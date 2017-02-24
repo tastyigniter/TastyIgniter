@@ -72,7 +72,7 @@ class Hub_manager
 	public function requestUpdateList($itemNames, $force = FALSE)
 	{
 		$itemNames = json_encode($itemNames);
-		$cacheFile = $this->cachePrefix . 'updates_' . md5($itemNames);
+		$cacheFile = $this->getCacheFilePath('updates', $itemNames);
 
 		if ($force OR !$response = $this->CI->cache->file->get($cacheFile)) {
 			$response = $this->requestRemoteData('core/check', ['items' => $itemNames]);
@@ -131,6 +131,14 @@ class Hub_manager
 		return $response;
 	}
 
+	private function getCacheFilePath($string, $itemNames)
+	{
+		$cachePath = str_split(substr(md5($this->cachePrefix . $string), 0, 9), 3);
+		$cachePath = implode(DIRECTORY_SEPARATOR, $cachePath);
+
+		return $this->cachePrefix. $string.'_' . md5($itemNames);
+	}
+
 	public function setSecurity()
 	{
 		$this->siteKey = empty($siteKey = $this->CI->config->item('site_key')) ? md5('NULL') : $siteKey;
@@ -176,9 +184,16 @@ class Hub_manager
 		if (file_exists($filePath)) {
 			$fileSha = sha1_file($filePath);
 			if ($fileHash != $fileSha) {
-				log_message('error', "File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
+				$response = @json_decode(file_get_contents($filePath), TRUE);
 				@unlink($filePath);
-				throw new Exception("Downloading failed, check error log.");
+
+				if (isset($response['status']) AND isset($response['message'])) {
+					log_message('error', isset($response['message']) ? $response['message'] : '');
+					throw new Exception(isset($response['message']) ? $response['message'] : '');
+				} else {
+					log_message('error', "File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
+					throw new Exception("Downloading failed, check error log.");
+				}
 			}
 		}
 

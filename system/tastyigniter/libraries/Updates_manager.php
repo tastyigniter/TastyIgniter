@@ -53,6 +53,7 @@ class Updates_manager
 
 		$items = $this->getHubManager()->setCacheLife(5)->listItems(['browse' => 'popular', 'type' => $itemType]);
 		if (isset($items['data'])) foreach ($items['data'] as &$item) {
+			unset($item['readme']);
 			$item['installed'] = isset($installedItems[$item['code']]);
 		}
 
@@ -69,6 +70,7 @@ class Updates_manager
 		]);
 
 		if (isset($items['data'])) foreach ($items['data'] as &$item) {
+			unset($item['readme']);
 			$item['installed'] = isset($installedItems[$item['code']]);
 		}
 
@@ -110,7 +112,7 @@ class Updates_manager
 		return $this->installedItems;
 	}
 
-	public function requestUpdateList($force)
+	public function requestUpdateList($force = false)
 	{
 		// Delete setting entry as its no longer in use... remove code in next version
 		if ($this->CI->config->item('last_version_check')) {

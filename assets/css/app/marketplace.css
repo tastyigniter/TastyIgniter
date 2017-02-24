@@ -6,8 +6,13 @@
 .items-list > ul li {
 	list-style: none;
 }
-.items-list .panel-default > .panel-heading {
+.items-list .panel-default {
 	background-color: #f6f8fa;
+}
+.items-list .panel-default > .panel-heading {
+	background-color: transparent;
+	border-bottom: 0;
+	padding-bottom: 4px;
 }
 .items-list .panel-default > .panel-heading .fa-pull-left {
 	font-size: 1.3em;
@@ -19,6 +24,9 @@
 }
 .items-list .panel-body {
 	overflow: auto;
+}
+.items-list .media .fa {
+	color: #6c7878;
 }
 #marketplace-items .panel-body {
 	height: 95px;
@@ -127,6 +135,7 @@
 }
 .item-details .item-thumb .fa {
 	padding: 10px 15px;
+	color: #6c7878;
 }
 .item-details .item-name {
 	padding-top: 5px;
@@ -139,4 +148,7 @@
 	overflow: auto;
 	height: 120px;
 	max-height: 120px;
+}
+#item-modal .modal-dialog {
+	margin: 80px auto;
 }

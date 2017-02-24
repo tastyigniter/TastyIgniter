@@ -3012,6 +3012,13 @@ body .datepicker-dropdown.datepicker-orient-bottom:after {
 	}
 }
 /** MODAL **/
+.modal-backdrop {
+	background-color: #fff;
+}
+.modal-backdrop.in {
+	filter: alpha(opacity=67);
+	opacity: .67;
+}
 .modal-content > .close {
 	position: absolute;
 	right: 15px;

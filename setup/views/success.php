@@ -2,14 +2,14 @@
 	<div class="panel-body">
 		<div class="row cta-next-steps">
 			<div class="col-xs-6">
+                <i class="fa fa-desktop fa-5x"></i><br><br>
 				<a class="btn btn-cta btn-orange" href="<?php echo $site_url; ?>">
-					<i class="fa fa-desktop fa-5x"></i><br>
 					<strong><?php echo lang('text_goto_storefront'); ?></strong>
 				</a>
 			</div>
 			<div class="col-xs-6">
-				<a class="btn btn-cta btn-blue" href="<?php echo $admin_url; ?>">
-					<i class="fa fa-dashboard fa-5x"></i><br>
+                <i class="fa fa-dashboard fa-5x"></i><br><br>
+				<a class="btn btn-cta btn-success" href="<?php echo $admin_url; ?>">
 					<strong><?php echo lang('text_login_to_admin'); ?></strong>
 				</a>
 			</div>
