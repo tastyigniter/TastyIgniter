@@ -5,11 +5,11 @@ $query_builder = TRUE;
 
 $db['default']['dsn'] = '';
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'your database username';
-$db['default']['password'] = 'your database password';
-$db['default']['database'] = 'your database name';
+$db['default']['username'] = 'root';
+$db['default']['password'] = 'mysql';
+$db['default']['database'] = 'tasty-dev';
 $db['default']['dbdriver'] = 'mysqli';
-$db['default']['dbprefix'] = 'ti_';
+$db['default']['dbprefix'] = 'kaxc9_';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = (ENVIRONMENT !== 'production');
 $db['default']['cache_on'] = FALSE;

@@ -71,9 +71,11 @@ class Location
 			}
 		}
 
-		foreach ($local_info as $item => $value) {
-			if (property_exists($this, $item) AND $this->$item != $value)
-				return TRUE;
+		if (isset($local_info)) {
+			foreach ($local_info as $item => $value) {
+				if (property_exists($this, $item) AND $this->$item != $value)
+					return TRUE;
+			}
 		}
 
 		return FALSE;
@@ -354,7 +356,7 @@ class Location
 	public function orderType()
 	{
 		$orderTypes = array_flip(self::$orderTypes);
-		return $orderTypes[$this->order_type];
+		return isset($orderTypes[$this->order_type]) ? $orderTypes[$this->order_type] : null;
 	}
 
 	public function getOrderType()
