@@ -91,7 +91,7 @@ in the top-level composer.json file:
   (optional, see [merge-dev](#merge-dev) below)
 * [suggest](https://getcomposer.org/doc/04-schema.md#suggest)
 * [extra](https://getcomposer.org/doc/04-schema.md#extra)
-  (optional, see [merge-extra](#merge-extra) below)* 
+  (optional, see [merge-extra](#merge-extra) below)
 * [scripts](https://getcomposer.org/doc/04-schema.md#scripts)
   (optional, see [merge-scripts](#merge-scripts) below)
 
@@ -146,12 +146,16 @@ always processed by the plugin unless [recursion](#recurse) is disabled.
 ### merge-scripts
 
 A `"merge-scripts": true` setting enables merging the contents of the
-`scripts` section of included files as well. The normal merge mode for the 
-scripts section is to accept the first version of any key found (e.g. a key in 
+`scripts` section of included files as well. The normal merge mode for the
+scripts section is to accept the first version of any key found (e.g. a key in
 the master config wins over the version found in any imported config). If
 `replace` mode is active ([see above](#replace)) then this behavior changes
 and the last key found will win (e.g. the key in the master config is replaced
-by the key in the imported config). 
+by the key in the imported config).
+
+Note: [custom commands][] added by merged configuration will work when invoked
+as `composer run-script my-cool-command` but will not be available using the
+normal `composer my-cool-command` shortcut.
 
 
 Running tests
@@ -200,3 +204,4 @@ file for more details.
 [License]: https://img.shields.io/packagist/l/wikimedia/composer-merge-plugin.svg?style=flat
 [Build Status]: https://img.shields.io/travis/wikimedia/composer-merge-plugin.svg?style=flat
 [Code Coverage]: https://img.shields.io/scrutinizer/coverage/g/wikimedia/composer-merge-plugin/master.svg?style=flat
+[custom commands]: https://getcomposer.org/doc/articles/scripts.md#writing-custom-commands
