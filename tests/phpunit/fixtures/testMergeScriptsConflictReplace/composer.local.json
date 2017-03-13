@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "example-script": [
+            "echo 'hello world'",
+            "echo 'hello again world'"
+        ],
+        "example-script2": "echo 'hello world'",
+        "example-script3": [
+            "echo 'hola world'"
+        ]
+    }
+}

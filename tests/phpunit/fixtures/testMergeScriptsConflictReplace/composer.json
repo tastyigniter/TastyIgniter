@@ -1,0 +1,13 @@
+{
+    "extra": {
+        "merge-plugin": {
+            "replace": true,
+            "merge-scripts": true,
+            "include": "composer.local.json"
+        }
+    },
+    "scripts": {
+        "example-script2": "echo 'goodbye world'",
+        "example-script3": "echo 'adios world'"
+    }
+}

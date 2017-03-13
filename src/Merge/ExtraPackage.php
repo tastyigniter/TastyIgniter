@@ -166,6 +166,8 @@ class ExtraPackage
 
         $this->mergeExtra($root, $state);
 
+        $this->mergeScripts($root, $state);
+
         if ($state->isDevMode()) {
             $this->mergeDevInto($root, $state);
         } else {
@@ -437,6 +439,33 @@ class ExtraPackage
             }
             $unwrapped->setExtra(
                 self::mergeExtraArray($state->shouldMergeExtraDeep(), $extra, $rootExtra)
+            );
+        }
+    }
+
+    /**
+     * Merge scripts config into a RootPackageInterface
+     *
+     * @param RootPackageInterface $root
+     * @param PluginState $state
+     */
+    public function mergeScripts(RootPackageInterface $root, PluginState $state)
+    {
+        $scripts = $this->package->getScripts();
+        if (!$state->shouldMergeScripts() || empty($scripts)) {
+            return;
+        }
+
+        $rootScripts = $root->getScripts();
+        $unwrapped = self::unwrapIfNeeded($root, 'setScripts');
+
+        if ($state->replaceDuplicateLinks()) {
+            $unwrapped->setScripts(
+                array_merge($rootScripts, $scripts)
+            );
+        } else {
+            $unwrapped->setScripts(
+                array_merge($scripts, $rootScripts)
             );
         }
     }
