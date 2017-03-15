@@ -98,7 +98,7 @@ defined('TI_DEBUG') OR define('TI_DEBUG', TRUE);
 | These constants are used when working with TastyIgniter API
 |
 */
-defined('TI_ENDPOINT') OR define('TI_ENDPOINT', 'http://api.beta.tastyigniter.com/v2/');
+defined('TI_ENDPOINT') OR define('TI_ENDPOINT', 'http://api.tastyigniter.com/v2/');
 defined('TI_REST_AUTH') OR define('TI_REST_AUTH', 'TI-Rest-Key');
 defined('TI_SITE_AUTH') OR define('TI_SITE_AUTH', 'TI-Site-Key');
 defined('TI_SIGN_REQUEST') OR define('TI_SIGN_REQUEST', 'TI-Sign-Request');

@@ -202,7 +202,7 @@ $theme['customize']['sections']['styling'] = array(
 					'desc'			=> 'The background color or image to use for the body body background and how the image is displayed.',
 					'type' 			=> 'input-group',
 					'group'			=> array(
-						array('id' => 'input-body-background', 'name' => 'body[background]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
+						array('id' => 'input-body-background', 'name' => 'body[background]', 'type' => 'color', 'value' => '#F5F5F5', 'rules' => 'required'),
 						array('id' => 'input-body-image', 'name' => 'body[image]', 'type' => 'media', 'value' => ''),
 						array('id' => 'input-body-background-display', 'name' => 'body[display]', 'type' => 'dropdown', 'options' => array('tiled' => 'Tiled', 'contain' => 'Contain', 'cover' => 'Cover', 'centered' => 'Centered'), 'value' => 'contain', 'rules' => 'required'),
 					)

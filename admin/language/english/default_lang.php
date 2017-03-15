@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang['site_title'] 		                = '%s ‹ Administrator Panel ‹ %s — %s';
+$lang['site_title'] 		                = '%s ‹ Administrator Panel — %s';
 $lang['text_edit'] 		                    = 'Edit';
 $lang['text_filter'] 		                = 'Filter';
 $lang['text_clear'] 		                = 'Clear';

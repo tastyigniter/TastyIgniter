@@ -40,7 +40,8 @@ $lang['label_delete_data'] 		        = 'Delete Data';
 $lang['label_copy_data'] 		        = 'Copy Data';
 
 $lang['button_upload'] 		            = 'Upload';
-$lang['button_browse'] 		            = '<i class="fa fa-globe"></i>  Browse Themes';
+$lang['button_browse'] 		            = '<i class="fa fa-globe"></i>  Browse more Themes';
+$lang['button_check']             		= '<i class="fa fa-refresh"></i>  Updates';
 $lang['button_choose'] 		            = 'Choose';
 $lang['button_change'] 		            = 'Change';
 $lang['button_delete'] 		            = 'Delete';

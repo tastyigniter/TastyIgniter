@@ -28,8 +28,8 @@ $lang['text_settings'] 		     		= 'Settings';
 
 $lang['button_upload'] 		            = 'Upload & Install';
 $lang['button_choose'] 		            = 'Choose';
-$lang['button_browse'] 		            = '<i class="fa fa-globe"></i>  Browse all extensions';
-$lang['button_check']             		= '<i class="fa fa-refresh"></i>  Check Updates';
+$lang['button_browse'] 		            = '<i class="fa fa-globe"></i>  Browse more extensions';
+$lang['button_check']             		= '<i class="fa fa-refresh"></i>  Updates';
 $lang['button_change'] 		            = 'Change';
 $lang['button_delete'] 		            = 'Delete';
 $lang['button_yes_delete'] 		        = 'Yes, delete';
@@ -58,7 +58,7 @@ $lang['error_config_invalid'] 		    = 'The configuration file for extension <b>%
 $lang['error_config_invalid_key'] 	    = 'Check that the <b>\'%s\'</b> configuration value for extension <b>%s</b> is correctly set';
 
 $lang['alert_info_layouts'] 		    = 'After you have installed and configured a module you can display it on a layout <a href="%s" class="alert-link">here!</a>';
-$lang['alert_warning_layouts'] 		    = 'To display this extension module in storefront add it to a layout <a href="%s" class="alert-link">here!</a>';
+$lang['alert_warning_layouts'] 		    = 'To display the component for this extension on a page add it to a layout <a href="%s" class="alert-link">here!</a>';
 $lang['alert_delete_warning'] 		    = 'You are about to delete the %s of extension <b>%s</b>';
 $lang['alert_delete_confirm'] 		    = 'Are you sure you wish to delete these %s? This cannot be undone!';
 $lang['alert_is_installed'] 		    = '. You must uninstall an extension before deleting.';

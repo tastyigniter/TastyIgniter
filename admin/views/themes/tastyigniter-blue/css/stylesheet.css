@@ -65,6 +65,9 @@ a, a:hover, a:active {
 b, strong, label {
 	font-weight: 500;
 }
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+	color: #303030;
+}
 h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small,
 h1 .small, .h1 .small, h2 .small, .h2 .small, h3 .small, .h3 .small {
 	font-size: 50%;
@@ -1503,6 +1506,7 @@ a:focus {
 }
 /** PANEL TABS **/
 .panel-tabs > .panel-heading {
+	background-color: #E8ECF0;
 	padding: 0;
 }
 .panel-tabs .panel-heading .nav-tabs {
@@ -1835,6 +1839,7 @@ table .action-three {
 table .action .checkbox {
 	display: inline-block;
 	margin: 0;
+	float: left;
 }
 .action .btn {
 	background-color: transparent;

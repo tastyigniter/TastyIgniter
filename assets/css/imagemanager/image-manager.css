@@ -130,6 +130,7 @@ line-height: 1;
 }
 .input-group-addon, .form-control {
     border: 1px solid #D2DCE7;
+    height: 36px;
 }
 
 
@@ -315,7 +316,7 @@ border: 1px solid #D2DCE7;
 border-bottom: 0 none;
 border-radius:3px 3px 0 0;
 padding: 7px 15px;
-margin: -3px 0 0;
+margin: 3px 0 0;
 z-index:5;
 }
 .breadcrumb > li {
@@ -370,7 +371,7 @@ display: inline-block;
 margin: 15px;
 padding: 0;
 vertical-align: top;
-width: 160px;
+width: 110px;
 line-height: 20px;
 }
 .thumbnail {
@@ -399,7 +400,7 @@ padding: 0;
 text-align: center;
 vertical-align: middle;
 width: 100%;
-height: 150px;
+height: 75px;
 transform: translate(50%,50%);
 top: 0px;
 bottom: 0px;

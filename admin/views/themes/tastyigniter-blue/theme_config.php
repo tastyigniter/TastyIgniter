@@ -128,9 +128,9 @@ $theme['nav_menu'] = array(
 		'title' => lang('menu_system'),
 		'permission' => 'Admin.Permissions|Admin.ErrorLogs|Site.Settings',
 		'child' => array(
-			'settings' => array('priority' => '1', 'class' => 'settings', 'href' => site_url('settings'), 'title' => lang('menu_setting'), 'permission' => 'Site.Settings'),
-			'updates' => array('priority' => '2', 'class' => 'updates', 'href' => site_url('updates'), 'title' => lang('menu_updates'), 'permission' => 'Site.Updates'),
-			'permissions' => array('priority' => '2', 'class' => 'permissions', 'href' => site_url('permissions'), 'title' => lang('menu_permission'), 'permission' => 'Admin.Permissions'),
+			'updates' => array('priority' => '1', 'class' => 'updates', 'href' => site_url('updates'), 'title' => lang('menu_updates'), 'permission' => 'Site.Updates'),
+			'settings' => array('priority' => '2', 'class' => 'settings', 'href' => site_url('settings'), 'title' => lang('menu_setting'), 'permission' => 'Site.Settings'),
+			'permissions' => array('priority' => '3', 'class' => 'permissions', 'href' => site_url('permissions'), 'title' => lang('menu_permission'), 'permission' => 'Admin.Permissions'),
 //			'uri_routes' => array('priority' => '3', 'class' => 'uri_routes', 'href' => site_url('uri_routes'), 'title' => lang('menu_uri_route')),
 			'error_logs' => array('priority' => '4', 'class' => 'error_logs', 'href' => site_url('error_logs'), 'title' => lang('menu_error_log'), 'permission' => 'Admin.ErrorLogs'),
 			'tools' => array(

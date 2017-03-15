@@ -111,7 +111,7 @@ class Reservations_model extends Model
 				}
 			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month']) AND !empty($filter['filter_day'])) {
 				$query->whereYear('reserve_date', $filter['filter_year']);
-				$query->whereMonth('reserve_date', $filter['filter_year']);
+				$query->whereMonth('reserve_date', $filter['filter_month']);
 				$query->whereDay('reserve_date', $filter['filter_day']);
 			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month'])) {
 				$query->whereYear('reserve_date', $filter['filter_year']);
@@ -207,8 +207,9 @@ class Reservations_model extends Model
 	{
 		$result = [];
 
-		$queryBuilder = $this->selectRaw("reserve_date, SUM(reservations.guest_num) as total_guest, DAY(reserve_date) as reserve_day");
-		//$queryBuilder->where('status', (int)$queryBuilder->config->item('default_reservation_status'));
+		$reservationsTable = $this->tablePrefix('reservations');
+		$queryBuilder = $this->selectRaw("reserve_date, SUM({$reservationsTable}.guest_num) as total_guest, DAY(reserve_date) as reserve_day");
+		//$queryBuilder->where('status', (int)$this->config->item('default_reservation_status'));
 
 		if (!empty($location_id)) {
 			$queryBuilder->where('location_id', $location_id);
@@ -216,7 +217,7 @@ class Reservations_model extends Model
 
 		if (!empty($dates)) {
 			$dates = !is_array($dates) ? [$dates] : $dates;
-			$queryBuilder->whereInRaw('DATE(reserve_date)', $dates);
+			$queryBuilder->whereDate('reserve_date', $dates);
 		}
 
 		$queryBuilder->groupBy('reserve_day');
@@ -248,7 +249,7 @@ class Reservations_model extends Model
 
 			$query = $this->Location_tables_model->where('location_id', $location_id)->where('table_status', '1');
 
-			$query->where(function ($query) {
+			$query->where(function ($query) use ($guest_num) {
 				$query->where('min_capacity', '<=', $guest_num);
 				$query->where('max_capacity', '>=', $guest_num);
 			});

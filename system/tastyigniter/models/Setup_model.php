@@ -142,7 +142,7 @@ class Setup_model extends TI_Model
 
 		$this->db->replace('permalinks', [
 			'permalink_id' => '22',
-			'slug' => $setting['site_name'],
+			'slug' => url_title($setting['site_name'], '-', TRUE),
 			'controller' => 'local',
 			'query' => 'location_id=11',
 		]);

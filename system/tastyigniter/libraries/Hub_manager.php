@@ -89,9 +89,9 @@ class Hub_manager
 		return $response;
 	}
 
-	public function applyInstallOrUpdate($itemNames = [])
+	public function applyInstallOrUpdate($type, $itemNames = [])
 	{
-		$response = $this->requestRemoteData('core/apply', ['items' => json_encode($itemNames)]);
+		$response = $this->requestRemoteData("{$type}/apply", ['items' => json_encode($itemNames)]);
 
 		if (is_array($response))
 			return $this->buildMetaArray($response);
@@ -213,9 +213,6 @@ class Hub_manager
 		$info = $this->getInstaller()->getSysInfo();
 		$params['version'] = $info['ver'];
 		$params['server'] = base64_encode(serialize($info));
-
-		if (isset($params['filter']))
-			$params['filter'] = $params['filter'];
 
 		if (!empty($params))
 			$options['POSTFIELDS'] = $params;

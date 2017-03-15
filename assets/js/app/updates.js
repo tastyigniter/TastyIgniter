@@ -330,7 +330,7 @@
             '<i class="fa {{icon}} fa-4x text-muted"></i>',
             '{{/thumb}}',
             '</a><div class="media-body">',
-            '{{{description}}}<span class="small"><span class="text-muted">Version:</span> <strong>{{version}}</strong>, ',
+            '<p>{{{description}}}</p><span class="small"><span class="text-muted">Version:</span> <strong>{{version}}</strong>, ',
             '<span class="text-muted">Author:</span> <strong>{{author}}</strong></span>',
             '</div></div></div>',
         ].join(''),
@@ -382,6 +382,10 @@
     $.ti.updates = new Updates
 
     $(document).on('click', '#item-modal button[type="submit"]', function () {
+        var $button = $(this);
+
+        $button.attr('disable', true).addClass('disabled')
+
         $.ti.updates.submitForm()
     });
 
@@ -390,7 +394,7 @@
 
         if ($button.data('requireCode') == null) return;
 
-        $(this).attr('disable', true).addClass('disabled')
+        $button.attr('disable', true).addClass('disabled')
 
         $.ti.updates.items.push({
             title: $button.data('title'),

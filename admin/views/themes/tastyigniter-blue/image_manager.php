@@ -178,7 +178,7 @@
                         <div class="media-preview row"></div>
                         <div class="media-list row">
                             <?php foreach ($files as $file) { ?>
-                                <div class="thumbnail-each col-xs-6 col-sm-4 <?php echo $file['html_class']; ?>">
+                                <div class="thumbnail-each col-xs-3 col-sm-2 <?php echo $file['html_class']; ?>">
                                     <figure class="thumbnail" data-type="<?php echo $file['type']; ?>" data-name="<?php echo $file['name']; ?>" data-path="<?php echo $file['path']; ?>">
                                         <a class="link" title="<?php echo $file['size']; ?>">
                                             <div class="img-container">
@@ -287,6 +287,12 @@
     <script type="text/javascript"><!--
         $(document).ready(function () {
             $('a, button, span').tooltip({container: 'body', placement: 'bottom'});
+
+            $(window).bind("load resize", function() {
+                if ($(window).height() > 550) {
+                    $("#image-manager iframe").css("height", $(window).height - $("#image-manager").offset().top);
+                }
+            })
 
             var folder_tree = '<?php echo $folder_tree; ?>';
             $('#folderPopover .btn-folders').popover({

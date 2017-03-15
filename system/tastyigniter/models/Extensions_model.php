@@ -437,7 +437,7 @@ class Extensions_model extends Model
 			$extensionModel = $this->whereIn('type', ['module', 'payment'])->firstOrCreate(['name' => $code]);
 
 			if ($extensionModel) {
-				$update = $extensionModel->fill(['type' => 'module', 'title' => $title, 'status' => '1'])->save();
+				$update = $extensionModel->fill(['type' => 'module', 'title' => $title, 'status' => '1', 'version' => $meta['version']])->save();
 				if ($update) $extension_id = $extensionModel->extension_id;
 			}
 

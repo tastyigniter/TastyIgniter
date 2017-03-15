@@ -257,7 +257,7 @@ class Setup extends Base_Controller {
 							$json['redirect'] = $this->pageUrl('success');
 						}
 
-						$result = $this->hub_manager->applyInstallOrUpdate($names);
+						$result = $this->installer->applySetup($names);
 						break;
 					case 'downloadComposer':
 						if ($this->composer_manager->downloadComposer())

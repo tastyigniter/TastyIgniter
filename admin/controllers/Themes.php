@@ -8,7 +8,8 @@ class Themes extends Admin_Controller
 	public $delete_url = 'themes/delete/{code}';
 	public $activate_url = 'themes/activate/{code}';
 	public $browse_url = 'updates/browse/themes';
-	protected $copy_url = 'themes/copy/{code}';
+	public $copy_url = 'themes/copy/{code}';
+	public $check_url = 'updates';
 
 	public function __construct()
 	{
@@ -31,6 +32,7 @@ class Themes extends Admin_Controller
 		$this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), ['class' => 'btn btn-primary', 'href' => page_url() . '/add']);
 		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->browse_url)]);
+		$this->template->setButton($this->lang->line('button_check'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->check_url)]);
 
 		$data = $this->getList();
 

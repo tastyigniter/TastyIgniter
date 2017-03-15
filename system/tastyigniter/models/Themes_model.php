@@ -106,7 +106,7 @@ class Themes_model extends Model
 
 		$rows = $this->where('type', 'theme')->getAsArray();
 		foreach ($rows as $row) {
-			$row['data'] = ($row['serialized'] == '1' AND !empty($row['data'])) ? unserialize($row['data']) : [];
+			$row['data'] = ($row['serialized'] == '1' AND !empty($row['data'])) ? @unserialize($row['data']) : [];
 			$results[$row['name']] = $row;
 		}
 
@@ -223,7 +223,7 @@ class Themes_model extends Model
 
 		$update['status'] = '1';
 
-		if (!empty($update['data'])) {
+		if (isset($update['data'])) {
 			$update['data'] = serialize($update['data']);
 			$update['serialized'] = '1';
 		}

@@ -93,7 +93,6 @@ class Installer
 		$info['php'] = $this->installed_php_version;
 		$info['mysql'] = $this->db_exists ? $this->CI->db->version() : '5.5';
 		$info['web'] = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : null;
-//		$info['site_key'] = empty($site_key = $this->CI->config->item('site_key')) ? md5('NULL') : $site_key;
 
 		return $info;
 	}
@@ -471,6 +470,11 @@ class Installer
 		}
 	}
 
+	public function applySetup($names)
+	{
+		return $this->getHubManager()->applyInstallOrUpdate('setup', $names);
+	}
+
 	public function downloadFile($fileCode, $fileHash, $params = [])
 	{
 		$filePath = storage_path("temp/".md5($fileCode) . '.zip');
@@ -478,7 +482,7 @@ class Installer
 		if (!is_dir($fileDir = dirname($filePath)))
 			mkdir($fileDir, 0777, TRUE);
 
-		return $this->CI->hub_manager->downloadFile('item', $filePath, $fileHash, $params);
+		return $this->getHubManager()->downloadFile('setup', $filePath, $fileHash, $params);
 	}
 
 	public function extractFile($fileCode, $fileType)
@@ -529,6 +533,14 @@ class Installer
 			$this->CI->load->helper('config_helper');
 
 		return write_config('config', $config_array, '', IGNITEPATH);
+	}
+
+	/**
+	 * @return Hub_manager
+	 */
+	protected function getHubManager()
+	{
+		return $this->CI->hub_manager;
 	}
 }
 

@@ -314,18 +314,22 @@ class Messages extends Admin_Controller
 
 		if ($this->input->post('recipient')) {
 			$data['recipient'] = $this->input->post('recipient');
-		} else {
+		} else if (isset($message_info['recipient'])) {
 			$data['recipient'] = $message_info['recipient'];
+		} else {
+			$data['recipient'] = null;
 		}
 
 		if ($this->input->post('send_type')) {
 			$data['send_type'] = $this->input->post('send_type');
-		} else {
+		} else if (isset($message_info['send_type'])) {
 			$data['send_type'] = $message_info['send_type'];
+		} else {
+			$data['send_type'] = 'account';
 		}
 
-		$data['subject'] = $message_info['subject'];
-		$data['body'] = $message_info['body'];
+		$data['subject'] = isset($message_info['subject']) ? $message_info['subject'] : null;
+		$data['body'] = isset($message_info['body']) ? $message_info['body'] : null;
 
 		$data['recipients'] = [
 			'all_newsletters' => $this->lang->line('text_all_newsletters'),

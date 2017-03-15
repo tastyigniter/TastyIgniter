@@ -36,7 +36,7 @@ class Updates extends Admin_Controller
 		}
 
 		$this->template->setButton(sprintf($this->lang->line('button_browse'), $this->lang->line('text_tab_title_extensions')), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->browse_url, ['item' => 'extensions'])]);
-		$this->template->setButton($this->lang->line('button_check_again'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->force_check_url)]);
+		$this->template->setButton($this->lang->line('button_check'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->force_check_url)]);
 
 		$this->assets->setStyleTag(assets_url('css/app/marketplace.css'), 'marketplace-css');
 		$this->assets->setScriptTag(assets_url('js/mustache.js'), 'mustache-js', '20');
@@ -72,7 +72,7 @@ class Updates extends Admin_Controller
 		$button_type = ($item_type == 'extensions') ? 'themes' : 'extensions';
 		$button_title = ($button_type == 'extensions') ? $this->lang->line('text_tab_title_extensions') : $this->lang->line('text_tab_title_themes');
 		$this->template->setButton(sprintf($this->lang->line('button_browse'), $button_title), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->browse_url, ['item' => $button_type])]);
-		$this->template->setButton($this->lang->line('button_check'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->check_url)]);
+		$this->template->setButton($this->lang->line('button_updates'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->check_url)]);
 
 		$this->assets->setStyleTag(assets_url('css/app/marketplace.css'), 'marketplace-css');
 		$this->assets->setScriptTag(assets_url('js/mustache.js'), 'mustache-js', '20');
@@ -227,13 +227,13 @@ class Updates extends Admin_Controller
 		if (isset($post['type'], $post['action']) AND $post['action'] == 'update') {
 			switch ($post['type']) {
 				case 'extension':
-					$this->updates_manager->updateExtension();
+					$this->updates_manager->updateExtension($post['code']);
 					break;
 				case 'theme':
-					$this->updates_manager->updateTheme();
+					$this->updates_manager->updateTheme($post['code']);
 					break;
 				case 'translation':
-					$this->updates_manager->updateTranslation();
+					$this->updates_manager->updateTranslation($post['code']);
 					break;
 			}
 		}
