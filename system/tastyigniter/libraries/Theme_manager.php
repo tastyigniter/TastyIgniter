@@ -77,7 +77,7 @@ class Theme_manager
 	{
 		$themes = [];
 		foreach ($this->paths() as $theme => $path) {
-			$themes[$path['domain']] = $theme;
+			$themes[$path['domain']][] = $theme;
 		}
 
 		return $themes;
@@ -136,7 +136,10 @@ class Theme_manager
 		$themeObject->parent = $this->findParent($themeCode);
 		$themeObject->activated = $this->isActivated($themeCode);
 		$themeObject->config = $this->getMetaFromFile($themeCode);
-		$themeObject->customizer = $this->getConfigFromFile($themeCode);
+
+		$themeObject->customizer = null;
+		if (APPDIR == ADMINDIR OR $themeObject->domain == MAINDIR)
+			$themeObject->customizer = $this->getConfigFromFile($themeCode);
 
 		$this->themes[$themeCode] = $themeObject;
 		$this->paths[$themeCode] = $path;

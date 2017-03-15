@@ -29,6 +29,7 @@ class Template
 
 	protected $parent_theme = null;
 	protected $theme = null;
+	protected $themeObj = null;
 	protected $theme_path = null;
 	protected $theme_shortpath = null;
 	protected $theme_locations = [];
@@ -38,6 +39,7 @@ class Template
 	protected $components = [];
 	protected $title_separator = ' | ';
 	protected $data = [];
+	protected $theme_fields = [];
 	protected $theme_config = [];
 
 	private $CI;
@@ -90,7 +92,8 @@ class Template
 		}
 
 		// Load the theme config and store array in $this->theme_config
-		$this->theme_config = load_theme_config($this->theme, APPDIR);
+		$this->theme_config = $this->themeObj->config;
+		$this->theme_fields = $this->themeObj->customizer;
 
 		// Set the parent theme if theme is child
 		$this->parent_theme = (isset($this->theme_config['parent'])) ? $this->theme_config['parent'] : '';
@@ -104,8 +107,8 @@ class Template
 		$this->_controller = $this->CI->router->fetch_class();
 		$this->_method = $this->CI->router->fetch_method();
 
-		if (!empty($this->theme_config['head_tags'])) {
-			$this->CI->assets->setHeadTags($this->theme_config['head_tags']);
+		if (!empty($this->theme_fields['head_tags'])) {
+			$this->CI->assets->setHeadTags($this->theme_fields['head_tags']);
 		}
 
 		$this->setPartialAreas();
@@ -225,6 +228,7 @@ class Template
 		if ($theme_location = $this->getThemeLocation($this->theme)) {
 			$this->theme_path = rtrim($theme_location . $this->theme);
 			$this->theme_shortpath = APPDIR . '/views/themes/' . $this->theme;
+			$this->themeObj = $this->CI->theme_manager->findTheme($this->theme);
 		} else {
 			show_error('Unable to locate the active theme: ' . APPDIR . '/views/themes/' . $this->theme);
 		}
@@ -232,7 +236,7 @@ class Template
 
 	public function setPartialAreas()
 	{
-		$partial_areas = isset($this->theme_config['partial_area']) ? $this->theme_config['partial_area'] : $this->partial_areas;
+		$partial_areas = isset($this->theme_fields['partial_area']) ? $this->theme_fields['partial_area'] : $this->partial_areas;
 
 		foreach ($partial_areas as $partial_area) {
 			$id = isset($partial_area['id']) ? $partial_area['id'] : $partial_area;
@@ -285,18 +289,18 @@ class Template
 	public function addNavMenuItem($item, $options = [], $parent = null)
 	{
 		if (!empty($parent)) {
-			$this->theme_config['nav_menu'][$parent]['child'][$item] = $options;
+			$this->theme_fields['nav_menu'][$parent]['child'][$item] = $options;
 		} else {
-			$this->theme_config['nav_menu'][$item] = $options;
+			$this->theme_fields['nav_menu'][$item] = $options;
 		}
 	}
 
 	public function removeNavMenuItem($item, $parent = null)
 	{
 		if (!empty($parent)) {
-			unset($this->theme_config['nav_menu'][$parent]['child'][$item]);
+			unset($this->theme_fields['nav_menu'][$parent]['child'][$item]);
 		} else {
-			unset($this->theme_config['nav_menu'][$item]);
+			unset($this->theme_fields['nav_menu'][$item]);
 		}
 	}
 
@@ -308,11 +312,11 @@ class Template
 		extract($prefs);
 
 		// Bail out if nav_menu theme config item is missing or not an array
-		if (!is_array($this->theme_config['nav_menu'])) {
+		if (!is_array($this->theme_fields['nav_menu'])) {
 			return null;
 		}
 
-		return $container_open . $this->_buildNavMenu($this->theme_config['nav_menu']) . $container_close;
+		return $container_open . $this->_buildNavMenu($this->theme_fields['nav_menu']) . $container_close;
 	}
 
 	protected function _buildNavMenu($nav_menu = [], $has_child = 0)

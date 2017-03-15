@@ -36,6 +36,34 @@ class Updates_manager
 		$this->logFile = $this->CI->config->item('log_path') . 'updates.log';
 	}
 
+	public function updateExtension($extensionCode)
+	{
+		$this->CI->load->model('Extensions_model');
+		$this->CI->Extensions_model->updateInstalledExtensions($extensionCode);
+
+		$extension = Modules::find_extension($extensionCode);
+		$permissions = $extension->registerPermissions();
+		$this->CI->Extensions_model->savePermissions($permissions);
+
+		// set extension migration to the latest version
+		Modules::run_migration($extensionCode);
+		return TRUE;
+	}
+
+	public function updateTheme($themeCode)
+	{
+		$this->CI->load->model('Themes_model');
+		$this->CI->Themes_model->updateInstalledThemes($themeCode);
+
+		return TRUE;
+	}
+
+	public function updateTranslation($translationCode)
+	{
+		// @TODO: complete with new translation implementation
+		return TRUE;
+	}
+
 	public function isLastCheckDue()
 	{
 		$response = $this->requestUpdateList(false);
@@ -95,9 +123,9 @@ class Updates_manager
 		}
 
 		$themeManager = $this->getThemeManager();
-		foreach ($themeManager->listThemes() as $theme) {
-			if ($meta = $themeManager->themeMeta($theme)) {
-				$installedItems['themes'][$theme] = [
+		foreach (array_collapse($themeManager->listThemes()) as $themeCode) {
+			if ($meta = $themeManager->themeMeta($themeCode)) {
+				$installedItems['themes'][$themeCode] = [
 					'ver'  => $meta['version'],
 					'type' => 'theme',
 				];
@@ -170,7 +198,7 @@ class Updates_manager
 
 	public function applyInstallOrUpdate($names)
 	{
-		$applies = $this->getHubManager()->applyInstallOrUpdate($names);
+		$applies = $this->getHubManager()->applyInstallOrUpdate('core', $names);
 
 		$ignoredUpdates = $this->getIgnoredUpdates();
 		if ($core = array_get($applies, 'core')) {
