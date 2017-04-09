@@ -1,5 +1,5 @@
 # 1.To use URL Alias you need to be running apache with mod_rewrite enabled.
-Options +FollowSymlinks
+#Options +FollowSymlinks
 
 # Prevent Directoy listing
 Options All -Indexes
@@ -16,5 +16,6 @@ Options All -Indexes
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^(.*)$ index.php?/$1 [L]
+    RewriteRule ^assets/cacheI/.* index.php [L,NC]
     RewriteRule ^assets/downloads/(.*) not_found [L]
 </IfModule>

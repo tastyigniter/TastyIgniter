@@ -19,16 +19,23 @@
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
   "require": {
-    "php": ">=5.4.0",
-    "composer/composer": "1.0.0-alpha8",
+    "php": ">=5.6.28",
+    "illuminate/events": "5.3.*",
     "illuminate/database": "5.3.*",
-    "illuminate/events": "5.3.*"
+    "laravelcollective/html": "5.3.*"
   },
   "autoload": {
     "classmap": [
-      "system/tastyigniter"
+      "system/core/"
     ],
-    "psr-4": {"TastyIgniter\\": "system/tastyigniter/"},
-    "exclude-from-classmap": ["system/tastyigniter/third_party/"]
+    "psr-4": {
+      "Admin\\": "app/admin/",
+      "Main\\": "app/main/",
+      "Igniter\\": "system/"
+    },
+    "exclude-from-classmap": [
+      "system/session/",
+      "system/third_party/"
+    ]
   }
 }
