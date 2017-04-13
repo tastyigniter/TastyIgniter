@@ -24,8 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('convert_camelcase_to_underscore'))
-{
+if (!function_exists('convert_camelcase_to_underscore')) {
     /**
      * Convert CamelCase to underscore Camel_Case
      *
@@ -34,6 +33,7 @@ if ( ! function_exists('convert_camelcase_to_underscore'))
      *
      * @param string $string
      * @param bool $lowercase
+     *
      * @return CamelCase string
      */
 
@@ -47,26 +47,51 @@ if ( ! function_exists('convert_camelcase_to_underscore'))
         }
 
         $string = implode('_', $ret);
+
         return (!$lowercase) ? $string : strtolower($string);
     }
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Current URL
- *
- * Converts a string_with_underscore into StringWithCamelCase. Strings can be passed via the
- * first parameter either as a string or an array.
- *
- * @access	public
- * @return	string
- */
-if ( ! function_exists('convert_underscore_to_camelcase'))
-{
-	function convert_underscore_to_camelcase($string = '')
-	{
+if (!function_exists('convert_underscore_to_camelcase')) {
+    /**
+     * Current URL
+     *
+     * Converts a string_with_underscore into StringWithCamelCase. Strings can be passed via the
+     * first parameter either as a string or an array.
+     *
+     * @access    public
+     * @return    string
+     */
+    function convert_underscore_to_camelcase($string = '')
+    {
         return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (!function_exists('contains_substring')) {
+    /**
+     * Determine if a given string contains a given substring.
+     *
+     * @access    public
+     *
+     * @param  string $haystack
+     * @param  string|array $needles
+     *
+     * @return bool
+     */
+    function contains_substring($haystack, $needles)
+    {
+        foreach ((array)$needles as $needle) {
+            if ($needle != '' && mb_strpos($haystack, $needle) !== FALSE) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
     }
 }
 

@@ -101,17 +101,14 @@ class TI_Config extends MX_Config
             }
         }
 
-        if (empty($uri)) {
-            return $base_url.$this->item('index_page');
-        }
-
         if (APPDIR === MAINDIR) {
             $uri = get_instance()->router->_reverse_routing($uri);
-            $base_url = substr($base_url, strpos($base_url, ADMINDIR.'/'));
-//            $base_url = str_replace(ADMINDIR.'/', '', $base_url);
         } else {
-            $uri = $this->_uri_string(APPDIR.'/'.$uri);
+            $uri = $this->_uri_string((!starts_with($uri, APPDIR) ? APPDIR.'/'.$uri : $uri));
         }
+
+        if (empty($uri))
+            return $base_url.$this->item('index_page');
 
         if ($this->item('enable_query_strings') === FALSE) {
             $suffix = isset($this->config['url_suffix']) ? $this->config['url_suffix'] : '';
