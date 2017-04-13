@@ -27,65 +27,63 @@ class Admin_Controller extends BaseController
     /**
      * @var bool Requires the admin user to be logged in.
      */
-    protected static $requireAuthentication = TRUE;
+    protected $requireAuthentication = TRUE;
 
     /**
      * @var object Stores the logged in admin user.
      */
     protected $currentUser;
 
-	/**
-	 * @var string Link URL for the create page
-	 */
-	public $create_url = NULL;
+    /**
+     * @var string Link URL for the create page
+     */
+    public $create_url = null;
 
-	/**
-	 * @var string Link URL for the edit page
-	 */
-	public $edit_url = NULL;
+    /**
+     * @var string Link URL for the edit page
+     */
+    public $edit_url = null;
 
-	/**
-	 * @var string Link URL for the edit page
-	 */
-	public $delete_url = NULL;
+    /**
+     * @var string Link URL for the edit page
+     */
+    public $delete_url = null;
 
-	/**
-	 * Class constructor
-	 *
-	 */
-	public function __construct() {
+    /**
+     * Class constructor
+     *
+     */
+    public function __construct()
+    {
         // autoload libraries
         $this->libraries = array_merge([
             'form_validation',
+            'user',
         ], $this->libraries);
-
-        // Load the user library, if required
-        if (self::$requireAuthentication === TRUE)
-            $this->libraries[] = 'user';
 
         $this->models = array_merge([
             'Settings_model',
-            'Locations_model'
+            'Locations_model',
         ], $this->models);
 
         parent::__construct();
 
         // Ensures that a user is logged in, if required
-        if (self::$requireAuthentication === TRUE)
+        if ($this->requireAuthentication === TRUE)
             $this->setUser();
 
         Events::trigger('before_admin_controller');
 
-		if (!isset($this->index_url)) $this->index_url = $this->controller;
-		if (!isset($this->create_url)) $this->create_url = $this->controller . '/edit';
-		if (!isset($this->edit_url)) $this->edit_url = $this->controller . '/edit?id={id}';
-		if (!isset($this->delete_url)) $this->delete_url = $this->controller;
+        if (!isset($this->index_url)) $this->index_url = $this->controller;
+        if (!isset($this->create_url)) $this->create_url = $this->controller.'/edit';
+        if (!isset($this->edit_url)) $this->edit_url = $this->controller.'/edit?id={id}';
+        if (!isset($this->delete_url)) $this->delete_url = $this->controller;
 
-		if (!empty($this->filter) OR !empty($this->default_sort)) $this->setFilter();
-		if (!empty($this->sort)) $this->setSort();
+        if (!empty($this->filter) OR !empty($this->default_sort)) $this->setFilter();
+        if (!empty($this->sort)) $this->setSort();
 
-		// @todo: use new template event binder instead..
-		// Change nav menu if single location mode is activated
+        // @todo: use new template event binder instead..
+        // Change nav menu if single location mode is activated
 //		if (($this->user AND $this->user->isStrictLocation()) OR $this->config->item('site_location_mode') === 'single') {
 //			$this->template->removeNavMenuItem('locations', 'restaurant');
 //			$menu = array('priority' => '1', 'class' => 'locations', 'href' => site_url('locations/edit'), 'title' => lang('menu_setting'), 'permission' => 'Admin.Locations');
@@ -95,27 +93,27 @@ class Admin_Controller extends BaseController
 		$this->form_validation->CI =& $this;
 
         log_message('info', 'Admin Controller Class Initialized');
-	}
+    }
 
     protected function setUser()
     {
-        if (class_exists('User', FALSE)) {
-            // Load the currently logged-in user for convenience
-            if ($this->user->auth() AND $this->user->isLogged()) {
-                $this->currentUser = $this->user;
-            }
-        } else {
-            show_error('User library class must be loaded when you enable $requireAuthentication.');
+        if (!class_exists('User', FALSE))
+            show_error('User library class must be loaded to use Authentication.');
+
+        // Load the currently logged-in user for convenience
+        if ($this->user->auth()) {
+            $this->currentUser = $this->user->getUser();
         }
     }
 
-    public function redirect($uri = NULL) {
-		if (is_numeric($uri)) {
-			$uri = ($this->input->post('save_close') != '1') ? str_replace('{id}', $uri, $this->edit_url) : NULL;
-		}
+    public function redirect($uri = null)
+    {
+        if (is_numeric($uri)) {
+            $uri = ($this->input->post('save_close') != '1') ? str_replace('{id}', $uri, $this->edit_url) : null;
+        }
 
-		parent::redirect($uri);
-	}
+        parent::redirect($uri);
+    }
 }
 
 /* End of file Admin_Controller.php */

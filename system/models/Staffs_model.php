@@ -304,54 +304,15 @@ class Staffs_model extends Model
 	 * Reset a staff password,
 	 * new password is sent to staff email
 	 *
-	 * @param string $user_email
+     * @param string $username
 	 *
 	 * @return bool
 	 */
-	public function resetPassword($user_email = '')
+    public function resetPassword($username = '')
 	{
-		if (!empty($user_email)) {
-			$query = $this->selectRaw('staffs.staff_id, staffs.staff_email, staffs.staff_name, users.username')
-						  ->whereRaw('staffs.staff_email', $user_email)->orWhereRaw('users.username', $user_email);
+        $this->load->model('Users_model');
 
-			$query->joinUserTable();
-
-			if ($row = $query->first()) {
-				$row = $row->toArray();
-
-				//Randome Password
-				$alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
-				$pass = [];
-				for ($i = 0; $i < 8; $i++) {
-					$n = rand(0, strlen($alphabet) - 1);
-					$pass[$i] = $alphabet[$n];
-				}
-
-				$password = implode('', $pass);
-				$this->load->model('Users_model');
-				$affectedRows = $this->Users_model->where(['staff_id', $row['staff_id']])->update([
-					'salt'     => $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9),
-					'password' => sha1($salt . sha1($salt . sha1($password))),
-				]);
-
-				if ($affectedRows > 0) {
-					$mail_data['staff_name'] = $row['staff_name'];
-					$mail_data['staff_username'] = $row['username'];
-					$mail_data['created_password'] = $password;
-
-					$this->load->model('Mail_templates_model');
-					$mail_template = $this->Mail_templates_model->getTemplateData(
-						$this->config->item('mail_template_id'),
-						'password_reset_alert');
-
-					if ($this->sendMail($row['staff_email'], $mail_template, $mail_data)) {
-						return TRUE;
-					}
-				}
-			}
-		}
-
-		return FALSE;
+        return $this->Users_model->resetPassword($username);
 	}
 
 	/**
@@ -388,20 +349,9 @@ class Staffs_model extends Model
 	 */
 	public function sendMail($email, $template, $data = [])
 	{
-		$this->load->library('email');
+        $this->load->model('Users_model');
 
-		$this->email->initialize();
-
-		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
-		$this->email->to(strtolower($email));
-		$this->email->subject($template['subject'], $data);
-		$this->email->message($template['body'], $data);
-
-		if ($this->email->send()) {
-			return TRUE;
-		} else {
-			log_message('debug', $this->email->print_debugger(['headers']));
-		}
+        return $this->Users_model->sendMail($email, $template, $data);
 	}
 
 	/**

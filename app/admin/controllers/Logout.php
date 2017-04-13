@@ -2,6 +2,7 @@
 
 class Logout extends Admin_Controller
 {
+    protected $requireAuthentication = FALSE;
 
     public function index()
     {

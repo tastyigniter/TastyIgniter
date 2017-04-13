@@ -29,6 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property Country $country                     Country Class.
  * @property Currency $currency                   Currency Class.
  * @property Customer $customer                   Customer Class.
+ * @property User $user                           User Class.
  * @property CI_Benchmark $benchmark              This class enables you to mark points and calculate the time difference between them.<br />  Memory consumption can also be displayed.
  * @property TI_Calendar $calendar                This class enables the creation of calendars
  * @property TI_Cart $cart                        Shopping Cart Class
@@ -214,7 +215,7 @@ class BaseController extends MX_Controller
             }, $uri);
         }
 
-        return ($uri === null) ? $this->index_url : $uri;
+        return ($uri === null) ? strtolower($this->controller) : $uri;
     }
 
     public function setWidgets($widgets)

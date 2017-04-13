@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        Igniter\Libraries\Customer.php
  * @link           http://docs.tastyigniter.com
  */
-class Customer
+class Customer extends \Igniter\Core\Auth
 {
 
 	private $customer_id;
@@ -34,44 +34,44 @@ class Customer
 	private $security_answer;
 	private $customer_group_id;
 
-	public function __construct()
-	{
-		$this->CI =& get_instance();
-		$this->CI->load->database();
-		$this->CI->load->driver('session');
-		$this->CI->load->library('user_agent');
-		$this->CI->load->library('cart');
-
-		$this->initialize();
-	}
+//	public function __construct()
+//	{
+//		$this->CI =& get_instance();
+//		$this->CI->load->database();
+//		$this->CI->load->driver('session');
+//		$this->CI->load->library('user_agent');
+//		$this->CI->load->library('cart');
+//
+//		$this->initialize();
+//	}
 
 	public function initialize()
 	{
-		$cust_info = $this->CI->session->userdata('cust_info');
-
-		if (isset($cust_info['customer_id']) AND isset($cust_info['email'])) {
-			$this->CI->db->from('customers');
-			$this->CI->db->where('customer_id', $cust_info['customer_id']);
-			$this->CI->db->where('email', $cust_info['email']);
-			$query = $this->CI->db->get();
-			$result = $query->row_array();
-
-			if ($query->num_rows() === 1) {
-				$this->customer_id = $result['customer_id'];
-				$this->firstname = $result['first_name'];
-				$this->lastname = $result['last_name'];
-				$this->email = strtolower($result['email']);
-				$this->telephone = $result['telephone'];
-				$this->address_id = $result['address_id'];
-				$this->security_question_id = $result['security_question_id'];
-				$this->security_answer = $result['security_answer'];
-				$this->customer_group_id = $result['customer_group_id'];
-
-				$this->updateCart();
-			} else {
-				$this->logout();
-			}
-		}
+//		$cust_info = $this->CI->session->userdata('cust_info');
+//
+//		if (isset($cust_info['customer_id']) AND isset($cust_info['email'])) {
+//			$this->CI->db->from('customers');
+//			$this->CI->db->where('customer_id', $cust_info['customer_id']);
+//			$this->CI->db->where('email', $cust_info['email']);
+//			$query = $this->CI->db->get();
+//			$result = $query->row_array();
+//
+//			if ($query->num_rows() === 1) {
+//				$this->customer_id = $result['customer_id'];
+//				$this->firstname = $result['first_name'];
+//				$this->lastname = $result['last_name'];
+//				$this->email = strtolower($result['email']);
+//				$this->telephone = $result['telephone'];
+//				$this->address_id = $result['address_id'];
+//				$this->security_question_id = $result['security_question_id'];
+//				$this->security_answer = $result['security_answer'];
+//				$this->customer_group_id = $result['customer_group_id'];
+//
+//				$this->updateCart();
+//			} else {
+//				$this->logout();
+//			}
+//		}
 	}
 
 	public function login($email, $password, $override_login = FALSE)

@@ -3,9 +3,12 @@
 class Login extends Admin_Controller
 {
 
+    protected $requireAuthentication = FALSE;
+
     public function index()
     {
         $this->lang->load('login');
+        $this->load->model('Users_model');
 
         if ($this->user->islogged()) {
             $this->redirect('dashboard');
@@ -17,7 +20,13 @@ class Login extends Admin_Controller
         $data['reset_url'] = $this->pageUrl('login/reset');
 
         if ($this->input->post() AND $this->validateLoginForm() === TRUE) {
-            if (!$this->user->login($this->input->post('user'), $this->input->post('password'))) {
+            $remember = (bool)$this->input->post('remember');
+            $credentials = [
+                'username' => $this->input->post('user'),
+                'password' => $this->input->post('password'),
+            ];
+
+            if (!$this->user->validate($credentials, $remember, TRUE)) {
                 $this->alert->set('danger', $this->lang->line('alert_username_not_found'));
                 $this->redirect(current_url());
             } else {
@@ -52,6 +61,8 @@ class Login extends Admin_Controller
 
         $this->template->setTitle($this->lang->line('text_password_reset_title'));
 
+        $data['reset_code'] = $this->uri->rsegment(3);
+
         if ($this->input->post() AND $this->_resetPassword() === TRUE) {
             $this->redirect('login');
         }
@@ -64,16 +75,33 @@ class Login extends Admin_Controller
     protected function _resetPassword()
     {
         if ($this->validateResetForm() === TRUE) {
-            $reset['email'] = $this->input->post('user_email');
+            if (!$this->uri->rsegment(3)) {
+                $username = $this->input->post('username');
+                if ($this->user->resetPassword($username)) {
+                    $this->alert->set('success', $this->lang->line('alert_email_sent'));
 
-            if ($this->Staffs_model->resetPassword($reset['email'])) {        // checks if form validation routines ran successfully
-                $this->alert->set('success', $this->lang->line('alert_success_reset'));
+                    return TRUE;
+                }
 
-                return TRUE;
+                $error = $this->lang->line('alert_email_not_sent');
+            } else {
+                $credentials = [
+                    'reset_code' => $this->uri->rsegment(3),
+                    'password'   => $this->input->post('password'),
+                ];
+
+                if ($this->user->validateResetPassword($credentials)) {
+                    $this->user->completeResetPassword($credentials);
+                    $this->alert->set('success', $this->lang->line('alert_success_reset'));
+
+                    return TRUE;
+                }
+
+                $error = $this->lang->line('alert_failed_reset');
             }
 
-            $this->alert->set('danger', $this->lang->line('alert_email_not_sent'));
-            $this->redirect('login/reset');
+            $this->alert->set('danger', $error);
+            $this->redirect(current_url());
         }
     }
 
@@ -93,9 +121,14 @@ class Login extends Admin_Controller
 
     protected function validateResetForm()
     {
-        $this->form_validation->set_rules('user_email', 'lang:label_username_email', 'xss_clean|trim|required|callback__check_user');    //validate form
+        if ($this->uri->segment(3)) {
+            $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
+            $this->form_validation->set_rules('password_confirm', 'lang:label_password_confirm', 'xss_clean|trim|required');
+        } else {
+            $this->form_validation->set_rules('username', 'lang:label_username', 'xss_clean|trim|required|callback__check_user');
+        }
 
-        if ($this->form_validation->run() === TRUE) {                                        // checks if form validation routines ran successfully
+        if ($this->form_validation->run() === TRUE) {
             return TRUE;
         } else {
             return FALSE;
@@ -104,7 +137,7 @@ class Login extends Admin_Controller
 
     public function _check_user($str)
     {
-        if (!$this->Staffs_model->validateStaff($str)) {
+        if (!$this->Users_model->validateUser($str)) {
             $this->form_validation->set_message('_check_user', $this->lang->line('error_no_user_found'));
 
             return FALSE;

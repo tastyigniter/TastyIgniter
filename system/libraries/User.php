@@ -21,8 +21,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        Igniter\Libraries\User.php
  * @link           http://docs.tastyigniter.com
  */
-class User
+class User extends \Igniter\Core\Auth
 {
+
+    protected $model = 'Users_model';
+    protected $identifier = 'username';
 
 	private $is_logged = FALSE;
 	private $user_id;
@@ -44,74 +47,35 @@ class User
 
 	public function __construct()
 	{
-		$this->CI =& get_instance();
-		$this->CI->load->database();
-
-		$this->initialize();
+        parent::__construct();
+        $this->initialize();
 	}
 
 	public function initialize()
 	{
-		$user_info = $this->CI->session->userdata('user_info');
+        if (is_null($userModel = $this->user()))
+            return;
 
-		if (!empty($user_info['user_id']) AND !empty($user_info['username']) AND !empty($user_info['email'])) {
-			$this->CI->db->from('users');
-			$this->CI->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
-			$this->CI->db->join('staff_groups', 'staff_groups.staff_group_id = staffs.staff_group_id', 'left');
-			$this->CI->db->join('locations', 'locations.location_id = staffs.staff_location_id', 'left');
+        foreach ($userModel->toArray() as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
 
-			$this->CI->db->where('user_id', $user_info['user_id']);
-			$this->CI->db->where('username', $user_info['username']);
-			$this->CI->db->where('staff_email', $user_info['email']);
-			$this->CI->db->where('staff_status', '1');
-			$query = $this->CI->db->get();
+        $this->is_logged = TRUE;
+    }
 
-			if ($query->num_rows() === 1) {
-				foreach ($query->row_array() as $key => $value) {
-					if (property_exists($this, $key)) {
-						$this->$key = $value;
-					}
-				}
-
-				$this->setPermissions();
-
-				$this->is_logged = TRUE;
-			}
-		}
-
-		if (!$this->is_logged) $this->logout();
-	}
-
-	public function login($user, $password)
-	{
-		$this->CI->db->from('users');
-		$this->CI->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
-
-		$this->CI->db->where('username', strtolower($user));
-		$this->CI->db->where('password', 'SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1("' . $password . '")))))', FALSE);
-		$this->CI->db->where('staff_status', '1');
-
-		$query = $this->CI->db->get();
-
-		//Login Successful
-		if ($query->num_rows() === 1) {
-			$row = $query->row_array();
-
-			$user_data = [
-				'user_id'  => $row['user_id'],
-				'username' => $row['username'],
-				'email'    => $row['staff_email'],
-			];
-
-			$this->CI->session->set_userdata('user_info', $user_data);
-
-			$this->initialize();
-
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+    /**
+     * Redirect if the current user is not authenticated.
+     */
+    public function auth()
+    {
+        if (!$this->check()) {
+            $this->alert->set('danger', $this->lang->line('alert_user_not_logged_in'));
+            $prepend = empty($uri) ? '' : '?redirect='.str_replace(site_url(), '/', current_url());
+            redirect(admin_url('login'.$prepend));
+        }
+    }
 
 	public function restrict($permission, $uri = '')
 	{
@@ -126,12 +90,12 @@ class User
 
 			// If previous page and current page are the same, but the user no longer
 			// has permission, redirect to site URL to prevent an infinite loop.
-			if (empty($uri) OR $uri === current_url() AND !$this->CI->input->post()) {
+            if (empty($uri) OR $uri === current_url() AND !$this->input->post()) {
 				$uri = site_url();
 			}
 		}
 
-		if (!$this->CI->input->is_ajax_request()) {  // remove later
+        if (!$this->input->is_ajax_request()) {  // remove later
 			redirect($uri);
 		}
 	}
@@ -148,7 +112,7 @@ class User
 			$context = substr($permission, strpos($permission, '.') + 1);
 			$action = end($this->permission_action);
 
-			$this->CI->alert->set('warning', sprintf($this->CI->lang->line('alert_location_restricted'), $action, $context));
+            $this->alert->set('warning', sprintf($this->lang->line('alert_location_restricted'), $action, $context));
 			if (!$redirect) {
 				return TRUE;
 			} else {
@@ -159,20 +123,9 @@ class User
 		return FALSE;
 	}
 
-	public function auth()
-	{
-		$uri = $this->CI->uri->rsegment(1);
-
-		if (!$this->isLogged() AND !in_array($uri, ['login', 'logout'])) {
-			$this->CI->alert->set('danger', $this->CI->lang->line('alert_user_not_logged_in'));
-			$prepend = empty($uri) ? '' : '?redirect=' . str_replace(site_url(), '/', current_url());
-            redirect(admin_url('login' . $prepend));
-		}
-	}
-
 	public function isLogged()
 	{
-		return $this->is_logged;
+        return $this->check();
 	}
 
 	public function getId()
@@ -202,12 +155,12 @@ class User
 
 	public function getLocationId()
 	{
-		return !empty($this->location_id) ? $this->location_id : $this->CI->config->item('default_location_id');
+        return !empty($this->location_id) ? $this->location_id : $this->config->item('default_location_id');
 	}
 
 	public function getLocationName()
 	{
-		return !empty($this->location_name) ? $this->location_name : $this->CI->config->item('location_name', 'main_address');
+        return !empty($this->location_name) ? $this->location_name : $this->config->item('location_name', 'main_address');
 	}
 
 	public function staffGroup()
@@ -222,7 +175,7 @@ class User
 
 	public function isStrictLocation()
 	{
-		return ($this->location_access == '1' OR $this->CI->config->item('site_location_mode') === 'single') ? TRUE : FALSE;
+        return ($this->location_access == '1' OR $this->config->item('site_location_mode') === 'single') ? TRUE : FALSE;
 	}
 
 	public function canAccessCustomerAccount()
@@ -233,8 +186,8 @@ class User
 	public function unreadMessageTotal()
 	{
 		if (empty($this->unread)) {
-			$this->CI->load->model('Messages_model');
-			$unread = $this->CI->Messages_model->getUnreadCount($this->staff_id);
+            $this->load->model('Messages_model');
+            $unread = $this->Messages_model->getUnreadCount($this->staff_id);
 			$this->unread = ($unread < 1) ? '' : $unread;
 		}
 
@@ -253,8 +206,8 @@ class User
 		$group_permissions = (!empty($this->permissions)) ? @unserialize($this->permissions) : null;
 
 		if (is_array($group_permissions)) {
-			$this->CI->load->model('Permissions_model');
-			$permissions = $this->CI->Permissions_model->getPermissionsByIds();
+            $this->load->model('Permissions_model');
+            $permissions = $this->Permissions_model->getPermissionsByIds();
 
 			foreach ($permissions as $permission_id => $permission) {
 				$this->available_actions[$permission['name']] = $permissions[$permission_id]['action'];
@@ -289,7 +242,7 @@ class User
 				if ($display_error) {
 					$context = substr($perm, strpos($perm, '.') + 1);
 
-					$this->CI->alert->set('warning', sprintf($this->CI->lang->line('alert_user_restricted'), $value, $context));
+                    $this->alert->set('warning', sprintf($this->lang->line('alert_user_restricted'), $value, $context));
 				}
 
 				return FALSE;
@@ -305,15 +258,15 @@ class User
 			$this->permission_action[] = strtolower(substr($permission, strrpos($permission, '.') + 1));
 		} else {
 			// Specify the requested action if not present, based on the $_SERVER REQUEST_METHOD
-			if ($this->CI->input->server('REQUEST_METHOD') === 'POST') {
-				if ($this->CI->input->post('delete')) {
+            if ($this->input->server('REQUEST_METHOD') === 'POST') {
+                if ($this->input->post('delete')) {
 					$this->permission_action = ['access', 'delete'];
-				} else if (is_numeric($this->CI->input->get('id'))) {
+                } else if (is_numeric($this->input->get('id'))) {
 					$this->permission_action = ['access', 'manage'];
 				} else {
 					$this->permission_action = ['access', 'add'];
 				}
-			} else if ($this->CI->input->server('REQUEST_METHOD') === 'GET') {
+            } else if ($this->input->server('REQUEST_METHOD') === 'GET') {
 				$this->permission_action = ['access'];
 			}
 		}
@@ -323,7 +276,7 @@ class User
 
 	public function logout()
 	{
-		$this->CI->session->unset_userdata('user_info');
+        parent::logout();
 
 		$this->is_logged = FALSE;
 		$this->user_id = '';
