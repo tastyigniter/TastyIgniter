@@ -58,6 +58,26 @@ class Mail_templates_data_model extends Model
 		return mdate('%d %M %y - %H:%i', strtotime($value));
 	}
 
+    /**
+     * Find a single mail template by template id and code
+     *
+     * @param $template_id
+     * @param $template_code
+     *
+     * @return mixed
+     */
+    public function getTemplateData($template_id, $template_code)
+    {
+        if (is_numeric($template_id) AND is_string($template_code)) {
+            $query = $this->where('mail_templates.template_id', $template_id)
+                          ->leftJoin('mail_templates', 'mail_templates.template_id', '=', 'mail_templates_data.template_id')
+                          ->where('code', $template_code)
+                          ->where('mail_templates.status', '1');
+
+            return $query->first();
+        }
+    }
+
 }
 
 /* End of file Mail_templates_data_model.php */

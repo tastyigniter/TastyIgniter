@@ -46,6 +46,8 @@ class Mail_templates_model extends Model
 
 	const UPDATED_AT = 'date_updated';
 
+    public $defaultTemplateId = 11;
+
 	/**
 	 * Scope a query to only include enabled mail template
 	 *
@@ -97,6 +99,25 @@ class Mail_templates_model extends Model
 
 		return $result;
 	}
+
+    /**
+     * Find the default mail template by template code
+     *
+     * @param $template_code
+     *
+     * @return mixed
+     */
+    public function getDefaultTemplateData($template_code)
+    {
+        $this->load->model('Mail_templates_data_model');
+        $template_id = $this->config->item('mail_template_id');
+        $found = $this->Mail_templates_data_model->getTemplateData($template_id, $template_code);
+
+        if (!$found)
+            $template_id = $this->defaultTemplateId;
+
+        return $this->getTemplateData($template_id, $template_code);
+    }
 
 	/**
 	 * Find a single mail template by template id and code
