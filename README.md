@@ -24,7 +24,8 @@ extensions which may be managed via Composer.
 Installation
 ------------
 
-Composer Merge Plugin requires [Composer 1.0.0](https://getcomposer.org/) or newer.
+Composer Merge Plugin requires [Composer 1.0.0](https://getcomposer.org/) or
+newer.
 
 ```
 $ composer require wikimedia/composer-merge-plugin
@@ -121,9 +122,17 @@ made by earlier files. Files are loaded in the order specified by the
 
 ### ignore-duplicates
 
-By default, Composer's conflict resolution engine is used to determine which version of a package should be installed when multiple files specify the same package. An `"ignore-duplicates": true` setting can be provided to change to a "first version specified wins" conflict resolution strategy. In this mode, duplicate package declarations found in merged files will be ignored in favor of the declarations made by earlier files. Files are loaded in the order specified by the `include` setting with globbed files being processed in alphabetical order.
+By default, Composer's conflict resolution engine is used to determine which
+version of a package should be installed when multiple files specify the same
+package. An `"ignore-duplicates": true` setting can be provided to change to
+a "first version specified wins" conflict resolution strategy. In this mode,
+duplicate package declarations found in merged files will be ignored in favor
+of the declarations made by earlier files. Files are loaded in the order
+specified by the `include` setting with globbed files being processed in
+alphabetical order.
 
-Note: `"replace": true` and `"ignore-duplicates": true` modes are mutually exclusive. If both are set, `"ignore-duplicates": true` will be used.
+Note: `"replace": true` and `"ignore-duplicates": true` modes are mutually
+exclusive. If both are set, `"ignore-duplicates": true` will be used.
 
 ### merge-dev
 
@@ -196,8 +205,8 @@ GitHub as well.
 License
 -------
 
-Composer Merge plugin is licensed under the MIT license. See the [`LICENSE`](LICENSE)
-file for more details.
+Composer Merge plugin is licensed under the MIT license. See the
+[`LICENSE`](LICENSE) file for more details.
 
 
 ---
