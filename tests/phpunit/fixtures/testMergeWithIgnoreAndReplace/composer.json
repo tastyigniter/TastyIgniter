@@ -1,0 +1,21 @@
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "./.."
+    }
+  ],
+  "require": {
+    "wikimedia/composer-merge-plugin": "*@dev",
+    "monolog/monolog": "~1.0"
+  },
+  "extra": {
+    "merge-plugin": {
+      "ignore-duplicates" : true,
+      "replace": true,
+      "include": [
+        "composer.local.json"
+      ]
+    }
+  }
+}

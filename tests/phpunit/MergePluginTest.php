@@ -188,6 +188,82 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+    /**
+     * Given a root package with requires
+     *   and a composer.local.json with requires
+     *   and the same package is listed in multiple files
+     *   and "ignore-duplicates" is true
+     * When the plugin is run
+     * Then the root package should win.
+     */
+    public function testMergeWithIgnore()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(2, count($requires));
+                $that->assertArrayHasKey('monolog/monolog', $requires);
+                $that->assertEquals(
+                    '~1.0',
+                    $requires['monolog/monolog']->getPrettyConstraint()
+                );
+            }
+        );
+
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
+        $root->getSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
+    /**
+     * Given a root package with requires
+     *   and a composer.local.json with requires
+     *   and the same package is listed in multiple files
+     *   and "ignore-duplicates" is true
+     *   and "replace" is true
+     * When the plugin is run
+     * Then the root package should win.
+     */
+    public function testMergeWithIgnoreAndReplace()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(2, count($requires));
+                $that->assertArrayHasKey('monolog/monolog', $requires);
+                $that->assertEquals(
+                    '~1.0',
+                    $requires['monolog/monolog']->getPrettyConstraint()
+                );
+            }
+        );
+
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
+        $root->getSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
 
     /**
      * Given a root package with no requires
