@@ -1,28 +1,8 @@
 .DS_Store
 .idea
 
-admin/cache/*
-!admin/cache/.htaccess
-
-assets/images/captcha/*
-
-assets/images/thumbs/*
-
-assets/images/data/*
-!assets/images/data/no_photo.png
-!assets/images/data/flags
-
-assets/downloads/*
-
-extensions
-!extensions/starter
-
-main/cache/*
-!main/cache/.htaccess
-
-system/tastyigniter/logs/*
-system/tastyigniter/session/*
-system/tastyigniter/migrations/backups/*
+extensions/*
+!extensions/demo
 
 # Ignore all vendor files included by composer and the lock file
 vendor/*

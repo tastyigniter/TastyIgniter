@@ -1,0 +1,8 @@
+downloads/*
+
+images/data/*
+!images/data/no_photo.png
+!images/data/slide.jpg
+!images/data/flags
+
+images/thumbs/*
