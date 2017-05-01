@@ -1,2 +1,5 @@
-*
+cache/*
+logs/*
+public/captcha/*
+session/*
 !.gitignore
