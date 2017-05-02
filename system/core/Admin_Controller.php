@@ -35,6 +35,21 @@ class Admin_Controller extends BaseController
     protected $currentUser;
 
     /**
+     * @var array Filters for list columns
+     */
+    public $filter = [];
+
+    /**
+     * @var array Default sort
+     */
+    public $default_sort = [];
+
+    /**
+     * @var array Sorting columns
+     */
+    public $sort = [];
+
+    /**
      * @var string Link URL for the create page
      */
     public $create_url = null;
