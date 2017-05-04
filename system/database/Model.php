@@ -37,8 +37,23 @@ use Igniter\Database\Manager as DatabaseManager;
  */
 class Model extends EloquentModel
 {
+    use \Igniter\Traits\ExtendableTrait;
 
-	public $timestamps = FALSE;
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = null;
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = null;
+
+    public $timestamps = FALSE;
 
 	protected $guarded = [];
 
@@ -88,19 +103,10 @@ class Model extends EloquentModel
 	 */
 	protected $casts = [];
 
-	/**
-	 * The name of the "created at" column.
-	 *
-	 * @var string
-	 */
-	const CREATED_AT = null;
-
-	/**
-	 * The name of the "updated at" column.
-	 *
-	 * @var string
-	 */
-	const UPDATED_AT = null;
+    /**
+     * @var array The array of models booted events.
+     */
+    protected static $eventsBooted = [];
 
 	public function __construct(array $attributes = [])
 	{
@@ -109,7 +115,42 @@ class Model extends EloquentModel
 		$this->setPerPage($this->config->item('page_limit'));
 
 		parent::__construct($attributes);
-	}
+        $this->bootNicerEvents();
+        $this->extendableConstruct();
+        $this->fill($attributes);
+    }
+
+    /**
+     * Bind some nicer events to this model, in the format of method overrides.
+     */
+    protected function bootNicerEvents()
+    {
+        $class = get_called_class();
+
+        if (isset(static::$eventsBooted[$class])) {
+            return;
+        }
+
+        $radicals = ['creat', 'sav', 'updat', 'delet'];
+        $hooks = ['before' => 'ing', 'after' => 'ed'];
+
+        foreach ($radicals as $radical) {
+            foreach ($hooks as $hook => $event) {
+
+                $eventMethod = $radical.$event; // saving / saved
+                $method = $hook.ucfirst($radical).'e'; // beforeSave / afterSave
+
+                self::$eventMethod(function ($model) use ($method) {
+                    if ($model->methodExists($method))
+                        return $model->$method();
+                });
+            }
+        }
+
+        // @todo: Hook to boot events
+
+        static::$eventsBooted[$class] = TRUE;
+    }
 
 	public function setUpdatedAt($value)
 	{
