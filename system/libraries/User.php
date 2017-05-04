@@ -27,23 +27,23 @@ class User extends \Igniter\Core\Auth
     protected $model = 'Users_model';
     protected $identifier = 'username';
 
-	private $is_logged = FALSE;
-	private $user_id;
-	private $username;
-	private $staff_id;
-	private $permissions = [];
-	private $permission_action = [];
-	private $permitted_actions = [];
-	private $available_actions = [];
-	private $staff_name;
-	private $staff_email;
-	private $staff_group_name;
-	private $staff_group_id;
-	private $location_id;
-	private $location_name;
-	private $customer_account_access;
-	private $location_access;
-	private $unread;
+    protected $is_logged = FALSE;
+    protected $user_id;
+    protected $username;
+    protected $staff_id;
+    protected $permissions = [];
+    protected $permission_action = [];
+    protected $permitted_actions = [];
+    protected $available_actions = [];
+    protected $staff_name;
+    protected $staff_email;
+    protected $staff_group_name;
+    protected $staff_group_id;
+    protected $location_id;
+    protected $location_name;
+    protected $customer_account_access;
+    protected $location_access;
+    protected $unread;
 
 	public function __construct()
 	{

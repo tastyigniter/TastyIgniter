@@ -70,7 +70,9 @@ class Users_model extends Model
             'reset_time' => mdate('%Y-%m-%d %H:%i:%a', time()),
         ];
 
-        $this->newQuery()->where('username', $username)->update($update);
+        $updated = $this->newQuery()->where('username', $username)->update($update);
+        if ($updated < 1)
+            return FALSE;
 
         $mail_data['staff_name'] = $userModel->staff_name;
         $mail_data['staff_username'] = $userModel->username;
@@ -78,7 +80,6 @@ class Users_model extends Model
 
         $this->load->model('Mail_templates_model');
         $mail_template = $this->Mail_templates_model->getDefaultTemplateData('password_reset_request_alert');
-
         $this->sendMail($this->getReminderEmail(), $mail_template, $mail_data);
 
         return TRUE;
@@ -125,6 +126,11 @@ class Users_model extends Model
      */
     public function updatePassword()
     {
+    }
+
+    public function getReminderEmail()
+    {
+        return $this->staff_email;
     }
 
     /**

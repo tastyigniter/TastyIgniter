@@ -25,6 +25,8 @@ use Igniter\Database\Model;
  */
 class Customers_model extends Model
 {
+    use \Igniter\Traits\UserTrait;
+
     /**
      * @var string The database table name
      */
@@ -285,37 +287,71 @@ class Customers_model extends Model
      */
     public function resetPassword($customer_id, $reset = [])
     {
-        if (is_numeric($customer_id) AND !empty($reset)) {
-            $queryBuilder = $this->where('customer_id', $customer_id);
-            $queryBuilder->where('email', strtolower($reset['email']));
-            if (!empty($reset['security_question_id']) AND !empty($reset['security_answer'])) {
-                $queryBuilder->where('security_question_id', $reset['security_question_id']);
-                $queryBuilder->where('security_answer', $reset['security_answer']);
-            }
+        if (!is_numeric($customer_id) OR !isset($reset['email']))
+            return FALSE;
 
-            if ($row = $queryBuilder->isEnabled()->firstAsArray()) {
-                $password = $this->getRandomString();
-                $data['salt'] = $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9);
-                $data['password'] = sha1($salt.sha1($salt.sha1($password)));
+        $email = strtolower($reset['email']);
+        $query = $this->where('customer_id', $customer_id);
+        $query->where('email', $email);
 
-                $queryBuilder = $this->where('email', $row['email'])->where('customer_id', $row['customer_id']);
-                if ($queryBuilder->update($data) > 0) {
-                    $mail_data['first_name'] = $row['first_name'];
-                    $mail_data['last_name'] = $row['last_name'];
-                    $mail_data['created_password'] = $password;
-                    $mail_data['account_login_link'] = root_url('account/login');
+        if (!$customerModel = $query->isEnabled()->first())
+            return FALSE;
 
-                    $this->load->model('Mail_templates_model');
-                    $mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'password_reset');
+        $update = [
+            'reset_code' => $this->createResetCode($customerModel),
+            'reset_time' => mdate('%Y-%m-%d %H:%i:%a', time()),
+        ];
 
-                    $this->sendMail($row['email'], $mail_template, $mail_data);
+        $updated = $this->newQuery()->where('email', $email)->update($update);
+        if ($updated < 1)
+            return FALSE;
 
-                    return TRUE;
-                }
-            }
-        }
+        $mail_data['first_name'] = $customerModel->first_name;
+        $mail_data['last_name'] = $customerModel->last_name;
+        $mail_data['reset_link'] = root_url('account/login'.$update['reset_code']);
+        $mail_data['account_login_link'] = root_url('account/login');
 
-        return FALSE;
+        $this->load->model('Mail_templates_model');
+        $mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'password_reset_request');
+        $this->sendMail($email, $mail_template, $mail_data);
+
+        return TRUE;
+    }
+
+    /**
+     * Sets the new password on customer requested reset
+     *
+     * @param $identity
+     * @param $credentials
+     *
+     * @return bool
+     */
+    public function completeResetPassword($identity, $credentials)
+    {
+        $code = $credentials['reset_code'];
+        $password = $credentials['password'];
+
+        $customerModel = $this->newQuery()
+                              ->where($this->getAuthIdentifierName(), $identity)
+                              ->where('reset_code', $code)->first();
+
+        if (is_null($customerModel))
+            return FALSE;
+
+        $customerModel->password = $this->getHasher()->make($password);
+        $customerModel->reset_code = null;
+        $customerModel->save();
+
+        $mail_data['first_name'] = $customerModel->first_name;
+        $mail_data['last_name'] = $customerModel->last_name;
+        $mail_data['created_password'] = str_repeat('*', strlen($password));
+        $mail_data['account_login_link'] = root_url('account/login');
+
+        $this->load->model('Mail_templates_model');
+        $mail_template = $this->Mail_templates_model->getDefaultTemplateData('password_reset');
+        $this->sendMail($this->getReminderEmail(), $mail_template, $mail_data);
+
+        return TRUE;
     }
 
     /**
@@ -365,8 +401,7 @@ class Customers_model extends Model
         $save['address_id'] = isset($save['address_id']) ? $save['address_id'] : '';
 
         if (isset($save['password'])) {
-            $save['salt'] = $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9);
-            $save['password'] = sha1($salt.sha1($salt.sha1($save['password'])));
+            $save['password'] = $this->getHasher()->make($save['password']);
         }
 
         $customerModel = $this->findOrNew($customer_id);
@@ -472,6 +507,11 @@ class Customers_model extends Model
                 return $affected_rows;
             }
         }
+    }
+
+    public function getReminderEmail()
+    {
+        return $this->email;
     }
 
     /**

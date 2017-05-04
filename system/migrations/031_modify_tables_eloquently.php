@@ -20,6 +20,8 @@ if (!defined('BASEPATH')) exit('No direct access allowed');
 class Migration_modify_tables_eloquently extends TI_Migration {
 
     public function up() {
+        $this->db->query('ALTER TABLE '.$this->db->dbprefix('customers').' MODIFY security_question_id INT(11) DEFAULT NULL');
+        $this->db->query('ALTER TABLE '.$this->db->dbprefix('customers').' MODIFY security_answer VARCHAR(32) DEFAULT NULL');
 		$this->db->query('ALTER TABLE ' . $this->db->dbprefix('customers') . ' MODIFY ip_address VARCHAR(40) DEFAULT NULL');
 		$this->db->query('ALTER TABLE ' . $this->db->dbprefix('customers') . ' MODIFY cart TEXT DEFAULT NULL');
 

@@ -62,9 +62,6 @@ trait UserTrait
     public function getAuthIdentifierName()
     {
         return $this->primaryKey;
-        $model = get_class($this);
-
-        return singular(substr($model, 0, strpos($model, '_model'))).'_id';
     }
 
     /**
@@ -199,11 +196,6 @@ trait UserTrait
             'password' => $hashedPassword,
             'salt'     => null,
         ]);
-    }
-
-    public function getReminderEmail()
-    {
-        return $this->staff_email;
     }
 
     public function createResetCode($userModel)

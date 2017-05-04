@@ -494,6 +494,9 @@ class Auth
      */
     public function createModel()
     {
+        if (!isset($this->model))
+            show_error('Required property [model] missing in %s library', get_called_class());
+
         if (!class_exists($this->model, FALSE))
             $this->load->model($this->model);
 
