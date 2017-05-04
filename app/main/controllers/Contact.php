@@ -83,7 +83,7 @@ class Contact extends Main_Controller
 			$mail_data['contact_message'] = nl2br($this->input->post('comment'));
 
 			$this->load->model('Mail_templates_model');
-			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'contact');
+			$mail_template = $this->Mail_templates_model->getDefaultTemplateData('contact');
 
 			$this->email->from(strtolower($email), ucwords($full_name));
 			$this->email->to(strtolower($this->config->item('site_email')));

@@ -402,7 +402,7 @@ class Reservations_model extends Model
 				$mail_data['status_comment'] = !empty($update['status_comment']) ? $update['status_comment'] : $this->lang->line('text_no_comment');
 
 				$this->load->model('Mail_templates_model');
-				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation_update');
+                $mail_template = $this->Mail_templates_model->getDefaultTemplateData('reservation_update');
 				$update['notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
 			}
 
@@ -481,17 +481,17 @@ class Reservations_model extends Model
 
 		$notify = '0';
 		if ($this->config->item('customer_reserve_email') == '1' OR in_array('customer', $config_reservation_email)) {
-			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation');
+            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('reservation');
 			$notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
 		}
 
 		if (!empty($mail_data['location_email']) AND ($this->config->item('location_reserve_email') == '1' OR in_array('location', $config_reservation_email))) {
-			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation_alert');
+            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('reservation_alert');
 			$this->sendMail($mail_data['location_email'], $mail_template, $mail_data);
 		}
 
 		if (in_array('admin', $config_reservation_email)) {
-			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation_alert');
+            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('reservation_alert');
 			$this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
 		}
 

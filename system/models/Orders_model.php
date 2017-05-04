@@ -293,7 +293,7 @@ class Orders_model extends Model
 				$mail_data['status_comment'] = !empty($update['status_comment']) ? $update['status_comment'] : $this->lang->line('text_no_comment');
 
 				$this->load->model('Mail_templates_model');
-				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_update');
+                $mail_template = $this->Mail_templates_model->getDefaultTemplateData('order_update');
 				$update['status_notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
 			}
 
@@ -666,17 +666,17 @@ class Orders_model extends Model
 
 		$notify = '0';
 		if ($this->config->item('customer_order_email') == '1' OR in_array('customer', $config_order_email)) {
-			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order');
+            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('order');
 			$notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
 		}
 
 		if (!empty($mail_data['location_email']) AND ($this->config->item('location_order_email') == '1' OR in_array('location', $config_order_email))) {
-			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_alert');
+            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('order_alert');
 			$this->sendMail($mail_data['location_email'], $mail_template, $mail_data);
 		}
 
 		if (in_array('admin', $config_order_email)) {
-			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_alert');
+            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('order_alert');
 			$this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
 		}
 
