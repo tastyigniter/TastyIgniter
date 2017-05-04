@@ -34,21 +34,19 @@ class TI_Form_validation extends CI_Form_validation
 		if (is_array($field)) {
 			foreach ($field as $rule) {
 				if (!isset($rule['field'])) {
-					if (isset($rule[0]))
+                    $temp_rule = [];
+                    if (isset($rule[0]))
 						$temp_rule['field'] = $rule[0];
 					if (isset($rule[1]))
 						$temp_rule['label'] = $rule[1];
 					if (isset($rule[2]))
 						$temp_rule['rules'] = $rule[2];
-
-					$rule = $temp_rule;
+                    $_field[] = $temp_rule;
 				}
+            }
 
-				$_field[] = $rule;
-			}
-
-			$field = !empty($_field) ? $_field : $field;
-		}
+            $field = !empty($_field) ? $_field : $field;
+        }
 
 		return parent::set_rules($field, $label, $rules, $errors);
 	}
@@ -68,7 +66,7 @@ class TI_Form_validation extends CI_Form_validation
 	{
 		sscanf($field, '%[^.].%[^.]', $table, $field);
 
-		return isset($this->CI->db)
+        return is_object($this->CI->db)
 			? ($this->CI->db->limit(1)->get_where($table, [$field => $str])->num_rows() === 0)
 			: FALSE;
 	}
