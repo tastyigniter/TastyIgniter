@@ -1,47 +1,25 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang = [
-    'text_heading'            => 'Address Book',
-    'text_my_details'         => 'My Details',
-    'text_default_address'    => 'My Default Address',
-    'text_cart'               => 'My Shopping Cart',
-    'text_orders'             => 'My Orders',
-    'text_reservations'       => 'My Reservations',
-    'text_inbox'              => 'My Inbox',
-    'text_edit'               => 'EDIT',
-    'text_checkout'           => 'CHECKOUT NOW',
-    'text_change_password'    => 'Change Password',
-    'text_no_default_address' => 'You don\'t have a default address',
-    'text_no_cart_items'      => 'There are no menus added in your cart.',
-    'text_no_orders'          => 'There are no orders available to show.',
-    'text_no_reservations'    => 'There are no reservations available to show.',
-    'text_no_inbox'           => 'There are no messages available to show',
-    'label_first_name'        => 'First Name:',
-    'label_last_name'         => 'Last Name:',
-    'label_email'             => 'Email Address:',
-    'label_password'          => 'Password:',
-    'label_telephone'         => 'Telephone:',
-    'label_s_question'        => 'Security Question:',
-    'label_s_answer'          => 'Security Answer:',
-    'column_cart_items'       => 'Total Items',
-    'column_cart_total'       => 'Total Amount',
-    'column_id'               => 'ID',
-    'column_date'             => 'Date/Time',
-    'column_status'           => 'Status',
-    'column_subject'          => 'Subject',
-    'text_my_account'         => 'My Account',
-    'text_edit_heading'       => 'Address Book Edit',
-    'text_no_address'         => 'You don\'t have any stored address(s)',
-    'text_delete'             => 'DELETE',
-    'button_back'             => 'Back',
-    'button_add'              => 'Add New Address',
-    'button_update'           => 'Update Address',
-    'label_address_1'         => 'Address 1',
-    'label_address_2'         => 'Address 2',
-    'label_city'              => 'City',
-    'label_state'             => 'State',
-    'label_postcode'          => 'Postcode',
-    'label_country'           => 'Country',
-    'alert_updated_success'   => '<p class="alert-success">Address added/updated successfully.</p>',
-    'alert_deleted_success'   => '<p class="alert-success">Address deleted successfully.</p>',
-];
+$lang['text_heading'] 			        = 'Address Book';
+$lang['text_my_account'] 		        = 'My Account';
+$lang['text_edit_heading'] 		        = 'Address Book Edit';
+$lang['text_no_address'] 		        = 'You don\'t have any stored address(s)';
+$lang['text_edit'] 				        = 'EDIT';
+$lang['text_delete'] 				    = 'DELETE';
+
+$lang['button_back'] 			        = 'Back';
+$lang['button_add'] 			        = 'Add New Address';
+$lang['button_update'] 			        = 'Update Address';
+
+$lang['label_address_1'] 		        = 'Address 1';
+$lang['label_address_2'] 		        = 'Address 2';
+$lang['label_city'] 			        = 'City';
+$lang['label_state'] 			        = 'State';
+$lang['label_postcode'] 		        = 'Postcode';
+$lang['label_country'] 			        = 'Country';
+
+$lang['alert_updated_success'] 			= '<p class="alert-success">Address added/updated successfully.</p>';
+$lang['alert_deleted_success'] 			= '<p class="alert-success">Address deleted successfully.</p>';
+
+/* End of file address_lang.php */
+/* Location: ./main/language/english/main/address_lang.php */

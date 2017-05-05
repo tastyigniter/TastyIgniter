@@ -1,64 +1,22 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang = [
-    'text_heading'            => 'My Inbox',
-    'text_my_details'         => 'My Details',
-    'text_default_address'    => 'My Default Address',
-    'text_cart'               => 'My Shopping Cart',
-    'text_orders'             => 'My Orders',
-    'text_reservations'       => 'My Reservations',
-    'text_inbox'              => 'My Inbox',
-    'text_edit'               => 'EDIT',
-    'text_checkout'           => 'CHECKOUT NOW',
-    'text_change_password'    => 'Change Password',
-    'text_no_default_address' => 'You don\'t have a default address',
-    'text_no_cart_items'      => 'There are no menus added in your cart.',
-    'text_no_orders'          => 'There are no orders available to show.',
-    'text_no_reservations'    => 'There are no reservations available to show.',
-    'text_no_inbox'           => 'There are no messages available to show',
-    'label_first_name'        => 'First Name',
-    'label_last_name'         => 'Last Name',
-    'label_email'             => 'Email Address',
-    'label_password'          => 'New Password',
-    'label_telephone'         => 'Telephone',
-    'label_s_question'        => 'Security Question',
-    'label_s_answer'          => 'Security Answer',
-    'column_cart_items'       => 'Total Items',
-    'column_cart_total'       => 'Total Amount',
-    'column_id'               => 'ID',
-    'column_date'             => 'Date',
-    'column_status'           => 'Status',
-    'column_subject'          => 'Subject',
-    'text_my_account'         => 'My Account',
-    'text_edit_heading'       => 'Address Book Edit',
-    'text_no_address'         => 'You don\'t have any stored address(s)',
-    'text_delete'             => 'DELETE',
-    'button_back'             => 'Back',
-    'button_add'              => 'Add New Address',
-    'button_update'           => 'Update Address',
-    'label_address_1'         => 'Address 1',
-    'label_address_2'         => 'Address 2',
-    'label_city'              => 'City',
-    'label_state'             => 'State',
-    'label_postcode'          => 'Postcode',
-    'label_country'           => 'Country',
-    'alert_updated_success'   => '<p class="alert-success">Details updated successfully.</p>',
-    'alert_deleted_success'   => 'Message deleted successfully.',
-    'text_details'            => 'Edit your details',
-    'text_password_heading'   => 'Change Password',
-    'text_select'             => ' please select ',
-    'button_subscribe'        => 'Subscribe',
-    'button_save'             => 'Save Details',
-    'label_password_confirm'  => 'New Password Confirm',
-    'label_old_password'      => 'Old Password',
-    'label_newsletter'        => 'Keep me up-to-date with offers by email.',
-    'error_password'          => 'The %s you entered does not match.',
-    'text_view_heading'       => 'My Inbox Message',
-    'text_empty'              => 'There are no message(s) in your inbox.',
-    'text_view'               => 'View',
-    'column_time'             => 'Time',
-    'column_text'             => 'Text',
-    'column_action'           => 'Action(s)',
-    'button_delete'           => 'Delete Message',
-    'alert_unknown_error'     => 'Sorry, an error has occurred.',
-];
+$lang['text_heading'] 			= 'My Inbox';
+$lang['text_my_account'] 		= 'My Account';
+$lang['text_view_heading'] 		= 'My Inbox Message';
+$lang['text_empty'] 			= 'There are no message(s) in your inbox.';
+$lang['text_view'] 				= 'View';
+
+$lang['column_date'] 			= 'Date';
+$lang['column_time'] 			= 'Time';
+$lang['column_subject'] 		= 'Subject';
+$lang['column_text'] 			= 'Text';
+$lang['column_action'] 			= 'Action(s)';
+
+$lang['button_back'] 			= 'Back';
+$lang['button_delete'] = 'Delete Message';
+
+$lang['alert_unknown_error'] 	= 'Sorry, an error has occurred.';
+$lang['alert_deleted_success'] = 'Message deleted successfully.';
+
+/* End of file inbox_lang.php */
+/* Location: ./main/language/english/main/inbox_lang.php */

@@ -1,56 +1,29 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang = [
-    'text_heading'            => 'My Details',
-    'text_my_details'         => 'My Details',
-    'text_default_address'    => 'My Default Address',
-    'text_cart'               => 'My Shopping Cart',
-    'text_orders'             => 'My Orders',
-    'text_reservations'       => 'My Reservations',
-    'text_inbox'              => 'My Inbox',
-    'text_edit'               => 'EDIT',
-    'text_checkout'           => 'CHECKOUT NOW',
-    'text_change_password'    => 'Change Password',
-    'text_no_default_address' => 'You don\'t have a default address',
-    'text_no_cart_items'      => 'There are no menus added in your cart.',
-    'text_no_orders'          => 'There are no orders available to show.',
-    'text_no_reservations'    => 'There are no reservations available to show.',
-    'text_no_inbox'           => 'There are no messages available to show',
-    'label_first_name'        => 'First Name',
-    'label_last_name'         => 'Last Name',
-    'label_email'             => 'Email Address',
-    'label_password'          => 'New Password',
-    'label_telephone'         => 'Telephone',
-    'label_s_question'        => 'Security Question',
-    'label_s_answer'          => 'Security Answer',
-    'column_cart_items'       => 'Total Items',
-    'column_cart_total'       => 'Total Amount',
-    'column_id'               => 'ID',
-    'column_date'             => 'Date/Time',
-    'column_status'           => 'Status',
-    'column_subject'          => 'Subject',
-    'text_my_account'         => 'My Account',
-    'text_edit_heading'       => 'Address Book Edit',
-    'text_no_address'         => 'You don\'t have any stored address(s)',
-    'text_delete'             => 'DELETE',
-    'button_back'             => 'Back',
-    'button_add'              => 'Add New Address',
-    'button_update'           => 'Update Address',
-    'label_address_1'         => 'Address 1',
-    'label_address_2'         => 'Address 2',
-    'label_city'              => 'City',
-    'label_state'             => 'State',
-    'label_postcode'          => 'Postcode',
-    'label_country'           => 'Country',
-    'alert_updated_success'   => '<p class="alert-success">Details updated successfully.</p>',
-    'alert_deleted_success'   => '<p class="alert-success">Address deleted successfully.</p>',
-    'text_details'            => 'Edit your details',
-    'text_password_heading'   => 'Change Password',
-    'text_select'             => ' please select ',
-    'button_subscribe'        => 'Subscribe',
-    'button_save'             => 'Save Details',
-    'label_password_confirm'  => 'New Password Confirm',
-    'label_old_password'      => 'Old Password',
-    'label_newsletter'        => 'Keep me up-to-date with offers by email.',
-    'error_password'          => 'The %s you entered does not match.',
-];
+$lang['text_heading'] 			        = 'My Details';
+$lang['text_my_account'] 		        = 'My Account';
+$lang['text_details'] 			        = 'Edit your details';
+$lang['text_password_heading'] 			= 'Change Password';
+$lang['text_select'] 			        = ' please select ';
+
+$lang['button_subscribe'] 			    = 'Subscribe';
+$lang['button_back'] 			        = 'Back';
+$lang['button_save'] 			        = 'Save Details';
+
+$lang['label_first_name'] 		        = 'First Name';
+$lang['label_last_name'] 		        = 'Last Name';
+$lang['label_email'] 			        = 'Email Address';
+$lang['label_password'] 		        = 'New Password';
+$lang['label_password_confirm']         = 'New Password Confirm';
+$lang['label_old_password'] 	        = 'Old Password';
+$lang['label_telephone'] 		        = 'Telephone';
+$lang['label_s_question'] 		        = 'Security Question';
+$lang['label_s_answer'] 		        = 'Security Answer';
+$lang['label_newsletter'] 		        = 'Keep me up-to-date with offers by email.';
+
+$lang['error_password'] 		        = 'The %s you entered does not match.';
+
+$lang['alert_updated_success'] 		    = '<p class="alert-success">Details updated successfully.</p>';
+
+/* End of file details_lang.php */
+/* Location: ./main/language/english/main/details_lang.php */

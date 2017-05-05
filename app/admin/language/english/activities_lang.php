@@ -13,3 +13,7 @@ $lang = [
     'activity_logged_out'       => '<a href="{link}">{staff}</a> <b>logged</b> out.',
     'activity_master_logged_in' => '<a href="{staff_link}">{staff}</a> <b>logged</b> in as <a href="{customer_link}">{customer}</a>.',
 ];
+
+
+/* End of file activities_lang.php */
+/* Location: ./admin/language/english/activities_lang.php */
