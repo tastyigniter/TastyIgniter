@@ -1,28 +1,29 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-$lang['text_title'] 		            = 'Tables';
-$lang['text_heading'] 		            = 'Tables';
-$lang['text_edit_heading'] 		        = 'Table: %s';
-$lang['text_list'] 		                = 'Table List';
-$lang['text_tab_general'] 		        = 'Table Details';
-$lang['text_empty'] 		            = 'There are no tables available.';
-$lang['text_no_match'] 		            = 'No Matches Found';
-$lang['text_filter_search'] 		    = 'Search table name.';
-$lang['text_filter_status'] 		    = 'View all status';
+$lang = [
+    'text_title'         => 'Tables',
+    'text_heading'       => 'Tables',
+    'text_edit_heading'  => 'Table: %s',
+    'text_list'          => 'Table List',
+    'text_tab_general'   => 'Table Details',
+    'text_empty'         => 'There are no tables available.',
+    'text_no_match'      => 'No Matches Found',
+    'text_filter_search' => 'Search table name.',
+    'text_filter_status' => 'View all status',
 
-$lang['column_name'] 		            = 'Name';
-$lang['column_min_capacity'] 		    = 'Minimum';
-$lang['column_capacity'] 		        = 'Capacity';
-$lang['column_status'] 		            = 'Status';
-$lang['column_id'] 		                = 'ID';
+    'column_name'         => 'Name',
+    'column_min_capacity' => 'Minimum',
+    'column_capacity'     => 'Capacity',
+    'column_status'       => 'Status',
+    'column_id'           => 'ID',
 
-$lang['label_name'] 		            = 'Name';
-$lang['label_min_capacity'] 		    = 'Minimum';
-$lang['label_capacity'] 		        = 'Capacity';
-$lang['label_status'] 		            = 'Status';
+    'label_name'         => 'Name',
+    'label_min_capacity' => 'Minimum',
+    'label_capacity'     => 'Capacity',
+    'label_status'       => 'Status',
 
-$lang['error_capacity'] 		            = 'The Maximum capacity value must be greater than minimum capacity value.';
-
+    'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
+];
 
 /* End of file tables_lang.php */
 /* Location: ./admin/language/english/tables_lang.php */
