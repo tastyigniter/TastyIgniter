@@ -18,6 +18,8 @@ class Dashboard extends Admin_Controller
 
     public function index()
     {
+        if (is_null($this->uri->segment(2))) $this->redirect('dashboard');
+
         $this->template->setTitle($this->lang->line('text_title'));
         $this->template->setHeading($this->lang->line('text_heading'));
 
@@ -108,11 +110,6 @@ class Dashboard extends Admin_Controller
         }
 
         $this->output->set_output(json_encode($json));
-    }
-
-    public function admin()
-    {
-        $this->index();
     }
 
     protected function getActivities()
