@@ -83,6 +83,7 @@ class Settings_model extends Model
 				}
 			}
 
+            $this->config->writeDBConfigCache();
 			return $query;
 		}
 	}
@@ -119,9 +120,10 @@ class Settings_model extends Model
 				'value'      => $value,
 				'serialized' => $serialized,
 			]);
-		}
+        }
 
-		return $query;
+        $this->config->writeDBConfigCache();
+        return $query;
 	}
 
 	/**
@@ -135,11 +137,14 @@ class Settings_model extends Model
 	public function deleteSettings($sort, $item)
 	{
 		if (!empty($sort) AND !empty($item)) {
-			return $this->where([
+			$query = $this->where([
 				['sort', '=', $sort],
 				['item', '=', $item]
 			])->delete();
 		}
+
+        $this->config->writeDBConfigCache();
+        return $query;
 	}
 }
 

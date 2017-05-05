@@ -289,16 +289,11 @@ class TI_Config extends MX_Config
         $serializedConfigArray = serialize($_configArray);
 
         $cacheFilePath = $this->getCacheFilePath();
-        if (!$fp = @fopen($cacheFilePath, FOPEN_WRITE_CREATE))
+        $cacheUpdated = file_put_contents($cacheFilePath, $serializedConfigArray);
+        if ($cacheUpdated === FALSE)
             return FALSE;
 
-        flock($fp, LOCK_EX);
-        fwrite($fp, $serializedConfigArray);
-        flock($fp, LOCK_UN);
-        fclose($fp);
-
-        @chmod($cacheFilePath, FILE_READ_MODE);
-
+        $this->config =& get_config($_configArray);
         return TRUE;
     }
 
@@ -307,10 +302,10 @@ class TI_Config extends MX_Config
      *
      * @return string
      */
-    public function getCacheFilePath()
+    protected function getCacheFilePath()
     {
         $path = (($path = config_item('cache_path')) === '') ? TI_APPPATH.'cache/' : $path;
-        $this->cachePath = $path.md5("{$this->item('base_url')}/system_config");
+        $this->cachePath = $path.md5("system_config");
 
         return $this->cachePath;
     }
