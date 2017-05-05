@@ -34,12 +34,8 @@ class Details extends Main_Controller
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];
 			$data['telephone'] = $result['telephone'];
-			$data['security_question'] = $result['security_question_id'];
-			$data['security_answer'] = $result['security_answer'];
 			$data['newsletter'] = $result['newsletter'];
 		}
-
-		$data['questions'] = $this->Security_questions_model->dropdown('text');                        // retrieve security questions from getQuestions in Security questions model
 
 		// check if $_POST is set and if update details validation was successful then redirect
 		if ($this->input->post() AND $this->_updateDetails() === TRUE) {
@@ -58,8 +54,6 @@ class Details extends Main_Controller
 			$update['first_name'] = $this->input->post('first_name');
 			$update['last_name'] = $this->input->post('last_name');
 			$update['telephone'] = $this->input->post('telephone');
-			$update['security_question_id'] = $this->input->post('security_question_id');
-			$update['security_answer'] = $this->input->post('security_answer');
 			$update['password'] = $this->input->post('new_password');
 			$update['newsletter'] = $this->input->post('newsletter');
 			$update['status'] = '1';
@@ -93,8 +87,6 @@ class Details extends Main_Controller
 		$rules[] = ['first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
 		$rules[] = ['last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
 		$rules[] = ['telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer'];
-		$rules[] = ['security_question_id', 'lang:label_s_question', 'xss_clean|trim|required|integer'];
-		$rules[] = ['security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]'];
 
 		if ($this->input->post('old_password')) {
 			$rules[] = ['old_password', 'lang:label_old_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|callback__check_old_password'];

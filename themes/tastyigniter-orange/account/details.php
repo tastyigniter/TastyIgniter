@@ -60,28 +60,6 @@
                                 </div>
 							</div>
                             <div class="row">
-                                <div class="col-xs-12 col-sm-6 col-md-6">
-                                    <div class="form-group">
-                                        <select name="security_question_id" id="security-question" class="form-control" placeholder="<?php echo lang('label_s_question'); ?>">
-                                            <?php foreach ($questions as $key => $value) { ?>
-                                                <?php if ($key == $security_question) { ?>
-                                                    <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
-                                                <?php } else { ?>
-                                                    <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </select>
-                                        <?php echo form_error('security_question_id', '<span class="text-danger">', '</span>'); ?>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-sm-6 col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" id="security-answer" class="form-control" name="security_answer" value="<?php echo set_value('security_answer', $security_answer); ?>" placeholder="<?php echo lang('label_s_answer'); ?>">
-                                        <?php echo form_error('security_answer', '<span class="text-danger">', '</span>'); ?>
-                                   </div>
-                                </div>
-                            </div>
-                            <div class="row">
 								<div class="col-xs-9 col-sm-10 col-md-10">
 									<span class="button-checkbox">
 										<button type="button" class="btn" data-color="info" tabindex="7">&nbsp;&nbsp;<?php echo lang('button_subscribe'); ?></button>

@@ -112,18 +112,20 @@ class Mail_templates extends Admin_Controller
         }
 
         $titles = [
-            'registration'         => $this->lang->line('text_registration'),
-            'registration_alert'   => $this->lang->line('text_registration_alert'),
-            'password_reset'       => $this->lang->line('text_password_reset'),
-            'password_reset_alert' => $this->lang->line('text_password_reset_alert'),
-            'order'                => $this->lang->line('text_order'),
-            'order_alert'          => $this->lang->line('text_order_alert'),
-            'order_update'         => $this->lang->line('text_order_update'),
-            'reservation'          => $this->lang->line('text_reservation'),
-            'reservation_alert'    => $this->lang->line('text_reservation_alert'),
-            'reservation_update'   => $this->lang->line('text_reservation_update'),
-            'internal'             => $this->lang->line('text_internal'),
-            'contact'              => $this->lang->line('text_contact'),
+            'registration'                 => $this->lang->line('text_registration'),
+            'registration_alert'           => $this->lang->line('text_registration_alert'),
+            'password_reset_request'       => $this->lang->line('text_password_reset_request'),
+            'password_reset_request_alert' => $this->lang->line('text_password_reset_request_alert'),
+            'password_reset'               => $this->lang->line('text_password_reset'),
+            'password_reset_alert'         => $this->lang->line('text_password_reset_alert'),
+            'order'                        => $this->lang->line('text_order'),
+            'order_alert'                  => $this->lang->line('text_order_alert'),
+            'order_update'                 => $this->lang->line('text_order_update'),
+            'reservation'                  => $this->lang->line('text_reservation'),
+            'reservation_alert'            => $this->lang->line('text_reservation_alert'),
+            'reservation_update'           => $this->lang->line('text_reservation_update'),
+            'internal'                     => $this->lang->line('text_internal'),
+            'contact'                      => $this->lang->line('text_contact'),
         ];
 
         $data['template_data'] = [];

@@ -53,11 +53,11 @@ class Customers_model extends Model
         return $this->belongsTo('Security_questions_model');
     }
 
-    /**
-     * @var string[] The names of callback methods which
-     * will be called after the insert method.
-     */
-//	protected $afterCreate = array('sendRegistrationEmail', 'saveCustomerGuestOrder');
+    public function afterCreate()
+    {
+        $this->saveCustomerGuestOrder();
+        $this->sendRegistrationEmail();
+    }
 
     /**
      * Filter database records
@@ -280,20 +280,16 @@ class Customers_model extends Model
      * Reset a customer password,
      * new password is sent to registered email
      *
-     * @param int $customer_id
-     * @param array $reset
+     * @param string $email
      *
      * @return bool
      */
-    public function resetPassword($customer_id, $reset = [])
+    public function resetPassword($email)
     {
-        if (!is_numeric($customer_id) OR !isset($reset['email']))
+        if (!is_string($email))
             return FALSE;
 
-        $email = strtolower($reset['email']);
-        $query = $this->where('customer_id', $customer_id);
-        $query->where('email', $email);
-
+        $query = $this->where('email', $email);
         if (!$customerModel = $query->isEnabled()->first())
             return FALSE;
 
@@ -308,11 +304,11 @@ class Customers_model extends Model
 
         $mail_data['first_name'] = $customerModel->first_name;
         $mail_data['last_name'] = $customerModel->last_name;
-        $mail_data['reset_link'] = root_url('account/login'.$update['reset_code']);
+        $mail_data['reset_link'] = root_url('account/reset?code='.$update['reset_code']);
         $mail_data['account_login_link'] = root_url('account/login');
 
         $this->load->model('Mail_templates_model');
-        $mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'password_reset_request');
+        $mail_template = $this->Mail_templates_model->getDefaultTemplateData('password_reset_request');
         $this->sendMail($email, $mail_template, $mail_data);
 
         return TRUE;
@@ -419,23 +415,21 @@ class Customers_model extends Model
      * Update guest orders, address and reservations
      * matching customer email
      *
-     * @param array $save
-     * @param int $customer_id
-     *
      * @return bool TRUE on success, or FALSE on failure
      */
-    public function saveCustomerGuestOrder($save = [], $customer_id)
+    public function saveCustomerGuestOrder()
     {
         $query = FALSE;
 
-        if (is_numeric($customer_id) AND !empty($save['email'])) {
-            $customer_email = $save['email'];
+        if (is_numeric($this->customer_id) AND !empty($this->email)) {
             $this->load->model('Addresses_model');
             $this->load->model('Coupons_model');
             $this->load->model('Coupons_history_model');
             $this->load->model('Orders_model');
             $this->load->model('Reservations_model');
 
+            $customer_id = $this->customer_id;
+            $customer_email = $this->email;
             $update = ['customer_id' => $customer_id];
 
             if ($orders = $this->Orders_model->where('email', $customer_email)->getAsArray()) {
@@ -546,33 +540,30 @@ class Customers_model extends Model
     /**
      * Send the registration confirmation email
      *
-     * @param array $save
-     * @param int $customer_id
-     *
      * @return bool FALSE on failure
      */
-    public function sendRegistrationEmail($save = [], $customer_id)
+    public function sendRegistrationEmail()
     {
-        if (!is_numeric($customer_id) OR empty($save)) return FALSE;
+        if (empty($this->email)) return FALSE;
 
         if (!is_array($this->config->item('registration_email'))) return FALSE;
 
         $config_registration_email = $this->config->item('registration_email');
 
-        $mail_data['first_name'] = $save['first_name'];
-        $mail_data['last_name'] = $save['last_name'];
-        $mail_data['email'] = $save['email'];
+        $mail_data['first_name'] = $this->first_name;
+        $mail_data['last_name'] = $this->last_name;
+        $mail_data['email'] = $this->email;
         $mail_data['account_login_link'] = root_url('account/login');
 
         $this->load->model('Mail_templates_model');
 
         if (in_array('customer', $config_registration_email)) {
-            $mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'registration');
+            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('registration');
             $this->sendMail($mail_data['email'], $mail_template, $mail_data);
         }
 
         if (in_array('admin', $config_registration_email)) {
-            $mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'registration_alert');
+            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('registration_alert');
             $this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
         }
     }

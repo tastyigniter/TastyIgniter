@@ -22,6 +22,7 @@ class Reset extends Main_Controller
 		$this->template->setTitle($this->lang->line('text_heading'));
 
 		$data['login_url'] = $this->pageUrl('account/login');
+        $data['reset_code'] = $this->input->get_post('code');
 
 		$data['questions'] = [];
 		$results = $this->Security_questions_model->getQuestions();                        // retrieve array of security questions from getQuestions method in Security questions model
@@ -33,7 +34,7 @@ class Reset extends Main_Controller
 		}
 
 		if ($this->input->post() AND $this->_resetPassword() === TRUE) {
-			$this->redirect('account/login');
+			$this->redirect(empty($data['reset_code']) ? 'account/reset' : 'account/login');
 		}
 
 		$this->template->render('account/reset', $data);
@@ -42,54 +43,52 @@ class Reset extends Main_Controller
 	protected function _resetPassword()
 	{                                                            // method to validate password reset
 		if ($this->validateForm() === TRUE) {
-			$reset['email'] = $this->input->post('email');
-			$reset['security_question_id'] = $this->input->post('security_question');
-			$reset['security_answer'] = $this->input->post('security_answer');
+            if ($this->input->get_post('code')) {
+                $credentials = [
+                    'reset_code' => $this->input->get_post('code'),
+                    'password'   => $this->input->post('password'),
+                ];
 
-			if ($this->Customers_model->resetPassword($this->input->post('customer_id'), $reset)) { // invoke reset password method in Customers model using customer id, email and security answer
-				// checks if password reset was sucessful then display success message and delete customer_id_to_reset from session userdata
-				$this->alert->set('alert', $this->lang->line('alert_reset_success'));
+                if ($this->customer->validateResetPassword($credentials)) {
+                    $this->customer->completeResetPassword($credentials);
+                    $this->alert->set('alert', $this->lang->line('alert_reset_success'));
 
-				return TRUE;
-			}
+                    return TRUE;
+                }
 
-			$this->alert->set('alert', $this->lang->line('alert_reset_error'));
-			$this->redirect('account/reset');                                                // redirect to password reset page
-		}
+                $error = $this->lang->line('alert_failed_reset');
+
+            } else {
+                $email = strtolower($this->input->post('email'));
+
+                if ($this->Customers_model->resetPassword($email)) { // invoke reset password method in Customers model using customer id, email and security answer
+                    // checks if password reset was sucessful then display success message and delete customer_id_to_reset from session userdata
+                    $this->alert->set('alert', $this->lang->line('alert_reset_request_success'));
+
+                    return TRUE;
+                }
+
+                $error = $this->lang->line('alert_reset_error');
+            }
+
+            $this->alert->set('alert', $error);
+            $this->redirect(current_url());
+        }
 	}
 
 	protected function validateForm()
 	{
-		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email|callback__check_reset');    //validate form
-		$this->form_validation->set_rules('security_question', 'lang:label_s_question', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]');
+        if ($this->input->get_post('code')) {
+            $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
+            $this->form_validation->set_rules('password_confirm', 'lang:label_password_confirm', 'xss_clean|trim|required');
+        } else {
+            $this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email');
+        }
 
-		if ($this->form_validation->run() === TRUE) {                                        // checks if form validation routines ran successfully
+		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
 		} else {
 			return FALSE;
-		}
-	}
-
-	public function _check_reset()
-	{
-		$customer_data = $this->Customers_model->getCustomerByEmail($this->input->post('email'));            // retrieve customer data based on $_POST email value from getCustomerByEmail method in Customers model
-		if ($customer_data['email'] !== strtolower($this->input->post('email'))) {
-			$this->form_validation->set_message('_check_reset', $this->lang->line('alert_no_email_match'));
-
-			return FALSE;
-		} else if ($customer_data['security_question_id'] !== $this->input->post('security_question')) {
-			$this->form_validation->set_message('_check_reset', $this->lang->line('alert_no_s_question_match'));
-
-			return FALSE;
-		} else if ($customer_data['security_answer'] !== $this->input->post('security_answer')) {
-			$this->form_validation->set_message('_check_reset', $this->lang->line('alert_no_s_answer_match'));
-
-			return FALSE;
-		} else {
-			$_POST['customer_id'] = $customer_data['customer_id'];
-
-			return TRUE;
 		}
 	}
 }

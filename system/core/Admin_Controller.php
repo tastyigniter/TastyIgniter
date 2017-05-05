@@ -50,6 +50,11 @@ class Admin_Controller extends BaseController
     public $sort = [];
 
     /**
+     * @var string Link URL for the index page
+     */
+    public $index_url = null;
+
+    /**
      * @var string Link URL for the create page
      */
     public $create_url = null;

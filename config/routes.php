@@ -14,19 +14,15 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-//if (APPDIR === ADMINDIR) {
-//    $route['default_controller'] = 'login';
-//    $route[ADMINDIR.'/(.+)'] = '$1';
-//    $route['404_override'] = '';
-//} else if (APPDIR === 'setup') {
-//    $route['default_controller'] = 'setup';
-//    $route['([^/]+)'] = 'setup/$1';
-//    $route['404_override'] = '';
-//} else {
-//}
-//
-$default_controller = 'home';
-$controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'cart', 'checkout', 'pages');
+$override_404 = '';
+if (APPDIR === ADMINDIR) {
+    $default_controller = 'login';
+} else if (APPDIR === 'setup') {
+    $default_controller = 'setup';
+} else {
+    $default_controller = 'home';
+    $override_404 = 'pages';
+}
 
 $route['default_controller'] = $default_controller;
 
@@ -34,6 +30,7 @@ $route['default_controller'] = $default_controller;
 $route['setup/(.+)'] = 'setup/$1';
 
 // Admin app routes
+$route[ADMINDIR] = 'dashboard';
 $route[ADMINDIR.'/(.+)'] = '$1';
 
 // Main app routes
@@ -44,6 +41,7 @@ $route['login'] = 'account/login';
 $route['logout'] = 'account/logout';
 $route['register'] = 'account/register';
 $route['forgot-password'] = 'account/reset';
+$route['forgot-password/(.+)'] = 'account/reset';
 $route['checkout/success'] = 'checkout/success';
 $route['reservation/success'] = 'reservation/success';
 
@@ -59,11 +57,13 @@ if (config_item('site_location_mode') === 'multiple') {
     $route["^([^/]+)/(" . implode('|', $location_methods) . ")?/([^/]+)?/([^/]+)$"] = 'local/$2/$1/$3/$4';
 }
 
+// Main app permalink routes
+$controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'cart', 'checkout', 'pages');
 $route["^(" . implode('|', $controller_exceptions) . ")?$"] = '$1';
 $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1';
 $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1/$2';
 
 // To route all permalinks for pages
-$route['404_override'] = 'pages';
+$route['404_override'] = $override_404;
 
 $route['translate_uri_dashes'] = FALSE;

@@ -54,9 +54,9 @@ class Users_model extends Model
      *
      * @return bool
      */
-    public function resetPassword($username = '')
+    public function resetPassword($username)
     {
-        if (empty($username))
+        if (!is_string($username))
             return FALSE;
 
         $staffsTable = $this->tablePrefix('staffs');
@@ -76,7 +76,7 @@ class Users_model extends Model
 
         $mail_data['staff_name'] = $userModel->staff_name;
         $mail_data['staff_username'] = $userModel->username;
-        $mail_data['reset_link'] = admin_url('login/reset/'.$update['reset_code']);
+        $mail_data['reset_link'] = admin_url('login/reset?code='.$update['reset_code']);
 
         $this->load->model('Mail_templates_model');
         $mail_template = $this->Mail_templates_model->getDefaultTemplateData('password_reset_request_alert');

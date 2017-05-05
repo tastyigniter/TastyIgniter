@@ -18,27 +18,23 @@
 						<?php echo $this->alert->display('', 'alert'); ?>
 					</div>
 				<?php } ?>
-				<p class="text-center"><?php echo lang('text_summary'); ?></p>
 				<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form">
-					<div class="form-group">
-						<input name="email" type="text" id="email" class="form-control input-lg" value="<?php echo set_value('email'); ?>" placeholder="<?php echo lang('label_email'); ?>" />
-		    			<?php echo form_error('email', '<span class="text-danger">', '</span>'); ?></td>
-					</div>
-					<div class="form-group">
-						<select name="security_question" id="security-question" class="form-control input-lg">
-                            <?php foreach ($questions as $question) { ?>
-                                <option value="<?php echo $question['id']; ?>"><?php echo $question['text']; ?></option>
-                            <?php } ?>
-						</select>
-						<?php echo form_error('security_question', '<span class="text-danger">', '</span>'); ?>
-					</div>
-					<div class="form-group">
-						<label for="security-answer"></label>
-						<input type="text" name="security_answer" id="security-answer" class="form-control input-lg" placeholder="<?php echo lang('label_s_answer'); ?>" />
-						<?php echo form_error('security_answer', '<span class="text-danger">', '</span>'); ?>
-					</div>
-					<br />
-
+                    <?php if (!empty($reset_code)) { ?>
+                        <div class="form-group">
+                            <input type="password" id="password" class="form-control input-lg" name="password" placeholder="<?php echo lang('label_password'); ?>">
+                            <?php echo form_error('password', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password-confirm" class="form-control input-lg" name="password_confirm" placeholder="<?php echo lang('label_password_confirm'); ?>">
+                            <?php echo form_error('password_confirm', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    <?php } else { ?>
+                        <p class="text-center"><?php echo lang('text_summary'); ?></p>
+                        <div class="form-group">
+                            <input name="email" type="text" id="email" class="form-control input-lg" value="<?php echo set_value('email'); ?>" placeholder="<?php echo lang('label_email'); ?>" />
+                            <?php echo form_error('email', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    <?php } ?>
 					<div class="row text-center">
 						<div class="col-xs-12 col-md-6">
 							<button type="submit" class="btn btn-primary btn-lg btn-block"><?php echo lang('button_reset'); ?></button>

@@ -47,7 +47,7 @@ defined('MAINDIR')  OR define('MAINDIR', 'main');
 |	Default: 'extensions/' in the extensions folder
 |
 */
-defined('EXTPATH')  OR define('EXTPATH', 'extensions/igniterlabs/');
+defined('EXTPATH')  OR define('EXTPATH', 'extensions/');
 
 /*
 |--------------------------------------------------------------------------

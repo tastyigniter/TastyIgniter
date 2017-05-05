@@ -61,7 +61,7 @@ class Login extends Admin_Controller
 
         $this->template->setTitle($this->lang->line('text_password_reset_title'));
 
-        $data['reset_code'] = $this->uri->rsegment(3);
+        $data['reset_code'] = $this->input->get_post('code');
 
         if ($this->input->post() AND $this->_resetPassword() === TRUE) {
             $this->redirect('login');
@@ -75,7 +75,7 @@ class Login extends Admin_Controller
     protected function _resetPassword()
     {
         if ($this->validateResetForm() === TRUE) {
-            if (!$this->uri->rsegment(3)) {
+            if (!$this->input->get_post('code')) {
                 $username = $this->input->post('username');
                 if ($this->user->resetPassword($username)) {
                     $this->alert->set('success', $this->lang->line('alert_email_sent'));
@@ -86,7 +86,7 @@ class Login extends Admin_Controller
                 $error = $this->lang->line('alert_email_not_sent');
             } else {
                 $credentials = [
-                    'reset_code' => $this->uri->rsegment(3),
+                    'reset_code' => $this->input->get_post('code'),
                     'password'   => $this->input->post('password'),
                 ];
 

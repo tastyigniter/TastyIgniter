@@ -22,27 +22,28 @@ class Login extends Main_Controller
 		$data['reset_url'] = site_url('account/reset' . $prepend);
 		$data['register_url'] = site_url('account/register' . $prepend);
 
-		if ($this->input->post()) {                                                                // checks if $_POST data is set
-			if ($this->validateForm() === TRUE) {
-				$email = $this->input->post('email');                                            // retrieves email value from $_POST data if set
-				$password = $this->input->post('password');                                        // retrieves password value from $_POST data if set
+		if ($this->input->post() AND $this->validateForm() === TRUE) {                                                                // checks if $_POST data is set
+            $remember = (bool)$this->input->post('remember');
+            $credentials = [
+                'email' => $this->input->post('email'),
+                'password' => $this->input->post('password'),
+            ];
 
-				if ($this->customer->login($email, $password) === FALSE) {                        // invoke login method in customer library with email and password $_POST data value then check if login was unsuccessful
-					$this->alert->set('alert', $this->lang->line('alert_invalid_login'));    // display error message and redirect to account login page
-					$this->redirect(current_url());
-				} else {                                                                        // else if login was successful redirect to account page
-					log_activity($this->customer->getId(), 'logged in', 'customers', get_activity_message('activity_logged_in',
-						['{customer}', '{link}'],
-						[$this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId())]
-					));
+            if (!$this->customer->validate($credentials, $remember, TRUE)) {                        // invoke login method in customer library with email and password $_POST data value then check if login was unsuccessful
+                $this->alert->set('alert', $this->lang->line('alert_invalid_login'));    // display error message and redirect to account login page
+                $this->redirect(current_url());
+            } else {                                                                        // else if login was successful redirect to account page
+                log_activity($this->customer->getId(), 'logged in', 'customers', get_activity_message('activity_logged_in',
+                    ['{customer}', '{link}'],
+                    [$this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId())]
+                ));
 
-					if ($redirect_url = $this->input->get('redirect')) {
-						$this->redirect($redirect_url);
-					}
+                if ($redirect_url = $this->input->get('redirect')) {
+                    $this->redirect($redirect_url);
+                }
 
-					$this->redirect('account/account');
-				}
-			}
+                $this->redirect('account/account');
+            }
 		}
 
 		$this->template->render('account/login', $data);

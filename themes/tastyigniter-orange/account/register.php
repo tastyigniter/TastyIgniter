@@ -51,22 +51,9 @@
 							<?php echo form_error('telephone', '<span class="text-danger">', '</span>'); ?>
 						</div>
 						<div class="form-group">
-							<select name="security_question" id="security-question" class="form-control input-lg" placeholder="<?php echo lang('label_s_question'); ?>">
-							<?php foreach ($questions as $key => $value) { ?>
-								<option value="<?php echo $key; ?>" <?php echo set_select('security_question', $key) ?>><?php echo $value; ?></option>
-							<?php } ?>
-							</select>
-							<?php echo form_error('security_question', '<span class="text-danger">', '</span>'); ?>
-						</div>
-						<div class="form-group">
-							<input type="text" id="security-answer" class="form-control input-lg" name="security_answer" value="<?php echo set_value('security_answer'); ?>" placeholder="<?php echo lang('label_s_answer'); ?>">
-							<?php echo form_error('security_answer', '<span class="text-danger">', '</span>'); ?>
-						</div>
-						<div class="form-group">
 							<div class="input-group">
          		 				<span><?php echo $captcha['image']; ?></span>
-								<input type="hidden" name="captcha_word" class="form-control" value="<?php echo $captcha['word']; ?>" />
-								<input type="text" name="captcha" class="form-control" placeholder="<?php echo lang('label_captcha'); ?>" />
+								<input type="text" name="captcha" class="form-control" placeholder="<?php echo lang('label_captcha'); ?>" autocomplete="off" />
 							</div>
 							<?php echo form_error('captcha', '<span class="text-danger">', '</span>'); ?>
 						</div>
@@ -102,8 +89,6 @@
 								</div>
 							</div>
 						<?php } ?>
-						<br />
-						<br />
 
 						<div class="row">
 							<div class="col-xs-12 col-md-6">

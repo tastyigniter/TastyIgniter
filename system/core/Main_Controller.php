@@ -25,7 +25,27 @@ class Main_Controller extends BaseController
 {
     protected static $showMaintenance = TRUE;
 
-	/**
+    /**
+     * @var array Filters for list columns
+     */
+    public $filter = [];
+
+    /**
+     * @var array Default sort
+     */
+    public $default_sort = [];
+
+    /**
+     * @var array Sorting columns
+     */
+    public $sort = [];
+
+    /**
+     * @var string Link URL for the index page
+     */
+    public $index_url = null;
+
+    /**
 	 * Class constructor
 	 *
 	 */

@@ -38,9 +38,6 @@ class Register extends Main_Controller
 			$data['registration_terms'] = FALSE;
 		}
 
-		$this->load->model('Security_questions_model');                                            // load the security questions model
-		$data['questions'] = $this->Security_questions_model->dropdown('text');                                // retrieve array of security questions from getQuestions method in Security questions model
-
 		$data['captcha'] = $this->createCaptcha();
 
 		$this->template->render('account/register', $data);
@@ -58,8 +55,6 @@ class Register extends Main_Controller
 			$add['email'] = $this->input->post('email');
 			$add['password'] = $this->input->post('password');
 			$add['telephone'] = $this->input->post('telephone');
-			$add['security_question_id'] = $this->input->post('security_question');
-			$add['security_answer'] = $this->input->post('security_answer');
 			$add['newsletter'] = $this->input->post('newsletter');
 			$add['terms_condition'] = $this->input->post('terms_condition');
 			$add['customer_group_id'] = $this->config->item('customer_group_id');
@@ -92,8 +87,6 @@ class Register extends Main_Controller
 		$rules[] = ['password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]'];
 		$rules[] = ['password_confirm', 'lang:label_password_confirm', 'xss_clean|trim|required'];
 		$rules[] = ['telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer'];
-		$rules[] = ['security_question', 'lang:label_s_question', 'xss_clean|trim|required|integer'];
-		$rules[] = ['security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]'];
 		$rules[] = ['newsletter', 'lang:label_subscribe', 'xss_clean|trim|integer'];
 		$rules[] = ['captcha', 'lang:label_captcha', 'xss_clean|trim|required|callback__validate_captcha'];
 
@@ -103,7 +96,7 @@ class Register extends Main_Controller
 
 		// END of form validation rules
 
-		return $this->form_validation->set_rules($rules)->run();
+        return $this->form_validation->set_rules($rules)->run();
 	}
 
 	public function _validate_captcha($word)
