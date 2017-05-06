@@ -25,7 +25,6 @@ class Assets
 {
 	protected $_title_separator = ' | ';
 	protected $_head_tags = [];
-	protected $_breadcrumbs = [];
 	public $active_styles = '';
 
 	protected $CI;
@@ -75,16 +74,6 @@ class Assets
 		return is_array($this->_head_tags['meta']) ? implode("\t\t", $this->_head_tags['meta']) : '';
 	}
 
-	public function getButtonList()
-	{
-		return is_array($this->_head_tags['buttons']) ? implode("\n\t\t", $this->_head_tags['buttons']) : '';
-	}
-
-	public function getIconList()
-	{
-		return is_array($this->_head_tags['icons']) ? implode("\n\t\t", $this->_head_tags['icons']) : '';
-	}
-
 	public function getStyleTags()
 	{
 		return is_array($this->_head_tags['style']) ? implode("\t\t", $this->_head_tags['style']) : '';
@@ -93,23 +82,6 @@ class Assets
 	public function getScriptTags()
 	{
 		return is_array($this->_head_tags['script']) ? implode("\n\t\t", $this->_head_tags['script']) : '';
-	}
-
-	public function getBreadcrumb($tag_open = '<li class="{class}">', $link_open = '<a href="{link}">', $link_close = ' </a>', $tag_close = '</li>')
-	{
-		$crumbs = '';
-
-		foreach ($this->_breadcrumbs as $crumb) {
-			if (!empty($crumb['uri'])) {
-				$crumbs .= str_replace('{class}', '', $tag_open) . str_replace('{link}', site_url(trim($crumb['uri'], '/')), $link_open) . $crumb['name'] . $link_close;
-			} else {
-				$crumbs .= str_replace('{class}', 'active', $tag_open) . '<span>' . $crumb['name'] . ' </span>';
-			}
-
-			$crumbs .= $tag_close;
-		}
-
-		return (!empty($crumbs)) ? '<ol class="breadcrumb">' . $crumbs . '</ol>' : $crumbs;
 	}
 
 	public function setHeadTag($type = '', $tag = '')
@@ -230,13 +202,6 @@ class Assets
 				$this->setScriptTag($tag);
 			}
 		}
-	}
-
-	public function setBreadcrumb($name, $uri = '')
-	{
-		$this->_breadcrumbs[] = ['name' => $name, 'uri' => $uri];
-
-		return $this;
 	}
 
 	protected function prepUrl($href, $suffix = '')

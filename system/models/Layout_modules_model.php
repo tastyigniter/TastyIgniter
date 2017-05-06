@@ -68,10 +68,10 @@ class Layout_modules_model extends Model
 		$priority = 1;
 		foreach ($modules as $module) {
 			if (!empty($module) AND is_array($module)) {
-				$options['title'] = isset($module['title']) ? htmlspecialchars($module['title']) : '';
-				$options['fixed'] = isset($module['fixed']) ? $module['fixed'] : '';
-				$options['fixed_top_offset'] = isset($module['fixed_top_offset']) ? $module['fixed_top_offset'] : '';
-				$options['fixed_bottom_offset'] = isset($module['fixed_bottom_offset']) ? $module['fixed_bottom_offset'] : '';
+                $options['title'] = isset($module['title']) ? htmlspecialchars($module['title']) : '';
+				$options['fixed'] = isset($module['fixed']) ? (int) $module['fixed'] : 0;
+				$options['fixed_top_offset'] = isset($module['fixed_top_offset']) ? (int) $module['fixed_top_offset'] : 0;
+				$options['fixed_bottom_offset'] = isset($module['fixed_bottom_offset']) ? (int) $module['fixed_bottom_offset'] : 0;
 
 				$query = $this->Layout_modules_model->create([
 					'layout_id'   => $layout_id,

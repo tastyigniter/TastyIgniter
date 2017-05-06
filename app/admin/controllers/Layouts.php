@@ -95,7 +95,8 @@ class Layouts extends Admin_Controller
             $data['_action'] = $this->pageUrl($this->edit_url, ['id' => $layout_id]);
         }
 
-        $theme_partials = get_theme_partials($this->config->item('main', 'default_themes'), 'main');
+        $data['theme_partials'] = [];
+        $theme_partials = get_partial_areas('main');
         foreach ($theme_partials as $partial) {
             $partial['id'] = isset($partial['id']) ? $partial['id'] : '';
             $deprecated_id = explode('_', $partial['id']);
@@ -126,6 +127,11 @@ class Layouts extends Admin_Controller
             $components = (is_numeric($partial)) ? $components : $components;
             foreach ($components as $priority => $component) {
                 if (!Components::hasComponent($component['module_code'])) continue;
+
+                if (isset($component['options'])) {
+                    $component = array_merge($component, $component['options']);
+                    unset($component['options']);
+                }
 
                 $data['layout_components'][$partial][] = array_merge($component, [
                     'name'     => isset($data['components'][$component['module_code']]['name']) ? $data['components'][$component['module_code']]['name'] : $component['module_code'],

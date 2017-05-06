@@ -22,382 +22,486 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link           http://docs.tastyigniter.com
  */
 
-if ( ! function_exists('get_header')) {
-	/**
-	 * Get Header
-	 *
-	 * @return    string
-	 */
-	function get_header() {
-		return get_instance()->template->get_header();
-	}
+if (!function_exists('get_header')) {
+    /**
+     * Get Header
+     *
+     * @return    string
+     */
+    function get_header()
+    {
+        return get_instance()->template->get_header();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_footer')) {
-	/**
-	 * Get Footer
-	 *
-	 * @return    string
-	 */
-	function get_footer() {
-		return get_instance()->template->get_footer();
-	}
+if (!function_exists('get_footer')) {
+    /**
+     * Get Footer
+     *
+     * @return    string
+     */
+    function get_footer()
+    {
+        return get_instance()->template->get_footer();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_partial')) {
-	/**
-	 * Get Partial
-	 *
-	 * @param string $partial
-	 * @param string $class
-	 *
-	 * @return string
-	 */
-	function get_partial($partial = '', $class = '') {
-		return get_instance()->template->get_partial($partial, array('class' => $class));
-	}
+if (!function_exists('get_partial')) {
+    /**
+     * Render a theme partial area with components view
+     *
+     * @deprecated since 2.2 use load_component_area instead
+     *
+     * @param string $partial
+     * @param string $class
+     *
+     * @return string
+     */
+    function get_partial($partial = '', $class = null)
+    {
+        return load_component_area($partial, $class);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('load_partial')) {
-	/**
-	 * Load Partial
-	 *
-	 * @param string $partial
-	 * @param array  $data
-	 *
-	 * @return string
-	 */
-	function load_partial($partial = '', $data = array()) {
-		echo get_instance()->template->load_view($partial, $data);
-	}
+if (!function_exists('load_component_area')) {
+    /**
+     * Render a theme partial area with its components view
+     *
+     * @param string $area
+     * @param string $class
+     *
+     * @return string
+     */
+    function load_component_area($area = '', $class = '')
+    {
+        $class = is_string($class) ? ['class' => $class] : $class;
+        return get_instance()->template->loadComponentArea($area, $class);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('partial_exists')) {
-	/**
-	 * Check if Partial Exist in layout
-	 *
-	 * @param string $partial
-	 *
-	 * @return string
-	 */
-	function partial_exists($partial = '') {
-		return (get_instance()->template->partial_exists($partial)) ? TRUE : FALSE;
-	}
+if (!function_exists('load_partial')) {
+    /**
+     * Load a partial view file
+     *
+     * @param string $partial
+     * @param array $data
+     *
+     * @return string
+     */
+    function load_partial($partial = '', $data = [])
+    {
+        echo get_instance()->load->partial($partial, $data);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_title')) {
-	/**
-	 * Get page title html tag
-	 *
-	 * @return    string
-	 */
-	function get_title() {
-		return get_instance()->template->getTitle();
-	}
+if (!function_exists('partial_exists')) {
+    /**
+     * Check if Partial Exist in layout
+     *
+     * @param string $partial
+     *
+     * @return string
+     */
+    function partial_exists($partial = '')
+    {
+        return (get_instance()->template->partial_exists($partial)) ? TRUE : FALSE;
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('set_title')) {
-	/**
-	 * Set page title html tag
-	 *
-	 * @param string $title
-	 *
-	 * @return string
-	 */
-	function set_title($title = '') {
-		get_instance()->template->setHeadTag('title', $title);
-	}
+if (!function_exists('get_title')) {
+    /**
+     * Get page title html tag
+     *
+     * @return    string
+     */
+    function get_title()
+    {
+        return get_instance()->template->getTitle();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_heading')) {
-	/**
-	 * Get page heading
-	 *
-	 * @return    string
-	 */
-	function get_heading() {
-		return get_instance()->template->getHeading();
-	}
+if (!function_exists('set_title')) {
+    /**
+     * Set page title html tag
+     *
+     * @param string $title
+     *
+     * @return string
+     */
+    function set_title($title = '')
+    {
+        get_instance()->template->setHeadTag('title', $title);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('set_heading')) {
-	/**
-	 * Set page heading
-	 *
-	 * @param string $heading
-	 *
-	 * @return string
-	 */
-	function set_heading($heading = '') {
-		get_instance()->template->setHeadTag('heading', $heading);
-	}
+if (!function_exists('get_heading')) {
+    /**
+     * Get page heading
+     *
+     * @return    string
+     */
+    function get_heading()
+    {
+        return get_instance()->template->getHeading();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_active_styles')) {
-	/**
-	 * Get the active theme custom stylesheet html tag,
-	 * generated by customizer
-	 *
-	 * @return    string
-	 */
-	function get_active_styles() {
-		return get_instance()->assets->getActiveStyle();
-	}
+if (!function_exists('set_heading')) {
+    /**
+     * Set page heading
+     *
+     * @param string $heading
+     *
+     * @return string
+     */
+    function set_heading($heading = '')
+    {
+        get_instance()->template->setHeadTag('heading', $heading);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_theme_options')) {
-	/**
-	 * Get the active theme options set in theme customizer
-	 *
-	 * @param string $item
-	 *
-	 * @return string
-	 */
-	function get_theme_options($item = '') {
-		return get_instance()->assets->getActiveThemeOptions($item);
-	}
+if (!function_exists('get_active_styles')) {
+    /**
+     * Get the active theme custom stylesheet html tag,
+     * generated by customizer
+     *
+     * @return    string
+     */
+    function get_active_styles()
+    {
+        return get_instance()->assets->getActiveStyle();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_breadcrumbs')) {
-	/**
-	 * Get page breadcrumbs
-	 *
-	 * @return    string
-	 */
-	function get_breadcrumbs() {
-		return get_instance()->template->getBreadcrumb();
-	}
+if (!function_exists('get_theme_options')) {
+    /**
+     * Get the active theme options set in theme customizer
+     *
+     * @param string $item
+     *
+     * @return string
+     */
+    function get_theme_options($item = '')
+    {
+        return get_instance()->assets->getActiveThemeOptions($item);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_button_list')) {
-	/**
-	 * Get admin page heading action buttons
-	 *
-	 * @return    string
-	 */
-	function get_button_list() {
-		return get_instance()->template->getButtonList();
-	}
+if (!function_exists('get_breadcrumbs')) {
+    /**
+     * Get page breadcrumbs
+     *
+     * @return    string
+     */
+    function get_breadcrumbs()
+    {
+        return get_instance()->template->getBreadcrumb();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_icon_list')) {
-	/**
-	 * Get admin page heading icons
-	 *
-	 * @return    string
-	 */
-	function get_icon_list() {
-		return get_instance()->template->getIconList();
-	}
+if (!function_exists('get_button_list')) {
+    /**
+     * Get admin page heading action buttons
+     *
+     * @return    string
+     */
+    function get_button_list()
+    {
+        return get_instance()->template->getButtonList();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_nav_menu')) {
-	/**
-	 * Build admin theme navigation menu
-	 *
-	 * @param array $prefs
-	 *
-	 * @return string
-	 */
-	function get_nav_menu($prefs = array()) {
-		return get_instance()->template->navMenu($prefs);
-	}
+if (!function_exists('get_icon_list')) {
+    /**
+     * Get admin page heading icons
+     *
+     * @return    string
+     */
+    function get_icon_list()
+    {
+        return get_instance()->template->getIconList();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_theme_partials')) {
-	/**
-	 * Get the theme partial areas/regions
-	 *
-	 * @param null   $theme
-	 * @param string $domain
-	 *
-	 * @return string
-	 */
-	function get_theme_partials($theme = NULL, $domain = 'main') {
-
-		$theme_config = load_theme_config(trim($theme, '/'), $domain);
-
-		return isset($theme_config['partial_area']) ? $theme_config['partial_area'] : array();
-	}
+if (!function_exists('get_nav_menu')) {
+    /**
+     * Build admin theme navigation menu
+     *
+     * @param array $prefs
+     *
+     * @return string
+     */
+    function get_nav_menu($prefs = [])
+    {
+        return get_instance()->template->navMenu($prefs);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('find_theme_files')) {
-	/**
-	 * Search a theme folder for files.
-	 * @deprecated since 2.2.0 use Theme_manager->findFiles() instead
-	 *
-	 * Searches an individual folder for any theme files and returns an array
-	 * appropriate for display in the theme tree view.
-	 *
-	 * @param string $themeCode The theme to search
-	 *
-	 * @return array $theme_files
-	 */
-	function find_theme_files($themeCode) {
-		$CI =& get_instance();
-		$CI->load->library('theme_manager');
-		return $CI->theme_manager->findFiles($themeCode);
-	}
+if (!function_exists('get_theme_partials')) {
+    /**
+     * Get the theme partial areas/regions
+     *
+     * @deprecated use get_partial_areas instead
+     *
+     * @param null $theme
+     * @param string $domain
+     *
+     * @return array
+     */
+    function get_theme_partials($theme = null, $domain = 'main')
+    {
+        return get_partial_areas($domain, $theme);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('list_themes')) {
-	/**
-	 * List existing themes in the system
-	 * @deprecated since 2.2.0 use Theme_manager->listThemes() instead
-	 *
-	 * Lists the existing themes in the system by examining the
-	 * theme folders in both admin and main domain, and also gets the theme
-	 * config.
-	 *
-	 * @return array The names,path,config of the theme directories.
-	 */
-	function list_themes() {
-		$CI =& get_instance();
-		$CI->load->library('theme_manager');
-		return $CI->theme_manager->listThemes();
-	}
+if (!function_exists('get_partial_areas')) {
+    /**
+     * Get the theme partial areas/regions
+     *
+     * @param null $theme
+     * @param string $domain
+     *
+     * @return array
+     */
+    function get_partial_areas($domain = 'main', $theme = null)
+    {
+        $activeTheme = is_null($theme) ? active_theme($domain) : $theme;
+        $theme_config = load_theme_config(trim($activeTheme, '/'), 'main');
+
+        return isset($theme_config['partial_area']) ? $theme_config['partial_area'] : [];
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('load_theme_config')) {
-	/**
-	 * Load a single theme config file into an array.
-	 * @deprecated since 2.2.0 use Theme_manager->getConfigFromFile() instead
-	 *
-	 * @param string $filename The name of the theme to locate. The config file
-	 *                         will be found and loaded by looking in the admin and main theme folders.
-	 * @param string $domain   The domain where the theme is located.
-	 *
-	 * @return mixed The $theme array from the file or false if not found. Returns
-	 * null if $filename is empty.
-	 */
-	function load_theme_config($filename = NULL, $domain = MAINDIR) {
+if (!function_exists('active_theme')) {
+    /**
+     * Get the active theme code of the specified domain
+     *
+     * @param string $domain
+     *
+     * @return null
+     */
+    function active_theme($domain = 'main')
+    {
+        $default_themes = config_item('default_themes');
 
-		$CI =& get_instance();
-		$CI->load->library('theme_manager');
-		return $CI->theme_manager->getConfigFromFile($filename);
-	}
+        return isset($default_themes[$domain]) ? $default_themes[$domain] : null;
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('load_theme_file')) {
-	/**
-	 * Load a single theme generic file into an array.
-	 * @deprecated since 2.2.0 use Theme_manager->readFile() instead
-	 *
-	 * @param string $filename The name of the file to locate. The file will be
-	 *                         found by looking in the admin and main themes folders.
-	 * @param string $theme    The theme to check.
-	 *
-	 * @return mixed The $theme_file array from the file or false if not found. Returns
-	 * null if $filename is empty.
-	 */
-	function load_theme_file($filename, $theme) {
-		$CI =& get_instance();
-		$CI->load->library('theme_manager');
-		return $CI->theme_manager->readFile($filename, $theme);
-	}
+if (!function_exists('parent_theme')) {
+    /**
+     * Get the parent theme code of the specified domain
+     * @param string $domain
+     *
+     * @return null
+     */
+    function parent_theme($domain = 'main')
+    {
+        $default_themes = config_item('default_themes');
+
+        return isset($default_themes[$domain.'_parent']) ? $default_themes[$domain.'_parent'] : null;
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('delete_theme')) {
-	/**
-	 * Delete existing theme folder.
-	 * @deprecated since 2.2.0 use Theme_manager->removeTheme() instead
-	 *
-	 * @param null $theme
-	 * @param      $domain
-	 *
-	 * @return bool
-	 */
-	function delete_theme($theme, $domain = MAINDIR) {
-		$CI =& get_instance();
-		$CI->load->library('theme_manager');
-		return $CI->theme_manager->removeTheme($theme, $domain);
-	}
+if (!function_exists('find_theme_files')) {
+    /**
+     * Search a theme folder for files.
+     * @deprecated since 2.2.0 use Theme_manager->findFiles() instead
+     *
+     * Searches an individual folder for any theme files and returns an array
+     * appropriate for display in the theme tree view.
+     *
+     * @param string $themeCode The theme to search
+     *
+     * @return array $theme_files
+     */
+    function find_theme_files($themeCode)
+    {
+        $CI =& get_instance();
+        $CI->load->library('theme_manager');
+
+        return $CI->theme_manager->findFiles($themeCode);
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('save_theme_file')) {
-	/**
-	 * Save a theme file.
-	 * @deprecated since 2.2.0 use Theme_manager->writeFile() instead
-	 *
-	 * @param string  $filename The name of the file to locate. The file will be
-	 *                          found by looking in the admin and main themes folders.
-	 * @param string  $theme    The theme to check.
-	 * @param array   $new_data A string of the theme file content replace.
-	 * @param boolean|string $return   True to return the contents or false to return bool.
-	 *
-	 * @return bool|string False if there was a problem loading the file. Otherwise,
-	 * returns true when $return is false or a string containing the file's contents
-	 * when $return is true.
-	 */
-	function save_theme_file($filename = NULL, $theme = NULL, $new_data = NULL, $return = FALSE) {
-		$CI =& get_instance();
-		$CI->load->library('theme_manager');
-		return $CI->theme_manager->writeFile($filename, $theme, $new_data, $return);
-	}
+if (!function_exists('list_themes')) {
+    /**
+     * List existing themes in the system
+     * @deprecated since 2.2.0 use Theme_manager->listThemes() instead
+     *
+     * Lists the existing themes in the system by examining the
+     * theme folders in both admin and main domain, and also gets the theme
+     * config.
+     *
+     * @return array The names,path,config of the theme directories.
+     */
+    function list_themes()
+    {
+        $CI =& get_instance();
+        $CI->load->library('theme_manager');
+
+        return $CI->theme_manager->listThemes();
+    }
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('create_child_theme_files')) {
-	/**
-	 * Create child theme file(s).
-	 * @deprecated since 2.2.0 use Theme_manager->createChild() instead
-	 *
-	 * @param array  $files The name of the files to locate. The file will be
-	 *                          found by looking in the main themes folders.
-	 * @param string $source_theme      The theme folder to copy the file from.
-	 * @param string $child_theme_data 	The child theme data.
-	 *
-	 * @return bool Returns false if file is not found in $source_theme
-	 * or $child_theme already exist.
-	 */
-	function create_child_theme_files($files = array(), $source_theme = NULL, $child_theme_data = NULL) {
-		$CI =& get_instance();
-		$CI->load->library('theme_manager');
-		return $CI->theme_manager->createChild($source_theme, $child_theme_data);
-	}
+if (!function_exists('load_theme_config')) {
+    /**
+     * Load a single theme config file into an array.
+     * @deprecated since 2.2.0 use Theme_manager->getConfigFromFile() instead
+     *
+     * @param string $filename The name of the theme to locate. The config file
+     *                         will be found and loaded by looking in the admin and main theme folders.
+     * @param string $domain The domain where the theme is located.
+     *
+     * @return mixed The $theme array from the file or false if not found. Returns
+     * null if $filename is empty.
+     */
+    function load_theme_config($filename = null, $domain = MAINDIR)
+    {
+
+        $CI =& get_instance();
+        $CI->load->library('theme_manager');
+
+        return $CI->theme_manager->getConfigFromFile($filename);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (!function_exists('load_theme_file')) {
+    /**
+     * Load a single theme generic file into an array.
+     * @deprecated since 2.2.0 use Theme_manager->readFile() instead
+     *
+     * @param string $filename The name of the file to locate. The file will be
+     *                         found by looking in the admin and main themes folders.
+     * @param string $theme The theme to check.
+     *
+     * @return mixed The $theme_file array from the file or false if not found. Returns
+     * null if $filename is empty.
+     */
+    function load_theme_file($filename, $theme)
+    {
+        $CI =& get_instance();
+        $CI->load->library('theme_manager');
+
+        return $CI->theme_manager->readFile($filename, $theme);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (!function_exists('delete_theme')) {
+    /**
+     * Delete existing theme folder.
+     * @deprecated since 2.2.0 use Theme_manager->removeTheme() instead
+     *
+     * @param null $theme
+     * @param      $domain
+     *
+     * @return bool
+     */
+    function delete_theme($theme, $domain = MAINDIR)
+    {
+        $CI =& get_instance();
+        $CI->load->library('theme_manager');
+
+        return $CI->theme_manager->removeTheme($theme, $domain);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (!function_exists('save_theme_file')) {
+    /**
+     * Save a theme file.
+     * @deprecated since 2.2.0 use Theme_manager->writeFile() instead
+     *
+     * @param string $filename The name of the file to locate. The file will be
+     *                          found by looking in the admin and main themes folders.
+     * @param string $theme The theme to check.
+     * @param array $new_data A string of the theme file content replace.
+     * @param boolean|string $return True to return the contents or false to return bool.
+     *
+     * @return bool|string False if there was a problem loading the file. Otherwise,
+     * returns true when $return is false or a string containing the file's contents
+     * when $return is true.
+     */
+    function save_theme_file($filename = null, $theme = null, $new_data = null, $return = FALSE)
+    {
+        $CI =& get_instance();
+        $CI->load->library('theme_manager');
+
+        return $CI->theme_manager->writeFile($filename, $theme, $new_data, $return);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (!function_exists('create_child_theme_files')) {
+    /**
+     * Create child theme file(s).
+     * @deprecated since 2.2.0 use Theme_manager->createChild() instead
+     *
+     * @param array $files The name of the files to locate. The file will be
+     *                          found by looking in the main themes folders.
+     * @param string $source_theme The theme folder to copy the file from.
+     * @param string $child_theme_data The child theme data.
+     *
+     * @return bool Returns false if file is not found in $source_theme
+     * or $child_theme already exist.
+     */
+    function create_child_theme_files($files = [], $source_theme = null, $child_theme_data = null)
+    {
+        $CI =& get_instance();
+        $CI->load->library('theme_manager');
+
+        return $CI->theme_manager->createChild($source_theme, $child_theme_data);
+    }
 }
 
 // ------------------------------------------------------------------------

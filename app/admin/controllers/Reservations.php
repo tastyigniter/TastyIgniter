@@ -167,10 +167,16 @@ class Reservations extends Admin_Controller
 
             $calendar_data = $this->getCalendarData($data['days'], $month, $year, $day);
 
-            $this->template->setIcon('<a class="btn btn-default" title="'.$this->lang->line('text_switch_to_list').'" href="'.site_url('reservations/').'"><i class="fa fa-list"></i></a>');
+            $this->template->setButton('<i class="fa fa-list"></i>', [
+                'title' => $this->lang->line('text_switch_to_list'),
+                'class' => 'btn btn-default', 'href' => site_url('reservations/')
+            ]);
             $data['calendar'] = $this->calendar->generate($year, $month, $calendar_data);
         } else {
-            $this->template->setIcon('<a class="btn btn-default" title="'.$this->lang->line('text_switch_to_calendar').'" href="'.site_url('reservations?show_calendar=1').'"><i class="fa fa-calendar"></i></a>');
+            $this->template->setButton('<i class="fa fa-calendar"></i>', [
+                'title' => $this->lang->line('text_switch_to_calendar'),
+                'class' => 'btn btn-default', 'href' => site_url('reservations?show_calendar=1')
+            ]);
         }
 
         return $data;

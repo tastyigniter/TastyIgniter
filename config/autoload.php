@@ -77,6 +77,7 @@ $autoload['libraries'] = [
     'events',
     'theme_manager',
     'template',
+    'assets',
 ];
 
 /*

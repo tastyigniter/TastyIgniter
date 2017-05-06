@@ -390,9 +390,9 @@ class Locations extends Admin_Controller
 		$data['countries'] = $this->Countries_model->isEnabled()->dropdown('country_name');
 
 		$data['payment_list'] = [];
-		$payments = Components::list_payment_gateways();
+		$payments = Components::listPaymentGateways();
 		foreach ($payments as $payment) {
-			$extension = Components::find_component_extension($payment['code']);
+			$extension = Components::findComponentExtension($payment['code']);
 			if (!$extension) {
 				continue;
 			}

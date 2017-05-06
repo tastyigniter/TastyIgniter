@@ -24,15 +24,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Template
 {
 
+    protected $_breadcrumb;
     protected $_title_separator;
+    protected $_partial_area;
     protected $_view_folders;
-    protected $_head_tags;
 
-    protected $module;
     protected $controller;
     protected $method;
 
-    protected $layout;
+    protected $layoutRoute;
+    protected $layoutComponents;
+    protected $attachedComponents;
+
     protected $currentView;
 
     protected $themeCode;
@@ -42,16 +45,11 @@ class Template
     protected $navMenu;
     protected $navMenuItems;
 
-    protected $parent_theme = null;
-    protected $theme_path = null;
-    protected $theme_shortpath = null;
-    protected $layouts = [];
-    protected $partials = [];
-    protected $components = [];
-    protected $title_separator = ' | ';
-    protected $data = [];
-    protected $theme_fields = [];
-    protected $theme_config = [];
+    protected $pageTitle;
+    protected $pageHeading;
+    protected $pageButtons = [];
+    protected $pageIcons = [];
+    protected $pageCrumbs = [];
 
     /**
      * @var \BaseController
@@ -69,7 +67,7 @@ class Template
     {
         $this->CI =& get_instance();
 
-        $this->CI->load->library('assets');
+        $this->CI->load->library('parser');
 
         $this->CI->load->helper('template');
         $this->CI->load->helper('assets');
@@ -93,45 +91,31 @@ class Template
         if ($activeTheme = $this->CI->config->item(APPDIR, 'default_themes'))
             $this->setTheme($activeTheme);
 
-        // Modular Separation / Modular Extensions has been detected
-        if (method_exists($this->CI->router, 'fetch_module'))
-            $this->module = $this->CI->router->fetch_module();
-
         // No locations set in config?  Let's use this obvious default
         if ($this->_view_folders === [])
             $this->_view_folders = [THEMEPATH];
     }
 
-    public function render($view = null, $data = [], $return = FALSE)
+    public function render($view = null, $data = [])
     {
         if (is_null($view))
             $view = $this->guessView();
 
         $this->currentView = $view;
 
-        // Set whatever values are given. These will be available to all view files
-        if (!empty($data))
-            $this->setData($data);
-
-        // We don't need you any more buddy
-        unset($data);
-
         // Initialize the components for this layout
         // using the current URI segments
         $this->initLayoutComponents();
 
-//        log_message('info', '------->>>>>>>>>   Template::render:  Load Components');
-        // Load the layouts and partials variables
-//        $this->loadPartials();
-//        dd($this->currentView);
-
         // Lets do the caching instead of the browser
-        if ($this->CI->config->item('cache_mode') === '1') {
-//			$this->CI->output->cache($this->CI->config->item('cache_time'));
-        }
+        if ($this->CI->config->item('cache_mode') === '1')
+            $this->CI->output->cache($this->CI->config->item('cache_time'));
+
+        // Set whatever values are given. These will be available to all view files
+        $this->CI->load->vars($data);
 
         // Want it returned or output to browser?
-        $output = $this->load_view($view, null, null, FALSE);
+        $output = $this->CI->load->view($view);
 
         Events::trigger('after_layout_render', $output);
 
@@ -140,9 +124,7 @@ class Template
 
     public function guessView()
     {
-        $controllerClass = strtolower(get_class($this->controller));
-        $view = $controllerClass.DIRECTORY_SEPARATOR.$this->method;
-
+        $view = strtolower(get_class($this->controller)).DIRECTORY_SEPARATOR.$this->method;
         foreach ($this->_view_folders as $view_folder) {
             if (is_file($view_folder.$this->themeCode.DIRECTORY_SEPARATOR.$view.EXT))
                 return $view;
@@ -159,7 +141,23 @@ class Template
 
     public function getTheme()
     {
-        return $this->theme;
+        return $this->themeCode;
+    }
+
+    public function getPartialArea($area = null)
+    {
+        if (is_null($area))
+            return $this->partialAreas;
+
+        if (!isset($this->partialAreas[$area]))
+            return null;
+
+        $defaultArea = array_merge([
+            'id'          => $area,
+            'class'       => '',
+        ], $this->_partial_area);
+
+        return array_merge($defaultArea, $this->partialAreas[$area]);
     }
 
     public function getCustomizer($item, $value = null)
@@ -174,57 +172,66 @@ class Template
         return $this->themeObj->customizer;
     }
 
-    // @todo: get from controller object
     public function getTitle()
     {
-        return isset($this->data['title']) ? $this->data['title'] : '';
+        return $this->pageTitle;
     }
 
-    // @todo: get from controller object
     public function getHeading()
     {
-        $heading = '';
-        if (isset($this->data['heading'])) {
-            if (count($heading_array = explode(':', $this->data['heading'])) === 2) {
-                $heading = $heading_array[0].'&nbsp;&nbsp;<small>'.$heading_array[1].'</small>';
-            } else {
-                $heading = $this->data['heading'];
-            }
-        }
-
-        return $heading;
+        return $this->pageHeading;
     }
 
-    // @todo: get from controller object
     public function getButtonList()
     {
-        return (isset($this->data['buttons']) AND is_array($this->data['buttons'])) ? implode("\n\t\t", $this->data['buttons']) : '';
+        return implode(PHP_EOL, $this->pageButtons);
     }
 
-    // @todo: get from controller object
+    /**
+     * @deprecated since 2.2
+     * @return string
+     */
     public function getIconList()
     {
-        return (isset($this->data['icons']) AND is_array($this->data['icons'])) ? implode("\n\t\t", $this->data['icons']) : '';
+        return implode(PHP_EOL, $this->pageIcons);
     }
 
-    // @todo: get from controller object
-    public function getBreadcrumb($tag_open = '<li class="{class}">', $link_open = '<a href="{link}">', $link_close = ' </a>', $tag_close = '</li>')
+    /**
+     * @param array $options default:
+     *      [
+     *          'tag_open' = '<li class="{class}">',
+     *          'link_open' = '<a href="{link}">',
+     *          'link_close' = '</a>',
+     *          'tag_close' = '</li>',
+     *      ]
+     *
+     * @return string
+     */
+    public function getBreadcrumb($options = [])
     {
-        $crumbs = '';
+        $options = array_merge($this->_breadcrumb, $options);
 
         if (isset($this->data['breadcrumbs'])) {
             foreach ($this->data['breadcrumbs'] as $crumb) {
-                if (!empty($crumb['uri'])) {
-                    $crumbs .= str_replace('{class}', '', $tag_open).str_replace('{link}', site_url(trim($crumb['uri'], '/')), $link_open).$crumb['name'].$link_close;
-                } else {
-                    $crumbs .= str_replace('{class}', 'active', $tag_open).'<span>'.$crumb['name'].' </span>';
+                $replaceData = array_merge([
+                    'class' => '',
+                    'active' => FALSE,
+                    'link' => site_url(trim($crumb['uri'], '/')),
+                ], $crumb['replace']);
+
+                if ($replaceData['active']) {
+                    $options['link_open'] = '<span class="{class}">';
+                    $options['link_close'] = '</span>';
                 }
 
-                $crumbs .= $tag_close;
+                $options['tag_open'] = $this->CI->parser->parse_string($options['tag_open'], $replaceData);
+                $options['link_open'] = $this->CI->parser->parse_string($options['link_open'], $replaceData);
+
+                $crumbs[] = $options['tag_open'].$options['link_open'].$crumb['name'].$options['link_close'].$options['tag_close'];
             }
         }
 
-        return (!empty($crumbs)) ? '<ol class="breadcrumb">'.$crumbs.'</ol>' : $crumbs;
+        return !empty($crumbs) ? implode(PHP_EOL, $crumbs) : null;
     }
 
     public function getThemeLocation($theme = null)
@@ -243,23 +250,20 @@ class Template
     // SETTER METHODS
     //--------------------------------------------------------------------------
 
-    public function setController($controller = null, $method = null)
+    /**
+     * @used-by	BaseController::_remap()
+     *
+     * @param BaseController $controller
+     * @param string $method
+     */
+    public function setController($controller, $method = null)
     {
         // What controllers or methods are in use
-        if (!is_null($controller))
+        if ($controller instanceof BaseController)
             $this->controller = $controller;
 
         if (!is_null($method))
             $this->method = $method;
-    }
-
-    public function setData($viewData)
-    {
-        if (!is_array($viewData))
-            return FALSE;
-
-        // Merge in what we already have with the specific data
-        $this->data = array_merge($this->data, $viewData);
     }
 
     /**
@@ -289,18 +293,18 @@ class Template
     }
 
     /**
-     * @param array $partialAreas
+     * @param array $partialArea
      *
      * @return $this
      */
-    public function setPartialAreas($partialAreas = null)
+    public function setPartialAreas($partialArea = null)
     {
-        if (is_null($partialAreas)) {
-            $partialAreas = (isset($this->themeObj->partialAreas) AND is_array($this->themeObj->partialAreas)) ?
+        if (is_null($partialArea)) {
+            $partialArea = (isset($this->themeObj->partialAreas) AND is_array($this->themeObj->partialAreas)) ?
                 $this->themeObj->partialAreas : [];
         }
 
-        foreach ($partialAreas as $alias => $area) {
+        foreach ($partialArea as $alias => $area) {
             $alias = is_string($alias) ? $alias : (isset($area['id']) ? $area['id'] : $area);
             $this->partialAreas[$alias] = $area;
         }
@@ -314,11 +318,10 @@ class Template
             return $this;
 
         $menuItems = $this->getCustomizer('nav_menu');
-        if (!$menuItems)
-            return $this;
-
-        foreach ($menuItems as $item => $menu) {
-            $this->navMenuItems[$item] = $menu;
+        if (is_array($menuItems)) {
+            foreach ($menuItems as $item => $menu) {
+                $this->navMenuItems[$item] = $menu;
+            }
         }
 
         return $this;
@@ -326,38 +329,44 @@ class Template
 
     public function setTitle()
     {
-        if (func_num_args() >= 1) {
-            $this->data['title'] = implode($this->title_separator, func_get_args());
+        if (func_num_args()) {
+            $this->pageTitle = implode($this->_title_separator, func_get_args());
         }
     }
 
-    // @todo: set from controller actions instead
-    public function setHeading($heading = '')
+    public function setHeading($heading)
     {
-        $this->data['heading'] = $heading;
+        if (count($heading_array = explode(':', $heading)) === 2) {
+            $heading = $heading_array[0].'&nbsp;<small>'.$heading_array[1].'</small>';
+        }
+
+        $this->pageHeading = $heading;
     }
 
-    // @todo: set from controller actions instead
     public function setButton($name, $attributes = [])
     {
-        $attr = '';
-        foreach ($attributes as $key => $value) {
-            $attr .= ' '.$key.'="'.$value.'"';
-        }
-
-        $this->data['buttons'][] = '<a'.$attr.'>'.$name.'</a>';
+        $this->pageButtons[] = '<a'._attributes_to_string($attributes).'>'.$name.'</a>';
     }
 
-    // @todo: set from controller actions instead
+    /**
+     * @deprecated since 2.2
+     * @param $icon
+     */
     public function setIcon($icon)
     {
-        $this->data['icons'][] = $icon;
+        $this->pageIcons[] = $icon;
     }
 
-    // @todo: set from controller actions instead
-    public function setBreadcrumb($name, $uri = '')
+    /**
+     * @param $name
+     * @param string $uri
+     * @param array $replace ex. ['class' => 'crumb-link', 'active' => TRUE]
+     *
+     * @return $this
+     */
+    public function setBreadcrumb($name, $uri = '', $replace = [])
     {
-        $this->data['breadcrumbs'][] = ['name' => $name, 'uri' => $uri];
+        $this->data['breadcrumbs'][] = ['name' => $name, 'uri' => $uri, 'replace' => $replace];
 
         return $this;
     }
@@ -478,45 +487,40 @@ class Template
 
     public function get_header()
     {
-        return $this->load_view('header', $this->data);
+        return $this->CI->load->partial('header');
     }
 
     public function get_footer()
     {
-        return $this->load_view('footer', $this->data);
+        return $this->CI->load->partial('footer');
     }
 
-    // @todo: get data from controller object
-    public function partial_exists($view = '')
+    public function partial_exists($partialName)
     {
-        return isset($this->partials[$view]);
+        return isset($this->layoutComponents[$partialName]);
     }
 
+    /**
+     * @deprecated since 2.2 use loadComponentArea instead
+     *
+     * @param string $view
+     * @param array $replace
+     *
+     * @return mixed|string
+     */
     public function get_partial($view = '', $replace = [])
     {
-        $partial = empty($this->partials[$view]) ? $this->getPartial($view) : $this->partials[$view];
-        var_dump($view);
-
-        $partial_class = !empty($partial['data']['class']) ? $partial['data']['class'] : '';
-        $partial_class = !empty($replace['class']) ? $replace['class'] : $partial_class;
-
-        $partial_data = isset($partial['data']['open_tag']) ? str_replace('{id}', str_replace('_', '-', $view), str_replace('{class}', $partial_class, $partial['data']['open_tag'])) : '';
-        $partial_data .= empty($partial['view']) ? '' : $partial['view'];
-        $partial_data .= isset($partial['data']['close_tag']) ? $partial['data']['close_tag'] : '';
-
-        return $partial_data;
+        return $this->loadComponentArea($view, $replace);
     }
 
     public function find_path($view = '')
     {
         if (!empty($this->themeCode)) {
-            $theme_views = ['/', '/layouts/', '/partials/'];
-
             $themeCode = $this->themeCode;
             $parentThemeCode = $this->themeObj->parent;
 
+            $theme_views = ['/', '/layouts/', '/partials/'];
             foreach ($this->_view_folders as $location) {
-
                 foreach ($theme_views as $theme_view) {
                     $t_view = (pathinfo($view, PATHINFO_EXTENSION)) ? $view : $view.'.php';
                     if (file_exists($location.$themeCode.$theme_view.$t_view)) {
@@ -532,94 +536,70 @@ class Template
         return [$view, null];
     }
 
-    protected function loadPartials()
+    public function getPartialComponents($partialName)
     {
-        $partialAreas = array_merge($this->partialAreas, $this->layouts);
+        if (!isset($this->layoutComponents[$partialName]))
+            return null;
 
-        foreach ($partialAreas as $partial_name => $partial_data) {
-            if (!is_string($partial_name)) continue;
-
-            if ($partial_view = $this->load_partial($partial_name, $partial_data)) {
-                $this->partials[$partial_name] = ['data' => $partial_data, 'view' => $partial_view];
-            }
-        }
-    }
-
-    protected function getPartial($partial = '')
-    {
-        list($name, $data) = [$partial, []];
-
-        if (!is_string($name)) return null;
-
-        $view = $this->load_partial($name, $data);
-
-        return ['data' => $data, 'view' => $view];
+        return $this->layoutComponents[$partialName];
     }
 
     protected function initLayoutComponents()
     {
-        list($uriRoute, $components) = $this->getLayoutComponentsByRoute();
+        $attachedComponents = $this->getAttachedComponentsByRoute();
+        if (!is_array($attachedComponents))
+            return;
+
+        foreach ($attachedComponents as $partialName => $components) {
+            $this->attachComponents($partialName, $components);
+            $this->sortComponents($partialName);
+        }
+    }
+
+    public function attachComponents($partialName, $components)
+    {
         foreach ($components as $component) {
-            $this->attachComponent();
+            $this->attachComponent($partialName, $component);
         }
     }
 
-    protected function getLayoutComponents()
+    public function attachComponent($partialName, $component)
     {
-        // Do nothing if template is rendered from a component
+        if (!isset($component['module_code']) OR (isset($component['status']) AND !$component['status']))
+            return;
 
-        list($uri_route, $layout_modules) = $this->getLayoutComponentsByRoute();
+        $componentCode = $component['module_code'];
+        $registeredComponent = Components::findComponent($componentCode);
+        if (!$registeredComponent)
+            return;
 
-        $components = [];
-        $_components = Components::listComponents();
-        foreach ($layout_modules as $partial => $partial_modules) {
-            foreach ($partial_modules as $layout_module) {
-                if (isset($layout_module['module_code']) AND !empty($_components[$layout_module['module_code']])) {
-                    $component = $_components[$layout_module['module_code']];
+        if (isset($component['partial']) AND in_array($component['partial'], ['top', 'left', 'right', 'bottom']))
+            $component['partial'] = 'content_'.$component['partial'];
 
-                    if ($component['code'] == $layout_module['module_code'] AND $layout_module['status'] == '1') {
-                        $partial = $layout_module['partial'];
-                        if (in_array($layout_module['partial'], ['top', 'left', 'right', 'bottom'])) {
-                            $partial = 'content_'.$layout_module['partial'];
-                        }
-
-                        unset($layout_module['options']);
-                        $components[$partial][] = [
-                            'code'                => $component['code'],
-                            'name'                => $component['name'],
-                            'layout_id'           => $layout_module['layout_id'],
-                            'uri_route'           => $uri_route,
-                            'partial'             => $partial,
-                            'priority'            => $layout_module['priority'],
-                            'title'               => $layout_module['title'],
-                            'fixed'               => $layout_module['fixed'],
-                            'fixed_top_offset'    => $layout_module['fixed_top_offset'],
-                            'fixed_bottom_offset' => $layout_module['fixed_bottom_offset'],
-                        ];
-                    }
-                }
-            }
-        }
-
-        return $components;
+        $partialArea = $this->getPartialArea($partialName);
+        $component = array_merge($registeredComponent, $component);
+        $component['view'] = $this->makeComponentView($componentCode, $component, $partialArea['module_html']);
+        $this->layoutComponents[$partialName][$componentCode] = $component;
     }
 
-    protected function getLayoutComponentsByRoute()
+    protected function getAttachedComponentsByRoute()
     {
-        if (APPDIR === ADMINDIR) return [null, []];
+        if (APPDIR === ADMINDIR) return [];
+
+        if (is_array($this->attachedComponents))
+            return $this->attachedComponents;
 
         $this->CI->load->model('Layouts_model');
         $segments = $this->getLayoutRouteSegments();
-        $layoutComponents = $this->CI->Layouts_model->getRouteLayoutModules($segments);
+        $attachedComponents = $this->CI->Layouts_model->getRouteLayoutModules(array_unique($segments));
+        if (!isset($attachedComponents['uri_route']))
+            return null;
 
-        // Lets break the look if a layout was found.
-        $uri_route = isset($layoutComponents['uri_route']) ? $layoutComponents['uri_route'] : '';
-        if (!empty($layoutComponents)) {
-            return [$uri_route, $layoutComponents];
-        }
+        // set the current layout route
+        $this->layoutRoute = $attachedComponents['uri_route'];
+        unset($attachedComponents['uri_route']);
 
-        // We return null if no layout was found.
-        return [null, []];
+        return $this->attachedComponents = $attachedComponents;
     }
 
     /**
@@ -654,14 +634,14 @@ class Template
         return empty($routes) ? null : $segments;
     }
 
-    protected function sortComponents($partial_name)
+    protected function sortComponents($partialName)
     {
-        if (!empty($partial_name)) {
-            foreach ($this->components[$partial_name] as $key => $module) {
+        if (isset($this->layoutComponents[$partialName])) {
+            foreach ($this->layoutComponents[$partialName] as $key => $module) {
                 $components[$key] = $module['priority'];
             }
 
-            array_multisort($components, SORT_ASC, $this->components[$partial_name]);
+            array_multisort($components, SORT_ASC, $this->layoutComponents[$partialName]);
         }
     }
 
@@ -669,73 +649,84 @@ class Template
     // VIEWS LOADER
     //--------------------------------------------------------------------------
 
-    public function load_view($view, $data = null, $override_view_path = null, $return = TRUE)
+    /**
+     * @deprecated since 2.2 use load->view instead
+     *
+     * @param $view
+     * @param null $data
+     *
+     * @return object|string
+     */
+    public function load_view($view, $data = null)
     {
-        if (empty($data))
-            $data = $this->data;
-
-        list($view, $location) = $this->find_path($view);
-
-        if (!empty($location)) $override_view_path = $location;
-
-        if (!empty($override_view_path)) {
-            $this->CI->load->vars($data);
-
-            // Load it directly, bypassing $this->load->view() as MX resets _ci_view
-            $content = $this->CI->load->file($override_view_path.$view.'.php', TRUE);
-        } else {
-            // Can just run as usual
-            // Grab the content of the view
-            $content = $this->CI->load->view($view, $data);
-        }
-
-        return $content;
+        return $this->CI->load->view($view, $data);
     }
 
+    /**
+     * @deprecated since 2.2 use load->partial instead
+     *
+     * @param $name
+     * @param array $data
+     *
+     * @return null|object|string
+     */
     public function load_partial($name, $data = [])
     {
-        $view = null;
-
-        if (isset($this->layouts[$name])) {
-            $view = $this->load_view($name, $data);
-        } else if (!empty($this->partialAreas[$name])) {
-            // We stop here if no module was found.
-            if (empty($this->components[$name])) return $view;
-
-            $count = 1;
-            $this->sortComponents($name);
-            foreach ($this->components[$name] as $module) {
-                $view .= $this->buildPartialComponent($module, $data, $count++);
-            }
-        }
-
-        return $view;
+        return $this->CI->load->partial($name, $data);
     }
 
-    protected function buildPartialComponent($module, $partial_data, $count)
+    public function loadComponentArea($partialName = '', $replaceVariables = [])
     {
-        $module_view = Components::run($module['code'].'/index', $this->controller, $module);
-        var_dump("buildPartialComponent => {$module['code']}");
+        $components = $this->getPartialComponents($partialName);
+        if (!is_array($components))
+            return $components;
 
-        if (!empty($module['title'])) {
-            $module_view = ($module['title'] != strip_tags($module['title'])) ? $module['title'].$module_view : "<h3 class=\"module-title\">{$module['title']}</h3>".$module_view;
+        $partialArea = $this->getPartialArea($partialName);
+        if ($replaceVariables)
+            $partialArea = array_merge($partialArea, $replaceVariables);
+
+        $partialArea['id'] = str_replace('_', '-', $partialArea['id'])."-".random_string();
+        $partialArea['open_tag'] = $this->CI->parser->parse_string($partialArea['open_tag'], $partialArea);
+
+        $componentView = [];
+        foreach ($components as $code => $component)
+            $componentView[] = $component['view'];
+
+        $partialArea['view'] = implode(PHP_EOL, $componentView);
+
+        $areaWrapper = "{open_tag}{view}{close_tag}";
+
+        return $this->CI->parser->parse_string($areaWrapper, $partialArea);
+    }
+
+    protected function makeComponentView($view, $component, $htmlWrapper = null)
+    {
+        if (!isset($component['code']))
+            show_error('Missing [code] index from component array passed to [template->renderComponent]');
+
+        $option = $component['options'];
+        $componentTitle = $option['title'];
+        if ($componentTitle != '' AND $componentTitle == strip_tags($componentTitle))
+            $componentTitle = "<h3 class=\"module-title\">{$componentTitle}</h3>";
+
+        $componentCode = $component['code'];
+        $parseData['id'] = "module-".str_replace('_', '-', $componentCode)."-".random_string();
+        $parseData['class'] = "module-{$componentCode}";
+
+        $componentView = Components::run($view, $this->controller, $option);
+
+        if ($option['fixed']) {
+            $parseData['class'] .= ' affix-module';
+            $fixedTag = "<div data-spy=\"affix\" data-offset-top=\"{$option['fixed_top_offset']}\" data-offset-bottom=\"{$option['fixed_bottom_offset']}\">";
+            $parseData['module'] = $fixedTag.$componentTitle.$componentView.'</div>';
+        } else {
+            $parseData['module'] = $componentTitle.$componentView;
         }
 
-        $module_class = 'module-'.$module['code'].'';
-        if ($module['fixed'] == '1') {
-            $top_offset = isset($module['fixed_top_offset']) ? $module['fixed_top_offset'] : '';
-            $bottom_offset = isset($module['fixed_bottom_offset']) ? $module['fixed_bottom_offset'] : '';
-            $fixed_tag = '<div data-spy="affix" data-offset-top="'.$top_offset.'" data-offset-bottom="'.$bottom_offset.'">';
-            $module_view = $fixed_tag.$module_view.'</div>';
-            $module_class .= ' affix-module';
-        }
+        // Parse component wrapper variables
+        $htmlWrapper = $this->CI->parser->parse_string($htmlWrapper, $parseData);
 
-        (!empty($partial_data['module_html'])) OR $partial_data['module_html'] = '<div id="{id}" class="{class}">{module}</div>';
-
-        $module_view = str_replace('{id}', 'module-'.str_replace('_', '-', $module['code']).'-'.$count,
-            str_replace('{class}', $module_class, str_replace('{module}', $module_view, $partial_data['module_html'])));
-
-        return $module_view;
+        return $htmlWrapper;
     }
 
     /**

@@ -20,13 +20,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | -------------------------------------------------------------------
 | This will contain some breadcrumbs settings.
 |
-| $config['breadcrumb_divider']			The string used to separate each breadcrumb link
-| $config['breadcrumb_tag_open'] 		The opening tag for breadcrumbs container.
-| $config['breadcrumb_tag_close'] 		The closing tag for breadcrumbs container.
-| $config['breadcrumb_link_open'] 		The opening tag for breadcrumb link.
-| $config['breadcrumb_link_close'] 		The closing tag for breadcrumb link.
+| $config['breadcrumb']['divider']			The string used to separate each breadcrumb link
+| $config['breadcrumb']['tag_open'] 		The opening tag for breadcrumbs container.
+| $config['breadcrumb']['tag_close'] 		The closing tag for breadcrumbs container.
+| $config['breadcrumb']['link_open'] 		The opening tag for breadcrumb link.
+| $config['breadcrumb']['link_close'] 		The closing tag for breadcrumb link.
 |
 */
+$config['breadcrumb']['divider']    = '&raquo;';
+$config['breadcrumb']['tag_open']  = '<li class="{class}">';
+$config['breadcrumb']['tag_close']  = '</li>';
+$config['breadcrumb']['link_open']  = '<a href="{link}">';
+$config['breadcrumb']['link_close'] = '</a>';
+
 /*
 |--------------------------------------------------------------------------
 | Title Separator
@@ -39,6 +45,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 $config['title_separator'] = ' - ';
+
+/*
+|--------------------------------------------------------------------------
+| Partial Area Config
+|--------------------------------------------------------------------------
+|
+|   The default config when none is available in the theme config
+|
+*/
+$config['partial_area']['open_tag'] = '<div id="{id}">';
+$config['partial_area']['close_tag'] = '</div>';
+$config['partial_area']['module_html'] = '<div id="{id}" class="{class}">{module}</div>';
 
 /*
 |--------------------------------------------------------------------------

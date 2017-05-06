@@ -135,7 +135,9 @@
 	                <div class="container">
 	                    <div class="row">
 	                        <div class="col-xs-12">
-                                <?php echo $breadcrumbs; ?>
+                                <ol class="breadcrumb">
+                                    <?php echo $breadcrumbs; ?>
+                                </ol>
 	                        </div>
 	                    </div>
 	                </div>

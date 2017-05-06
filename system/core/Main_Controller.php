@@ -54,7 +54,6 @@ class Main_Controller extends BaseController
         $this->libraries = array_merge([
             'form_validation',
             'permalink',
-            'template',
             'customer',
             'customer_online',
             'location'

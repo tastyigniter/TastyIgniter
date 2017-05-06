@@ -67,7 +67,7 @@ class Themes_model extends Model
 				'is_child'     => $themeObj->isChild,
 				'parent'       => $themeObj->parent,
 				'installed'    => !empty($installed_theme) ? TRUE : FALSE,
-				'activated'    => $themeObj->activated,
+				'activated'    => $themeObj->active,
 				'data'         => !empty($installed_theme['data']) ? $installed_theme['data'] : [],
 				'customizer'   => $themeObj->customizer,
 			]);
@@ -192,12 +192,12 @@ class Themes_model extends Model
 				$default_themes[MAINDIR . '_parent'] = $theme['parent'] . '/';
 			}
 
-			$this->load->model('Settings_model');
+            $this->load->model('Settings_model');
 			if ($this->Settings_model->addSetting('prefs', 'default_themes', $default_themes, '1')) {
 				$query = $theme['name'];
 			}
 
-			if ($query !== FALSE) {
+            if ($query !== FALSE) {
 				$this->updateInstalledThemes($name);
 
 				$active_theme_options = $this->config->item('active_theme_options');

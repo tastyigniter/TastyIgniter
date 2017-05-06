@@ -130,8 +130,8 @@ class Layouts_model extends Model
 		$result = [];
 		$this->load->model('Layout_routes_model');
 
-		if (!empty($uri_route)) {
-			foreach (array_unique($uri_route) as $route) {
+		if (is_array($uri_route)) {
+			foreach ($uri_route as $route) {
 				$query = $this->Layout_routes_model->groupBy('layout_module_id');
 				$query->select('layout_modules.layout_id', 'layout_module_id', 'module_code', 'uri_route', 'partial', 'priority', 'layout_modules.options', 'layout_modules.status');
 				$query->leftJoin('layout_modules', 'layout_modules.layout_id', '=', 'layout_routes.layout_id');
@@ -143,19 +143,21 @@ class Layouts_model extends Model
 					$query->orWhere('layout_routes.uri_route', $route);
 				}
 
-				if ($rows = $query->getAsArray()) {
+                // Lets break the loop if a layout was found.
+                if ($rows = $query->getAsArray()) {
+                    $result['uri_route'] = $route;
 					foreach ($rows as $row) {
 						$row = $this->getModuleOptionsArray($row);
 
 						$result[$row['partial']][] = $row;
 					}
 
-					return $result;
+					break;
 				}
 			}
 		}
 
-		return $result;
+        return $result;
 	}
 
 	/**
@@ -224,11 +226,11 @@ class Layouts_model extends Model
 	 */
 	protected function getModuleOptionsArray($row = [])
 	{
-		$options = $row['options'];
-		$row['title'] = isset($options['title']) ? htmlspecialchars_decode($options['title']) : '';
-		$row['fixed'] = isset($options['fixed']) ? $options['fixed'] : '';
-		$row['fixed_top_offset'] = isset($options['fixed_top_offset']) ? $options['fixed_top_offset'] : '';
-		$row['fixed_bottom_offset'] = isset($options['fixed_bottom_offset']) ? $options['fixed_bottom_offset'] : '';
+		$row['options'] = $options = is_string($row['options']) ? @unserialize($row['options']) : $row['options'];
+		$row['options']['title'] = isset($options['title']) ? htmlspecialchars_decode($options['title']) : '';
+		$row['options']['fixed'] = isset($options['fixed']) ? (int)$options['fixed'] : 0;
+		$row['options']['fixed_top_offset'] = isset($options['fixed_top_offset']) ? (int)$options['fixed_top_offset'] : 0;
+		$row['options']['fixed_bottom_offset'] = isset($options['fixed_bottom_offset']) ? (int)$options['fixed_bottom_offset'] : 0;
 
 		return $row;
 	}
