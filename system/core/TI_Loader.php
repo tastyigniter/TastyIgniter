@@ -87,22 +87,53 @@ class TI_Loader extends MX_Loader
     // --------------------------------------------------------------------
 
     /** Load a view **/
-    public function view($view, $vars = [], $return = FALSE)
+    public function view($view, $vars = [], $return = TRUE)
     {
-        $theme_paths = [
-            $this->config->item(APPDIR, 'default_themes'), $this->config->item(APPDIR.'_parent', 'default_themes'),
-        ];
+        return $this->_ci_load([
+            '_ci_view' => $this->find_view($view),
+            '_ci_vars' => $this->_ci_object_to_array($vars),
+            '_ci_return' => $return
+        ]);
+    }
 
+    // --------------------------------------------------------------------
+
+    /** Load a partial **/
+    public function partial($partial, $vars = [], $return = TRUE)
+    {
+        return $this->_ci_load([
+            '_ci_view' => $this->find_view($partial, '/partials/'),
+            '_ci_vars' => $this->_ci_object_to_array($vars),
+            '_ci_return' => $return
+        ]);
+    }
+
+    // --------------------------------------------------------------------
+
+    /** Load a layout **/
+    public function layout($layout, $vars = [], $return = TRUE)
+    {
+        return $this->_ci_load([
+            '_ci_view' => $this->find_view($layout, '/layouts/'),
+            '_ci_vars' => $this->_ci_object_to_array($vars),
+            '_ci_return' => $return
+        ]);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function find_view($view = '', $folder = null)
+    {
+        $folders = is_null($folder) ? ['/', '/partials/', '/layouts/'] : [$folder];
+
+        $theme_paths = $this->_get_theme_paths();
         foreach (array_filter($theme_paths) as $theme_path) {
             $theme_path = rtrim($theme_path, '/');
-
-            foreach (['/', '/layouts/', '/partials/'] as $folder) {
-                $t_view = (pathinfo($view, PATHINFO_EXTENSION)) ? $view : $view.EXT;
-
-                if (file_exists(THEMEPATH.$theme_path.$folder.$t_view)) {
-                    $path = THEMEPATH.$theme_path.$folder;
+            foreach ($folders as $folder) {
+                if (file_exists($theme_path.$folder.$view.EXT)) {
+                    $path = $theme_path.$folder;
                     $this->_ci_view_paths = [$path => TRUE] + $this->_ci_view_paths;
-                    break;
+                    break 2;
                 }
             }
         }
@@ -110,14 +141,28 @@ class TI_Loader extends MX_Loader
         if (empty($path)) {
             $base = (APPDIR === ADMINDIR) ? 'views/' : 'components/views/';
             list($path, $_view) = Modules::find($view, $this->_module, $base);
-
             if ($path != FALSE) {
                 $this->_ci_view_paths = [$path => TRUE] + $this->_ci_view_paths;
                 $view = $_view;
             }
         }
 
-        return $this->_ci_load(['_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => FALSE]);
+        return $view;
+    }
+
+    // --------------------------------------------------------------------
+
+    protected function _get_theme_paths($domain = null)
+    {
+        if (is_null($domain)) $domain = APPDIR;
+
+        $default_themes = $this->config->item('default_themes');
+        $paths = array_intersect_key($default_themes, [$domain => '', $domain.'_parent' => '']);
+
+        $theme_path = ($domain == ADMINDIR) ? VIEWPATH : THEMEPATH;
+        return array_map(function($path) use ($theme_path) {
+            return $theme_path.rtrim($path, '/');
+        }, $paths);
     }
 
     // --------------------------------------------------------------------
