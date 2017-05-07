@@ -150,7 +150,7 @@ class Staffs_model extends Model
 	{
 		$this->load->model('Users_model');
 
-		return $this->Users_model->findOrNew(['staff_id' => $staff_id])->toArray();
+		return $this->Users_model->firstOrNew(['staff_id' => $staff_id])->toArray();
 	}
 
 	/**

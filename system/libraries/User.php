@@ -56,7 +56,14 @@ class User extends \Igniter\Core\Auth
         if (is_null($userModel = $this->user()))
             return;
 
-        foreach ($userModel->toArray() as $key => $value) {
+        $this->load->model('Staffs_model');
+        $staffModel = $this->Staffs_model->joinTables()
+            ->where('user_id', $userModel->user_id);
+
+        if (is_null($staffModel = $staffModel->first()))
+            return;
+
+        foreach ($staffModel->toArray() as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->$key = $value;
             }
