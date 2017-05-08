@@ -217,7 +217,7 @@ if (!function_exists('page_url')) {
     {
         $CI =& get_instance();
 
-        return rtrim($CI->config->site_url(), '/').'/'.$CI->uri->uri_string();
+        return root_url($CI->uri->uri_string());
     }
 }
 

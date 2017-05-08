@@ -141,23 +141,22 @@ class TI_Config extends MX_Config
         $query_arr = [];
         if (isset($query[1])) parse_str($query[1], $query_arr);
 
-        if (!isset($query_arr['location_id'])) {
-            $location_id = isset(get_instance()->location) ? get_instance()->location->getId() : null;
-            if ($this->item('site_location_mode') === 'multiple' AND is_numeric($location_id)) {
-                $query_arr['location_id'] = $location_id;
-            }
+        if (!isset($query_arr['location_id']) AND $this->item('site_location_mode') === 'multiple') {
+            $CI =& get_instance();
+            if (is_object($CI->location))
+                $CI->location->initialize(); // make sure library is initialized
+
+            if (!is_numeric($location_id = $CI->location->getId()))
+                $location_id = (int)$this->item('default_location_id');
+
+            $query_arr['location_id'] = $location_id;
         }
 
         if ($this->item('site_location_mode') === 'single') unset($query_arr['location_id']);
 
         $temp_uri = str_replace(['menus', 'info', 'reviews', 'gallery'], 'local', $query[0]);
-        if (!empty($query_arr)) {
-            $url = $this->site_url($temp_uri.'?'.http_build_query($query_arr), $protocol);
-        } else {
-            $url = $this->site_url($uri, $protocol);
-        }
-
-//        $url = str_replace(['setup/', ADMINDIR.'/'], '', $url);
+        $temp_uri = !empty($query_arr) ? $temp_uri.'?'.http_build_query($query_arr) : $uri;
+        $url = $this->site_url($temp_uri, $protocol);
 
         if (strpos($url, '/menus') === FALSE AND !empty($query_arr)) {
             $_query = explode('?', $url);
@@ -294,6 +293,7 @@ class TI_Config extends MX_Config
             return FALSE;
 
         $this->config =& get_config($_configArray);
+
         return TRUE;
     }
 
