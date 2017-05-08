@@ -121,7 +121,7 @@ class Login extends Admin_Controller
 
     protected function validateResetForm()
     {
-        if ($this->uri->segment(3)) {
+        if ($this->input->get_post('code')) {
             $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
             $this->form_validation->set_rules('password_confirm', 'lang:label_password_confirm', 'xss_clean|trim|required');
         } else {
