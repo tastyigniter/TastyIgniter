@@ -71,7 +71,6 @@ class Menus_model extends Model
 		$categoriesTable = $this->tablePrefix('categories');
 		$menusSpecialsTable = $this->tablePrefix('menus_specials');
 		$mealtimesTable = $this->tablePrefix('mealtimes');
-		$locationMenusTable = $this->tablePrefix('location_menus');
 
 		if (APPDIR === ADMINDIR) {
 			$queryBuilder = "*, {$menusTable}.menu_id, IF(start_date <= {$current_date}, IF(end_date >= {$current_date}, \"1\", \"0\"), \"0\") AS is_special";
@@ -79,7 +78,7 @@ class Menus_model extends Model
 			$queryBuilder = "{$menusTable}.menu_id, menu_name, menu_description, menu_photo, menu_price, minimum_qty,
 				menu_category_id, menu_priority, {$categoriesTable}.name AS category_name, special_status,
 				start_date, end_date, special_price, {$menusTable}.mealtime_id, {$mealtimesTable}.mealtime_name,
-				{$mealtimesTable}.start_time, {$mealtimesTable}.end_time, mealtime_status, {$locationMenusTable}.location_id, " .
+				{$mealtimesTable}.start_time, {$mealtimesTable}.end_time, mealtime_status, " .
 				"IF({$menusSpecialsTable}.start_date <= {$current_date}, IF({$menusSpecialsTable}.end_date >= {$current_date}, \"1\", \"0\"), \"0\") AS is_special, " .
 				"IF({$mealtimesTable}.start_time <= {$current_time}, IF({$mealtimesTable}.end_time >= {$current_time}, \"1\", \"0\"), \"0\") AS is_mealtime";
 		}
@@ -88,7 +87,6 @@ class Menus_model extends Model
 		$query->leftJoin('categories', 'categories.category_id', '=', 'menus.menu_category_id');
 		$query->leftJoin('menus_specials', 'menus_specials.menu_id', '=', 'menus.menu_id');
 		$query->leftJoin('mealtimes', 'mealtimes.mealtime_id', '=', 'menus.mealtime_id');
-		$query->leftJoin('location_menus', 'location_menus.menu_id', '=', 'menus.menu_id');
 
 		if (APPDIR === ADMINDIR) {
 			if (!empty($filter['filter_search'])) {
@@ -98,10 +96,6 @@ class Menus_model extends Model
 			if (is_numeric($filter['filter_status'])) {
 				$query->where('menu_status', $filter['filter_status']);
 			}
-		}
-
-		if (!empty($filter['filter_location'])) {
-			$query->where('location_id', $filter['filter_location']);
 		}
 
 		if (!empty($filter['filter_category'])) {
@@ -138,25 +132,6 @@ class Menus_model extends Model
 					   ->findOrNew($menu_id);
 
 		return $result;
-	}
-
-	/**
-	 * Return all menus by location
-	 *
-	 * @param int $location_id
-	 *
-	 * @return array
-	 */
-	public function getMenusByLocation($location_id = null)
-	{
-		$location_menus = [];
-		$this->load->model('Location_menus_model');
-		$menus = $this->Location_menus_model->where('location_id', $location_id)->getAsArray();
-		foreach ($menus as $row) {
-			$location_menus[] = $row['menu_id'];
-		}
-
-		return $location_menus;
 	}
 
 	/**
@@ -245,36 +220,6 @@ class Menus_model extends Model
 			}
 
 			return $menu_id;
-		}
-	}
-
-	/**
-	 * Create a new or update existing menu locations
-	 *
-	 * @param int $menu_id
-	 * @param array $locations
-	 *
-	 * @return bool
-	 */
-	public function addMenuLocations($menu_id, $locations = [])
-	{
-		if (is_single_location())
-			return TRUE;
-
-		$this->load->model('Location_menus_model');
-		$affected_rows = $this->Location_menus_model->where('menu_id', $menu_id)->delete();
-
-		if (is_array($locations) AND !empty($locations)) {
-			foreach ($locations as $key => $location_id) {
-				$this->Location_menus_model->firstOrCreate([
-					'menu_id'    => $menu_id,
-					'location_id' => $location_id,
-				]);
-			}
-		}
-
-		if (!empty($locations) AND $affected_rows > 0) {
-			return TRUE;
 		}
 	}
 

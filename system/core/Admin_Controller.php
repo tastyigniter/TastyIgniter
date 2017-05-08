@@ -102,14 +102,6 @@ class Admin_Controller extends BaseController
         if (!empty($this->filter) OR !empty($this->default_sort)) $this->setFilter();
         if (!empty($this->sort)) $this->setSort();
 
-        // @todo: use new template event binder instead..
-        // Change nav menu if single location mode is activated
-//		if (($this->user AND $this->user->isStrictLocation()) OR $this->config->item('site_location_mode') === 'single') {
-//			$this->template->removeNavMenuItem('locations', 'restaurant');
-//			$menu = array('priority' => '1', 'class' => 'locations', 'href' => site_url('locations/edit'), 'title' => lang('menu_setting'), 'permission' => 'Admin.Locations');
-//			$this->template->addNavMenuItem('locations', $menu, 'restaurant');
-//		}
-
 		$this->form_validation->CI =& $this;
 
         log_message('info', 'Admin Controller Class Initialized');

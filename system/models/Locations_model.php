@@ -195,25 +195,6 @@ class Locations_model extends Model
 	}
 
 	/**
-	 * Return all locations by menu
-	 *
-	 * @param int $menu_id
-	 *
-	 * @return array
-	 */
-	public function getLocationsByMenu($menu_id = null)
-	{
-		$menu_locations = [];
-		$this->load->model('Location_menus_model');
-		$locations = $this->Location_menus_model->where('menu_id', $menu_id)->getAsArray();
-		foreach ($locations as $row) {
-			$menu_locations[] = $row['location_id'];
-		}
-
-		return $menu_locations;
-	}
-
-	/**
 	 * Return all locations by table
 	 *
 	 * @param int $table_id
@@ -457,34 +438,6 @@ class Locations_model extends Model
 
 				return $query;
 			}
-		}
-	}
-
-	/**
-	 * Create a new or update existing location menus
-	 *
-	 * @param int $location_id
-	 * @param array $menus
-	 *
-	 * @return bool
-	 */
-	public function addLocationMenus($location_id, $menus = [])
-	{
-		$this->load->model('Location_menus_model');
-		$affected_rows = $this->Location_menus_model->where('location_id', $location_id)->delete();
-
-		if (is_array($menus) && !empty($menus)) {
-			foreach ($menus as $key => $menu_id) {
-
-				$this->Location_menus_model->firstOrCreate([
-					'location_id' => $location_id,
-					'menu_id'    => $menu_id,
-				]);
-			}
-		}
-
-		if (!empty($menus) AND $affected_rows > 0) {
-			return TRUE;
 		}
 	}
 

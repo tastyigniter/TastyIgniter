@@ -48,6 +48,7 @@ class System
      */
     public function postControllerConstructor()
     {
+        $this->replaceNavMenuItem();
     }
 
     /**
@@ -63,5 +64,26 @@ class System
 
     public function postSystem()
     {
+    }
+
+    protected function replaceNavMenuItem()
+    {
+        $CI =& get_instance();
+
+        if (!$CI->load->controller instanceof Admin_Controller)
+            return;
+
+        // Change nav menu if single location mode is activated
+        if ((is_object($CI->user) AND $CI->user->isStrictLocation()) OR $CI->config->item('site_location_mode') === 'single') {
+            $CI->template->removeNavMenuItem('locations', 'restaurant');
+
+            $CI->template->addNavMenuItem('locations', [
+                'priority' => '1',
+                'class' => 'locations',
+                'href' => site_url('locations/edit'),
+                'title' => lang('menu_setting'),
+                'permission' => 'Admin.Locations'
+            ], 'restaurant');
+        }
     }
 }

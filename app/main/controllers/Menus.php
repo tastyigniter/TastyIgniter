@@ -77,10 +77,6 @@ class Menus extends Main_Controller
 			$this->setFilter('filter_category', (int)$this->input->get('category_id'));
 		}
 
-		if (!is_single_location() AND $this->input->get('location_id')) {
-			$this->setFilter('filter_location', (int)$this->input->get('location_id'));
-		}
-
 		$this->setFilter('base_url', current_url());
 		$results = $this->Menus_model->paginateWithFilter($this->getFilter());
 		$data['menus'] = $this->Menus_model->buildMenuList($results->list);
