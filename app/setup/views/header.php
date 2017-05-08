@@ -4,11 +4,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><?php echo sprintf(lang('text_title'), $text_heading); ?></title>
 	<link type="image/ico" rel="shortcut icon" href="<?php echo root_url('favicon.ico'); ?>">
-    <link type="text/css" rel="stylesheet" href="<?php echo assets_url('css/bootstrap.min.css'); ?>">
-	<link type="text/css" rel="stylesheet" href="<?php echo assets_url('css/font-awesome.min.css'); ?>">
-	<link type="text/css" rel="stylesheet" href="<?php echo assets_url('css/awesome-checkbox.css'); ?>">
-	<link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/fonts.css'); ?>">
-	<link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/stylesheet.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?php echo assets_url('css/vendor/bootstrap.min.css'); ?>">
+	<link type="text/css" rel="stylesheet" href="<?php echo assets_url('css/vendor/font-awesome.min.css'); ?>">
+	<link type="text/css" rel="stylesheet" href="<?php echo assets_url('css/vendor/awesome-checkbox.css'); ?>">
+	<link type="text/css" rel="stylesheet" href="<?php echo base_url('app/setup/views/assets/fonts.css'); ?>">
+	<link type="text/css" rel="stylesheet" href="<?php echo base_url('app/setup/views/assets/stylesheet.css'); ?>">
 	<script src="<?php echo assets_url('js/app/vendor.js'); ?>"></script>
 	<script src="<?php echo assets_url('js/app/app.js'); ?>"></script>
 	<script src="<?php echo assets_url('js/app/installer.js'); ?>"></script>

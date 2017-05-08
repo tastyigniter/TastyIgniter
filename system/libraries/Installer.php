@@ -37,16 +37,15 @@ class Installer
 	public $required_php_version;
 
 	protected $writable_folders = [
-		'admin/cache',
-		'main/cache',
-		'system/tastyigniter/logs',
-		'assets/cache',
+		'storage/cache',
+		'storage/logs',
+		'storage/public',
 		'assets/downloads',
 		'assets/images',
 	];
 
 	protected $writable_files = [
-		'system/tastyigniter/config/database.php',
+		'config/database.php',
 	];
 
 	public function __construct($config = [])

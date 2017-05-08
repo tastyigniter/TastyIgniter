@@ -3,6 +3,7 @@
 class Setup extends BaseController {
 
     protected $setup_step;
+    protected $sess_setup_step;
     protected $setup_timeout = '900';
     protected $setup_proceed = FALSE;
 
@@ -12,7 +13,7 @@ class Setup extends BaseController {
         $this->load->model('Setup_model');
         $this->load->library('form_validation');
 
-        $this->setup_step = $this->uri->segment(1) ? $this->uri->segment(1) : 'license';
+        $this->setup_step = $this->uri->segment(2) ? $this->uri->segment(2) : 'license';
 		$this->sess_setup_step = $this->session->tempdata('setup_step');
 
         if ($this->setup_step !== 'success' AND !$this->input->post('install_step') AND $this->installer->isInstalled()) {
@@ -45,7 +46,6 @@ class Setup extends BaseController {
             $this->load->view('license', $data);
             $this->load->view('footer', $data);
         }
-
     }
 
 	public function requirements() {

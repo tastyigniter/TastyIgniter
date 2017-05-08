@@ -36,7 +36,7 @@ class Extensions extends Admin_Controller
     {
         if ($method !== 'edit' AND method_exists($this, $method)) {
             $this->$method();
-        } else if (strtolower($this->uri->segment(3)) === 'settings') {
+        } else if (strtolower($this->uri->segment(4)) === 'settings') {
             $this->edit();
         } else {
             show_404($this->uri->uri_string());
