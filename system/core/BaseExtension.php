@@ -165,8 +165,14 @@ class BaseExtension
     /**
      * Registers any mail templates implemented by this extension.
      * The templates must be returned in the following format:
-     * ['registration' => 'This is a description of the registration email to customer'],
-     * ['password_reset' => 'This is a description of the password reset email to customer'],
+     * [
+     *  'extension_code/mail/registration' => [
+     *      'label' => 'Registration email to customer.',
+     *      'subject => 'Welcome to {site_name}'
+     *  ]
+     * ]
+     *
+     * The array key last segment will be used as the template code
      *
      * @return array
      */

@@ -3,6 +3,9 @@
 class Mail_templates extends Admin_Controller
 {
 
+    public $defaultTemplate;
+    public $update_url = 'mail_templates/update?id={id}';
+
     public function __construct()
     {
         parent::__construct();
@@ -10,9 +13,12 @@ class Mail_templates extends Admin_Controller
         $this->user->restrict('Admin.MailTemplates');
 
         $this->load->model('Mail_templates_model');
+        $this->load->model('Mail_templates_data_model');
         $this->load->model('Settings_model');
 
         $this->lang->load('mail_templates');
+
+        $this->defaultTemplate = $this->Mail_templates_model->defaultTemplateId;
     }
 
     public function index()
@@ -56,6 +62,14 @@ class Mail_templates extends Admin_Controller
 
         $this->template->setButton($this->lang->line('button_save'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
         $this->template->setButton($this->lang->line('button_save_close'), ['class' => 'btn btn-default', 'onclick' => 'saveClose();']);
+
+        if (is_numeric($templateModel->template_id) AND $templateModel->template_id !== $this->defaultTemplate)
+            $this->template->setButton($this->lang->line('button_icon_update'), [
+                'class' => 'btn btn-success pull-right',
+                'title' => $this->lang->line('text_fetch_changes'),
+                'href'  => $this->pageUrl($this->update_url, ['id' => $templateModel->template_id]),
+            ]);
+
         $this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('mail_templates')]);
 
         $this->assets->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css');
@@ -64,6 +78,30 @@ class Mail_templates extends Admin_Controller
         $data = $this->getForm($templateModel);
 
         $this->template->render('mail_templates_edit', $data);
+    }
+
+    public function update()
+    {
+        if ($this->input->post() AND $template_id = $this->_updateTemplateChanges()) {
+            $this->redirect($this->pageUrl($this->edit_url, ['id' => $template_id]));
+        }
+
+        $templateModel = $this->Mail_templates_model->findOrNew((int)$this->input->get('id'));
+
+        $title = (isset($templateModel->name)) ? $templateModel->name : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
+
+        $this->assets->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css');
+        $this->assets->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js');
+
+        $data['_action'] = $this->pageUrl($this->update_url, ['id' => $templateModel->template_id]);
+
+        $data['changes'] = $this->Mail_templates_data_model->fetchChanges($templateModel->template_id);
+
+        $this->template->render('mail_templates_update', $data);
     }
 
     public function variables()
@@ -107,39 +145,18 @@ class Mail_templates extends Admin_Controller
             $data['_action'] = $this->pageUrl($this->edit_url, ['id' => $template_id]);
         }
 
-        if ($template_id === '11') {
+        if ($template_id == $this->defaultTemplate) {
             $this->alert->set('info', $this->lang->line('alert_caution_edit'));
         }
 
-        $titles = [
-            'registration'                 => $this->lang->line('text_registration'),
-            'registration_alert'           => $this->lang->line('text_registration_alert'),
-            'password_reset_request'       => $this->lang->line('text_password_reset_request'),
-            'password_reset_request_alert' => $this->lang->line('text_password_reset_request_alert'),
-            'password_reset'               => $this->lang->line('text_password_reset'),
-            'password_reset_alert'         => $this->lang->line('text_password_reset_alert'),
-            'order'                        => $this->lang->line('text_order'),
-            'order_alert'                  => $this->lang->line('text_order_alert'),
-            'order_update'                 => $this->lang->line('text_order_update'),
-            'reservation'                  => $this->lang->line('text_reservation'),
-            'reservation_alert'            => $this->lang->line('text_reservation_alert'),
-            'reservation_update'           => $this->lang->line('text_reservation_update'),
-            'internal'                     => $this->lang->line('text_internal'),
-            'contact'                      => $this->lang->line('text_contact'),
-        ];
-
         $data['template_data'] = [];
         $template_data = $this->Mail_templates_model->getAllTemplateData($template_id);
-        foreach ($titles as $key => $value) {
-            foreach ($template_data as $tpl_data) {
-                if ($key == $tpl_data['code']) {
-                    $data['template_data'][] = array_merge($tpl_data, [
-                        'title'        => $value,
-                        'date_added'   => mdate('%d %M %y - %H:%i', strtotime($tpl_data['date_added'])),
-                        'date_updated' => mdate('%d %M %y - %H:%i', strtotime($tpl_data['date_updated'])),
-                    ]);
-                }
-            }
+        foreach ($template_data as $tpl_data) {
+            $data['template_data'][] = array_merge($tpl_data, [
+                'title'        => $tpl_data['title'],
+                'date_added'   => mdate('%d %M %y - %H:%i', strtotime($tpl_data['date_added'])),
+                'date_updated' => mdate('%d %M %y - %H:%i', strtotime($tpl_data['date_updated'])),
+            ]);
         }
 
         $data['templates'] = $this->Mail_templates_model->isEnabled()->dropdown('name');
@@ -159,6 +176,17 @@ class Mail_templates extends Admin_Controller
 
             return $template_id;
         }
+    }
+
+    protected function _updateTemplateChanges()
+    {
+        if ($this->Mail_templates_data_model->updateChanges($this->input->get('id'), $this->input->post())) {
+            $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Mail Template '.$this->lang->line('text_updated')));
+        } else {
+            $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
+        }
+
+        return $this->input->get('id');
     }
 
     protected function _deleteTemplate()
@@ -191,7 +219,7 @@ class Mail_templates extends Admin_Controller
             foreach ($this->input->post('templates') as $key => $value) {
                 $rules[] = ['templates['.$key.'][code]', 'lang:label_code', 'xss_clean|trim|required'];
                 $rules[] = ['templates['.$key.'][subject]', 'lang:label_subject', 'xss_clean|trim|required|min_length[2]|max_length[128]'];
-                $rules[] = ['templates['.$key.'][body]', 'lang:label_body', 'required|min_length[3]'];
+                $rules[] = ['templates['.$key.'][body]', 'lang:label_body', 'trim|required|min_length[3]'];
             }
         }
 
@@ -201,10 +229,10 @@ class Mail_templates extends Admin_Controller
     protected function getVariables()
     {
         $data['filters'] = [
-            'General'            => ['registration', 'registration_alert', 'password_reset', 'password_reset_alert', 'order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update', 'internal', 'contact'],
-            'Customer'           => ['registration', 'registration_alert', 'password_reset', 'password_reset_alert', 'order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update'],
+            'General'            => ['registration', 'registration_alert', 'password_reset', 'password_reset_alert', 'password_reset_request', 'password_reset_request_alert', 'order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update', 'internal', 'contact'],
+            'Customer'           => ['registration', 'registration_alert', 'password_reset', 'password_reset_alert', 'password_reset_request', 'password_reset_request_alert', 'order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update'],
             'Staff'              => ['password_reset_alert', 'order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update'],
-            'Registration/Reset' => ['registration', 'registration_alert', 'password_reset', 'password_reset_alert'],
+            'Registration/Reset' => ['registration', 'registration_alert', 'password_reset_request', 'password_reset_request_alert', 'password_reset', 'password_reset_alert'],
             'Order'              => ['order', 'order_alert', 'order_update'],
             'Reservation'        => ['reservation', 'reservation_alert', 'reservation_update'],
             'Status'             => ['order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update'],

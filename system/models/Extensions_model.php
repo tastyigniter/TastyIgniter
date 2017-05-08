@@ -28,6 +28,7 @@ if (!defined('BASEPATH')) exit('No direct access allowed');
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use Igniter\Core\BaseExtension;
 use Igniter\Database\Model;
 
 /**
@@ -448,6 +449,10 @@ class Extensions_model extends Model
 				$permissions = $extension->registerPermissions();
 				$this->savePermissions($permissions);
 
+				$mailTemplates = $extension->registerMailTemplates();
+				$this->load->model('Mail_templates_data_model');
+				$this->Mail_templates_data_model->addMailTemplateData($mailTemplates);
+
 				// set extension migration to the latest version
 				Modules::run_migration($code);
 			}
@@ -480,10 +485,13 @@ class Extensions_model extends Model
 
 				if ($query AND $extension instanceof BaseExtension) {
 					$permissions = $extension->registerPermissions();
-
 					$this->deletePermissions($permissions);
 
-					$query = TRUE;
+                    $mailTemplates = $extension->registerMailTemplates();
+                    $this->load->model('Mail_templates_data_model');
+                    $this->Mail_templates_data_model->removeMailTemplateData($mailTemplates);
+
+                    $query = TRUE;
 				}
 			}
 		}

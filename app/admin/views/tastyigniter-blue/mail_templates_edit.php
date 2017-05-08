@@ -66,7 +66,7 @@
 										<thead>
 											<tr>
 												<th class="action action-one"></th>
-												<th class="left"><?php echo lang('column_title'); ?></th>
+												<th class="left"><b><?php echo lang('column_code'); ?></b> - <?php echo lang('column_title'); ?></th>
 												<th class="text-right"><?php echo lang('column_date_updated'); ?></th>
 												<th class="text-right"><?php echo lang('column_date_added'); ?></th>
 											</tr>
@@ -84,7 +84,7 @@
 																		<i class="fa fa-chevron-up up"></i>
 																		<i class="fa fa-chevron-down down"></i>
 																	</td>
-																	<td class="left"><?php echo $tpl_data['title']; ?></td>
+																	<td class="left"><b><?php echo $tpl_data['code']; ?></b> - <?php echo $tpl_data['title']; ?></td>
 																	<td class="text-right"><?php echo $tpl_data['date_updated']; ?></td>
 																	<td class="text-right"><?php echo $tpl_data['date_added']; ?></td>
 																</tr>

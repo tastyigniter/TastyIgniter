@@ -176,22 +176,8 @@ class Mail_templates_model extends Model
 	 */
 	public function updateTemplateData($template_id, $templates = [])
 	{
-		$query = FALSE;
-
-		if (empty($template_id) OR empty($templates)) return FALSE;
-
-		$this->load->model('Mail_templates_data_model');
-
-		foreach ($templates as $template) {
-			$templateDataModel = $this->Mail_templates_data_model
-				->firstOrNew(['template_id' => $template_id, 'code' => $template['code']]);
-
-			$query = $templateDataModel->fill(array_merge($template, [
-				'template_id' => $template_id, 'code' => $template['code'],
-			]))->save();
-		}
-
-		return $query;
+        $this->load->model('Mail_templates_data_model');
+        return $this->Mail_templates_data_model->updateTemplateData($template_id, $templates);
 	}
 
 	/**
