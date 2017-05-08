@@ -118,7 +118,7 @@ class Template
         $this->CI->load->vars($data);
 
         // Want it returned or output to browser?
-        $output = $this->CI->load->view($view);
+        $output = $this->CI->load->view($view, [], TRUE);
 
         $event = Events::trigger('Template::after_render', ['output' => $output]);
         $output = is_null($event) ? $output : $event;
@@ -663,7 +663,7 @@ class Template
      */
     public function load_view($view, $data = null)
     {
-        return $this->CI->load->view($view, $data);
+        return $this->CI->load->view($view, $data, TRUE);
     }
 
     /**

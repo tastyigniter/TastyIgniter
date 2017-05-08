@@ -87,7 +87,7 @@ class TI_Loader extends MX_Loader
     // --------------------------------------------------------------------
 
     /** Load a view **/
-    public function view($view, $vars = [], $return = TRUE)
+    public function view($view, $vars = [], $return = FALSE)
     {
         return $this->_ci_load([
             '_ci_view' => $this->find_view($view),
