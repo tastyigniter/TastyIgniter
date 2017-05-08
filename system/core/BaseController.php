@@ -148,7 +148,7 @@ class BaseController extends MX_Controller
         $this->showProfiler();
 
         // After-Controller Constructor Event
-        Events::trigger('after_controller_constructor', $this->controller);
+        Events::trigger('after_controller_constructor', ['controller' => $this->controller]);
 
         log_message('info', 'Base Controller Class Initialized');
     }
@@ -218,10 +218,6 @@ class BaseController extends MX_Controller
         return ($uri === null) ? strtolower($this->controller) : $uri;
     }
 
-    public function setWidgets($widgets)
-    {
-    }
-
     public function redirect($uri = null)
     {
         redirect(($uri === null) ? $this->index_url : $uri);
@@ -243,7 +239,7 @@ class BaseController extends MX_Controller
         }
     }
 
-    public function getFilter($filter = null)
+    public function getFilter($filter = null, $default = null)
     {
         if ($filter === null) {
             return $this->filter;
@@ -252,7 +248,7 @@ class BaseController extends MX_Controller
         } else if (isset($this->filter[$filter])) {
             return $this->filter[$filter];
         } else {
-            return null;
+            return $default;
         }
     }
 
@@ -288,7 +284,7 @@ class BaseController extends MX_Controller
         CI::$APP->controller = $this;
 
         $class = str_replace(CI::$APP->config->item('controller_suffix'), '', get_class($this));
-        Events::trigger('before_controller', $class);
+        Events::trigger('before_controller', ['controllerClass' => $class]);
 
         Modules::$registry[strtolower($class)] = $this;
 

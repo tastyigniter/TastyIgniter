@@ -101,6 +101,9 @@ class Template
         if (is_null($view))
             $view = $this->guessView();
 
+        $event = Events::trigger('Template::before_render', ['view' => $view, 'data' => $data]);
+        $data = is_null($event) ? $data : $event;
+
         $this->currentView = $view;
 
         // Initialize the components for this layout
@@ -117,7 +120,8 @@ class Template
         // Want it returned or output to browser?
         $output = $this->CI->load->view($view);
 
-        Events::trigger('after_layout_render', $output);
+        $event = Events::trigger('Template::after_render', ['output' => $output]);
+        $output = is_null($event) ? $output : $event;
 
         $this->CI->output->set_output($output);
     }

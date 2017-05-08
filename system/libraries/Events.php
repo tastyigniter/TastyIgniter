@@ -30,15 +30,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Events
 {
 
-	/**
-	 * @var object The CI instance, only retrieved if required in the init() method.
-	 */
-	private static $CI;
-
-	/**
-	 * @var array Holds the registered events.
-	 */
-	private static $events = [];
+    /**
+     * @var array Holds the registered events.
+     */
+    protected static $configEventCollection = [];
 
 	/**
 	 * This if here solely for CI loading to work. Just calls the initialize() method.
@@ -67,72 +62,90 @@ class Events
 
 			list($path, $file) = Modules::find('events', $module, 'config/');
 
-			if ($path) {
-				$module_events = Modules::load_file('events', $path, 'config');
+            if ($path) {
+                $moduleEvents = Modules::load_file('events', $path, 'config');
 
-				if (is_array($module_events)) {
-					self::$events = array_merge_recursive(self::$events, $module_events);
-				}
-			}
-		}
+                if (is_array($moduleEvents)) {
+                    self::$configEventCollection = array_merge_recursive(self::$configEventCollection, $moduleEvents);
+                }
+            }
+        }
 
-		if (self::$events === FALSE) {
-			self::$events = [];
-		}
-	}
+        if (self::$configEventCollection === FALSE) {
+            self::$configEventCollection = [];
+        }
+    }
 
-	/**
-	 * Triggers an individual event.
-	 *
-	 * @param string $event_name A string with the name of the event to trigger. Case sensitive.
-	 * @param mixed $payload     (optional) An array to send to the event method.
-	 *
-	 * @return void
-	 */
-	public static function trigger($event_name = null, $payload = null)
-	{
-//        log_message('info', "Events::{$event_name}  Triggering");
+    /**
+     * Create a new event binding.
+     *
+     * @param $event
+     * @param $callback
+     */
+    public static function bind($event, $callback)
+    {
+        if (!is_array($callback))
+            $callback = ['method' => $callback];
 
-		if (empty($event_name) OR !is_string($event_name)
-			OR !array_key_exists($event_name, self::$events)
-		) {
-			return;
-		}
+        self::$configEventCollection[$event][] = $callback;
+    }
 
-		foreach (self::$events[$event_name] as $subscriber) {
-			if (strpos($subscriber['filename'], '.php') === FALSE) {
-				$subscriber['filename'] .= '.php';
-			}
+    /**
+     * Triggers an individual event.
+     *
+     * @param string $eventName A string with the name of the event to trigger. Case sensitive.
+     * @param mixed $payload (optional) An array to send to the event method.
+     *
+     * @return void
+     */
+    public static function trigger($eventName = null, $payload = null)
+    {
+        if (empty($eventName) OR !is_string($eventName)
+            OR !array_key_exists($eventName, self::$configEventCollection)
+        ) {
+            return;
+        }
 
-			$file_path = Modules::file_path($subscriber['module'], $subscriber['filepath'], $subscriber['filename']);
+        $result = null;
 
-			if (!file_exists($file_path)) {
-				continue;
-			}
+        foreach (self::$configEventCollection[$eventName] as $subscriber) {
+            if (isset($subscriber['module'])) {
+                if (strpos($subscriber['filename'], '.php') === FALSE) {
+                    $subscriber['filename'] .= '.php';
+                }
 
-			include_once($file_path);
+                $filePath = Modules::file_path($subscriber['module'], $subscriber['filepath'], $subscriber['filename']);
 
-			if (!class_exists($subscriber['class'])) {
-				// if class doesn't exist check that the function is callable
-				// could be just a helper function
-				if (is_callable($subscriber['method'])) {
-					call_user_func($subscriber['method'], $payload);
-				}
+                if (!file_exists($filePath)) {
+                    continue;
+                }
 
-				continue;
-			}
+                include_once($filePath);
+            }
 
-			$class = new $subscriber['class'];
+            if (!isset($subscriber['class']) OR !class_exists($subscriber['class'])) {
+                // if class doesn't exist check that the function is callable
+                // could be just a helper function
+                if (is_callable($subscriber['method'])) {
+                    $result = call_user_func($subscriber['method'], $payload);
+                }
 
-			if (!is_callable([$class, $subscriber['method']])) {
-				unset($class);
-				continue;
-			}
+                continue;
+            }
 
-			$class->{$subscriber['method']}($payload);
-			unset($class);
-		}
-	}
+            $class = new $subscriber['class'];
+
+            if (!is_callable([$class, $subscriber['method']])) {
+                unset($class);
+                continue;
+            }
+
+            $result = $class->{$subscriber['method']}($payload);
+            unset($class);
+        }
+
+        return is_null($result) ? $payload : $result;
+    }
 }
 
 // END Events Class
