@@ -244,7 +244,7 @@ class Mail_templates_data_model extends Model
         $defaultTemplateId = $this->Mail_templates_model->defaultTemplateId;
 
         foreach ($mailTemplates as $mailPath => $mailTemplate) {
-            if (!is_string($mailPath) OR count($path = pathinfo($mailPath)) === 3) continue;
+            if (!is_string($mailPath)) continue;
 
             $this->where('template_id', $defaultTemplateId)
                 ->where('code', $mailPath)->delete();
