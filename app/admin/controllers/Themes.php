@@ -405,7 +405,7 @@ class Themes extends Admin_Controller
             $rules = $this->customizer->getRules();
         }
 
-        $rules[] = ['editor_area', 'Editor area'];
+        $rules['editor_area'] = ['field' => 'editor_area', 'label' => 'Editor area'];
 
         return $this->form_validation->set_rules($rules)->run();
     }

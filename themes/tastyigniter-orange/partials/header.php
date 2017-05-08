@@ -144,7 +144,7 @@
 	            </div>
 			<?php } ?>
 
-            <?php if (($page_heading = get_heading()) !== '') { ?>
+            <?php if ($page_heading = get_heading()) { ?>
 	            <div id="heading">
 	                <div class="container">
 	                    <div class="row">

@@ -24,18 +24,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Customizer
 {
 
-	private $data = [];
-	private $config = [];
-	private $sections = [];
-	private $fields = [];
-	private $tables = [];
-	private $rules = [];
+    protected $_styles;
+    protected $_form_classes;
+
+	protected $data = [];
+	protected $config = [];
+	protected $sections = [];
+	protected $fields = [];
+	protected $tables = [];
+	protected $rules = [];
 
 	public function __construct($config = [])
 	{
 		$this->CI =& get_instance();
 		foreach ($config as $key => $val) {
-			$this->{'_' . $key} = $val;
+            if (property_exists($this, '_'.$key))
+                $this->{'_' . $key} = $val;
 		}
 
 		unset($config);
