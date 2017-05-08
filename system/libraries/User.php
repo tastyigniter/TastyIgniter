@@ -72,6 +72,12 @@ class User extends \Igniter\Core\Auth
         $this->is_logged = TRUE;
     }
 
+    public function login($userModel, $remember = FALSE)
+    {
+        parent::login($userModel, $remember);
+        $this->initialize();
+    }
+
     /**
      * Redirect if the current user is not authenticated.
      */

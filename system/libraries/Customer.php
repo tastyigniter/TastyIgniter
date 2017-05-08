@@ -57,7 +57,13 @@ class Customer extends \Igniter\Core\Auth
         $this->is_logged = TRUE;
 	}
 
-	public function logout()
+    public function login($userModel, $remember = FALSE)
+    {
+        parent::login($userModel, $remember);
+        $this->initialize();
+    }
+
+    public function logout()
 	{
         parent::logout();
 
