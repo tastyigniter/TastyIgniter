@@ -1,6 +1,6 @@
 jQuery(function() {
     // This identifies your website in the createToken call below
-    Stripe.setPublishableKey('pk_test_d5BEDmaLhu6JeckNBeAWYcyq');
+    Stripe.setPublishableKey($('input[name="stripe_publishable_key"]').val());
 
     $('[data-numeric]').payment('restrictNumeric');
     $('[data-stripe="number"]').payment('formatCardNumber');

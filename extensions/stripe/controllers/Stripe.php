@@ -24,6 +24,10 @@ class Stripe extends Main_Controller {
         $data['force_ssl'] 		= isset($payment['ext_data']['force_ssl']) ? $payment['ext_data']['force_ssl'] : '1';
         // END of retrieving lines from language file to send to view.
 
+        $transaction_mode = isset($payment['ext_data']['transaction_mode']) ? $payment['ext_data']['transaction_mode'] : 'test';
+        $publishable_key = ($transaction_mode == 'live') ? 'live_publishable_key' : 'test_publishable_key';
+        $data['publishable_key'] = isset($payment['ext_data'][$publishable_key]) ? $payment['ext_data'][$publishable_key] : '';
+
         $order_data = $this->session->userdata('order_data');                           // retrieve order details from session userdata
         $data['payment'] = !empty($order_data['payment']) ? $order_data['payment'] : '';
         $data['minimum_order_total'] = is_numeric($payment['ext_data']['order_total']) ? $payment['ext_data']['order_total'] : 0;

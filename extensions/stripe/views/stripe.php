@@ -14,8 +14,9 @@
     <?php } ?>
 </div>
 <div id="stripe-payment" class="wrap-horizontal" style="<?php echo ($payment === 'authorize_net_aim') ? 'display: block;' : 'display: none;'; ?>">
-	<?php if (!empty($stripe_token)) { ?>
-		<input type="hidden" name="stripe_token" value="<?php echo $stripe_token; ?>" />
+    <input type="hidden" name="stripe_publishable_key" value="<?php echo $publishable_key; ?>" />
+    <?php if (!empty($stripe_token)) { ?>
+        <input type="hidden" name="stripe_token" value="<?php echo $stripe_token; ?>" />
 	<?php } ?>
 
 	<div class="row">
