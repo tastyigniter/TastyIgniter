@@ -530,7 +530,13 @@ class Location {
 	}
 
 	public function checkOrderTime($time, $type = 'delivery') {
-		$status = $this->workingStatus($type, $time);
+        $index = date('w', strtotime($time)) - 1;
+        if ($index < 0)
+            $index = 6; // Sunday
+
+        $working_hours = $this->getWorkingHours($this->location_id);
+        $working_hours_of_time  = isset($working_hours[$type]) ? $working_hours[$type][$index] : [];
+        $status = $this->workingStatus($type, $time, $working_hours_of_time);
 
 		return ($status === 'open' OR ($this->hasFutureOrder() AND $status !== 'closed'));
 	}
