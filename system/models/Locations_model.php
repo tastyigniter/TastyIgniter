@@ -363,14 +363,6 @@ class Locations_model extends Model
 				$this->addOpeningHours($location_id, $save['options']['opening_hours']);
 			}
 
-			if (isset($save['menus_select_type']) AND $save['menus_select_type'] == '1') {
-				$this->load->model('Menus_model');
-				 $menusCollection = $this->Menus_model->lists('menu_id');
-				 $save['menus'] = $menusCollection->toArray();
-			}
-
-			$this->addLocationMenus($location_id, isset($save['menus']) ? $save['menus'] : []);
-
 			if (isset($save['tables_select_type']) AND $save['tables_select_type'] == '1') {
 				$this->load->model('Tables_model');
 				$tablesCollection = $this->Tables_model->lists('table_id');

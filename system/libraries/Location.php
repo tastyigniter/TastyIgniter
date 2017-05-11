@@ -92,7 +92,7 @@ class Location
 
             if (isset($local['order_type'])) $this->setOrderType($local['order_type']);
 
-            $this->setWorkingSchedule();
+            $this->setWorkingTime();
             $this->setNearestArea();
 
             if (!empty($this->CI->permalink) AND $this->CI->config->item('permalink') == '1')
@@ -118,9 +118,9 @@ class Location
         ]);
     }
 
-    public function setWorkingSchedule()
+    public function setWorkingTime()
     {
-        $this->locationHours()->setWorkingSchedule();
+        $this->locationHours()->setWorkingTime();
     }
 
     public function setNearestArea()
@@ -500,7 +500,7 @@ class Location
             $working_types[$value] = (empty($this->local_options['opening_hours']["{$value}_type"])) ? '0' : $this->local_options['opening_hours']["{$value}_type"];
         }
 
-        return (!empty($type) AND isset($working_types[$type])) ? $working_types[$type] : $working_types;
+        return (!empty($hourType) AND isset($working_types[$hourType])) ? $working_types[$hourType] : $working_types;
     }
 
     public function workingSchedule($type = 'opening')
@@ -512,9 +512,18 @@ class Location
         return $workingSchedule;
     }
 
-    public function workingTime($type = 'opening', $hour = 'open', $format = TRUE)
+    /**
+     * @deprecated since v2.2 use workingHour() method instead
+     * @return array|mixed
+     */
+    public function workingTime($type = 'opening', $hourType = 'open', $format = TRUE)
     {
-        return $this->locationHours()->setWorkingType($type)->getWorkingTime($hour, $format);
+        return $this->locationHours()->setWorkingType($type)->getWorkingHour($hourType, $format);
+    }
+
+    public function workingHour($type = 'opening', $hourType = 'open', $format = TRUE)
+    {
+        return $this->locationHours()->setWorkingType($type)->getWorkingHour($hourType, $format);
     }
 
     public function workingStatus($type = 'opening', $time = null, $hours = [])
@@ -523,7 +532,7 @@ class Location
     }
 
     /**
-     * @deprecated since v2.1.1 use Location_hours->getHours() method instead
+     * @deprecated since v2.2 use Location_hours->getHours() method instead
      * @return array|mixed
      */
     public function workingHours()
@@ -546,7 +555,10 @@ class Location
 
     public function checkOrderTime($time, $type = self::DELIVERY)
     {
-        $status = $this->workingStatus($type, $time);
+        $timeDate = mdate("%d-%m-%Y", strtotime($time));
+        $workingSchedule = $this->locationHours()->getWorkingSchedule($timeDate);
+
+        $status = $this->workingStatus($type, $time, $workingSchedule);
 
         return ($status === 'open' OR ($this->hasFutureOrder() AND $status !== 'closed'));
     }
@@ -614,7 +626,7 @@ class Location
     }
 
     /**
-     * @deprecated since v2.1.1 use Location_delivery->checkChargeCondition() method instead
+     * @deprecated since v2.2 use Location_delivery->checkChargeCondition() method instead
      *
      * @return array|mixed|null
      */
@@ -624,7 +636,7 @@ class Location
     }
 
     /**
-     * @deprecated since v2.1.1 use Location_delivery->findNearestArea() method instead
+     * @deprecated since v2.2 use Location_delivery->findNearestArea() method instead
      *
      * @param null $currentPosition
      *
@@ -636,7 +648,7 @@ class Location
     }
 
     /**
-     * @deprecated since v2.1.1 use Location_geocode->pointInVertices() method instead
+     * @deprecated since v2.2 use Location_geocode->pointInVertices() method instead
      *
      * @param $point
      * @param array $vertices
@@ -649,7 +661,7 @@ class Location
     }
 
     /**
-     * @deprecated since v2.1.1 use Location_geocode->pointInCircle() method instead
+     * @deprecated since v2.2 use Location_geocode->pointInCircle() method instead
      *
      * @param $point
      * @param array $circle
@@ -662,7 +674,7 @@ class Location
     }
 
     /**
-     * @deprecated since v2.1.1 use Location_geocode->findUserPosition() method instead
+     * @deprecated since v2.2 use Location_geocode->findUserPosition() method instead
      *
      * @param bool $search_query
      *
