@@ -40,23 +40,19 @@ class TI_Lang extends MX_Lang
 	 * @return string[]|void Array containing translations, if $return is set to TRUE
 	 */
 	public function load($langfile, $lang = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '', $_module = '') {
-//		$lang = $this->defaultLang($langfile, $lang);
-//
-//		return parent::load($langfile, $lang, $return, $add_suffix, $alt_path);
-//
 		if (is_array($langfile)) {
 			foreach ($langfile as $_lang) $this->load($_lang);
 
 			return $this->language;
 		}
 
-		$deft_lang = CI::$APP->config->item('language');
-		$idiom = ($lang == '') ? $deft_lang : $lang;
+        if (in_array($langfile.'_lang'.EXT, $this->is_loaded, TRUE))
+            return $this->language;
 
-		if (in_array($langfile . '_lang' . EXT, $this->is_loaded, TRUE))
-			return $this->language;
+        $lang = $this->defaultLang($langfile, $lang);
 
-		$lang = $this->defaultLang($langfile, $lang);
+        $deft_lang = CI::$APP->config->item('language');
+        $idiom = ($lang == '') ? $deft_lang : $lang;
 
 		$_module OR $_module = CI::$APP->router->fetch_module();
 		list($path, $_langfile) = Modules::find($langfile . '_lang', $_module, 'language/' . $idiom . '/');
@@ -132,39 +128,46 @@ class TI_Lang extends MX_Lang
 	 * @return string
 	 */
 	public function defaultLang($langfile, $lang = '') {
-		if (empty($langfile)) return $lang;
+        if (empty($langfile) OR !empty($lang)) return $lang;
 
-		$this->CI =& get_instance();
+        if (!isset($this->CI))
+            $this->CI =& get_instance();
 
-		// Detect the browser language
-		if ($this->CI->config->item('detect_language') == '1') {
-			$this->CI->load->library('user_agent');
+        $defaultLang = $this->findDefaultLang();
 
-			$http_lang = $this->CI->agent->languages();
-			if ($this->CI->agent->accept_lang($http_lang[0])) {
-				// Check the language file exist, else use the config default language
-				if ($idiom = $this->getIdiom($http_lang[0]) AND find_lang_file($langfile, $idiom)) {
-					return $idiom;
-				}
-			}
-		}
+        $this->CI->load->helper('language');
+        if (find_lang_file($langfile, $defaultLang)) {
+            return $defaultLang;
+        }
 
-		// Use admin settings
-		$default_lang = APPDIR === ADMINDIR ? $this->CI->config->item('admin_language_id') : $this->CI->config->item('language_id');
+        return $lang;
+    }
 
-		$idiom = (is_numeric($default_lang)) ? $this->getIdiom($default_lang) : $default_lang;
+    // --------------------------------------------------------------------
 
-		$this->CI->load->helper('language');
-		if (find_lang_file($langfile, $idiom)) {
-			return $idiom;
-		}
+    protected function findDefaultLang()
+    {
+        if (isset($this->defaultLang))
+            return $this->defaultLang;
 
-		return $lang;
-	}
+        // Use admin settings
+        $language = $this->CI->config->item((APPDIR === ADMINDIR) ? 'admin_language_id' : 'language_id');
 
-	// --------------------------------------------------------------------
+        // Detect the browser language and use it instead
+        if ($this->CI->config->item('detect_language') === '1') {
+            $this->CI->load->library('user_agent');
+            $http_lang = $this->CI->agent->languages();
+            if ($this->CI->agent->accept_lang($http_lang[0])) {
+                $language = $http_lang[0];
+            }
+        }
 
-	/**
+        return $this->defaultLang = $this->getIdiom($language);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
 	 * Language Idiom
 	 *
 	 * Fetches the idiom of the browser's language from the database.
@@ -185,11 +188,11 @@ class TI_Lang extends MX_Lang
 			}
 		}
 
-		if ($language !== '' AND !empty($this->languages)) {
+        if ($language !== '' AND !empty($this->languages)) {
 			foreach ($this->languages as $row) {
-				if (is_numeric($language) AND $row['language_id'] == $language) {
-					return $row['idiom'];
-				} else if ($row['code'] == $language) {
+                if (is_numeric($language)) {
+                    return ($row['language_id'] === $language) ? $row['idiom'] : null;
+                } else if ($row['code'] === $language OR $row['idiom'] === $language) {
 					return $row['idiom'];
 				}
 			}
