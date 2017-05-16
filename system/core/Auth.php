@@ -230,6 +230,8 @@ class Auth
         }
 
         $this->setUser($userModel);
+
+        $this->loggedOut = FALSE;
     }
 
     /**
@@ -242,7 +244,8 @@ class Auth
      */
     public function loginUsingId($id, $remember = FALSE)
     {
-        $userModel = $this->provider->retrieveById($id);
+        $model = $this->createModel();
+        $userModel = $model->getById($id);
         $this->login($userModel, $remember);
 
         return $userModel;

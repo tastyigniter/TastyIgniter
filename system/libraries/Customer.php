@@ -27,8 +27,8 @@ class Customer extends \Igniter\Core\Auth
     protected $identifier = 'email';
 
     protected $customer_id;
-	protected $firstname;
-	protected $lastname;
+    protected $first_name;
+    protected $last_name;
 	protected $email;
 	protected $telephone;
 	protected $address_id;
@@ -68,8 +68,8 @@ class Customer extends \Igniter\Core\Auth
         parent::logout();
 
 		$this->customer_id = '0';
-		$this->firstname = '';
-		$this->lastname = '';
+        $this->first_name = '';
+        $this->last_name = '';
 		$this->email = '';
 		$this->telephone = '';
 		$this->address_id = '';
@@ -90,17 +90,17 @@ class Customer extends \Igniter\Core\Auth
 
 	public function getName()
 	{
-		return $this->firstname . ' ' . $this->lastname;
+        return $this->first_name.' '.$this->last_name;
 	}
 
 	public function getFirstName()
 	{
-		return $this->firstname;
+        return $this->first_name;
 	}
 
 	public function getLastName()
 	{
-		return $this->lastname;
+        return $this->last_name;
 	}
 
 	public function getEmail()

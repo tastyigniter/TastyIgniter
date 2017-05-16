@@ -62,12 +62,12 @@ class Customers extends Admin_Controller
 
     public function login()
     {
-        $customer_info = $this->Customers_model->getCustomer((int)$this->input->get('id'));
+        $customerModel = $this->Customers_model->find((int)$this->input->get('id'));
 
         if (!$this->user->canAccessCustomerAccount()) {
             $this->alert->set('warning', $this->lang->line('alert_login_restricted'));
-        } else if ($customer_info) {
-            $customer_id = $customer_info['customer_id'];
+        } else if (count($customerModel)) {
+            $customer_id = $customerModel->customer_id;
 
             $this->load->library('customer');
             $this->load->library('cart');
@@ -75,7 +75,9 @@ class Customers extends Admin_Controller
             $this->customer->logout();
             $this->cart->destroy();
 
-            if ($this->customer->login($customer_info['email'], '', TRUE)) {
+            $this->customer->loginUsingId($customer_id, FALSE);
+
+            if ($this->customer->isLogged()) {
                 log_activity($customer_id, 'logged in', 'customers', get_activity_message('activity_master_logged_in',
                     ['{staff}', '{staff_link}', '{customer}', '{customer_link}'],
                     [$this->user->getStaffName(), admin_url('staffs/edit?id='.$this->user->getId()), $this->customer->getName(), $this->pageUrl($this->edit_url, ['id' => $customer_id])]
