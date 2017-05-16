@@ -88,14 +88,15 @@ class Location {
 				$this->geocode = (isset($local_info['geocode']) AND is_array($local_info['geocode'])) ? $local_info['geocode'] : array();
 				$this->search_query = (empty($this->geocode['search_query'])) ? '' : $this->geocode['search_query'];
 				$this->area_id = (empty($local_info['area_id'])) ? '' : $local_info['area_id'];
-				$this->order_type = (isset($local_info['order_type'])) ? $local_info['order_type'] : '1';
+                $defaultOrderType = ($this->hasCollection() AND !$this->hasDelivery()) ? '2' : '1';
+                $this->order_type = (isset($local_info['order_type'])) ? $local_info['order_type'] : $defaultOrderType;
 
 				if (!empty($this->CI->permalink) AND $this->CI->config->item('permalink') === '1') {
 					$this->permalink = $this->CI->permalink->getPermalink('location_id=' . $location['location_id']);
 				}
 
 				$this->setWorkingHours();
-				$this->setDeliveryAreas();
+                $this->setDeliveryAreas();
 
 				$delivery_area = $this->checkDeliveryCoverage();
 				$this->setDeliveryArea($delivery_area);
