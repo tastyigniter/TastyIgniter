@@ -109,12 +109,15 @@ class Location
         if (!isset($allLocations[$locationId]) OR !is_array($allLocations[$locationId]))
             return null;
 
+        $orderTypes = array_flip(self::$orderTypes);
+        $defaultOrderType = ($this->hasCollection() AND !$this->hasDelivery()) ? $orderTypes[self::COLLECTION] : $orderTypes[self::DELIVERY];
+
         $location = $allLocations[$locationId];
 
         return array_merge($location, [
             'local_options' => $location['options'],
             'local_info'    => $location,
-            'order_type'    => (isset($localInfo['order_type'])) ? $localInfo['order_type'] : self::DELIVERY,
+            'order_type'    => (isset($localInfo['order_type'])) ? $localInfo['order_type'] : $defaultOrderType,
         ]);
     }
 
@@ -164,7 +167,9 @@ class Location
             $orderType = self::DELIVERY;
 
         $this->order_type = $orderType;
-        $this->updateSessionData(['order_type' => $orderType]);
+
+        $orderTypes = array_flip(self::$orderTypes);
+        $this->updateSessionData(['order_type' => $orderTypes[$orderType]]);
     }
 
     public function searchRestaurant($search_query = FALSE)
