@@ -68,11 +68,16 @@ class Paypal_model extends TI_Model {
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon_discount());
 			}
 
-			if ($this->cart->order_total() > 0) {
-				$nvp_data  .= '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
+            if ($this->cart->order_total() > 0) {
+				$nvp_data  .= '&PAYMENTREQUEST_0_AMT='. urlencode(round($this->cart->order_total(), 2));
 			}
 
-			$response = $this->callPayPal('SetExpressCheckout', $nvp_data);
+            $taxArray = $this->cart->tax_array();
+            if ($this->cart->tax_amount() AND $taxArray['action'] != 'ignore') {
+                $nvp_data .= '&PAYMENTREQUEST_0_TAXAMT=' . urlencode(round($this->cart->tax_amount(), 2));
+            }
+
+            $response = $this->callPayPal('SetExpressCheckout', $nvp_data);
 
 			if (isset($response['ACK'])) {
 				if (strtoupper($response['ACK']) !== 'SUCCESS' OR strtoupper($response['ACK']) !== 'SUCCESSWITHWARNING') {
@@ -101,10 +106,15 @@ class Paypal_model extends TI_Model {
 		}
 
 		if ($this->cart->order_total() > 0) {
-			$nvp_data  .= '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
+			$nvp_data  .= '&PAYMENTREQUEST_0_AMT='. urlencode(round($this->cart->order_total(), 2));
 		}
 
-		$response = $this->callPayPal('DoExpressCheckoutPayment', $nvp_data);
+        $taxArray = $this->cart->tax_array();
+        if ($this->cart->tax_amount() AND $taxArray['action'] != 'ignore') {
+            $nvp_data .= '&PAYMENTREQUEST_0_TAXAMT=' . urlencode(round($this->cart->tax_amount(), 2));
+        }
+
+        $response = $this->callPayPal('DoExpressCheckoutPayment', $nvp_data);
 
 		if (isset($response['ACK'])) {
 			if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {

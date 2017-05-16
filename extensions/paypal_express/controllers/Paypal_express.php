@@ -109,7 +109,7 @@ class Paypal_express extends Main_Controller {
                 'object_id'  => $order_data['order_id'],
                 'status_id'  => $status['status_id'],
                 'notify'     => '0',
-                'comment'    => $status['comment'],
+                'comment'    => $status['status_comment'],
                 'date_added' => mdate('%Y-%m-%d %H:%i:%s', time()),
             );
 
