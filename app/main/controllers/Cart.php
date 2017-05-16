@@ -8,10 +8,10 @@ class Cart extends Main_Controller
 		$this->lang->load('cart');
 
 		$this->load->module('cart_module');
-		$data['cart'] = $this->cart_module->getCart(TRUE);
+        $data = $this->cart_module->getCart(TRUE);
 
 		$this->template->setTitle($this->lang->line('text_heading'));
-		$this->assets->setStyleTag(extension_url('cart_module/views/stylesheet.css'), 'cart-module-css', '144000');
+        $this->assets->setStyleTag(extension_url('cart_module/assets/stylesheet.css'), 'cart-module-css', '144000');
 
 		$this->template->render('cart', $data);
 	}

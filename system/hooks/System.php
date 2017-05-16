@@ -70,7 +70,7 @@ class System
     {
         $CI =& get_instance();
 
-        if (!$CI->load->controller instanceof Admin_Controller)
+        if (!isset($CI->load->controller) OR !$CI->load->controller instanceof Admin_Controller)
             return;
 
         // Change nav menu if single location mode is activated

@@ -41,7 +41,7 @@ defined('MAINDIR')  OR define('MAINDIR', 'main');
 |--------------------------------------------------------------------------
 | Extensions directory path for front-end
 |--------------------------------------------------------------------------
-|   @todo: deprecate to use only modules_locations config value
+|
 | Folder name we expect to see extensions?
 |
 |	Default: 'extensions/' in the extensions folder

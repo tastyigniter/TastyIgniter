@@ -17,8 +17,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * TastyIgniter Model Class
  *
- * @deprecated use Database\Model
- *
  * @category       Libraries
  * @package        Igniter\Core\TI_Model.php
  * @link           http://docs.tastyigniter.com

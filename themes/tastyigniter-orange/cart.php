@@ -8,7 +8,7 @@
         <div class="clearfix"></div>
     </div>
 
-    <?php echo $cart; ?>
+    <?php load_partial('cart_module/cart_module'); ?>
 </div>
 <?php echo get_partial('content_bottom'); ?>
 <?php echo get_footer(); ?>

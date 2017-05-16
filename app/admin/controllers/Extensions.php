@@ -260,7 +260,8 @@ class Extensions extends Admin_Controller
                     if (class_exists($ext_class, FALSE)) {
                         if ($this->input->post()) $this->user->restrict("Admin.Extensions.Manage");
 
-                        $data['extension'] = $this->{strtolower($ext_class)}->index($db_extension);
+                        $ext_module = $ext_controller.'/index';
+                        $data['extension'] = Modules::run($ext_module, $db_extension);
                         $loaded = TRUE;
                     } else {
                         $error_msg = sprintf($this->lang->line('error_failed'), $ext_class);

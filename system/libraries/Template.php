@@ -328,6 +328,8 @@ class Template
             }
         }
 
+        $this->extendNavMenuItems();
+
         return $this;
     }
 
@@ -397,12 +399,22 @@ class Template
         }
     }
 
-    public function navMenu($prefs = [])
+    public function extendNavMenuItems()
     {
         // Bail out if nav_menu theme config item is missing or not an array
         if (!is_array($this->navMenuItems))
             return null;
 
+        $extensions = Modules::get_extensions();
+        foreach ($extensions as $code => $extension) {
+            $navigation = $extension->registerNavigation();
+            if ($navigation)
+                $this->navMenuItems = array_merge($this->navMenuItems, $navigation);
+        }
+    }
+
+    public function navMenu($prefs = [])
+    {
         $openTag = '<ul class="nav" id="side-menu">';
         $closeTag = '</ul>';
 
