@@ -14,6 +14,7 @@ class Orders extends Admin_Controller {
         $this->load->model('Statuses_model');
         $this->load->model('Staffs_model');
         $this->load->model('Countries_model');
+        $this->load->model('Menu_options_model');
 
         $this->load->library('pagination');
         $this->load->library('currency'); // load the currency library
@@ -319,13 +320,20 @@ class Orders extends Admin_Controller {
 		$data['cart_items'] = array();
 		$cart_items = $this->Orders_model->getOrderMenus($order_info['order_id']);
         $menu_options = $this->Orders_model->getOrderMenuOptions($order_info['order_id']);
-		foreach ($cart_items as $cart_item) {
+        $options = $this->Menu_options_model->getMenuOptions();
+        $options = array_column($options, 'option_name', 'menu_option_id');
+        foreach ($cart_items as $cart_item) {
 			$option_data = array();
 
 			if (!empty($menu_options)) {
 				foreach ($menu_options as $menu_option) {
 					if ($cart_item['order_menu_id'] === $menu_option['order_menu_id']) {
-						$option_data[] = $menu_option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($menu_option['order_option_price']);
+                        $option_name = (isset($options[$menu_option['order_menu_option_id']]))
+                            ? $options[$menu_option['order_menu_option_id']] : null;
+                        $option_data[] = sprintf($this->lang->line('text_menu_options'),
+                            $option_name, $menu_option['order_option_name'], $this->lang->line('text_equals'),
+                            $this->currency->format($menu_option['order_option_price'])
+                        );
 					}
 				}
 			}
