@@ -146,6 +146,10 @@ if ( ! function_exists('get_remote_data'))
      */
     function get_remote_data($url, $options = array('TIMEOUT' => 10))
     {
+        // Prevent the exploitation of curl_exec to read local files
+        if (preg_match('/^file/i', $url) === 1) {
+            return "";
+        }
         // Set the curl parameters.
         $curl = curl_init($url);
 
