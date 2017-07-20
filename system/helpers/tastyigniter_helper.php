@@ -26,12 +26,12 @@ if ( ! function_exists('is_single_location'))
 {
     /**
      * Is Single Location Mode
-     * 
+     *
      * Test to see system config multi location mode is set to single.
      *
      * @return bool
      */
-    function is_single_location() 
+    function is_single_location()
     {
         return (config_item('site_location_mode') === 'single');
     }
@@ -145,6 +145,11 @@ if ( ! function_exists('get_remote_data'))
      */
     function get_remote_data($url, $options = array('TIMEOUT' => 10))
     {
+        // Prevent the exploitation of curl_exec to read local files
+        if (preg_match('/^file/i', $url) === 1) {
+            return "";
+        }
+
         // Set the curl parameters.
         $curl = curl_init($url);
 
