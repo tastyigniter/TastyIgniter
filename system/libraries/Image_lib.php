@@ -862,24 +862,24 @@ class CI_Image_lib {
 
 		if ($action === 'crop')
 		{
-			$cmd .= ' -crop '.$this->width.'x'.$this->height.'+'.$this->x_axis.'+'.$this->y_axis.' "'.$this->full_src_path.'" "'.$this->full_dst_path .'" 2>&1';
+			$cmd .= ' -crop '.$this->width.'x'.$this->height.'+'.$this->x_axis.'+'.$this->y_axis.' '.escapeshellarg($this->full_src_path).' '.escapeshellarg($this->full_dst_path).' 2>&1';
 		}
 		elseif ($action === 'rotate')
 		{
 			$angle = ($this->rotation_angle === 'hor' OR $this->rotation_angle === 'vrt')
 					? '-flop' : '-rotate '.$this->rotation_angle;
 
-			$cmd .= ' '.$angle.' "'.$this->full_src_path.'" "'.$this->full_dst_path.'" 2>&1';
+			$cmd .= ' '.$angle.' "'.escapeshellarg($this->full_src_path).' '.escapeshellarg($this->full_dst_path).' 2>&1';
 		}
 		else // Resize
 		{
 			if($this->maintain_ratio === TRUE)
 			{
-				$cmd .= ' -resize '.$this->width.'x'.$this->height.' "'.$this->full_src_path.'" "'.$this->full_dst_path.'" 2>&1';
+				$cmd .= ' -resize '.$this->width.'x'.$this->height.' '.escapeshellarg($this->full_src_path).' '.escapeshellarg($this->full_dst_path).' 2>&1';
 			}
 			else
 			{
-				$cmd .= ' -resize '.$this->width.'x'.$this->height.'\! "'.$this->full_src_path.'" "'.$this->full_dst_path.'" 2>&1';
+				$cmd .= ' -resize '.$this->width.'x'.$this->height.'\! '.escapeshellarg($this->full_src_path).' '.escapeshellarg($this->full_dst_path).' 2>&1';
 			}
 		}
 
@@ -964,7 +964,7 @@ class CI_Image_lib {
 			$cmd_inner = 'pnmscale -xysize '.$this->width.' '.$this->height;
 		}
 
-		$cmd = $this->library_path.$cmd_in.' '.$this->full_src_path.' | '.$cmd_inner.' | '.$cmd_out.' > '.$this->dest_folder.'netpbm.tmp';
+		$cmd = $this->library_path.$cmd_in.' '.escapeshellarg($this->full_src_path).' | '.$cmd_inner.' | '.$cmd_out.' > '.escapeshellcmd($this->dest_folder).'netpbm.tmp';
 
 		$retval = 1;
 		// exec() might be disabled
