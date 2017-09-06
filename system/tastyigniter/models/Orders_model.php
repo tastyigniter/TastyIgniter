@@ -313,11 +313,12 @@ class Orders_model extends TI_Model {
 
                 if ((int) $update['old_status_id'] !== (int) $update['order_status']) {
                     if (APPDIR === ADMINDIR) {
-                        $update['staff_id'] = $this->user->getStaffId();
+                        $status_update['staff_id'] = $this->user->getStaffId();
                     }
 
                     $status_update['object_id']    = (int) $order_id;
                     $status_update['status_id']    = (int) $update['order_status'];
+                    $status_update['assignee_id']    = (int) $update['assignee_id'];
                     $status_update['comment']      = isset($update['status_comment']) ? $update['status_comment'] : $status['status_comment'];
                     $status_update['notify']       = isset($update['status_notify']) ? $update['status_notify'] : $status['notify_customer'];
                     $status_update['date_added']   = mdate('%Y-%m-%d %H:%i:%s', time());
