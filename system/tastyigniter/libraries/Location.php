@@ -275,43 +275,55 @@ class Location {
 		return $this->deliveryCondition('totals', $cart_total);
 	}
 
-	public function deliveryCondition($sort_by = 'amounts', $cart_total = FALSE) {
-		$area_id = isset($this->delivery_areas[$this->area_id]) ? $this->area_id : key($this->delivery_areas);
+    public function deliveryCondition($sort_by = 'amounts', $cart_total = FALSE)
+    {
+        $area_id = isset($this->delivery_areas[$this->area_id]) ? $this->area_id : key($this->delivery_areas);
 
-		$condition = array();
-		if (isset($this->delivery_areas[$area_id]['charge'], $this->delivery_areas[$area_id]['charge'][$sort_by])) {
-			$charge = $this->delivery_areas[$area_id]['charge'];
+        $condition = [];
+        if (isset($this->delivery_areas[$area_id]['charge'], $this->delivery_areas[$area_id]['charge'][$sort_by])) {
+            $charge = $this->delivery_areas[$area_id]['charge'];
 
-			asort($charge[$sort_by]);
+            asort($charge[$sort_by]);
 
-			// if a condition on all orders exist, use it
-			if ($key = array_search('all', $charge['conditions'])) {
-				$charge[$sort_by] = array($key => $charge[$sort_by][$key]);
-			}
+            $minimumTotal = min($charge['totals']);
 
-			$count = 1;
-			foreach ($charge[$sort_by] as $key => $amt) {
-				$con = isset($charge['conditions'][$key]) ? $charge['conditions'][$key] : 'above';
-				$total = isset($charge['totals'][$key]) ? $charge['totals'][$key] : 0;
+            // Overall summary requested
+            if ($cart_total === FALSE) {
+                $condition = isset($this->delivery_areas[$area_id]['condition'])
+                    ? $this->delivery_areas[$area_id]['condition'] : [];
 
-				if ($cart_total === FALSE) {
-					$condition[] = isset($this->delivery_areas[$area_id]['condition'][$key]) ? $this->delivery_areas[$area_id]['condition'][$key] : '';
-				} else if (empty($cart_total) OR ($con === 'above' AND $cart_total >= $total)) {
-					return $charge[$sort_by][$key];
-				} else if ($sort_by == 'totals' AND $count == count($charge[$sort_by])) {
-					return min($charge[$sort_by]);
-				}
+                if ($minimumTotal > 0) {
+                    $condition[] = "0|below|".$minimumTotal;
+                }
 
-				if ($count === count($charge[$sort_by]) AND min($charge['totals']) > 0) {
-					$condition[] = "0|below|".min($charge['totals']);
-				}
+                return $condition;
+            }
 
-				$count++;
-			}
-		}
+            // check overall minimum total is greater than cart total
+            if ($minimumTotal > $cart_total) {
+                return $sort_by == 'amounts' ? 0 : $minimumTotal;
+            }
 
-		return ($cart_total === FALSE) ? $condition : NULL;
-	}
+            $conditions = array_keys($charge[$sort_by]);
+            foreach ($conditions as $index => $key) {
+                // if ONLY condition on all orders exist, use it
+                if (in_array('all', $charge['conditions']) AND count($conditions) == 1) {
+                    return $charge[$sort_by][$key];
+                }
+
+                $nextKey = isset($conditions[$index + 1]) ? $conditions[$index + 1] : 0;
+                $total = isset($charge['totals'][$key]) ? $charge['totals'][$key] : 0;
+                $nextTotal = isset($charge['totals'][$nextKey]) ? $charge['totals'][$nextKey] : 0;
+                $amount = isset($charge[$sort_by][$key]) ? $charge[$sort_by][$key] : 0;
+
+                if ($total < $cart_total AND ($nextTotal == 0 OR $nextTotal > $cart_total)) {
+                    return $amount;
+                }
+            }
+        }
+
+        return ($cart_total === FALSE) ? $condition : null;
+    }
 
 	public function getReservationInterval() {
     	return (!empty($this->local_info['reservation_time_interval'])) ? $this->local_info['reservation_time_interval'] : $this->CI->config->item('reservation_time_interval');
