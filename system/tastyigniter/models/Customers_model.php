@@ -305,7 +305,7 @@ class Customers_model extends TI_Model {
 			$this->db->set('email', strtolower($save['email']));
 		}
 
-		if (isset($save['password'])) {
+		if (!empty($save['password'])) {
 			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
 			$this->db->set('password', sha1($salt . sha1($salt . sha1($save['password']))));
 		}
