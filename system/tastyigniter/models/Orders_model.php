@@ -411,7 +411,7 @@ class Orders_model extends TI_Model {
 
         if (isset($order_info['order_time'])) {
             $current_time = time();
-            $order_time = (strtotime($order_info['order_time']) < strtotime($current_time)) ? $current_time : $order_info['order_time'];
+            $order_time = (strtotime($order_info['order_time']) < $current_time) ? $current_time : $order_info['order_time'];
             $this->db->set('order_time', mdate('%H:%i', strtotime($order_time)));
             $this->db->set('order_date', mdate('%Y-%m-%d', strtotime($order_time)));
             $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', $current_time));
