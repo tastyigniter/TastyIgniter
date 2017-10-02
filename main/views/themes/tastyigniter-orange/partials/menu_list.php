@@ -2,7 +2,7 @@
 	<div id="Container" class="menu-list">
 		<?php $category_count = 1; ?>
 		<?php foreach ($categories as $category_id => $category) { ?>
-			<?php $category_name = strtolower(str_replace(' ', '-', str_replace('&', '_', $category['name']))); ?>
+			<?php $category_name = strtolower(str_replace(' ', '-', str_replace(array("&", ",", "'"), '_', $category['name']))); ?>
 			<div class="menu-container mix <?php echo $category_name; ?>">
 				<a class="menu-toggle visible-xs visible-sm collapsed" href="#<?php echo $category_name; ?>" role="button" data-toggle="collapse" data-parent=".menu-list" aria-expanded="<?php echo ($category_count === 1) ? 'true' : 'false'; ?>" aria-controls="<?php echo $category_name; ?>">
 					<?php echo $category['name']; ?>

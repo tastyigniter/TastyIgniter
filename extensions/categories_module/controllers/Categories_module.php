@@ -88,7 +88,7 @@ class Categories_module extends Main_Controller {
 
 		if ( ! empty($categories)) {
 			foreach ($categories as $category) {
-				$selector = '.'.strtolower(str_replace(' ', '-', str_replace('&', '_', $category['category_name'])));
+				$selector = '.'.strtolower(str_replace(' ', '-', str_replace(array("&", ",", "'"), '_', $category['category_name'])));
 
 				if ($mix_it_up) {
 					$attr = ' class="filter" data-filter="'.$selector.'" ';
