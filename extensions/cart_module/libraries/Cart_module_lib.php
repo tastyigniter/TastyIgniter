@@ -132,10 +132,14 @@ class Cart_module_lib {
         $cart_options = array();
         if ($this->CI->input->post('menu_options') AND is_array($this->CI->input->post('menu_options'))) {
             $option_price = 0;
+
             foreach ($this->CI->input->post('menu_options') as $menu_option_id => $menu_option) {
                 if ($cart_option_required === FALSE AND isset($menu_options[$menu_option_id])) {
                     if ($menu_options[$menu_option_id]['required'] === '1'
-                        AND (empty($menu_option['option_values']) OR ! is_array($menu_option['option_values']))
+                        AND (empty($menu_option['option_values'])
+                            OR ! is_array($menu_option['option_values'])
+                            OR empty(array_filter($menu_option['option_values']))
+                        )
                     ) {
                         $cart_option_required = $menu_options[$menu_option_id]['option_name'];
                         break;
