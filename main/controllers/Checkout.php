@@ -505,7 +505,7 @@ class Checkout extends Main_Controller {
 
         $order_type_text = ($this->location->orderType() === '1') ? $this->lang->line('label_delivery') : $this->lang->line('label_collection');
 
-		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|numeric|max_length[20]');
+		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|numeric|max_length[20]');
 		$this->form_validation->set_rules('order_time_type', sprintf(lang('label_order_time_type'), $order_type_text), 'xss_clean|trim|required|alpha');
 
         if ($this->input->post('order_time_type') === 'asap') {
