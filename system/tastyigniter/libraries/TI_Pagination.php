@@ -113,22 +113,7 @@ class TI_Pagination extends CI_Pagination
 			$num_pages,
 		);
 
-		$per_page = array('20', '50', '100', '250', '500', '1000', '2500');
-		if (APPDIR === MAINDIR) {
-			$info = '<span>' . str_replace($find, $replace, $this->info_text) . '</span>';
-		} else {
-			$info = '<div class="input-group">';
-			$info .= '<span class="input-group-addon">' . str_replace($find, $replace, $this->info_text) . '</span>';
-			if ($this->total_rows > $this->per_page) {
-				$info .= '<select id="per-page-limit" class="form-control per-page-limit" onchange="filterList()">';
-				foreach ($per_page as $num) {
-					$selected = ($this->per_page == $num) ? 'selected' : '';
-					$info .= '<option value="' . $num . '" ' . $selected . '>' . str_replace('{per_page}', $num, $this->per_page_text) . '</option>';
-				}
-				$info .= '</select>';
-			}
-			$info .= '</div>';
-		}
+        $info = '<span>' . str_replace($find, $replace, $this->info_text) . '</span>';
 
 		return $info;
 	}
