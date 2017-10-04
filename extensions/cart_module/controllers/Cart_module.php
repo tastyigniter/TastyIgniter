@@ -76,7 +76,7 @@ class Cart_module extends Main_Controller {
 				'name'   		=> $menu_data['menu_name'],
 				'qty'    		=> $quantity,
 				'price'  		=> $price,
-				'comment'       => $this->input->post('comment') ? substr(htmlspecialchars(trim($this->input->post('comment'))), 0, 50) : '',
+				'comment'       => $this->input->post('comment') ? character_limiter(htmlspecialchars(trim($this->input->post('comment'))), 500) : '',
 				'options' 		=> $cart_options
 			);
 		}
@@ -305,7 +305,7 @@ class Cart_module extends Main_Controller {
 					$data['cart_items'][] = array(
 						'rowid'				=> $cart_item['rowid'],
 						'menu_id' 			=> $cart_item['id'],
-						'name' 				=> (strlen($cart_item['name']) > 25) ? strtolower(substr($cart_item['name'], 0, 25)) .'...' : strtolower($cart_item['name']),
+						'name' 				=> (strlen($cart_item['name']) > 25) ? strtolower(character_limiter($cart_item['name'], 25)) .'...' : strtolower($cart_item['name']),
 						//add currency symbol and format item price to two decimal places
 						'price' 			=> $this->currency->format($cart_item['price']),
 						'qty' 				=> $cart_item['qty'],
