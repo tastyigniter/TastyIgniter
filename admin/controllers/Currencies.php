@@ -199,11 +199,11 @@ class Currencies extends Admin_Controller {
 		$this->form_validation->set_rules('currency_code', 'lang:label_code', 'xss_clean|trim|required|exact_length[3]');
 		$this->form_validation->set_rules('currency_symbol', 'lang:label_symbol', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('country_id', 'lang:label_country', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('symbol_position', 'lang:label_symbol_position', 'xss_clean|trim|required|integer|exact_length[1]');
+		$this->form_validation->set_rules('symbol_position', 'lang:label_symbol_position', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('currency_rate', 'lang:label_rate', 'xss_clean|trim|required|decimal');
-		$this->form_validation->set_rules('thousand_sign', 'lang:label_thousand_sign', 'xss_clean|trim|required|exact_length[1]');
-		$this->form_validation->set_rules('decimal_sign', 'lang:label_decimal_sign', 'xss_clean|trim|required|exact_length[1]');
-		$this->form_validation->set_rules('decimal_position', 'lang:label_decimal_position', 'xss_clean|trim|required|integer|exact_length[1]');
+		$this->form_validation->set_rules('thousand_sign', 'lang:label_thousand_sign', 'xss_clean|trim');
+		$this->form_validation->set_rules('decimal_sign', 'lang:label_decimal_sign', 'xss_clean|trim');
+		$this->form_validation->set_rules('decimal_position', 'lang:label_decimal_position', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('currency_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
