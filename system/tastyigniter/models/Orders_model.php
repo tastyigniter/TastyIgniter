@@ -463,7 +463,7 @@ class Orders_model extends TI_Model {
                 $this->addOrderTotals($order_id, $cart_contents);
 
                 if ( ! empty($cart_contents['coupon'])) {
-                    $this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon']);
+                    $this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['totals']['coupon']);
                 }
 
                 return $order_id;
@@ -616,7 +616,7 @@ class Orders_model extends TI_Model {
     }
 
     public function addOrderCoupon($order_id, $customer_id, $coupon) {
-        if (is_array($coupon) AND is_numeric($coupon['discount'])) {
+        if (is_array($coupon) AND is_numeric($coupon['amount'])) {
             $this->db->where('order_id', $order_id);
             $this->db->delete('coupons_history');
 
@@ -627,7 +627,8 @@ class Orders_model extends TI_Model {
             $this->db->set('customer_id', empty($customer_id) ? '0' : $customer_id);
             $this->db->set('coupon_id', $temp_coupon['coupon_id']);
             $this->db->set('code', $temp_coupon['code']);
-            $this->db->set('amount', '-' . $coupon['discount']);
+            $this->db->set('min_total', $temp_coupon['min_total']);
+            $this->db->set('amount', '-' . $coupon['amount']);
             $this->db->set('date_used', mdate('%Y-%m-%d %H:%i:%s', time()));
 
             if ($this->db->insert('coupons_history')) {
