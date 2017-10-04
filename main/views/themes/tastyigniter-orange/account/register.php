@@ -65,7 +65,6 @@
 						<div class="form-group">
 							<div class="input-group">
          		 				<span><?php echo $captcha['image']; ?></span>
-								<input type="hidden" name="captcha_word" class="form-control" value="<?php echo $captcha['word']; ?>" />
 								<input type="text" name="captcha" class="form-control" placeholder="<?php echo lang('label_captcha'); ?>" />
 							</div>
 							<?php echo form_error('captcha', '<span class="text-danger">', '</span>'); ?>
