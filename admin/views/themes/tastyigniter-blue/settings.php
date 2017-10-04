@@ -74,30 +74,12 @@
 				</div>
 
 				<div id="restaurant" class="tab-pane">
-					<div class="form-group">
-						<label for="input-site-location-mode" class="col-sm-3 control-label"><?php echo lang('label_site_location_mode'); ?>
-							<span class="help-block"><?php echo lang('help_site_location_mode'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<label class="btn btn-default active">
-									<input type="radio" name="site_location_mode" value="single" <?php echo set_radio('site_location_mode', 'single', (config_item('site_location_mode') === 'single')); ?>>
-									<?php echo lang('text_single'); ?>
-								</label>
-								<label class="btn btn-default">
-									<input type="radio" name="site_location_mode" value="multiple" <?php echo set_radio('site_location_mode', 'multiple', (config_item('site_location_mode') === 'multiple')); ?>>
-									<?php echo lang('text_multiple'); ?>
-								</label>
-							</div>
-							<?php echo form_error('site_location_mode', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
 					<div id="multi-locations" class="form-group">
 						<label for="input-default-location" class="col-sm-3 control-label"><?php echo lang('label_default_location'); ?>
 							<span class="help-block"><?php echo lang('help_default_location'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<?php if (!empty($locations) AND $site_location_mode === 'single') { ?>
+							<?php if (!empty($locations)) { ?>
 								<select name="default_location_id" id="input-default-location" class="form-control">
 									<?php if (!empty($locations)) { ?>
 										<option value=""><?php echo lang('text_please_select'); ?></option>
@@ -1346,16 +1328,6 @@ $(document).ready(function() {
 			$('#lat-lng').fadeOut();
 		}
 	});
-
-	$('input[name="site_location_mode"]').on('change', function() {
-		if (this.value == 'multiple') {
-			$('#multi-locations').fadeIn();
-		} else {
-			$('#multi-locations').fadeOut();
-		}
-	});
-
-	$('input[name="site_location_mode"]:checked').trigger('change');
 
 	$('input[name="show_menu_images"]').on('change', function() {
 		if (this.value == '1') {

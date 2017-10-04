@@ -352,13 +352,12 @@ class Installer
 		// Save the site configuration to the settings table
 		$settings = [
 			'ti_setup'           => 'installed',
-			'site_location_mode' => $this->CI->input->post('site_location_mode'),
 			'site_url'           => root_url(),
 			'site_name'          => $this->CI->input->post('site_name'),
 			'site_email'         => $this->CI->input->post('site_email'),
 		];
 
-		if (!$this->CI->Setup_model->updateSettings($settings)) {
+        if (!$this->CI->Setup_model->updateSettings($settings)) {
 			return FALSE;
 		}
 

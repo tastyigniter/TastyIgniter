@@ -206,7 +206,7 @@ class User
 	}
 
 	public function isStrictLocation() {
-		return ($this->location_access == '1' OR $this->CI->config->item('site_location_mode') === 'single') ? TRUE : FALSE;
+		return ($this->location_access == '1') ? TRUE : FALSE;
 	}
 
 	public function canAccessCustomerAccount() {

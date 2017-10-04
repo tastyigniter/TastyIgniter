@@ -24,19 +24,19 @@ class Setup_model extends TI_Model
 {
 	protected $schema = array();
 
-	protected function querySchema($table, $schema = 'initial') {
+	public function querySchema($table, $schema = 'initial') {
 		if (!empty($this->schema[$schema][$table])) {
 			$this->db->query($this->schema[$schema][$table]);
 		}
 
-		if ($this->input->post('site_location_mode') === 'multi' AND !empty($this->schema[$schema][$table.'_for_multi'])) {
+		if (!empty($this->schema[$schema][$table.'_for_multi'])) {
 			$this->db->query($this->schema[$schema][$table.'_for_multi']);
 		}
 	}
 
 	// --------------------------------------------------------------------
 
-	protected function loadSchema($schema_type = 'initial') {
+	public function loadSchema($schema_type = 'initial') {
 		include(IGNITEPATH . '/migrations/'.$schema_type.'_schema.php');
 
 		if (!empty($schema)) {
@@ -101,17 +101,17 @@ class Setup_model extends TI_Model
 			if ($this->db->replace('settings', $setting_row) === FALSE) {
 				return FALSE;
 			}
-		}
+        }
 
 		return TRUE;
 	}
 
 	public function updateLocation($setting = array()) {
 		$this->load->model('Locations_model');
-		$this->Locations_model->save(array(
+		$this->Locations_model->saveLocation('11', array(
 			'location_name' => $setting['site_name'],
 			'location_email' => $setting['site_email'],
-		), '11');
+		));
 
 		$this->load->model('Settings_model');
 		$this->Settings_model->addSetting('prefs', 'main_address', $this->Locations_model->getAddress(11), '1');
@@ -122,17 +122,15 @@ class Setup_model extends TI_Model
 	}
 
 	public function updateVersion($version = NULL) {
-		$this->load->model('Settings_model');
-		$this->Settings_model->where('sort', 'prefs');
-		$this->Settings_model->where('item', 'ti_version');
-		$this->Settings_model->delete();
+		$this->db->where('sort', 'prefs');
+		$this->db->where('item', 'ti_version');
+		$this->db->delete('settings');
 
-		$this->Settings_model->insert(array(
-			'sort' => 'prefs',
-			'item' => 'ti_version',
-			'value' => (empty($version)) ? TI_VERSION : $version,
-			'serialized' => '0'
-		));
+		$this->db->set('sort', 'prefs');
+		$this->db->set('item', 'ti_version');
+		$this->db->set('value', (empty($version)) ? TI_VERSION : $version);
+		$this->db->set('serialized', '0');
+		$this->db->insert('settings');
 	}
 }
 
