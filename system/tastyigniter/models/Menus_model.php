@@ -127,8 +127,8 @@ class Menus_model extends TI_Model {
 
 				$results[$row['menu_category_id']][] = array(                                                            // create array of menu data to be sent to view
 					'menu_id'          => $row['menu_id'],
-					'menu_name'        => (strlen($row['menu_name']) > 80) ? strtolower(substr($row['menu_name'], 0, 80)) . '...' : strtolower($row['menu_name']),
-					'menu_description' => (strlen($row['menu_description']) > 120) ? substr($row['menu_description'], 0, 120) . '...' : $row['menu_description'],
+					'menu_name'        => (strlen($row['menu_name']) > 80) ? strtolower(character_limiter($row['menu_name'], 80)) . '...' : strtolower($row['menu_name']),
+					'menu_description' => (strlen($row['menu_description']) > 120) ? character_limiter($row['menu_description'], 120) . '...' : $row['menu_description'],
 					'category_name'    => $row['category_name'],
 					'category_id'      => $row['menu_category_id'],
 					'minimum_qty'      => ! empty($row['minimum_qty']) ? $row['minimum_qty'] : '1',

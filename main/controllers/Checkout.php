@@ -147,7 +147,7 @@ class Checkout extends Main_Controller {
 
             $data['menus'][] = array(													// load menu data into array
                 'menu_id' 		=> $menu['menu_id'],
-                'name' 			=> (strlen($menu['name']) > 120) ? substr($menu['name'], 0, 120) .'...' : $menu['name'],
+                'name' 			=> (strlen($menu['name']) > 120) ? character_limiter($menu['name'], 120) .'...' : $menu['name'],
                 'price' 		=> $this->currency->format($menu['price']),		//add currency symbol and format item price to two decimal places
                 'quantity' 		=> $menu['quantity'],
                 'subtotal' 		=> $this->currency->format($menu['subtotal']), 	//add currency symbol and format item subtotal to two decimal places

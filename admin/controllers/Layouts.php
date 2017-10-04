@@ -103,7 +103,7 @@ class Layouts extends Admin_Controller {
 				'extension_id'	=> $result['extension_id'],
 				'module_code'	=> $result['name'],
 				'title'			=> $result['title'],
-				'description'	=> (strlen($meta['description']) > 70) ? substr($meta['description'], 0, 70) . '...' : $meta['description'],
+				'description'	=> (strlen($meta['description']) > 70) ? character_limiter($meta['description'], 70) . '...' : $meta['description'],
 			);
 		}
 

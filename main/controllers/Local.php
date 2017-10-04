@@ -336,7 +336,7 @@ class Local extends Main_Controller {
 				$data['locations'][] = array(                                                            // create array of menu data to be sent to view
 					'location_id'       => $location['location_id'],
 					'location_name'     => $location['location_name'],
-					'description'       => (strlen($location['description']) > 120) ? substr($location['description'], 0, 120) . '...' : $location['description'],
+					'description'       => (strlen($location['description']) > 120) ? character_limiter($location['description'], 120) . '...' : $location['description'],
 					'address'           => $this->location->getAddress(TRUE),
 					'total_reviews'     => $review_totals,
 					'location_image'    => $this->location->getImage(),

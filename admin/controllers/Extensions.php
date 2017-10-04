@@ -91,7 +91,7 @@ class Extensions extends Admin_Controller {
 				'title'        => $result['title'],
 				'version'      => ! empty($result['meta']['version']) ? $result['meta']['version'] : '',
 				'type'         => ucfirst($result['type']),
-				'description'  => isset($result['description']) ? substr($result['description'], 0, 128) : '',
+				'description'  => isset($result['description']) ? character_limiter($result['description'], 128) : '',
 				'installed'    => $result['installed'],
 				'settings'     => $result['settings'],
 				'status'       => $result['status'],

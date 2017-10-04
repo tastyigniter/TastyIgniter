@@ -81,7 +81,7 @@ class Categories extends Admin_Controller {
                 'name' 					=> $result['name'],
                 'parent_id' 			=> $result['parent_id'],
                 'priority' 			    => $result['priority'],
-				'description' 			=> substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
+				'description' 			=> character_limiter(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 100) . '..',
 				'status'		        => ($result['status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit' 					=> site_url('categories/edit?id=' . $result['category_id'])
 			);

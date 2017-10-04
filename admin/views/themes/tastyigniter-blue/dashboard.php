@@ -198,7 +198,7 @@
                                 <?php foreach ($news_feed as $feed) { ?>
                                     <a class="list-group-item" target="_blank" href="<?php echo $feed['link']; ?>">
                                         <h5 class="text-primary"><?php echo $feed['title']; ?></h5>
-                                        <span class="text-muted"><?php echo strip_tags(substr($feed['description'], 0, 75)).'...'; ?></span>
+                                        <span class="text-muted"><?php echo character_limiter(strip_tags($feed['description']), 75).'...'; ?></span>
                                     </a>
                                 <?php } ?>
                             </div>

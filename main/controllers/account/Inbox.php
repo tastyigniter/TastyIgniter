@@ -46,7 +46,7 @@ class Inbox extends Main_Controller {
 			$data['messages'][] = array(														// create array of customer messages to pass to view
                 'date_added'	=> time_elapsed($result['date_added']),
 				'subject' 		=> $result['subject'],
-				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
+				'body' 			=> character_limiter(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 100) . '..',
 				'state'			=> ($result['state'] === '0') ? 'unread' : 'read',
 				'view'			=> site_url('account/inbox/view/'. $result['message_id'])
 			);
