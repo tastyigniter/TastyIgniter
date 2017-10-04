@@ -168,8 +168,8 @@ class Menu_options extends Admin_Controller {
 				foreach ($results as $result) {
 					$json['results'][] = array(
 						'id' 				=> $result['option_id'],
-						'text' 				=> utf8_encode($result['option_name']),
-						'display_type' 		=> utf8_encode($result['display_type']),
+						'text' 				=> $result['option_name'],
+						'display_type' 		=> $result['display_type'],
 						'priority' 			=> $result['priority'],
 						'option_values' 	=> $result['option_values']
 					);

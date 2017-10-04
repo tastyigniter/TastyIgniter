@@ -236,7 +236,7 @@ class Staffs extends Admin_Controller {
 				foreach ($results as $result) {
 					$json['results'][] = array(
 						'id' 		=> $result['staff_id'],
-						'text' 		=> utf8_encode($result['staff_name'])
+						'text' 		=> $result['staff_name']
 					);
 				}
 			} else {

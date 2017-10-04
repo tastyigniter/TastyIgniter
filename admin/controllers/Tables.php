@@ -152,7 +152,7 @@ class Tables extends Admin_Controller {
 				foreach ($results as $result) {
 					$json['results'][] = array(
 						'id' 		=> $result['table_id'],
-						'text' 		=> utf8_encode($result['table_name']),
+						'text' 		=> $result['table_name'],
 						'min' 		=> $result['min_capacity'],
 						'max' 		=> $result['max_capacity']
 					);

@@ -262,7 +262,7 @@ class Customers extends Admin_Controller {
 				foreach ($results as $result) {
 					$json['results'][] = array(
 						'id' 	=> $result['customer_id'],
-						'text' 	=> utf8_encode($result['first_name'] .' '. $result['last_name'])
+						'text' 	=> $result['first_name'] .' '. $result['last_name']
 					);
 				}
 			} else {
