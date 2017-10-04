@@ -775,7 +775,12 @@ class Location {
 
         $temp_query = (is_array($temp_query)) ? implode(', ', $temp_query) : $temp_query;
 
-        $url  = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($temp_query) .'&sensor=false'; //encode $postcode string and construct the url query
+        $map_key = $this->CI->config->item('maps_api_key')
+            ? 'key='.$this->CI->config->item('maps_api_key').'&' : '';
+
+        $url  = 'https://maps.googleapis.com/maps/api/geocode/json?'.$map_key
+            .'address=' . urlencode($temp_query) .'&sensor=false';
+
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
