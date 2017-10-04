@@ -28,7 +28,7 @@
             };
 
             var allowed_ext = new Array('<?php echo implode("','", $allowed_ext); ?>');
-            var maxSizeUpload = <?php echo round($max_size_upload / 1024, 2); ?>;
+            var maxSizeUpload = '<?php echo round($max_size_upload / 1024, 2); ?>';
         </script>
     </head>
     <body>
