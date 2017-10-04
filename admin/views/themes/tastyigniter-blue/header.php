@@ -45,8 +45,6 @@
 	$wrapper_class = '';
 	if (!$this->user->islogged()) $wrapper_class .= 'wrap-none';
 	if ($this->input->cookie('ti_sidebarToggleState') == 'hide') $wrapper_class .= ' hide-sidebar';
-
-	$locations = $this->Locations_model->isEnabled()->dropdown('location_name');
 ?>
 <?php echo get_doctype(); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -119,38 +117,6 @@
 				</div>
 
 				<ul class="nav navbar-top-links navbar-right">
-					<?php if ($is_strict_location AND !is_single_location()) { ?>
-					<li class="dropdown">
-						<a class="dropdown-toggle btn-location" data-toggle="dropdown">
-							<i class="fa fa-bank fa-fw visible-xs-inline-block"></i>
-							<span class="text-nowrap hidden-xs"><strong><?php echo $staff_location; ?></strong></span>
-							<i class="fa fa-angle-down"></i>
-						</a>
-						<ul class="dropdown-menu dropdown-locations">
-							<li class="menu-header"><strong><?php echo sprintf(lang('text_locations'), count($locations)); ?></strong></li>
-							<li class="menu-body">
-								<?php if ($locations) { ?>
-									<ul class="menu locations-list">
-										<?php foreach ($locations as $key => $value) { ?>
-											<li class="<?php echo ($staff_location_id == $key) ? 'active' : ''; ?>">
-												<a class="clickable" data-location="<?php echo $key; ?>"><?php echo $value; ?></a>
-											</li>
-											<li class="divider"></li>
-										<?php } ?>
-									</ul>
-								<?php } ?>
-							</li>
-							<li class="menu-footer"></li>
-						</ul>
-					</li>
-					<?php } else if ($is_strict_location AND !is_single_location() AND count($locations) === 1) { ?>
-						<li>
-							<span class="btn-location">
-								<i class="fa fa-bank fa-fw visible-xs-inline-block"></i>
-								<span class="text-nowrap hidden-xs"><strong><?php echo $staff_location; ?></strong></span>
-							</span>
-						</li>
-					<?php } ?>
 					<li class="dropdown">
 						<a class="front-end" title="<?php echo lang('menu_storefront'); ?>" href="<?php echo root_url(); ?>" target="_blank">
 							<i class="fa fa-home"></i>

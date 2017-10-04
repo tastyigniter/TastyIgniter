@@ -210,7 +210,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 }
 .navbar-logo {
 	display: block;
-	padding: 0 15px;
+	padding: 20px 15px 0;
 }
 .navbar-logo img {
 	height: 40px;
@@ -707,6 +707,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	}
 }
 .page-header .page-action {
+	padding-top: 15px;
 	padding-bottom: 5px;
 }
 .page-header .btn {
