@@ -101,6 +101,7 @@ if ( ! function_exists('currency_format'))
     function currency_format($num = '')
     {
         $CI =& get_instance();
+        $CI->load->library('currency');
         return $CI->currency->format($num);
     }
 }
