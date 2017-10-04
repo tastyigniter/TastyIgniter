@@ -29,7 +29,7 @@ class Checkout extends Main_Controller {
             redirect(restaurant_url());																	// redirect to menus page and display error
 		}
 
-		if ($this->config->item('location_order') === '1' AND ! $this->location->hasSearchQuery()) { 														// else if local restaurant is not selected
+		if ($this->location->orderType() == '1' AND $this->config->item('location_order') === '1' AND ! $this->location->hasSearchQuery()) { 														// else if local restaurant is not selected
             $this->alert->set('alert', $this->lang->line('alert_no_selected_local'));
             redirect(restaurant_url());																	// redirect to menus page and display error
         }

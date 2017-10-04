@@ -37,7 +37,7 @@
 					<div class="panel panel-local display-local">
 						<?php if ($location_search_mode === 'multi') { ?>
 							<div class="panel-heading">
-								<div class="row local-search bg-warning" style="display: <?php echo (empty($search_query) AND $location_order === '1') ? 'block' : 'none'; ?>">
+								<div class="row local-search bg-warning" style="display: <?php echo (empty($search_query) AND $order_type == '1' AND $location_order === '1') ? 'block' : 'none'; ?>">
 									<a class="close-search clickable" onclick="toggleLocalSearch();">&times;</a>
 									<div class="col-xs-12 col-sm-6 center-block">
 										<div class="postcode-group text-center">
