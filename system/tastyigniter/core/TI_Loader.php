@@ -213,8 +213,8 @@ class TI_Loader extends MX_Loader {
                     date_default_timezone_set($this->config->item('timezone'));
                 }
 
-                if ($this->config->item('site_url')) {
-                    $this->config->set_item('base_url', trim($this->config->item('site_url'), '/') . '/' . (APPDIR === MAINDIR) ? '' : APPDIR);
+                if ($url = $this->config->item('site_url')) {
+                    $this->config->set_item('base_url', rtrim($url, '/') . '/' . (APPDIR === MAINDIR ? '' : APPDIR));
                 }
 
                 $this->_db_config_loaded = TRUE;

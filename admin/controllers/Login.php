@@ -7,18 +7,18 @@ class Login extends Admin_Controller
 		$this->lang->load('login');
 
 		if ($this->user->islogged()) {
-			$this->redirect('dashboard');
+  			redirect('dashboard');
 		}
 
 		$this->template->setTitle($this->lang->line('text_title'));
 
-		$data['site_name'] = $this->config->item('site_name');
-		$data['reset_url'] = $this->pageUrl('login/reset');
+        $data['site_name']  = $this->config->item('site_name');
+        $data['reset_url'] = site_url('login/reset');
 
 		if ($this->input->post() AND $this->validateLoginForm() === TRUE) {
 			if (!$this->user->login($this->input->post('user'), $this->input->post('password'))) {                                        // checks if form validation routines ran successfully
 				$this->alert->set('danger', $this->lang->line('alert_username_not_found'));
-				$this->redirect(current_url());
+                redirect(current_url());
 			} else {
 				log_activity($this->user->getStaffId(), 'logged in', 'staffs', get_activity_message('activity_logged_in',
 					array('{staff}', '{link}'),
@@ -26,14 +26,14 @@ class Login extends Admin_Controller
 				));
 
 				if (!$this->config->item('default_location_id')) {
-					$this->redirect('settings');
+					redirect('settings');
 				}
 
 				if ($redirect_url = $this->input->get('redirect')) {
-					$this->redirect($redirect_url);
+	                redirect($redirect_url);
 				}
 
-				$this->redirect('dashboard');
+                redirect('dashboard');
 			}
 		}
 
@@ -45,16 +45,16 @@ class Login extends Admin_Controller
 
 		$this->load->model('Staffs_model');
 		if ($this->user->islogged()) {
-			$this->redirect('dashboard');
+			redirect('dashboard');
 		}
 
 		$this->template->setTitle($this->lang->line('text_password_reset_title'));
 
 		if ($this->input->post() AND $this->_resetPassword() === TRUE) {
-			$this->redirect('login');
+			redirect('login');
 		}
 
-		$data['login_url'] = $this->pageUrl();
+		$data['login_url'] = site_url('login');
 
 		$this->template->render('login_reset', $data);
 	}
@@ -70,7 +70,7 @@ class Login extends Admin_Controller
 			}
 
 			$this->alert->set('danger', $this->lang->line('alert_email_not_sent'));
-			$this->redirect('login/reset');
+			redirect('login/reset');
 		}
 	}
 

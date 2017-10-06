@@ -5,7 +5,7 @@ class Login extends Main_Controller
 
 	public function index() {
 		if ($this->customer->islogged()) {                                                        // checks if customer is logged in then redirect to account page.
-			$this->redirect('account/account');
+			redirect('account/account');
 		}
 
 		$this->load->model('Pages_model');
@@ -27,7 +27,7 @@ class Login extends Main_Controller
 
 				if ($this->customer->login($email, $password) === FALSE) {                        // invoke login method in customer library with email and password $_POST data value then check if login was unsuccessful
 					$this->alert->set('alert', $this->lang->line('alert_invalid_login'));    // display error message and redirect to account login page
-					$this->redirect(current_url());
+					redirect(current_url());
 				} else {                                                                        // else if login was successful redirect to account page
 					log_activity($this->customer->getId(), 'logged in', 'customers', get_activity_message('activity_logged_in',
 						array('{customer}', '{link}'),
@@ -35,10 +35,10 @@ class Login extends Main_Controller
 					));
 
 					if ($redirect_url = $this->input->get('redirect')) {
-						$this->redirect($redirect_url);
+						redirect($redirect_url);
 					}
 
-					$this->redirect('account/account');
+					redirect('account/account');
 				}
 			}
 		}

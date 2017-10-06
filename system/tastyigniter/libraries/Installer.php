@@ -89,7 +89,7 @@ class Installer
 		$info['version'] = TI_VERSION;
 		$info['php_version'] = $this->installed_php_version;
 		$info['mysql_version'] = $this->db_exists ? $this->CI->db->version() : '';
-		$info['sys_hash'] = $this->CI->config->item('sys_hash');  // md5(TastyIgniter!core!2.1.1)
+		$info['sys_hash'] = $this->CI->config->item('sys_hash');
 
 		$this->CI->load->model('Languages_model');
 		$languages = $this->CI->Languages_model->getLanguages();

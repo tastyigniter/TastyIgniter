@@ -8,7 +8,7 @@ class Register extends Main_Controller
 		parent::__construct();                                                                    //  calls the constructor
 
 		if ($this->customer->islogged()) {                                                        // checks if customer is logged in then redirect to account page.
-			$this->redirect('account/account');
+			redirect('account/account');
 		}
 
 		$this->load->model('Pages_model');
@@ -20,10 +20,10 @@ class Register extends Main_Controller
 			$this->alert->set('alert', $this->lang->line('alert_account_created'));    // display success message and redirect to account login page
 
 			if ($redirect_url = $this->input->get('redirect')) {
-				$this->redirect($redirect_url);
+				redirect($redirect_url);
 			}
 
-			$this->redirect('account/login');
+			redirect('account/login');
 		}
 
 		$this->template->setTitle($this->lang->line('text_register_heading'));
