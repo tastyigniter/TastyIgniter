@@ -74,7 +74,7 @@ if ( ! function_exists('sort_array'))
      * @param string $sort_key
      * @param array  $sort_array
      *
-     * @return string
+     * @return array
      */
     function sort_array($array = array(), $sort_key = 'priority', $sort_array = array()) {
         if (!empty($array)) {
@@ -128,12 +128,18 @@ if ( ! function_exists('get_remote_data'))
      */
     function get_remote_data($url, $options = array('TIMEOUT' => 10))
     {
+        // Prevent the exploitation of curl_exec to read local files
+        if (preg_match('/^file/i', $url) === 1) {
+            return "";
+        }
+
         // Set the curl parameters.
         $curl = curl_init($url);
 
         curl_setopt($curl, CURLOPT_HEADER, FALSE);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
 
         if (!empty($options['TIMEOUT'])) {
             curl_setopt($curl, CURLOPT_TIMEOUT, $options['TIMEOUT']);
@@ -160,8 +166,6 @@ if ( ! function_exists('get_remote_data'))
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, $options['FOLLOWLOCATION']);
         }
 
-        curl_setopt($curl, CURLOPT_MAXREDIRS, 20);
-
         if (!empty($options['REFERER'])) {
             curl_setopt($curl, CURLOPT_REFERER, current_url());
         }
@@ -171,10 +175,19 @@ if ( ! function_exists('get_remote_data'))
             curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($options['POSTFIELDS'], '', '&'));
         }
 
+		if (!empty($options['FILE'])) {
+			curl_setopt($curl, CURLOPT_FILE, $options['FILE']);
+		}
+
         // Get response from the server.
         $response = curl_exec($curl);
 
-        if (curl_error($curl)) {
+		$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		if ($httpCode == 500) {
+			log_message('error', 'cURL: Error --> ' . print_r(curl_getinfo($curl)) .' '. $url);
+		}
+
+		if (curl_error($curl)) {
             log_message('error', 'cURL: Error --> ' . curl_errno($curl) . ': ' . curl_error($curl) .' '. $url);
         }
 
