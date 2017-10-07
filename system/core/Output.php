@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Output
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/libraries/output.html
+ * @link		https://codeigniter.com/user_guide/libraries/output.html
  */
 class CI_Output {
 
@@ -123,6 +123,13 @@ class CI_Output {
 	public $parse_exec_vars = TRUE;
 
 	/**
+	 * mbstring.func_overload flag
+	 *
+	 * @var	bool
+	 */
+	protected static $func_overload;
+
+	/**
 	 * Class constructor
 	 *
 	 * Determines whether zLib output compression will be used.
@@ -137,6 +144,8 @@ class CI_Output {
 			&& config_item('compress_output') === TRUE
 			&& extension_loaded('zlib')
 		);
+
+		isset(self::$func_overload) OR self::$func_overload = (extension_loaded('mbstring') && ini_get('mbstring.func_overload'));
 
 		// Get mime types for later
 		$this->mimes =& get_mimes();
@@ -285,7 +294,7 @@ class CI_Output {
 	/**
 	 * Get Header
 	 *
-	 * @param	string	$header_name
+	 * @param	string	$header
 	 * @return	string
 	 */
 	public function get_header($header)
@@ -302,11 +311,12 @@ class CI_Output {
 			return NULL;
 		}
 
-		for ($i = 0, $c = count($headers); $i < $c; $i++)
+		// Count backwards, in order to get the last matching header
+		for ($c = count($headers) - 1; $c > -1; $c--)
 		{
-			if (strncasecmp($header, $headers[$i], $l = strlen($header)) === 0)
+			if (strncasecmp($header, $headers[$c], $l = self::strlen($header)) === 0)
 			{
-				return trim(substr($headers[$i], $l+1));
+				return trim(self::substr($headers[$c], $l+1));
 			}
 		}
 
@@ -377,9 +387,8 @@ class CI_Output {
 	/**
 	 * Set Cache
 	 *
-	 * @param    int $time Cache expiration time in minutes
-	 *
-	 * @return    CI_Output
+	 * @param	int	$time	Cache expiration time in minutes
+	 * @return	CI_Output
 	 */
 	public function cache($time)
 	{
@@ -481,13 +490,13 @@ class CI_Output {
 				if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
 				{
 					header('Content-Encoding: gzip');
-					header('Content-Length: '.strlen($output));
+					header('Content-Length: '.self::strlen($output));
 				}
 				else
 				{
 					// User agent doesn't support gzip compression,
 					// so we'll have to decompress our cache
-					$output = gzinflate(substr($output, 10, -8));
+					$output = gzinflate(self::substr($output, 10, -8));
 				}
 			}
 
@@ -557,11 +566,15 @@ class CI_Output {
 			.$CI->config->item('index_page')
 			.$CI->uri->uri_string();
 
-		if (($cache_query_string = $CI->config->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
-			if (is_array($cache_query_string)) {
-				$uri .= '?' . http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
-			} else {
-				$uri .= '?' . $_SERVER['QUERY_STRING'];
+		if (($cache_query_string = $CI->config->item('cache_query_string')) && ! empty($_SERVER['QUERY_STRING']))
+		{
+			if (is_array($cache_query_string))
+			{
+				$uri .= '?'.http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
+			}
+			else
+			{
+				$uri .= '?'.$_SERVER['QUERY_STRING'];
 			}
 		}
 
@@ -573,62 +586,59 @@ class CI_Output {
 			return;
 		}
 
-		if (flock($fp, LOCK_EX))
-		{
-			// If output compression is enabled, compress the cache
-			// itself, so that we don't have to do that each time
-			// we're serving it
-			if ($this->_compress_output === TRUE)
-			{
-				$output = gzencode($output);
-
-				if ($this->get_header('content-type') === NULL)
-				{
-					$this->set_content_type($this->mime_type);
-				}
-			}
-
-			$expire = time() + ($this->cache_expiration * 60);
-
-			// Put together our serialized info.
-			$cache_info = serialize(array(
-				'expire'	=> $expire,
-				'headers'	=> $this->headers
-			));
-
-			$output = $cache_info.'ENDCI--->'.$output;
-
-			for ($written = 0, $length = strlen($output); $written < $length; $written += $result)
-			{
-				if (($result = fwrite($fp, substr($output, $written))) === FALSE)
-				{
-					break;
-				}
-			}
-
-			flock($fp, LOCK_UN);
-		}
-		else
+		if ( ! flock($fp, LOCK_EX))
 		{
 			log_message('error', 'Unable to secure a file lock for file at: '.$cache_path);
+			fclose($fp);
 			return;
 		}
 
+		// If output compression is enabled, compress the cache
+		// itself, so that we don't have to do that each time
+		// we're serving it
+		if ($this->_compress_output === TRUE)
+		{
+			$output = gzencode($output);
+
+			if ($this->get_header('content-type') === NULL)
+			{
+				$this->set_content_type($this->mime_type);
+			}
+		}
+
+		$expire = time() + ($this->cache_expiration * 60);
+
+		// Put together our serialized info.
+		$cache_info = serialize(array(
+			'expire'	=> $expire,
+			'headers'	=> $this->headers
+		));
+
+		$output = $cache_info.'ENDCI--->'.$output;
+
+		for ($written = 0, $length = self::strlen($output); $written < $length; $written += $result)
+		{
+			if (($result = fwrite($fp, self::substr($output, $written))) === FALSE)
+			{
+				break;
+			}
+		}
+
+		flock($fp, LOCK_UN);
 		fclose($fp);
 
-		if (is_int($result))
-		{
-			chmod($cache_path, 0640);
-			log_message('debug', 'Cache file written: '.$cache_path);
-
-			// Send HTTP cache-control headers to browser to match file cache settings.
-			$this->set_cache_header($_SERVER['REQUEST_TIME'], $expire);
-		}
-		else
+		if ( ! is_int($result))
 		{
 			@unlink($cache_path);
 			log_message('error', 'Unable to write the complete cache content at: '.$cache_path);
+			return;
 		}
+
+		chmod($cache_path, 0640);
+		log_message('debug', 'Cache file written: '.$cache_path);
+
+		// Send HTTP cache-control headers to browser to match file cache settings.
+		$this->set_cache_header($_SERVER['REQUEST_TIME'], $expire);
 	}
 
 	// --------------------------------------------------------------------
@@ -650,11 +660,15 @@ class CI_Output {
 		// Build the file path. The file name is an MD5 hash of the full URI
 		$uri = $CFG->item('base_url').$CFG->item('index_page').$URI->uri_string;
 
-		if (($cache_query_string = $CFG->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
-			if (is_array($cache_query_string)) {
-				$uri .= '?' . http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
-			} else {
-				$uri .= '?' . $_SERVER['QUERY_STRING'];
+		if (($cache_query_string = $CFG->item('cache_query_string')) && ! empty($_SERVER['QUERY_STRING']))
+		{
+			if (is_array($cache_query_string))
+			{
+				$uri .= '?'.http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
+			}
+			else
+			{
+				$uri .= '?'.$_SERVER['QUERY_STRING'];
 			}
 		}
 
@@ -691,11 +705,9 @@ class CI_Output {
 			log_message('debug', 'Cache file has expired. File deleted.');
 			return FALSE;
 		}
-		else
-		{
-			// Or else send the HTTP cache control headers.
-			$this->set_cache_header($last_modified, $expire);
-		}
+
+		// Send the HTTP cache control headers
+		$this->set_cache_header($last_modified, $expire);
 
 		// Add headers from cache file.
 		foreach ($cache_info['headers'] as $header)
@@ -704,7 +716,7 @@ class CI_Output {
 		}
 
 		// Display the cache
-		$this->_display(substr($cache, strlen($match[0])));
+		$this->_display(self::substr($cache, self::strlen($match[0])));
 		log_message('debug', 'Cache file is current. Sending it to browser.');
 		return TRUE;
 	}
@@ -736,16 +748,20 @@ class CI_Output {
 		{
 			$uri = $CI->uri->uri_string();
 
-			if (($cache_query_string = $CI->config->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
-				if (is_array($cache_query_string)) {
-					$uri .= '?' . http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
-				} else {
-					$uri .= '?' . $_SERVER['QUERY_STRING'];
+			if (($cache_query_string = $CI->config->item('cache_query_string')) && ! empty($_SERVER['QUERY_STRING']))
+			{
+				if (is_array($cache_query_string))
+				{
+					$uri .= '?'.http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
+				}
+				else
+				{
+					$uri .= '?'.$_SERVER['QUERY_STRING'];
 				}
 			}
 		}
 
-		$cache_path .= md5($CI->config->item('base_url') . $CI->config->item('index_page') . ltrim($uri, '/'));
+		$cache_path .= md5($CI->config->item('base_url').$CI->config->item('index_page').ltrim($uri, '/'));
 
 		if ( ! @unlink($cache_path))
 		{
@@ -777,13 +793,50 @@ class CI_Output {
 			$this->set_status_header(304);
 			exit;
 		}
-		else
-		{
-			header('Pragma: public');
-			header('Cache-Control: max-age='.$max_age.', public');
-			header('Expires: '.gmdate('D, d M Y H:i:s', $expiration).' GMT');
-			header('Last-modified: '.gmdate('D, d M Y H:i:s', $last_modified).' GMT');
-		}
+
+		header('Pragma: public');
+		header('Cache-Control: max-age='.$max_age.', public');
+		header('Expires: '.gmdate('D, d M Y H:i:s', $expiration).' GMT');
+		header('Last-modified: '.gmdate('D, d M Y H:i:s', $last_modified).' GMT');
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Byte-safe strlen()
+	 *
+	 * @param	string	$str
+	 * @return	int
+	 */
+	protected static function strlen($str)
+	{
+		return (self::$func_overload)
+			? mb_strlen($str, '8bit')
+			: strlen($str);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Byte-safe substr()
+	 *
+	 * @param	string	$str
+	 * @param	int	$start
+	 * @param	int	$length
+	 * @return	string
+	 */
+	protected static function substr($str, $start, $length = NULL)
+	{
+		if (self::$func_overload)
+		{
+			// mb_substr($str, $start, null, '8bit') returns an empty
+			// string on PHP 5.3
+			isset($length) OR $length = ($start >= 0 ? self::strlen($str) - $start : -$start);
+			return mb_substr($str, $start, $length, '8bit');
+		}
+
+		return isset($length)
+			? substr($str, $start, $length)
+			: substr($str, $start);
+	}
 }

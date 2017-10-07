@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/database/
+ * @link		https://codeigniter.com/user_guide/database/
  */
 abstract class CI_DB_driver {
 
@@ -429,7 +429,7 @@ abstract class CI_DB_driver {
 			// We still don't have a connection?
 			if ( ! $this->conn_id)
 			{
-//				log_message('error', 'Unable to connect to the database');
+				log_message('error', 'Unable to connect to the database');
 
 				if ($this->db_debug)
 				{
@@ -451,7 +451,7 @@ abstract class CI_DB_driver {
 	 *
 	 * This is just a dummy method that all drivers will override.
 	 *
-	 * @return    mixed
+	 * @return	mixed
 	 */
 	public function db_connect()
 	{
@@ -481,7 +481,7 @@ abstract class CI_DB_driver {
 	 * This is just a dummy method to allow drivers without such
 	 * functionality to not declare it, while others will override it.
 	 *
-	 * @return    void
+	 * @return	void
 	 */
 	public function reconnect()
 	{
@@ -495,7 +495,7 @@ abstract class CI_DB_driver {
 	 * This is just a dummy method to allow drivers without such
 	 * functionality to not declare it, while others will override it.
 	 *
-	 * @return    bool
+	 * @return	bool
 	 */
 	public function db_select()
 	{
@@ -507,9 +507,10 @@ abstract class CI_DB_driver {
 	/**
 	 * Last error
 	 *
-	 * @return    array
+	 * @return	array
 	 */
-	public function error() {
+	public function error()
+	{
 		return array('code' => NULL, 'message' => NULL);
 	}
 
@@ -658,7 +659,8 @@ abstract class CI_DB_driver {
 			}
 
 			// This will trigger a rollback if transactions are being used
-			if ($this->_trans_depth !== 0) {
+			if ($this->_trans_depth !== 0)
+			{
 				$this->_trans_status = FALSE;
 			}
 
@@ -780,7 +782,8 @@ abstract class CI_DB_driver {
 	{
 		if ( ! $this->conn_id)
 		{
-			if (!$this->initialize()) {
+			if ( ! $this->initialize())
+			{
 				return FALSE;
 			}
 		}
@@ -814,8 +817,7 @@ abstract class CI_DB_driver {
 	 * meaning a failure of one group will not affect any others
 	 *
 	 * @param	bool	$mode = TRUE
-	 *
-*@return	void
+	 * @return	void
 	 */
 	public function trans_strict($mode = TRUE)
 	{
@@ -828,12 +830,12 @@ abstract class CI_DB_driver {
 	 * Start Transaction
 	 *
 	 * @param	bool	$test_mode = FALSE
-	 *
-	 * @return    bool
+	 * @return	bool
 	 */
 	public function trans_start($test_mode = FALSE)
 	{
-		if ( ! $this->trans_enabled) {
+		if ( ! $this->trans_enabled)
+		{
 			return FALSE;
 		}
 
@@ -891,17 +893,19 @@ abstract class CI_DB_driver {
 	/**
 	 * Begin Transaction
 	 *
-	 * @param    bool $test_mode
-	 *
-	 * @return    bool
+	 * @param	bool	$test_mode
+	 * @return	bool
 	 */
-	public function trans_begin($test_mode = FALSE) {
-		if (!$this->trans_enabled) {
+	public function trans_begin($test_mode = FALSE)
+	{
+		if ( ! $this->trans_enabled)
+		{
 			return FALSE;
-		} // When transactions are nested we only begin/commit/rollback the outermost ones
-		elseif ($this->_trans_depth > 0) {
+		}
+		// When transactions are nested we only begin/commit/rollback the outermost ones
+		elseif ($this->_trans_depth > 0)
+		{
 			$this->_trans_depth++;
-
 			return TRUE;
 		}
 
@@ -910,9 +914,10 @@ abstract class CI_DB_driver {
 		// even if the queries produce a successful result.
 		$this->_trans_failure = ($test_mode === TRUE);
 
-		if ($this->_trans_begin()) {
+		if ($this->_trans_begin())
+		{
+			$this->_trans_status = TRUE;
 			$this->_trans_depth++;
-
 			return TRUE;
 		}
 
@@ -924,15 +929,18 @@ abstract class CI_DB_driver {
 	/**
 	 * Commit Transaction
 	 *
-	 * @return    bool
+	 * @return	bool
 	 */
-	public function trans_commit() {
-		if (!$this->trans_enabled OR $this->_trans_depth === 0) {
+	public function trans_commit()
+	{
+		if ( ! $this->trans_enabled OR $this->_trans_depth === 0)
+		{
 			return FALSE;
-		} // When transactions are nested we only begin/commit/rollback the outermost ones
-		elseif ($this->_trans_depth > 1 OR $this->_trans_commit()) {
+		}
+		// When transactions are nested we only begin/commit/rollback the outermost ones
+		elseif ($this->_trans_depth > 1 OR $this->_trans_commit())
+		{
 			$this->_trans_depth--;
-
 			return TRUE;
 		}
 
@@ -944,15 +952,18 @@ abstract class CI_DB_driver {
 	/**
 	 * Rollback Transaction
 	 *
-	 * @return    bool
+	 * @return	bool
 	 */
-	public function trans_rollback() {
-		if (!$this->trans_enabled OR $this->_trans_depth === 0) {
+	public function trans_rollback()
+	{
+		if ( ! $this->trans_enabled OR $this->_trans_depth === 0)
+		{
 			return FALSE;
-		} // When transactions are nested we only begin/commit/rollback the outermost ones
-		elseif ($this->_trans_depth > 1 OR $this->_trans_rollback()) {
+		}
+		// When transactions are nested we only begin/commit/rollback the outermost ones
+		elseif ($this->_trans_depth > 1 OR $this->_trans_rollback())
+		{
 			$this->_trans_depth--;
-
 			return TRUE;
 		}
 
@@ -970,7 +981,7 @@ abstract class CI_DB_driver {
 	 */
 	public function compile_binds($sql, $binds)
 	{
-		if (empty($binds) OR empty($this->bind_marker) OR strpos($sql, $this->bind_marker) === FALSE)
+		if (empty($this->bind_marker) OR strpos($sql, $this->bind_marker) === FALSE)
 		{
 			return $sql;
 		}
@@ -990,7 +1001,7 @@ abstract class CI_DB_driver {
 		$ml = strlen($this->bind_marker);
 
 		// Make sure not to replace a chunk inside a string that happens to match the bind marker
-		if ($c = preg_match_all("/'[^']*'/i", $sql, $matches))
+		if ($c = preg_match_all("/'[^']*'|\"[^\"]*\"/i", $sql, $matches))
 		{
 			$c = preg_match_all('/'.preg_quote($this->bind_marker, '/').'/i',
 				str_replace($matches[0],
@@ -1034,7 +1045,7 @@ abstract class CI_DB_driver {
 	 */
 	public function is_write_type($sql)
 	{
-		return (bool) preg_match('/^\s*"?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD|COPY|ALTER|RENAME|GRANT|REVOKE|LOCK|UNLOCK|REINDEX)\s/i', $sql);
+		return (bool) preg_match('/^\s*"?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD|COPY|ALTER|RENAME|GRANT|REVOKE|LOCK|UNLOCK|REINDEX|MERGE)\s/i', $sql);
 	}
 
 	// --------------------------------------------------------------------
@@ -1163,14 +1174,14 @@ abstract class CI_DB_driver {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Platform-dependant string escape
+	 * Platform-dependent string escape
 	 *
 	 * @param	string
 	 * @return	string
 	 */
 	protected function _escape_str($str)
 	{
-		return str_replace("'", "''", remove_invisible_characters($str));
+		return str_replace("'", "''", remove_invisible_characters($str, FALSE));
 	}
 
 	// --------------------------------------------------------------------
@@ -1561,8 +1572,8 @@ abstract class CI_DB_driver {
 				'\s+BETWEEN\s+',                 // BETWEEN value AND value
 				'\s+IN\s*\(.*\)',            // IN(list)
 				'\s+NOT IN\s*\(.*\)',        // NOT IN (list)
-				'\s+LIKE\s+\S.*(' . $_les . ')?',    // LIKE 'expr'[ ESCAPE '%s']
-				'\s+NOT LIKE\s+\S.*(' . $_les . ')?' // NOT LIKE 'expr'[ ESCAPE '%s']
+				'\s+LIKE\s+\S.*('.$_les.')?',    // LIKE 'expr'[ ESCAPE '%s']
+				'\s+NOT LIKE\s+\S.*('.$_les.')?' // NOT LIKE 'expr'[ ESCAPE '%s']
 			);
 
 		}
@@ -1798,8 +1809,7 @@ abstract class CI_DB_driver {
 	 * @param	bool
 	 * @param	mixed
 	 * @param	bool
-	 *
-*@return	string
+	 * @return	string
 	 */
 	public function protect_identifiers($item, $prefix_single = FALSE, $protect_identifiers = NULL, $field_exists = TRUE)
 	{
@@ -1858,7 +1868,8 @@ abstract class CI_DB_driver {
 		// Break the string apart if it contains periods, then insert the table prefix
 		// in the correct location, assuming the period doesn't indicate that we're dealing
 		// with an alias. While we're at it, we will escape the components
-		if (strpos($item, '.') !== FALSE) {
+		if (strpos($item, '.') !== FALSE)
+		{
 			$parts = explode('.', $item);
 
 			// Does the first segment of the exploded item match
@@ -1867,7 +1878,7 @@ abstract class CI_DB_driver {
 			//
 			// NOTE: The ! empty() condition prevents this method
 			//       from breaking when QB isn't enabled.
-			if (!empty($this->qb_aliased_tables) && in_array($parts[0], $this->qb_aliased_tables))
+			if ( ! empty($this->qb_aliased_tables) && in_array($parts[0], $this->qb_aliased_tables))
 			{
 				if ($protect_identifiers === TRUE)
 				{

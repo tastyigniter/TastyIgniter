@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @var	string
  *
  */
-	define('TI_VERSION', '2.1.1');
+	define('TI_VERSION', '2.1.2');
 
 	// Path to the root folder
     defined('ROOTPATH') OR define('ROOTPATH', dirname(dirname(dirname(__DIR__))) . '/');
@@ -416,14 +416,29 @@ $RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
 			$params = array($method, array_slice($URI->rsegments, 2));
 			$method = '_remap';
 		}
-		// WARNING: It appears that there are issues with is_callable() even in PHP 5.2!
-		// Furthermore, there are bug reports and feature/change requests related to it
-		// that make it unreliable to use in this context. Please, DO NOT change this
-		// work-around until a better alternative is available.
-		elseif ( ! in_array(strtolower($method), array_map('strtolower', get_class_methods($class)), TRUE))
+		elseif ( ! method_exists($class, $method))
 		{
 			$e404 = TRUE;
 		}
+		/**
+		 * DO NOT CHANGE THIS, NOTHING ELSE WORKS!
+		 *
+		 * - method_exists() returns true for non-public methods, which passes the previous elseif
+		 * - is_callable() returns false for PHP 4-style constructors, even if there's a __construct()
+		 * - method_exists($class, '__construct') won't work because CI_Controller::__construct() is inherited
+		 * - People will only complain if this doesn't work, even though it is documented that it shouldn't.
+		 *
+		 * ReflectionMethod::isConstructor() is the ONLY reliable check,
+		 * knowing which method will be executed as a constructor.
+		 */
+		elseif ( ! is_callable(array($class, $method)) && strcasecmp($class, $method) === 0)
+		{
+			$reflection = new ReflectionMethod($class, $method);
+			if ( ! $reflection->isPublic() OR $reflection->isConstructor())
+		{
+			$e404 = TRUE;
+		}
+	}
 	}
 
 	if ($e404)

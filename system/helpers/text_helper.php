@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Helpers
  * @category	Helpers
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/helpers/text_helper.html
+ * @link		https://codeigniter.com/user_guide/helpers/text_helper.html
  */
 
 // ------------------------------------------------------------------------
@@ -102,7 +102,7 @@ if ( ! function_exists('character_limiter'))
 		}
 
 		// a bit complicated, but faster than preg_replace with \s+
-		$str = preg_replace('/ {2,}/', ' ', str_replace(array("\r", "\n", "\t", "\x0B", "\x0C"), ' ', $str));
+		$str = preg_replace('/ {2,}/', ' ', str_replace(array("\r", "\n", "\t", "\v", "\f"), ' ', $str));
 
 		if (mb_strlen($str) <= $n)
 		{
@@ -138,7 +138,10 @@ if ( ! function_exists('ascii_to_entities'))
 	function ascii_to_entities($str)
 	{
 		$out = '';
-		for ($i = 0, $s = strlen($str) - 1, $count = 1, $temp = array(); $i <= $s; $i++)
+		$length = defined('MB_OVERLOAD_STRING')
+			? mb_strlen($str, '8bit') - 1
+			: strlen($str) - 1;
+		for ($i = 0, $count = 1, $temp = array(); $i <= $length; $i++)
 		{
 			$ordinal = ord($str[$i]);
 
@@ -176,7 +179,7 @@ if ( ! function_exists('ascii_to_entities'))
 					$temp = array();
 				}
 				// If this is the last iteration, just output whatever we have
-				elseif ($i === $s)
+				elseif ($i === $length)
 				{
 					$out .= '&#'.implode(';', $temp).';';
 				}
@@ -254,10 +257,9 @@ if ( ! function_exists('word_censor'))
 	 * word you've submitted.
 	 *
 	 * @param	string	the text string
-	 * @param    string    the array of censored words
+	 * @param	string	the array of censored words
 	 * @param	string	the optional replacement value
-	 *
-*@return	string
+	 * @return	string
 	 */
 	function word_censor($str, $censored, $replacement = '')
 	{
@@ -274,17 +276,22 @@ if ( ! function_exists('word_censor'))
 		// a bad word will be bookeneded by any of these characters.
 		$delim = '[-_\'\"`(){}<>\[\]|!?@#%&,.:;^~*+=\/ 0-9\n\r\t]';
 
-		foreach ($censored as $badword) {
+		foreach ($censored as $badword)
+		{
 			$badword = str_replace('\*', '\w*?', preg_quote($badword, '/'));
-			if ($replacement !== '') {
+			if ($replacement !== '')
+			{
 				$str = preg_replace(
-					"/({$delim})(" . $badword . ")({$delim})/i",
+					"/({$delim})(".$badword.")({$delim})/i",
 					"\\1{$replacement}\\3",
 					$str
 				);
-			} elseif (preg_match_all("/{$delim}(" . $badword . "){$delim}/i", $str, $matches, PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE)) {
+			}
+			elseif (preg_match_all("/{$delim}(".$badword."){$delim}/i", $str, $matches, PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE))
+			{
 				$matches = $matches[1];
-				for ($i = count($matches) - 1; $i >= 0; $i--) {
+				for ($i = count($matches) - 1; $i >= 0; $i--)
+				{
 					$length = strlen($matches[$i][0]);
 					$str = substr_replace(
 						$str,
