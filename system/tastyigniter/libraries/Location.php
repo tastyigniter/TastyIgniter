@@ -522,8 +522,6 @@ class Location {
 			$local_info['area_id'] = $this->area_id = $area['area_id'];
 
 			$this->CI->session->set_userdata('local_info', $local_info);
-
-			$this->initialize($local_info);
 		}
 	}
 
