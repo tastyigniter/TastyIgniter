@@ -83,14 +83,14 @@
 								<select name="default_location_id" id="input-default-location" class="form-control">
 									<?php if (!empty($locations)) { ?>
 										<option value=""><?php echo lang('text_please_select'); ?></option>
-										<?php foreach ($locations as $key => $value) { ?>
-											<?php if ($key == config_item('default_location_id')) { ?>
-												<option value="<?php echo $key; ?>" <?php echo set_select('default_location_id', $key, TRUE); ?>><?php echo $value; ?></option>
-											<?php } else { ?>
-												<option value="<?php echo $key; ?>" <?php echo set_select('default_location_id', $key); ?>><?php echo $value; ?></option>
-											<?php } ?>
-										<?php } ?>
-									<?php } else { ?>
+                                        <?php foreach ($locations as $location) { ?>
+                                            <?php if ($location['location_id'] === config_item('default_location_id')) { ?>
+                                                <option value="<?php echo $location['location_id']; ?>" <?php echo set_select('default_location_id', $location['location_id'], TRUE); ?>><?php echo $location['location_name']; ?></option>
+                                            <?php } else { ?>
+                                                <option value="<?php echo $location['location_id']; ?>" <?php echo set_select('default_location_id', $location['location_id']); ?>><?php echo $location['location_name']; ?></option>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    <?php } else { ?>
 										<option value=""><?php echo lang('button_add_location'); ?></option>
 									<?php } ?>
 								</select>
@@ -99,14 +99,14 @@
 									<select name="default_location_id" id="input-default-location" class="form-control">
 										<?php if (!empty($locations)) { ?>
 											<option value=""><?php echo lang('text_please_select'); ?></option>
-											<?php foreach ($locations as $key => $value) { ?>
-												<?php if ($key == config_item('default_location_id')) { ?>
-													<option value="<?php echo $key; ?>" <?php echo set_select('default_location_id', $key, TRUE); ?>><?php echo $value; ?></option>
-												<?php } else { ?>
-													<option value="<?php echo $key; ?>" <?php echo set_select('default_location_id', $key); ?>><?php echo $value; ?></option>
-												<?php } ?>
-											<?php } ?>
-										<?php } else { ?>
+                                            <?php foreach ($locations as $location) { ?>
+                                                <?php if ($location['location_id'] === config_item('default_location_id')) { ?>
+                                                    <option value="<?php echo $location['location_id']; ?>" <?php echo set_select('default_location_id', $location['location_id'], TRUE); ?>><?php echo $location['location_name']; ?></option>
+                                                <?php } else { ?>
+                                                    <option value="<?php echo $location['location_id']; ?>" <?php echo set_select('default_location_id', $location['location_id']); ?>><?php echo $location['location_name']; ?></option>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        <?php } else { ?>
 											<option value=""><?php echo lang('button_add_location'); ?></option>
 										<?php } ?>
 									</select>
@@ -123,13 +123,13 @@
 						<label for="input-country" class="col-sm-3 control-label"><?php echo lang('label_country'); ?></label>
 						<div class="col-sm-5">
 							<select name="country_id" id="input-country" class="form-control">
-								<?php foreach ($countries as $key => $value) { ?>
-									<?php if ($key == config_item('country_id')) { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('country_id', $key, TRUE); ?>><?php echo $value; ?></option>
-									<?php } else { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('country_id', $key); ?>><?php echo $value; ?></option>
-									<?php } ?>
-								<?php } ?>
+                                <?php foreach ($countries as $country) { ?>
+                                    <?php if ($country['country_id'] === config_item('country_id')) { ?>
+                                        <option value="<?php echo $country['country_id']; ?>" <?php echo set_select('country_id', $country['country_id'], TRUE); ?>><?php echo $country['name']; ?></option>
+                                    <?php } else { ?>
+                                        <option value="<?php echo $country['country_id']; ?>" <?php echo set_select('country_id', $country['country_id']); ?>><?php echo $country['name']; ?></option>
+                                    <?php } ?>
+                                <?php } ?>
 							</select>
 							<?php echo form_error('country_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
@@ -217,11 +217,11 @@
 						<label for="input-language" class="col-sm-3 control-label"><?php echo lang('label_site_language'); ?></label>
 						<div class="col-sm-5">
 							<select name="language_id" id="input-language" class="form-control">
-								<?php foreach ($languages as $key => $value) { ?>
-									<?php if ($key == config_item('language_id')) { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('language_id', $key, TRUE); ?>><?php echo $value; ?></option>
+								<?php foreach ($languages as $language) { ?>
+									<?php if ($language['language_id'] === config_item('language_id') OR $language['idiom'] === config_item('language_id')) { ?>
+										<option value="<?php echo $language['idiom']; ?>" <?php echo set_select('language_id', $language['language_id'], TRUE); ?>><?php echo $language['name']; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('language_id', $key); ?>><?php echo $value; ?></option>
+										<option value="<?php echo $language['idiom']; ?>" <?php echo set_select('language_id', $language['language_id']); ?>><?php echo $language['name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
@@ -232,11 +232,11 @@
 						<label for="input-admin-language" class="col-sm-3 control-label"><?php echo lang('label_admin_language'); ?></label>
 						<div class="col-sm-5">
 							<select name="admin_language_id" id="input-admin-language" class="form-control">
-								<?php foreach ($languages as $key => $value) { ?>
-									<?php if ($key == config_item('language_id')) { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('language_id', $key, TRUE); ?>><?php echo $value; ?></option>
+								<?php foreach ($languages as $language) { ?>
+									<?php if ($language['idiom'] === config_item('admin_language_id')) { ?>
+										<option value="<?php echo $language['idiom']; ?>" <?php echo set_select('admin_language_id', $language['language_id'], TRUE); ?>><?php echo $language['name']; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('language_id', $key); ?>><?php echo $value; ?></option>
+										<option value="<?php echo $language['idiom']; ?>" <?php echo set_select('admin_language_id', $language['language_id']); ?>><?php echo $language['name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
@@ -368,11 +368,11 @@
 						</label>
 						<div class="col-sm-5">
 							<select name="special_category_id" id="input-special-category" class="form-control">
-								<?php foreach ($categories as $key => $value) { ?>
-									<?php if ($key == config_item('special_category_id')) { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('category_id', $key, TRUE); ?>><?php echo $value; ?></option>
+								<?php foreach ($categories as $category) { ?>
+									<?php if ($category['category_id'] === config_item('special_category_id')) { ?>
+										<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('category_id', $category['category_id'], TRUE); ?>><?php echo $category['category_name']; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('category_id', $key); ?>><?php echo $value; ?></option>
+										<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('category_id', $category['category_id']); ?>><?php echo $category['category_name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
@@ -491,11 +491,11 @@
 						<label for="input-customer-group" class="col-sm-3 control-label"><?php echo lang('label_customer_group'); ?></label>
 						<div class="col-sm-5">
 							<select name="customer_group_id" id="input-customer-group" class="form-control">
-								<?php foreach ($customer_groups as $key => $value) { ?>
-									<?php if ($key == config_item('customer_group_id')) { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('customer_group_id', $key, TRUE); ?> ><?php echo $value; ?></option>
+								<?php foreach ($customer_groups as $customer_group) { ?>
+									<?php if ($customer_group['customer_group_id'] === config_item('customer_group_id')) { ?>
+										<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id'], TRUE); ?> ><?php echo $customer_group['group_name']; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('customer_group_id', $key); ?> ><?php echo $value; ?></option>
+										<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id']); ?> ><?php echo $customer_group['group_name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
@@ -547,11 +547,11 @@
 						<div class="col-sm-5">
 							<select name="checkout_terms" id="input-checkout-terms" class="form-control">
 								<option value="0"><?php echo lang('text_none'); ?></option>
-								<?php foreach ($pages as $key => $value) { ?>
-									<?php if ($key == config_item('checkout_terms')) { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('checkout_terms', $key, TRUE); ?>><?php echo $value; ?></option>
+								<?php foreach ($pages as $page) { ?>
+									<?php if ($page['page_id'] == config_item('checkout_terms')) { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('checkout_terms', $page['page_id'], TRUE); ?>><?php echo $page['name']; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('checkout_terms', $key); ?>><?php echo $value; ?></option>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('checkout_terms', $page['page_id']); ?>><?php echo $page['name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
@@ -565,11 +565,11 @@
 						<div class="col-sm-5">
 							<select name="registration_terms" id="input-registration-terms" class="form-control">
 								<option value="0"><?php echo lang('text_none'); ?></option>
-								<?php foreach ($pages as $key => $value) { ?>
-									<?php if ($key == config_item('registration_terms')) { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('registration_terms', $key, TRUE); ?>><?php echo $value; ?></option>
+								<?php foreach ($pages as $page) { ?>
+									<?php if ($page['page_id'] == config_item('registration_terms')) { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('registration_terms', $page['page_id'], TRUE); ?>><?php echo $page['name']; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('registration_terms', $key); ?>><?php echo $value; ?></option>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('registration_terms', $page['page_id']); ?>><?php echo $page['name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
@@ -615,11 +615,13 @@
 						<div class="col-sm-5">
 							<select name="default_order_status" id="input-order-status-default" class="form-control">
 								<optgroup label="Orders">
-									<?php foreach ($order_statuses as $key => $value) { ?>
-										<?php if ($key == config_item('default_order_status') OR $key == config_item('new_order_status')) { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('default_order_status', $key, TRUE); ?>><?php echo $value; ?></option>
+									<?php foreach ($statuses as $status) { ?>
+									<?php if ($status['status_for'] === 'order') { ?>
+										<?php if ($status['status_id'] === config_item('default_order_status') OR $status['status_id'] === config_item('new_order_status')) { ?>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('default_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('default_order_status', $key); ?>><?php echo $value; ?></option>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('default_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+										<?php } ?>
 										<?php } ?>
 									<?php } ?>
 								</optgroup>
@@ -634,11 +636,13 @@
 						<div class="col-sm-5">
 							<select name="processing_order_status[]" id="input-order-status-processing" class="form-control" multiple="multiple">
 								<optgroup label="Orders">
-									<?php foreach ($order_statuses as $key => $value) { ?>
-										<?php if (in_array($key, (array) config_item('processing_order_status'))) { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('processing_order_status', $key, TRUE); ?>><?php echo $value; ?></option>
+									<?php foreach ($statuses as $status) { ?>
+									<?php if ($status['status_for'] === 'order') { ?>
+										<?php if (in_array($status['status_id'], (array) config_item('processing_order_status'))) { ?>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('processing_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('processing_order_status', $key); ?>><?php echo $value; ?></option>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('processing_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+										<?php } ?>
 										<?php } ?>
 									<?php } ?>
 								</optgroup>
@@ -653,11 +657,13 @@
 						<div class="col-sm-5">
 							<select name="completed_order_status[]" id="input-order-status-completed" class="form-control" multiple="multiple">
 								<optgroup label="Orders">
-									<?php foreach ($order_statuses as $key => $value) { ?>
-										<?php if (in_array($key, (array) config_item('completed_order_status'))) { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('completed_order_status', $key, TRUE); ?>><?php echo $value; ?></option>
+									<?php foreach ($statuses as $status) { ?>
+									<?php if ($status['status_for'] === 'order') { ?>
+										<?php if (in_array($status['status_id'], (array) config_item('completed_order_status'))) { ?>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('completed_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('completed_order_status', $key); ?>><?php echo $value; ?></option>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('completed_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+										<?php } ?>
 										<?php } ?>
 									<?php } ?>
 								</optgroup>
@@ -672,11 +678,13 @@
 						<div class="col-sm-5">
 							<select name="canceled_order_status" id="input-order-status-cancel" class="form-control">
 								<optgroup label="Orders">
-									<?php foreach ($order_statuses as $key => $value) { ?>
-										<?php if ($key == config_item('canceled_order_status')) { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('canceled_order_status', $key, TRUE); ?>><?php echo $value; ?></option>
+									<?php foreach ($statuses as $status) { ?>
+									<?php if ($status['status_for'] === 'order') { ?>
+										<?php if ($status['status_id'] === config_item('canceled_order_status')) { ?>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('canceled_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('canceled_order_status', $key); ?>><?php echo $value; ?></option>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('canceled_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+										<?php } ?>
 										<?php } ?>
 									<?php } ?>
 								</optgroup>
@@ -786,11 +794,13 @@
 						<div class="col-sm-5">
 							<select name="default_reservation_status" id="input-default-reserve-status" class="form-control">
 								<optgroup label="Reservations">
-									<?php foreach ($reservation_statuses as $status) { ?>
-										<?php if ($key == config_item('default_reservation_status') OR $key == config_item('new_reservation_status')) { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('default_reservation_status', $key, TRUE); ?>><?php echo $value; ?></option>
+									<?php foreach ($statuses as $status) { ?>
+                                        <?php if ($status['status_for'] === 'reserve') { ?>
+                                            <?php if ($status['status_id'] === config_item('default_reservation_status') OR $status['status_id'] === config_item('new_reservation_status')) { ?>
+                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('default_reservation_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('default_reservation_status', $key); ?>><?php echo $value; ?></option>
+                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('default_reservation_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+                                            <?php } ?>
 										<?php } ?>
 									<?php } ?>
 								</optgroup>
@@ -805,11 +815,13 @@
 						<div class="col-sm-5">
 							<select name="confirmed_reservation_status" id="input-confirmed-reserve-status" class="form-control">
 								<optgroup label="Reservations">
-									<?php foreach ($reservation_statuses as $key => $value) { ?>
-										<?php if ($key == config_item('confirmed_reservation_status')) { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('confirmed_reservation_status', $key, TRUE); ?>><?php echo $value; ?></option>
+									<?php foreach ($statuses as $status) { ?>
+                                        <?php if ($status['status_for'] === 'reserve') { ?>
+                                            <?php if ($status['status_id'] === config_item('confirmed_reservation_status')) { ?>
+                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('confirmed_reservation_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('confirmed_reservation_status', $key); ?>><?php echo $value; ?></option>
+                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('confirmed_reservation_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+                                            <?php } ?>
 										<?php } ?>
 									<?php } ?>
 								</optgroup>
@@ -824,11 +836,13 @@
 						<div class="col-sm-5">
 							<select name="canceled_reservation_status" id="input-canceled-reserve-status" class="form-control">
 								<optgroup label="Reservations">
-									<?php foreach ($reservation_statuses as $key => $value) { ?>
-										<?php if ($key == config_item('canceled_reservation_status')) { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('canceled_reservation_status', $key, TRUE); ?>><?php echo $value; ?></option>
+									<?php foreach ($statuses as $status) { ?>
+                                        <?php if ($status['status_for'] === 'reserve') { ?>
+                                            <?php if ($status['status_id'] === config_item('canceled_reservation_status')) { ?>
+                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('canceled_reservation_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $key; ?>" <?php echo set_select('canceled_reservation_status', $key); ?>><?php echo $value; ?></option>
+                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('canceled_reservation_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+                                            <?php } ?>
 										<?php } ?>
 									<?php } ?>
 								</optgroup>
