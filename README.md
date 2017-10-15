@@ -28,3 +28,9 @@ Visit the [TastyIgniter Community Forums](http://forum.tastyigniter.com) or [Doc
 License
 ============
 TastyIgniter is licensed under the [GNU General Public License version 3(GPLv3)](http://tastyigniter.com/licence/)
+
+Android Support
+===============
+1. The Android Application Support is under development with working Layouts.
+2. A Facial Recognition Module is integrated with it.
+3. Dowload and Install the .apk file on your Android device.
