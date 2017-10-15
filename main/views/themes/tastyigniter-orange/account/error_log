@@ -1,0 +1,4 @@
+[28-Sep-2017 06:40:06 Etc/GMT] PHP Fatal error:  Call to undefined function get_header() in /home/u1701227/public_html/TastyIgniter-master/main/views/themes/tastyigniter-orange/account/login.php on line 1
+[28-Sep-2017 06:40:11 Etc/GMT] PHP Fatal error:  Call to undefined function get_header() in /home/u1701227/public_html/TastyIgniter-master/main/views/themes/tastyigniter-orange/account/login.php on line 1
+[28-Sep-2017 06:40:21 Etc/GMT] PHP Fatal error:  Call to undefined function get_header() in /home/u1701227/public_html/TastyIgniter-master/main/views/themes/tastyigniter-orange/account/login.php on line 1
+[28-Sep-2017 06:41:02 Etc/GMT] PHP Fatal error:  Call to undefined function get_header() in /home/u1701227/public_html/TastyIgniter-master/main/views/themes/tastyigniter-orange/account/login.php on line 1

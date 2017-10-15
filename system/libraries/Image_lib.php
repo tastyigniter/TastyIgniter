@@ -965,7 +965,7 @@ class CI_Image_lib {
 		}
 
 		$cmd = $this->library_path.$cmd_in.' '.$this->full_src_path.' | '.$cmd_inner.' | '.$cmd_out.' > '.$this->dest_folder.'netpbm.tmp';
-
+		
 		$retval = 1;
 		// exec() might be disabled
 		if (function_usable('exec'))
