@@ -138,7 +138,6 @@
 						<label for="input-slug" class="col-sm-3 control-label"><?php echo lang('label_permalink_slug'); ?>
 							<span class="help-block"><?php echo lang('help_permalink'); ?></span>
 						</label>
-						<?php if (!is_single_location()) { ?>
 						<div class="col-sm-7">
 							<div class="input-group">
                                 <span class="input-group-addon text-sm"><?php echo $permalink['url']; ?></span>
@@ -149,11 +148,6 @@
 							<?php echo form_error('permalink[permalink_id]', '<span class="text-danger">', '</span>'); ?>
                             <?php echo form_error('permalink[slug]', '<span class="text-danger">', '</span>'); ?>
 						</div>
-						<?php } else { ?>
-						<div class="col-sm-5">
-							<input type="text" class="form-control" value="<?php echo $permalink['url']; ?>" readonly>
-						</div>
-						<?php } ?>
 					</div>
 					<div class="form-group">
                         <label for="" class="col-sm-3 control-label"><?php echo lang('label_image'); ?>
