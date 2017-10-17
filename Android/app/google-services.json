@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "405930153733",
+    "firebase_url": "https://tastyigniter-india.firebaseio.com",
+    "project_id": "tastyigniter-india",
+    "storage_bucket": "tastyigniter-india.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405930153733:android:49ab2d913d69af39",
+        "android_client_info": {
+          "package_name": "com.minorguys.tastyigniter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405930153733-nrarqkkm5e5fhest3isv2cas4chk4vt0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3cX_8Ny3JMbtV98fudQQoZkow-m7Wp2U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
