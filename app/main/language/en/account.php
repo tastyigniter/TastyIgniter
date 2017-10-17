@@ -1,0 +1,271 @@
+<?php
+return [
+    'text_heading'      => 'My Account',
+    'text_welcome'      => 'Welcome %s',
+    'text_cart_summary' => 'You have %s items: %s',
+
+    'text_my_details'         => 'My Details',
+    'text_default_address'    => 'My Default Address',
+    'text_cart'               => 'My Shopping Cart',
+    'text_orders'             => 'My Orders',
+    'text_reservations'       => 'My Reservations',
+    'text_inbox'              => 'My Inbox',
+    'text_edit'               => 'EDIT',
+    'text_order'              => 'ORDER NOW',
+    'text_checkout'           => 'CHECKOUT NOW',
+    'text_change_password'    => 'Change Password',
+    'text_no_default_address' => 'You don\'t have a default address',
+    'text_no_cart_items'      => 'There are no menus added in your cart.',
+    'text_no_orders'          => 'There are no orders available to show.',
+    'text_no_reservations'    => 'There are no reservations available to show.',
+    'text_no_inbox'           => 'There are no messages available to show',
+
+    'label_first_name' => 'First Name:',
+    'label_last_name'  => 'Last Name:',
+    'label_email'      => 'Email Address:',
+    'label_password'   => 'Password:',
+    'label_telephone'  => 'Telephone:',
+    'label_s_question' => 'Security Question:',
+    'label_s_answer'   => 'Security Answer:',
+
+    'column_cart_items' => 'Total Items',
+    'column_cart_total' => 'Total Amount',
+    'column_id'         => 'ID',
+    'column_date'       => 'Date/Time',
+    'column_status'     => 'Status',
+    'column_subject'    => 'Subject',
+
+    'address' => [
+        'text_heading'      => 'Address Book',
+        'text_my_account'   => 'My Account',
+        'text_edit_heading' => 'Address Book Edit',
+        'text_no_address'   => 'You don\'t have any stored address(s)',
+        'text_edit'         => 'EDIT',
+        'text_delete'       => 'DELETE',
+
+        'button_back'   => 'Back',
+        'button_add'    => 'Add New Address',
+        'button_update' => 'Update Address',
+
+        'label_address_1' => 'Address 1',
+        'label_address_2' => 'Address 2',
+        'label_city'      => 'City',
+        'label_state'     => 'State',
+        'label_postcode'  => 'Postcode',
+        'label_country'   => 'Country',
+
+        'alert_updated_success' => '<p class="alert-success">Address added/updated successfully.</p>',
+        'alert_deleted_success' => '<p class="alert-success">Address deleted successfully.</p>',
+    ],
+
+    'details' => [
+        'text_heading'          => 'My Details',
+        'text_my_account'       => 'My Account',
+        'text_details'          => 'Edit your details',
+        'text_password_heading' => 'Change Password',
+        'text_select'           => ' please select ',
+
+        'button_subscribe' => 'Subscribe',
+        'button_back'      => 'Back',
+        'button_save'      => 'Save Details',
+
+        'label_first_name'       => 'First Name',
+        'label_last_name'        => 'Last Name',
+        'label_email'            => 'Email Address',
+        'label_password'         => 'New Password',
+        'label_password_confirm' => 'New Password Confirm',
+        'label_old_password'     => 'Old Password',
+        'label_telephone'        => 'Telephone',
+        'label_s_question'       => 'Security Question',
+        'label_s_answer'         => 'Security Answer',
+        'label_newsletter'       => 'Keep me up-to-date with offers by email.',
+
+        'error_password' => 'The %s you entered does not match.',
+
+        'alert_updated_success' => '<p class="alert-success">Details updated successfully.</p>',
+    ],
+
+    'inbox' => [
+        'text_heading'      => 'My Inbox',
+        'text_my_account'   => 'My Account',
+        'text_view_heading' => 'My Inbox Message',
+        'text_empty'        => 'There are no message(s) in your inbox.',
+        'text_view'         => 'View',
+
+        'column_date'    => 'Date',
+        'column_time'    => 'Time',
+        'column_subject' => 'Subject',
+        'column_text'    => 'Text',
+        'column_action'  => 'Action(s)',
+
+        'button_back'   => 'Back',
+        'button_delete' => 'Delete Message',
+
+        'alert_unknown_error'   => 'Sorry, an error has occurred.',
+        'alert_deleted_success' => 'Message deleted successfully.',
+    ],
+
+    'login' => [
+        'text_heading'          => 'Login',
+        'text_register_heading' => 'Register',
+        'text_logout_heading'   => 'Logged Out',
+        'text_login'            => 'Log In',
+        'text_register'         => 'Please Register <small>It\'s easy and always will be.</small>',
+        'text_forgot'           => 'Forgot password?',
+        'text_required'         => '*** All Required fields.',
+        'text_login_register'   => 'Already registered? <a href="%s">Login</a>',
+
+        'text_subject'         => 'Account created!',
+        'text_success_message' => 'Your account has been created.',
+        'text_signature'       => 'Regards, <br />%s',
+
+        'label_first_name'       => 'First Name',
+        'label_last_name'        => 'Last Name',
+        'label_email'            => 'Email Address',
+        'label_password'         => 'Password',
+        'label_password_confirm' => 'Password Confirm',
+        'label_telephone'        => 'Telephone',
+        'label_s_question'       => 'Security Question',
+        'label_s_answer'         => 'Security Answer',
+        'label_newsletter'       => 'Keep me up-to-date with offers by email.',
+        'label_terms'            => 'By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="%s" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.',
+        'label_captcha'          => 'Type the code shown',
+        'label_i_agree'          => 'I Agree',
+        'label_subscribe'        => 'Subscribe',
+
+        'button_terms_agree' => 'I Agree',
+        'button_subscribe'   => 'Subscribe',
+        'button_login'       => 'Login',
+        'button_register'    => 'Register',
+
+        'error_email_exist' => 'The Email address already has an account, please log in',
+        'error_captcha'     => 'The letters you entered does not match the image.',
+
+        'alert_logout_success'  => '<p class="alert-success">You have been logged out successfully.</p>',
+        'alert_invalid_login'   => '<p class="alert-danger">Username and password not found!</p>',
+        'alert_account_created' => '<p class="alert-success">Account created successfully, login below!</p>',
+    ],
+
+    'reset' => [
+        'text_heading' => 'Account Password Reset',
+        'text_summary' => 'Email address you use to log in to your account We\'ll send you an email with a new password.',
+
+        'label_email'            => 'Email Address',
+        'label_password'         => 'Password',
+        'label_password_confirm' => 'Confirm Password',
+        'label_s_answer'         => 'Security Answer',
+
+        'button_continue' => 'Continue',
+        'button_login'    => 'Login',
+        'button_reset'    => 'Reset Password',
+
+        'alert_reset_success'         => '<p class="alert-success">Password reset successfully.</p>',
+        'alert_reset_request_success' => '<p class="alert-success">Password reset request successfully, please check your email on how to proceed.</p>',
+        'alert_reset_error'           => '<p class="alert-error">Password reset unsuccessful, email not found or incorrect details entered.</p>',
+        'alert_reset_failed'          => '<p class="alert-error">Password reset failed, reset code is either invalid or expired.</p>',
+        'alert_no_email_match'        => 'No matching email address',
+        'alert_no_s_answer_match'     => 'Security answer does not match',
+        'alert_no_s_question_match'   => 'Security question does not match',
+    ],
+
+    'orders' => [
+        'text_heading'      => 'Recent Orders',
+        'text_my_account'   => 'My Account',
+        'text_view_heading' => 'My Order View',
+        'text_order_menus'  => 'Order Menus',
+        'text_empty'        => 'There are no order(s).',
+        'text_delivery'     => 'Delivery',
+        'text_collection'   => 'Pick-up',
+        'text_reorder'      => 'Re-order',
+        'text_leave_review' => 'Leave review',
+        'text_no_payment'   => 'No Payment',
+
+        'column_id'            => 'ID',
+        'column_status'        => 'Status',
+        'column_delivery'      => 'Delivery',
+        'column_payment'       => 'Payment',
+        'column_location'      => 'Location',
+        'column_date'          => 'Ready Time - Date',
+        'column_date_added'    => 'Date Added',
+        'column_order'         => 'Order Type',
+        'column_items'         => 'Total Items',
+        'column_total'         => 'Order Total',
+        'column_menu_name'     => 'Name/Options',
+        'column_menu_price'    => 'Price',
+        'column_menu_subtotal' => 'Total',
+
+        'button_order'   => 'Place New Order',
+        'button_reorder' => 'Re-Order',
+        'button_back'    => 'Back',
+
+        'alert_reorder_success' => '<p class="alert-success">You have successfully added the menus from order ID %s to your order.</p>',
+    ],
+
+    'reservations' => [
+        'text_heading'      => 'Recent Reservations',
+        'text_my_account'   => 'My Account',
+        'text_view_heading' => 'My Reservation View',
+        'text_empty'        => 'There are no reservation(s).',
+        'text_leave_review' => 'Leave review',
+
+        'column_id'        => 'Reservation ID',
+        'column_status'    => 'Status',
+        'column_location'  => 'Location',
+        'column_date'      => 'Time - Date',
+        'column_table'     => 'Table Name',
+        'column_guest'     => 'Guest Number',
+        'column_occasion'  => 'Occasion',
+        'column_name'      => 'Name',
+        'column_email'     => 'Email',
+        'column_telephone' => 'Telephone',
+        'column_comment'   => 'Comment',
+
+        'button_reserve' => 'Make Reservation',
+        'button_back'    => 'Back',
+
+        'alert_reservation_disabled' => '<p class="alert-danger">Table reservation has been disabled, please contact administrator.</p>',
+    ],
+
+    'reviews' => [
+        'text_heading'             => 'Recent Reviews',
+        'text_my_account'          => 'My Account',
+        'text_empty'               => 'There are no added review(s).',
+        'text_view'                => 'View',
+        'text_write_review'        => 'Write Review',
+        'text_view_review'         => 'View Review',
+        'text_not_applicable'      => 'not applicable',
+        'text_birthday'            => 'birthday',
+        'text_anniversary'         => 'anniversary',
+        'text_general_celebration' => 'general celebration',
+        'text_hen_party'           => 'hen party',
+        'text_stag_party'          => 'stag party',
+
+        'column_sale_type'  => 'Sale Type',
+        'column_sale_id'    => 'Sale ID',
+        'column_restaurant' => 'Restaurant',
+        'column_rating'     => 'Rating',
+        'column_author'     => 'Author',
+        'column_date'       => 'Date',
+        'column_action'     => 'Action(s)',
+
+        'button_back'   => 'Back',
+        'button_review' => 'Send Review',
+
+        'label_restaurant'    => 'Restaurant',
+        'label_customer_name' => 'Customer Name',
+        'label_quality'       => 'Quality',
+        'label_delivery'      => 'Delivery',
+        'label_service'       => 'Service',
+        'label_review'        => 'Review',
+        'label_date'          => 'Review Date',
+
+        'alert_review_success'        => 'Review sent successfully, it will be visible once approved.',
+        'alert_review_error'          => 'An error has occurred, please try again.',
+        'alert_review_duplicate'      => 'Sorry. Either you\'ve already left a review for this order, or an error has occurred.',
+        'alert_review_disabled'       => 'Reviews has been disabled, please contact site administrator.',
+        'alert_review_status_history' => 'Review can not be added because order/reservation is not completed',
+    ],
+];
+
+/* End of file account_lang.php */
+/* Location: ./main/language/english/main/account_lang.php */
