@@ -1,0 +1,14 @@
+language: php
+
+# list of PHP version to test against
+php:
+  - 7.0
+  - 7.1
+  - hhvm
+
+sudo: false
+
+# build only the specified branches
+branches:
+  only:
+    - master
