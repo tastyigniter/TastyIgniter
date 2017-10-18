@@ -3,9 +3,6 @@
 .htaccess
 .env
 
-/extensions/*
-!/extensions/demo
-
 # Ignore all vendor files included by composer and the lock file
 /vendor
 composer.lock
