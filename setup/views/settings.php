@@ -1,62 +1,142 @@
-<form role="form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" >
-	<h4 class="text-center"><?php echo lang('text_restaurant_details'); ?></h4>
-	<hr>
-	<div class="form-group">
-		<label for="input-site-name" class="col-sm-3 control-label"><?php echo lang('label_site_name'); ?></label>
-		<div class="col-sm-9">
-			<input type="text" name="site_name" id="input-site-name" class="form-control" value="<?php echo $site_name; ?>" />
-			<?php echo form_error('site_name', '<span class="text-danger">', '</span>'); ?>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="input-site-email" class="col-sm-3 control-label"><?php echo lang('label_site_email'); ?></label>
-		<div class="col-sm-9">
-			<input type="text" name="site_email" id="input-site-email" class="form-control" value="<?php echo $site_email; ?>" />
-			<?php echo form_error('site_email', '<span class="text-danger">', '</span>'); ?>
-		</div>
-	</div>
-	<br />
+<?php
+$settings = $setup->getSettingsDetails();
+?>
+<div class="panel panel-carte">
+    <div class="panel-body">
+        <label for="">
+            <?= lang('label_site_key'); ?>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="small" href="//docs.tastyigniter.com/tutorial/site"><?= lang('text_whats_this'); ?></a>
+            <span class="help-block"><?= lang('help_site_key'); ?></span>
+        </label>
+        <input type="text"
+               class="form-control"
+               name="site_key"
+               value="<?= $settings->site_key; ?>"
+               placeholder="Enter your Carté Key... (Optional)">
+    </div>
+</div>
 
-	<h4 class="text-center"><?php echo lang('text_admin_details'); ?></h4>
-	<hr>
-	<div class="form-group">
-		<label for="input-staff-name" class="col-sm-3 control-label"><?php echo lang('label_staff_name'); ?></label>
-		<div class="col-sm-9">
-			<input type="text" name="staff_name" id="input-staff-name" class="form-control" value="<?php echo $staff_name; ?>" />
-			<?php echo form_error('staff_name', '<span class="text-danger">', '</span>'); ?>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="input-username" class="col-sm-3 control-label"><?php echo lang('label_admin_username'); ?></label>
-		<div class="col-sm-9">
-			<input type="text" name="username" id="input-username" class="form-control" value="<?php echo $username; ?>" />
-			<?php echo form_error('username', '<span class="text-danger">', '</span>'); ?>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="input-password" class="col-sm-3 control-label"><?php echo lang('label_admin_password'); ?></label>
-		<div class="col-sm-9">
-			<input type="password" name="password" id="input-password" class="form-control" value="<?php echo $password; ?>" />
-			<?php echo form_error('password', '<span class="text-danger">', '</span>'); ?>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="input-confirm-password" class="col-sm-3 control-label"><?php echo lang('label_confirm_password'); ?></label>
-		<div class="col-sm-9">
-			<input type="password" name="confirm_password" id="input-confirm-password" class="form-control" value="" />
-			<?php echo form_error('confirm_password', '<span class="text-danger">', '</span>'); ?>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="input-demo-data" class="col-sm-3 control-label"><?php echo lang('label_demo_data'); ?></label>
-		<div class="col-sm-9">
-			<input type="checkbox" name="demo_data" value="1">
-			<?php echo form_error('demo_data', '<span class="text-danger">', '</span>'); ?>
-		</div>
-	</div>
+<h5><?= lang('text_restaurant_details'); ?></h5>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="input-site-location-mode"
+                   class="control-label"><?= lang('label_site_location_mode'); ?>
+            </label>
+            <div class="cleafix">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default <?= ($settings->site_location_mode == 'single') ? 'active' : '' ?>">
+                        <input type="radio"
+                               name="site_location_mode"
+                               value="single" <?= $settings->site_location_mode == 'single' ? 'checked' : ''; ?>>
+                        <?= lang('text_single_location'); ?>
+                    </label>
+                    <label class="btn btn-default <?= ($settings->site_location_mode != 'single') ? 'active' : '' ?>">
+                        <input type="radio"
+                               name="site_location_mode"
+                               value="multiple" <?= $settings->site_location_mode != 'single' ? 'checked' : ''; ?>>
+                        <?= lang('text_multi_location'); ?>
+                    </label>
+                </div>
+            </div>
+            <span class="help-block"><?= lang('help_site_location_mode'); ?></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="input-demo-data" class="control-label"><?= lang('label_demo_data'); ?>
+            </label>
+            <div class="clearfix">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default <?= ($settings->demo_data == '1') ? 'active' : '' ?>">
+                        <input type="radio"
+                               name="demo_data"
+                               value="1" <?= $settings->demo_data == '1' ? 'checked' : ''; ?>>
+                        <?= lang('text_yes'); ?>
+                    </label>
+                    <label class="btn btn-default <?= ($settings->demo_data != '1') ? 'active' : '' ?>">
+                        <input type="radio"
+                               name="demo_data"
+                               value="0" <?= $settings->demo_data != '1' ? 'checked' : ''; ?>>
+                        <?= lang('text_no'); ?>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="input-site-name" class="control-label"><?= lang('label_site_name'); ?></label>
+            <input type="text"
+                   name="site_name"
+                   id="input-site-name"
+                   class="form-control"
+                   value="<?= $settings->site_name; ?>"/>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="input-site-email" class="control-label"><?= lang('label_site_email'); ?></label>
+            <input type="text"
+                   name="site_email"
+                   id="input-site-email"
+                   class="form-control"
+                   value="<?= $settings->site_email; ?>"/>
+        </div>
+    </div>
+</div>
 
-	<div class="buttons">
-		<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
-		<button type="submit" class="btn btn-success pull-right"><?php echo lang('button_continue'); ?></button>
-	</div>
-</form>
+<h5><?= lang('text_admin_details'); ?></h5>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="input-staff-name" class="control-label"><?= lang('label_staff_name'); ?></label>
+            <input type="text"
+                   name="staff_name"
+                   id="input-staff-name"
+                   class="form-control"
+                   value="<?= $settings->staff_name; ?>"/>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="input-username" class="control-label"><?= lang('label_admin_username'); ?></label>
+            <input type="text"
+                   name="username"
+                   id="input-username"
+                   class="form-control"
+                   value="<?= $settings->username; ?>"/>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="input-password" class="control-label"><?= lang('label_admin_password'); ?></label>
+            <input type="password"
+                   name="password"
+                   id="input-password"
+                   class="form-control"/>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="input-confirm-password"
+                   class="control-label"><?= lang('label_confirm_password'); ?>
+            </label>
+            <input type="password"
+                   name="confirm_password"
+                   id="input-confirm-password"
+                   class="form-control"
+                   value=""/>
+        </div>
+    </div>
+</div>
+
+<div class="buttons">
+    <button type="submit" class="btn btn-success pull-right"><?= lang('button_continue'); ?></button>
+</div>

@@ -1,10 +1,14 @@
-<form accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" />
-	<input type="hidden" name="licence_agreed" value="1" />
-	<div class="terms"><?php echo lang('text_license_terms'); ?></div>
-	<div class="buttons">
-		<p class="text-right"><?php echo lang('text_license_agreed'); ?></p>
-		<div class="pull-right">
-			<button type="submit" class="btn btn-success"><?php echo lang('button_continue'); ?></button>
-		</div>
-	</div>
-</form>
+<div class="panel panel-default panel-license">
+    <div
+        class="panel-heading"
+        data-toggle="collapse"
+        data-target="#license-body"
+    >
+        <?= lang('text_license_sub_heading'); ?>
+    </div>
+    <div id="license-body" class="panel-body collapse">
+        <input type="hidden" name="license_agreed" value="1">
+        <?= nl2br(file_get_contents('license.txt')); ?>
+    </div>
+</div>
+

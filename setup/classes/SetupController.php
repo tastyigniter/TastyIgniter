@@ -1,223 +1,754 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php
 
-class Setup extends Base_Controller {
+/**
+ * SetupController Class
+ */
+class SetupController
+{
+    const TI_ENDPOINT = 'http://api.tasty-cms.com/v2';
+    const COMPOSER_INSTALLER_URL = 'https://getcomposer.org/composer.phar';
+    const COMPOSER_EXTRACTED_PHAR = 'extracted_phar';
+    const COMPOSER_PHAR = 'composer.phar';
+    const COMPOSER_VENDOR = 'vendor';
 
-    protected $setup_step;
-    protected $setup_timeout = '120';
-    protected $setup_proceed = FALSE;
+    public $page;
 
-    public function __construct() {
-		parent::__construct();
+    public $logFile;
 
-        $this->load->model('Setup_model');
+    public function __construct()
+    {
+        // Establish directory paths
+        $this->baseDirectory = BASEPATH;
+        $this->tempDirectory = SETUPPATH.'/temp'; //
+        $this->configDirectory = $this->baseDirectory.'/config';
+        $this->logFile = SETUPPATH.'/setup.log';
+        $this->writePostToLog();
 
-        $this->setup_step = $this->uri->segment(1);
+        $this->repository = new SetupRepository(SETUPPATH.'/setup_config');
 
-        if ($this->setup_step !== 'success' AND $this->installer->isInstalled()) {
-            redirect('success');
-        }
-
-        if ($this->session->tempdata('setup_step') === $this->setup_step) {
-            $this->setup_proceed = TRUE;
-        }
+        // Execute post handler
+        $this->execPostHandler();
     }
 
-	public function index() {
-        $this->license();
+    public function getPage()
+    {
+        if (!$this->page)
+            $this->evalPage();
+
+        return $this->page;
     }
 
-    public function license() {
-        $data['text_heading'] 		= $this->lang->line('text_license_heading');
-        $data['text_sub_heading'] 	= $this->lang->line('text_license_sub_heading');
-        $data['setup_step'] 	    = $this->setup_step;
+    public function getDatabaseDetails()
+    {
+        $defaults = [
+            'database' => '',
+            'host'     => '127.0.0.1',
+            'username' => '',
+            'password' => '',
+            'prefix'   => 'ti_',
+        ];
 
-        if ($this->input->post('licence_agreed')) {
-            $this->session->set_tempdata('setup_step', 'requirements', $this->setup_timeout);
-            redirect('requirements');
-        }
-
-        if ( ! file_exists(VIEWPATH .'/license.php')) {
-            show_404();
-        } else {
-            $this->load->view('header', $data);
-            $this->load->view('license', $data);
-            $this->load->view('footer', $data);
-        }
-
-    }
-
-	public function requirements() {
-        if ($this->setup_proceed === FALSE) {
-            $this->alert->set('danger', $this->lang->line('alert_license_error'));
-            redirect('license');
-        }
-
-        $data['text_heading'] 		    = $this->lang->line('text_requirement_heading');
-        $data['text_sub_heading'] 		= $this->lang->line('text_requirement_sub_heading');
-        $data['installed_php_version']  = $this->installer->installed_php_version;
-        $data['required_php_version']   = $this->installer->required_php_version;
-        $data['requirements']           = $this->installer->checkRequirements();
-        $data['writables']              = $this->installer->checkWritable();
-        $data['setup_step'] 	    = $this->setup_step;
-
-        $data['back_url'] 		        = site_url('license');
-
-        if ($this->input->post('requirements')) {
-            if (!in_array(FALSE, $data['requirements'], TRUE) AND !in_array(FALSE, $data['writables'], TRUE)) {
-                $this->session->set_tempdata('setup_step', 'database', $this->setup_timeout);
-                redirect('database');
+        $settings = [];
+        $db = $this->repository->get('database');
+        foreach ($defaults as $item => $value) {
+            if ($this->post($item)) {
+                $settings[$item] = $this->post($item);
             }
-
-            $this->alert->set('danger_now', $this->lang->line('alert_requirement_error'));
-        }
-
-        if ( ! file_exists(VIEWPATH .'/requirements.php')) {
-            show_404();
-        } else {
-            $this->load->view('header', $data);
-            $this->load->view('requirements', $data);
-            $this->load->view('footer', $data);
-        }
-	}
-
-	public function database() {
-        if ($this->setup_proceed === FALSE) {
-            $this->alert->set('danger', $this->lang->line('alert_requirement_error'));
-            redirect('requirements');
-        }
-
-        if ($this->installer->db_exists === TRUE OR $this->_validateDatabase() === TRUE) {
-            $this->session->set_tempdata('setup_step', 'settings', $this->setup_timeout);
-            redirect('settings');
-        }
-
-        $data['text_heading'] 		= $this->lang->line('text_database_heading');
-        $data['text_sub_heading'] 	= $this->lang->line('text_database_sub_heading');
-        $data['setup_step'] 	    = $this->setup_step;
-        $data['back_url'] 		    = site_url('requirements');
-
-        foreach (array('database', 'hostname', 'username', 'password', 'dbprefix') as $item) {
-            if ($this->input->post($item)) {
-                $data[$item] = $this->input->post($item);
-            } else if (isset($this->db->{$item})) {
-                $data[$item] = $this->db->{$item};
-            } else {
-                $data[$item] = '';
+            else if (isset($db[$item])) {
+                $settings[$item] = $db[$item];
+            }
+            else {
+                $settings[$item] = $value;
             }
         }
 
-        $this->load->helper('string');
-        $data['dbprefix'] = strtolower(random_string('alnum', '9').'_');
+        return (object)$settings;
+    }
 
-        if ( ! file_exists(VIEWPATH .'/database.php')) {
-            show_404();
-        } else {
-            $this->load->view('header', $data);
-            $this->load->view('database', $data);
-            $this->load->view('footer', $data);
-        }
-	}
+    public function getSettingsDetails()
+    {
+        $defaults = [
+            'site_location_mode' => 'single',
+            'site_name'          => 'TastyIgniter',
+            'site_email'         => 'admin@restaurant.com',
+            'staff_name'         => 'Chef Sam',
+            'username'           => 'admin',
+            'demo_data'          => 1,
+            'site_key'           => '',
+        ];
 
-	public function settings() {
-        if ($this->installer->db_exists === FALSE OR $this->setup_proceed === FALSE) {
-            $this->alert->set('danger', $this->lang->line('alert_database_error'));
-            redirect('database');
-        }
-
-        if ($this->installer->checkSettings() === TRUE OR $this->_validateSettings() === TRUE) {
-            $this->session->set_tempdata('setup_step', 'success', $this->setup_timeout);
-            redirect('success');
-        }
-
-        $data['text_heading'] 		= $this->lang->line('text_settings_heading');
-        $data['text_sub_heading'] 	= $this->lang->line('text_settings_sub_heading');
-        $data['setup_step'] 	    = $this->setup_step;
-        $data['back_url'] 		    = site_url('database');
-
-        foreach (array('site_name', 'site_email', 'staff_name', 'username', 'password') as $item) {
-            if ($this->input->post($item)) {
-                $data[$item] = $this->input->post($item);
-            } else if ($this->config->item($item)) {
-                $data[$item] = $this->config->item($item);
-            } else {
-                $data[$item] = '';
+        $settings = [];
+        foreach ($defaults as $item => $value) {
+            if ($this->post($item)) {
+                $settings[$item] = $this->post($item);
+            }
+            else if ($this->repository->has($item)) {
+                $settings[$item] = $this->repository->get($item);
+            }
+            else {
+                $settings[$item] = $value;
             }
         }
 
-        if ( !file_exists(VIEWPATH .'/settings.php')) {
-            show_404();
-        } else {
-            $this->load->view('header', $data);
-            $this->load->view('settings', $data);
-            $this->load->view('footer', $data);
+        return (object)$settings;
+    }
+
+    protected function evalPage()
+    {
+        $this->page = new stdClass;
+
+        if (isset($this->page->currentStep) AND $this->isBooted()) {
+            $this->page->currentStep = 'proceed';
+        }
+        else if ($this->repository->get('requirement') == 'success') {
+            $this->page->currentStep = 'database';
+        }
+        else {
+            $this->page->currentStep = 'requirement';
         }
     }
 
-	public function success() {
-        if ( ! file_exists(VIEWPATH .'/success.php')) {
-            show_404();
-        }
+    protected function isBooted()
+    {
+        if (!$this->vendorInstalled())
+            return FALSE;
 
-        if ( ! ($this->setup_proceed === TRUE OR $this->installer->checkSettings() === TRUE)) {
-            redirect('requirements');
-        }
+        if ($this->repository->get('install') != 'complete')
+            return FALSE;
 
-        $data['text_heading'] 		= $this->lang->line('text_success_heading');
-        $data['text_sub_heading'] 	= $this->lang->line('text_success_sub_heading');
-        $data['setup_step'] 	    = $this->setup_step;
-        $data['admin_url'] 	        = admin_url();
-        $data['site_url'] 	        = root_url();
+        if (!$this->checkDatabase())
+            return FALSE;
 
-        $this->load->library('user');
-        $this->user->logout();
-
-        $this->load->view('header', $data);
-        $this->load->view('success', $data);
-        $this->load->view('footer', $data);
+        return TRUE;
     }
 
-    private function _validateDatabase() {
-        if ($this->input->post()) {
-            $this->form_validation->set_rules('database', 'lang:label_database', 'xss_clean|trim|required');
-            $this->form_validation->set_rules('hostname', 'lang:label_hostname', 'xss_clean|trim|required');
-            $this->form_validation->set_rules('username', 'lang:label_username', 'xss_clean|trim|required');
-            $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required');
-            $this->form_validation->set_rules('dbprefix', 'lang:label_prefix', 'xss_clean|trim|required');
+    protected function vendorExists()
+    {
+        $extractedPhar = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR;
+        if (!is_dir($extractedPhar.'/vendor'))
+            return FALSE;
 
-            if ($this->form_validation->run() === TRUE) {
-                if ($this->installer->testDbConnection() === FALSE) {
-                    $this->alert->set('danger_now', $this->lang->line('alert_database_error'));
-                } else if ($this->installer->writeDbConfiguration() === TRUE) {
-                    return TRUE;
+        return $this->vendorInstalled();
+    }
+
+    protected function vendorInstalled()
+    {
+        if (!is_file($this->baseDirectory.'/vendor/tastyigniter/flame/src/Support/helpers.php'))
+            return FALSE;
+
+        if (!is_file($this->baseDirectory.'/vendor/illuminate/support/helpers.php'))
+            return FALSE;
+
+        return TRUE;
+    }
+
+    //
+    // Event Handlers
+    //
+
+    public function onCheckRequirement()
+    {
+        $code = $this->post('code');
+        $this->writeLog('System check: %s', $code);
+        $result = FALSE;
+        switch ($code) {
+            case 'connection':
+                $result = ($this->requestRemoteData('ping') !== null);
+                break;
+            case 'writable':
+                $result = is_writable(BASEPATH) AND is_writable($this->logFile);
+                break;
+            case 'php':
+                $result = version_compare(PHP_VERSION, TI_PHP_VERSION, ">=");
+                break;
+            case 'mysqli':
+                $result = extension_loaded('mysqli') AND class_exists('Mysqli');
+                break;
+            case 'pdo':
+                $result = defined('PDO::ATTR_DRIVER_NAME') OR class_exists('PDO');
+                break;
+            case 'mbstring':
+                $result = extension_loaded('mbstring');
+                break;
+            case 'ssl':
+                $result = extension_loaded('openssl');
+                break;
+            case 'gd':
+                $result = extension_loaded('gd');
+                break;
+            case 'curl':
+                $result = function_exists('curl_init') AND defined('CURLOPT_FOLLOWLOCATION');
+                break;
+            case 'zip':
+                $result = class_exists('ZipArchive');
+                break;
+            case 'uploads':
+                $result = ini_get('file_uploads');
+                break;
+        }
+
+        $this->repository->set('requirement', $result ? 'success' : 'fail')->save();
+        $this->writeLog('Requirement %s %s', $code, ($result ? '+OK' : '=FAIL'));
+
+        return ['result' => $result];
+    }
+
+    public function onCheckDatabase()
+    {
+        $database = $this->post('database');
+        $this->writeLog('Database check: %s', $database);
+
+        $this->confirmRequirements();
+
+        if (!strlen($this->post('host')))
+            throw new SetupException('Please specify a database host');
+
+        if (!strlen($database = $this->post('database')))
+            throw new SetupException('Please specify the database name');
+
+        if (!$config = $this->testDbConnection($this->post())) {
+            return [
+                'flash' => [
+                    'type'    => 'warning',
+                    'message' => sprintf(
+                        'Database "%s" is not empty. Please empty the database or specify a different database table prefix.',
+                        $this->e($database)
+                    ),
+                ],
+            ];
+        }
+
+        $newValues = $this->verifyDbConfiguration($config);
+        $this->repository->set('database', $newValues);
+        $result = $this->repository->save();
+
+        $this->writeLog('Database %s %s', $database, ($result ? '+OK' : '=FAIL'));
+
+        return $result ? ['step' => 'settings'] : ['result' => $result];
+    }
+
+    public function onValidateSettings()
+    {
+        $siteName = $this->post('site_name');
+        $this->writeLog('Settings check: %s', $siteName);
+
+        $this->confirmRequirements();
+
+        if (!strlen($siteName))
+            throw new SetupException('Please specify your restaurant name');
+
+        if (!strlen($siteEmail = $this->post('site_email')))
+            throw new SetupException('Please specify your restaurant email');
+
+        if (!strlen($adminName = $this->post('staff_name')))
+            throw new SetupException('Please specify the administrator name');
+
+        if (!strlen($username = $this->post('username')))
+            throw new SetupException('Please specify the administrator username');
+
+        if (!strlen($password = $this->post('password'))
+            OR strlen($password = $this->post('password')) < 6
+        )
+            throw new SetupException('Please specify the administrator password, at least 6 characters');
+
+        if (!strlen($this->post('confirm_password')))
+            throw new SetupException('Please confirm the administrator password');
+
+        if ($this->post('confirm_password') != $password)
+            throw new SetupException('Password does not match');
+
+        $this->repository->set('settings', [
+            'include_demo' => ($this->post('demo_data') == '1'),
+            'use_multi'    => ($this->post('site_location_mode') == 'multiple'),
+            'site_name'    => $siteName,
+            'site_email'   => $siteEmail,
+            'staff_name'   => $adminName,
+            'username'     => $username,
+            'password'     => $password,
+        ]);
+
+        $result = $this->repository->save();
+        $this->writeLog('Settings %s', ($result ? '+OK' : '=FAIL'));
+
+        return $result ? ['step' => 'install'] : ['result' => $result];
+    }
+
+    public function onInstallDependencies()
+    {
+        $installStep = $this->post('step');
+        $this->writeLog('Foundation framework check: %s', $installStep);
+        $result = FALSE;
+
+        if (!strlen($this->post('db')) OR $this->post('db') != 'success')
+            throw new SetupException('Database connection was not successful');
+
+        if ($this->confirmInstallation()) {
+            $result = $this->getBaseUrl().'admin/settings';
+        }
+        else {
+            switch ($installStep) {
+                case 'download':
+                    if ($this->downloadFoundation())
+                        $result = TRUE;
+                    break;
+                case 'extract':
+                    if ($this->extractFoundation())
+                        $result = TRUE;
+                    break;
+                case 'install':
+                    if ($this->installFoundation())
+                        $result = $this->getBaseUrl().'admin/settings';
+                    break;
+            }
+
+            $status = $installStep == 'install' ? 'complete' : $installStep;
+            $this->repository->set('install', $result ? $status : 'fail')->save();
+        }
+
+        $this->writeLog('Foundation framework check: %s %s', $installStep, ($result ? '+OK' : '=FAIL'));
+
+        return ['result' => $result];
+    }
+
+    //
+    // Database
+    //
+
+    public function checkDatabase()
+    {
+        if (!$config = $this->repository->get('database', []))
+            return FALSE;
+
+        // Make sure the database name is specified
+        if (!isset($config['host']))
+            return FALSE;
+
+        try {
+            $this->testDbConnection($config);
+        } catch (Exception $ex) {
+            return FALSE;
+        }
+
+        // At this point,
+        // its clear database configuration is set
+        // and connection successful
+        return TRUE;
+    }
+
+    protected function testDbConnection($db = [])
+    {
+        $config = $this->verifyDbConfiguration($db);
+
+        extract($config);
+        $port = 3306;
+
+        // Try connecting to database using the specified driver
+        $dsn = 'mysql:host='.$host.';dbname='.$database;
+        if ($port) $dsn .= ";port=".$port;
+
+        try {
+            $db = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        } catch (PDOException $ex) {
+            throw new SetupException('Connection failed: '.$ex->getMessage());
+        }
+
+        // Check the database table prefix is empty
+        $fetch = $db->query("show tables where tables_in_{$database} like '".str_replace('_', '\\_', $prefix)."%'", PDO::FETCH_NUM);
+
+        $tables = 0;
+        while ($result = $fetch->fetch()) $tables++;
+        if ($tables > 0) {
+            return FALSE;
+        }
+
+        return $config;
+    }
+
+    protected function verifyDbConfiguration($config)
+    {
+        $result = [];
+        $result['host'] = '127.0.0.1';
+        if (isset($config['host']) AND is_string($config['host']))
+            $result['host'] = trim($config['host']);
+
+        $result['database'] = '';
+        if (isset($config['database']) AND is_string($config['database']))
+            $result['database'] = trim($config['database']);
+
+        $result['username'] = '';
+        if (isset($config['username']) AND is_string($config['username']))
+            $result['username'] = trim($config['username']);
+
+        $result['password'] = '';
+        if (isset($config['password']) AND is_string($config['password']))
+            $result['password'] = $config['password'];
+
+        $result['prefix'] = 'ti_';
+        if (isset($config['prefix']) AND is_string($config['prefix']))
+            $result['prefix'] = trim($config['prefix']);
+
+        return $result;
+    }
+
+    //
+    // Install
+    //
+
+    public function cleanUpAfterInstall()
+    {
+        $this->deleteTempFiles($this->tempDirectory);
+        @rmdir($this->tempDirectory);
+
+        if (file_exists($this->baseDirectory.'/example.htaccess'))
+            rename(
+                $this->baseDirectory.'/example.htaccess',
+                $this->baseDirectory.'/.htaccess'
+            );
+    }
+
+    public function deleteTempFiles($path, $depth = 0)
+    {
+        // Trim the trailing slash
+        $path = rtrim($path, '/\\');
+
+        if (!$dir = @opendir($path)) {
+            return FALSE;
+        }
+
+        while (FALSE !== ($filename = @readdir($dir))) {
+            if ($filename !== '.' AND $filename !== '..') {
+                $filepath = $path.'/'.$filename;
+                if (is_dir($filepath) AND $filename[0] !== '.' AND !is_link($filepath)) {
+                    $this->deleteTempFiles($filepath, $depth + 1);
+                }
+                else {
+                    @unlink($filepath);
                 }
             }
         }
 
-        return FALSE;
+        closedir($dir);
+
+        return (is_dir($path) AND $depth > 0) ? @rmdir($path) : TRUE;
     }
 
-    private function _validateSettings() {
-        if ($this->input->post()) {
-            $this->form_validation->set_rules('site_name', 'lang:label_site_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-            $this->form_validation->set_rules('site_email', 'lang:label_site_email', 'xss_clean|trim|required|valid_email');
-            $this->form_validation->set_rules('staff_name', 'lang:label_staff_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-            $this->form_validation->set_rules('username', 'lang:label_admin_username', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-            $this->form_validation->set_rules('password', 'lang:label_admin_password', 'xss_clean|trim|required|min_length[6]|max_length[128]|matches[confirm_password]');
-            $this->form_validation->set_rules('confirm_password', 'lang:label_confirm_password', 'xss_clean|trim|required');
+    public function ensureTempDirExists()
+    {
+        if (!is_dir($this->tempDirectory))
+            @mkdir($this->tempDirectory, 0777);
+    }
 
-            if ($this->form_validation->run() === TRUE) {
+    protected function downloadFoundation()
+    {
+        $composerPhar = $this->tempDirectory.'/'.static::COMPOSER_PHAR;
+        if (is_dir($composerPhar) OR $this->vendorExists()) {
+            $this->writeLog('Skipping download: dependencies already installed.');
 
-                if ($this->installer->setup() === FALSE) {
-                    $this->alert->set('danger_now', $this->lang->line('alert_settings_error'));
-                } else {
-                    return TRUE;
-                }
-            }
+            return TRUE;
         }
 
-        return FALSE;
+        $this->ensureTempDirExists();
+
+        try {
+            $installerStream = fopen($composerPhar, 'w+');
+            $curl = curl_init(static::COMPOSER_INSTALLER_URL);
+            curl_setopt($curl, CURLOPT_HEADER, FALSE);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($curl, CURLOPT_FILE, $installerStream);
+            $response = curl_exec($curl);
+
+            $this->writeLog('Server request: %s', static::COMPOSER_INSTALLER_URL);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            if ($httpCode == 500) {
+                $this->writeLog('Request information: %s', print_r(curl_getinfo($curl), TRUE));
+            }
+            curl_close($curl);
+        } catch (Exception $ex) {
+            $this->writeLog('Failed to get server data (ignored): '.$ex->getMessage());
+        }
+
+        return file_exists($composerPhar);
+    }
+
+    protected function extractFoundation()
+    {
+        if ($this->vendorExists()) {
+            $this->writeLog('Skipping extract: dependencies already installed.');
+
+            return TRUE;
+        }
+
+        $composerPhar = $this->tempDirectory.'/'.static::COMPOSER_PHAR;
+        $extractedPhar = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR;
+        if (!is_file($composerPhar))
+            return FALSE;
+
+        mkdir($extractedPhar, 0777, TRUE);
+        $composer = new Phar($composerPhar);
+        $composer->extractTo($extractedPhar);
+        @unlink($composerPhar);
+
+        return TRUE;
+    }
+
+    protected function installFoundation()
+    {
+        $vendorPath = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR.'/bin';
+        if (!is_dir($vendorPath)) {
+            $this->writeLog('Missing vendor autoload file');
+
+            return FALSE;
+        }
+
+        $vendorPath = dirname($vendorPath);
+
+        set_time_limit(-1);
+        ini_set('memory_limit', -1); // @todo: remove later
+        putenv("COMPOSER_HOME={$vendorPath}/bin/composer");
+        require_once($vendorPath.'/vendor/autoload.php');
+
+        ob_start();
+        $command = $this->vendorInstalled() ? 'update' : 'install';
+        $output = new Symfony\Component\Console\Output\StreamOutput(fopen('php://output', 'w'));
+        $input = new Symfony\Component\Console\Input\StringInput($command.' -v -d '.$this->baseDirectory);
+        $composerApp = new Composer\Console\Application();
+        $composerApp->setAutoExit(FALSE);
+        $composerApp->run($input, $output);
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        $this->writeLog('Composer Console output: %s => %s', $command, print_r($content, TRUE));
+
+        if (!$this->vendorInstalled())
+            return FALSE;
+
+        $this->cleanUpAfterInstall();
+
+        return TRUE;
+    }
+
+    //
+    // Logging
+    //
+
+    public function cleanLog()
+    {
+        $message = ".========================== SETUP LOG ========================.";
+        file_put_contents($this->logFile, $message.PHP_EOL);
+    }
+
+    public function writeLog()
+    {
+        $args = func_get_args();
+
+        $message = array_shift($args);
+        if (is_array($message))
+            $message = implode(PHP_EOL, $message);
+
+        $date = "";
+        if (!array_key_exists('hideTime', $args))
+            $date = "[".date("Y/m/d h:i:s", time())."] => ";
+
+        $message = vsprintf($date.$message, $args).PHP_EOL;
+
+        file_put_contents($this->logFile, $message, FILE_APPEND);
+    }
+
+    protected function writePostToLog()
+    {
+        if (!isset($_POST) OR !count($_POST)) return;
+
+        $postData = $_POST;
+        if (array_key_exists('disableLog', $postData))
+            $postData = ['disableLog' => TRUE];
+
+        // Filter sensitive data fields
+        $fieldsToErase = [
+            'encryption_code',
+            'admin_password',
+            'admin_confirm_password',
+            'db_pass',
+            'project_id',
+        ];
+
+        if (isset($postData['admin_email'])) $postData['admin_email'] = '*******@*****.com';
+        foreach ($fieldsToErase as $field) {
+            if (isset($postData[$field])) $postData[$field] = '*******';
+        }
+
+        $this->writeLog('.============================ POST REQUEST ==========================.', ['hideTime' => TRUE]);
+        $this->writeLog('Postback payload: %s', print_r($postData, TRUE));
+    }
+
+    //
+    // Helpers
+    //
+
+    public function e($value)
+    {
+        return htmlentities($value, ENT_QUOTES, 'UTF-8', FALSE);
+    }
+
+    protected function server($var, $default = null)
+    {
+        if (array_key_exists($var, $_SERVER)) {
+            $result = $_SERVER[$var];
+            if (is_string($result)) $result = trim($result);
+
+            return $result;
+        }
+
+        return $default;
+    }
+
+    protected function post($var = null, $default = null)
+    {
+        if (is_null($var))
+            return $_POST;
+
+        if (array_key_exists($var, $_POST)) {
+            $result = $_POST[$var];
+            if (is_string($result)) $result = trim($result);
+
+            return $result;
+        }
+
+        return $default;
+    }
+
+    protected function session($var, $default = null)
+    {
+        if (array_key_exists($var, $_SESSION)) {
+            $result = $_SESSION[$var];
+            if (is_string($result)) $result = trim($result);
+
+            return $result;
+        }
+
+        return $default;
+    }
+
+    protected function getBaseUrl()
+    {
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $baseUrl = (!empty($_SERVER['HTTPS']) AND strtolower($_SERVER['HTTPS']) !== 'off') ? 'https' : 'http';
+            $baseUrl .= '://'.$_SERVER['HTTP_HOST'];
+            $baseUrl .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+        }
+        else {
+            $baseUrl = 'http://localhost/';
+        }
+
+        return $baseUrl;
+    }
+
+    protected function getSysInfo()
+    {
+        $info = [
+            'domain' => $this->getBaseUrl(),
+            'ver'    => TI_VERSION,
+            'web'    => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : null,
+            'os'     => php_uname(),
+            'php'    => phpversion(),
+        ];
+
+        return $info;
+    }
+
+    protected function execPostHandler()
+    {
+        $handler = $this->post('handler');
+        if (!is_null($handler)) {
+            if (!strlen($handler)) exit;
+
+            try {
+                if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handler))
+                    throw new SetupException(sprintf('Invalid handler: %s', $this->e($handler)));
+                if (method_exists($this, $handler) AND ($result = $this->$handler()) !== null) {
+                    $this->writeLog('Execute handler (%s): %s', $handler, print_r($result, TRUE));
+                    header('Content-Type: application/json');
+                    die(json_encode($result));
+                }
+            } catch (Exception $ex) {
+                header($_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error', TRUE, 500);
+                $this->writeLog('Handler error (%s): %s', $handler, $ex->getMessage());
+                $this->writeLog(['Trace log:', '%s'], $ex->getTraceAsString());
+                die($ex->getMessage());
+            }
+            exit;
+        }
+    }
+
+    protected function requestRemoteData($uri = null, $params = [])
+    {
+        $result = null;
+        $error = null;
+        try {
+            $curl = $this->prepareRequest($uri, $params);
+            $result = curl_exec($curl);
+
+            $this->writeLog('Server request: %s', $uri);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            if ($httpCode == 500) {
+                $result = '';
+            }
+
+            $this->writeLog('Request information: %s', print_r(curl_getinfo($curl), TRUE));
+            curl_close($curl);
+        } catch (Exception $ex) {
+            $this->writeLog('Failed to get server data (ignored): '.$ex->getMessage());
+        }
+
+        if (!$result || !strlen($result))
+            throw new SetupException('Server responded with no response.');
+
+        try {
+            $_result = @json_decode($result, TRUE);
+        } catch (Exception $ex) {
+        }
+
+        if (!is_array($_result)) {
+            $this->writeLog('Server response: '.$result);
+            throw new SetupException('Server returned an invalid response.');
+        }
+
+        return $_result;
+    }
+
+    protected function prepareRequest($uri, $params)
+    {
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_URL, static::TI_ENDPOINT.'/'.$uri);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 3600);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
+
+        if (isset($_SERVER['HTTP_USER_AGENT']))
+            curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+
+        $info = $this->getSysInfo();
+        $params['server'] = base64_encode(serialize($info));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, '', '&'));
+
+        return $curl;
+    }
+
+    protected function confirmRequirements()
+    {
+        $requirement = $this->post('requirement', $this->repository->get('requirement'));
+        if (!strlen($requirement) OR $requirement != 'success')
+            throw new SetupException('Please make sure your system meets all requirements');
+    }
+
+    protected function confirmInstallation()
+    {
+        $requirement = $this->repository->get('install');
+
+        return $requirement == 'complete';
     }
 }
-
-/* End of file Setup.php */
-/* Location: ./setup/controllers/Setup.php */
