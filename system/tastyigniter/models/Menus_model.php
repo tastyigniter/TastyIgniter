@@ -307,7 +307,7 @@ class Menus_model extends TI_Model {
 					$this->db->set('special_status', '0');
 				}
 
-				if (isset($save['special_id'])) {
+				if (!empty($save['special_id'])) {
 					$this->db->where('special_id', $save['special_id']);
 					$this->db->where('menu_id', $menu_id);
 					$this->db->update('menus_specials');
