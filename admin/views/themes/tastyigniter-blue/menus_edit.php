@@ -382,6 +382,9 @@
                 };
             },
             results: function (data, page, query) {
+                for (var i in data.results) {
+                    data.results[i].text = decodeURIComponent(escape(data.results[i].text))
+                }
                 return { results: data.results };
             }
         }
