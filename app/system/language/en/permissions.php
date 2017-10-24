@@ -1,31 +1,34 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-$lang['text_title'] 		            = 'Permissions';
-$lang['text_heading'] 		            = 'Permissions';
-$lang['text_edit_heading'] 		        = 'Permission: %s';
-$lang['text_list'] 		                = 'Staff Permission List';
-$lang['text_tab_general'] 		        = 'Permission Details';
-$lang['text_empty'] 		            = 'There are no permissions available.';
-$lang['text_filter_search'] 		    = 'Search permission name.';
-$lang['text_filter_status'] 		    = 'View all status';
-$lang['text_access'] 		            = 'Access';
-$lang['text_manage'] 		            = 'Manage';
-$lang['text_add'] 		                = 'Add';
-$lang['text_delete'] 		            = 'Delete';
+return [
+    'text_title'         => 'Permissions',
+    'text_new_title'     => 'Permission: New',
+    'text_edit_title'    => 'Permission: Update',
+    'text_preview_title' => 'Permission: Preview',
+    'text_form_name'     => 'Permission',
+    'text_empty'         => 'There are no permissions available.',
+    'text_filter_search' => 'Search permission name.',
+    'text_filter_status' => 'View all status',
+    'text_access'        => 'Access',
+    'text_manage'        => 'Manage',
+    'text_add'           => 'Add',
+    'text_delete'        => 'Delete',
 
-$lang['column_name'] 		            = 'Name';
-$lang['column_actions'] 		        = 'Available Actions';
-$lang['column_description'] 		    = 'Description';
-$lang['column_status'] 		            = 'Status';
-$lang['column_id'] 		                = 'ID';
+    'column_name'        => 'Name',
+    'column_actions'     => 'Available Actions',
+    'column_description' => 'Description',
+    'column_status'      => 'Status',
+    'column_id'          => 'ID',
 
-$lang['label_name'] 		            = 'Name';
-$lang['label_description'] 		        = 'Description';
-$lang['label_status'] 		            = 'Status';
-$lang['label_action'] 		            = 'Action';
+    'label_name'        => 'Name',
+    'label_description' => 'Description',
+    'label_status'      => 'Status',
+    'label_action'      => 'Action',
 
-$lang['help_name'] 		                = 'Permissions name are made up of (Domain.Context):<br />Domain  - Typically the application domain name (e.g. Admin, Main, Module).<br />Context - The controller class name (e.g. Menus, Orders, Locations, or Settings).';
-$lang['help_action'] 		            = 'The permitted action (Access, Manage, Add, Delete)';
+    'help_name'   => 'Permissions name are made up of (Domain.Context):<br />Domain  - Typically the application domain name (e.g. Admin, Site, Extension, Module, Payment).<br />Context - The controller class name (e.g. Menus, Orders, Locations, or Settings).',
+    'help_action' => 'The permitted action (Access, Manage, Add, Delete)',
 
-/* End of file permissions_lang.php */
-/* Location: ./admin/language/english/permissions_lang.php */
+    'error_invalid_name' => 'Invalid permission name, must match Domain.Context',
+
+    'activity_event_log'           => '{event} permission <b>:subject.name</b>',
+];

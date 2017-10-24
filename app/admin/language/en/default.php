@@ -1,114 +1,150 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php
 
-$lang['site_title'] 		                = '%s ‹ Administrator Panel ‹ %s — %s';
-$lang['text_edit'] 		                    = 'Edit';
-$lang['text_filter'] 		                = 'Filter';
-$lang['text_clear'] 		                = 'Clear';
-$lang['text_search'] 		                = 'Search';
-$lang['text_enabled'] 		                = 'Enabled';
-$lang['text_disabled'] 		                = 'Disabled';
-$lang['text_new'] 		                    = 'New';
-$lang['text_no'] 		                    = 'NO';
-$lang['text_yes'] 		                    = 'YES';
-$lang['text_none'] 		                    = 'None';
-$lang['text_hide'] 		                    = 'Hide';
-$lang['text_show'] 		                    = 'Show';
-$lang['text_equals'] 		                = ' = ';
-$lang['text_plus'] 		                    = '+ ';
-$lang['text_please_select'] 		        = ' - please select - ';
-$lang['text_use_default'] 		            = 'Use Default';
-$lang['text_updated'] 		                = 'updated';
-$lang['text_added'] 		                = 'added';
-$lang['text_deleted'] 		                = 'deleted';
-$lang['text_default'] 		                = '<b>(Default)</b>';
-$lang['text_select'] 		                = 'Select';
-$lang['text_remove'] 		                = 'Remove';
-$lang['text_about_tastyigniter'] 		    = 'About TastyIgniter';
-$lang['text_documentation'] 		        = 'Documentation';
-$lang['text_community_support'] 		    = 'Community Support';
-$lang['text_help'] 		                    = 'Click for Help';
+return [
+    'site_title'              => '%s ‹ Administrator Panel — %s',
+    'text_edit'               => 'Edit',
+    'text_filter'             => 'Filter',
+    'text_clear'              => 'Clear',
+    'text_search'             => 'Search',
+    'text_enabled'            => 'Enabled',
+    'text_disabled'           => 'Disabled',
+    'text_new'                => 'New',
+    'text_no'                 => 'NO',
+    'text_yes'                => 'YES',
+    'text_none'               => 'None',
+    'text_hide'               => 'Hide',
+    'text_show'               => 'Show',
+    'text_action'             => 'Action',
+    'text_equals'             => ' = ',
+    'text_plus'               => '+ ',
+    'text_please_select'      => ' - please select - ',
+    'text_use_default'        => 'Use Default',
+    'text_updated'            => 'updated',
+    'text_added'              => 'added',
+    'text_deleted'            => 'deleted',
+    'text_default'            => 'Default',
+    'text_select_all'         => 'Select All',
+    'text_select_none'        => 'Select None',
+    'text_select'             => 'Select',
+    'text_selected'           => 'Selected',
+    'text_now'                => 'Now',
+    'text_never'              => 'Never',
+    'text_remove'             => 'Remove',
+    'text_about_tastyigniter' => 'About TastyIgniter',
+    'text_documentation'      => 'Documentation',
+    'text_community_support'  => 'Community Support',
+    'text_help'               => 'Click for Help',
+    'text_no_title'           => 'No Title',
 
-$lang['button_new'] 		                = '<i class="fa fa-plus"></i> New';
-$lang['button_delete'] 		                = '<i class="fa fa-trash-o"></i> Delete';
-$lang['button_edit'] 		                = 'Edit';
-$lang['button_save'] 		                = '<i class="fa fa-save"></i> Save';
-$lang['button_save_close'] 		            = '<i class="fa fa-save"></i> Save & Close';
-$lang['button_icon_back'] 		            = '<i class="fa fa-angle-double-left"></i>';
-$lang['button_close'] 		                = 'Close';
-$lang['button_option'] 		                = 'Options';
+    'button_new'         => '<i class="fa fa-plus"></i> New',
+    'button_delete'      => '<i class="fa fa-trash-o"></i> Delete',
+    'button_edit'        => 'Edit',
+    'button_save'        => '<i class="fa fa-save"></i> Save',
+    'button_save_close'  => '<i class="fa fa-save"></i> Save & Close',
+    'button_icon_back'   => '<i class="fa fa-angle-double-left"></i>',
+    'button_icon_filter' => '<i class="fa fa-filter"></i>',
+    'button_icon_delete' => '<i class="fa fa-trash-o"></i>',
+    'button_close'       => 'Close',
+    'button_option'      => 'Options',
 
-$lang['alert_success'] 		                = '%s successfully.';
-$lang['alert_error'] 		                = 'An error occurred, %s.';
-$lang['alert_error_nothing'] 		        = 'An error occurred, nothing %s.';
-$lang['alert_error_try_again'] 		        = 'An error occurred, please try again.';
-$lang['alert_warning_confirm'] 		        = 'This cannot be undone! Are you sure you want to do this?';
-$lang['alert_rates_updated'] 		        = 'Currency rates has been updated automatically';
-$lang['alert_user_not_logged_in'] 		    = 'You must be logged in to access that page.';
-$lang['alert_user_restricted'] 		        = 'Warning: You do not have the right permission to <b>%s</b> [%s] context, please contact system administrator.';
+    'alert_success'             => '%s successfully.',
+    'alert_error'               => 'An error occurred, %s.',
+    'alert_error_nothing'       => 'An error occurred, nothing %s.',
+    'alert_error_try_again'     => 'An error occurred, please try again.',
+    'alert_warning_confirm'     => 'This cannot be undone! Are you sure you want to do this?',
+    'alert_user_not_logged_in'  => 'You must be logged in to access that page.',
+    'alert_user_restricted'     => 'Warning: You do not have the right permission to <b>%s</b> [%s] context, please contact the system administrator.',
+    'alert_location_restricted' => 'Warning: You do not have the right permission to <b>%s</b> [%s] context outside your location, please contact the system administrator.',
+    'alert_form_error_message'  => 'Sorry but form validation has failed, please check for errors.',
 
-$lang['text_message_count'] 		        = 'You have %s messages';
-$lang['text_activity_count'] 		        = 'Recent activities';
-$lang['text_see_all_message'] 		        = 'See all messages';
-$lang['text_see_all_activity'] 		        = 'See all activities';
-$lang['text_see_all_customers'] 		    = 'See all customers';
-$lang['text_see_all_orders'] 		        = 'See all orders';
-$lang['text_user'] 		                    = 'User';
-$lang['text_staff_group'] 		            = 'Staff Group';
-$lang['text_location'] 		                = 'Location';
-$lang['text_edit_details'] 		            = 'Edit Details';
-$lang['text_logout'] 		                = 'Logout';
+    'text_locations'         => 'Locations&nbsp;&nbsp;&nbsp;<span class="badge">%s</span>',
+    'text_links_title'       => 'Quick links',
+    'text_message_title'     => 'Your messages',
+    'text_activity_title'    => 'Recent activities',
+    'text_empty_activity'    => 'No recent activity',
+    'text_empty_message'     => 'No message found',
+    'text_see_all_message'   => 'See all messages',
+    'text_see_all_activity'  => 'See all activities',
+    'text_see_all_customers' => 'See all customers',
+    'text_see_all_orders'    => 'See all orders',
+    'text_user'              => 'User',
+    'text_staff_group'       => 'Staff Group',
+    'text_location'          => 'Location',
+    'text_edit_details'      => 'Edit Details',
+    'text_logout'            => 'Logout',
 
-$lang['menu_updates'] 		                = 'Updates';
-$lang['menu_storefront'] 		            = 'Storefront';
-$lang['menu_page'] 		                    = 'Pages';
-$lang['menu_banner'] 		                = 'Banners';
-$lang['menu_layout'] 		                = 'Layouts';
-$lang['menu_uri_route'] 		            = 'URI Routes';
-$lang['menu_error_log'] 		            = 'Error Logs';
-$lang['menu_setting'] 		                = 'Settings';
-$lang['menu_dashboard'] 		            = 'Dashboard';
-$lang['menu_kitchen'] 		                = 'Kitchen';
-$lang['menu_menu'] 		                    = 'Menus';
-$lang['menu_option'] 		                = 'Options';
-$lang['menu_category'] 		                = 'Categories';
-$lang['menu_table'] 		                = 'Tables';
-$lang['menu_sale'] 		                    = 'Sales';
-$lang['menu_order'] 		                = 'Orders';
-$lang['menu_reservation'] 		            = 'Reservations';
-$lang['menu_coupon'] 		                = 'Coupons';
-$lang['menu_review'] 		                = 'Reviews';
-$lang['menu_user'] 		                    = 'Users';
-$lang['menu_customer'] 		                = 'Customers';
-$lang['menu_staff'] 		                = 'Staff';
-$lang['menu_customer_group'] 		        = 'Customer Groups';
-$lang['menu_staff_group'] 		            = 'Staff Groups';
-$lang['menu_customer_online'] 		        = 'Customers Online';
-$lang['menu_activities'] 		            = 'Activities';
-$lang['menu_restaurant'] 		            = 'Restaurant';
-$lang['menu_location'] 		                = 'Locations';
-$lang['menu_marketing'] 		            = 'Marketing';
-$lang['menu_messages'] 		                = 'Messages';
-$lang['menu_localisation'] 		            = 'Localisation';
-$lang['menu_language'] 		                = 'Languages';
-$lang['menu_currency'] 		                = 'Currencies';
-$lang['menu_country'] 		                = 'Countries';
-$lang['menu_security_question'] 		    = 'Security Questions';
-$lang['menu_rating'] 		                = 'Ratings';
-$lang['menu_status'] 		                = 'Statuses';
-$lang['menu_mealtimes'] 		            = 'Mealtimes';
-$lang['menu_extension'] 		            = 'Extensions';
-$lang['menu_module'] 		                = 'Modules';
-$lang['menu_payment'] 		                = 'Payments';
-$lang['menu_design'] 		                = 'Design';
-$lang['menu_theme'] 		                = 'Themes';
-$lang['menu_mail_template'] 		        = 'Mail Templates';
-$lang['menu_tool'] 		                    = 'Tools';
-$lang['menu_media_manager'] 		        = 'Image Manager';
-$lang['menu_maintenance'] 		            = 'Maintenance';
-$lang['menu_system'] 		                = 'System';
-$lang['menu_permission'] 		            = 'Permissions';
-$lang['menu_collapse'] 		                = 'Collapse Menu';
+    'menu_updates'           => 'Updates',
+    'menu_storefront'        => 'Storefront',
+    'menu_page'              => 'Pages',
+    'menu_banner'            => 'Banners',
+    'menu_layout'            => 'Layouts',
+    'menu_uri_route'         => 'URI Routes',
+    'menu_error_log'         => 'Error Logs',
+    'menu_setting'           => 'Settings',
+    'menu_dashboard'         => 'Dashboard',
+    'menu_kitchen'           => 'Kitchen',
+    'menu_menu'              => 'Menus',
+    'menu_option'            => 'Options',
+    'menu_category'          => 'Categories',
+    'menu_table'             => 'Tables',
+    'menu_sale'              => 'Sales',
+    'menu_order'             => 'Orders',
+    'menu_reservation'       => 'Reservations',
+    'menu_coupon'            => 'Coupons',
+    'menu_review'            => 'Reviews',
+    'menu_user'              => 'Users',
+    'menu_customer'          => 'Customers',
+    'menu_staff'             => 'Staff',
+    'menu_customer_group'    => 'Customer Groups',
+    'menu_staff_group'       => 'Staff Groups',
+    'menu_customer_online'   => 'Customers Online',
+    'menu_activities'        => 'Activities',
+    'menu_restaurant'        => 'Restaurant',
+    'menu_location'          => 'Locations',
+    'menu_marketing'         => 'Marketing',
+    'menu_messages'          => 'Messages',
+    'menu_localisation'      => 'Localisation',
+    'menu_language'          => 'Languages',
+    'menu_currency'          => 'Currencies',
+    'menu_country'           => 'Countries',
+    'menu_security_question' => 'Security Questions',
+    'menu_rating'            => 'Ratings',
+    'menu_status'            => 'Statuses',
+    'menu_mealtimes'         => 'Mealtimes',
+    'menu_extension'         => 'Extensions',
+    'menu_module'            => 'Modules',
+    'menu_payment'           => 'Payments',
+    'menu_design'            => 'Design',
+    'menu_theme'             => 'Themes',
+    'menu_mail_template'     => 'Mail Templates',
+    'menu_tool'              => 'Tools',
+    'menu_media_manager'     => 'Media Manager',
+    'menu_maintenance'       => 'Maintenance',
+    'menu_system'            => 'System',
+    'menu_permission'        => 'Permissions',
+    'menu_collapse'          => 'Collapse Menu',
 
+    'label_status'                => 'Status',
 
-/* End of file english_lang.php */
-/* Location: ./admin/language/english/english_lang.php */
+    'form' => [
+        'create_title'              => ':name: Create',
+        'edit_title'                => ':name: Edit',
+        'preview_title'             => ':name: Preview',
+        'missing_model'             => 'Form behavior used in %s does not have a model defined.',
+        'undefined_tab'             => 'Misc',
+        'create_success'            => '%s created successfully',
+        'edit_success'              => '%s updated successfully',
+        'delete_success'            => '%s deleted successfully',
+        'create_failed'             => '%s create failed',
+        'edit_failed'               => '%s update failed',
+        'delete_failed'             => '%s delete failed',
+        'insert_row'                => 'Insert Row',
+        'insert_row_below'          => 'Insert Row Below',
+        'delete_row'                => 'Delete Row',
+        'not_ready'                 => 'Form action has not been initialized, check that you have called initForm() in your controller.',
+        'options_method_not_exists' => 'The model class %s must define a method %s returning options for the [%s] form field.',
+        'field_invalid_type'        => 'Invalid field type used %s.',
+        'missing_id'                => 'Form record ID has not been specified.',
+        'not_found'                 => 'Form was not found.',
+    ],
+];

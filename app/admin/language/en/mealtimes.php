@@ -1,21 +1,24 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-$lang['text_title'] 		            = 'Mealtimes';
-$lang['text_heading'] 		            = 'Mealtimes';
-$lang['text_list'] 		                = 'Mealtime List';
-$lang['text_empty'] 		            = 'There are no mealtimes, please add.';
+return [
+    'text_title'   => 'Mealtimes',
+    'text_new_title'           => 'Mealtime: New',
+    'text_edit_title'          => 'Mealtime: Update',
+    'text_preview_title'       => 'Mealtime: Preview',
+    'text_form_name'           => 'Mealtime',
+    'text_filter_search'       => 'Search mealtime name.',
+    'text_filter_status'       => 'View all status',
+    'text_empty'   => 'There are no mealtimes, please add.',
 
-$lang['column_mealtime_id'] 		    = 'ID';
-$lang['column_mealtime_name'] 		    = 'Name';
-$lang['column_start_time'] 		        = 'Start Time';
-$lang['column_end_time'] 		        = 'End Time';
-$lang['column_mealtime_status'] 	    = 'Status';
+    'column_mealtime_id'     => 'ID',
+    'column_mealtime_name'   => 'Name',
+    'column_start_time'      => 'Start Time',
+    'column_end_time'        => 'End Time',
+    'column_mealtime_status' => 'Status',
 
-$lang['label_mealtime_id'] 		        = 'Mealtime Id';
-$lang['label_mealtime_name'] 		    = 'Mealtime Name';
-$lang['label_start_time'] 		        = 'Start Time';
-$lang['label_end_time'] 		        = 'End Time';
-$lang['label_mealtime_status'] 		    = 'Status';
-
-/* End of file mealtimes_lang.php */
-/* Location: ./admin/language/english/mealtimes_lang.php */
+    'label_mealtime_id'     => 'Mealtime Id',
+    'label_mealtime_name'   => 'Mealtime Name',
+    'label_start_time'      => 'Start Time',
+    'label_end_time'        => 'End Time',
+    'label_mealtime_status' => 'Status',
+];

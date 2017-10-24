@@ -1,28 +1,27 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-$lang['text_title'] 		            = 'Statuses';
-$lang['text_heading'] 		            = 'Statuses';
-$lang['text_edit_heading'] 		        = 'Status: %s';
-$lang['text_list'] 		                = 'Status List';
-$lang['text_tab_general'] 		        = 'Details';
-$lang['text_filter_search'] 		    = 'Search name or code.';
-$lang['text_filter_status'] 		    = 'View all status types';
-$lang['text_empty'] 		            = 'There are no statuses available.';
-$lang['text_order'] 		            = 'Order';
-$lang['text_reservation'] 		        = 'Reservations';
+return [
+    'text_title'         => 'Statuses',
+    'text_new_title'     => 'Status: New',
+    'text_edit_title'    => 'Status: Update',
+    'text_preview_title' => 'Status: Preview',
+    'text_form_name'     => 'Status',
+    'text_filter_search' => 'Search name or code.',
+    'text_filter_status' => 'View all status types',
+    'text_empty'         => 'There are no statuses available.',
+    'text_order'         => 'Order',
+    'text_reservation'   => 'Reservation',
 
-$lang['column_name'] 		            = 'Name';
-$lang['column_comment'] 		        = 'Status Comment';
-$lang['column_type'] 		            = 'Status Type';
-$lang['column_notify'] 		            = 'Notify';
+    'column_name'    => 'Name',
+    'column_comment' => 'Status Comment',
+    'column_type'    => 'Status Type',
+    'column_notify'  => 'Notify',
 
-$lang['label_name'] 		            = 'Name';
-$lang['label_for'] 		                = 'Status For';
-$lang['label_color'] 		            = 'Color';
-$lang['label_comment'] 		            = 'Comment';
-$lang['label_notify'] 		            = 'Email Notification';
+    'label_name'    => 'Name',
+    'label_for'     => 'Status For',
+    'label_color'   => 'Color',
+    'label_comment' => 'Comment',
+    'label_notify'  => 'Email Notification',
 
-$lang['help_notify'] 		            = 'Set whether an email is sent to the customer after this status is set to the order. This option can be overridden from the order edit page.';
-
-/* End of file statuses_lang.php */
-/* Location: ./admin/language/english/statuses_lang.php */
+    'help_notify' => 'Set whether an email is sent to the customer after this status is set to the order. This option can be overridden from the order edit page.',
+];

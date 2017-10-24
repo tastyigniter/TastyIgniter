@@ -1,8 +1,19 @@
 <?php
-/**
- * Copyright (c) 2016. Igniter Labs
- */
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-$lang['pagination_info_text'] = 'Displaying {start} to {end} of {total}';
-$lang['pagination_per_page_text'] = '{per_page} Records Per Page';
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pagination Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used by the paginator library to build
+    | the simple pagination links. You are free to change them to anything
+    | you want to customize your views to better match your application.
+    |
+    */
+
+    'previous' => '&laquo; Previous',
+    'next' => 'Next &raquo;',
+
+];

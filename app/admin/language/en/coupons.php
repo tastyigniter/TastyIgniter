@@ -1,62 +1,73 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-$lang['text_title'] 		            = 'Coupons';
-$lang['text_heading'] 		            = 'Coupons';
-$lang['text_edit_heading'] 		        = 'Coupon: %s';
-$lang['text_list'] 		                = 'Coupon List';
-$lang['text_tab_general'] 		        = 'Coupon';
-$lang['text_tab_history'] 		        = 'History';
-$lang['text_filter_search'] 		    = 'Search name or code.';
-$lang['text_filter_type'] 		        = 'View all types';
-$lang['text_filter_status'] 		    = 'View all status';
-$lang['text_empty'] 		            = 'There are no coupons available.';
-$lang['text_no_history'] 		        = 'There are no history for this coupon.';
-$lang['text_coupon'] 		            = 'Coupon';
-$lang['text_fixed_amount'] 		        = 'Fixed Amount';
-$lang['text_percentage'] 		        = 'Percentage';
-$lang['text_24_hour'] 		            = '24 Hours';
-$lang['text_custom'] 		            = 'custom';
-$lang['text_leading_zeros'] 		    = '.00';
+return [
+    'text_title'         => 'Coupons',
+    'text_new_title'  => 'Coupon: New',
+    'text_edit_title'  => 'Coupon: Update',
+    'text_preview_title'  => 'Coupon: Preview',
+    'text_form_name'          => 'Coupon',
+    'text_tab_general'   => 'Coupon',
+    'text_tab_history'   => 'History',
+    'text_filter_search' => 'Search name or code.',
+    'text_filter_type'   => 'View all types',
+    'text_filter_status' => 'View all status',
+    'text_empty'         => 'There are no coupons available.',
+    'text_no_history'    => 'There are no history for this coupon.',
+    'text_coupon'        => 'Coupon',
+    'text_fixed_amount'  => 'Fixed Amount',
+    'text_percentage'    => 'Percentage',
+    'text_24_hour'       => '24 Hours',
+    'text_custom'        => 'custom',
+    'text_redeemed'      => 'Redeemed',
+    'text_forever'      => 'Forever',
+    'text_fixed'      => 'Fixed',
+    'text_period'      => 'Period',
+    'text_recurring'      => 'Recurring',
+    'text_delivery_only'      => 'Delivery Only',
+    'text_collection_only'      => 'Collection Only',
+    'text_not_redeemed'  => 'Not Yet Redeemed',
+    'text_leading_zeros' => '.00',
 
-$lang['column_name'] 		            = 'Name';
-$lang['column_code'] 		            = 'Code';
-$lang['column_type'] 		            = 'Type';
-$lang['column_discount'] 		        = 'Discount';
-$lang['column_validity'] 		        = 'Validity';
-$lang['column_status'] 		            = 'Status';
-$lang['column_order_id'] 		        = 'Order ID';
-$lang['column_customer'] 		        = 'Customer';
-$lang['column_amount'] 		            = 'Amount';
-$lang['column_date_used'] 		        = 'Date Used';
+    'column_name'      => 'Name',
+    'column_code'      => 'Code',
+    'column_type'      => 'Type',
+    'column_discount'  => 'Discount',
+    'column_validity'  => 'Validity',
+    'column_status'    => 'Status',
+    'column_order_id'  => 'Order ID',
+    'column_customer'  => 'Customer',
+    'column_amount'    => 'Total Amount',
+    'column_min_total'    => 'Min Order Total',
+    'column_date_used' => 'Date Used',
+    'column_count'     => 'Redemption Count',
 
-$lang['label_name'] 		            = 'Coupon Name';
-$lang['label_code'] 		            = 'Code';
-$lang['label_type'] 		            = 'Type';
-$lang['label_discount'] 		        = 'Discount';
-$lang['label_min_total'] 		        = 'Minimum Total';
-$lang['label_redemption'] 		        = 'Redemptions';
-$lang['label_customer_redemption'] 		= 'Customer Redemptions';
-$lang['label_description'] 		        = 'Description';
-$lang['label_validity'] 		        = 'Validity';
-$lang['label_order_restriction'] 		= 'Order Restriction';
-$lang['label_date'] 		            = 'Date';
-$lang['label_fixed_date'] 		        = 'Fixed date';
-$lang['label_fixed_time'] 		        = 'Fixed time';
-$lang['label_fixed_from_time'] 		    = 'Fixed from time';
-$lang['label_fixed_to_time'] 		    = 'Fixed to time';
-$lang['label_period_start_date'] 		= 'Period start date';
-$lang['label_period_end_date'] 		    = 'Period end date';
-$lang['label_recurring_every'] 		    = 'Recurring every';
-$lang['label_recurring_time'] 		    = 'Recurring time';
-$lang['label_recurring_from_time'] 		= 'Recurring from time';
-$lang['label_recurring_to_time'] 		= 'Recurring to time';
-$lang['label_status'] 		            = 'Status';
+    'label_name'                => 'Coupon Name',
+    'label_code'                => 'Code',
+    'label_type'                => 'Type',
+    'label_discount'            => 'Discount',
+    'label_min_total'           => 'Minimum Total',
+    'label_redemption'          => 'Redemptions',
+    'label_customer_redemption' => 'Customer Redemptions',
+    'label_description'         => 'Description',
+    'label_validity'            => 'Validity',
+    'label_order_restriction'   => 'Order Restriction',
+    'label_date'                => 'Date',
+    'label_fixed_date'          => 'Fixed date',
+    'label_fixed_time'          => 'Fixed time',
+    'label_fixed_from_time'     => 'Fixed from time',
+    'label_fixed_to_time'       => 'Fixed to time',
+    'label_period_start_date'   => 'Period start date',
+    'label_period_end_date'     => 'Period end date',
+    'label_recurring_every'     => 'Recurring every',
+    'label_recurring_time'      => 'Recurring time',
+    'label_recurring_from_time' => 'Recurring from time',
+    'label_recurring_to_time'   => 'Recurring to time',
+    'label_status'              => 'Status',
 
-$lang['help_type'] 		                = 'Whether to subtract a fixed amount or percentage from order total.';
-$lang['help_redemption'] 		        = 'The total number of times this coupon can be redeem. Enter 0 for unlimited redemptions.';
-$lang['help_customer_redemption'] 		= 'The number of times a specific customer can redeem this coupon. Enter 0 for unlimited redemptions.';
-$lang['help_order_restriction'] 		= 'Whether to restrict the coupon to a specific order type.';
+    'help_type'                => 'Whether to subtract a fixed amount or percentage from order total.',
+    'help_redemption'          => 'The total number of times this coupon can be redeem. Enter 0 for unlimited redemptions.',
+    'help_customer_redemption' => 'The number of times a specific customer can redeem this coupon. Enter 0 for unlimited redemptions.',
+    'help_order_restriction'   => 'Whether to restrict the coupon to a specific order type.',
 
-
-/* End of file coupons_lang.php */
-/* Location: ./admin/language/english/coupons_lang.php */
+    'activity_event_log'           => '{event} coupon <b>:subject.name</b>',
+];

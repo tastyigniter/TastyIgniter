@@ -1,33 +1,40 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-$lang['text_title'] 		            = 'Layouts';
-$lang['text_heading'] 		            = 'Layouts';
-$lang['text_edit_heading'] 		        = 'Layout: %s';
-$lang['text_list'] 		                = 'Layout List';
-$lang['text_empty'] 		            = 'There are no layouts available.';
-$lang['text_partial_empty'] 		    = 'There are no modules added.';
-$lang['text_tab_general'] 		        = 'Layout Modules';
-$lang['text_tab_details'] 		        = 'Details';
-$lang['text_modules'] 		            = 'Modules';
+return [
+    'text_title'         => 'Layouts',
+    'text_new_title'           => 'Layout: New',
+    'text_edit_title'          => 'Layout: Update',
+    'text_preview_title'       => 'Layout: Preview',
+    'text_form_name'       => 'Layout',
+    'text_tab_general'   => 'Components',
+    'text_tab_routes'   => 'Routes',
+    'text_filter_search'       => 'Search layout name.',
+    'text_empty'         => 'There are no layouts available.',
+    'text_partial_empty' => 'There are no components added.',
+    'text_tab_details'   => 'Details',
+    'text_modules'       => 'Modules',
 
-$lang['column_name'] 		            = 'Layout';
-$lang['column_active_modules'] 		    = 'Active Modules';
-$lang['column_module'] 		            = 'Module';
-$lang['column_partial'] 		        = 'Partial Area';
-$lang['column_priority'] 		        = 'Priority';
-$lang['column_status'] 		            = 'Status';
-$lang['column_uri_route'] 		        = 'URI Route';
+    'column_name'              => 'Layout',
+    'column_active_components' => 'Active Components',
+    'column_module'            => 'Module',
+    'column_partial'           => 'Partial Area',
+    'column_priority'          => 'Priority',
+    'column_status'            => 'Status',
+    'column_uri_route'         => 'URI Route',
 
-$lang['label_name'] 		            = 'Name';
-$lang['label_route'] 		            = 'Route';
-$lang['label_module_title'] 	        = 'Title';
-$lang['label_module_fixed'] 	        = 'Fixed';
-$lang['label_fixed_offset'] 	        = 'Fixed Offset (top x bottom)';
-$lang['label_module_code'] 		        = 'Module Code';
-$lang['label_module_partial'] 		    = 'Module Partial';
-$lang['label_module_priority'] 		    = 'Module Priority';
-$lang['label_module_status'] 		    = 'Status';
+    'label_name'            => 'Name',
+    'label_routes'           => 'Routes',
+    'label_route'           => 'URI Route',
+    'label_components'           => 'Components',
+    'label_module_alias'    => 'Alias',
+    'label_module_title'    => 'Title',
+    'label_module_fixed'    => 'Fixed',
+    'label_fixed_top'    => 'Fixed Top Offset',
+    'label_fixed_bottom'    => 'Fixed Bottom Offset',
+    'label_module_code'     => 'Module Code',
+    'label_module_partial'  => 'Module Partial',
+    'label_module_priority' => 'Module Priority',
+    'label_module_status'   => 'Status',
 
-
-/* End of file layouts_lang.php */
-/* Location: ./admin/language/english/layouts_lang.php */
+    'help_module_alias'    => 'Unique Component Alias',
+];

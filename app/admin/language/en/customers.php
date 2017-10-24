@@ -1,49 +1,52 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-$lang['text_title'] 		            = 'Customers';
-$lang['text_heading'] 		            = 'Customers';
-$lang['text_edit_heading'] 		        = 'Customer: %s';
-$lang['text_list'] 		                = 'Customer List';
-$lang['text_tab_general'] 		        = 'Customer';
-$lang['text_tab_address'] 		        = 'Address';
-$lang['text_filter_search'] 		    = 'Search customer name or email.';
-$lang['text_filter_status'] 		    = 'View all status';
-$lang['text_filter_date'] 		        = 'View all dates';
-$lang['text_empty'] 		            = 'There are no customers available.';
-$lang['text_no_match'] 		            = 'No Matches Found';
-$lang['text_subscribe'] 		        = 'Subscribe';
-$lang['text_un_subscribe'] 		        = 'Un-subscribe';
-$lang['text_login_as_customer'] 	    = 'Login as Customer';
+return [
+    'text_title'             => 'Customers',
+    'text_new_title'         => 'Customer: New',
+    'text_edit_title'        => 'Customer: Update',
+    'text_preview_title'     => 'Customer: Preview',
+    'text_form_name'         => 'Customer',
+    'text_tab_general'       => 'Customer',
+    'text_tab_address'       => 'Address',
+    'text_filter_search'     => 'Search customer name or email.',
+    'text_filter_status'     => 'View all status',
+    'text_filter_date'       => 'View all dates',
+    'text_empty'             => 'There are no customers available.',
+    'text_no_match'          => 'No Matches Found',
+    'text_subscribe'         => 'Subscribe',
+    'text_un_subscribe'      => 'Un-subscribe',
+    'text_login_as_customer' => 'Login as Customer',
 
-$lang['column_first_name'] 		        = 'First Name';
-$lang['column_last_name'] 		        = 'Last Name';
-$lang['column_email'] 		            = 'Email';
-$lang['column_telephone'] 		        = 'Telephone';
-$lang['column_date_added'] 		        = 'Date Registered';
-$lang['column_status'] 		            = 'Status';
-$lang['column_id'] 		                = 'ID';
+    'column_full_name'  => 'Full Name',
+    'column_first_name' => 'First Name',
+    'column_last_name'  => 'Last Name',
+    'column_email'      => 'Email',
+    'column_telephone'  => 'Telephone',
+    'column_date_added' => 'Date Registered',
+    'column_status'     => 'Status',
+    'column_id'         => 'ID',
 
-$lang['label_first_name'] 		        = 'First Name';
-$lang['label_last_name'] 		        = 'Last Name';
-$lang['label_email'] 		            = 'Email';
-$lang['label_password'] 		        = 'Password';
-$lang['label_confirm_password'] 		= 'Confirm Password';
-$lang['label_telephone'] 		        = 'Telephone';
-$lang['label_security_question'] 		= 'Security Question';
-$lang['label_security_answer'] 		    = 'Security Answer';
-$lang['label_newsletter'] 		        = 'Newsletter';
-$lang['label_customer_group'] 		    = 'Customer Group';
-$lang['label_status'] 		            = 'Status';
-$lang['label_address_1'] 		        = 'Address 1';
-$lang['label_address_2'] 		        = 'Address 2';
-$lang['label_city'] 		            = 'City';
-$lang['label_state'] 		            = 'State';
-$lang['label_postcode'] 		        = 'Postcode';
-$lang['label_country'] 		            = 'Country';
+    'label_first_name'        => 'First Name',
+    'label_last_name'         => 'Last Name',
+    'label_email'             => 'Email',
+    'label_password'          => 'Password',
+    'label_confirm_password'  => 'Confirm Password',
+    'label_telephone'         => 'Telephone',
+    'label_security_question' => 'Security Question',
+    'label_security_answer'   => 'Security Answer',
+    'label_newsletter'        => 'Newsletter',
+    'label_customer_group'    => 'Customer Group',
+    'label_status'            => 'Status',
+    'label_address_1'         => 'Address 1',
+    'label_address_2'         => 'Address 2',
+    'label_city'              => 'City',
+    'label_state'             => 'State',
+    'label_postcode'          => 'Postcode',
+    'label_country'           => 'Country',
 
-$lang['help_password'] 		            = 'Leave blank to leave password unchanged';
+    'help_password' => 'Leave blank to leave password unchanged',
 
-$lang['alert_login_restricted'] 	    = 'Warning: You do not have the right permission to <b>access customer account</b>, please contact system administrator.';
-
-/* End of file customers_lang.php */
-/* Location: ./admin/language/english/customers_lang.php */
+    'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access customer account</b>, please contact system administrator.',
+    'activity_event_log'     => '{event} customer <b>:subject.first_name :subject.last_name</b>',
+    'activity_master_logged_in' => 'logged in as <b>:subject.first_name :subject.last_name</b>.',
+];

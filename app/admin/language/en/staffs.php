@@ -1,38 +1,38 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-$lang['text_title'] 		            = 'Staff';
-$lang['text_heading'] 		            = 'Staff';
-$lang['text_edit_heading'] 		        = 'Staff: %s';
-$lang['text_list'] 		                = 'Staff List';
-$lang['text_tab_general'] 		        = 'Staff Details';
-$lang['text_tab_setting'] 		        = 'Basic Settings';
-$lang['text_filter_search'] 		    = 'Search location, name or email.';
-$lang['text_filter_group'] 		        = 'View all groups';
-$lang['text_filter_location'] 		    = 'View all locations';
-$lang['text_filter_date'] 		        = 'View all dates';
-$lang['text_filter_status'] 		    = 'View all status';
-$lang['text_empty'] 		            = 'There are no staffs available.';
-$lang['text_no_match'] 		            = 'No Matches Found';
+return [
+    'text_title'            => 'Staff',
+    'text_new_title'          => 'Staff: New',
+    'text_edit_title'         => 'Staff: Update',
+    'text_preview_title'      => 'Staff: Preview',
+    'text_form_name'          => 'Staff',
+    'text_filter_search'    => 'Search location, name or email.',
+    'text_filter_group'     => 'View all groups',
+    'text_filter_location'  => 'View all locations',
+    'text_filter_date'      => 'View all dates',
+    'text_filter_status'    => 'View all status',
+    'text_empty'            => 'There are no staffs available.',
+    'text_no_match'         => 'No Matches Found',
+    'text_default_location' => 'Default',
 
-$lang['column_name'] 		            = 'Name';
-$lang['column_email'] 		            = 'Email';
-$lang['column_group'] 		            = 'Staff Group';
-$lang['column_location'] 		        = 'Location';
-$lang['column_date_added'] 		        = 'Date Added';
-$lang['column_status'] 		            = 'Status';
-$lang['column_id'] 		                = 'ID';
+    'column_name'       => 'Name',
+    'column_email'      => 'Email',
+    'column_group'      => 'Staff Group',
+    'column_location'   => 'Location',
+    'column_date_added' => 'Date Added',
+    'column_status'     => 'Status',
+    'column_id'         => 'ID',
 
-$lang['label_name'] 		            = 'Name';
-$lang['label_email'] 		            = 'Email';
-$lang['label_username'] 		        = 'Username';
-$lang['label_password'] 		        = 'Password';
-$lang['label_confirm_password'] 		= 'Password Confirm';
-$lang['label_group'] 		            = 'Department';
-$lang['label_location'] 		        = 'Location';
-$lang['label_status'] 		            = 'Status';
+    'label_name'             => 'Name',
+    'label_super_staff'             => 'Super Admin',
+    'label_email'            => 'Email',
+    'label_username'         => 'Username',
+    'label_password'         => 'Password',
+    'label_confirm_password' => 'Password Confirm',
+    'label_group'            => 'Department',
+    'label_location'         => 'Location',
+    'label_status'           => 'Status',
 
-$lang['help_password'] 		            = 'Leave blank to leave password unchanged';
-$lang['help_username'] 		            = 'Username can not be changed.';
-
-/* End of file staffs_lang.php */
-/* Location: ./admin/language/english/staffs_lang.php */
+    'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
+    'help_groups' => 'Specify which groups the staff should belong to. Groups define staff permissions, which can be overridden under Staff Groups, on the Permissions tab.',
+];

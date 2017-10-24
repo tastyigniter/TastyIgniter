@@ -1,15 +1,19 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 
-$lang['text_title'] 		            = 'Security Questions';
-$lang['text_heading'] 		            = 'Security Questions';
-$lang['text_list'] 		                = 'Security Question List';
-$lang['text_empty'] 		            = 'There are no security questions, please add.';
+return [
+    'text_title'   => 'Security Questions',
+    'text_new_title'           => 'Security Question: New',
+    'text_edit_title'          => 'Security Question: Update',
+    'text_preview_title'       => 'Security Question: Preview',
+    'text_form_name'           => 'Security Question',
+    'text_filter_search'       => 'Search security question name.',
+    'text_filter_status'       => 'View all status',
+    'text_empty'   => 'There are no security questions, please add.',
 
-$lang['column_question'] 		        = 'Question';
-$lang['column_id'] 		                = 'ID';
+    'column_question' => 'Question',
+    'column_priority' => 'Priority',
+    'column_id'       => 'ID',
 
-$lang['label_question'] 		        = 'Question Id';
-$lang['label_answer'] 		            = 'Question Answer';
-
-/* End of file security_questions_lang.php */
-/* Location: ./admin/language/english/security_questions_lang.php */
+    'label_question' => 'Question',
+    'label_priority' => 'Priority',
+];
