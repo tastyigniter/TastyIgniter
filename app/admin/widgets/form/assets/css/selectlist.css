@@ -1,0 +1,31 @@
+.multiselect.dropdown-toggle {
+	text-align: left;
+}
+.control-selectlist .btn-group {
+	width: 100%;
+}
+.multiselect-container {
+	width: 100%;
+}
+.multiselect-container > .active > a,
+.multiselect-container > .active > a:focus,
+.multiselect-container > .active > a:hover {
+	background-color: #CFD6E2;
+}
+.control-selectlist .multiselect-search {
+	box-shadow: unset;
+}
+.multiselect-all .checkbox label {
+	font-weight: 500;
+}.multiselect-container .multiselect-item > a {
+	padding: 0 0 0 15px;
+}
+.multiselect-item .checkbox,
+.multiselect-item .radio {
+	margin: 0;
+}
+.multiselect-item .checkbox label,
+.multiselect-item .radio label {
+	display: block;
+	padding: 8px 20px 8px 10px;
+}

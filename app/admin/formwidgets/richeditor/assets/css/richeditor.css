@@ -1,0 +1,10 @@
+.richeditor-fluid,
+.richeditor-fluid .note-editor .panel-heading {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.richeditor-fluid,
+.richeditor-fluid .note-editor {
+    margin-left: -20px;
+    margin-right: -20px;
+}

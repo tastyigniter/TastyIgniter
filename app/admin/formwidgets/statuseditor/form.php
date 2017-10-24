@@ -1,0 +1,24 @@
+<div
+    id="<?= $this->getId('form-modal') ?>"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    data-status-editor>
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                <h4 class="modal-title"><?= $formTitle ? e(lang($formTitle)) : '' ?></h4>
+            </div>
+            <div class="modal-body">
+                <?php foreach ($statusFormWidget->getFields() as $field): ?>
+                    <?= $statusFormWidget->renderField($field) ?>
+                <?php endforeach ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
