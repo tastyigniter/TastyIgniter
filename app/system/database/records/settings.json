@@ -1,0 +1,322 @@
+[
+  {
+    "sort": "prefs",
+    "item": "mail_template_id",
+    "value": "11"
+  },
+  {
+    "sort": "ratings",
+    "item": "ratings",
+    "value": "a:1:{s:7:\"ratings\";a:5:{i:1;s:3:\"Bad\";i:2;s:5:\"Worse\";i:3;s:4:\"Good\";i:4;s:7:\"Average\";i:5;s:9:\"Excellent\";}}"
+  },
+  {
+    "sort": "config",
+    "item": "site_desc",
+    "value": ""
+  },
+  {
+    "sort": "config",
+    "item": "search_radius",
+    "value": "20"
+  },
+  {
+    "sort": "config",
+    "item": "ready_time",
+    "value": "45"
+  },
+  {
+    "sort": "prefs",
+    "item": "default_location_id",
+    "value": "11"
+  },
+  {
+    "sort": "prefs",
+    "item": "main_address",
+    "value": "a:6:{s:9:\"address_1\";s:0:\"\";s:9:\"address_2\";s:0:\"\";s:4:\"city\";s:0:\"\";s:8:\"postcode\";s:0:\"\";s:11:\"location_id\";s:2:\"11\";s:10:\"country_id\";s:1:\"1\";}"
+  },
+  {
+    "sort": "config",
+    "item": "site_logo",
+    "value": "tastyigniter-logo.png"
+  },
+  {
+    "sort": "config",
+    "item": "country_id",
+    "value": "222"
+  },
+  {
+    "sort": "config",
+    "item": "timezone",
+    "value": "Europe/London"
+  },
+  {
+    "sort": "config",
+    "item": "currency_id",
+    "value": "226"
+  },
+  {
+    "sort": "config",
+    "item": "language_id",
+    "value": "11"
+  },
+  {
+    "sort": "config",
+    "item": "customer_group_id",
+    "value": "11"
+  },
+  {
+    "sort": "config",
+    "item": "page_limit",
+    "value": "20"
+  },
+  {
+    "sort": "config",
+    "item": "meta_description",
+    "value": ""
+  },
+  {
+    "sort": "config",
+    "item": "meta_keywords",
+    "value": ""
+  },
+  {
+    "sort": "config",
+    "item": "menus_page_limit",
+    "value": "20"
+  },
+  {
+    "sort": "config",
+    "item": "show_menu_images",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "menu_images_h",
+    "value": "80"
+  },
+  {
+    "sort": "config",
+    "item": "menu_images_w",
+    "value": "95"
+  },
+  {
+    "sort": "config",
+    "item": "special_category_id",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "registration_terms",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "checkout_terms",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "stock_warning",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "stock_qty_warning",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "registration_email",
+    "value": "a:1:{i:0;s:8:\"customer\";}"
+  },
+  {
+    "sort": "config",
+    "item": "order_email",
+    "value": "a:2:{i:0;s:8:\"customer\";i:1;s:5:\"admin\";}"
+  },
+  {
+    "sort": "config",
+    "item": "reservation_email",
+    "value": "a:2:{i:0;s:8:\"customer\";i:1;s:5:\"admin\";}"
+  },
+  {
+    "sort": "config",
+    "item": "maps_api_key",
+    "value": ""
+  },
+  {
+    "sort": "config",
+    "item": "distance_unit",
+    "value": "mi"
+  },
+  {
+    "sort": "config",
+    "item": "future_orders",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "location_order",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "location_order_email",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "location_reserve_email",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "approve_reviews",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "new_order_status",
+    "value": "11"
+  },
+  {
+    "sort": "config",
+    "item": "completed_order_status",
+    "value": "15"
+  },
+  {
+    "sort": "config",
+    "item": "guest_order",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "delivery_time",
+    "value": "45"
+  },
+  {
+    "sort": "config",
+    "item": "collection_time",
+    "value": "15"
+  },
+  {
+    "sort": "config",
+    "item": "reservation_mode",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "new_reservation_status",
+    "value": "18"
+  },
+  {
+    "sort": "config",
+    "item": "confirmed_reservation_status",
+    "value": "16"
+  },
+  {
+    "sort": "config",
+    "item": "canceled_order_status",
+    "value": "19"
+  },
+  {
+    "sort": "config",
+    "item": "canceled_reservation_status",
+    "value": "17"
+  },
+  {
+    "sort": "config",
+    "item": "reservation_time_interval",
+    "value": "45"
+  },
+  {
+    "sort": "config",
+    "item": "reservation_stay_time",
+    "value": "60"
+  },
+  {
+    "sort": "config",
+    "item": "image_manager",
+    "value": "a:11:{s:8:\"max_size\";s:3:\"300\";s:11:\"thumb_width\";s:3:\"320\";s:12:\"thumb_height\";s:3:\"220\";s:7:\"uploads\";s:1:\"1\";s:10:\"new_folder\";s:1:\"1\";s:4:\"copy\";s:1:\"1\";s:4:\"move\";s:1:\"1\";s:6:\"rename\";s:1:\"1\";s:6:\"delete\";s:1:\"1\";s:15:\"transliteration\";s:1:\"0\";s:13:\"remember_days\";s:1:\"7\";}"
+  },
+  {
+    "sort": "config",
+    "item": "protocol",
+    "value": "sendmail"
+  },
+  {
+    "sort": "config",
+    "item": "mailtype",
+    "value": "html"
+  },
+  {
+    "sort": "config",
+    "item": "smtp_host",
+    "value": ""
+  },
+  {
+    "sort": "config",
+    "item": "smtp_port",
+    "value": ""
+  },
+  {
+    "sort": "config",
+    "item": "smtp_user",
+    "value": ""
+  },
+  {
+    "sort": "config",
+    "item": "smtp_pass",
+    "value": ""
+  },
+  {
+    "sort": "config",
+    "item": "log_threshold",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "customer_online_time_out",
+    "value": "120"
+  },
+  {
+    "sort": "config",
+    "item": "customer_online_archive_time_out",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "index_file_url",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "permalink",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "maintenance_mode",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "maintenance_message",
+    "value": "Site is under maintenance. Please check back later."
+  },
+  {
+    "sort": "config",
+    "item": "cache_mode",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "cache_time",
+    "value": "0"
+  },
+  {
+    "sort": "prefs",
+    "item": "default_themes",
+    "value": "a:2:{s:5:\"admin\";s:17:\"tastyigniter-blue\";s:4:\"main\";s:19:\"tastyigniter-orange\";}"
+  }
+]
