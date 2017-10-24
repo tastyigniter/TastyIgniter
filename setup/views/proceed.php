@@ -2,7 +2,7 @@
     <h3>Almost there!</h3>
     <i class="fa fa-check-circle fa-5x"></i>
     <h5>Ignite your website to start receiving orders</h5>
-    <p class="small">*NOTE: After clicking "Complete Setup" button, make sure you see the administrator dashboard BEFORE deleting the setup directory and setup.php file</p>
+    <p class="small">*NOTE: After clicking "Complete Setup" button, make sure you see the administrator login page BEFORE deleting the setup directory and setup.php file</p>
 </div>
 
 <div class="buttons">

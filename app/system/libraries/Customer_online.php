@@ -3,8 +3,7 @@
 /**
  * Customer_online Class
  *
- * @package        Igniter\Libraries\Customer_online.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
 class Customer_online
 {
@@ -150,8 +149,3 @@ class Customer_online
 		return (!empty($country_code)) ? $country_code : '0';
 	}
 }
-
-// END Customer_online class
-
-/* End of file Customer_online.php */
-/* Location: ./system/libraries/Customer_online.php */

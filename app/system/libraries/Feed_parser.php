@@ -7,8 +7,7 @@
  * www.techbytes.co.in/blogs/2006/01/15/consuming-rss-with-php-the-simple-way/
  * All credit should be given to the original author
  *
- * @package        Igniter\Libraries\Feed_parser.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
 class Feed_parser
 {
@@ -216,8 +215,3 @@ class Feed_parser
         return $this;
     }
 }
-
-// END Feed_parser Class
-
-/* End of file Feed_parser.php */
-/* Location: ./system/libraries/Feed_parser.php */

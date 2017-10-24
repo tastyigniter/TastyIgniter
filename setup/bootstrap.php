@@ -34,7 +34,6 @@ define('TI_PHP_VERSION', '5.6');
 define('SETUPPATH', dirname(__FILE__));
 define('BASEPATH', dirname(SETUPPATH));
 define('VIEWPATH', SETUPPATH.'/views');
-//defined('TI_ENDPOINT') OR define('TI_ENDPOINT', 'http://api.tasty-cms.com/v2');
 
 // Exception handler
 register_shutdown_function('installerShutdown');

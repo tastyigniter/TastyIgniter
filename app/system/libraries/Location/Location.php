@@ -5,12 +5,10 @@ use Model;
 use Igniter\Traits\DelegateToCI;
 use Igniter\Traits\SessionMaker;
 
-
 /**
  * Location Class
  *
- * @package        Igniter\Libraries\Location.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
 class Location
 {
@@ -76,7 +74,7 @@ class Location
         self::$orderTypes = [1 => self::DELIVERY, 2 => self::COLLECTION];
 
         if (!isset($this->config['location_id']))
-            $this->config['location_id'] = setting('default_location_id');
+            $this->config['location_id'] = params('default_location_id');
 
         $this->setSearchMode(setting('site_location_mode'));
     }
@@ -457,7 +455,7 @@ class Location
 
     public function getDefaultLocal()
     {
-        $defaultLocal = $this->createModel()->find(setting('default_location_id'));
+        $defaultLocal = $this->createModel()->find(params('default_location_id'));
 
         return $defaultLocal ? $defaultLocal->toArray() : null;
     }
@@ -832,8 +830,3 @@ class Location
         return $this->delegateFromCI($key);
     }
 }
-
-// END Location Class
-
-/* End of file Location.php */
-/* Location: ./system/libraries/Location.php */

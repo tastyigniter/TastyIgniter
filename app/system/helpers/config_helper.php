@@ -1,25 +1,9 @@
 <?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
- */
-defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Config helper functions
  *
- * @category       Helpers
- * @package        TastyIgniter\Helpers\config_helper.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
 
 if ( ! function_exists('array_string_output')) {
@@ -85,7 +69,7 @@ if ( ! function_exists('write_config')) {
 	 *
 	 * @return bool False on error, else true.
 	 */
-	function write_config($file = '', $settings = NULL, $module = '', $config_path = APPPATH) {
+	function write_config($file = '', $settings = NULL, $module = '', $config_path = null) {
 		if (empty($file) || ! is_array($settings)) {
 			return FALSE;
 		}
@@ -95,7 +79,7 @@ if ( ! function_exists('write_config')) {
 		// Look in module first.
 		$found = FALSE;
 		if ($module) {
-			$file_details = Modules::find($config_file, $module, '');
+			$file_details = ExtensionManager::instance()->find($config_file, $module, '');
 			if ( ! empty($file_details) AND ! empty($file_details[0])) {
 				$config_file = implode('', $file_details);
 				$found = TRUE;
@@ -127,7 +111,7 @@ if ( ! function_exists('write_config')) {
 			// Format the value to be written to the file.
 			if (is_array($val)) {
 				// Get the array output.
-				$val = config_array_output($val);
+				$val = array_string_output($val);
 			} elseif ( ! is_numeric($val)) {
 				$val = "\"$val\"";
 			}
@@ -160,6 +144,3 @@ if ( ! function_exists('write_config')) {
 		return $result !== FALSE;
 	}
 }
-
-/* End of file config_helper.php */
-/* Location: ./system/tastyigniter/helpers/config_helper.php */

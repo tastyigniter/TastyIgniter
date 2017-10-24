@@ -97,7 +97,7 @@ class SetupController
     {
         $this->page = new stdClass;
 
-        if (isset($this->page->currentStep) AND $this->isBooted()) {
+        if ($this->isBooted()) {
             $this->page->currentStep = 'proceed';
         }
         else if ($this->repository->get('requirement') == 'success') {
@@ -117,26 +117,6 @@ class SetupController
             return FALSE;
 
         if (!$this->checkDatabase())
-            return FALSE;
-
-        return TRUE;
-    }
-
-    protected function vendorExists()
-    {
-        $extractedPhar = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR;
-        if (!is_dir($extractedPhar.'/vendor'))
-            return FALSE;
-
-        return $this->vendorInstalled();
-    }
-
-    protected function vendorInstalled()
-    {
-        if (!is_file($this->baseDirectory.'/vendor/tastyigniter/flame/src/Support/helpers.php'))
-            return FALSE;
-
-        if (!is_file($this->baseDirectory.'/vendor/illuminate/support/helpers.php'))
             return FALSE;
 
         return TRUE;
@@ -283,6 +263,7 @@ class SetupController
             throw new SetupException('Database connection was not successful');
 
         if ($this->confirmInstallation()) {
+            $this->renameExampleHtaccess();
             $result = $this->getBaseUrl().'admin/settings';
         }
         else {
@@ -298,6 +279,8 @@ class SetupController
                 case 'install':
                     if ($this->installFoundation())
                         $result = $this->getBaseUrl().'admin/settings';
+
+                    $this->cleanUpAfterInstall();
                     break;
             }
 
@@ -394,50 +377,6 @@ class SetupController
     // Install
     //
 
-    public function cleanUpAfterInstall()
-    {
-        $this->deleteTempFiles($this->tempDirectory);
-        @rmdir($this->tempDirectory);
-
-        if (file_exists($this->baseDirectory.'/example.htaccess'))
-            rename(
-                $this->baseDirectory.'/example.htaccess',
-                $this->baseDirectory.'/.htaccess'
-            );
-    }
-
-    public function deleteTempFiles($path, $depth = 0)
-    {
-        // Trim the trailing slash
-        $path = rtrim($path, '/\\');
-
-        if (!$dir = @opendir($path)) {
-            return FALSE;
-        }
-
-        while (FALSE !== ($filename = @readdir($dir))) {
-            if ($filename !== '.' AND $filename !== '..') {
-                $filepath = $path.'/'.$filename;
-                if (is_dir($filepath) AND $filename[0] !== '.' AND !is_link($filepath)) {
-                    $this->deleteTempFiles($filepath, $depth + 1);
-                }
-                else {
-                    @unlink($filepath);
-                }
-            }
-        }
-
-        closedir($dir);
-
-        return (is_dir($path) AND $depth > 0) ? @rmdir($path) : TRUE;
-    }
-
-    public function ensureTempDirExists()
-    {
-        if (!is_dir($this->tempDirectory))
-            @mkdir($this->tempDirectory, 0777);
-    }
-
     protected function downloadFoundation()
     {
         $composerPhar = $this->tempDirectory.'/'.static::COMPOSER_PHAR;
@@ -523,8 +462,6 @@ class SetupController
 
         if (!$this->vendorInstalled())
             return FALSE;
-
-        $this->cleanUpAfterInstall();
 
         return TRUE;
     }
@@ -628,6 +565,26 @@ class SetupController
         }
 
         return $default;
+    }
+
+    protected function vendorExists()
+    {
+        $extractedPhar = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR;
+        if (!is_dir($extractedPhar.'/vendor'))
+            return FALSE;
+
+        return $this->vendorInstalled();
+    }
+
+    protected function vendorInstalled()
+    {
+        if (!is_file($this->baseDirectory.'/vendor/tastyigniter/flame/src/Support/helpers.php'))
+            return FALSE;
+
+        if (!is_file($this->baseDirectory.'/vendor/laravel/framework/src/illuminate/support/helpers.php'))
+            return FALSE;
+
+        return TRUE;
     }
 
     protected function getBaseUrl()
@@ -750,5 +707,55 @@ class SetupController
         $requirement = $this->repository->get('install');
 
         return $requirement == 'complete';
+    }
+
+    protected function cleanUpAfterInstall()
+    {
+        if (file_exists($this->tempDirectory)) {
+            $this->deleteTempFiles($this->tempDirectory);
+            @rmdir($this->tempDirectory);
+        }
+    }
+
+    protected function deleteTempFiles($path, $depth = 0)
+    {
+        // Trim the trailing slash
+        $path = rtrim($path, '/\\');
+
+        if (!$dir = @opendir($path)) {
+            return FALSE;
+        }
+
+        while (FALSE !== ($filename = @readdir($dir))) {
+            if ($filename !== '.' AND $filename !== '..') {
+                $filepath = $path.'/'.$filename;
+                if (is_dir($filepath) AND $filename[0] !== '.' AND !is_link($filepath)) {
+                    $this->deleteTempFiles($filepath, $depth + 1);
+                }
+                else {
+                    @unlink($filepath);
+                }
+            }
+        }
+
+        closedir($dir);
+
+        return (is_dir($path) AND $depth > 0) ? @rmdir($path) : TRUE;
+    }
+
+    protected function ensureTempDirExists()
+    {
+        if (!is_dir($this->tempDirectory))
+            @mkdir($this->tempDirectory, 0777);
+    }
+
+    protected function renameExampleHtaccess()
+    {
+        if (file_exists($this->baseDirectory.'/example.htaccess')) {
+            rename(
+                $this->baseDirectory.'/example.htaccess',
+                $this->baseDirectory.'/.htaccess'
+            );
+        }
     }
 }

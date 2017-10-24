@@ -1,12 +1,10 @@
 <?php
 use System\Models\Countries_model;
 
-
 /**
  * Country Class
  *
- * @package        Igniter\Libraries\Country.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
 class Country
 {
@@ -136,7 +134,3 @@ class Country
         return $this->countriesCollection;
     }
 }
-// END Country Class
-
-/* End of file Country.php */
-/* Location: ./system/libraries/Country.php */

@@ -6,9 +6,7 @@ use Igniter\Flame\Traits\Singleton;
 
 /**
  * MediaManager Class
- *
- * @package        System\Libraries\MediaManager.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
 class MediaManager
 {
