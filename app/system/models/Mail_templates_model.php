@@ -1,204 +1,218 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace System\Models;
+
+use Model;
 
 /**
- * Mail_templates Model Class
+ * MailTemplates Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Mail_templates_model.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
-class Mail_templates_model extends TI_Model {
+class Mail_templates_model extends Model
+{
+    const CREATED_AT = 'date_added';
 
-	public function getList() {
-		$this->db->from('mail_templates');
-		$this->db->order_by('template_id', 'ASC');
+    const UPDATED_AT = 'date_updated';
 
-		$query = $this->db->get();
-		$result = array();
+    public static $defaultTemplateId = 11;
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'mail_templates';
 
-		return $result;
-	}
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'template_id';
 
-	public function getTemplates() {
-		$this->db->from('mail_templates');
+    protected $fillable = ['name', 'language_id', 'date_added', 'date_updated', 'status'];
 
-		$query = $this->db->get();
+    /**
+     * @var array The model table column to convert to dates on insert/update
+     */
+    public $timestamps = TRUE;
 
-		$result = array();
+    public $relation = [
+        'hasMany' => [
+            'templates' => ['System\Models\Mail_templates_data_model', 'foreignKey' => 'template_id', 'delete' => true],
+        ],
+        'belongsTo' => [
+            'language' => 'System\Models\Languages_model',
+            'original' => 'System\Models\Mail_templates_model',
+        ],
+    ];
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
+    //
+    // Scopes
+    //
 
-		return $result;
-	}
+    /**
+     * Scope a query to only include enabled mail template
+     *
+     * @return $this
+     */
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('status', 1);
+    }
 
-	public function getTemplate($template_id) {
-		$this->db->from('mail_templates');
+    //
+    // Events
+    //
 
-		$this->db->where('template_id', $template_id);
+    public function afterCreate()
+    {
+        if (is_null($this->original_id))
+            return;
 
-		$query = $this->db->get();
+        $originalTemplate = $this->find($this->original_id);
+        $this->plain_layout = $originalTemplate->plain_layout;
+        $this->layout = $originalTemplate->layout;
+        $this->save();
 
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
-		}
+        self::updateTemplateData(
+            $this->getKey(),
+            $this->getAllTemplateData($originalTemplate->getKey())
+        );
+    }
 
-		return FALSE;
-	}
+    //
+    // Helpers
+    //
 
-	public function getAllTemplateData($template_id) {
-		$result = array();
+    /**
+     * Return all mail templates
+     *
+     * @return array
+     */
+    public function getTemplates()
+    {
+        return $this->get();
+    }
 
-		if ($template_id) {
-			$this->db->from('mail_templates_data');
-			$this->db->order_by('template_data_id', 'ASC');
-			$this->db->where('template_id', $template_id);
+    /**
+     * Find a single mail template by template_id
+     *
+     * @param $template_id
+     *
+     * @return bool
+     */
+    public function getTemplate($template_id)
+    {
+        return $this->find($template_id);
+    }
 
-			$query = $this->db->get();
+    /**
+     * Return all mail templates data by template_id
+     *
+     * @param $template_id
+     *
+     * @return array
+     */
+    public function getAllTemplateData($template_id)
+    {
+        $result = [];
 
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-		}
+        if ($template_id) {
+            $result = Mail_templates_data_model::where('template_id', $template_id)
+                                                      ->orderBy('template_data_id')->get();
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
-	public function getTemplateData($template_id, $template_code) {
-		if (is_numeric($template_id) AND is_string($template_code)) {
-			$this->db->from('mail_templates_data');
-			$this->db->join('mail_templates', 'mail_templates.template_id = mail_templates_data.template_id', 'left');
-			$this->db->where('mail_templates_data.template_id', $template_id);
-			$this->db->where('mail_templates_data.code', $template_code);
-			$this->db->where('mail_templates.status', '1');
+    /**
+     * Find the default mail template by template code
+     *
+     * @param $template_code
+     *
+     * @return mixed
+     */
+    public static function getDefaultTemplateData($template_code)
+    {
+        $template_id = setting('mail_template_id');
+        $found = (new Mail_templates_data_model)->getTemplateData($template_id, $template_code);
 
-			$query = $this->db->get();
+        if (!$found)
+            $template_id = self::$defaultTemplateId;
 
-			if ($query->num_rows() > 0) {
-				return $query->row_array();
-			}
-		}
-	}
+        return self::getTemplateData($template_id, $template_code);
+    }
 
-	public function saveTemplate($template_id, $save = array()) {
-		if (empty($save)) return FALSE;
+    /**
+     * Find a single mail template by template id and code
+     *
+     * @param $template_id
+     * @param $template_code
+     *
+     * @return mixed
+     */
+    public static function getTemplateData($template_id, $template_code)
+    {
+        if (is_numeric($template_id) AND is_string($template_code)) {
+            $query = Mail_templates_data_model::leftJoin(
+                'mail_templates', 'mail_templates.template_id', '=', 'mail_templates_data.template_id'
+            );
 
-		if (isset($save['name'])) {
-			$this->db->set('name', $save['name']);
-		}
+            $query->where('mail_templates_data.template_id', $template_id);
+            $query->where('mail_templates_data.code', $template_code);
+            $query->where('mail_templates.status', '1');
 
-		if (isset($save['language_id'])) {
-			$this->db->set('language_id', $save['language_id']);
-		}
+            return $query->first();
+        }
+    }
 
-		if (isset($save['status']) AND $save['status'] === '1') {
-			$this->db->set('status', '1');
-		} else {
-			$this->db->set('status', '0');
-		}
+    /**
+     * Create a new or update existing mail template
+     *
+     * @param       $template_id
+     * @param array $save
+     *
+     * @return bool|int The $template_id of the affected row, or FALSE on failure
+     */
+    public function saveTemplate($template_id, $save = [])
+    {
+        if (empty($save)) return FALSE;
 
-		if (is_numeric($template_id)) {
-			$this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
-			$this->db->where('template_id', $template_id);
-			$query = $this->db->update('mail_templates');
-		} else {
-			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-			$this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
-			$query = $this->db->insert('mail_templates');
-			$template_id = $this->db->insert_id();
-		}
+        $templateModel = $this->findOrNew($template_id);
 
-		if ($query === TRUE AND is_numeric($template_id)) {
-			if ( ! empty($save['clone_template_id'])) {
-				$templates = $this->getAllTemplateData($save['clone_template_id']);
-				$this->updateTemplateData($template_id, $templates, $save['clone_template_id']);
-			} else if ( ! empty($save['templates'])) {
-				$this->updateTemplateData($template_id, $save['templates']);
-			}
+        $saved = $templateModel->fill($save)->save();
 
-			return $template_id;
-		}
-	}
+        return $saved ? $templateModel->getKey() : $saved;
+    }
 
-	public function updateTemplateData($template_id, $templates = array(), $clone_template_id = FALSE) {
-		$query = FALSE;
+    /**
+     * Create a new or update existing mail template data
+     *
+     * @param       $template_id
+     * @param array $templates
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public static function updateTemplateData($template_id, $templates = [])
+    {
+        return Mail_templates_data_model::updateTemplateData($template_id, $templates);
+    }
 
-		if (empty($templates)) return FALSE;
+    /**
+     * Delete a single or multiple mail template by template_id
+     *
+     * @param $template_id
+     *
+     * @return int The number of deleted rows
+     */
+    public function deleteTemplate($template_id)
+    {
+        if (is_numeric($template_id)) $template_id = [$template_id];
 
-		foreach ($templates as $template) {
-			if (isset($template['subject'])) {
-				$this->db->set('subject', $template['subject']);
-			}
+        foreach ($template_id as $key => $value) {
+            if ($value == setting('mail_template_id')) {
+                unset($template_id[$key]);
+            }
+        }
 
-			if (isset($template['body'])) {
-				$this->db->set('body', preg_replace('~>\s+<~m', '><', $template['body']));
-			}
-
-			if (isset($template['date_updated'])) {
-				$this->db->set('date_updated', $template['date_updated']);
-			}
-
-			if ( ! empty($template_id)) {
-				if ( ! $clone_template_id AND ! empty($template['code'])) {
-					$this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
-					$this->db->where('template_id', $template_id);
-					$this->db->where('code', $template['code']);
-					$query = $this->db->update('mail_templates_data');
-				} else if ( ! empty($template['code'])) {
-					$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-					$this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
-					$this->db->set('template_id', $template_id);
-					$this->db->set('code', $template['code']);
-					$query = $this->db->insert('mail_templates_data');
-				}
-			}
-		}
-
-		return $query;
-	}
-
-	public function deleteTemplate($template_id) {
-		if (is_numeric($template_id)) $template_id = array($template_id);
-
-		foreach ($template_id as $key => $value) {
-			if ($value === $this->config->item('mail_template_id')) {
-				unset($template_id[$key]);
-			}
-		}
-
-		if ( ! empty($template_id) AND ctype_digit(implode('', $template_id))) {
-			$this->db->where_in('template_id', $template_id);
-			$this->db->where('template_id !=', '11');
-			$this->db->delete('mail_templates');
-
-			if (($affected_rows = $this->db->affected_rows()) > 0) {
-				$this->db->where_in('template_id', $template_id);
-				$this->db->where('template_id !=', '11');
-				$this->db->delete('mail_templates_data');
-
-				return $affected_rows;
-			}
-		}
-	}
+        if (!empty($template_id) AND ctype_digit(implode('', $template_id))) {
+            return $this->where('template_id', '!=', '11')->whereIn('template_id', $template_id)->delete();
+        }
+    }
 }
-
-/* End of file mail_templates_model.php */
-/* Location: ./system/tastyigniter/models/mail_templates_model.php */

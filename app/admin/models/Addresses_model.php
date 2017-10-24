@@ -1,271 +1,218 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Model;
 
 /**
  * Addresses Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Addresses_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Addresses_model extends TI_Model {
+class Addresses_model extends Model
+{
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'addresses';
 
-	public function getCount($filter = array()) {
-		if ( ! empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			$this->db->where('customer_id', $filter['customer_id']);
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'address_id';
 
-			$this->db->from('addresses');
+    protected $fillable = ['address_1', 'address_2', 'city', 'state', 'postcode', 'country_id'];
 
-			return $this->db->count_all_results();
-		}
-	}
+    public $relation = [
+        'belongsTo' => [
+            'customer' => 'Admin\Models\Customers_model',
+            'country'  => 'System\Models\Countries_model',
+        ],
+    ];
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-				$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-			}
+    public static $allowedSortingColumns = [
+        'address_id asc', 'address_id desc',
+    ];
 
-			if ($this->db->limit($filter['limit'], $filter['page'])) {
-				$this->db->from('addresses');
-				$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
+    //
+    // Scopes
+    //
 
-				$this->db->where('customer_id', $filter['customer_id']);
+    public function scopeListFrontEnd($query, $options = [])
+    {
+        extract(array_merge([
+            'page'      => 1,
+            'pageLimit' => 20,
+            'customer'  => null,
+            'location'  => null,
+            'sort'      => 'address_id desc',
+        ], $options));
 
-				$query = $this->db->get();
+        if ($customer instanceof Customers_model) {
+            $query->where('customer_id', $customer->getKey());
+        }
+        else if (strlen($customer)) {
+            $query->where('customer_id', $customer);
+        }
 
-				$address_data = array();
+        if (!is_array($sort)) {
+            $sort = [$sort];
+        }
 
-				if ($query->num_rows() > 0) {
-					foreach ($query->result_array() as $result) {
+        foreach ($sort as $_sort) {
+            if (in_array($_sort, self::$allowedSortingColumns)) {
+                $parts = explode(' ', $_sort);
+                if (count($parts) < 2) {
+                    array_push($parts, 'desc');
+                }
+                list($sortField, $sortDirection) = $parts;
+                $query->orderBy($sortField, $sortDirection);
+            }
+        }
 
-						$address_data[$result['address_id']] = array(
-							'address_id' => $result['address_id'],
-							'address_1'  => $result['address_1'],
-							'address_2'  => $result['address_2'],
-							'city'       => $result['city'],
-							'state'      => $result['state'],
-							'postcode'   => $result['postcode'],
-							'country_id' => $result['country_id'],
-							'country'    => $result['country_name'],
-							'iso_code_2' => $result['iso_code_2'],
-							'iso_code_3' => $result['iso_code_3'],
-							'format'     => $result['format'],
-						);
-					}
-				}
+        return $query->paginate($pageLimit, $page);
+    }
 
-				return $address_data;
-			}
-		}
-	}
+    public function scopeJoinCountry($query)
+    {
+        return $query->join('countries', 'countries.country_id', '=', 'addresses.country_id', 'left');
+    }
 
-	public function getAddresses($customer_id) {
-		$address_data = array();
+    /**
+     * Filter database records
+     *
+     * @param $query
+     * @param array $filter an associative array of field/value pairs
+     *
+     * @return $this
+     */
+    public function scopeFilter($query, $filter = [])
+    {
+        if (isset($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+            $query->where('customer_id', $filter['customer_id']);
+        }
 
-		if (!empty($customer_id) AND is_numeric($customer_id)) {
-			$this->db->from('addresses');
-			$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
+        return $query;
+    }
 
-			$this->db->where('customer_id', $customer_id);
+    //
+    // Helpers
+    //
 
-			$query = $this->db->get();
+    /**
+     * Return all customer addresses by customer_id
+     *
+     * @param int $customer_id
+     *
+     * @return array
+     */
+    public function getAddresses($customer_id)
+    {
+        $result = [];
 
-			if ($query->num_rows() > 0) {
-				foreach ($query->result_array() as $result) {
+        $addresses = self::joinCountry()->where('customer_id', $customer_id)->get();
+        foreach ($addresses as $row) {
+            $result[$row['address_id']] = $row;
+        }
 
-					$address_data[$result['address_id']] = array(
-						'address_id' => $result['address_id'],
-						'address_1'  => $result['address_1'],
-						'address_2'  => $result['address_2'],
-						'city'       => $result['city'],
-						'state'      => $result['state'],
-						'postcode'   => $result['postcode'],
-						'country_id' => $result['country_id'],
-						'country'    => $result['country_name'],
-						'iso_code_2' => $result['iso_code_2'],
-						'iso_code_3' => $result['iso_code_3'],
-						'format'     => $result['format'],
-					);
-				}
-			}
-		}
+        return $result;
+    }
 
-		return $address_data;
-	}
+    /**
+     * Find a single customer address by customer_id
+     *
+     * @param int $customer_id
+     * @param int $address_id
+     *
+     * @return array
+     */
+    public function getAddress($customer_id, $address_id)
+    {
+        $query = $this->joinCountry();
+        $query->where('customer_id', $customer_id);
 
-	public function getAddress($customer_id, $address_id) {
-		if (!empty($address_id) AND is_numeric($address_id)) {
-			$this->db->from('addresses');
-			$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
+        return $query->find($address_id);
+    }
 
-			$this->db->where('address_id', $address_id);
+    /**
+     * Find a single guest address by address_id
+     *
+     * @param int $address_id
+     *
+     * @return array
+     */
+    public function getGuestAddress($address_id)
+    {
+        $query = $this->joinCountry()->where('address_id', $address_id);
 
-			if (!empty($customer_id) AND is_numeric($customer_id)) {
-				$this->db->where('customer_id', $customer_id);
-			}
+        return $query->first();
+    }
 
-			$query = $this->db->get();
+    /**
+     * Find a customer default address
+     *
+     * @param int $address_id
+     * @param int $customer_id
+     *
+     * @return array
+     */
+    public function getDefault($address_id, $customer_id)
+    {
+        return $this->getAddress($customer_id, $address_id);
+    }
 
-			$address_data = array();
+    /**
+     * Update a customer default address
+     *
+     * @param int $customer_id
+     * @param int $address_id
+     *
+     * @return bool
+     */
+    public static function updateDefault($customer_id, $address_id = null)
+    {
+        return self::customer()->find($customer_id)->update(['address_id' => $address_id]);
+    }
 
-			if ($query->num_rows() > 0) {
-				$row = $query->row_array();
+    /**
+     * Create a new or update existing customer address
+     *
+     * @param int $customer_id
+     * @param int $address_id
+     * @param array $address an array of key/value pairs
+     *
+     * @return bool|int The $address_id of the affected row, or FALSE on failure
+     */
+    public function saveAddress($customer_id = null, $address_id = null, $address = [])
+    {
+        if (is_array($address_id)) {
+            $address = $address_id;
+            $address_id = isset($address['address_id']) ? $address['address_id'] : null;
+        }
 
-				$address_data = array(
-					'address_id' => $row['address_id'],
-					'address_1'  => $row['address_1'],
-					'address_2'  => $row['address_2'],
-					'city'       => $row['city'],
-					'state'      => $row['state'],
-					'postcode'   => $row['postcode'],
-					'country_id' => $row['country_id'],
-					'country'    => $row['country_name'],
-					'iso_code_2' => $row['iso_code_2'],
-					'iso_code_3' => $row['iso_code_3'],
-					'format'     => $row['format'],
-				);
-			}
+        if (!isset($address['address_1'])) return FALSE;
 
-			return $address_data;
-		}
-	}
+        $addressModel = $this->findOrNew($address_id);
 
-	public function getGuestAddress($address_id) {
-		$this->db->from('addresses');
-		$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
+        $saved = $addressModel->fill(array_merge($address, [
+            'customer_id' => $customer_id,
+            'country_id'  => isset($address['country']) ? $address['country'] : $address['country_id'],
+        ]))->save();
 
-		$this->db->where('address_id', $address_id);
+        return $saved ? $addressModel->getKey() : $saved;
+    }
 
-		$query = $this->db->get();
-
-		$address_data = array();
-
-		if ($query->num_rows() > 0) {
-			$row = $query->row_array();
-
-			$address_data = array(
-				'address_id' => $row['address_id'],
-				'address_1'  => $row['address_1'],
-				'address_2'  => $row['address_2'],
-				'city'       => $row['city'],
-				'state'      => $row['state'],
-				'postcode'   => $row['postcode'],
-				'country_id' => $row['country_id'],
-				'country'    => $row['country_name'],
-				'iso_code_2' => $row['iso_code_2'],
-				'iso_code_3' => $row['iso_code_3'],
-				'format'     => $row['format'],
-			);
-		}
-
-		return $address_data;
-	}
-
-	public function getDefault($address_id, $customer_id) {
-		if (($address_id !== '0') && ($customer_id !== '0')) {
-			$this->db->from('addresses');
-			$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
-
-			$this->db->where('address_id', $address_id);
-			$this->db->where('customer_id', $customer_id);
-
-			$query = $this->db->get();
-
-			if ($query->num_rows() > 0) {
-				return $query->row_array();
-			}
-		}
-	}
-
-	public function updateDefault($customer_id = '', $address_id = '') {
-		$query = FALSE;
-
-		if ($address_id !== '' AND $customer_id !== '') {
-			$this->db->set('address_id', $address_id);
-			$this->db->where('customer_id', $customer_id);
-
-			$query = $this->db->update('customers');
-		}
-
-		return $query;
-	}
-
-	public function saveAddress($customer_id = FALSE, $address_id = FALSE, $address = array()) {
-
-		if (is_array($address_id)) $address = $address_id;
-
-		if (empty($address)) return FALSE;
-
-		if ($customer_id) {
-			$this->db->set('customer_id', $customer_id);
-		}
-
-		if (empty($address_id) AND isset($address['address_id'])) {
-			$this->db->set('address_id', $address['address_id']);
-		}
-
-		if (isset($address['address_1'])) {
-			$this->db->set('address_1', $address['address_1']);
-		}
-
-		if (isset($address['address_2'])) {
-			$this->db->set('address_2', $address['address_2']);
-		}
-
-		if (isset($address['city'])) {
-			$this->db->set('city', $address['city']);
-		}
-
-		if (isset($address['state'])) {
-			$this->db->set('state', $address['state']);
-		}
-
-		if (isset($address['postcode'])) {
-			$this->db->set('postcode', $address['postcode']);
-		}
-
-		if (isset($address['country'])) {
-			$this->db->set('country_id', $address['country']);
-		} else if (isset($address['country_id'])) {
-			$this->db->set('country_id', $address['country_id']);
-		}
-
-		if (is_numeric($address_id)) {
-			$this->db->where('address_id', $address_id);
-			$query = $this->db->update('addresses');
-		} else {
-			$query = $this->db->insert('addresses');
-			$address_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($address_id)) ? $address_id : FALSE;
-	}
-
-	public function deleteAddress($customer_id, $address_id) {
-
-		$this->db->where('customer_id', $customer_id);
-		$this->db->where('address_id', $address_id);
-
-		$this->db->delete('addresses');
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
-	}
+    /**
+     * Delete a single customer address by customer_id and address_id
+     *
+     * @param int $customer_id
+     * @param int $address_id
+     *
+     * @return int The number of deleted rows
+     */
+    public function deleteAddress($customer_id, $address_id)
+    {
+        return $this->where([
+            ['customer_id', $customer_id],
+            ['address_id', $address_id],
+        ])->delete();
+    }
 }
-
-/* End of file addresses_model.php */
-/* Location: ./system/tastyigniter/models/addresses_model.php */

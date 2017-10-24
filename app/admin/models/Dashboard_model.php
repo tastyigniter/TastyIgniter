@@ -1,40 +1,50 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Model;
 
 /**
  * Dashboard Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Dashboard_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Dashboard_model extends TI_Model {
+class Dashboard_model extends Model
+{
 
-	public function getStatistics($stat_range = '') {
-		$results = $range_query = array();
+	/**
+	 * Dashboard_model constructor.
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('Orders_model');
+		$this->load->model('Reservations_model');
+		$this->load->model('Customers_model');
+		$this->load->model('Menus_model');
+		$this->load->model('Tables_model');
+		$this->load->model('Reviews_model');
+	}
+
+	/**
+	 * Return the statistics data
+	 *
+	 * @param string $stat_range
+	 *
+	 * @return array
+	 */
+	public function getStatistics($stat_range = '')
+	{
+		$results = $range_query = [];
 
 		if ($stat_range === '') return $results;
 
 		if ($stat_range === 'today') {
-			$range_query = array('DATE(date_added)' => date('Y-m-d'));
+			$range_query = ['DATE(date_added) = ?', date('Y-m-d')];
 		} else if ($stat_range === 'week') {
-			$range_query = array('WEEK(date_added)' => date('W'));
+			$range_query = ['WEEK(date_added) = ?', date('W')];
 		} else if ($stat_range === 'month') {
-			$range_query = array('MONTH(date_added)' => date('m'));
+			$range_query = ['MONTH(date_added) = ?', date('m')];
 		} else if ($stat_range === 'year') {
-			$range_query = array('YEAR(date_added)' => date('Y'));
+			$range_query = ['YEAR(date_added) = ?', date('Y')];
 		}
 
 		$results['sales'] = $this->getTotalSales($range_query);
@@ -50,21 +60,32 @@ class Dashboard_model extends TI_Model {
 		return $results;
 	}
 
-	public function getTotalMenus() {
-		return $this->db->count_all('menus');
+	/**
+	 * Return the total number of menus in database
+	 *
+	 * @return mixed
+	 */
+	public function getTotalMenus()
+	{
+		return $this->Menus_model->count();
 	}
 
-	public function getTotalSales($range_query) {
+	/**
+	 * Return the total amount of order sales
+	 *
+	 * @param $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalSales($range_query)
+	{
 		$total_sales = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->select_sum('order_total', 'total_sales');
-			$this->db->where('status_id >', '0');
-			$this->db->where($range_query);
-			$query = $this->db->get('orders');
+		if (is_array($range_query) AND !empty($range_query)) {
+			$row = $this->Orders_model->where('status_id', '>', '0')->selectRaw("SUM(order_total) as total_sales")
+										->whereRaw($range_query[0], $range_query[1])->first();
 
-			if ($query->num_rows() > 0) {
-				$row = $query->row_array();
+			if (!empty($row)) {
 				$total_sales = $row['total_sales'];
 			}
 		}
@@ -72,22 +93,24 @@ class Dashboard_model extends TI_Model {
 		return $total_sales;
 	}
 
-	public function getTotalLostSales($range_query) {
+	/**
+	 * Return the total amount of lost order sales
+	 *
+	 * @param $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalLostSales($range_query)
+	{
 		$total_lost_sales = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->select_sum('order_total', 'total_lost_sales');
-			$this->db->where($range_query);
+		if (is_array($range_query) AND !empty($range_query)) {
+			$row = $this->Orders_model->query()->selectRaw("SUM(order_total) as total_lost_sales")->where(function ($query) {
+				$query->where('status_id', '<=', '0');
+				$query->orWhere('status_id', $this->config->item('canceled_order_status'));
+			})->whereRaw($range_query[0], $range_query[1])->first();
 
-			$this->db->group_start();
-			$this->db->where('status_id <=', '0');
-			$this->db->or_where('status_id', $this->config->item('canceled_order_status'));
-			$this->db->group_end();
-
-			$query = $this->db->get('orders');
-
-			if ($query->num_rows() > 0) {
-				$row = $query->row_array();
+			if (!empty($row)) {
 				$total_lost_sales = $row['total_lost_sales'];
 			}
 		}
@@ -95,18 +118,22 @@ class Dashboard_model extends TI_Model {
 		return $total_lost_sales;
 	}
 
-	public function getTotalCashPayments($range_query = '') {
+	/**
+	 * Return the total amount of cash payment order sales
+	 *
+	 * @param string $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalCashPayments($range_query = '')
+	{
 		$cash_payments = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->select_sum('order_total', 'cash_payments');
-			$this->db->where('status_id >', '0');
-			$this->db->where('payment', 'cod');
-			$this->db->where($range_query);
-			$query = $this->db->get('orders');
+		if (is_array($range_query) AND !empty($range_query)) {
+			$row = $this->Orders_model->where('status_id', '>', '0')
+				->selectRaw("SUM(order_total) as cash_payments")->where('payment', 'cod')->first();
 
-			if ($query->num_rows() > 0) {
-				$row = $query->row_array();
+			if (!empty($row)) {
 				$cash_payments = $row['cash_payments'];
 			}
 		}
@@ -114,229 +141,273 @@ class Dashboard_model extends TI_Model {
 		return $cash_payments;
 	}
 
-	public function getTotalCustomers($range_query) {
+	/**
+	 * Return the total number of customers
+	 *
+	 * @param $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalCustomers($range_query)
+	{
 		$total_customers = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->where($range_query);
-			$this->db->from('customers');
-			$total_customers = $this->db->count_all_results();
+		if (is_array($range_query) AND !empty($range_query)) {
+			$total_customers = $this->Customers_model->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_customers;
 	}
 
-	public function getTotalOrders($range_query) {
+	/**
+	 * Return the total number of orders placed
+	 *
+	 * @param $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalOrders($range_query)
+	{
 		$total_orders = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->where($range_query);
-			$this->db->from('orders');
-			$total_orders = $this->db->count_all_results();
+		if (is_array($range_query) AND !empty($range_query)) {
+			$total_orders = $this->Orders_model->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_orders;
 	}
 
-	public function getTotalOrdersCompleted($range_query = '') {
+	/**
+	 * Return the total number of completed orders
+	 *
+	 * @param string $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalOrdersCompleted($range_query = '')
+	{
 		$total_orders_completed = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->where($range_query);
-			$this->db->where_in('status_id', (array) $this->config->item('completed_order_status'));
-			$this->db->from('orders');
-			$total_orders_completed = $this->db->count_all_results();
+		if (is_array($range_query) AND !empty($range_query)) {
+			$total_orders_completed = $this->Orders_model->whereIn('status_id', (array)$this->config->item('completed_order_status'))
+														 ->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_orders_completed;
 	}
 
-	public function getTotalDeliveryOrders($range_query = '') {
+	/**
+	 * Return the total number of delivery orders
+	 *
+	 * @param string $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalDeliveryOrders($range_query = '')
+	{
 		$total_delivery_orders = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->where($range_query);
-			$this->db->where('order_type', '1');
-			$this->db->from('orders');
-
-			$total_delivery_orders = $this->db->count_all_results();
+		if (is_array($range_query) AND !empty($range_query)) {
+			$total_delivery_orders = $this->Orders_model->where('order_type', '1')->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_delivery_orders;
 	}
 
-	public function getTotalCollectionOrders($range_query = '') {
+	/**
+	 * Return the total number of collection orders
+	 *
+	 * @param string $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalCollectionOrders($range_query = '')
+	{
 		$total_collection_orders = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->where($range_query);
-			$this->db->where('order_type', '2');
-			$this->db->from('orders');
-
-			$total_collection_orders = $this->db->count_all_results();
+		if (is_array($range_query) AND !empty($range_query)) {
+			$total_collection_orders = $this->Orders_model->where('order_type', '2')->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_collection_orders;
 	}
 
-	public function getTotalTables() {
-		return $this->db->count_all_results('tables');
+	/**
+	 * Return the total number of tables
+	 *
+	 * @return mixed
+	 */
+	public function getTotalTables()
+	{
+		return $this->Tables_model->count();
 	}
 
-	public function getTotalTablesReserved($range_query = '') {
+	/**
+	 * Return the total number of table reservations
+	 *
+	 * @param string $range_query
+	 *
+	 * @return int
+	 */
+	public function getTotalTablesReserved($range_query = '')
+	{
 		$total_tables_reserved = 0;
 
-		if (is_array($range_query) AND ! empty($range_query)) {
-			$this->db->where($range_query);
-			$this->db->where('status >', '0');
-			$this->db->from('reservations');
-			$total_tables_reserved = $this->db->count_all_results();
+		if (is_array($range_query) AND !empty($range_query)) {
+			$total_tables_reserved = $this->Reservations_model->where('status', '>', '0')->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_tables_reserved;
 	}
 
-	public function getTodayChart($hour = FALSE) {
-		$result = array();
+	/**
+	 * Return the chart data by hour of the day
+	 *
+	 * @param bool $hour
+	 *
+	 * @return array
+	 */
+	public function getTodayChart($hour = FALSE)
+	{
+		$result = [];
 
-		$this->db->where('DATE(date_added)', 'DATE(NOW())');
-		$this->db->where('HOUR(date_added)', $hour);
-		$this->db->order_by('date_added', 'ASC');
-		if ($this->db->from('customers')) {
-			$result['customers'] = $this->db->count_all_results();
-		}
+		$result['customers'] = $this->Customers_model->whereDate('date_added', 'DATE(NOW())')
+													 ->whereRaw('HOUR(date_added)', $hour)->orderBy('date_added')->count();
 
-		$this->db->where('status_id >', '0');
-		$this->db->where('DATE(date_added)', 'DATE(NOW())', FALSE);
-		$this->db->where('HOUR(order_time)', $hour);
-		$this->db->group_by('HOUR(order_time)');
-		$this->db->order_by('date_added', 'ASC');
-		if ($this->db->from('orders')) {
-			$result['orders'] = $this->db->count_all_results();
-		}
+		$result['orders'] = $this->Orders_model->where('status_id', '>', '0')
+											   ->whereDate('date_added', 'DATE(NOW())', FALSE)->whereRaw('HOUR(order_time)', $hour)
+											   ->orderBy('date_added')->count();
 
-		$this->db->where('status >', '0');
-		$this->db->where('DATE(reserve_date)', 'DATE(NOW())', FALSE);
-		$this->db->where('HOUR(reserve_time)', $hour);
-		$this->db->group_by('HOUR(reserve_time)');
-		$this->db->order_by('reserve_date', 'ASC');
-		if ($this->db->from('reservations')) {
-			$result['reservations'] = $this->db->count_all_results();
-		}
+		$result['reservations'] = $this->Reservations_model->where('status', '>', '0')
+														   ->whereDate('reserve_date', 'DATE(NOW())', FALSE)->whereRaw('HOUR(reserve_time)', $hour)
+														   ->orderBy('reserve_date')->count();
 
-		$this->db->where('DATE(date_added)', 'DATE(NOW())', FALSE);
-		$this->db->where('HOUR(date_added)', $hour);
-		$this->db->order_by('date_added', 'ASC');
-		if ($this->db->from('reviews')) {
-			$result['reviews'] = $this->db->count_all_results();
-		}
+		$result['reviews'] = $this->Reviews_model->whereDate('date_added', 'DATE(NOW())', FALSE)
+												 ->where('HOUR(date_added)', $hour)
+												 ->orderBy('date_added')->count();
 
 		return $result;
 	}
 
-	public function getDateChart($date = FALSE) {
-		$result = array();
+	/**
+	 * Return the chart data by date
+	 *
+	 * @param bool $date
+	 *
+	 * @return array
+	 */
+	public function getDateChart($date = FALSE)
+	{
+		$result = [];
 
-		$this->db->where('DATE(date_added)', $date);
-		$this->db->group_by('DAY(date_added)');
-		if ($this->db->from('customers')) {
-			$result['customers'] = $this->db->count_all_results();
-		}
+		$DB = $this->queryBuilder();
 
-		$this->db->where('status_id >', '0');
-		$this->db->where('DATE(date_added)', $date);
-		$this->db->group_by('DAY(date_added)');
-		if ($this->db->from('orders')) {
-			$result['orders'] = $this->db->count_all_results();
-		}
+		$result['customers'] = $this->Customers_model->whereDate('date_added', $date)
+													 ->selectRaw("date_added")->groupBy($DB->raw('DAY(date_added)'))
+													 ->count();
 
-		$this->db->where('status >', '0');
-		$this->db->where('DATE(reserve_date)', $date);
-		$this->db->group_by('DAY(reserve_date)');
-		if ($this->db->from('reservations')) {
-			$result['reservations'] = $this->db->count_all_results();
-		}
+		$result['orders'] = $this->Orders_model->where('status_id', '>', '0')
+											   ->whereDate('date_added', $date)
+											   ->selectRaw("date_added")->groupBy($DB->raw('DAY(date_added)'))
+											   ->count();
 
-		$this->db->where('DATE(date_added)', $date);
-		$this->db->group_by('DAY(date_added)');
-		if ($this->db->from('reviews')) {
-			$result['reviews'] = $this->db->count_all_results();
-		}
+		$result['reservations'] = $this->Reservations_model->where('status', '>', '0')
+														   ->whereDate('reserve_date', $date)
+														   ->selectRaw("date_added")->groupBy($DB->raw('DAY(reserve_date)'))
+														   ->count();
 
-		return $result;
-	}
-
-	public function getYearChart($year = FALSE, $month = FALSE) {
-		$result = array();
-
-		$this->db->where('YEAR(date_added)', (int) $year);
-		$this->db->where('MONTH(date_added)', (int) $month);
-		$this->db->group_by('MONTH(date_added)');
-		if ($this->db->from('customers')) {
-			$result['customers'] = $this->db->count_all_results();
-		}
-
-		$this->db->where('status_id >', '0');
-		$this->db->where('YEAR(date_added)', (int) $year);
-		$this->db->where('MONTH(date_added)', (int) $month);
-		$this->db->group_by('MONTH(date_added)');
-		if ($this->db->from('orders')) {
-			$result['orders'] = $this->db->count_all_results();
-		}
-
-		$this->db->where('status >', '0');
-		$this->db->where('YEAR(reserve_date)', (int) $year);
-		$this->db->where('MONTH(reserve_date)', (int) $month);
-		$this->db->group_by('MONTH(reserve_date)');
-		if ($this->db->from('reservations')) {
-			$result['reservations'] = $this->db->count_all_results();
-		}
-
-		$this->db->where('YEAR(date_added)', (int) $year);
-		$this->db->where('MONTH(date_added)', (int) $month);
-		$this->db->group_by('MONTH(date_added)');
-		if ($this->db->from('reviews')) {
-			$result['reviews'] = $this->db->count_all_results();
-		}
+		$result['reviews'] = $this->Reviews_model->whereDate('date_added', $date)
+												 ->selectRaw("date_added")->groupBy($DB->raw('DAY(date_added)'))
+												 ->count();
 
 		return $result;
 	}
 
-	public function getReviewChart($rating_id, $menu_id) {
-		$total_ratings = 0;
-		$this->db->where('menu_id', $menu_id);
-		$this->db->where('rating_id', $rating_id);
-		$this->db->from('reviews');
-		$total_ratings = $this->db->count_all_results();
+	/**
+	 * Return the chart data by year and month
+	 *
+	 * @param bool $year
+	 * @param bool $month
+	 *
+	 * @return array
+	 */
+	public function getYearChart($year = FALSE, $month = FALSE)
+	{
+		$result = [];
+
+		$DB = $this->queryBuilder();
+		$result['customers'] = $this->Customers_model->whereYear('date_added', (int)$year)
+													 ->whereMonth('date_added', (int)$month)
+													 ->groupBy($DB->raw("MONTH(date_added)"))
+													 ->count();
+
+		$result['orders'] = $this->Orders_model->where('status_id', '>', '0')
+											   ->whereYear('date_added', (int)$year)
+											   ->whereMonth('date_added', (int)$month)
+											   ->groupBy($DB->raw("MONTH(date_added)"))
+											   ->count();
+
+		$result['reservations'] = $this->Reservations_model->where('status', '>', '0')
+														   ->whereYear('reserve_date', (int)$year)
+														   ->whereMonth('reserve_date', (int)$month)
+														   ->groupBy($DB->raw("MONTH(reserve_date)"))
+														   ->count();
+
+		$result['reviews'] = $this->Reviews_model->whereYear('date_added', (int)$year)
+												 ->whereMonth('date_added', (int)$month)
+												 ->groupBy($DB->raw("MONTH(date_added)"))
+												 ->count();
+
+		return $result;
+	}
+
+	/**
+	 * Return review chart menu and rating
+	 *
+	 * @param $rating_id
+	 * @param $menu_id
+	 *
+	 * @return mixed
+	 */
+	public function getReviewChart($rating_id, $menu_id)
+	{
+		$total_ratings = $this->Reviews_model->where('menu_id', $menu_id)
+											 ->where('rating_id', $rating_id)->count();
 
 		return $total_ratings;
 	}
 
-	public function getTopCustomers($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
+	/**
+	 * Return the total orders made by all customers
+	 *
+	 * @param array $filter limit the result
+	 *
+	 * @return array
+	 */
+	public function getTopCustomers($filter = [])
+	{
+		if (isset($filter['limit']) AND isset($filter['page'])) {
+			$this->Customers_model->limit($filter['limit'], $filter['page']);
 		}
 
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->select('customers.customer_id, customers.first_name, customers.last_name, COUNT(order_id) AS total_orders');
-			$this->db->select_sum('order_total', 'total_sale');
-			$this->db->from('customers');
-			$this->db->join('orders', 'orders.customer_id = customers.customer_id', 'left');
-			$this->db->group_by('customer_id');
-			$this->db->order_by('total_orders', 'DESC');
+		$customersTable = $this->getTablePrefix('customers');
 
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
+		return $this->Customers_model->groupBy('customer_id')->orderBy('total_orders', 'DESC')
+									 ->selectRaw("SUM(order_total) as total_sale")->selectRaw("{$customersTable}.customer_id, {$customersTable}.first_name, {$customersTable}.last_name, " .
+				"COUNT(order_id) AS total_orders")
+									 ->join('orders', 'orders.customer_id', '=', 'customers.customer_id', 'left')->get();
 	}
 
-	public function getNewsFeed($number = 5, $expiry = 3) {
+	/**
+	 * Fetch tastyigniter news feed data
+	 *
+	 * @param int $number limit the number of results show
+	 * @param int $expiry cache expiry
+	 *
+	 * @return mixed
+	 */
+	public function getNewsFeed($number = 5, $expiry = 3)
+	{
 		$this->load->library('feed_parser');
 
 		$this->feed_parser->set_feed_url('http://feeds.feedburner.com/Tastyigniter');
@@ -345,6 +416,3 @@ class Dashboard_model extends TI_Model {
 		return $this->feed_parser->getFeed($number);
 	}
 }
-
-/* End of file dashboard_model.php */
-/* Location: ./system/tastyigniter/models/dashboard_model.php */

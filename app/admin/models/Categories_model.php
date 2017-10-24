@@ -1,180 +1,234 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use DB;
+use Igniter\Flame\Database\Traits\Purgeable;
+use Model;
+use Igniter\Flame\NestedSet\NestedTree;
+use Igniter\Flame\Permalink\Traits\HasPermalink;
+use Igniter\Flame\Database\Traits\Sortable;
 
 /**
  * Categories Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Categories_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Categories_model extends TI_Model {
+class Categories_model extends Model
+{
+    use Sortable;
+    use HasPermalink;
+//    use NestedTree;
 
-	public function getCount($filter = array()) {
-		if ( ! empty($filter['filter_search'])) {
-			$this->db->like('name', $filter['filter_search']);
-		}
+    const SORT_ORDER = 'priority';
 
-		if (is_numeric($filter['filter_status'])) {
-			$this->db->where('menu_status', $filter['filter_status']);
-		}
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'categories';
 
-		$this->db->from('categories');
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'category_id';
 
-		return $this->db->count_all_results();
-	}
+    protected $fillable = ['name', 'description', 'parent_id', 'priority', 'image', 'status'];
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
+    public $relation = [
+        'belongsTo'     => [
+            'parent_cat' => ['Admin\Models\Categories_model', 'foreignKey' => 'parent_id', 'otherKey' => 'category_id'],
+        ],
+        'belongsToMany' => [
+            'menus' => ['Admin\Models\Menus_model', 'table' => 'menu_categories'],
+        ],
+    ];
 
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('categories');
+    public $permalinkable = [
+        'permalink_slug' => [
+            'source'  => 'name',
+//            'controller' => 'menus',
+        ],
+    ];
 
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
+//    protected $with = ['permalink_data'];
 
-			if ( ! empty($filter['filter_search'])) {
-				$this->db->like('name', $filter['filter_search']);
-			}
+    public static function getDropdownOptions()
+    {
+        return self::dropdown('name');
+    }
 
-			$query = $this->db->get();
-			$result = array();
+    //
+    // Accessors & Mutators
+    //
 
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
+    public function getDescriptionAttribute($value)
+    {
+        return strip_tags(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
+    }
 
-			return $result;
-		}
-	}
+    //
+    // Scopes
+    //
 
-	public function getCategories($parent = NULL) {
-		$sql = "SELECT cat1.category_id, cat1.name, cat1.description, cat1.image, ";
-		$sql .= "cat1.priority, cat1.status, child.category_id as child_id, sibling.category_id as sibling_id ";
-		$sql .= "FROM {$this->db->dbprefix('categories')} AS cat1 ";
-		$sql .= "LEFT JOIN {$this->db->dbprefix('categories')} AS child ON child.parent_id = cat1.category_id ";
-		$sql .= "LEFT JOIN {$this->db->dbprefix('categories')} AS sibling ON sibling.parent_id = child.category_id ";
+    public function scopeWhereHasMenus($query)
+    {
+        return $query->whereExists(function ($q) {
+            $prefix = DB::getTablePrefix();
+            $q->select(DB::raw(1))
+              ->from('menu_categories')
+              ->join('menus', 'menus.menu_id', '=', 'menu_categories.menu_id')
+              ->whereNotNull('menus.menu_status')
+              ->where('menus.menu_status', '=', 1)
+              ->whereRaw($prefix.'categories.category_id = '.$prefix.'menu_categories.category_id');
+        });
+    }
 
-		if ($parent === NULL) {
-			$sql .= "WHERE cat1.parent_id >= 0 ";
-		} else if (empty($parent)) {
-			$sql .= "WHERE cat1.parent_id = 0 ";
-		} else {
-			$sql .= "WHERE cat1.parent_id = ? ";
-		}
+    /**
+     * Scope a query to only include enabled category
+     *
+     * @param $query
+     *
+     * @return $this
+     */
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('status', 1);
+    }
 
-		if (APPDIR === MAINDIR) {
-			$sql .= "AND cat1.status = 1 ";
-		}
+    /**
+     * Filter database records
+     *
+     * @param $query
+     * @param array $filter an associative array of field/value pairs
+     *
+     * @return $this
+     */
+    public function scopeFilter($query, $filter = [])
+    {
+        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
+            $query->search($filter['filter_search'], ['name']);
+        }
 
-		$query = $this->db->query($sql, $parent);
+        if (is_numeric($filter['filter_status'])) {
+            $query->where('menu_status', $filter['filter_status']);
+        }
 
-		$result = array();
+        return $query;
+    }
 
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row) {
-				$result[$row['category_id']] = $row;
-			}
-		}
+    //
+    // Helpers
+    //
 
-		return $result;
-	}
+    public function getThumb($options = [])
+    {
+        extract(array_merge([
+            'width'  => 800,
+            'height' => 65,
+        ], $options));
 
-	public function getCategory($category_id) {
-		if (is_numeric($category_id)) {
-			$this->db->from('categories');
-			$this->db->where('category_id', $category_id);
+        return Image_tool_model::resize($this->image, $width, $height);
+    }
 
-			if (APPDIR === MAINDIR) {
-				$this->db->where('status', '1');
-			}
+    /**
+     * Return all categories with child and sibling
+     *
+     * @param int $parent
+     *
+     * @return array
+     */
+    public function getCategories($parent = null)
+    {
+        $query = $this->newQuery();
+        $tablePrefix = DB::getTablePrefix();
+        $catOneTable = $tablePrefix.'cat1';
+        $childTable = $tablePrefix.'child';
+        $siblingTable = $tablePrefix.'sibling';
 
-			$query = $this->db->get();
+        $query->selectRaw("{$catOneTable}.category_id, {$catOneTable}.name, {$catOneTable}.description, {$catOneTable}.image, ".
+            "{$catOneTable}.priority, {$catOneTable}.status, {$childTable}.category_id as child_id, {$siblingTable}.category_id as sibling_id");
+        $query->from("categories AS cat1");
+        $query->leftJoin("categories AS child", function ($join) {
+            $join->on('child.parent_id', '=', 'cat1.category_id');
+        });
 
-			if ($query->num_rows() > 0) {
-				return $query->row_array();
-			}
-		}
-	}
+        $query->leftJoin("categories AS sibling", function ($join) {
+            $join->on('sibling.parent_id', '=', 'child.category_id');
+        });
 
-	public function saveCategory($category_id, $save = array()) {
-		if (empty($save)) return FALSE;
+        if ($parent === null) {
+            $query->where('cat1.parent_id', '>=', '0');
+        }
+        else if (empty($parent)) {
+            $query->where('cat1.parent_id', '0');
+        }
+        else {
+            $query->where('cat1.parent_id', $parent);
+        }
 
-		if (isset($save['name'])) {
-			$this->db->set('name', $save['name']);
-		}
+        if (APPDIR === MAINDIR) {
+            $query->where('cat1.status', '1');
+        }
 
-		if (isset($save['description'])) {
-			$this->db->set('description', $save['description']);
-		}
+        $result = [];
 
-		if (isset($save['parent_id'])) {
-			$this->db->set('parent_id', $save['parent_id']);
-		}
+        foreach ($query->get() as $row) {
+            $result[$row['category_id']] = $row;
+        }
 
-		if (isset($save['image'])) {
-			$this->db->set('image', $save['image']);
-		}
+        return $result;
+    }
 
-		if (isset($save['priority'])) {
-			$this->db->set('priority', $save['priority']);
-		}
+    /**
+     * Find a single category by category_id
+     *
+     * @param int $category_id
+     *
+     * @return array
+     */
+    public function getCategory($category_id)
+    {
+        if (is_numeric($category_id)) {
+            $query = $this->newQuery();
 
-		if (isset($save['status']) AND $save['status'] === '1') {
-			$this->db->set('status', $save['status']);
-		} else {
-			$this->db->set('status', '0');
-		}
+            if (APPDIR === MAINDIR) {
+                $query->where('status', '1');
+            }
 
-		if (is_numeric($category_id)) {
-			$this->db->where('category_id', $category_id);
-			$query = $this->db->update('categories');
-		} else {
-			$query = $this->db->insert('categories');
-			$category_id = $this->db->insert_id();
-		}
+            return $query->find($category_id);
+        }
+    }
 
-		if ($query === TRUE AND is_numeric($category_id)) {
-			if ( ! empty($save['permalink'])) {
-				$this->permalink->savePermalink('menus', $save['permalink'], 'category_id=' . $category_id);
-			}
+    /**
+     * Create a new or update existing menu category
+     *
+     * @param int $category_id
+     * @param array $save
+     *
+     * @return bool|int The $category_id of the affected row, or FALSE on failure
+     */
+    public function saveCategory($category_id, $save = [])
+    {
+        if (empty($save)) return FALSE;
 
-			return $category_id;
-		}
-	}
+        $categoryModel = $this->findOrNew($category_id);
 
-	public function deleteCategory($category_id) {
-		if (is_numeric($category_id)) $category_id = array($category_id);
+        $saved = $categoryModel->fill($save)->save();
 
-		if ( ! empty($category_id) AND ctype_digit(implode('', $category_id))) {
-			$this->db->where_in('category_id', $category_id);
-			$this->db->delete('categories');
+        return $saved ? $categoryModel->getKey() : $saved;
+    }
 
-			if (($affected_rows = $this->db->affected_rows()) > 0) {
-				foreach ($category_id as $id) {
-					$this->permalink->deletePermalink('menus', 'category_id=' . $id);
-				}
+    /**
+     * Delete a single or multiple category by category_id
+     *
+     * @param string|array $category_id
+     *
+     * @return int The number of deleted rows
+     */
+    public function deleteCategory($category_id)
+    {
+        if (is_numeric($category_id)) $category_id = [$category_id];
 
-				return $affected_rows;
-			}
-		}
-	}
+        if (!empty($category_id) AND ctype_digit(implode('', $category_id))) {
+            return $this->whereIn('category_id', $category_id)->delete();
+        }
+    }
 }
-
-/* End of file categories_model.php */
-/* Location: ./system/tastyigniter/models/categories_model.php */

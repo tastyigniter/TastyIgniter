@@ -1,94 +1,79 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use File;
+use Model;
 
 /**
  * Image_tool Model Class
- *
- * @category       Models
- * @package        TastyIgniter\Models\Image_tool_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Image_tool_model extends TI_Model {
+class Image_tool_model extends Model
+{
+    public static function resize($imgPath, $width = null, $height = null)
+    {
+        extract(array_merge([
+            'width'   => is_array($width) ? null : $width,
+            'height'  => $height,
+            'crop'    => FALSE,
+            'default' => 'no_photo.png',
+        ], is_array($width) ? $width : []));
 
-	public function resize($img_path, $width = NULL, $height = NULL) {
-		$setting = $this->config->item('image_tool');
+//        $setting = setting('image_manager');
 
-		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
-			$root_folder = $setting['root_folder'] . '/';
-		} else {
-			$root_folder = 'data/';
-		}
+        $rootFolder = 'data/';
+        if (strpos($imgPath, $rootFolder) === 0)
+            $imgPath = substr($imgPath, strlen($rootFolder));
 
-		if (strpos($img_path, $root_folder) === 0) {
-			$img_path = str_replace($root_folder, '', $img_path);
-		}
+        $imgPath = $rootFolder.ltrim($imgPath, '/');
+        if (!is_file(image_path($imgPath)))
+            $imgPath = $default;
 
-		if ( ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path, '/') === 0) {
-			$img_path = 'no_photo.png';
-		}
+//        if (empty($width) AND empty($height))
+            return image_url($imgPath);
 
-		if (empty($width) AND empty($height)) {
-			return image_url($root_folder . $img_path);
-		}
+//        if (!File::isDirectory($thumbsPath = image_path('thumbs')))
+//            File::makeDirectory($thumbsPath, 0777, TRUE);
+//
+//        if (is_dir(image_path().$rootFolder.$imgPath) AND !is_dir($thumbsPath.'/'.$imgPath)) {
+//            self::createFolder($thumbsPath.'/'.$imgPath);
+//        }
 
-		$thumbs_path = IMAGEPATH . 'thumbs';
+//        $info = pathinfo($imgPath);
+//        $extension = $info['extension'];
 
-		if ( ! is_dir($thumbs_path)) {
-			$this->_createFolder($thumbs_path);
-		}
+//        dd($imgPath, $setting, $info);
+//        $old_path = image_path().$rootFolder.$imgPath;
+//
+//        $new_path = image_path().'thumbs/'.substr($imgPath, 0, strrpos($imgPath, '.')).'-'.$width.'x'.$height.'.'.$extension;
+//        $new_image = 'thumbs/'.substr($imgPath, 0, strrpos($imgPath, '.')).'-'.$width.'x'.$height.'.'.$extension;
 
-		if (is_dir(IMAGEPATH . $root_folder . $img_path) AND ! is_dir($thumbs_path . '/' . $img_path)) {
-			$this->_createFolder($thumbs_path . '/' . $img_path);
-		}
+//        if (file_exists($old_path) AND !file_exists($new_path)) {
+//            $CI =& get_instance();
+//            $CI->load->library('image_lib');
+//            $CI->image_lib->clear();
+//            $config['image_library'] = 'gd2';
+//            $config['source_image'] = $old_path;
+//            $config['new_image'] = $new_path;
+//            $config['width'] = $width;
+//            $config['height'] = $height;
+//
+//            $CI->image_lib->initialize($config);
+//            if (!$CI->image_lib->resize()) {
+//                return FALSE;
+//            }
+//        }
 
-		$info = pathinfo($img_path);
-		$extension = $info['extension'];
+        return image_url($new_image);
+    }
 
-		$old_path = IMAGEPATH . $root_folder . $img_path;
+    protected static function createFolder($thumb_path = FALSE)
+    {
+        $oldumask = umask(0);
 
-		$new_path = IMAGEPATH . 'thumbs/' . substr($img_path, 0, strrpos($img_path, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
-		$new_image = 'thumbs/' . substr($img_path, 0, strrpos($img_path, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+        if ($thumb_path AND !file_exists($thumb_path)) {
+            mkdir($thumb_path, 0777, TRUE);
+        }
 
-		if (file_exists($old_path) AND ! file_exists($new_path)) {
-			$this->load->library('image_lib');
-			$this->image_lib->clear();
-			$config['image_library'] = 'gd2';
-			$config['source_image'] = $old_path;
-			$config['new_image'] = $new_path;
-			$config['width'] = $width;
-			$config['height'] = $height;
-
-			$this->image_lib->initialize($config);
-			if ( ! $this->image_lib->resize()) {
-				return FALSE;
-			}
-		}
-
-		return image_url($new_image);
-	}
-
-	public function _createFolder($thumb_path = FALSE) {
-		$oldumask = umask(0);
-
-		if ($thumb_path AND ! file_exists($thumb_path)) {
-			mkdir($thumb_path, DIR_WRITE_MODE, TRUE);
-		}
-
-		umask($oldumask);
-	}
+        umask($oldumask);
+    }
 }
-
-/* End of file image_tool_model.php */
-/* Location: ./system/tastyigniter/models/image_tool_model.php */

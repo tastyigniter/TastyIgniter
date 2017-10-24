@@ -1,180 +1,231 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace System\Models;
+
+use DB;
+use Model;
 
 /**
  * Maintenance Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Maintenance_model.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
-class Maintenance_model extends TI_Model {
+class Maintenance_model extends Model
+{
+    protected static $storageFolder = 'backups';
 
-	public function getdbTables() {
-		$result = array();
+    /**
+     * List all database tables
+     *
+     * @return array
+     */
+    public function getDbTables()
+    {
+        $result = [];
 
-		$sql = "SELECT table_name, table_rows, engine, data_free, index_length, data_length FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? ";
-		$query = $this->db->query($sql, $this->db->database);
+        $connectionName = app('config')->get('database.default');
+//        $connection = app('db')->connection($connectionName);
+        $connection = app('config')->get('database.connections.'.$connectionName);
 
-		if ($query->num_rows() > 0) {
-			;
-			foreach ($query->result_array() as $row) {
-				if ($this->db->table_exists($row['table_name'])) {
-					$result[] = $row;
-				}
-			}
-		}
 
-		return $result;
-	}
+        $sql = "SELECT table_name, table_rows, engine, data_free, index_length, data_length "
+            ."FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND table_name LIKE "
+            .DB::connection()->getPdo()->quote($connection['prefix'].'%')."";
 
-	public function getBackupFiles() {
-		$result = array();
+        $query = DB::select($sql, [$connection['database']]);
 
-		$backup_files = glob(IGNITEPATH . 'migrations/backups/*.sql');
-		if (is_array($backup_files)) {
-			foreach ($backup_files as $backup_file) {
-				$basename = basename($backup_file);
-				$result[] = array(
-					'filename' => $basename,
-					'size'     => filesize($backup_file),
-					'download' => site_url('maintenance/backup?download=' . $basename),
-					'restore'  => site_url('maintenance/backup?restore=' . $basename),
-					'delete'   => site_url('maintenance/backup?delete=' . $basename)
-				);
-			}
-		}
+        if (count($query)) {
+            foreach ($query as $row) {
+                $result[] = (array) $row;
+            }
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
-	public function browseTable($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
+    /**
+     * Return all backed up SQL files
+     *
+     * @return array
+     */
+    public function getBackupFiles()
+    {
+        $result = [];
 
-		if ( ! empty($filter['table']) AND is_string($filter['table']) AND $this->db->limit($filter['limit'],
-		                                                                                    $filter['page'])
-		) {
-			$this->db->from($filter['table']);
+        $storagePath = storage_path(self::$storageFolder);
+        $backup_files = glob($storagePath.'/*.sql');
+        if (is_array($backup_files)) {
+            foreach ($backup_files as $backup_file) {
+                $basename = basename($backup_file);
+                $result[] = [
+                    'filename' => rtrim($basename, '.sql'),
+                    'time' => filemtime($backup_file),
+                    'size'     => filesize($backup_file),
+                ];
+            }
+        }
 
-			$query = $this->db->get();
+        return sort_array($result, 'time', SORT_DESC);
+    }
 
-			$result = array('query' => $query, 'total_rows' => $this->db->count_all($filter['table']));
+    /**
+     * List all database table records matching filter
+     *
+     * @param array $filter
+     *
+     * @return array
+     */
+    public function browseTable($filter = [])
+    {
+        if (!empty($filter['page']) AND $filter['page'] !== 0) {
+            $filter['page'] = ($filter['page'] - 1) * $filter['limit'];
+        }
 
-			return $result;
-		}
-	}
+        if (!empty($filter['table']) AND is_string($filter['table']) AND $this->ci()->limit($filter['limit'], $filter['page'])) {
+            $this->ci()->from($filter['table']);
 
-	public function checkTables($tables = array()) {
-		if ( ! empty($tables)) {
-			foreach ($tables as $table) {
-				if ( ! $this->db->table_exists($table)) {
-					return FALSE;
-				}
-			}
+            $query = $this->ci()->get();
 
-			return TRUE;
-		}
+            $result = ['query' => $query, 'total_rows' => $this->ci()->count_all($filter['table'])];
 
-		return FALSE;
-	}
+            return $result;
+        }
+    }
 
-	public function backupDatabase($backup = array()) {
-		if ( ! empty($backup)) {
-			$this->load->dbutil();
-			$this->load->helper('file');
+    /**
+     * Check if a table exist in the database
+     *
+     * @param array $tables
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function checkTables($tables = [])
+    {
+        if (!empty($tables)) {
+            foreach ($tables as $table) {
+                if (!$this->ci()->table_exists($table)) {
+                    return FALSE;
+                }
+            }
 
-			$timestamp = mdate('%Y-%m-%d-%H-%i-%s', now());
+            return TRUE;
+        }
 
-			$file_name = ! empty($backup['file_name']) ? $backup['file_name'] : 'tastyigniter-' . $timestamp;
+        return FALSE;
+    }
 
-			$prefs = array(
-				// Array of tables to backup.
-				'tables'     => ! empty($backup['tables']) ? $backup['tables'] : array(),
-				// gzip, zip, txt
-				'format'     => isset($backup['compression']) OR $backup['compression'] !== 'none' ? $backup['compression'] : 'txt',
-				// File name - NEEDED ONLY WITH ZIP FILES
-				'filename'   => $file_name . '.sql',
-				// Whether to add DROP TABLE statements to backup file
-				'add_drop'   => isset($backup['drop_tables']) AND $backup['drop_tables'] === '1' ? TRUE : FALSE,
-				// Whether to add INSERT data to backup file
-				'add_insert' => isset($backup['add_inserts']) AND $backup['add_inserts'] === '1' ? TRUE : FALSE,
-				// Newline character used in backup file
-				'newline'    => "\n",
-			);
+    /**
+     * Backup database and save backup file
+     *
+     * @param array $backup an array containing backup options
+     *
+     * @return bool
+     */
+    public function backupDatabase($backup = [])
+    {
+        if (!empty($backup)) {
+            $this->ci()->load->dbutil();
+            $this->ci()->load->helper('file');
 
-			$back_up = $this->dbutil->backup($prefs);
+            $timestamp = mdate('%Y-%m-%d-%H-%i-%s', now());
 
-			if ( ! is_dir(IGNITEPATH . 'migrations/backups')) {
-				mkdir(IGNITEPATH . 'migrations/backups', DIR_WRITE_MODE);
-			}
+            $file_name = !empty($backup['file_name']) ? $backup['file_name'] : 'tastyigniter-'.$timestamp;
 
-			if (file_put_contents(IGNITEPATH . 'migrations/backups/' . $file_name . '.sql', $back_up, LOCK_EX)) {
-				return TRUE;
-			}
-		}
+            $prefs = [
+                // Array of tables to backup.
+                'tables'     => !empty($backup['backup_tables']) ? $backup['backup_tables'] : [],
+                // gzip, zip, txt
+                'format'     => (isset($backup['compression']) AND $backup['compression'] !== 'none') ? $backup['compression'] : 'txt',
+                // File name - NEEDED ONLY WITH ZIP FILES
+                'filename'   => $file_name.'.sql',
+                // Whether to add DROP TABLE statements to backup file
+                'add_drop'   => isset($backup['drop_tables']) AND $backup['drop_tables'] == '1' ? TRUE : FALSE,
+                // Whether to add INSERT data to backup file
+                'add_insert' => isset($backup['add_inserts']) AND $backup['add_inserts'] == '1' ? TRUE : FALSE,
+                // Newline character used in backup file
+                'newline'    => "\n",
+            ];
 
-		return FALSE;
-	}
+            $back_up = $this->dbutil->backup($prefs);
 
-	public function restoreDatabase($backup_file) {
-		$file = pathinfo($this->security->sanitize_filename($backup_file));
-		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
+            $storagePath = storage_path(self::$storageFolder);
+            if (!is_dir(storage_path(self::$storageFolder))) {
+                mkdir($storagePath, DIR_WRITE_MODE);
+            }
 
-		if (isset($file['filename']) AND strpos($file_path, 'tastyigniter-') !== FALSE) {
-			if (is_file($file_path) AND $content = file_get_contents($file_path)) {
-				foreach (explode(";\n", $content) as $sql) {
-					$sql = trim($sql);
+            if (file_put_contents($storagePath.DIRECTORY_SEPARATOR.$file_name.'.sql', $back_up, LOCK_EX)) {
+                return TRUE;
+            }
+        }
 
-					if ($sql) {
-						$this->db->query($sql);
-					}
-				}
+        return FALSE;
+    }
 
-				$this->db->query("SET CHARACTER SET utf8");
+    /**
+     * Restore database from existing backup file
+     *
+     * @param $backup_file
+     *
+     * @return bool
+     */
+    public function restoreDatabase($backup_file)
+    {
+        $file = pathinfo($this->security->sanitize_filename($backup_file));
+        $file_path = storage_path(self::$storageFolder.DIRECTORY_SEPARATOR.$file['filename'].".sql");
 
-				return TRUE;
-			}
-		}
-	}
+        if (isset($file['filename']) AND strpos($file_path, 'tastyigniter-') !== FALSE) {
+            if (is_file($file_path) AND $content = file_get_contents($file_path)) {
+                foreach (explode(";\n", $content) as $sql) {
+                    $sql = trim($sql);
 
-	public function readBackupFile($backup_file) {
-		$file = pathinfo($this->security->sanitize_filename($backup_file));
-		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
+                    if ($sql) {
+                        $this->ci()->query($sql);
+                    }
+                }
 
-		if (isset($file['filename']) AND strpos($file_path, 'tastyigniter-') !== FALSE) {
-			if (is_file($file_path)) {
-				return array(
-					'filename' => $file['basename'],
-					'content' => file_get_contents($file_path),
-				);
-			}
-		}
-	}
+                $this->ci()->query("SET CHARACTER SET utf8");
 
-	public function deleteBackupFile($backup_file) {
-		$file = pathinfo($this->security->sanitize_filename($backup_file));
-		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
+                return TRUE;
+            }
+        }
+    }
 
-		if ($file['extension'] === 'sql' AND is_file($file_path)) {
-			unlink($file_path);
-			return TRUE;
-		}
-	}
+    /**
+     * Read the database backup file from backup folder
+     *
+     * @param $backup_file
+     *
+     * @return array
+     */
+    public function readBackupFile($backup_file)
+    {
+        $file = pathinfo($this->ci()->security->sanitize_filename($backup_file));
+        $file_path = storage_path(self::$storageFolder.DIRECTORY_SEPARATOR.$file['filename'].".sql");
+
+        if (isset($file['filename']) AND strpos($file_path, 'tastyigniter-') !== FALSE) {
+            if (is_file($file_path)) {
+                return [
+                    'filename' => $file['basename'].".sql",
+                    'content'  => file_get_contents($file_path),
+                ];
+            }
+        }
+    }
+
+    /**
+     * Delete a single or multiple database file
+     *
+     * @param $backup_file
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function deleteBackupFile($backup_file)
+    {
+        $file = pathinfo($this->ci()->security->sanitize_filename($backup_file));
+        $file_path = storage_path(self::$storageFolder.DIRECTORY_SEPARATOR.$file['filename'].".sql");
+
+        if (is_file($file_path)) {
+            unlink($file_path);
+
+            return TRUE;
+        }
+    }
 }
-
-/* End of file maintenance_model.php */
-/* Location: ./system/tastyigniter/models/maintenance_model.php */

@@ -1,563 +1,689 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace System\Models;
+
+use Model;
+use Igniter\Flame\NestedSet\NestedTree;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Messages Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Messages_model.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
-class Messages_model extends TI_Model {
+class Messages_model extends Model
+{
+    use SoftDeletes;
+    use NestedTree;
 
-    public function getCount($filter = array()) {
-        if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-            $this->queryCustomerInboxMessages($filter);
-        } else if (APPDIR === ADMINDIR) {
+    const DELETED_AT = 'date_deleted';
+    const CREATED_AT = 'date_added';
 
-            if ($filter['filter_folder'] === 'inbox') {
-                $this->queryInboxMessages($filter);
-            } else if ($filter['filter_folder'] === 'draft') {
-                $this->queryDraftMessages($filter);
-            } else if ($filter['filter_folder'] === 'sent') {
-                $this->querySentMessages($filter);
-            } else if ($filter['filter_folder'] === 'archive') {
-                $this->queryArchiveMessages($filter);
-            } else if ($filter['filter_folder'] === 'all') {
-                $this->queryAllMessages($filter);
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'messages';
+
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'message_id';
+
+    public $timestamps = TRUE;
+
+    protected $fillable = ['date_added', 'send_type', 'parent_id', 'subject', 'body', 'status'];
+
+    public $relation = [
+        'belongsTo' => [
+            'layout' => ['System\Models\Mail_templates_model'],
+        ],
+        'hasMany' => [
+            'recipients'      => ['System\Models\Message_meta_model'],
+            'customers'       => ['Admin\Models\Customers_model'],
+            'customer_groups' => ['Admin\Models\Customer_groups_model'],
+            'staffs'          => ['Admin\Models\Staffs_model'],
+            'staff_groups'    => ['Admin\Models\Staff_groups_model'],
+        ],
+        'morphTo' => [
+            'sender' => [],
+        ],
+    ];
+
+    public $purgeable = [
+        'customers',
+        'customer_groups',
+        'staffs',
+        'staff_groups',
+    ];
+
+    public static function countUnread($messagable)
+    {
+        if (!$messagable instanceof Model)
+            return null;
+
+        return Message_meta_model::where('messageable_id', $messagable->getKey())
+                                 ->where('messageable_type', get_class($messagable))->isUnread()->count();
+    }
+
+    public function getRecipientOptions()
+    {
+        $receivers = collect($this->listReceivers());
+
+        return $receivers->transform(function ($receiver) {
+            return $receiver['label'];
+        });
+    }
+
+    //
+    // Accessors & Mutators
+    //
+
+    public function getSummaryAttribute($value)
+    {
+        return str_limit(strip_tags($this->body), 120);
+    }
+
+    public function getRecipientAttribute($value)
+    {
+        if (!isset($this->attributes['recipient']))
+            return $value;
+
+        $replace = ['all_customers' => 'customers', 'all_staffs' => 'staffs'];
+        if (array_key_exists($this->attributes['recipient'], $replace))
+            return $replace[$this->attributes['recipient']];
+
+        return $this->attributes['recipient'];
+    }
+
+    public function getReceiverAttribute($value)
+    {
+        $receivers = $this->listReceivers();
+
+        $replace = ['all_customers' => 'customers', 'all_staffs' => 'staffs'];
+        $recipient = array_key_exists($this->recipient, $replace) ? $replace[$this->recipient] : $this->recipient;
+
+        return isset($receivers[$recipient]) ? (object)$receivers[$recipient] : null;
+    }
+
+    //
+    // Scopes
+    //
+
+    public function scopeListFrontEnd($query, $options = [])
+    {
+        extract(array_merge([
+            'page'      => 1,
+            'pageLimit' => 20,
+            'sort'      => null,
+        ], $options));
+
+        $query->isAccountSendType()->listMessages($options);
+
+        return $query->paginate($pageLimit);
+    }
+
+    public function scopeSelectRecipientStatus($query)
+    {
+        return $query->selectRaw('*, '.DB::prefix('message_meta').'.status AS recipient_status');
+    }
+
+    public function scopeFilterState($query, $state)
+    {
+        return $query->whereHas('recipients', function ($q) use ($state) {
+            $q->where('state', $state);
+        });
+    }
+
+    public function scopeListMessages($query, $options = [])
+    {
+        extract(array_merge([
+            'context'   => 'inbox',
+            'recipient' => null,
+        ], $options));
+
+        if (!is_null($recipient)) {
+
+            if ($context == 'inbox') {
+                $query->whereNull('parent_id')->whereHas('recipients', function ($q) use ($recipient) {
+                    $q->where('messageable_id', $recipient->getKey())
+                      ->where('messageable_type', get_class($recipient));
+                });
             }
-
-            if (!empty($filter['filter_search']) OR !empty($filter['filter_recipient'])
-                OR !empty($filter['filter_type']) OR !empty($filter['filter_date'])
-            ) {
-
-                $this->db->group_start();
-                if (!empty($filter['filter_search'])) {
-                    $this->db->like('staff_name', $filter['filter_search']);
-                    $this->db->or_like('subject', $filter['filter_search']);
-                }
-
-                if (!empty($filter['filter_recipient'])) {
-                    $this->db->where('recipient', $filter['filter_recipient']);
-                }
-
-                if (!empty($filter['filter_type'])) {
-                    $this->db->where('send_type', $filter['filter_type']);
-                }
-
-                if (!empty($filter['filter_date'])) {
-                    $date = mdate('%Y-%m', strtotime($filter['filter_date']));
-                    $this->db->like('messages.date_added', $date, 'after');
-                }
-                $this->db->group_end();
+            else if ($context == 'draft') {
+                $query->where('status', 0)->orWhereNull('status')
+                      ->where('sender_id', $recipient->getKey())
+                      ->where('sender_type', get_class($recipient));
             }
-        }
-
-        $this->db->from('messages');
-
-        return $this->db->count_all_results();
-    }
-
-    public function getList($filter = array()) {
-        if (!empty($filter['page']) AND $filter['page'] !== 0) {
-            $filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-        }
-
-        if ($this->db->limit($filter['limit'], $filter['page'])) {
-            $this->db->select('*, messages.date_added, messages.status AS message_status');
-            $this->db->from('messages');
-
-            if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-                $this->queryCustomerInboxMessages($filter);
-            } else if (APPDIR === ADMINDIR) {
-
-                if ($filter['filter_folder'] === 'inbox') {
-                    $this->queryInboxMessages($filter);
-                } else if ($filter['filter_folder'] === 'draft') {
-                    $this->queryDraftMessages($filter);
-                } else if ($filter['filter_folder'] === 'sent') {
-                    $this->querySentMessages($filter);
-                } else if ($filter['filter_folder'] === 'archive') {
-                    $this->queryArchiveMessages($filter);
-                } else if ($filter['filter_folder'] === 'all') {
-                    $this->queryAllMessages($filter);
-                }
-
-                if (!empty($filter['filter_search']) OR !empty($filter['filter_recipient'])
-                    OR !empty($filter['filter_type']) OR !empty($filter['filter_date'])
-                ) {
-
-                    $this->db->group_start();
-                    if (!empty($filter['filter_search'])) {
-                        $this->db->like('staff_name', $filter['filter_search']);
-                        $this->db->or_like('subject', $filter['filter_search']);
-                    }
-
-                    if (!empty($filter['filter_recipient'])) {
-                        $this->db->where('recipient', $filter['filter_recipient']);
-                    }
-
-                    if (!empty($filter['filter_type'])) {
-                        $this->db->where('send_type', $filter['filter_type']);
-                    }
-
-                    if (!empty($filter['filter_date'])) {
-                        $date = mdate('%Y-%m', strtotime($filter['filter_date']));
-                        $this->db->like('messages.date_added', $date, 'after');
-                    }
-                    $this->db->group_end();
-                }
+            else if ($context == 'sent') {
+                $query->whereNull('parent_id')->where('status', 1)
+                      ->where('sender_id', $recipient->getKey())
+                      ->where('sender_type', get_class($recipient));
             }
-
-            if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
-                $this->db->order_by($filter['sort_by'], $filter['order_by']);
+            else if ($context == 'archive') {
+                $query->whereNull('parent_id')->where('sender_id', $recipient->getKey())
+                      ->where('sender_type', get_class($recipient))->onlyTrashed();
             }
-
-            $query = $this->db->get();
-            $result = array();
-
-            if ($query->num_rows() > 0) {
-                $result = $query->result_array();
-            }
-
-            return $result;
-        }
-    }
-
-    protected function queryCustomerInboxMessages($filter = array()) {
-        if (isset($filter['customer_id'])) {
-            $this->db->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
-            $this->db->join('customers', 'customers.customer_id = message_meta.value AND message_meta.item = ' . $this->db->escape('customer_id'), 'left');
-
-            $this->db->where('message_meta.status', '1');
-            $this->db->where('message_meta.deleted', '0');
-            $this->db->where('messages.send_type', 'account');
-            $this->db->where('message_meta.item', 'customer_id');
-            $this->db->where('message_meta.value', $filter['customer_id']);
-        }
-    }
-
-    protected function queryInboxMessages($filter = array()) {
-        if (isset($filter['filter_staff'])) {
-            $this->db->select('message_meta.status AS recipient_status');
-
-            $this->db->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-            $this->db->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
-
-            $this->db->where('messages.status >=', '1');
-            $this->db->where('message_meta.status', '1');
-            $this->db->where('message_meta.deleted', '0');
-            $this->db->where('messages.send_type', 'account');
-            $this->db->where('message_meta.item', 'staff_id');
-            $this->db->where('message_meta.value', $filter['filter_staff']);
-        }
-    }
-
-    protected function queryDraftMessages($filter = array()) {
-        if (isset($filter['filter_staff'])) {
-            $this->db->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-
-            $this->db->where('messages.status', '0');
-            $this->db->where('messages.sender_id', $filter['filter_staff']);
-        }
-    }
-
-    protected function querySentMessages($filter = array()) {
-        if (isset($filter['filter_staff'])) {
-            $this->db->select('message_meta.status AS recipient_status');
-            $this->db->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-            $this->db->join('message_meta', 'message_meta.message_id = messages.message_id AND message_meta.item = ' . $this->db->escape('sender_id'), 'left');
-
-            $this->db->where('messages.status', '1');
-            $this->db->where('message_meta.status', '1');
-            $this->db->where('message_meta.deleted', '0');
-            $this->db->where('message_meta.item', 'sender_id');
-            $this->db->where('message_meta.value', $filter['filter_staff']);
-        }
-    }
-
-    protected function queryArchiveMessages($filter = array()) {
-        if (isset($filter['filter_staff'])) {
-            $this->db->select('message_meta.status AS recipient_status');
-            $this->db->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-            $this->db->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
-
-            $this->db->where('messages.status', '1');
-            $this->db->where('message_meta.deleted', '1');
-            $this->db->where('message_meta.value', $filter['filter_staff']);
-
-            $this->db->group_start();
-            $this->db->where('message_meta.item', 'staff_id');
-            $this->db->or_where('message_meta.item', 'sender_id');
-            $this->db->group_end();
-        }
-    }
-
-    protected function queryAllMessages($filter = array()) {
-        if (isset($filter['filter_staff'])) {
-            $this->db->select('message_meta.status AS recipient_status');
-            $this->db->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-            $this->db->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
-
-            $this->db->where('messages.status', '1');
-            $this->db->where('message_meta.value', $filter['filter_staff']);
-            $this->db->where('message_meta.deleted !=', '2');
-
-            $this->db->group_start();
-            $this->db->where('message_meta.item', 'staff_id');
-            $this->db->or_where('message_meta.item', 'sender_id');
-            $this->db->group_end();
-        }
-    }
-
-    public function getMessage($message_id) {
-        if ($message_id) {
-            $this->db->from('messages');
-            $this->db->where('message_id', $message_id);
-
-            $query = $this->db->get();
-
-            if ($query->num_rows() > 0) {
-                return $query->row_array();
-            }
-        }
-    }
-
-    public function getDraftMessage($message_id) {
-        if ($message_id) {
-            $this->db->from('messages');
-            $this->db->where('sender_id', $this->user->getStaffId());
-            $this->db->where('message_id', $message_id);
-            $this->db->where('status', '0');
-
-            $query = $this->db->get();
-
-            if ($query->num_rows() > 0) {
-                return $query->row_array();
-            }
-        }
-    }
-
-    public function getRecipients($message_id) {
-        if ($message_id) {
-            $this->db->select('message_meta.*, staffs.staff_id, staffs.staff_name, staffs.staff_email, customers.customer_id, customers.first_name, customers.last_name, customers.email');
-            $this->db->from('message_meta');
-            $this->db->join('staffs', "staffs.staff_id = message_meta.value OR staffs.staff_email = message_meta.value", 'left');
-            $this->db->join('customers', "customers.customer_id = message_meta.value OR customers.email = message_meta.value", 'left');
-            $this->db->where('item !=', 'sender_id');
-            $this->db->where('message_id', $message_id);
-
-            $query = $this->db->get();
-            $result = array();
-
-            if ($query->num_rows() > 0) {
-                $result = $query->result_array();
-            }
-
-            return $result;
-        }
-    }
-
-    public function getMessageDates() {
-        $this->db->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
-        $this->db->from('messages');
-        $this->db->group_by('MONTH(date_added)');
-        $this->db->group_by('YEAR(date_added)');
-        $query = $this->db->get();
-        $result = array();
-
-        if ($query->num_rows() > 0) {
-            $result = $query->result_array();
-        }
-
-        return $result;
-    }
-
-    public function viewMessage($message_id, $user_id = '') {
-        if (is_numeric($message_id) AND is_numeric($user_id)) {
-            $this->db->select('*, message_meta.status, messages.date_added, message_meta.status AS recipient_status, messages.status AS message_status');
-            $this->db->from('messages');
-            $this->db->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
-
-            $this->db->group_by('messages.message_id');
-
-            $this->db->where('messages.message_id', $message_id);
-
-            if (APPDIR === ADMINDIR) {
-                $this->db->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-
-                $this->db->group_start();
-                $this->db->where('message_meta.item', 'sender_id');
-                $this->db->or_where('message_meta.item', 'staff_id');
-                $this->db->group_end();
-
-                $this->db->where('message_meta.value', $user_id);
-            } else {
-                $this->db->join('customers', 'customers.customer_id = message_meta.value', 'left');
-
-                $this->db->where('messages.status', '1');
-                $this->db->where('message_meta.status', '1');
-                $this->db->where('message_meta.deleted', '0');
-                $this->db->where('messages.send_type', 'account');
-                $this->db->where('message_meta.item', 'customer_id');
-                $this->db->where('message_meta.value', $user_id);
-            }
-
-            $query = $this->db->get();
-
-            return $query->row_array();
-        }
-    }
-
-    public function getUnreadCount($user_id = '') {
-        if (is_numeric($user_id) AND $this->db->table_exists('message_meta')) {
-            $this->db->where('messages.status', '1');
-            $this->db->where('message_meta.status', '1');
-            $this->db->where('message_meta.deleted', '0');
-            $this->db->where('message_meta.state', '0');
-            $this->db->where('messages.send_type', 'account');
-            $this->db->where('message_meta.value', $user_id);
-
-            if (APPDIR === ADMINDIR) {
-                $this->db->where('message_meta.item', 'staff_id');
-            } else {
-                $this->db->where('message_meta.item', 'customer_id');
-            }
-
-            $this->db->from('messages');
-            $this->db->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
-
-            $total = $this->db->count_all_results();
-
-            if ($total < 1) {
-                $total = '';
-            }
-
-            return $total;
-        }
-    }
-
-    public function updateState($message_meta_id, $user_id, $state, $folder = '') {
-        $query = FALSE;
-
-        if (!is_array($message_meta_id)) $message_meta_id = array($message_meta_id);
-
-        if (is_numeric($user_id)) {
-            if ($state === 'unread') {
-                $this->db->set('state', '0');
-            } else if ($state === 'read') {
-                $this->db->set('state', '1');
-            } else if ($state === 'restore') {
-                $this->db->set('status', '1');
-                $this->db->set('deleted', '0');
-            } else if ($state === 'archive') {
-                $this->db->set('deleted', '1');
-            } else if ($state === 'trash') {
-                $this->db->set('deleted', '2');
-            }
-
-            $this->db->where('value', $user_id);
-            $this->db->where_in('message_meta_id', $message_meta_id);
-
-            if (APPDIR === ADMINDIR) {
-                if ($folder === 'inbox') {
-                    $this->db->where('item', 'staff_id');
-                } else if ($folder === 'sent') {
-                    $this->db->where('item', 'sender_id');
-                } else {
-                    $this->db->group_start();
-                    $this->db->where('item', 'sender_id');
-                    $this->db->or_where('item', 'staff_id');
-                    $this->db->group_end();
-                }
-            } else {
-                $this->db->where('item', 'customer_id');
-            }
-
-            $query = $this->db->update('message_meta');
         }
 
         return $query;
     }
 
-    public function saveMessage($message_id, $save = array()) {
-        if (empty($save)) return FALSE;
+    public function scopeViewConversation($query, $options = [])
+    {
+        extract(array_merge([
+            'recipient' => null,
+        ], $options));
 
-        if (isset($save['send_type'])) {
-            $this->db->set('send_type', $save['send_type']);
+        $query->whereNull('parent_id')->where('status', 1);
+
+        if (!is_null($recipient)) {
+
+            $query->whereHas('recipients', function ($q) use ($recipient) {
+                $q->where('messageable_id', $recipient->getKey())
+                  ->where('messageable_type', get_class($recipient));
+            });
+
+            $query->orWhere(function ($q) use ($recipient) {
+                $q->where('sender_id', $recipient->getKey())
+                  ->where('sender_type', get_class($recipient));
+            });
         }
 
-        if (isset($save['recipient'])) {
-            $this->db->set('recipient', $save['recipient']);
-        }
-
-        if (isset($save['subject'])) {
-            $this->db->set('subject', $save['subject']);
-        }
-
-        if (isset($save['body'])) {
-            $this->db->set('body', $save['body']);
-        }
-
-        if (isset($save['save_as_draft']) AND $save['save_as_draft'] === '1') {
-            $this->db->set('status', '0');
-        } else {
-            $this->db->set('status', '1');
-        }
-
-        $this->db->set('sender_id', $this->user->getStaffId());
-        $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-
-        if (is_numeric($message_id)) {
-            $this->db->where('message_id', $message_id);
-            $query = $this->db->update('messages');
-        } else {
-            $query = $this->db->insert('messages');
-            $message_id = $this->db->insert_id();
-        }
-
-        if ($query === TRUE AND is_numeric($message_id) AND empty($save['save_as_draft'])
-            AND !empty($save['recipient']) AND !empty($save['send_type'])
-        ) {
-            $this->sendMessage($message_id, $save);
-        }
-
-        return $message_id;
+        return $query;
     }
 
-    private function sendMessage($message_id, $send = array()) {
-        $results = array();
-
-        $column = ($send['send_type'] === 'email') ? 'email' : 'id';
-
-        if (empty($send['save_as_draft']) OR $send['save_as_draft'] !== '1') {
-            $this->load->model('Customers_model');
-
-            switch ($send['recipient']) {
-                case 'all_newsletters':
-                    $results = $this->Customers_model->getCustomersByNewsletterForMessages($column);
-                    break;
-                case 'all_customers':
-                    $results = $this->Customers_model->getCustomersForMessages($column);
-                    break;
-                case 'customer_group':
-                    $results = $this->Customers_model->getCustomersByGroupIdForMessages($column,
-                        $send['customer_group_id']);
-                    break;
-                case 'customers':
-                    if (isset($send['customers'])) {
-                        $results = $this->Customers_model->getCustomerForMessages($column, $send['customers']);
-                    }
-
-                    break;
-                case 'all_staffs':
-                    $results = $this->Staffs_model->getStaffsForMessages($column);
-                    break;
-                case 'staff_group':
-                    $results = $this->Staffs_model->getStaffsByGroupIdForMessages($column, $send['staff_group_id']);
-                    break;
-                case 'staffs':
-                    if (isset($send['staffs'])) {
-                        $results = $this->Staffs_model->getStaffForMessages($column, $send['staffs']);
-                    }
-
-                    break;
-            }
-
-            $results['sender_id'] = $this->user->getStaffId();
-
-            if (!empty($results) AND $this->addRecipients($message_id, $send, $results)) {
-                return TRUE;
-            }
-        }
+    public function scopeIsAccountSendType($query)
+    {
+        return $query->where('send_type', 'account');
     }
 
-    public function addRecipients($message_id, $send, $recipients) {
-        $this->db->where('message_id', $message_id);
-        $this->db->delete('message_meta');
+    //
+    // Helpers
+    //
 
-        $suffix = ($send['send_type'] === 'email') ? 'email' : 'id';
+    public function readState($messagable)
+    {
+        if (!$messagable instanceof Model OR !$this->recipients)
+            return null;
 
-        if ($recipients) {
-            foreach ($recipients as $key => $recipient) {
-                if (!empty($recipient)) {
-                    $status = (is_numeric($recipient)) ? '1' : $this->_sendMail($message_id, $recipient);
+        $meta = $this->recipients->where('messageable_id', $messagable->getKey())
+                                 ->where('messageable_type', get_class($messagable))->first();
+        if (!count($meta))
+            return null;
 
-                    $this->db->set('value', $recipient);
-                    $this->db->set('message_id', $message_id);
-                    $this->db->set('status', $status);
-
-                    if ($key === 'sender_id') {
-                        $this->db->set('item', 'sender_id');
-                    } else if (in_array($send['recipient'], array('all_staffs', 'staff_group', 'staffs'))) {
-                        $this->db->set('item', 'staff_' . $suffix);
-                    } else {
-                        $this->db->set('item', 'customer_' . $suffix);
-                    }
-
-                    if (!($query = $this->db->insert('message_meta'))) {
-                        return FALSE;
-                    }
-                }
-            }
-
-            return $query;
-        }
+        return $meta->state == 1 ? 'read' : 'unread';
     }
 
-    public function deleteMessage($message_id, $user_id = '') {
-        if (is_numeric($message_id)) $message_id = array($message_id);
-
-        if (!empty($message_id) AND ctype_digit(implode('', $message_id))) {
-            // Delete draft messages
-            $this->db->where_in('message_id', $message_id);
-            $this->db->where('sender_id', $user_id);
-            $this->db->where('status', '0');
-            $this->db->delete('messages');
-            $affected_rows = $this->db->affected_rows();
-
-            return $affected_rows;
-        }
+    public static function listFolders()
+    {
+        return [
+            'inbox'   => [
+                'title' => 'lang:system::messages.text_inbox',
+                'icon'  => 'fa-inbox',
+                'url'   => 'messages',
+            ],
+            'draft'   => [
+                'title' => 'lang:system::messages.text_draft',
+                'icon'  => 'fa-file-text-o',
+                'url'   => 'messages/draft',
+            ],
+            'sent'    => [
+                'title' => 'lang:system::messages.text_sent',
+                'icon'  => 'fa-paper-plane-o',
+                'url'   => 'messages/sent',
+            ],
+            'all'     => [
+                'title' => 'lang:system::messages.text_all',
+                'icon'  => 'fa-briefcase',
+                'url'   => 'messages/all',
+            ],
+            'archive' => [
+                'title' => 'lang:system::messages.text_archive',
+                'icon'  => 'fa-archive',
+                'url'   => 'messages/archive',
+            ],
+        ];
     }
 
-    public function _sendMail($message_id, $email) {
-        if (!empty($message_id) AND !empty($email)) {
-            $this->load->library('email');
+    public function getSendTypeOptions()
+    {
+        return [
+            'email'   => 'lang:system::messages.text_email',
+            'account' => 'lang:system::messages.text_account',
+        ];
+    }
 
-            $mail_data = $this->getMessage($message_id);
-            if (isset($mail_data['subject'], $mail_data['body'])) {
-                $this->email->initialize();
+    public function listReceivers()
+    {
+        return [
+            'all_newsletters' => [
+                'label' => 'lang:system::messages.text_all_newsletters',
+            ],
+            'customers'       => [
+                'label' => 'lang:system::messages.text_customers',
+                'model' => 'Admin\Models\Customers_model',
+            ],
+            'customer_group'  => [
+                'label' => 'lang:system::messages.text_customer_group',
+                'model' => 'Admin\Models\Customer_groups_model',
+            ],
+            'staffs'          => [
+                'label' => 'lang:system::messages.text_staff',
+                'model' => 'Admin\Models\Staffs_model',
+            ],
+            'staff_group'     => [
+                'label' => 'lang:system::messages.text_staff_group',
+                'model' => 'Admin\Models\Staff_groups_model',
+            ],
+        ];
+    }
 
-                $this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
+    public function listParticipants()
+    {
+        $participants = $this->recipients;
+        if (!count($participants))
+            return null;
 
-                $this->email->to(strtolower($email));
-                $this->email->subject($mail_data['subject']);
-                $this->email->message($mail_data['body']);
+        $participants->transform(function ($participant) {
+            if (!$participant->messageable) return FALSE;
+            if (!$participant->messageable->staff) return FALSE;
 
-                if (!$this->email->send()) {
-                    log_message('debug', $this->email->print_debugger(array('headers')));
-                    $notify = '0';
-                } else {
-                    $notify = '1';
-                }
+            return $participant->messageable->staff;
+        });
 
-                return $notify;
-            }
-        }
+        return $participants;
+    }
+
+    /**
+     * Find a single message by message_id
+     *
+     * @param int $message_id
+     *
+     * @return array
+     */
+    public function getMessage($message_id)
+    {
+        return $this->find($message_id);
+    }
+
+    /**
+     * Find a single draft message by message_id
+     *
+     * @param int $message_id
+     *
+     * @return array
+     */
+    public function getDraftMessage($message_id)
+    {
+        return $this->where('sender_id', $this->user->getStaffId())
+                    ->where('message_id', $message_id)
+                    ->where('status', '0')->first();
+    }
+
+    /**
+     * Return all recipients of a message
+     *
+     * @param int $message_id
+     *
+     * @return array
+     */
+    public function getRecipients($message_id)
+    {
+//        $staffTable = DB::getTablePrefix().'staffs';
+//        $customersTable = DB::getTablePrefix().'customers';
+//        $metaTable = DB::getTablePrefix().'message_meta';
+//
+//        $query = Message_meta_model::selectRaw("{$metaTable}.*, {$staffTable}.staff_id, {$staffTable}.staff_name, ".
+//            "{$staffTable}.staff_email, {$customersTable}.customer_id, {$customersTable}.first_name, {$customersTable}.last_name, {$customersTable}.email");
+//
+//        $query->leftJoin('staffs', function ($join) {
+//            $join->on('staffs.staff_id', '=', 'message_meta.value')
+//                 ->orOn('staffs.staff_email', '=', 'message_meta.value');
+//        });
+//        $query->leftJoin('customers', function ($join) {
+//            $join->on('customers.customer_id', '=', 'message_meta.value')
+//                 ->orOn('customers.email', '=', 'message_meta.value');
+//        });
+//
+//        $query->where('item', '!=', 'sender_id');
+//        $query->where('message_id', $message_id);
+//
+//        return $query->get();
+    }
+
+    /**
+     * Return the dates of all messages
+     *
+     * @return array
+     */
+    public function getMessageDates()
+    {
+        return $this->pluckDates('date_added');
+    }
+
+    /**
+     * Find a single message by message_id and user_id
+     *
+     * @param int $message_id
+     * @param string $user_id
+     *
+     * @return array
+     */
+    public function viewMessage($message_id, $user_id = '')
+    {
+//        if (is_numeric($message_id) AND is_numeric($user_id)) {
+//            $messageTable = DB::getTablePrefix().'messages';
+//            $metaTable = DB::getTablePrefix().'message_meta';
+//
+//            $query = $this->selectRaw("*, {$metaTable}.status, {$messageTable}.date_added, {$metaTable}.status AS recipient_status, ".
+//                "{$messageTable}.status AS message_status");
+//            $query->groupBy('messages.message_id');
+//            $query->where('messages.message_id', $message_id);
+//
+//            if (APPDIR == ADMINDIR) {
+//                $query->join('staffs', 'staffs.staff_id', '=', 'messages.sender_id', 'left');
+//
+//                $query->where(function ($query) {
+//                    $query->where('message_meta.item', 'sender_id');
+//                    $query->orWhere('message_meta.item', 'staff_id');
+//                });
+//
+//                $query->where('message_meta.value', $user_id);
+//            }
+//            else {
+//                $query->join('customers', 'customers.customer_id', '=', 'message_meta.value', 'left');
+//
+//                $query->where(function ($query) use ($user_id) {
+//                    $query->where('messages.status', '1');
+//                    $query->where('message_meta.status', '1');
+//                    $query->where('message_meta.deleted', '0');
+//                    $query->where('messages.send_type', 'account');
+//                    $query->where('message_meta.item', 'customer_id');
+//                    $query->where('message_meta.value', $user_id);
+//                });
+//            }
+//
+//            $query->join('message_meta', 'message_meta.message_id', '=', 'messages.message_id', 'left');
+//
+//            return $query->first();
+//        }
+    }
+
+    /**
+     * Count the number of unread inbox messages
+     *
+     * @param string $user_id
+     *
+     * @return string
+     */
+    public function getUnreadCount($user_id = '')
+    {
+//        if (is_numeric($user_id)) {
+//            $query = $this->where('messages.status', '1')
+//                          ->where('message_meta.status', '1')
+//                          ->where('message_meta.deleted', '0')
+//                          ->where('message_meta.state', '0')
+//                          ->where('messages.send_type', 'account')
+//                          ->where('message_meta.value', $user_id);
+//
+//            if (APPDIR == ADMINDIR) {
+//                $query->where('message_meta.item', 'staff_id');
+//            }
+//            else {
+//                $query->where('message_meta.item', 'customer_id');
+//            }
+//
+//            $query->join('message_meta', 'message_meta.message_id', '=', 'messages.message_id', 'left');
+//
+//            return $query->count();
+//        }
+    }
+
+    /**
+     * Update a message state or status
+     *
+     * @param int $message_meta_id
+     * @param int $user_id
+     * @param string $state
+     * @param string $folder
+     *
+     * @return bool
+     */
+    public function updateState($user_id, $state, $folder = '')
+    {
+//        $query = FALSE;
+//
+//        if (!is_array($message_meta_id)) $message_meta_id = [$message_meta_id];
+//
+//        if (is_numeric($user_id)) {
+//            $update = [];
+//            if ($state == 'unread') {
+//                $update['state'] = '0';
+//            }
+//            else if ($state == 'read') {
+//                $update['state'] = '1';
+//            }
+//            else if ($state == 'restore') {
+//                $update['status'] = '1';
+//                $update['deleted'] = '0';
+//            }
+//            else if ($state == 'archive') {
+//                $update['deleted'] = '1';
+//            }
+//            else if ($state == 'trash') {
+//                $update['deleted'] = '2';
+//            }
+//
+//            $where['value'] = $user_id;
+//            $this->load->model('Message_meta_model');
+//            $queryBuilder = $this->Message_meta_model->whereIn('message_meta_id', $message_meta_id);
+//
+//            if (APPDIR == ADMINDIR) {
+//                if ($folder == 'inbox') {
+//                    $queryBuilder->where('item', 'staff_id');
+//                }
+//                else if ($folder == 'sent') {
+//                    $queryBuilder->where('item', 'sender_id');
+//                }
+//                else {
+//                    $queryBuilder->where(function ($query) {
+//                        $query->where('item', 'sender_id');
+//                        $query->orWhere('item', 'staff_id');
+//                    });
+//                }
+//            }
+//            else {
+//                $queryBuilder->where('item', 'customer_id');
+//            }
+//
+//            $query = $queryBuilder->update($update);
+//        }
+//
+//        return $query;
+    }
+
+    /**
+     * Create a new or update existing message
+     *
+     * @param int $message_id
+     * @param array $save
+     *
+     * @return bool|int The $message_id of the affected row, or FALSE on failure
+     */
+    public function saveMessage($message_id, $save = [])
+    {
+        $save['sender_id'] = $this->user->getStaffId();
+        $save['sender_typr'] = get_class($this->user->getUser());
+
+        $messageModel = $this->findOrNew($message_id);
+
+        $saved = $messageModel->fill($save)->save();
+
+        return $saved ? $messageModel->getKey() : $saved;
+
+//        if (is_numeric($message_id) AND empty($save['save_as_draft'])
+//            AND !empty($save['recipient']) AND !empty($save['send_type'])
+//        ) {
+//            $this->sendMessage($message_id, $save);
+//        }
+//
+//        return $message_id;
+    }
+
+    /**
+     * Send a new or existing message
+     *
+     * @param       $message_id
+     * @param array $send
+     *
+     * @return bool
+     */
+    protected function sendMessage($message_id, $send = [])
+    {
+//        $results = [];
+//
+//        $column = ($send['send_type'] == 'email') ? 'email' : 'id';
+//
+//        if (empty($send['save_as_draft']) OR $send['save_as_draft'] != '1') {
+//            $this->load->model('Customers_model');
+//
+//            switch ($send['recipient']) {
+//                case 'all_newsletters':
+//                    $results = $this->Customers_model->getCustomersByNewsletterForMessages($column);
+//                    break;
+//                case 'all_customers':
+//                    $results = $this->Customers_model->getCustomersForMessages($column);
+//                    break;
+//                case 'customer_group':
+//                    $results = $this->Customers_model->getCustomersByGroupIdForMessages($column,
+//                        $send['customer_group_id']);
+//                    break;
+//                case 'customers':
+//                    if (isset($send['customers'])) {
+//                        $results = $this->Customers_model->getCustomerForMessages($column, $send['customers']);
+//                    }
+//
+//                    break;
+//                case 'all_staffs':
+//                    $results = $this->Staffs_model->getStaffsForMessages($column);
+//                    break;
+//                case 'staff_group':
+//                    $results = $this->Staffs_model->getStaffsByGroupIdForMessages($column, $send['staff_group_id']);
+//                    break;
+//                case 'staffs':
+//                    if (isset($send['staffs'])) {
+//                        $results = $this->Staffs_model->getStaffForMessages($column, $send['staffs']);
+//                    }
+//
+//                    break;
+//            }
+//
+//            $results['sender_id'] = $this->user->getStaffId();
+//
+//            if (!empty($results) AND $this->addRecipients($message_id, $send, $results)) {
+//                return TRUE;
+//            }
+//        }
+    }
+
+    /**
+     * Add message recipients to database
+     *
+     * @param $message_id
+     * @param $send
+     * @param $recipients
+     *
+     * @return bool
+     */
+    public function addRecipients($message_id, $send, $recipients)
+    {
+//        $this->load->model('Message_meta_model');
+//        $this->Message_meta_model->where('message_id', $message_id)->delete();
+//
+//        $suffix = ($send['send_type'] == 'email') ? 'email' : 'id';
+//
+//        if ($recipients) {
+//            $insert = [];
+//            foreach ($recipients as $key => $recipient) {
+//                if (!empty($recipient)) {
+//                    $status = (is_numeric($recipient)) ? '1' : $this->_sendMail($message_id, $recipient);
+//
+//                    $meta['value'] = $recipient;
+//                    $meta['message_id'] = $message_id;
+//                    $meta['status'] = $status;
+//
+//                    if ($key === 'sender_id') {
+//                        $meta['item'] = 'sender_id';
+//                    }
+//                    else if (in_array($send['recipient'], ['all_staffs', 'staff_group', 'staffs'])) {
+//                        $meta['item'] = 'staff_'.$suffix;
+//                    }
+//                    else {
+//                        $meta['item'] = 'customer_'.$suffix;
+//                    }
+//
+//                    $insert[] = $meta;
+//                }
+//            }
+//
+//            if (!($query = $this->Message_meta_model->insertGetId($insert))) {
+//                return FALSE;
+//            }
+//
+//            return $query;
+//        }
+    }
+
+    /**
+     * Delete a single or multiple message by message_id
+     *
+     * @param int $message_id
+     * @param string $user_id
+     *
+     * @return mixed
+     */
+    public function deleteMessage($message_id, $user_id = '')
+    {
+//        if (is_numeric($message_id)) $message_id = [$message_id];
+//
+//        if (!empty($message_id) AND ctype_digit(implode('', $message_id))) {
+//            // Delete draft messages
+//            return $this->where('sender_id', $user_id)
+//                        ->where('status', '0')->whereIn('message_id', $message_id)->delete();
+//        }
+    }
+
+    /**
+     * Send a message to recipient email or account
+     *
+     * @param int $message_id
+     * @param string $email
+     *
+     * @return string
+     */
+    public function _sendMail($message_id, $email)
+    {
+//        if (!empty($message_id) AND !empty($email)) {
+//            $this->load->library('email');
+//
+//            $mail_data = $this->getMessage($message_id);
+//            if (isset($mail_data['subject'], $mail_data['body'])) {
+//                $this->email->initialize();
+//
+//                $this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
+//
+//                $this->email->to(strtolower($email));
+//                $this->email->subject($mail_data['subject']);
+//                $this->email->message($mail_data['body']);
+//
+//                if (!$this->email->send()) {
+//                    log_message('debug', $this->email->print_debugger(['headers']));
+//                    $notify = '0';
+//                }
+//                else {
+//                    $notify = '1';
+//                }
+//
+//                return $notify;
+//            }
+//        }
     }
 }
-
-/* End of file messages_model.php */
-/* Location: ./system/tastyigniter/models/messages_model.php */

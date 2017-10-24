@@ -1,499 +1,676 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Admin\Notifications\CustomerRegistered;
+use DB;
+use Hash;
+use Igniter\Flame\ActivityLog\Traits\LogsActivity;
+use Igniter\Flame\Database\Traits\Mailable;
+use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Notifications\Notifiable;
+use Model;
 
 /**
  * Customers Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Customers_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Customers_model extends TI_Model {
-
-	public function getCount($filter = array()) {
-		if ( ! empty($filter['filter_search'])) {
-			$this->db->like('first_name', $filter['filter_search']);
-			$this->db->or_like('last_name', $filter['filter_search']);
-			$this->db->or_like('email', $filter['filter_search']);
-		}
-
-		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('status', $filter['filter_status']);
-		}
-
-		if ( ! empty($filter['filter_date'])) {
-			$date = explode('-', $filter['filter_date']);
-			$this->db->where('YEAR(date_added)', $date[0]);
-			$this->db->where('MONTH(date_added)', $date[1]);
-		}
-
-		$this->db->from('customers');
-
-		return $this->db->count_all_results();
-	}
-
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
-
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('customers');
-
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
-
-			if ( ! empty($filter['filter_search'])) {
-				$this->db->like('first_name', $filter['filter_search']);
-				$this->db->or_like('last_name', $filter['filter_search']);
-				$this->db->or_like('email', $filter['filter_search']);
-			}
-
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('status', $filter['filter_status']);
-			}
-
-			if ( ! empty($filter['filter_date'])) {
-				$date = explode('-', $filter['filter_date']);
-				$this->db->where('YEAR(date_added)', $date[0]);
-				$this->db->where('MONTH(date_added)', $date[1]);
-			}
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
-	}
-
-	public function getCustomers() {
-		$this->db->from('customers');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
-	}
-
-	public function getCustomer($customer_id) {
-		if (is_numeric($customer_id)) {
-			$this->db->from('customers');
-			$this->db->where('customer_id', $customer_id);
-
-			$query = $this->db->get();
-
-			if ($query->num_rows() > 0) {
-				return $query->row_array();
-			}
-		}
-	}
-
-	public function getCustomerDates() {
-		$this->db->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
-		$this->db->from('customers');
-		$this->db->group_by('MONTH(date_added)');
-		$this->db->group_by('YEAR(date_added)');
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
-	}
-
-	public function getCustomersForMessages($type) {
-		$this->db->select('customer_id, email, status');
-		$this->db->from('customers');
-		$this->db->where('status', '1');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row)
-				$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
-		}
-
-		return $result;
-	}
-
-	public function getCustomerForMessages($type, $customer_id) {
-		if ( ! empty($customer_id) AND is_array($customer_id)) {
-			$this->db->select('customer_id, email, status');
-			$this->db->from('customers');
-			$this->db->where('status', '1');
-			$this->db->where_in('customer_id', $customer_id);
-
-			$query = $this->db->get();
-
-			if ($query->num_rows() > 0) {
-				foreach ($query->result_array() as $row)
-					$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
-			}
-
-			return $result;
-		}
-	}
-
-	public function getCustomersByGroupIdForMessages($type, $customer_group_id) {
-		if (is_numeric($customer_group_id)) {
-			$this->db->select('customer_id, email, customer_group_id, status');
-			$this->db->from('customers');
-			$this->db->where('customer_group_id', $customer_group_id);
-			$this->db->where('status', '1');
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				foreach ($query->result_array() as $row)
-					$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
-			}
-
-			return $result;
-		}
-	}
-
-	public function getCustomersByNewsletterForMessages($type) {
-		$this->db->select('customer_id, email, newsletter, status');
-		$this->db->from('customers');
-		$this->db->where('newsletter', '1');
-		$this->db->where('status', '1');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row)
-				$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
-
-			$this->load->model('Extensions_model');
-			$newsletter = $this->Extensions_model->getModule('newsletter');
-			if ($type === 'email' AND !empty($newsletter['ext_data']['subscribe_list'])) {
-				$result = array_merge($result, $newsletter['ext_data']['subscribe_list']);
-			}
-		}
-
-		return $result;
-	}
-
-	public function getCustomerByEmail($email) {
-
-		$this->db->from('customers');
-		$this->db->where('email', strtolower($email));
-
-		$query = $this->db->get();
-
-		if ($query->num_rows() === 1) {
-			$row = $query->row_array();
-
-			return $row;
-		}
-	}
-
-	public function resetPassword($customer_id, $reset = array()) {
-		if (is_numeric($customer_id) AND ! empty($reset)) {
-
-			$this->db->from('customers');
-			$this->db->where('customer_id', $customer_id);
-			$this->db->where('email', strtolower($reset['email']));
-
-			if ( ! empty($reset['security_question_id']) AND ! empty($reset['security_answer'])) {
-				$this->db->where('security_question_id', $reset['security_question_id']);
-				$this->db->where('security_answer', $reset['security_answer']);
-			}
-
-			$this->db->where('status', '1');
-			$query = $this->db->get();
-			if ($query->num_rows() === 1) {
-				$row = $query->row_array();
-
-				//Random Password
-				$alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
-				$pass = array();
-				for ($i = 0; $i < 8; $i ++) {
-					$n = rand(0, strlen($alphabet) - 1);
-					$pass[$i] = $alphabet[$n];
-				}
-
-				$password = implode('', $pass);
-
-				$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-				$this->db->set('password', sha1($salt . sha1($salt . sha1($password))));
-				$this->db->where('customer_id', $row['customer_id']);
-				$this->db->where('email', $row['email']);
-
-				if ($this->db->update('customers') AND $this->db->affected_rows() > 0) {
-
-					$mail_data['first_name'] = $row['first_name'];
-					$mail_data['last_name'] = $row['last_name'];
-					$mail_data['created_password'] = $password;
-					$mail_data['account_login_link'] = root_url('account/login');
-
-					$this->load->model('Mail_templates_model');
-					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),
-																				  'password_reset');
-
-					$this->sendMail($row['email'], $mail_template, $mail_data);
-
-					return TRUE;
-				}
-			}
-		}
-
-		return FALSE;
-	}
-
-	public function getAutoComplete($filter_data = array()) {
-		if (is_array($filter_data) && ! empty($filter_data)) {
-			$this->db->from('customers');
-
-			if ( ! empty($filter_data['customer_name'])) {
-				$this->db->like('CONCAT(first_name, last_name)', $filter_data['customer_name']);
-			}
-
-			if ( ! empty($filter_data['customer_id'])) {
-				$this->db->where('customer_id', $filter_data['customer_id']);
-			}
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
-	}
-
-	public function saveCustomer($customer_id, $save = array()) {
-		if (empty($save)) return FALSE;
-
-		if (isset($save['first_name'])) {
-			$this->db->set('first_name', $save['first_name']);
-		}
-
-		if (isset($save['last_name'])) {
-			$this->db->set('last_name', $save['last_name']);
-		}
-
-		if (isset($save['email'])) {
-			$this->db->set('email', strtolower($save['email']));
-		}
-
-		if (!empty($save['password'])) {
-			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-			$this->db->set('password', sha1($salt . sha1($salt . sha1($save['password']))));
-		}
-
-		if (isset($save['telephone'])) {
-			$this->db->set('telephone', $save['telephone']);
-		}
-
-		if (isset($save['security_question_id'])) {
-			$this->db->set('security_question_id', $save['security_question_id']);
-		}
-
-		if (isset($save['security_answer'])) {
-			$this->db->set('security_answer', $save['security_answer']);
-		}
-
-		if (isset($save['newsletter']) AND $save['newsletter'] === '1') {
-			$this->db->set('newsletter', $save['newsletter']);
-		} else {
-			$this->db->set('newsletter', '0');
-		}
-
-		if (isset($save['customer_group_id'])) {
-			$this->db->set('customer_group_id', $save['customer_group_id']);
-		}
-
-		if (isset($save['date_added'])) {
-			$add['date_added'] = mdate('%Y-%m-%d', time());
-			$this->db->set('date_added', $save['date_added']);
-		}
-
-		if (isset($save['status']) AND $save['status'] === '1') {
-			$this->db->set('status', $save['status']);
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (is_numeric($customer_id)) {
-			$action = 'updated';
-			$this->db->where('customer_id', $customer_id);
-			$query = $this->db->update('customers');
-		} else {
-			$action = 'added';
-			$this->db->set('date_added', mdate('%Y-%m-%d', time()));
-			$query = $this->db->insert('customers');
-			$customer_id = $this->db->insert_id();
-		}
-
-		if ($query === TRUE AND is_numeric($customer_id)) {
-			if (isset($save['address'])) {
-				$this->saveAddress($customer_id, $save['address']);
-			}
-
-			if ($action === 'added') {
-				$mail_data['first_name'] = $save['first_name'];
-				$mail_data['last_name'] = $save['last_name'];
-				$mail_data['account_login_link'] = root_url('account/login');
-
-				$this->load->model('Mail_templates_model');
-				$config_registration_email = is_array($this->config->item('registration_email')) ? $this->config->item('registration_email') : array();
-
-				if ($this->config->item('registration_email') === '1' OR in_array('customer', $config_registration_email)) {
-					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'registration');
-					$this->sendMail($save['email'], $mail_template, $mail_data);
-				}
-
-				if (in_array('admin', $config_registration_email)) {
-					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'registration_alert');
-					$this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
-				}
-
-				$this->saveCustomerGuestOrder($customer_id, $save['email']);
-			}
-
-			return $customer_id;
-		}
-	}
-
-	private function saveCustomerGuestOrder($customer_id, $customer_email) {
-		$query = FALSE;
-
-		if (is_numeric($customer_id) AND ! empty($customer_email)) {
-
-			$query = $this->db->from('orders')->where('email', $customer_email)->get();
-
-			if ($query->num_rows() > 0) {
-				foreach ($query->result_array() as $row) {
-					if (empty($row['order_id'])) continue;
-
-					$this->db->set('customer_id', $customer_id);
-					$this->db->where('order_id', $row['order_id'])->where('email', $customer_email);
-					$this->db->update('orders');
-
-					if ($row['order_type'] === '1' AND ! empty($row['address_id'])) {
-						$this->db->set('customer_id', $customer_id);
-						$this->db->where('address_id', $row['address_id']);
-						$this->db->update('addresses');
-					}
-
-					if ( ! empty($row['payment'])) {
-						$this->db->set('customer_id', $customer_id);
-						$this->db->where('order_id', $row['order_id']);
-						$this->db->update('pp_payments');
-					}
-
-					$this->db->set('customer_id', $customer_id);
-					$this->db->where('order_id', $row['order_id']);
-					$this->db->update('coupons_history');
-				}
-			}
-
-			$this->db->set('customer_id', $customer_id);
-			$this->db->where('email', $customer_email);
-			$this->db->update('reservations');
-
-			$query = TRUE;
-		}
-
-		return $query;
-	}
-
-	public function saveAddress($customer_id, $addresses = array()) {
-		if ( is_numeric($customer_id) AND ! empty($addresses)) {
-			$this->db->where('customer_id', $customer_id);
-			$this->db->delete('addresses');
-
-			$this->load->model('Addresses_model');
-
-			foreach ($addresses as $key => $address) {
-				if (!empty($address['address_1'])) {
-					$this->Addresses_model->saveAddress($customer_id, '', $address);
-				}
-			}
-		}
-	}
-
-	public function deleteCustomer($customer_id) {
-		if (is_numeric($customer_id)) $customer_id = array($customer_id);
-
-		if ( ! empty($customer_id) AND ctype_digit(implode('', $customer_id))) {
-			$this->db->where_in('customer_id', $customer_id);
-			$this->db->delete('customers');
-
-			if (($affected_rows = $this->db->affected_rows()) > 0) {
-				$this->db->where_in('customer_id', $customer_id);
-				$this->db->delete('addresses');
-
-				return $affected_rows;
-			}
-		}
-	}
-
-	public function sendMail($email, $template = array(), $data = array()) {
-		if (empty($template) OR empty($email) OR !isset($template['subject'], $template['body']) OR empty($data)) {
-			return FALSE;
-		}
-
-		$this->load->library('email');
-
-		$this->email->initialize();
-
-		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
-		$this->email->to(strtolower($email));
-		$this->email->subject($template['subject'], $data);
-		$this->email->message($template['body'], $data);
-
-		if ($this->email->send()) {
-			return TRUE;
-		} else {
-			log_message('debug', $this->email->print_debugger(array('headers')));
-		}
-	}
-
-	public function validateCustomer($customer_id) {
-		if (is_numeric($customer_id)) {
-			$this->db->from('customers');
-			$this->db->where('customer_id', $customer_id);
-
-			$query = $this->db->get();
-
-			if ($query->num_rows() > 0) {
-				return TRUE;
-			}
-		}
-
-		return FALSE;
-	}
+class Customers_model extends Model
+{
+    use LogsActivity;
+    use Purgeable;
+    use Notifiable;
+    use Mailable;
+
+    protected static $logAttributes = ['name'];
+
+    protected static $mailables = [
+        'Igniter\Mail\CustomerRegistration' => ['registration', 'registration_alert'],
+    ];
+
+    const CREATED_AT = 'date_added';
+
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'customers';
+
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'customer_id';
+
+    protected $fillable = ['first_name', 'last_name', 'email', 'telephone', 'newsletter'];
+
+    protected $hidden = ['password'];
+
+    public $timestamps = TRUE;
+
+    public $relation = [
+        'hasMany' => [
+            'addresses' => ['Admin\Models\Addresses_model', 'delete' => true],
+            'orders' => ['Admin\Models\Orders_model', 'delete' => true],
+            'reservations' => ['Admin\Models\Reservations_model', 'delete' => true],
+        ],
+        'belongsTo' => [
+            'group' => 'Admin\Models\Customer_groups_model',
+            'address' => 'Admin\Models\Addresses_model',
+            'security_question' => 'Admin\Models\Security_questions_model',
+        ],
+        'belongsToMany' => [
+            'security_question' => 'Admin\Models\Security_questions_model',
+        ],
+        'morphMany' => [
+            'messages' => ['System\Models\Message_meta_model', 'name' => 'messageable'],
+        ]
+    ];
+
+    public $purgeable = ['addresses'];
+
+    public static function getDropdownOptions()
+    {
+        return static::isEnabled()->selectRaw('concat(first_name, " ", last_name) as fullname')->dropdown('fullname');
+    }
+
+    //
+    // Accessors & Mutators
+    //
+
+    public function getCustomerNameAttribute($value)
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+
+    public function getEmailAttribute($value)
+    {
+        return strtolower($value);
+    }
+
+    public function getDateAddedAttribute($value)
+    {
+        return day_elapsed($value);
+    }
+
+    //
+    // Scopes
+    //
+
+    /**
+     * Filter database records
+     *
+     * @param $query
+     * @param array $filter an associative array of field/value pairs
+     *
+     * @return $this
+     */
+    public function scopeFilter($query, $filter = [])
+    {
+        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
+            $query->search($filter['filter_search'], ['first_name', 'last_name', 'email']);
+        }
+
+        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+            $query->where('status', $filter['filter_status']);
+        }
+
+        if (!empty($filter['filter_date'])) {
+            $date = explode('-', $filter['filter_date']);
+            $query->whereYear('date_added', $date[0]);
+            $query->whereMonth('date_added', $date[1]);
+        }
+
+        return $query;
+    }
+
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('status', 1);
+    }
+
+    //
+    // Events
+    //
+
+    public function beforeSave()
+    {
+        if (!empty($this->attributes['password']))
+            $this->password = Hash::make($this->attributes['password']);
+    }
+
+    public function afterCreate()
+    {
+        $this->saveCustomerGuestOrder();
+        $this->sendRegistrationEmail();
+    }
+
+    public function afterSave()
+    {
+        $this->restorePurgedValues();
+
+        if (!$this->exists)
+            return;
+
+        if (array_key_exists('addresses', $this->attributes))
+            $this->saveAddress($this->getKey(), $this->attributes['addresses']);
+    }
+
+    //
+    // Helpers
+    //
+
+    public function getCustomerName()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+
+    public function listAddresses()
+    {
+        return $this->addresses()->with(['country'])->get()->groupBy(function ($address) {
+            return $address->getKey();
+        });
+    }
+
+    public function getReminderEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * List all customers matching the filter,
+     * to fill select auto-complete options
+     *
+     * @param array $filter
+     *
+     * @return array
+     */
+    public static function getAutoComplete($filter = [])
+    {
+        if (is_array($filter) AND !empty($filter)) {
+            $query = self::query()->select('customer_id', 'first_name', 'last_name')
+                          ->selectRaw('concat(first_name, " ", last_name) AS customer_name');
+
+            if (!empty($filter['customer_name'])) {
+                $query->like('CONCAT(first_name, last_name)', $filter['customer_name']);
+            }
+
+            if (!empty($filter['customer_id'])) {
+                $query->where('customer_id', $filter['customer_id']);
+            }
+
+            $limit = isset($filter['limit']) ? $filter['limit'] : 20;
+            if ($results = $query->take($limit)->get()) {
+                foreach ($results as $result) {
+                    $return['results'][] = [
+                        'id'   => $result['customer_id'],
+                        'text' => utf8_encode($result['customer_name']),
+                    ];
+                }
+            } else {
+                $return['results'] = ['id' => '0', 'text' => lang('text_no_match')];
+            }
+
+            return $return;
+        }
+    }
+
+    /**
+     * Return all customers
+     *
+     * @return array
+     */
+    public function getCustomers()
+    {
+        return $this->get();
+    }
+
+    /**
+     * Find a single customer by customer_id
+     *
+     * @param $customer_id
+     *
+     * @return array
+     */
+    public function getCustomer($customer_id)
+    {
+        if (is_numeric($customer_id)) {
+            return $this->find($customer_id);
+        }
+    }
+
+    /**
+     * Return all customer registration dates
+     *
+     * @return array
+     */
+    public function getCustomerDates()
+    {
+        return $this->pluckDates('date_added');
+    }
+
+    /**
+     * Return all customers email or id,
+     * to use when sending messages to customers
+     *
+     * @param $type
+     *
+     * @return array
+     */
+    public function getCustomersForMessages($type)
+    {
+        $result = $this->select('customer_id, email, status')->isEnabled()->get();
+
+        return $this->getEmailOrIdFromResult($result, $type);
+    }
+
+    /**
+     * Return specified customer email or id by customer_id,
+     * to use when sending messages to customers
+     *
+     * @param $type
+     * @param $customer_id
+     *
+     * @return array
+     */
+    public function getCustomerForMessages($type, $customer_id)
+    {
+        if (!empty($customer_id) AND is_array($customer_id)) {
+            $result = $this->select('customer_id, email, status')
+                           ->whereIn('customer_id', $customer_id)->isEnabled()->get();
+
+            $result = $this->getEmailOrIdFromResult($result, $type);
+
+            return $result;
+        }
+    }
+
+    /**
+     * Return all customers email or id by customer_group_id,
+     * to use when sending messages to customers
+     *
+     * @param $type
+     * @param $customer_group_id
+     *
+     * @return array
+     */
+    public function getCustomersByGroupIdForMessages($type, $customer_group_id)
+    {
+        if (is_numeric($customer_group_id)) {
+            $result = $this->selectRaw('customer_id, email, customer_group_id, status')
+                           ->where('customer_group_id', $customer_group_id)->isEnabled()->get();
+
+            return $this->getEmailOrIdFromResult($result, $type);
+        }
+    }
+
+    /**
+     * Return all subscribed customers email or id,
+     * to use when sending messages to customers
+     *
+     * @param $type
+     *
+     * @return array
+     */
+    public function getCustomersByNewsletterForMessages($type)
+    {
+        $result = $this->selectRaw('customer_id, email, newsletter, status')
+                       ->where('newsletter', '1')->isEnabled()->get();
+
+        $result = $this->getEmailOrIdFromResult($result, $type);
+
+        // @todo: use separate database table for newsletter email list and manage from newsletter extension
+        $newsletter = Extensions_model::getExtension('newsletter');
+        if ($type === 'email' AND !empty($newsletter['ext_data']['subscribe_list'])) {
+            $result = array_merge($result, $newsletter['ext_data']['subscribe_list']);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $query
+     *
+     * @param $type
+     * @param array $result
+     *
+     * @return array
+     */
+    protected function getEmailOrIdFromResult($result, $type)
+    {
+        if (!empty($result)) {
+            foreach ($result as $row) {
+                $result[] = ($type == 'email') ? $row['email'] : $row['customer_id'];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Find a single customer by email
+     *
+     * @param string $email
+     *
+     * @return array
+     */
+    public function getCustomerByEmail($email)
+    {
+        return $this->where('email', strtolower($email))->first();
+    }
+
+    /**
+     * Sets the reset password columns to NULL
+     *
+     * @param string $code
+     *
+     * @return bool
+     */
+    public function clearResetPasswordCode($code)
+    {
+        if (is_null($code))
+            return FALSE;
+
+        $query = $this->where('reset_code', $code);
+
+        if ($row = $query->isEnabled()->first()) {
+            $query->update([
+                'reset_code' => null,
+                'reset_time' => null,
+            ]);
+
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    /**
+     * Reset a customer password,
+     * new password is sent to registered email
+     *
+     * @param string $email
+     *
+     * @return bool
+     */
+    public function resetPassword($email)
+    {
+        if (!is_string($email))
+            return FALSE;
+
+        $query = $this->newQuery()->where('email', $email);
+        if (!$customerModel = $query->isEnabled()->first())
+            return FALSE;
+
+        $update = [
+            'reset_code' => $this->createResetCode($customerModel),
+            'reset_time' => mdate('%Y-%m-%d %H:%i:%a', time()),
+        ];
+
+        $updated = $this->newQuery()->where('email', $email)->update($update);
+        if ($updated < 1)
+            return FALSE;
+
+        $mail_data['first_name'] = $customerModel->first_name;
+        $mail_data['last_name'] = $customerModel->last_name;
+        $mail_data['reset_link'] = root_url('account/reset?code='.$update['reset_code']);
+        $mail_data['account_login_link'] = root_url('account/login');
+
+        $this->sendMail($email, 'password_reset_request', $mail_data);
+
+        return TRUE;
+    }
+
+    /**
+     * Sets the new password on customer requested reset
+     *
+     * @param $identity
+     * @param $credentials
+     *
+     * @return bool
+     */
+    public function completeResetPassword($identity, $credentials)
+    {
+        $code = $credentials['reset_code'];
+        $password = $credentials['password'];
+
+        $customerModel = $this->newQuery()
+                              ->where($this->getAuthIdentifierName(), $identity)
+                              ->where('reset_code', $code)->first();
+
+        if (is_null($customerModel))
+            return FALSE;
+
+        $customerModel->password = $this->getHasher()->make($password);
+        $customerModel->reset_code = null;
+        $customerModel->save();
+
+        $mail_data['first_name'] = $customerModel->first_name;
+        $mail_data['last_name'] = $customerModel->last_name;
+        $mail_data['created_password'] = str_repeat('*', strlen($password));
+        $mail_data['account_login_link'] = root_url('account/login');
+
+        $this->sendMail($this->getReminderEmail(), 'password_reset', $mail_data);
+
+        return TRUE;
+    }
+
+    /**
+     * Update the customer password
+     */
+    public function updatePassword($identity, array $credentials)
+    {
+        $password = $credentials['password'];
+
+        $model = $this->newQuery()
+                          ->where($this->getAuthIdentifierName(), $identity)->first();
+
+        if (is_null($model))
+            return FALSE;
+
+        $model->password = $this->getHasher()->make($password);
+    }
+
+    /**
+     * Create a new or update existing customer
+     *
+     * @param int $customer_id
+     * @param array $save
+     *
+     * @return bool|int The $customer_id of the affected row, or FALSE on failure
+     */
+    public function saveCustomer($customer_id, $save = [])
+    {
+        if (empty($save)) return FALSE;
+
+        $customerModel = $this->findOrNew($customer_id);
+
+        $saved = $customerModel->fill($save)->save();
+
+        return $saved ? $customerModel->getKey() : $saved;
+    }
+
+    /**
+     * Update guest orders, address and reservations
+     * matching customer email
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function saveCustomerGuestOrder()
+    {
+        $query = FALSE;
+
+        if (is_numeric($this->customer_id) AND !empty($this->email)) {
+            $customer_id = $this->customer_id;
+            $customer_email = $this->email;
+            $update = ['customer_id' => $customer_id];
+
+            if ($orders = Orders_model::where('email', $customer_email)->get()) {
+                foreach ($orders as $row) {
+                    if (empty($row['order_id'])) continue;
+
+                    Coupons_model::where('email', $customer_email)
+                                       ->where('order_id', $row['order_id'])->update($update);
+
+                    Coupons_history_model::where('order_id', $row['order_id'])->update($update);
+
+                    if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
+                        Addresses_model::where('address_id', $row['address_id'])->update($update);
+                    }
+
+                    // @todo: move to paypal extension
+                    if (!empty($row['payment'])) {
+                        DB::table('pp_payments')->where('order_id', $row['order_id'])
+                             ->update(['customer_id' => $customer_id]);
+                    }
+                }
+            }
+
+            Reservations_model::where('email', $customer_email)->update($update);
+
+            $query = TRUE;
+        }
+
+        return $query;
+    }
+
+    /**
+     * Create a new or update existing customer address
+     *
+     * @param int $customer_id
+     * @param array $addresses an array of one or multiple address array
+     */
+//    public function saveAddress($customer_id = null, $addresses = [])
+//    {
+//        !is_null($customer_id) OR $customer_id = $this->getKey();
+//
+//        $idsToKeep = [];
+//        foreach ($addresses as $address) {
+//            $addressModel = $this->addresses()->updateOrCreate([
+//                'customer_id' => $customer_id,
+//                'address_id' => $address['address_id'],
+//            ], array_except($address, ['customer_id', 'address_id']));
+//
+//            $idsToKeep[] = $addressModel->getKey();
+//        }
+//
+//        $this->addresses()->whereNotIn('address_id', $idsToKeep)->delete();
+//    }
+
+    /**
+     * Delete a single or multiple customer by customer_id
+     *
+     * @param string|array $customer_id
+     *
+     * @return int  The number of deleted rows
+     */
+//    public function deleteCustomer($customer_id)
+//    {
+//        if (is_numeric($customer_id)) $customer_id = [$customer_id];
+//
+//        if (!empty($customer_id) AND ctype_digit(implode('', $customer_id))) {
+//            return $this->whereIn('customer_id', $customer_id)->delete();
+//        }
+//    }
+
+    /**
+     * Send email to customer
+     *
+     * @param string $email
+     * @param array
+     * @param array $data
+     *
+     * @return bool
+     */
+//    public function sendMail($email, $template = [], $data = [])
+//    {
+//        if (!$template OR !strlen($email) OR !$data)
+//            return FALSE;
+//
+////        if (!is_array($template)) {
+////            $this->load->model('Mail_templates_model');
+////            $template = $this->Mail_templates_model->getDefaultTemplateData($template);
+////        }
+//
+//        if (!isset($template['subject'], $template['body']))
+//            return FALSE;
+//
+//        $this->ci()->load->library('email');
+//        $this->ci()->email->initialize();
+//        $this->ci()->email->set_template($template, $data);
+//        $this->ci()->email->from($this->ci()->config->item('site_email'), $this->ci()->config->item('site_name'));
+//        $this->ci()->email->to(strtolower($email));
+//
+//        if ($this->ci()->email->send()) {
+//            return TRUE;
+//        } else {
+//            log_message('debug', $this->ci()->email->print_debugger(['headers']));
+//        }
+//    }
+
+    /**
+     * Send the registration confirmation email
+     *
+     * @return bool FALSE on failure
+     */
+    public function sendRegistrationEmail()
+    {
+        if (empty($this->email))
+            return FALSE;
+
+//        $mail_data['first_name'] = $this->first_name;
+//        $mail_data['last_name'] = $this->last_name;
+//        $mail_data['email'] = $this->email;
+//        $mail_data['account_login_link'] = root_url('account/login');
+
+        $this->notify(new CustomerRegistered($this));
+
+//        $config = setting('registration_email', ['customer', 'admin']);
+//        if (in_array('customer', $config))
+//            $this->sendMail($mail_data['email'], 'registration', $mail_data);
+
+//        if (in_array('admin', $config))
+//            $this->sendMail('registration_alert');
+//            $this->sendMail($this->config->item('site_email'), 'registration_alert', $mail_data);
+    }
+
+    public function routeNotificationForMail()
+    {
+        $emails = [];
+        $config = setting('registration_email', ['customer', 'admin']);
+        if (in_array('customer', $config)) {
+            $emails[] = $this->email;
+        } else {
+            $emails[] = setting('site_email');
+        }
+
+        return $emails;
+    }
+
+    /**
+     * Check if a customer id already exists in database
+     *
+     * @param int $customer_id
+     *
+     * @return bool
+     */
+    public function validateCustomer($customer_id)
+    {
+        return (is_numeric($customer_id) AND $this->find($customer_id)) ? TRUE : FALSE;
+    }
+
+    /**
+     * Generate random password
+     *
+     * @return string
+     */
+    protected function getRandomString()
+    {
+        //Random Password
+        $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+        $pass = [];
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, strlen($alphabet) - 1);
+            $pass[$i] = $alphabet[$n];
+        }
+
+        return implode('', $pass);
+    }
 }
-
-/* End of file customers_model.php */
-/* Location: ./system/tastyigniter/models/customers_model.php */

@@ -1,273 +1,211 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Model;
+use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 
 /**
  * Coupons Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Coupons_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Coupons_model extends TI_Model {
+class Coupons_model extends Model
+{
+    use LogsActivity;
 
-	public function getCount($filter = array()) {
-		if ( ! empty($filter['filter_search'])) {
-			$this->db->like('name', $filter['filter_search']);
-			$this->db->or_like('code', $filter['filter_search']);
-		}
+    const CREATED_AT = 'date_added';
 
-		if ( ! empty($filter['filter_type'])) {
-			$this->db->where('type', $filter['filter_type']);
-		}
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'coupons';
 
-		if ( ! empty($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('status', $filter['filter_status']);
-		}
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'coupon_id';
 
-		$this->db->from('coupons');
+    public $timestamps = TRUE;
 
-		return $this->db->count_all_results();
-	}
+    protected $timeFormat = 'H:i';
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
+    public $casts = [
+        'period_start_date'   => 'date',
+        'period_end_date'     => 'date',
+        'fixed_date'          => 'date',
+        'fixed_from_time'     => 'time',
+        'fixed_to_time'       => 'time',
+        'recurring_from_time' => 'time',
+        'recurring_to_time'   => 'time',
+    ];
 
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('coupons');
+    public $relation = [
+        'hasMany' => [
+            'history' => 'Admin\Models\Coupons_history_model',
+        ],
+    ];
 
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
+    public function getRecurringEveryOptions()
+    {
+        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    }
 
-			if ( ! empty($filter['filter_search'])) {
-				$this->db->like('name', $filter['filter_search']);
-				$this->db->or_like('code', $filter['filter_search']);
-			}
+    //
+    // Accessors & Mutators
+    //
 
-			if ( ! empty($filter['filter_type'])) {
-				$this->db->where('type', $filter['filter_type']);
-			}
+    public function getRecurringEveryAttribute($value)
+    {
+        return (empty($value)) ? [] : explode(', ', $value);
+    }
 
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('status', $filter['filter_status']);
-			}
+    public function setRecurringEveryAttribute($value)
+    {
+        return (empty($value)) ? [] : implode(', ', $value);
+    }
 
-			$query = $this->db->get();
-			$result = array();
+    public function getTypeNameAttribute($value)
+    {
+        return ($this->type == 'P') ? lang('text_percentage') : lang('text_fixed_amount');
+    }
 
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
+    public function getFormattedDiscountAttribute($value)
+    {
+        return ($this->type == 'P') ? round($this->discount).'%' : number_format($this->discount, 2);
+    }
 
-			return $result;
-		}
-	}
+    //
+    // Scopes
+    //
 
-	public function getCoupons() {
-		$this->db->from('coupons');
+    /**
+     * Filter database records
+     *
+     * @param $query
+     * @param array $filter an associative array of field/value pairs
+     *
+     * @return $this
+     */
+    public function scopeFilter($query, $filter = [])
+    {
+        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
+            $query->search($filter['filter_search'], ['name', 'code']);
+        }
 
-		$query = $this->db->get();
-		$result = array();
+        if (isset($filter['filter_type']) AND is_string($filter['filter_type'])) {
+            $query->where('type', $filter['filter_type']);
+        }
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
+        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+            $query->where('status', $filter['filter_status']);
+        }
 
-		return $result;
-	}
+        return $query;
+    }
 
-	public function getCoupon($coupon_id) {
-		$this->db->from('coupons');
-		$this->db->where('coupon_id', $coupon_id);
+    //
+    // Helpers
+    //
 
-		$query = $this->db->get();
+    /**
+     * Return all coupons
+     *
+     * @return array
+     */
+    public function getCoupons()
+    {
+        return self::get();
+    }
 
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
-		}
-	}
+    /**
+     * Find a single coupon by coupon_id
+     *
+     * @param int $coupon_id
+     *
+     * @return array
+     */
+    public function getCoupon($coupon_id)
+    {
+        return $this->find($coupon_id);
+    }
 
-	public function getCouponByCode($code) {
-		$this->db->from('coupons');
-		$this->db->where('code', $code);
+    /**
+     * Find a single coupon by coupon code
+     *
+     * @param string $code
+     *
+     * @return array
+     */
+    public function getCouponByCode($code)
+    {
+        return $this->first(['code' => $code]);
+    }
 
-		$query = $this->db->get();
+    /**
+     * Return all coupon history by coupon_id
+     *
+     * @return array
+     */
+    public function getCouponHistories()
+    {
+        $couponHistoryTable = DB::getTablePrefix().'coupons_history';
 
-		return $query->row_array();
-	}
+        $query = $this->newQuery()->history()->join('orders', 'orders.order_id', '=', 'coupons_history.order_id', 'left');
+        $query->join('customers', 'customers.customer_id', '=', 'coupons_history.customer_id', 'left');
+        $query->selectRaw("*, COUNT({$couponHistoryTable}.customer_id) as total_redemption, SUM(amount) as total_amount, ".
+            "MAX({$couponHistoryTable}.date_used) as date_last_used");
+        $query->groupBy('customers.customer_id');
+        $query->where('coupon_id', $this->getKey());
 
-	public function getCouponHistories($coupon_id) {
-		$this->db->from('coupons_history');
-		$this->db->join('orders', 'orders.order_id = coupons_history.order_id', 'left');
+        return $query->orderBy('date_used', 'DESC')->get();
+    }
 
-		$this->db->where('coupons_history.coupon_id', $coupon_id);
-		//$this->db->group_by('coupons_history.customer_id');
-		$this->db->order_by('coupons_history.date_used', 'DESC');
+    /**
+     * Redeem coupon by order_id
+     *
+     * @param int $order_id
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function redeemCoupon($order_id)
+    {
+        $query = $this->newQuery()->history()->where('status', '!=', '1')->where('order_id', $order_id);
+        if ($couponModel = $query->first()) {
+            return $couponModel->touchStatus();
+        }
+    }
 
-		$query = $this->db->get();
-		$result = array();
+    /**
+     * Create a new or update existing coupon
+     *
+     * @param int $coupon_id
+     * @param array $save
+     *
+     * @return bool|int The $coupon_id of the affected row, or FALSE on failure
+     */
+    public function saveCoupon($coupon_id, $save = [])
+    {
+        if (empty($save)) return FALSE;
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
+        $couponModel = $this->findOrNew($coupon_id);
 
-		return $result;
-	}
+        $saved = $couponModel->fill($save)->save();
 
-	public function redeemCoupon($order_id) {
-		$this->db->from('coupons_history');
-		$this->db->where('order_id', $order_id);
-		$this->db->where('status !=', '1');
+        return $saved ? $couponModel->getKey() : $saved;
+    }
 
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			$this->db->set('status', '1');
+    /**
+     * Delete a single or multiple coupon by coupon_id
+     *
+     * @param string|array $coupon_id
+     *
+     * @return int The number of deleted rows
+     */
+    public function deleteCoupon($coupon_id)
+    {
+        if (is_numeric($coupon_id)) $coupon_id = [$coupon_id];
 
-			$this->db->where('order_id', $order_id);
-			return $this->db->update('coupons_history');
-		}
-	}
-
-	public function saveCoupon($coupon_id, $save = array()) {
-		if (empty($save)) return FALSE;
-
-		if (isset($save['name'])) {
-			$this->db->set('name', $save['name']);
-		}
-
-		if (isset($save['code'])) {
-			$this->db->set('code', $save['code']);
-		}
-
-		if (isset($save['type'])) {
-			$this->db->set('type', $save['type']);
-		}
-
-		if (isset($save['discount'])) {
-			$this->db->set('discount', $save['discount']);
-		}
-
-		if (isset($save['min_total'])) {
-			$this->db->set('min_total', $save['min_total']);
-		}
-
-		if (isset($save['redemptions']) AND $save['redemptions'] > 0) {
-			$this->db->set('redemptions', $save['redemptions']);
-		} else {
-			$this->db->set('redemptions', '0');
-		}
-
-		if (isset($save['customer_redemptions']) AND $save['customer_redemptions'] > 0) {
-			$this->db->set('customer_redemptions', $save['customer_redemptions']);
-		} else {
-			$this->db->set('customer_redemptions', '0');
-		}
-
-		if ( ! empty($save['validity']) AND ! empty($save['validity_times'])) {
-			$this->db->set('validity', $save['validity']);
-
-			if ($save['validity'] == 'fixed') {
-				if (isset($save['validity_times']['fixed_date'])) {
-					$this->db->set('fixed_date', mdate('%Y-%m-%d', strtotime($save['validity_times']['fixed_date'])));
-				}
-
-				if (isset($save['validity_times']['fixed_from_time'])) {
-					$this->db->set('fixed_from_time',
-					               mdate('%H:%i', strtotime($save['validity_times']['fixed_from_time'])));
-				} else {
-					$this->db->set('fixed_from_time', mdate('%H:%i', strtotime('12:00 AM')));
-				}
-
-				if (isset($save['validity_times']['fixed_to_time'])) {
-					$this->db->set('fixed_to_time',
-					               mdate('%H:%i', strtotime($save['validity_times']['fixed_to_time'])));
-				} else {
-					$this->db->set('fixed_to_time', mdate('%H:%i', strtotime('11:59 PM')));
-				}
-			} else if ($save['validity'] == 'period') {
-				if (isset($save['validity_times']['period_start_date'])) {
-					$this->db->set('period_start_date',
-					               mdate('%Y-%m-%d', strtotime($save['validity_times']['period_start_date'])));
-				}
-
-				if (isset($save['validity_times']['period_end_date'])) {
-					$this->db->set('period_end_date',
-					               mdate('%Y-%m-%d', strtotime($save['validity_times']['period_end_date'])));
-				}
-			} else if ($save['validity'] == 'recurring') {
-				if (isset($save['validity_times']['recurring_every'])) {
-					$this->db->set('recurring_every', implode(', ', $save['validity_times']['recurring_every']));
-				}
-
-				if (isset($save['validity_times']['recurring_from_time'])) {
-					$this->db->set('recurring_from_time',
-					               mdate('%H:%i', strtotime($save['validity_times']['recurring_from_time'])));
-				} else {
-					$this->db->set('recurring_from_time', mdate('%H:%i', strtotime('12:00 AM')));
-				}
-
-				if (isset($save['validity_times']['recurring_to_time'])) {
-					$this->db->set('recurring_to_time',
-					               mdate('%H:%i', strtotime($save['validity_times']['recurring_to_time'])));
-				} else {
-					$this->db->set('recurring_to_time', mdate('%H:%i', strtotime('11:59 PM')));
-				}
-			}
-		}
-
-		if (isset($save['order_restriction']) AND is_numeric($coupon_id)) {
-			$this->db->set('order_restriction', $save['order_restriction']);
-		} else {
-			$this->db->set('order_restriction', '0');
-		}
-
-		if (isset($save['description'])) {
-			$this->db->set('description', $save['description']);
-		}
-
-		if (isset($save['status']) AND $save['status'] === '1') {
-			$this->db->set('status', $save['status']);
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (is_numeric($coupon_id)) {
-			$this->db->where('coupon_id', $coupon_id);
-			$query = $this->db->update('coupons');
-		} else {
-			$this->db->set('date_added', mdate('%Y-%m-%d', time()));
-			$query = $this->db->insert('coupons');
-			$coupon_id = $this->db->insert_id();
-		}
-
-		return $coupon_id;
-	}
-
-	public function deleteCoupon($coupon_id) {
-		if (is_numeric($coupon_id)) $coupon_id = array($coupon_id);
-
-		if ( ! empty($coupon_id) AND ctype_digit(implode('', $coupon_id))) {
-			$this->db->where_in('coupon_id', $coupon_id);
-			$this->db->delete('coupons');
-
-			return $this->db->affected_rows();
-		}
-	}
+        if (!empty($coupon_id) AND ctype_digit(implode('', $coupon_id))) {
+            return $this->whereIn('coupon_id', $coupon_id)->delete();
+        }
+    }
 }
-
-/* End of file coupons_model.php */
-/* Location: ./system/tastyigniter/models/coupons_model.php */

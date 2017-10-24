@@ -1,148 +1,140 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace System\Models;
+
+use Admin\Models\Image_tool_model;
+use Model;
 
 /**
  * Countries Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Countries_model.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
-class Countries_model extends TI_Model {
+class Countries_model extends Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table = 'countries';
 
-	public function getCount($filter = array()) {
-		if (isset($filter['filter_search'])) {
-			$this->db->like('country_name', $filter['filter_search']);
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primaryKey = 'country_id';
+
+	protected $fillable = ['country_id', 'country_name', 'iso_code_2', 'iso_code_3', 'format', 'status', 'flag'];
+
+	public $relation = [
+        'hasOne' => [
+            'currency' => 'System\Models\Currencies_model',
+        ]
+	];
+
+    public static function getDropdownOptions()
+    {
+        return static::isEnabled()->dropdown('country_name');
+	}
+
+    //
+    // Accessors & Mutators
+    //
+
+    public function getFlagUrlAttribute($value)
+    {
+        return Image_tool_model::resize($this->flag, ['default' => 'flags/no_flag.png']);
+	}
+
+    //
+    // Scopes
+    //
+
+    /**
+	 * Scope a query to only include enabled country
+	 *
+	 * @return $this
+	 */
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('status', 1);
+    }
+
+	/**
+	 * Filter database records
+	 *
+	 * @param $query
+	 * @param array $filter an associative array of field/value pairs
+	 *
+	 * @return $this
+	 */
+	public function scopeFilter($query, $filter = [])
+	{
+		if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
+			$query->search($filter['filter_search'], ['country_name']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('status', $filter['filter_status']);
+			$query->where('status', $filter['filter_status']);
 		}
 
-		$this->db->from('countries');
-
-		return $this->db->count_all_results();
+		return $query;
 	}
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
+    //
+    // Helpers
+    //
 
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('countries');
-
-			if ( ! empty($filter['filter_search'])) {
-				$this->db->like('country_name', $filter['filter_search']);
-			}
-
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('status', $filter['filter_status']);
-			}
-
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
+    /**
+	 * Return all countries from the database
+	 *
+	 * @return array
+	 */
+	public function getCountries()
+	{
+		return $this->orderBy('country_name')->get();
 	}
 
-	public function getCountries() {
-		$this->db->from('countries');
-		$this->db->order_by('country_name', 'ASC');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+	/**
+	 * Find a single country by country_id
+	 *
+	 * @param int $country_id
+	 *
+	 * @return array
+	 */
+	public function getCountry($country_id)
+	{
+		return $this->find($country_id);
 	}
 
-	public function getCountry($country_id) {
-		$this->db->from('countries');
-		$this->db->where('country_id', $country_id);
-
-		$query = $this->db->get();
-
-		if ($this->db->affected_rows() > 0) {
-			return $query->row_array();
-		}
-	}
-
-	public function saveCountry($country_id, $save = array()) {
+	/**
+	 * Create a new or update existing country
+	 *
+	 * @param int $country_id
+	 * @param array $save
+	 *
+	 * @return bool|int The $country_id of the affected row, or FALSE on failure
+	 */
+	public function saveCountry($country_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if (isset($save['country_name'])) {
-			$this->db->set('country_name', $save['country_name']);
-		}
+		$countryModel = $this->findOrNew($country_id);
 
-		if (isset($save['iso_code_2'])) {
-			$this->db->set('iso_code_2', $save['iso_code_2']);
-		}
+		$saved = $countryModel->fill($save)->save();
 
-		if (isset($save['iso_code_3'])) {
-			$this->db->set('iso_code_3', $save['iso_code_3']);
-		}
-
-		if (isset($save['flag'])) {
-			$this->db->set('flag', $save['flag']);
-		}
-
-		if (isset($save['format'])) {
-			$this->db->set('format', $save['format']);
-		}
-
-		if (isset($save['status']) AND $save['status'] === '1') {
-			$this->db->set('status', $save['status']);
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (is_numeric($country_id)) {
-			$this->db->where('country_id', $country_id);
-			$query = $this->db->update('countries');
-		} else {
-			$query = $this->db->insert('countries');
-			$country_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($country_id)) ? $country_id : FALSE;
+		return $saved ? $countryModel->getKey() : $saved;
 	}
 
-	public function deleteCountry($country_id) {
-		if (is_numeric($country_id)) $country_id = array($country_id);
+	/**
+	 * Delete a single or multiple country by country_id
+	 *
+	 * @param string|array $country_id
+	 *
+	 * @return int The number of deleted rows
+	 */
+	public function deleteCountry($country_id)
+	{
+		if (is_numeric($country_id)) $country_id = [$country_id];
 
-		if ( ! empty($country_id) AND ctype_digit(implode('', $country_id))) {
-			$this->db->where_in('country_id', $country_id);
-			$this->db->delete('countries');
-
-			return $this->db->affected_rows();
+		if (!empty($country_id) AND ctype_digit(implode('', $country_id))) {
+			return $this->whereIn('country_id', $country_id)->delete();
 		}
 	}
 }
-
-/* End of file countries_model.php */
-/* Location: ./system/tastyigniter/models/countries_model.php */

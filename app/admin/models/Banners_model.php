@@ -1,122 +1,181 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Model;
 
 /**
  * Banners Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Banners_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Banners_model extends TI_Model {
+class Banners_model extends Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table = 'banners';
 
-	public function getBanners() {
-		$this->db->from('banners');
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primaryKey = 'banner_id';
 
-		$query = $this->db->get();
+	protected $fillable = ['name', 'type', 'click_url', 'language_id', 'alt_text', 'image_code', 'custom_code', 'status'];
 
-		$result = array();
+    public $relation = [
+        'belongsTo' => [
+            'language' => 'System\Models\Languages_model',
+        ],
+    ];
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
+	public $casts = [
+	    'image_code' => 'serialize',
+    ];
 
-		return $result;
+    //
+    // Accessors & Mutators
+    //
+
+    public function getTypeLabelAttribute()
+    {
+        return ucwords($this->type);
 	}
 
-	public function getBanner($banner_id) {
-		$this->db->from('banners');
+    //
+    // Scopes
+    //
 
-		$this->db->where('banner_id', $banner_id);
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('status', 1);
+    }
 
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
+    /**
+	 * Filter database records
+	 *
+	 * @param $query
+	 * @param array $filter an associative array of field/value pairs
+	 *
+	 * @return $this
+	 */
+	public function scopeFilter($query, $filter = [])
+	{
+        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
+			$query->search($filter['filter_search'], ['name']);
 		}
+
+		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+			$query->where('status', $filter['filter_status']);
+		}
+
+		return $query;
 	}
 
-	public function saveBanner($banner_id, $save = array()) {
-		if (empty($save)) return FALSE;
+    //
+    // Helpers
+    //
 
-		if (isset($save['name'])) {
-			$this->db->set('name', $save['name']);
-		}
+    public function getLanguageIdOptions()
+    {
+        return $this->dropdown('name');
+    }
 
-		if (isset($save['type'])) {
-			$this->db->set('type', $save['type']);
-		}
+    public function getImageThumb($options = [])
+	{
+		$defaults = ['name' => 'no_photo.png', 'path' => 'data/no_photo.png', 'url' => $options['no_photo']];
 
-		if (isset($save['click_url'])) {
-			$this->db->set('click_url', $save['click_url']);
-		}
+		if (empty($this->image_code))
+			return $defaults;
 
-		if (isset($save['language_id'])) {
-			$this->db->set('language_id', $save['language_id']);
-		}
+		$image = unserialize($this->image_code);
 
-		if (isset($save['alt_text'])) {
-			$this->db->set('alt_text', $save['alt_text']);
-		}
+		if (empty($image['path']))
+			return $defaults;
 
-		if (isset($save['type']) AND $save['type'] === 'custom' AND isset($save['custom_code'])) {
-
-			$this->db->set('custom_code', $save['custom_code']);
-		} else if (isset($save['type']) AND $save['type'] === 'image' AND isset($save['image_path'])) {
-
-			$save['image_code']['path'] = $save['image_path'];
-
-			$this->db->set('image_code', serialize($save['image_code']));
-		} else if (isset($save['type']) AND $save['type'] === 'carousel') {
-			if (isset($save['carousels']) AND is_array($save['carousels'])) {
-				foreach ($save['carousels'] as $key => $value) {
-					$save['image_code']['paths'][] = $value;
-				}
-
-				$this->db->set('image_code', serialize($save['image_code']));
-			}
-		}
-
-		if (isset($save['status'])) {
-			$this->db->set('status', $save['status']);
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (is_numeric($banner_id)) {
-			$this->db->where('banner_id', $banner_id);
-			$query = $this->db->update('banners');
-		} else {
-			$query = $this->db->insert('banners');
-			$banner_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($banner_id)) ? $banner_id : FALSE;
+		return $this->getThumbArray($image['path'], 120, 120);
 	}
 
-	public function deleteBanner($banner_id) {
-		if (is_numeric($banner_id)) $banner_id = array($banner_id);
+	public function getCarouselThumbs($options = [])
+	{
+		$defaults = [];
+
+		if (empty($this->image_code))
+			return $defaults;
+
+		$image = unserialize($this->image_code);
+
+		if (!is_array($image['paths']))
+			return $defaults;
+
+		foreach ($image['paths'] as $path) {
+			$images[] = $this->getThumbArray($path, 120, 120);
+		}
+
+		return $images;
+	}
+
+	public function getThumbArray($file_path, $width = 120, $height = 120)
+	{
+		return [
+			'name' => basename($file_path),
+			'path' => $file_path,
+			'url'  => Image_tool_model::resize($file_path, $width, $height),
+		];
+	}
+
+	/**
+	 * Return all banners from the database
+	 *
+	 * @return array
+	 */
+	public function getBanners()
+	{
+		return $this->get();
+	}
+
+	/**
+	 * Find a single banner by banner_id
+	 *
+	 * @param int $banner_id
+	 *
+	 * @return array
+	 */
+	public function getBanner($banner_id)
+	{
+		return $this->findOrNew($banner_id)->toArray();
+	}
+
+	/**
+	 * Create a new or update existing banner
+	 *
+	 * @param int $banner_id
+	 * @param array $save input post data
+	 *
+	 * @return bool|int The $banner_id of the affected row, or FALSE on failure
+	 */
+	public function saveBanner($banner_id, $save = [])
+	{
+		if (count($save)) return FALSE;
+
+		$bannerModel = $this->findOrNew($banner_id);
+
+		$saved = $bannerModel->fill($save)->save();
+
+		return $saved ? $bannerModel->getKey() : $saved;
+	}
+
+	/**
+	 * Delete a single or multiple banner by banner_id
+	 *
+	 * @param string|array $banner_id
+	 *
+	 * @return int The number of deleted rows
+	 */
+	public function deleteBanner($banner_id)
+	{
+		if (is_numeric($banner_id)) $banner_id = [$banner_id];
 
 		if (isset($banner_id) AND ctype_digit(implode('', $banner_id))) {
-			$this->db->where_in('banner_id', $banner_id);
-			$this->db->delete('banners');
-
-			return $this->db->affected_rows();
+			return $this->whereIn('banner_id', $banner_id)->delete();
 		}
 	}
 }
-
-/* End of file banners_model.php */
-/* Location: ./system/tastyigniter/models/banners_model.php */

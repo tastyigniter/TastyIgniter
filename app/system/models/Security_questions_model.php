@@ -1,80 +1,83 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace System\Models;
+
+use Model;
+use Igniter\Flame\Database\Traits\Sortable;
 
 /**
- * Security_questions Model Class
+ * SecurityQuestions Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Security_questions_model.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
-class Security_questions_model extends TI_Model {
+class Security_questions_model extends Model
+{
+    use Sortable;
 
-	public function getQuestions() {
-		$this->db->from('security_questions');
+    const SORT_ORDER = 'priority';
 
-		$this->db->order_by('priority', 'ASC');
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'security_questions';
 
-		$query = $this->db->get();
-		$result = array();
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'question_id';
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
+    /**
+     * Return all security questions
+     *
+     * @return array
+     */
+    public function getQuestions()
+    {
+        return $this->orderBy('priority')->get();
+    }
 
-		return $result;
-	}
+    /**
+     * Find a single security_question by question_id
+     *
+     * @param int $question_id
+     *
+     * @return array
+     */
+    public function getQuestion($question_id)
+    {
+        if (!$question = $this->find($question_id))
+            return null;
 
-	public function getQuestion($question_id) {
-		$this->db->from('security_questions');
+        return $question->toArray();
+    }
 
-		$this->db->where('question_id', $question_id);
-		$query = $this->db->get();
+    /**
+     * Create a new or update an existing security question
+     *
+     * @param array $questions
+     *
+     * @return bool
+     */
+    public function updateQuestions($questions = [])
+    {
+        $query = FALSE;
 
-		return $query->row_array();
-	}
+        if (!empty($questions)) {
+            $priority = 1;
+            foreach ($questions as $question) {
+                if (!empty($question['text'])) {
+                    $this->updateOrCreate([
+                        'question_id' => isset($question['question_id']) ? $question['question_id'] : null
+                    ], [
+                        'text'     => $question['text'],
+                        'priority' => $priority,
+                    ]);
+                }
 
-	public function updateQuestions($questions = array()) {
-		$query = FALSE;
+                $priority++;
+            }
 
-		if ( ! empty($questions)) {
-			$priority = 1;
+            $query = TRUE;
+        }
 
-			foreach ($questions as $question) {
-				if ( ! empty($question['text'])) {
-					if ( ! empty($question['question_id']) AND $question['question_id'] > 0) {
-						$this->db->set('text', $question['text']);
-						$this->db->set('priority', $priority);
-						$this->db->where('question_id', $question['question_id']);
-						$this->db->update('security_questions');
-					} else if ( ! empty($question['text'])) {
-						$this->db->set('text', $question['text']);
-						$this->db->set('priority', $priority);
-						$this->db->insert('security_questions');
-					}
-				}
-
-				$priority ++;
-			}
-
-			$query = TRUE;
-		}
-
-		return $query;
-	}
+        return $query;
+    }
 }
-
-/* End of file security_questions_model.php */
-/* Location: ./system/tastyigniter/models/security_questions_model.php */

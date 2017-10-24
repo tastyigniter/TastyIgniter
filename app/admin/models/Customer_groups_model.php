@@ -1,121 +1,118 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Model;
 
 /**
- * Customer_groups Model Class
+ * CustomerGroups Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Customer_groups_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
+class Customer_groups_model extends Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table = 'customer_groups';
 
-class Customer_groups_model extends TI_Model {
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primaryKey = 'customer_group_id';
 
-	public function getCount($filter = array()) {
-		$this->db->from('customer_groups');
+	protected $fillable = ['group_name', 'approval'];
 
-		return $this->db->count_all_results();
+    public $relation = [
+        'hasMany' => [
+            'customers' => 'Admin\Models\Customers_model',
+        ],
+    ];
+
+    public static function getDropdownOptions()
+    {
+        return static::dropdown('group_name');
 	}
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
+    //
+    // Accessors & Mutators
+    //
 
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('customer_groups');
+    public function getCustomerCountAttribute($value)
+    {
+        return $this->getCustomersCount($this->customer_group_id);
+    }
 
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
+    //
+    // Helpers
+    //
 
-			$query = $this->db->get();
-			$result = array();
+    /**
+	 * Return all customer groups
+	 *
+	 * @return array
+	 */
+	public function getCustomerGroups()
+	{
+		return $this->get();
+	}
 
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
+	/**
+	 * Find a single customer group by customer_group_id
+	 *
+	 * @param int $customer_group_id
+	 *
+	 * @return array
+	 */
+	public function getCustomerGroup($customer_group_id)
+	{
+		return $this->find($customer_group_id);
+	}
 
-			return $result;
+	/**
+	 * Return total number of customers in group
+	 *
+	 * @param int $customer_group_id
+	 *
+	 * @return int
+	 */
+	public function getCustomersCount($customer_group_id)
+	{
+		if ($customer_group_id) {
+			return $this->customers()->count();
 		}
 	}
 
-	public function getCustomerGroups() {
-		$this->db->from('customer_groups');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
-	}
-
-	public function getCustomerGroup($customer_group_id) {
-		$this->db->from('customer_groups');
-
-		$this->db->where('customer_group_id', $customer_group_id);
-
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
-		}
-	}
-
-	public function saveCustomerGroup($customer_group_id, $save = array()) {
+	/**
+	 * Create a new or update existing currency
+	 *
+	 * @param int $customer_group_id
+	 * @param array $save
+	 *
+	 * @return bool|int The $customer_group_id of the affected row, or FALSE on failure
+	 */
+	public function saveCustomerGroup($customer_group_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if (isset($save['group_name'])) {
-			$this->db->set('group_name', $save['group_name']);
-		}
+		$customerGroupModel = $this->findOrNew($customer_group_id);
 
-		if (isset($save['description'])) {
-			$this->db->set('description', $save['description']);
-		}
+		$saved = $customerGroupModel->fill($save)->save();
 
-		if (isset($save['approval']) AND $save['approval'] === '1') {
-			$this->db->set('approval', $save['approval']);
-		} else {
-			$this->db->set('approval', '0');
-		}
-
-		if (is_numeric($customer_group_id)) {
-			$this->db->where('customer_group_id', $customer_group_id);
-			$query = $this->db->update('customer_groups');
-		} else {
-			$query = $this->db->insert('customer_groups');
-			$customer_group_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($customer_group_id)) ? $customer_group_id : FALSE;
+		return $saved ? $customerGroupModel->getKey() : $saved;
 	}
 
-	public function deleteCustomerGroup($customer_group_id) {
-		if (is_numeric($customer_group_id)) $customer_group_id = array($customer_group_id);
+	/**
+	 * Delete a single or multiple customer group by customer_group_id
+	 *
+	 * @param string|array $customer_group_id
+	 *
+	 * @return int  The number of deleted rows
+	 */
+	public function deleteCustomerGroup($customer_group_id)
+	{
+		if (is_numeric($customer_group_id)) $customer_group_id = [$customer_group_id];
 
-		if ( ! empty($customer_group_id) AND ctype_digit(implode('', $customer_group_id))) {
-			$this->db->where_in('customer_group_id', $customer_group_id);
-			$this->db->delete('customer_groups');
-
-			return $this->db->affected_rows();
+		if (!empty($customer_group_id) AND ctype_digit(implode('', $customer_group_id))) {
+			return $this->whereIn('customer_group_id', $customer_group_id)->delete();
 		}
 	}
 }
-
-/* End of file customer_groups_model.php */
-/* Location: ./system/tastyigniter/models/customer_groups_model.php */

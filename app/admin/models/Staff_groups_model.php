@@ -1,175 +1,148 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Model;
 
 /**
- * Staff_groups Model Class
+ * StaffGroups Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Staff_groups_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Staff_groups_model extends TI_Model {
+class Staff_groups_model extends Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table = 'staff_groups';
 
-	public function getCount($filter = array()) {
-		$this->db->from('staff_groups');
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primaryKey = 'staff_group_id';
 
-		return $this->db->count_all_results();
+    public $casts = [
+		'permissions' => 'serialize',
+	];
+
+    public function getStaffCountAttribute($value)
+    {
+        return $this->getUsersCount($this->staff_group_id);
+    }
+
+    //
+    // Helpers
+    //
+
+    /**
+	 * Return all staff groups
+	 *
+	 * @return array
+	 */
+	public function getStaffGroups()
+	{
+		return $this->get();
 	}
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
-
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('staff_groups');
-
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
-	}
-
-	public function getStaffGroups() {
-		$this->db->from('staff_groups');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
-	}
-
-	public function getStaffGroup($staff_group_id) {
-		$this->db->from('staff_groups');
-
-		$this->db->where('staff_group_id', $staff_group_id);
-
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0) {
-			$row = $query->row_array();
-
-			return array(
+	/**
+	 * Find a single staff_group by staff_group_id
+	 *
+	 * @param int $staff_group_id
+	 *
+	 * @return array
+	 */
+	public function getStaffGroup($staff_group_id)
+	{
+		if ($row = $this->findOrNew($staff_group_id)->toArray()) {
+			return [
 				'staff_group_id'          => $row['staff_group_id'],
 				'staff_group_name'        => $row['staff_group_name'],
 				'customer_account_access' => $row['customer_account_access'],
 				'location_access'         => $row['location_access'],
 				'permissions'             => $row['permissions'],
-			);
+			];
 		}
 	}
 
-	public function getUsersCount($staff_group_id) {
+	/**
+	 * Return total number of staff in group
+	 *
+	 * @param $staff_group_id
+	 *
+	 * @return int
+	 */
+	public function getUsersCount($staff_group_id)
+	{
 		if ($staff_group_id) {
-			$this->db->from('staffs');
-
-			$this->db->where('staff_group_id', $staff_group_id);
-
-			return $this->db->count_all_results();
+			return Staffs_model::where('staff_group_id', $staff_group_id)->count();
 		}
 	}
 
-	public function saveStaffGroup($staff_group_id, $save = array()) {
+	/**
+	 * Create a new or update existing staff group
+	 *
+	 * @param int $staff_group_id
+	 * @param array $save
+	 *
+	 * @return bool|int The $staff_group_id of the affected row, or FALSE on failure
+	 */
+	public function saveStaffGroup($staff_group_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if (isset($save['staff_group_name'])) {
-			$this->db->set('staff_group_name', $save['staff_group_name']);
-		}
+		$save['permissions'] = isset($save['permissions']) ? $save['permissions'] : [];
 
-		if (isset($save['location_access']) AND $save['location_access'] === '1') {
-			$this->db->set('location_access', $save['location_access']);
-		} else {
-			$this->db->set('location_access', '0');
-		}
+		$groupModel = $this->findOrNew($staff_group_id);
 
-		if (isset($save['customer_account_access']) AND $save['customer_account_access'] === '1') {
-			$this->db->set('customer_account_access', $save['customer_account_access']);
-		} else {
-			$this->db->set('customer_account_access', '0');
-		}
+		$saved = $groupModel->fill($save)->save();
 
-		if (isset($save['permissions'])) {
-			$this->db->set('permissions', serialize($save['permissions']));
-		} else {
-			$this->db->set('permissions', serialize(array()));
-		}
-
-		if (is_numeric($staff_group_id)) {
-			$this->db->where('staff_group_id', $staff_group_id);
-			$query = $this->db->update('staff_groups');
-		} else {
-			$query = $this->db->insert('staff_groups');
-			$staff_group_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($staff_group_id)) ? $staff_group_id : FALSE;
+		return $saved ? $groupModel->getKey() : $saved;
 	}
 
-	public function assignPermissionRule($staff_group_id, $permission_rule) {
+	/**
+	 * Assign permission rule to staff group
+	 *
+	 * @param int $staff_group_id
+	 * @param array $permission_rule
+	 *
+	 * @return bool
+	 */
+	public function assignPermissionRule($staff_group_id, $permission_rule)
+	{
 		$query = FALSE;
 
-		if (isset($permission_rule['name']) AND ! ($permission = $this->Permissions_model->getPermissionByName($permission_rule['name']))) {
+		if (isset($permission_rule['name']) AND !($permission = Permissions_model::getPermissionByName($permission_rule['name']))) {
 			return $query;
 		}
 
-		$permission_name = isset($permission['name']) ? $permission['name'] : NULL;
+		$permission_name = isset($permission['name']) ? $permission['name'] : null;
 
-		$staff_group = $this->db->get_where('staff_groups', array('staff_group_id' => $staff_group_id));
+		if ($groupModel = $this->find($staff_group_id)) {
+			$row = $groupModel->toArray();
+			$group_permissions = (!empty($row['permissions'])) ? $row['permissions'] : [];
 
-		if ($staff_group->num_rows() > 0) {
-			$row = $staff_group->row_array();
-			$group_permissions = ( ! empty($row['permissions'])) ? unserialize($row['permissions']) : array();
-
-			is_array($permission_rule['action']) OR (array) $permission_rule['action'];
+			is_array($permission_rule['action']) OR (array)$permission_rule['action'];
 
 			// Add new permission to group_permissions, Add new permission by name instead of id
 			$group_permissions[$permission_name] = $permission_rule['action'];
 
-			$this->db->set('permissions', serialize($group_permissions));
-			$this->db->where('staff_group_id', $staff_group_id);
-			$query = $this->db->update('staff_groups');
+			$query = $groupModel->update(['permissions' => $group_permissions]);
 		}
 
 		return $query;
 	}
 
-	public function deleteStaffGroup($staff_group_id) {
-		if (is_numeric($staff_group_id)) $staff_group_id = array($staff_group_id);
+	/**
+	 * Delete a single or multiple staff group by staff_group_id
+	 *
+	 * @param string|array $staff_group_id
+	 *
+	 * @return int  The number of deleted rows
+	 */
+	public function deleteStaffGroup($staff_group_id)
+	{
+		if (is_numeric($staff_group_id)) $staff_group_id = [$staff_group_id];
 
-		if ( ! empty($staff_group_id) AND ctype_digit(implode('', $staff_group_id))) {
-			$this->db->where_in('staff_group_id', $staff_group_id);
-			$this->db->where('staff_group_id !=', '11');
-			$this->db->delete('staff_groups');
-
-			return $this->db->affected_rows();
+		if (!empty($staff_group_id) AND ctype_digit(implode('', $staff_group_id))) {
+			return $this->where('staff_group_id', '!=', '11')->whereIn('staff_group_id', $staff_group_id)->delete();
 		}
 	}
 }
-
-/* End of file staff_groups_model.php */
-/* Location: ./system/tastyigniter/models/staff_groups_model.php */

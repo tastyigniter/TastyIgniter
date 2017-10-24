@@ -1,262 +1,276 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Model;
 
 /**
  * Statuses Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Statuses_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Statuses_model extends TI_Model {
+class Statuses_model extends Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table = 'statuses';
 
-	public function getCount($filter = array()) {
-		if ( ! empty($filter['filter_type'])) {
-			$this->db->where('status_for', $filter['filter_type']);
-		}
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primaryKey = 'status_id';
 
-		$this->db->from('statuses');
+	public $relation = [
+        'hasMany' => [
+            'status_history' => 'Admin\Models\Status_history_model',
+        ]
+	];
 
-		return $this->db->count_all_results();
+    public static function getDropdownOptionsForOrder()
+    {
+        return static::isForOrder()->dropdown('status_name');
 	}
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
-
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('statuses');
-
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
-
-			if (isset($filter['filter_type']) AND is_numeric($filter['filter_type'])) {
-				$this->db->where('status_for', $filter['filter_type']);
-			}
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
+    public static function getDropdownOptionsForReservation()
+    {
+        return static::isForReservation()->dropdown('status_name');
 	}
 
-	public function getStatuses($for = FALSE) {
-		$this->db->from('statuses');
-		$this->db->order_by('status_for', 'ASC');
+    //
+    // Scopes
+    //
 
-		if ( ! empty($for)) {
-			$this->db->where('status_for', $for);
-		}
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+    /**
+	 * Scope a query to only include order statuses
+	 *
+	 * @param $query
+	 *
+	 * @return $this
+	 */
+	public function scopeIsForOrder($query)
+	{
+		return $query->where('status_for', 'order');
 	}
 
-	public function getStatusHistories($for, $order_id) {
-		$this->db->select('status_history_id, status_history.date_added, staffs.staff_name, status_history.assignee_id, statuses.status_name, statuses.status_color, status_history.notify, status_history.comment');
-		$this->db->from('status_history');
-		$this->db->join('statuses', 'statuses.status_id = status_history.status_id', 'left');
-		$this->db->join('staffs', 'staffs.staff_id = status_history.staff_id', 'left');
-		$this->db->where('object_id', $order_id);
-		$this->db->where($this->db->dbprefix('status_history') . '.status_for', $for);
-		$this->db->order_by('status_history.date_added', 'DESC');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+	/**
+	 * Scope a query to only include reservation statuses
+	 *
+	 * @param $query
+	 *
+	 * @return $this
+	 */
+	public function scopeIsForReservation($query)
+	{
+		return $query->where('status_for', 'reserve');
 	}
 
-	public function getStatusHistory($for = FALSE, $order_id, $status_id = array()) {
-		$this->db->from('status_history');
-		$this->db->where('status_for', $for);
-		$this->db->where('status_history.object_id', $order_id);
+    /**
+     * Filter database records
+     *
+     * @param $query
+     * @param array $filter an associative array of field/value pairs
+     *
+     * @return $this
+     */
+    public function scopeFilter($query, $filter = [])
+    {
+        if (isset($filter['filter_type']) AND is_numeric($filter['filter_type'])) {
+            $query->where('status_for', $filter['filter_type']);
+        }
+
+        return $query;
+    }
+
+    //
+    // Helpers
+    //
+
+    /**
+     * Return status_for attribute as lang text, used by
+     *
+     * @param $value
+     * @param $row
+     *
+     * @return string
+     */
+    public function getStatusForNameAttribute($value)
+    {
+        return ($this->status_for == 'reserve') ? lang('text_reservation') : lang('text_order');
+    }
+
+    public static function listStatuses()
+    {
+        return static::all()->keyBy('status_id');
+    }
+
+	/**
+	 * Return all status by order or reservation
+	 *
+	 * @param string $for
+	 *
+	 * @return array
+	 */
+	public function getStatuses($for = '')
+	{
+		$query = $this->query();
+
+		if (!empty($for)) {
+			$query->where('status_for', $for);
+		}
+
+		return $query->orderBy('status_for')->get();
+	}
+
+	/**
+	 * Return all status history by order or reservation
+	 *
+	 * @param $for
+	 * @param $order_id
+	 *
+	 * @return array
+	 */
+	public function getStatusHistories($for, $order_id)
+	{
+		$staffTable = $this->getTablePrefix('staffs');
+		$statusHistoryTable = $this->getTablePrefix('status_history');
+		$statusesTable = $this->getTablePrefix('statuses');
+
+		$query = Status_history_model::selectRaw("status_history_id, {$statusHistoryTable}.date_added, {$staffTable}.staff_name," .
+			" {$statusHistoryTable}.assignee_id, {$statusesTable}.status_name, {$statusesTable}.status_color, ".
+			"{$statusHistoryTable}.notify, {$statusHistoryTable}.comment")
+											->where('object_id', $order_id)
+											->where('status_history.status_for', $for)
+											->orderBy('status_history.date_added', 'DESC')
+											->joinStatusAndStaffTables();
+		return $query->get();
+	}
+
+	/**
+	 * Find a single status history
+	 *
+	 * @param string $for
+	 * @param int $order_id
+	 * @param array $status_id
+	 *
+	 * @return array
+	 */
+	public function getStatusHistory($for = null, $order_id, $status_id = [])
+	{
+		$query = Status_history_model::where('status_for', $for)
+											->where('status_history.object_id', $order_id);
 
 		if (!empty($status_id)) {
-			$this->db->where_in('status_history.status_id', (array) $status_id);
+			$query->whereIn('status_history.status_id', (array)$status_id);
 		}
 
-		$this->db->order_by('status_history.date_added', 'DESC');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->row_array();
-		}
-
-		return $result;
+		return $query->orderBy('status_history.date_added', 'DESC')->firstOrNew()->toArray();
 	}
 
-
-	public function statusExists($for = FALSE, $order_id, $status_id = array()) {
+	/**
+	 * Search for status history by order_id
+	 *
+	 * @param string $for
+	 * @param int $order_id
+	 * @param array $status_id
+	 *
+	 * @return bool
+	 */
+	public function statusExists($for = null, $order_id, $status_id = [])
+	{
 		$for = ($for === 'reservation') ? 'reserve' : $for;
 
-		$this->db->from('status_history');
-		$this->db->where('status_for', $for);
-		$this->db->where('status_history.object_id', $order_id);
+		$query = Status_history_model::where('status_for', $for)
+											->where('status_history.object_id', $order_id);
 
 		if (!empty($status_id)) {
-			$this->db->where_in('status_history.status_id', (array) $status_id);
+			$query->whereIn('status_history.status_id', (array)$status_id);
 		}
 
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0) {
+		if ($query->first()) {
 			return TRUE;
 		}
 
 		return FALSE;
 	}
 
-	public function getStatus($status_id) {
-		$this->db->from('statuses');
-
-		$this->db->where('status_id', $status_id);
-		$query = $this->db->get();
-
-		if ($this->db->affected_rows() > 0) {
-			return $query->row_array();
-		}
+	/**
+	 * Find a single status by status_id
+	 *
+	 * @param int $status_id
+	 *
+	 * @return array
+	 */
+	public function getStatus($status_id)
+	{
+		return $this->findOrNew($status_id)->toArray();
 	}
 
-	public function getStatusComment($status_id = '') {
+	/**
+	 * Return a single status comment by status_id
+	 *
+	 * @param string $status_id
+	 *
+	 * @return string
+	 */
+	public function getStatusComment($status_id = '')
+	{
 		if ($status_id !== '') {
-			$this->db->from('statuses');
-
-			$this->db->where('status_id', $status_id);
-			$query = $this->db->get();
-
-			if ($this->db->affected_rows() > 0) {
-				$row = $query->row_array();
-
+			if ($row = $this->getStatus($status_id)) {
 				return $row['status_comment'];
 			}
 		}
 	}
 
-	public function saveStatus($status_id, $save = array()) {
+	/**
+	 * Create a new or update existing status
+	 *
+	 * @param int $status_id
+	 * @param array $save
+	 *
+	 * @return bool|int The $status_id of the affected row, or FALSE on failure
+	 */
+	public function saveStatus($status_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if (isset($save['status_name'])) {
-			$this->db->set('status_name', $save['status_name']);
-		}
+		$statusModel = $this->findOrNew($status_id);
 
-		if (isset($save['status_color'])) {
-			$this->db->set('status_color', $save['status_color']);
-		}
+		$saved = $statusModel->fill($save)->save();
 
-		if (isset($save['status_comment'])) {
-			$this->db->set('status_comment', $save['status_comment']);
-		}
-
-		if (isset($save['status_for'])) {
-			$this->db->set('status_for', $save['status_for']);
-		}
-
-		if (isset($save['notify_customer']) AND $save['notify_customer'] === '1') {
-			$this->db->set('notify_customer', $save['notify_customer']);
-		} else {
-			$this->db->set('notify_customer', '0');
-		}
-
-		if (is_numeric($status_id)) {
-			$this->db->where('status_id', $status_id);
-			$query = $this->db->update('statuses');
-		} else {
-			$query = $this->db->insert('statuses');
-			$status_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($status_id)) ? $status_id : FALSE;
+		return $saved ? $statusModel->getKey() : $saved;
 	}
 
-	public function addStatusHistory($for = '', $add = array()) {
-		$query = FALSE;
-
-		if (isset($add['staff_id'])) {
-			$this->db->set('staff_id', $add['staff_id']);
-		}
-
-		if (isset($add['assignee_id'])) {
-			$this->db->set('assignee_id', $add['assignee_id']);
-		}
-
-		if (isset($add['object_id'])) {
-			$this->db->set('object_id', $add['object_id']);
-		}
-
-		if (isset($add['status_id'])) {
-			$this->db->set('status_id', $add['status_id']);
-		}
+	/**
+	 * Create a new status history
+	 *
+	 * @param string $for
+	 * @param array $add
+	 *
+	 * @return bool
+	 */
+	public function addStatusHistory($for = '', $add = [])
+	{
+		if (empty($add)) return FALSE;
 
 		if ($for !== '') {
-			$this->db->set('status_for', $for);
+			$add['status_for'] = $for;
 		}
 
-		if (isset($add['notify']) AND $add['notify'] === '1') {
-			$this->db->set('notify', $add['notify']);
-		} else {
-			$this->db->set('notify', '0');
-		}
-
-		if (isset($add['comment'])) {
-			$this->db->set('comment', $add['comment']);
-		}
-
-		if (isset($add['date_added'])) {
-			$this->db->set('date_added', $add['date_added']);
-		}
-
-		if ( ! empty($add)) {
-			if ($this->db->insert('status_history')) {
-				$query = $this->db->insert_id();
-			}
-		}
-
-		return $query;
+		return Status_history_model::insertGetId($add);
 	}
 
-	public function deleteStatus($status_id) {
-		if (is_numeric($status_id)) $status_id = array($status_id);
+	/**
+	 * Delete a single or multiple status by status_id
+	 *
+	 * @param string|array $status_id
+	 *
+	 * @return int  The number of deleted rows
+	 */
+	public function deleteStatus($status_id)
+	{
+		if (is_numeric($status_id)) $status_id = [$status_id];
 
-		if ( ! empty($status_id) AND ctype_digit(implode('', $status_id))) {
-			$this->db->where_in('status_id', $status_id);
-			$this->db->delete('statuses');
-
-			return $this->db->affected_rows();
+		if (!empty($status_id) AND ctype_digit(implode('', $status_id))) {
+			return $this->whereIn('status_id', $status_id)->delete();
 		}
 	}
 }
-
-/* End of file statuses_model.php */
-/* Location: ./system/tastyigniter/models/statuses_model.php */

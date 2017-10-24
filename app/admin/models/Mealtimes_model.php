@@ -1,66 +1,88 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace Admin\Models;
+
+use Model;
 
 /**
  * Mealtimes Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Mealtimes_model.php
- * @link           http://docs.tastyigniter.com
+ * @package Admin
  */
-class Mealtimes_model extends TI_Model {
+class Mealtimes_model extends Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table = 'mealtimes';
 
-	public function getMealtimes() {
-		$this->db->from('mealtimes');
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primaryKey = 'mealtime_id';
 
-		$query = $this->db->get();
-		$result = array();
+	public $casts = [
+	    'start_time' => 'time',
+	    'end_time' => 'time'
+    ];
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+    public function getDropdownOptions()
+    {
+        $this->isEnabled()->dropdown('mealtime_name');
 	}
 
-	public function getMealtime($mealtime_id) {
-		$this->db->from('mealtimes');
+    //
+    // Scopes
+    //
 
-		$this->db->where('mealtime_id', $mealtime_id);
-		$query = $this->db->get();
-
-		return $query->row_array();
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('mealtime_status', 1);
 	}
 
-	public function updateMealtimes($mealtimes = array()) {
+    //
+    // Helpers
+    //
+
+    public function availableNow()
+    {
+        $currentTime = time();
+        return (strtotime($this->start_time) <= $currentTime AND strtotime($this->end_time) >= $currentTime);
+    }
+
+    /**
+	 * Return all enabled mealtimes
+	 * @return array
+	 */
+	public function getMealtimes()
+	{
+		return $this->get();
+	}
+
+	/**
+	 * Find a single mealtime by mealtime_id
+	 *
+	 * @param $mealtime_id
+	 *
+	 * @return object
+	 */
+	public function getMealtime($mealtime_id)
+	{
+		return $this->find($mealtime_id);
+	}
+
+	/**
+	 * Create a new or update existing mealtimes
+	 *
+	 * @param array $mealtimes
+	 *
+	 * @return bool
+	 */
+	public function updateMealtimes($mealtimes = [])
+	{
 		$query = FALSE;
 
-		if ( ! empty($mealtimes)) {
+		if (!empty($mealtimes)) {
 			foreach ($mealtimes as $mealtime) {
-
-				$this->db->set('mealtime_name', $mealtime['mealtime_name']);
-				$this->db->set('start_time', mdate('%H:%i', strtotime($mealtime['start_time'])));
-				$this->db->set('end_time', mdate('%H:%i', strtotime($mealtime['end_time'])));
-				$this->db->set('mealtime_status', $mealtime['mealtime_status']);
-
-				if ( ! empty($mealtime['mealtime_id']) AND $mealtime['mealtime_id'] > 0) {
-					$this->db->where('mealtime_id', $mealtime['mealtime_id']);
-					$this->db->update('mealtimes');
-				} else {
-					$this->db->insert('mealtimes');
-				}
+				$this->findOrNew($mealtime['mealtime_id'])->fill($mealtime)->save();
 			}
 
 			$query = TRUE;
@@ -69,6 +91,3 @@ class Mealtimes_model extends TI_Model {
 		return $query;
 	}
 }
-
-/* End of file Mealtimes_model.php */
-/* Location: ./system/tastyigniter/models/Mealtimes_model.php */

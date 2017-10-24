@@ -1,122 +1,199 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace System\Models;
+
+use Igniter\Flame\Database\Builder;
+use Model;
 
 /**
  * Activities Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Activities_model.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
-class Activities_model extends TI_Model {
+class Activities_model extends Model
+{
+    /**
+     * @var string The database table name
+     */
+    public $table = 'activities';
 
-	public function getCount($filter = array()) {
-		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('status', $filter['filter_status']);
-		}
+    /**
+     * @var string The database table primary key
+     */
+    public $primaryKey = 'activity_id';
 
-		$this->db->from('activities');
+    protected $fillable = ['domain', 'context', 'user', 'user_id', 'action', 'message', 'status', 'date_added'];
 
-		return $this->db->count_all_results();
-	}
+    public $timestamps = TRUE;
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
+    /**
+     * @var array Auto-fill the created date field on insert
+     */
+    const CREATED_AT = 'date_added';
+    const UPDATED_AT = 'date_updated';
 
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('activities');
+    public $casts = [
+        'properties' => 'collection',
+    ];
 
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('status', $filter['filter_status']);
-			}
+    public $relation = [
+        'morphTo' => [
+            'subject' => [],
+            'causer' => []
+        ],
+    ];
 
-			$this->db->order_by('date_added', 'DESC');
+    public static function listMenuActivities($menu, $item, $user)
+    {
+        $query = self::with(['causer'])->listRecent([
+            'exceptUser' => $user,
+        ]);
 
-			$query = $this->db->get();
-			$result = $sort_result = array();
+        return [
+            'total' => $query->toBase()->getCountForPagination(),
+            'items' => $query->get(),
+        ];
+    }
 
-			if ($query->num_rows() > 0) {
-				return $query->result_array();
-			}
+    //
+    // Scopes
+    //
 
-			return $result;
-		}
-	}
+    public function scopeListRecent($query, $options)
+    {
+        extract(array_merge([
+            'page'       => 1,
+            'pageLimit'  => 20,
+            'sort'       => 'date_added desc',
+            'exceptUser' => null,
+        ], $options));
 
-	public function getActivities() {
-		$this->db->from('activities');
-		$this->db->order_by('date_added', 'DESC');
+        if ($exceptUser) {
+            $query->where('causer_type', get_class($exceptUser))
+                ->where('causer_id', '<>', $exceptUser->getKey());
+        }
 
-		$query = $this->db->get();
-		$activities = array();
+        if (!is_array($sort)) {
+            $sort = [$sort];
+        }
 
-		if ($query->num_rows() > 0) {
-			$activities = $query->result_array();
-		}
+        foreach ($sort as $_sort) {
 
-		return $activities;
-	}
+            if (in_array($_sort, ['date_added asc', 'date_added desc', 'date_updated asc', 'date_updated desc'])) {
+                $parts = explode(' ', $_sort);
+                if (count($parts) < 2) {
+                    array_push($parts, 'desc');
+                }
+                list($sortField, $sortDirection) = $parts;
+                $query->orderBy($sortField, $sortDirection);
+            }
+        }
 
-	public function logActivity($user_id, $action, $context, $message) {
-		if (method_exists($this->router, 'fetch_module')) {
-			$this->_module = $this->router->fetch_module();
-		}
+        return $query->take($pageLimit);
+    }
 
-		if (is_numeric($user_id) AND is_string($action) AND is_string($message)) {
-			// set the current domain (e.g admin, main, module)
-			$domain = ( ! empty($this->_module)) ? 'module' : APPDIR;
+    /**
+     * Filter database records
+     *
+     * @param $query
+     * @param array $filter an associative array of field/value pairs
+     *
+     * @return $this
+     */
+    public function scopeFilter($query, $filter = [])
+    {
+        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+            $query->where('status', $filter['filter_status']);
+        }
 
-			// set user if customer is logged in and the domain is not admin
-			$user = 'staff';
-			if ($domain !== ADMINDIR) {
-				$this->load->library('customer');
-				if ($this->customer->islogged()) {
-					$user = 'customer';
-				}
-			}
+        return $query;
+    }
 
-			$this->db->set('user', $user);
-			$this->db->set('domain', $domain);
-			$this->db->set('context', $context);
+    /**
+     * Scope a query to only include activities by a given causer.
+     *
+     * @param \Igniter\Flame\Database\Builder $query
+     * @param \Model $causer
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCausedBy(Builder $query, Model $causer)
+    {
+        return $query
+            ->where('causer_type', $causer->getMorphClass())
+            ->where('causer_id', $causer->getKey());
+    }
 
-			if (is_numeric($user_id)) {
-				$this->db->set('user_id', $user_id);
-			}
+    /**
+     * Scope a query to only include activities for a given subject.
+     *
+     * @param \Igniter\Flame\Database\Builder $query
+     * @param \Model $subject
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForSubject(Builder $query, Model $subject)
+    {
+        return $query
+            ->where('subject_type', $subject->getMorphClass())
+            ->where('subject_id', $subject->getKey());
+    }
 
-			if (is_string($action)) {
-				$this->db->set('action', $action);
-			}
+    //
+    // Helpers
+    //
 
-			if (is_string($message)) {
-				$this->db->set('message', $message);
-			}
+    /**
+     * Log activity to database
+     *
+     * @param int $user_id the logged in admin or customer id
+     * @param string $action the activity action taken e.g (added, updated, assigned, custom,...)
+     * @param string $context where the activity occurred, the controller name
+     * @param string $message the activity message to record
+     */
+//    public function logActivity($user_id, $action, $context, $message)
+//    {
+//        if (is_numeric($user_id) AND is_string($action) AND is_string($message)) {
+//            // set the current domain (e.g admin, main, module)
+//            $domain = (!empty($this->router->fetch_module())) ? 'module' : APPDIR;
+//
+//            // set user if customer is logged in and the domain is not admin
+//            $user = 'staff';
+//            if ($domain !== ADMINDIR) {
+//                $this->ci()->load->library('customer');
+//                if ($this->ci()->customer->islogged()) {
+//                    $user = 'customer';
+//                }
+//            }
+//
+//            $data['user'] = $user;
+//            $data['domain'] = $domain;
+//            $data['context'] = $context;
+//
+//            if (is_numeric($user_id))
+//                $data['user_id'] = $user_id;
+//
+//            if (is_string($action))
+//                $data['action'] = $action;
+//
+//            if (is_string($message))
+//                $data['message'] = $message;
+//
+//            $this->create($data);
+//        }
+//    }
 
-			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-
-			$this->db->insert('activities');
-		}
-	}
-
-	public function getMessage($lang, $search = array(), $replace = array()) {
-		$this->lang->load('activities');
-
-		return str_replace($search, $replace, $this->lang->line($lang));
-	}
+    /**
+     * Return the activity message language text
+     *
+     * @param string $lang
+     * @param array $search
+     * @param array $replace
+     *
+     * @return string
+     */
+//    public function getMessage($lang, $search = [], $replace = [])
+//    {
+//        $this->ci()->lang->load('activities');
+//
+//        return str_replace($search, $replace, $this->ci()->lang->line($lang));
+//    }
 }
-
-/* End of file activities_model.php */
-/* Location: ./system/tastyigniter/models/activities_model.php */

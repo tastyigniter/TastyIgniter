@@ -1,250 +1,234 @@
-<?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php namespace System\Models;
+
+use Admin\Facades\AdminAuth;
+use Artisan;
+use Carbon\Carbon;
+use Model;
+use Igniter\Traits\DelegateToCI;
 
 /**
  * Currencies Model Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Currencies_model.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
-class Currencies_model extends TI_Model {
+class Currencies_model extends Model
+{
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'currencies';
 
-	public function getCount($filter = array()) {
-		if ( ! empty($filter['filter_search'])) {
-			$this->db->like('currency_name', $filter['filter_search']);
-			$this->db->or_like('currency_code', $filter['filter_search']);
-			$this->db->or_like('country_name', $filter['filter_search']);
-		}
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'currency_id';
 
-		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('currency_status', $filter['filter_status']);
-		}
+    /**
+     * @var array The model table column to convert to dates on insert/update
+     */
+    public $timestamps = TRUE;
 
-		$this->db->from('currencies');
-		$this->db->join('countries', 'countries.country_id = currencies.country_id', 'left');
+    const UPDATED_AT = 'date_modified';
 
-		return $this->db->count_all_results();
-	}
+    public $relation = [
+        'belongsTo' => [
+            'country' => 'System\Models\Countries_model',
+        ],
+    ];
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
+    public static function getDropdownOptions()
+    {
+        return static::selectRaw("currency_id, CONCAT_WS(' - ', currency_name, currency_code, currency_symbol) as name")
+                     ->dropdown('name');
+    }
 
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('currencies');
-			$this->db->join('countries', 'countries.country_id = currencies.country_id', 'left');
+    /**
+     * Auto update rates,
+     * called by before_create trigger
+     *
+     * @return void
+     */
+    public static function autoUpdateRates()
+    {
+        if (setting('auto_update_currency_rates') == '1') {
+            self::make()->updateRates();
+        }
+    }
 
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
+    //
+    // Scopes
+    //
 
-			if ( ! empty($filter['filter_search'])) {
-				$this->db->like('currency_name', $filter['filter_search']);
-				$this->db->or_like('currency_code', $filter['filter_search']);
-				$this->db->or_like('country_name', $filter['filter_search']);
-			}
+    public function scopeJoinCountry($query)
+    {
+        return $query->join('countries', 'countries.iso_code_3', '=', 'currencies.iso_alpha3', 'left');
+    }
 
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('currency_status', $filter['filter_status']);
-			}
+    /**
+     * Filter database records
+     *
+     * @param $query
+     * @param array $filter an associative array of field/value pairs
+     *
+     * @return $this
+     */
+    public function scopeFilter($query, $filter = [])
+    {
+        $query->joinCountry();
 
-			$query = $this->db->get();
-			$result = array();
+        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
+            $query->search($filter['filter_search'], ['currency_name', 'currency_code']);
 
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
+            $query->orWhereHas('country', function ($q) use ($filter) {
+                $q->search($filter['filter_search'], ['country_name']);
+            });
+        }
 
-			return $result;
-		}
-	}
+        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+            $query->where('currency_status', $filter['filter_status']);
+        }
 
-	public function getCurrencies() {
-		$this->db->from('currencies');
-		$this->db->join('countries', 'countries.country_id = currencies.country_id', 'left');
+        return $query;
+    }
 
+    //
+    // Events
+    //
 
+    public function afterCreate()
+    {
+        self::autoUpdateRates();
+    }
 
-		$query = $this->db->get();
-		$result = array();
+    //
+    // Helpers
+    //
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
+    /**
+     * Return all currencies
+     *
+     * @return array
+     */
+    public function getCurrencies()
+    {
+        return $this->joinCountry()->get();
+    }
 
-		return $result;
-	}
+    /**
+     * Find a single currency by currency_id
+     *
+     * @param int $currency_id
+     *
+     * @return array
+     */
+    public function getCurrency($currency_id)
+    {
+        return $this->joinCountry()->find($currency_id);
+    }
 
-	public function getCurrency($currency_id) {
-		$this->db->from('currencies');
+    /**
+     * Update the accepted currencies
+     *
+     * @param array $accepted_currencies an indexed array of currency ids
+     *
+     * @return bool TRUE on success, FALSE on failure
+     */
+    public static function updateAcceptedCurrencies($accepted_currencies)
+    {
+        $update = self::where('currency_id', '!=', setting('currency_id'))
+                       ->update(['currency_status' => '0']);
 
-		$this->db->where('currency_id', $currency_id);
+        if (is_array($accepted_currencies)) {
+            $update = self::whereIn('currency_id', $accepted_currencies)
+                           ->update(['currency_status' => '1']);
+        }
 
-		$query = $this->db->get();
+        return $update;
+    }
 
-		if ($this->db->affected_rows() > 0) {
-			return $query->row_array();
-		}
-	}
+    /**
+     * Update all currency rates
+     *
+     * @param bool $force_refresh
+     *
+     * @return bool TRUE on success, FALSE on failure
+     */
+    public function updateRates($forceUpdates = false)
+    {
+        $query = $this->newQuery()->where('currency_id', '!=', setting('currency_id'));
+        if (!$forceUpdates)
+            $query->whereDate('date_modified', '<', Carbon::yesterday());
 
-	public function updateAcceptedCurrencies($accepted_currencies) {
-		$this->db->set('currency_status', '0');
-		$this->db->where('currency_id !=', $this->config->item('currency_id'));
-		$this->db->update('currencies');
+        if (!$query->get())
+            return FALSE;
 
-		if (is_array($accepted_currencies)) {
-			$this->db->set('currency_status', '1');
+        Artisan::call('currency:update');
 
-			$this->db->where_in('currency_id', $accepted_currencies);
-			return $this->db->update('currencies');
-		}
-	}
+        activity()->performedOn($this)
+            ->causedBy(AdminAuth::getUser())
+            ->log(lang('system::currencies.activity_updated_event_log'));
 
-	public function saveCurrency($currency_id, $save = array()) {
-		if (empty($save)) return FALSE;
+        return TRUE;
+    }
 
-		if (isset($save['currency_name'])) {
-			$this->db->set('currency_name', $save['currency_name']);
-		}
+    /**
+     * Create a new or update existing currency
+     *
+     * @param int $currency_id
+     * @param array $save
+     *
+     * @return bool|int The $currency_id of the affected row, or FALSE on failure
+     */
+    public function saveCurrency($currency_id, $save = [])
+    {
+        if (empty($save)) return FALSE;
 
-		if (isset($save['currency_code'])) {
-			$this->db->set('currency_code', $save['currency_code']);
-		}
+        $currencyModel = $this->findOrNew($currency_id);
 
-		if (isset($save['currency_symbol'])) {
-			$this->db->set('currency_symbol', $save['currency_symbol']);
-		}
+        $saved = $currencyModel->fill($save)->save();
 
-		if (isset($save['currency_rate'])) {
-			$this->db->set('currency_rate', $save['currency_rate']);
-		}
+        return $saved ? $currencyModel->getKey() : $saved;
+    }
 
-		if (isset($save['symbol_position'])) {
-			$this->db->set('symbol_position', $save['symbol_position']);
-		}
+    /**
+     * Delete a single or multiple currency by currency_id
+     *
+     * @param string|array $currency_id
+     *
+     * @return int  The number of deleted rows
+     */
+    public function deleteCurrency($currency_id)
+    {
+        if (is_numeric($currency_id)) $currency_id = [$currency_id];
 
-		if (isset($save['thousand_sign'])) {
-			$this->db->set('thousand_sign', $save['thousand_sign']);
-		}
+        if (!empty($currency_id) AND ctype_digit(implode('', $currency_id))) {
+            return $this->whereIn('currency_id', $currency_id)->delete();
+        }
+    }
 
-		if (isset($save['decimal_sign'])) {
-			$this->db->set('decimal_sign', $save['decimal_sign']);
-		}
+    protected function queryYahooFinance($currencies)
+    {
+        $yahoo__query = 'select * from yahoo.finance.xchange where pair in ("'.implode(', ', $currencies).'")';
+        $yahoo_query_url = "http://query.yahooapis.com/v1/public/yql?q=".urlencode($yahoo__query)."&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 
-		if (isset($save['decimal_position'])) {
-			$this->db->set('decimal_position', $save['decimal_position']);
-		}
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $yahoo_query_url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_HEADER, FALSE);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        $content = curl_exec($curl);
+        curl_close($curl);
 
-		if (isset($save['country_id'])) {
-			$this->db->set('country_id', $save['country_id']);
-		}
+        $json = json_decode($content, TRUE);
 
-		if (isset($save['currency_status']) AND $save['currency_status'] === '1') {
-			$this->db->set('currency_status', $save['currency_status']);
-		} else {
-			$this->db->set('currency_status', '0');
-		}
+        if (!isset($json['query']['results']['rate']))
+            return [];
 
-		if (is_numeric($currency_id)) {
-			$this->db->where('currency_id', $currency_id);
-			$query = $this->db->update('currencies');
-		} else {
-			$query = $this->db->insert('currencies');
-			$currency_id = $this->db->insert_id();
+        if (!isset($json['query']['results']['rate'][0])) {
+            $json['query']['results']['rate'] = [$json['query']['results']['rate']];
+        }
 
-			if ($this->config->item('auto_update_currency_rates') === '1') {
-				$this->updateRates(TRUE);
-			}
-
-		}
-
-		return ($query === TRUE AND is_numeric($currency_id)) ? $currency_id : FALSE;
-	}
-
-	public function updateRates($force_refresh = FALSE) {
-
-		$currency = $this->getCurrency($this->config->item('currency_id'));
-
-		$this->db->from('currencies');
-		$this->db->where('currency_id !=', $this->config->item('currency_id'));
-
-		if (!$force_refresh) {
-			$this->db->where('date_modified <', mdate('%Y-%m-%d %H:%i:%s', strtotime('-1 day')));
-		}
-
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row) {
-				$currencies[] = !empty($currency['currency_code']) ? $currency['currency_code'].$row['currency_code'] : $row['currency_code'];
-			}
-
-			$yahoo__query = 'select * from yahoo.finance.xchange where pair in ("' . implode(', ', $currencies) . '")';
-			$yahoo_query_url = "http://query.yahooapis.com/v1/public/yql?q=" . urlencode($yahoo__query) . "&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
-
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, $yahoo_query_url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-			curl_setopt($curl, CURLOPT_HEADER, FALSE);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-			$content = curl_exec($curl);
-			curl_close($curl);
-
-			$json = json_decode($content, TRUE);
-
-			if (!empty($json['query']['results']['rate'])) {
-
-				if (!isset($json['query']['results']['rate'][0])) {
-					$json['query']['results']['rate'] = array($json['query']['results']['rate']);
-				}
-
-				foreach ($json['query']['results']['rate'] as $rate) {
-					if (isset($rate['id']) AND isset($rate['Rate'])) {
-						$currency_code = substr($rate['id'], 3);
-
-						$this->db->set('currency_rate', (float) $rate['Rate']);
-						$this->db->set('date_modified', mdate('%Y-%m-%d %H:%i:%s', time()));
-						$this->db->where('currency_code', $currency_code);
-						$this->db->update('currencies');
-					}
-				}
-
-				$this->db->set('currency_rate', '1.0000');
-				$this->db->set('date_modified', mdate('%Y-%m-%d %H:%i:%s', time()));
-				$this->db->where('currency_id', $this->config->item('currency_id'));
-				$this->db->update('currencies');
-
-				return TRUE;
-			}
-		}
-	}
-
-	public function deleteCurrency($currency_id) {
-		if (is_numeric($currency_id)) $currency_id = array($currency_id);
-
-		if ( ! empty($currency_id) AND ctype_digit(implode('', $currency_id))) {
-			$this->db->where_in('currency_id', $currency_id);
-			$this->db->delete('currencies');
-
-			return $this->db->affected_rows();
-		}
-	}
+        return $json['query']['results']['rate'];
+    }
 }
-
-/* End of file currencies_model.php */
-/* Location: ./system/tastyigniter/models/currencies_model.php */
