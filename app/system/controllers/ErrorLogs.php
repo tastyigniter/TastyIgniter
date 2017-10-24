@@ -1,54 +1,41 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php namespace System\Controllers;
 
-class Error_logs extends Admin_Controller {
+use AdminAuth;
+use File;
+use Igniter\Flame\Support\LogViewer;
+use Log;
+use Template;
+use AdminMenu;
 
-	public function index() {
-        $this->lang->load('error_logs');
+class ErrorLogs extends \Admin\Classes\AdminController
+{
+    protected $requiredPermissions = 'Admin.ErrorLogs';
 
-        $this->user->restrict('Admin.ErrorLogs.Access');
+    protected $logFile = 'system.';
 
-        $this->template->setTitle($this->lang->line('text_title'));
-        $this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('text_clear'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+    public function index()
+    {
+        AdminMenu::setContext('error_logs', 'system');
 
-		$log_path = $this->config->item('log_path');
+        Template::setTitle(lang('system::error_logs.text_title'));
+        Template::setHeading(lang('system::error_logs.text_heading'));
+        Template::setButton(lang('system::error_logs.text_clear_logs'), ['class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onClearLogs']);
 
-		if ( file_exists($log_path .'logs.php')) {
+        LogViewer::setFile(storage_path('logs/system.log'));
 
-			$logs = file_get_contents($log_path .'logs.php');
-			$remove = "<"."?php defined('BASEPATH') OR exit('No direct script access allowed'); ?".">\n";
+        $this->vars['logs'] = LogViewer::all();
+    }
 
-			$data['logs'] = str_replace($remove, '', $logs);
-		} else {
-			$data['logs'] = '';
-		}
+    public function index_onClearLogs()
+    {
+        AdminAuth::restrict('Admin.ErrorLogs.Delete');
 
-		//Delete Error Log
-		if ($this->input->post() AND $this->_clearLog() === TRUE) {
+        if (File::isWritable(storage_path('logs/system.log'))) {
+            File::put(storage_path('logs/system.log'), "");
 
-			redirect('error_logs');
-		}
-
-		$this->template->render('error_logs', $data);
-	}
-
-	private function _clearLog() {
-        $this->user->restrict('Admin.ErrorLogs.Delete');
-
-        $log_path = IGNITEPATH .'/logs/';
-
-        if (is_readable($log_path .'logs.php')) {
-			$log = "<"."?php defined('BASEPATH') OR exit('No direct script access allowed'); ?".">\n";
-
-            $this->load->helper('file');
-            write_file($log_path .'logs.php', $log);
-
-            $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Logs Cleared '));
+            flash()->set('success', sprintf(lang('admin::default.alert_success'), 'Logs Cleared '));
         }
 
-		return TRUE;
-	}
+        return $this->redirectBack();
+    }
 }
-
-/* End of file error_logs.php */
-/* Location: ./admin/controllers/error_logs.php */

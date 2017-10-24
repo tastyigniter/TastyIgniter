@@ -1,103 +1,140 @@
 <?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') OR exit('No direct script access allowed');
+
+namespace System\Classes;
+
+use Igniter\Flame\Support\Extendable;
+use Request;
+use Igniter\Flame\Traits\EventEmitter;
 
 /**
  * Base Controller Class
  *
- * @category       Libraries
- * @package        TastyIgniter\Core\Base_Controller.php
- * @link           http://docs.tastyigniter.com
+ * @package System
  */
-class Base_Controller extends MX_Controller {
+class BaseController extends Extendable
+{
+    use EventEmitter;
+
+    /**
+     * A list of controller behavours/traits to be implemented
+     */
+    public $implement = [];
+
+    /**
+     * @var string Page controller class name being called.
+     */
+    protected $class;
+
+    /**
+     * @var string Page method name being called.
+     */
+    protected $action;
+
+    /**
+     * @var array Routed parameters.
+     */
+    protected $params;
+
+    /**
+     * @var object Object used for storing a fatal error.
+     */
+    protected $fatalError;
+
+    /**
+     * @var array Default actions which cannot be called as actions.
+     */
+    public $hiddenActions = [
+        'execPageAction',
+        'handleError',
+    ];
+
+    /**
+     * @var array Array of actions available without authentication.
+     */
+    protected $publicActions = [];
+
+    /**
+     * @var int Response status code
+     */
+    protected $statusCode = 200;
+
+    /**
+     * @var array A list of libraries to be auto-loaded
+     */
+    protected $libraries = [];
 
     /**
      * Class constructor
-     *
      */
     public function __construct()
     {
-        parent::__construct();
+        $this->class = Controller::$class;
+        $this->action = Controller::$action;
+        $this->params = Controller::$segments;
 
-        log_message('info', 'Base Controller Class Initialized');
+        $this->extendableConstruct();
 
-        // Load session
-        $this->load->library('session');
+        $this->fireEvent('controller.beforeConstructor', [$this]);
+    }
 
-        $this->load->library('alert');
+    public function getClass()
+    {
+        return $this->class;
+    }
 
-        // Load installer library and database config items
-        $this->load->library('installer');
+    public function getAction()
+    {
+        return $this->action;
+    }
 
-        // If 'config/updated.txt' exists, system needs upgrade
-        if (is_file(IGNITEPATH . 'config/updated.txt')) {
-            if ($this->installer->upgrade()) redirect(admin_url('dashboard'));
+    public function checkAction($action)
+    {
+        if (!$methodExists = $this->methodExists($action))
+            return false;
+
+        if (in_array(strtolower($action), array_map('strtolower', $this->hiddenActions)))
+            return false;
+
+        if ($ownMethod = method_exists($this, $action)) {
+            $methodInfo = new \ReflectionMethod($this, $action);
+            return $methodInfo->isPublic();
         }
 
-        // Redirect to setup if app requires setup
-        if (($installed = $this->installer->isInstalled()) !== TRUE AND APPDIR !== 'setup') {
-            redirect(root_url('setup'));
-        }
+        return $methodExists;
+    }
 
-        // If database is connected, then app is ready
-        if ($this->installer->db_exists === TRUE) {
+    public function pageUrl($uri = '', $protocol = null)
+    {
+        return site_url($uri, $protocol);
+    }
 
-            // Load extension library
-            $this->load->library('extension');
+    protected function showProfiler()
+    {
+        if (TI_DEBUG == TRUE AND !is_cli() AND !$this->input->is_ajax_request()) {
+            if (!class_exists('Console', FALSE))
+                $this->load->library('Console');
 
-            // Load events library
-            $this->load->library('events');
-
-            // If the requested controller is a module controller then load the module config
-            if (ENVIRONMENT !== 'testing') {
-                if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
-                    // Load the module configuration file and retrieve its items.
-                    // Shows 404 error message on failure to load
-                    $this->extension->loadConfig($_module, TRUE);
-                }
-            }
-        }
-
-        // Check app for maintenance in production environments.
-        if (ENVIRONMENT === 'production') {
-
-            // Show maintenance message if maintenance is enabled
-            if ($this->maintenanceEnabled()) {
-                show_error($this->config->item('maintenance_message'), '503', 'Maintenance Enabled');
-            }
-        }
-
-        // Enable profiler for development environments.
-        if ( ! $this->input->is_ajax_request()) {
             $this->output->enable_profiler(TI_DEBUG);
         }
-
-        $this->form_validation->CI =& $this;
     }
 
-    private function maintenanceEnabled() {
-        if ($this->config->item('maintenance_mode') === '1') {
-            $this->load->library('user');
-            if (APPDIR === MAINDIR
-                AND $this->uri->rsegment(1) !== 'maintenance'
-                AND !$this->user->isLogged()
-            ) {
-                return TRUE;
-            }
-        }
+    public function setStatusCode($code)
+    {
+        $this->statusCode = $code;
+    }
+
+    /**
+     * Sets standard page variables in the case of a controller error.
+     *
+     * @param $exception
+     */
+    public function handleError($exception)
+    {
+        $errorMessage = $exception->getMessage();
+        $this->fatalError = $errorMessage;
+        if (!Request::ajax())
+            throw $exception;
+
+        flash()->set('error', $errorMessage);
     }
 }
-
-/* End of file Base_Controller.php */
-/* Location: ./system/tastyigniter/core/Base_Controller.php */

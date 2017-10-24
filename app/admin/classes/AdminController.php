@@ -1,50 +1,283 @@
 <?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- */
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Admin Controller Class
- *
- * @category       Libraries
- * @package        TastyIgniter\Core\Admin_Controller.php
- * @link           http://docs.tastyigniter.com
- */
-class Admin_Controller extends Base_Controller {
+namespace Admin\Classes;
 
-	/**
-	 * Class constructor
-	 *
-	 */
-	public function __construct()
-	{
+use Admin;
+use Admin\Traits\HasAuthentication;
+use Admin\Traits\ValidatesForm;
+use Admin\Traits\WidgetMaker;
+use Admin\Widgets\MediaManager;
+use Admin\Widgets\Menu;
+use Admin\Widgets\Toolbar;
+use AdminAuth;
+use AdminMenu;
+use Exception;
+use Redirect;
+use Request;
+use Response;
+use System\Classes\BaseController;
+use System\Traits\ConfigMaker;
+use System\Traits\ViewMaker;
+
+class AdminController extends BaseController
+{
+    use ViewMaker;
+    use ConfigMaker;
+    use WidgetMaker;
+    use ValidatesForm;
+    use HasAuthentication;
+
+    /**
+     * @var object Object used for storing a fatal error.
+     */
+    protected $fatalError;
+
+    /**
+     * @var array A list of BaseWidget objects used on this page
+     */
+    public $widgets = [];
+
+    /**
+     * @var bool Prevents the automatic view display.
+     */
+    public $suppressView = FALSE;
+
+    /**
+     * @var string Permission required to view this page.
+     * ex. Admin.Banners or Admin.Banners.Access
+     */
+    protected $requiredPermissions;
+
+    /**
+     * @var string Page title
+     */
+    public $pageTitle;
+
+    /**
+     * @var string Body class property used for customising the layout on a controller basis.
+     */
+    public $bodyClass;
+
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        // Define layout and view paths
+        $this->layout = $this->layout ?: 'default';
+
+        $this->definePaths();
+
+        // Create a new instance of the admin user
+        $this->setUser(AdminAuth::getUser());
+
         parent::__construct();
 
-		log_message('info', 'Admin Controller Class Initialized');
+        // Toolbar widget is available on all admin pages
+        $toolbar = new Toolbar($this, ['context' => $this->action]);
+        $toolbar->bindToController();
 
-        // Load template library
-        $this->load->library('template');
+        // Media Manager widget is available on all admin pages
+        $manager = new MediaManager($this, ['alias' => 'mediamanager']);
+        $manager->bindToController();
 
-        $this->load->library('user');
+        $this->fireEvent('controller.afterConstructor', [$this]);
+    }
 
-		$uri = $this->uri->rsegment(1);
-        if (!$this->user->isLogged() AND $uri !== 'login' AND $uri !== 'logout') {
-            $this->alert->set('danger', $this->lang->line('alert_user_not_logged_in'));
-            $prepend = empty($uri) ? '' : '?redirect=' . current_url();
-            redirect(admin_url('login'.$prepend));
+    protected function definePaths()
+    {
+        // Add paths from the extension / module context
+        $relativePath = dirname(dirname($classPath = strtolower(str_replace('\\', '/', get_called_class()))));
+        $this->viewPath[] = '~/extensions/'.$relativePath.'/views';
+        $this->viewPath[] = '~/app/'.$relativePath.'/views/'.basename($classPath);
+        $this->viewPath[] = '~/app/'.$relativePath.'/views';
+        $this->viewPath[] = '~/app/admin/views/'.basename($classPath);
+        $this->viewPath[] = '~/app/admin/views';
+
+        // Add layout paths from the extension / module context
+        $this->layoutPath[] = '~/extensions/'.$relativePath.'/views/_layouts';
+        $this->layoutPath[] = '~/app/'.$relativePath.'/views/_layouts';
+        $this->layoutPath[] = '~/app/admin/views/_layouts';
+
+        // Add partial paths from the extension / module context
+        // We will also make sure the admin module context is always present
+        $this->partialPath[] = '~/extensions/'.$relativePath.'/views/_partials';
+        $this->partialPath[] = '~/app/'.$relativePath.'/views/_partials';
+//        $this->partialPath[] = '~/app/' . $relativePath . '/views/'.basename($classPath);
+        $this->partialPath[] = '~/app/admin/views/_partials';
+        $this->partialPath = array_merge($this->partialPath, $this->viewPath);
+
+        $this->configPath = '~/app/'.$relativePath.'/models/config';
+    }
+
+    public function remap($action, $params)
+    {
+        $this->action = $action;
+        $this->params = $params;
+
+        // Determine if this request is a public action or authentication is required
+        $requireAuthentication = !(in_array($action, $this->publicActions) OR !$this->requireAuthentication);
+
+        // Ensures that a user is logged in, if required
+        if ($requireAuthentication) {
+            if (!$this->checkUser()) {
+                flash(lang('admin::default.alert_user_not_logged_in'))->error()->important();
+
+                return Admin::redirectIntended(input('redirect', 'login'));
+            }
+
+            // Check that user has permission to view this page
+            if ($this->requiredPermissions AND !AdminAuth::hasPermission($this->requiredPermissions, TRUE)) {
+                return Admin::redirectIntended(input('redirect', 'dashboard'));
+            }
         }
+
+        // Top menu widget is available on all admin pages
+        $this->makeMainMenuWidget();
+
+        // Execute post handler and AJAX event
+        if ($ajaxResponse = $this->processHandlers() AND $ajaxResponse !== TRUE) {
+            return $ajaxResponse;
+        }
+
+        // Loads the requested controller action
+        $response = $this->execPageAction($action, $params);
+
+        if (!is_string($response))
+            return $response;
+
+        if ($event = $this->fireEvent('controller.beforeResponse', [$this, $response])) {
+            return $event;
+        }
+
+        // Return response
+        return is_string($response)
+            ? Response::make($response, $this->statusCode) : $response;
+    }
+
+    protected function processHandlers()
+    {
+        if (!$handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+            $handler = post('_handler');
+
+        if (!$handler)
+            return FALSE;
+
+        $params = $this->params;
+        array_unshift($params, $this->action);
+
+        // Process Widget handler
+        if (strpos($handler, '::')) {
+            list($widgetName, $handlerName) = explode('::', $handler);
+
+            $this->suppressView = TRUE;
+
+            // Execute the page action so widgets are initialized
+            $this->execPageAction($this->action, $this->params);
+
+            if (!isset($this->widgets[$widgetName])) {
+                throw new Exception(sprintf(
+                    "A widget with class name '%s' has not been bound to the controller",
+                    $widgetName
+                ));
+            }
+
+            if (($widget = $this->widgets[$widgetName]) AND method_exists($widget, $handlerName)) {
+                $result = call_user_func_array([$widget, $handlerName], $params);
+
+                return ($result) ?: TRUE;
+            }
+        } // Process page specific handler (index_onSomething)
+        else {
+            $pageHandler = $this->action.'_'.$handler;
+
+            if ($this->methodExists($pageHandler)) {
+                $result = call_user_func_array([$this, $pageHandler], $params);
+
+                return ($result) ?: TRUE;
+            }
+
+            $this->suppressView = TRUE;
+
+            $this->execPageAction($this->action, $this->params);
+
+            foreach ((array)$this->widgets as $widget) {
+                if ($widget->methodExists($handler)) {
+                    $result = call_user_func_array([$widget, $handler], $params);
+
+                    return ($result) ?: TRUE;
+                }
+            }
+        }
+
+        return FALSE;
+    }
+
+    protected function execPageAction($action, $params)
+    {
+        $result = null;
+
+        if (!$this->checkAction($action)) {
+            throw new Exception(sprintf(
+                "Method [%s] is not found in the controller [%s]",
+                $action, get_class($this)
+            ));
+        }
+
+        array_unshift($params, $action);
+
+        // Execute the action
+        $result = call_user_func_array([$this, $action], $params);
+
+        // Render the controller view if not already loaded
+        if (is_null($result) AND !$this->suppressView) {
+            return $this->makeView($this->fatalError ? 'admin::error' : $action);
+        }
+
+        return $result;
+    }
+
+    protected function makeMainMenuWidget()
+    {
+        $config = [];
+        $config['alias'] = 'mainmenu';
+        $config['items'] = AdminMenu::getMainItems();
+        $config['context'] = $this->getClass();
+        $mainMenuWidget = new Menu($this, $config);
+        $mainMenuWidget->bindToController();
+    }
+
+    //
+    // Helper Methods
+    //
+
+    public function pageUrl($path = null, $parameters = [], $secure = null)
+    {
+        return Admin::url($path, $parameters, $secure);
+    }
+
+    public function redirect($path, $status = 302, $headers = [], $secure = null)
+    {
+        return Admin::redirect($path, $status, $headers, $secure);
+    }
+
+    public function redirectGuest($path, $status = 302, $headers = [], $secure = null)
+    {
+        return Admin::redirectGuest($path, $status, $headers, $secure);
+    }
+
+    public function redirectIntended($path, $status = 302, $headers = [], $secure = null)
+    {
+        return Admin::redirectIntended($path, $status, $headers, $secure);
+    }
+
+    public function redirectBack()
+    {
+        return Redirect::back();
+    }
+
+    public function refresh()
+    {
+        return Redirect::back();
     }
 }
-
-/* End of file Admin_Controller.php */
-/* Location: ./system/tastyigniter/core/Admin_Controller.php */

@@ -1,24 +1,22 @@
-<?php if (!defined('BASEPATH')) exit('No direct access allowed');
+<?php
 
-class Logout extends Admin_Controller {
+namespace Admin\Controllers;
 
-    public function __construct() {
-        parent::__construct(); //  calls the constructor
-    }
+use AdminAuth;
 
-    public function index() {
-        $this->lang->load('login');
+class Logout extends \Admin\Classes\AdminController
+{
+    protected $requireAuthentication = FALSE;
 
-        log_activity($this->user->getStaffId(), 'logged out', 'staffs', get_activity_message('activity_logged_out',
-            array('{staff}', '{link}'),
-            array($this->user->getStaffName(), admin_url('staffs/edit?id=' . $this->user->getStaffId()))
-        ));
+    public function index()
+    {
+        if ($user = AdminAuth::user())
+            activity()->causedBy($user)->log(lang('system::activities.activity_logged_out'));
 
-        $this->user->logout();
-        $this->alert->set('success', $this->lang->line('alert_success_logout'));
-        redirect('login');
+        AdminAuth::logout();
+
+        flash()->set('success', lang('admin::login.alert_success_logout'));
+
+        return $this->redirect('login');
     }
 }
-
-/* End of file logout.php */
-/* Location: ./admin/controllers/logout.php */

@@ -1,71 +1,78 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php namespace Admin\Controllers;
 
-class Ratings extends Admin_Controller {
+use Assets;
+use System\Models\Settings_model;
+use AdminMenu;
+use Template;
 
-	public function index() {
-        $this->user->restrict('Admin.Ratings');
+class Ratings extends \Admin\Classes\AdminController
+{
+    protected $requiredPermissions = 'Admin.Ratings';
 
-        $this->lang->load('ratings');
+    public function index()
+    {
+        AdminMenu::setContext('ratings', 'localisation');
 
-        $this->template->setTitle($this->lang->line('text_title'));
-        $this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+        if (post() AND $this->_updateRating() === TRUE) {
+            return $this->redirectBack();
+        }
 
-		$this->template->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
+        Template::setTitle(lang('admin::ratings.text_title'));
+        Template::setHeading(lang('admin::ratings.text_heading'));
+        Template::setButton(lang('admin::default.button_save'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
 
-		if ($this->input->post() AND $this->_updateRating() === TRUE) {
-			redirect('ratings');
-		}
+        Assets::addJs(assets_url('js/vendor/jquery-sortable.js'), 'jquery-sortable-js');
 
-		if ($this->input->post('ratings')) {
-			$results = $this->input->post('ratings');
-		} else if ($this->config->item('ratings')) {
-			$ratings = $this->config->item('ratings');
-			$results = $ratings['ratings'];
-		} else {
-			$results = '';
-		}
+        $this->prepareVars();
+    }
 
-		$data['ratings'] = array();
-		if (is_array($results)) {
-			foreach ($results as $key => $value) {
-				$data['ratings'][$key] = $value;
-			}
-		}
+    public function prepareVars()
+    {
+        if (post('ratings')) {
+            $results = post('ratings');
+        }
+        else {
+            $results = Settings_model::where('sort', 'ratings')->first();
+            $results = array_get($results->value, 'ratings', []);
+        }
 
-		$this->template->render('ratings', $data);
-	}
+        $this->vars['ratings'] = [];
+        if (is_array($results)) {
+            foreach ($results as $key => $value) {
+                $this->vars['ratings'][$key] = $value;
+            }
+        }
+    }
 
-	private function _updateRating() {
-    	if ($this->input->post('ratings') AND $this->validateForm() === TRUE) {
-			$this->load->model('Settings_model');
-			$update = array();
-			$update['ratings'] = $this->input->post('ratings');
+    protected function _updateRating()
+    {
+        if ($this->validateForm()) {
+            $update = [];
+            $update['ratings'] = post('ratings');
 
-			if ($this->Settings_model->addSetting('ratings', 'ratings', $update, '1')) {
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Rating updated '));
-            } else {
-                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
-			}
+            if ($ratings = Settings_model::where('sort', 'ratings')->first()) {
+                $ratings->value = serialize($update);
+                $ratings->save();
+                flash()->set('success', sprintf(lang('admin::default.alert_success'), 'Rating updated '));
+            }
+            else {
+                flash()->set('warning', sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
+            }
 
-			return TRUE;
-		}
-	}
+            return TRUE;
+        }
+    }
 
-	private function validateForm() {
-		if ($this->input->post('ratings')) {
-			foreach ($this->input->post('ratings') as $key => $value) {
-				$this->form_validation->set_rules('ratings['.$key.']', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-			}
-		}
+    protected function validateForm()
+    {
+        if (!$post = post('ratings'))
+            return false;
 
-		if ($this->form_validation->run() === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+        $rules = [];
+        foreach ($post as $key => $value) {
+            $rules[] = ['ratings.'.$key, 'lang:admin::ratings.label_name', 'required|min:2|max:32'];
+        }
+
+        return $this->validatePasses(post(), $rules);
+    }
 }
-
-/* End of file ratings.php */
-/* Location: ./admin/controllers/ratings.php */

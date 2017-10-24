@@ -1,112 +1,128 @@
-<?php if (!defined('BASEPATH')) exit('No direct access allowed');
+<?php namespace Admin\Controllers;
 
-class Login extends Admin_Controller
+use AdminAuth;
+use Admin\Traits\ValidatesForm;
+use Request;
+use Admin\Models\Users_model;
+use AdminMenu;
+use Template;
+use ValidationException;
+use Validator;
+
+class Login extends \Admin\Classes\AdminController
 {
+    use ValidatesForm;
 
-	public function index() {
-		$this->lang->load('login');
+    protected $requireAuthentication = FALSE;
 
-		if ($this->user->islogged()) {
-  			redirect('dashboard');
-		}
+    public $bodyClass = 'page-login';
 
-		$this->template->setTitle($this->lang->line('text_title'));
+    public function index()
+    {
+        if (AdminAuth::isLogged())
+            return $this->redirect('dashboard');
 
-        $data['site_name']  = $this->config->item('site_name');
-        $data['reset_url'] = site_url('login/reset');
+        Template::setTitle(lang('admin::login.text_title'));
 
-		if ($this->input->post() AND $this->validateLoginForm() === TRUE) {
-			if (!$this->user->login($this->input->post('user'), $this->input->post('password'))) {                                        // checks if form validation routines ran successfully
-				$this->alert->set('danger', $this->lang->line('alert_username_not_found'));
-                redirect(current_url());
-			} else {
-				log_activity($this->user->getStaffId(), 'logged in', 'staffs', get_activity_message('activity_logged_in',
-					array('{staff}', '{link}'),
-					array($this->user->getStaffName(), admin_url('staffs/edit?id=' . $this->user->getStaffId()))
-				));
+        if ($this->validateLoginForm()) {
+            $credentials = [
+                'username' => post('user'),
+                'password' => post('password'),
+            ];
 
-				if (!$this->config->item('default_location_id')) {
-					redirect('settings');
-				}
+            if (!AdminAuth::authenticate($credentials, TRUE, TRUE)) {
+                flash()->set('danger', lang('admin::login.alert_username_not_found'));
+                return $this->redirectBack();
+            }
 
-				if ($redirect_url = $this->input->get('redirect')) {
-	                redirect($redirect_url);
-				}
+            activity()->causedBy(AdminAuth::getUser())
+                      ->log(lang('system::activities.activity_logged_in'));
 
-                redirect('dashboard');
-			}
-		}
+            if ($redirectUrl = input('redirect'))
+                return $this->redirect($redirectUrl);
 
-		$this->template->render('login', $data);
-	}
+            return $this->redirect('dashboard');
+        }
 
-	public function reset() {
-		$this->lang->load('login');
+        return $this->makeView('auth/login');
+    }
 
-		$this->load->model('Staffs_model');
-		if ($this->user->islogged()) {
-			redirect('dashboard');
-		}
+    public function reset()
+    {
+        if (AdminAuth::islogged()) {
+            return $this->redirect('dashboard');
+        }
 
-		$this->template->setTitle($this->lang->line('text_password_reset_title'));
+        Template::setTitle(lang('admin::login.text_password_reset_title'));
 
-		if ($this->input->post() AND $this->_resetPassword() === TRUE) {
-			redirect('login');
-		}
+        $data['resetCode'] = input('code');
 
-		$data['login_url'] = site_url('login');
+        if ($this->_resetPassword()) {
+            return $this->redirect('login');
+        }
 
-		$this->template->render('login_reset', $data);
-	}
+        return $this->makeView('auth/reset');
+    }
 
-	protected function _resetPassword() {
-		if ($this->validateResetForm() === TRUE) {
-			$reset['email'] = $this->input->post('user_email');
+    protected function _resetPassword()
+    {
+        if ($this->validateResetForm() === TRUE) {
+            if (!get_post('code')) {
+                $username = post('username');
+                if (AdminAuth::resetPassword($username)) {
+                    flash()->set('success', lang('admin::login.alert_email_sent'));
 
-			if ($this->Staffs_model->resetPassword($reset['email'])) {        // checks if form validation routines ran successfully
-				$this->alert->set('success', $this->lang->line('alert_success_reset'));
+                    return TRUE;
+                }
 
-				return TRUE;
-			}
+                $error = lang('admin::login.alert_email_not_sent');
+            }
+            else {
+                $credentials = [
+                    'reset_code' => get_post('code'),
+                    'password'   => post('password'),
+                ];
 
-			$this->alert->set('danger', $this->lang->line('alert_email_not_sent'));
-			redirect('login/reset');
-		}
-	}
+                if (AdminAuth::validateResetPassword($credentials)) {
+                    AdminAuth::completeResetPassword($credentials);
+                    flash()->set('success', lang('admin::login.alert_success_reset'));
 
-	protected function validateLoginForm() {
-		// START of form validation rules
-		$this->form_validation->set_rules('user', 'lang:label_username', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]');
-		// END of form validation rules
+                    return TRUE;
+                }
 
-		if ($this->form_validation->run() === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+                $error = lang('admin::login.alert_failed_reset');
+            }
 
-	protected function validateResetForm() {
-		$this->form_validation->set_rules('user_email', 'lang:label_username_email', 'xss_clean|trim|required|callback__check_user');    //validate form
+            flash()->set('danger', $error);
+            return $this->redirect(current_url());
+        }
+    }
 
-		if ($this->form_validation->run() === TRUE) {                                        // checks if form validation routines ran successfully
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+    protected function validateLoginForm()
+    {
+        if (!$post = post())
+            return false;
 
-	public function _check_user($str) {
-		if (!$this->Staffs_model->validateStaff($str)) {
-			$this->form_validation->set_message('_check_user', $this->lang->line('error_no_user_found'));
+        return $this->validatePasses($post, [
+            ['user', 'lang:admin::login.label_username', 'required|exists:users,username'],
+            ['password', 'lang:admin::login.label_password', 'required|min:6'],
+        ]);
+    }
 
-			return FALSE;
-		}
+    protected function validateResetForm()
+    {
+        if (!$post = post())
+            return false;
 
-		return TRUE;
-	}
+        if (input('code')) {
+            $rules = [
+                ['password', 'lang:admin::login.label_password', 'required|min:6|max:32|same:password_confirm]'],
+                ['password_confirm', 'lang:admin::login.label_password_confirm', 'required'],
+            ];
+        } else {
+            $rules = ['username', 'lang:admin::login.label_username', 'required|exists:users'];
+        }
+
+        return $this->validatePasses($post, $rules);
+    }
 }
-
-/* End of file Login.php */
-/* Location: ./admin/controllers/Login.php */
