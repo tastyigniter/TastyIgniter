@@ -3,8 +3,7 @@
 /**
  * Customer Class
  *
- * @package        Main\Classes\Customer.php
- * @link           http://docs.tastyigniter.com
+ * @package Main
  */
 class Customer extends \Igniter\Flame\Auth\Manager
 {
@@ -136,8 +135,3 @@ class Customer extends \Igniter\Flame\Auth\Manager
 		$this->CI->db->update('customers');
 	}
 }
-
-// END Customer Class
-
-/* End of file Customer.php */
-/* Location: ./system/libraries/Customer.php */
