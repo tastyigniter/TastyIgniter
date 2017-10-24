@@ -1,0 +1,77 @@
+{
+  "doctype": "html5",
+  "favicon": ":root_url,favicon.ico",
+  "meta": [
+    {
+      "name": "Content-type",
+      "content": "text/html; charset=utf-8",
+      "type": "equiv"
+    },
+    {
+      "name": "X-UA-Compatible",
+      "content": "IE=edge",
+      "type": "equiv"
+    },
+    {
+      "name": "viewport",
+      "content": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+      "type": "name"
+    }
+  ],
+  "style": [
+    {
+      "href": "assets/css/metisMenu.min.css",
+      "name": "metis-menu-css"
+    },
+    {
+      "href": "assets/css/metisMenu.min.css",
+      "name": "metis-menu-css"
+    },
+    {
+      "href": ":assets_url,css/vendor/select2.min.css",
+      "name": "select2-css"
+    },
+    {
+      "href": ":assets_url,css/vendor/select2-bootstrap.min.css",
+      "name": "select2-bootstrap-css"
+    },
+    {
+      "href": ":assets_url,css/vendor/awesome-checkbox.css",
+      "name": "awesome-checkbox-css"
+    },
+    {
+      "href": "assets/css/fonts.css",
+      "name": "fonts-css"
+    },
+    {
+      "href": "assets/css/stylesheet.css",
+      "name": "stylesheet-css"
+    }
+  ],
+  "script": [
+    {
+      "src": ":assets_url,js/app/toggler.js",
+      "name": "toggle-js"
+    },
+    {
+      "src": ":assets_url,js/app/trigger.js",
+      "name": "trigger-js"
+    },
+    {
+      "src": "assets/js/metisMenu.min.js",
+      "name": "metis-menu-js"
+    },
+    {
+      "src": ":assets_url,js/vendor/select2.min.js",
+      "name": "select-2-js"
+    },
+    {
+      "src": ":assets_url,js/vendor/js.cookie.js",
+      "name": "js-cookie-js"
+    },
+    {
+      "src": "assets/js/common.js",
+      "name": "common-js"
+    }
+  ]
+}
