@@ -39,7 +39,8 @@ class ModifyColumnsOnUsersAndCustomersTables extends Migration
         });
     }
 
-    public function down() {
+    public function down()
+    {
         //
     }
 }

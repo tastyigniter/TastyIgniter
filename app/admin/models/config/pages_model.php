@@ -34,9 +34,9 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-eye',
         'attributes'   => [
-            'class' => 'btn btn-info',
-            'href'  => site_url('{permalink_slug}'),
-            'target'  => '_blank',
+            'class'  => 'btn btn-info',
+            'href'   => site_url('{permalink_slug}'),
+            'target' => '_blank',
         ],
     ],
     'name'          => [
@@ -86,25 +86,25 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'name'            => [
+    'name'             => [
         'label' => 'lang:admin::pages.label_name',
         'type'  => 'text',
         'span'  => 'left',
     ],
-    'title'          => [
+    'title'            => [
         'label' => 'lang:admin::pages.label_title',
         'type'  => 'text',
         'span'  => 'right',
     ],
     'content'          => [
-        'label' => 'lang:admin::pages.label_content',
-        'type'  => 'richeditor',
-        'cssClass'  => 'richeditor-fluid',
+        'label'    => 'lang:admin::pages.label_content',
+        'type'     => 'richeditor',
+        'cssClass' => 'richeditor-fluid',
     ],
-    'permalink_slug'  => [
-        'label'    => 'lang:admin::pages.label_permalink_slug',
-        'type'     => 'text',
-        'comment'  => 'lang:admin::pages.help_permalink',
+    'permalink_slug'   => [
+        'label'   => 'lang:admin::pages.label_permalink_slug',
+        'type'    => 'text',
+        'comment' => 'lang:admin::pages.help_permalink',
     ],
     'navigation'       => [
         'label'   => 'lang:admin::pages.label_navigation',

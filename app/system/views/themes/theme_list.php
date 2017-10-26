@@ -1,8 +1,8 @@
 <?php if (count($records)) { ?>
     <?php foreach ($records as $theme) { ?>
-    <?php
+        <?php
         if (!$theme->themeClass) continue;
-    ?>
+        ?>
         <div class="col-xs-12 col-sm-6 wrap-bottom">
         <div class="panel panel-theme">
             <div class="theme-label">

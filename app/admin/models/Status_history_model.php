@@ -24,7 +24,7 @@ class Status_history_model extends Model
             'assignee' => 'Admin\Models\Staffs_model',
             'status'   => ['Admin\Models\Statuses_model', 'status_id'],
         ],
-        'morphTo' => [
+        'morphTo'   => [
             'object' => [],
         ],
     ];

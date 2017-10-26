@@ -1,9 +1,9 @@
 <?php namespace Admin\Models;
 
 use DB;
-use Model;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Model;
 
 /**
  * Menus Model Class
@@ -34,17 +34,17 @@ class Menus_model extends Model
 
     public $relation = [
         'hasMany'       => [
-            'menu_options'       => ['Admin\Models\Menu_item_options_model', 'delete' => true],
+            'menu_options'       => ['Admin\Models\Menu_item_options_model', 'delete' => TRUE],
             'menu_option_values' => ['Admin\Models\Menu_item_option_values_model'],
         ],
         'hasOne'        => [
-            'special' => ['Admin\Models\Menus_specials_model', 'delete' => true],
+            'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
         ],
         'belongsTo'     => [
             'mealtime' => ['Admin\Models\Mealtimes_model'],
         ],
         'belongsToMany' => [
-            'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories', 'delete' => true],
+            'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories', 'delete' => TRUE],
         ],
     ];
 
@@ -60,7 +60,7 @@ class Menus_model extends Model
             'page'      => 1,
             'pageLimit' => 20,
             'sort'      => 'menu_priority asc',
-            'group'      => null,
+            'group'     => null,
             'category'  => null,
         ], $options));
 
@@ -114,7 +114,8 @@ class Menus_model extends Model
 
         if (APPDIR === ADMINDIR) {
             $queryBuilder = "*, {$menusTable}.menu_id, IF(start_date <= {$current_date}, IF(end_date >= {$current_date}, \"1\", \"0\"), \"0\") AS is_special";
-        } else {
+        }
+        else {
             $queryBuilder = "{$menusTable}.menu_id, menu_name, menu_description, menu_photo, menu_price, minimum_qty,
 				{$categoriesTable}.category_id, menu_priority, {$categoriesTable}.name AS category_name, special_status,
 				start_date, end_date, special_price, {$menusTable}.mealtime_id, {$mealtimesTable}.mealtime_name,
@@ -156,7 +157,7 @@ class Menus_model extends Model
         $this->restorePurgedValues();
 
         if (array_key_exists('special', $this->attributes))
-            $this->addMenuSpecial( $this->attributes['special']);
+            $this->addMenuSpecial($this->attributes['special']);
 
         if (array_key_exists('categories', $this->attributes)) {
             $defaultSpecialCategory = (int)setting('special_category_id');
@@ -251,7 +252,8 @@ class Menus_model extends Model
                         'text' => utf8_encode($result['customer_name']),
                     ];
                 }
-            } else {
+            }
+            else {
                 $return['results'] = ['id' => '0', 'text' => lang('text_no_match')];
             }
 
@@ -354,7 +356,7 @@ class Menus_model extends Model
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId))
-            return false;
+            return FALSE;
 
         $idsToKeep = [];
         foreach ($menuOptions as $option) {
@@ -390,7 +392,7 @@ class Menus_model extends Model
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId))
-            return false;
+            return FALSE;
 
         $idsToKeep = [];
         foreach ($optionValues as $value) {
@@ -424,7 +426,7 @@ class Menus_model extends Model
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId) OR !isset($menuSpecial['special_id']))
-            return false;
+            return FALSE;
 
         $menuSpecial['menu_id'] = $menuId;
         $this->special()->updateOrCreate([

@@ -13,7 +13,6 @@ use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use Request;
-use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 
 class ServiceProvider extends AppServiceProvider
@@ -24,6 +23,8 @@ class ServiceProvider extends AppServiceProvider
      */
     public function register()
     {
+        $this->includeHelpers();
+
         parent::register('system');
 
         $this->registerSingletons();
@@ -32,11 +33,7 @@ class ServiceProvider extends AppServiceProvider
         ExtensionManager::instance()->registerExtensions();
 
         $this->registerConsole();
-//        $this->registerErrorHandler();
-        $this->registerActivityLogger();
-//        $this->registerTwigParser();
 //        $this->registerMailer();
-//        $this->registerMarkupTags();
         $this->registerPaginator();
 
         // Register admin and main module providers
@@ -45,13 +42,6 @@ class ServiceProvider extends AppServiceProvider
                 $this->app->register('\\'.$module.'\ServiceProvider');
             }
         });
-
-        // Admin specific
-        if ($this->app->runningInAdmin()) {
-//            $this->registerAdminNavigation();
-//            $this->registerAdminReportWidgets();
-            $this->registerAdminSettings();
-        }
     }
 
     /**
@@ -63,11 +53,19 @@ class ServiceProvider extends AppServiceProvider
         // Boot extensions
         parent::boot('system');
 
-        $this->includeHelpers();
-
         ExtensionManager::instance()->initializeExtensions();
 
         $this->extendValidator();
+    }
+
+    /*
+     * Include helpers
+     */
+    protected function includeHelpers()
+    {
+        foreach (glob(__DIR__.'/helpers/*_helper.php') as $file) {
+            include_once $file;
+        }
     }
 
     /**
@@ -127,61 +125,19 @@ class ServiceProvider extends AppServiceProvider
         }
     }
 
-    /*
-     * Error handling for uncaught Exceptions
-     */
-    protected function registerErrorHandler()
-    {
-        Event::listen('exception.beforeRender', function ($exception, $httpCode, $request) {
-            return (new ErrorHandler)->handleException($exception);
-        });
-    }
-
-    /*
-     * Activity Logger for logging model events
-     */
-    protected function registerActivityLogger()
-    {
-//        $this->app->register(Ac);
-    }
-
-    /*
-     * Include helpers
-     */
-    protected function includeHelpers()
-    {
-        foreach (glob(__DIR__.'/helpers/*_helper.php') as $file) {
-            include_once $file;
-        }
-    }
-
     /**
      * Extends the validator with custom rules
      */
     protected function extendValidator()
     {
-//        Validator::extend('extensions', function ($attribute, $value, $parameters) {
-//            $extension = strtolower($value->getClientOriginalExtension());
-//
-//            return in_array($extension, $parameters);
-//        });
-//
-//        Validator::replacer('extensions', function ($message, $attribute, $rule, $parameters) {
-//            return strtr($message, [':values' => implode(', ', $parameters)]);
-//        });
-
         Validator::extend('valid_date', function ($attribute, $value, $parameters, $validator) {
-            return ( ! preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $value)
-                AND ! preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value)) ? FALSE : TRUE;
+            return (!preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $value)
+                AND !preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value)) ? FALSE : TRUE;
         });
 
         Validator::extend('valid_time', function ($attribute, $value, $parameters, $validator) {
-            return ( ! preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
-                AND ! preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value)) ? FALSE : TRUE;
-        });
-
-        Validator::extend('valid_lat_lng', function ($attribute, $value, $parameters, $validator) {
-            // @todo: implement
+            return (!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
+                AND !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value)) ? FALSE : TRUE;
         });
     }
 
@@ -202,10 +158,5 @@ class ServiceProvider extends AppServiceProvider
 
             return 1;
         });
-    }
-
-    protected function registerAdminSettings()
-    {
-//        Setting::setExtraColumns(['sort' => 'prefs']);
     }
 }

@@ -2,23 +2,17 @@
 
 namespace System\Console\Commands;
 
-use Str;
-use Config;
 use Illuminate\Console\Command;
-use System\Classes\UpdateManager;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Console command to install TastyIgniter.
- *
  * This sets up TastyIgniter for the first time. It will prompt the user for several
  * configuration items, including application URL and database config, and then
  * perform a database migration.
  */
 class IgniterInstall extends Command
 {
-
     /**
      * The console command name.
      */

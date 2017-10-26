@@ -1,6 +1,5 @@
 <?php namespace Admin\FormWidgets;
 
-use Exception;
 use Admin\Classes\BaseFormWidget;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -10,7 +9,9 @@ use Illuminate\Database\Eloquent\Collection;
 class Repeater extends BaseFormWidget
 {
     const INDEX_SEARCH = '___index__';
+
     const SORT_PREFIX = '___dragged_';
+
     const CHECKED_PREFIX = '___checked_';
 
     //
@@ -164,6 +165,7 @@ class Repeater extends BaseFormWidget
     public function getFormWidgetTemplate()
     {
         $index = self::INDEX_SEARCH;
+
         return $this->makeItemFormWidget($index);
     }
 

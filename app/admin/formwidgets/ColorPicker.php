@@ -48,6 +48,7 @@ class ColorPicker extends BaseFormWidget
     public function render()
     {
         $this->prepareVars();
+
         return $this->makePartial('colorpicker/colorpicker');
     }
 

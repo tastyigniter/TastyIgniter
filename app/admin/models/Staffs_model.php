@@ -1,7 +1,7 @@
 <?php namespace Admin\Models;
 
-use Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Model;
 
 /**
  * Staffs Model Class

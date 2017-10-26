@@ -1,25 +1,24 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php
+return [
+    'text_heading'          => 'Contact',
+    'text_summary'          => 'Feel free to send a message',
+    'text_find_us'          => 'Find Us On Map',
+    'text_select_subject'   => 'select a subject',
+    'text_contact_us'       => 'Contact Us',
+    'text_general_enquiry'  => 'General enquiry',
+    'text_comment'          => 'Comment',
+    'text_technical_issues' => 'Technical Issues',
 
-$lang['text_heading'] 			            = 'Contact';
-$lang['text_summary']			            = 'Feel free to send a message';
-$lang['text_find_us']			            = 'Find Us On Map';
-$lang['text_select_subject'] 				= 'select a subject';
-$lang['text_contact_us'] 			        = 'Contact Us';
+    'label_subject'   => 'Enquiry Subject:',
+    'label_full_name' => 'Full Name:',
+    'label_email'     => 'Email Address:',
+    'label_telephone' => 'Telephone:',
+    'label_comment'   => 'Comment',
+    'label_captcha'   => 'Type the code shown',
 
-$lang['label_subject'] 			            = 'Enquiry Subject:';
-$lang['label_full_name'] 		            = 'Full Name:';
-$lang['label_email'] 			            = 'Email Address:';
-$lang['label_telephone'] 		            = 'Telephone:';
-$lang['label_comment'] 			            = 'Comment';
-$lang['label_captcha'] 			            = 'Type the code shown';
+    'button_send' => 'SEND',
 
-$lang['button_send'] 			            = 'SEND';
+    'error_captcha' => 'The letters you entered does not match the image.',
 
-$lang['error_captcha'] 			            = 'The letters you entered does not match the image.';
-
-$lang['alert_contact_sent'] 	            = '<p class="alert-success">Message Sent successfully, we will get back to you shortly!</p>';
-
-
-
-/* End of file contact_lang.php */
-/* Location: ./main/language/english/main/contact_lang.php */
+    'alert_contact_sent' => '<p class="alert-success">Message Sent successfully, we will get back to you shortly!</p>',
+];

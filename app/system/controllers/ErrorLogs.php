@@ -1,11 +1,10 @@
 <?php namespace System\Controllers;
 
 use AdminAuth;
+use AdminMenu;
 use File;
 use Igniter\Flame\Support\LogViewer;
-use Log;
 use Template;
-use AdminMenu;
 
 class ErrorLogs extends \Admin\Classes\AdminController
 {
@@ -33,7 +32,7 @@ class ErrorLogs extends \Admin\Classes\AdminController
         if (File::isWritable(storage_path('logs/system.log'))) {
             File::put(storage_path('logs/system.log'), "");
 
-            flash()->set('success', sprintf(lang('admin::default.alert_success'), 'Logs Cleared '));
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Logs Cleared '));
         }
 
         return $this->redirectBack();

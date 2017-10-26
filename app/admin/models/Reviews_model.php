@@ -55,6 +55,7 @@ class Reviews_model extends Model
     public function getRatingOptions()
     {
         $result = Settings_model::where('sort', 'ratings')->first();
+
         return array_get($result->value, 'ratings', []);
     }
 

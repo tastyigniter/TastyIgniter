@@ -29,4 +29,4 @@
     </script>
 </head>
 <body>
-<p><?= lang('text_update_start'); ?></p>
+    <p><?= lang('text_update_start'); ?></p>

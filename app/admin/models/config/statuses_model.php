@@ -29,9 +29,9 @@ $config['list']['columns'] = [
     'edit'            => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'statuses/edit/{status_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'statuses/edit/{status_id}',
         ],
     ],
     'status_name'     => [
@@ -45,8 +45,8 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'status_for_name' => [
-        'label'      => 'lang:admin::statuses.column_type',
-        'type'       => 'text',
+        'label' => 'lang:admin::statuses.column_type',
+        'type'  => 'text',
     ],
     'notify_customer' => [
         'label' => 'lang:admin::statuses.column_notify',

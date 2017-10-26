@@ -124,7 +124,7 @@ return [
     'menu_permission'        => 'Permissions',
     'menu_collapse'          => 'Collapse Menu',
 
-    'label_status'                => 'Status',
+    'label_status' => 'Status',
 
     'form' => [
         'create_title'              => ':name: Create',

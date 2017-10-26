@@ -1,11 +1,9 @@
 <?php namespace Admin\Models;
 
 use DB;
-use Igniter\Flame\Database\Traits\Purgeable;
-use Model;
-use Igniter\Flame\NestedSet\NestedTree;
-use Igniter\Flame\Permalink\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Sortable;
+use Igniter\Flame\Permalink\Traits\HasPermalink;
+use Model;
 
 /**
  * Categories Model Class
@@ -16,6 +14,7 @@ class Categories_model extends Model
 {
     use Sortable;
     use HasPermalink;
+
 //    use NestedTree;
 
     const SORT_ORDER = 'priority';
@@ -43,7 +42,7 @@ class Categories_model extends Model
 
     public $permalinkable = [
         'permalink_slug' => [
-            'source'  => 'name',
+            'source' => 'name',
 //            'controller' => 'menus',
         ],
     ];

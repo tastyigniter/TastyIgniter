@@ -1,8 +1,8 @@
 <?php namespace Admin\FormWidgets;
 
-use Admin\Widgets\MapView;
-use Admin\Classes\FormField;
 use Admin\Classes\BaseFormWidget;
+use Admin\Classes\FormField;
+use Admin\Widgets\MapView;
 use Illuminate\Support\Collection;
 
 /**

@@ -99,6 +99,7 @@ class Admin
     public function redirectIntended($path = '/', $status = 302, $headers = [], $secure = null)
     {
         $path = $path == '/' ? $path : '/'.$path;
+
         return Redirect::intended($this->uri().$path, $status, $headers, $secure);
     }
 }

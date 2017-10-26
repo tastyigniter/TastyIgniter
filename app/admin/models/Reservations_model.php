@@ -25,6 +25,7 @@ class Reservations_model extends Model
     public $timestamps = TRUE;
 
     const CREATED_AT = 'date_added';
+
     const UPDATED_AT = 'date_modified';
 
     public $relation = [

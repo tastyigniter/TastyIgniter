@@ -1,11 +1,11 @@
 <?php namespace System\Controllers;
 
 use AdminAuth;
+use AdminMenu;
 use Exception;
 use System\Models\Mail_templates_data_model;
 use System\Models\Mail_templates_model;
 use Template;
-use AdminMenu;
 
 class MailLayouts extends \Admin\Classes\AdminController
 {
@@ -71,7 +71,7 @@ class MailLayouts extends \Admin\Classes\AdminController
     public function edit($context, $recordId = null)
     {
         if ($recordId == $this->defaultTemplate) {
-            $this->alert->info_now(lang('alert_caution_edit'));
+            flash()->info(lang('alert_caution_edit'));
         }
 
         try {
@@ -102,7 +102,8 @@ class MailLayouts extends \Admin\Classes\AdminController
             $layoutChanges = Mail_templates_data_model::fetchChanges($model->template_id);
 
             if (!$layoutChanges) {
-                flash()->set('success', sprintf(lang('text_no_changes'), $model->name, $model->original->name));
+                flash()->success(sprintf(lang('text_no_changes'), $model->name, $model->original->name));
+
                 return $this->redirect('mail_layouts/edit/'.$recordId);
             }
 
@@ -127,7 +128,7 @@ class MailLayouts extends \Admin\Classes\AdminController
         $templateModel = $query->first();
 
         if (setting()->add('mail_template_id', $templateModel->getKey())) {
-            flash()->set('success', lang('alert_set_default'));
+            flash()->success(lang('alert_set_default'));
         }
 
         return $this->refreshList($alias);
@@ -137,10 +138,10 @@ class MailLayouts extends \Admin\Classes\AdminController
     {
         $changes = post('changes');
         if (Mail_templates_data_model::updateChanges($recordId, $changes)) {
-            flash()->set('success', sprintf(lang('alert_success'), 'Mail Template '.lang('text_updated')));
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Mail Template '.lang('admin::default.text_updated')));
         }
         else {
-            flash()->set('warning', sprintf(lang('alert_error_nothing'), lang('text_updated')));
+            flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), lang('admin::default.text_updated')));
         }
 
         return $this->redirect('mail_layouts/edit/'.$recordId);

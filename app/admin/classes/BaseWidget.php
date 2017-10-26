@@ -1,17 +1,12 @@
 <?php namespace Admin\Classes;
 
 use Admin\Traits\WidgetMaker;
-use Assets;
-use File;
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
-use Lang;
-use function Psy\debug;
 use System\Traits\AssetMaker;
 use System\Traits\ConfigMaker;
 use System\Traits\SessionMaker;
 use System\Traits\ViewMaker;
-use SystemException;
 
 /**
  * Base Widget Class
@@ -63,10 +58,10 @@ class BaseWidget extends Extendable
 
         // Add paths from the extension / module context
         $classPath = strtolower(str_replace('\\', '/', get_called_class()));
-        $this->partialPath[] = '~/app/' . dirname($classPath); // match view folder/file
-        $this->partialPath[] = '~/app/' . $classPath;
+        $this->partialPath[] = '~/app/'.dirname($classPath); // match view folder/file
+        $this->partialPath[] = '~/app/'.$classPath;
 
-        $this->assetPath = '~/app/' . $classPath.'/assets';
+        $this->assetPath = '~/app/'.$classPath.'/assets';
         $this->assetCollection = 'widget';
 
         // Set config values, if a parent constructor hasn't set already.
@@ -170,24 +165,6 @@ class BaseWidget extends Extendable
     {
         return $this->controller;
     }
-
-//    /**
-//     * Reads the contents of the supplied file and applies it to this object.
-//     *
-//     * @param array $configFile
-//     * @param array $requiredConfig
-//     *
-//     * @return array
-//     */
-//    public function loadConfig($configFile = [], $requiredConfig = [], $index = null)
-//    {
-//        $config = $this->makeConfig($configFile, $requiredConfig);
-//
-//        if (is_null($index))
-//            return $config;
-//
-//        return isset($config[$index]) ? $config[$index] : null;
-//    }
 
     /**
      * Sets the widget configuration values

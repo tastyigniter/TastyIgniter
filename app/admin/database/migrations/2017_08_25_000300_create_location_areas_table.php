@@ -8,7 +8,6 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class CreateLocationAreasTable extends Migration
 {
-
     public function up()
     {
         Schema::create('location_areas', function (Blueprint $table) {

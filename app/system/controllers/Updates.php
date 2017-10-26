@@ -1,11 +1,11 @@
 <?php namespace System\Controllers;
 
+use AdminMenu;
 use Assets;
-use Flash;
 use Exception;
+use Flash;
 use System\Classes\UpdateManager;
 use Template;
-use AdminMenu;
 
 class Updates extends \Admin\Classes\AdminController
 {

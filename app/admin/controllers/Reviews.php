@@ -1,7 +1,5 @@
 <?php namespace Admin\Controllers;
 
-use Admin\Models\Orders_model;
-use Admin\Models\Reservations_model;
 use AdminMenu;
 
 class Reviews extends \Admin\Classes\AdminController
@@ -67,7 +65,7 @@ class Reviews extends \Admin\Classes\AdminController
             ['review_status', 'lang:admin::default.label_status', 'required|integer'],
         ];
 
-        $this->validateAfter(function($validator) {
+        $this->validateAfter(function ($validator) {
             if ($message = $this->saleIdDoesNotExists()) {
                 $validator->errors()->add('sale_id', $message);
             }
@@ -78,8 +76,8 @@ class Reviews extends \Admin\Classes\AdminController
 
     protected function saleIdDoesNotExists()
     {
-        $saleId = post('Review[sale_id]');
-        $saleType = post('Review[sale_type]');
+        $saleId = post('Review.sale_id');
+        $saleType = post('Review.sale_type');
         $saleModel = '\\Admin\\Models\\'.ucwords($saleType.'s_model');
 
         if (!$saleModel::find($saleId)) {
@@ -89,6 +87,6 @@ class Reviews extends \Admin\Classes\AdminController
             );
         }
 
-        return false;
+        return FALSE;
     }
 }

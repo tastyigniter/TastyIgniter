@@ -1,10 +1,10 @@
 <?php namespace Admin\FormWidgets;
 
-use Exception;
 use Admin\Classes\BaseFormWidget;
-use System\Classes\ComponentManager as ComponentsManager;
 use Admin\Models\Layout_modules_model;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use System\Classes\ComponentManager as ComponentsManager;
 
 /**
  * Components

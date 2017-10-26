@@ -6,7 +6,8 @@
 
     <div id="<?= $this->getId('items') ?>" class="repeater-items">
         <div class="table-responsive">
-            <table id="<?= $this->getId('sortable') ?>" class="table table-striped <?= ($sortable) ? 'is-sortable' : '' ?>">
+            <table id="<?= $this->getId('sortable') ?>"
+                   class="table table-striped <?= ($sortable) ? 'is-sortable' : '' ?>">
                 <thead>
                 <tr>
                     <?php if (!$this->previewMode AND $sortable) { ?>
@@ -30,21 +31,21 @@
                 <?php } ?>
                 </tbody>
                 <?php if (!$this->previewMode) { ?>
-                <tfoot>
-                <tr>
-                    <th colspan="99">
-                        <div class="list-action">
-                            <button
-                                class="btn btn-primary"
-                                data-control="add-item"
-                                type="button">
-                                <i class="fa fa-plus"></i>
-                                <?= $prompt ? e(lang($prompt)) : '' ?>
-                            </button>
-                        </div>
-                    </th>
-                </tr>
-                </tfoot>
+                    <tfoot>
+                    <tr>
+                        <th colspan="99">
+                            <div class="list-action">
+                                <button
+                                    class="btn btn-primary"
+                                    data-control="add-item"
+                                    type="button">
+                                    <i class="fa fa-plus"></i>
+                                    <?= $prompt ? e(lang($prompt)) : '' ?>
+                                </button>
+                            </div>
+                        </th>
+                    </tr>
+                    </tfoot>
                 <?php } ?>
             </table>
         </div>

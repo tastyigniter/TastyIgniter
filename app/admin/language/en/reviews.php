@@ -2,10 +2,10 @@
 
 return [
     'text_title'           => 'Reviews',
-    'text_new_title'          => 'Review: New',
-    'text_edit_title'         => 'Review: Update',
-    'text_preview_title'      => 'Review: Preview',
-    'text_form_name'          => 'Review',
+    'text_new_title'       => 'Review: New',
+    'text_edit_title'      => 'Review: Update',
+    'text_preview_title'   => 'Review: Preview',
+    'text_form_name'       => 'Review',
     'text_empty'           => 'There are no reviews available.',
     'text_filter_search'   => 'Search author, restaurant, order id or rating.',
     'text_filter_location' => 'View all locations',

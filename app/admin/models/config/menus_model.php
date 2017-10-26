@@ -106,10 +106,10 @@ $config['form']['tabs'] = [
             'type'  => 'number',
             'span'  => 'right',
         ],
-        'categories' => [
-            'label'       => 'lang:admin::menus.label_category',
-            'type'        => 'relation',
-            'span'        => 'left',
+        'categories'       => [
+            'label' => 'lang:admin::menus.label_category',
+            'type'  => 'relation',
+            'span'  => 'left',
         ],
         'menu_priority'    => [
             'label'   => 'lang:admin::menus.label_menu_priority',

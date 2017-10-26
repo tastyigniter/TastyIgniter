@@ -46,7 +46,7 @@
         <a
             class="btn btn-outline btn-danger"
             <?php if (!$this->previewMode) { ?>
-            onclick="$(this).closest('#<?= $this->getId('item-'.$indexValue) ?>').remove()"
+                onclick="$(this).closest('#<?= $this->getId('item-'.$indexValue) ?>').remove()"
             <?php } ?>
         >
             <i class="fa fa-times-circle"></i>

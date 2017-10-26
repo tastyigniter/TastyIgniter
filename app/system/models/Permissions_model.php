@@ -1,13 +1,12 @@
 <?php namespace System\Models;
 
-use Model;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
+use Model;
 use Modules;
 use System\Classes\ExtensionManager;
 
 /**
  * Permissions Model Class
- *
  * @package System
  */
 class Permissions_model extends Model
@@ -106,7 +105,6 @@ class Permissions_model extends Model
 
     /**
      * Return all permissions
-     *
      * @return array
      */
     public static function getPermissions()

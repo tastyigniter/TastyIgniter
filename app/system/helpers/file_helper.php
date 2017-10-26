@@ -32,7 +32,8 @@ if (!function_exists('unzip_file')) {
             $zip->close();
 
             return $dirname;
-        } else {
+        }
+        else {
             return FALSE;
         }
     }

@@ -1,9 +1,8 @@
 <?php namespace Admin\FormWidgets;
 
-use Event;
-use Exception;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\PaymentGateways;
+use Exception;
 
 /**
  * Payment Editor
@@ -36,6 +35,7 @@ class PaymentEditor extends BaseFormWidget
      * @var string Prompt to display if no record is selected.
      */
     protected $listPrompt = 'Activity';
+
     protected $formPrompt = 'Edit';
 
     /**
@@ -59,8 +59,11 @@ class PaymentEditor extends BaseFormWidget
      * @var PaymentGateways
      */
     protected $gatewayManager;
+
     protected $listWidget;
+
     protected $relationModel;
+
     protected $sortPayments;
 
     public function initialize()
@@ -79,13 +82,13 @@ class PaymentEditor extends BaseFormWidget
 
         $this->listWidget = $this->makeListWidget();
         $this->listWidget->bindToController();
-
 //        $this->gatewayManager = PaymentGateways::instance();
     }
 
     public function render()
     {
         $this->prepareVars();
+
         return $this->makePartial('paymenteditor/paymenteditor');
     }
 
@@ -144,11 +147,13 @@ class PaymentEditor extends BaseFormWidget
             $widget->bindEvent('list.extendQueryBefore', function ($query) use ($sqlConditions) {
                 $query->whereRaw($sqlConditions);
             });
-        } elseif ($scopeMethod = $this->scope) {
+        }
+        elseif ($scopeMethod = $this->scope) {
             $widget->bindEvent('list.extendQueryBefore', function ($query) use ($scopeMethod) {
                 $query->$scopeMethod();
             });
-        } else {
+        }
+        else {
             $widget->bindEvent('list.extendQueryBefore', function ($query) {
                 $query->where($this->model->getKeyName(), $this->model->getKey());
             });

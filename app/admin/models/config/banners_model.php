@@ -51,8 +51,8 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'type_label' => [
-        'label'    => 'lang:admin::banners.column_type',
-        'type'     => 'text',
+        'label' => 'lang:admin::banners.column_type',
+        'type'  => 'text',
     ],
     'status'     => [
         'label'      => 'lang:admin::banners.column_status',
@@ -69,10 +69,10 @@ $config['list']['columns'] = [
 $config['form']['toolbar'] = [
     'buttons' => [
         'save'      => [
-            'label'             => 'lang:admin::default.button_save',
-            'context'           => ['create', 'edit'],
-            'class'             => 'btn btn-primary',
-            'data-request'      => 'onSave',
+            'label'        => 'lang:admin::default.button_save',
+            'context'      => ['create', 'edit'],
+            'class'        => 'btn btn-primary',
+            'data-request' => 'onSave',
         ],
         'saveClose' => [
             'label'             => 'lang:admin::default.button_save_close',
@@ -111,9 +111,9 @@ $config['form']['fields'] = [
         'type'    => 'radio',
         'default' => 'image',
         'options' => [
-            'image'  => 'lang:admin::banners.text_image',
+            'image'    => 'lang:admin::banners.text_image',
             'carousel' => 'lang:admin::banners.text_carousel',
-            'custom' => 'lang:admin::banners.text_custom',
+            'custom'   => 'lang:admin::banners.text_custom',
         ],
     ],
     'image_code'  => [

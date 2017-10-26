@@ -12,14 +12,14 @@ class Coupons_history_model extends Model
     const CREATED_AT = 'date_used';
 
     /**
-	 * @var string The database table name
-	 */
-	protected $table = 'coupons_history';
+     * @var string The database table name
+     */
+    protected $table = 'coupons_history';
 
-	/**
-	 * @var string The database table primary key
-	 */
-	protected $primaryKey = 'coupon_history_id';
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'coupon_history_id';
 
     public $relation = [
         'belongsTo' => [
@@ -28,7 +28,7 @@ class Coupons_history_model extends Model
         ],
     ];
 
-	public $timestamps = TRUE;
+    public $timestamps = TRUE;
 
     protected $appends = ['customer_name'];
 
@@ -38,9 +38,9 @@ class Coupons_history_model extends Model
     }
 
     public function touchStatus()
-	{
-		$this->status = ($this->status < 1) ? 1 : 0;
+    {
+        $this->status = ($this->status < 1) ? 1 : 0;
 
-		return $this->save();
-	}
+        return $this->save();
+    }
 }

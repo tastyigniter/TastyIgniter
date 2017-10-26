@@ -29,7 +29,7 @@ $countries = System\Models\Countries_model::pluck('country_name');
             foreach ($addresses as $address) { ?>
                 <? $index++; ?>
                 <?= $this->makePartial('customers/address', [
-                    'field' => $field,
+                    'field'     => $field,
                     'countries' => $countries,
                     'address'   => $address,
                     'index'     => $index,
@@ -40,9 +40,9 @@ $countries = System\Models\Countries_model::pluck('country_name');
 
     <script type="text/template" data-address-template>
         <?= $this->makePartial('customers/address', [
-            'field' => $field,
+            'field'     => $field,
             'countries' => $countries,
-            'address' => [
+            'address'   => [
                 'address_id' => '',
                 'address_1'  => '',
                 'address_2'  => '',
@@ -51,7 +51,7 @@ $countries = System\Models\Countries_model::pluck('country_name');
                 'postcode'   => '',
                 'country_id' => '',
             ],
-            'index'   => '%%index%%',
+            'index'     => '%%index%%',
         ]) ?>
     </script>
 </div>

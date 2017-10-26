@@ -6,7 +6,10 @@
                 <h4 class="modal-title"><?= $formTitle ? e(lang($formTitle)) : '' ?></h4>
             </div>
             <div class="modal-body">
-                <div class="panel-group" id="<?= $this->getId('form-modal-accordion') ?>" role="tablist" aria-multiselectable="true">
+                <div class="panel-group"
+                     id="<?= $this->getId('form-modal-accordion') ?>"
+                     role="tablist"
+                     aria-multiselectable="true">
                     <?php $index = 0;
                     foreach ($payments as $payment) { ?>
                         <?php $index++; ?>
@@ -31,7 +34,7 @@
 
                                 <div class="panel-body">
                                     <?= var_dump($payment->data); ?>
-<!--                                    --><?//= $this->renderPaymentForm($payment); ?>
+                                    <!--                                    --><? //= $this->renderPaymentForm($payment); ?>
                                 </div>
                             </div>
                         </div>

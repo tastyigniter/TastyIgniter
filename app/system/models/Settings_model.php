@@ -2,14 +2,12 @@
 
 use DateTime;
 use DateTimeZone;
-use Exception;
 use Model;
 use System\Classes\ExtensionManager;
 use System\Traits\ConfigMaker;
 
 /**
  * Settings Model Class
- *
  * @package System
  */
 class Settings_model extends Model
@@ -78,7 +76,6 @@ class Settings_model extends Model
 
     /**
      * Return all settings
-     *
      * @return array
      */
     public function getAll()
@@ -201,7 +198,7 @@ class Settings_model extends Model
     }
 
     //
-    // Helpers
+    // Form Dropdown options
     //
 
     public static function listTimezones()
@@ -232,107 +229,4 @@ class Settings_model extends Model
 
         return $timezone_list;
     }
-
-//    /**
-//     * Insert new or update multiple existing settings
-//     *
-//     * @param string $sort
-//     * @param array $update
-//     * @param bool $flush
-//     *
-//     * @return bool
-//     */
-//    public static function updateSettings($sort, $update = [], $flush = FALSE)
-//    {
-//        if (!empty($update) && !empty($sort)) {
-//            if ($flush === TRUE) {
-//                self::where('sort', $sort)->delete();
-//            }
-//
-//            $query = FALSE;
-//            foreach ($update as $item => $value) {
-//                if (!empty($item)) {
-//                    if ($flush === FALSE) {
-//                        self::where([
-//                            ['sort', '=', $sort],
-//                            ['item', '=', $item],
-//                        ])->delete();
-//                    }
-//
-//                    if (isset($value)) {
-//                        $serialized = '0';
-//                        if (is_array($value)) {
-//                            $value = serialize($value);
-//                            $serialized = '1';
-//                        }
-//
-//                        $query = self::insertGetId(['sort' => $sort, 'item' => $item, 'value' => $value, 'serialized' => $serialized]);
-//                    }
-//                }
-//            }
-//
-//            get_instance()->config->writeDBConfigCache();
-//
-//            return $query;
-//        }
-//    }
-//
-//    /**
-//     * Insert new single setting
-//     *
-//     * @param string $sort
-//     * @param string $item
-//     * @param string $value
-//     * @param string $serialized
-//     *
-//     * @return bool
-//     */
-//    public static function addSetting($sort, $item, $value, $serialized = '0', $reloadCache = TRUE)
-//    {
-//        $query = FALSE;
-//
-//        if (isset($sort, $item, $value, $serialized)) {
-//            self::where([
-//                ['sort', '=', $sort],
-//                ['item', '=', $item],
-//            ])->delete();
-//
-//            $serialized = '0';
-//            if (is_array($value)) {
-//                $value = serialize($value);
-//                $serialized = '1';
-//            }
-//
-//            $query = self::insertGetId([
-//                'sort'       => $sort,
-//                'item'       => $item,
-//                'value'      => $value,
-//                'serialized' => $serialized,
-//            ]);
-//        }
-//
-//        if ($reloadCache) get_instance()->config->writeDBConfigCache();
-//
-//        return $query;
-//    }
-//
-//    /**
-//     * Delete a single setting
-//     *
-//     * @param string $sort
-//     * @param string $item
-//     *
-//     * @return bool
-//     */
-//    public static function deleteSettings($sort, $item)
-//    {
-//        if (!empty($sort) AND !empty($item)) {
-//            $query = self::where([
-//                ['sort', '=', $sort],
-//                ['item', '=', $item],
-//            ])->delete();
-//        }
-//
-//        return $query;
-//    }
 }

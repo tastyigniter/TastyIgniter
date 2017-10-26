@@ -3,7 +3,6 @@
 use AdminMenu;
 use Exception;
 use System\Models\Mail_templates_model;
-use Template;
 
 class MailTemplates extends \Admin\Classes\AdminController
 {
@@ -65,7 +64,7 @@ class MailTemplates extends \Admin\Classes\AdminController
 
             $model = $this->getFormModel();
             if ($model->template_id == $this->defaultTemplate) {
-                flash()->set('info', lang('admin::mail_templates.alert_caution_edit'));
+                flash()->info(lang('admin::mail_templates.alert_caution_edit'));
             }
 
             $this->widgets['toolbar']->bindEvent('toolbar.extendButtons', function ($toolbar) use ($model) {

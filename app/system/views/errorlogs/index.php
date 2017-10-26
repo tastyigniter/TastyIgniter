@@ -31,10 +31,10 @@
                     <td
                         class="text clickable"
                         <?php if ($log['stack']) { ?>
-                        data-toggle="collapse"
-                        data-target="#stack-<?= e($key); ?>"
-                        aria-expanded="false"
-                        aria-controls="stack<?= e($key); ?>"
+                            data-toggle="collapse"
+                            data-target="#stack-<?= e($key); ?>"
+                            aria-expanded="false"
+                            aria-controls="stack<?= e($key); ?>"
                         <?php } ?>
                     >
                         <?= e($log['text']); ?>

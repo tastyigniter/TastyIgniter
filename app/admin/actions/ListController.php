@@ -1,9 +1,8 @@
 <?php
+
 namespace Admin\Actions;
 
 use Admin\Traits\ListExtendable;
-use Event;
-use Model;
 use System\Classes\BaseController;
 use System\Classes\ControllerAction;
 use Template;
@@ -44,17 +43,17 @@ class ListController extends ControllerAction
     public $listConfig;
 
     /**
-     * @var \Admin\Classes\BaseWidget Reference to the list widget objects
+     * @var \Admin\Widgets\Lists[] Reference to the list widget objects
      */
     protected $listWidgets;
 
     /**
-     * @var \Admin\Classes\BaseWidget Reference to the toolbar widget objects.
+     * @var \Admin\Widgets\Toolbar[] Reference to the toolbar widget objects.
      */
     protected $toolbarWidget;
 
     /**
-     * @var \Admin\Classes\BaseWidget Reference to the filter widget objects.
+     * @var \Admin\Widgets\Filter[] Reference to the filter widget objects.
      */
     protected $filterWidgets = [];
 
@@ -108,7 +107,7 @@ class ListController extends ControllerAction
     {
         $checkedIds = post('checked');
         if (!$checkedIds || !is_array($checkedIds) || !count($checkedIds)) {
-            flash()->set('success', lang('admin::default.alert_list_delete_empty'));
+            flash()->success(lang('admin::default.alert_list_delete_empty'));
 
             return $this->controller->refreshList();
         }
@@ -135,9 +134,10 @@ class ListController extends ControllerAction
             }
 
             $prefix = ($count > 1) ? ' records' : 'record';
-            flash()->set('success', sprintf(lang('admin::default.alert_success'), '['.$count.']'.$prefix.' '.lang('admin::default.text_deleted')));
-        } else {
-            flash()->set('warning', sprintf(lang('admin::default.alert_error_nothing'), lang('admin::default.text_deleted')));
+            flash()->success(sprintf(lang('admin::default.alert_success'), '['.$count.']'.$prefix.' '.lang('admin::default.text_deleted')));
+        }
+        else {
+            flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), lang('admin::default.text_deleted')));
         }
 
         return $this->controller->refreshList($alias);

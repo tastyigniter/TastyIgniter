@@ -1,8 +1,8 @@
 <?php namespace Admin\Controllers;
 
+use AdminMenu;
 use Assets;
 use System\Models\Settings_model;
-use AdminMenu;
 use Template;
 
 class Ratings extends \Admin\Classes\AdminController
@@ -53,10 +53,10 @@ class Ratings extends \Admin\Classes\AdminController
             if ($ratings = Settings_model::where('sort', 'ratings')->first()) {
                 $ratings->value = serialize($update);
                 $ratings->save();
-                flash()->set('success', sprintf(lang('admin::default.alert_success'), 'Rating updated '));
+                flash()->success(sprintf(lang('admin::default.alert_success'), 'Rating updated '));
             }
             else {
-                flash()->set('warning', sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
+                flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
             }
 
             return TRUE;
@@ -66,7 +66,7 @@ class Ratings extends \Admin\Classes\AdminController
     protected function validateForm()
     {
         if (!$post = post('ratings'))
-            return false;
+            return FALSE;
 
         $rules = [];
         foreach ($post as $key => $value) {

@@ -27,7 +27,7 @@ class Customer_online_model extends Model
         'belongsTo' => [
             'customer' => ['Admin\Models\Customers_model', 'foreignKey' => 'customer_id'],
             'country'  => ['System\Models\Countries_model', 'foreignKey' => 'country_code', 'otherKey' => 'iso_code_2'],
-        ]
+        ],
     ];
 
     //

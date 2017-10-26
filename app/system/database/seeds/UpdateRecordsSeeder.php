@@ -1,8 +1,10 @@
 <?php namespace System\Database\Seeds;
 
+use Admin\Models\Categories_model;
 use Admin\Models\Layout_modules_model;
 use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
+use Admin\Models\Pages_model;
 use Admin\Models\Payments_model;
 use Admin\Models\Reviews_model;
 use Admin\Models\Status_history_model;
@@ -12,7 +14,6 @@ use System\Models\Extensions_model;
 use System\Models\Mail_templates_data_model;
 use System\Models\Message_meta_model;
 use System\Models\Messages_model;
-use System\Models\Permalink_model;
 use System\Models\Themes_model;
 
 /**
@@ -31,7 +32,7 @@ class UpdateRecordsSeeder extends Seeder
 
         $this->updateMorphsOnReviews();
 
-        $this->fillPermalinkSlugColumn();
+        $this->fixPermalinkSlugColumns();
 
         $this->updateMorphsOnMessages();
 
@@ -86,29 +87,19 @@ class UpdateRecordsSeeder extends Seeder
         });
     }
 
-    protected function fillPermalinkSlugColumn()
+    protected function fixPermalinkSlugColumns()
     {
-        if (!Permalink_model::count())
-            return;
-
-        $morphs = [
-            'category_id' => '\Admin\Models\Categories_model',
-            'location_id' => '\Admin\Models\Locations_model',
-            'page_id'     => '\Admin\Models\Pages_model',
-        ];
-
-        Permalink_model::all()->each(function ($model) use ($morphs) {
-            list($keyName, $key) = explode('=', $model->query);
-
-            if (!isset($morphs[$keyName]))
-                return FALSE;
-
-            $class = $morphs[$keyName];
-            $class::where($keyName, $key)->update([
-                'permalink_slug' => $model->slug,
-            ]);
+        Categories_model::all()->each(function($model) {
+            $model->save();
         });
-//        Permalink_model::truncate();
+
+        Pages_model::all()->each(function($model) {
+            $model->save();
+        });
+
+        Locations_model::all()->each(function($model) {
+            $model->save();
+        });
     }
 
     protected function updateMorphsOnMessages()

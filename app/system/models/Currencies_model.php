@@ -3,16 +3,17 @@
 use Admin\Facades\AdminAuth;
 use Artisan;
 use Carbon\Carbon;
-use Model;
 use Igniter\Traits\DelegateToCI;
+use Model;
 
 /**
  * Currencies Model Class
- *
  * @package System
  */
 class Currencies_model extends Model
 {
+    const UPDATED_AT = 'date_modified';
+
     /**
      * @var string The database table name
      */
@@ -27,8 +28,6 @@ class Currencies_model extends Model
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
-
-    const UPDATED_AT = 'date_modified';
 
     public $relation = [
         'belongsTo' => [
@@ -45,7 +44,6 @@ class Currencies_model extends Model
     /**
      * Auto update rates,
      * called by before_create trigger
-     *
      * @return void
      */
     public static function autoUpdateRates()
@@ -105,28 +103,6 @@ class Currencies_model extends Model
     //
 
     /**
-     * Return all currencies
-     *
-     * @return array
-     */
-    public function getCurrencies()
-    {
-        return $this->joinCountry()->get();
-    }
-
-    /**
-     * Find a single currency by currency_id
-     *
-     * @param int $currency_id
-     *
-     * @return array
-     */
-    public function getCurrency($currency_id)
-    {
-        return $this->joinCountry()->find($currency_id);
-    }
-
-    /**
      * Update the accepted currencies
      *
      * @param array $accepted_currencies an indexed array of currency ids
@@ -136,11 +112,11 @@ class Currencies_model extends Model
     public static function updateAcceptedCurrencies($accepted_currencies)
     {
         $update = self::where('currency_id', '!=', setting('currency_id'))
-                       ->update(['currency_status' => '0']);
+                      ->update(['currency_status' => '0']);
 
         if (is_array($accepted_currencies)) {
             $update = self::whereIn('currency_id', $accepted_currencies)
-                           ->update(['currency_status' => '1']);
+                          ->update(['currency_status' => '1']);
         }
 
         return $update;
@@ -153,7 +129,7 @@ class Currencies_model extends Model
      *
      * @return bool TRUE on success, FALSE on failure
      */
-    public function updateRates($forceUpdates = false)
+    public function updateRates($forceUpdates = FALSE)
     {
         $query = $this->newQuery()->where('currency_id', '!=', setting('currency_id'));
         if (!$forceUpdates)
@@ -165,70 +141,9 @@ class Currencies_model extends Model
         Artisan::call('currency:update');
 
         activity()->performedOn($this)
-            ->causedBy(AdminAuth::getUser())
-            ->log(lang('system::currencies.activity_updated_event_log'));
+                  ->causedBy(AdminAuth::getUser())
+                  ->log(lang('system::currencies.activity_updated_event_log'));
 
         return TRUE;
-    }
-
-    /**
-     * Create a new or update existing currency
-     *
-     * @param int $currency_id
-     * @param array $save
-     *
-     * @return bool|int The $currency_id of the affected row, or FALSE on failure
-     */
-    public function saveCurrency($currency_id, $save = [])
-    {
-        if (empty($save)) return FALSE;
-
-        $currencyModel = $this->findOrNew($currency_id);
-
-        $saved = $currencyModel->fill($save)->save();
-
-        return $saved ? $currencyModel->getKey() : $saved;
-    }
-
-    /**
-     * Delete a single or multiple currency by currency_id
-     *
-     * @param string|array $currency_id
-     *
-     * @return int  The number of deleted rows
-     */
-    public function deleteCurrency($currency_id)
-    {
-        if (is_numeric($currency_id)) $currency_id = [$currency_id];
-
-        if (!empty($currency_id) AND ctype_digit(implode('', $currency_id))) {
-            return $this->whereIn('currency_id', $currency_id)->delete();
-        }
-    }
-
-    protected function queryYahooFinance($currencies)
-    {
-        $yahoo__query = 'select * from yahoo.finance.xchange where pair in ("'.implode(', ', $currencies).'")';
-        $yahoo_query_url = "http://query.yahooapis.com/v1/public/yql?q=".urlencode($yahoo__query)."&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $yahoo_query_url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_HEADER, FALSE);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-        $content = curl_exec($curl);
-        curl_close($curl);
-
-        $json = json_decode($content, TRUE);
-
-        if (!isset($json['query']['results']['rate']))
-            return [];
-
-        if (!isset($json['query']['results']['rate'][0])) {
-            $json['query']['results']['rate'] = [$json['query']['results']['rate']];
-        }
-
-        return $json['query']['results']['rate'];
     }
 }

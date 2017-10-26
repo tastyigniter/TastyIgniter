@@ -1,17 +1,11 @@
 <?php namespace System\Classes;
 
 use Exception;
-use System\Models\Settings_model;
 use Igniter\Flame\Traits\Singleton;
 
 /**
  * Hub Manager Class
- *
  * @package System
- *
- * @property \TI_Loader $load                       TemplateLoader Class.
- * @property \TI_Config $config                     Config Class.
- * @property \CI_Cache $cache                       Cache Class.
  */
 class HubManager
 {

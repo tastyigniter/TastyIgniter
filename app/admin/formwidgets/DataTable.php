@@ -1,8 +1,7 @@
 <?php namespace Admin\FormWidgets;
 
-use Admin\Widgets\Table;
-use Event;
 use Admin\Classes\BaseFormWidget;
+use Admin\Widgets\Table;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -29,7 +28,7 @@ class DataTable extends BaseFormWidget
      * @var bool Allow rows to be sorted
      * @todo Not implemented...
      */
-    public $rowSorting = false;
+    public $rowSorting = FALSE;
 
     //
     // Object properties
@@ -56,6 +55,7 @@ class DataTable extends BaseFormWidget
     public function render()
     {
         $this->prepareVars();
+
         return $this->makePartial('datatable/datatable');
     }
 
@@ -68,7 +68,7 @@ class DataTable extends BaseFormWidget
         // Sync the array keys as the ID to make the
         // table widget happy!
         foreach ((array)$value as $key => $_value) {
-            $value[$key] = ['id' => $key] + (array) $_value;
+            $value[$key] = ['id' => $key] + (array)$_value;
         }
 
         return $value;
@@ -154,7 +154,7 @@ class DataTable extends BaseFormWidget
         $records = $this->getLoadValue() ?: [];
 
         $dataSource->purge();
-        $dataSource->initRecords((array) $records);
+        $dataSource->initRecords((array)$records);
     }
 
     protected function makeTableWidget()
@@ -162,7 +162,7 @@ class DataTable extends BaseFormWidget
         $config = $this->config;
 
         $config['dataSource'] = 'client';
-        $config['alias'] = studly_case(name_to_id($this->fieldName)) . 'datatable';
+        $config['alias'] = studly_case(name_to_id($this->fieldName)).'datatable';
         $config['fieldName'] = $this->fieldName;
 
         $table = new Table($this->getController(), $config);

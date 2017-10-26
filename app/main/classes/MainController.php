@@ -129,9 +129,9 @@ class MainController extends BaseController
     /**
      * Class constructor
      */
-    public function __construct()
+    public function __construct($theme = null)
     {
-        $this->theme = ThemeManager::instance()->getActiveTheme();
+        $this->theme = $theme ?: ThemeManager::instance()->getActiveTheme();
         if (!$this->theme)
             throw new MainException(Lang::get('main::default.not_found.active_theme'));
 

@@ -1,7 +1,7 @@
 <?php namespace Admin\Classes;
 
 use Igniter\Flame\Traits\Singleton;
-use Modules;
+use Response;
 use System\Classes\ExtensionManager;
 
 /**
@@ -53,6 +53,7 @@ class PaymentGateways
      *       $manager->registerGateways([...]);
      *   });
      * </pre>
+     *
      * @param callable $callback A callable function.
      */
     public function registerCallback(callable $callback)
@@ -63,6 +64,7 @@ class PaymentGateways
     /**
      * Registers the payment gateways.
      * The argument is an array of the gateway classes.
+     *
      * @param string $owner Specifies the gateways owner extension in the format extension_code.
      * @param array $classes An array of the payment gateway classes.
      */
@@ -77,7 +79,7 @@ class PaymentGateways
             $this->gateways[$code] = array_merge($paymentGateway, [
                 'owner' => $owner,
                 'class' => $classPath,
-                'code' => $code,
+                'code'  => $code,
             ]);
         }
     }
@@ -104,7 +106,7 @@ class PaymentGateways
 
             $gatewayObj = new $gateway['class'];
             $result[$gateway['code']] = array_merge($gateway, [
-                'object'      => $gatewayObj,
+                'object' => $gatewayObj,
             ]);
         }
 
@@ -145,10 +147,13 @@ class PaymentGateways
 
     /**
      * Executes an entry point for registered gateways, defined in routes.php file.
-     * @param  string $code Access point code
-     * @param  string $uri  Remaining uri parts
+     *
+     * @param  string $code Entry point code
+     * @param  string $uri Remaining uri parts
+     *
+     * @return \Illuminate\Http\Response
      */
-    public static function runAccessPoint($code = null, $uri = null)
+    public static function runEntryPoint($code = null, $uri = null)
     {
         $params = explode('/', $uri);
 
@@ -174,43 +179,20 @@ class PaymentGateways
      */
     public static function createPartials()
     {
-        $partials = Partial::lists('baseFileName', 'baseFileName');
-        $paymentMethods = TypeModel::all();
-
-        foreach ($paymentMethods as $paymentMethod) {
-            $class = $paymentMethod->class_name;
-
-            if (!$class || get_parent_class($class) != 'Responsiv\Pay\Classes\GatewayBase')
-                continue;
-
-            $partialName = 'pay/'.strtolower(class_basename($class));
-            $partialExists = array_key_exists($partialName, $partials);
-
-            if (!$partialExists) {
-                $filePath = dirname(File::fromClass($class)).'/'.strtolower(class_basename($class)).'/payment_form.htm';
-                self::createPartialFromFile($partialName, $filePath, Theme::getEditTheme());
-            }
-        }
+        // @todo: implement
     }
 
     /**
      * Creates a partial using the contents of a specified file.
-     * @param  string $name      New Partial name
-     * @param  string $filePath  File containing partial contents
+     *
+     * @param  string $name New Partial name
+     * @param  string $filePath File containing partial contents
      * @param  string $themeCode Theme to create the partial
+     *
      * @return void
      */
     protected static function createPartialFromFile($name, $filePath, $themeCode)
     {
-        if (!File::exists($filePath))
-            return;
-
-        $partial = Partial::inTheme($themeCode);
-        $partial->fill([
-            'fileName' => $name,
-            'markup' => File::get($filePath)
-        ]);
-        $partial->save();
+        // @todo: implement
     }
-
 }

@@ -19,7 +19,7 @@ $config['form']['general'] = [
     'priority' => 0,
     'url'      => admin_url('settings/edit/general'),
     'form'     => [
-        'tabs' => [
+        'tabs'  => [
             'fields' => [
                 'site_name'           => [
                     'label' => 'lang:system::settings.label_site_name',
@@ -248,7 +248,7 @@ $config['form']['general'] = [
                 ],
             ],
         ],
-        'rules'    => [
+        'rules' => [
             ['site_name', 'lang:system::settings.label_site_name', 'required|min:2|max:128'],
             ['site_email', 'lang:system::settings.label_site_email', 'required|email'],
             ['site_logo', 'lang:system::settings.label_site_logo', 'required'],
@@ -282,7 +282,7 @@ $config['form']['order'] = [
     'priority' => 1,
     'url'      => admin_url('settings/edit/order'),
     'form'     => [
-        'tabs' => [
+        'tabs'  => [
             'fields' => [
                 'default_order_status'    => [
                     'label'       => 'lang:system::settings.label_default_order_status',
@@ -474,7 +474,7 @@ $config['form']['order'] = [
                 ],
             ],
         ],
-        'rules'    => [
+        'rules' => [
             ['order_email[]', 'lang:system::settings.label_order_email', 'required|alpha'],
             ['tax_mode', 'lang:system::settings.label_tax_mode', 'required|integer'],
             ['tax_title', 'lang:system::settings.label_tax_title', 'max:32'],
@@ -555,7 +555,7 @@ $config['form']['reservation'] = [
                 'comment' => 'lang:system::settings.help_reservation_stay_time',
             ],
         ],
-        'rules'    => [
+        'rules'  => [
             ['reservation_email[]', 'lang:system::settings.label_reservation_email', 'required|alpha'],
             ['reservation_mode', 'lang:system::settings.label_reservation_mode', 'required|integer'],
             ['default_reservation_status', 'lang:system::settings.label_default_reservation_status', 'required|integer'],
@@ -575,7 +575,7 @@ $config['form']['user'] = [
     'url'      => admin_url('settings/edit/user'),
     'form'     => [
         'fields' => [
-            'registration_email' => [
+            'registration_email'         => [
                 'label'   => 'lang:system::settings.label_registration_email',
                 'type'    => 'checkbox',
                 'options' => [
@@ -584,26 +584,26 @@ $config['form']['user'] = [
                 ],
                 'comment' => 'lang:system::settings.help_registration_email',
             ],
-            'registration_terms' => [
+            'registration_terms'         => [
                 'label'       => 'lang:system::settings.label_registration_terms',
                 'type'        => 'select',
                 'options'     => ['Admin\Models\Pages_model', 'getDropdownOptions'],
                 'comment'     => 'lang:system::settings.help_registration_terms',
                 'placeholder' => 'lang:admin::default.text_please_select',
             ],
-            'customer_group_id'  => [
+            'customer_group_id'          => [
                 'label'   => 'lang:system::settings.label_customer_group',
                 'type'    => 'select',
                 'options' => ['Admin\Models\Customer_groups_model', 'getDropdownOptions'],
             ],
-            'disable_security_questions'  => [
+            'disable_security_questions' => [
                 'label'   => 'lang:system::settings.label_security_questions',
                 'type'    => 'radio',
                 'comment' => 'lang:system::settings.help_security_questions',
-                'options' => ['lang:admin::default.text_no', 'lang:admin::default.text_yes']
+                'options' => ['lang:admin::default.text_no', 'lang:admin::default.text_yes'],
             ],
         ],
-        'rules'    => [
+        'rules'  => [
             ['registration_email[]', 'lang:system::settings.label_registration_email', 'required|alpha'],
             ['registration_terms', 'lang:system::settings.label_registration_terms', 'required|numeric'],
             ['customer_group_id', 'lang:system::settings.label_customer_group', 'required|integer'],
@@ -684,7 +684,7 @@ $config['form']['media'] = [
                 'comment' => 'lang:system::settings.help_media_delete',
             ],
         ],
-        'rules'    => [
+        'rules'  => [
             ['image_manager[max_size]', 'lang:system::settings.label_media_max_size', 'required|numeric'],
             ['image_manager[thumb_height]', 'lang:system::settings.label_media_thumb_height', 'required|numeric'],
             ['image_manager[thumb_width]', 'lang:system::settings.label_media_thumb_width', 'required|numeric'],
@@ -720,7 +720,7 @@ $config['form']['mail'] = [
             'protocol'     => [
                 'label'   => 'lang:system::settings.label_protocol',
                 'type'    => 'radio',
-                'default'    => 'sendmail',
+                'default' => 'sendmail',
                 'options' => [
                     'sendmail' => 'lang:system::settings.text_sendmail',
                     'smtp'     => 'lang:system::settings.text_smtp',
@@ -728,54 +728,54 @@ $config['form']['mail'] = [
                 'span'    => 'left',
             ],
             'smtp_host'    => [
-                'label' => 'lang:system::settings.label_smtp_host',
-                'type'  => 'text',
-                'span'  => 'right',
+                'label'   => 'lang:system::settings.label_smtp_host',
+                'type'    => 'text',
+                'span'    => 'right',
                 'trigger' => [
-                    'action' => 'show',
+                    'action'    => 'show',
                     'field'     => 'protocol',
                     'condition' => 'value[smtp]',
-                ]
+                ],
             ],
             'smtp_port'    => [
-                'label' => 'lang:system::settings.label_smtp_port',
-                'type'  => 'text',
-                'span'  => 'left',
+                'label'   => 'lang:system::settings.label_smtp_port',
+                'type'    => 'text',
+                'span'    => 'left',
                 'trigger' => [
-                    'action' => 'show',
+                    'action'    => 'show',
                     'field'     => 'protocol',
                     'condition' => 'value[smtp]',
-                ]
+                ],
             ],
             'smtp_user'    => [
-                'label' => 'lang:system::settings.label_smtp_user',
-                'type'  => 'text',
-                'span'  => 'right',
+                'label'   => 'lang:system::settings.label_smtp_user',
+                'type'    => 'text',
+                'span'    => 'right',
                 'trigger' => [
-                    'action' => 'show',
+                    'action'    => 'show',
                     'field'     => 'protocol',
                     'condition' => 'value[smtp]',
-                ]
+                ],
             ],
             'smtp_pass'    => [
-                'label' => 'lang:system::settings.label_smtp_pass',
-                'type'  => 'text',
-                'span'  => 'left',
+                'label'   => 'lang:system::settings.label_smtp_pass',
+                'type'    => 'text',
+                'span'    => 'left',
                 'trigger' => [
-                    'action' => 'show',
+                    'action'    => 'show',
                     'field'     => 'protocol',
                     'condition' => 'value[smtp]',
-                ]
+                ],
             ],
-            'mailtype' => [
+            'mailtype'     => [
                 'label'   => 'lang:system::settings.label_mailtype',
                 'type'    => 'radio',
-                'default'    => 'plain',
+                'default' => 'plain',
                 'options' => [
                     'plain' => 'lang:system::settings.text_plain',
-                    'html' => 'lang:system::settings.text_html',
+                    'html'  => 'lang:system::settings.text_html',
                 ],
-                'span'  => 'right',
+                'span'    => 'right',
             ],
             'test_email'   => [
                 'label' => 'lang:system::settings.label_test_email',
@@ -784,7 +784,7 @@ $config['form']['mail'] = [
                 'path'  => 'settings/test_email_button',
             ],
         ],
-        'rules'    => [
+        'rules'  => [
             ['sender_name', 'lang:system::settings.label_sender_name', 'required'],
             ['sender_email', 'lang:system::settings.label_sender_email', 'required'],
             ['protocol', 'lang:system::settings.label_protocol', 'required'],
@@ -803,27 +803,27 @@ $config['form']['advanced'] = [
     'url'      => admin_url('settings/edit/advanced'),
     'form'     => [
         'fields' => [
-            'captcha'      => [
+            'captcha'              => [
                 'label' => 'lang:system::settings.text_tab_title_captcha',
                 'type'  => 'section',
             ],
-            'captcha_mode' => [
+            'captcha_mode'         => [
                 'label'   => 'lang:system::settings.label_captcha_mode',
                 'type'    => 'radio',
                 'comment' => 'lang:system::settings.help_captcha_mode',
-                'default'    => 'default',
+                'default' => 'default',
                 'options' => [
-                    'default' => 'lang:admin::default.text_default',
-                    'recaptcha' => 'lang:system::settings.text_recaptcha',
+                    'default'             => 'lang:admin::default.text_default',
+                    'recaptcha'           => 'lang:system::settings.text_recaptcha',
                     'invisible-recaptcha' => 'lang:system::settings.text_invisible_recaptcha',
-                ]
+                ],
             ],
-            'recaptcha_site_key' => [
+            'recaptcha_site_key'   => [
                 'label'   => 'lang:system::settings.label_recaptcha_site_key',
                 'type'    => 'text',
                 'span'    => 'left',
                 'comment' => 'lang:system::settings.help_recaptcha_site_key',
-                'trigger'  => [
+                'trigger' => [
                     'action'    => 'show',
                     'field'     => 'captcha_mode',
                     'condition' => 'value[recaptcha]',
@@ -834,7 +834,7 @@ $config['form']['advanced'] = [
                 'type'    => 'text',
                 'span'    => 'right',
                 'comment' => 'lang:system::settings.help_recaptcha_secret_key',
-                'trigger'  => [
+                'trigger' => [
                     'action'    => 'show',
                     'field'     => 'captcha_mode',
                     'condition' => 'value[recaptcha]',
@@ -906,7 +906,7 @@ $config['form']['advanced'] = [
                 'comment' => 'lang:system::settings.help_cache_time',
             ],
         ],
-        'rules'    => [
+        'rules'  => [
             ['captcha_mode', 'lang:system::settings.label_recaptcha_site_key', 'required'],
             ['recaptcha_site_key', 'lang:system::settings.label_recaptcha_site_key', 'required_if:captcha_mode,recaptcha'],
             ['recaptcha_secret_key', 'lang:system::settings.label_recaptcha_secret_key', 'required_if:captcha_mode,recaptcha'],

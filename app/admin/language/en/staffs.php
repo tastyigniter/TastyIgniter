@@ -2,10 +2,10 @@
 
 return [
     'text_title'            => 'Staff',
-    'text_new_title'          => 'Staff: New',
-    'text_edit_title'         => 'Staff: Update',
-    'text_preview_title'      => 'Staff: Preview',
-    'text_form_name'          => 'Staff',
+    'text_new_title'        => 'Staff: New',
+    'text_edit_title'       => 'Staff: Update',
+    'text_preview_title'    => 'Staff: Preview',
+    'text_form_name'        => 'Staff',
     'text_filter_search'    => 'Search location, name or email.',
     'text_filter_group'     => 'View all groups',
     'text_filter_location'  => 'View all locations',
@@ -24,7 +24,7 @@ return [
     'column_id'         => 'ID',
 
     'label_name'             => 'Name',
-    'label_super_staff'             => 'Super Admin',
+    'label_super_staff'      => 'Super Admin',
     'label_email'            => 'Email',
     'label_username'         => 'Username',
     'label_password'         => 'Password',
@@ -34,5 +34,5 @@ return [
     'label_status'           => 'Status',
 
     'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
-    'help_groups' => 'Specify which groups the staff should belong to. Groups define staff permissions, which can be overridden under Staff Groups, on the Permissions tab.',
+    'help_groups'      => 'Specify which groups the staff should belong to. Groups define staff permissions, which can be overridden under Staff Groups, on the Permissions tab.',
 ];

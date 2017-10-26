@@ -4,5 +4,5 @@
     'formValue' => $field->value,
     'model'     => $formModel,
     'field'     => $field,
-    'value'     => $field->value
+    'value'     => $field->value,
 ]); ?>

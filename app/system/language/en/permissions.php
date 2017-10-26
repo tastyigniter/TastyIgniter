@@ -30,5 +30,5 @@ return [
 
     'error_invalid_name' => 'Invalid permission name, must match Domain.Context',
 
-    'activity_event_log'           => '{event} permission <b>:subject.name</b>',
+    'activity_event_log' => '{event} permission <b>:subject.name</b>',
 ];

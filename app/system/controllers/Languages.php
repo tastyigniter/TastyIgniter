@@ -1,8 +1,7 @@
 <?php namespace System\Controllers;
 
-use System\Models\Languages_model;
-use Template;
 use AdminMenu;
+use System\Models\Languages_model;
 
 class Languages extends \Admin\Classes\AdminController
 {
@@ -60,7 +59,7 @@ class Languages extends \Admin\Classes\AdminController
         $model = $this->asExtension('FormController')->getFormModel();
 
         if ($model->isDefault()) {
-            flash()->set('info', lang('admin::languages.alert_caution_edit'));
+            flash()->info(lang('admin::languages.alert_caution_edit'));
         }
     }
 
@@ -69,7 +68,7 @@ class Languages extends \Admin\Classes\AdminController
         $defaultId = post('default');
 
         if (Languages_model::updateDefault($defaultId)) {
-            flash()->set('success', sprintf(lang('alert_success'), lang('alert_set_default')));
+            flash()->success(sprintf(lang('alert_success'), lang('alert_set_default')));
         }
 
         return $this->refreshList($alias);
@@ -92,7 +91,7 @@ class Languages extends \Admin\Classes\AdminController
         if (!$fileContent = load_lang_file($file, $form->model->idiom, $domain))
             return;
 
-        flash()->set('warning', lang('admin::languages.alert_save_changes'));
+        flash()->warning(lang('admin::languages.alert_save_changes'));
 
         $field->options = [];
         foreach ($fileContent as $key => $value) {

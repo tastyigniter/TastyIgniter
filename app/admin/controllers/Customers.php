@@ -1,8 +1,8 @@
 <?php namespace Admin\Controllers;
 
 use AdminAuth;
-use Assets;
 use AdminMenu;
+use Assets;
 
 class Customers extends \Admin\Classes\AdminController
 {
@@ -58,7 +58,8 @@ class Customers extends \Admin\Classes\AdminController
     public function login($context = null, $id = null)
     {
         if (!AdminAuth::canAccessCustomerAccount()) {
-            flash()->set('warning', lang('admin::customers.alert_login_restricted'));
+            flash()->warning(lang('admin::customers.alert_login_restricted'));
+
             return $this->redirectBack();
         }
 
@@ -104,13 +105,13 @@ class Customers extends \Admin\Classes\AdminController
             ['status', 'lang:admin::default.label_status', 'required|integer'],
         ];
 
-        if (!$model->exists OR post($form->arrayName.'[password]')) {
+        if (!$model->exists OR post($form->arrayName.'.password')) {
             $rules[] = ['password', 'lang:admin::customers.label_password', 'required|min:8|max:40|same:_confirm_password'];
             $rules[] = ['_confirm_password', 'lang:admin::customers.label_confirm_password'];
         }
 
-        if (post($form->arrayName.'[addresses]')) {
-            foreach (post($form->arrayName.'[addresses]') as $key => $value) {
+        if (post($form->arrayName.'.addresses')) {
+            foreach (post($form->arrayName.'.addresses') as $key => $value) {
                 $rules[] = ['addresses.'.$key.'.address_1', '['.$key.'] '.lang('lang:admin::customers.label_address_1'), 'required|min:3|max:128'];
                 $rules[] = ['addresses.'.$key.'.city', '['.$key.'] '.lang('lang:admin::customers.label_city'), 'required|min:2|max:128'];
                 $rules[] = ['addresses.'.$key.'.state', '['.$key.'] '.lang('lang:admin::customers.label_state'), 'max:128'];

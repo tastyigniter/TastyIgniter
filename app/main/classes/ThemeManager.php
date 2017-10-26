@@ -5,7 +5,6 @@ use Config;
 use File;
 use Igniter\Flame\Traits\Singleton;
 use Lang;
-use Log;
 use SystemException;
 use ZipArchive;
 
@@ -307,7 +306,7 @@ class ThemeManager
     {
         return [
             'admin' => 'app/admin/views',
-            'main' => App::themesPath(),
+            'main'  => App::themesPath(),
         ];
     }
 

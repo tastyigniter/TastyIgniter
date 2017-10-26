@@ -12,6 +12,6 @@
         <?php if ($startDate) { ?>data-start-date="<?= $startDate ?>"<?php } ?>
         <?php if ($endDate) { ?>data-end-date="<?= $endDate ?>"<?php } ?>
         <?php if ($datesDisabled) { ?>data-dates-disabled="<?= $datesDisabled ?>"<?php } ?>
-        data-format="<?= $format ?>" />
+        data-format="<?= $format ?>"/>
     <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
 </div>

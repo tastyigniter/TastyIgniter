@@ -22,14 +22,6 @@ class User extends Manager
 
     protected $belongsToSuperGroup = TRUE;
 
-    protected $is_logged;
-
-    protected $user_id;
-
-    protected $username;
-
-    protected $staff_id;
-
     protected $permissions = [];
 
     protected $permission_action = [];
@@ -77,7 +69,7 @@ class User extends Manager
     public function auth()
     {
         if (!$this->check()) {
-            flash()->set('danger', lang('admin::default.alert_user_not_logged_in'));
+            flash()->danger(lang('admin::default.alert_user_not_logged_in'));
             $prepend = empty($uri) ? '' : '?redirect='.str_replace(site_url(), '/', current_url());
             redirect(admin_url('login'.$prepend));
         }
@@ -125,7 +117,7 @@ class User extends Manager
             $context = substr($permission, strpos($permission, '.') + 1);
             $action = end($this->permission_action);
 
-            flash()->set('warning', sprintf(lang('admin::users.alert_location_restricted'), $action, $context));
+            flash()->warning(sprintf(lang('admin::users.alert_location_restricted'), $action, $context));
             if (!$redirect) {
                 return TRUE;
             }
@@ -140,6 +132,11 @@ class User extends Manager
     public function isLogged()
     {
         return $this->check();
+    }
+
+    public function isSuperUser()
+    {
+        return $this->user->super_user;
     }
 
     public function fromModel($key)
@@ -215,14 +212,21 @@ class User extends Manager
         return $this->fromModel('customer_account_access');
     }
 
-    public function unreadMessageTotal()
+    //
+    // Permissions
+    //
+
+    public function hasPermission($permission, $display_error = FALSE)
     {
-        if (empty($this->unread)) {
-            $unread = Messages_model::getUnreadCount($this->staff_id);
-            $this->unread = ($unread < 1) ? '' : $unread;
+        if (!is_array($permission))
+            $permission = [$permission];
+
+        foreach ($permission as $perms) {
+            if ($this->checkPermittedActions($perms, $display_error))
+                return TRUE;
         }
 
-        return $this->unread;
+        return FALSE;
     }
 
     protected function setPermissions()
@@ -245,19 +249,6 @@ class User extends Manager
         }
     }
 
-    public function hasPermission($permission, $display_error = FALSE)
-    {
-        if (!is_array($permission))
-            $permission = [$permission];
-
-        foreach ($permission as $perms) {
-            if ($this->checkPermittedActions($perms, $display_error))
-                return TRUE;
-        }
-
-        return FALSE;
-    }
-
     protected function checkPermittedActions($perm, $display_error = FALSE)
     {
         // Bail out if the staff is a super user
@@ -277,7 +268,7 @@ class User extends Manager
             if (in_array($value, $available_actions) AND !in_array($value, $permitted_actions)) {
                 if ($display_error) {
                     $context = substr($permName, strpos($permName, '.') + 1);
-                    flash()->set('warning', sprintf(lang('admin::users.alert_user_restricted'), $value, $context));
+                    flash()->warning(sprintf(lang('admin::users.alert_user_restricted'), $value, $context));
                 }
 
                 return FALSE;
@@ -343,21 +334,5 @@ class User extends Manager
         }
 
         return $result;
-    }
-
-    public function logout()
-    {
-        parent::logout();
-
-        $this->is_logged = FALSE;
-        $this->user_id = '';
-        $this->username = '';
-        $this->staff_id = '';
-        $this->staff_name = '';
-        $this->staff_group_name = '';
-        $this->staff_group_id = '';
-        $this->location_id = '';
-        $this->location_name = '';
-        $this->customer_account_access = '';
     }
 }

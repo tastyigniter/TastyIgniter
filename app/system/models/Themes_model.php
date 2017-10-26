@@ -1,8 +1,8 @@
 <?php namespace System\Models;
 
 use File;
-use Model;
 use Main\Classes\ThemeManager;
+use Model;
 use URL;
 
 /**
@@ -106,46 +106,6 @@ class Themes_model extends Model
     //
     // Helpers
     //
-
-    /**
-     * Return all themes
-     * @return array
-     */
-    public function getThemes()
-    {
-        $results = [];
-
-        $rows = $this->get();
-        foreach ($rows as $row) {
-            $results[$row['code']] = $row;
-        }
-
-        return $results;
-    }
-
-    /**
-     * Find a single theme by code
-     *
-     * @param string $code
-     *
-     * @return array
-     */
-    public function getTheme($code = '')
-    {
-        $results = [];
-
-        if (!empty($code)) {
-            $themes_list = $this->getList();
-
-            if (!empty($themes_list) AND is_array($themes_list)) {
-                if (isset($themes_list[$code]) AND is_array($themes_list[$code])) {
-                    $results = $themes_list[$code];
-                }
-            }
-        }
-
-        return $results;
-    }
 
     /**
      * Update installed extensions config value

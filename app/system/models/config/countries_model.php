@@ -25,16 +25,16 @@ $config['list']['columns'] = [
     'edit'         => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'countries/edit/{country_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'countries/edit/{country_id}',
         ],
     ],
-    'flag_url' => [
-        'label'      => 'lang:system::countries.column_flag',
-        'type'       => 'partial',
-        'path'       => 'countries/flag_column',
-        'cssClass'       => 'text-center',
+    'flag_url'     => [
+        'label'    => 'lang:system::countries.column_flag',
+        'type'     => 'partial',
+        'path'     => 'countries/flag_column',
+        'cssClass' => 'text-center',
     ],
     'country_name' => [
         'label'      => 'lang:system::countries.column_name',
@@ -86,13 +86,13 @@ $config['form']['fields'] = [
     'country_name' => [
         'label' => 'lang:system::countries.label_name',
         'type'  => 'text',
-        'span'    => 'left',
+        'span'  => 'left',
     ],
-    'priority' => [
-        'label' => 'lang:system::countries.label_priority',
-        'type'  => 'number',
-        'default'  => 0,
-        'span'  => 'right',
+    'priority'     => [
+        'label'   => 'lang:system::countries.label_priority',
+        'type'    => 'number',
+        'default' => 0,
+        'span'    => 'right',
     ],
     'iso_code_2'   => [
         'label'   => 'lang:system::countries.label_iso_code2',

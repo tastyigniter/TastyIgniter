@@ -1,3 +1,3 @@
-    <div class="row-fluid">
-        <?= $this->renderList(); ?>
-    </div>
+<div class="row-fluid">
+    <?= $this->renderList(); ?>
+</div>

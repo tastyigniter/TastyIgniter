@@ -1,8 +1,8 @@
 <?php namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
-use Model;
 use Igniter\Flame\Database\Traits\Sortable;
+use Model;
 
 /**
  * Payments Model Class

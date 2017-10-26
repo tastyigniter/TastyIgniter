@@ -30,7 +30,8 @@
         <?= form_error('add_inserts', '<span class="text-danger">', '</span>'); ?>
     </div>
     <div class="form-group">
-        <label for="input-backup-tables" class="control-label"><?= lang('system::maintenance.label_backup_table'); ?></label>
+        <label for="input-backup-tables"
+               class="control-label"><?= lang('system::maintenance.label_backup_table'); ?></label>
         <span class="help-block"><?= lang('system::maintenance.help_select_table') ?></span>
         <select name="backup_tables[]" id="input-backup-tables" class="form-control" multiple="multiple">
             <?php foreach ($dbTables as $name => $table) { ?>

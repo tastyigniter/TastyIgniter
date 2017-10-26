@@ -29,8 +29,10 @@
                 <div class="row">
                     <div
                         class="col-xs-12 col-md-6">
-                        <?php $index = 0; foreach ($themePartials as $partial) { ?>
-                            <?php $index++; if (($index % 2) == 0) continue; ?>
+                        <?php $index = 0;
+                        foreach ($themePartials as $partial) { ?>
+                            <?php $index++;
+                            if (($index % 2) == 0) continue; ?>
 
                             <?= $this->loadPartial('components/partial', [
                                 'partial' => $partial,
@@ -40,8 +42,10 @@
                     </div>
                     <div
                         class="col-xs-12 col-md-6">
-                        <?php $index = 0; foreach ($themePartials as $partial) { ?>
-                            <?php $index++; if (($index % 2) == 1) continue; ?>
+                        <?php $index = 0;
+                        foreach ($themePartials as $partial) { ?>
+                            <?php $index++;
+                            if (($index % 2) == 1) continue; ?>
 
                             <?= $this->loadPartial('components/partial', [
                                 'partial' => $partial,

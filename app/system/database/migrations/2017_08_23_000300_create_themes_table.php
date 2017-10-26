@@ -8,12 +8,11 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class CreateThemesTable extends Migration
 {
-
     public function up()
     {
         Schema::create('themes', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('theme_id', true);
+            $table->integer('theme_id', TRUE);
             $table->string('name');
             $table->string('code', 128)->unique();
             $table->text('description');

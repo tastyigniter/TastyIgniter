@@ -14,7 +14,7 @@
                 <p><?= lang('system::updates.text_maintenance_mode'); ?></p>
             </div>
 
-            <?= $this->makePartial('updates/list_items', ['items' => $updates['items'], 'ignored' => false]); ?>
+            <?= $this->makePartial('updates/list_items', ['items' => $updates['items'], 'ignored' => FALSE]); ?>
         <?php } ?>
 
         <?php if ($countIgnored) { ?>
@@ -25,7 +25,7 @@
                 </h3>
             </div>
 
-            <?= $this->makePartial('updates/list_items', ['items' => $updates['ignored'], 'ignored' => true]); ?>
+            <?= $this->makePartial('updates/list_items', ['items' => $updates['ignored'], 'ignored' => TRUE]); ?>
         <?php } ?>
 
     </div>

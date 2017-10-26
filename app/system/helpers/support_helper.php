@@ -6,10 +6,8 @@ use Illuminate\Routing\UrlGenerator;
 if (!function_exists('current_url')) {
     /**
      * Current URL
-     *
      * Returns the full URL (including segments and query string) of the page where this
      * function is placed
-     *
      * @return    string
      */
     function current_url()
@@ -56,7 +54,6 @@ if (!function_exists('site_url')) {
 if (!function_exists('restaurant_url')) {
     /**
      * Restaurant URL
-     *
      * Returns the full URL (including segments) of the local restaurant if any,
      * else locations URL is returned
      *
@@ -68,16 +65,17 @@ if (!function_exists('restaurant_url')) {
     function restaurant_url($uri = '', $params = [])
     {
         return $uri;
-        return app(UrlGenerator::class)->route('local', array_merge([
-            'uri' => $uri,
-        ], $params));
+
+        // @todo: implement
+//        return app(UrlGenerator::class)->route('local', array_merge([
+//            'uri' => $uri,
+//        ], $params));
     }
 }
 
 if (!function_exists('assets_url')) {
     /**
      * Assets URL
-     *
      * Returns the full URL (including segments) of the assets directory
      *
      * @param string $uri
@@ -94,7 +92,6 @@ if (!function_exists('assets_url')) {
 if (!function_exists('image_url')) {
     /**
      * Image Assets URL
-     *
      * Returns the full URL (including segments) of the assets image directory
      *
      * @param string $uri
@@ -111,7 +108,6 @@ if (!function_exists('image_url')) {
 if (!function_exists('admin_url')) {
     /**
      * Admin URL
-     *
      * Create a local URL based on your admin path.
      * Segments can be passed in as a string.
      *
@@ -129,7 +125,6 @@ if (!function_exists('admin_url')) {
 if (!function_exists('theme_url')) {
     /**
      * Theme URL
-     *
      * Create a local URL based on your theme path.
      * Segments can be passed in as a string.
      *
@@ -147,10 +142,8 @@ if (!function_exists('theme_url')) {
 if (!function_exists('referrer_url')) {
     /**
      * Referrer URL
-     *
      * Returns the full URL (including segments) of the page where this
      * function is placed
-     *
      * @return    string
      */
     function referrer_url()
@@ -162,7 +155,6 @@ if (!function_exists('referrer_url')) {
 if (!function_exists('root_url')) {
     /**
      * Root URL
-     *
      * Create a local URL based on your root path.
      * Segments can be passed in as a string.
      *
@@ -233,8 +225,7 @@ if (!function_exists('temp_path')) {
     }
 }
 
-if ( ! function_exists('get_remote_data'))
-{
+if (!function_exists('get_remote_data')) {
     /**
      * Get remote data (cURL)
      *
@@ -243,7 +234,7 @@ if ( ! function_exists('get_remote_data'))
      *
      * @return string
      */
-    function get_remote_data($url, $options = array('TIMEOUT' => 10))
+    function get_remote_data($url, $options = ['TIMEOUT' => 10])
     {
         // Set the curl parameters.
         $curl = curl_init($url);
@@ -296,11 +287,11 @@ if ( ! function_exists('get_remote_data'))
 
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         if ($httpCode == 500) {
-            log_message('error', 'cURL: Error --> ' . print_r(curl_getinfo($curl)) .' '. $url);
+            log_message('error', 'cURL: Error --> '.print_r(curl_getinfo($curl)).' '.$url);
         }
 
         if (curl_error($curl)) {
-            log_message('error', 'cURL: Error --> ' . curl_errno($curl) . ': ' . curl_error($curl) .' '. $url);
+            log_message('error', 'cURL: Error --> '.curl_errno($curl).': '.curl_error($curl).' '.$url);
         }
 
         curl_close($curl);
@@ -309,8 +300,7 @@ if ( ! function_exists('get_remote_data'))
     }
 }
 
-if ( ! function_exists('strip_class_basename'))
-{
+if (!function_exists('strip_class_basename')) {
     function strip_class_basename($class = '', $chop = null)
     {
         $basename = class_basename($class);
@@ -322,8 +312,7 @@ if ( ! function_exists('strip_class_basename'))
     }
 }
 
-if ( ! function_exists('mdate'))
-{
+if (!function_exists('mdate')) {
     /**
      * Convert MySQL Style Datecodes
      * This function is identical to PHPs date() function,
@@ -363,16 +352,15 @@ if ( ! function_exists('mdate'))
 if (!function_exists('time_elapsed')) {
     /**
      * Get time elapsed
-     *
      * Returns a time elapsed of seconds, minutes, hours, days in this format:
      *    10 days, 14 hours, 36 minutes, 47 seconds, now
      *
      * @param string $datetime
-     * @param bool $full
+     * @param array $full
      *
      * @return string
      */
-    function time_elapsed($datetime, $full = FALSE)
+    function time_elapsed($datetime, $full = null)
     {
         $now = new DateTime;
         $ago = new DateTime($datetime);
@@ -394,7 +382,8 @@ if (!function_exists('time_elapsed')) {
         foreach ($string as $key => &$value) {
             if ($diff->$key) {
                 $value = $diff->$key.' '.$value.($diff->$key > 1 ? 's' : '');
-            } else {
+            }
+            else {
                 unset($string[$key]);
             }
         }
@@ -402,7 +391,8 @@ if (!function_exists('time_elapsed')) {
         if (!empty($full)) {
             $intersect = array_intersect_key($string, array_flip($full));
             $string = (empty($intersect)) ? $string : $intersect;
-        } else {
+        }
+        else {
             $string = array_slice($string, 0, 1);
         }
 
@@ -413,7 +403,6 @@ if (!function_exists('time_elapsed')) {
 if (!function_exists('day_elapsed')) {
     /**
      * Get day elapsed
-     *
      * Returns a day elapsed as today, yesterday or date d/M/y:
      *    Today or Yesterday or 12 Jan 15
      *
@@ -427,7 +416,8 @@ if (!function_exists('day_elapsed')) {
 
         if (mdate('%d %M', $datetime) === mdate('%d %M', time())) {
             return 'Today';
-        } else if (mdate('%d %M', $datetime) === mdate('%d %M', strtotime('yesterday'))) {
+        }
+        else if (mdate('%d %M', $datetime) === mdate('%d %M', strtotime('yesterday'))) {
             return 'Yesterday';
         }
 
@@ -442,20 +432,19 @@ if (!function_exists('day_elapsed')) {
 if (!function_exists('time_range')) {
     /**
      * Date range
-     *
      * Returns a list of time within a specified period.
      *
-     * @param    int    unix_start    UNIX timestamp of period start time
-     * @param    int    unix_end    UNIX timestamp of period end time
-     * @param    int    interval        Specifies the second interval
-     * @param    string  time_format    Output time format, same as in date()
+     * @param    int    $unix_start    UNIX timestamp of period start time
+     * @param    int    $unix_end    UNIX timestamp of period end time
+     * @param    int    $interval        Specifies the second interval
+     * @param    string  $time_format    Output time format, same as in date()
      *
      * @return    array
      */
     function time_range($unix_start, $unix_end, $interval, $time_format = '%H:%i')
     {
         if ($unix_start == '' OR $unix_end == '' OR $interval == '') {
-            return FALSE;
+            return null;
         }
 
         $interval = ctype_digit($interval) ? $interval.' mins' : $interval;
@@ -491,13 +480,17 @@ if (!function_exists('make_carbon')) {
     {
         if ($value instanceof Carbon) {
             // Do nothing
-        } elseif ($value instanceof DateTime) {
+        }
+        elseif ($value instanceof DateTime) {
             $value = Carbon::instance($value);
-        } elseif (is_numeric($value)) {
+        }
+        elseif (is_numeric($value)) {
             $value = Carbon::createFromTimestamp($value);
-        } elseif (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
+        }
+        elseif (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
             $value = Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
-        } else {
+        }
+        else {
             try {
                 $value = Carbon::parse($value);
             } catch (Exception $ex) {
@@ -512,13 +505,10 @@ if (!function_exists('make_carbon')) {
     }
 }
 
-if ( ! function_exists('is_single_location'))
-{
+if (!function_exists('is_single_location')) {
     /**
      * Is Single Location Mode
-     *
      * Test to see system config multi location mode is set to single.
-     *
      * @return bool
      */
     function is_single_location()
@@ -527,17 +517,16 @@ if ( ! function_exists('is_single_location'))
     }
 }
 
-if ( ! function_exists('log_message'))
-{
+if (!function_exists('log_message')) {
     /**
      * Error Logging Interface
-     *
      * We use this as a simple mechanism to access the logging
      * class and send messages to be logged.
      *
-     * @param	string	the error level: 'error', 'debug' or 'info'
-     * @param	string	the error message
-     * @return	void
+     * @param    string    $level the error level: 'error', 'debug' or 'info'
+     * @param    string    $message the error message
+     *
+     * @return    void
      */
     function log_message($level, $message)
     {
@@ -545,18 +534,18 @@ if ( ! function_exists('log_message'))
     }
 }
 
-if ( ! function_exists('sort_array'))
-{
+if (!function_exists('sort_array')) {
     /**
      * Sort an array by key
      *
-     * @param array  $array
+     * @param array $array
      * @param string $sort_key
-     * @param array  $option
+     * @param array $option
      *
      * @return array
      */
-    function sort_array($array = array(), $sort_key = 'priority', $option = SORT_ASC) {
+    function sort_array($array = [], $sort_key = 'priority', $option = SORT_ASC)
+    {
         if (!empty($array)) {
             foreach ($array as $key => $value) {
                 $sort_array[$key] = $value[$sort_key];
@@ -622,14 +611,13 @@ if (!function_exists('name_to_array')) {
 if (!function_exists('convert_camelcase_to_underscore')) {
     /**
      * Convert CamelCase to underscore Camel_Case
-     *
      * Converts a StringWithCamelCase into string_with_underscore. Strings can be passed via the
      * first parameter either as a string or an array.
      *
      * @param string $string
      * @param bool $lowercase
      *
-     * @return CamelCase string
+     * @return string CamelCase
      */
     function convert_camelcase_to_underscore($string = '', $lowercase = FALSE)
     {
@@ -649,10 +637,8 @@ if (!function_exists('convert_camelcase_to_underscore')) {
 if (!function_exists('convert_underscore_to_camelcase')) {
     /**
      * Current URL
-     *
      * Converts a string_with_underscore into StringWithCamelCase. Strings can be passed via the
      * first parameter either as a string or an array.
-     *
      * @access    public
      * @return    string
      */
@@ -665,7 +651,6 @@ if (!function_exists('convert_underscore_to_camelcase')) {
 if (!function_exists('contains_substring')) {
     /**
      * Determine if a given string contains a given substring.
-     *
      * @access    public
      *
      * @param  string $haystack

@@ -32,13 +32,15 @@
                                 </a>
                                 <button
                                     id="update-carte"
-                                        class="btn btn-primary"
-                                        type="button"><i class="fa fa-arrow-right"></i></button>
+                                    class="btn btn-primary"
+                                    type="button"><i class="fa fa-arrow-right"></i></button>
                             </span>
                         </div>
                         <?= form_close(); ?>
                         <div
-                            id="carte-help" class="wrap-horizontal" style="display: <?= $carteInfo ? 'none' : 'block'; ?>;"><?= lang('system::updates.help_carte_key'); ?>
+                            id="carte-help"
+                            class="wrap-horizontal"
+                            style="display: <?= $carteInfo ? 'none' : 'block'; ?>;"><?= lang('system::updates.help_carte_key'); ?>
                         </div>
                     </div>
                 </div>

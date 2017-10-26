@@ -10,7 +10,6 @@ use Illuminate\Database\Seeder;
 use System\Models\Countries_model;
 use System\Models\Currencies_model;
 use System\Models\Languages_model;
-use System\Models\Permalink_model;
 use System\Models\Permissions_model;
 use System\Models\Settings_model;
 
@@ -41,8 +40,6 @@ class InitialSchemaSeeder extends Seeder
         $this->seedPages();
 
         $this->seedPermissions();
-
-        $this->seedPermalinks();
 
         $this->seedStaffGroups();
 
@@ -116,19 +113,19 @@ class InitialSchemaSeeder extends Seeder
                 "mealtime_name"   => "Breakfast",
                 "start_time"      => "07:00:00",
                 "end_time"        => "10:00:00",
-                "mealtime_status" => true,
+                "mealtime_status" => TRUE,
             ],
             [
                 "mealtime_name"   => "Lunch",
                 "start_time"      => "12:00:00",
                 "end_time"        => "14:30:00",
-                "mealtime_status" => true,
+                "mealtime_status" => TRUE,
             ],
             [
                 "mealtime_name"   => "Dinner",
                 "start_time"      => "18:00:00",
                 "end_time"        => "20:00:00",
-                "mealtime_status" => true,
+                "mealtime_status" => TRUE,
             ],
         ]);
     }
@@ -181,34 +178,6 @@ class InitialSchemaSeeder extends Seeder
         foreach ($permissions as $permission) {
             Permissions_model::insert($permission);
         }
-    }
-
-    protected function seedPermalinks()
-    {
-        if (Permalink_model::count())
-            return;
-
-        $aboutPage = Pages_model::whereName('About Us')->first();
-        $privacyPage = Pages_model::whereName('Policy')->first();
-        $location = Locations_model::first();
-
-        Permalink_model::insert([
-            [
-                "slug"       => "about-us",
-                "controller" => "pages",
-                "query"      => "page_id=".$aboutPage->page_id,
-            ],
-            [
-                "slug"       => "privacy",
-                "controller" => "pages",
-                "query"      => "page_id=".$privacyPage->page_id,
-            ],
-//            [
-//                "slug"        => "lewisham",
-//                "controller"  => "local",
-//                "query"       => "location_id=".$location->location_id,
-//            ],
-        ]);
     }
 
     protected function seedStaffGroups()

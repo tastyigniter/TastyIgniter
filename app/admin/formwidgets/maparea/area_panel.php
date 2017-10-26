@@ -7,9 +7,10 @@
          data-toggle="collapse"
          data-parent="#<?= $this->getId('areas') ?>"
          href="#<?= $this->getId('panel-collapse-'.$index) ?>"
-        role="button">
+         role="button">
         <span class="fa-stack">
-            <i data-area-color class="fa fa-<?= ($area['type'] == 'circle') ? 'circle' : 'stop' ?> fa-stack-2x fa-inverse"></i>
+            <i data-area-color
+               class="fa fa-<?= ($area['type'] == 'circle') ? 'circle' : 'stop' ?> fa-stack-2x fa-inverse"></i>
             <i data-area-color class="fa fa-<?= ($area['type'] == 'circle') ? 'circle' : 'stop' ?> fa-stack-1x"
                style="color:<?= is_numeric($index) ? $this->getAreaColor($index) : '%%color%%'; ?>">
             </i>

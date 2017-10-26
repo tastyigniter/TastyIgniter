@@ -1,4 +1,9 @@
-<form id="search-form" class="form-inline" accept-charset="utf-8" method="POST" action="<?= current_url(); ?>" role="form">
+<form id="search-form"
+      class="form-inline"
+      accept-charset="utf-8"
+      method="POST"
+      action="<?= current_url(); ?>"
+      role="form">
     <input type="hidden" name="_handler" value="<?= $searchBox->getEventHandler('onSubmit'); ?>">
     <div class="form-group">
         <div class="input-group input-group-sm">

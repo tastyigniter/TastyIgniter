@@ -1,8 +1,8 @@
 <?php namespace Admin\FormWidgets;
 
-use Carbon\Carbon;
-use Admin\Classes\FormField;
 use Admin\Classes\BaseFormWidget;
+use Admin\Classes\FormField;
+use Carbon\Carbon;
 
 /**
  * Date picker
@@ -34,6 +34,7 @@ class DatePicker extends BaseFormWidget
     public $endDate = null;
 
     public $dateFormat = '%d-%m-%Y';
+
     public $timeFormat = '%H:%i';
 
     protected $datesDisabled;
@@ -105,9 +106,11 @@ class DatePicker extends BaseFormWidget
         // Display alias, used by preview mode
         if ($this->mode == 'time') {
             $formatAlias = setting('time_format');
-        } elseif ($this->mode == 'date') {
+        }
+        elseif ($this->mode == 'date') {
             $formatAlias = setting('date_format');
-        } else {
+        }
+        else {
             $formatAlias = setting('date_format')
                 .' '.setting('time_format');
         }

@@ -1,8 +1,8 @@
 <?php namespace System\Controllers;
 
 use AdminAuth;
-use System\Models\Currencies_model;
 use AdminMenu;
+use System\Models\Currencies_model;
 
 class Currencies extends \Admin\Classes\AdminController
 {
@@ -63,8 +63,8 @@ class Currencies extends \Admin\Classes\AdminController
 
     public function index_onUpdateRate()
     {
-        if (Currencies_model::make()->updateRates(true)) {
-            flash()->set('success', lang('system::currencies.alert_rates_updated'));
+        if (Currencies_model::make()->updateRates(TRUE)) {
+            flash()->success(lang('system::currencies.alert_rates_updated'));
         }
 
         return $this->redirectBack();

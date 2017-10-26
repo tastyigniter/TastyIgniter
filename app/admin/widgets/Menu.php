@@ -1,9 +1,9 @@
 <?php
+
 namespace Admin\Widgets;
 
-use Exception;
-use Admin\Classes\MenuItem;
 use Admin\Classes\BaseWidget;
+use Admin\Classes\MenuItem;
 use SystemException;
 
 class Menu extends BaseWidget
@@ -47,6 +47,7 @@ class Menu extends BaseWidget
     public function render()
     {
         $this->prepareVars();
+
         return $this->makePartial('menu/top_menu');
     }
 
@@ -69,7 +70,8 @@ class Menu extends BaseWidget
      *
      * @return string
      */
-    public function renderItemElement($item) {
+    public function renderItemElement($item)
+    {
         $params = ['item' => $item];
 
         return $this->makePartial('menu/item_'.$item->type, $params);
@@ -194,8 +196,8 @@ class Menu extends BaseWidget
 
             $user = $this->getLoggedUser();
             $options = call_user_func($itemOptions, $this, $item, $user);
-
-        } elseif (is_array($itemOptions)) {
+        }
+        elseif (is_array($itemOptions)) {
             $options = $itemOptions;
         }
 
@@ -212,7 +214,7 @@ class Menu extends BaseWidget
         }
 
         return [
-            'options' => $options
+            'options' => $options,
         ];
     }
 

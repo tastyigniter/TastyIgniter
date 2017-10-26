@@ -230,14 +230,16 @@ class FormField
         if ($value === null) {
             if (is_array($this->options)) {
                 return $this->options;
-            } elseif (is_callable($this->options)) {
+            }
+            elseif (is_callable($this->options)) {
                 $callable = $this->options;
 
                 return $callable();
             }
 
             return [];
-        } else {
+        }
+        else {
             $this->options = $value;
         }
 
@@ -339,7 +341,8 @@ class FormField
 
         if (isset($config['valueFrom'])) {
             $this->valueFrom = $config['valueFrom'];
-        } else {
+        }
+        else {
             $this->valueFrom = $this->fieldName;
 //            $this->valueFrom = ends_with($this->fieldName, '_id') ? rtrim($this->fieldName, '_id') : $this->fieldName;
         }
@@ -377,19 +380,19 @@ class FormField
      * @param  array $items
      * @param  string $position
      *
-     * @return void|self
+     * @return self
      */
     public function attributes($items, $position = 'field')
     {
         if (!is_array($items)) {
-            return;
+            return null;
         }
 
         $multiArray = array_filter($items, 'is_array');
         if (!$multiArray) {
             $this->attributes[$position] = $items;
 
-            return;
+            return null;
         }
 
         foreach ($items as $_position => $_items) {
@@ -486,7 +489,8 @@ class FormField
 
         if ($this->arrayName) {
             $fullTriggerField = $this->arrayName.'['.implode('][', name_to_array($triggerField)).']';
-        } else {
+        }
+        else {
             $fullTriggerField = $triggerField;
         }
 
@@ -525,7 +529,8 @@ class FormField
 
         if ($this->arrayName) {
             $fullPresetField = $this->arrayName.'['.implode('][', name_to_array($presetField)).']';
-        } else {
+        }
+        else {
             $fullPresetField = $presetField;
         }
 
@@ -559,7 +564,8 @@ class FormField
 
         if ($arrayName) {
             return $arrayName.'['.implode('][', name_to_array($this->fieldName)).']';
-        } else {
+        }
+        else {
             return $this->fieldName;
         }
     }
@@ -690,15 +696,18 @@ class FormField
             if ($result instanceof Model AND $result->hasRelation($key)) {
                 if ($key == $lastField) {
                     $result = $result->getRelationValue($key) ?: $default;
-                } else {
+                }
+                else {
                     $result = $result->{$key};
                 }
-            } elseif (is_array($result)) {
+            }
+            elseif (is_array($result)) {
                 if (!array_key_exists($key, $result)) {
                     return $default;
                 }
                 $result = $result[$key];
-            } else {
+            }
+            else {
                 if (!isset($result->{$key})) {
                     return $default;
                 }

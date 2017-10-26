@@ -20,12 +20,13 @@
             role="tablist" aria-multiselectable="true">
 
             <?php $partialComponents = $this->getPartialComponents($partial) ?>
-            <?php $indexValue = 0; foreach ($partialComponents as $component) { ?>
+            <?php $indexValue = 0;
+            foreach ($partialComponents as $component) { ?>
                 <?php $indexValue++; ?>
 
                 <?= $this->makePartial('components/component', [
                     'component' => $component,
-                    'index' => $indexValue,
+                    'index'     => $indexValue,
                 ]) ?>
 
             <?php } ?>

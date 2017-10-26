@@ -14,6 +14,7 @@ class Pages_model extends Model
     use HasPermalink;
 
     const CREATED_AT = 'date_added';
+
     const UPDATED_AT = 'date_updated';
 
     /**
@@ -47,8 +48,8 @@ class Pages_model extends Model
 
     protected $permalinkable = [
         'permalink_slug' => [
-            'source'  => 'title',
-        ]
+            'source' => 'title',
+        ],
     ];
 
     public static function getDropdownOptions()
@@ -200,14 +201,14 @@ class Pages_model extends Model
             return $saved;
 
         $permalink = $this->permalink_data()->updateOrCreate([
-            'query'      => $this->getKeyName()."=".$this->getKey(),
-            'controller' => 'pages',
-        ]
+                'query'      => $this->getKeyName()."=".$this->getKey(),
+                'controller' => 'pages',
+            ]
 //        );
 //        $permalink->generateSlug();
-        , [
-           'slug' => str_slug(isset($dirtyAttributes['permalink_slug']) ? $dirtyAttributes['permalink_slug'] : $this->title)
-        ]);
+            , [
+                'slug' => str_slug(isset($dirtyAttributes['permalink_slug']) ? $dirtyAttributes['permalink_slug'] : $this->title),
+            ]);
 
         return $saved;
     }

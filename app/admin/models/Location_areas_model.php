@@ -13,8 +13,11 @@ use Model;
 class Location_areas_model extends Model
 {
     const VERTEX = "vertex";
+
     const BOUNDARY = "boundary";
+
     const INSIDE = "inside";
+
     const OUTSIDE = "outside";
 
     /**

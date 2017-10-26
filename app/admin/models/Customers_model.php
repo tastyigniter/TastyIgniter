@@ -46,22 +46,22 @@ class Customers_model extends Model
     public $timestamps = TRUE;
 
     public $relation = [
-        'hasMany' => [
-            'addresses' => ['Admin\Models\Addresses_model', 'delete' => true],
-            'orders' => ['Admin\Models\Orders_model', 'delete' => true],
-            'reservations' => ['Admin\Models\Reservations_model', 'delete' => true],
+        'hasMany'       => [
+            'addresses'    => ['Admin\Models\Addresses_model', 'delete' => TRUE],
+            'orders'       => ['Admin\Models\Orders_model', 'delete' => TRUE],
+            'reservations' => ['Admin\Models\Reservations_model', 'delete' => TRUE],
         ],
-        'belongsTo' => [
-            'group' => 'Admin\Models\Customer_groups_model',
-            'address' => 'Admin\Models\Addresses_model',
+        'belongsTo'     => [
+            'group'             => 'Admin\Models\Customer_groups_model',
+            'address'           => 'Admin\Models\Addresses_model',
             'security_question' => 'Admin\Models\Security_questions_model',
         ],
         'belongsToMany' => [
             'security_question' => 'Admin\Models\Security_questions_model',
         ],
-        'morphMany' => [
+        'morphMany'     => [
             'messages' => ['System\Models\Message_meta_model', 'name' => 'messageable'],
-        ]
+        ],
     ];
 
     public $purgeable = ['addresses'];
@@ -186,7 +186,7 @@ class Customers_model extends Model
     {
         if (is_array($filter) AND !empty($filter)) {
             $query = self::query()->select('customer_id', 'first_name', 'last_name')
-                          ->selectRaw('concat(first_name, " ", last_name) AS customer_name');
+                         ->selectRaw('concat(first_name, " ", last_name) AS customer_name');
 
             if (!empty($filter['customer_name'])) {
                 $query->like('CONCAT(first_name, last_name)', $filter['customer_name']);
@@ -204,7 +204,8 @@ class Customers_model extends Model
                         'text' => utf8_encode($result['customer_name']),
                     ];
                 }
-            } else {
+            }
+            else {
                 $return['results'] = ['id' => '0', 'text' => lang('text_no_match')];
             }
 
@@ -317,7 +318,7 @@ class Customers_model extends Model
         $result = $this->getEmailOrIdFromResult($result, $type);
 
         // @todo: use separate database table for newsletter email list and manage from newsletter extension
-        $newsletter = Extensions_model::getExtension('newsletter');
+        $newsletter = ExtensionManager::instance()->findExtension('newsletter');
         if ($type === 'email' AND !empty($newsletter['ext_data']['subscribe_list'])) {
             $result = array_merge($result, $newsletter['ext_data']['subscribe_list']);
         }
@@ -460,7 +461,7 @@ class Customers_model extends Model
         $password = $credentials['password'];
 
         $model = $this->newQuery()
-                          ->where($this->getAuthIdentifierName(), $identity)->first();
+                      ->where($this->getAuthIdentifierName(), $identity)->first();
 
         if (is_null($model))
             return FALSE;
@@ -507,7 +508,7 @@ class Customers_model extends Model
                     if (empty($row['order_id'])) continue;
 
                     Coupons_model::where('email', $customer_email)
-                                       ->where('order_id', $row['order_id'])->update($update);
+                                 ->where('order_id', $row['order_id'])->update($update);
 
                     Coupons_history_model::where('order_id', $row['order_id'])->update($update);
 
@@ -518,7 +519,7 @@ class Customers_model extends Model
                     // @todo: move to paypal extension
                     if (!empty($row['payment'])) {
                         DB::table('pp_payments')->where('order_id', $row['order_id'])
-                             ->update(['customer_id' => $customer_id]);
+                          ->update(['customer_id' => $customer_id]);
                     }
                 }
             }
@@ -637,7 +638,8 @@ class Customers_model extends Model
         $config = setting('registration_email', ['customer', 'admin']);
         if (in_array('customer', $config)) {
             $emails[] = $this->email;
-        } else {
+        }
+        else {
             $emails[] = setting('site_email');
         }
 

@@ -43,7 +43,7 @@ class Widgets
     protected $reportWidgetCallbacks = [];
 
     /**
-     * @var Modules
+     * @var ExtensionManager
      */
     protected $extensionManager;
 
@@ -68,16 +68,12 @@ class Widgets
         if ($this->formWidgets === null) {
             $this->formWidgets = [];
 
-            /*
-             * Load module widgets
-             */
+            // Load app widgets
             foreach ($this->formWidgetCallbacks as $callback) {
                 $callback($this->instance());
             }
 
-            /*
-             * Load plugin widgets
-             */
+            // Load extension widgets
             $extensions = $this->extensionManager->getExtensions();
 
             foreach ($extensions as $extension) {
@@ -174,20 +170,16 @@ class Widgets
         if ($this->reportWidgets === null) {
             $this->reportWidgets = [];
 
-            /*
-             * Load module widgets
-             */
+            // Load app widgets
             foreach ($this->reportWidgetCallbacks as $callback) {
                 $callback($this->instance());
             }
 
-            /*
-             * Load plugin widgets
-             */
-            $plugins = $this->extensionManager->getExtensions();
+            // Load extension widgets
+            $extensions = $this->extensionManager->getExtensions();
 
-            foreach ($plugins as $plugin) {
-                if (!is_array($widgets = $plugin->registerReportWidgets())) {
+            foreach ($extensions as $extension) {
+                if (!is_array($widgets = $extension->registerReportWidgets())) {
                     continue;
                 }
 

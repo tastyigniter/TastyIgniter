@@ -1,7 +1,7 @@
 <?php namespace System\Controllers;
 
-use System\Models\Messages_model;
 use AdminMenu;
+use System\Models\Messages_model;
 
 class Messages extends \Admin\Classes\AdminController
 {

@@ -1,7 +1,7 @@
 <?php
+
 namespace Admin\Widgets;
 
-use Event;
 use Admin\Classes\BaseWidget;
 
 class SearchBox extends BaseWidget
@@ -99,7 +99,8 @@ class SearchBox extends BaseWidget
     {
         if (strlen($term)) {
             $this->putSession('term', $term);
-        } else {
+        }
+        else {
             $this->resetSession();
         }
 
@@ -114,5 +115,4 @@ class SearchBox extends BaseWidget
     {
         return $this->alias;
     }
-
 }

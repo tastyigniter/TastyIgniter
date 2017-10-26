@@ -9,18 +9,18 @@ use Model;
  */
 class Layout_modules_model extends Model
 {
-	/**
-	 * @var string The database table name
-	 */
-	protected $table = 'layout_modules';
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'layout_modules';
 
-	protected $primaryKey = 'layout_module_id';
+    protected $primaryKey = 'layout_module_id';
 
     protected $fillable = ['layout_id', 'module_code', 'alias', 'partial', 'priority', 'options', 'status'];
 
     public $casts = [
-		'options' => 'serialize',
-	];
+        'options' => 'serialize',
+    ];
 
     /**
      * Return all layout modules

@@ -1,8 +1,8 @@
 <?php namespace Admin\Classes;
 
-use IteratorAggregate;
-use ArrayIterator;
 use ArrayAccess;
+use ArrayIterator;
+use IteratorAggregate;
 
 /**
  * Form Tabs definition
@@ -15,6 +15,7 @@ use ArrayAccess;
 class FormTabs implements IteratorAggregate, ArrayAccess
 {
     const SECTION_OUTSIDE = 'outside';
+
     const SECTION_PRIMARY = 'primary';
 
     /**
@@ -30,7 +31,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
     /**
      * @var string Default tab label to use when none is specified.
      */
-    public $defaultTab = 'text_form_undefined_tab';
+    public $defaultTab = 'admin::default.form.undefined_tab';
 
     /**
      * @var bool Should these tabs stretch to the bottom of the page layout.

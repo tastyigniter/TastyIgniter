@@ -4,12 +4,10 @@ namespace System\Actions;
 
 use File;
 use Model;
-use System\Actions\ModelAction;
 
 /**
  * Settings model extension
  * Based on October/ModelBehaviour
- *
  * Usage:
  * In the model class definition:
  *   public $implement = ['System\Actions\SettingsModel'];
@@ -47,7 +45,7 @@ class SettingsModel extends ModelAction
         $this->model->timestamps = FALSE;
 
         $relativePath = dirname(dirname(File::fromClass($model)));
-        $this->configPath = $relativePath . '/models/config';
+        $this->configPath = $relativePath.'/models/config';
 
         // Access to model's overrides is unavailable, using events instead
         $this->model->bindEvent('model.afterFetch', [$this, 'afterModelFetch']);

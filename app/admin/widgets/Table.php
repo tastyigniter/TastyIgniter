@@ -1,4 +1,5 @@
 <?php
+
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
@@ -66,7 +67,8 @@ class Table extends BaseWidget
         if (Request::method() == 'post' AND $this->isClientDataSource()) {
             if (strpos($this->fieldName, '[') === FALSE) {
                 $requestDataField = $this->fieldName.'TableData';
-            } else {
+            }
+            else {
                 $requestDataField = $this->fieldName.'[TableData]';
             }
 

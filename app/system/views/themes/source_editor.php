@@ -1,4 +1,5 @@
 <?php
+
 use Main\Classes\ThemeManager;
 
 $themeManager = ThemeManager::instance();

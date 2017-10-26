@@ -8,12 +8,11 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class CreatePaymentsAndPaymentLogsTable extends Migration
 {
-
     public function up()
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('payment_id', true);
+            $table->integer('payment_id', TRUE);
             $table->string('name');
             $table->string('code', 128)->unique();
             $table->text('class_name');
@@ -28,7 +27,7 @@ class CreatePaymentsAndPaymentLogsTable extends Migration
 
         Schema::create('payment_logs', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('payment_log_id', true);
+            $table->integer('payment_log_id', TRUE);
             $table->integer('order_id');
             $table->string('payment_name', 128);
             $table->string('message');

@@ -25,30 +25,30 @@ $config['list']['columns'] = [
     'edit'          => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'permissions/edit/{permission_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'permissions/edit/{permission_id}',
         ],
     ],
-    'name'     => [
+    'name'          => [
         'label'      => 'lang:system::permissions.column_name',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'action_text'      => [
-        'label'      => 'lang:system::permissions.column_actions',
+    'action_text'   => [
+        'label'    => 'lang:system::permissions.column_actions',
         'sortable' => FALSE,
     ],
-    'description' => [
+    'description'   => [
         'label'      => 'lang:system::permissions.column_description',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'status'     => [
+    'status'        => [
         'label' => 'lang:system::permissions.column_status',
         'type'  => 'switch',
     ],
-    'permission_id'       => [
+    'permission_id' => [
         'label'     => 'lang:system::permissions.column_id',
         'invisible' => TRUE,
     ],
@@ -76,22 +76,22 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'name'        => [
-        'label' => 'lang:system::permissions.label_name',
-        'type'  => 'text',
+        'label'   => 'lang:system::permissions.label_name',
+        'type'    => 'text',
         'comment' => 'lang:system::permissions.help_name',
     ],
-    'action'       => [
-        'label' => 'lang:system::permissions.label_action',
-        'type'  => 'checkbox',
+    'action'      => [
+        'label'   => 'lang:system::permissions.label_action',
+        'type'    => 'checkbox',
         'comment' => 'lang:system::permissions.help_action',
     ],
     'description' => [
         'label' => 'lang:system::permissions.label_description',
         'type'  => 'textarea',
     ],
-    'status' => [
-        'label'       => 'lang:admin::default.label_status',
-        'type'        => 'switch',
+    'status'      => [
+        'label' => 'lang:admin::default.label_status',
+        'type'  => 'switch',
     ],
 ];
 

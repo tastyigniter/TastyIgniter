@@ -25,8 +25,8 @@ class Layouts_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'routes'     => ['Admin\Models\Layout_routes_model', 'delete' => true],
-            'components' => ['Admin\Models\Layout_modules_model', 'delete' => true],
+            'routes'     => ['Admin\Models\Layout_routes_model', 'delete' => TRUE],
+            'components' => ['Admin\Models\Layout_modules_model', 'delete' => TRUE],
         ],
     ];
 
@@ -118,7 +118,7 @@ class Layouts_model extends Model
     {
         $this->load->model('Layout_modules_model');
         $layouts = Layout_modules_model::join('layouts', 'layouts.layout_id', '=', 'layout_modules.layout_id', 'left')
-                                              ->orderBy('priority')->where('module_code', $module_code)->get();
+                                       ->orderBy('priority')->where('module_code', $module_code)->get();
 
         $result = [];
         if ($layouts) {
@@ -154,7 +154,8 @@ class Layouts_model extends Model
 
                 if (is_numeric($route)) {
                     $query->orWhere('pages.page_id', $route);
-                } else {
+                }
+                else {
                     $query->orWhere('layout_routes.uri_route', $route);
                 }
 
@@ -395,7 +396,7 @@ class Layouts_model extends Model
                         $layoutModule = $this->components()->updateOrCreate([
                             'layout_module_id' => $module['layout_module_id'],
                         ], array_merge($this->getModuleOptionsArray($module), [
-                            'priority'  => $priority,
+                            'priority' => $priority,
                         ]));
 
                         $idsToKeep[] = $layoutModule->getKey();

@@ -5,7 +5,6 @@ use Model;
 
 /**
  * Maintenance Model Class
- *
  * @package System
  */
 class Maintenance_model extends Model
@@ -14,7 +13,6 @@ class Maintenance_model extends Model
 
     /**
      * List all database tables
-     *
      * @return array
      */
     public function getDbTables()
@@ -25,7 +23,6 @@ class Maintenance_model extends Model
 //        $connection = app('db')->connection($connectionName);
         $connection = app('config')->get('database.connections.'.$connectionName);
 
-
         $sql = "SELECT table_name, table_rows, engine, data_free, index_length, data_length "
             ."FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND table_name LIKE "
             .DB::connection()->getPdo()->quote($connection['prefix'].'%')."";
@@ -34,7 +31,7 @@ class Maintenance_model extends Model
 
         if (count($query)) {
             foreach ($query as $row) {
-                $result[] = (array) $row;
+                $result[] = (array)$row;
             }
         }
 
@@ -43,7 +40,6 @@ class Maintenance_model extends Model
 
     /**
      * Return all backed up SQL files
-     *
      * @return array
      */
     public function getBackupFiles()
@@ -57,7 +53,7 @@ class Maintenance_model extends Model
                 $basename = basename($backup_file);
                 $result[] = [
                     'filename' => rtrim($basename, '.sql'),
-                    'time' => filemtime($backup_file),
+                    'time'     => filemtime($backup_file),
                     'size'     => filesize($backup_file),
                 ];
             }
@@ -148,7 +144,7 @@ class Maintenance_model extends Model
 
             $storagePath = storage_path(self::$storageFolder);
             if (!is_dir(storage_path(self::$storageFolder))) {
-                mkdir($storagePath, DIR_WRITE_MODE);
+                mkdir($storagePath, 0777);
             }
 
             if (file_put_contents($storagePath.DIRECTORY_SEPARATOR.$file_name.'.sql', $back_up, LOCK_EX)) {

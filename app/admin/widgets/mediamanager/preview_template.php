@@ -1,21 +1,38 @@
 <div class="info">
     <div class="btn-group">
         <?php if ($file['type'] === 'img') { ?>
-            <button type="button" class="btn btn-default btn-preview" title="<?= lang('button_preview'); ?>" data-url="<?= $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
+            <button type="button"
+                    class="btn btn-default btn-preview"
+                    title="<?= lang('button_preview'); ?>"
+                    data-url="<?= $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
         <?php } else { ?>
-            <button type="button" class="btn btn-default btn-preview" title="<?= lang('button_preview'); ?>" disabled="disabled" data-url="<?= $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
+            <button type="button"
+                    class="btn btn-default btn-preview"
+                    title="<?= lang('button_preview'); ?>"
+                    disabled="disabled"
+                    data-url="<?= $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
         <?php } ?>
         <?php if ($rename) { ?>
-            <button type="button" class="btn btn-default btn-rename" title="<?= lang('button_rename'); ?>" data-name="<?= $file['name']; ?>" data-path="<?= $sub_folder; ?>"><i class="fa fa-pencil"></i></button>
+            <button type="button"
+                    class="btn btn-default btn-rename"
+                    title="<?= lang('button_rename'); ?>"
+                    data-name="<?= $file['name']; ?>"
+                    data-path="<?= $sub_folder; ?>"><i class="fa fa-pencil"></i></button>
         <?php } ?>
         <?php if ($move) { ?>
-            <button type="button" class="btn btn-default btn-move" title="<?= lang('button_move'); ?>"><i class="fa fa-folder-open"></i></button>
+            <button type="button"
+                    class="btn btn-default btn-move"
+                    title="<?= lang('button_move'); ?>"><i class="fa fa-folder-open"></i></button>
         <?php } ?>
         <?php if ($copy) { ?>
-            <button type="button" class="btn btn-default btn-copy" title="<?= lang('button_copy'); ?>"><i class="fa fa-clipboard"></i></button>
+            <button type="button"
+                    class="btn btn-default btn-copy"
+                    title="<?= lang('button_copy'); ?>"><i class="fa fa-clipboard"></i></button>
         <?php } ?>
         <?php if ($delete) { ?>
-            <button type="button" class="btn btn-default btn-delete" title="<?= lang('button_delete'); ?>"><i class="fa fa-trash"></i></button>
+            <button type="button"
+                    class="btn btn-default btn-delete"
+                    title="<?= lang('button_delete'); ?>"><i class="fa fa-trash"></i></button>
         <?php } ?>
     </div>
     <ul class="get_info">
@@ -30,7 +47,10 @@
         </li>
         <?php if ($file['type'] === 'img') { ?>
             <li class="file-url"><span><?= lang('label_url'); ?> :</span>
-                <input type="text" class="form-control url-control" readonly="readonly" value="<?= $file['img_url']; ?>"/>
+                <input type="text"
+                       class="form-control url-control"
+                       readonly="readonly"
+                       value="<?= $file['img_url']; ?>"/>
             </li>
             <li class="img-dimension">
                 <span><?= lang('label_dimension'); ?> :</span> <?= $file['img_dimension']; ?>

@@ -1,7 +1,7 @@
 <?php namespace Admin\Controllers;
 
-use System\Classes\ComponentManager;
 use AdminMenu;
+use System\Classes\ComponentManager;
 
 class Layouts extends \Admin\Classes\AdminController
 {
@@ -72,29 +72,29 @@ class Layouts extends \Admin\Classes\AdminController
     {
         $rules = [
             ['name', 'lang:admin::layouts.label_name', 'required|min:2|max:128'],
-            ['routes[]', 'lang:admin::layouts.label_routes', 'required'],
+            ['routes.*]', 'lang:admin::layouts.label_routes', 'required'],
         ];
 
-        if (post($form->arrayName.'[routes]')) {
-            foreach (post($form->arrayName.'[routes]') as $key => $value) {
-                $rules[] = ['routes['.$key.'][uri_route]', '['.$key.'] '.lang('label_route'), 'required'];
+        if (post($form->arrayName.'.routes')) {
+            foreach (post($form->arrayName.'.routes') as $key => $value) {
+                $rules[] = ['routes.'.$key.'.uri_route', '['.$key.'] '.lang('label_route'), 'required'];
             }
         }
 
-        if (post($form->arrayName.'[components]')) {
-            foreach (post($form->arrayName.'[components]') as $partial => $layout_components) {
+        if (post($form->arrayName.'.components')) {
+            foreach (post($form->arrayName.'.components') as $partial => $layout_components) {
                 foreach ($layout_components as $key => $value) {
-                    $rules[] = ['components['.$partial.']['.$key.'][module_code]', '['.$partial.'] '.'['.$key.'] '.lang('label_module_code'), 'required|alpha_dash'];
-                    $rules[] = ['components['.$partial.']['.$key.'][partial]', '['.$partial.'] '.'['.$key.'] '.lang('label_module_partial'), 'required|alpha_dash'];
-                    $rules[] = ['components['.$partial.']['.$key.'][options][title]', '['.$partial.'] '.'['.$key.'] '.lang('label_module_title'), 'min:2'];
-                    $rules[] = ['components['.$partial.']['.$key.'][options][fixed]', '['.$partial.'] '.'['.$key.'] '.lang('label_module_fixed'), 'required|integer'];
+                    $rules[] = ['components.'.$partial.'.'.$key.'.module_code', '['.$partial.'] '.'['.$key.'] '.lang('label_module_code'), 'required|alpha_dash'];
+                    $rules[] = ['components.'.$partial.'.'.$key.'.partial', '['.$partial.'] '.'['.$key.'] '.lang('label_module_partial'), 'required|alpha_dash'];
+                    $rules[] = ['components.'.$partial.'.'.$key.'.options[title]', '['.$partial.'] '.'['.$key.'] '.lang('label_module_title'), 'min:2'];
+                    $rules[] = ['components.'.$partial.'.'.$key.'.options[fixed]', '['.$partial.'] '.'['.$key.'] '.lang('label_module_fixed'), 'required|integer'];
 
-                    if (post('components['.$partial.']['.$key.'][options][fixed]') == '1') {
-                        $rules[] = ['components['.$partial.']['.$key.'][options][fixed_top_offset]', '['.$partial.'] '.'['.$key.'] '.lang('label_fixed_offset'), 'required|integer'];
-                        $rules[] = ['components['.$partial.']['.$key.'][options][fixed_bottom_offset]', '['.$partial.'] '.'['.$key.'] '.lang('label_fixed_offset'), 'required|integer'];
+                    if (post('components.'.$partial.'.'.$key.'.options.fixed') == '1') {
+                        $rules[] = ['components.'.$partial.'.'.$key.'.options.fixed_top_offset', '['.$partial.'] '.'['.$key.'] '.lang('label_fixed_offset'), 'required|integer'];
+                        $rules[] = ['components.'.$partial.'.'.$key.'.options.fixed_bottom_offset', '['.$partial.'] '.'['.$key.'] '.lang('label_fixed_offset'), 'required|integer'];
                     }
 
-                    $rules[] = ['components['.$partial.']['.$key.'][status]', '['.$partial.'] '.'['.$key.'] '.lang('label_module_status'), 'required|integer'];
+                    $rules[] = ['components.'.$partial.'.'.$key.'.status', '['.$partial.'] '.'['.$key.'] '.lang('label_module_status'), 'required|integer'];
                 }
             }
         }

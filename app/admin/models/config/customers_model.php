@@ -31,16 +31,16 @@ $config['list']['columns'] = [
     'edit'        => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'customers/edit/{customer_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'customers/edit/{customer_id}',
         ],
     ],
     'info'        => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-user',
-        'attributes'      => [
-            'class'     => 'btn btn-info',
+        'attributes'   => [
+            'class'  => 'btn btn-info',
             'target' => '_blank',
             'href'   => 'customers/login/{customer_id}',
         ],

@@ -84,7 +84,7 @@ trait FormExtendable
      *
      * @param string $recordId
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Model
      * @throws \Exception
      */
     public function formFindModelObject($recordId)
@@ -112,7 +112,7 @@ trait FormExtendable
     /**
      * Creates a new instance of a form model. This logic can be changed
      * by overriding it in the controller.
-     * @return Model
+     * @return \Model
      */
     public function formCreateModelObject()
     {
@@ -181,9 +181,9 @@ trait FormExtendable
      * Extend supplied model used by create and edit actions, the model can
      * be altered by overriding it in the controller.
      *
-     * @param Model $model
+     * @param \Model $model
      *
-     * @return Model
+     * @return \Model
      */
     public function formExtendModel($model)
     {

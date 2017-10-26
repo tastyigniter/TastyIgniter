@@ -1,8 +1,8 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
-use Exception;
 use AdminMenu;
+use Exception;
 use Igniter\Flame\Database\Model;
 
 class Payments extends \Admin\Classes\AdminController

@@ -1,4 +1,4 @@
 <?php
-    $widget = $this->makeFormFieldWidget($field);
+$widget = $this->makeFormFieldWidget($field);
 ?>
 <?= $widget->render() ?>

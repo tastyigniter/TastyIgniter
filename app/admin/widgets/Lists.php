@@ -15,7 +15,6 @@ use Model;
 
 class Lists extends BaseWidget
 {
-
     /**
      * @var array List column configuration.
      */
@@ -195,7 +194,8 @@ class Lists extends BaseWidget
     public function onRefresh()
     {
         $this->prepareVars();
-        $this->getController()->redirect(current_url());
+
+        return $this->getController()->refresh();
     }
 
     /**
@@ -204,7 +204,8 @@ class Lists extends BaseWidget
     public function onPaginate()
     {
         $this->currentPageNumber = input('page');
-        $this->onRefresh();
+
+        return $this->onRefresh();
     }
 
     protected function validateModel()
@@ -1108,5 +1109,4 @@ class Lists extends BaseWidget
 
         return TRUE;
     }
-
 }

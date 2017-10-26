@@ -1,11 +1,14 @@
 <?php
 
 namespace System\Classes;
+
+use Exception;
 use Igniter\Flame\Traits\Singleton;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\StreamOutput;
 
 /**
  * ComposerManager Class
- *
  * @package System
  */
 class ComposerManager
@@ -13,7 +16,9 @@ class ComposerManager
     use Singleton;
 
     const INSTALLER_URL = 'https://getcomposer.org/composer.phar';
+
     const EXTRACTED_PHAR = 'extracted_phar';
+
     const COMPOSER_PHAR = 'composer.phar';
 
     protected $namespacePool = [];
@@ -25,11 +30,12 @@ class ComposerManager
     protected $includeFilesPool = [];
 
     /**
-     * @var Composer\Autoload\ClassLoader The primary composer instance.
+     * @var \Composer\Autoload\ClassLoader The primary composer instance.
      */
     protected $loader;
 
     public $vendorDir;
+
     public $checkPaths = ['vendor', 'vendor/codeigniter', 'vendor/illuminate', 'vendor/autoload.php'];
 
     public function initialize()
@@ -40,22 +46,22 @@ class ComposerManager
 
     protected function preloadPools()
     {
-        $this->classMapPool = array_fill_keys(array_keys($this->loader->getClassMap()), true);
-        $this->namespacePool = array_fill_keys(array_keys($this->loader->getPrefixes()), true);
-        $this->psr4Pool = array_fill_keys(array_keys($this->loader->getPrefixesPsr4()), true);
+        $this->classMapPool = array_fill_keys(array_keys($this->loader->getClassMap()), TRUE);
+        $this->namespacePool = array_fill_keys(array_keys($this->loader->getPrefixes()), TRUE);
+        $this->psr4Pool = array_fill_keys(array_keys($this->loader->getPrefixesPsr4()), TRUE);
         $this->includeFilesPool = $this->preloadIncludeFilesPool();
     }
 
     protected function preloadIncludeFilesPool()
     {
         $result = [];
-        $vendorPath = base_path() .'/vendor';
+        $vendorPath = base_path().'/vendor';
 
-        if (file_exists($file = $vendorPath . '/composer/autoload_files.php')) {
+        if (file_exists($file = $vendorPath.'/composer/autoload_files.php')) {
             $includeFiles = require $file;
             foreach ($includeFiles as $includeFile) {
                 $relativeFile = $this->stripVendorDir($includeFile, $vendorPath);
-                $result[$relativeFile] = true;
+                $result[$relativeFile] = TRUE;
             }
         }
 
@@ -64,59 +70,58 @@ class ComposerManager
 
     /**
      * Similar function to including vendor/autoload.php.
+     *
      * @param string $vendorPath Absoulte path to the vendor directory.
+     *
      * @return void
      */
     public function autoload($vendorPath)
     {
-        $dir = $vendorPath . '/composer';
+        $dir = $vendorPath.'/composer';
 
-        if (file_exists($file = $dir . '/autoload_namespaces.php')) {
+        if (file_exists($file = $dir.'/autoload_namespaces.php')) {
             $map = require $file;
             foreach ($map as $namespace => $path) {
                 if (isset($this->namespacePool[$namespace])) continue;
                 $this->loader->set($namespace, $path);
-                $this->namespacePool[$namespace] = true;
+                $this->namespacePool[$namespace] = TRUE;
             }
         }
 
-        if (file_exists($file = $dir . '/autoload_psr4.php')) {
+        if (file_exists($file = $dir.'/autoload_psr4.php')) {
             $map = require $file;
             foreach ($map as $namespace => $path) {
                 if (isset($this->psr4Pool[$namespace])) continue;
                 $this->loader->setPsr4($namespace, $path);
-                $this->psr4Pool[$namespace] = true;
+                $this->psr4Pool[$namespace] = TRUE;
             }
         }
 
-        if (file_exists($file = $dir . '/autoload_classmap.php')) {
+        if (file_exists($file = $dir.'/autoload_classmap.php')) {
             $classMap = require $file;
             if ($classMap) {
                 $classMapDiff = array_diff_key($classMap, $this->classMapPool);
                 $this->loader->addClassMap($classMapDiff);
-                $this->classMapPool += array_fill_keys(array_keys($classMapDiff), true);
+                $this->classMapPool += array_fill_keys(array_keys($classMapDiff), TRUE);
             }
         }
 
-        if (file_exists($file = $dir . '/autoload_files.php')) {
+        if (file_exists($file = $dir.'/autoload_files.php')) {
             $includeFiles = require $file;
             foreach ($includeFiles as $includeFile) {
                 $relativeFile = $this->stripVendorDir($includeFile, $vendorPath);
                 if (isset($this->includeFilesPool[$relativeFile])) continue;
                 require $includeFile;
-                $this->includeFilesPool[$relativeFile] = true;
+                $this->includeFilesPool[$relativeFile] = TRUE;
             }
         }
     }
 
-    public function setPsr4($namespace, $path)
-    {
-        $this->loader->setPsr4($namespace, $path);
-    }
-
     /**
      * Removes the vendor directory from a path.
+     *
      * @param string $path
+     *
      * @return string
      */
     protected function stripVendorDir($path, $vendorDir)
@@ -168,8 +173,8 @@ class ComposerManager
 
         // Setup composer input and output formatter
         $stream = fopen('php://temp', 'w+');
-        $output = new Symfony\Component\Console\Output\StreamOutput($stream);
-        $input = new Symfony\Component\Console\Input\ArrayInput(['command' => $command]);
+        $output = new StreamOutput($stream);
+        $input = new ArrayInput(['command' => $command]);
 
         // change out of the directory so that the vendors file is created correctly
         chdir($this->getVendorRootDir());

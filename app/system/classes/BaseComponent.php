@@ -1,7 +1,5 @@
 <?php namespace System\Classes;
 
-use Config;
-use File;
 use Igniter\Flame\Pagic\TemplateCode;
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
@@ -10,7 +8,6 @@ use System\Traits\AssetMaker;
 
 /**
  * Base Component Class
- *
  * @package System
  */
 abstract class BaseComponent extends Extendable
@@ -115,7 +112,6 @@ abstract class BaseComponent extends Extendable
     /**
      * Renders a requested partial in context of this component,
      * @see \Main\Classes\MainController::renderPartial for usage.
-     *
      * @return mixed
      */
     public function renderPartial()
@@ -184,8 +180,6 @@ abstract class BaseComponent extends Extendable
      * Sets multiple properties.
      *
      * @param array $properties
-     *
-     * @return array
      */
     public function setProperties($properties)
     {
@@ -197,8 +191,6 @@ abstract class BaseComponent extends Extendable
      *
      * @param string $name
      * @param mixed $value
-     *
-     * @return void
      */
     public function setProperty($name, $value)
     {
@@ -249,14 +241,14 @@ abstract class BaseComponent extends Extendable
         return is_null($segment) ? $default : $segment;
     }
 
-//    public function __get($key)
-//    {
-//        if (isset(get_instance()->$key)) {
-//            return get_instance()->$key;
-//        }
-//
-//        return parent::__get($key);
-//    }
+    public function __get($key)
+    {
+        if (isset($this->page->{$key})) {
+            return $this->page->{$key};
+        }
+
+        return parent::__get($key);
+    }
 
     public function __toString()
     {

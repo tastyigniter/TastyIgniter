@@ -6,9 +6,9 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'status' => [
-            'label' => 'lang:system::security_questions.text_filter_status',
-            'type'  => 'switch',
-            'conditions'  => 'status = :filtered',
+            'label'      => 'lang:system::security_questions.text_filter_status',
+            'type'       => 'switch',
+            'conditions' => 'status = :filtered',
         ],
     ],
 ];
@@ -22,25 +22,25 @@ $config['list']['toolbar'] = [
 ];
 
 $config['list']['columns'] = [
-    'edit'        => [
+    'edit'                 => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'security_questions/edit/{question_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'security_questions/edit/{question_id}',
         ],
     ],
-    'text'        => [
+    'text'                 => [
         'label'      => 'lang:system::security_questions.column_question',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'priority'      => [
+    'priority'             => [
         'label' => 'lang:system::security_questions.column_priority',
-        'type'       => 'text',
+        'type'  => 'text',
     ],
-    'security_question_id'      => [
-        'label' => 'lang:system::security_questions.column_question_id',
+    'security_question_id' => [
+        'label'     => 'lang:system::security_questions.column_question_id',
         'invisible' => TRUE,
     ],
 ];
@@ -65,15 +65,15 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'text'      => [
-        'label'       => 'lang:system::security_questions.label_question',
-        'type'    => 'text',
-        'span'    => 'left',
+    'text'     => [
+        'label' => 'lang:system::security_questions.label_question',
+        'type'  => 'text',
+        'span'  => 'left',
     ],
-    'priority'      => [
+    'priority' => [
         'label' => 'lang:system::security_questions.label_priority',
-        'type'    => 'number',
-        'span'    => 'right',
+        'type'  => 'number',
+        'span'  => 'right',
     ],
 ];
 

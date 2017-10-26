@@ -4,10 +4,10 @@
     id="<?= $field->getId('address').'-'.$index; ?>">
     <input
         type="hidden" name="<?= $fieldName; ?>[<?= $index; ?>][address_id]"
-        value="<?= set_value($fieldName.'['.$index.'][address_id]', $address['address_id']); ?>" />
+        value="<?= set_value($fieldName.'['.$index.'][address_id]', $address['address_id']); ?>"/>
     <input
         type="hidden" name="<?= $fieldName; ?>[<?= $index; ?>][customer_id]"
-        value="<?= set_value($fieldName.'['.$index.'][customer_id]', isset($address['customer_id']) ? $address['customer_id'] : null); ?>" />
+        value="<?= set_value($fieldName.'['.$index.'][customer_id]', isset($address['customer_id']) ? $address['customer_id'] : null); ?>"/>
 
     <div class="form-group span-left <?= form_error($fieldName.'['.$index.'][address_1]') != '' ? 'has-error' : ''; ?>">
         <label class="control-label"><?= lang('admin::customers.label_address_1'); ?></label>

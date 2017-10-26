@@ -1,9 +1,9 @@
 <?php namespace Admin\FormWidgets;
 
-use Exception;
-use Admin\Classes\FormField;
 use Admin\Classes\BaseFormWidget;
+use Admin\Classes\FormField;
 use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
 
@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
  */
 class Relation extends BaseFormWidget
 {
-
     //
     // Configurable properties
     //

@@ -1,13 +1,8 @@
 <?php namespace Admin\Controllers;
 
-use AdminAuth;
 use Admin\Traits\ValidatesForm;
-use Request;
-use Admin\Models\Users_model;
-use AdminMenu;
+use AdminAuth;
 use Template;
-use ValidationException;
-use Validator;
 
 class Login extends \Admin\Classes\AdminController
 {
@@ -31,7 +26,8 @@ class Login extends \Admin\Classes\AdminController
             ];
 
             if (!AdminAuth::authenticate($credentials, TRUE, TRUE)) {
-                flash()->set('danger', lang('admin::login.alert_username_not_found'));
+                flash()->danger(lang('admin::login.alert_username_not_found'));
+
                 return $this->redirectBack();
             }
 
@@ -67,10 +63,10 @@ class Login extends \Admin\Classes\AdminController
     protected function _resetPassword()
     {
         if ($this->validateResetForm() === TRUE) {
-            if (!get_post('code')) {
+            if (!input('code')) {
                 $username = post('username');
                 if (AdminAuth::resetPassword($username)) {
-                    flash()->set('success', lang('admin::login.alert_email_sent'));
+                    flash()->success(lang('admin::login.alert_email_sent'));
 
                     return TRUE;
                 }
@@ -79,13 +75,13 @@ class Login extends \Admin\Classes\AdminController
             }
             else {
                 $credentials = [
-                    'reset_code' => get_post('code'),
+                    'reset_code' => input('code'),
                     'password'   => post('password'),
                 ];
 
                 if (AdminAuth::validateResetPassword($credentials)) {
                     AdminAuth::completeResetPassword($credentials);
-                    flash()->set('success', lang('admin::login.alert_success_reset'));
+                    flash()->success(lang('admin::login.alert_success_reset'));
 
                     return TRUE;
                 }
@@ -93,7 +89,8 @@ class Login extends \Admin\Classes\AdminController
                 $error = lang('admin::login.alert_failed_reset');
             }
 
-            flash()->set('danger', $error);
+            flash()->danger($error);
+
             return $this->redirect(current_url());
         }
     }
@@ -101,7 +98,7 @@ class Login extends \Admin\Classes\AdminController
     protected function validateLoginForm()
     {
         if (!$post = post())
-            return false;
+            return FALSE;
 
         return $this->validatePasses($post, [
             ['user', 'lang:admin::login.label_username', 'required|exists:users,username'],
@@ -112,14 +109,15 @@ class Login extends \Admin\Classes\AdminController
     protected function validateResetForm()
     {
         if (!$post = post())
-            return false;
+            return FALSE;
 
         if (input('code')) {
             $rules = [
                 ['password', 'lang:admin::login.label_password', 'required|min:6|max:32|same:password_confirm]'],
                 ['password_confirm', 'lang:admin::login.label_password_confirm', 'required'],
             ];
-        } else {
+        }
+        else {
             $rules = ['username', 'lang:admin::login.label_username', 'required|exists:users'];
         }
 

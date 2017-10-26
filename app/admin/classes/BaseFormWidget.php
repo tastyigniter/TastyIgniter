@@ -1,5 +1,7 @@
 <?php namespace Admin\Classes;
 
+use System\Classes\BaseController;
+
 /**
  * Form Widget base class
  * Widgets used specifically for forms
@@ -10,13 +12,12 @@
  */
 class BaseFormWidget extends BaseWidget
 {
-
     //
     // Configurable properties
     //
 
     /**
-     * @var Model Form model object.
+     * @var \Model Form model object.
      */
     public $model;
 
@@ -33,12 +34,12 @@ class BaseFormWidget extends BaseWidget
     /**
      * @var bool Render this form with uneditable preview data.
      */
-    public $previewMode = false;
+    public $previewMode = FALSE;
 
     /**
      * @var bool Determines if this form field should display comments and labels.
      */
-    public $showLabels = true;
+    public $showLabels = TRUE;
 
     //
     // Object properties
@@ -61,6 +62,7 @@ class BaseFormWidget extends BaseWidget
 
     /**
      * Constructor
+     *
      * @param $controller BaseController Active controller object.
      * @param $formField \Admin\Classes\FormField Object containing general form field information.
      * @param $configuration array Configuration the relates to this widget.
@@ -78,7 +80,7 @@ class BaseFormWidget extends BaseWidget
             'data',
             'sessionKey',
             'previewMode',
-            'showLabels'
+            'showLabels',
         ]);
 
         parent::__construct($controller, $configuration);
@@ -94,14 +96,17 @@ class BaseFormWidget extends BaseWidget
     public function getId($suffix = null)
     {
         $id = parent::getId($suffix);
-        $id .= '-' . $this->fieldName;
+        $id .= '-'.$this->fieldName;
+
         return name_to_id($id);
     }
 
     /**
      * Process the postback value for this widget. If the value is omitted from
      * postback data, it will be NULL, otherwise it will be an empty string.
+     *
      * @param mixed $value The existing value for this widget.
+     *
      * @return string The new value for this widget.
      */
     public function getSaveValue($value)
@@ -125,5 +130,4 @@ class BaseFormWidget extends BaseWidget
 
         return $this->formField->getValueFromData($this->data ?: $this->model, $defaultValue);
     }
-
 }

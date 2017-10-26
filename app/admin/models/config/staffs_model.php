@@ -45,9 +45,9 @@ $config['list']['columns'] = [
     'edit'             => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'staffs/edit/{staff_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'staffs/edit/{staff_id}',
         ],
     ],
     'staff_name'       => [
@@ -105,53 +105,53 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'staff_name'        => [
+    'staff_name'             => [
         'label' => 'lang:admin::staffs.label_name',
         'type'  => 'text',
         'span'  => 'left',
     ],
-    'staff_email'       => [
+    'staff_email'            => [
         'label' => 'lang:admin::staffs.label_email',
         'type'  => 'text',
         'span'  => 'right',
     ],
-    'user[username]'          => [
+    'user[username]'         => [
         'label' => 'lang:admin::staffs.label_username',
         'type'  => 'text',
     ],
-    'user[password]'          => [
+    'user[password]'         => [
         'label' => 'lang:admin::staffs.label_password',
         'type'  => 'password',
         'span'  => 'left',
     ],
-    'user[password_confirm]'  => [
+    'user[password_confirm]' => [
         'label' => 'lang:admin::staffs.label_confirm_password',
         'type'  => 'password',
         'span'  => 'right',
     ],
-    'staff_group_id'    => [
-        'label'     => 'lang:admin::staffs.label_group',
-        'type'      => 'relation',
+    'staff_group_id'         => [
+        'label'        => 'lang:admin::staffs.label_group',
+        'type'         => 'relation',
         'relationFrom' => 'group',
-        'nameFrom'  => 'staff_group_name',
-        'span'      => 'left',
-        'comment'   => 'lang:admin::staffs.help_groups',
+        'nameFrom'     => 'staff_group_name',
+        'span'         => 'left',
+        'comment'      => 'lang:admin::staffs.help_groups',
         'placeholder'  => 'lang:admin::default.text_please_select',
     ],
-    'staff_location_id' => [
-        'label'     => 'lang:admin::staffs.label_location',
-        'type'      => 'relation',
+    'staff_location_id'      => [
+        'label'        => 'lang:admin::staffs.label_location',
+        'type'         => 'relation',
         'relationFrom' => 'location',
-        'nameFrom'  => 'location_name',
-        'span'      => 'right',
+        'nameFrom'     => 'location_name',
+        'span'         => 'right',
         'placeholder'  => 'lang:admin::default.text_please_select',
     ],
-    'user[super_user]'           => [
+    'user[super_user]'       => [
         'label'   => 'lang:admin::staffs.label_super_staff',
         'type'    => 'switch',
         'comment' => 'lang:admin::staffs.help_super_staff',
     ],
-    'staff_status'      => [
+    'staff_status'           => [
         'label'   => 'lang:admin::default.label_status',
         'type'    => 'switch',
         'default' => 1,

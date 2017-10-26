@@ -32,15 +32,15 @@
 </div>
 <script type="text/template" id="area-template">
     <?= $this->makePartial('maparea/area_panel', [
-        'area' => $emptyArea,
-        'index' => '%%index%%'
+        'area'  => $emptyArea,
+        'index' => '%%index%%',
     ]) ?>
 </script>
 
 <script type="text/template" id="condition-template">
     <?= $this->makePartial('maparea/condition', [
         'condition' => $emptyCondition,
-        'areaIndex'   => '%%row%%',
+        'areaIndex' => '%%row%%',
         'index'     => '%%index%%',
     ]) ?>
 </script>

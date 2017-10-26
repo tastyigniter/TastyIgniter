@@ -110,7 +110,8 @@ class MenuItem
     {
         if (is_array($this->options)) {
             return $this->options;
-        } elseif (is_callable($this->options)) {
+        }
+        elseif (is_callable($this->options)) {
             $callable = $this->options;
 
             return $callable();
@@ -127,11 +128,13 @@ class MenuItem
     public function optionsFrom()
     {
         var_dump($this->optionsFrom);
-        if (is_array($this->optionsFrom) AND count($this->optionsFrom) ==  2) {
+        if (is_array($this->optionsFrom) AND count($this->optionsFrom) == 2) {
             $itemOptions = $this->optionsFrom;
             var_dump($itemOptions);
+
             return call_user_func($itemOptions, $this);
-        } elseif (is_array($this->optionsFrom)) {
+        }
+        elseif (is_array($this->optionsFrom)) {
             return $this->optionsFrom;
         }
 
@@ -207,6 +210,7 @@ class MenuItem
     /**
      * Returns the attributes for this item.
      **
+     *
      * @param bool $htmlBuild
      *
      * @return array|string

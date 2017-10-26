@@ -2,10 +2,10 @@
 
 return [
     'text_title'         => 'Tables',
-    'text_new_title'          => 'Table: New',
-    'text_edit_title'         => 'Table: Update',
-    'text_preview_title'      => 'Table: Preview',
-    'text_form_name'          => 'Table',
+    'text_new_title'     => 'Table: New',
+    'text_edit_title'    => 'Table: Update',
+    'text_preview_title' => 'Table: Preview',
+    'text_form_name'     => 'Table',
     'text_empty'         => 'There are no tables available.',
     'text_no_match'      => 'No Matches Found',
     'text_filter_search' => 'Search table name.',

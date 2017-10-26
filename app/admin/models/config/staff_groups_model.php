@@ -10,9 +10,9 @@ $config['list']['columns'] = [
     'edit'             => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'staff_groups/edit/{staff_group_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'staff_groups/edit/{staff_group_id}',
         ],
     ],
     'staff_group_name' => [

@@ -27,5 +27,4 @@ class Menu_categories_model extends Model
             'category' => ['Admin\Models\Categories_model'],
         ],
     ];
-
 }

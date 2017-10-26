@@ -36,7 +36,7 @@ return [
     'column_table'         => 'Table',
     'column_status'        => 'Status',
     'column_staff'         => 'Assigned Staff',
-    'column_time_date'      => 'Date Time',
+    'column_time_date'     => 'Date Time',
     'column_time'          => 'Time',
     'column_date'          => 'Date',
     'column_comment'       => 'Comment',

@@ -62,7 +62,7 @@ return [
     'column_time'          => 'Order Time',
     'column_date'          => 'Order Date',
     'column_date_added'    => 'Date Added',
-    'column_time_date'      => 'Date Time',
+    'column_time_date'     => 'Date Time',
     'column_id'            => 'ID',
     'column_staff'         => 'Staff',
     'column_comment'       => 'Comment',
@@ -70,8 +70,8 @@ return [
     'column_notify'        => 'Customer Notified',
     'column_name_option'   => 'Name/Options',
     'column_price'         => 'Price',
-    'column_payment_name'         => 'Payment Name',
-    'column_message'         => 'Message',
+    'column_payment_name'  => 'Payment Name',
+    'column_message'       => 'Message',
 
     'label_order_id'           => 'Order #',
     'label_customer_name'      => 'Name',
@@ -84,7 +84,7 @@ return [
     'label_order_total'        => 'Order Total',
     'label_comment'            => 'Order Comment',
     'label_date_modified'      => 'Date Modified',
-    'label_send_confirmation'             => 'Send order confirmation',
+    'label_send_confirmation'  => 'Send order confirmation',
     'label_notify'             => 'Notify Customer',
     'label_user_agent'         => 'User Agent',
     'label_ip_address'         => 'IP Address',
@@ -94,7 +94,7 @@ return [
     'label_restaurant_name'    => 'Name',
     'label_restaurant_address' => 'Address',
     'label_payment_method'     => 'Payment Method',
-    'label_total_items'     => 'Total Items',
+    'label_total_items'        => 'Total Items',
 
     'error_status_exists' => 'The order can not be updated twice with the same order status',
 

@@ -5,7 +5,6 @@ use File;
 
 trait AssetMaker
 {
-
     /**
      * @var string Specifies a path to the asset directory.
      */
@@ -32,7 +31,7 @@ trait AssetMaker
             return $fileName;
         }
 
-        if ($symbolizedPath = File::symbolizePath($fileName, NULL))
+        if ($symbolizedPath = File::symbolizePath($fileName, null))
             return File::localToPublic($symbolizedPath);
 
         if (!$assetPath) {
@@ -57,8 +56,6 @@ trait AssetMaker
     public function addJs($href, $options = null)
     {
         $jsPath = $this->getAssetPath($href);
-//        if ($jsPath != $href)
-//            $jsPath = asset($jsPath);
 
         Assets::collection($this->assetCollection)->addJs($jsPath, $options);
     }
@@ -66,8 +63,6 @@ trait AssetMaker
     public function addCss($href, $options = null)
     {
         $cssPath = $this->getAssetPath($href);
-//        if ($cssPath != $href)
-//            $cssPath = asset($cssPath);
 
         Assets::collection($this->assetCollection)->addCss($cssPath, $options);
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
@@ -11,9 +12,9 @@ class Toolbar extends BaseWidget
 
     protected $defaultAlias = 'toolbar';
 
-    protected $previewMode = false;
+    protected $previewMode = FALSE;
 
-    public $showToolbar = false;
+    public $showToolbar = FALSE;
 
     /**
      * @var array List of CSS classes to apply to the toolbar container element
@@ -107,11 +108,13 @@ class Toolbar extends BaseWidget
 
             if (isset($attributes['partial'])) {
                 $buttons[$name] = $this->makePartial($attributes['partial']);
-            } else {
+            }
+            else {
                 foreach ($attributes as $key => $value) {
                     if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
                         $attributes[$key] = admin_url($value);
-                    } else if (is_string($value)) {
+                    }
+                    else if (is_string($value)) {
                         $attributes[$key] = lang($value);
                     }
                 }

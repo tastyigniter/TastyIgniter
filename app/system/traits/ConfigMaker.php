@@ -37,13 +37,13 @@ trait ConfigMaker
     /**
      * Reads the contents of the supplied file and applies it to this object.
      *
-     * @param array $configFile
+     * @param string|array $configFile
      * @param array $requiredConfig
-     * @param null $subfolder
      *
-     * @return array|\System\Traits\stdClass
+     * @return array
+     * @throws \SystemException
      */
-    public function makeConfig($configFile = [], $requiredConfig = [])
+    public function makeConfig($configFile, $requiredConfig = [])
     {
         if (!$configFile) {
             $configFile = [];
@@ -125,7 +125,7 @@ trait ConfigMaker
 
         $fileName = File::symbolizePath($fileName);
 
-        if (File::isLocalPath($fileName) || realpath($fileName) !== FALSE) {
+        if (File::isLocalPath($fileName) OR realpath($fileName) !== FALSE) {
             return $fileName;
         }
 

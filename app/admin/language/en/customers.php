@@ -46,7 +46,7 @@ return [
 
     'help_password' => 'Leave blank to leave password unchanged',
 
-    'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access customer account</b>, please contact system administrator.',
-    'activity_event_log'     => '{event} customer <b>:subject.first_name :subject.last_name</b>',
+    'alert_login_restricted'    => 'Warning: You do not have the right permission to <b>access customer account</b>, please contact system administrator.',
+    'activity_event_log'        => '{event} customer <b>:subject.first_name :subject.last_name</b>',
     'activity_master_logged_in' => 'logged in as <b>:subject.first_name :subject.last_name</b>.',
 ];

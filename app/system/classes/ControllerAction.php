@@ -2,8 +2,7 @@
 
 use Admin\Traits\WidgetMaker;
 use Exception;
-use File;
-use October\Rain\Extension\ExtensionTrait;
+use Igniter\Flame\Traits\ExtensionTrait;
 use System\Traits\ConfigMaker;
 use System\Traits\ViewMaker;
 
@@ -58,7 +57,7 @@ class ControllerAction
     /**
      * Sets the widget configuration values
      *
-     * @param array $config
+     * @param string|array $config
      * @param array $required Required config items
      */
     public function setConfig($config, $required = [])
@@ -72,7 +71,7 @@ class ControllerAction
      * @param string $name Config name, supports array names like "field[key]"
      * @param mixed $default Default value if nothing is found
      *
-     * @return string
+     * @return mixed
      */
     public function getConfig($name = null, $default = null)
     {

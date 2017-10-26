@@ -5,7 +5,6 @@ use Modules;
 
 /**
  * Components class for TastyIgniter.
- *
  * Provides utility functions for working with components.
  */
 class ComponentManager
@@ -51,41 +50,40 @@ class ComponentManager
      *
      * @return mixed The output from the module.
      */
-    public function run($component, $controller, $module)
-    {
-        $method = 'index';
-
-        // If a directory separator is found in $module, use the right side of the
-        // separator as $method, the left side as $module.
-        if (($pos = strrpos($component, '/')) != FALSE) {
-            $method = substr($component, $pos + 1);
-            $component = substr($component, 0, $pos);
-        }
-
-        // Load the class indicated by $module and check whether $method exists.
-        $class = $this->makeComponent($component, $controller, $module);
-        if (!$class OR !method_exists($class, $method)) {
-            log_message('error', "Extension component failed to run: {$component}/{$method}");
-
-            return;
-        }
-
-        // Buffer the output.
-        ob_start();
-
-        // Get the remaining arguments and pass them to $method.
-        $output = call_user_func([$class, $method]);
-
-        // Get/clean the current buffer.
-        $buffer = ob_get_clean();
-
-        // If $output is not null, return it, otherwise return the buffered content.
-        return $output !== null ? $output : $buffer;
-    }
+//    public function run($component, $controller, $module)
+//    {
+//        $method = 'index';
+//
+//        // If a directory separator is found in $module, use the right side of the
+//        // separator as $method, the left side as $module.
+//        if (($pos = strrpos($component, '/')) != FALSE) {
+//            $method = substr($component, $pos + 1);
+//            $component = substr($component, 0, $pos);
+//        }
+//
+//        // Load the class indicated by $module and check whether $method exists.
+//        $class = $this->makeComponent($component, $controller, $module);
+//        if (!$class OR !method_exists($class, $method)) {
+//            log_message('error', "Extension component failed to run: {$component}/{$method}");
+//
+//            return;
+//        }
+//
+//        // Buffer the output.
+//        ob_start();
+//
+//        // Get the remaining arguments and pass them to $method.
+//        $output = call_user_func([$class, $method]);
+//
+//        // Get/clean the current buffer.
+//        $buffer = ob_get_clean();
+//
+//        // If $output is not null, return it, otherwise return the buffered content.
+//        return $output !== null ? $output : $buffer;
+//    }
 
     /**
      * Scans each extension and loads it components.
-     *
      * @return void
      */
     protected function loadComponents()
@@ -161,7 +159,6 @@ class ComponentManager
 
     /**
      * Returns a list of registered components.
-     *
      * @return array Array keys are codes, values are component meta array.
      */
     public function listComponents()
@@ -381,7 +378,7 @@ class ComponentManager
                 if (!in_array($propertyName, $translate)) continue;
 
                 if (is_array($propertyValue)) {
-                    array_walk($property[$propertyName], function (&$_propertyValue, $key) {
+                    array_walk($property[$propertyName], function (&$_propertyValue) {
                         $_propertyValue = lang($_propertyValue);
                     });
                 }

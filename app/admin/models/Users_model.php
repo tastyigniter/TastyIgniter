@@ -1,8 +1,8 @@
 <?php namespace Admin\Models;
 
 use Hash;
-use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
+use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Users Model Class

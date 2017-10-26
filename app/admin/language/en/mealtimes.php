@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'text_title'   => 'Mealtimes',
-    'text_new_title'           => 'Mealtime: New',
-    'text_edit_title'          => 'Mealtime: Update',
-    'text_preview_title'       => 'Mealtime: Preview',
-    'text_form_name'           => 'Mealtime',
-    'text_filter_search'       => 'Search mealtime name.',
-    'text_filter_status'       => 'View all status',
-    'text_empty'   => 'There are no mealtimes, please add.',
+    'text_title'         => 'Mealtimes',
+    'text_new_title'     => 'Mealtime: New',
+    'text_edit_title'    => 'Mealtime: Update',
+    'text_preview_title' => 'Mealtime: Preview',
+    'text_form_name'     => 'Mealtime',
+    'text_filter_search' => 'Search mealtime name.',
+    'text_filter_status' => 'View all status',
+    'text_empty'         => 'There are no mealtimes, please add.',
 
     'column_mealtime_id'     => 'ID',
     'column_mealtime_name'   => 'Name',

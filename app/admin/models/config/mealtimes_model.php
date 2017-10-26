@@ -6,9 +6,9 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'status' => [
-            'label' => 'lang:admin::mealtimes.text_filter_status',
-            'type'  => 'switch',
-            'conditions'  => 'status = :filtered',
+            'label'      => 'lang:admin::mealtimes.text_filter_status',
+            'type'       => 'switch',
+            'conditions' => 'status = :filtered',
         ],
     ],
 ];
@@ -22,33 +22,33 @@ $config['list']['toolbar'] = [
 ];
 
 $config['list']['columns'] = [
-    'edit'        => [
+    'edit'            => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'mealtimes/edit/{mealtime_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'mealtimes/edit/{mealtime_id}',
         ],
     ],
-    'mealtime_name'        => [
+    'mealtime_name'   => [
         'label'      => 'lang:admin::mealtimes.column_mealtime_name',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'start_time' => [
-        'label'      => 'lang:admin::mealtimes.column_start_time',
-        'type'       => 'time',
+    'start_time'      => [
+        'label' => 'lang:admin::mealtimes.column_start_time',
+        'type'  => 'time',
     ],
-    'end_time'    => [
-        'label'      => 'lang:admin::mealtimes.column_end_time',
-        'type'       => 'time',
+    'end_time'        => [
+        'label' => 'lang:admin::mealtimes.column_end_time',
+        'type'  => 'time',
     ],
-    'mealtime_status'    => [
-        'label'      => 'lang:admin::mealtimes.column_mealtime_status',
-        'type'       => 'switch',
+    'mealtime_status' => [
+        'label' => 'lang:admin::mealtimes.column_mealtime_status',
+        'type'  => 'switch',
     ],
-    'mealtime_id'      => [
-        'label' => 'lang:admin::mealtimes.column_mealtime_id',
+    'mealtime_id'     => [
+        'label'     => 'lang:admin::mealtimes.column_mealtime_id',
         'invisible' => TRUE,
     ],
 
@@ -74,28 +74,28 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'mealtime_name'      => [
-        'label'       => 'lang:admin::mealtimes.label_mealtime_name',
-        'type'    => 'text',
-        'span'    => 'left',
+    'mealtime_name'   => [
+        'label' => 'lang:admin::mealtimes.label_mealtime_name',
+        'type'  => 'text',
+        'span'  => 'left',
     ],
     'mealtime_status' => [
         'label'   => 'lang:admin::mealtimes.label_mealtime_status',
         'type'    => 'switch',
-        'default'    => TRUE,
+        'default' => TRUE,
         'span'    => 'right',
     ],
-    'start_time' => [
-        'label'   => 'lang:admin::mealtimes.label_start_time',
-        'type'    => 'datepicker',
-        'mode'    => 'time',
-        'span'    => 'left',
+    'start_time'      => [
+        'label' => 'lang:admin::mealtimes.label_start_time',
+        'type'  => 'datepicker',
+        'mode'  => 'time',
+        'span'  => 'left',
     ],
-    'end_time' => [
-        'label'   => 'lang:admin::mealtimes.label_end_time',
-        'type'    => 'datepicker',
-        'mode'    => 'time',
-        'span'    => 'right',
+    'end_time'        => [
+        'label' => 'lang:admin::mealtimes.label_end_time',
+        'type'  => 'datepicker',
+        'mode'  => 'time',
+        'span'  => 'right',
     ],
 ];
 

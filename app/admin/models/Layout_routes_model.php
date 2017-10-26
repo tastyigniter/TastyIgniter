@@ -1,6 +1,5 @@
 <?php namespace Admin\Models;
 
-use DB;
 use Model;
 
 /**

@@ -91,19 +91,19 @@ class Orders extends \Admin\Classes\AdminController
             $json['invoice_no'] = $this->Orders_model->createInvoiceNo(post('order_id'));
 
             if ($json['invoice_no'] === TRUE) {
-                flash()->set('warning', $this->lang->line('alert_order_not_completed'));
+                flash()->warning($this->lang->line('alert_order_not_completed'));
             }
             else if (!empty($json['invoice_no'])) {
-                flash()->set('success', sprintf($this->lang->line('alert_success'), 'Invoice generated'));
+                flash()->success(sprintf($this->lang->line('alert_success'), 'Invoice generated'));
             }
             else {
-                flash()->set('error', sprintf($this->lang->line('alert_error_nothing'), 'generated'));
+                flash()->error(sprintf($this->lang->line('alert_error_nothing'), 'generated'));
             }
 
             $json['redirect'] = $this->pageUrl($this->edit_url, ['id' => post('order_id')]);
         }
 
-        $this->output->set_output(json_encode($json));
+        return $json;
     }
 
     public function invoice()
@@ -178,6 +178,7 @@ class Orders extends \Admin\Classes\AdminController
         }
         else {
             $order_id = 0;
+
             //$data['_action']	= $this->pageUrl($this->create_url);
             return $this->redirectBack();
         }
@@ -333,10 +334,10 @@ class Orders extends \Admin\Classes\AdminController
                     ));
                 }
 
-                flash()->set('success', sprintf($this->lang->line('alert_success'), 'Order updated'));
+                flash()->success(sprintf($this->lang->line('alert_success'), 'Order updated'));
             }
             else {
-                flash()->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
+                flash()->warning(sprintf($this->lang->line('alert_error_nothing'), 'updated'));
             }
 
             return get('id');
@@ -349,10 +350,10 @@ class Orders extends \Admin\Classes\AdminController
             $deleted_rows = $this->Orders_model->deleteOrder(post('delete'));
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Orders' : 'Order';
-                flash()->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+                flash()->success(sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             }
             else {
-                flash()->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+                flash()->warning(sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;

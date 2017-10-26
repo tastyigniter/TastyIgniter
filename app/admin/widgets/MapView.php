@@ -1,11 +1,11 @@
 <?php
+
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 
 class MapView extends BaseWidget
 {
-
     /**
      * @var string Partial name containing the toolbar buttons
      */
@@ -28,8 +28,8 @@ class MapView extends BaseWidget
         'circle'     => [],
         'polygon'    => [],
         'vertices'   => [],
-        'serialized' => false,
-        'editable'   => false,
+        'serialized' => FALSE,
+        'editable'   => FALSE,
     ];
 
     protected $previewMode = FALSE;
@@ -90,5 +90,4 @@ class MapView extends BaseWidget
 
         return $result;
     }
-
 }

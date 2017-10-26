@@ -1,12 +1,12 @@
 <?php namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
+use AdminMenu;
 use Assets;
 use Exception;
 use Main\Classes\ThemeManager;
 use System\Traits\ConfigMaker;
 use Template;
-use AdminMenu;
 
 class Themes extends \Admin\Classes\AdminController
 {
@@ -241,7 +241,7 @@ class Themes extends \Admin\Classes\AdminController
                         )
                     );
 
-                    flash()->set('success', sprintf(lang('system::themes.alert_success'), "Theme {$theme_name} added "));
+                    flash()->success(sprintf(lang('system::themes.alert_success'), "Theme {$theme_name} added "));
 
                     return TRUE;
                 }

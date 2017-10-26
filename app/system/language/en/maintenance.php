@@ -14,7 +14,7 @@ return [
     'text_no_row'              => 'There are no rows available for this table.',
     'text_installed_version'   => 'Installed Version',
     'text_latest_version'      => 'Latest Available Version',
-    'text_recommended_version'      => 'Recommended Version',
+    'text_recommended_version' => 'Recommended Version',
     'text_select_version'      => 'Select version file',
     'text_zip'                 => 'zip',
     'text_gzip'                => 'gzip',
@@ -27,8 +27,8 @@ return [
 
     'column_select_tables' => 'Select tables to backup',
     'column_records'       => '# Records',
-    'column_size'     => 'Size',
-    'column_date'    => 'Date',
+    'column_size'          => 'Size',
+    'column_date'          => 'Date',
     'column_data_free'     => 'Data Free',
     'column_engine'        => 'Engine',
     'column_name'          => 'Name',
@@ -47,6 +47,6 @@ return [
     'alert_warning_migration'   => '<b>BE CAREFUL!</b> Do not migrate unless you know what you\'re doing.',
     'alert_warning_maintenance' => 'Your site is live you can\'t %s the database, please enable maintenance mode. Make sure you <b>BACKUP</b> your database.',
 
-    'help_select_table'         => 'Select database tables to backup',
-    'help_compression' => 'The Restore option is only capable of reading un-compressed files. Gzip or Zip compression is good if you just want a backup to download and store on your computer.',
+    'help_select_table' => 'Select database tables to backup',
+    'help_compression'  => 'The Restore option is only capable of reading un-compressed files. Gzip or Zip compression is good if you just want a backup to download and store on your computer.',
 ];

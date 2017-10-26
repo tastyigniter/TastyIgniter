@@ -19,10 +19,10 @@ class PermissionEditor extends BaseFormWidget
     ];
 
     public $tabs = [
-        'site' => 'lang:admin::staff_groups.text_site',
-        'module' => 'lang:admin::staff_groups.text_module',
+        'site'    => 'lang:admin::staff_groups.text_site',
+        'module'  => 'lang:admin::staff_groups.text_module',
         'payment' => 'lang:admin::staff_groups.text_payment',
-        'admin' => 'lang:admin::staff_groups.text_admin',
+        'admin'   => 'lang:admin::staff_groups.text_admin',
     ];
 
     public function initialize()

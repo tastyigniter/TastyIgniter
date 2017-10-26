@@ -266,6 +266,3 @@ return [
         'alert_review_status_history' => 'Review can not be added because order/reservation is not completed',
     ],
 ];
-
-/* End of file account_lang.php */
-/* Location: ./main/language/english/main/account_lang.php */

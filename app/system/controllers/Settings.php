@@ -2,11 +2,11 @@
 
 use Admin\Models\Locations_model;
 use Admin\Traits\WidgetMaker;
+use AdminMenu;
 use Exception;
 use System\Models\Currencies_model;
 use System\Models\Settings_model;
 use Template;
-use AdminMenu;
 
 class Settings extends \Admin\Classes\AdminController
 {
@@ -83,35 +83,13 @@ class Settings extends \Admin\Classes\AdminController
         }
 
         if ($updated) {
-            flash()->set('success', sprintf(lang('system::settings.alert_success'), lang($definition['label']).' settings updated '));
+            flash()->success(sprintf(lang('system::settings.alert_success'), lang($definition['label']).' settings updated '));
         }
         else {
-            flash()->set('warning', sprintf(lang('system::settings.alert_error_nothing'), 'updated'));
+            flash()->warning(sprintf(lang('system::settings.alert_error_nothing'), 'updated'));
         }
 
         return $this->refresh();
-    }
-
-    public function initWidgets($model, $definition)
-    {
-        $this->modelConfig = $model->getFieldConfig();
-
-        $formConfig = array_get($definition, 'form', []);
-        $formConfig['model'] = $model;
-        $formConfig['data'] = $model->getFieldValues();
-        $formConfig['alias'] = 'form-'.$this->settingCode;
-        $formConfig['arrayName'] = str_singular(strip_class_basename($model, '_model'));
-        $formConfig['context'] = 'edit';
-
-        // Form Widget with extensibility
-        $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
-        $this->formWidget->bindToController();
-
-        // Prep the optional toolbar widget
-        if (isset($this->modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
-            $this->toolbarWidget = $this->widgets['toolbar'];
-            $this->toolbarWidget->addButtons(array_get($this->modelConfig['toolbar'], 'buttons', []));
-        }
     }
 
     public function edit_onSendTest()
@@ -119,7 +97,7 @@ class Settings extends \Admin\Classes\AdminController
         $json = [];
 
         if (!post('send_test_email')) {
-            $json['error'] = lang('system::settings.alert_error_try_again');
+            $json['error'] = lang('admin::default.alert_error_try_again');
         }
 
         if (empty($json)) {
@@ -143,9 +121,32 @@ class Settings extends \Admin\Classes\AdminController
             $this->output->set_output(json_encode($json));                                            // encode the json array and set final out to be sent to jQuery AJAX
         }
         else {
-            if (isset($json['error'])) flash()->set('danger', $json['error']);
-            if (isset($json['success'])) flash()->set('success', $json['success']);
+            if (isset($json['error'])) flash()->danger($json['error']);
+            if (isset($json['success'])) flash()->success($json['success']);
+
             return $this->redirect('settings/#mail');
+        }
+    }
+
+    public function initWidgets($model, $definition)
+    {
+        $this->modelConfig = $model->getFieldConfig();
+
+        $formConfig = array_get($definition, 'form', []);
+        $formConfig['model'] = $model;
+        $formConfig['data'] = $model->getFieldValues();
+        $formConfig['alias'] = 'form-'.$this->settingCode;
+        $formConfig['arrayName'] = str_singular(strip_class_basename($model, '_model'));
+        $formConfig['context'] = 'edit';
+
+        // Form Widget with extensibility
+        $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
+        $this->formWidget->bindToController();
+
+        // Prep the optional toolbar widget
+        if (isset($this->modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
+            $this->toolbarWidget = $this->widgets['toolbar'];
+            $this->toolbarWidget->addButtons(array_get($this->modelConfig['toolbar'], 'buttons', []));
         }
     }
 

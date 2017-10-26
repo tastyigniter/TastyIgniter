@@ -10,7 +10,7 @@
     <?php } ?>
 
     <?php if (strlen($mapKey)) { ?>
-    <div class="map-view"></div>
+        <div class="map-view"></div>
     <?php } else { ?>
         <p>Missing google maps API key. Add one under General Settings</p>
     <?php } ?>

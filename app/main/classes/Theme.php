@@ -130,10 +130,10 @@ class Theme
     {
 //        if (!\File::isFile())
         if (isset($config['customize']))
-        $this->customizers = $config['customize'];
+            $this->customizers = $config['customize'];
 
         if (isset($config['partial_areas']))
-        $this->partials = $config['partial_areas'];
+            $this->partials = $config['partial_areas'];
     }
 
     /**

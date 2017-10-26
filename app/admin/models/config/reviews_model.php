@@ -43,9 +43,9 @@ $config['list']['columns'] = [
     'edit'          => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'reviews/edit/{review_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'reviews/edit/{review_id}',
         ],
     ],
     'location'      => [
@@ -69,16 +69,16 @@ $config['list']['columns'] = [
         'label'      => 'lang:admin::reviews.column_sale_type',
         'type'       => 'select',
         'searchable' => TRUE,
-        'formatter' => function ($record, $column, $value) {
+        'formatter'  => function ($record, $column, $value) {
             return ucwords($value);
         },
     ],
     'review_status' => [
-        'label' => 'lang:admin::reviews.column_status',
-        'type'  => 'switch',
-        'options'  => [
+        'label'   => 'lang:admin::reviews.column_status',
+        'type'    => 'switch',
+        'options' => [
             'lang:admin::reviews.text_pending_review',
-            'lang:admin::reviews.text_approved'
+            'lang:admin::reviews.text_approved',
         ],
     ],
     'date_added'    => [

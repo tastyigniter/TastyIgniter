@@ -8,7 +8,7 @@ return [
     'text_new_template_title'           => 'Mail Layout Template: New',
     'text_edit_template_title'          => 'Mail Layout Template: Update',
     'text_preview_template_title'       => 'Mail Layout Template: Preview',
-    'text_changes_title'                  => 'Mail Template: Changes',
+    'text_changes_title'                => 'Mail Template: Changes',
     'text_form_name'                    => 'Mail Template',
     'text_tab_general'                  => 'General',
     'text_tab_templates'                => 'Templates',

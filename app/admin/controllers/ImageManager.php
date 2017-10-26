@@ -27,8 +27,7 @@ class ImageManager extends \Admin\Classes\AdminController
             $width = (get('width')) ? (int)get('width') : '';
             $height = (get('height')) ? (int)get('height') : '';
 
-            $image_url = Image_tool_model::resize(html_entity_decode(get('image'), ENT_QUOTES, 'UTF-8'), $width, $height);
-            $this->output->set_output(json_encode($image_url));
+            return Image_tool_model::resize(html_entity_decode(get('image'), ENT_QUOTES, 'UTF-8'), $width, $height);
         }
     }
 }

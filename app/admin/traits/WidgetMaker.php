@@ -1,7 +1,7 @@
 <?php namespace Admin\Traits;
 
-use Exception;
 use Admin\Classes\FormField;
+use Exception;
 
 /**
  * Widget Maker Trait Class
@@ -12,7 +12,6 @@ use Admin\Classes\FormField;
  */
 trait WidgetMaker
 {
-
     /**
      * Makes a widget object with the supplied configuration
      * ex. model config
@@ -71,6 +70,7 @@ trait WidgetMaker
         }
 
         $widgetConfig['vars'] = $this->vars;
+
         return new $class($controller, $formField, $widgetConfig);
     }
 }

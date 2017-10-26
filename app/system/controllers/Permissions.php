@@ -56,7 +56,7 @@ class Permissions extends \Admin\Classes\AdminController
 
     public function formBeforeCreate($model)
     {
-        $model->is_custom = true;
+        $model->is_custom = TRUE;
     }
 
     public function formValidate($model, $form)

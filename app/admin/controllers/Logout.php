@@ -15,7 +15,7 @@ class Logout extends \Admin\Classes\AdminController
 
         AdminAuth::logout();
 
-        flash()->set('success', lang('admin::login.alert_success_logout'));
+        flash()->success(lang('admin::login.alert_success_logout'));
 
         return $this->redirect('login');
     }

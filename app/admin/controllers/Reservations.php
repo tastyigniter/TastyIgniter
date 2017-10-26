@@ -113,6 +113,7 @@ class Reservations extends \Admin\Classes\AdminController
         }
         else {
             $reservation_id = 0;
+
             //$data['_action']	= $this->pageUrl($this->create_url);
             return $this->redirectBack();
         }
@@ -253,10 +254,10 @@ class Reservations extends \Admin\Classes\AdminController
                     ));
                 }
 
-                flash()->set('success', sprintf($this->lang->line('alert_success'), 'Reservation updated'));
+                flash()->success(sprintf($this->lang->line('alert_success'), 'Reservation updated'));
             }
             else {
-                flash()->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
+                flash()->warning(sprintf($this->lang->line('alert_error_nothing'), 'updated'));
             }
 
             return $reservation_id;
@@ -269,10 +270,10 @@ class Reservations extends \Admin\Classes\AdminController
             $deleted_rows = $this->Reservations_model->deleteReservation(post('delete'));
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Reservations' : 'Reservation';
-                flash()->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+                flash()->success(sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             }
             else {
-                flash()->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+                flash()->warning(sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;

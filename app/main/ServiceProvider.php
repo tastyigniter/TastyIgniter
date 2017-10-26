@@ -1,4 +1,5 @@
 <?php
+
 namespace Main;
 
 use Config;
@@ -45,7 +46,7 @@ class ServiceProvider extends AppServiceProvider
     {
         Assets::defaultPaths([
             $this->app->themesPath(),
-            app_path($this->app->appContext().'/views')
+            app_path($this->app->appContext().'/views'),
         ]);
 
         Assets::registerAssets(function (Assets $manager) {

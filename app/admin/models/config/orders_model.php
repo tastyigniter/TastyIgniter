@@ -57,9 +57,9 @@ $config['list']['columns'] = [
     'edit'            => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'orders/edit/{order_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'orders/edit/{order_id}',
         ],
     ],
     'location'        => [
@@ -74,20 +74,20 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'order_status'    => [
-        'label'      => 'lang:admin::orders.column_status',
-        'relation'   => 'status',
-        'select'     => 'status_name',
-        'type'       => 'partial',
-        'path'       => 'orders/status_column',
+        'label'    => 'lang:admin::orders.column_status',
+        'relation' => 'status',
+        'select'   => 'status_name',
+        'type'     => 'partial',
+        'path'     => 'orders/status_column',
     ],
     'order_type_name' => [
-        'label'      => 'lang:admin::orders.column_type',
-        'type'       => 'text',
+        'label'    => 'lang:admin::orders.column_type',
+        'type'     => 'text',
         'sortable' => FALSE,
     ],
     'payment_title'   => [
-        'label'      => 'lang:admin::orders.column_payment',
-        'type'       => 'text',
+        'label'    => 'lang:admin::orders.column_payment',
+        'type'     => 'text',
         'sortable' => FALSE,
     ],
     'order_total'     => [
@@ -144,26 +144,26 @@ $config['form']['fields'] = [
     'order_total' => [
         'label'    => 'lang:admin::orders.label_order_total',
         'type'     => 'money',
-        'span'    => 'right',
+        'span'     => 'right',
         'disabled' => TRUE,
         'context'  => ['edit', 'preview'],
     ],
     'assignee_id' => [
-        'label'    => 'lang:admin::orders.label_assign_staff',
-        'type'     => 'relation',
+        'label'        => 'lang:admin::orders.label_assign_staff',
+        'type'         => 'relation',
         'relationFrom' => 'assignee',
-        'nameFrom' => 'staff_name',
-        'span'     => 'left',
-        'placeholder' => 'lang:admin::default.text_please_select',
+        'nameFrom'     => 'staff_name',
+        'span'         => 'left',
+        'placeholder'  => 'lang:admin::default.text_please_select',
     ],
-    'status_id'     => [
+    'status_id'   => [
         'label'   => 'lang:admin::default.label_status',
         'type'    => 'statuseditor',
-        'span'     => 'right',
+        'span'    => 'right',
         'options' => ['Admin\Models\Statuses_model', 'listStatuses'],
         'form'    => [
             'fields' => [
-                'assignee_id'    => [
+                'assignee_id' => [
                     'label'       => 'lang:admin::orders.label_assign_staff',
                     'type'        => 'select',
                     'options'     => ['Admin\Models\Staffs_model', 'getDropdownOptions'],
@@ -178,14 +178,14 @@ $config['form']['fields'] = [
                         'data-status-value' => '',
                     ],
                 ],
-                'comment' => [
+                'comment'     => [
                     'label'      => 'lang:admin::orders.label_comment',
                     'type'       => 'textarea',
                     'attributes' => [
                         'data-status-comment' => '',
                     ],
                 ],
-                'notify'  => [
+                'notify'      => [
                     'label'      => 'lang:admin::orders.label_notify',
                     'type'       => 'radio',
                     'default'    => 1,
@@ -212,7 +212,7 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
             'span'     => 'left',
         ],
-        'invoice'     => [
+        'invoice'       => [
             'label'    => 'lang:admin::orders.label_invoice',
             'type'     => 'text',
             'disabled' => TRUE,
@@ -229,7 +229,7 @@ $config['form']['tabs'] = [
                 2 => 'lang:admin::orders.text_collection',
             ],
         ],
-        'total_items' => [
+        'total_items'   => [
             'label'    => 'lang:admin::orders.label_total_items',
             'type'     => 'number',
             'span'     => 'right',
@@ -257,24 +257,24 @@ $config['form']['tabs'] = [
             'valueFrom' => 'payment_method',
         ],
         'address_id'    => [
-            'label'   => 'lang:admin::orders.text_tab_delivery_address',
-            'span'    => 'left',
-            'type'    => 'select',
-            'options'    => 'getAddressOptions',
-            'placeholder'    => 'lang:admin::default.text_please_select',
-            'trigger' => [
+            'label'       => 'lang:admin::orders.text_tab_delivery_address',
+            'span'        => 'left',
+            'type'        => 'select',
+            'options'     => 'getAddressOptions',
+            'placeholder' => 'lang:admin::default.text_please_select',
+            'trigger'     => [
                 'action'    => 'show',
                 'field'     => 'order_type',
                 'condition' => 'value[1]',
             ],
         ],
         'location_id'   => [
-            'label'   => 'lang:admin::orders.text_restaurant',
-            'type'    => 'relation',
-            'relationFrom'    => 'location',
-            'nameFrom'  => 'location_name',
-            'span'    => 'right',
-            'placeholder'    => 'lang:admin::default.text_please_select',
+            'label'        => 'lang:admin::orders.text_restaurant',
+            'type'         => 'relation',
+            'relationFrom' => 'location',
+            'nameFrom'     => 'location_name',
+            'span'         => 'right',
+            'placeholder'  => 'lang:admin::default.text_please_select',
         ],
         'notify'        => [
             'label'   => 'lang:admin::orders.label_send_confirmation',
@@ -322,29 +322,29 @@ $config['form']['tabs'] = [
             'type' => 'textarea',
         ],
 
-        'status_history'     => [
-            'tab'   => 'lang:admin::orders.text_tab_status',
+        'status_history' => [
+            'tab'     => 'lang:admin::orders.text_tab_status',
             'type'    => 'datatable',
             'columns' => [
-                'date_added' => [
+                'date_added'    => [
                     'title' => 'lang:admin::orders.column_time_date',
                 ],
-                'staff_name' => [
+                'staff_name'    => [
                     'title' => 'lang:admin::orders.column_staff',
                 ],
                 'assignee_name' => [
                     'title' => 'lang:admin::orders.column_assignee',
                 ],
-                'status_name' => [
+                'status_name'   => [
                     'title' => 'lang:admin::orders.column_status',
                 ],
-                'comment' => [
-                    'title' => 'lang:admin::orders.column_comment'
+                'comment'       => [
+                    'title' => 'lang:admin::orders.column_comment',
                 ],
-                'notified' => [
+                'notified'      => [
                     'title' => 'lang:admin::orders.column_notify',
                 ],
-            ]
+            ],
         ],
     ],
 ];

@@ -1,7 +1,7 @@
 <?php namespace Admin\Models;
 
-use Model;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
+use Model;
 
 /**
  * Coupons Model Class

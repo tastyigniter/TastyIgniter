@@ -4,7 +4,9 @@
             <thead>
             <tr>
                 <th class="list-action"></th>
-                <th><b><?= lang('system::mail_templates.column_code'); ?></b> - <?= lang('system::mail_templates.column_title'); ?></th>
+                <th>
+                    <b><?= lang('system::mail_templates.column_code'); ?></b> - <?= lang('system::mail_templates.column_title'); ?>
+                </th>
                 <th class="text-right"><?= lang('system::mail_templates.column_date_updated'); ?></th>
                 <th class="text-right"><?= lang('system::mail_templates.column_date_added'); ?></th>
             </tr>

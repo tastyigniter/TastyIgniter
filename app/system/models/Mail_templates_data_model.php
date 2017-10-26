@@ -6,7 +6,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Mail template data Model Class
- *
  * @package System
  */
 class Mail_templates_data_model extends Model
@@ -26,7 +25,7 @@ class Mail_templates_data_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'template' => 'System\Models\Mail_templates_model'
+            'template' => 'System\Models\Mail_templates_model',
         ],
     ];
 
@@ -240,8 +239,9 @@ class Mail_templates_data_model extends Model
         if ($templates AND $deletedTemplates = $templates->diffKeys($parentTemplates)->all())
             $mailChanges['deleted'] = $deletedTemplates;
 
-        $modifiedTemplates = $parentTemplates->reject(function($model, $key) use ($templates) {
+        $modifiedTemplates = $parentTemplates->reject(function ($model, $key) use ($templates) {
             $template = $templates->get($key);
+
             return (!$template OR !self::compareTemplateData($model, $template));
         })->all();
 
@@ -290,7 +290,8 @@ class Mail_templates_data_model extends Model
 
                 if ($type == 'deleted') {
                     $templatesToDelete[] = self::destroy($template_data_id);
-                } else {
+                }
+                else {
                     $templatesToUpdate[] = $template->toArray();
                 }
             }
@@ -447,7 +448,7 @@ class Mail_templates_data_model extends Model
      * Returns a list of the registered templates.
      * @return array
      */
-    public  function listRegisteredTemplates()
+    public function listRegisteredTemplates()
     {
         if (self::$registeredTemplates === null) {
             $this->loadRegisteredTemplates();
@@ -495,5 +496,4 @@ class Mail_templates_data_model extends Model
     {
         self::$callbacks[] = $callback;
     }
-
 }

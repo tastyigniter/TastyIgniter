@@ -33,7 +33,7 @@ class AdminController extends BaseController
     protected $fatalError;
 
     /**
-     * @var array A list of BaseWidget objects used on this page
+     * @var \Admin\Classes\BaseWidget[] A list of BaseWidget objects used on this page
      */
     public $widgets = [];
 

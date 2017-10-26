@@ -1,7 +1,7 @@
 <?php namespace Admin\Models;
 
-use Model;
 use Igniter\Flame\Database\Traits\Sortable;
+use Model;
 
 /**
  * MenuOptions Model Class
@@ -29,13 +29,13 @@ class Menu_item_options_model extends Model
     protected $fillable = ['option_id', 'menu_id', 'required', 'priority', 'default_value_id', 'option_values'];
 
     public $relation = [
-        'hasMany' => [
+        'hasMany'   => [
             'values'             => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
-            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'foreignKey' => 'menu_option_id', 'delete' => true],
+            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'foreignKey' => 'menu_option_id', 'delete' => TRUE],
         ],
         'belongsTo' => [
-            'menu' => ['Admin\Models\Menus_model'],
-            'option'   => ['Admin\Models\Menu_options_model'],
+            'menu'   => ['Admin\Models\Menus_model'],
+            'option' => ['Admin\Models\Menu_options_model'],
         ],
     ];
 

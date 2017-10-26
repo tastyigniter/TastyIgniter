@@ -10,9 +10,9 @@ $config['list']['columns'] = [
     'edit'              => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'customer_groups/edit/{customer_group_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'customer_groups/edit/{customer_group_id}',
         ],
     ],
     'group_name'        => [
@@ -21,8 +21,8 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'customer_count'    => [
-        'label'      => 'lang:admin::customer_groups.column_customers',
-        'type'       => 'number',
+        'label'    => 'lang:admin::customer_groups.column_customers',
+        'type'     => 'number',
         'sortable' => FALSE,
     ],
     'approval'          => [

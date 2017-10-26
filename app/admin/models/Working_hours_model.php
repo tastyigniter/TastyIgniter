@@ -10,21 +10,21 @@ use Model;
  */
 class Working_hours_model extends Model
 {
-	/**
-	 * @var string The database table name
-	 */
-	protected $table = 'working_hours';
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'working_hours';
 
     protected $primaryKey = 'location_id';
 
-    public $incrementing = false;
+    public $incrementing = FALSE;
 
     public $fillable = ['location_id', 'weekday', 'opening_time', 'closing_time', 'status', 'type'];
 
     public $relation = [
         'belongsTo' => [
-            'location' => ['Admin\Models\Locations_model']
-        ]
+            'location' => ['Admin\Models\Locations_model'],
+        ],
     ];
 
     protected $appends = ['day', 'weekDate', 'open', 'close', 'past_midnight', 'open_all_day'];
@@ -49,6 +49,7 @@ class Working_hours_model extends Model
             return null;
 
         $diffInHours = $this->opening_time->diffInHours($this->close);
+
         return $diffInHours >= 23 OR $diffInHours == 0;
     }
 
@@ -57,7 +58,7 @@ class Working_hours_model extends Model
         $open = "{$this->weekDate} {$this->attributes['opening_time']}";
 
         return Carbon::createFromFormat('Y-m-d H:i:s', $open);
-	}
+    }
 
     public function getCloseAttribute()
     {
@@ -69,12 +70,12 @@ class Working_hours_model extends Model
             $date->addDay();
 
         return $date;
-	}
+    }
 
     public function getWeekDateAttribute()
     {
         return isset($this->attributes['weekDate']) ? $this->attributes['weekDate'] : mdate('%Y-%m-%d', time());
-	}
+    }
 
     public function getPastMidnightAttribute()
     {
@@ -82,7 +83,7 @@ class Working_hours_model extends Model
             return null;
 
         return $this->open->gt($this->close);
-	}
+    }
 
     public function getHoursByLocation($id)
     {
@@ -108,17 +109,17 @@ class Working_hours_model extends Model
         $this->attributes['weekDate'] = mdate('%Y-%m-%d', strtotime($time));
 
         return $this;
-	}
+    }
 
-	public function setWeekDays($weekDays)
-	{
-		$this->weekDays = $weekDays;
-	}
+    public function setWeekDays($weekDays)
+    {
+        $this->weekDays = $weekDays;
+    }
 
-	public function getWeekDays()
-	{
-		return $this->weekDays;
-	}
+    public function getWeekDays()
+    {
+        return $this->weekDays;
+    }
 
     public function parseRecord($row)
     {

@@ -9,13 +9,13 @@ use Model;
  */
 class Payment_logs_model extends Model
 {
-	/**
-	 * @var string The database table name
-	 */
-	protected $table = 'payment_logs';
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'payment_logs';
 
-	/**
-	 * @var string The database table primary key
-	 */
-	protected $primaryKey = 'payment_log_id';
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'payment_log_id';
 }

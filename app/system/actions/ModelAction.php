@@ -2,15 +2,13 @@
 
 namespace System\Actions;
 
-use Model;
 use Igniter\Flame\Traits\ExtensionTrait;
-use System\Classes\ExtensionManager;
+use Model;
 use System\Traits\ConfigMaker;
 use SystemException;
 
 /**
  * Model Action base Class
- *
  * @package System
  */
 class ModelAction

@@ -10,10 +10,8 @@ use URL;
  **
  * Uses Assetic PHP Assets Manager
  * Within controllers, widgets, components and views, use facade:
- *
  *   Assets::addCss($path, $options);
  *   Assets::addJs($path, $options);
- *
  * @package System
  */
 class Assets
@@ -278,35 +276,37 @@ class Assets
     public function getActiveThemeOptions($item = null, $default = null)
     {
         return $default;
-        if (setting(strtolower(APPDIR), 'active_theme_options')) {
-            $active_theme_options = setting(strtolower(APPDIR), 'active_theme_options');
-        }
-        else if (setting(strtolower(APPDIR), 'customizer_active_style')) {
-            $active_theme_options = setting(strtolower(APPDIR), 'customizer_active_style');
-        }
 
-        if (empty($active_theme_options) OR !isset($active_theme_options[0]) OR !isset($active_theme_options[1])) {
-            return null;
-        }
-
-        if ($active_theme_options[0] !== $this->ci()->template->getTheme()) {
-            return null;
-        }
-
-        $theme_options = null;
-        if (is_array($active_theme_options[1])) {
-            $theme_options = $active_theme_options[1];
-        }
-
-        if ($item === null) {
-            return $theme_options;
-        }
-        else if (isset($theme_options[$item])) {
-            return $theme_options[$item];
-        }
-        else {
-            return null;
-        }
+        // @todo: implement
+//        if (setting(strtolower(APPDIR), 'active_theme_options')) {
+//            $active_theme_options = setting(strtolower(APPDIR), 'active_theme_options');
+//        }
+//        else if (setting(strtolower(APPDIR), 'customizer_active_style')) {
+//            $active_theme_options = setting(strtolower(APPDIR), 'customizer_active_style');
+//        }
+//
+//        if (empty($active_theme_options) OR !isset($active_theme_options[0]) OR !isset($active_theme_options[1])) {
+//            return null;
+//        }
+//
+//        if ($active_theme_options[0] !== $this->ci()->template->getTheme()) {
+//            return null;
+//        }
+//
+//        $theme_options = null;
+//        if (is_array($active_theme_options[1])) {
+//            $theme_options = $active_theme_options[1];
+//        }
+//
+//        if ($item === null) {
+//            return $theme_options;
+//        }
+//        else if (isset($theme_options[$item])) {
+//            return $theme_options[$item];
+//        }
+//        else {
+//            return null;
+//        }
     }
 
     public function flushAssets()
@@ -398,19 +398,20 @@ class Assets
     protected function compileActiveStyle($content = '')
     {
         return $content;
-        if (setting(strtolower(APPDIR), 'active_theme_options')) {
-            $active_theme_options = setting(strtolower(APPDIR), 'active_theme_options');
-        }
-        else if (setting(strtolower(APPDIR), 'customizer_active_style')) {
-            $active_theme_options = setting(strtolower(APPDIR), 'customizer_active_style');
-        }
-
-        if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->ci()->template->getTheme()) {
-            $data = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : [];
-            $content = $this->ci()->template->load_view('stylesheet', $data);
-        }
-
-        return $content;
+        // @todo: implement
+//        if (setting(strtolower(APPDIR), 'active_theme_options')) {
+//            $active_theme_options = setting(strtolower(APPDIR), 'active_theme_options');
+//        }
+//        else if (setting(strtolower(APPDIR), 'customizer_active_style')) {
+//            $active_theme_options = setting(strtolower(APPDIR), 'customizer_active_style');
+//        }
+//
+//        if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->ci()->template->getTheme()) {
+//            $data = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : [];
+//            $content = $this->ci()->template->load_view('stylesheet', $data);
+//        }
+//
+//        return $content;
     }
 
     protected function getAssetPath($href)

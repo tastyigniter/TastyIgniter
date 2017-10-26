@@ -37,6 +37,7 @@ class AddColumns extends Migration
             $table->string('name')->change();
             $table->integer('nest_left')->nullable();
             $table->string('nest_right')->nullable();
+            $table->string('permalink_slug')->nullable();
         });
 
         Schema::table('layout_modules', function (Blueprint $table) {
@@ -45,6 +46,10 @@ class AddColumns extends Migration
 
         Schema::table('languages', function (Blueprint $table) {
             $table->integer('original_id')->nullable();
+        });
+
+        Schema::table('locations', function (Blueprint $table) {
+            $table->string('permalink_slug')->nullable();
         });
 
         Schema::table('mail_templates_data', function (Blueprint $table) {
@@ -74,14 +79,6 @@ class AddColumns extends Migration
             $table->string('permalink_slug')->nullable();
         });
 
-        Schema::table('categories', function (Blueprint $table) {
-            $table->string('permalink_slug')->nullable();
-        });
-
-        Schema::table('locations', function (Blueprint $table) {
-            $table->string('permalink_slug')->nullable();
-        });
-
         Schema::table('permissions', function (Blueprint $table) {
             $table->boolean('is_custom')->default(1);
         });
@@ -89,6 +86,5 @@ class AddColumns extends Migration
         Schema::table('status_history', function (Blueprint $table) {
             $table->string('object_type')->after('object_id');
         });
-
     }
 }

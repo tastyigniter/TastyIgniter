@@ -1,6 +1,7 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Models\Staffs_model;
+use AdminAuth;
 use AdminMenu;
 
 class Staffs extends \Admin\Classes\AdminController
@@ -72,7 +73,7 @@ class Staffs extends \Admin\Classes\AdminController
             }
         }
 
-        $this->output->set_output(json_encode($json));
+        return $json;
     }
 
     public function formExtendQuery($query)
@@ -91,17 +92,16 @@ class Staffs extends \Admin\Classes\AdminController
             ['staff_status', 'lang:admin::default.label_status', 'integer'],
         ];
 
-        if (!$model->exists OR post($form->arrayName.'[user][password]')) {
+        if (!$model->exists OR post($form->arrayName.'.user.password')) {
             $rules[] = ['user.password', 'lang:admin::staffs.label_password', 'min:6|max:32|same:user.password_confirm'
                 .($form->context == 'create' ? '|required' : '')];
             $rules[] = ['user.password_confirm', 'lang:admin::staffs.label_confirm_password'];
         }
 
-//        if (AdminAuth::getId() != $model->getKey()) {
-        $rules[] = ['staff_group_id', 'lang:admin::staffs.label_group', 'required|integer'];
-        $rules[] = ['staff_location_id', 'lang:admin::staffs.label_location', 'integer'];
-
-//        }
+        if (AdminAuth::isSuperUser()) {
+            $rules[] = ['staff_group_id', 'lang:admin::staffs.label_group', 'required|integer'];
+            $rules[] = ['staff_location_id', 'lang:admin::staffs.label_location', 'integer'];
+        }
 
         return $this->validatePasses($form->getSaveData(), $rules);
     }

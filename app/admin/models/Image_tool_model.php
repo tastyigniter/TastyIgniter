@@ -1,6 +1,5 @@
 <?php namespace Admin\Models;
 
-use File;
 use Model;
 
 /**
@@ -29,7 +28,7 @@ class Image_tool_model extends Model
             $imgPath = $default;
 
 //        if (empty($width) AND empty($height))
-            return image_url($imgPath);
+        return image_url($imgPath);
 
 //        if (!File::isDirectory($thumbsPath = image_path('thumbs')))
 //            File::makeDirectory($thumbsPath, 0777, TRUE);

@@ -2,11 +2,11 @@
 
 use Admin\Traits\WidgetMaker;
 use AdminAuth;
+use AdminMenu;
 use Exception;
 use System\Classes\ExtensionManager;
 use System\Models\Extensions_model;
 use System\Models\Settings_model;
-use AdminMenu;
 use Template;
 
 class Extensions extends \Admin\Classes\AdminController
@@ -49,8 +49,14 @@ class Extensions extends \Admin\Classes\AdminController
 
     protected $requiredPermissions = 'Admin.Extensions';
 
+    /**
+     * @var \Admin\Widgets\Form
+     */
     public $formWidget;
 
+    /**
+     * @var \Admin\Widgets\Toolbar
+     */
     public $toolbarWidget;
 
     public function __construct()
@@ -68,15 +74,15 @@ class Extensions extends \Admin\Classes\AdminController
         $this->asExtension('ListController')->index();
     }
 
-    public function settings($context, $code = null)
+    public function settings($context, $vendor = null, $extension = null)
     {
         try {
-            if (!strlen($code)) {
-                throw new Exception(lang('admin::extensions.alert_setting_missing_id'));
+            if (!strlen($vendor) OR !strlen($extension)) {
+                throw new Exception(lang('system::extensions.alert_setting_missing_id'));
             }
 
-            if (!$settingItem = Settings_model::getSettingItem($code)) {
-                throw new Exception(lang('admin::extensions.alert_setting_not_found'));
+            if (!$settingItem = Settings_model::make()->getSettingItem($vendor.'.'.$extension)) {
+                throw new Exception(lang('system::extensions.alert_setting_not_found'));
             }
 
             if ($settingItem->permissions)
@@ -96,11 +102,11 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function upload($context = null)
     {
-        Template::setTitle(lang('admin::extensions.text_add_title'));
-        Template::setHeading(lang('admin::extensions.text_add_title'));
+        Template::setTitle(lang('system::extensions.text_add_title'));
+        Template::setHeading(lang('system::extensions.text_add_title'));
 
-        Template::setButton(lang('admin::extensions.button_icon_back'), ['class' => 'btn btn-default', 'href' => admin_url('extensions')]);
-        Template::setButton(lang('admin::extensions.button_browse'), ['class' => 'btn btn-default pull-right', 'href' => admin_url('updates/browse/extensions')]);
+        Template::setButton(lang('system::extensions.button_icon_back'), ['class' => 'btn btn-default', 'href' => admin_url('extensions')]);
+        Template::setButton(lang('system::extensions.button_browse'), ['class' => 'btn btn-default pull-right', 'href' => admin_url('updates/browse/extensions')]);
 
         // Prep the optional toolbar widget
         if (isset($config['toolbar']) AND isset($this->widgets['toolbar'])) {
@@ -109,19 +115,22 @@ class Extensions extends \Admin\Classes\AdminController
         }
     }
 
-    public function delete($context, $extensionCode = null)
+    public function delete($context, $vendor = null, $extension = null)
     {
         try {
-            $pageTitle = lang('admin::extensions.text_delete_title');
+            $pageTitle = lang('system::extensions.text_delete_title');
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
-            $extensionClass = ExtensionManager::instance()->findExtension($extensionCode);
+            $extensionCode = $vendor.'.'.$extension;
+            $extensionManager = ExtensionManager::instance();
+            $extensionClass = $extensionManager->findExtension($extensionCode);
             $model = Extensions_model::where('name', $extensionCode)->first();
 
             // Extension must be disabled before it can be deleted
             if ($model AND $model->status) {
-                flash()->set('warning', sprintf(lang('admin::extensions.alert_error_nothing'), lang('admin::extensions.text_deleted').lang('admin::extensions.alert_is_installed')));
+                flash()->warning(sprintf(lang('system::extensions.alert_error_nothing'), lang('system::extensions.text_deleted').lang('system::extensions.alert_is_installed')));
+
                 return $this->redirectBack();
             }
 
@@ -129,7 +138,8 @@ class Extensions extends \Admin\Classes\AdminController
             // so delete from database
             if (!$extensionClass) {
                 Extensions_model::deleteExtension($extensionCode, TRUE);
-                flash()->set('success', sprintf(lang('admin::extensions.alert_success'), "Extension deleted "));
+                flash()->success(sprintf(lang('admin::default.alert_success'), "Extension deleted "));
+
                 return $this->redirectBack();
             }
 
@@ -140,7 +150,7 @@ class Extensions extends \Admin\Classes\AdminController
             $this->vars['extensionMeta'] = $meta;
             $this->vars['extensionName'] = isset($meta['name']) ? $meta['name'] : '';
             $this->vars['extensionData'] = $model->data;
-            $this->vars['filesToDelete'] = ExtensionManager::instance()->files_path($extensionCode);
+            $this->vars['filesToDelete'] = $extensionManager->files($extensionCode);
         } catch (Exception $ex) {
             $this->handleError($ex);
         }
@@ -155,16 +165,16 @@ class Extensions extends \Admin\Classes\AdminController
             $meta = $extension->extensionMeta();
             $title = isset($meta['name']) ? $meta['name'] : '';
 
-            flash()->set('success', sprintf(lang('admin::extensions.alert_success'), "Extension {$title} installed "));
+            flash()->success(sprintf(lang('admin::default.alert_success'), "Extension {$title} installed "));
             if ($extension->registerComponents()) {
-                flash()->set('info', sprintf(lang('admin::extensions.alert_info_layouts'), admin_url('layouts')));
+                flash()->info(sprintf(lang('system::extensions.alert_info_layouts'), admin_url('layouts')));
             }
         }
         else {
-            flash()->set('danger', lang('admin::extensions.alert_error_try_again'));
+            flash()->danger(lang('admin::default.alert_error_try_again'));
         }
 
-        $this->refreshList('list');
+        return $this->refreshList('list');
     }
 
     public function index_onUninstall($context = null)
@@ -176,25 +186,26 @@ class Extensions extends \Admin\Classes\AdminController
             $meta = $extension->extensionMeta();
             $extension_name = isset($meta['name']) ? $meta['name'] : '';
 
-            flash()->set('success', sprintf(
-                lang('admin::extensions.alert_success'), "Extension {$extension_name} uninstalled "
+            flash()->success(sprintf(
+                lang('admin::default.alert_success'), "Extension {$extension_name} uninstalled "
             ));
         }
         else {
-            flash()->set('danger', lang('admin::extensions.alert_error_try_again'));
+            flash()->danger(lang('admin::default.alert_error_try_again'));
         }
 
-        $this->refreshList('list');
+        return $this->refreshList('list');
     }
 
-    public function settings_onSave($context, $extensionCode = null)
+    public function settings_onSave($context, $vendor = null, $extension = null)
     {
-        if (!strlen($extensionCode)) {
-            throw new Exception(lang('admin::extensions.alert_setting_missing_id'));
+        if (!strlen($vendor) OR !strlen($extension)) {
+            throw new Exception(lang('system::extensions.alert_setting_missing_id'));
         }
 
-        if (!$settingItem = Settings_model::getSettingItem($extensionCode)) {
-            throw new Exception(lang('admin::extensions.alert_setting_not_found'));
+        $extensionCode = $vendor.'.'.$extension;
+        if (!$settingItem = Settings_model::make()->getSettingItem($extensionCode)) {
+            throw new Exception(lang('system::extensions.alert_setting_not_found'));
         }
 
         if ($settingItem->permissions)
@@ -209,10 +220,10 @@ class Extensions extends \Admin\Classes\AdminController
             return;
 
         if ($model->set($this->formWidget->getSaveData())) {
-            flash()->set('success', sprintf(lang('admin::default.alert_success'), lang($settingItem->label).' settings updated '));
+            flash()->success(sprintf(lang('admin::default.alert_success'), lang($settingItem->label).' settings updated '));
         }
         else {
-            flash()->set('warning', sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
+            flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
         }
 
         return $this->refresh();
@@ -221,18 +232,18 @@ class Extensions extends \Admin\Classes\AdminController
     public function upload_onUpload($context = null)
     {
         if (!isset($_FILES['extension_zip']) OR !$this->validateUpload()) {
-            flash()->set('danger', sprintf(
-                lang('admin::extensions.alert_error'), lang('admin::extensions.error_config_no_found')
+            flash()->danger(sprintf(
+                lang('system::extensions.alert_error'), lang('system::extensions.error_config_no_found')
             ));
             $this->refresh();
         }
 
         $extractedPath = ExtensionManager::instance()->extract_extension($_FILES['extension_zip']['tmp_name']);
         if (!$extractedPath) {
-            flash()->set('danger', sprintf(
-                lang('admin::extensions.alert_error'), lang('admin::extensions.error_config_no_found')
+            flash()->danger(sprintf(
+                lang('system::extensions.alert_error'), lang('system::extensions.error_config_no_found')
             ));
-            $this->refresh();
+            return $this->refresh();
         }
 
         $extension_code = basename($extractedPath);
@@ -245,26 +256,27 @@ class Extensions extends \Admin\Classes\AdminController
             $meta = $extension->extensionMeta();
             $extension_name = isset($meta['name']) ? $meta['name'] : '';
             $alert = "Extension {$extension_name} uploaded & installed ";
-            flash()->set('success', sprintf(lang('admin::extensions.alert_success'), $alert));
+            flash()->success(sprintf(lang('admin::default.alert_success'), $alert));
         }
 
-        $this->refresh();
+        return $this->refresh();
     }
 
-    public function delete_onDelete($context = null, $extensionCode = null)
+    public function delete_onDelete($context = null, $vendor = null, $extension = null)
     {
         $deleteData = post('delete_data');
 
+        $extensionCode = $vendor.'.'.$extension;
         $extension = ExtensionManager::instance()->findExtension($extensionCode);
 
         if (Extensions_model::deleteExtension($extensionCode, ($deleteData == 1))) {
             $meta = $extension->extensionMeta();
             $extension_name = isset($meta['name']) ? $meta['name'] : '';
 
-            flash()->set('success', sprintf(lang('admin::extensions.alert_success'), "Extension {$extension_name} deleted "));
+            flash()->success(sprintf(lang('admin::default.alert_success'), "Extension {$extension_name} deleted "));
         }
         else {
-            flash()->set('danger', lang('admin::extensions.alert_error_try_again'));
+            flash()->danger(lang('admin::default.alert_error_try_again'));
         }
 
         return $this->redirectBack();
@@ -308,9 +320,11 @@ class Extensions extends \Admin\Classes\AdminController
 
     protected function createModel($class)
     {
-        if (!strlen($class) OR !class_exists($class)) {
-            throw new Exception(sprintf(lang('admin::extensions.alert_setting_missing_model'), $class));
-        }
+        if (!strlen($class))
+            throw new Exception(lang('system::extensions.alert_setting_model_missing'));
+
+        if (!class_exists($class))
+            throw new Exception(sprintf(lang('system::extensions.alert_setting_model_not_found'), $class));
 
         $model = new $class;
 
@@ -326,7 +340,7 @@ class Extensions extends \Admin\Classes\AdminController
         $result = $query->where('name', $settingItem->owner)->first();
 
         if (!$result) {
-            throw new Exception(lang('admin::extensions.alert_setting_not_found'));
+            throw new Exception(lang('system::extensions.alert_setting_not_found'));
         }
 
         return $result;
@@ -350,13 +364,13 @@ class Extensions extends \Admin\Classes\AdminController
             return FALSE;
 
         if (preg_match('/\s/', $zip['name'])) {
-            flash()->set('danger', lang('admin::extensions.error_upload_name'));
+            flash()->danger(lang('system::extensions.error_upload_name'));
 
             return FALSE;
         }
 
         if ($zip['type'] !== 'application/zip') {
-            flash()->set('danger', lang('admin::extensions.error_upload_type'));
+            flash()->danger(lang('system::extensions.error_upload_type'));
 
             return FALSE;
         }
@@ -367,13 +381,13 @@ class Extensions extends \Admin\Classes\AdminController
         $zip['name'] = basename($filename, '.zip');
 
         if (!empty($zip['error'])) {
-            flash()->set('danger', lang('admin::extensions.error_php_upload').$zip['error']);
+            flash()->danger(lang('system::extensions.error_php_upload').$zip['error']);
 
             return FALSE;
         }
 
         if (ExtensionManager::instance()->hasExtension($zip['name'])) {
-            flash()->set('danger', sprintf(lang('admin::extensions.alert_error'), lang('admin::extensions.error_extension_exists')));
+            flash()->danger(sprintf(lang('system::extensions.alert_error'), lang('system::extensions.error_extension_exists')));
 
             return FALSE;
         }

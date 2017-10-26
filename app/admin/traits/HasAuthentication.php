@@ -56,6 +56,5 @@ trait HasAuthentication
     {
         return $this->currentUser;
     }
-
 }
 

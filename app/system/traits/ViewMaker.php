@@ -3,14 +3,12 @@
 namespace System\Traits;
 
 use Exception;
-use Log;
-use SystemException;
 use File;
 use Lang;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
+use SystemException;
 use Template;
 use Throwable;
-use View;
 
 trait ViewMaker
 {
@@ -42,7 +40,7 @@ trait ViewMaker
     /**
      * @var bool Prevents the use of a layout.
      */
-    public $suppressLayout = false;
+    public $suppressLayout = FALSE;
 
     protected $viewFileExtension = ".php";
 
@@ -65,7 +63,7 @@ trait ViewMaker
             $viewPath = [$viewPath];
 
         foreach ($viewPath as $path) {
-            $_view = File::symbolizePath($path) . '/' . $view;
+            $_view = File::symbolizePath($path).'/'.$view;
             if (File::isFile($_view)) {
                 return $_view;
             }
@@ -101,6 +99,7 @@ trait ViewMaker
      * @param bool $throwException Throw an exception if the layout is not found
      *
      * @return mixed The layout contents, or false.
+     * @throws \SystemException
      */
     public function makeLayout($name = null, $vars = [], $throwException = TRUE)
     {
@@ -218,10 +217,10 @@ trait ViewMaker
     /**
      * Handle a view exception.
      *
-     * @param  \Exception  $e
-     * @param  int  $obLevel
-     * @return void
+     * @param  \Exception $e
+     * @param  int $obLevel
      *
+     * @return void
      */
     protected function handleViewException($e, $obLevel)
     {
@@ -231,5 +230,4 @@ trait ViewMaker
 
         throw $e;
     }
-
 }

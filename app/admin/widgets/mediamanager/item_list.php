@@ -6,5 +6,5 @@
     <?php } else { ?>
         <p><?php echo lang('text_empty'); ?></p>
     <?php } ?>
-    
+
 </div>

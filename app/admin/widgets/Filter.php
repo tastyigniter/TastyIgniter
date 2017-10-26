@@ -2,11 +2,11 @@
 
 namespace Admin\Widgets;
 
+use Admin\Classes\BaseWidget;
+use Admin\Classes\FilterScope;
+use DB;
 use Event;
 use Exception;
-use Admin\Classes\FilterScope;
-use Admin\Classes\BaseWidget;
-use DB;
 use Request;
 
 /**
@@ -15,7 +15,6 @@ use Request;
  */
 class Filter extends BaseWidget
 {
-
     /**
      * @var array|string Search widget configuration or partial name, optional.
      */
@@ -562,7 +561,7 @@ class Filter extends BaseWidget
     {
         $cookiePrefix = setting('cookie_prefix');
 
-        return (bool) Request::cookie($cookiePrefix.'displayFilterPanel');
+        return (bool)Request::cookie($cookiePrefix.'displayFilterPanel');
     }
 
     /**

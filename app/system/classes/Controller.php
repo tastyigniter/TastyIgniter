@@ -7,7 +7,6 @@ use Igniter\Flame\Support\RouterHelper;
 use Igniter\Flame\Traits\ExtendableTrait;
 use Illuminate\Routing\Controller as IlluminateController;
 use Response;
-use Str;
 use View;
 
 /**

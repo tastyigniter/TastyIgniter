@@ -1,6 +1,5 @@
 <?php namespace Admin\FormWidgets;
 
-use Event;
 use Admin\Classes\BaseFormWidget;
 
 /**
@@ -20,7 +19,7 @@ class RichEditor extends BaseFormWidget
     /**
      * @var boolean Determines whether content has HEAD and HTML tags.
      */
-    public $fullPage = false;
+    public $fullPage = FALSE;
 
     public $toolbarButtons = null;
 
@@ -41,6 +40,7 @@ class RichEditor extends BaseFormWidget
     public function render()
     {
         $this->prepareVars();
+
         return $this->makePartial('richeditor/richeditor');
     }
 
@@ -75,7 +75,7 @@ class RichEditor extends BaseFormWidget
         $buttons = $this->toolbarButtons;
 
         if (is_string($buttons)) {
-            $buttons = array_map(function($button) {
+            $buttons = array_map(function ($button) {
                 return strlen($button) ? $button : '|';
             }, explode('|', $buttons));
         }

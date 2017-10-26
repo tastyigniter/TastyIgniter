@@ -11,7 +11,6 @@ use System\Models\Settings_model;
  */
 class StarRating extends BaseFormWidget
 {
-
     /**
      * @var array Default available hints
      */
@@ -33,6 +32,7 @@ class StarRating extends BaseFormWidget
     public function render()
     {
         $this->prepareVars();
+
         return $this->makePartial('starrating/starrating');
     }
 
@@ -67,6 +67,7 @@ class StarRating extends BaseFormWidget
     protected function getHints()
     {
         $result = Settings_model::where('sort', 'ratings')->first();
+
         return array_get($result->value, 'ratings', []);
     }
 }

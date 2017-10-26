@@ -1,11 +1,11 @@
 <?php
 $config['list']['columns'] = [
-    'date_added'     => [
+    'date_added'      => [
         'label'      => 'lang:system::activities.column_date_added',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'message'  => [
+    'message'         => [
         'label'      => 'lang:system::activities.column_message',
         'type'       => 'text',
         'searchable' => TRUE,
@@ -19,7 +19,7 @@ $config['list']['columns'] = [
         'label' => 'lang:system::activities.column_notify',
         'type'  => 'switch',
     ],
-    'activity_id'       => [
+    'activity_id'     => [
         'label'     => 'lang:system::activities.column_id',
         'invisible' => TRUE,
     ],

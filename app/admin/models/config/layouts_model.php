@@ -71,10 +71,10 @@ $config['form']['tabs']['fields'] = [
                 'module_code'                  => ['type' => 'hidden',],
                 'partial'                      => ['type' => 'hidden',],
                 'alias'                        => [
-                    'label' => 'lang:admin::layouts.label_module_alias',
-                    'type'  => 'text',
-                    'attributes'  => [
-                        'data-toggle' => 'disabled'
+                    'label'      => 'lang:admin::layouts.label_module_alias',
+                    'type'       => 'text',
+                    'attributes' => [
+                        'data-toggle' => 'disabled',
                     ],
                 ],
                 'options[title]'               => [
@@ -87,10 +87,10 @@ $config['form']['tabs']['fields'] = [
                     'span'  => 'left',
                 ],
                 'status'                       => [
-                    'label' => 'lang:admin::layouts.label_module_status',
-                    'type'  => 'switch',
-                    'span'  => 'right',
-                    'default'  => TRUE,
+                    'label'   => 'lang:admin::layouts.label_module_status',
+                    'type'    => 'switch',
+                    'span'    => 'right',
+                    'default' => TRUE,
                 ],
                 'options[fixed_top_offset]'    => [
                     'label'   => 'lang:admin::layouts.label_fixed_top',

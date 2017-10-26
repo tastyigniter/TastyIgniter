@@ -2,13 +2,13 @@
 
 namespace System\Classes;
 
+use Exception;
 use Igniter\Flame\Support\Extendable;
-use Request;
 use Igniter\Flame\Traits\EventEmitter;
+use Request;
 
 /**
  * Base Controller Class
- *
  * @package System
  */
 class BaseController extends Extendable
@@ -90,13 +90,14 @@ class BaseController extends Extendable
     public function checkAction($action)
     {
         if (!$methodExists = $this->methodExists($action))
-            return false;
+            return FALSE;
 
         if (in_array(strtolower($action), array_map('strtolower', $this->hiddenActions)))
-            return false;
+            return FALSE;
 
         if ($ownMethod = method_exists($this, $action)) {
             $methodInfo = new \ReflectionMethod($this, $action);
+
             return $methodInfo->isPublic();
         }
 
@@ -108,16 +109,6 @@ class BaseController extends Extendable
         return site_url($uri, $protocol);
     }
 
-    protected function showProfiler()
-    {
-        if (TI_DEBUG == TRUE AND !is_cli() AND !$this->input->is_ajax_request()) {
-            if (!class_exists('Console', FALSE))
-                $this->load->library('Console');
-
-            $this->output->enable_profiler(TI_DEBUG);
-        }
-    }
-
     public function setStatusCode($code)
     {
         $this->statusCode = $code;
@@ -126,15 +117,17 @@ class BaseController extends Extendable
     /**
      * Sets standard page variables in the case of a controller error.
      *
-     * @param $exception
+     * @param \Exception $exception
+     *
+     * @throws \Exception
      */
-    public function handleError($exception)
+    public function handleError(Exception $exception)
     {
         $errorMessage = $exception->getMessage();
         $this->fatalError = $errorMessage;
         if (!Request::ajax())
             throw $exception;
 
-        flash()->set('error', $errorMessage);
+        flash()->error($errorMessage);
     }
 }

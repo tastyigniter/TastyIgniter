@@ -57,7 +57,7 @@ class Pages extends \Admin\Classes\AdminController
         $rules[] = ['meta_description', 'lang:admin::pages.label_meta_description', 'min:2|max:255'];
         $rules[] = ['meta_keywords', 'lang:admin::pages.label_meta_keywords', 'min:2|max:255'];
         $rules[] = ['layout_id', 'lang:admin::pages.label_layout', 'integer'];
-        $rules[] = ['navigation[]', 'lang:admin::pages.label_navigation', 'required'];
+        $rules[] = ['navigation.*', 'lang:admin::pages.label_navigation', 'required'];
         $rules[] = ['status', 'lang:admin::default.label_status', 'required|integer'];
 
         return $this->validatePasses($form->getSaveData(), $rules);

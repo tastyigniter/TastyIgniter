@@ -1,8 +1,6 @@
 <?php namespace Admin\FormWidgets;
 
-use Event;
 use Admin\Classes\BaseFormWidget;
-use Exception;
 
 /**
  * Record Finder
@@ -250,11 +248,13 @@ class RecordFinder extends BaseFormWidget
             $widget->bindEvent('list.extendQueryBefore', function ($query) use ($sqlConditions) {
                 $query->whereRaw($sqlConditions);
             });
-        } elseif ($scopeMethod = $this->scope) {
+        }
+        elseif ($scopeMethod = $this->scope) {
             $widget->bindEvent('list.extendQueryBefore', function ($query) use ($scopeMethod) {
                 $query->$scopeMethod();
             });
-        } else {
+        }
+        else {
             $widget->bindEvent('list.extendQueryBefore', function ($query) {
                 $this->getRelationObject()->addDefinedConstraintsToQuery($query);
             });

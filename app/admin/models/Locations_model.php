@@ -2,10 +2,10 @@
 
 use Admin\Classes\PaymentGateways;
 use DB;
-use Model;
-use Igniter\Flame\Permalink\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Permalink\Traits\HasPermalink;
 use Igniter\Libraries\Location\Location;
+use Model;
 
 /**
  * Locations Model Class
@@ -57,7 +57,7 @@ class Locations_model extends Model
 
     public $permalinkable = [
         'permalink_slug' => [
-            'source' => 'location_name',
+            'source'     => 'location_name',
             'controller' => 'local',
         ],
     ];

@@ -8,7 +8,7 @@
             <div class="checkbox checkbox-primary">
                 <input
                     type="checkbox" id="<?= 'checkboxAll-'.$listId ?>"
-                    class="styled" onclick="$('input[name*=\'checked\']').prop('checked', this.checked);"/>
+                    class="styled" onclick="$('input[name*=\'checked\']').prop('checked', this.checked)"/>
                 <label for="<?= 'checkboxAll-'.$listId ?>"></label>
             </div>
         </th>
@@ -20,7 +20,9 @@
         <?php } else if ($showSorting AND $column->sortable) { ?>
             <th
                 class="list-cell-name-<?= $column->getName() ?> list-cell-type-<?= $column->type ?> <?= $column->cssClass ?>"
-                <?php if ($column->width) {echo 'style="width: '.$column->width.'"';} ?>>
+                <?php if ($column->width) {
+                    echo 'style="width: '.$column->width.'"';
+                } ?>>
                 <a
                     class="sort"
                     data-request="<?= $this->getEventHandler('onSort') ?>"

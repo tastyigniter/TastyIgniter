@@ -17,45 +17,45 @@ $config['list']['toolbar'] = [
     'buttons' => [
         'upload' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'themes/upload'],
         'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
-        'check' => ['label' => 'lang:system::themes.button_check', 'class' => 'btn btn-success pull-right', 'href' => 'updates'],
+        'check'  => ['label' => 'lang:system::themes.button_check', 'class' => 'btn btn-success pull-right', 'href' => 'updates'],
         'browse' => ['label' => 'lang:system::themes.button_browse', 'class' => 'btn btn-default pull-right', 'href' => 'updates/browse/themes'],
     ],
 ];
 
 $config['list']['columns'] = [
-    'edit'          => [
+    'edit'     => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-outline btn-default',
-            'href' => 'themes/edit/{code}',
+        'attributes'   => [
+            'class' => 'btn btn-outline btn-default',
+            'href'  => 'themes/edit/{code}',
         ],
     ],
-    'default'          => [
+    'default'  => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-star',
-        'attributes'      => [
-            'class'     => 'btn btn-outline btn-warning',
-            'title' => 'lang:system::themes.text_set_default',
+        'attributes'   => [
+            'class'             => 'btn btn-outline btn-warning',
+            'title'             => 'lang:system::themes.text_set_default',
             'data-request'      => 'onSetDefault',
             'data-request-form' => '#list-form',
             'data-request-data' => 'code:\'{code}\'',
         ],
     ],
-    'copy'          => [
+    'copy'     => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-files-o',
-        'attributes'      => [
-            'class'     => 'btn btn-outline btn-info',
-            'href' => 'themes/copy/{code}',
+        'attributes'   => [
+            'class' => 'btn btn-outline btn-info',
+            'href'  => 'themes/copy/{code}',
         ],
     ],
-    'delete'          => [
+    'delete'   => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-trash-o',
-        'attributes'      => [
-            'class'     => 'btn btn-outline btn-danger',
-            'href' => 'themes/delete/{code}',
+        'attributes'   => [
+            'class' => 'btn btn-outline btn-danger',
+            'href'  => 'themes/delete/{code}',
         ],
     ],
     'name'     => [
@@ -63,7 +63,7 @@ $config['list']['columns'] = [
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'theme_id'       => [
+    'theme_id' => [
         'label'     => 'lang:system::themes.column_id',
         'invisible' => TRUE,
     ],
@@ -85,22 +85,22 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'name' => [
-        'label' => 'lang:system::themes.label_name',
-        'type' => 'text',
-        'span' => 'left',
-        'disabled' => true,
+        'label'    => 'lang:system::themes.label_name',
+        'type'     => 'text',
+        'span'     => 'left',
+        'disabled' => TRUE,
     ],
     'code' => [
-        'label' => 'lang:system::themes.label_code',
-        'type' => 'text',
-        'span' => 'right',
-        'disabled' => true,
+        'label'    => 'lang:system::themes.label_code',
+        'type'     => 'text',
+        'span'     => 'right',
+        'disabled' => TRUE,
     ],
 ];
 
 $config['form']['tabs'] = [
     'fields' => [
-        'source'    => [
+        'source' => [
             'tab'  => 'lang:system::themes.text_tab_edit_source',
             'type' => 'partial',
             'path' => 'themes/source_editor',

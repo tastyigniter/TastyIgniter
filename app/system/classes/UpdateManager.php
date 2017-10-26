@@ -5,10 +5,8 @@ use Config;
 use Exception;
 use File;
 use Igniter\Flame\Traits\Singleton;
-use Schema;
-use System\Classes\ExtensionManager;
-use System\Models\Settings_model;
 use Main\Classes\ThemeManager;
+use Schema;
 use ZipArchive;
 
 /**
@@ -83,6 +81,7 @@ class UpdateManager
     public function log($message)
     {
         $this->logs[] = $message;
+
         return $this;
     }
 
@@ -92,6 +91,7 @@ class UpdateManager
     public function resetLogs()
     {
         $this->logs = [];
+
         return $this;
     }
 
@@ -137,9 +137,9 @@ class UpdateManager
 
         // Seed app
 //        if ($this->repository->wasFreshlyMigrated) {
-            foreach ($modules as $module) {
-                $this->seedApp($module);
-            }
+        foreach ($modules as $module) {
+            $this->seedApp($module);
+        }
 //        }
 
         // Update extensions
@@ -157,6 +157,7 @@ class UpdateManager
 
         if ($hasColumn = Schema::hasColumns($migrationTable, ['group', 'batch'])) {
             $this->log('Migration table already created');
+
             return;
         }
 
@@ -184,20 +185,22 @@ class UpdateManager
     {
         $className = '\\'.$app.'\Database\Seeds\DatabaseSeeder';
         if (!class_exists($className))
-            return;
+            return false;
 
         $seeder = App::make($className);
         $seeder->run();
 
         $this->log(sprintf('<info>Seeded %s</info> ', $app));
+
         return $this;
     }
 
     public function migrateExtension($name)
     {
         if (!($extension = $this->extensionManager->findExtension($name))) {
-            $this->log('<error>Unable to find:</error> ' . $name);
-            return;
+            $this->log('<error>Unable to find:</error> '.$name);
+
+            return false;
         }
 
         if (File::exists($path = $this->getMigrationPath($name))) {
@@ -215,8 +218,9 @@ class UpdateManager
     public function purgeExtension($name)
     {
         if (!($extension = $this->extensionManager->findExtension($name))) {
-            $this->log('<error>Unable to find:</error> ' . $name);
-            return;
+            $this->log('<error>Unable to find:</error> '.$name);
+
+            return false;
         }
 
         if (File::exists($path = $this->getMigrationPath($name))) {
@@ -338,7 +342,7 @@ class UpdateManager
     {
         // Delete setting entry as its no longer in use... remove code in next version
 //        if ($this->config->item('last_version_check'))
-            params()->forget('prefs', 'last_version_check');
+        params()->forget('prefs', 'last_version_check');
 
         $installedItems = $this->getInstalledItems();
 
@@ -565,7 +569,7 @@ class UpdateManager
                 if (substr($filename, -1) == '/') {
                     // Delete existing directory to replace all contents
                     if (!is_dir($relativePath))
-                        mkdir($relativePath, DIR_WRITE_MODE, TRUE);
+                        mkdir($relativePath, 0777, TRUE);
                 }
                 else {
                     $this->copyFiles("zip://".$zipPath."#".$filename, $relativePath);

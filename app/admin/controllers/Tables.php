@@ -76,7 +76,7 @@ class Tables extends \Admin\Classes\AdminController
             }
         }
 
-        $this->output->set_output(json_encode($json));
+        return $json;
     }
 
     public function formValidate($model, $form)
@@ -99,7 +99,7 @@ class Tables extends \Admin\Classes\AdminController
 
     protected function capacityIsInvalid()
     {
-        if (post('Table[max_capacity]') < post('Table[min_capacity]')) {
+        if (post('Table.max_capacity') < post('Table.min_capacity')) {
             return lang('admin::tables.error_capacity');
         }
 

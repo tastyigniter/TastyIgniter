@@ -19,7 +19,7 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'title'        => [
+    'title'       => [
         'label' => 'lang:system::mail_templates.label_name',
         'span'  => 'left',
         'type'  => 'text',
@@ -29,40 +29,40 @@ $config['form']['fields'] = [
         'span'  => 'right',
         'type'  => 'text',
     ],
-    'subject'        => [
+    'subject'     => [
         'label' => 'lang:system::mail_templates.label_subject',
         'span'  => 'left',
         'type'  => 'text',
     ],
-    'template_id'        => [
-        'label' => 'lang:system::mail_templates.label_layout',
-        'span'  => 'right',
-        'type'  => 'relation',
-        'relationFrom'  => 'template',
+    'template_id' => [
+        'label'        => 'lang:system::mail_templates.label_layout',
+        'span'         => 'right',
+        'type'         => 'relation',
+        'relationFrom' => 'template',
         'placeholder'  => 'lang:admin::default.text_please_select',
     ],
 ];
 
 $config['form']['tabs'] = [
     'fields' => [
-        'body' => [
-            'tab'    => 'lang:system::mail_templates.label_body',
-            'type'      => 'richeditor',
+        'body'       => [
+            'tab'  => 'lang:system::mail_templates.label_body',
+            'type' => 'richeditor',
         ],
         'plain_body' => [
-            'tab'    => 'lang:system::mail_templates.label_plain_body',
-            'type'      => 'textarea',
+            'tab'        => 'lang:system::mail_templates.label_plain_body',
+            'type'       => 'textarea',
             'attributes' => [
-                'rows'      => 10
+                'rows' => 10,
             ],
         ],
-        'variables' => [
-            'tab'    => 'lang:system::mail_templates.text_variables',
-            'type'      => 'partial',
-            'path'      => 'mailtemplates/variables',
-            'disabled'      => true,
+        'variables'  => [
+            'tab'      => 'lang:system::mail_templates.text_variables',
+            'type'     => 'partial',
+            'path'     => 'mailtemplates/variables',
+            'disabled' => TRUE,
         ],
-    ]
+    ],
 ];
 
 return $config;

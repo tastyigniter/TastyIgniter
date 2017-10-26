@@ -1,7 +1,7 @@
 <?php namespace Admin\Models;
 
-use Model;
 use Igniter\Flame\Database\Traits\Sortable;
+use Model;
 
 /**
  * MenuOptions Model Class
@@ -35,5 +35,4 @@ class Menu_item_option_values_model extends Model
             'menu_option_value' => ['Admin\Models\Menu_item_option_values_model'],
         ],
     ];
-
 }

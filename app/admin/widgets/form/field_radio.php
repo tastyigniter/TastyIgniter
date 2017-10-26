@@ -7,7 +7,8 @@ $fieldOptions = $field->options();
             id="<?= $field->getId() ?>"
             class="btn-group"
             data-toggle="buttons">
-            <?php $index = 0; foreach ($fieldOptions as $key => $value) { ?>
+            <?php $index = 0;
+            foreach ($fieldOptions as $key => $value) { ?>
                 <?php
                 $index++;
                 ?>
@@ -16,7 +17,7 @@ $fieldOptions = $field->options();
                         type="radio"
                         id="<?= $field->getId($index) ?>"
                         name="<?= $field->getName() ?>"
-                        value="<?= $key?>"
+                        value="<?= $key ?>"
                         <?= $field->value == $key ? 'checked="checked"' : '' ?>
                         <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                         <?= $field->getAttributes() ?>>
@@ -37,7 +38,7 @@ $fieldOptions = $field->options();
                     type="radio"
                     id="<?= $field->getId($index) ?>"
                     name="<?= $field->getName() ?>"
-                    value="<?= $key?>"
+                    value="<?= $key ?>"
                     <?= $field->value == $key ? 'checked="checked"' : '' ?>
                     <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                     <?= $field->getAttributes() ?>>

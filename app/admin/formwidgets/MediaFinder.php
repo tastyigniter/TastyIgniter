@@ -15,7 +15,7 @@ use System\Libraries\MediaManager;
  *        type: mediafinder
  *        mode: inline
  *        prompt: Click the %s button to find a user
- * 
+ *
  * @package Admin
  */
 class MediaFinder extends BaseFormWidget
@@ -50,13 +50,14 @@ class MediaFinder extends BaseFormWidget
             'mode',
             'blankImage',
             'isMulti',
-            'prompt'
+            'prompt',
         ]);
     }
 
     public function render()
     {
         $this->prepareVars();
+
         return $this->makePartial('mediafinder/mediafinder');
     }
 
@@ -80,7 +81,8 @@ class MediaFinder extends BaseFormWidget
         $this->addCss('css/mediafinder.css', 'mediafinder-css');
     }
 
-    public function resizeImage($image) {
+    public function resizeImage($image)
+    {
         $image = trim($image, '/');
 
         $rootFolder = MediaManager::instance()->getRootFolder();

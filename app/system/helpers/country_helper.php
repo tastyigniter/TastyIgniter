@@ -2,15 +2,13 @@
 
 /**
  * Country helper functions
- *
  * @package System
  */
 
 if (!function_exists('format_address')) {
 
-    function format_address($address, $useLineBreaks = true)
+    function format_address($address, $useLineBreaks = TRUE)
     {
-        get_instance()->load->library('country');
-        return get_instance()->country->addressFormat($address, $useLineBreaks);
+        return app('country')->addressFormat($address, $useLineBreaks);
     }
 }

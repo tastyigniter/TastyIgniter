@@ -44,7 +44,7 @@ class Maintenance extends \Admin\Classes\AdminController
 
             $maintenanceModel = $this->createModel();
             if ($maintenanceModel->backupDatabase(post())) {
-                flash()->set('success', sprintf(lang('admin::default.alert_success'), 'Database backed up '));
+                flash()->success(sprintf(lang('admin::default.alert_success'), 'Database backed up '));
             }
 
             $this->refresh();
@@ -56,13 +56,13 @@ class Maintenance extends \Admin\Classes\AdminController
         if (post('file')) {
             $maintenanceModel = $this->createModel();
             if ($this->config->item('maintenance_mode') != '1') {
-                flash()->set('warning', sprintf(lang('system::maintenance.alert_warning_maintenance'), 'restore'));
+                flash()->warning(sprintf(lang('system::maintenance.alert_warning_maintenance'), 'restore'));
             }
             else if ($maintenanceModel->restoreDatabase(post('file'))) { // calls model to save data to SQL
-                flash()->set('success', sprintf(lang('admin::default.alert_success'), 'Database restored '));
+                flash()->success(sprintf(lang('admin::default.alert_success'), 'Database restored '));
             }
             else {
-                flash()->set('warning', sprintf(lang('admin::default.alert_error_nothing'), 'restored'));
+                flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), 'restored'));
             }
 
             $this->refresh();
@@ -84,7 +84,7 @@ class Maintenance extends \Admin\Classes\AdminController
         if (post('file')) {
             $maintenanceModel = $this->createModel();
             if ($result = $maintenanceModel->deleteBackupFile(post('file'))) {
-                flash()->set('success', sprintf(lang('admin::default.alert_success'), 'Database backup deleted '));
+                flash()->success(sprintf(lang('admin::default.alert_success'), 'Database backup deleted '));
             }
 
             $this->refresh();

@@ -1,11 +1,10 @@
 <?php namespace System\Models;
 
-use Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Model;
 
 /**
  * Message Meta Model Class
- *
  * @package System
  */
 class Message_meta_model extends Model
@@ -15,24 +14,24 @@ class Message_meta_model extends Model
     const DELETED_AT = 'date_deleted';
 
     /**
-	 * @var string The database table name
-	 */
-	protected $table = 'message_meta';
+     * @var string The database table name
+     */
+    protected $table = 'message_meta';
 
-	protected $primaryKey = 'message_meta_id';
+    protected $primaryKey = 'message_meta_id';
 
-	protected $fillable = ['message_meta_id', 'message_id', 'messageable_id', 'messageable_type', 'state', 'status'];
+    protected $fillable = ['message_meta_id', 'message_id', 'messageable_id', 'messageable_type', 'state', 'status'];
 
-	public $relation = [
-	    'morphTo' => [
-	        'messageable' => []
-        ]
+    public $relation = [
+        'morphTo' => [
+            'messageable' => [],
+        ],
     ];
 
-	protected $with = ['messageable'];
+    protected $with = ['messageable'];
 
     public function scopeIsUnread($query)
     {
         return $query->where('state', '!=', '1');
-	}
+    }
 }

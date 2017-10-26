@@ -2,14 +2,13 @@
 
 namespace Admin\Widgets;
 
-use Event;
-use Exception;
+use Admin\Classes\BaseWidget;
 use Admin\Classes\FormField;
 use Admin\Classes\FormTabs;
-use Admin\Classes\BaseWidget;
 use Admin\Classes\Widgets;
+use Event;
+use Exception;
 use Model;
-use Request;
 
 class Form extends BaseWidget
 {

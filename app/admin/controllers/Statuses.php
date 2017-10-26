@@ -58,7 +58,7 @@ class Statuses extends \Admin\Classes\AdminController
 
             $json = ['comment' => $status['status_comment'], 'notify' => $status['notify_customer']];
 
-            $this->output->set_output(json_encode($json));
+            return $json;
         }
     }
 

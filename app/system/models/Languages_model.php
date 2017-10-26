@@ -1,7 +1,7 @@
 <?php namespace System\Models;
 
-use Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Model;
 
 /**
  * Languages Model Class
@@ -152,62 +152,5 @@ class Languages_model extends Model
     public function isDefault()
     {
         return ($this->language_id == 11);
-    }
-
-    /**
-     * Return all enabled languages
-     * @return array
-     */
-    public function getLanguages()
-    {
-        return $this->isEnabled()->get();
-    }
-
-    /**
-     * Find a single language by language_id
-     *
-     * @param int $language_id
-     *
-     * @return mixed
-     */
-    public function getLanguage($language_id)
-    {
-        return $this->findOrNew($language_id)->toArray();
-    }
-
-    /**
-     * Create a new or update existing language, skips validation
-     *
-     * @param int $language_id
-     * @param array $save
-     *
-     * @return bool|int The $language_id of the affected row, or FALSE on failure
-     */
-    public function saveLanguage($language_id, $save = [])
-    {
-        if (empty($save)) return FALSE;
-
-        $languageModel = $this->findOrNew($language_id);
-
-        $saved = $languageModel->fill($save)->save();
-
-        return $saved ? $languageModel->getKey() : $saved;
-    }
-
-    /**
-     * Delete a single or multiple language by language_id
-     *
-     * @param string|array $language_id
-     *
-     * @return int The number of deleted rows
-     */
-    public function deleteLanguage($language_id)
-    {
-        if (is_numeric($language_id)) $language_id = [$language_id];
-
-        if (!empty($language_id) AND ctype_digit(implode('', $language_id))) {
-            return $this->where('language_id', '!=', '11')->where('can_delete', '0')
-                        ->whereIn('language_id', $language_id)->delete();
-        }
     }
 }

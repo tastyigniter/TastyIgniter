@@ -1,12 +1,13 @@
 <?php namespace Admin\Actions;
 
 use Admin\Classes\AdminController;
+use Admin\Classes\FormField;
 use Admin\Traits\FormExtendable;
 use Admin\Widgets\Toolbar;
-use Event;
 use Exception;
-use Admin\Classes\FormField;
+use Igniter\Flame\Database\Builder;
 use Model;
+use Redirect;
 use System\Classes\ControllerAction;
 use Template;
 
@@ -125,7 +126,7 @@ class FormController extends ControllerAction
     /**
      * Prepare the widgets used by this action
      *
-     * @param Model $model
+     * @param \Model $model
      *
      * @return void
      */
@@ -215,9 +216,8 @@ class FormController extends ControllerAction
         $model = $this->controller->formExtendModel($model) ?: $model;
         $this->initForm($model, $context);
 
-        $validate = $this->controller->formValidate($model, $this->formWidget);
-        if ($validate === FALSE)
-            return;
+        if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
+            return false;
 
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeCreate($model);
@@ -231,7 +231,7 @@ class FormController extends ControllerAction
         $this->controller->formAfterCreate($model);
 
         $title = sprintf(lang('admin::default.form.create_success'), lang($this->getConfig('name')));
-        flash()->set('success', lang($this->getConfig('create[flashSave]', $title)));
+        flash()->success(sprintf(lang($this->getConfig('create[flashSave]'), $title)));
 
         if ($redirect = $this->makeRedirect('create', $model)) {
             return $redirect;
@@ -260,9 +260,8 @@ class FormController extends ControllerAction
         $model = $this->controller->formFindModelObject($recordId);
         $this->initForm($model, $context);
 
-        $validate = $this->controller->formValidate($model, $this->formWidget);
-        if ($validate === FALSE)
-            return;
+        if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
+            return false;
 
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeUpdate($model);
@@ -276,7 +275,7 @@ class FormController extends ControllerAction
         $this->controller->formAfterUpdate($model);
 
         $title = sprintf(lang('admin::default.form.edit_success'), lang($this->getConfig('name')));
-        flash()->set('success', sprintf($this->getConfig('edit[flashSave]', $title)));
+        flash()->success(sprintf($this->getConfig('edit[flashSave]', $title)));
 
         if ($redirect = $this->makeRedirect('edit', $model)) {
             return $redirect;
@@ -291,13 +290,13 @@ class FormController extends ControllerAction
         $this->initForm($model, $context);
 
         if (!$model->delete()) {
-            flash()->set('warning', lang('admin::default.form.delete_failed'));
+            flash()->warning(lang('admin::default.form.delete_failed'));
         }
         else {
             $this->controller->formAfterDelete($model);
 
             $title = lang($this->getConfig('name'));
-            flash()->set('success', sprintf(lang($this->getConfig('edit[flashDelete]', 'admin::default.form.delete_success')), $title));
+            flash()->success(sprintf(lang($this->getConfig('edit[flashDelete]', 'admin::default.form.delete_success')), $title));
         }
 
         if ($redirect = $this->makeRedirect('delete', $model)) {

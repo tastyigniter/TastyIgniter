@@ -11,6 +11,7 @@ use Model;
 class Orders_model extends Model
 {
     const DELIVERY = 'delivery';
+
     const COLLECTION = 'collection';
 
     protected static $orderTypes = [1 => self::DELIVERY, 2 => self::COLLECTION];
@@ -38,6 +39,7 @@ class Orders_model extends Model
     public $timestamps = TRUE;
 
     const CREATED_AT = 'date_added';
+
     const UPDATED_AT = 'date_modified';
 
     public $casts = [
@@ -46,16 +48,16 @@ class Orders_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'customer' => 'Admin\Models\Customers_model',
-            'location' => 'Admin\Models\Locations_model',
-            'status'   => 'Admin\Models\Statuses_model',
-            'assignee'   => 'Admin\Models\Staffs_model',
-            'payment_method'   => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
+            'customer'       => 'Admin\Models\Customers_model',
+            'location'       => 'Admin\Models\Locations_model',
+            'status'         => 'Admin\Models\Statuses_model',
+            'assignee'       => 'Admin\Models\Staffs_model',
+            'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
             'payment_logs'   => 'Admin\Models\Payment_logs_model',
         ],
         'morphMany' => [
-            'review' => ['Admin\Models\Reviews_model'],
-            'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object']
+            'review'         => ['Admin\Models\Reviews_model'],
+            'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
         ],
     ];
 
@@ -150,10 +152,12 @@ class Orders_model extends Model
 
         if (APPDIR === MAINDIR) {
             $query->where('orders.status_id', '!=', '0');
-        } else {
+        }
+        else {
             if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
                 $query->where('orders.status_id', $filter['filter_status']);
-            } else {
+            }
+            else {
                 $query->where('orders.status_id', '!=', '0');
             }
         }
@@ -666,7 +670,8 @@ class Orders_model extends Model
                         $total['title'] = empty($total['title']) ? $order_total['title'] : $total['title'];
                         if (isset($total['code'])) {
                             $total['title'] = str_replace('{coupon}', $total['code'], $total['title']);
-                        } else if (isset($total['tax'])) {
+                        }
+                        else if (isset($total['tax'])) {
                             $total['title'] = str_replace('{tax}', $total['tax'], $total['title']);
                         }
 
@@ -822,7 +827,8 @@ class Orders_model extends Model
             $payments = PaymentGateways::instance()->listGateways();
             if (isset($payments[$result['payment']]) AND $payment = $payments[$result['payment']]) {
                 $data['order_payment'] = !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'];
-            } else {
+            }
+            else {
                 $data['order_payment'] = lang('admin::orders.text_no_payment');
             }
 
@@ -913,7 +919,8 @@ class Orders_model extends Model
         if (!$this->email->send()) {
             log_message('error', $this->email->print_debugger(['headers']));
             $notify = '0';
-        } else {
+        }
+        else {
             $notify = '1';
         }
 

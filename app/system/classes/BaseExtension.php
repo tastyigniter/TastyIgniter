@@ -6,6 +6,7 @@ use Exception;
 use File;
 use Illuminate\Support\ServiceProvider;
 use Lang;
+use ReflectionClass;
 use SystemException;
 
 /**
@@ -37,16 +38,13 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Register method called when the extension is first installed.
-     * Use migrations to manage database updates instead...
-     * @return array
      */
     public function register()
     {
     }
 
     /**
-     * Boot method, called right before the request route.
-     * @return array
+     * Initialize method, called right before the request route.
      */
     public function initialize()
     {
@@ -78,10 +76,11 @@ class BaseExtension extends ServiceProvider
 
         if (isset($config['layout_ready']) AND !empty($config['extension_meta']['type']) AND $config['extension_meta']['type'] == 'module') {
             $reflection = new ReflectionClass(get_class($this));
+            $vendor = basename(dirname(dirname($reflection->getFileName())));
             $_module = basename(dirname($reflection->getFileName()));
             $_class = ucfirst($_module);
 
-            return ["{$_module}/components/{$_class}" => ['code' => $_module]];
+            return ["{$vendor}/{$_module}/components/{$_class}" => ['code' => $vendor.'.'.$_module]];
         }
 
         return [];
@@ -99,10 +98,11 @@ class BaseExtension extends ServiceProvider
 
         if (isset($config['layout_ready']) AND !empty($config['extension_meta']['type']) AND $config['extension_meta']['type'] == 'payment') {
             $reflection = new ReflectionClass(get_class($this));
-            $_module = dirname($reflection->getFileName());
+            $vendor = basename(dirname(dirname($reflection->getFileName())));
+            $_module = basename(dirname($reflection->getFileName()));
             $_class = ucfirst($_module);
 
-            return ["{$_module}/components/{$_class}" => $_module];
+            return ["{$vendor}/{$_module}/components/{$_class}" => $vendor.'.'.$_module];
         }
 
         return [];
@@ -143,15 +143,25 @@ class BaseExtension extends ServiceProvider
 
         if (!empty($config['extension_meta']['settings'])) {
             $reflection = new ReflectionClass(get_class($this));
+            $vendor = basename(dirname(dirname($reflection->getFileName())));
             $_module = basename(dirname($reflection->getFileName()));
 
             return [
                 'settings' => [
-                    'url' => admin_extension_url('settings/'.$_module),
+                    'url' => admin_url("extensions/settings/{$vendor}/{$_module}"),
                 ],
             ];
         }
 
+        return [];
+    }
+
+    /**
+     * Registers any report widgets provided by this extension.
+     * @return array
+     */
+    public function registerReportWidgets()
+    {
         return [];
     }
 
@@ -225,7 +235,7 @@ class BaseExtension extends ServiceProvider
                      ] as $item) {
 
                 if (!array_key_exists($item, $config)) {
-                    if (!$throwException) return false;
+                    if (!$throwException) return FALSE;
 
                     throw new SystemException(sprintf(
                         Lang::get('system::default.missing.config_key'),

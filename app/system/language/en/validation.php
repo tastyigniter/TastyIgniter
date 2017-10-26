@@ -91,16 +91,16 @@ return [
     'valid_time' => 'The :attribute must contain a valid 24-hour time format.',
     'valid_date' => 'The :attribute field must contain a valid date format.',
 
-/*
-|--------------------------------------------------------------------------
-| Custom Validation Language Lines
-|--------------------------------------------------------------------------
-|
-| Here you may specify custom validation messages for attributes using the
-| convention "attribute.rule" to name the lines. This makes it quick to
-| specify a specific custom language line for a given attribute rule.
-|
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify custom validation messages for attributes using the
+    | convention "attribute.rule" to name the lines. This makes it quick to
+    | specify a specific custom language line for a given attribute rule.
+    |
+    */
 
     'custom' => [
         'attribute-name' => [

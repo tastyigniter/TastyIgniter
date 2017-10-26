@@ -1,11 +1,10 @@
 <?php namespace System\Models;
 
-use Model;
 use Igniter\Flame\Database\Traits\Sortable;
+use Model;
 
 /**
  * SecurityQuestions Model Class
- *
  * @package System
  */
 class Security_questions_model extends Model
@@ -26,7 +25,6 @@ class Security_questions_model extends Model
 
     /**
      * Return all security questions
-     *
      * @return array
      */
     public function getQuestions()
@@ -65,7 +63,7 @@ class Security_questions_model extends Model
             foreach ($questions as $question) {
                 if (!empty($question['text'])) {
                     $this->updateOrCreate([
-                        'question_id' => isset($question['question_id']) ? $question['question_id'] : null
+                        'question_id' => isset($question['question_id']) ? $question['question_id'] : null,
                     ], [
                         'text'     => $question['text'],
                         'priority' => $priority,

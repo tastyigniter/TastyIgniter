@@ -57,9 +57,12 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Initializes configuration data when the payment method is first created.
+     *
      * @param  Model $host
      */
-    public function initConfigData($host){}
+    public function initConfigData($host)
+    {
+    }
 
     /**
      * Reads the contents of the supplied file and applies it to this object.
@@ -164,6 +167,7 @@ class BasePaymentGateway extends ModelAction
         $this->controller->setComponentContext($this);
         $result = call_user_func_array([$this->controller, 'renderPartial'], func_get_args());
         $this->controller->setComponentContext(null);
+
         return $result;
     }
 
@@ -177,7 +181,7 @@ class BasePaymentGateway extends ModelAction
     public function processPaymentForm($data, $host, $order)
     {
     }
-    
+
     /**
      * Creates an instance of the order model
      */
@@ -185,6 +189,7 @@ class BasePaymentGateway extends ModelAction
     {
         $class = '\\'.ltrim($this->orderModel, '\\');
         $model = new $class();
+
         return $model;
     }
 
@@ -195,6 +200,7 @@ class BasePaymentGateway extends ModelAction
     {
         $class = '\\'.ltrim($this->orderStatusModel, '\\');
         $model = new $class();
+
         return $model;
     }
 }

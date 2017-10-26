@@ -6,7 +6,7 @@
             onclick="confirm(
                 '<?= lang('lang:admin::default.alert_warning_confirm'); ?>')
                 ? $(this).parents('#<?= $this->getId('area-'.$areaIndex.'condition-row-'.$index) ?>').remove()
-                : false;">
+                : false">
             <i class="fa fa-times-circle"></i>
         </a>
     </td>

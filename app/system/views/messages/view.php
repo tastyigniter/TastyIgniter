@@ -1,22 +1,22 @@
-    <div class="row-fluid">
-        <?= form_open(current_url(),
-            [
-                'id'   => 'edit-form',
-                'role' => 'form',
-            ],
-            ['_method' => 'PATCH']
-        ); ?>
+<div class="row-fluid">
+    <?= form_open(current_url(),
+        [
+            'id'   => 'edit-form',
+            'role' => 'form',
+        ],
+        ['_method' => 'PATCH']
+    ); ?>
 
-        <?= $this->widgets['toolbar']->render(); ?>
+    <?= $this->widgets['toolbar']->render(); ?>
 
-        <div
-            class="panel-group conversation"
-        >
-            <?= $this->widgets['form']->renderField('conversation', ['useContainer' => FALSE]); ?>
+    <div
+        class="panel-group conversation"
+    >
+        <?= $this->widgets['form']->renderField('conversation', ['useContainer' => FALSE]); ?>
 
-            <div class="conversation-respond">
-                <?= $this->widgets['form']->renderField('respond', ['useContainer' => FALSE]); ?>
-            </div>
+        <div class="conversation-respond">
+            <?= $this->widgets['form']->renderField('respond', ['useContainer' => FALSE]); ?>
         </div>
-        <?= form_close(); ?>
     </div>
+    <?= form_close(); ?>
+</div>

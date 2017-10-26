@@ -1,7 +1,6 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
-use Template;
 
 class SecurityQuestions extends \Admin\Classes\AdminController
 {

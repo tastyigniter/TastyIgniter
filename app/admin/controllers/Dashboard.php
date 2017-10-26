@@ -37,12 +37,12 @@ class Dashboard extends \Admin\Classes\AdminController
 //        if ($this->config->item('auto_update_currency_rates') == '1') {
 //            $this->load->model('Currencies_model');
 //            if ($this->Currencies_model->updateRates()) {
-//                flash()->set('success_now', lang('admin::dashboard.alert_rates_updated'));
+//                flash()->success_now(lang('admin::dashboard.alert_rates_updated'));
 //            }
 //        }
 //
 //        if (!$this->updates_manager->isLastCheckDue()) {
-//            flash()->set('success_now', sprintf(lang('admin::dashboard.text_last_version_check'), admin_url('updates')));
+//            flash()->success_now(sprintf(lang('admin::dashboard.text_last_version_check'), admin_url('updates')));
 //        }
 
         return $this->makeView('dashboard');

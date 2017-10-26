@@ -1,5 +1,6 @@
 <div class="media-list row">
-    <?php $index=0; foreach ($items as $item) { ?>
+    <?php $index = 0;
+    foreach ($items as $item) { ?>
         <?php $index++; ?>
         <div class="media-item col-xs-2">
             <div class="media-thumb"

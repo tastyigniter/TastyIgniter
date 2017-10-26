@@ -144,7 +144,7 @@ if (!function_exists('get_active_styles')) {
      */
     function get_active_styles()
     {
-        return get_instance()->assets->getActiveStyle();
+        return Assets::getActiveStyle();
     }
 }
 

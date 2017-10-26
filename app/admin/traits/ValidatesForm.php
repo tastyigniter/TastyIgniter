@@ -37,7 +37,8 @@ trait ValidatesForm
 
         if ($validator->fails()) {
             Session::flash('errors', $validator->errors());
-            return false;
+
+            return FALSE;
         }
 
         return $this->extractInputFromRules($request, $rules);
@@ -87,7 +88,7 @@ trait ValidatesForm
 
         $result = [];
         foreach ($rules as $key => $value) {
-            list($name, $attribute, ) = $value;
+            list($name, $attribute,) = $value;
             $result[$name] = (sscanf($attribute, 'lang:%s', $line) === 1) ? lang($line) : $attribute;
         }
 
@@ -120,7 +121,8 @@ trait ValidatesForm
         return app(Factory::class);
     }
 
-    public function validateAfter(Closure $callback) {
+    public function validateAfter(Closure $callback)
+    {
         $this->validateAfterCallback = $callback;
     }
 }

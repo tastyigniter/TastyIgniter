@@ -33,6 +33,6 @@ return [
     'label_images'      => 'Images',
     'label_custom_code' => 'Custom Code',
 
-    'help_image' => 'Choose multiple images to display banner as carousel',
+    'help_image'     => 'Choose multiple images to display banner as carousel',
     'help_click_url' => 'You can use a relative or absolute site URL',
 ];

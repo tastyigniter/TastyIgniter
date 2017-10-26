@@ -18,7 +18,9 @@
                 </div>
                 <a class="find-button">
                     <div class="img-cover">
-                        <img data-find-image src="<?= $this->resizeImage($value ? $value : $blankImage) ?>" class="img-responsive">
+                        <img data-find-image
+                             src="<?= $this->resizeImage($value ? $value : $blankImage) ?>"
+                             class="img-responsive">
                     </div>
                 </a>
             <?php } ?>

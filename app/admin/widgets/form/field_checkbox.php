@@ -9,7 +9,8 @@ $checkedValues = (array)$field->value;
             id="<?= $field->getId() ?>"
             class="btn-group"
             data-toggle="buttons">
-            <?php $index = 0; foreach ($fieldOptions as $value => $option) { ?>
+            <?php $index = 0;
+            foreach ($fieldOptions as $value => $option) { ?>
                 <?php
                 $index++;
                 $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
@@ -32,7 +33,8 @@ $checkedValues = (array)$field->value;
             id="<?= $field->getId() ?>"
             class="btn-group"
             data-toggle="buttons">
-            <?php $index = 0; foreach ($fieldOptions as $value => $option) { ?>
+            <?php $index = 0;
+            foreach ($fieldOptions as $value => $option) { ?>
                 <?php
                 $index++;
                 $checkboxId = 'checkbox_'.$field->getId().'_'.$index;

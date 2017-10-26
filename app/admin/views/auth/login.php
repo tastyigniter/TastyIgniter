@@ -27,7 +27,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="input-password" class="control-label"><?= lang('admin::login.label_password'); ?></label>
+                    <label for="input-password"
+                           class="control-label"><?= lang('admin::login.label_password'); ?></label>
                     <div class="">
                         <div class="input-group">
                             <input name="password" type="password" id="input-password" class="form-control"/>
@@ -40,8 +41,10 @@
                     <button
                         type="submit"
                         class="btn btn-primary btn-lg pull-right"
-                    ><i class="fa fa-sign-in fa-fw"></i>&nbsp;&nbsp;&nbsp;<?= lang('admin::login.button_login'); ?></button>
-                    <p><a href="<?= admin_url('login/reset'); ?>"><?= lang('admin::login.text_forgot_password'); ?></a></p>
+                    ><i class="fa fa-sign-in fa-fw"></i>&nbsp;&nbsp;&nbsp;<?= lang('admin::login.button_login'); ?>
+                    </button>
+                    <p><a href="<?= admin_url('login/reset'); ?>"><?= lang('admin::login.text_forgot_password'); ?></a>
+                    </p>
                 </div>
 
                 <?= form_close(); ?>

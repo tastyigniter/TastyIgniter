@@ -6,9 +6,9 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'status' => [
-            'label' => 'lang:admin::tables.text_filter_status',
-            'type'  => 'switch',
-            'conditions'  => 'table_status = :filtered',
+            'label'      => 'lang:admin::tables.text_filter_status',
+            'type'       => 'switch',
+            'conditions' => 'table_status = :filtered',
         ],
     ],
 ];
@@ -22,12 +22,12 @@ $config['list']['toolbar'] = [
 ];
 
 $config['list']['columns'] = [
-    'edit'        => [
+    'edit'         => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'      => [
-            'class'     => 'btn btn-edit',
-            'href' => 'tables/edit/{table_id}',
+        'attributes'   => [
+            'class' => 'btn btn-edit',
+            'href'  => 'tables/edit/{table_id}',
         ],
     ],
     'table_name'   => [
@@ -35,20 +35,20 @@ $config['list']['columns'] = [
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'min_capacity'       => [
+    'min_capacity' => [
         'label'      => 'lang:admin::tables.column_min_capacity',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'max_capacity'   => [
+    'max_capacity' => [
         'label' => 'lang:admin::tables.column_capacity',
-        'type'   => 'number',
+        'type'  => 'number',
     ],
-    'table_status'   => [
+    'table_status' => [
         'label' => 'lang:admin::tables.column_status',
-        'type'   => 'switch',
+        'type'  => 'switch',
     ],
-    'table_id' => [
+    'table_id'     => [
         'label'     => 'lang:admin::tables.column_id',
         'invisible' => TRUE,
     ],
@@ -75,22 +75,22 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'table_name'       => [
+    'table_name'   => [
         'label' => 'lang:admin::tables.label_name',
         'type'  => 'text',
     ],
-    'min_capacity'            => [
+    'min_capacity' => [
         'label' => 'lang:admin::tables.label_min_capacity',
         'type'  => 'number',
     ],
-    'max_capacity'        => [
+    'max_capacity' => [
         'label' => 'lang:admin::tables.label_capacity',
         'type'  => 'number',
     ],
     'table_status' => [
-        'label' => 'lang:admin::default.label_status',
-        'type'  => 'switch',
-        'default'  => 1,
+        'label'   => 'lang:admin::default.label_status',
+        'type'    => 'switch',
+        'default' => 1,
     ],
 ];
 

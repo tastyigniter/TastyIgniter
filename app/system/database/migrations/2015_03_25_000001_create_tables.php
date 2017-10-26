@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Create the initial tables:
- *	activities, addresses, banners, categories, countries, coupons, coupons_history,
+ *    activities, addresses, banners, categories, countries, coupons, coupons_history,
  *  currencies, customers, customers_activity, customer_groups, extensions,
  *  languages, layouts, layout_modules, layout_routes, locations, location_tables,
  *  mail_templates, mail_templates_data, menus, menus_specials,
@@ -15,9 +15,10 @@ use Illuminate\Database\Schema\Blueprint;
  *  staffs, staff_groups, statuses, status_history, tables, uri_routes,
  *  users, working_hours
  */
-class CreateTables extends Migration {
-
-	public function up() {
+class CreateTables extends Migration
+{
+    public function up()
+    {
         foreach (get_class_methods(__CLASS__) as $method) {
             if (!starts_with($method, ['_create_']))
                 continue;
@@ -28,9 +29,10 @@ class CreateTables extends Migration {
 
             Schema::create($table, $this->$method());
         }
-	}
+    }
 
-	public function down() {
+    public function down()
+    {
         foreach (get_class_methods(__CLASS__) as $method) {
             if (!starts_with($method, ['_create_']))
                 continue;
@@ -38,12 +40,13 @@ class CreateTables extends Migration {
             $table = substr($method, 8);
             Schema::dropIfExists($table);
         }
-	}
+    }
 
-	protected function _create_activities() {
-        return function(Blueprint $table) {
+    protected function _create_activities()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('activity_id', true);
+            $table->integer('activity_id', TRUE);
             $table->string('domain', 10);
             $table->string('context', 128);
             $table->string('user', 10);
@@ -55,8 +58,9 @@ class CreateTables extends Migration {
         };
     }
 
-	protected function _create_addresses() {
-        return function(Blueprint $table) {
+    protected function _create_addresses()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('address_id');
             $table->integer('customer_id');
@@ -67,10 +71,11 @@ class CreateTables extends Migration {
             $table->string('postcode', 10);
             $table->integer('country_id');
         };
-	}
+    }
 
-	protected function _create_banners() {
-        return function(Blueprint $table) {
+    protected function _create_banners()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('banner_id');
             $table->string('name');
@@ -82,10 +87,11 @@ class CreateTables extends Migration {
             $table->text('custom_code');
             $table->boolean('status');
         };
-	}
+    }
 
-	protected function _create_categories() {
-        return function(Blueprint $table) {
+    protected function _create_categories()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('category_id');
             $table->string('name', 32);
@@ -95,10 +101,11 @@ class CreateTables extends Migration {
             $table->string('image');
             $table->boolean('status')->default(1);
         };
-	}
+    }
 
-	protected function _create_countries() {
-        return function(Blueprint $table) {
+    protected function _create_countries()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('country_id');
             $table->string('country_name', 128);
@@ -108,10 +115,11 @@ class CreateTables extends Migration {
             $table->boolean('status');
             $table->string('flag');
         };
-	}
+    }
 
-	protected function _create_coupons() {
-        return function(Blueprint $table) {
+    protected function _create_coupons()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('coupon_id');
             $table->string('name');
@@ -135,10 +143,11 @@ class CreateTables extends Migration {
             $table->time('recurring_to_time')->nullable();
             $table->boolean('order_restriction');
         };
-	}
+    }
 
-	protected function _create_coupons_history() {
-        return function(Blueprint $table) {
+    protected function _create_coupons_history()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('coupon_history_id');
             $table->integer('coupon_id');
@@ -150,10 +159,11 @@ class CreateTables extends Migration {
             $table->dateTime('date_used');
             $table->boolean('status');
         };
-	}
+    }
 
-	protected function _create_currencies() {
-        return function(Blueprint $table) {
+    protected function _create_currencies()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('currency_id');
             $table->integer('country_id');
@@ -172,20 +182,22 @@ class CreateTables extends Migration {
             $table->integer('currency_status');
             $table->dateTime('date_modified');
         };
-	}
+    }
 
-	protected function _create_customer_groups() {
-        return function(Blueprint $table) {
+    protected function _create_customer_groups()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('customer_group_id');
             $table->string('group_name', 32);
             $table->text('description');
             $table->boolean('approval');
         };
-	}
+    }
 
-	protected function _create_customers() {
-        return function(Blueprint $table) {
+    protected function _create_customers()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('customer_id');
             $table->string('first_name', 32);
@@ -204,12 +216,13 @@ class CreateTables extends Migration {
             $table->boolean('status');
             $table->text('cart');
         };
-	}
+    }
 
-	protected function _create_customers_online() {
-        return function(Blueprint $table) {
+    protected function _create_customers_online()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('activity_id', true);
+            $table->integer('activity_id', TRUE);
             $table->integer('customer_id');
             $table->string('access_type', 128);
             $table->string('browser', 128);
@@ -221,10 +234,11 @@ class CreateTables extends Migration {
             $table->boolean('status');
             $table->text('user_agent');
         };
-	}
+    }
 
-	protected function _create_extensions() {
-        return function(Blueprint $table) {
+    protected function _create_extensions()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('extension_id');
             $table->string('type', 32);
@@ -234,14 +248,15 @@ class CreateTables extends Migration {
             $table->boolean('status');
             $table->string('title');
             $table->string('version', 11)->default('1.0.0');
-            $table->unique(['type','name'], 'type');
+            $table->unique(['type', 'name'], 'type');
         };
-	}
+    }
 
-	protected function _create_languages() {
-        return function(Blueprint $table) {
+    protected function _create_languages()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('language_id', true);
+            $table->integer('language_id', TRUE);
             $table->string('code', 7);
             $table->string('name', 32);
             $table->string('image', 32);
@@ -249,21 +264,23 @@ class CreateTables extends Migration {
             $table->boolean('status');
             $table->boolean('can_delete');
         };
-	}
+    }
 
-	protected function _create_layout_routes() {
-        return function(Blueprint $table) {
+    protected function _create_layout_routes()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('layout_route_id');
             $table->integer('layout_id');
             $table->string('uri_route', 128);
         };
-	}
+    }
 
-	protected function _create_layout_modules() {
-        return function(Blueprint $table) {
+    protected function _create_layout_modules()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('layout_module_id', true);
+            $table->integer('layout_module_id', TRUE);
             $table->integer('layout_id');
             $table->string('module_code', 128);
             $table->string('partial', 32);
@@ -271,28 +288,30 @@ class CreateTables extends Migration {
             $table->text('options');
             $table->boolean('status');
         };
-	}
+    }
 
-	protected function _create_layouts() {
-        return function(Blueprint $table) {
+    protected function _create_layouts()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('layout_id');
             $table->string('name', 45);
         };
-	}
+    }
 
-	protected function _create_location_tables() {
-        return function(Blueprint $table) {
+    protected function _create_location_tables()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('location_id');
             $table->integer('table_id');
-            $table->primary(['location_id','table_id']);
+            $table->primary(['location_id', 'table_id']);
         };
-	}
+    }
 
-	protected function _create_locations() {
-        return function(Blueprint $table)
-        {
+    protected function _create_locations()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('location_id');
             $table->string('location_name', 32);
@@ -319,12 +338,13 @@ class CreateTables extends Migration {
             $table->text('options');
             $table->string('location_image');
         };
-	}
+    }
 
-	protected function _create_mail_templates() {
-        return function(Blueprint $table) {
+    protected function _create_mail_templates()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('template_id', true);
+            $table->integer('template_id', TRUE);
             $table->string('name', 32);
             $table->integer('language_id');
             $table->dateTime('date_added');
@@ -333,24 +353,26 @@ class CreateTables extends Migration {
         };
     }
 
-	protected function _create_mail_templates_data() {
-        return function(Blueprint $table) {
+    protected function _create_mail_templates_data()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('template_data_id', true);
+            $table->integer('template_data_id', TRUE);
             $table->integer('template_id');
             $table->string('code', 32);
             $table->string('subject', 128);
             $table->text('body');
             $table->dateTime('date_added');
             $table->dateTime('date_updated');
-            $table->unique(['template_id','code']);
+            $table->unique(['template_id', 'code']);
         };
     }
 
-    protected function _create_mealtimes() {
-        return function(Blueprint $table) {
+    protected function _create_mealtimes()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('mealtime_id', true);
+            $table->integer('mealtime_id', TRUE);
             $table->string('mealtime_name', 128);
             $table->time('start_time')->default('00:00:00');
             $table->time('end_time')->default('23:59:59');
@@ -358,10 +380,10 @@ class CreateTables extends Migration {
         };
     }
 
-    protected function _create_menus() {
-        return function(Blueprint $table)
-        {
-            $table->integer('menu_id', true);
+    protected function _create_menus()
+    {
+        return function (Blueprint $table) {
+            $table->integer('menu_id', TRUE);
             $table->string('menu_name');
             $table->text('menu_description');
             $table->decimal('menu_price', 15, 4);
@@ -374,22 +396,24 @@ class CreateTables extends Migration {
             $table->boolean('menu_status');
             $table->integer('menu_priority');
         };
-	}
+    }
 
-    public function _create_options() {
-        return function(Blueprint $table) {
+    public function _create_options()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('option_id', true);
+            $table->integer('option_id', TRUE);
             $table->string('option_name', 32);
             $table->string('display_type', 15);
             $table->integer('priority');
         };
     }
 
-    public function _create_option_values() {
-        return function(Blueprint $table) {
+    public function _create_option_values()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('option_value_id', true);
+            $table->integer('option_value_id', TRUE);
             $table->integer('option_id');
             $table->string('value', 128);
             $table->decimal('price', 15, 4)->nullable();
@@ -397,10 +421,11 @@ class CreateTables extends Migration {
         };
     }
 
-    protected function _create_menu_options() {
-        return function(Blueprint $table) {
+    protected function _create_menu_options()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('menu_option_id', true);
+            $table->integer('menu_option_id', TRUE);
             $table->integer('option_id');
             $table->integer('menu_id');
             $table->boolean('required');
@@ -409,10 +434,11 @@ class CreateTables extends Migration {
         };
     }
 
-    public function _create_menu_option_values() {
-        return function(Blueprint $table) {
+    public function _create_menu_option_values()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('menu_option_value_id', true);
+            $table->integer('menu_option_value_id', TRUE);
             $table->integer('menu_option_id');
             $table->integer('menu_id');
             $table->integer('option_id');
@@ -423,24 +449,25 @@ class CreateTables extends Migration {
         };
     }
 
-    protected function _create_menus_specials() {
-        return function(Blueprint $table) {
+    protected function _create_menus_specials()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('special_id', true);
+            $table->integer('special_id', TRUE);
             $table->integer('menu_id')->default(0);
             $table->date('start_date');
             $table->date('end_date');
             $table->decimal('special_price', 15, 4)->nullable();
             $table->boolean('special_status');
-            $table->unique(['special_id','menu_id']);
+            $table->unique(['special_id', 'menu_id']);
         };
-	}
+    }
 
-	protected function _create_messages() {
-        return function(Blueprint $table)
-        {
+    protected function _create_messages()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('message_id', true);
+            $table->integer('message_id', TRUE);
             $table->integer('sender_id');
             $table->dateTime('date_added');
             $table->string('send_type', 32);
@@ -449,12 +476,13 @@ class CreateTables extends Migration {
             $table->text('body');
             $table->boolean('status');
         };
-	}
+    }
 
-	protected function _create_message_meta() {
-        return function(Blueprint $table) {
+    protected function _create_message_meta()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('message_meta_id', true);
+            $table->integer('message_meta_id', TRUE);
             $table->integer('message_id');
             $table->boolean('state');
             $table->boolean('status');
@@ -462,12 +490,13 @@ class CreateTables extends Migration {
             $table->string('item', 32);
             $table->text('value');
         };
-	}
+    }
 
-	protected function _create_orders() {
-        return function(Blueprint $table) {
+    protected function _create_orders()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('order_id', true);
+            $table->integer('order_id', TRUE);
             $table->integer('customer_id');
             $table->string('first_name', 32);
             $table->string('last_name', 32);
@@ -494,12 +523,13 @@ class CreateTables extends Migration {
             $table->string('invoice_prefix', 32);
             $table->dateTime('invoice_date');
         };
-	}
+    }
 
-	protected function _create_order_menus() {
-        return function(Blueprint $table) {
+    protected function _create_order_menus()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('order_menu_id', true);
+            $table->integer('order_menu_id', TRUE);
             $table->integer('order_id');
             $table->integer('menu_id');
             $table->string('name');
@@ -509,12 +539,13 @@ class CreateTables extends Migration {
             $table->text('option_values');
             $table->text('comment');
         };
-	}
+    }
 
-	protected function _create_order_options() {
-        return function(Blueprint $table) {
+    protected function _create_order_options()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('order_option_id', true);
+            $table->integer('order_option_id', TRUE);
             $table->integer('order_id');
             $table->integer('menu_id');
             $table->string('order_option_name', 128);
@@ -523,12 +554,13 @@ class CreateTables extends Migration {
             $table->integer('order_menu_option_id');
             $table->integer('menu_option_value_id');
         };
-	}
+    }
 
-	protected function _create_order_totals() {
-        return function(Blueprint $table) {
+    protected function _create_order_totals()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('order_total_id', true);
+            $table->integer('order_total_id', TRUE);
             $table->integer('order_id');
             $table->string('code', 30);
             $table->string('title');
@@ -536,13 +568,13 @@ class CreateTables extends Migration {
             $table->boolean('priority');
             $table->index(['order_id']); // was unique
         };
-	}
+    }
 
-	protected function _create_pages() {
-        return function(Blueprint $table)
-        {
+    protected function _create_pages()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('page_id', true);
+            $table->integer('page_id', TRUE);
             $table->integer('language_id');
             $table->string('name', 32);
             $table->string('title');
@@ -556,44 +588,48 @@ class CreateTables extends Migration {
             $table->dateTime('date_updated');
             $table->boolean('status');
         };
-	}
+    }
 
-	protected function _create_permalinks() {
-        return function(Blueprint $table) {
+    protected function _create_permalinks()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('permalink_id', true);
+            $table->integer('permalink_id', TRUE);
             $table->string('slug');
             $table->string('controller');
             $table->string('query');
-            $table->index(['slug','controller']); // was unique
+            $table->index(['slug', 'controller']); // was unique
         };
-	}
+    }
 
-	protected function _create_pp_payments() {
-        return function(Blueprint $table) {
+    protected function _create_pp_payments()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('transaction_id', 19)->primary();
             $table->integer('order_id');
             $table->integer('customer_id');
             $table->text('serialized');
         };
-	}
+    }
 
-	protected function _create_permissions() {
-        return function(Blueprint $table) {
+    protected function _create_permissions()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('permission_id', true);
+            $table->integer('permission_id', TRUE);
             $table->string('name', 128);
             $table->string('description');
             $table->text('action');
             $table->boolean('status');
         };
-	}
+    }
 
-	protected function _create_reservations() {
-        return function(Blueprint $table) {
+    protected function _create_reservations()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('reservation_id', true);
+            $table->integer('reservation_id', TRUE);
             $table->integer('location_id');
             $table->integer('table_id');
             $table->integer('guest_num');
@@ -613,14 +649,15 @@ class CreateTables extends Migration {
             $table->string('ip_address', 40);
             $table->string('user_agent');
             $table->boolean('status');
-            $table->index(['location_id','table_id']);  // was unique
+            $table->index(['location_id', 'table_id']);  // was unique
         };
-	}
+    }
 
-	protected function _create_reviews() {
-        return function(Blueprint $table) {
+    protected function _create_reviews()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('review_id', true);
+            $table->integer('review_id', TRUE);
             $table->integer('customer_id');
             $table->integer('sale_id');
             $table->string('sale_type', 32)->default('');
@@ -632,45 +669,49 @@ class CreateTables extends Migration {
             $table->text('review_text');
             $table->dateTime('date_added');
             $table->boolean('review_status');
-            $table->index(['review_id','sale_type','sale_id']);  // was unique
+            $table->index(['review_id', 'sale_type', 'sale_id']);  // was unique
         };
-	}
+    }
 
-	protected function _create_security_questions() {
-        return function(Blueprint $table) {
+    protected function _create_security_questions()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('question_id', true);
+            $table->integer('question_id', TRUE);
             $table->text('text');
             $table->boolean('priority');
         };
-	}
+    }
 
-	protected function _create_settings() {
-        return function(Blueprint $table) {
+    protected function _create_settings()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('setting_id', true);
+            $table->integer('setting_id', TRUE);
             $table->string('sort', 45);
             $table->string('item', 128)->unique('item');
             $table->text('value');
             $table->boolean('serialized');
         };
-	}
+    }
 
-	protected function _create_staff_groups() {
-        return function(Blueprint $table) {
+    protected function _create_staff_groups()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('staff_group_id', true);
+            $table->integer('staff_group_id', TRUE);
             $table->string('staff_group_name', 32);
             $table->boolean('customer_account_access');
             $table->boolean('location_access');
             $table->text('permissions');
         };
-	}
+    }
 
-	protected function _create_staffs() {
-        return function(Blueprint $table) {
+    protected function _create_staffs()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('staff_id', true);
+            $table->integer('staff_id', TRUE);
             $table->string('staff_name', 32);
             $table->string('staff_email', 96)->unique('staff_email');
             $table->integer('staff_group_id');
@@ -680,12 +721,13 @@ class CreateTables extends Migration {
             $table->date('date_added');
             $table->boolean('staff_status');
         };
-	}
+    }
 
-	protected function _create_status_history() {
-        return function(Blueprint $table) {
+    protected function _create_status_history()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('status_history_id', true);
+            $table->integer('status_history_id', TRUE);
             $table->integer('object_id');
             $table->integer('staff_id');
             $table->integer('assignee_id');
@@ -695,55 +737,60 @@ class CreateTables extends Migration {
             $table->text('comment');
             $table->dateTime('date_added');
         };
-	}
+    }
 
-	protected function _create_statuses() {
-        return function(Blueprint $table) {
+    protected function _create_statuses()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('status_id', true);
+            $table->integer('status_id', TRUE);
             $table->string('status_name', 45);
             $table->text('status_comment');
             $table->boolean('notify_customer');
             $table->string('status_for', 10);
             $table->string('status_color', 32);
         };
-	}
+    }
 
-	protected function _create_tables() {
-        return function(Blueprint $table) {
+    protected function _create_tables()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('table_id', true);
+            $table->integer('table_id', TRUE);
             $table->string('table_name', 32);
             $table->integer('min_capacity');
             $table->integer('max_capacity');
             $table->boolean('table_status');
         };
-	}
+    }
 
-	protected function _create_uri_routes() {
-        return function(Blueprint $table) {
+    protected function _create_uri_routes()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('uri_route_id', true);
+            $table->integer('uri_route_id', TRUE);
             $table->string('uri_route');
             $table->string('controller', 128);
             $table->boolean('priority');
-            $table->index(['uri_route_id','uri_route']);  // was unique
+            $table->index(['uri_route_id', 'uri_route']);  // was unique
         };
-	}
+    }
 
-	protected function _create_users() {
-        return function(Blueprint $table) {
+    protected function _create_users()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('user_id', true);
+            $table->integer('user_id', TRUE);
             $table->integer('staff_id')->unique();
             $table->string('username', 32)->unique();
             $table->string('password', 40);
             $table->string('salt', 9);
         };
-	}
+    }
 
-	protected function _create_working_hours() {
-        return function(Blueprint $table) {
+    protected function _create_working_hours()
+    {
+        return function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('location_id');
             $table->integer('weekday');
@@ -751,7 +798,7 @@ class CreateTables extends Migration {
             $table->time('closing_time')->default('00:00:00');
             $table->boolean('status');
             $table->string('type', 32);
-            $table->index(['location_id','weekday','type']);  // was unique
+            $table->index(['location_id', 'weekday', 'type']);  // was unique
         };
-	}
+    }
 }

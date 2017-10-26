@@ -3,9 +3,9 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
-use File;
-use \System\Libraries\MediaManager as MediaLibrary;
 use Exception;
+use File;
+use System\Libraries\MediaManager as MediaLibrary;
 
 /**
  * Media Manager widget.

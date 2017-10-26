@@ -1,7 +1,7 @@
 <?php namespace Admin\FormWidgets;
 
-use Exception;
 use Admin\Classes\BaseFormWidget;
+use Exception;
 
 /**
  * Status Editor
@@ -55,6 +55,7 @@ class StatusEditor extends BaseFormWidget
     public function render()
     {
         $this->prepareVars();
+
         return $this->makePartial('statuseditor/statuseditor');
     }
 

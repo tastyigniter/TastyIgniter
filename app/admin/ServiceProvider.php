@@ -41,7 +41,7 @@ class ServiceProvider extends AppServiceProvider
     protected function registerBaseTags()
     {
         Assets::defaultPaths([
-            app_path($this->app->appContext().'/views')
+            app_path($this->app->appContext().'/views'),
         ]);
 
         Assets::registerAssets(function (Assets $manager) {
