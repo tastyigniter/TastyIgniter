@@ -7,9 +7,9 @@ if (version_compare(PHP_VERSION, '5.6', '<')) exit('You need at least PHP 5.6 to
 
 // PHP headers
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
+header('Cache-Control: post-check=0, pre-check=0', FALSE);
 header('Pragma: no-cache');
 
 // Session
@@ -68,7 +68,6 @@ try {
     $setup->writeLog('Max execution time: %s', ini_get('max_execution_time'));
 
     $page = $setup->getPage();
-}
-catch (Exception $ex) {
+} catch (Exception $ex) {
     $fatalError = $ex->getMessage();
 }

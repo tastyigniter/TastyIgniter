@@ -36,7 +36,8 @@ class SetupRepository
     /**
      * Determine if the given configuration value exists.
      *
-     * @param  string  $key
+     * @param  string $key
+     *
      * @return bool
      */
     public function has($key)
@@ -47,8 +48,9 @@ class SetupRepository
     /**
      * Get the specified configuration value.
      *
-     * @param  array|string  $key
-     * @param  mixed   $default
+     * @param  array|string $key
+     * @param  mixed $default
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -63,13 +65,15 @@ class SetupRepository
     /**
      * Set a given configuration value.
      *
-     * @param  array|string  $key
-     * @param  mixed   $value
+     * @param  array|string $key
+     * @param  mixed $value
+     *
      * @return \SetupRepository
      */
     public function set($key, $value = null)
     {
         $this->items[$key] = $value;
+
         return $this;
     }
 
@@ -116,6 +120,7 @@ class SetupRepository
     public function destroy()
     {
         @unlink($this->configPath);
+
         return $this;
     }
 }

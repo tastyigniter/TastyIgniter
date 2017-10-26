@@ -6,9 +6,13 @@
 class SetupController
 {
     const TI_ENDPOINT = 'http://api.tasty-cms.com/v2';
+
     const COMPOSER_INSTALLER_URL = 'https://getcomposer.org/composer.phar';
+
     const COMPOSER_EXTRACTED_PHAR = 'extracted_phar';
+
     const COMPOSER_PHAR = 'composer.phar';
+
     const COMPOSER_VENDOR = 'vendor';
 
     public $page;
