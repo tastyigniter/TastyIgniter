@@ -635,6 +635,7 @@ class Orders_model extends TI_Model {
             $this->db->set('code', $temp_coupon['code']);
             $this->db->set('amount', '-' . $coupon['amount']);
             $this->db->set('date_used', mdate('%Y-%m-%d %H:%i:%s', time()));
+	    $this->db->set('status', '1');
 
             if ($this->db->insert('coupons_history')) {
                 return $this->db->insert_id();
