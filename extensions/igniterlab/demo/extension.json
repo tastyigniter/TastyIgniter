@@ -3,7 +3,7 @@
   "name": "Demo Extension",
   "description": "Provides component for demonstration",
   "version": "1.0.0",
-  "author": "SamPoyigi, TastyIgniter Dev Team",
+  "author": "Igniter Lab",
   "icon": "fa-puzzle",
   "tags": {
     "1.0.0": "Initial tag of demo extension"
