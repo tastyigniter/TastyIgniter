@@ -18,7 +18,7 @@ class Admin
      */
     public function uri()
     {
-        return Config::get('cms.adminUri', 'admin');
+        return Config::get('system.adminUri', 'admin');
     }
 
     /**

@@ -73,10 +73,6 @@ class ServiceProvider extends AppServiceProvider
      */
     protected function registerSingletons()
     {
-//        App::singleton('main.helper', function () {
-//            return new \Main\Helpers\Main;
-//        });
-
         App::singleton('admin.helper', function () {
             return new AdminHelper;
         });
