@@ -6,6 +6,7 @@ use Admin\Models\Locations_model;
 use Admin\Models\Mealtimes_model;
 use Admin\Models\Pages_model;
 use Admin\Models\Staff_groups_model;
+use Admin\Models\Statuses_model;
 use Illuminate\Database\Seeder;
 use System\Models\Countries_model;
 use System\Models\Currencies_model;
@@ -33,7 +34,7 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedLanguages();
 
-        $this->seedLayouts();
+//        $this->seedLayouts();
 
 //        $this->seedMailTemplates();
 
@@ -41,9 +42,9 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedPermissions();
 
-        $this->seedStaffGroups();
-
         $this->seedSettings();
+
+        $this->seedStaffGroups();
     }
 
     protected function seedCountries()
@@ -180,6 +181,18 @@ class InitialSchemaSeeder extends Seeder
         }
     }
 
+    protected function seedSettings()
+    {
+        if (Settings_model::count())
+            return;
+
+        $settings = json_decode(file_get_contents($this->recordsPath.'/settings.json'), TRUE);
+
+        foreach ($settings as $setting) {
+            Settings_model::insert($setting);
+        }
+    }
+
     protected function seedStaffGroups()
     {
         if (Staff_groups_model::count())
@@ -193,15 +206,15 @@ class InitialSchemaSeeder extends Seeder
         ]);
     }
 
-    protected function seedSettings()
+    protected function seedStatuses()
     {
-        if (Settings_model::count())
+        if (Statuses_model::count())
             return;
 
-        $settings = json_decode(file_get_contents($this->recordsPath.'/settings.json'), TRUE);
+        $statuses = json_decode(file_get_contents($this->recordsPath.'/statuses.json'), TRUE);
 
-        foreach ($settings as $setting) {
-            Settings_model::insert($setting);
+        foreach ($statuses as $status) {
+            Statuses_model::insert($status);
         }
     }
 }

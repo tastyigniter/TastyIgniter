@@ -160,7 +160,7 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Renders a requested partial in context of this component,
-     * see Cms\Classes\Controller@renderPartial for usage.
+     * see Main\Classes\MainController@renderPartial for usage.
      */
     public function renderPartial()
     {

@@ -141,10 +141,6 @@ class MainController extends BaseController
 
         $this->router = new Router($this->theme);
 
-        // Initialize layout library so that component can be manually added to page
-        $this->layoutObj = new Layout($this);
-        $this->layoutObj->initialize();
-
         $this->initTemplateEnvironment();
 
         $this->fireEvent('controller.afterConstructor', [$this]);
@@ -245,7 +241,7 @@ class MainController extends BaseController
         $this->pageObj->onInit();
 
         // Extensibility
-        if ($event = $this->fireSystemEvent('cms.page.init', [$page])) {
+        if ($event = $this->fireSystemEvent('page.init', [$page])) {
             return $event;
         }
 
@@ -844,15 +840,26 @@ class MainController extends BaseController
 
     public function pageUrl($path = null, $params = [])
     {
-        return URL::to($path, $params);
+        if (!$path)
+            return $this->currentPageUrl($params);
+
+        if (!is_array($params))
+            $params = [];
+
+        $params = array_merge($this->router->getParameters(), $params);
+
+        if (!$url = $this->router->findByFile($path, $params))
+            return null;
+
+        return URL::to($url, $params);
     }
 
-    public function currentPageUrl($parameters = [])
+    public function currentPageUrl($params = [])
     {
         if (!$currentFile = $this->page->getFileName())
             return null;
 
-        return $this->pageUrl($currentFile, $parameters);
+        return $this->pageUrl($currentFile, $params);
     }
 
     public function themeUrl($url = null)

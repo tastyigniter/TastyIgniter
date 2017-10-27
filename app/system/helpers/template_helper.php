@@ -20,17 +20,6 @@ if (!function_exists('get_partial')) {
     }
 }
 
-if (!function_exists('controller')) {
-    /**
-     * Get the page controller
-     * @return Main\Classes\MainController
-     */
-    function controller()
-    {
-        return \Main\Classes\MainController::getController();
-    }
-}
-
 if (!function_exists('page')) {
     /**
      * Get the page content

@@ -3,6 +3,17 @@
 use Carbon\Carbon;
 use Illuminate\Routing\UrlGenerator;
 
+if (!function_exists('controller')) {
+    /**
+     * Get the page controller
+     * @return Main\Classes\MainController
+     */
+    function controller()
+    {
+        return \Main\Classes\MainController::getController();
+    }
+}
+
 if (!function_exists('current_url')) {
     /**
      * Current URL
@@ -45,9 +56,10 @@ if (!function_exists('site_url')) {
      *
      * @return string
      */
-    function site_url($uri = '', $protocol = null, $params = [])
+    function site_url($uri = '', $params = [])
     {
-        return app(UrlGenerator::class)->to($uri, $params, $protocol);
+        return controller()->pageUrl($uri, $params);
+        return app(UrlGenerator::class)->to($uri, $params);
     }
 }
 
