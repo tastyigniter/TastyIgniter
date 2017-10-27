@@ -472,9 +472,10 @@ class ExtensionManager
             return;
         }
 
-        $extensionPath = $this->path($name);
+        $path = $this->getNamePath($name);
+        $extensionPath = extension_path($path);
 
-        $langPath = $extensionPath.'language';
+        $langPath = $extensionPath.'/language';
         if (File::isDirectory($langPath)) {
             Lang::addNamespace($name, $langPath);
         }
@@ -585,10 +586,10 @@ class ExtensionManager
 //        return $extensionOwner.'.'.$extensionName;
 //    }
 //
-//    public function getNamePath($name)
-//    {
-//        return str_replace('.', '/', $name);
-//    }
+    public function getNamePath($name)
+    {
+        return str_replace('.', '/', $name);
+    }
 
     /**
      * Checks to see if an extension has been registered.
