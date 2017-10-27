@@ -1,4 +1,4 @@
-<?php namespace Demo\Components;
+<?php namespace IgniterLab\Demo\Components;
 
 use System\Classes\BaseComponent;
 
