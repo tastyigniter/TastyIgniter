@@ -11,7 +11,7 @@ use Model;
  * Usage:
  * In the model class definition:
  *   public $implement = ['System\Actions\SettingsModel'];
- *   public $settingsCode = 'extension_code';
+ *   public $settingsCode = 'owner.extension_code';
  *   public $settingsFieldsConfig = 'settings_model';
  */
 class SettingsModel extends ModelAction

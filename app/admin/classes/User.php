@@ -30,29 +30,6 @@ class User extends Manager
 
     protected $available_actions = [];
 
-    public function initialize()
-    {
-//        if (is_null($userModel = $this->user()))
-//            return;
-//
-//        if (is_null($staffModel = $userModel->staff))
-//            return;
-//
-//        $staffArray = $staffModel->toArray();
-//        if ($staffModel->group)
-//            $staffArray = array_merge($staffArray, $staffArray['group']);
-//
-//        foreach ($staffArray as $key => $value) {
-//            if (property_exists($this, $key)) {
-//                $this->$key = $value;
-//            }
-//        }
-//
-//        $this->is_logged = TRUE;
-//        $this->belongsToSuperGroup = $staffModel->belongsToSuperGroup();
-//        $this->setPermissions();
-    }
-
     public function login($userModel, $remember = FALSE)
     {
         parent::login($userModel, $remember);

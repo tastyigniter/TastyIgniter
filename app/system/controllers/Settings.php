@@ -2,10 +2,14 @@
 
 use Admin\Models\Locations_model;
 use Admin\Traits\WidgetMaker;
+use AdminAuth;
 use AdminMenu;
 use Exception;
+use Illuminate\Mail\Message;
+use Mail;
 use System\Models\Currencies_model;
 use System\Models\Settings_model;
+use SystemException;
 use Template;
 
 class Settings extends \Admin\Classes\AdminController
@@ -67,65 +71,54 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->initWidgets($model, $definition);
 
-        $validate = $this->formValidate($this->formWidget);
-        if ($validate === FALSE)
+        if ($this->formValidate($this->formWidget) === FALSE)
             return;
 
-        $updated = Settings_model::updateSettings('config', $this->formWidget->getSaveData());
-
-        if (is_numeric(post('default_location_id'))) {
-            $this->config->set_item('default_location_id', post('default_location_id'));
-            Locations_model::updateDefault();
+        if (is_numeric($locationId = post('default_location_id'))) {
+            Locations_model::updateDefault(['location_id' => $locationId]);
         }
 
-        if (post('accepted_currencies')) {
-            Currencies_model::updateAcceptedCurrencies(post('accepted_currencies'));
+        if (is_array($acceptedCurrencies = post('accepted_currencies'))) {
+            Currencies_model::updateAcceptedCurrencies($acceptedCurrencies);
         }
 
-        if ($updated) {
-            flash()->success(sprintf(lang('system::settings.alert_success'), lang($definition['label']).' settings updated '));
-        }
-        else {
-            flash()->warning(sprintf(lang('system::settings.alert_error_nothing'), 'updated'));
-        }
+//        dd($this->formWidget->getSaveData());
+        setting()->set($this->formWidget->getSaveData());
+
+        flash()->success(sprintf(lang('admin::default.alert_success'), lang($definition['label']).' settings updated '));
 
         return $this->refresh();
     }
 
-    public function edit_onSendTest()
+    public function edit_onTestMail()
     {
-        $json = [];
-
-        if (!post('send_test_email')) {
-            $json['error'] = lang('admin::default.alert_error_try_again');
+        list($model, $definition) = $this->findSettingDefinitions('mail');
+        if (!$definition) {
+            throw new Exception(lang('system::settings.alert_settings_not_found'));
         }
 
-        if (empty($json)) {
-            $this->load->library('email');                                                        //loading upload library
-            $this->email->initialize();
+        $this->initWidgets($model, $definition);
 
-            $this->email->from(strtolower($this->config->item('site_email')), $this->config->item('site_name'));
-            $this->email->to(strtolower($this->config->item('site_email')));
-            $this->email->subject('This a test email');
-            $this->email->message('This is a test email. If you\'ve received this, it means emails are working in TastyIgniter.');
+        if ($this->formValidate($this->formWidget) === FALSE)
+            return;
 
-            if ($this->email->send()) {
-                $json['success'] = sprintf(lang('system::settings.alert_email_sent'), $this->config->item('site_email'));
-            }
-            else {
-                $json['error'] = $this->email->print_debugger(['headers']);
-            }
+        setting()->set($this->formWidget->getSaveData());
+
+        $name = AdminAuth::getStaffName();
+        $email = AdminAuth::getStaffEmail();
+        $text = 'This is a test email. If you\'ve received this, it means emails are working in TastyIgniter.';
+
+        try {
+            Mail::raw($text, function (Message $message) use ($name, $email) {
+                $message->to($email, $name)->subject('This a test email');
+            });
+
+            flash()->success(sprintf(lang('system::settings.alert_email_sent'), $email));
+        } catch (Exception $ex) {
+            flash()->error($ex->getMessage());
         }
 
-        if ($this->input->is_ajax_request()) {
-            $this->output->set_output(json_encode($json));                                            // encode the json array and set final out to be sent to jQuery AJAX
-        }
-        else {
-            if (isset($json['error'])) flash()->danger($json['error']);
-            if (isset($json['success'])) flash()->success($json['success']);
-
-            return $this->redirect('settings/#mail');
-        }
+        return $this->refresh();
     }
 
     public function initWidgets($model, $definition)

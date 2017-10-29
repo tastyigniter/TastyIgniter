@@ -235,7 +235,7 @@ abstract class BaseComponent extends Extendable
 
     public function param($name, $default = null)
     {
-        if (is_null($segment = $this->controller->uri->segment($name)))
+        if (is_null($segment = $this->controller->param($name, $default)))
             $segment = input($name);
 
         return is_null($segment) ? $default : $segment;

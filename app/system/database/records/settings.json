@@ -57,7 +57,12 @@
   {
     "sort": "config",
     "item": "language_id",
-    "value": "11"
+    "value": "en"
+  },
+  {
+    "sort": "config",
+    "item": "admin_language_id",
+    "value": "en"
   },
   {
     "sort": "config",
@@ -98,11 +103,6 @@
     "sort": "config",
     "item": "menu_images_w",
     "value": "95"
-  },
-  {
-    "sort": "config",
-    "item": "special_category_id",
-    "value": "0"
   },
   {
     "sort": "config",
@@ -252,12 +252,12 @@
   {
     "sort": "config",
     "item": "smtp_host",
-    "value": ""
+    "value": "smtp.mailgun.org"
   },
   {
     "sort": "config",
     "item": "smtp_port",
-    "value": ""
+    "value": "587"
   },
   {
     "sort": "config",
@@ -317,6 +317,6 @@
   {
     "sort": "prefs",
     "item": "default_themes",
-    "value": "a:2:{s:5:\"admin\";s:17:\"tastyigniter-blue\";s:4:\"main\";s:19:\"tastyigniter-orange\";}"
+    "value": "a:1:{s:4:\"main\";s:19:\"tastyigniter-orange\";}"
   }
 ]

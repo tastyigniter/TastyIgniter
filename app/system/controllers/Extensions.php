@@ -219,7 +219,8 @@ class Extensions extends \Admin\Classes\AdminController
         if ($validate === FALSE)
             return;
 
-        if ($model->set($this->formWidget->getSaveData())) {
+        $model->set($this->formWidget->getSaveData());
+        if ($model->save()) {
             flash()->success(sprintf(lang('admin::default.alert_success'), lang($settingItem->label).' settings updated '));
         }
         else {

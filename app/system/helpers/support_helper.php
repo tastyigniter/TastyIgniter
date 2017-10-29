@@ -38,7 +38,7 @@ if (!function_exists('page_url')) {
      *
      * @return string
      */
-    function page_url($uri = '', $params = [])
+    function page_url($uri = null, $params = [])
     {
         return app(UrlGenerator::class)->to($uri, $params);
     }
@@ -56,10 +56,9 @@ if (!function_exists('site_url')) {
      *
      * @return string
      */
-    function site_url($uri = '', $params = [])
+    function site_url($uri = null, $params = [])
     {
         return controller()->pageUrl($uri, $params);
-        return app(UrlGenerator::class)->to($uri, $params);
     }
 }
 
@@ -74,7 +73,7 @@ if (!function_exists('restaurant_url')) {
      *
      * @return string
      */
-    function restaurant_url($uri = '', $params = [])
+    function restaurant_url($uri = null, $params = [])
     {
         return $uri;
 
@@ -95,7 +94,7 @@ if (!function_exists('assets_url')) {
      *
      * @return string
      */
-    function assets_url($uri = '', $protocol = null)
+    function assets_url($uri = null, $protocol = null)
     {
         return app(UrlGenerator::class)->asset('assets/'.$uri, $protocol);
     }
@@ -111,7 +110,7 @@ if (!function_exists('image_url')) {
      *
      * @return string
      */
-    function image_url($uri = '', $protocol = null)
+    function image_url($uri = null, $protocol = null)
     {
         return app(UrlGenerator::class)->asset('assets/images/'.$uri, $protocol);
     }

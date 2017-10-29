@@ -7,7 +7,7 @@
 if (!function_exists('get_partial')) {
     /**
      * Render a theme partial area with components view
-     * @deprecated since 2.2 use partial_area instead
+     * @deprecated since 2.2 use component() instead
      *
      * @param string $partial
      * @param string $class
@@ -16,7 +16,7 @@ if (!function_exists('get_partial')) {
      */
     function get_partial($partial = '', $class = null)
     {
-        return partial_area($partial, $class);
+        return $partial;
     }
 }
 

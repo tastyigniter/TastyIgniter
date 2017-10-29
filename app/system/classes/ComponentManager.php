@@ -2,6 +2,7 @@
 
 use Exception;
 use Modules;
+use SystemException;
 
 /**
  * Components class for TastyIgniter.
@@ -265,22 +266,18 @@ class ComponentManager
     {
         $class_path = $this->resolve($name);
         if (!$class_path)
-            throw new Exception(sprintf(
+            throw new SystemException(sprintf(
                 'Class name is not registered for the component "%s". Check the component extension.', $name
             ));
 
         if (!class_exists($class_path))
-            throw new Exception(sprintf(
+            throw new SystemException(sprintf(
                 'Component class not found "%s". Check the component extension.', $class_path
             ));
 
         // Create and register the new controller.
         $component = new $class_path($page, $params);
         $component->name = $name;
-
-//            $extension = $this->findComponentExtension($class_path);
-//            $extensionMeta = $extension->extensionMeta();
-//            $component->extensionIcon = isset($extensionMeta['icon']) ? $extensionMeta['icon'] : null;
 
         return $component;
     }
