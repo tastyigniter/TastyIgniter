@@ -28,25 +28,6 @@ class Extensions extends \Admin\Classes\AdminController
         ],
     ];
 
-    public $formConfig = [
-        'name'       => 'lang:system::extensions.text_form_name',
-        'model'      => 'System\Models\Extensions_model',
-        'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
-            'redirect'      => 'extensions/edit/{code}',
-            'redirectClose' => 'extensions',
-        ],
-        'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
-            'redirect'      => 'extensions/edit/{code}',
-            'redirectClose' => 'extensions',
-        ],
-        'delete'     => [
-            'redirect' => 'extensions',
-        ],
-        'configFile' => '',
-    ];
-
     protected $requiredPermissions = 'Admin.Extensions';
 
     /**
@@ -74,14 +55,14 @@ class Extensions extends \Admin\Classes\AdminController
         $this->asExtension('ListController')->index();
     }
 
-    public function settings($context, $vendor = null, $extension = null)
+    public function edit($action, $vendor = null, $extension = null, $context = null)
     {
         try {
             if (!strlen($vendor) OR !strlen($extension)) {
                 throw new Exception(lang('system::extensions.alert_setting_missing_id'));
             }
 
-            if (!$settingItem = Settings_model::make()->getSettingItem($vendor.'.'.$extension)) {
+            if (!$settingItem = Settings_model::make()->getSettingItem($vendor.'.'.$extension.'.'.$context)) {
                 throw new Exception(lang('system::extensions.alert_setting_not_found'));
             }
 
@@ -94,7 +75,7 @@ class Extensions extends \Admin\Classes\AdminController
 
             $model = $this->formFindModelObject($settingItem);
 
-            $this->initFormWidget($model, $context);
+            $this->initFormWidget($model, $action);
         } catch (Exception $ex) {
             $this->handleError($ex);
         }

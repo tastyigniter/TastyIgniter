@@ -181,6 +181,7 @@ class Extensions_model extends Model
             if (!($extensionClass = $extensionManager->findExtension($code))) continue;
 
             $extensionMeta = (object)$extensionClass->extensionMeta();
+            $installedExtensions[] = $extensionMeta->code;
 
             // Only add  extensions whose meta code matched their directory name
             // or extension has no record in extensions table
@@ -196,6 +197,10 @@ class Extensions_model extends Model
                 'version' => $extensionMeta->version,
             ]);
         }
+
+        // Disabled extensions not found in file system
+        // This allows admin to remove an enabled extension from admin UI after deleting files
+        self::whereNotIn('name', $installedExtensions)->update(['status' => false]);
 
         self::updateInstalledExtensions();
     }

@@ -72,17 +72,6 @@ class BaseExtension extends ServiceProvider
      */
     public function registerComponents()
     {
-        $config = $this->getConfigFromFile();
-
-        if (isset($config['layout_ready']) AND !empty($config['extension_meta']['type']) AND $config['extension_meta']['type'] == 'module') {
-            $reflection = new ReflectionClass(get_class($this));
-            $vendor = basename(dirname(dirname($reflection->getFileName())));
-            $_module = basename(dirname($reflection->getFileName()));
-            $_class = ucfirst($_module);
-
-            return ["{$vendor}/{$_module}/components/{$_class}" => ['code' => $vendor.'.'.$_module]];
-        }
-
         return [];
     }
 
@@ -94,17 +83,6 @@ class BaseExtension extends ServiceProvider
      */
     public function registerPaymentGateways()
     {
-        $config = $this->getConfigFromFile();
-
-        if (isset($config['layout_ready']) AND !empty($config['extension_meta']['type']) AND $config['extension_meta']['type'] == 'payment') {
-            $reflection = new ReflectionClass(get_class($this));
-            $vendor = basename(dirname(dirname($reflection->getFileName())));
-            $_module = basename(dirname($reflection->getFileName()));
-            $_class = ucfirst($_module);
-
-            return ["{$vendor}/{$_module}/components/{$_class}" => $vendor.'.'.$_module];
-        }
-
         return [];
     }
 
@@ -139,20 +117,6 @@ class BaseExtension extends ServiceProvider
      */
     public function registerSettings()
     {
-        $config = $this->getConfigFromFile();
-
-        if (!empty($config['extension_meta']['settings'])) {
-            $reflection = new ReflectionClass(get_class($this));
-            $vendor = basename(dirname(dirname($reflection->getFileName())));
-            $_module = basename(dirname($reflection->getFileName()));
-
-            return [
-                'settings' => [
-                    'url' => admin_url("extensions/settings/{$vendor}/{$_module}"),
-                ],
-            ];
-        }
-
         return [];
     }
 

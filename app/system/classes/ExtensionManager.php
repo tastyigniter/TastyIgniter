@@ -576,16 +576,7 @@ class ExtensionManager
 
         return str_replace('\\', '.', $name);
     }
-//
-//    public function buildName($path)
-//    {
-//        $paths = explode('/', $path);
-//        $extensionName = array_pop($paths);
-//        $extensionOwner = array_pop($paths);
-//
-//        return $extensionOwner.'.'.$extensionName;
-//    }
-//
+
     public function getNamePath($name)
     {
         return str_replace('.', '/', $name);
@@ -601,6 +592,11 @@ class ExtensionManager
     public function hasExtension($name)
     {
         return isset($this->extensions[$name]);
+    }
+
+    public function hasVendor($path)
+    {
+        return array_key_exists($path, $this->paths());
     }
 
     /**

@@ -151,8 +151,7 @@ class Settings_model extends Model
             $category = ($item->owner != 'core') ? 'other' : $item->owner;
             $catItems[$category][] = $item;
 
-            $index = ($item->owner != 'core') ? $item->owner : $item->code;
-            $allItems[$index] = $item;
+            $allItems[$item->owner.'.'.$item->code] = $item;
         }
 
         $this->allItems = $allItems;
@@ -183,6 +182,12 @@ class Settings_model extends Model
                 'code'  => $code,
                 'owner' => $owner,
             ]));
+
+            if ($owner == 'core') {
+                $item['url'] = admin_url('settings/edit/'.$code);
+            } else {
+                $item['url'] = admin_url('extensions/edit/'.str_replace('.', '/', $owner).'/'.$code);
+            }
 
             $this->items[] = (object)$item;
         }
