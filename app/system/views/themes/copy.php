@@ -3,8 +3,8 @@
         [
             'id'   => 'edit-form',
             'role' => 'form',
-        ],
-        ['_method' => 'PATCH']
+                'method' => 'PATCH'
+        ]
     ); ?>
 
     <input type="hidden" name="_handler" value="onCreateChild">

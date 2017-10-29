@@ -3,8 +3,8 @@
         [
             'id'   => 'edit-form',
             'role' => 'form',
-        ],
-        ['_method' => 'POST']
+                'method' => 'POST'
+        ]
     ); ?>
 
     <?= $this->renderForm(); ?>

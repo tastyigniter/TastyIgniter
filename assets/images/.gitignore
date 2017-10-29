@@ -1,6 +1,5 @@
 data/*
 !data/no_photo.png
-!data/slide.jpg
 !data/flags
 
 thumbs/*

@@ -4,8 +4,8 @@
             'id'      => 'preview-form',
             'role'    => 'form',
             'enctype' => 'multipart/form-data',
-        ],
-        ['_method' => 'PATCH']
+                'method' => 'PATCH'
+        ]
     ); ?>
 
     <div class="toolbar">

@@ -3,6 +3,7 @@
 namespace Admin\Traits;
 
 use Closure;
+use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Support\Str;
 use Session;
@@ -61,9 +62,13 @@ trait ValidatesForm
 
         $rules = $this->parseRules($rules);
 
-        $this->getValidationFactory()
-             ->make($request, $rules, $messages, $customAttributes)
-             ->validate();
+        $validator = $this->getValidationFactory()
+             ->make($request, $rules, $messages, $customAttributes);
+
+        if ($validator->fails()) {
+            Session::flash('errors', $validator->errors());
+            throw new ValidationException($validator);
+        }
 
         return $this->extractInputFromRules($request, $rules);
     }

@@ -3,8 +3,8 @@
         [
             'id'   => 'list-form',
             'role' => 'form',
-        ],
-        ['_method' => 'POST']
+                'method' => 'POST'
+        ]
     ); ?>
 
     <?= $this->widgets['toolbar']->render() ?>

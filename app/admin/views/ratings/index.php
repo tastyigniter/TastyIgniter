@@ -7,8 +7,8 @@
             [
                 'id'   => 'edit-form',
                 'role' => 'form',
-            ],
-            ['_method' => 'PATCH']
+                'method' => 'PATCH'
+            ]
         ); ?>
 
         <table class="table table-striped table-border table-sortable">

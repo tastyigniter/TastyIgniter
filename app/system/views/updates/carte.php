@@ -15,8 +15,8 @@
                             [
                                 'id'   => 'carte-form',
                                 'role' => 'form',
-                            ],
-                            ['_method' => 'POST']
+                                'method' => 'POST'
+                            ]
                         ); ?>
                         <div class="input-group">
                             <input type="text"

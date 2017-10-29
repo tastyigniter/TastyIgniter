@@ -3,8 +3,8 @@
         [
             'id'   => 'preview-form',
             'role' => 'form',
-        ],
-        ['_method' => 'PATCH']
+                'method' => 'PATCH'
+        ]
     ); ?>
 
     <?= $this->toolbarWidget->render(); ?>

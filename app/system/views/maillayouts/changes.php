@@ -6,8 +6,8 @@
             [
                 'id'   => 'edit-form',
                 'role' => 'form',
-            ],
-            ['_method' => 'PATCH']
+                'method' => 'PATCH'
+            ]
         ); ?>
 
         <div class="toolbar">

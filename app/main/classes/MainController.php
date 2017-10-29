@@ -26,6 +26,7 @@ use System\Classes\BaseComponent;
 use System\Classes\BaseController;
 use System\Classes\ComponentManager;
 use System\Traits\AssetMaker;
+use SystemException;
 use URL;
 use View;
 
@@ -312,8 +313,8 @@ class MainController extends BaseController
 
     protected function processHandlers()
     {
-        if (!$handler = Request::get('X-IGNITER-REQUEST-HANDLER'))
-            $handler = post('_handler');
+        if (!$handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+            $handler = input('_handler');
 
         if (!$handler)
             return FALSE;
@@ -671,8 +672,7 @@ class MainController extends BaseController
         try {
             $manager = ComponentManager::instance();
             $componentObj = $manager->makeComponent($name, $codeObj, $properties);
-        } catch (Exception $ex) {
-            // @todo use a blank component object instead.
+        } catch (SystemException $ex) {
             throw new MainException(sprintf(
                     lang('main::default.not_found.component'), $name
                 ).' => '.$ex->getMessage()
@@ -683,7 +683,6 @@ class MainController extends BaseController
         $this->vars[$alias] = $componentObj;
         $templateObj->components[$alias] = $componentObj;
 
-//        $this->setComponentPropertiesFromParams($componentObj);
         $componentObj->initialize();
 
         return $componentObj;

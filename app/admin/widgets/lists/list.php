@@ -3,8 +3,8 @@
         [
             'id'   => 'list-form',
             'role' => 'form',
-        ],
-        ['_method' => 'GET']
+                'method' => 'GET'
+        ]
     ); ?>
 
     <div class="table-responsive">

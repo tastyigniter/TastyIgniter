@@ -4,8 +4,8 @@
             [
                 'id'   => 'edit-form',
                 'role' => 'form',
-            ],
-            ['_method' => 'DELETE']
+                'method' => 'DELETE'
+            ]
         ); ?>
 
         <input type="hidden" name="_handler" value="onDelete">

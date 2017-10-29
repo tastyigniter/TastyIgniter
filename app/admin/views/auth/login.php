@@ -12,8 +12,8 @@
                     [
                         'id'   => 'edit-form',
                         'role' => 'form',
-                    ],
-                    ['_method' => 'POST']
+                        'method' => 'POST'
+                    ]
                 ); ?>
 
                 <div class="form-group">
