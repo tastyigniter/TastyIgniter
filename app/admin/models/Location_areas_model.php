@@ -52,6 +52,10 @@ class Location_areas_model extends Model
 
     public $positionBoundary;
 
+    //
+    // Accessors & Mutators
+    //
+
     public function getVerticesAttribute()
     {
         return isset($this->boundaries['vertices']) ?
@@ -63,6 +67,10 @@ class Location_areas_model extends Model
         return isset($this->boundaries['circle']) ?
             json_decode($this->boundaries['circle']) : null;
     }
+
+    //
+    // Helpers
+    //
 
     public function listConditions()
     {

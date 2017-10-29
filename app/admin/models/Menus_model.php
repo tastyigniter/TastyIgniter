@@ -160,15 +160,7 @@ class Menus_model extends Model
             $this->addMenuSpecial($this->attributes['special']);
 
         if (array_key_exists('categories', $this->attributes)) {
-            $defaultSpecialCategory = (int)setting('special_category_id');
             $menuCategories = $this->attributes['categories'];
-            if (isset($this->attributes['special']['special_status'])
-                AND $this->attributes['special']['special_status'] == 1
-                AND !in_array($defaultSpecialCategory, $menuCategories)
-            ) {
-                $menuCategories[] = $defaultSpecialCategory;
-            }
-
             $this->addMenuCategories($menuCategories);
         }
 
@@ -199,30 +191,29 @@ class Menus_model extends Model
     }
 
     /**
-     * Find a single menu by menu_id
+     * Subtract or add to menu stock quantity
      *
      * @param int $menu_id
+     * @param int $quantity
+     * @param string $action
      *
-     * @return mixed
+     * @return bool TRUE on success, or FALSE on failure
      */
-    public function getMenu($menu_id)
+    public function updateStock($quantity = 0, $action = 'subtract')
     {
-        $menusTable = $this->getTablePrefix('menus');
-        $categoriesTable = $this->getTablePrefix('categories');
-        $menusSpecialsTable = $this->getTablePrefix('menus_specials');
-        $mealtimesTable = $this->getTablePrefix('mealtimes');
+        $update = FALSE;
 
-        $result = $this->selectRaw("*, {$menusTable}.menu_id, menu_name, ".
-            "menu_description, menu_price, menu_photo, menu_category_id, stock_qty, minimum_qty, subtract_stock, ".
-            "menu_status, menu_priority, category_id, {$categoriesTable}.name, description, special_id, start_date, ".
-            "end_date, {$menusSpecialsTable}.special_id, special_price, special_status, {$menusTable}.mealtime_id, {$mealtimesTable}.mealtime_name, ".
-            "{$mealtimesTable}.start_time, {$mealtimesTable}.end_time, mealtime_status")
-                       ->leftJoin('categories', 'categories.category_id', '=', 'menus.menu_category_id')
-                       ->leftJoin('menus_specials', 'menus_specials.menu_id', '=', 'menus.menu_id')
-                       ->leftJoin('mealtimes', 'mealtimes.mealtime_id', '=', 'menus.mealtime_id')
-                       ->findOrNew($menu_id);
+        if ($this->subtract_stock == '1' AND !empty($quantity)) {
+            $stock_qty = $this->stock_qty + $quantity;
 
-        return $result;
+            if ($action === 'subtract') {
+                $stock_qty = $this->stock_qty - $quantity;
+            }
+
+            $update = $this->update(['stock_qty' => $stock_qty]);
+        }
+
+        return $update;
     }
 
     /**
@@ -258,74 +249,6 @@ class Menus_model extends Model
             }
 
             return $return;
-        }
-    }
-
-    /**
-     * Subtract or add to menu stock quantity
-     *
-     * @param int $menu_id
-     * @param int $quantity
-     * @param string $action
-     *
-     * @return bool TRUE on success, or FALSE on failure
-     */
-    public function updateStock($menu_id, $quantity = 0, $action = 'subtract')
-    {
-        $update = FALSE;
-
-        if (is_numeric($menu_id)) {
-            $menuModel = $this->find($menu_id);
-            if ($menuModel AND $row = $menuModel->toArray()) {
-                if ($row['subtract_stock'] == '1' AND !empty($quantity)) {
-                    $stock_qty = $row['stock_qty'] + $quantity;
-
-                    if ($action === 'subtract') {
-                        $stock_qty = $row['stock_qty'] - $quantity;
-                    }
-
-                    $update = $menuModel->update(['stock_qty' => $stock_qty]);
-                }
-            }
-        }
-
-        return $update;
-    }
-
-    /**
-     * Create a new or update existing menu
-     *
-     * @param int $menu_id
-     * @param array $save
-     *
-     * @return bool|int The $menu_id of the affected row, or FALSE on failure
-     */
-    public function saveMenu($menu_id, $save = [])
-    {
-        if (empty($save) AND !is_array($save)) return FALSE;
-
-        $menuModel = $this->findOrNew($menu_id);
-
-        $saved = $menuModel->fill($save)->save();
-
-        return $saved ? $menuModel->getKey() : $saved;
-    }
-
-    /**
-     * Delete a single or multiple option by menu_id
-     *
-     * @param string|array $menu_id
-     *
-     * @return int The number of deleted rows
-     */
-    public function deleteMenu($menu_id)
-    {
-        if (is_numeric($menu_id)) $menu_id = [$menu_id];
-
-        if (!empty($menu_id) AND ctype_digit(implode('', $menu_id))) {
-            return $this->newQuery()->with([
-                'menu_options', 'special', 'categories',
-            ])->whereIn('menu_id', $menu_id)->delete();
         }
     }
 
@@ -432,48 +355,5 @@ class Menus_model extends Model
         $this->special()->updateOrCreate([
             'special_id' => $menuSpecial['special_id'],
         ], array_except($menuSpecial, 'special_id'));
-    }
-
-    /**
-     * Build menu data array
-     *
-     * @param array $rows
-     *
-     * @return array
-     */
-    public function buildMenuList($rows = [])
-    {
-        $show_menu_images = (is_numeric(setting('show_menu_images'))) ? setting('show_menu_images') : '';
-        $menu_images_h = (is_numeric(setting('menu_images_h'))) ? setting('menu_images_h') : '50';
-        $menu_images_w = (is_numeric(setting('menu_images_w'))) ? setting('menu_images_w') : '50';
-
-        $result = [];
-        foreach ($rows as $row) {                                                            // loop through menus array
-            if ($show_menu_images == '1' AND !empty($row['menu_photo'])) {
-                $row['menu_photo'] = Image_tool_model::resize($row['menu_photo'], $menu_images_w, $menu_images_h);
-            }
-
-            $end_days = $end_date = '';
-            if ($row['special_status'] == '1' AND $row['is_special'] == '1') {
-                $row['menu_price'] = $row['special_price'];
-                $end_date = mdate('%d %M', strtotime($row['end_date']));
-
-                $end_days = sprintf(lang('text_end_today'));
-                if (($daydiff = floor((strtotime($row['end_date']) - time()) / 86400)) > 0) {
-                    $end_days = sprintf(lang('text_end_days'), $end_date, $daydiff);
-                }
-            }
-
-            $result[$row['menu_category_id']][] = array_merge($row, [                                                            // create array of menu data to be sent to view
-                'category_id'     => $row['menu_category_id'],
-                'minimum_qty'     => !empty($row['minimum_qty']) ? $row['minimum_qty'] : '1',
-                'mealtime_status' => (!empty($row['mealtime_id']) AND !empty($row['mealtime_status'])) ? '1' : '0',
-                'end_date'        => $end_date,
-                'end_days'        => $end_days,
-                'menu_price'      => $this->currency->format($row['menu_price']),        //add currency symbol and format price to two decimal places
-            ]);
-        }
-
-        return $result;
     }
 }

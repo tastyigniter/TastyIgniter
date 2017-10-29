@@ -74,15 +74,6 @@ class Settings_model extends Model
     // Config & Registration
     //
 
-    /**
-     * Return all settings
-     * @return array
-     */
-    public function getAll()
-    {
-        return $this->get();
-    }
-
     public function getFieldConfig()
     {
         if ($this->fieldConfig !== null) {

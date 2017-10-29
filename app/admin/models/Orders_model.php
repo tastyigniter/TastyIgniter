@@ -10,6 +10,10 @@ use Model;
  */
 class Orders_model extends Model
 {
+    const CREATED_AT = 'date_added';
+
+    const UPDATED_AT = 'date_modified';
+
     const DELIVERY = 'delivery';
 
     const COLLECTION = 'collection';
@@ -37,10 +41,6 @@ class Orders_model extends Model
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
-
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_modified';
 
     public $casts = [
         'cart' => 'array',

@@ -100,34 +100,6 @@ class Customer_online_model extends Model
     //
 
     /**
-     * Return all online customers
-     *
-     * @return array
-     */
-    public function getCustomersOnline()
-    {
-        return $this->get();
-    }
-
-    /**
-     * Find a single online customer by currency_id
-     *
-     * @param int $customer_id
-     *
-     * @return array
-     */
-    public function getCustomerOnline($customer_id)
-    {
-        if ($customer_id) {
-            $dateAddedColumn = DB::getTablePrefix().'customers_online.date_added';
-
-            return $this->selectRaw('*, '.DB::getTablePrefix().'customers_online.ip_address, '.$dateAddedColumn)
-                        ->leftJoin('customers', 'customers.customer_id', '=', 'customers_online.customer_id')
-                        ->orderBy($dateAddedColumn, 'DESC')->where('customer_id', $customer_id)->first();
-        }
-    }
-
-    /**
      * Find when a customer was last online by ip
      *
      * @param string $ip the IP address of the current user
@@ -136,18 +108,8 @@ class Customer_online_model extends Model
      */
     public function getLastOnline($ip)
     {
-        if ($this->input->valid_ip($ip)) {
+//        if ($this->input->valid_ip($ip)) {
             return $this->selectRaw('*, MAX(date_added) as date_added')->where('ip_address', $ip)->first();
-        }
-    }
-
-    /**
-     * Return the last online dates of all customers
-     *
-     * @return array
-     */
-    public function getOnlineDates()
-    {
-        return $this->pluckDates('date_added');
+//        }
     }
 }

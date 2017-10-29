@@ -94,20 +94,4 @@ class Menu_item_options_model extends Model
 
         return TRUE;
     }
-
-    /**
-     * Delete a single or multiple menu option by menu_id
-     *
-     * @param string|array $menu_id
-     *
-     * @return int The number of deleted rows
-     */
-    public function deleteMenuOption($menu_id)
-    {
-        if (is_numeric($menu_id)) $menu_id = [$menu_id];
-
-        if (!empty($menu_id) AND ctype_digit(implode('', $menu_id))) {
-            return $this->newQuery->whereIn('menu_id', $menu_id)->delete();
-        }
-    }
 }

@@ -358,66 +358,6 @@ class Locations_model extends Model
     }
 
     /**
-     * Return all enabled locations
-     *
-     * @return array
-     */
-    public function getLocations()
-    {
-        return $this->where('location_status', '1')->get();
-    }
-
-    /**
-     * Find a single location by location_id
-     *
-     * @param $location_id
-     *
-     * @return mixed
-     */
-    public function getLocation($location_id)
-    {
-        return $this->joinCountry()->find($location_id);
-    }
-
-    /**
-     * Return all location working hours by location id
-     *
-     * @param int $location_id
-     *
-     * @return array
-     */
-    public function getWorkingHours($location_id = null)
-    {
-        $workingHoursModel = Working_hours_model::query();
-
-        if (!is_null($location_id)) {
-            $workingHoursModel->where('location_id', $location_id);
-        }
-
-        return $workingHoursModel->get();
-    }
-
-    /**
-     * Find a single location address by location id
-     *
-     * @param int $location_id
-     *
-     * @return array
-     */
-    public function getAddress($location_id)
-    {
-        $address_data = [];
-
-        if ($location_id !== 0) {
-            if ($row = $this->joinCountry()->find($location_id)) {
-                $address_data = $this->processAddress($row);
-            }
-        }
-
-        return $address_data;
-    }
-
-    /**
      * Find a location working hour by day of the week
      *
      * @param int $location_id
@@ -441,24 +381,6 @@ class Locations_model extends Model
         }
 
         return $hour;
-    }
-
-    /**
-     * Return all locations by table
-     *
-     * @param int $table_id
-     *
-     * @return array
-     */
-    public function getLocationsByTable($table_id = null)
-    {
-        $table_locations = [];
-        $locations = Location_tables_model::where('table_id', $table_id)->get();
-        foreach ($locations as $row) {
-            $table_locations[] = $row['location_id'];
-        }
-
-        return $table_locations;
     }
 
     /**
@@ -504,60 +426,19 @@ class Locations_model extends Model
      *
      * @return bool|int
      */
-    public static function updateDefault($address = [])
+    public static function updateDefault($update = [])
     {
-        $query = FALSE;
-
-        if (empty($address) AND !is_array($address)) return $query;
-
-        if (isset($address['address_1'])) {
-            $update['location_address_1'] = $address['address_1'];
-        }
-
-        if (isset($address['address_2'])) {
-            $update['location_address_2'] = $address['address_2'];
-        }
-
-        if (isset($address['city'])) {
-            $update['location_city'] = $address['city'];
-        }
-
-        if (isset($address['state'])) {
-            $update['location_state'] = $address['state'];
-        }
-
-        if (isset($address['postcode'])) {
-            $update['location_postcode'] = $address['postcode'];
-        }
-
-        if (isset($address['country_id'])) {
-            $update['location_country_id'] = $address['country_id'];
-        }
-
-        if (isset($address['location_lat'])) {
-            $update['location_lat'] = $address['location_lat'];
-        }
-
-        if (isset($address['location_lng'])) {
-            $update['location_lng'] = $address['location_lng'];
-        }
-
-        $update['location_status'] = '1';
-
-        if (isset($address['location_id'])) {
-            $location_id = (int)$address['location_id'];
-        }
-        else {
-            $location_id = params('default_location_id');
-        }
+        $location_id = isset($update['location_id'])
+            ? (int)$update['location_id']
+            : params('default_location_id');
 
         $locationModel = self::findOrNew($location_id);
 
         $saved = null;
         if ($locationModel) {
+            $locationModel->location_status = true;
             $saved = $locationModel->fill($update)->save();
 
-//            Settings_model::addSetting('prefs', 'main_address', $default_address, '1');
             params()->set('default_location_id', $locationModel->getKey());
 
             if (is_single_location()) {
@@ -565,27 +446,6 @@ class Locations_model extends Model
                     ->update(['location_status' => '0']);
             }
         }
-
-        return $saved ? $locationModel->getKey() : $saved;
-    }
-
-    /**
-     * Create a new or update existing location
-     *
-     * @param int $location_id
-     * @param array $save
-     *
-     * @return bool|int
-     */
-    public function saveLocation($location_id, $save = [])
-    {
-        if (empty($save)) return FALSE;
-
-        $save = $this->postData($save);
-
-        $locationModel = $this->findOrNew($location_id);
-
-        $saved = $locationModel->fill($save)->save();
 
         return $saved ? $locationModel->getKey() : $saved;
     }
@@ -669,40 +529,6 @@ class Locations_model extends Model
     }
 
     /**
-     * Delete a single or multiple location by location_id
-     *
-     * @param string|array $location_id
-     *
-     * @return int The number of deleted rows
-     */
-    public function deleteLocation($location_id)
-    {
-        if (is_numeric($location_id)) $location_id = [$location_id];
-
-        if (!empty($location_id) AND ctype_digit(implode('', $location_id))) {
-            return $this->whereIn('location_id', $location_id)->delete();
-        }
-    }
-
-    /**
-     * Validate a single location by language_id
-     *
-     * @param int $location_id
-     *
-     * @return bool TRUE on success, FALSE on failure
-     */
-    public function validateLocation($location_id)
-    {
-        if (!empty($location_id)) {
-            if ($this->find($location_id)) {
-                return TRUE;
-            }
-        }
-
-        return FALSE;
-    }
-
-    /**
      * Build working hours array
      *
      * @param $type
@@ -758,125 +584,5 @@ class Locations_model extends Model
         ];
 
         return $address_data;
-    }
-
-    /**
-     * Build post data to save in database
-     * @deprecated
-     *
-     * @param array $save
-     *
-     * @return array
-     */
-    protected function postData($save = [])
-    {
-        if (isset($save['address']['address_1'])) {
-            $save['location_address_1'] = $save['address']['address_1'];
-        }
-
-        if (isset($save['address']['address_2'])) {
-            $save['location_address_2'] = $save['address']['address_2'];
-        }
-
-        if (isset($save['address']['city'])) {
-            $save['location_city'] = $save['address']['city'];
-        }
-
-        if (isset($save['address']['state'])) {
-            $save['location_state'] = $save['address']['state'];
-        }
-
-        if (isset($save['address']['postcode'])) {
-            $save['location_postcode'] = $save['address']['postcode'];
-        }
-
-        if (isset($save['address']['country'])) {
-            $save['location_country_id'] = $save['address']['country'];
-        }
-
-        if (isset($save['address']['location_lat'])) {
-            $save['location_lat'] = $save['address']['location_lat'];
-        }
-
-        if (isset($save['address']['location_lng'])) {
-            $save['location_lng'] = $save['address']['location_lng'];
-        }
-
-        if (isset($save['email'])) {
-            $save['location_email'] = $save['email'];
-        }
-
-        if (isset($save['telephone'])) {
-            $save['location_telephone'] = $save['telephone'];
-        }
-
-        $options = [];
-        if (isset($save['auto_lat_lng'])) {
-            $options['auto_lat_lng'] = $save['auto_lat_lng'];
-        }
-
-        if (isset($save['opening_type'])) {
-            $options['opening_hours']['opening_type'] = $save['opening_type'];
-        }
-
-        if (isset($save['daily_days'])) {
-            $options['opening_hours']['daily_days'] = $save['daily_days'];
-        }
-
-        if (isset($save['daily_hours'])) {
-            $options['opening_hours']['daily_hours'] = $save['daily_hours'];
-        }
-
-        if (isset($save['flexible_hours'])) {
-            $options['opening_hours']['flexible_hours'] = $save['flexible_hours'];
-        }
-
-        if (isset($save['delivery_type'])) {
-            $options['opening_hours']['delivery_type'] = $save['delivery_type'];
-        }
-
-        if (isset($save['delivery_days'])) {
-            $options['opening_hours']['delivery_days'] = $save['delivery_days'];
-        }
-
-        if (isset($save['delivery_hours'])) {
-            $options['opening_hours']['delivery_hours'] = $save['delivery_hours'];
-        }
-
-        if (isset($save['collection_type'])) {
-            $options['opening_hours']['collection_type'] = $save['collection_type'];
-        }
-
-        if (isset($save['collection_days'])) {
-            $options['opening_hours']['collection_days'] = $save['collection_days'];
-        }
-
-        if (isset($save['collection_hours'])) {
-            $options['opening_hours']['collection_hours'] = $save['collection_hours'];
-        }
-
-        if (isset($save['future_orders'])) {
-            $options['future_orders'] = $save['future_orders'];
-        }
-
-        if (isset($save['future_order_days'])) {
-            $options['future_order_days'] = $save['future_order_days'];
-        }
-
-        if (isset($save['payments'])) {
-            $options['payments'] = $save['payments'];
-        }
-
-        if (isset($save['delivery_areas'])) {
-            $options['delivery_areas'] = $save['delivery_areas'];
-        }
-
-        if (isset($save['gallery'])) {
-            $options['gallery'] = $save['gallery'];
-        }
-
-        $save['options'] = $options;
-
-        return $save;
     }
 }

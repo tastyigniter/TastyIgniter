@@ -84,84 +84,15 @@ class Menu_options_model extends Model
      *
      * @return array
      */
-    public function getOptionValues($option_id = null)
+    public static function getOptionValues($option_id = null)
     {
-        $query = $this->orderBy('priority')->from('option_values');
+        $query = self::orderBy('priority')->from('option_values');
 
         if ($option_id !== FALSE) {
             $query->where('option_id', $option_id);
         }
 
         return $query->get();
-    }
-
-    /**
-     * Find a single option by option_id
-     *
-     * @param $option_id
-     *
-     * @return mixed
-     */
-    public function getOption($option_id)
-    {
-        return $this->findOrNew($option_id)->toArray();
-    }
-
-    /**
-     * Return all menu options by menu_id
-     *
-     * @param int $menu_id
-     *
-     * @return array
-     */
-    public function getMenuOptions($menu_id = null)
-    {
-        $results = [];
-
-        $tablePrefixed = $this->getTablePrefix('menu_options');
-
-        $query = $this->selectRaw("*, {$tablePrefixed}.menu_id, {$tablePrefixed}.option_id")
-                      ->leftJoin('options', 'options.option_id', '=', 'menu_options.option_id');
-
-        if (is_numeric($menu_id)) {
-            $query->where('menu_id', $menu_id);
-        }
-
-        if ($result = $query->orderBy('options.priority')->from('menu_options')->get()) {
-            foreach ($result as $row) {
-                $results[] = array_merge($row, [
-                    'option_values' => $this->getMenuOptionValues($row['menu_option_id'], $row['option_id']),
-                ]);
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     * Return all menu option values by menu_option_id and option_id
-     *
-     * @param int $menu_option_id
-     * @param int $option_id
-     *
-     * @return array
-     */
-    public function getMenuOptionValues($menu_option_id = null, $option_id = null)
-    {
-        $result = [];
-
-        if (is_numeric($menu_option_id) AND is_numeric($option_id)) {
-            $valuePrefixed = $this->getTablePrefix('menu_option_values');
-            $optionPrefixed = $this->getTablePrefix('option_values');
-
-            $result = $this->selectRaw("*, {$valuePrefixed}.option_id, {$optionPrefixed}.option_value_id")
-                           ->leftJoin('option_values', 'option_values.option_value_id', '=', 'menu_option_values.option_value_id')
-                           ->where('menu_option_values.menu_option_id', $menu_option_id)
-                           ->where('menu_option_values.option_id', $option_id)
-                           ->orderBy('option_values.priority')->from('menu_option_values')->get();
-        }
-
-        return $result;
     }
 
     /**
@@ -185,7 +116,7 @@ class Menu_options_model extends Model
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
                     $result[] = array_merge($row, [
-                        'option_values' => $this->getOptionValues($row['option_id']),
+                        'option_values' => self::getOptionValues($row['option_id']),
                     ]);
                 }
             }
@@ -223,45 +154,5 @@ class Menu_options_model extends Model
              ->whereNotIn('option_value_id', $idsToKeep)->delete();
 
         return TRUE;
-    }
-
-    /**
-     * Create a new or update existing options
-     *
-     * @param int $option_id
-     * @param array $save
-     *
-     * @return bool|int The $option_id of the affected row, or FALSE on failure
-     */
-    public function saveOption($option_id, $save = [])
-    {
-        if (empty($save)) return FALSE;
-
-        $menuOptionModel = $this->findOrNew($option_id);
-
-        if ($saved = $menuOptionModel->fill($save)->save()) {
-            $save['option_values'] = isset($save['option_values']) ? $save['option_values'] : [];
-            $this->addOptionValues($menuOptionModel->getKey(), $save['option_values']);
-        }
-
-        return $saved ? $menuOptionModel->getKey() : $saved;
-    }
-
-    /**
-     * Delete a single or multiple option by option_id
-     *
-     * @param string|array $option_id
-     *
-     * @return int The number of deleted rows
-     */
-    public function deleteOption($option_id)
-    {
-        if (is_numeric($option_id)) $option_id = [$option_id];
-
-        if (!empty($option_id) AND ctype_digit(implode('', $option_id))) {
-
-            return $this->newQuery()
-                        ->whereIn('option_id', $option_id)->delete();
-        }
     }
 }

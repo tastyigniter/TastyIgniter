@@ -4,7 +4,7 @@ use Admin\Notifications\CustomerRegistered;
 use DB;
 use Hash;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
-use Igniter\Flame\Database\Traits\Mailable;
+use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Notifications\Notifiable;
 use Model;
@@ -14,18 +14,17 @@ use Model;
  *
  * @package Admin
  */
-class Customers_model extends Model
+class Customers_model extends AuthUserModel
 {
     use LogsActivity;
     use Purgeable;
     use Notifiable;
-    use Mailable;
 
     protected static $logAttributes = ['name'];
 
-    protected static $mailables = [
-        'Igniter\Mail\CustomerRegistration' => ['registration', 'registration_alert'],
-    ];
+//    protected static $mailables = [
+//        'Igniter\Mail\CustomerRegistration' => ['registration', 'registration_alert'],
+//    ];
 
     const CREATED_AT = 'date_added';
 
@@ -214,150 +213,6 @@ class Customers_model extends Model
     }
 
     /**
-     * Return all customers
-     *
-     * @return array
-     */
-    public function getCustomers()
-    {
-        return $this->get();
-    }
-
-    /**
-     * Find a single customer by customer_id
-     *
-     * @param $customer_id
-     *
-     * @return array
-     */
-    public function getCustomer($customer_id)
-    {
-        if (is_numeric($customer_id)) {
-            return $this->find($customer_id);
-        }
-    }
-
-    /**
-     * Return all customer registration dates
-     *
-     * @return array
-     */
-    public function getCustomerDates()
-    {
-        return $this->pluckDates('date_added');
-    }
-
-    /**
-     * Return all customers email or id,
-     * to use when sending messages to customers
-     *
-     * @param $type
-     *
-     * @return array
-     */
-    public function getCustomersForMessages($type)
-    {
-        $result = $this->select('customer_id, email, status')->isEnabled()->get();
-
-        return $this->getEmailOrIdFromResult($result, $type);
-    }
-
-    /**
-     * Return specified customer email or id by customer_id,
-     * to use when sending messages to customers
-     *
-     * @param $type
-     * @param $customer_id
-     *
-     * @return array
-     */
-    public function getCustomerForMessages($type, $customer_id)
-    {
-        if (!empty($customer_id) AND is_array($customer_id)) {
-            $result = $this->select('customer_id, email, status')
-                           ->whereIn('customer_id', $customer_id)->isEnabled()->get();
-
-            $result = $this->getEmailOrIdFromResult($result, $type);
-
-            return $result;
-        }
-    }
-
-    /**
-     * Return all customers email or id by customer_group_id,
-     * to use when sending messages to customers
-     *
-     * @param $type
-     * @param $customer_group_id
-     *
-     * @return array
-     */
-    public function getCustomersByGroupIdForMessages($type, $customer_group_id)
-    {
-        if (is_numeric($customer_group_id)) {
-            $result = $this->selectRaw('customer_id, email, customer_group_id, status')
-                           ->where('customer_group_id', $customer_group_id)->isEnabled()->get();
-
-            return $this->getEmailOrIdFromResult($result, $type);
-        }
-    }
-
-    /**
-     * Return all subscribed customers email or id,
-     * to use when sending messages to customers
-     *
-     * @param $type
-     *
-     * @return array
-     */
-    public function getCustomersByNewsletterForMessages($type)
-    {
-        $result = $this->selectRaw('customer_id, email, newsletter, status')
-                       ->where('newsletter', '1')->isEnabled()->get();
-
-        $result = $this->getEmailOrIdFromResult($result, $type);
-
-        // @todo: use separate database table for newsletter email list and manage from newsletter extension
-        $newsletter = ExtensionManager::instance()->findExtension('newsletter');
-        if ($type === 'email' AND !empty($newsletter['ext_data']['subscribe_list'])) {
-            $result = array_merge($result, $newsletter['ext_data']['subscribe_list']);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param $query
-     *
-     * @param $type
-     * @param array $result
-     *
-     * @return array
-     */
-    protected function getEmailOrIdFromResult($result, $type)
-    {
-        if (!empty($result)) {
-            foreach ($result as $row) {
-                $result[] = ($type == 'email') ? $row['email'] : $row['customer_id'];
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Find a single customer by email
-     *
-     * @param string $email
-     *
-     * @return array
-     */
-    public function getCustomerByEmail($email)
-    {
-        return $this->where('email', strtolower($email))->first();
-    }
-
-    /**
      * Sets the reset password columns to NULL
      *
      * @param string $code
@@ -470,108 +325,6 @@ class Customers_model extends Model
     }
 
     /**
-     * Create a new or update existing customer
-     *
-     * @param int $customer_id
-     * @param array $save
-     *
-     * @return bool|int The $customer_id of the affected row, or FALSE on failure
-     */
-    public function saveCustomer($customer_id, $save = [])
-    {
-        if (empty($save)) return FALSE;
-
-        $customerModel = $this->findOrNew($customer_id);
-
-        $saved = $customerModel->fill($save)->save();
-
-        return $saved ? $customerModel->getKey() : $saved;
-    }
-
-    /**
-     * Update guest orders, address and reservations
-     * matching customer email
-     *
-     * @return bool TRUE on success, or FALSE on failure
-     */
-    public function saveCustomerGuestOrder()
-    {
-        $query = FALSE;
-
-        if (is_numeric($this->customer_id) AND !empty($this->email)) {
-            $customer_id = $this->customer_id;
-            $customer_email = $this->email;
-            $update = ['customer_id' => $customer_id];
-
-            if ($orders = Orders_model::where('email', $customer_email)->get()) {
-                foreach ($orders as $row) {
-                    if (empty($row['order_id'])) continue;
-
-                    Coupons_model::where('email', $customer_email)
-                                 ->where('order_id', $row['order_id'])->update($update);
-
-                    Coupons_history_model::where('order_id', $row['order_id'])->update($update);
-
-                    if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
-                        Addresses_model::where('address_id', $row['address_id'])->update($update);
-                    }
-
-                    // @todo: move to paypal extension
-                    if (!empty($row['payment'])) {
-                        DB::table('pp_payments')->where('order_id', $row['order_id'])
-                          ->update(['customer_id' => $customer_id]);
-                    }
-                }
-            }
-
-            Reservations_model::where('email', $customer_email)->update($update);
-
-            $query = TRUE;
-        }
-
-        return $query;
-    }
-
-    /**
-     * Create a new or update existing customer address
-     *
-     * @param int $customer_id
-     * @param array $addresses an array of one or multiple address array
-     */
-//    public function saveAddress($customer_id = null, $addresses = [])
-//    {
-//        !is_null($customer_id) OR $customer_id = $this->getKey();
-//
-//        $idsToKeep = [];
-//        foreach ($addresses as $address) {
-//            $addressModel = $this->addresses()->updateOrCreate([
-//                'customer_id' => $customer_id,
-//                'address_id' => $address['address_id'],
-//            ], array_except($address, ['customer_id', 'address_id']));
-//
-//            $idsToKeep[] = $addressModel->getKey();
-//        }
-//
-//        $this->addresses()->whereNotIn('address_id', $idsToKeep)->delete();
-//    }
-
-    /**
-     * Delete a single or multiple customer by customer_id
-     *
-     * @param string|array $customer_id
-     *
-     * @return int  The number of deleted rows
-     */
-//    public function deleteCustomer($customer_id)
-//    {
-//        if (is_numeric($customer_id)) $customer_id = [$customer_id];
-//
-//        if (!empty($customer_id) AND ctype_digit(implode('', $customer_id))) {
-//            return $this->whereIn('customer_id', $customer_id)->delete();
-//        }
-//    }
-
-    /**
      * Send email to customer
      *
      * @param string $email
@@ -644,35 +397,5 @@ class Customers_model extends Model
         }
 
         return $emails;
-    }
-
-    /**
-     * Check if a customer id already exists in database
-     *
-     * @param int $customer_id
-     *
-     * @return bool
-     */
-    public function validateCustomer($customer_id)
-    {
-        return (is_numeric($customer_id) AND $this->find($customer_id)) ? TRUE : FALSE;
-    }
-
-    /**
-     * Generate random password
-     *
-     * @return string
-     */
-    protected function getRandomString()
-    {
-        //Random Password
-        $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
-        $pass = [];
-        for ($i = 0; $i < 8; $i++) {
-            $n = rand(0, strlen($alphabet) - 1);
-            $pass[$i] = $alphabet[$n];
-        }
-
-        return implode('', $pass);
     }
 }

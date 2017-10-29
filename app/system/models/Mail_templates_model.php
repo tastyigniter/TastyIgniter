@@ -79,53 +79,6 @@ class Mail_templates_model extends Model
     // Helpers
     //
 
-//    /**
-//     * Return all mail templates
-//     * @return array
-//     */
-//    public function getTemplates()
-//    {
-//        return $this->get();
-//    }
-//
-//    /**
-//     * Find a single mail template by template_id
-//     *
-//     * @param $template_id
-//     *
-//     * @return bool
-//     */
-//    public function getTemplate($template_id)
-//    {
-//        return $this->find($template_id);
-//    }
-//
-//    /**
-//     * Return all mail templates data by template_id
-//     *
-//     * @param $template_id
-//     *
-//     * @return array
-//     */
-//    public function getAllTemplateData($template_id)
-//    {
-//        $result = [];
-//
-//        if ($template_id) {
-//            $result = Mail_templates_data_model::where('template_id', $template_id)
-//                                               ->orderBy('template_data_id')->get();
-//        }
-//
-//        return $result;
-//    }
-//
-//    /**
-//     * Find the default mail template by template code
-//     *
-//     * @param $template_code
-//     *
-//     * @return mixed
-//     */
     public static function getDefaultTemplateData($template_code)
     {
         $template_id = setting('mail_template_id');
@@ -159,58 +112,4 @@ class Mail_templates_model extends Model
             return $query->first();
         }
     }
-//
-//    /**
-//     * Create a new or update existing mail template
-//     *
-//     * @param       $template_id
-//     * @param array $save
-//     *
-//     * @return bool|int The $template_id of the affected row, or FALSE on failure
-//     */
-//    public function saveTemplate($template_id, $save = [])
-//    {
-//        if (empty($save)) return FALSE;
-//
-//        $templateModel = $this->findOrNew($template_id);
-//
-//        $saved = $templateModel->fill($save)->save();
-//
-//        return $saved ? $templateModel->getKey() : $saved;
-//    }
-//
-//    /**
-//     * Create a new or update existing mail template data
-//     *
-//     * @param       $template_id
-//     * @param array $templates
-//     *
-//     * @return bool TRUE on success, or FALSE on failure
-//     */
-//    public static function updateTemplateData($template_id, $templates = [])
-//    {
-//        return Mail_templates_data_model::updateTemplateData($template_id, $templates);
-//    }
-//
-//    /**
-//     * Delete a single or multiple mail template by template_id
-//     *
-//     * @param $template_id
-//     *
-//     * @return int The number of deleted rows
-//     */
-//    public function deleteTemplate($template_id)
-//    {
-//        if (is_numeric($template_id)) $template_id = [$template_id];
-//
-//        foreach ($template_id as $key => $value) {
-//            if ($value == setting('mail_template_id')) {
-//                unset($template_id[$key]);
-//            }
-//        }
-//
-//        if (!empty($template_id) AND ctype_digit(implode('', $template_id))) {
-//            return $this->where('template_id', '!=', '11')->whereIn('template_id', $template_id)->delete();
-//        }
-//    }
 }

@@ -25,7 +25,7 @@ class Languages_model extends Model
 
     public static function getDropdownOptions()
     {
-        return static::isEnabled()->dropdown('name');
+        return static::isEnabled()->dropdown('name', 'code');
     }
 
     public static function listCloneableLanguages()

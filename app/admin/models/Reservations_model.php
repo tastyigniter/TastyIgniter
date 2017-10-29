@@ -9,6 +9,10 @@ use Model;
  */
 class Reservations_model extends Model
 {
+    const CREATED_AT = 'date_added';
+
+    const UPDATED_AT = 'date_modified';
+
     /**
      * @var string The database table name
      */
@@ -23,10 +27,6 @@ class Reservations_model extends Model
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
-
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_modified';
 
     public $relation = [
         'belongsTo' => [
