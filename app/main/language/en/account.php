@@ -20,13 +20,14 @@ return [
     'text_no_reservations'    => 'There are no reservations available to show.',
     'text_no_inbox'           => 'There are no messages available to show',
 
-    'label_first_name' => 'First Name:',
-    'label_last_name'  => 'Last Name:',
-    'label_email'      => 'Email Address:',
-    'label_password'   => 'Password:',
-    'label_telephone'  => 'Telephone:',
-    'label_s_question' => 'Security Question:',
-    'label_s_answer'   => 'Security Answer:',
+    'label_first_name' => 'First Name',
+    'label_last_name'  => 'Last Name',
+    'label_email'      => 'Email Address',
+    'label_password'   => 'Password',
+    'label_password_confirm' => 'Password Confirm',
+    'label_telephone'  => 'Telephone',
+    'label_s_question' => 'Security Question',
+    'label_s_answer'   => 'Security Answer',
 
     'column_cart_items' => 'Total Items',
     'column_cart_total' => 'Total Amount',
@@ -54,16 +55,14 @@ return [
         'label_postcode'  => 'Postcode',
         'label_country'   => 'Country',
 
-        'alert_updated_success' => '<p class="alert-success">Address added/updated successfully.</p>',
-        'alert_deleted_success' => '<p class="alert-success">Address deleted successfully.</p>',
+        'alert_updated_success' => 'Address added/updated successfully.',
+        'alert_deleted_success' => 'Address deleted successfully.',
     ],
 
     'details' => [
         'text_heading'          => 'My Details',
-        'text_my_account'       => 'My Account',
         'text_details'          => 'Edit your details',
         'text_password_heading' => 'Change Password',
-        'text_select'           => ' please select ',
 
         'button_subscribe' => 'Subscribe',
         'button_back'      => 'Back',
@@ -82,7 +81,7 @@ return [
 
         'error_password' => 'The %s you entered does not match.',
 
-        'alert_updated_success' => '<p class="alert-success">Details updated successfully.</p>',
+        'alert_updated_success' => 'Details updated successfully.',
     ],
 
     'inbox' => [
@@ -114,24 +113,14 @@ return [
         'text_forgot'           => 'Forgot password?',
         'text_required'         => '*** All Required fields.',
         'text_login_register'   => 'Already registered? <a href="%s">Login</a>',
+        'text_remember'         => 'Remember me',
 
-        'text_subject'         => 'Account created!',
-        'text_success_message' => 'Your account has been created.',
-        'text_signature'       => 'Regards, <br />%s',
-
-        'label_first_name'       => 'First Name',
-        'label_last_name'        => 'Last Name',
-        'label_email'            => 'Email Address',
-        'label_password'         => 'Password',
-        'label_password_confirm' => 'Password Confirm',
-        'label_telephone'        => 'Telephone',
-        'label_s_question'       => 'Security Question',
-        'label_s_answer'         => 'Security Answer',
-        'label_newsletter'       => 'Keep me up-to-date with offers by email.',
-        'label_terms'            => 'By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="%s" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.',
-        'label_captcha'          => 'Type the code shown',
-        'label_i_agree'          => 'I Agree',
-        'label_subscribe'        => 'Subscribe',
+        'label_remember'   => 'Remember me',
+        'label_newsletter' => 'Keep me up-to-date with offers by email.',
+        'label_terms'      => 'By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="%s" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.',
+        'label_captcha'    => 'Type the code shown',
+        'label_i_agree'    => 'I Agree',
+        'label_subscribe'  => 'Subscribe',
 
         'button_terms_agree' => 'I Agree',
         'button_subscribe'   => 'Subscribe',
@@ -141,9 +130,10 @@ return [
         'error_email_exist' => 'The Email address already has an account, please log in',
         'error_captcha'     => 'The letters you entered does not match the image.',
 
-        'alert_logout_success'  => '<p class="alert-success">You have been logged out successfully.</p>',
-        'alert_invalid_login'   => '<p class="alert-danger">Username and password not found!</p>',
-        'alert_account_created' => '<p class="alert-success">Account created successfully, login below!</p>',
+        'alert_logout_success'  => 'You have been logged out successfully.',
+        'alert_expired_login'   => 'Session expired, please login',
+        'alert_invalid_login'   => 'Username and password not found!',
+        'alert_account_created' => 'Account created successfully, login below!',
     ],
 
     'reset' => [
@@ -159,10 +149,10 @@ return [
         'button_login'    => 'Login',
         'button_reset'    => 'Reset Password',
 
-        'alert_reset_success'         => '<p class="alert-success">Password reset successfully.</p>',
-        'alert_reset_request_success' => '<p class="alert-success">Password reset request successfully, please check your email on how to proceed.</p>',
-        'alert_reset_error'           => '<p class="alert-error">Password reset unsuccessful, email not found or incorrect details entered.</p>',
-        'alert_reset_failed'          => '<p class="alert-error">Password reset failed, reset code is either invalid or expired.</p>',
+        'alert_reset_success'         => 'Password reset successfully.',
+        'alert_reset_request_success' => 'Password reset request successfully, please check your email on how to proceed.',
+        'alert_reset_error'           => 'Password reset unsuccessful, email not found or incorrect details entered.',
+        'alert_reset_failed'          => 'Password reset failed, reset code is either invalid or expired.',
         'alert_no_email_match'        => 'No matching email address',
         'alert_no_s_answer_match'     => 'Security answer does not match',
         'alert_no_s_question_match'   => 'Security question does not match',
@@ -198,7 +188,7 @@ return [
         'button_reorder' => 'Re-Order',
         'button_back'    => 'Back',
 
-        'alert_reorder_success' => '<p class="alert-success">You have successfully added the menus from order ID %s to your order.</p>',
+        'alert_reorder_success' => 'You have successfully added the menus from order ID %s to your order.',
     ],
 
     'reservations' => [
@@ -223,7 +213,7 @@ return [
         'button_reserve' => 'Make Reservation',
         'button_back'    => 'Back',
 
-        'alert_reservation_disabled' => '<p class="alert-danger">Table reservation has been disabled, please contact administrator.</p>',
+        'alert_reservation_disabled' => 'Table reservation has been disabled, please contact administrator.',
     ],
 
     'reviews' => [
