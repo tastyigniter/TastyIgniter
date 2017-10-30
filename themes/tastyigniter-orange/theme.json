@@ -2,6 +2,7 @@
   "code": "tastyigniter-orange",
   "name": "TastyIgniter Orange",
   "description": "Responsive theme for TastyIgniter front-end, customizable, simple, and readable",
+  "author": "TastyIgniter Dev Team",
   "version": "2.1.0",
   "tags": {
     "1.0.0": "Theme initialization",
