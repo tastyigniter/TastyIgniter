@@ -1,6 +1,9 @@
-<ul class="menu message-list">
-    <?php if ($messages) { ?>
-        <?php foreach ($messages as $message) { ?>
+<?php
+$itemOptions = isset($itemOptions['items']) ? $itemOptions['items'] : $itemOptions;
+?>
+<ul class="menu">
+    <?php if (count($itemOptions)) { ?>
+        <?php foreach ($itemOptions as $message) { ?>
             <li class="<?= $message['state']; ?>">
                 <a href="<?= $message['view']; ?>">
                     <div>
@@ -16,7 +19,7 @@
         <?php } ?>
     <?php }
     else { ?>
-        <li><?= lang('admin::default.text_empty'); ?></li>
+        <li><?= lang('admin::default.text_empty_message'); ?></li>
         <li class="divider"></li>
     <?php } ?>
 </ul>

@@ -16,7 +16,7 @@
 
     <div class="panel panel-default text-center">
         <div class="panel-heading">
-            <h4><?= lang('text_upload_title'); ?></h4>
+            <h4><?= lang('system::extensions.text_upload_title'); ?></h4>
         </div>
         <div class="panel-body">
             <div class="form-group">
@@ -26,8 +26,8 @@
                         <span class="input-group-btn">
                                     <div class="btn btn-default btn-file-input">
                                         <i class="fa fa-fw fa-folder-open"></i>&nbsp;&nbsp;
-                                        <span class="btn-file-input-choose"><?= lang('button_choose'); ?></span>
-                                        <span class="btn-file-input-change hide"><?= lang('button_change'); ?></span>
+                                        <span class="btn-file-input-choose"><?= lang('system::extensions.button_choose'); ?></span>
+                                        <span class="btn-file-input-change hide"><?= lang('system::extensions.button_change'); ?></span>
                                         <input type="file"
                                                name="extension_zip"
                                                value="<?= set_value('extension_zip'); ?>"
@@ -38,7 +38,7 @@
                                         />
                                     </div>
                                     <button type="submit" class="btn btn-primary" data-request="onUpload">
-                                        <i class="fa fa-fw fa-upload">&nbsp;&nbsp;</i><?= lang('button_upload'); ?>
+                                        <i class="fa fa-fw fa-upload">&nbsp;&nbsp;</i><?= lang('system::extensions.button_upload'); ?>
                                     </button>
                                 </span>
                     </div>
