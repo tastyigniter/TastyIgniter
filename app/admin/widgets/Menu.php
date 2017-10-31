@@ -104,7 +104,6 @@ class Menu extends BaseWidget
         foreach ($items as $name => $config) {
 
             $itemObj = $this->makeMenuItem($name, $config);
-//            var_dump($itemObj);
 
             // Check that the menu item matches the active context
             if ($itemObj->context !== null) {

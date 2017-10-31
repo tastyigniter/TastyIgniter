@@ -176,7 +176,7 @@ class ServiceProvider extends AppServiceProvider
                     'badge'       => 'label-danger',
                     'type'        => 'dropdown',
                     'optionsFrom' => ['System\Models\Messages_model', 'listMenuMessages'],
-                    'partial'     => 'messages/latest',
+                    'partial'     => '~/app/system/views/messages/latest',
                     'menuLink'    => 'messages',
                     'attributes'  => [
                         'class'       => 'dropdown-toggle',
@@ -188,7 +188,7 @@ class ServiceProvider extends AppServiceProvider
                     'icon'        => 'fa-bell',
                     'type'        => 'dropdown',
                     'optionsFrom' => ['System\Models\Activities_model', 'listMenuActivities'],
-                    'partial'     => 'activities/latest',
+                    'partial'     => '~/app/system/views/activities/latest',
                     'menuLink'    => 'activities',
                     'attributes'  => [
                         'class'       => 'dropdown-toggle',

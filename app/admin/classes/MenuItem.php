@@ -127,10 +127,8 @@ class MenuItem
      */
     public function optionsFrom()
     {
-        var_dump($this->optionsFrom);
         if (is_array($this->optionsFrom) AND count($this->optionsFrom) == 2) {
             $itemOptions = $this->optionsFrom;
-            var_dump($itemOptions);
 
             return call_user_func($itemOptions, $this);
         }

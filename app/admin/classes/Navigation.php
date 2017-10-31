@@ -4,10 +4,12 @@ use AdminAuth;
 use Igniter\Flame\Traits\Singleton;
 use System\Classes\BaseExtension;
 use System\Classes\ExtensionManager;
+use System\Traits\ViewMaker;
 
 class Navigation
 {
     use Singleton;
+    use ViewMaker;
 
     protected $navItems = [];
 
@@ -35,6 +37,37 @@ class Navigation
         return $this->navItems;
     }
 
+    public function getVisibleNavItems()
+    {
+        $navItems = [];
+        foreach ($this->getNavItems() as $code => $navItem) {
+            if ($this->filterPermittedNavItem($navItem) === FALSE)
+                continue;
+
+            $navItems[$code] = $navItem;
+        }
+
+        foreach ($navItems as $key => $navItem) {
+            $sort_array[$key] = isset($navItem['priority'])
+                ? $navItem['priority'] : 9999999;
+        }
+
+        array_multisort($sort_array, SORT_ASC, $navItems);
+
+        return $navItems;
+    }
+
+    public function isActiveNavItem($code)
+    {
+        if ($code == self::$navContextParentCode)
+            return true;
+
+        if ($code == self::$navContextItemCode)
+            return true;
+
+        return false;
+    }
+
     public function getMainItems()
     {
         if (!self::$mainItems)
@@ -43,16 +76,15 @@ class Navigation
         return self::$mainItems;
     }
 
-    public function render($prefs = [])
+    public function render($partial)
     {
-        $openTag = '<ul class="nav" id="side-menu">';
-        $closeTag = '</ul>';
+        $navItems = $this->getVisibleNavItems();
 
-        extract($prefs);
+        $this->partialPath[] = '~/app/admin/views/_partials/';
 
-        $navItems = $this->getNavItems();
-
-        return $openTag.$this->_buildNav($navItems).$closeTag;
+        return $this->makePartial($partial, [
+            'navItems' => $navItems
+        ]);
     }
 
     public function addNavItem($itemCode, $options = [], $parentCode = null)
@@ -101,92 +133,29 @@ class Navigation
         self::$navItemsLoaded = TRUE;
     }
 
-    protected function _buildNav($nav_menu = [], $has_child = 0)
-    {
-        $levels = ['', 'nav-second-level', 'nav-third-level'];
-
-        foreach ($nav_menu as $key => $value) {
-            $sort_array[$key] = isset($value['priority']) ? $value['priority'] : '1111';
-        }
-
-        array_multisort($sort_array, SORT_ASC, $nav_menu);
-
-        $out = '';
-        foreach ($nav_menu as $code => $menu) {
-
-            if ($this->filterPermittedNavItem($menu) === FALSE) continue;
-
-            $class = null;
-            var_dump($has_child, self::$navContextParentCode, self::$navContextItemCode);
-            if (!$has_child AND $code == self::$navContextParentCode) {
-                $class = ' class="active"';
-            }
-            else if ($has_child AND $code == self::$navContextItemCode) {
-                $class = ' class="active"';
-            }
-
-            $out .= '<li'.$class.'>'.$this->_buildNavLink($menu);
-
-            if (isset($menu['child'])) {
-                $has_child += 1;
-
-                $child_links = $this->_buildNav($menu['child'], $has_child);
-                $out .= '<ul class="nav '.$levels[$has_child].'">'.$child_links.'</ul>';
-
-                $has_child = 0;
-            }
-
-            $out .= '</li>';
-        }
-
-        return $out;
-    }
-
-    protected function _buildNavLink($menu_link = [])
-    {
-        $out = '<a';
-        $out .= ' class="'.$menu_link['class'].'"';
-
-        if (isset($menu_link['href']))
-            $out .= ' href="'.$menu_link['href'].'"';
-
-        $out .= '>';
-        if (isset($menu_link['icon'])) {
-            $out .= '<i class="fa '.$menu_link['icon'].' fa-fw"></i>';
-        }
-        else {
-            $out .= '<i class="fa fa-square-o fa-fw"></i>';
-        }
-
-        if (isset($menu_link['icon']) AND isset($menu_link['title'])) {
-            $out .= '<span class="content">'.$menu_link['title'].'</span>';
-        }
-        else {
-            $out .= $menu_link['title'];
-        }
-
-        if (isset($menu_link['child'])) {
-            $out .= '<span class="fa arrow"></span>';
-        }
-
-        $out .= '</a>';
-
-        return $out;
-    }
-
     protected function filterPermittedNavItem($menu)
     {
-        if (empty($menu['permission']))
-            return null;
+        $permissions = array_get($menu, 'child', []) ?: [$menu];
 
-        $permissions = $menu['permission'];
-        if (is_string($permissions)) {
-            $permissions = strpos($permissions, '|') !== FALSE
-                ? explode('|', $permissions) : [$permissions];
+        $collection = collect($permissions)->pluck('permission')->toArray();
+
+        $filtered = [];
+        foreach ($collection as $permission) {
+            if (strpos($permission, '|') !== FALSE) {
+                $results = explode('|', $permission);
+            } else {
+                $results = [$permission];
+            }
+
+            $filtered = array_merge($filtered, $results);
         }
 
-        foreach ($permissions as $permission) {
-            if (!AdminAuth::hasPermission($permission.'.Access'))
+        foreach ($filtered as $permission) {
+            $permissionName = (count(explode('.', $permission)) > 1)
+                ? $permission
+                : $permission.'.Access';
+
+            if (!AdminAuth::hasPermission($permissionName))
                 return FALSE;
         }
 
@@ -229,15 +198,20 @@ class Navigation
                 'code' => $name,
             ]));
 
-            if (is_null($parent))
-                $this->navItems[$navItem['code']] = $navItem;
-
-            if (count($navItem['child']))
+            if (count($navItem['child'])) {
                 $this->registerNavItems($navItem['child'], $navItem['code']);
-
-            if (!is_null($parent)) {
-                $this->navItems[$parent]['child'][$navItem['code']] = $navItem;
             }
+
+            $this->registerNavItem($navItem['code'], $navItem, $parent);
+        }
+    }
+
+    public function registerNavItem($code, $item, $parent = null)
+    {
+        if (!is_null($parent)) {
+            $this->navItems[$parent]['child'][$code] = $item;
+        } else {
+            $this->navItems[$code] = $item;
         }
     }
 

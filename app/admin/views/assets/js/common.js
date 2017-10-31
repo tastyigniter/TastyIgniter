@@ -5,6 +5,7 @@ $(function () {
             handler = $element.data('request'),
             $form = $($element.data('requestForm'))
 
+        console.log($element);
         $form = $form.length ? $form : $element.closest('form')
 
         if (handler && $form) {

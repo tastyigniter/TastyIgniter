@@ -12,7 +12,7 @@
 
         <?= $this->makePartial('top_nav') ?>
 
-        <?= $this->makePartial('side_nav') ?>
+        <?= AdminMenu::render('side_nav'); ?>
 
     <?php } ?>
 

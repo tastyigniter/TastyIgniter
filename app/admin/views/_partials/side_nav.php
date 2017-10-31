@@ -13,10 +13,10 @@ $systemName = lang('system::default.tastyigniter.system_name');
         </a>
     </div>
 
-    <?= AdminMenu::render([
-        'openTag'  => '<ul class="nav nav-sidebar navbar-collapse" id="side-menu">',
-        'closeTag' => '</ul>',
-    ]); ?>
+    <?= $this->makePartial('side_nav_items', [
+        'cssClass' => 'nav nav-sidebar navbar-collapse',
+        'navItems' => $navItems,
+    ]) ?>
 
     <div class="hidden-xs sidebar-toggle">
         <a>
