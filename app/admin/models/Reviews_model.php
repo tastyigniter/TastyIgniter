@@ -160,4 +160,14 @@ class Reviews_model extends Model
     {
         $this->attributes['sale_type'] = self::$relatedSaleTypes[$value];
     }
+
+    /**
+     * Return the dates of all reviews
+     *
+     * @return array
+     */
+    public function getReviewDates()
+    {
+        return $this->pluckDates('date_added');
+    }
 }

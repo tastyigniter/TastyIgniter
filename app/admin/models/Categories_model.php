@@ -1,8 +1,9 @@
 <?php namespace Admin\Models;
 
 use DB;
+use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Sortable;
-use Igniter\Flame\Permalink\Traits\HasPermalink;
+use Igniter\Flame\Database\Traits\HasPermalink;
 use Model;
 
 /**
@@ -14,8 +15,7 @@ class Categories_model extends Model
 {
     use Sortable;
     use HasPermalink;
-
-//    use NestedTree;
+    use NestedTree;
 
     const SORT_ORDER = 'priority';
 

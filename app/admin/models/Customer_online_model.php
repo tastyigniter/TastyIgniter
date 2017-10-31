@@ -112,4 +112,14 @@ class Customer_online_model extends Model
             return $this->selectRaw('*, MAX(date_added) as date_added')->where('ip_address', $ip)->first();
 //        }
     }
+
+    /**
+     * Return the last online dates of all customers
+     *
+     * @return array
+     */
+    public function getOnlineDates()
+    {
+        return $this->pluckDates('date_added');
+    }
 }

@@ -1,7 +1,7 @@
 <?php namespace Admin\Models;
 
 use DB;
-use Igniter\Flame\Permalink\Traits\HasPermalink;
+use Igniter\Flame\Database\Traits\HasPermalink;
 use Model;
 
 /**

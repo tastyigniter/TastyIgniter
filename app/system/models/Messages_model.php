@@ -1,6 +1,6 @@
 <?php namespace System\Models;
 
-use Igniter\Flame\NestedSet\NestedTree;
+use Igniter\Flame\Database\Traits\NestedTree;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Model;
 
@@ -199,55 +199,16 @@ class Messages_model extends Model
     // Helpers
     //
 
-    public function readState($messagable)
+    public static function listMenuMessages($menu, $item, $user)
     {
-        if (!$messagable instanceof Model OR !$this->recipients)
-            return null;
+        $query = self::listMessages([
+            'context'   => 'inbox',
+            'recipient' => $user,
+        ]);
 
-        $meta = $this->recipients->where('messageable_id', $messagable->getKey())
-                                 ->where('messageable_type', get_class($messagable))->first();
-        if (!count($meta))
-            return null;
-
-        return $meta->state == 1 ? 'read' : 'unread';
-    }
-
-    public static function listFolders()
-    {
         return [
-            'inbox'   => [
-                'title' => 'lang:system::messages.text_inbox',
-                'icon'  => 'fa-inbox',
-                'url'   => 'messages',
-            ],
-            'draft'   => [
-                'title' => 'lang:system::messages.text_draft',
-                'icon'  => 'fa-file-text-o',
-                'url'   => 'messages/draft',
-            ],
-            'sent'    => [
-                'title' => 'lang:system::messages.text_sent',
-                'icon'  => 'fa-paper-plane-o',
-                'url'   => 'messages/sent',
-            ],
-            'all'     => [
-                'title' => 'lang:system::messages.text_all',
-                'icon'  => 'fa-briefcase',
-                'url'   => 'messages/all',
-            ],
-            'archive' => [
-                'title' => 'lang:system::messages.text_archive',
-                'icon'  => 'fa-archive',
-                'url'   => 'messages/archive',
-            ],
-        ];
-    }
-
-    public function getSendTypeOptions()
-    {
-        return [
-            'email'   => 'lang:system::messages.text_email',
-            'account' => 'lang:system::messages.text_account',
+            'total' => $query->toBase()->getCountForPagination(),
+            'items' => $query->get(),
         ];
     }
 
@@ -290,6 +251,58 @@ class Messages_model extends Model
         });
 
         return $participants;
+    }
+
+    public static function listFolders()
+    {
+        return [
+            'inbox'   => [
+                'title' => 'lang:system::messages.text_inbox',
+                'icon'  => 'fa-inbox',
+                'url'   => 'messages',
+            ],
+            'draft'   => [
+                'title' => 'lang:system::messages.text_draft',
+                'icon'  => 'fa-file-text-o',
+                'url'   => 'messages/draft',
+            ],
+            'sent'    => [
+                'title' => 'lang:system::messages.text_sent',
+                'icon'  => 'fa-paper-plane-o',
+                'url'   => 'messages/sent',
+            ],
+            'all'     => [
+                'title' => 'lang:system::messages.text_all',
+                'icon'  => 'fa-briefcase',
+                'url'   => 'messages/all',
+            ],
+            'archive' => [
+                'title' => 'lang:system::messages.text_archive',
+                'icon'  => 'fa-archive',
+                'url'   => 'messages/archive',
+            ],
+        ];
+    }
+
+    public function readState($messagable)
+    {
+        if (!$messagable instanceof Model OR !$this->recipients)
+            return null;
+
+        $meta = $this->recipients->where('messageable_id', $messagable->getKey())
+                                 ->where('messageable_type', get_class($messagable))->first();
+        if (!count($meta))
+            return null;
+
+        return $meta->state == 1 ? 'read' : 'unread';
+    }
+
+    public function getSendTypeOptions()
+    {
+        return [
+            'email'   => 'lang:system::messages.text_email',
+            'account' => 'lang:system::messages.text_account',
+        ];
     }
 
     /**

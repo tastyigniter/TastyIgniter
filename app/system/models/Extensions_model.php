@@ -200,7 +200,7 @@ class Extensions_model extends Model
 
         // Disabled extensions not found in file system
         // This allows admin to remove an enabled extension from admin UI after deleting files
-        self::whereNotIn('name', $installedExtensions)->update(['status' => false]);
+        self::whereNotIn('name', $installedExtensions)->update(['status' => FALSE]);
 
         self::updateInstalledExtensions();
     }
@@ -263,7 +263,7 @@ class Extensions_model extends Model
         if ($extensionModel AND $extensionModel->meta) {
             $extensionModel->fill([
                 'title'   => $extensionModel->meta['name'],
-                'status'  => true,
+                'status'  => TRUE,
                 'version' => $extensionModel->meta['version'],
             ])->save();
         }
@@ -308,17 +308,18 @@ class Extensions_model extends Model
     {
         $extensionModel = self::where('name', trim($code, '.'))->first();
 
-        $deletedData = FALSE;
+        $dataDeleted = FALSE;
+        $filesDeleted = TRUE;
+
         if ($extensionModel AND $deleteData) {
-            $deletedData = $extensionModel->delete();
+            $dataDeleted = $extensionModel->delete();
         }
 
-        // Lets make sure extension files are deleted
-        // since deleting the model also triggers
-        // deleting the extension files
-        if (!$deletedData)
-            ExtensionManager::instance()->removeExtension($code);
+        // This is to make sure files are deleted
+        // since the beforeDelete() event only fires on disabled extensions
+        if (!$dataDeleted)
+            $filesDeleted = ExtensionManager::instance()->removeExtension($code);
 
-        return TRUE;
+        return $filesDeleted;
     }
 }

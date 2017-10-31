@@ -3,7 +3,7 @@
 use Admin\Classes\PaymentGateways;
 use DB;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Igniter\Flame\Permalink\Traits\HasPermalink;
+use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Libraries\Location\Location;
 use Model;
 

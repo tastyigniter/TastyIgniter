@@ -167,6 +167,15 @@ class Staffs_model extends Model
         }
     }
 
+    /**
+     * Return the dates of all staff
+     * @return array
+     */
+    public function getStaffDates()
+    {
+        return $this->pluckDates('date_added');
+    }
+
     public function addStaffUser($user = [])
     {
         $userModel = $this->user()->firstOrCreate(['staff_id' => $this->getKey()]);

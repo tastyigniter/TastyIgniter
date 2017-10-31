@@ -213,6 +213,16 @@ class Customers_model extends AuthUserModel
     }
 
     /**
+     * Return all customer registration dates
+     *
+     * @return array
+     */
+    public function getCustomerDates()
+    {
+        return $this->pluckDates('date_added');
+    }
+
+    /**
      * Sets the reset password columns to NULL
      *
      * @param string $code
