@@ -181,7 +181,7 @@ class Setup extends Base_Controller {
             $this->form_validation->set_rules('database', 'lang:label_database', 'xss_clean|trim|required');
             $this->form_validation->set_rules('hostname', 'lang:label_hostname', 'xss_clean|trim|required');
             $this->form_validation->set_rules('username', 'lang:label_username', 'xss_clean|trim|required');
-            $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required');
+            $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim');
             $this->form_validation->set_rules('dbprefix', 'lang:label_prefix', 'xss_clean|trim|required');
 
             if ($this->form_validation->run() === TRUE) {
