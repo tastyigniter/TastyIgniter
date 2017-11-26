@@ -366,10 +366,6 @@ class Installer
 		// Create the default location
 		$this->CI->Setup_model->updateLocation($settings);
 
-		// Create config array item containing all installed extensions
-		$this->CI->load->model('Extensions_model');
-		$this->CI->Extensions_model->updateInstalledExtensions();
-
 		// Create the encryption key used for sessions and encryption
 		$this->createEncryptionKey();
 
