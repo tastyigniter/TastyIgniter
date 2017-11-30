@@ -201,7 +201,7 @@ class Tables extends Admin_Controller {
 
 	private function validateForm() {
 		$this->form_validation->set_rules('table_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('min_capacity', 'lang:label_min_capacity', 'xss_clean|trim|required|integer|greater_than[1]');
+		$this->form_validation->set_rules('min_capacity', 'lang:label_min_capacity', 'xss_clean|trim|required|integer|greater_than[0]');
 		$this->form_validation->set_rules('max_capacity', 'lang:label_capacity', 'xss_clean|trim|required|integer|greater_than[1]|callback__check_capacity');
 		$this->form_validation->set_rules('table_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
