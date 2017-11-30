@@ -72,7 +72,7 @@ class Reservation_module extends Main_Controller {
 			);
 		}
 
-		$data['guest_numbers'] = array('2', '3', '4', '5','6', '7', '8', '9', '10');
+		$data['guest_numbers'] = array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10');
 
         $data['location_image'] = $this->location->getImage();
 
