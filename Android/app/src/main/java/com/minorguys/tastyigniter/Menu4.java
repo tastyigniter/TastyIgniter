@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 public class Menu4 extends Fragment
 {
+	String server=getResources().getString(R.string.server_url);
     String fname;
     String lname;
     String answer;
@@ -98,7 +99,7 @@ public class Menu4 extends Fragment
     public void send()
     {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/login.php".concat("?email="+id+"&password="+password),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,server+"/api/login.php".concat("?email="+id+"&password="+password),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

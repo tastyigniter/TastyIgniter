@@ -44,9 +44,10 @@ import java.io.FileReader;
 
 public class Menu1 extends Fragment
 {
+	String server=getResources().getString(R.string.server_url);
 
-    String url="http://u1701227.nettech.firm.in/api/category.php";
-    String imgcategory="http://u1701227.nettech.firm.in/TastyIgniter-master/assets/images/";
+    String url=server+"/api/category.php";
+    String imgcategory=server+"/TastyIgniter-master/assets/images/";
     TextView tv1,tv2,tv3,tv4,tv5,tv6,tv7,tv8;
     ImageView iv1,iv2,iv3,iv4;
     String t1,t2,t3,t4;

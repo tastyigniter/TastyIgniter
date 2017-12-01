@@ -71,8 +71,8 @@ Button btn1,loginImageBttn;
 
     }
     private void ConnectToServer(){
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/login.php".concat("?email="+id+"&password="+pwd),
+	String server=getResources().getString(R.string.server_url);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,server+"/api/login.php".concat("?email="+id+"&password="+pwd),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

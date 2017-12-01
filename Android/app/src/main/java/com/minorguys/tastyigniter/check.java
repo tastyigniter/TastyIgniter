@@ -40,6 +40,7 @@ import java.util.Set;
 import static com.minorguys.tastyigniter.R.id.text;
 
 public class check extends AppCompatActivity {
+	String server=getResources().getString(R.string.server_url);
     TextView tot;
     double total=0;
     double latest=0;
@@ -101,9 +102,9 @@ public class check extends AppCompatActivity {
            // h.setFocusable(false);
             UserData o=new UserData();
 
-          //Toast.makeText(check.this,"http://u1701227.nettech.firm.in/api/display.php".concat("?item_id="+i+"&quantity="+quantity+"&order_id="+or.id+"&customer_id="+o.id), Toast.LENGTH_SHORT).show();
+          //Toast.makeText(check.this,server+"/api/display.php".concat("?item_id="+i+"&quantity="+quantity+"&order_id="+or.id+"&customer_id="+o.id), Toast.LENGTH_SHORT).show();
 
-           StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/display.php".concat("?item_id="+i+"&quantity="+quantity+"&order_id="+or.id+"&customer_id="+o.id),
+           StringRequest stringRequest = new StringRequest(Request.Method.GET,server+"/api/display.php".concat("?item_id="+i+"&quantity="+quantity+"&order_id="+or.id+"&customer_id="+o.id),
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -193,9 +194,9 @@ public class check extends AppCompatActivity {
             // h.setFocusable(false);
             UserData o=new UserData();
 
-            Toast.makeText(check.this,"http://u1701227.nettech.firm.in/api/display.php".concat("?item_id="+i+"&quantity="+quantity+"&order_id="+z+"&customer_id="+o.id), Toast.LENGTH_SHORT).show();
+            Toast.makeText(check.this,server+"/api/display.php".concat("?item_id="+i+"&quantity="+quantity+"&order_id="+z+"&customer_id="+o.id), Toast.LENGTH_SHORT).show();
 
-            StringRequest stringRequest1 = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/display.php".concat("?item_id="+i+"&quantity="+quantity+"&order_id="+z+"&customer_id="+o.id),
+            StringRequest stringRequest1 = new StringRequest(Request.Method.GET,server+"/api/display.php".concat("?item_id="+i+"&quantity="+quantity+"&order_id="+z+"&customer_id="+o.id),
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -302,7 +303,7 @@ public class check extends AppCompatActivity {
         r.setVisibility(View.INVISIBLE);
         complete.setVisibility(View.INVISIBLE);
         proceedb.setVisibility(View.INVISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/invoice.php?order_id=".concat(Integer.toString(or.id)),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,server+"/api/invoice.php?order_id=".concat(Integer.toString(or.id)),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -334,7 +335,7 @@ public class check extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
         /* WebView browser = (WebView) findViewById(R.id.webview);
-        browser.loadUrl("http://u1701227.nettech.firm.in/TastyIgniter-master/admin/orders/invoice/view/20702"); */
+        browser.loadUrl(server+"/TastyIgniter-master/admin/orders/invoice/view/20702"); */
 
 
     }
@@ -342,7 +343,7 @@ public class check extends AppCompatActivity {
     {
         saveTheTimeAndRegisterOrder();
         passTheNotification();
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://u1701227.nettech.firm.in/TastyIgniter-master/assets/bills/".concat(or.id+"")+".pdf")));
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("server+/TastyIgniter-master/assets/bills/".concat(or.id+"")+".pdf")));
         if(clearCache())
         {
             Toast.makeText(this, "cleared", Toast.LENGTH_SHORT).show();

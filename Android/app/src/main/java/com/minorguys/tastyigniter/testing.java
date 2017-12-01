@@ -20,7 +20,8 @@ import com.google.gson.GsonBuilder;
 
 public class testing extends AppCompatActivity
 {
-    String url = "http://u1701227.nettech.firm.in/api/item.php?category=";
+	String server=getResources().getString(R.string.server_url);
+    String url = server+"/api/item.php?category=";
 int k=0;
     public static Mydata users[];
 

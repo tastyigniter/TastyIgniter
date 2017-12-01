@@ -33,4 +33,5 @@ Android Support
 ===============
 1. The Android Application Support is under development with working Layouts.
 2. A Facial Recognition Module is integrated with it.
-3. Dowload and Install the .apk file on your Android device.
+3. Run and Build the project on Android device.
+4. Change the server_url in strings.xml for your server.

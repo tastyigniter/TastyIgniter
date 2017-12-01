@@ -46,7 +46,7 @@ public class Menu3 extends Fragment
 
     public static final String TAG = "MAMA";
     private static final int DETECT_IMAGE = 301;
-
+	String server=getResources().getString(R.string.server_url);
     String fname;
     String lname;
     String answer;
@@ -179,7 +179,7 @@ public class Menu3 extends Fragment
     }
     public void ConnectToServer2()
     {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/country.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,server+"/api/country.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -223,7 +223,7 @@ public class Menu3 extends Fragment
     public void send()
     {
         country=text.getText().toString();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/country.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,server+"/api/country.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -267,7 +267,7 @@ public class Menu3 extends Fragment
     }
     public void submit2()
     {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/security_questions.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,server+"/api/security_questions.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -314,7 +314,7 @@ public class Menu3 extends Fragment
     public void send2()
     {
         question=q.getSelectedItem().toString();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://u1701227.nettech.firm.in/api/security_questions.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,server+"/api/security_questions.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -462,7 +462,7 @@ public class Menu3 extends Fragment
             {
 
 
-                URL url = new URL("http://u1701227.nettech.firm.in/api/signup.php");
+                URL url = new URL(server+"/api/signup.php");
                 URLConnection conn = url.openConnection();
                 conn.setDoOutput(true);
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());

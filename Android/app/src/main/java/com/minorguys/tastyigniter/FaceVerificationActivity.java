@@ -79,6 +79,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class FaceVerificationActivity extends AppCompatActivity {
+	String server=getResources().getString(R.string.server_url);
     // Background task for face verification.
     private static final String TAG = "MAMA";
     JSONArray jsonArray;
@@ -588,7 +589,7 @@ public class FaceVerificationActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String url = "http://u1701227.nettech.firm.in/api/image.php";
+            String url = server+"/api/image.php";
             StringRequest request=new StringRequest(url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response)
@@ -706,7 +707,7 @@ public class FaceVerificationActivity extends AppCompatActivity {
                 sB.deleteCharAt(1);
                 sB.deleteCharAt(1);
                 sB.deleteCharAt(0);
-                meriImageURL="http://u1701227.nettech.firm.in/"+ sB.toString();
+                meriImageURL=server+ sB.toString();
                 new downloadAndVerify().execute(meriImageURL);
             }
             catch(Exception e)
@@ -750,7 +751,7 @@ public class FaceVerificationActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             Log.d(TAG, "MakeClearance Function Called ");
-            String url = "http://u1701227.nettech.firm.in/api/login_email.php?email="+currEmail;
+            String url = server+"/api/login_email.php?email="+currEmail;
             StringRequest request=new StringRequest(url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response)

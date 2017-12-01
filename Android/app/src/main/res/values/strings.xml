@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">TastyIgniter</string>
     <string name="title_activity_main">MainActivity</string>
+	
+<string name="server_url">http://u1701227.nettech.firm.in</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -12,8 +14,6 @@
 
 
   <string name="language">fr</string>
-
-
     <string name="subscription_key">8521a5816d59486d926027514eac9aa6</string>
     <string name="endpoint">https://westcentralus.api.cognitive.microsoft.com/face/v1.0</string>
 
