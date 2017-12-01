@@ -55,7 +55,7 @@ public class Mydata
     }
 
     public String getImage_url() {
-        return image_url;
+        return "TastyIgniter-master/assets/images/"+image_url;
     }
 
     public void setImage_url(String image_url) {

@@ -38,6 +38,7 @@ int k=0;
             url=url+x;
 
         }
+        url=url+"&lang="+GetCacheDirExample.readAllCachedText(this, "myCacheFile.txt");
         final RecyclerView userlist=(RecyclerView)findViewById(R.id.user_list);
         userlist.setLayoutManager(new LinearLayoutManager(this));
         StringRequest request=new StringRequest(url, new com.android.volley.Response.Listener<String>()

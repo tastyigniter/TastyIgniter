@@ -1,20 +1,20 @@
 <resources>
-    <string name="app_name">Tastyigniter</string>
+    <string name="app_name">TastyIgniter</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Change Language</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_crawl">Crawl</string>
 
 
+  <string name="language">fr</string>
 
 
-
-    <string name="subscription_key">ce55fb18954645ff8ba9b52156180b3d</string>
+    <string name="subscription_key">8521a5816d59486d926027514eac9aa6</string>
     <string name="endpoint">https://westcentralus.api.cognitive.microsoft.com/face/v1.0</string>
 
     <!-- Main activity -->

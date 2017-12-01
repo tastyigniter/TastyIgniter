@@ -1,30 +1,31 @@
 package com.minorguys.tastyigniter;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
        // FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        Log.d(TAG, "Going to Call NV Header: ");
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         displaySelectedScreen(R.id.nav_category);
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed: ");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+       // Toast.makeText(MainActivity.this, "hi", Toast.LENGTH_SHORT).show();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
 
         } else {
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(TAG, "onCreateOptionsMenu: ");
+       // Toast.makeText(MainActivity.this, "hi", Toast.LENGTH_SHORT).show();
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -106,6 +111,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            clearCache();
+            fragRestart();
             return true;
         }
 
@@ -238,5 +245,45 @@ public void gotocart(View v)
 {
     Intent i=new Intent(this,check.class);
     startActivity(i);
+}
+public boolean clearCache()
+{
+    try {
+        File[] files = getBaseContext().getCacheDir().listFiles();
+
+        for (File file : files) {
+
+            // delete returns boolean we can use
+            if (!file.delete()) {
+                return false;
+            }
+        }
+
+        // if for completes all
+        return true;
+
+    } catch (Exception e) {}
+    return true;
+}
+public void fragRestart()
+{
+  //  Menu1 m1 =new Menu1();
+  //  m1.getFragmentManager().beginTransaction().replace(R.id.activity_main,m1).commit();
+  /*  android.app.Fragment f=null;
+    f=getFragmentManager().findFragmentById(R.id.activity_main);
+    final android.app.FragmentTransaction ft=getFragmentManager().beginTransaction();
+    ft.detach(f);
+    ft.attach(f);
+    ft.commit();
+  //  ft.replace(R.id.activity_main,i) */
+    PackageManager packageManager = getApplicationContext().getPackageManager();
+    Intent intent = packageManager.getLaunchIntentForPackage(getApplicationContext().getPackageName());
+    ComponentName componentName = intent.getComponent();
+    Intent mainIntent = IntentCompat.makeRestartActivityTask(componentName);
+    Toast.makeText(getApplicationContext(), "else", Toast.LENGTH_SHORT).show();
+    getApplicationContext().startActivity(mainIntent);
+
+    System.exit(0);
+
 }
 }

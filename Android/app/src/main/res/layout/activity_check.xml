@@ -7,7 +7,7 @@
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
       <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
           android:layout_width="match_parent"
@@ -47,13 +47,46 @@
            android:layout_height="wrap_content"
            android:textSize="25dp"
            android:text="Proceed For Payment"
-
+           android:onClick="go"
+            android:id="@+id/proceedb"
            android:layout_margin="10dp"
            />
+       <RadioButton
+           android:layout_width="wrap_content"
+           android:layout_height="90dp"
+           android:textSize="70dp"
+           android:text="Cash"
+           android:onClick="order"
+
+           android:visibility="invisible"
+           android:id="@+id/r"/>
+       <Button
+           android:layout_width="wrap_content"
+           android:layout_height="40dp"
+           android:text="Place Order"
+
+           android:paddingLeft="110dp"
+           android:paddingRight="110dp"
+            android:onClick="generate"
+
+           android:visibility="invisible"
+           android:id="@+id/complete"
+           />
+
+
    </LinearLayout>
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+
 
 
 </LinearLayout>
+
+
 
 
 

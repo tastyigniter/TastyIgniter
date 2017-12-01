@@ -81,7 +81,8 @@ Button btn1,loginImageBttn;
                             JSONObject x = new JSONObject(response);
                             String message=x.getString("message");
                             if(message.equals("Success"))
-                            {
+                            {    UserData o=new UserData();
+                                o.setId(x.getString("cust_id"));
                                 Toast.makeText(getActivity(), "Login Successfull... Welcome Mr. "+x.getString("fname")+x.getString("lname"), Toast.LENGTH_LONG).show();
 
 
@@ -144,6 +145,11 @@ Button btn1,loginImageBttn;
         o.setstatus(true);
         o.setEmail(m);
         o.setPassword(pwd);
+
+
+
+
+
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 10 && resultCode == -1)

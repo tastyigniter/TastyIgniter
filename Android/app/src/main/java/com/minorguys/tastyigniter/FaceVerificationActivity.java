@@ -132,6 +132,7 @@ public class FaceVerificationActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
                 matchFound=true;
+
                 Toast.makeText(FaceVerificationActivity.this, "MATCH FOUND", Toast.LENGTH_SHORT).show();
                 new makeClearance().execute();
             }
@@ -773,6 +774,8 @@ public class FaceVerificationActivity extends AppCompatActivity {
                             o.setCity(jsonObject.get("city").toString());
                             o.setPin(jsonObject.get("pin").toString());
                             o.setCountry(jsonObject.get("country_name").toString());
+
+                            o.setId(jsonObject.getString("cust_id"));
                             Log.d(TAG, "GET Fname: "+o.getFname());
                         }
 

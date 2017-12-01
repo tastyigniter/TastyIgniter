@@ -29,7 +29,7 @@ public class SplashScreen extends AwesomeSplash {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ///BACKGROUNG K LIYE
         configSplash.setBackgroundColor(R.color.bg_splash);
-        configSplash.setAnimCircularRevealDuration(4500);
+        configSplash.setAnimCircularRevealDuration(1000);
         configSplash.setRevealFlagX(Flags.REVEAL_LEFT);
         configSplash.setRevealFlagX(Flags.REVEAL_BOTTOM);
 
@@ -37,14 +37,14 @@ public class SplashScreen extends AwesomeSplash {
 
         configSplash.setLogoSplash(R.drawable.minorchef);
 
-        configSplash.setAnimCircularRevealDuration(2000);
+        configSplash.setAnimCircularRevealDuration(1000);
         configSplash.setAnimLogoSplashTechnique(Techniques.Bounce);
 
         ///TITLE YE HAIn
         configSplash.setTitleSplash("Food 24*7");
         configSplash.setTitleTextColor(R.color.white);
         configSplash.setTitleTextSize(26f);
-        configSplash.setAnimTitleDuration(500);
+        configSplash.setAnimTitleDuration(50);
         configSplash.setAnimTitleTechnique(Techniques.FlipInX);
 
     }

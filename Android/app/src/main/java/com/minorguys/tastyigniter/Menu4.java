@@ -37,7 +37,7 @@ public class Menu4 extends Fragment
     String qid;
     String question;
     TextView fn;
-
+    String cid;
     TextView ln;
     TextView em,p,ct, st,ad1,ad2,mo;
    TextView text;
@@ -74,6 +74,7 @@ public class Menu4 extends Fragment
             ad2.setText(o.getAddress2());
             text.setText(o.getCountry());
 
+            //Toast.makeText(getActivity(), ""+cid, Toast.LENGTH_SHORT).show();
         }
         else if(o.getstatus())
         {   id=o.getEmail();
@@ -84,6 +85,7 @@ public class Menu4 extends Fragment
             Toast.makeText(getActivity(), "Not Logged in", Toast.LENGTH_SHORT).show();
 
         }
+
 
     }
 
@@ -114,6 +116,8 @@ public class Menu4 extends Fragment
                             address2=x.getString("address2");
                             country=x.getString("country_name");
                             String message=x.getString("message");
+
+
                             if(message.equals("Success"))
                             {
                                 fn.setText(fname);
@@ -126,7 +130,9 @@ public class Menu4 extends Fragment
                                 ad1.setText(address1);
                                 ad2.setText(address2);
                                 text.setText(country);
-
+                                cid=x.getString("cust_id");
+                                UserData o=new UserData();
+                                o.setId(cid);
                                //Toast.makeText(getActivity(), "Login Successfull... Welcome Mr. "+x.getString("fname")+" "+x.getString("lname"), Toast.LENGTH_LONG).show();
                                 //view(id);
                             }
@@ -157,7 +163,6 @@ public class Menu4 extends Fragment
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
     }
-
 
 
 

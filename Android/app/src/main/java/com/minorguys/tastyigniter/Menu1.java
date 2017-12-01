@@ -1,15 +1,24 @@
 package com.minorguys.tastyigniter;
 
 
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +33,11 @@ import com.bumptech.glide.Glide;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+
 /**
  * Created by hp-u on 17-09-2017.
  */
@@ -32,17 +46,91 @@ public class Menu1 extends Fragment
 {
 
     String url="http://u1701227.nettech.firm.in/api/category.php";
-    String imgcategory="http://u1701227.nettech.firm.in/";
+    String imgcategory="http://u1701227.nettech.firm.in/TastyIgniter-master/assets/images/";
     TextView tv1,tv2,tv3,tv4,tv5,tv6,tv7,tv8;
     ImageView iv1,iv2,iv3,iv4;
     String t1,t2,t3,t4;
     String a[]=new String[4];
     int i=0;
-
-
+    String lang="?lang=";
+    File langFile;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    {   langFile =new File(getContext().getFilesDir(),"langFile.txt");
+
+
+
+
+     try {
+         String S1=GetCacheDirExample.readAllCachedText(getContext(), "myCacheFile.txt");                                                            ;
+         String S=S1.substring(0,2);
+         if (!(S.equals("en") || S.equals("fr"))) {
+
+             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+             boolean a=S.equalsIgnoreCase("en");
+            // Toast.makeText(getActivity(),S+""+a, Toast.LENGTH_SHORT).show();
+             builder.setTitle("Language");
+             builder.setMessage("Choose your Language");
+
+
+             builder.setPositiveButton("English", new DialogInterface.OnClickListener() {
+
+                 public void onClick(DialogInterface dialog, int which) {
+
+                     // Do nothing, but close the dialog
+                     // String textToCache = "Some text";
+
+                    String demp="en";
+                     boolean success = GetCacheDirExample.writeAllCachedText(getContext(), "myCacheFile.txt", demp);
+                     PackageManager packageManager = getContext().getPackageManager();
+                     Intent intent = packageManager.getLaunchIntentForPackage(getContext().getPackageName());
+                     ComponentName componentName = intent.getComponent();
+                     Intent mainIntent = IntentCompat.makeRestartActivityTask(componentName);
+                     Toast.makeText(getContext(), "else", Toast.LENGTH_SHORT).show();
+                     getContext().startActivity(mainIntent);
+
+                     System.exit(0);
+
+                     //String readText = GetCacheDirExample.readAllCachedText(this, "myCacheFile.txt");
+                     dialog.dismiss();
+
+
+                 }
+             });
+
+             builder.setNegativeButton("French", new DialogInterface.OnClickListener() {
+
+                 @Override
+                 public void onClick(DialogInterface dialog, int which) {
+                     String textToCache = "Some text";
+                     String demp="fr";
+                     boolean success = GetCacheDirExample.writeAllCachedText(getContext(), "myCacheFile.txt", demp);
+                     //String readText = GetCacheDirExample.readAllCachedText(this, "myCacheFile.txt");
+                     PackageManager packageManager = getContext().getPackageManager();
+                     Intent intent = packageManager.getLaunchIntentForPackage(getContext().getPackageName());
+                     ComponentName componentName = intent.getComponent();
+                     Intent mainIntent = IntentCompat.makeRestartActivityTask(componentName);
+                     getContext().startActivity(mainIntent);
+                     System.exit(0);
+                     dialog.dismiss();
+                 }
+             });
+             AlertDialog alert = builder.create();
+             alert.show();
+         }
+
+     }
+     catch (Exception e)
+     {    boolean success = GetCacheDirExample.writeAllCachedText(getContext(), "myCacheFile.txt", "x");
+         PackageManager packageManager = getContext().getPackageManager();
+         Intent intent = packageManager.getLaunchIntentForPackage(getContext().getPackageName());
+         ComponentName componentName = intent.getComponent();
+         Intent mainIntent = IntentCompat.makeRestartActivityTask(componentName);
+         getContext().startActivity(mainIntent);
+         System.exit(0);
+     }
+
+
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Categories");
         tv1=(TextView)view.findViewById(R.id.cardview_desc);
@@ -57,6 +145,9 @@ public class Menu1 extends Fragment
         tv7=(TextView)view.findViewById(R.id.cardview_desc4);
         tv8=(TextView)view.findViewById(R.id.cardview_title4);
         iv4=(ImageView)view.findViewById(R.id.cardviewimg4);
+
+        url=url+lang+ GetCacheDirExample.readAllCachedText(getContext(), "myCacheFile.txt");
+
         StringRequest request=new StringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response)
@@ -75,6 +166,7 @@ public class Menu1 extends Fragment
                             t2 = jsonObject.getString("name");
                             t3 = jsonObject.getString("image");
                             t4 = jsonObject.getString("description");
+                           // Toast.makeText(getActivity(), ""+t3, Toast.LENGTH_SHORT).show();
                             String x=imgcategory+t3;
                             a[i]=t1;
                           //  Toast.makeText(getActivity(), ""+t1, Toast.LENGTH_SHORT).show();
@@ -177,4 +269,7 @@ public class Menu1 extends Fragment
         return inflater.inflate(R.layout.menu1,container,false);
 
     }
+
+
+
 }

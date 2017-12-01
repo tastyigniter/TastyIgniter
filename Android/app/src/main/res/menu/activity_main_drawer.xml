@@ -26,7 +26,7 @@
         <item
             android:id="@+id/nav_extras"
             android:icon="@drawable/signout"
-            android:title="Extras" />
+            android:title="Poll" />
 
     </group>
 
@@ -39,7 +39,7 @@
             <item
                 android:id="@+id/c2"
                 android:icon="@drawable/ab"
-                android:title="About Us" />
+                android:title="Track your Order" />
         </menu>
     </item>
 

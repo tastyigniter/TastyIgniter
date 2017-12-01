@@ -5,9 +5,9 @@ package com.minorguys.tastyigniter;
  */
 
 public class UserData {
-    static  String fname;
+    static String fname="";
     static String lname;
-    static   String answer;
+    static String answer;
     static String pin;
     static String state,city ;
     static String password, mobile, address1 , address2 , email;

@@ -1,17 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#B9B8B8"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:background="@drawable/shape">
-        <TextView
-            android:textSize="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Go to https://tastyigniter.com/about to know more about us."/>
+    android:orientation="vertical"
+    >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:background="@drawable/shape">
+
+    <TextView
+        android:id="@+id/tv1_timer"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:textSize="20dp"
+        android:text="TextView" />
+
+    <CheckBox
+        android:id="@+id/cb1_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CheckBox" />
+
+    <CheckBox
+        android:id="@+id/cb2_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CheckBox" />
+
+    <CheckBox
+        android:id="@+id/cb3_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CheckBox" />
+
+    <TextView
+        android:id="@+id/tv2_timer"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:textSize="25dp"
+        android:text="TextView" />
     </LinearLayout>
-    </LinearLayout>
+</LinearLayout>
