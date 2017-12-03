@@ -8,11 +8,11 @@ Options -Indexes
 	# Turn on URL rewriting
 	RewriteEngine On
 
-	# !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading slashes.
+	# !IMPORTANT! Set your RewriteBase here and dont forget trailing and leading slashes.
 	# If your page resides at http://www.example.com/mypage then use
 	# RewriteBase /mypage
 
-    RewriteBase /
+    RewriteBase /TastyIgniter-master
     RewriteRule ^assets/downloads/(.*) not_found [L]
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d

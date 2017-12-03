@@ -1,0 +1,373 @@
+[22-Sep-2017 11:10:44 Etc/GMT] PHP Notice:  Undefined index: category in /home/u1701227/public_html/api/item.php on line 6
+[22-Sep-2017 11:14:28 Etc/GMT] PHP Notice:  Array to string conversion in /home/u1701227/public_html/api/item.php on line 17
+[22-Sep-2017 11:14:28 Etc/GMT] PHP Notice:  Array to string conversion in /home/u1701227/public_html/api/item.php on line 17
+[22-Sep-2017 11:14:28 Etc/GMT] PHP Notice:  Array to string conversion in /home/u1701227/public_html/api/item.php on line 17
+[22-Sep-2017 21:31:02 Etc/GMT] PHP Notice:  Array to string conversion in /home/u1701227/public_html/api/item.php on line 17
+[22-Sep-2017 21:31:02 Etc/GMT] PHP Notice:  Array to string conversion in /home/u1701227/public_html/api/item.php on line 17
+[22-Sep-2017 21:31:02 Etc/GMT] PHP Notice:  Array to string conversion in /home/u1701227/public_html/api/item.php on line 17
+[22-Sep-2017 23:55:49 Etc/GMT] PHP Notice:  Undefined index: category in /home/u1701227/public_html/api/item.php on line 6
+[22-Sep-2017 23:55:50 Etc/GMT] PHP Notice:  Undefined index: category in /home/u1701227/public_html/api/item.php on line 6
+[23-Sep-2017 20:34:49 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 20:34:49 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 20:34:49 Asia/Kolkata] PHP Warning:  mysqli_insert_id() expects exactly 1 parameter, 0 given in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 20:39:48 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 20:39:48 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 20:39:48 Asia/Kolkata] PHP Warning:  mysqli_insert_id() expects exactly 1 parameter, 0 given in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 20:39:59 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 20:39:59 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 20:39:59 Asia/Kolkata] PHP Warning:  mysqli_insert_id() expects exactly 1 parameter, 0 given in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 20:41:17 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 20:41:17 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 20:41:17 Asia/Kolkata] PHP Fatal error:  Call to undefined function LAST_INSERT_ID() in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 20:41:22 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 20:41:22 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 20:41:22 Asia/Kolkata] PHP Fatal error:  Call to undefined function LAST_INSERT_ID() in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 20:41:31 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 20:41:31 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 20:41:31 Asia/Kolkata] PHP Fatal error:  Call to undefined function LAST_INSERT_ID() in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 20:41:38 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 20:41:38 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 20:41:38 Asia/Kolkata] PHP Fatal error:  Call to undefined function LAST_INSERT_ID() in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 20:41:51 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 20:41:51 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 20:41:51 Asia/Kolkata] PHP Warning:  mysqli_insert_id() expects exactly 1 parameter, 0 given in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 22:19:32 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 22:19:32 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 22:19:32 Asia/Kolkata] PHP Warning:  mysqli_insert_id() expects exactly 1 parameter, 0 given in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 22:34:32 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 22:34:32 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 22:34:32 Asia/Kolkata] PHP Warning:  mysqli_insert_id() expects exactly 1 parameter, 0 given in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 22:36:32 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 22:36:32 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 22:36:32 Asia/Kolkata] PHP Warning:  mysqli_insert_id() expects exactly 1 parameter, 0 given in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 22:37:17 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 22:37:17 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 22:37:17 Asia/Kolkata] PHP Warning:  mysqli_insert_id() expects exactly 1 parameter, 0 given in /home/u1701227/public_html/api/signup.php on line 22
+[23-Sep-2017 22:42:29 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 22:42:29 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 22:43:13 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 22:43:13 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 22:43:56 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[23-Sep-2017 22:43:56 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 22:47:30 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[23-Sep-2017 22:47:40 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: lname in /home/u1701227/public_html/api/signup.php on line 6
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/signup.php on line 7
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: password in /home/u1701227/public_html/api/signup.php on line 8
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: mobile in /home/u1701227/public_html/api/signup.php on line 9
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: address1 in /home/u1701227/public_html/api/signup.php on line 10
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: address2 in /home/u1701227/public_html/api/signup.php on line 11
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: city in /home/u1701227/public_html/api/signup.php on line 12
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: state in /home/u1701227/public_html/api/signup.php on line 13
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 01:39:10 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: lname in /home/u1701227/public_html/api/signup.php on line 6
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/signup.php on line 7
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: password in /home/u1701227/public_html/api/signup.php on line 8
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: mobile in /home/u1701227/public_html/api/signup.php on line 9
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: address1 in /home/u1701227/public_html/api/signup.php on line 10
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: address2 in /home/u1701227/public_html/api/signup.php on line 11
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: city in /home/u1701227/public_html/api/signup.php on line 12
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: state in /home/u1701227/public_html/api/signup.php on line 13
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 01:39:27 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: lname in /home/u1701227/public_html/api/signup.php on line 6
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/signup.php on line 7
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: password in /home/u1701227/public_html/api/signup.php on line 8
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: mobile in /home/u1701227/public_html/api/signup.php on line 9
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: address1 in /home/u1701227/public_html/api/signup.php on line 10
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: address2 in /home/u1701227/public_html/api/signup.php on line 11
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: city in /home/u1701227/public_html/api/signup.php on line 12
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: state in /home/u1701227/public_html/api/signup.php on line 13
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: lname in /home/u1701227/public_html/api/signup.php on line 6
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/signup.php on line 7
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: password in /home/u1701227/public_html/api/signup.php on line 8
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: mobile in /home/u1701227/public_html/api/signup.php on line 9
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: address1 in /home/u1701227/public_html/api/signup.php on line 10
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: address2 in /home/u1701227/public_html/api/signup.php on line 11
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: city in /home/u1701227/public_html/api/signup.php on line 12
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: state in /home/u1701227/public_html/api/signup.php on line 13
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 01:39:38 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: fname in /home/u1701227/public_html/api/signup.php on line 5
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: lname in /home/u1701227/public_html/api/signup.php on line 6
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/signup.php on line 7
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: password in /home/u1701227/public_html/api/signup.php on line 8
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: mobile in /home/u1701227/public_html/api/signup.php on line 9
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: address1 in /home/u1701227/public_html/api/signup.php on line 10
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: address2 in /home/u1701227/public_html/api/signup.php on line 11
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: city in /home/u1701227/public_html/api/signup.php on line 12
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: state in /home/u1701227/public_html/api/signup.php on line 13
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 02:43:07 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 06:45:07 Etc/GMT] PHP Notice:  Undefined index: category in /home/u1701227/public_html/api/item.php on line 6
+[24-Sep-2017 06:45:12 Etc/GMT] PHP Notice:  Undefined index: category in /home/u1701227/public_html/api/item.php on line 6
+[24-Sep-2017 06:45:16 Etc/GMT] PHP Notice:  Undefined index: category in /home/u1701227/public_html/api/item.php on line 6
+[24-Sep-2017 06:45:19 Etc/GMT] PHP Notice:  Undefined index: category in /home/u1701227/public_html/api/item.php on line 6
+[24-Sep-2017 18:30:17 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 18:30:17 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 18:30:17 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 18:30:18 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 18:30:18 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 18:30:18 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 18:30:18 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 18:30:18 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 18:30:18 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 18:30:19 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 18:30:19 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 18:30:19 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 18:30:19 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 18:30:19 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 18:30:19 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 18:45:09 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 18:45:09 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 18:45:09 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 18:45:14 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 18:45:14 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 18:45:14 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[24-Sep-2017 18:46:23 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[24-Sep-2017 18:46:23 Asia/Kolkata] PHP Notice:  Undefined index: security_ques_id in /home/u1701227/public_html/api/signup.php on line 16
+[24-Sep-2017 18:46:23 Asia/Kolkata] PHP Notice:  Undefined index: security_ans in /home/u1701227/public_html/api/signup.php on line 17
+[25-Sep-2017 02:38:43 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[25-Sep-2017 02:38:43 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[25-Sep-2017 02:40:20 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[25-Sep-2017 02:40:20 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[25-Sep-2017 02:50:26 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[25-Sep-2017 02:50:26 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[25-Sep-2017 16:15:22 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 21:45:56 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[25-Sep-2017 21:45:56 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[25-Sep-2017 16:16:11 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:16:37 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 8
+[25-Sep-2017 16:17:44 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:18:15 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:18:17 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:18:37 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 8
+[25-Sep-2017 16:18:40 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 8
+[25-Sep-2017 16:19:27 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:19:30 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:19:39 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:21:15 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:21:15 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 8
+[25-Sep-2017 16:21:54 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 8
+[25-Sep-2017 16:23:11 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:23:35 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 21:54:01 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[25-Sep-2017 21:54:01 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[25-Sep-2017 16:24:05 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 21:54:45 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[25-Sep-2017 21:54:45 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[25-Sep-2017 16:25:16 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 21:55:29 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[25-Sep-2017 21:55:29 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[25-Sep-2017 16:25:32 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:26:03 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 8
+[25-Sep-2017 16:27:52 Etc/GMT] PHP Fatal error:  Can't use function return value in write context in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:27:54 Etc/GMT] PHP Fatal error:  Can't use function return value in write context in /home/u1701227/public_html/api/login.php on line 7
+[25-Sep-2017 16:28:20 Etc/GMT] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 8
+[25-Sep-2017 16:28:20 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 18
+[25-Sep-2017 16:29:22 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[26-Sep-2017 10:12:46 Etc/GMT] PHP Notice:  Undefined index: state in /home/u1701227/public_html/api/login.php on line 16
+[26-Sep-2017 10:13:32 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[26-Sep-2017 10:13:36 Etc/GMT] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/login.php on line 7
+[26-Sep-2017 19:46:33 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[26-Sep-2017 19:46:33 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:48:32 Asia/Kolkata] PHP Notice:  Undefined index: country in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:52:02 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:52:08 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:52:23 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:52:37 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:52:42 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:54:01 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:54:51 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:57:07 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:57:22 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:57:24 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:57:39 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:57:40 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[26-Sep-2017 19:57:41 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 13:43:52 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 13:53:05 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 13:53:13 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 13:59:44 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:01:53 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:09:37 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:10:02 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:13:09 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:18:47 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:18:55 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:19:18 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:27:23 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:29:26 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 14:57:56 Asia/Kolkata] PHP Notice:  Undefined index: country_id in /home/u1701227/public_html/api/signup.php on line 15
+[27-Sep-2017 18:36:45 Etc/GMT] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/category.php on line 6
+[27-Sep-2017 18:36:55 Etc/GMT] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/category.php on line 6
+[27-Sep-2017 18:37:17 Etc/GMT] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/category.php on line 6
+[27-Sep-2017 18:37:25 Etc/GMT] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/u1701227/public_html/api/category.php on line 6
+[28-Sep-2017 01:55:17 Etc/GMT] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/login.php on line 3
+[28-Sep-2017 01:55:17 Etc/GMT] PHP Notice:  Undefined index: password in /home/u1701227/public_html/api/login.php on line 4
+[29-Sep-2017 02:27:50 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[29-Sep-2017 02:29:28 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[29-Sep-2017 02:31:58 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[29-Sep-2017 02:32:19 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[30-Sep-2017 20:46:33 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[30-Sep-2017 23:22:00 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[30-Sep-2017 23:22:00 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 00:03:22 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:03:22 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:03:22 Asia/Kolkata] PHP Notice:  Undefined variable: image in /home/u1701227/public_html/api/signup.php on line 35
+[01-Oct-2017 00:03:22 Asia/Kolkata] PHP Warning:  file_put_contents(images/customers/43.png): failed to open stream: No such file or directory in /home/u1701227/public_html/api/signup.php on line 35
+[01-Oct-2017 00:06:28 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:06:28 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:06:28 Asia/Kolkata] PHP Warning:  file_put_contents(images/customers/44.png): failed to open stream: No such file or directory in /home/u1701227/public_html/api/signup.php on line 35
+[01-Oct-2017 00:12:00 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:12:00 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:12:00 Asia/Kolkata] PHP Warning:  file_put_contents(images/customers/45.png): failed to open stream: No such file or directory in /home/u1701227/public_html/api/signup.php on line 35
+[01-Oct-2017 00:13:36 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:13:36 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:17:23 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:17:23 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:17:23 Asia/Kolkata] PHP Warning:  file_put_contents(./images/customers/47.png): failed to open stream: No such file or directory in /home/u1701227/public_html/api/signup.php on line 35
+[01-Oct-2017 00:18:56 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:18:56 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:20:36 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 00:20:36 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 01:38:40 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 01:38:40 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 01:38:40 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 02:45:15 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 03:34:21 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 04:05:44 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 04:05:44 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 04:05:44 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 04:07:20 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 04:07:40 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 04:07:40 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 04:07:40 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 05:01:18 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 16:16:54 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 16:27:07 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 18:58:40 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 19:15:09 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 19:39:50 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[01-Oct-2017 19:44:58 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 19:44:58 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 20:14:52 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 20:14:52 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 23:38:59 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 31
+[01-Oct-2017 23:38:59 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 31
+[02-Oct-2017 01:50:28 Asia/Kolkata] PHP Notice:  Undefined index: uuid in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 01:50:28 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 01:50:28 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 01:57:45 Asia/Kolkata] PHP Notice:  Undefined index: uuid in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 01:57:45 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 01:57:45 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:07:14 Asia/Kolkata] PHP Notice:  Undefined index: uuid in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 02:07:14 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:07:14 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:21:55 Asia/Kolkata] PHP Notice:  Undefined index: uuid in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 02:21:55 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:21:55 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:22:18 Asia/Kolkata] PHP Notice:  Undefined index: uuid in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 02:29:41 Asia/Kolkata] PHP Notice:  Undefined index: uuid in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 02:29:41 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:29:41 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:33:55 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:33:55 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:46:26 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 02:46:26 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 02:46:26 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:46:26 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 02:55:10 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 02:55:10 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 15:12:04 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 15:12:04 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 15:12:04 Asia/Kolkata] PHP Notice:  Undefined variable: query_second in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 15:12:04 Asia/Kolkata] PHP Warning:  mysqli_query(): Empty query in /home/u1701227/public_html/api/signup.php on line 32
+[02-Oct-2017 15:12:20 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 15:12:20 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 23:16:37 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 23:16:37 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 23:16:56 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 23:16:56 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 23:24:09 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 23:24:09 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 23:24:18 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 23:24:18 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 23:24:31 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 23:24:31 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 23:29:54 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 23:29:54 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 23:37:52 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[02-Oct-2017 23:37:52 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[03-Oct-2017 02:12:59 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[03-Oct-2017 02:12:59 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[03-Oct-2017 02:33:16 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[03-Oct-2017 02:33:16 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[03-Oct-2017 03:19:59 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[03-Oct-2017 03:19:59 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[02-Oct-2017 22:47:42 Etc/GMT] PHP Notice:  Undefined index: item_id in /home/u1701227/public_html/api/display.php on line 3
+[02-Oct-2017 23:56:37 Etc/GMT] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/login_email.php on line 3
+[02-Oct-2017 23:57:03 Etc/GMT] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/login_email.php on line 3
+[03-Oct-2017 15:19:44 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[03-Oct-2017 15:19:51 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[04-Oct-2017 17:31:59 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[04-Oct-2017 17:31:59 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[04-Oct-2017 17:36:40 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[04-Oct-2017 17:36:40 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[04-Oct-2017 17:51:22 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[04-Oct-2017 17:51:22 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[05-Oct-2017 15:12:10 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[05-Oct-2017 15:12:10 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[05-Oct-2017 15:28:57 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[05-Oct-2017 15:28:57 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[05-Oct-2017 15:34:10 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[05-Oct-2017 15:34:10 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[05-Oct-2017 11:47:49 Etc/GMT] PHP Notice:  Undefined index: email in /home/u1701227/public_html/api/login_email.php on line 3
+[05-Oct-2017 22:39:31 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[05-Oct-2017 22:39:31 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[05-Oct-2017 22:40:03 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[05-Oct-2017 22:40:04 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[05-Oct-2017 22:40:06 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[05-Oct-2017 22:40:08 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[06-Oct-2017 10:54:29 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[06-Oct-2017 10:54:29 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[08-Oct-2017 18:35:20 Etc/GMT] PHP Parse error:  syntax error, unexpected ')' in /home/u1701227/public_html/api/signup.php on line 21
+[08-Oct-2017 18:35:26 Etc/GMT] PHP Parse error:  syntax error, unexpected ')' in /home/u1701227/public_html/api/signup.php on line 21
+[09-Oct-2017 00:06:09 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[09-Oct-2017 00:06:09 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[09-Oct-2017 00:06:09 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[09-Oct-2017 00:07:55 Asia/Kolkata] PHP Notice:  Undefined index: pin in /home/u1701227/public_html/api/signup.php on line 14
+[09-Oct-2017 00:07:55 Asia/Kolkata] PHP Notice:  Undefined index: img in /home/u1701227/public_html/api/signup.php on line 18
+[09-Oct-2017 00:07:55 Asia/Kolkata] PHP Notice:  Undefined index: uuid_image in /home/u1701227/public_html/api/signup.php on line 19
+[08-Oct-2017 19:25:34 Etc/GMT] PHP Fatal error:  Using $this when not in object context in /home/u1701227/public_html/api/login.php on line 6
+[08-Oct-2017 19:25:53 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 10
+[08-Oct-2017 19:25:53 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 12
+[08-Oct-2017 19:26:02 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 10
+[08-Oct-2017 19:26:02 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 12
+[08-Oct-2017 19:26:18 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 10
+[08-Oct-2017 19:26:18 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 12
+[08-Oct-2017 19:28:22 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 10
+[08-Oct-2017 19:28:22 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 12
+[08-Oct-2017 19:30:44 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 10
+[08-Oct-2017 19:30:44 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 12
+[08-Oct-2017 19:31:30 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 10
+[08-Oct-2017 19:31:30 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 12
+[08-Oct-2017 19:37:16 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 10
+[08-Oct-2017 19:37:16 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 12
+[08-Oct-2017 19:37:18 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 10
+[08-Oct-2017 19:37:18 Etc/GMT] PHP Notice:  Undefined variable: response in /home/u1701227/public_html/api/login.php on line 12
+[08-Oct-2017 19:37:51 Etc/GMT] PHP Parse error:  syntax error, unexpected '$salt' (T_VARIABLE) in /home/u1701227/public_html/api/login.php on line 11
+[08-Oct-2017 19:37:54 Etc/GMT] PHP Parse error:  syntax error, unexpected '$salt' (T_VARIABLE) in /home/u1701227/public_html/api/login.php on line 11

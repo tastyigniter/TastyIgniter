@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "388927768918",
+    "firebase_url": "https://j-tastyigniter.firebaseio.com",
+    "project_id": "j-tastyigniter",
+    "storage_bucket": "j-tastyigniter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388927768918:android:49ab2d913d69af39",
+        "android_client_info": {
+          "package_name": "com.minorguys.tastyigniter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388927768918-aice0f3pncv4b66631pm1e1om51h40hr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minorguys.tastyigniter",
+            "certificate_hash": "890534d9c6b4d67ee4507c8f129391219a8dcd03"
+          }
+        },
+        {
+          "client_id": "388927768918-eilc70qaf1k6en82jkvv6g7g5bfthaa9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minorguys.tastyigniter",
+            "certificate_hash": "04551f58d6e66ce00f495d44943d7d50d5e3fc62"
+          }
+        },
+        {
+          "client_id": "388927768918-dfe5rrvsua8o2ekd4kdrv9imnl7d64k5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-fp2xDAXrhbHtPbv8u6Har6_xR1qEvJQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388927768918-dfe5rrvsua8o2ekd4kdrv9imnl7d64k5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

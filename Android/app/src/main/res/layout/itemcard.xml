@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:orientation="vertical"
+    android:background="#B9B8B8"
+    android:layout_weight="4">
+
+    <RelativeLayout
+        android:id="@+id/rl1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="0.00"
+        android:background="@drawable/shape"
+        android:clickable="true">
+
+        <TextView
+
+            android:id="@+id/cardview_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cardview_title"
+            android:text="this is description "
+            android:textColor="#8b8b8b" />
+
+        <TextView
+
+            android:id="@+id/cardview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/card_viewprice"
+            android:layout_alignBottom="@+id/card_viewprice"
+            android:layout_alignParentStart="true"
+            android:paddingBottom="5dp"
+            android:text="testing"
+            android:textSize="24sp" />
+
+
+        <ImageView
+            android:id="@+id/imagecard"
+            android:layout_width="350dp"
+            android:layout_height="200dp"
+            android:layout_below="@+id/cardview_desc"
+            android:layout_marginTop="30dp"
+            app:srcCompat="@drawable/aloo" />
+
+        <TextView
+
+            android:id="@+id/card_viewq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/cardviewimg"
+            android:layout_marginEnd="16dp"
+            android:text="QUAN  "
+            android:textColor="#8b8b8b"
+            android:textSize="20dp" />
+
+        <TextView
+
+            android:id="@+id/card_viewprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cardviewimg"
+            android:layout_marginEnd="24dp"
+            android:layout_toStartOf="@+id/card_viewq"
+            android:text="PRICE    "
+            android:textColor="#8b8b8b"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/btnp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignStart="@+id/card_viewprice"
+            android:layout_below="@+id/imagecard"
+            android:layout_marginTop="24dp"
+            android:text="+" />
+
+        <Button
+            android:id="@+id/btnm"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@+id/btnp"
+            android:layout_alignBottom="@+id/btnp"
+            android:layout_alignEnd="@+id/card_viewq"
+            android:text="-" />
+
+        <TextView
+            android:id="@+id/txtamt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/btnp"
+            android:layout_alignBottom="@+id/btnp"
+            android:layout_toEndOf="@+id/cardview_title"
+            android:text="Amount" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="50dp"
+            android:text="0"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:layout_alignTop="@+id/btnp"
+            android:layout_toStartOf="@+id/card_viewq" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/shape"
+
+    tools:context="com.minorguys.tastyigniter.Crawl2">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/radio_tv"
+        android:layout_height="wrap_content"
+        android:text="TELL ME YOUR OPINION"
+
+        android:textSize="20sp" />
+
+  <RadioGroup
+        android:layout_width="wrap_content"
+        android:id="@+id/radio_group"
+        android:layout_height="wrap_content"
+      >
+
+    <RadioButton
+            android:id="@+id/rd1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="I passionately love them"
+            android:textSize="15sp"
+            android:layout_marginRight="155dp"
+         android:buttonTint="@color/perfect"
+        />
+
+        <RadioButton
+            android:id="@+id/rd2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="I somewhat like them"
+            android:textSize="15sp"
+            android:buttonTint="@color/perfect"/>
+
+      <RadioButton
+            android:id="@+id/rd3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I think they are okay"
+            android:textSize="15sp"
+            android:checked="false"
+          android:layout_marginRight="118dp"
+          android:buttonTint="@color/perfect"/>
+
+        <RadioButton
+            android:id="@+id/rd4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I have a disintrest in them"
+            android:textSize="15sp"
+            android:checked="false"
+            android:buttonTint="@color/perfect"/>
+
+
+    </RadioGroup>
+
+</LinearLayout>
