@@ -1,7 +1,7 @@
 <?php
 $servername="localhost";
-$username="u1701227";
-$password="cPanelForNettech";
+$username="root";
+$password="";
 $database="u1701227_tastyigniter";
 $conn= new mysqli($servername,$username,$password,$database);
 if($conn->connect_error)
