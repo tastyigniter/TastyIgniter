@@ -137,6 +137,7 @@ $settings = $setup->getSettingsDetails();
     </div>
 </div>
 
+<input type="hidden" name="disableLog" value="1">
 <div class="buttons">
     <button type="submit" class="btn btn-success pull-right"><?= lang('button_continue'); ?></button>
 </div>

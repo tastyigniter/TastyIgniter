@@ -51,9 +51,6 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function updateMorphsOnStatusHistory()
     {
-        if (!Status_history_model::where('object_type', 'order')->count())
-            return;
-
         $morphs = [
             'order'   => 'Admin\Models\Orders_model',
             'reserve' => 'Admin\Models\Reservations_model',
@@ -70,9 +67,6 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function updateMorphsOnReviews()
     {
-        if (!Reviews_model::where('sale_type', 'order')->count())
-            return;
-
         $morphs = [
             'order'       => 'Admin\Models\Orders_model',
             'reservation' => 'Admin\Models\Reservations_model',
@@ -157,10 +151,10 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function copyRecordsFromExtensionsToThemes()
     {
-        if (!Themes_model::count())
+        if (Themes_model::count())
             return;
 
-        Extensions_model::where('type', 'theme')->get()->each(function ($model) {
+        Extensions_model::getQuery()->where('type', 'theme')->get()->each(function ($model) {
 
             Themes_model::insert([
                 'name'       => $model->title,
@@ -175,10 +169,10 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function copyRecordsFromExtensionsToPayments()
     {
-        if (!Payments_model::count() OR !Extensions_model::where('type', 'payment')->count())
+        if (Payments_model::count() OR !Extensions_model::getQuery()->where('type', 'payment')->count())
             return;
 
-        Extensions_model::where('type', 'payment')->get()->each(function ($model) {
+        Extensions_model::getQuery()->where('type', 'payment')->get()->each(function ($model) {
 
             Payments_model::insert([
                 'name'         => $model->title,
@@ -195,10 +189,10 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function copyRecordsFromLocationsToLocationAreas()
     {
-        if (!Location_areas_model::count())
+        if (Location_areas_model::count())
             return;
 
-        Locations_model::pluck('options', 'location_id')->each(function ($model) {
+        Locations_model::pluck('options', 'location_id')->each(function ($options, $id) {
             if (!isset($options['delivery_areas']))
                 return TRUE;
 
@@ -211,7 +205,7 @@ class UpdateRecordsSeeder extends Seeder
                 unset($boundaries['shape']);
 
                 Location_areas_model::insert([
-                    'location_id' => $model->location_id,
+                    'location_id' => $id,
                     'name'        => $option['name'],
                     'type'        => $option['type'] == 'shape' ? 'polygon' : $option['type'],
                     'boundaries'  => serialize($boundaries),

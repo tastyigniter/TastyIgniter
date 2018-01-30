@@ -38,6 +38,7 @@ $config['form']['general'] = [
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'text',
                     'span'  => 'left',
+                    'default' => root_url(),
                 ],
                 'country_id'          => [
                     'label'   => 'lang:system::settings.label_country',
@@ -56,20 +57,6 @@ $config['form']['general'] = [
                         'multiple' => 'lang:system::settings.text_multiple',
                     ],
                     'comment' => 'lang:system::settings.help_site_location_mode',
-                ],
-                'default_location_id' => [
-                    'label'    => 'lang:system::settings.label_default_location',
-                    'tab'      => 'lang:system::settings.text_tab_restaurant',
-                    'type'     => 'select',
-                    'span'     => 'right',
-                    'disabled' => TRUE,
-                    'options'  => ['Admin\Models\Locations_model', 'getDropdownOptions'],
-                    'comment'  => 'lang:system::settings.help_default_location',
-                    'trigger'  => [
-                        'action'    => 'show',
-                        'field'     => 'site_location_mode',
-                        'condition' => 'value[multiple]',
-                    ],
                 ],
                 'site_logo'           => [
                     'label' => 'lang:system::settings.label_site_logo',
@@ -252,6 +239,7 @@ $config['form']['general'] = [
             ['date_format', 'lang:system::settings.label_date_format', 'required'],
             ['time_format', 'lang:system::settings.label_time_format', 'required'],
             ['currency_id', 'lang:system::settings.label_site_currency', 'required|integer'],
+            ['site_location_mode', 'lang:system::settings.label_site_location_mode', 'required|string'],
             ['auto_update_currency_rates', 'lang:system::settings.label_auto_update_rates', 'required|integer'],
             ['accepted_currencies.*', 'lang:system::settings.label_accepted_currency', 'required|integer'],
             ['detect_language', 'lang:system::settings.label_default_language', 'required|integer'],

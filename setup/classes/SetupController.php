@@ -104,7 +104,10 @@ class SetupController
         if ($this->isBooted()) {
             $this->page->currentStep = 'proceed';
         }
-        else if ($this->repository->get('requirement') == 'success') {
+        else if (is_array($this->repository->get('database'))) {
+            $this->page->currentStep = 'settings';
+        }
+        else if ($this->repository->get('requirement') == 'complete') {
             $this->page->currentStep = 'database';
         }
         else {
@@ -171,7 +174,8 @@ class SetupController
                 break;
         }
 
-        $this->repository->set('requirement', $result ? 'success' : 'fail')->save();
+        $status = ($code == 'uploads') ? 'complete' : $code;
+        $this->repository->set('requirement', $result ? $status : 'fail')->save();
         $this->writeLog('Requirement %s %s', $code, ($result ? '+OK' : '=FAIL'));
 
         return ['result' => $result];
@@ -203,7 +207,9 @@ class SetupController
         }
 
         $newValues = $this->verifyDbConfiguration($config);
-        $this->repository->set('database', $newValues);
+        $result = $this->writeDbConfiguration($newValues);
+
+        $this->repository->set('database', $result);
         $result = $this->repository->save();
 
         $this->writeLog('Database %s %s', $database, ($result ? '+OK' : '=FAIL'));
@@ -266,31 +272,29 @@ class SetupController
         if (!strlen($this->post('db')) OR $this->post('db') != 'success')
             throw new SetupException('Database connection was not successful');
 
-        if ($this->confirmInstallation()) {
-            $this->renameExampleHtaccess();
-            $result = $this->getBaseUrl().'admin/settings';
-        }
-        else {
-            switch ($installStep) {
-                case 'download':
-                    if ($this->downloadFoundation())
-                        $result = TRUE;
-                    break;
-                case 'extract':
-                    if ($this->extractFoundation())
-                        $result = TRUE;
-                    break;
-                case 'install':
-                    if ($this->installFoundation())
-                        $result = $this->getBaseUrl().'admin/settings';
+        if ($installed = $this->confirmInstallation())
+            $installStep = 'install';
 
-                    $this->cleanUpAfterInstall();
-                    break;
-            }
+        switch ($installStep) {
+            case 'download':
+                if ($this->downloadFoundation())
+                    $result = TRUE;
+                break;
+            case 'extract':
+                if ($this->extractFoundation())
+                    $result = TRUE;
+                break;
+            case 'install':
+                if ($installed OR $this->installFoundation())
+                    $result = $this->getBaseUrl().'admin/settings';
 
-            $status = $installStep == 'install' ? 'complete' : $installStep;
-            $this->repository->set('install', $result ? $status : 'fail')->save();
+                $this->renameExampleFiles();
+                $this->cleanUpAfterInstall();
+                break;
         }
+
+        $status = $installStep == 'install' ? 'complete' : $installStep;
+        $this->repository->set('install', $result ? $status : 'fail')->save();
 
         $this->writeLog('Foundation framework check: %s %s', $installStep, ($result ? '+OK' : '=FAIL'));
 
@@ -375,6 +379,32 @@ class SetupController
             $result['prefix'] = trim($config['prefix']);
 
         return $result;
+    }
+
+    protected function writeDbConfiguration($config)
+    {
+        if (!file_exists($exampleEnvFile = $this->baseDirectory.'/example.env'))
+            return $config;
+
+        $contents = file_get_contents($exampleEnvFile);
+
+        foreach (
+            [
+                '/^DB_HOST=127.0.0.1/m'    => 'DB_HOST='.$config['host'],
+                '/^DB_DATABASE=database/m' => 'DB_DATABASE='.$config['database'],
+                '/^DB_USERNAME=username/m' => 'DB_USERNAME='.$config['username'],
+                '/^DB_PASSWORD=password/m' => 'DB_PASSWORD='.$config['password'],
+                '/^DB_PREFIX=ti_/m'        => 'DB_PREFIX='.$config['prefix'],
+            ] as $pattern => $replace) {
+
+            $contents = preg_replace($pattern, $replace, $contents);
+        }
+
+        file_put_contents($exampleEnvFile, $contents);
+
+        rename($exampleEnvFile, $this->baseDirectory.'/.env');
+
+        return $config;
     }
 
     //
@@ -702,7 +732,7 @@ class SetupController
     protected function confirmRequirements()
     {
         $requirement = $this->post('requirement', $this->repository->get('requirement'));
-        if (!strlen($requirement) OR $requirement != 'success')
+        if (!strlen($requirement) OR $requirement != 'complete')
             throw new SetupException('Please make sure your system meets all requirements');
     }
 
@@ -753,7 +783,7 @@ class SetupController
             @mkdir($this->tempDirectory, 0777);
     }
 
-    protected function renameExampleHtaccess()
+    protected function renameExampleFiles()
     {
         if (file_exists($this->baseDirectory.'/example.htaccess')) {
             rename(

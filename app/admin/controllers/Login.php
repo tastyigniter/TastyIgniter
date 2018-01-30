@@ -37,7 +37,7 @@ class Login extends \Admin\Classes\AdminController
             if ($redirectUrl = input('redirect'))
                 return $this->redirect($redirectUrl);
 
-            return $this->redirect('dashboard');
+            return $this->redirectIntended('dashboard');
         }
 
         return $this->makeView('auth/login');

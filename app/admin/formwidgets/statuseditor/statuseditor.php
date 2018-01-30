@@ -1,4 +1,4 @@
-<?
+<?php
 $statusItem = isset($fieldOptions[$value]) ? $fieldOptions[$value] : [];
 ?>
 <div

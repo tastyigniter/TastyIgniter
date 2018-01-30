@@ -276,8 +276,8 @@ class Customers_model extends AuthUserModel
 
         $mail_data['first_name'] = $customerModel->first_name;
         $mail_data['last_name'] = $customerModel->last_name;
-        $mail_data['reset_link'] = root_url('account/reset?code='.$update['reset_code']);
-        $mail_data['account_login_link'] = root_url('account/login');
+        $mail_data['reset_link'] = site_url('account/reset?code='.$update['reset_code']);
+        $mail_data['account_login_link'] = site_url('account/login');
 
         $this->sendMail($email, 'password_reset_request', $mail_data);
 
@@ -311,7 +311,7 @@ class Customers_model extends AuthUserModel
         $mail_data['first_name'] = $customerModel->first_name;
         $mail_data['last_name'] = $customerModel->last_name;
         $mail_data['created_password'] = str_repeat('*', strlen($password));
-        $mail_data['account_login_link'] = root_url('account/login');
+        $mail_data['account_login_link'] = site_url('account/login');
 
         $this->sendMail($this->getReminderEmail(), 'password_reset', $mail_data);
 
@@ -332,6 +332,50 @@ class Customers_model extends AuthUserModel
             return FALSE;
 
         $model->password = $this->getHasher()->make($password);
+    }
+
+    /**
+     * Update guest orders, address and reservations
+     * matching customer email
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function saveCustomerGuestOrder()
+    {
+        $query = FALSE;
+
+        if (is_numeric($this->customer_id) AND !empty($this->email)) {
+            $customer_id = $this->customer_id;
+            $customer_email = $this->email;
+            $update = ['customer_id' => $customer_id];
+
+            if ($orders = Orders_model::where('email', $customer_email)->get()) {
+                foreach ($orders as $row) {
+                    if (empty($row['order_id'])) continue;
+
+                    Coupons_model::where('email', $customer_email)
+                                 ->where('order_id', $row['order_id'])->update($update);
+
+                    Coupons_history_model::where('order_id', $row['order_id'])->update($update);
+
+                    if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
+                        Addresses_model::where('address_id', $row['address_id'])->update($update);
+                    }
+
+                    // @todo: move to paypal extension
+                    if (!empty($row['payment'])) {
+                        DB::table('pp_payments')->where('order_id', $row['order_id'])
+                          ->update(['customer_id' => $customer_id]);
+                    }
+                }
+            }
+
+            Reservations_model::where('email', $customer_email)->update($update);
+
+            $query = TRUE;
+        }
+
+        return $query;
     }
 
     /**

@@ -1,6 +1,6 @@
-<?php if ($this->previewMode): ?>
+<?php if ($this->previewMode){ ?>
     <div class="form-control-static"><?= $value ?></div>
-<?php else: ?>
+<?php } else { ?>
     <div
         class="field-richeditor size-<?= $size ?>"
         data-control="rich-editor"
@@ -11,4 +11,4 @@
             class="form-control"
         ><?= trim(e($value)) ?></textarea>
     </div>
-<?php endif ?>
+<?php } ?>

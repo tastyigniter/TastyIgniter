@@ -6,6 +6,5 @@
 </div>
 
 <div class="buttons">
-    <a href="{{frontUrl}}" class="btn btn-default pull-left" target="_blank"><?= lang('text_goto_storefront'); ?></a>
     <a href="{{proceedUrl}}" class="btn btn-success pull-right"><?= lang('button_proceed'); ?></a>
 </div>

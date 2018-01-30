@@ -814,7 +814,7 @@ class Orders_model extends Model
             $this->load->library('country');
 
             $data['order_number'] = $result['order_id'];
-            $data['order_view_url'] = root_url('account/orders/view/'.$result['order_id']);
+            $data['order_view_url'] = site_url('account/orders/view/'.$result['order_id']);
             $data['order_type'] = ($result['order_type'] == '1') ? 'delivery' : 'collection';
             $data['order_time'] = mdate('%H:%i', strtotime($result['order_time'])).' '.mdate('%d %M', strtotime($result['order_date']));
             $data['order_date'] = mdate('%d %M %y', strtotime($result['date_added']));

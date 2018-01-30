@@ -11,8 +11,6 @@ use ZipArchive;
 
 /**
  * Modules class for TastyIgniter.
- * Adapted from Wiredesignz Modular Extensions - HMVC.
- * @link https://bitbucket.org/wiredesignz/codeigniter-modular-extensions-hmvc
  * Provides utility functions for working with modules.
  */
 class ExtensionManager
@@ -104,8 +102,8 @@ class ExtensionManager
     /**
      * Return an associative array of files within one or more extensions.
      *
-     * @param $extensionName   string  If not null, will return only files from that extension.
-     * @param $extensionFolder string  If not null, will return only files within that sub-folder of each extension (ie 'views').
+     * @param string $extensionName
+     * @param string $subFolder
      *
      * @return bool|array An associative array, like:
      * <code>
@@ -115,43 +113,17 @@ class ExtensionManager
      *     )
      * )
      */
-    public function files($extensionName = null, $extensionFolder = null)
+    public function files($extensionName = null, $subFolder = null)
     {
         $files = [];
-        foreach ($this->folders() as $path) {
-            // Only map the whole extensions directory if $extensionName isn't passed.
-            if (empty($extensionName)) {
-                $extensions = File::directories($path);
-            }
-            elseif (File::isDirectory($path.$extensionName)) {
-                // Only map the $extensionName directory if it exists.
-                $path = $path.$extensionName;
-                $extensions[$extensionName] = File::directories($path);
-            }
-
-            // If the element is not an array, it's a file, so ignore it. Otherwise,
-            // it is assumed to be a extension.
-            if (empty($extensions) || !is_array($extensions)) {
-                continue;
-            }
-
-            foreach ($extensions as $modDir => $values) {
-                if (is_array($values)) {
-                    if (empty($extensionFolder)) {
-                        // Add the entire extension.
-                        $files[$modDir] = $values;
-                    }
-                    elseif (!empty($values[$extensionFolder])) {
-                        // Add just the specified folder for this extension.
-                        $files[$modDir] = [
-                            $extensionFolder => $values[$extensionFolder],
-                        ];
-                    }
-                }
-            }
+        $extensionPath = $this->path($this->getNamePath($extensionName));
+        $extensionPath = rtrim($extensionPath.$subFolder, '/');
+        foreach (File::allFiles($extensionPath) as $path) {
+            // Add just the specified folder for this extension.
+            $files[] = $path->getRelativePathname();
         }
 
-        return empty($files) ? FALSE : $files;
+        return $files;
     }
 
     /**
@@ -649,42 +621,39 @@ class ExtensionManager
      * @param $zipPath
      * @param array $extCode extension code
      *
-     * @return bool TRUE on success, FALSE on failure
+     * @return array
      */
     public function extractExtension($zipPath, $extCode = null)
     {
-        if (!file_exists($zipPath) OR !class_exists('ZipArchive', FALSE))
-            return FALSE;
-
-        $extensionDir = null;
-        $extractTo = current($this->folders());
-
-        chmod($zipPath, config('system.filePermission'));
+        if (!File::exists($zipPath) OR !class_exists('ZipArchive', FALSE))
+            return [FALSE, FALSE];
 
         $zip = new ZipArchive;
-        if ($zip->open($zipPath) === TRUE) {
-            $extensionDir = $zip->getNameIndex(0);
+        if ($zip->open($zipPath) !== TRUE)
+            throw new SystemException('Failed to open zip file');
 
-            if ($zip->locateName($extensionDir.'Extension.php') === FALSE AND $zip->locateName($extensionDir.'extension.json') === FALSE)
-                return FALSE;
+        $extensionDir = $zip->getNameIndex(0);
 
-            if (!$this->checkName($extensionDir) OR file_exists($extractTo.$extensionDir))
-                return FALSE;
+        if (
+            $zip->locateName($extensionDir.'Extension.php') === FALSE
+            AND $zip->locateName($extensionDir.'extension.json') === FALSE
+        )
+            throw new SystemException('Missing extension registration class file');
 
-            $zip->extractTo($extractTo);
-            $zip->close();
-        }
+        if (!$this->checkName($extensionDir))
+            throw new SystemException(lang('system::extensions.error_upload_name'));
 
-        if (!file_exists($extractedPath = $extractTo.'/'.$extensionDir))
-            return FALSE;
+        $zip->extractTo($extractTo = temp_path());
+        $zip->close();
 
-        if (is_string($extCode)) {
-            $extensionPath = extension_path('/'.$extCode);
-            if (!file_exists($extensionPath))
-                File::copyDirectory($extractedPath, $extensionPath);
-        }
+        $extractedPath = $extractTo.'/'.$extensionDir;
+        $manifestFile = $extractedPath.'extension.json';
+        $config = json_decode(File::get($manifestFile));
+        $extensionPath = extension_path($this->getNamePath($config->code));
 
-        return $extractedPath;
+        File::moveDirectory($extractedPath, $extensionPath, TRUE);
+
+        return [$config, $extensionPath];
     }
 
     /**
@@ -696,12 +665,19 @@ class ExtensionManager
      */
     public function removeExtension($extCode = null)
     {
-        $extensionPath = rtrim($this->path($extCode), '/');
-        // Delete the specified admin and main language folder.
-        if (!File::isDirectory($extensionPath))
-            return FALSE;
+        $extensionPath = extension_path($this->getNamePath($extCode));
 
-        File::deleteDirectory($extensionPath);
+        // Delete the specified extension folder.
+        if (File::isDirectory($extensionPath))
+            File::deleteDirectory($extensionPath);
+
+        $vendorPath = dirname($extensionPath);
+
+        // Delete the specified extension vendor folder if it has no extension.
+        if (File::isDirectory($vendorPath) AND
+            !count(File::directories($vendorPath))
+        )
+            File::deleteDirectory($vendorPath);
 
         return TRUE;
     }

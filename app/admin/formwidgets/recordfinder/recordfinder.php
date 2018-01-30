@@ -5,14 +5,14 @@
     data-refresh-handler="<?= $this->getEventHandler('onRefresh') ?>"
     data-data-locker="#<?= $field->getId() ?>">
     <span class="form-control">
-        <?php if ($value): ?>
+        <?php if ($value) { ?>
             <span class="primary"><?= e($nameValue) ?: 'Undefined' ?></span>
-            <?php if ($descriptionValue): ?>
+            <?php if ($descriptionValue) { ?>
                 <span class="secondary"> - <?= e($descriptionValue) ?></span>
-            <?php endif ?>
-        <?php else: ?>
+            <?php } ?>
+        <?php } else { ?>
             <span class="text-muted"><?= $prompt ?></span>
-        <?php endif ?>
+        <?php } ?>
     </span>
 
     <?php if (!$this->previewMode): ?>

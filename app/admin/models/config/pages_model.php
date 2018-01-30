@@ -35,7 +35,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-eye',
         'attributes'   => [
             'class'  => 'btn btn-info',
-            'href'   => site_url('{permalink_slug}'),
+            'href'   => root_url('{permalink_slug}'),
             'target' => '_blank',
         ],
     ],

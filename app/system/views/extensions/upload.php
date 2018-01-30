@@ -1,10 +1,10 @@
 <div class="row-fluid">
     <?= form_open(current_url(),
         [
-            'id'      => 'preview-form',
+            'id'      => 'upload-form',
             'role'    => 'form',
             'enctype' => 'multipart/form-data',
-                'method' => 'PATCH'
+            'method'  => 'PATCH',
         ]
     ); ?>
 

@@ -11,8 +11,8 @@ $type = $tabs->section;
         class="panel-body">
         <?php $index = 0;
         foreach ($tabs as $name => $fields) { ?>
-            <? $index++; ?>
-            <div class="panel panel-inverse panel-form">
+            <?php $index++; ?>
+            <div class="panel panel-inverse">
                 <div class="panel-heading <?= $index == 1 ? '' : 'collapsed' ?>"
                      role="button"
                      data-toggle="collapse"

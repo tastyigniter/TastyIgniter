@@ -10,7 +10,7 @@
 
         <div class="panel-body">
             <div class="row">
-                <?= $this->makePartial('themes/theme_list'); ?>
+                <?= $this->makePartial('lists/list_body') ?>
             </div>
         </div>
 

@@ -75,9 +75,9 @@ class Theme
     public $partials;
 
     /**
-     * @var array Raw theme customizer configuration.
+     * @var array Raw theme fields for styling.
      */
-    public $customizers;
+    public $fields;
 
     public $active;
 
@@ -91,7 +91,39 @@ class Theme
     {
         $this->publicPath = File::localToPublic($this->path);
         $this->config = $this->evalConfig($config);
-        $this->registerPagicSource();
+    }
+
+    /**
+     * Ensures this theme is registered as a Pagic source.
+     * @return void
+     */
+    public function registerAsSource()
+    {
+        $resolver = App::make('pagic');
+
+        if (!$resolver->hasSource($this->getDirName())) {
+            $source = new FileSource($this->getPath(), App::make('files'));
+            $resolver->addSource($this->getDirName(), $source);
+        }
+    }
+
+    public function getFields()
+    {
+        if ($this->fields)
+            return$this->fields;
+
+        $fields = [];
+        if ($parentConfigPath = $this->getParentPath()) {
+            $parentConfigPath = $parentConfigPath.'/_meta/fields.php';
+            if (File::exists($parentConfigPath))
+                $fields = File::getRequire($parentConfigPath);
+        }
+
+        $configPath = $this->getPath().'/_meta/fields.php';
+        if (File::exists($configPath))
+            $fields = array_merge($fields, File::getRequire($configPath));
+
+        return $this->fields = $fields;
     }
 
     /**
@@ -113,6 +145,14 @@ class Theme
     /**
      * @return string
      */
+    public function getParentPath()
+    {
+        return $this->isChild() ? dirname($this->path).'/'.$this->parent : null;
+    }
+
+    /**
+     * @return string
+     */
     public function getDirName()
     {
         return basename($this->path);
@@ -124,16 +164,6 @@ class Theme
             $require = [$require];
 
         return $require;
-    }
-
-    public function setCustomizers(array $config = [])
-    {
-//        if (!\File::isFile())
-        if (isset($config['customize']))
-            $this->customizers = $config['customize'];
-
-        if (isset($config['partial_areas']))
-            $this->partials = $config['partial_areas'];
     }
 
     /**
@@ -201,19 +231,5 @@ class Theme
             $this->disabled = $config['disabled'];
 
         return $config;
-    }
-
-    /**
-     * Ensures this theme is registered as a Pagic source.
-     * @return void
-     */
-    protected function registerPagicSource()
-    {
-        $resolver = App::make('pagic');
-
-        if (!$resolver->hasSource($this->getDirName())) {
-            $source = new FileSource($this->getPath(), App::make('files'));
-            $resolver->addSource($this->getDirName(), $source);
-        }
     }
 }

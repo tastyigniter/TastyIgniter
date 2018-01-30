@@ -179,6 +179,7 @@ return [
     'alert_success_thumb_deleted'  => 'Thumbs deleted successfully.',
     'alert_settings_missing_model' => 'Missing defined model %s.',
     'alert_settings_not_found'     => 'Settings %s not found.',
+    'alert_delete_setup_files'     => '<b>SECURITY WARNING!</b> Delete the setup files to stop someone else from overwriting your site. <a class="btn btn-danger" data-request="onDeleteSetupFiles">Delete Setup Files</a>',
 
     'help_timezone'                     => 'The default timezone. Choose a city in the same timezone as your restaurant.',
     'help_site_location_mode'           => 'Set whether to enable support for single or multiple restaurant locations.',

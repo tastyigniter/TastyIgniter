@@ -50,6 +50,7 @@ trait HasComponents
 
         $this->settings['components'] = $components;
     }
+
     public function parseSettings()
     {
         $this->fillViewBagArray();
@@ -85,7 +86,7 @@ trait HasComponents
         $componentManager = ComponentManager::instance();
         $componentName = $componentManager->resolve($componentName);
 
-        foreach ($this->settings['components'] as $name => $values) {
+        foreach ($this->components as $name => $component) {
             $result = $name;
             if ($name == $componentName)
                 return $result;

@@ -26,15 +26,9 @@
   },
   "require": {
     "php": ">=7.0.0",
-    "tastyigniter/flame": "dev-master",
-    "laravel/framework": "5.5.*"
-  },
-  "autoload": {
-    "psr-4": {
-      "Main\\": "app/main/",
-      "Admin\\": "app/admin/",
-      "System\\": "app/system/"
-    }
+    "composer/installers": "~1.0",
+    "laravel/framework": "5.5.*",
+    "tastyigniter/flame": "dev-master"
   },
   "extra": {
     "merge-plugin": {

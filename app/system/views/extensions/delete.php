@@ -2,9 +2,9 @@
     <div class="col-md-12">
         <?= form_open(current_url(),
             [
-                'id'   => 'edit-form',
-                'role' => 'form',
-                'method' => 'DELETE'
+                'id'     => 'edit-form',
+                'role'   => 'form',
+                'method' => 'DELETE',
             ]
         ); ?>
 
@@ -30,10 +30,10 @@
                 <p><?= sprintf(lang('system::extensions.alert_delete_warning'), $deleteAction, $extensionName); ?></p>
                 <p><?= sprintf(lang('system::extensions.alert_delete_confirm'), $deleteAction); ?></p>
                 <div id="deletedFiles">
-                        <textarea
-                            class="form-control"
-                            rows="10"
-                            readonly><?= implode(PHP_EOL, $filesToDelete); ?></textarea>
+                    <textarea
+                        class="form-control"
+                        rows="10"
+                        readonly><?= implode(PHP_EOL, $filesToDelete); ?></textarea>
                 </div>
                 <?php if ($extensionData) { ?>
                     <div class="form-group wrap-top">

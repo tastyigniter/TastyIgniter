@@ -25,15 +25,23 @@ $config['list']['toolbar'] = [
 $config['list']['columns'] = [
     'edit'     => [
         'type'         => 'button',
-        'iconCssClass' => 'fa fa-pencil',
+        'iconCssClass' => 'fa fa-paint-brush',
         'attributes'   => [
             'class' => 'btn btn-outline btn-default',
             'href'  => 'themes/edit/{code}',
         ],
     ],
+    'source'     => [
+        'type'         => 'button',
+        'iconCssClass' => 'fa fa-pencil',
+        'attributes'   => [
+            'class' => 'btn btn-outline btn-default',
+            'href'  => 'themes/source/{code}',
+        ],
+    ],
     'default'  => [
         'type'         => 'button',
-        'iconCssClass' => 'fa fa-star',
+        'iconCssClass' => 'fa fa-star-o',
         'attributes'   => [
             'class'             => 'btn btn-outline btn-warning',
             'title'             => 'lang:system::themes.text_set_default',
@@ -99,11 +107,21 @@ $config['form']['fields'] = [
 ];
 
 $config['form']['tabs'] = [
+    'cssClass' => 'theme-editor',
     'fields' => [
-        'source' => [
+        'files' => [
             'tab'  => 'lang:system::themes.text_tab_edit_source',
             'type' => 'partial',
-            'path' => 'themes/source_editor',
+            'span' => 'flex',
+            'cssClass' => 'col-sm-3 wrap-none',
+            'path' => 'themes/source_files',
+        ],
+        'source' => [
+            'tab'  => 'lang:system::themes.text_tab_edit_source',
+            'type' => 'codeeditor',
+            'span' => 'flex',
+            'cssClass' => 'col-sm-9 pull-right wrap-none',
+            'mode' => 'css',
         ],
     ],
 ];

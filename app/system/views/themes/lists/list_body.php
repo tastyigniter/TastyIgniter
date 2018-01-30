@@ -19,7 +19,7 @@
                     <a class="media-left preview-thumb"
                        data-toggle="modal"
                        data-target="#theme-preview-<?= $theme->code; ?>"
-                       data-img-src="<?= URL::asset($theme->themeClass->screenshot); ?>">
+                       data-img-src="<?=  URL::asset($theme->themeClass->screenshot); ?>">
                         <img class="img-rounded"
                              alt=""
                              src="<?= URL::asset($theme->themeClass->screenshot); ?>"
@@ -40,14 +40,18 @@
                         </div>
                         <div class="buttons action">
 
+                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('source')]) ?>
+
                             <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('edit')]) ?>
 
                             <?php
-                            $column = $this->getColumn('default');
-                            if ($theme->themeClass->isActive()) {
-                                $column->cssClass = $column->cssClass.' disabled';
-                                $column->attributes['title'] = 'lang:text_is_default';
-                            }
+//                            $column = $this->getColumn('default');
+//                            dump($theme->themeClass->isActive());
+//                            if ($theme->themeClass->isActive()) {
+//                                $column->iconCssClass = 'fa fa-star';
+//                                $column->attributes['title'] = 'lang:system::themes.text_is_default';
+//                                $column->attributes['data-request'] = null;
+//                            }
                             ?>
                             <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('default')]) ?>
 

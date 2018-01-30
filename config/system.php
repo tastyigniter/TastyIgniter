@@ -44,8 +44,8 @@ return [
     |
     */
 
-    'dateFormat' => '%d-%m-%Y',
-    'timeFormat' => '%H:%i',
+    'dateFormat'     => '%d-%m-%Y',
+    'timeFormat'     => '%H:%i',
     'dateTimeFormat' => '%d-%m-%Y - %H:%i',
 
     /*
@@ -58,7 +58,6 @@ return [
     */
 
     'modules' => ['System', 'Admin', 'Main'],
-
 
     /*
     |--------------------------------------------------------------------------
@@ -105,7 +104,7 @@ return [
     |
     */
 
-    'enableRoutesCache' => false,
+    'enableRoutesCache' => FALSE,
 
     /*
     |--------------------------------------------------------------------------
@@ -139,7 +138,7 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'templateCachePath' => storage_path().'/framework/templates',
+    'templateCachePath'      => storage_path().'/framework/templates',
 
     /*
     |--------------------------------------------------------------------------
@@ -162,8 +161,8 @@ return [
     'assets' => [
 
         'media' => [
-            'disk'   => 'local',
-            'path'   => '',
+            'disk' => 'local',
+            'path' => '',
         ],
 
     ],
@@ -177,6 +176,6 @@ return [
     |
     */
 
-    'filePermissions' => '777',
+    'filePermissions'   => '777',
     'folderPermissions' => '777',
 ];

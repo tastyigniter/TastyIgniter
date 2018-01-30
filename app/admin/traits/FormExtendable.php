@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Event;
 use Exception;
 
 trait FormExtendable

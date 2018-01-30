@@ -10,7 +10,7 @@
 	<li class="<?= ($context === 'info') ? 'active':''; ?>">
 		<a href="<?= restaurant_url('info'); ?>"><?= lang('main::default.local.text_tab_info'); ?></a>
 	</li>
-	<?php if ($localLibrary->hasGallery()) { ?>
+	<?php if ($local->location->hasGallery()) { ?>
 		<li class="<?= ($context === 'gallery') ? 'active':''; ?>">
 			<a href="<?= restaurant_url('gallery'); ?>"><?= lang('main::default.local.text_tab_gallery'); ?></a>
 		</li>

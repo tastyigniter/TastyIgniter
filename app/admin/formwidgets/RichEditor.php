@@ -21,6 +21,10 @@ class RichEditor extends BaseFormWidget
      */
     public $fullPage = FALSE;
 
+    public $stretch;
+
+    public $size;
+
     public $toolbarButtons = null;
 
     //
@@ -33,6 +37,8 @@ class RichEditor extends BaseFormWidget
     {
         $this->fillFromConfig([
             'fullPage',
+            'stretch',
+            'size',
             'toolbarButtons',
         ]);
     }
@@ -59,8 +65,8 @@ class RichEditor extends BaseFormWidget
     {
         $this->vars['field'] = $this->formField;
         $this->vars['fullPage'] = $this->fullPage;
-        $this->vars['stretch'] = $this->formField->stretch;
-        $this->vars['size'] = $this->formField->size;
+        $this->vars['stretch'] = $this->stretch;
+        $this->vars['size'] = $this->size;
         $this->vars['name'] = $this->formField->getName();
         $this->vars['value'] = $this->getLoadValue();
         $this->vars['toolbarButtons'] = $this->evalToolbarButtons();

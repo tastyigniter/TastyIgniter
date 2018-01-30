@@ -31,7 +31,7 @@
                     <ul>
                         <?php if (!is_single_location()) { ?>
                             <li>
-                                <a href="<?= site_url('local/all'); ?>">
+                                <a href="<?= site_url('locations'); ?>">
                                     <?= lang('main::default.menu_locations'); ?>
                                 </a>
                             </li>

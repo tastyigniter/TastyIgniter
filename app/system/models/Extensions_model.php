@@ -28,7 +28,7 @@ class Extensions_model extends Model
      */
     protected $primaryKey = 'extension_id';
 
-    protected $fillable = ['extension_id', 'type', 'name', 'data', 'serialized', 'status', 'title', 'version'];
+    protected $fillable = ['type', 'name', 'title', 'version'];
 
     public $casts = [
         'data' => 'serialize',
@@ -103,8 +103,6 @@ class Extensions_model extends Model
             return;
 
         $this->updateInstalledExtensions($this->name, ($this->status == 1));
-
-        $this->syncPermissions();
 
         $this->syncTemplates();
 
@@ -198,19 +196,11 @@ class Extensions_model extends Model
             ]);
         }
 
-        // Disabled extensions not found in file system
+        // Disable extensions not found in file system
         // This allows admin to remove an enabled extension from admin UI after deleting files
         self::whereNotIn('name', $installedExtensions)->update(['status' => FALSE]);
 
         self::updateInstalledExtensions();
-    }
-
-    /**
-     * Save all extension registered permissions to database
-     */
-    public function syncPermissions()
-    {
-        Permissions_model::syncAll();
     }
 
     /**
@@ -251,7 +241,7 @@ class Extensions_model extends Model
      *
      * @return bool|null
      */
-    public static function install($code, $extension)
+    public static function install($code, $extension = null)
     {
         $code = str_replace('/', '.', $code);
 
@@ -261,9 +251,9 @@ class Extensions_model extends Model
         $extensionModel = self::firstOrNew(['type' => 'module', 'name' => $code]);
 
         if ($extensionModel AND $extensionModel->meta) {
+            $extensionModel->status = true;
             $extensionModel->fill([
                 'title'   => $extensionModel->meta['name'],
-                'status'  => TRUE,
                 'version' => $extensionModel->meta['version'],
             ])->save();
         }
@@ -311,7 +301,7 @@ class Extensions_model extends Model
         $dataDeleted = FALSE;
         $filesDeleted = TRUE;
 
-        if ($extensionModel AND $deleteData) {
+        if ($extensionModel AND ($deleteData OR !$extensionModel->data)) {
             $dataDeleted = $extensionModel->delete();
         }
 

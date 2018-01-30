@@ -1,4 +1,4 @@
-<?
+<?php
 $sortName = isset($sortBy[0]) ? $sortBy[0] : null;
 $sortDirection = isset($sortBy[1]) ? $sortBy[1] : 'ascending';
 $sortIcon = ($sortDirection === 'ascending') ? '-up' : '-down';

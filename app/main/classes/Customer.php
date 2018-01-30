@@ -13,45 +13,6 @@ class Customer extends \Igniter\Flame\Auth\Manager
 
     protected $identifier = 'email';
 
-//    protected $customer_id;
-//
-//    protected $first_name;
-//
-//    protected $last_name;
-//
-//    protected $email;
-//
-//    protected $telephone;
-//
-//    protected $address_id;
-//
-//    protected $security_question_id;
-//
-//    protected $security_answer;
-//
-//    protected $customer_group_id;
-
-//    public function __construct()
-//    {
-//        parent::__construct();
-//        $this->initialize();
-//    }
-//
-//    public function logout()
-//    {
-//        parent::logout();
-//
-//        $this->customer_id = '0';
-//        $this->first_name = '';
-//        $this->last_name = '';
-//        $this->email = '';
-//        $this->telephone = '';
-//        $this->address_id = '';
-//        $this->security_question_id = '';
-//        $this->security_answer = '';
-//        $this->customer_group_id = '';
-//    }
-
     public function isLogged()
     {
         return $this->check();
@@ -81,16 +42,6 @@ class Customer extends \Igniter\Flame\Auth\Manager
     {
         return strtolower($this->user->email);
     }
-
-//    public function checkPassword($password)
-//    {
-//        $credentials = [
-//            'email'    => $this->email,
-//            'password' => $password,
-//        ];
-//
-//        return $this->validate($credentials, FALSE, FALSE);
-//    }
 
     public function getTelephone()
     {
@@ -123,5 +74,47 @@ class Customer extends \Igniter\Flame\Auth\Manager
 //        $this->CI->db->where('customer_id', $this->customer_id);
 //        $this->CI->db->where('email', $this->email);
 //        $this->CI->db->update('customers');
+    }
+
+    //
+    // Impersonation
+    //
+
+    /**
+     * Impersonates the given user and sets properties
+     * in the session but not the cookie.
+     */
+    public function impersonate($userModel)
+    {
+        $oldSession = $this->getSession(static::AUTH_KEY_NAME);
+
+        $this->login($userModel, FALSE);
+
+        $this->putSession(static::AUTH_KEY_NAME.'_impersonate', $oldSession);
+    }
+
+    public function stopImpersonate()
+    {
+        $oldSession = $this->getSession(static::AUTH_KEY_NAME.'_impersonate');
+
+        $this->putSession(static::AUTH_KEY_NAME, $oldSession);
+    }
+
+    public function isImpersonator()
+    {
+        return $this->hasSession(static::AUTH_KEY_NAME.'_impersonate');
+    }
+
+    public function getImpersonator()
+    {
+        $impersonateArray = $this->getSession(static::AUTH_KEY_NAME.'_impersonate');
+
+        // Check supplied session/cookie is an array (user id, persist code)
+        if (!is_array($impersonateArray) OR count($impersonateArray) !== 2)
+            return FALSE;
+
+        $id = reset($impersonateArray);
+
+        return $this->createModel()->find($id);
     }
 }

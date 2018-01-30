@@ -1,9 +1,9 @@
 <div class="panel panel-table">
     <?= form_open(current_url(),
         [
-            'id'   => 'list-form',
-            'role' => 'form',
-                'method' => 'GET'
+            'id'     => 'list-form',
+            'role'   => 'form',
+            'method' => 'POST',
         ]
     ); ?>
 

@@ -7,6 +7,7 @@ use Admin\Classes\FilterScope;
 use DB;
 use Event;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Request;
 
 /**
@@ -154,7 +155,8 @@ class Filter extends BaseWidget
         $params = func_get_args();
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
-            return call_user_func_array('array_merge', $result);
+            list($redirect) = $result;
+            return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
     }
 
@@ -171,7 +173,8 @@ class Filter extends BaseWidget
         $params = func_get_args();
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
-            return call_user_func_array('array_merge', $result);
+            list($redirect) = $result;
+            return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
     }
 

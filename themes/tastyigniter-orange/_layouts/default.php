@@ -36,7 +36,6 @@ function onEnd()
         <?php } ?>
 
         <?= page(); ?>
-<!--        --><?//= view('main::404')->with(['hala' => 'at me']); ?>
 
     </div>
     <footer id="page-footer">

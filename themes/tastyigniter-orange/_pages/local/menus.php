@@ -6,7 +6,7 @@ permalink: /menus
 '[categories]':
 
 '[localMenu]':
-pageLimit: 50
+    pageLimit: 50
 ---
 <div id="page-content">
 
@@ -32,7 +32,7 @@ pageLimit: 50
             </div>
 
             <div class="col-sm-4 col-md-3">
-                <?= component('cart'); ?>
+<!--                --><?//= component('cart'); ?>
             </div>
         </div>
     </div>

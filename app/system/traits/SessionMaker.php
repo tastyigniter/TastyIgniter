@@ -113,6 +113,9 @@ trait SessionMaker
      */
     protected function makeSessionKey()
     {
+        if (isset($this->sessionKey))
+            return $this->sessionKey;
+
         return get_class_id(get_class($this));
     }
 

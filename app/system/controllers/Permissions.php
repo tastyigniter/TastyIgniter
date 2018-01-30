@@ -49,8 +49,6 @@ class Permissions extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        Permissions_model::syncAll();
-
         AdminMenu::setContext('permissions', 'users');
     }
 

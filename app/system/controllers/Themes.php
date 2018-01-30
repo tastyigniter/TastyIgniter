@@ -1,11 +1,14 @@
 <?php namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
+use AdminAuth;
 use AdminMenu;
-use Assets;
 use Exception;
 use Main\Classes\ThemeManager;
+use Request;
+use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
+use SystemException;
 use Template;
 
 class Themes extends \Admin\Classes\AdminController
@@ -46,13 +49,21 @@ class Themes extends \Admin\Classes\AdminController
         'configFile' => 'themes_model',
     ];
 
+    /**
+     * @var \Admin\Widgets\Form
+     */
     public $formWidget;
 
+    /**
+     * @var \Admin\Widgets\Toolbar
+     */
     public $toolbarWidget;
 
     public function __construct()
     {
         parent::__construct();
+
+        Themes_model::syncLocal();
 
         AdminMenu::setContext('themes', 'design');
     }
@@ -78,16 +89,6 @@ class Themes extends \Admin\Classes\AdminController
 
     public function source($context, $themeCode = null)
     {
-        Assets::addCss(assets_url('js/codemirror/material.css'), 'material-css');
-        Assets::addCss(assets_url('js/codemirror/codemirror.css'), 'codemirror-css');
-        Assets::addJs(assets_url('js/codemirror/codemirror.js'), 'codemirror-js');
-        Assets::addJs(assets_url('js/codemirror/xml/xml.js'), 'codemirror-xml-js');
-        Assets::addJs(assets_url('js/codemirror/css/css.js'), 'codemirror-css-js');
-        Assets::addJs(assets_url('js/codemirror/javascript/javascript.js'), 'codemirror-javascript-js');
-        Assets::addJs(assets_url('js/codemirror/php/php.js'), 'codemirror-php-js');
-        Assets::addJs(assets_url('js/codemirror/htmlmixed/htmlmixed.js'), 'codemirror-htmlmixed-js');
-        Assets::addJs(assets_url('js/codemirror/clike/clike.js'), 'codemirror-clike-js');
-
         try {
             $pageTitle = lang('system::themes.text_edit_title');
             Template::setTitle($pageTitle);
@@ -121,36 +122,185 @@ class Themes extends \Admin\Classes\AdminController
 
     public function upload($context)
     {
+        $pageTitle = lang('system::themes.text_edit_title');
+        Template::setTitle($pageTitle);
+        Template::setHeading($pageTitle);
+
+        Template::setButton(lang('admin::default.button_icon_back'), ['class' => 'btn btn-default', 'href' => admin_url('themes')]);
+        Template::setButton(lang('system::themes.button_browse'), ['class' => 'btn btn-default pull-right', 'href' => admin_url('updates/browse/themes')]);
+    }
+
+    public function delete($context, $themeCode = null)
+    {
         try {
-            $pageTitle = lang('system::themes.text_edit_title');
+            $pageTitle = lang('system::themes.text_delete_title');
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
-            $model = $this->createModel();
-//            $this->initFormWidget($model, $context);
+            $themeManager = ThemeManager::instance();
+            $themeClass = $themeManager->findTheme($themeCode);
+            $model = Themes_model::whereCode($themeCode)->first();
+
+            // Theme must be disabled before it can be deleted
+            if ($model AND $model->status) {
+                flash()->warning(sprintf(
+                    lang('admin::default.alert_error_nothing'),
+                    lang('admin::default.text_deleted').lang('system::themes.text_theme_is_active')
+                ));
+
+                return $this->redirectBack();
+            }
+
+            // Theme not found in filesystem
+            // so delete from database
+            if (!$themeClass) {
+                Themes_model::deleteTheme($themeCode, TRUE);
+                flash()->success(sprintf(lang('admin::default.alert_success'), "Theme deleted "));
+
+                return $this->redirectBack();
+            }
+
+            // Lets display a delete confirmation screen
+            // with list of files to be deleted
+            $this->vars['themeModel'] = $model;
+            $this->vars['themeClass'] = $themeClass;
+            $this->vars['themeName'] = $themeClass->name;
+            $this->vars['themeData'] = $model->data;
+            $this->vars['filesToDelete'] = array_collapse($themeManager->listFiles($themeCode));
         } catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
 
-    public function index_onDelete()
-    {
-        dd(post());
-    }
-
     public function index_onSetDefault()
     {
-        dd(post());
+        if (!AdminAuth::hasPermission('Site.Themes.Manage', TRUE))
+            return $this->redirectBack();
+
+        $themeName = post('code');
+        if ($theme = Themes_model::activateTheme($themeName)) {
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme ['.$theme->name.'] set as default '));
+        }
+
+        return $this->redirectBack();
     }
 
-    public function copy_onCreateChild()
+    public function edit_onSave($context, $themeCode = null)
     {
-        dd(post());
+        $model = $this->formFindModelObject($themeCode);
+
+        $this->initFormWidget($model, $context);
+
+        if ($this->formValidate($model, $this->formWidget) === FALSE)
+            return;
+
+        $model->setAttribute('data', $this->formWidget->getSaveData());
+
+        if ($model->save()) {
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme settings updated '));
+        }
+        else {
+            flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
+        }
+
+        return $this->refresh();
     }
 
-    public function listExtendQuery($query)
+    public function source_onSave($context, $themeCode = null)
     {
-        $query->isCustomisable();
+        $model = $this->formFindModelObject($themeCode);
+
+        $this->initFormWidget($model, $context);
+
+        if ($this->formValidate($model, $this->formWidget) === FALSE)
+            return;
+
+        $filename = array_get(post($this->formWidget->arrayName), 'file');
+        $content = array_get($this->formWidget->getSaveData(), 'source');
+        if (is_int($content))
+            $filename = null;
+
+        if (ThemeManager::instance()->writeFile($filename, $themeCode, $content)) {
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme file ['.$filename.'] updated '));
+        }
+
+        session()->flash('file', input('file'));
+
+        return $this->refresh();
+    }
+
+    public function copy_onCreateChild($context, $themeCode = null)
+    {
+        $theme = ThemeManager::instance()->findTheme($themeCode);
+        $meta = $theme->config;
+
+        if (Themes_model::copyTheme($themeCode, (post('copy_data') == 1))) {
+            $name = isset($meta['name']) ? $meta['name'] : '';
+
+            flash()->success(sprintf(lang('admin::default.alert_success'), "Theme {$name} copied "));
+        }
+        else {
+            flash()->danger(lang('admin::default.alert_error_try_again'));
+        }
+
+        return $this->redirect('themes');
+    }
+
+    public function upload_onUpload($context = null)
+    {
+        try {
+            $themeManager = ThemeManager::instance();
+
+            $this->validateUpload();
+
+            $zipFile = Request::file('theme_zip');
+            list($config, $path) = $themeManager->extractTheme($zipFile->path());
+
+            if (!$config)
+                throw new Exception(lang('system::themes.error_config_no_found'));
+        } catch (Exception $ex) {
+            flash()->danger($ex->getMessage());
+
+            return $this->refresh();
+        }
+
+        flash()->success(sprintf(lang('admin::default.alert_success'), "Theme uploaded "));
+
+        return $this->redirect('themes');
+    }
+
+    public function delete_onDelete($context = null, $themeCode = null)
+    {
+        $theme = ThemeManager::instance()->findTheme($themeCode);
+        $meta = $theme->config;
+
+        if (Themes_model::deleteTheme($themeCode, (post('delete_data') == 1))) {
+            $name = isset($meta['name']) ? $meta['name'] : '';
+
+            flash()->success(sprintf(lang('admin::default.alert_success'), "Theme {$name} deleted "));
+        }
+        else {
+            flash()->danger(lang('admin::default.alert_error_try_again'));
+        }
+
+        return $this->redirect('themes');
+    }
+
+    public function listOverrideColumnValue($record, $column, $alias = null)
+    {
+        if ($column->type != 'button' OR $column->columnName != 'default')
+            return null;
+
+        $attributes = $column->attributes;
+
+        $column->iconCssClass = 'fa fa-star-o';
+        if ($record->themeClass AND $record->themeClass->isActive()) {
+            $column->iconCssClass = 'fa fa-star';
+            $attributes['title'] = 'lang:system::themes.text_is_default';
+            $attributes['data-request'] = null;
+        }
+
+        return $attributes;
     }
 
     public function initFormWidget($model, $context = null)
@@ -170,6 +320,10 @@ class Themes extends \Admin\Classes\AdminController
 
         // Form Widget with extensibility
         $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $modelConfig);
+        $this->formWidget->bindEvent('form.extendFields', function ($fields) {
+            $this->formExtendFields($this->formWidget, $fields);
+        });
+
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget
@@ -189,14 +343,44 @@ class Themes extends \Admin\Classes\AdminController
 
         // Prepare query and find model record
         $query = $model->newQuery();
-//        $this->controller->formExtendQuery($query);
-        $result = $query->isCustomisable()->where('code', $recordId)->first();
+        $result = $query->where('code', $recordId)->first();
 
         if (!$result) {
             throw new Exception(lang('system::default.form.not_found'));
         }
 
         return $result;
+    }
+
+    public function formExtendFields($form, $fields)
+    {
+        $sourceField = $form->getField('source');
+        $filesField = $form->getField('files');
+        if (!$sourceField OR !$filesField)
+            return;
+
+        $file = input('file', session('file'));
+        $themeCode = $form->model->code;
+        $filesField->options = $this->prepareFilesList($themeCode, $file);
+
+        $themeManager = ThemeManager::instance();
+        if (!$fileSource = $themeManager->readFile($file, $themeCode))
+            return;
+
+        $form->data->source = $fileSource;
+
+        switch (pathinfo($file, PATHINFO_EXTENSION)) {
+            case 'js':
+                $sourceField->config['mode'] = 'javascript';
+                break;
+            case 'css':
+                $sourceField->config['mode'] = 'css';
+                break;
+            case 'php':
+            default:
+                $sourceField->config['mode'] = 'application/x-httpd-php';
+                break;
+        }
     }
 
     protected function createModel()
@@ -215,7 +399,7 @@ class Themes extends \Admin\Classes\AdminController
     protected function _addTheme()
     {
         if (isset($_FILES['theme_zip'])) {
-            AdminAuth::restrict('Site.Themes.Add', admin_url('themes/add'));
+            AdminAuth::hasPermission('Site.Themes.Add', admin_url('themes/add'));
 
             if ($this->validateUpload() === TRUE) {
                 $extractedPath = ThemeManager::instance()->extractTheme($_FILES['theme_zip']['tmp_name']);
@@ -256,53 +440,72 @@ class Themes extends \Admin\Classes\AdminController
 
     protected function validateUpload()
     {
-        if (!empty($_FILES['theme_zip']['name']) AND !empty($_FILES['theme_zip']['tmp_name'])) {
+        $zipFile = Request::file('theme_zip');
+        dump($zipFile);
+        if (!Request::hasFile('theme_zip') OR !$zipFile->isValid())
+            throw new SystemException("Please upload a zip file");
 
-            if (preg_match('/\s/', $_FILES['theme_zip']['name'])) {
-                $this->alert->danger_now(lang('system::themes.error_upload_name'));
+        $name = $zipFile->getClientOriginalName();
+        $theme = $zipFile->extension();
 
-                return FALSE;
-            }
+        if (preg_match('/\s/', $name))
+            throw new SystemException(lang('system::themes.error_upload_name'));
 
-            if ($_FILES['theme_zip']['type'] !== 'application/zip') {
-                $this->alert->danger_now(lang('system::themes.error_upload_type'));
+        if ($theme != 'zip')
+            throw new SystemException(lang('system::themes.error_upload_type'));
 
-                return FALSE;
-            }
+        if ($zipFile->getError())
+            throw new SystemException(lang('system::themes.error_php_upload').$zipFile->getErrorMessage());
 
-            $_FILES['theme_zip']['name'] = html_entity_decode($_FILES['theme_zip']['name'], ENT_QUOTES, 'UTF-8');
-            $_FILES['theme_zip']['name'] = str_replace(['"', "'", "/", "\\"], "", $_FILES['theme_zip']['name']);
-            $filename = $this->security->sanitize_filename($_FILES['theme_zip']['name']);
-            $_FILES['theme_zip']['name'] = basename($filename, '.zip');
+        $name = substr($name, -strlen($theme));
+        if (ThemeManager::instance()->hasTheme($name))
+            throw new SystemException(lang('system::themes.error_theme_exists'));
 
-            if (!empty($_FILES['theme_zip']['error'])) {
-                $this->alert->danger_now(lang('system::themes.error_php_upload').$_FILES['theme_zip']['error']);
-
-                return FALSE;
-            }
-
-            if (file_exists(ROOTPATH.MAINDIR.'/views/themes/'.$_FILES['theme_zip']['name'])) {
-                $this->alert->danger_now(sprintf(lang('system::themes.alert_error'), lang('system::themes.error_theme_exists')));
-
-                return FALSE;
-            }
-
-            if (is_uploaded_file($_FILES['theme_zip']['tmp_name'])) {
-                return TRUE;
-            }
-
-            return FALSE;
-        }
+        return TRUE;
     }
 
-    protected function validateForm($is_customizable = FALSE)
+    public function formValidate($model, $form)
     {
-        if ($is_customizable) {
-            $rules = $this->customizer->getRules();
+        $rules = [];
+        if ($form->context != 'source') {
+            foreach ($model->getFieldsConfig() as $name => $field) {
+                if (!array_key_exists('rules', $field))
+                    continue;
+
+                $dottedName = implode('.', name_to_array($name));
+                $rules[] = [$dottedName, $field['label'], $field['rules']];
+            }
+        }
+        else {
+            $rules = [
+                ['file', 'Source File', 'sometimes'],
+                ['source', 'Source Content', 'sometimes'],
+            ];
         }
 
-        $rules['editor_area'] = ['field' => 'editor_area', 'label' => 'Editor area'];
+        return $this->validatePasses($form->getSaveData(), $rules);
+    }
 
-        return $this->validatePasses(post(), $rules);
+    protected function prepareFilesList($themeCode, $currentFile = null)
+    {
+        $result = [];
+
+        $themeManager = ThemeManager::instance();
+        $list = $themeManager->listFiles($themeCode, ['_layouts', '_pages', '_partials']);
+        foreach (array_sort($list) as $directory => $files) {
+            foreach ($files as $file) {
+                $group = pathinfo($file, PATHINFO_DIRNAME);
+                $result[$group][] = (object)[
+                    'path'  => $file,
+                    'group' => $group,
+                    'name'  => pathinfo($file, PATHINFO_FILENAME),
+                ];
+            }
+        }
+
+        return [
+            'currentFile' => $currentFile,
+            'list'        => $result,
+        ];
     }
 }

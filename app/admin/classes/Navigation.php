@@ -39,13 +39,7 @@ class Navigation
 
     public function getVisibleNavItems()
     {
-        $navItems = [];
-        foreach ($this->getNavItems() as $code => $navItem) {
-            if ($this->filterPermittedNavItem($navItem) === FALSE)
-                continue;
-
-            $navItems[$code] = $navItem;
-        }
+        $navItems = $this->getNavItems();
 
         foreach ($navItems as $key => $navItem) {
             $sort_array[$key] = isset($navItem['priority'])
@@ -73,14 +67,22 @@ class Navigation
         if (!self::$mainItems)
             $this->loadItems();
 
-        return self::$mainItems;
+        $mainItems = [];
+        foreach (self::$mainItems as $code => $mainItem) {
+            if ($this->filterPermittedNavItem($mainItem) === FALSE)
+                continue;
+
+            $mainItems[$code] = $mainItem;
+        }
+
+        return $mainItems;
     }
 
     public function render($partial)
     {
-        $navItems = $this->getVisibleNavItems();
-
         $this->partialPath[] = '~/app/admin/views/_partials/';
+
+        $navItems = $this->getVisibleNavItems();
 
         return $this->makePartial($partial, [
             'navItems' => $navItems
@@ -133,14 +135,14 @@ class Navigation
         self::$navItemsLoaded = TRUE;
     }
 
-    protected function filterPermittedNavItem($menu)
+    public function filterPermittedNavItem($menu)
     {
         $permissions = array_get($menu, 'child', []) ?: [$menu];
 
         $collection = collect($permissions)->pluck('permission')->toArray();
 
         $filtered = [];
-        foreach ($collection as $permission) {
+        foreach (array_filter($collection) as $permission) {
             if (strpos($permission, '|') !== FALSE) {
                 $results = explode('|', $permission);
             } else {
@@ -150,16 +152,16 @@ class Navigation
             $filtered = array_merge($filtered, $results);
         }
 
+        $permitted = [];
         foreach ($filtered as $permission) {
-            $permissionName = (count(explode('.', $permission)) > 1)
+            $permissionName = (count(explode('.', $permission)) > 2)
                 ? $permission
                 : $permission.'.Access';
 
-            if (!AdminAuth::hasPermission($permissionName))
-                return FALSE;
+            $permitted[$permissionName] = AdminAuth::hasPermission($permissionName);
         }
 
-        return TRUE;
+        return array_filter($permitted);
     }
 
     //

@@ -155,7 +155,6 @@ class FormController extends ControllerAction
         $modelConfig = $this->loadConfig($configFile, $requiredConfig, 'form');
         $formConfig = array_except($modelConfig, 'toolbar');
         $formConfig['model'] = $model;
-//        $formConfig['arrayName'] = strip_class_basename($model, '_model');
         $formConfig['arrayName'] = str_singular(strip_class_basename($model, '_model'));
         $formConfig['context'] = $context;
 
@@ -231,7 +230,7 @@ class FormController extends ControllerAction
         $this->controller->formAfterCreate($model);
 
         $title = sprintf(lang('admin::default.form.create_success'), lang($this->getConfig('name')));
-        flash()->success(sprintf(lang($this->getConfig('create[flashSave]'), $title)));
+        flash()->success(lang($this->getConfig('create[flashSave]', $title)));
 
         if ($redirect = $this->makeRedirect('create', $model)) {
             return $redirect;
@@ -275,7 +274,7 @@ class FormController extends ControllerAction
         $this->controller->formAfterUpdate($model);
 
         $title = sprintf(lang('admin::default.form.edit_success'), lang($this->getConfig('name')));
-        flash()->success(sprintf($this->getConfig('edit[flashSave]', $title)));
+        flash()->success(lang($this->getConfig('edit[flashSave]', $title)));
 
         if ($redirect = $this->makeRedirect('edit', $model)) {
             return $redirect;

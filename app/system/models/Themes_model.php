@@ -21,13 +21,25 @@ class Themes_model extends Model
      */
     protected $primaryKey = 'theme_id';
 
+    protected $fillable = ['name', 'code', 'version', 'description'];
+
     public $casts = [
         'data' => 'serialize',
     ];
 
+    /**
+     * @var ThemeManager
+     */
     public $manager = null;
 
+    /**
+     * @var \Main\Classes\Theme
+     */
     public $themeClass = null;
+
+    //
+    // Events
+    //
 
     public function afterFetch()
     {
@@ -37,11 +49,6 @@ class Themes_model extends Model
     //
     // Scopes
     //
-
-    public function scopeIsCustomisable($query)
-    {
-        return $query; // @todo: remove, no longer needed
-    }
 
     public function scopeIsEnabled($query)
     {
@@ -87,9 +94,9 @@ class Themes_model extends Model
     public function getFieldsConfig()
     {
         $fields = [];
-        $customizeConfig = array_get($this->themeObj, 'customizeConfig.sections', []);
+        $customizeConfig = array_get($this->themeClass->getFields(), 'sections', []);
         foreach ($customizeConfig as $section => $item) {
-            foreach ($item['fields'] as $name => $field) {
+            foreach (array_get($item, 'fields', []) as $name => $field) {
                 $field['tab'] = $item['title'];
                 $fields[$name] = $field;
             }
@@ -107,6 +114,41 @@ class Themes_model extends Model
     // Helpers
     //
 
+    public static function syncLocal()
+    {
+        $themes = self::get();
+
+        $installedThemes = [];
+        $themeManager = ThemeManager::instance();
+        foreach ($themeManager->paths() as $code => $path) {
+
+            if (!($themeClass = $themeManager->findTheme($code))) continue;
+
+            $themeMeta = (object)$themeClass;
+            $installedThemes[] = $themeMeta->name;
+
+            // Only add themes whose meta code matched their directory name
+            // or theme has no record in extensions table
+            if (
+                !isset($themeMeta->name) OR $code != $themeMeta->name OR
+                $extension = $themes->where('code', $themeMeta->name)->first()
+            ) continue;
+
+            self::create([
+                'name'        => $themeMeta->label,
+                'code'        => $themeMeta->name,
+                'version'     => $themeMeta->version,
+                'description' => $themeMeta->description,
+            ]);
+        }
+
+        // Disable themes not found in file system
+        // This allows admin to remove an enabled theme from admin UI after deleting files
+        self::whereNotIn('code', $installedThemes)->update(['status' => FALSE]);
+
+        self::updateInstalledThemes();
+    }
+
     /**
      * Update installed extensions config value
      *
@@ -115,29 +157,18 @@ class Themes_model extends Model
      *
      * @return bool TRUE on success, FALSE on failure
      */
-    public function updateInstalledThemes($theme = null, $install = TRUE)
+    public static function updateInstalledThemes($theme = null, $install = TRUE)
     {
-        $installed_themes = setting('installed_themes');
+        $installedThemes = self::lists('status', 'code')->all();
 
-        if (empty($installed_themes) OR !is_array($installed_themes)) {
-            $installed_themes = $this->select('code')
-                                     ->where('status', '1')->get();
-            if ($installed_themes) {
-                $installed_themes = array_flip(array_column($installed_themes, 'code'));
-                $installed_themes = array_fill_keys(array_keys($installed_themes), TRUE);
-            }
+        if (!is_array($installedThemes))
+            $installedThemes = [];
+
+        if ($theme) {
+            $installedThemes[$theme] = $install;
         }
 
-        if (!is_null($theme) AND ThemeManager::instance()->hasTheme($theme)) {
-            if ($install) {
-                $installed_themes[$theme] = TRUE;
-            }
-            else {
-                unset($installed_themes[$theme]);
-            }
-        }
-
-        setting()->add('installed_themes', $installed_themes);
+        setting()->set('installed_themes', $installedThemes);
     }
 
     /**
@@ -147,34 +178,14 @@ class Themes_model extends Model
      *
      * @return bool|mixed
      */
-    public function activateTheme($code)
+    public static function activateTheme($code)
     {
-        $query = FALSE;
+        if (empty($code) OR !$theme = self::whereCode($code)->first())
+            return false;
 
-        if (!empty($code) AND $theme = $this->getTheme($code)) {
-            $default_themes = setting('default_themes');
-            $default_themes['main'] = $code.'/';
+        params()->set('default_themes.main', $theme->code);
 
-            unset($default_themes['main_parent']);
-            if (!empty($theme['parent'])) {
-                $default_themes['main_parent'] = $theme['parent'].'/';
-            }
-
-            if (setting()->add('default_themes', $default_themes)) {
-                $query = $theme['code'];
-            }
-
-            if ($query !== FALSE) {
-                $this->updateInstalledThemes($code);
-
-                $active_theme_options = setting('active_theme_options');
-                $active_theme_options['main'] = [$theme['code'], $theme['data']];
-
-                setting()->add('active_theme_options', $active_theme_options);
-            }
-        }
-
-        return $query;
+        return $theme;
     }
 
     /**
@@ -232,28 +243,20 @@ class Themes_model extends Model
      *
      * @return bool
      */
-    public function copyTheme($theme_code = null, $copy_data = TRUE)
+    public static function copyTheme($themeCode, $copy_data = TRUE)
     {
-        $query = FALSE;
+        $themeModel = self::where('code', $themeCode)->first();
+        if (!$themeModel)
+            return FALSE;
 
-        if (!empty($theme_code)) {
+        $childTheme = $themeModel->replicate();
+        $childTheme->code = self::getUniqueThemeCode("{$themeCode}-child");
+        $childTheme->name = "{$themeModel->name} Child";
+        $childTheme->save();
 
-            $themeModel = $this->where('code', $theme_code)->first();
+        ThemeManager::instance()->createChild($themeCode, $childTheme->code);
 
-            if (!is_null($themeModel)) {
-                $row = $themeModel->toArray();
-                unset($row['extension_id']);
-                $row['code'] = $this->findThemeCode("{$row['code']}-child");
-                $row['old_title'] = $row['title'];
-                $row['title'] = "{$row['title']} Child";
-
-                if ($query = $this->updateTheme($row)) {
-                    $query = ThemeManager::instance()->createChild($theme_code, $row);
-                }
-            }
-        }
-
-        return $query;
+        return TRUE;
     }
 
     /**
@@ -263,9 +266,9 @@ class Themes_model extends Model
      *
      * @return bool TRUE on success, FALSE on failure
      */
-    public function themeExists($code)
+    public static function themeExists($code)
     {
-        return $this->where('code', $code)->first() ? TRUE : FALSE;
+        return self::where('code', $code)->first() ? TRUE : FALSE;
     }
 
     /**
@@ -276,13 +279,13 @@ class Themes_model extends Model
      *
      * @return string
      */
-    protected function findThemeCode($theme_code, $count = 0)
+    protected static function getUniqueThemeCode($themeCode, $count = 0)
     {
         do {
-            $newThemeCode = ($count > 0) ? "{$theme_code}-{$count}" : $theme_code;
+            $newThemeCode = ($count > 0) ? "{$themeCode}-{$count}" : $themeCode;
             $count++;
         } // Already exist in DB? Try again
-        while ($this->themeExists($newThemeCode));
+        while (self::themeExists($newThemeCode));
 
         return $newThemeCode;
     }
@@ -295,22 +298,16 @@ class Themes_model extends Model
      *
      * @return bool
      */
-    public function deleteTheme($theme_code, $delete_data = TRUE)
+    public static function deleteTheme($themeCode, $deleteData = TRUE)
     {
-        $themeModel = $this->where('code', $theme_code)->first();
+        $themeModel = self::where('code', $themeCode)->first();
 
-        if ($delete_data) {
+        if ($themeModel AND ($deleteData OR !$themeModel->data)) {
             $themeModel->delete();
         }
-        else {
-            $themeModel->status = 0;
-            $themeModel->save();
-        }
 
-        $this->updateInstalledThemes($theme_code, FALSE);
+        $filesDeleted = ThemeManager::instance()->removeTheme($themeCode);
 
-        $query = ThemeManager::instance()->removeTheme($theme_code);
-
-        return $query;
+        return $filesDeleted;
     }
 }

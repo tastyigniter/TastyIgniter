@@ -30,14 +30,16 @@ class ThemeManager
 
     public $activeTheme;
 
-    protected $filesToCopy;
-
     /**
      * @var array of themes and their directory paths.
      */
     protected $paths = [];
 
-    protected $config;
+    protected $config = [
+        'filesToCopy' => ['theme.json', 'theme.php', 'screenshot.png'],
+        'allowedImageExt' => ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'],
+        'allowedFileExt' => ['html', 'txt', 'xml', 'js', 'css', 'php', 'json'],
+    ];
 
     protected $loadedConfig;
 
@@ -45,9 +47,6 @@ class ThemeManager
 
     public function initialize()
     {
-        $this->config = Config::get('theme', TRUE);
-        $this->filesToCopy = ['theme.json', 'theme_config.php', 'screenshot.png'];
-
         $this->app = app();
 
         // This prevents reading settings from the database before its been created
@@ -134,10 +133,7 @@ class ThemeManager
         $themeObject = new Theme($themeCode, $path);
 
         $themeObject->setUpAs($this->getMetaFromFile($themeCode));
-
-        $themeConfigPath = $themeObject->getPath().'/theme_config.php';
-        if (File::exists($themeConfigPath))
-            $themeObject->setCustomizers(File::getRequire($themeConfigPath));
+        $themeObject->registerAsSource();
 
         $themeObject->active = $this->isActive($themeCode);
         $this->themes[$themeCode] = $themeObject;
@@ -157,7 +153,7 @@ class ThemeManager
         return $user;
     }
 
-    //--------------------------------------------------------------------------
+    //
     // Theme Management Methods
     //--------------------------------------------------------------------------
 
@@ -171,11 +167,8 @@ class ThemeManager
 
     public function getActiveThemeCode()
     {
-        $theme = setting('default_themes.main', config('system.defaultTheme'));
-        if (is_string($theme))
-            $theme = trim($theme, '/');
-
-        return $theme;
+        $theme = params('default_themes.main', config('system.defaultTheme'));
+        return trim($theme, '/');
     }
 
     /**
@@ -299,18 +292,6 @@ class ThemeManager
     }
 
     /**
-     * Returns an array of the folders in which themes/views files may be stored.
-     * @return array.
-     */
-    public function folders()
-    {
-        return [
-            'admin' => 'app/admin/views',
-            'main'  => App::themesPath(),
-        ];
-    }
-
-    /**
      * Determines if a theme is activated by looking at the default themes config.
      *
      * @param $themeCode
@@ -323,9 +304,7 @@ class ThemeManager
             return FALSE;
         }
 
-        $themeCode = rtrim($themeCode, '/').'/';
-
-        return $themeCode == $this->getActiveThemeCode();
+        return (rtrim($themeCode, '/') == $this->getActiveThemeCode());
     }
 
     /**
@@ -353,39 +332,20 @@ class ThemeManager
      */
     public function listFiles($themeCode, $subFolder = null)
     {
+        $result = [];
         $themePath = $this->findPath($themeCode);
         $files = File::allFiles($themePath);
+        foreach ($files as $file) {
+            list($folder,) = explode('/', $file->getRelativePath());
+            $path = $file->getRelativePathname();
+            $result[$folder ?: '/'][] = $path;
+        }
 
-        return ($subFolder) ? array_get($files, $subFolder, FALSE) : $files;
+        if (is_string($subFolder))
+            $subFolder = [$subFolder];
+
+        return ($subFolder) ? array_only($result, $subFolder) : $result;
     }
-
-    /**
-     * Search a theme folder for files.
-     *
-     * @param string $themeCode The theme to search
-     * @param string $subFolder If not null, will return only files within sub-folder (ie 'partials').
-     *
-     * @return array $theme_files
-     */
-//    public function findFilesPath($themeCode, $subFolder = null)
-//    {
-//
-//        $themePath = $this->findPath($themeCode);
-//        $files = $this->findFiles($themeCode, $subFolder);
-//        $subFolder = !is_null($subFolder) ? $subFolder.'/' : null;
-//
-//        $_files = [];
-//        foreach ($files as $key => $file) {
-//            if (is_string($key)) {
-//                $_files[] = $this->findFilesPath($themeCode, $key);
-//            }
-//            else {
-//                $_files[] = $themePath.'/'.$subFolder.$file;
-//            }
-//        }
-//
-//        return array_flatten($_files);
-//    }
 
     //--------------------------------------------------------------------------
     // Theme Helper Methods
@@ -444,31 +404,17 @@ class ThemeManager
      */
     public function readFile($filename, $themeCode)
     {
-        $file = [];
         $themePath = $this->findPath($themeCode);
-        $filePath = $themePath.'/'.ltrim($filename, '/');
-        $fileExt = strtolower(substr(strrchr($filename, '.'), 1));
+        $filePath = $themePath.'/'.$filename;
 
-        if (in_array($fileExt, $this->config['allowed_image_ext'])) {
-            $file['type'] = 'img';
-            $file['content'] = root_url(File::localToPublic($filePath));
-        }
-        else if (in_array($fileExt, $this->config['allowed_file_ext'])) {
-            $file['type'] = 'file';
-            $file['content'] = htmlspecialchars(file_get_contents($filePath));
-        }
-        else {
-            return null;
-        }
+        if (!$filename OR !File::isFile($filePath))
+            return false;
 
-        $file = array_merge($file, [
-            'name'        => $filename,
-            'ext'         => $fileExt,
-            'path'        => $filePath,
-            'is_writable' => File::isWritable($filePath),
-        ]);
+        $fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
+        if (!in_array($fileExt, $this->config['allowedFileExt']))
+            return false;
 
-        return $file;
+        return File::get($filePath);
     }
 
     /**
@@ -492,12 +438,12 @@ class ThemeManager
 
         $path = $this->findPath($themeCode);
 
-        if (!file_exists($filePath = base_path($path.'/'.$filename))) {
+        if (!File::exists($filePath = $path.'/'.$filename)) {
             return FALSE;
         }
 
-        $fileExt = strtolower(substr(strrchr($filePath, '.'), 1));
-        if (!in_array($fileExt, $this->config['allowed_file_ext']) OR !File::isWritable($filePath)) {
+        $fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
+        if (!in_array($fileExt, $this->config['allowedFileExt']) OR !File::isWritable($filePath)) {
             return FALSE;
         }
 
@@ -511,9 +457,9 @@ class ThemeManager
     public function getFilesToCopy($themeCode)
     {
         $files = [];
-        foreach ($this->filesToCopy as $file) {
+        foreach ($this->config['filesToCopy'] as $file) {
             $path = $this->findFile($file, $themeCode);
-            $files[] = $path;
+            $files[] = File::localToPublic($path);
         }
 
         return $files;
@@ -529,48 +475,37 @@ class ThemeManager
      * @return bool Returns false if child them could not be created
      * or $child_theme already exist.
      */
-    public function createChild($themeCode, $childData = [])
+    public function createChild($themeCode, $childThemeCode)
     {
-        if (empty($childData) OR !isset($childData['name']))
+        if (!strlen($childThemeCode) OR !strlen($themeCode))
             return FALSE;
 
         // preparing the paths
         $parentPath = $this->findPath($themeCode);
-        $childPath = dirname($parentPath).'/'.$childData['name'];
+        $childPath = dirname($parentPath).'/'.$childThemeCode;
 
         // creating the destination directory
-        if (!is_dir($childPath)) {
-            mkdir($childPath, config('system.folderPermissions'), TRUE);
-        }
+        if (!File::isDirectory($childPath))
+            File::makeDirectory($childPath);
 
-        $failed = FALSE;
-        $themeMeta = $this->themeMeta($themeCode);
-        $files = $this->getFilesToCopy($themeCode);
-
-        foreach ($files as $filePath) {
-            $filename = basename($filePath);
-
-            if (file_exists("{$childPath}/{$filename}") OR !file_exists($filePath))
-                continue;
-
-            if ($filename == 'theme.json') {
+        foreach ($this->config['filesToCopy'] as $file) {
+            if ($file == 'theme.json') {
+                $themeMeta = json_decode(File::get("{$parentPath}/{$file}"), true);
                 $content = array_merge($themeMeta, [
-                    'parent' => $themeMeta['code'],
-                    'code'   => $childData['name'],
-                    'name'   => $childData['title'],
+                    'code'   => $childThemeCode,
+                    'name'   => $themeMeta['name'].' Child',
+                    'parent' => $themeCode,
                 ]);
 
                 $content = stripslashes(json_encode($content, JSON_PRETTY_PRINT));
-                if (!File::put("{$childPath}/{$filename}", $content)) {
-                    return FALSE;
-                }
+                File::put("{$childPath}/{$file}", $content);
             }
             else {
-                File::copy($filePath, "{$childPath}/{$filename}");
+                File::copy("{$parentPath}/{$file}", "{$childPath}/{$file}");
             }
         }
 
-        return $failed === TRUE ? FALSE : TRUE;
+        return TRUE;
     }
 
     /**
@@ -586,13 +521,11 @@ class ThemeManager
     {
         if (file_exists($zipPath) AND class_exists('ZipArchive', FALSE)) {
 
-            $domain = $domain ?: config('system.mainUri');
-
             $zip = new ZipArchive;
 
             chmod($zipPath, config('system.filePermission'));
 
-            $themesFolder = $this->folders()['main'];
+            $themesFolder = App::themesPath();
 
             if ($zip->open($zipPath) === TRUE) {
                 $themeDir = $zip->getNameIndex(0);
@@ -666,6 +599,7 @@ class ThemeManager
      */
     public function getMetaFromFile($themeCode)
     {
+        $config = [];
         if (isset($this->loadedConfig[$themeCode]))
             return $this->loadedConfig[$themeCode];
 

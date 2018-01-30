@@ -15,7 +15,7 @@ $backgroundOptions = [
 ];
 
 // Set all sections for the admin theme customisation.
-$theme['customize']['sections']['general'] = [
+$fields['sections']['general'] = [
     'title'   => 'General',
     'comment' => '',
     'icon'    => '',
@@ -42,7 +42,7 @@ $theme['customize']['sections']['general'] = [
     ],
 ];
 
-$theme['customize']['sections']['main_body'] = [
+$fields['sections']['main_body'] = [
     'title'   => 'Typography - Main body',
     'comment' => '',
     'icon'    => '',
@@ -94,7 +94,7 @@ $theme['customize']['sections']['main_body'] = [
     ],
 ];
 
-$theme['customize']['sections']['main_menu'] = [
+$fields['sections']['main_menu'] = [
     'title'   => 'Typography - Main Menu',
     'comment' => '',
     'icon'    => '',
@@ -148,7 +148,7 @@ $theme['customize']['sections']['main_menu'] = [
     ],
 ];
 
-$theme['customize']['sections']['body'] = [
+$fields['sections']['body'] = [
     'title'   => 'Styling - Body',
     'comment' => '',
     'icon'    => '',
@@ -236,7 +236,7 @@ $theme['customize']['sections']['body'] = [
     ],
 ];
 
-$theme['customize']['sections']['heading'] = [
+$fields['sections']['heading'] = [
     'title'   => 'Styling - Heading',
     'comment' => '',
     'icon'    => '',
@@ -305,7 +305,7 @@ $theme['customize']['sections']['heading'] = [
     ],
 ];
 
-$theme['customize']['sections']['button_colors'] = [
+$fields['sections']['button_colors'] = [
     'title'   => 'Styling - Button Colors',
     'comment' => '',
     'icon'    => '',
@@ -434,7 +434,7 @@ $theme['customize']['sections']['button_colors'] = [
     ],
 ];
 
-$theme['customize']['sections']['sidebar'] = [
+$fields['sections']['sidebar'] = [
     'title'   => 'Sidebar',
     'comment' => '',
     'icon'    => '',
@@ -497,7 +497,7 @@ $theme['customize']['sections']['sidebar'] = [
     ],
 ];
 
-$theme['customize']['sections']['header'] = [
+$fields['sections']['header'] = [
     'title'   => 'Header',
     'comment' => '',
     'icon'    => '',
@@ -561,7 +561,7 @@ $theme['customize']['sections']['header'] = [
     ],
 ];
 
-$theme['customize']['sections']['logo'] = [
+$fields['sections']['logo'] = [
     'title'   => 'Header - Logo',
     'comment' => '',
     'icon'    => '',
@@ -601,7 +601,7 @@ $theme['customize']['sections']['logo'] = [
     ],
 ];
 
-$theme['customize']['sections']['favicon'] = [
+$fields['sections']['favicon'] = [
     'title'   => 'Header - Favicon',
     'comment' => '',
     'icon'    => '',
@@ -614,7 +614,7 @@ $theme['customize']['sections']['favicon'] = [
     ],
 ];
 
-$theme['customize']['sections']['footer'] = [
+$fields['sections']['footer'] = [
     'title'   => 'Footer',
     'comment' => '',
     'icon'    => '',
@@ -720,7 +720,7 @@ $theme['customize']['sections']['footer'] = [
     ],
 ];
 
-$theme['customize']['sections']['social'] = [
+$fields['sections']['social'] = [
     'title'   => 'Social',
     'comment' => 'Add full URL for your social network profiles',
     'icon'    => '',
@@ -780,7 +780,7 @@ $theme['customize']['sections']['social'] = [
     ],
 ];
 
-$theme['customize']['sections']['custom_script'] = [
+$fields['sections']['custom_script'] = [
     'title'   => 'Custom Scripts',
     'comment' => '',
     'icon'    => '',
@@ -806,8 +806,4 @@ $theme['customize']['sections']['custom_script'] = [
     ],
 ];
 
-// Set accepted post item when updating the admin theme options.
-$theme['customize']['post_items'] = ['logo_image', 'logo_text', 'favicon', 'logo_height', 'logo_padding_top', 'logo_padding_bottom', 'display_crumbs', 'hide_admin_link',
-    'ga_tracking_code', 'font', 'menu_font', 'body', 'header', 'heading', 'sidebar', 'link', 'button', 'footer', 'social', 'custom_script'];
-
-return $theme;
+return $fields;

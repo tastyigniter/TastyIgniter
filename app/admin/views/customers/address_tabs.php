@@ -1,4 +1,4 @@
-<?
+<?php
 $addresses = count($field->value) ? $field->value : $field->options();
 $countries = System\Models\Countries_model::pluck('country_name');
 ?>
@@ -27,7 +27,7 @@ $countries = System\Models\Countries_model::pluck('country_name');
         <?php if (count($addresses)) { ?>
             <?php $index = 0;
             foreach ($addresses as $address) { ?>
-                <? $index++; ?>
+                <?php $index++; ?>
                 <?= $this->makePartial('customers/address', [
                     'field'     => $field,
                     'countries' => $countries,

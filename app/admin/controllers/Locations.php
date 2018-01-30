@@ -159,7 +159,7 @@ class Locations extends \Admin\Classes\AdminController
                 $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.day', 'lang:admin::locations.label_opening_days', $requiredIf.'|numeric'];
                 $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.open', 'lang:admin::locations.label_open_hour', $requiredIf.'|valid_time'];
                 $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.close', 'lang:admin::locations.label_close_hour', $requiredIf.'|valid_time'];
-                $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.status', 'lang:admin::locations.label_opening_status', 'xss_clean'.$requiredIf.'|trim|integer'];
+                $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.status', 'lang:admin::locations.label_opening_status', $requiredIf.'|trim|integer'];
             }
         }
 

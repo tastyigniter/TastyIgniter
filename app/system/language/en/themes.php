@@ -69,4 +69,6 @@ return [
     'alert_copy_warning'          => 'You are about to create a copy the following %s from theme <b>%s</b>',
     'alert_copy_confirm'          => 'Are you sure you wish to copy these %s?',
     'alert_setting_missing_model' => 'Missing defined model %s.',
+
+    'activity_event_log' => '{event} theme <b>:subject.title</b>',
 ];

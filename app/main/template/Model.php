@@ -111,6 +111,17 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     }
 
     /**
+     * Returns the unique id of this object.
+     * ex. account/login.php => account-login
+     * @return \Main\Classes\Theme
+     */
+    public function getId()
+    {
+        $fileName = $this->getBaseFileName();
+        return str_replace('/', '-', $fileName);
+    }
+
+    /**
      * Returns the theme this object belongs to.
      * @return \Main\Classes\Theme
      */

@@ -3,6 +3,7 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
+use Illuminate\Http\RedirectResponse;
 
 class SearchBox extends BaseWidget
 {
@@ -78,7 +79,9 @@ class SearchBox extends BaseWidget
         $params = func_get_args();
         $result = $this->fireEvent('search.submit', [$params]);
         if ($result && is_array($result)) {
-            return call_user_func_array('array_merge', $result);
+            list($redirect) = $result;
+            return ($redirect instanceof RedirectResponse) ?
+                $redirect : call_user_func_array('array_merge', $result);
         }
     }
 

@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Hash;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
 
@@ -127,20 +128,15 @@ class Staffs_model extends Model
 
     public function afterSave()
     {
-//        $this->restorePurgedValues();
-//
-//        if (array_key_exists('user', $this->attributes))
-//            $this->addStaffUser($this->attributes['user']);
+        $this->restorePurgedValues();
+
+        if (array_key_exists('user', $this->attributes))
+            $this->addStaffUser($this->attributes['user']);
     }
 
     //
     // Helpers
     //
-
-    public function belongsToSuperGroup()
-    {
-        return ($this->staff_group_id == 11);
-    }
 
     /**
      * List all staff matching the filter,
@@ -178,7 +174,7 @@ class Staffs_model extends Model
 
     public function addStaffUser($user = [])
     {
-        $userModel = $this->user()->firstOrCreate(['staff_id' => $this->getKey()]);
+        $userModel = $this->user()->firstOrNew(['staff_id' => $this->getKey()]);
 
         if (isset($user['super_user']))
             $userModel->super_user = $user['super_user'];
@@ -187,12 +183,13 @@ class Staffs_model extends Model
             $userModel->username = $user['username'];
 
         if (isset($user['password']))
-            $userModel->password = $userModel->getHasher()->make($user['password']);
+            $userModel->password = $user['password'];
 
-        if ($userModel->wasRecentlyCreated)
+        if (!$userModel->exists) {
+            $userModel->is_activated = true;
             $userModel->date_activated = date('Y-m-d');
+        }
 
-        dd($userModel);
         $userModel->save();
     }
 

@@ -82,11 +82,6 @@ class ServiceProvider extends AppServiceProvider
                 'code'  => 'starrating',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\Permalink', [
-                'label' => 'Permalink',
-                'code'  => 'permalink',
-            ]);
-
             $manager->registerFormWidget('Admin\FormWidgets\MapArea', [
                 'label' => 'Map Area',
                 'code'  => 'maparea',
@@ -151,6 +146,11 @@ class ServiceProvider extends AppServiceProvider
                 'label' => 'Rich editor',
                 'code'  => 'richeditor',
             ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\CodeEditor', [
+                'label' => 'Code editor',
+                'code'  => 'codeeditor',
+            ]);
         });
     }
 
@@ -178,6 +178,7 @@ class ServiceProvider extends AppServiceProvider
                     'optionsFrom' => ['System\Models\Messages_model', 'listMenuMessages'],
                     'partial'     => '~/app/system/views/messages/latest',
                     'menuLink'    => 'messages',
+                    'permission' => 'Admin.Messages',
                     'attributes'  => [
                         'class'       => 'dropdown-toggle',
                         'data-toggle' => 'dropdown',
@@ -190,6 +191,7 @@ class ServiceProvider extends AppServiceProvider
                     'optionsFrom' => ['System\Models\Activities_model', 'listMenuActivities'],
                     'partial'     => '~/app/system/views/activities/latest',
                     'menuLink'    => 'activities',
+                    'permission' => 'Admin.Activities',
                     'attributes'  => [
                         'class'       => 'dropdown-toggle',
                         'data-toggle' => 'dropdown',
@@ -441,7 +443,7 @@ class ServiceProvider extends AppServiceProvider
                             'class'      => 'staffs',
                             'href'       => admin_url('staffs'),
                             'title'      => lang('admin::default.menu_staff'),
-                            'permission' => 'Admin.Staff',
+                            'permission' => 'Admin.Staffs',
                         ],
                         'staff_groups'     => [
                             'priority'   => '5',

@@ -5,6 +5,7 @@ use Admin\Traits\WidgetMaker;
 use AdminAuth;
 use AdminMenu;
 use Exception;
+use File;
 use Illuminate\Mail\Message;
 use Mail;
 use System\Models\Currencies_model;
@@ -37,6 +38,15 @@ class Settings extends \Admin\Classes\AdminController
 
     public function index()
     {
+        // show modal if required items are not installed
+
+        // show validation errors for missing required settings
+
+        // For security reasons, delete setup files if still exists.
+        if (File::isFile(base_path('setup.php')) OR File::isDirectory(base_path('setup'))) {
+            flash()->danger(lang('system::settings.alert_delete_setup_files'))->now();
+        }
+
         $pageTitle = lang('system::settings.text_title');
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
@@ -82,8 +92,8 @@ class Settings extends \Admin\Classes\AdminController
             Currencies_model::updateAcceptedCurrencies($acceptedCurrencies);
         }
 
-//        dd($this->formWidget->getSaveData());
         setting()->set($this->formWidget->getSaveData());
+        setting()->save();
 
         flash()->success(sprintf(lang('admin::default.alert_success'), lang($definition['label']).' settings updated '));
 

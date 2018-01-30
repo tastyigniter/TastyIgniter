@@ -31,10 +31,6 @@ class ServiceProvider extends AppServiceProvider
     {
         parent::register('main');
 
-        $this->app->singleton('customer.auth', function () {
-            return \Main\Classes\Customer::instance();
-        });
-
         if (!$this->app->runningInAdmin()) {
             $this->registerBaseTags();
 

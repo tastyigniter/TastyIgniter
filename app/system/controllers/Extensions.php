@@ -4,9 +4,11 @@ use Admin\Traits\WidgetMaker;
 use AdminAuth;
 use AdminMenu;
 use Exception;
+use Request;
 use System\Classes\ExtensionManager;
 use System\Models\Extensions_model;
 use System\Models\Settings_model;
+use SystemException;
 use Template;
 
 class Extensions extends \Admin\Classes\AdminController
@@ -59,15 +61,15 @@ class Extensions extends \Admin\Classes\AdminController
     {
         try {
             if (!strlen($vendor) OR !strlen($extension)) {
-                throw new Exception(lang('system::extensions.alert_setting_missing_id'));
+                throw new SystemException(lang('system::extensions.alert_setting_missing_id'));
             }
 
             if (!$settingItem = Settings_model::make()->getSettingItem($vendor.'.'.$extension.'.'.$context)) {
-                throw new Exception(lang('system::extensions.alert_setting_not_found'));
+                throw new SystemException(lang('system::extensions.alert_setting_not_found'));
             }
 
-            if ($settingItem->permissions)
-                AdminAuth::restrict($settingItem->permissions);
+            if ($settingItem->permissions AND !AdminAuth::hasPermission($settingItem->permissions, TRUE))
+                return $this->redirectBack();
 
             $pageTitle = lang($settingItem->label ?: 'text_edit_title');
             Template::setTitle($pageTitle);
@@ -86,31 +88,24 @@ class Extensions extends \Admin\Classes\AdminController
         Template::setTitle(lang('system::extensions.text_add_title'));
         Template::setHeading(lang('system::extensions.text_add_title'));
 
-        Template::setButton(lang('system::extensions.button_icon_back'), ['class' => 'btn btn-default', 'href' => admin_url('extensions')]);
+        Template::setButton(lang('admin::default.button_icon_back'), ['class' => 'btn btn-default', 'href' => admin_url('extensions')]);
         Template::setButton(lang('system::extensions.button_browse'), ['class' => 'btn btn-default pull-right', 'href' => admin_url('updates/browse/extensions')]);
-
-        // Prep the optional toolbar widget
-        if (isset($config['toolbar']) AND isset($this->widgets['toolbar'])) {
-            $this->toolbarWidget = $this->widgets['toolbar'];
-            $this->toolbarWidget->addButtons(array_get($config['toolbar'], 'buttons', []));
-        }
     }
 
-    public function delete($context, $vendor = null, $extension = null)
+    public function delete($context, $extensionCode = null)
     {
         try {
             $pageTitle = lang('system::extensions.text_delete_title');
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
-            $extensionCode = $vendor.'.'.$extension;
             $extensionManager = ExtensionManager::instance();
             $extensionClass = $extensionManager->findExtension($extensionCode);
             $model = Extensions_model::where('name', $extensionCode)->first();
 
             // Extension must be disabled before it can be deleted
             if ($model AND $model->status) {
-                flash()->warning(sprintf(lang('system::extensions.alert_error_nothing'), lang('system::extensions.text_deleted').lang('system::extensions.alert_is_installed')));
+                flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), lang('admin::default.text_deleted').lang('system::extensions.alert_is_installed')));
 
                 return $this->redirectBack();
             }
@@ -178,26 +173,25 @@ class Extensions extends \Admin\Classes\AdminController
         return $this->refreshList('list');
     }
 
-    public function settings_onSave($context, $vendor = null, $extension = null)
+    public function edit_onSave($action, $vendor = null, $extension = null, $context = null)
     {
         if (!strlen($vendor) OR !strlen($extension)) {
-            throw new Exception(lang('system::extensions.alert_setting_missing_id'));
+            throw new SystemException(lang('system::extensions.alert_setting_missing_id'));
         }
 
-        $extensionCode = $vendor.'.'.$extension;
+        $extensionCode = $vendor.'.'.$extension.'.'.$context;
         if (!$settingItem = Settings_model::make()->getSettingItem($extensionCode)) {
-            throw new Exception(lang('system::extensions.alert_setting_not_found'));
+            throw new SystemException(lang('system::extensions.alert_setting_not_found'));
         }
 
-        if ($settingItem->permissions)
-            AdminAuth::restrict($settingItem->permissions);
+        if ($settingItem->permissions AND !AdminAuth::hasPermission($settingItem->permissions, TRUE))
+            return $this->redirectBack();
 
         $model = $this->formFindModelObject($settingItem);
 
-        $this->initFormWidget($model, $context);
+        $this->initFormWidget($model, $action);
 
-        $validate = $this->formValidate($this->formWidget);
-        if ($validate === FALSE)
+        if ($this->formValidate($this->formWidget) === FALSE)
             return;
 
         $model->set($this->formWidget->getSaveData());
@@ -213,55 +207,41 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function upload_onUpload($context = null)
     {
-        if (!isset($_FILES['extension_zip']) OR !$this->validateUpload()) {
-            flash()->danger(sprintf(
-                lang('system::extensions.alert_error'), lang('system::extensions.error_config_no_found')
-            ));
-            $this->refresh();
-        }
+        try {
+            $extensionManager = ExtensionManager::instance();
 
-        $extractedPath = ExtensionManager::instance()->extract_extension($_FILES['extension_zip']['tmp_name']);
-        if (!$extractedPath) {
-            flash()->danger(sprintf(
-                lang('system::extensions.alert_error'), lang('system::extensions.error_config_no_found')
-            ));
+            $this->validateUpload();
+
+            $zipFile = Request::file('extension_zip');
+            list($config, $path) = $extensionManager->extractExtension($zipFile->path());
+
+            if (!$config)
+                throw new Exception(lang('system::extensions.error_config_no_found'));
+
+        } catch (Exception $ex) {
+            flash()->danger($ex->getMessage());
             return $this->refresh();
         }
 
-        $extension_code = basename($extractedPath);
-        $path = ExtensionManager::instance()->path($extension_code);
-        $extension = ExtensionManager::instance()->loadExtension($extension_code, $path);
-
-        if ($extension) {
-            Extensions_model::install($extension_code, $extension);
-
-            $meta = $extension->extensionMeta();
-            $extension_name = isset($meta['name']) ? $meta['name'] : '';
-            $alert = "Extension {$extension_name} uploaded & installed ";
-            flash()->success(sprintf(lang('admin::default.alert_success'), $alert));
-        }
-
-        return $this->refresh();
+        flash()->success(sprintf(lang('admin::default.alert_success'), "Extension uploaded "));
+        return $this->redirect('extensions');
     }
 
-    public function delete_onDelete($context = null, $vendor = null, $extension = null)
+    public function delete_onDelete($context = null, $extensionCode = null)
     {
-        $deleteData = post('delete_data');
-
-        $extensionCode = $vendor.'.'.$extension;
         $extension = ExtensionManager::instance()->findExtension($extensionCode);
+        $meta = $extension->extensionMeta();
 
-        if (Extensions_model::deleteExtension($extensionCode, ($deleteData == 1))) {
-            $meta = $extension->extensionMeta();
-            $extension_name = isset($meta['name']) ? $meta['name'] : '';
+        if (Extensions_model::deleteExtension($extensionCode, (post('delete_data') == 1))) {
+            $name = isset($meta['name']) ? $meta['name'] : '';
 
-            flash()->success(sprintf(lang('admin::default.alert_success'), "Extension {$extension_name} deleted "));
+            flash()->success(sprintf(lang('admin::default.alert_success'), "Extension {$name} deleted "));
         }
         else {
             flash()->danger(lang('admin::default.alert_error_try_again'));
         }
 
-        return $this->redirectBack();
+        return $this->redirect('extensions');
     }
 
     public function listOverrideColumnValue($record, $column, $alias = null)
@@ -303,10 +283,10 @@ class Extensions extends \Admin\Classes\AdminController
     protected function createModel($class)
     {
         if (!strlen($class))
-            throw new Exception(lang('system::extensions.alert_setting_model_missing'));
+            throw new SystemException(lang('system::extensions.alert_setting_model_missing'));
 
         if (!class_exists($class))
-            throw new Exception(sprintf(lang('system::extensions.alert_setting_model_not_found'), $class));
+            throw new SystemException(sprintf(lang('system::extensions.alert_setting_model_not_found'), $class));
 
         $model = new $class;
 
@@ -322,7 +302,7 @@ class Extensions extends \Admin\Classes\AdminController
         $result = $query->where('name', $settingItem->owner)->first();
 
         if (!$result) {
-            throw new Exception(lang('system::extensions.alert_setting_not_found'));
+            throw new SystemException(lang('system::extensions.alert_setting_not_found'));
         }
 
         return $result;
@@ -338,44 +318,26 @@ class Extensions extends \Admin\Classes\AdminController
 
     protected function validateUpload()
     {
-        if (!isset($_FILES['extension_zip']))
-            return FALSE;
+        $zipFile = Request::file('extension_zip');
+        if (!Request::hasFile('extension_zip') OR !$zipFile->isValid())
+            throw new SystemException("Please upload a zip file");
 
-        $zip = $_FILES['extension_zip'];
-        if (!strlen($zip['name']) OR !strlen($zip['tmp_name']))
-            return FALSE;
+        $name = $zipFile->getClientOriginalName();
+        $extension = $zipFile->extension();
 
-        if (preg_match('/\s/', $zip['name'])) {
-            flash()->danger(lang('system::extensions.error_upload_name'));
+        if (preg_match('/\s/', $name))
+            throw new SystemException(lang('system::extensions.error_upload_name'));
 
-            return FALSE;
-        }
+        if ($extension != 'zip')
+            throw new SystemException(lang('system::extensions.error_upload_type'));
 
-        if ($zip['type'] !== 'application/zip') {
-            flash()->danger(lang('system::extensions.error_upload_type'));
+        if ($zipFile->getError())
+            throw new SystemException(lang('system::extensions.error_php_upload').$zipFile->getErrorMessage());
 
-            return FALSE;
-        }
+        $name = substr($name, -strlen($extension));
+        if (ExtensionManager::instance()->hasExtension($name))
+            throw new SystemException(lang('system::extensions.error_extension_exists'));
 
-        $zip['name'] = html_entity_decode($zip['name'], ENT_QUOTES, 'UTF-8');
-        $zip['name'] = str_replace(['"', "'", "/", "\\"], "", $zip['name']);
-        $filename = $this->security->sanitize_filename($zip['name']);
-        $zip['name'] = basename($filename, '.zip');
-
-        if (!empty($zip['error'])) {
-            flash()->danger(lang('system::extensions.error_php_upload').$zip['error']);
-
-            return FALSE;
-        }
-
-        if (ExtensionManager::instance()->hasExtension($zip['name'])) {
-            flash()->danger(sprintf(lang('system::extensions.alert_error'), lang('system::extensions.error_extension_exists')));
-
-            return FALSE;
-        }
-
-        if (is_uploaded_file($zip['tmp_name'])) return TRUE;
-
-        return FALSE;
+        return true;
     }
 }

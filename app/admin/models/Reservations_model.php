@@ -595,7 +595,7 @@ class Reservations_model extends Model
             $this->load->library('country');
 
             $data['reservation_number'] = $result['reservation_id'];
-            $data['reservation_view_url'] = root_url('main/reservations?id='.$result['reservation_id']);
+            $data['reservation_view_url'] = site_url('main/reservations?id='.$result['reservation_id']);
             $data['reservation_time'] = mdate('%H:%i', strtotime($result['reserve_time']));
             $data['reservation_date'] = mdate('%l, %F %j, %Y', strtotime($result['reserve_date']));
             $data['reservation_guest_no'] = $result['guest_num'];

@@ -54,7 +54,7 @@
     </td>
 
     <?php foreach ($widget->getFields() as $field) { ?>
-        <?
+        <?php
         $fieldError = form_error($field->getName());
         $widget->prepareVars();
         ?>

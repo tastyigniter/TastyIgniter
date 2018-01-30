@@ -48,9 +48,6 @@ trait ViewMaker
     {
         $view = File::symbolizePath($view);
 
-//        if (View::exists($view) OR realpath($view) !== false)
-//            return $view;
-
         if (!isset($this->viewPath)) {
             $this->viewPath = $this->guessViewPath();
         }
@@ -141,7 +138,6 @@ trait ViewMaker
         Template::setBlock('body', $contents);
 
         return $this->makeLayout();
-//        return $this->loadViewContent($contents);
     }
 
     /**

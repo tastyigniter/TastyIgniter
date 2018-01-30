@@ -8,7 +8,6 @@ use URL;
 /**
  * Assets Class
  **
- * Uses Assetic PHP Assets Manager
  * Within controllers, widgets, components and views, use facade:
  *   Assets::addCss($path, $options);
  *   Assets::addJs($path, $options);
@@ -234,11 +233,8 @@ class Assets
         }
 
         $options = $this->evalOptions('css', $href, $options);
-//        var_dump($this->collection, $options);
 
         $this->assets[$this->collection]['css'][] = $options;
-
-//        $this->assetsManager->createAsset($options);
 
         return $this;
     }

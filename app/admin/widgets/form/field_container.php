@@ -1,5 +1,5 @@
-<?
-$fieldError = form_error($field->fieldName)
+<?php
+$fieldError = form_error($field->fieldName);
 ?>
 <div
     class="form-group <?=

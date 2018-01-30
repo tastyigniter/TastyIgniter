@@ -3,6 +3,8 @@
 use AdminAuth;
 use AdminMenu;
 use Assets;
+use Auth;
+use Redirect;
 
 class Customers extends \Admin\Classes\AdminController
 {
@@ -55,7 +57,7 @@ class Customers extends \Admin\Classes\AdminController
         AdminMenu::setContext('customers', 'users');
     }
 
-    public function login($context = null, $id = null)
+    public function impersonate($context = null, $id = null)
     {
         if (!AdminAuth::canAccessCustomerAccount()) {
             flash()->warning(lang('admin::customers.alert_login_restricted'));
@@ -64,22 +66,18 @@ class Customers extends \Admin\Classes\AdminController
         }
 
         $customerModel = $this->formFindModelObject((int)$id);
-        if (count($customerModel)) {
-            $this->load->library('customer');
-            $this->load->library('cart');
+        if ($customerModel) {
 
-            $this->customer->logout();
-            $this->cart->destroy();
+            Auth::stopImpersonate();
 
-            $this->customer->loginUsingId($customerModel->customer_id, FALSE);
+            Auth::impersonate($customerModel);
 
-            if ($this->customer->isLogged()) {
-                activity()->performedOn($customerModel)
-                          ->causedBy($this->getUser())
-                          ->log(lang('activity_master_logged_in'));
+            activity()
+                ->performedOn($customerModel)
+                ->causedBy(AdminAuth::getUser())
+                ->log(lang('system::activities.activity_master_logged_in'));
 
-                return $this->redirect(root_url('account/account'));
-            }
+            return Redirect::to(root_url());
         }
 
         return $this->redirectBack();

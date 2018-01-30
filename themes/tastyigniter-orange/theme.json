@@ -1,13 +1,10 @@
 {
   "code": "tastyigniter-orange",
+  "parent": null,
   "name": "TastyIgniter Orange",
   "description": "Responsive theme for TastyIgniter front-end, customizable, simple, and readable",
   "author": "TastyIgniter Dev Team",
   "version": "2.1.0",
-  "tags": {
-    "1.0.0": "Theme initialization",
-    "2.1.0": "Update code to use latest Theme API"
-  },
   "require": {
     "cart": "*",
     "local": "*",
@@ -15,5 +12,9 @@
     "account": "*",
     "frontend": "*",
     "pages": "*"
+  },
+  "tags": {
+    "1.0.0": "Theme initialization",
+    "2.1.0": "Update code to use latest Theme API"
   }
 }

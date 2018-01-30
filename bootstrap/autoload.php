@@ -23,7 +23,7 @@ require $helperPath;
 
 /*
 |--------------------------------------------------------------------------
-| Register The Composer Auto TemplateLoader
+| Register The Composer Auto ClassLoader
 |--------------------------------------------------------------------------
 |
 | Composer provides a convenient, automatically generated class loader

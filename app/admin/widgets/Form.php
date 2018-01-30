@@ -586,9 +586,7 @@ class Form extends BaseWidget
             $field = $this->allFields[$field];
         }
 
-        $defaultValue = !$this->model->exists
-            ? $field->getDefaultFromData($this->data)
-            : null;
+        $defaultValue = $field->getDefaultFromData($this->data);
 
         if ($value = post($field->getName()))
             return $value;

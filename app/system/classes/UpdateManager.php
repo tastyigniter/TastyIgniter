@@ -35,11 +35,6 @@ class UpdateManager
     protected $themeManager;
 
     /**
-     * @var \System\Classes\InstallerManager
-     */
-    protected $installerManager;
-
-    /**
      * @var ThemeManager
      */
     protected $hubManager;
@@ -63,7 +58,6 @@ class UpdateManager
     {
         $this->hubManager = HubManager::instance();
         $this->extensionManager = ExtensionManager::instance();
-        $this->installerManager = InstallerManager::instance();
         $this->themeManager = ThemeManager::instance();
 
         $this->tempDirectory = temp_path();
@@ -250,33 +244,29 @@ class UpdateManager
         return extension_path($name.'/database/migrations');
     }
 
-    public function updateExtension($extensionCode)
-    {
-        $this->CI->load->model('Extensions_model');
-        $this->CI->Extensions_model->updateInstalledExtensions($extensionCode);
-
-        $extension = ExtensionManager::instance()->findExtension($extensionCode);
-        $permissions = $extension->registerPermissions();
-        $this->CI->Extensions_model->savePermissions($permissions);
-
-        // set extension migration to the latest version
-        ExtensionManager::instance()->updateExtension($extensionCode);
-
-        return TRUE;
-    }
-
-    public function updateTheme($themeCode)
-    {
-        $this->CI->load->model('Themes_model');
-
-        return $this->CI->Themes_model->updateInstalledThemes($themeCode);
-    }
-
-    public function updateTranslation($translationCode)
-    {
-        // @TODO: complete with new translation implementation
-        return TRUE;
-    }
+//    public function updateExtension($extensionCode)
+//    {
+//        $this->CI->load->model('Extensions_model');
+//        $this->CI->Extensions_model->updateInstalledExtensions($extensionCode);
+//
+//        // set extension migration to the latest version
+//        ExtensionManager::instance()->updateExtension($extensionCode);
+//
+//        return TRUE;
+//    }
+//
+//    public function updateTheme($themeCode)
+//    {
+//        $this->CI->load->model('Themes_model');
+//
+//        return $this->CI->Themes_model->updateInstalledThemes($themeCode);
+//    }
+//
+//    public function updateTranslation($translationCode)
+//    {
+//        // @TODO: complete with new translation implementation
+//        return TRUE;
+//    }
 
     public function isLastCheckDue()
     {
@@ -677,23 +667,10 @@ class UpdateManager
     }
 
     /**
-     * @return \System\Classes\InstallerManager
-     */
-    protected function getInstallerManager()
-    {
-        return $this->installerManager;
-    }
-
-    /**
      * @return \Main\Classes\ThemeManager
      */
     protected function getThemeManager()
     {
         return $this->themeManager;
     }
-
-//    public function __get($name)
-//    {
-//        return get_instance()->$name;
-//    }
 }

@@ -10,8 +10,9 @@ use App;
 use Config;
 use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
-use Igniter\Flame\Pagination\Paginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
+use Main\Classes\Customer;
 use Request;
 use System\Classes\ExtensionManager;
 
@@ -78,7 +79,11 @@ class ServiceProvider extends AppServiceProvider
         });
 
         App::singleton('admin.auth', function () {
-            return User::instance();
+            return new User();
+        });
+
+        App::singleton('customer.auth', function () {
+            return new Customer();
         });
 
         App::singleton('assets', function ($app) {
@@ -91,6 +96,16 @@ class ServiceProvider extends AppServiceProvider
 
         App::singleton('admin.template', function ($app) {
             return new Template($app['config']['template']);
+        });
+
+        App::singleton('country', function ($app) {
+            $country = new Libraries\Country($app);
+
+            $country->setDefaultFormat("{address_1}\n{address_2}\n{city} {postcode}\n{state}\n{country}", [
+                '{address_1}', '{address_2}', '{city}', '{postcode}', '{state}', '{country}',
+            ]);
+
+            return $country;
         });
     }
 
@@ -126,6 +141,10 @@ class ServiceProvider extends AppServiceProvider
      */
     protected function extendValidator()
     {
+        Validator::extend('trim', function ($attribute, $value, $parameters, $validator) {
+            return trim($value);
+        });
+
         Validator::extend('valid_date', function ($attribute, $value, $parameters, $validator) {
             return (!preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $value)
                 AND !preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value)) ? FALSE : TRUE;

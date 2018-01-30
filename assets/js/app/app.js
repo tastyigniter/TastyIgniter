@@ -97,13 +97,13 @@ if (jQuery === undefined)
                 var updatePromise = $.Deferred().done(function () {
                     var dataArray = []
                     try {
-                        dataArray = jQuery.parseJSON(data)
+                        dataArray = jQuery.type(data) === 'object' ? data : jQuery.parseJSON(data)
                     } catch (e) {
                     }
 
                     for (var partial in dataArray) {
                         var selector = partial
-                        if (jQuery.type(selector) == 'string' && selector.charAt(0) == '@') {
+                        if (jQuery.type(selector) === 'string' && selector.charAt(0) == '@') {
                             $(selector.substring(1)).append(dataArray[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])
                         } else if (jQuery.type(selector) == 'string' && selector.charAt(0) == '^') {
                             $(selector.substring(1)).prepend(dataArray[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])

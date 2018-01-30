@@ -42,7 +42,7 @@ $config['list']['columns'] = [
         'attributes'   => [
             'class'  => 'btn btn-info',
             'target' => '_blank',
-            'href'   => 'customers/login/{customer_id}',
+            'href'   => 'customers/impersonate/{customer_id}',
         ],
     ],
     'full_name'   => [

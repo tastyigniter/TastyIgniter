@@ -86,11 +86,11 @@ $viewsList = [
 ];
 ?>
 
-<?php foreach ($viewsList as $file): ?>
+<?php foreach ($viewsList as $file) { ?>
     <script type="text/template" data-view="<?= $file ?>">
         <?php include VIEWPATH.'/'.$file.'.php'; ?>
     </script>
-<?php endforeach ?>
+<?php } ?>
 
 <script src="assets/js/app/vendor.js"></script>
 <script src="assets/js/app/app.js"></script>

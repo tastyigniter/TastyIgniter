@@ -411,6 +411,15 @@ h4 small, h5 .small, h5 small, h6 .small, h6 small {
 .tabs-form {
 	padding: 15px 20px;
 }
+.tabs-form::before,
+.tabs-form::after {
+	display: table;
+	content: " ";
+	box-sizing: border-box;
+}
+.tabs-form::after {
+	clear: both;
+}
 .panel-form {
 	padding: 15px 20px;
 	background-color: #FFF;
@@ -1155,6 +1164,13 @@ fieldset[disabled] .form-control {
 .conversation-respond .panel-heading {
 	padding: 5px 20px 10px;
 	background-color: #D7D7DE;
+}
+/*
+	Theme source editor
+ */
+.panel-files {
+	height: 600px;
+	overflow: auto;
 }
 /*
 	Utilities

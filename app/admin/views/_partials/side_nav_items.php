@@ -1,5 +1,8 @@
 <ul class="<?= $cssClass; ?>" id="side-menu">
     <?php foreach ($navItems as $code => $menu) { ?>
+    <?php
+        if (!$this->filterPermittedNavItem($menu)) continue;
+        ?>
         <li
             <?= $this->isActiveNavItem($code) ? 'class="active"' : '' ?>
         >

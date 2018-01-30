@@ -1,4 +1,4 @@
-<? $fieldName = $field->arrayName.'['.$field->fieldName.']'; ?>
+<?php $fieldName = $field->arrayName.'['.$field->fieldName.']'; ?>
 <div
     class="tab-pane <?= $index == 1 ? 'active' : '' ?>"
     id="<?= $field->getId('address').'-'.$index; ?>">

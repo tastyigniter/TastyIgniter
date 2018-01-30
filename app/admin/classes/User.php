@@ -3,7 +3,7 @@
 use Igniter\Flame\Auth\Manager;
 use Redirect;
 use Request;
-use System\Models\Messages_model;
+use System\Classes\Controller;
 use System\Models\Permissions_model;
 
 /**
@@ -16,75 +16,28 @@ class User extends Manager
 
     protected $model = 'Admin\Models\Users_model';
 
-    protected $groupModel = 'System\Models\User_group_model';
+    protected $groupModel = 'Admin\Models\Staff_groups_model';
 
     protected $identifier = 'username';
 
-    protected $belongsToSuperGroup = TRUE;
+    protected $isSuperUser = FALSE;
 
-    protected $permissions = [];
+    protected $availablePermissions = [];
 
-    protected $permission_action = [];
+    protected $groupPermissions = [];
 
-    protected $permitted_actions = [];
+    protected $filteredPermissions = [];
 
-    protected $available_actions = [];
+    protected $permissionsLoaded = FALSE;
 
     public function login($userModel, $remember = FALSE)
     {
         parent::login($userModel, $remember);
-
-        if ($userModel = $this->user() AND $staffModel = $userModel->staff) {
-            $this->belongsToSuperGroup = $staffModel->belongsToSuperGroup();
-            $this->setPermissions();
-        }
-    }
-
-    /**
-     * Redirect if the current user is not authenticated.
-     */
-    public function auth()
-    {
-        if (!$this->check()) {
-            flash()->danger(lang('admin::default.alert_user_not_logged_in'));
-            $prepend = empty($uri) ? '' : '?redirect='.str_replace(site_url(), '/', current_url());
-            redirect(admin_url('login'.$prepend));
-        }
-    }
-
-    public function restrict($permission, $uri = '')
-    {
-        if (!is_array($permission))
-            $permission = [$permission];
-
-        // If user isn't logged in, redirect to the login page.
-        if (!$this->check() AND Request::segment(1) !== 'login')
-            return Redirect::to(admin_url('login'));
-
-        // Check whether the user has the proper permissions action.
-        foreach ($permission as $perms) {
-            if ($this->checkPermittedActions($perms, TRUE) === TRUE)
-                return TRUE;
-        }
-
-        if ($uri === '') { // get the previous page from the session.
-            $uri = referrer_url();
-
-            // If previous page and current page are the same, but the user no longer
-            // has permission, redirect to site URL to prevent an infinite loop.
-            if (empty($uri) OR $uri === current_url() AND !post()) {
-                $uri = site_url();
-            }
-        }
-
-        if (!Request::ajax()) {
-            redirect($uri);
-        }
     }
 
     public function restrictLocation($location_id, $permission, $redirect = FALSE)
     {
-        if ($this->belongsToSuperGroup) return FALSE;
+        if ($this->isSuperUser()) return FALSE;
 
         if (empty($location_id)) return FALSE;
 
@@ -113,139 +66,129 @@ class User extends Manager
 
     public function isSuperUser()
     {
-        return $this->user->super_user;
-    }
-
-    public function fromModel($key)
-    {
-        $user = $this->user();
-        if (isset($user[$key]))
-            return $user[$key];
-
-        if (isset($user->staff[$key]))
-            return $user->staff[$key];
-
-        if (isset($user->staff->group[$key]))
-            return $user->staff->group[$key];
-
-        if (isset($user->staff->location[$key]))
-            return $user->staff->location[$key];
-
-        return null;
+        return $this->user()->isSuperUser();
     }
 
     public function getId()
     {
-        return $this->user->user_id;
+        return $this->fromModel('user_id', 'user');
     }
 
     public function getUserName()
     {
-        return $this->user->username;
+        return $this->fromModel('username', 'user');
     }
 
     public function getStaffId()
     {
-        return $this->fromModel('staff_id');
+        return $this->fromModel('staff_id', 'user');
     }
 
     public function getStaffName()
     {
-        return $this->fromModel('staff_name');
+        return $this->fromModel('staff_name', 'staff');
     }
 
     public function getStaffEmail()
     {
-        return $this->fromModel('staff_email');
+        return $this->fromModel('staff_email', 'staff');
     }
 
     public function getLocationId()
     {
-        return $this->fromModel('staff_email') ?: params('default_location_id');
+        return $this->fromModel('staff_email', 'staff', params('default_location_id'));
     }
 
     public function getLocationName()
     {
-        return $this->fromModel('location_name');
+        return $this->fromModel('location_name', 'location');
     }
 
     public function staffGroup()
     {
-        return $this->fromModel('staff_group_name');
+        return $this->fromModel('staff_group_name', 'group');
     }
 
     public function getStaffGroupId()
     {
-        return $this->fromModel('staff_group_id');
+        return $this->fromModel('staff_group_id', 'staff');
     }
 
     public function isStrictLocation()
     {
-        return ($this->fromModel('location_access') AND setting('site_location_mode') == 'single');
+        return ($this->fromModel('location_access', 'group') AND setting('site_location_mode') == 'single');
     }
 
     public function canAccessCustomerAccount()
     {
-        return $this->fromModel('customer_account_access');
+        return $this->fromModel('customer_account_access', 'group');
     }
+
+    public function extendUserQuery($query)
+    {
+        $query->with(['staff.group', 'staff.location']);
+    }
+
+    protected function fromModel($key, $related = null, $default = null)
+    {
+        $user = $this->user();
+
+        switch ($related) {
+            case 'staff':
+                return isset($user->staff[$key]) ? $user->staff[$key] : $default;
+            case 'group':
+                return isset($user->staff->group[$key]) ? $user->staff->group[$key] : $default;
+            case 'location':
+                return isset($user->staff->location[$key]) ? $user->staff->location[$key] : $default;
+            default:
+                return isset($user[$key]) ? $user[$key] : $default;
+        }
+
+        return $default;
+    }
+
 
     //
     // Permissions
     //
 
-    public function hasPermission($permission, $display_error = FALSE)
+    public function hasPermission($permission, $displayError = FALSE)
     {
+        if (!$this->check())
+            return FALSE;
+
         if (!is_array($permission))
             $permission = [$permission];
 
-        foreach ($permission as $perms) {
-            if ($this->checkPermittedActions($perms, $display_error))
+        foreach ($permission as $name) {
+            if ($this->checkPermittedActions($name, $displayError))
                 return TRUE;
         }
 
         return FALSE;
     }
 
-    protected function setPermissions()
+    protected function checkPermittedActions($perm, $displayError = FALSE)
     {
-        $group_permissions = $this->permissions;
+        $this->loadPermissions();
 
-        if (is_array($group_permissions)) {
-            $permissions = Permissions_model::getPermissionsByIds();
-
-            foreach ($permissions as $permission_id => $permission) {
-                $this->available_actions[$permission['name']] = $permissions[$permission_id]['action'];
-            }
-
-            foreach ($group_permissions as $permission_name => $permitted_actions) {
-                if (!empty($this->available_actions[$permission_name])) {
-                    $intersect = array_intersect($permitted_actions, $this->available_actions[$permission_name]);
-                    if (!empty($intersect)) $this->permitted_actions[$permission_name] = $permitted_actions;
-                }
-            }
-        }
-    }
-
-    protected function checkPermittedActions($perm, $display_error = FALSE)
-    {
         // Bail out if the staff is a super user
-        if ($this->belongsToSuperGroup) return TRUE;
+        if ($this->isSuperUser()) return TRUE;
 
-        $action = $this->filterPermissionAction($perm);
+        list($permName, $action) = $this->filterPermissionName($perm);
 
-        // Ensure the permission string matches pattern Domain.Context
-        $permName = $this->filterPermissionName($perm);
+        $actionsToCheck = $action
+            ? [$action]
+            : $this->getRequestedAction();
 
-        $available_actions = $this->getPermissionActions($permName, 'available_actions');
-        $permitted_actions = $this->getPermissionActions($permName, 'permitted_actions');
+        $availableActions = $this->getPermissionActions($permName, 'available');
+        $permittedActions = $this->getPermissionActions($permName, 'filtered');
 
-        foreach ($action as $value) {
-
+        foreach ($actionsToCheck as $value) {
             // Fail if action is available and not permitted.
-            if (in_array($value, $available_actions) AND !in_array($value, $permitted_actions)) {
-                if ($display_error) {
-                    $context = substr($permName, strpos($permName, '.') + 1);
-                    flash()->warning(sprintf(lang('admin::users.alert_user_restricted'), $value, $context));
+            if (in_array($value, $availableActions) AND !in_array($value, $permittedActions)) {
+                if ($displayError) {
+                    flash()->warning(sprintf(lang('admin::default.alert_user_restricted'), $value, $permName));
                 }
 
                 return FALSE;
@@ -255,8 +198,72 @@ class User extends Manager
         return TRUE;
     }
 
+    protected function loadPermissions()
+    {
+        if ($this->permissionsLoaded)
+            return FALSE;
+
+        $groupModel = $this->createGroupModel()->find($this->getStaffGroupId());
+        if (!$groupModel)
+            return FALSE;
+
+        $this->groupPermissions = is_array($groupModel->permissions) ? $groupModel->permissions : [];
+        $this->availablePermissions = Permissions_model::listPermissionActions();
+
+        $this->filteredPermissions = [];
+        foreach ($this->groupPermissions as $permission => $actions) {
+            if (!$availableActions = array_get($this->availablePermissions, $permission, FALSE))
+                continue;
+
+            if (!array_filter(array_intersect($actions, $availableActions)))
+                continue;
+
+            $this->filteredPermissions[$permission] = $actions;
+        }
+
+        $this->permissionsLoaded = TRUE;
+    }
+
+    protected function getRequestedAction()
+    {
+        $result = [];
+
+        // Specify the requested action if not present, based on the $_SERVER REQUEST_METHOD
+        $requestMethod = Request::server('REQUEST_METHOD');
+        if (in_array(Controller::$action, ['create', 'edit', 'manage', 'settings']))
+            $requestMethod = Controller::$action;
+
+        if (is_string(post('_method')))
+            $requestMethod = post('_method');
+
+        switch (strtolower($requestMethod)) {
+            case 'get':
+                $result = ['access'];
+                break;
+            case 'post':
+                $result = ['access', 'add'];
+                break;
+            case 'delete':
+                $result = ['delete'];
+                break;
+            case 'edit':
+            case 'manage':
+            case 'settings':
+            case 'patch':
+                $result = ['access', 'manage'];
+                break;
+            case 'create':
+            case 'put':
+                $result = ['add'];
+                break;
+        }
+
+        return $result;
+    }
+
     protected function getPermissionActions($permission, $whichAction)
     {
+        $whichAction = $whichAction.'Permissions';
         if (!isset($this->{$whichAction}[$permission]))
             return [];
 
@@ -266,50 +273,11 @@ class User extends Manager
 
     protected function filterPermissionName($permission)
     {
-        return (substr_count($permission, '.') === 2)
-            ? substr($permission, 0, strrpos($permission, '.'))
-            : $permission;
-    }
+        $permArray = explode('.', $permission);
 
-    protected function filterPermissionAction($permission)
-    {
-        $result = [];
+        $name = array_slice($permArray, 0, 2);
+        $action = array_slice($permArray, 2, 1);
 
-        if (substr_count($permission, '.') === 2) {
-            $result[] = strtolower(substr($permission, strrpos($permission, '.') + 1));
-        }
-        else {
-            // Specify the requested action if not present, based on the $_SERVER REQUEST_METHOD
-            $requestMethod = $this->input->server('REQUEST_METHOD');
-            if (in_array($this->uri->rsegment(2), ['create', 'edit', 'manage', 'settings']))
-                $requestMethod = $this->uri->rsegment(2);
-
-            if (is_string(post('_method')))
-                $requestMethod = post('_method');
-
-            switch (strtolower($requestMethod)) {
-                case 'get':
-                    $result = ['access'];
-                    break;
-                case 'post':
-                    $result = ['access', 'add'];
-                    break;
-                case 'delete':
-                    $result = ['delete'];
-                    break;
-                case 'edit':
-                case 'manage':
-                case 'settings':
-                case 'patch':
-                    $result = ['access', 'manage'];
-                    break;
-                case 'create':
-                case 'put':
-                    $result = ['add'];
-                    break;
-            }
-        }
-
-        return $result;
+        return [implode('.', $name), strtolower(current($action))];
     }
 }

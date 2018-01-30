@@ -4,28 +4,17 @@ use Admin\Classes\PaymentGateways;
 use DB;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\HasPermalink;
-use Igniter\Libraries\Location\Location;
-use Model;
+use Igniter\Flame\Location\Models\Location as LocationModel;
 
 /**
  * Locations Model Class
  *
  * @package Admin
  */
-class Locations_model extends Model
+class Locations_model extends LocationModel
 {
     use HasPermalink;
     use Purgeable;
-
-    /**
-     * @var string The database table name
-     */
-    protected $table = 'locations';
-
-    /**
-     * @var string The database table primary key
-     */
-    protected $primaryKey = 'location_id';
 
     public $fillable = ['location_name', 'location_email', 'description', 'location_address_1',
         'location_address_2', 'location_city', 'location_state', 'location_postcode', 'location_country_id',
@@ -49,10 +38,6 @@ class Locations_model extends Model
 
     public $purgeable = ['tables', 'delivery_areas'];
 
-    public $casts = [
-        'options' => 'serialize',
-    ];
-
     protected $appends = ['location_thumb'];
 
     public $permalinkable = [
@@ -70,6 +55,8 @@ class Locations_model extends Model
     ];
 
     public $locationClass;
+
+    public $url;
 
     public static function getDropdownOptions()
     {
@@ -112,21 +99,6 @@ class Locations_model extends Model
     public function scopeJoinCountry($query)
     {
         return $query->join('countries', 'countries.country_id', '=', 'locations.location_country_id', 'left');
-    }
-
-    public function scopeSelectDistance($query, $lat = null, $lng = null)
-    {
-        if (setting('distance_unit') === 'km') {
-            $sql = "( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) *";
-        }
-        else {
-            $sql = "( 3959 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) *";
-        }
-
-        $sql .= " cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) *";
-        $sql .= " sin( radians( location_lat ) ) ) ) AS distance";
-
-        return $query->selectRaw(DB::raw($sql), [$lat, $lng, $lat]);
     }
 
     /**
@@ -232,9 +204,12 @@ class Locations_model extends Model
     // Helpers
     //
 
-    public function getThumb($options = [])
+    public function setUrl($suffix = null)
     {
-        return Image_tool_model::resize($this->location_image, $options);
+        if (setting('site_location_mode') == 'single')
+            $suffix = '/menus';
+
+        $this->url = site_url($this->permalink_slug.$suffix);
     }
 
     public function parseOptionsValue()
@@ -305,39 +280,9 @@ class Locations_model extends Model
         return $result;
     }
 
-    public function offersOrderType($type = 'delivery')
-    {
-        if (!isset($this->attributes["offer_{$type}"]))
-            return FALSE;
-
-        return $this->attributes["offer_{$type}"] == 1;
-    }
-
-    public function hasFutureOrder()
-    {
-        return $this->future_orders ? TRUE : FALSE;
-    }
-
-    public function applyLocationClass()
-    {
-        if ($this->locationClass)
-            return $this->class;
-
-        $locationClass = new Location(config('location'));
-
-        $this->locationClass = $locationClass;
-        $this->locationClass->useLocation($this)->initialize();
-
-        return $this->locationClass;
-    }
-
     public function performAfterSave()
     {
         $this->restorePurgedValues();
-
-//        if ($this->getKey() == params('default_location_id')) {
-//            Settings_model::addSetting('prefs', 'main_address', $this->getAddress($this->getKey()), '1');
-//        }
 
         if (is_single_location()) {
             $this->where('location_id', '!=', $this->getKey())
@@ -358,68 +303,6 @@ class Locations_model extends Model
     }
 
     /**
-     * Find a location working hour by day of the week
-     *
-     * @param int $location_id
-     * @param string $day
-     *
-     * @return array
-     */
-    public function getOpeningHourByDay($location_id = null, $day = null)
-    {
-        $weekdays = ['Monday' => 0, 'Tuesday' => 1, 'Wednesday' => 2, 'Thursday' => 3, 'Friday' => 4, 'Saturday' => 5, 'Sunday' => 6];
-        $day = (!isset($weekdays[$day])) ? date('l', strtotime($day)) : $day;
-        $hour = ['open' => '00:00:00', 'close' => '00:00:00', 'status' => '0'];
-
-        $working_hours = Working_hours_model::where('location_id', $location_id)
-                                            ->where('weekday', $weekdays[$day])->first();
-
-        if ($working_hours) {
-            $hour['open'] = $row['opening_time'];
-            $hour['close'] = $row['closing_time'];
-            $hour['status'] = $row['status'];
-        }
-
-        return $hour;
-    }
-
-    /**
-     * Find the nearest location to latitude and longitude
-     *
-     * @param string $lat
-     * @param string $lng
-     * @param string $search_query
-     *
-     * @return array|bool an array of the nearest location, or FALSE on failure
-     */
-    public function getLocalRestaurant($lat = null, $lng = null, $search_query = null)
-    {
-        $result = null;
-        if (!is_null($lat) && !is_null($lng)) {
-            $result = $this->newQuery()
-                           ->with('delivery_areas')
-                           ->select(['location_id', 'location_radius'])
-                           ->selectDistance($lat, $lng)
-                           ->isEnabled()
-//                           ->having('distance', '>', 100)
-                           ->orderBy('distance', 'asc')->first();
-        }
-
-//        if ($result) {
-//            $searchRadius = ($result->location_radius > 0)
-//                ? $result->location_radius : (int)setting('search_radius');
-//
-//            if ($result->distance > $searchRadius) {
-//                dd($result->distance, $result->location_radius, $result->getKey(), $searchRadius);
-//
-//                return null;
-//            }
-//        }
-
-        return $result;
-    }
-
-    /**
      * Update the default location
      *
      * @param array $address
@@ -436,7 +319,7 @@ class Locations_model extends Model
 
         $saved = null;
         if ($locationModel) {
-            $locationModel->location_status = true;
+            $locationModel->location_status = TRUE;
             $saved = $locationModel->fill($update)->save();
 
             params()->set('default_location_id', $locationModel->getKey());
@@ -466,6 +349,9 @@ class Locations_model extends Model
 
         if (is_array($data)) foreach ($data as $type => $hours) {
             $_hours = [];
+
+            if (!isset($hours['type'])) continue;
+
             switch ($hourType = $hours['type']) {
                 case '24_7':
                     $_hours = $this->createWorkingHours($hourType, $hours);
@@ -558,31 +444,5 @@ class Locations_model extends Model
         }
 
         return $workingHours;
-    }
-
-    public function processAddress($row = null)
-    {
-        if (is_null($row)) {
-            $row = $this->toArray();
-        }
-
-        $address_data = [
-            'location_id'   => $row['location_id'],
-            'location_name' => $row['location_name'],
-            'address_1'     => $row['location_address_1'],
-            'address_2'     => $row['location_address_2'],
-            'city'          => $row['location_city'],
-            'state'         => $row['location_state'],
-            'postcode'      => $row['location_postcode'],
-            'country_id'    => $row['location_country_id'],
-            'location_lat'  => $row['location_lat'],
-            'location_lng'  => $row['location_lng'],
-            'country'       => isset($row['country_name']) ? $row['country_name'] : null,
-            'iso_code_2'    => isset($row['iso_code_2']) ? $row['iso_code_2'] : null,
-            'iso_code_3'    => isset($row['iso_code_3']) ? $row['iso_code_3'] : null,
-            'format'        => isset($row['format']) ? $row['format'] : null,
-        ];
-
-        return $address_data;
     }
 }

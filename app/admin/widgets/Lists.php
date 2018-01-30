@@ -9,8 +9,8 @@ use DB;
 use Event;
 use Exception;
 use Html;
-use Igniter\Flame\Pagination\LengthAwarePaginator;
-use Igniter\Flame\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Model;
 
 class Lists extends BaseWidget

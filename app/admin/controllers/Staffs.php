@@ -44,9 +44,14 @@ class Staffs extends \Admin\Classes\AdminController
         'configFile' => 'staffs_model',
     ];
 
+    protected $requiredPermissions = 'Admin.Staffs';
+
     public function __construct()
     {
         parent::__construct();
+
+        if ($this->action == 'edit' AND AdminAuth::getStaffId() == current($this->params))
+            $this->requiredPermissions = null;
 
         AdminMenu::setContext('staffs', 'users');
     }
@@ -76,6 +81,17 @@ class Staffs extends \Admin\Classes\AdminController
         return $json;
     }
 
+    public function formExtendFields($form, $fields)
+    {
+        if (!AdminAuth::isSuperUser()) {
+            $form->removeField('staff_group_id');
+            $form->removeField('staff_location_id');
+            $form->removeField('user[username]');
+            $form->removeField('user[super_user]');
+            $form->removeField('staff_status');
+        }
+    }
+
     public function formExtendQuery($query)
     {
         $query->with(['user']);
@@ -87,18 +103,15 @@ class Staffs extends \Admin\Classes\AdminController
             ['staff_name', 'lang:admin::staffs.label_name', 'required|min:2|max:128'],
             ['staff_email', 'lang:admin::staffs.label_email', 'required|max:96|email'
                 .($form->context == 'create' ? '|unique:staffs,staff_email' : '')],
-            ['user.username', 'lang:admin::staffs.label_username', 'required|min:2|max:32'
-                .($form->context == 'create' ? '|unique:users,username' : '')],
-            ['staff_status', 'lang:admin::default.label_status', 'integer'],
         ];
 
-        if (!$model->exists OR post($form->arrayName.'.user.password')) {
-            $rules[] = ['user.password', 'lang:admin::staffs.label_password', 'min:6|max:32|same:user.password_confirm'
-                .($form->context == 'create' ? '|required' : '')];
+        $rules[] = ['user.password', 'lang:admin::staffs.label_password', 'sometimes|min:6|max:32|same:user.password_confirm'];
             $rules[] = ['user.password_confirm', 'lang:admin::staffs.label_confirm_password'];
-        }
 
         if (AdminAuth::isSuperUser()) {
+            $rules[] = ['user.username', 'lang:admin::staffs.label_username', 'required|min:2|max:32'
+                .($form->context == 'create' ? '|unique:users,username' : '')];
+            $rules[] = ['staff_status', 'lang:admin::default.label_status', 'integer'];
             $rules[] = ['staff_group_id', 'lang:admin::staffs.label_group', 'required|integer'];
             $rules[] = ['staff_location_id', 'lang:admin::staffs.label_location', 'integer'];
         }

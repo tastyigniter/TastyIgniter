@@ -47,6 +47,7 @@ $db = $setup->getDatabaseDetails();
            placeholder="<?= lang('help_dbprefix'); ?>"/>
 </div>
 
+<input type="hidden" name="disableLog" value="1">
 <div class="buttons">
     <a class="btn btn-default" href=""><?= lang('button_back'); ?></a>
     <button type="submit" class="btn btn-success pull-right"><?= lang('button_continue'); ?></button>

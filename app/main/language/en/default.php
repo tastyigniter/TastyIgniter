@@ -104,7 +104,7 @@ return [
         'text_signature' => 'Regards, <br />%s <br /><br />We hope to see you again soon.',
     ],
 
-    'reservation' => [
+    'local' => [
         'text_heading'                      => 'Restaurants',
         'text_tab_menu'                     => 'Menu',
         'text_tab_review'                   => 'Reviews',

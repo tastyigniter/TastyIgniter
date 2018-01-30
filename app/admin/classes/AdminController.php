@@ -121,14 +121,14 @@ class AdminController extends BaseController
         // Ensures that a user is logged in, if required
         if ($requireAuthentication) {
             if (!$this->checkUser()) {
-                flash(lang('admin::default.alert_user_not_logged_in'))->error()->important();
+                flash()->error(lang('admin::default.alert_user_not_logged_in'))->important();
 
-                return Admin::redirectIntended(input('redirect', 'login'));
+                return $this->redirectGuest('login');
             }
 
             // Check that user has permission to view this page
             if ($this->requiredPermissions AND !AdminAuth::hasPermission($this->requiredPermissions, TRUE)) {
-                return Admin::redirectIntended(input('redirect', 'dashboard'));
+                return $this->redirectBack(302, [], 'dashboard');
             }
         }
 
@@ -271,9 +271,9 @@ class AdminController extends BaseController
         return Admin::redirectIntended($path, $status, $headers, $secure);
     }
 
-    public function redirectBack()
+    public function redirectBack($status = 302, $headers = [], $fallback = FALSE)
     {
-        return Redirect::back();
+        return Redirect::back($status, $headers, Admin::url($fallback ? $fallback : 'dashboard'));
     }
 
     public function refresh()

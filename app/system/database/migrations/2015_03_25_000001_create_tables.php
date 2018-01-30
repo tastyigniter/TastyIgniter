@@ -566,7 +566,7 @@ class CreateTables extends Migration
             $table->string('title');
             $table->decimal('value', 15);
             $table->boolean('priority');
-            $table->index(['order_id']); // was unique
+            $table->unique('order_id'); // was unique
         };
     }
 
@@ -598,7 +598,7 @@ class CreateTables extends Migration
             $table->string('slug');
             $table->string('controller');
             $table->string('query');
-            $table->index(['slug', 'controller']); // was unique
+            $table->index('slug', 'controller'); // was unique
         };
     }
 
@@ -772,7 +772,7 @@ class CreateTables extends Migration
             $table->string('uri_route');
             $table->string('controller', 128);
             $table->boolean('priority');
-            $table->index(['uri_route_id', 'uri_route']);  // was unique
+            $table->index('uri_route_id', 'uri_route');  // was unique
         };
     }
 

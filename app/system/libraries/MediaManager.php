@@ -13,24 +13,41 @@ class MediaManager
     use Singleton;
 
     private $_image_path;
+
     private $_root_folder = 'data/';
+
     private $_thumbs_folder = 'thumbs/';
+
     private $_sub_folder;
+
     private $_max_size = '300';
+
     private $_thumb_width = '320';
+
     private $_thumb_height = '220';
+
     private $_uploads = '1';
+
     private $_new_folder = '1';
+
     private $_copy = '1';
+
     private $_move = '1';
+
     private $_rename = '1';
+
     private $_delete = '1';
+
     private $_allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico'];
+
     private $_hidden_files = ['index.html'];
+
     private $_hidden_folders = [];
+
     private $_transliteration = FALSE;
 
     private $_remember_days = '7';
+
     private $_options = [];
 
     public function initialize($config = [])
@@ -137,7 +154,8 @@ class MediaManager
 
         if ($img_width < $this->_thumb_width AND $img_height < $this->_thumb_height) {
             $thumb_url = image_url($this->_root_folder.$sub_folder.$file_name);
-        } else {
+        }
+        else {
             $thumb_url = Image_tool_model::resize($sub_folder.$file_name, $this->_thumb_width, $this->_thumb_height);
         }
 
@@ -159,11 +177,11 @@ class MediaManager
         $oldumask = umask(0);
 
         if ($file_path AND !file_exists($file_path)) {
-            mkdir($file_path, DIR_WRITE_MODE, TRUE);
+            mkdir($file_path, 0777, TRUE);
         }
 
         if ($thumb_path AND !file_exists($thumb_path)) {
-            mkdir($thumb_path, DIR_WRITE_MODE, TRUE);
+            mkdir($thumb_path, 0777, TRUE);
         }
 
         umask($oldumask);
@@ -193,7 +211,8 @@ class MediaManager
                 if ($item != '.' AND $item != '..') {
                     if (!is_dir($from_path.'/'.$item)) {
                         copy($from_path.'/'.$item, $to_path.'/'.$item);
-                    } else {
+                    }
+                    else {
                         $this->copy($from_path.'/'.$item, $to_path.'/'.$item, TRUE);
                     }
                 }
@@ -248,7 +267,8 @@ class MediaManager
 
         if (!file_exists($path)) {
             return FALSE;
-        } else if (is_file($path)) {
+        }
+        else if (is_file($path)) {
             return unlink($path);
         }
 
@@ -256,7 +276,8 @@ class MediaManager
             if ($item != '.' AND $item != '..') {
                 if (!is_dir($path.'/'.$item)) {
                     unlink($path.'/'.$item);
-                } else {
+                }
+                else {
                     $this->delete($path.'/'.$item, TRUE);
                 }
             }
@@ -280,13 +301,15 @@ class MediaManager
             log_message('debug', $this->CI->upload->display_errors('', ''));
 
             return FALSE;
-        } else {
+        }
+        else {
             $data = $this->CI->upload->data();
             if (!$data) {
                 unlink($data['full_path']);
 
                 return FALSE;
-            } else {
+            }
+            else {
                 return TRUE;
             }
         }
@@ -306,7 +329,8 @@ class MediaManager
                 if (is_dir($currentFile)) {
                     $size = $this->folderSize($currentFile);
                     $total_size += $size;
-                } else {
+                }
+                else {
                     $size = filesize($currentFile);
                     $total_size += $size;
                 }
@@ -339,7 +363,7 @@ class MediaManager
         if (is_dir($this->_image_path.$this->_root_folder.$path))
             return rtrim($path, '/');
 
-        return (is_dir($this->_image_path.$path)) ? substr($path, strlen($this->_root_folder)): null;
+        return (is_dir($this->_image_path.$path)) ? substr($path, strlen($this->_root_folder)) : null;
     }
 
     public function fileExists($file_path)
