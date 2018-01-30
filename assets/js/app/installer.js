@@ -291,7 +291,7 @@ var Installer = {
             } else {
                 Installer.renderView('database')
                 Installer.updateWizard('database')
-                Installer.$form.append('<input type="hidden" name="requirement" value="success">')
+                Installer.$form.append('<input type="hidden" name="requirement" value="complete">')
             }
         })
     },

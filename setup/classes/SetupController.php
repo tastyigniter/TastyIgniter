@@ -174,7 +174,7 @@ class SetupController
                 break;
         }
 
-        $status = ($code == 'uploads') ? 'complete' : $code;
+        $status = ($code == 'writable') ? 'complete' : $code;
         $this->repository->set('requirement', $result ? $status : 'fail')->save();
         $this->writeLog('Requirement %s %s', $code, ($result ? '+OK' : '=FAIL'));
 
