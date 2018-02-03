@@ -104,12 +104,6 @@ class SetupController
         if ($this->isBooted()) {
             $this->page->currentStep = 'proceed';
         }
-        else if (is_array($this->repository->get('database'))) {
-            $this->page->currentStep = 'settings';
-        }
-        else if ($this->repository->get('requirement') == 'complete') {
-            $this->page->currentStep = 'database';
-        }
         else {
             $this->page->currentStep = 'requirement';
         }
@@ -206,8 +200,7 @@ class SetupController
             ];
         }
 
-        $newValues = $this->verifyDbConfiguration($config);
-        $result = $this->writeDbConfiguration($newValues);
+        $result = $this->verifyDbConfiguration($config);
 
         $this->repository->set('database', $result);
         $result = $this->repository->save();
@@ -288,7 +281,7 @@ class SetupController
                 if ($installed OR $this->installFoundation())
                     $result = $this->getBaseUrl().'admin/settings';
 
-                $this->renameExampleFiles();
+                $this->writeExampleFiles();
                 $this->cleanUpAfterInstall();
                 break;
         }
@@ -381,32 +374,6 @@ class SetupController
         return $result;
     }
 
-    protected function writeDbConfiguration($config)
-    {
-        if (!file_exists($exampleEnvFile = $this->baseDirectory.'/example.env'))
-            return $config;
-
-        $contents = file_get_contents($exampleEnvFile);
-
-        foreach (
-            [
-                '/^DB_HOST=127.0.0.1/m'    => 'DB_HOST='.$config['host'],
-                '/^DB_DATABASE=database/m' => 'DB_DATABASE='.$config['database'],
-                '/^DB_USERNAME=username/m' => 'DB_USERNAME='.$config['username'],
-                '/^DB_PASSWORD=password/m' => 'DB_PASSWORD='.$config['password'],
-                '/^DB_PREFIX=ti_/m'        => 'DB_PREFIX='.$config['prefix'],
-            ] as $pattern => $replace) {
-
-            $contents = preg_replace($pattern, $replace, $contents);
-        }
-
-        file_put_contents($exampleEnvFile, $contents);
-
-        rename($exampleEnvFile, $this->baseDirectory.'/.env');
-
-        return $config;
-    }
-
     //
     // Install
     //
@@ -468,6 +435,12 @@ class SetupController
 
     protected function installFoundation()
     {
+        if ($this->vendorInstalled()) {
+            $this->writeLog('Skipping install: dependencies already installed.');
+
+            return TRUE;
+        }
+
         $vendorPath = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR.'/bin';
         if (!is_dir($vendorPath)) {
             $this->writeLog('Missing vendor autoload file');
@@ -603,11 +576,12 @@ class SetupController
 
     protected function vendorExists()
     {
-        $extractedPhar = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR;
-        if (!is_dir($extractedPhar.'/vendor'))
-            return FALSE;
+        if ($this->vendorInstalled())
+            return TRUE;
 
-        return $this->vendorInstalled();
+        $extractedPhar = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR;
+
+        return is_dir($extractedPhar.'/vendor');
     }
 
     protected function vendorInstalled()
@@ -738,9 +712,9 @@ class SetupController
 
     protected function confirmInstallation()
     {
-        $requirement = $this->repository->get('install');
+        $installation = $this->repository->get('install');
 
-        return $requirement == 'complete';
+        return $installation == 'complete';
     }
 
     protected function cleanUpAfterInstall()
@@ -783,13 +757,44 @@ class SetupController
             @mkdir($this->tempDirectory, 0777);
     }
 
-    protected function renameExampleFiles()
+    protected function writeExampleFiles()
     {
+        if (!file_exists($exampleEnvFile = $this->baseDirectory.'/example.env'))
+            $exampleEnvFile = $this->baseDirectory.'/.env';
+
+        if (file_exists($exampleEnvFile)) {
+            $contents = file_get_contents($exampleEnvFile);
+
+            $search = $this->envReplacementPatterns();
+            foreach ($search as $pattern => $replace) {
+                $contents = preg_replace($pattern, $replace, $contents);
+                putenv($replace);
+            }
+
+            file_put_contents($exampleEnvFile, $contents);
+            rename($exampleEnvFile, $this->baseDirectory.'/.env');
+        }
+
         if (file_exists($this->baseDirectory.'/example.htaccess')) {
             rename(
                 $this->baseDirectory.'/example.htaccess',
                 $this->baseDirectory.'/.htaccess'
             );
         }
+    }
+
+    protected function envReplacementPatterns()
+    {
+        $setting = $this->repository->get('settings');
+        $db = $this->repository->get('database');
+
+        return [
+            '/^APP_NAME=TastyIgniter/m' => 'APP_NAME='.$setting['site_name'],
+            '/^DB_HOST=127.0.0.1/m'     => 'DB_HOST='.$db['host'],
+            '/^DB_DATABASE=database/m'  => 'DB_DATABASE='.$db['database'],
+            '/^DB_USERNAME=username/m'  => 'DB_USERNAME='.$db['username'],
+            '/^DB_PASSWORD=password/m'  => 'DB_PASSWORD='.$db['password'],
+            '/^DB_PREFIX=ti_/m'         => 'DB_PREFIX='.$db['prefix'],
+        ];
     }
 }

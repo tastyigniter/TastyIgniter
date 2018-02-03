@@ -468,7 +468,7 @@ $config['form']['order'] = [
             ['approve_reviews', 'lang:system::settings.label_approve_reviews', 'required|integer'],
             ['stock_checkout', 'lang:system::settings.label_stock_checkout', 'required|integer'],
             ['show_stock_warning', 'lang:system::settings.label_show_stock_warning', 'required|integer'],
-            ['checkout_terms', 'lang:system::settings.label_checkout_terms', 'required|numeric'],
+            ['checkout_terms', 'lang:system::settings.label_checkout_terms', 'numeric'],
             ['default_order_status', 'lang:system::settings.label_default_order_status', 'required|integer'],
             ['processing_order_status.*', 'lang:system::settings.label_processing_order_status', 'required|integer'],
             ['completed_order_status.*', 'lang:system::settings.label_completed_order_status', 'required|integer'],

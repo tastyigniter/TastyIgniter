@@ -9,7 +9,7 @@ return [
     ],
     'no_database'  => [
         'label' => 'Database Error Was Encountered',
-        'help'  => "A database connection is required. Check the database is configured and migrated before trying again.",
+        'help'  => "A database connection is required. Check the database is properly configured and migrated before trying again.",
     ],
     'required'     => [
         'config' => "Configuration used in %s must supply a value '%s'.",

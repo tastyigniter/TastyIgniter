@@ -15,7 +15,7 @@ define('LARAVEL_START', microtime(true));
 $helperPath = __DIR__.'/../vendor/tastyigniter/flame/src/Support/helpers.php';
 
 if (!file_exists($helperPath)) {
-    echo 'Missing vendor files, try running "composer install" or use the installer.'.PHP_EOL;
+    echo 'Missing vendor files, try using the installer (setup.php).'.PHP_EOL;
     exit(1);
 }
 

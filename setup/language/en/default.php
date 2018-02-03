@@ -20,7 +20,7 @@ function lang($key)
         'text_complete_sub_heading'    => 'Install recommended extensions and attach your TastyIgniter Site.',
         'text_success_sub_heading'     => 'Start receiving orders!',
 
-        'text_php_version'              => 'PHP version 5.6.10 or greater required',
+        'text_php_version'              => 'PHP version 7.0 or greater required',
         'text_mysqli_installed'         => 'is MySQLi installed?',
         'text_curl_installed'           => 'cURL PHP Extension is required',
         'text_live_connection'          => 'Test connection to the installation server is required',
@@ -57,7 +57,7 @@ function lang($key)
         'text_fetch_extensions' => 'Fetching extensions from the TastyIgniter Marketplace...',
 
         'label_requirement'      => 'Requirement Field',
-        'label_php_version'      => 'PHP Version (required %s+)',
+        'label_php_version'      => 'PHP Version (required 7+)',
         'label_register_globals' => 'Register Globals',
         'label_magic_quotes'     => 'Magic Quotes GPC',
         'label_file_uploads'     => 'File Uploads',
