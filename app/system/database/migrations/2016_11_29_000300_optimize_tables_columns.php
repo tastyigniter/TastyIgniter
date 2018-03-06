@@ -169,13 +169,6 @@ class OptimizeTablesColumns extends Migration
         };
     }
 
-    protected function _optimize_layouts()
-    {
-        return function (Blueprint $table) {
-            $table->string('name')->change();
-        };
-    }
-
     protected function _optimize_locations()
     {
         return function (Blueprint $table) {

@@ -266,39 +266,6 @@ class CreateTables extends Migration
         };
     }
 
-    protected function _create_layout_routes()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->increments('layout_route_id');
-            $table->integer('layout_id');
-            $table->string('uri_route', 128);
-        };
-    }
-
-    protected function _create_layout_modules()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->integer('layout_module_id', TRUE);
-            $table->integer('layout_id');
-            $table->string('module_code', 128);
-            $table->string('partial', 32);
-            $table->integer('priority');
-            $table->text('options');
-            $table->boolean('status');
-        };
-    }
-
-    protected function _create_layouts()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->increments('layout_id');
-            $table->string('name', 45);
-        };
-    }
-
     protected function _create_location_tables()
     {
         return function (Blueprint $table) {

@@ -1,7 +1,6 @@
 <?php namespace System\Database\Seeds;
 
 use Admin\Models\Customer_groups_model;
-use Admin\Models\Layouts_model;
 use Admin\Models\Mealtimes_model;
 use Admin\Models\Pages_model;
 use Admin\Models\Staff_groups_model;
@@ -33,7 +32,7 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedLanguages();
 
-//        $this->seedLayouts();
+        $this->seedMealtimes();
 
 //        $this->seedMailTemplates();
 
@@ -94,13 +93,6 @@ class InitialSchemaSeeder extends Seeder
             'status'     => TRUE,
             'can_delete' => FALSE,
         ]);
-    }
-
-    protected function seedLayouts()
-    {
-        if (Layouts_model::count())
-            return;
-//        Layouts_model::insert([]);
     }
 
     protected function seedMealtimes()
