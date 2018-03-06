@@ -8,10 +8,13 @@ permalink: /locations
 <div id="page-content">
 	<div class="container">
 		<div class="row">
-            <?= component('localList::filter'); ?>
-
-            <div class="location-list col-sm-9">
-                <?= component('localList'); ?>
+            <div class="row">
+                <div class="locations-filter col-sm-3">
+                    <?= partial('localList::filter'); ?>
+                </div>
+                <div class="location-list col-sm-9">
+                    <?= component('localList'); ?>
+                </div>
             </div>
 		</div>
 	</div>

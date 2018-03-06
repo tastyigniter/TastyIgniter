@@ -1,5 +1,7 @@
 <?php namespace Main\Classes;
 
+use Session;
+
 /**
  * Customer Class
  *
@@ -12,6 +14,11 @@ class Customer extends \Igniter\Flame\Auth\Manager
     protected $model = 'Admin\Models\Customers_model';
 
     protected $identifier = 'email';
+
+    public function customer()
+    {
+        return $this->user();
+    }
 
     public function isLogged()
     {
@@ -68,6 +75,26 @@ class Customer extends \Igniter\Flame\Auth\Manager
         return $this->user->customer_group_id;
     }
 
+    /**
+     * Registers a user by giving the required credentials
+     *
+     * @param array $credentials
+     *
+     * @return \Admin\Models\Customers_model
+     * @throws \Exception
+     */
+    public function register(array $credentials)
+    {
+        $model = $this->createModel();
+        $model->fill($credentials);
+        $model->save();
+
+        // Prevents subsequent saves to this model object
+        $model->password = null;
+
+        return $this->user = $model;
+    }
+
     public function updateCart()
     {
 //        $this->CI->db->set('cart', ($cart_contents = $this->CI->cart->contents()) ? serialize($cart_contents) : '');
@@ -83,31 +110,35 @@ class Customer extends \Igniter\Flame\Auth\Manager
     /**
      * Impersonates the given user and sets properties
      * in the session but not the cookie.
+     *
+     * @param $userModel
+     *
+     * @throws \Exception
      */
     public function impersonate($userModel)
     {
-        $oldSession = $this->getSession(static::AUTH_KEY_NAME);
+        $oldSession = Session::get(static::AUTH_KEY_NAME);
 
         $this->login($userModel, FALSE);
 
-        $this->putSession(static::AUTH_KEY_NAME.'_impersonate', $oldSession);
+        Session::put(static::AUTH_KEY_NAME.'_impersonate', $oldSession);
     }
 
     public function stopImpersonate()
     {
-        $oldSession = $this->getSession(static::AUTH_KEY_NAME.'_impersonate');
+        $oldSession = Session::get(static::AUTH_KEY_NAME.'_impersonate');
 
-        $this->putSession(static::AUTH_KEY_NAME, $oldSession);
+        Session::put(static::AUTH_KEY_NAME, $oldSession);
     }
 
     public function isImpersonator()
     {
-        return $this->hasSession(static::AUTH_KEY_NAME.'_impersonate');
+        return Session::has(static::AUTH_KEY_NAME.'_impersonate');
     }
 
     public function getImpersonator()
     {
-        $impersonateArray = $this->getSession(static::AUTH_KEY_NAME.'_impersonate');
+        $impersonateArray = Session::get(static::AUTH_KEY_NAME.'_impersonate');
 
         // Check supplied session/cookie is an array (user id, persist code)
         if (!is_array($impersonateArray) OR count($impersonateArray) !== 2)

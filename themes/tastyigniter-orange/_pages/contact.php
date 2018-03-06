@@ -2,114 +2,27 @@
 title: main::default.contact.text_tab_gallery
 layout: default
 permalink: /contact
+
+'[contact]':
 ---
 <div id="page-content">
     <div class="container">
-
         <div class="row">
-            <div class="">
-                <div class="row">
-                    <div class="col-md-7 center-block bottom-spacing text-center">
-                        <div class="contact-info">
-                            <ul>
-                                <li><strong><?= $defaultLocal->getName(); ?></strong></li>
-                                <li><i class="fa fa-globe"></i><?= $defaultLocal->getAddress(); ?></li>
-                                <li><i class="fa fa-phone"></i><?= $defaultLocal->getTelephone(); ?></li>
-                            </ul>
-                        </div>
+            <div class="col-md-12">
+                <div class="text-center">
+                    <div class="contact-info">
+                        <ul>
+                            <li><strong><?= $contact->location->getName(); ?></strong></li>
+                            <li><i class="fa fa-globe"></i><?= format_address($contact->location->getAddress()); ?></li>
+                            <li><i class="fa fa-phone"></i><?= $contact->location->getTelephone(); ?></li>
+                        </ul>
                     </div>
 
-                    <div id="contactForm" class="col-md-7 center-block">
-                        <h4 class="contact-title"><?= lang('main::default.contact.text_summary'); ?></h4>
+                    <h4 class="contact-title">
+                        <?= lang('sampoyigi.frontend::default.contact.text_summary'); ?>
+                    </h4>
 
-                        <?= form_open(current_url(),
-                            [
-                                'id'   => 'contact-form',
-                                'role' => 'form',
-                                'method'  => 'POST',
-                                'handler' => 'onSubmit',
-                            ]
-                        ); ?>
-                        <div class="row">
-                            <div class="col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <select name="subject" id="subject" class="form-control">
-                                        <option value=""><?= lang('main::default.contact.text_select_subject'); ?></option>
-                                        <?php foreach ($subjects as $key => $subject) { ?>
-                                            <option value="<?= $key; ?>"><?= $subject; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <?= form_error('subject', '<span class="text-danger">', '</span>'); ?>
-                                </div>
-                                <div class="form-group">
-                                    <input
-                                        type="text"
-                                        name="email"
-                                        id="email"
-                                        class="form-control"
-                                        value="<?= set_value('email'); ?>"
-                                        placeholder="<?= lang('main::default.contact.label_email'); ?>"/>
-                                    <?= form_error('email', '<span class="text-danger">', '</span>'); ?>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <input
-                                        type="text"
-                                        name="full_name"
-                                        id="full-name"
-                                        class="form-control"
-                                        value="<?= set_value('full_name'); ?>"
-                                        placeholder="<?= lang('main::default.contact.label_full_name'); ?>"/>
-                                    <?= form_error('full_name', '<span class="text-danger">', '</span>'); ?>
-                                </div>
-                                <div class="form-group">
-                                    <input
-                                        type="text"
-                                        name="telephone"
-                                        id="telephone"
-                                        class="form-control"
-                                        value="<?= set_value('telephone'); ?>"
-                                        placeholder="<?= lang('main::default.contact.label_telephone'); ?>"/>
-                                    <?= form_error('telephone', '<span class="text-danger">', '</span>'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea
-                                name="comment"
-                                id="comment"
-                                class="form-control"
-                                rows="5"
-                                placeholder="<?= lang('main::default.contact.label_comment'); ?>"
-                            ><?= set_value('comment'); ?></textarea>
-                            <?= form_error('comment', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span><?= $captcha; ?></span>
-                                <input
-                                    type="text"
-                                    name="captcha"
-                                    class="form-control"
-                                    placeholder="<?= lang('main::default.contact.label_captcha'); ?>"/>
-                            </div>
-                            <?= form_error('captcha', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                        <br/>
-
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12">
-                                <div class="buttons">
-                                    <button
-                                        type="submit"
-                                        class="btn btn-primary btn-block"
-                                    ><?= lang('main::default.contact.button_send'); ?></button>
-                                </div>
-                            </div>
-                        </div>
-                        <?= form_close(); ?>
-                    </div>
+                    <?= component('contact'); ?>
                 </div>
 
                 <div class="heading-section">

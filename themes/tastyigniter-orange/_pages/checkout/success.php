@@ -1,13 +1,15 @@
 ---
-title: main::default.text_heading
+title: Checkout Success
 layout: default
-permalink: /success
+permalink: /checkout/success/:hash?
+
+'checkout':
 ---
 <div id="page-content">
     <div class="container top-spacing">
         <div class="row">
             <div class="content-wrap col-xs-9 center-block text-center">
-                <?= $messgae; ?>
+                <?= partial('checkout::success'); ?>
             </div>
         </div>
     </div>

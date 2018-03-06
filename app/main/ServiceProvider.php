@@ -2,6 +2,7 @@
 
 namespace Main;
 
+use App;
 use Config;
 use File;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
@@ -32,10 +33,18 @@ class ServiceProvider extends AppServiceProvider
         parent::register('main');
 
         if (!$this->app->runningInAdmin()) {
+            $this->registerSingletons();
             $this->registerBaseTags();
 
             FileParser::setCache(new FileCache(Config::get('system.templateCachePath', FALSE)));
         }
+    }
+
+    protected function registerSingletons()
+    {
+        App::singleton('captcha', function ($app) {
+            return new Libraries\Captcha($app);
+        });
     }
 
     protected function registerBaseTags()

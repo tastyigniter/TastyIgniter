@@ -88,11 +88,6 @@ $config['form']['toolbar'] = [
             'data-request'         => 'onDelete',
             'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
         ],
-        'modules'   => [
-            'label' => 'lang:admin::banners.button_modules',
-            'class' => 'btn btn-default',
-            'href'  => 'extensions',
-        ],
         'back'      => [
             'label' => 'lang:admin::default.button_icon_back',
             'class' => 'btn btn-default',

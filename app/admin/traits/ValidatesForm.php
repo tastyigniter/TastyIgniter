@@ -65,6 +65,9 @@ trait ValidatesForm
         $validator = $this->getValidationFactory()
              ->make($request, $rules, $messages, $customAttributes);
 
+        if ($this->validateAfterCallback instanceof Closure)
+            $validator->after($this->validateAfterCallback);
+
         if ($validator->fails()) {
             Session::flash('errors', $validator->errors());
             throw new ValidationException($validator);

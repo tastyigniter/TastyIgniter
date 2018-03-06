@@ -900,7 +900,7 @@ class Form extends BaseWidget
                 !$this->objectMethodExists($model, $methodName) AND
                 !$this->objectMethodExists($model, 'getDropdownOptions')
             ) {
-                throw new Exception(sprintf(lang('admin::default.options_method_not_exists'),
+                throw new Exception(sprintf(lang('admin::default.form.options_method_not_exists'),
                     get_class($model), $methodName, $field->fieldName
                 ));
             }
@@ -914,7 +914,7 @@ class Form extends BaseWidget
         } // Field options are an explicit method reference
         elseif (is_string($fieldOptions)) {
             if (!$this->objectMethodExists($this->model, $fieldOptions)) {
-                throw new Exception(sprintf(lang('admin::default.options_method_not_exists'),
+                throw new Exception(sprintf(lang('admin::default.form.options_method_not_exists'),
                     get_class($this->model), $fieldOptions, $field->fieldName
                 ));
             }

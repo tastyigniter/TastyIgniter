@@ -7,7 +7,6 @@ use System\Classes\BaseComponent;
  * This is a hidden component ignored by the back-end UI.
  *
  * @package Main
- * @author Alexey Bobkov, Samuel Georges
  */
 class ViewBag extends BaseComponent
 {

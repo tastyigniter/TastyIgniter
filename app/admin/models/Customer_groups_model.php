@@ -38,6 +38,11 @@ class Customer_groups_model extends Model
 
     public function getCustomerCountAttribute($value)
     {
-        return $this->getCustomersCount($this->customer_group_id);
+        return $this->customers()->count();
+    }
+
+    public function requiresApproval()
+    {
+        return $this->approval == 1;
     }
 }

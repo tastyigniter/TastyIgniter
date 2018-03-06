@@ -40,7 +40,7 @@ class Settings extends \Admin\Classes\AdminController
     {
         // show modal if required items are not installed
 
-        // show validation errors for missing required settings
+        // show validation errors for missing required settings items
 
         // For security reasons, delete setup files if still exists.
         if (File::isFile(base_path('setup.php')) OR File::isDirectory(base_path('setup'))) {

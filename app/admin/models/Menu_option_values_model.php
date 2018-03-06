@@ -8,7 +8,8 @@ use Model;
  *
  * @package Admin
  */
-class Menu_option_values_model extends Model
+class
+Menu_option_values_model extends Model
 {
     use Sortable;
 

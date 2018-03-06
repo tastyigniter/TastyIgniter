@@ -1,8 +1,10 @@
 <?php namespace System\Classes;
 
+use BadMethodCallException;
 use Igniter\Flame\Pagic\TemplateCode;
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
+use Lang;
 use Main\Classes\MainController;
 use System\Traits\AssetMaker;
 
@@ -241,13 +243,32 @@ abstract class BaseComponent extends Extendable
         return is_null($segment) ? $default : $segment;
     }
 
-    public function __get($key)
+
+    //
+    // Magic methods
+    //
+
+    /**
+     * Dynamically handle calls into the controller instance.
+     * @param string $method
+     * @param array $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
     {
-        if (isset($this->page->{$key})) {
-            return $this->page->{$key};
+        try {
+            return parent::__call($method, $parameters);
+        }
+        catch (BadMethodCallException $ex) {}
+
+        if (method_exists($this->controller, $method)) {
+            return call_user_func_array([$this->controller, $method], $parameters);
         }
 
-        return parent::__get($key);
+        throw new BadMethodCallException(Lang::get('main::default.not_found.method', [
+            'name' => get_class($this),
+            'method' => $method
+        ]));
     }
 
     public function __toString()

@@ -13,9 +13,9 @@ $config['form']['fields'] = [
         'type' => 'hidden',
     ],
     'required'           => [
-        'label'   => 'lang:admin::menu_options.label_option_required',
+        'label'   => 'lang:admin::menus.label_option_required',
         'type'    => 'switch',
-        'comment' => 'lang:admin::menu_options.help_option_required',
+        'comment' => 'lang:admin::menus.help_option_required',
     ],
     'menu_option_values' => [
         'type'       => 'repeater',

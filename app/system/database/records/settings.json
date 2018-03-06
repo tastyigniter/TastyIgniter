@@ -86,43 +86,13 @@
   },
   {
     "sort": "config",
-    "item": "menus_page_limit",
+    "item": "main_page_limit",
     "value": "20"
-  },
-  {
-    "sort": "config",
-    "item": "show_menu_images",
-    "value": "1"
-  },
-  {
-    "sort": "config",
-    "item": "menu_images_h",
-    "value": "80"
-  },
-  {
-    "sort": "config",
-    "item": "menu_images_w",
-    "value": "95"
   },
   {
     "sort": "config",
     "item": "registration_terms",
     "value": "1"
-  },
-  {
-    "sort": "config",
-    "item": "checkout_terms",
-    "value": "0"
-  },
-  {
-    "sort": "config",
-    "item": "stock_warning",
-    "value": "0"
-  },
-  {
-    "sort": "config",
-    "item": "stock_qty_warning",
-    "value": "0"
   },
   {
     "sort": "config",
@@ -282,11 +252,6 @@
   {
     "sort": "config",
     "item": "customer_online_archive_time_out",
-    "value": "0"
-  },
-  {
-    "sort": "config",
-    "item": "index_file_url",
     "value": "0"
   },
   {

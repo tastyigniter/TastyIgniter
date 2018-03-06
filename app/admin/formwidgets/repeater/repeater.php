@@ -13,10 +13,15 @@
                     <?php if (!$this->previewMode AND $sortable) { ?>
                         <th class="list-action"></th>
                     <?php } ?>
+                    <?php if ($showCheckboxes) { ?>
+                        <th class="list-action"></th>
+                    <?php } ?>
                     <?php if ($showRadios) { ?>
                         <th class="list-action"></th>
                     <?php } ?>
-                    <th class="list-action"></th>
+                    <?php if ($showRemoveButton) { ?>
+                        <th class="list-action"></th>
+                    <?php } ?>
                     <?php foreach ($this->getVisibleColumns() as $name => $label) { ?>
                         <th><?= $label ? e(lang($label)) : '' ?></th>
                     <?php } ?>
@@ -30,7 +35,7 @@
                     ]) ?>
                 <?php } ?>
                 </tbody>
-                <?php if (!$this->previewMode) { ?>
+                <?php if ($showAddButton AND !$this->previewMode) { ?>
                     <tfoot>
                     <tr>
                         <th colspan="99">

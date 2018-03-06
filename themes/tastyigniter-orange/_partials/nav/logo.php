@@ -1,5 +1,5 @@
 <div class="logo">
-    <a class="" href="<?= site_url('home'); ?>">
+    <a class="" href="<?= page_url('home'); ?>">
         <?php if (get_theme_options('logo_image')) { ?>
             <img
                 alt="<?= setting('site_name'); ?>"

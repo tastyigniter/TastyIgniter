@@ -35,11 +35,15 @@ class Repeater extends BaseFormWidget
 
     public $sortColumn = 'priority';
 
+    public $showAddButton = TRUE;
+
+    public $showRemoveButton = TRUE;
+
+    public $showRadios = FALSE;
+
     public $showCheckboxes = FALSE;
 
     public $radioFrom;
-
-    public $showRadios = FALSE;
 
     public $checkedFrom;
 
@@ -54,14 +58,8 @@ class Repeater extends BaseFormWidget
      */
     protected $indexCount = 0;
 
-    /**
-     * @var array Collection of form widgets.
-     */
     public $radioValues = [];
 
-    /**
-     * @var array Collection of form widgets.
-     */
     public $checkedValues = [];
 
     /**
@@ -79,6 +77,8 @@ class Repeater extends BaseFormWidget
             'checkedFrom',
             'showRadios',
             'showCheckboxes',
+            'showAddButton',
+            'showRemoveButton',
         ]);
 
         $this->form = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
@@ -138,6 +138,8 @@ class Repeater extends BaseFormWidget
         $this->vars['nextIndex'] = $this->indexCount;
         $this->vars['prompt'] = $this->prompt;
         $this->vars['sortable'] = $this->sortable;
+        $this->vars['showAddButton'] = $this->showAddButton;
+        $this->vars['showRemoveButton'] = $this->showRemoveButton;
         $this->vars['showCheckboxes'] = $this->showCheckboxes;
         $this->vars['showRadios'] = $this->showRadios;
         $this->vars['indexSearch'] = self::INDEX_SEARCH;

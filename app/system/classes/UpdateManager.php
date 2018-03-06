@@ -35,7 +35,7 @@ class UpdateManager
     protected $themeManager;
 
     /**
-     * @var ThemeManager
+     * @var HubManager
      */
     protected $hubManager;
 
@@ -130,11 +130,11 @@ class UpdateManager
         }
 
         // Seed app
-//        if ($this->repository->wasFreshlyMigrated) {
-        foreach ($modules as $module) {
-            $this->seedApp($module);
+        if ($this->repository->wasFreshlyMigrated) {
+            foreach ($modules as $module) {
+                $this->seedApp($module);
+            }
         }
-//        }
 
         // Update extensions
         $extensions = $this->extensionManager->listByDependencies();
@@ -179,7 +179,7 @@ class UpdateManager
     {
         $className = '\\'.$app.'\Database\Seeds\DatabaseSeeder';
         if (!class_exists($className))
-            return false;
+            return FALSE;
 
         $seeder = App::make($className);
         $seeder->run();
@@ -194,16 +194,16 @@ class UpdateManager
         if (!($extension = $this->extensionManager->findExtension($name))) {
             $this->log('<error>Unable to find:</error> '.$name);
 
-            return false;
+            return FALSE;
         }
 
-        if (File::exists($path = $this->getMigrationPath($name))) {
-            $this->migrator->run([$name => $path]);
+        $extensionName = array_get($extension->extensionMeta(), 'name');
+        $this->log($extensionName);
+        $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
+        $this->migrator->run([$name => $path]);
 
-            $this->log($name);
-            foreach ($this->migrator->getNotes() as $note) {
-                $this->log(' - '.$note);
-            }
+        foreach ($this->migrator->getNotes() as $note) {
+            $this->log(' - '.$note);
         }
 
         return $this;
@@ -214,16 +214,16 @@ class UpdateManager
         if (!($extension = $this->extensionManager->findExtension($name))) {
             $this->log('<error>Unable to find:</error> '.$name);
 
-            return false;
+            return FALSE;
         }
 
-        if (File::exists($path = $this->getMigrationPath($name))) {
-            $this->migrator->rollbackAll([$name => $path]);
+        $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
+        $this->migrator->rollbackAll([$name => $path]);
 
-            $this->log($name);
-            foreach ($this->migrator->getNotes() as $note) {
-                $this->log(' - '.$note);
-            }
+        $extensionName = array_get($extension->extensionMeta(), 'name');
+        $this->log($extensionName);
+        foreach ($this->migrator->getNotes() as $note) {
+            $this->log(' - '.$note);
         }
 
         return $this;
@@ -431,7 +431,7 @@ class UpdateManager
 
     public function ignoreUpdates($names)
     {
-        $ignoredUpdates = $this->config->item('ignored_updates');
+        $ignoredUpdates = setting('ignored_updates');
 
         foreach ($names as $item) {
             if (!isset($item['ver']) OR !version_compare($item['ver'], '0.0.1', '>'))
@@ -446,7 +446,6 @@ class UpdateManager
         }
 
         setting()->add('ignored_updates', $ignoredUpdates);
-        $this->config->set_item('ignored_updates', $ignoredUpdates);
 
         return TRUE;
     }
@@ -543,14 +542,11 @@ class UpdateManager
         chmod($zipPath, 0777);
 
         if ($zip->open($zipPath) === TRUE) {
-//            $dirname = trim($zip->getNameIndex(0), DIRECTORY_SEPARATOR);
             $extractTo = rtrim($extractTo, DIRECTORY_SEPARATOR);
 
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
 
-//                $pathToCopy = substr($filename, mb_strlen($dirname, "UTF-8"));
-//                var_dump($pathToCopy);
                 $relativePath = $extractTo.DIRECTORY_SEPARATOR.$filename;
 
                 // Ignore the themes, extensions, logs and sessions folder
@@ -582,19 +578,13 @@ class UpdateManager
 
     protected function getIgnoredFiles()
     {
-        $ignitePath = rtrim(str_replace(ROOTPATH, '', IGNITEPATH), DIRECTORY_SEPARATOR);
-
-        $ignoredFiles = [
-            '/tests',
-            '/'.MAINDIR.'/views/themes',
+        return [
             '/extensions',
             '/setup',
-            '/'.$ignitePath.'/logs',
-            '/'.$ignitePath.'/session',
-            '/'.$ignitePath.'/config/database.php',
+            '/storage',
+            '/themes',
+            '/tests',
         ];
-
-        return $ignoredFiles;
     }
 
     protected function isFileIgnored($file)

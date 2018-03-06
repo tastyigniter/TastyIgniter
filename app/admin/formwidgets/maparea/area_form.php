@@ -6,7 +6,7 @@
                 name="<?= $field->getName() ?>[<?= $index; ?>][type]"
                 value="circle" <?= ($area['type'] == 'circle') ? 'checked="checked"' : '' ?>
                 data-toggle="map-shape">
-            <?= lang('text_circle'); ?>
+            <?= lang('admin::locations.text_circle'); ?>
         </label>
         <label class="btn btn-default <?= ($area['type'] == 'polygon') ? 'active' : '' ?>">
             <input
@@ -14,12 +14,12 @@
                 name="<?= $field->getName() ?>[<?= $index; ?>][type]"
                 value="polygon" <?= ($area['type'] == 'polygon') ? 'checked="checked"' : '' ?>
                 data-toggle="map-shape">
-            <?= lang('text_shape'); ?>
+            <?= lang('admin::locations.text_shape'); ?>
         </label>
     </div>
 </div>
 <div class="form-group">
-    <label for="" class="control-label"><?= lang('label_area_name'); ?></label>
+    <label for="" class="control-label"><?= lang('admin::locations.label_area_name'); ?></label>
     <input
         type="text"
         name="<?= $field->getName() ?>[<?= $index; ?>][name]"

@@ -75,7 +75,7 @@ class Router
      *
      * @param string $url The requested URL string.
      *
-     * @return \Main\Classes\Page|mixed Returns page object
+     * @return \Main\Template\Page|mixed Returns page object
      * or null if the page cannot be found.
      */
     public function findByUrl($url)
@@ -253,7 +253,7 @@ class Router
      *
      * @param  array $parameters
      *
-     * @return array
+     * @return void
      */
     public function setParameters(array $parameters)
     {
@@ -280,6 +280,10 @@ class Router
 
     /**
      * Returns a routing parameter.
+     *
+     * @param $name
+     * @param $default
+     *
      * @return array
      */
     public function getParameter($name, $default = null)

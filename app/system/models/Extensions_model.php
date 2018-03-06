@@ -99,12 +99,12 @@ class Extensions_model extends Model
 
     public function afterSave()
     {
-        if ((isset($this->original['status'])) AND $this->original['status'] == $this->attributes['status'])
+        if (array_get($this->original, 'status') == array_get($this->attributes, 'status'))
             return;
 
         $this->updateInstalledExtensions($this->name, ($this->status == 1));
 
-        $this->syncTemplates();
+        $this->syncMailTemplates();
 
         // set extension migration to the latest version
         ExtensionManager::instance()->updateExtension($this->name);
@@ -167,7 +167,7 @@ class Extensions_model extends Model
     /**
      * Save all extension registered permissions to database
      */
-    public static function syncLocal()
+    public static function syncAll()
     {
         $extensions = self::get();
 
@@ -206,7 +206,7 @@ class Extensions_model extends Model
     /**
      * Save all extension registered mail templates to database
      */
-    public function syncTemplates()
+    public function syncMailTemplates()
     {
         Mail_templates_data_model::syncAll();
     }
@@ -279,7 +279,8 @@ class Extensions_model extends Model
                 $query = $extensionModel->delete();
             }
             else {
-                $query = $extensionModel->fill(['status' => '0'])->save();
+                $extensionModel->status = false;
+                $query = $extensionModel->save();
             }
         }
 

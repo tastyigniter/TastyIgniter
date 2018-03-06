@@ -136,5 +136,5 @@ return [
     'help_no_payments'               => 'No enabled payment was found.',
     'help_reservation_time_interval' => 'Set the number of minutes between each reservation time, Leave as 0 to use system setting value',
     'help_reservation_stay_time'     => 'Set in minutes the average time a guest will stay at a table, Leave as 0 to use system setting value',
-    'help_delivery_condition'        => 'Use the table below to set different delivery charge conditions. EX. xx delivery charge on order total above xx. Use 0 delivery charge for free delivery or to apply on all orders.',
+    'help_delivery_condition'        => 'Use the table below to set different delivery charge conditions. Use 0 delivery charge for free delivery or to apply on all orders and -1 for when delivery is unavailable. EX. xx delivery charge on order total above xx.',
 ];

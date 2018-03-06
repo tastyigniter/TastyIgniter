@@ -23,65 +23,36 @@ class PaymentGateways
      */
     private $gateways;
 
-    protected function loadGateways()
+    /**
+     * Returns payment gateway details based on its name.
+     *
+     * @param $name
+     *
+     * @return mixed|null
+     */
+    public function findGateway($name)
     {
-        // Load manually registered components
-        foreach ($this->callbacks as $callback) {
-            $callback($this);
+        $gateways = $this->listGateways();
+        if (empty($gateways[$name])) {
+            return null;
         }
 
-        // Load extensions payment gateways
-        $extensions = ExtensionManager::instance()->getExtensions();
-        foreach ($extensions as $id => $extension) {
-            if (!method_exists($extension, 'registerPaymentGateways'))
-                continue;
-
-            $paymentGateways = $extension->registerPaymentGateways();
-            if (!is_array($paymentGateways)) {
-                continue;
-            }
-
-            $this->registerGateways($id, $paymentGateways);
-        }
+        return $gateways[$name];
     }
 
     /**
-     * Manually registers a payment gateways.
-     * Usage:
-     * <pre>
-     *   PaymentGateways::registerCallback(function($manager){
-     *       $manager->registerGateways([...]);
-     *   });
-     * </pre>
-     *
-     * @param callable $callback A callable function.
+     * Returns a list of the payment gateway objects
+     * @return array
      */
-    public function registerCallback(callable $callback)
+    public function listGatewayObjects()
     {
-        $this->callbacks[] = $callback;
-    }
-
-    /**
-     * Registers the payment gateways.
-     * The argument is an array of the gateway classes.
-     *
-     * @param string $owner Specifies the gateways owner extension in the format extension_code.
-     * @param array $classes An array of the payment gateway classes.
-     */
-    public function registerGateways($owner, array $classes)
-    {
-        if (!$this->gateways)
-            $this->gateways = [];
-
-        foreach ($classes as $classPath => $paymentGateway) {
-            $code = isset($paymentGateway['code']) ? $paymentGateway['code'] : strtolower(basename($classPath));
-
-            $this->gateways[$code] = array_merge($paymentGateway, [
-                'owner' => $owner,
-                'class' => $classPath,
-                'code'  => $code,
-            ]);
+        $collection = [];
+        $gateways = $this->listGateways();
+        foreach ($gateways as $gateway) {
+            $collection[$gateway['alias']] = $gateway['object'];
         }
+
+        return $collection;
     }
 
     /**
@@ -113,36 +84,65 @@ class PaymentGateways
         return $this->gateways = $result;
     }
 
-    /**
-     * Returns a list of the payment gateway objects
-     * @return array
-     */
-    public function listGatewayObjects()
+    protected function loadGateways()
     {
-        $collection = [];
-        $gateways = $this->listGateways();
-        foreach ($gateways as $gateway) {
-            $collection[$gateway['alias']] = $gateway['object'];
+        // Load manually registered components
+        foreach ($this->callbacks as $callback) {
+            $callback($this);
         }
 
-        return $collection;
+        // Load extensions payment gateways
+        $extensions = ExtensionManager::instance()->getExtensions();
+        foreach ($extensions as $id => $extension) {
+            if (!method_exists($extension, 'registerPaymentGateways'))
+                continue;
+
+            $paymentGateways = $extension->registerPaymentGateways();
+            if (!is_array($paymentGateways)) {
+                continue;
+            }
+
+            $this->registerGateways($id, $paymentGateways);
+        }
     }
 
     /**
-     * Returns payment gateway details based on its name.
+     * Registers the payment gateways.
+     * The argument is an array of the gateway classes.
      *
-     * @param $name
-     *
-     * @return mixed|null
+     * @param string $owner Specifies the gateways owner extension in the format extension_code.
+     * @param array $classes An array of the payment gateway classes.
      */
-    public function findGateway($name)
+    public function registerGateways($owner, array $classes)
     {
-        $gateways = $this->listGateways();
-        if (empty($gateways[$name])) {
-            return null;
-        }
+        if (!$this->gateways)
+            $this->gateways = [];
 
-        return $gateways[$name];
+        foreach ($classes as $classPath => $paymentGateway) {
+            $code = isset($paymentGateway['code']) ? $paymentGateway['code'] : strtolower(basename($classPath));
+
+            $this->gateways[$code] = array_merge($paymentGateway, [
+                'owner' => $owner,
+                'class' => $classPath,
+                'code'  => $code,
+            ]);
+        }
+    }
+
+    /**
+     * Manually registers a payment gateways.
+     * Usage:
+     * <pre>
+     *   PaymentGateways::registerCallback(function($manager){
+     *       $manager->registerGateways([...]);
+     *   });
+     * </pre>
+     *
+     * @param callable $callback A callable function.
+     */
+    public function registerCallback(callable $callback)
+    {
+        $this->callbacks[] = $callback;
     }
 
     /**

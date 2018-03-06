@@ -296,6 +296,7 @@ class OptimizeTablesColumns extends Migration
             $table->integer('invoice_no')->nullable()->change();
             $table->string('invoice_prefix')->nullable()->change();
             $table->dateTime('invoice_date')->nullable()->change();
+            $table->dateTime('date_modified')->change();
         };
     }
 

@@ -1,6 +1,8 @@
 <?php namespace Admin\Models;
 
+use Carbon\Carbon;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
+use Igniter\Flame\Auth\Models\User;
 use Model;
 
 /**
@@ -65,7 +67,7 @@ class Coupons_model extends Model
 
     public function getTypeNameAttribute($value)
     {
-        return ($this->type == 'P') ? lang('text_percentage') : lang('text_fixed_amount');
+        return ($this->type == 'P') ? lang('admin::coupons.text_percentage') : lang('admin::coupons.text_fixed_amount');
     }
 
     public function getFormattedDiscountAttribute($value)
@@ -102,9 +104,29 @@ class Coupons_model extends Model
         return $query;
     }
 
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('status', '1');
+    }
+
     //
     // Helpers
     //
+
+    public function isFixed()
+    {
+        return $this->type == 'F';
+    }
+
+    public function discountWithOperand()
+    {
+        return ($this->isFixed() ? "-" : "-%").$this->discount;
+    }
+
+    public function minimumOrderTotal()
+    {
+        return $this->min_total;
+    }
 
     /**
      * Redeem coupon by order_id
@@ -119,5 +141,56 @@ class Coupons_model extends Model
         if ($couponModel = $query->first()) {
             return $couponModel->touchStatus();
         }
+    }
+
+    public function isExpired()
+    {
+        $now = Carbon::now();
+
+        switch ($this->validity) {
+            case 'forever':
+                return false;
+            case 'fixed':
+                return $this->fixed_date->eq($now) AND !$now->between($this->fixed_from_time, $this->fixed_to_time);
+            case 'period':
+                return $now->between($this->period_start_date, $this->period_end_date) ? false : true;
+            case 'recurring':
+                if (!in_array($now->format('l'), $this->recurring_every))
+                    return true;
+
+                return $now->between($this->recurring_from_time, $this->recurring_to_time) ? false : true;
+        }
+
+        return false;
+    }
+
+    public function hasRestriction($orderType)
+    {
+        if (is_null($this->order_restriction))
+            false;
+
+        return $orderType != $this->order_restriction;
+    }
+
+    public function hasReachedMaxRedemption()
+    {
+        return !$this->redemptions OR $this->redemptions <= $this->countRedemptions();
+    }
+
+    public function customerHasMaxRedemption(User $user)
+    {
+        return !$this->customer_redemptions
+            OR $this->customer_redemptions <= $this->countCustomerRedemptions($user->getKey());
+    }
+
+    public function countRedemptions()
+    {
+        return $this->history()->isEnabled()->count();
+    }
+
+    public function countCustomerRedemptions($id)
+    {
+        return $this->history()->isEnabled()
+                    ->where('customer_id', $id)->count();
     }
 }

@@ -25,7 +25,9 @@ function onEnd()
 
     <?= partial('nav/menu'); ?>
 
-    <?= partial('flash'); ?>
+    <div id="notification">
+        <?= partial('flash'); ?>
+    </div>
 
     <div id="page-wrapper" class="content-area">
 

@@ -1,0 +1,16 @@
+---
+title: Reservation Confirmation
+layout: default
+permalink: /reservation/success/:hash?
+
+'booking':
+---
+<div id="page-content">
+    <div class="container top-spacing">
+        <div class="row">
+            <div class="content-wrap col-xs-9 center-block text-center">
+                <?= partial('booking::success'); ?>
+            </div>
+        </div>
+    </div>
+</div>

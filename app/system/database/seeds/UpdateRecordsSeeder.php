@@ -177,7 +177,7 @@ class UpdateRecordsSeeder extends Seeder
             Payments_model::insert([
                 'name'         => $model->title,
                 'code'         => $model->name,
-                'class_name'   => ucwords($model->name).'\Payments\\'.ucwords($model->name),
+                'class_name'   => 'SamPoyigi\\PayRegister\\Payments\\'.ucwords($model->name),
                 'data'         => $model->data,
                 'status'       => $model->status,
                 'is_default'   => FALSE,

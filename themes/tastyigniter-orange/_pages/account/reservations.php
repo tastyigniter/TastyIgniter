@@ -4,7 +4,7 @@ layout: default
 permalink: /account/reservations
 
 '[account]':
-    context: user
+    security: customer
 
 '[accountReservations]':
 ---
@@ -12,7 +12,7 @@ permalink: /account/reservations
     <div class="container top-spacing">
         <div class="row">
             <div class="col-sm-3 col-md-3">
-                <?= partial('account::sidebar'); ?>
+                <?= partial('sidebar/account'); ?>
             </div>
 
             <div class="content-wrap col-sm-9 col-md-9">

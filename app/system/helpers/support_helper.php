@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Igniter\Flame\Location\Facades\Location;
 use Illuminate\Routing\UrlGenerator;
 
 if (!function_exists('controller')) {
@@ -40,7 +41,7 @@ if (!function_exists('page_url')) {
      */
     function page_url($uri = null, $params = [])
     {
-        return app(UrlGenerator::class)->to($uri, $params);
+        return controller()->pageUrl($uri, $params);
     }
 }
 
@@ -51,14 +52,13 @@ if (!function_exists('site_url')) {
      * first parameter either as a string or an array.
      *
      * @param string $uri
-     * @param string $protocol
      * @param array $params
      *
      * @return string
      */
     function site_url($uri = null, $params = [])
     {
-        return controller()->pageUrl($uri, $params);
+        return controller()->url($uri, $params);
     }
 }
 
@@ -75,12 +75,10 @@ if (!function_exists('restaurant_url')) {
      */
     function restaurant_url($uri = null, $params = [])
     {
-        return $uri;
+        if (!isset($params['location']) AND $current = Location::current())
+            $params['location'] = $current->permalink_slug;
 
-        // @todo: implement
-//        return app(UrlGenerator::class)->route('local', array_merge([
-//            'uri' => $uri,
-//        ], $params));
+        return page_url($uri, $params);
     }
 }
 
@@ -144,9 +142,9 @@ if (!function_exists('theme_url')) {
      *
      * @return    string
      */
-    function theme_url($uri = '', $params = [])
+    function theme_url($uri = '', $protocol = null)
     {
-        return app(UrlGenerator::class)->asset('themes/'.$uri, $params);
+        return app(UrlGenerator::class)->asset('themes/'.$uri, $protocol);
     }
 }
 

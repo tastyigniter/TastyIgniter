@@ -24,15 +24,15 @@ $config['form']['fields'] = [
         'options' => 'listOptionValues',
     ],
     'new_price'            => [
-        'label' => 'lang:admin::menu_options.label_option_price',
+        'label' => 'lang:admin::menus.label_option_price',
         'type'  => 'number',
     ],
     'quantity'             => [
-        'label' => 'lang:admin::menu_options.label_option_qty',
+        'label' => 'lang:admin::menus.label_option_qty',
         'type'  => 'number',
     ],
     'subtract_stock'       => [
-        'label' => 'lang:admin::menu_options.label_option_subtract_stock',
+        'label' => 'lang:admin::menus.label_option_subtract_stock',
         'type'  => 'switch',
     ],
 ];

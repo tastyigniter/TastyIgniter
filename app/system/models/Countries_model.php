@@ -12,6 +12,8 @@ class Countries_model extends Model
 {
     use Sortable;
 
+    const SORT_ORDER = 'priority';
+
     /**
      * @var string The database table name
      */

@@ -1,10 +1,13 @@
 <?php namespace System\Classes;
 
+use App;
 use Config;
+use Exception;
 use Igniter\Flame\Exception\ErrorHandler as BaseErrorHandler;
 use Main\Classes\MainController;
 use Main\Classes\Router;
 use Main\Classes\ThemeManager;
+use Request;
 use Symfony\Component\HttpFoundation\Response;
 use View;
 
@@ -15,6 +18,14 @@ use View;
  */
 class ErrorHandler extends BaseErrorHandler
 {
+    public function handleException(Exception $proposedException)
+    {
+        if (Config::get('app.debug', FALSE) AND !Request::ajax())
+            return null;
+
+        return parent::handleException($proposedException);
+    }
+
     /**
      * Looks up an error page using the route "/error". If the route does not
      * exist, this function will use the error view found in the MAIN app.

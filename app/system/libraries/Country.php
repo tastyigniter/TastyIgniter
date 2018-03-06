@@ -1,4 +1,6 @@
-<?php
+<?php namespace System\Libraries;
+
+use Illuminate\Contracts\Support\Arrayable;
 use System\Models\Countries_model;
 
 /**
@@ -11,7 +13,7 @@ class Country
     const ISO_CODE_2 = 2;
     const ISO_CODE_3 = 3;
 
-    protected $defaultFormat;
+    protected $defaultFormat = [];
 
     protected $requiredAddressKeys = [
         'address_1',
@@ -24,25 +26,8 @@ class Country
 
     protected $countriesCollection = [];
 
-    public function __construct()
+    public function addressFormat($address, $useLineBreaks = TRUE)
     {
-        $this->loadCountries();
-
-        $this->setDefaultFormat("{address_1}\n{address_2}\n{city} {postcode}\n{state}\n{country}", [
-            '{address_1}',
-            '{address_2}',
-            '{city}',
-            '{postcode}',
-            '{state}',
-            '{country}',
-        ]);
-    }
-
-    public function addressFormat($address = [], $useLineBreaks = TRUE)
-    {
-        if (empty($address))
-            return null;
-
         list($format, $placeholders) = $this->getDefaultFormat();
 
         // Override format if present in address array
@@ -63,6 +48,8 @@ class Country
 
     public function getCountryNameById($id = null)
     {
+        $this->loadCountries();
+
         if (!$countryModel = $this->countriesCollection->find($id))
             return null;
 
@@ -71,6 +58,8 @@ class Country
 
     public function getCountryCodeById($id = null, $codeType = null)
     {
+        $this->loadCountries();
+
         if (!$countryModel = $this->countriesCollection->where('location_id', $id)->first())
             return null;
 
@@ -90,10 +79,12 @@ class Country
 
     public function listAll($column = null, $key = 'country_id')
     {
-        if (is_null($key))
+        $this->loadCountries();
+
+        if (is_null($column))
             return $this->countriesCollection;
 
-        return $this->countriesCollection->pluck($column, $key)->all();
+        return $this->countriesCollection->pluck($column, $key);
     }
 
     protected function evalAddress($address)
@@ -129,7 +120,7 @@ class Country
     protected function loadCountries()
     {
         if (!count($this->countriesCollection))
-            $this->countriesCollection = Countries_model::isEnabled()->get();
+            $this->countriesCollection = Countries_model::isEnabled()->sorted()->get();
 
         return $this->countriesCollection;
     }

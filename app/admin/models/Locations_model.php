@@ -54,8 +54,6 @@ class Locations_model extends LocationModel
         'location_name asc', 'location_name desc',
     ];
 
-    public $locationClass;
-
     public $url;
 
     public static function getDropdownOptions()
@@ -168,7 +166,7 @@ class Locations_model extends LocationModel
             $query->search($search, $searchableFields);
         }
 
-        return $query->forPage($page, $pageLimit);
+        return $query->paginate($pageLimit, $page);
     }
 
     //
@@ -241,6 +239,12 @@ class Locations_model extends LocationModel
             unset($value['opening_hours']);
         }
 
+        // Ensures form checkbox is unchecked when value is empty
+        foreach (['opening', 'delivery', 'collection'] as $type) {
+            if (!isset($value['hours'][$type]['days']))
+                $value['hours'][$type]['days'] = [];
+        }
+
         // Rename options array index ['delivery_areas']['charge']
         // to ['delivery_areas']['conditions']
         if (isset($value['delivery_areas'])) {
@@ -261,20 +265,36 @@ class Locations_model extends LocationModel
         return $value;
     }
 
-    public function listPaymentGateways()
+//    public function listPaymentGateways()
+//    {
+//        $result = [];
+//        $gatewayManager = PaymentGateways::instance();
+//        $payments = $gatewayManager->listGateways();
+//        foreach ($payments as $payment) {
+//            $gateway = $gatewayManager->findGateway($payment['code']);
+//            if (!$gateway) continue;
+//
+//            $payment['edit'] = method_exists($gateway, 'registerSettings')
+//                ? $gateway->registerSettings()
+//                : '';
+//
+//            $result[$payment['code']] = [$payment['name'], $payment['description']];
+//        }
+//
+//        return $result;
+//    }
+
+    public function listAvailablePayments()
     {
+        $paymentGateways = Payments_model::listPayments();
+        if (!$payments = array_get($this->options, 'payments', []))
+            return $paymentGateways;
+
         $result = [];
-        $gatewayManager = PaymentGateways::instance();
-        $payments = $gatewayManager->listGateways();
-        foreach ($payments as $payment) {
-            $extension = $gatewayManager->findGateway($payment['code']);
-            if (!$extension) continue;
+        foreach ($paymentGateways as $payment) {
+            if (!in_array($payment->code, $payments)) continue;
 
-            $payment['edit'] = method_exists($extension, 'registerSettings')
-                ? $extension->registerSettings()
-                : '';
-
-            $result[$payment['code']] = [$payment['name'], $payment['description']];
+            $result[$payment->code] = $payment;
         }
 
         return $result;
@@ -348,30 +368,30 @@ class Locations_model extends LocationModel
         $this->working_hours()->delete();
 
         if (is_array($data)) foreach ($data as $type => $hours) {
-            $_hours = [];
+            $hoursArray = [];
 
             if (!isset($hours['type'])) continue;
 
             switch ($hourType = $hours['type']) {
                 case '24_7':
-                    $_hours = $this->createWorkingHours($hourType, $hours);
+                    $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
                     break;
                 case 'daily':
-                    $_hours = $this->createWorkingHours($hourType, $hours);
+                    $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
                     break;
                 case 'flexible':
-                    $_hours = $this->createWorkingHours($hourType, $hours);
+                    $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
                     break;
             }
 
-            foreach ($_hours as $_hour) {
+            foreach ($hoursArray as $hourValue) {
                 $created = $this->working_hours()->create([
                     'location_id'  => $this->getKey(),
-                    'weekday'      => $_hour['day'],
+                    'weekday'      => $hourValue['day'],
                     'type'         => $type,
-                    'opening_time' => mdate('%H:%i', strtotime($_hour['open'])),
-                    'closing_time' => mdate('%H:%i', strtotime($_hour['close'])),
-                    'status'       => $_hour['status'],
+                    'opening_time' => mdate('%H:%i', strtotime($hourValue['open'])),
+                    'closing_time' => mdate('%H:%i', strtotime($hourValue['close'])),
+                    'status'       => $hourValue['status'],
                 ]);
             }
         }
@@ -422,7 +442,7 @@ class Locations_model extends LocationModel
      *
      * @return array
      */
-    public function createWorkingHours($type, $data)
+    public function createWorkingHoursArray($type, $data)
     {
         $hours = ['open' => '00:00', 'close' => '23:59'];
         if ($type != '24_7')

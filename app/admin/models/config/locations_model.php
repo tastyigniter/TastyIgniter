@@ -515,7 +515,7 @@ $config['form']['tabs'] = [
             'label'        => 'lang:admin::locations.label_payments',
             'tab'          => 'lang:admin::locations.label_payments',
             'type'         => 'checkboxlist',
-            'options'      => 'listPaymentGateways',
+            'options'      => ['Admin\Models\Payments_model', 'listDropdownOptions'],
             'commentAbove' => 'lang:admin::locations.help_payments',
             'placeholder'  => 'lang:admin::locations.help_no_payments',
         ],

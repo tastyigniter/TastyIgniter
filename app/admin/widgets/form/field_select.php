@@ -25,7 +25,7 @@ $fieldValue = !is_array($field->value) ? [$field->value] : $field->value;
                 <?= in_array($value, $fieldValue) ? 'selected="selected"' : '' ?>
                 <?php if (isset($option[1])): ?>data-<?= strpos($option[1], '.') ? 'image' : 'icon' ?>="<?= $option[1] ?>"<?php endif ?>
                 value="<?= $value ?>">
-                <?= e(lang($option[0])) ?>
+                <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
             </option>
         <?php } ?>
     </select>

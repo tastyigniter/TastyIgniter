@@ -274,7 +274,7 @@ class ExtensionManager
         foreach ($extensions as $code => $extension) {
             $depends = $this->getDependencies($extension) ?: [];
             $depends = array_filter($depends, function ($dependCode) use ($extensions) {
-                return isset($plugins[$dependCode]);
+                return isset($extensions[$dependCode]);
             });
 
             if (count($depends) > 0)
@@ -322,6 +322,7 @@ class ExtensionManager
     /**
      * Finds all available extensions and loads them in to the $extensions array.
      * @return array
+     * @throws \SystemException
      */
     public function loadExtensions()
     {
@@ -457,7 +458,7 @@ class ExtensionManager
         }
 
         // Register extension class autoloader
-        $autoloadPath = $extensionPath.'vendor/autoload.php';
+        $autoloadPath = $extensionPath.'/vendor/autoload.php';
         if (file_exists($autoloadPath)) {
             ComposerManager::instance()->autoload($extensionPath.'/vendor');
         }
@@ -622,6 +623,8 @@ class ExtensionManager
      * @param array $extCode extension code
      *
      * @return array
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \SystemException
      */
     public function extractExtension($zipPath, $extCode = null)
     {
@@ -693,6 +696,7 @@ class ExtensionManager
      */
     public function updateExtension($extension, $downgrade = FALSE)
     {
+        // @todo: implement
 //        dd($extension);
 //        list($path) = $this->find('migration', $extension, 'config/');
 //

@@ -25,7 +25,7 @@
                 <option
                     value="<?= $rule; ?>"
                     <?= ($rule == $condition['type']) ? 'selected="selected"' : '' ?>>
-                    <?= $text; ?>
+                    <?= e(lang($text)); ?>
                 </option>
             <?php } ?>
         </select>

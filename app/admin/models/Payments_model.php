@@ -31,14 +31,30 @@ class Payments_model extends Model
 
     protected $fillable = ['name', 'code', 'class_name', 'description', 'data', 'status', 'is_default', 'priority'];
 
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-    }
-
     public function getDropdownOptions()
     {
-        return $this->newQuery()->isEnabled()->dropdown('name', 'code');
+        return $this->isEnabled()->dropdown('name', 'code');
+    }
+
+    public static function listDropdownOptions()
+    {
+        $all = self::select('code', 'name', 'description')->isEnabled()->get();
+        $collection = $all->keyBy('code')->map(function ($model) {
+            return [$model->name, $model->description];
+        });
+
+        return $collection;
+    }
+
+    public function listGateways()
+    {
+        $result = [];
+        $this->gatewayManager = PaymentGateways::instance();
+        foreach ($this->gatewayManager->listGateways() as $code => $gateway) {
+            $result[$gateway['code']] = $gateway['name'];
+        }
+
+        return $result;
     }
 
     public function scopeIsEnabled($query)
@@ -49,6 +65,14 @@ class Payments_model extends Model
     //
     // Events
     //
+
+    public function afterFetch()
+    {
+        $this->applyGatewayClass();
+
+        if (is_array($this->data))
+            $this->attributes = array_merge($this->data, $this->attributes);
+    }
 
     public function beforeSave()
     {
@@ -81,18 +105,6 @@ class Payments_model extends Model
     // Manager
     //
 
-    public function listGateways()
-    {
-        $this->gatewayManager = PaymentGateways::instance();
-
-        $result = [];
-        foreach ($this->gatewayManager->listGateways() as $code => $gateway) {
-            $result[$gateway['code']] = $gateway['name'];
-        }
-
-        return $result;
-    }
-
     /**
      * Extends this class with the gateway class
      *
@@ -113,31 +125,32 @@ class Payments_model extends Model
         }
 
         $this->class_name = $class;
-        if (is_array($this->data))
-            $this->attributes = array_merge($this->data, $this->attributes);
+//        if (is_array($this->data))
+//            $this->attributes = array_merge($this->data, $this->attributes);
 
         return TRUE;
     }
 
     public function renderPaymentForm($controller)
     {
-//        $this->beforeRenderPaymentForm($this);
+        $this->beforeRenderPaymentForm($this);
 
         $paymentMethodFile = strtolower(class_basename($this->class_name));
-        $partialName = 'pay/'.$paymentMethodFile;
+        $partialName = 'payregister/'.$paymentMethodFile;
 
-        var_dump($partialName);
+//        dd($this->class_name, $paymentMethodFile, $partialName);
 
-        return $controller->renderPartial($partialName);
+        return $controller->renderPartial($partialName, ['paymentMethod' => $this]);
+    }
+
+    public function getGatewayClass()
+    {
+        return $this->class_name;
     }
 
     //
     // Helpers
     //
-
-    public static function syncAll()
-    {
-    }
 
     /**
      * Return all payments
@@ -146,6 +159,35 @@ class Payments_model extends Model
      */
     public static function listPayments()
     {
-        return self::isEnabled()->get();
+        $payments = self::isEnabled()->get();
+//        $payments->each(function ($payment) {
+//            $payment->applyGatewayClass();
+//        });
+
+        return $payments;
+    }
+
+    public static function syncAll()
+    {
+        $payments = self::pluck('code')->all();
+
+        $gatewayManager = PaymentGateways::instance();
+        foreach ($gatewayManager->listGateways() as $code => $gateway) {
+            if (
+                !isset($gateway['code']) OR !isset($gateway['class'])
+                OR $code != $gateway['code'] OR in_array($code, $payments)
+            ) continue;
+
+            $model = self::make([
+                'code'        => $code,
+                'name'        => $gateway['name'],
+                'description' => $gateway['description'],
+                'class_name'  => $gateway['class'],
+                'status'      => TRUE,
+            ]);
+
+            $model->applyGatewayClass();
+            $model->save();
+        }
     }
 }

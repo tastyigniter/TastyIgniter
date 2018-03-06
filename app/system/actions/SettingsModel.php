@@ -192,6 +192,11 @@ class SettingsModel extends ModelAction
     {
     }
 
+    public function validateRules($form)
+    {
+        return [];
+    }
+
     /**
      * Checks if a key is legitimate or should be added to
      * the field value collection

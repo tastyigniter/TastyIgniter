@@ -123,7 +123,7 @@ class Languages_model extends Model
     // Helpers
     //
 
-    public static function syncLocal()
+    public static function syncAll()
     {
     }
 

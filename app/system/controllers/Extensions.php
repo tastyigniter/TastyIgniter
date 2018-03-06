@@ -52,7 +52,7 @@ class Extensions extends \Admin\Classes\AdminController
     public function index()
     {
         if (AdminAuth::hasPermission('Admin.Extensions.Manage'))
-            Extensions_model::syncLocal();
+            Extensions_model::syncAll();
 
         $this->asExtension('ListController')->index();
     }
@@ -191,7 +191,7 @@ class Extensions extends \Admin\Classes\AdminController
 
         $this->initFormWidget($model, $action);
 
-        if ($this->formValidate($this->formWidget) === FALSE)
+        if ($this->formValidate($model, $this->formWidget) === FALSE)
             return;
 
         $model->set($this->formWidget->getSaveData());
@@ -308,12 +308,16 @@ class Extensions extends \Admin\Classes\AdminController
         return $result;
     }
 
-    protected function formValidate($form)
+    protected function formValidate($model, $form)
     {
-        if (!isset($form->config['rules']))
-            return null;
+        $rules = [];
+        if (isset($form->config['rules']))
+            $rules = $form->config['rules'];
 
-        return $this->validatePasses($form->getSaveData(), $form->config['rules']);
+        if ($modelRules = $model->validateRules($form))
+            $rules = $modelRules;
+
+        return $this->validatePasses($form->getSaveData(), $rules);
     }
 
     protected function validateUpload()

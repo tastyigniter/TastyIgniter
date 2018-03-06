@@ -31,22 +31,22 @@ if (!function_exists('page')) {
     }
 }
 
-if (!function_exists('partial_area')) {
-    /**
-     * Render a theme partial area with its components view
-     *
-     * @param string $area
-     * @param string $class
-     *
-     * @return string
-     */
-    function partial_area($area = '', $class = '')
-    {
-        $params = !is_array($class) ? ['class' => $class] : $class;
-
-        return controller()->renderPartialArea($area, $params);
-    }
-}
+//if (!function_exists('partial_area')) {
+//    /**
+//     * Render a theme partial area with its components view
+//     *
+//     * @param string $area
+//     * @param string $class
+//     *
+//     * @return string
+//     */
+//    function partial_area($area = '', $class = '')
+//    {
+//        $params = !is_array($class) ? ['class' => $class] : $class;
+//
+//        return controller()->renderPartialArea($area, $params);
+//    }
+//}
 
 if (!function_exists('partial')) {
     /**

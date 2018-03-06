@@ -56,7 +56,9 @@ class Menus extends AdminController
     {
         $query->with([
             'categories',
+            'menu_options.option',
             'menu_options.menu_option_values',
+            'menu_options.menu_option_values.option_value',
             'menu_options.values',
             'special',
         ]);

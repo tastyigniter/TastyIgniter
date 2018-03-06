@@ -1,9 +1,16 @@
 <?php
 
+// Constants
+define('TI_VERSION', '3.0.0-alpha');
+define('TI_PHP_VERSION', '7.0');
+define('SETUPPATH', dirname(__FILE__));
+define('BASEPATH', dirname(SETUPPATH));
+define('VIEWPATH', SETUPPATH.'/views');
+
 /*
  * Check PHP version
  */
-if (version_compare(PHP_VERSION, '5.6', '<')) exit('You need at least PHP 5.6 to install TastyIgniter.');
+if (version_compare(PHP_VERSION, TI_PHP_VERSION, '<')) exit('You need at least PHP '.TI_PHP_VERSION.' to install TastyIgniter.');
 
 // PHP headers
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -27,13 +34,6 @@ else {
     ini_set('display_errors', 0);
     error_reporting(0);
 }
-
-// Constants
-define('TI_VERSION', '3.0.0-alpha');
-define('TI_PHP_VERSION', '7.0');
-define('SETUPPATH', dirname(__FILE__));
-define('BASEPATH', dirname(SETUPPATH));
-define('VIEWPATH', SETUPPATH.'/views');
 
 // Exception handler
 register_shutdown_function('installerShutdown');

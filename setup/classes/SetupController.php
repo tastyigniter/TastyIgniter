@@ -133,12 +133,6 @@ class SetupController
         $this->writeLog('System check: %s', $code);
         $result = FALSE;
         switch ($code) {
-            case 'connection':
-                $result = ($this->requestRemoteData('ping') !== null);
-                break;
-            case 'writable':
-                $result = is_writable(BASEPATH) AND is_writable($this->logFile);
-                break;
             case 'php':
                 $result = version_compare(PHP_VERSION, TI_PHP_VERSION, ">=");
                 break;
@@ -165,6 +159,12 @@ class SetupController
                 break;
             case 'uploads':
                 $result = ini_get('file_uploads');
+                break;
+            case 'connection':
+                $result = ($this->requestRemoteData('ping') !== null);
+                break;
+            case 'writable':
+                $result = is_writable(BASEPATH) AND is_writable($this->logFile);
                 break;
         }
 
@@ -589,7 +589,7 @@ class SetupController
         if (!is_file($this->baseDirectory.'/vendor/tastyigniter/flame/src/Support/helpers.php'))
             return FALSE;
 
-        if (!is_file($this->baseDirectory.'/vendor/laravel/framework/src/illuminate/support/helpers.php'))
+        if (!is_file($this->baseDirectory.'/vendor/laravel/framework/src/Illuminate/Support/helpers.php'))
             return FALSE;
 
         return TRUE;

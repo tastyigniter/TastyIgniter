@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use DB;
 use Model;
 
 /**
@@ -48,6 +49,25 @@ class Reservations_model extends Model
     //
     // Scopes
     //
+
+    public function scopeFindAvailableTimeSlots($query, $options = [])
+    {
+        extract(array_merge([
+            'sort'     => 'address_id desc',
+            'customer' => null,
+            'location' => null,
+        ], $options));
+
+        dd($query->select(DB::raw("
+SELECT if (d.name = 'Free', @timeSlider, b.timeBooked) AS free_from,
+       if (d.name = 'Free', b.timeBooked, @timeSlider := b.timeBooked + INTERVAL b.duration MINUTE) AS free_until,
+       d.name AS Free
+FROM (SELECT 1 AS place, 'Free' AS name UNION SELECT 2 AS place, 'Booked' AS name) AS d 
+INNER JOIN bookingEvents b 
+HAVING free_from < free_until
+ORDER BY b.timeBooked, d.place;
+"))->get());
+    }
 
     public function scopeListFrontEnd($query, $options = [])
     {

@@ -54,6 +54,12 @@ class MapArea extends BaseFormWidget
         $this->mapViewWidget->bindToController();
     }
 
+    public function loadAssets()
+    {
+        $this->addCss('css/maparea.css', 'maparea-css');
+        $this->addJs('js/maparea.js', 'maparea-js');
+    }
+
     public function render()
     {
         $this->prepareVars();
@@ -101,7 +107,7 @@ class MapArea extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->formField->disabled || $this->formField->hidden) {
+        if ($this->formField->disabled OR $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 
@@ -141,12 +147,6 @@ class MapArea extends BaseFormWidget
             : '#F16745';
     }
 
-    public function loadAssets()
-    {
-        $this->addCss('css/maparea.css', 'maparea-css');
-        $this->addJs('js/maparea.js', 'maparea-js');
-    }
-
     protected function makeMapViewWidget()
     {
         $config = $this->config;
@@ -180,9 +180,9 @@ class MapArea extends BaseFormWidget
     protected function getConditionsTypes()
     {
         return [
-            'all'   => lang('text_all_orders'),
-            'above' => lang('text_above_order_total'),
-            'below' => lang('text_below_order_total'),
+            'all'   => 'admin::locations.text_all_orders',
+            'above' => 'admin::locations.text_above_order_total',
+            'below' => 'admin::locations.text_below_order_total',
         ];
     }
 
@@ -224,15 +224,6 @@ class MapArea extends BaseFormWidget
         if (isset($item['conditions']))
             return $item['conditions'];
 
-        // backward compatibility v2.0
-        if (isset($item['charge']) AND is_string($item['charge'])) {
-            $item['charge'] = [[
-                'amount' => $item['charge'],
-                'type'   => (isset($item['type'])) ? $item['type'] : $item['condition'],
-                'total'  => (isset($item['min_amount'])) ? $item['min_amount'] : '',
-            ]];
-        }
-
-        return isset($item['charge']) ? $item['charge'] : [];
+        return [];
     }
 }

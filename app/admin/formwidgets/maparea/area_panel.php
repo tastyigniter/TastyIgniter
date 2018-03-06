@@ -37,8 +37,8 @@
 
             <div class="form-group">
                 <label class="control-label">
-                    <?= lang('label_delivery_condition'); ?>
-                    <span class="help-block"><?= lang('help_delivery_condition'); ?></span>
+                    <?= lang('admin::locations.label_delivery_condition'); ?>
+                    <span class="help-block"><?= lang('admin::locations.help_delivery_condition'); ?></span>
                 </label>
                 <?= $this->makePartial('maparea/conditions', ['area' => $area, 'areaIndex' => $index]) ?>
             </div>

@@ -22,6 +22,7 @@ class Mealtimes_model extends Model
     public $casts = [
         'start_time' => 'time',
         'end_time'   => 'time',
+        'mealtime_status'   => 'boolean',
     ];
 
     public function getDropdownOptions()

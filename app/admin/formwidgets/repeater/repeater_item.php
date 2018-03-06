@@ -42,6 +42,7 @@
         </td>
     <?php } ?>
 
+    <?php if ($showRemoveButton) { ?>
     <td class="list-action repeater-item-remove">
         <a
             class="btn btn-outline btn-danger"
@@ -52,6 +53,7 @@
             <i class="fa fa-times-circle"></i>
         </a>
     </td>
+    <?php } ?>
 
     <?php foreach ($widget->getFields() as $field) { ?>
         <?php

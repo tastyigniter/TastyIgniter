@@ -1,7 +1,9 @@
 <?php namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
+use DB;
 use Model;
+use Request;
 
 /**
  * Orders Model Class
@@ -37,13 +39,17 @@ class Orders_model extends Model
         'status_id', 'ip_address', 'user_agent', 'notify', 'assignee_id', 'invoice_no', 'invoice_prefix', 'invoice_date',
     ];
 
+    protected $timeFormat = 'H:i';
+
     /**
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
 
     public $casts = [
-        'cart' => 'array',
+        'cart'       => 'serialize',
+        'order_date' => 'date',
+        'order_time' => 'time',
     ];
 
     public $relation = [
@@ -203,6 +209,19 @@ class Orders_model extends Model
         return $payments[$this->attributes['payment']];
     }
 
+    public function beforeCreate()
+    {
+        $this->generateHash();
+
+        $this->ip_address = Request::getClientIp();
+        $this->user_agent = Request::userAgent();
+    }
+
+    public function afterUpdate()
+    {
+//        $this->updateOrder();
+    }
+
     //
     // Helpers
     //
@@ -236,10 +255,31 @@ class Orders_model extends Model
         $this->availablePayments = [];
         $payments = \Admin\Classes\PaymentGateways::instance()->listGateways();
         foreach ($payments as $payment) {
-            $this->availablePayments[$payment['code']] = !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'];
+            $this->availablePayments[$payment['code']] = !empty($payment['name']) ? lang($payment['name']) : $payment['code'];
         }
 
         return $this->availablePayments;
+    }
+
+    /**
+     * Generate a unique hash for this order.
+     * @return string
+     */
+    protected function generateHash()
+    {
+        $this->hash = $this->createHash();
+        while ($this->newQuery()->where('hash', $this->hash)->count() > 0) {
+            $this->hash = $this->createHash();
+        }
+    }
+
+    /**
+     * Create a hash for this order.
+     * @return string
+     */
+    protected function createHash()
+    {
+        return md5(uniqid('order', microtime()));
     }
 
     /**
@@ -250,18 +290,18 @@ class Orders_model extends Model
      *
      * @return bool|object
      */
-    public function getOrder($order_id = null, $customer_id = null)
-    {
-        if (!empty($order_id)) {
-            if (!empty($customer_id)) {
-                $this->where('customer_id', $customer_id);
-            }
-
-            return $this->joinTables()->findOrNew($order_id)->toArray();
-        }
-
-        return $order_id;
-    }
+//    public function getOrder($order_id = null, $customer_id = null)
+//    {
+//        if (!empty($order_id)) {
+//            if (!empty($customer_id)) {
+//                $this->where('customer_id', $customer_id);
+//            }
+//
+//            return $this->joinTables()->findOrNew($order_id)->toArray();
+//        }
+//
+//        return $order_id;
+//    }
 
     /**
      * Find a single invoice by order_id
@@ -270,14 +310,14 @@ class Orders_model extends Model
      *
      * @return bool|object
      */
-    public function getInvoice($order_id = null)
-    {
-        if (!empty($order_id) AND is_numeric($order_id)) {
-            return $this->joinTables()->findOrNew($order_id)->toArray();
-        }
-
-        return FALSE;
-    }
+//    public function getInvoice($order_id = null)
+//    {
+//        if (!empty($order_id) AND is_numeric($order_id)) {
+//            return $this->joinTables()->findOrNew($order_id)->toArray();
+//        }
+//
+//        return FALSE;
+//    }
 
     /**
      * Find a single order by order_id during checkout
@@ -287,15 +327,15 @@ class Orders_model extends Model
      *
      * @return bool|object
      */
-    public function getCheckoutOrder($order_id, $customer_id)
-    {
-        if (isset($order_id, $customer_id)) {
-            return $this->where('customer_id', $customer_id)
-                        ->where('status_id', null)->findOrNew($order_id)->toArray();
-        }
-
-        return FALSE;
-    }
+//    public function getCheckoutOrder($order_id, $customer_id)
+//    {
+//        if (isset($order_id, $customer_id)) {
+//            return $this->where('customer_id', $customer_id)
+//                        ->where('status_id', null)->findOrNew($order_id)->toArray();
+//        }
+//
+//        return FALSE;
+//    }
 
     /**
      * Return all order menu by order_id
@@ -304,9 +344,9 @@ class Orders_model extends Model
      *
      * @return array
      */
-    public function getOrderMenus($order_id)
+    public function getOrderMenus()
     {
-        return $this->queryBuilder()->table('order_menus')->where('order_id', $order_id)->get();
+        return DB::table('order_menus')->where('order_id', $this->getKey())->get();
     }
 
     /**
@@ -316,15 +356,9 @@ class Orders_model extends Model
      *
      * @return array
      */
-    public function getOrderMenuOptions($order_id)
+    public function getOrderMenuOptions()
     {
-        $result = [];
-
-        if (!empty($order_id)) {
-            $result = $this->queryBuilder()->table('order_options')->where('order_id', $order_id)->get();
-        }
-
-        return $result;
+        return DB::table('order_options')->where('order_id', $this->getKey())->get();
     }
 
     /**
@@ -334,9 +368,9 @@ class Orders_model extends Model
      *
      * @return array
      */
-    public function getOrderTotals($order_id)
+    public function getOrderTotals()
     {
-        return $this->queryBuilder()->table('order_totals')->where('order_id', $order_id)->orderBy('priority')->get();
+        return DB::table('order_totals')->where('order_id', $this->getKey())->orderBy('priority')->get();
     }
 
     /**
@@ -346,9 +380,9 @@ class Orders_model extends Model
      *
      * @return mixed
      */
-    public function getOrderCoupon($order_id)
+    public function getOrderCoupon()
     {
-        return Coupons_history_model::where('order_id', $order_id)->first();
+        return Coupons_history_model::where('order_id', $this->getKey())->first();
     }
 
     /**
@@ -368,9 +402,9 @@ class Orders_model extends Model
      *
      * @return bool TRUE on success, or FALSE on failure
      */
-    public function isOrderPlaced($order_id)
+    public function isPlaced()
     {
-        return $this->where('status_id', '>', '0')->find($order_id) ? TRUE : FALSE;
+        return $this->status_id;
     }
 
     /**
@@ -381,9 +415,10 @@ class Orders_model extends Model
      *
      * @return bool
      */
-    public function updateOrder($order_id = null, $update = [])
+    public function updateOrder()
     {
         if (!is_numeric($order_id)) return FALSE;
+//        $this->sendConfirmationMail();
 
         if (isset($update['order_status']) AND !isset($update['status_id'])) {
             $update['status_id'] = $update['order_status'];
@@ -469,52 +504,52 @@ class Orders_model extends Model
      *
      * @return bool|int order_id on success, FALSE on failure
      */
-    public function addOrder($order_info = [], $cart_contents = [])
-    {
-        if (empty($order_info) OR empty($cart_contents)) return FALSE;
-
-        if (isset($order_info['order_time'])) {
-            $current_time = time();
-            $order_time = (strtotime($order_info['order_time']) < strtotime($current_time)) ? $current_time : $order_info['order_time'];
-            $order_info['order_time'] = mdate('%H:%i', strtotime($order_time));
-            $order_info['order_date'] = mdate('%Y-%m-%d', strtotime($order_time));
-            $order_info['ip_address'] = $this->input->ip_address();
-            $order_info['user_agent'] = $this->input->user_agent();
-        }
-
-        $order_info['status_id'] = $order_info['notify'] = $order_info['assignee_id'] = $order_info['invoice_no'] = $order_info['invoice_prefix'] = $order_info['invoice_date'] = '';
-
-        $order_info['cart'] = $cart_contents;
-        if (isset($cart_contents['order_total'])) {
-            $order_info['order_total'] = $cart_contents['order_total'];
-        }
-
-        if (isset($cart_contents['total_items'])) {
-            $order_info['total_items'] = $cart_contents['total_items'];
-        }
-
-        $order_id = (isset($order_info['order_id']) AND is_numeric($order_info['order_id'])) ? $order_info['order_id'] : null;
-
-        $orderModel = $this->findOrNew($order_id);
-
-        if ($saved = $orderModel->fill($order_info)->save()) {
-            $order_id = $orderModel->getKey();
-
-            if (isset($order_info['address_id'])) {
-                Addresses_model::updateDefault($order_info['customer_id'], $order_info['address_id']);
-            }
-
-            $this->addOrderMenus($order_id, $cart_contents);
-
-            $this->addOrderTotals($order_id, $cart_contents);
-
-            if (!empty($cart_contents['totals']['coupon'])) {
-                $this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['totals']['coupon']);
-            }
-
-            return $order_id;
-        }
-    }
+//    public function addOrder($order_info = [], $cart_contents = [])
+//    {
+//        if (empty($order_info) OR empty($cart_contents)) return FALSE;
+//
+//        if (isset($order_info['order_time'])) {
+//            $current_time = time();
+//            $order_time = (strtotime($order_info['order_time']) < strtotime($current_time)) ? $current_time : $order_info['order_time'];
+//            $order_info['order_time'] = mdate('%H:%i', strtotime($order_time));
+//            $order_info['order_date'] = mdate('%Y-%m-%d', strtotime($order_time));
+//            $order_info['ip_address'] = $this->input->ip_address();
+//            $order_info['user_agent'] = $this->input->user_agent();
+//        }
+//
+//        $order_info['status_id'] = $order_info['notify'] = $order_info['assignee_id'] = $order_info['invoice_no'] = $order_info['invoice_prefix'] = $order_info['invoice_date'] = '';
+//
+//        $order_info['cart'] = $cart_contents;
+//        if (isset($cart_contents['order_total'])) {
+//            $order_info['order_total'] = $cart_contents['order_total'];
+//        }
+//
+//        if (isset($cart_contents['total_items'])) {
+//            $order_info['total_items'] = $cart_contents['total_items'];
+//        }
+//
+//        $order_id = (isset($order_info['order_id']) AND is_numeric($order_info['order_id'])) ? $order_info['order_id'] : null;
+//
+//        $orderModel = $this->findOrNew($order_id);
+//
+//        if ($saved = $orderModel->fill($order_info)->save()) {
+//            $order_id = $orderModel->getKey();
+//
+//            if (isset($order_info['address_id'])) {
+//                Addresses_model::updateDefault($order_info['customer_id'], $order_info['address_id']);
+//            }
+//
+//            $this->addOrderMenus($order_id, $cart_contents);
+//
+//            $this->addOrderTotals($order_id, $cart_contents);
+//
+//            if (!empty($cart_contents['totals']['coupon'])) {
+//                $this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['totals']['coupon']);
+//            }
+//
+//            return $order_id;
+//        }
+//    }
 
     /**
      * Complete order by sending email confirmation and,
@@ -526,84 +561,48 @@ class Orders_model extends Model
      *
      * @return bool
      */
-    public function completeOrder($order_id, $order_info, $cart_contents = [])
+    public function completeOrder($status)
     {
-        if ($order_id AND !empty($order_info)) {
+        if (!$status instanceof Statuses_model)
+            return FALSE;
 
-            $notify = $this->sendConfirmationMail($order_id);
-
-            $update = [
-                'old_status_id' => '',
-                'order_status'  => !empty($order_info['status_id']) ? (int)$order_info['status_id'] : (int)setting('default_order_status'),
-                'notify'        => $notify,
-            ];
-
-            if ($this->updateOrder($order_id, $update)) {
-                if (APPDIR === MAINDIR) {
-                    log_activity($order_info['customer_id'], 'created', 'orders', get_activity_message('activity_created_order',
-                        ['{customer}', '{link}', '{order_id}'],
-                        [$order_info['first_name'].' '.$order_info['last_name'], admin_url('orders/edit?id='.$order_id), $order_id]
-                    ));
-                }
-
-                Event::trigger('after_create_order', ['order_id' => $order_id]);
-
-                return TRUE;
-            }
-        }
+        $this->status_id = $status->getKey();
+        $this->save();
     }
 
     /**
      * Add cart menu items to order by order_id
      *
-     * @param int $order_id
-     * @param array $cart_contents
+     * @param array $cartContent
      *
      * @return bool
      */
-    public function addOrderMenus($order_id, $cart_contents = [])
+    public function addOrderMenus($cartContent = [])
     {
-        if (is_array($cart_contents) AND !empty($cart_contents) AND $order_id) {
-            $orderMenusTable = $this->queryBuilder()->table('order_menus');
+        $orderId = $this->getKey();
+        if (!is_numeric($orderId))
+            return FALSE;
 
-            $orderMenusTable->where('order_id', $order_id)->delete();
-            foreach ($cart_contents as $key => $item) {
-                if (is_array($item) AND isset($item['rowid']) AND $key == $item['rowid']) {
-                    $insert['order_id'] = $order_id;
+        DB::table('order_menus')->where('order_id', $orderId)->delete();
+        DB::table('order_options')->where('order_id', $orderId)->delete();
 
-                    if (isset($item['id'])) {
-                        $insert['menu_id'] = $item['id'];
-                    }
+        foreach ($cartContent as $rowId => $cartItem) {
+            if ($rowId != $cartItem->rowId) continue;
 
-                    if (isset($item['name'])) {
-                        $insert['name'] = $item['name'];
-                    }
+            $orderMenuId = DB::table('order_menus')->insertGetId([
+                'order_id'      => $orderId,
+                'menu_id'       => $cartItem->id,
+                'name'          => $cartItem->name,
+                'quantity'      => $cartItem->qty,
+                'price'         => $cartItem->price,
+                'subtotal'      => $cartItem->subtotal,
+                'comment'       => $cartItem->comment,
+                'option_values' => $cartItem->options,
+            ]);
 
-                    if (isset($item['qty'])) {
-                        $insert['quantity'] = $item['qty'];
-                    }
-
-                    if (isset($item['price'])) {
-                        $insert['price'] = $item['price'];
-                    }
-
-                    if (isset($item['subtotal'])) {
-                        $insert['subtotal'] = $item['subtotal'];
-                    }
-
-                    if (!empty($item['options'])) {
-                        $insert['option_values'] = serialize($item['options']);
-                    }
-
-                    if ($order_menu_id = $orderMenusTable->insertGetId($insert)) {
-                        if (!empty($item['options'])) {
-                            $this->addOrderMenuOptions($order_menu_id, $order_id, $item['id'], $item['options']);
-                        }
-                    }
-                }
+            if ($orderMenuId AND count($cartItem->options)) {
+                $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
             }
-
-            return TRUE;
         }
     }
 
@@ -611,34 +610,29 @@ class Orders_model extends Model
      * Add cart menu item options to menu and order by,
      * order_id and menu_id
      *
-     * @param int $order_menu_id
-     * @param int $order_id
-     * @param int $menu_id
-     * @param array $menu_options
+     * @param $orderMenuId
+     * @param $menuId
+     * @param $options
+     *
+     * @return bool
      */
-    public function addOrderMenuOptions($order_menu_id, $order_id, $menu_id, $menu_options)
+    protected function addOrderMenuOptions($orderMenuId, $menuId, $options)
     {
-        $orderOptionsTable = $this->queryBuilder()->table('order_options');
+        $orderId = $this->getKey();
+        if (!is_numeric($orderId))
+            return FALSE;
 
-        if (!empty($order_id) AND !empty($menu_id) AND !empty($menu_options)) {
-            $orderOptionsTable->where([
-                ['order_id', '=', $order_id],
-                ['order_menu_id', '=', $order_menu_id],
-                ['menu_id', '=', $menu_id],
-            ])->delete();
-
-            foreach ($menu_options as $menu_option_id => $options) {
-                foreach ($options as $option) {
-                    $insert['order_menu_option_id'] = $menu_option_id;
-                    $insert['order_menu_id'] = $order_menu_id;
-                    $insert['order_id'] = $order_id;
-                    $insert['menu_id'] = $menu_id;
-                    $insert['menu_option_value_id'] = $option['value_id'];
-                    $insert['order_option_name'] = $option['value_name'];
-                    $insert['order_option_price'] = $option['value_price'];
-
-                    $orderOptionsTable->insertGetId($insert);
-                }
+        foreach ($options as $option) {
+            foreach ($option['values'] as $value) {
+                DB::table('order_options')->insert([
+                    'order_menu_id'        => $orderMenuId,
+                    'order_id'             => $orderId,
+                    'menu_id'              => $menuId,
+                    'order_menu_option_id' => $option['menu_option_id'],
+                    'menu_option_value_id' => $value['menu_option_value_id'],
+                    'order_option_name'    => $value['name'],
+                    'order_option_price'   => $value['price'],
+                ]);
             }
         }
     }
@@ -646,47 +640,26 @@ class Orders_model extends Model
     /**
      * Add cart totals to order by order_id
      *
-     * @param int $order_id
-     * @param array $cart_contents
+     * @param array $totals
      *
      * @return bool
      */
-    public function addOrderTotals($order_id, $cart_contents = [])
+    public function addOrderTotals($totals = [])
     {
-        $orderTotalsTable = $this->queryBuilder()->table('order_totals');
-        if (is_numeric($order_id) AND !empty($cart_contents['totals'])) {
+        $orderId = $this->getKey();
+        if (!is_numeric($orderId))
+            return FALSE;
 
-            $orderTotalsTable->where('order_id', $order_id)->delete();
+        DB::table('order_totals')->where('order_id', $orderId)->delete();
 
-            $this->load->model('cart_module/Cart_model');
-            $order_totals = $this->Cart_model->getTotals();
-
-            $cart_contents['totals']['cart_total']['amount'] = (isset($cart_contents['cart_total'])) ? $cart_contents['cart_total'] : '';
-            $cart_contents['totals']['order_total']['amount'] = (isset($cart_contents['order_total'])) ? $cart_contents['order_total'] : '';
-
-            foreach ($cart_contents['totals'] as $name => $total) {
-                foreach ($order_totals as $total_name => $order_total) {
-                    if ($name == $total_name AND is_numeric($total['amount'])) {
-                        $total['title'] = empty($total['title']) ? $order_total['title'] : $total['title'];
-                        if (isset($total['code'])) {
-                            $total['title'] = str_replace('{coupon}', $total['code'], $total['title']);
-                        }
-                        else if (isset($total['tax'])) {
-                            $total['title'] = str_replace('{tax}', $total['tax'], $total['title']);
-                        }
-
-                        $orderTotalsTable->insertGetId([
-                            'order_id' => $order_id,
-                            'code'     => $name,
-                            'title'    => htmlspecialchars($total['title']),
-                            'priority' => $order_total['priority'],
-                            'value'    => ($name === 'coupon') ? 0 - $total['amount'] : $total['amount'],
-                        ]);
-                    }
-                }
-            }
-
-            return TRUE;
+        foreach ($totals as $total) {
+            DB::table('order_totals')->insert([
+                'order_id' => $orderId,
+                'code'     => $total['name'],
+                'title'    => $total['label'],
+                'value'    => $total['value'],
+                'priority' => $total['priority'],
+            ]);
         }
     }
 

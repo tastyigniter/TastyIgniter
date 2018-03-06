@@ -14,6 +14,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use Main\Classes\Customer;
 use Request;
+use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 
 class ServiceProvider extends AppServiceProvider
@@ -34,6 +35,7 @@ class ServiceProvider extends AppServiceProvider
         ExtensionManager::instance()->registerExtensions();
 
         $this->registerConsole();
+        $this->registerErrorHandler();
 //        $this->registerMailer();
         $this->registerPaginator();
 
@@ -79,11 +81,11 @@ class ServiceProvider extends AppServiceProvider
         });
 
         App::singleton('admin.auth', function () {
-            return new User();
+            return new User;
         });
 
-        App::singleton('customer.auth', function () {
-            return new Customer();
+        App::singleton('main.auth', function () {
+            return new Customer;
         });
 
         App::singleton('assets', function ($app) {
@@ -99,7 +101,7 @@ class ServiceProvider extends AppServiceProvider
         });
 
         App::singleton('country', function ($app) {
-            $country = new Libraries\Country($app);
+            $country = new Libraries\Country;
 
             $country->setDefaultFormat("{address_1}\n{address_2}\n{city} {postcode}\n{state}\n{country}", [
                 '{address_1}', '{address_2}', '{city}', '{postcode}', '{state}', '{country}',
@@ -134,6 +136,17 @@ class ServiceProvider extends AppServiceProvider
         ) {
             $this->registerConsoleCommand($command, $class);
         }
+    }
+
+    /*
+     * Error handling for uncaught Exceptions
+     */
+    protected function registerErrorHandler()
+    {
+        Event::listen('exception.beforeRender', function ($exception, $httpCode, $request) {
+            $handler = new ErrorHandler;
+            return $handler->handleException($exception);
+        });
     }
 
     /**

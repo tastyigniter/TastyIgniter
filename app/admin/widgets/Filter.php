@@ -404,30 +404,6 @@ class Filter extends BaseWidget
 
                 break;
 
-//            case 'daterange':
-//                if (is_array($scope->value) && count($scope->value) > 1) {
-//                    list($after, $before) = array_values($scope->value);
-//
-//                    if ($after && $after instanceof Carbon && $before && $before instanceof Carbon) {
-//
-//                        if ($scopeConditions = $scope->conditions) {
-//                            $query->whereRaw(DbDongle::parse(strtr($scopeConditions, [
-//                                ':afterDate'  => $after->format('Y-m-d'),
-//                                ':after'      => $after->format('Y-m-d H:i:s'),
-//                                ':beforeDate' => $before->format('Y-m-d'),
-//                                ':before'     => $before->format('Y-m-d H:i:s'),
-//                            ])));
-//                        } /*
-//                         * Scope
-//                         */
-//                        elseif ($scopeMethod = $scope->scope) {
-//                            $query->$scopeMethod($after, $before);
-//                        }
-//                    }
-//                }
-//
-//                break;
-
             default:
                 $value = is_array($scope->value) ? array_keys($scope->value) : $scope->value;
 

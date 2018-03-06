@@ -1,5 +1,6 @@
 <?php namespace System\Models;
 
+use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Model;
@@ -36,19 +37,22 @@ class Settings_model extends Model
 
     public static function getDateFormatOptions()
     {
+        $now = Carbon::now();
         return [
-            '%d/%m/%Y' => mdate('%d/%m/%Y', time()),
-            '%m/%d/%Y' => mdate('%m/%d/%Y', time()),
-            '%Y-%m-%d' => mdate('%Y-%m-%d', time()),
+            'd m Y' => $now->format('d m Y'),
+            'd/m/Y' => $now->format('d/m/Y'),
+            'm/d/Y' => $now->format('m/d/Y'),
+            'Y-m-d' => $now->format('Y-m-d'),
         ];
     }
 
     public static function getTimeFormatOptions()
     {
+        $now = Carbon::now();
         return [
-            '%h:%i %A' => mdate('%h:%i %A', time()),
-            '%h:%i %a' => mdate('%h:%i %a', time()),
-            '%H:%i'    => mdate('%H:%i', time()),
+            'h:i A' => $now->format('h:i A'),
+            'h:i a' => $now->format('h:i a'),
+            'H:i'    => $now->format('H:i'),
         ];
     }
 
@@ -126,8 +130,8 @@ class Settings_model extends Model
     public function loadSettingItems()
     {
         $fieldConfig = $this->getFieldConfig();
-        $settingsCategories = array_except($fieldConfig, 'toolbar');
-        $this->registerSettingItems('core', $settingsCategories);
+        $settingsConfig = array_except($fieldConfig, 'toolbar');
+        $this->registerSettingItems('core', $settingsConfig);
 
         // Load plugin items
         $extensions = ExtensionManager::instance()->getExtensions();
@@ -183,11 +187,11 @@ class Settings_model extends Model
                 'owner' => $owner,
             ]));
 
-            if ($owner == 'core') {
-                $item['url'] = admin_url('settings/edit/'.$code);
-            } else {
-                $item['url'] = admin_url('extensions/edit/'.str_replace('.', '/', $owner).'/'.$code);
-            }
+            if (!isset($item['url']))
+                $item['url'] = admin_url($owner == 'core'
+                    ? 'settings/edit/'.$code
+                    : 'extensions/edit/'.str_replace('.', '/', $owner).'/'.$code
+                );
 
             $this->items[] = (object)$item;
         }

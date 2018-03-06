@@ -1,6 +1,7 @@
 <?php namespace Admin\Models;
 
-use Admin\Notifications\CustomerRegistered;
+use App;
+use Carbon\Carbon;
 use DB;
 use Hash;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
@@ -38,7 +39,8 @@ class Customers_model extends AuthUserModel
      */
     protected $primaryKey = 'customer_id';
 
-    protected $fillable = ['first_name', 'last_name', 'email', 'telephone', 'newsletter'];
+//    protected $fillable = ['first_name', 'last_name', 'email', 'telephone', 'newsletter'];
+    protected $guarded = ['reset_code', 'activation_code', 'remember_token'];
 
     protected $hidden = ['password'];
 
@@ -64,6 +66,10 @@ class Customers_model extends AuthUserModel
     ];
 
     public $purgeable = ['addresses'];
+
+    public $casts = [
+        'reset_time' => 'datetime',
+    ];
 
     public static function getDropdownOptions()
     {
@@ -129,16 +135,9 @@ class Customers_model extends AuthUserModel
     // Events
     //
 
-    public function beforeSave()
-    {
-        if (!empty($this->attributes['password']))
-            $this->password = Hash::make($this->attributes['password']);
-    }
-
     public function afterCreate()
     {
         $this->saveCustomerGuestOrder();
-        $this->sendRegistrationEmail();
     }
 
     public function afterSave()
@@ -155,6 +154,11 @@ class Customers_model extends AuthUserModel
     //
     // Helpers
     //
+
+    public function enabled()
+    {
+        return $this->status;
+    }
 
     public function getCustomerName()
     {
@@ -222,31 +226,13 @@ class Customers_model extends AuthUserModel
         return $this->pluckDates('date_added');
     }
 
-    /**
-     * Sets the reset password columns to NULL
-     *
-     * @param string $code
-     *
-     * @return bool
-     */
-    public function clearResetPasswordCode($code)
-    {
-        if (is_null($code))
-            return FALSE;
-
-        $query = $this->where('reset_code', $code);
-
-        if ($row = $query->isEnabled()->first()) {
-            $query->update([
-                'reset_code' => null,
-                'reset_time' => null,
-            ]);
-
-            return TRUE;
-        }
-
-        return FALSE;
-    }
+//    public function getResetPasswordCode()
+//    {
+//        $this->reset_code = $resetCode = str_random(42);
+//        $this->reset_time = Carbon::now();
+//        $this->forceSave();
+//        return $resetCode;
+//    }
 
     /**
      * Reset a customer password,
@@ -256,32 +242,31 @@ class Customers_model extends AuthUserModel
      *
      * @return bool
      */
-    public function resetPassword($email)
+    public function resetPassword()
     {
-        if (!is_string($email))
+        if (!$this->enabled())
             return FALSE;
 
-        $query = $this->newQuery()->where('email', $email);
-        if (!$customerModel = $query->isEnabled()->first())
-            return FALSE;
+        $this->reset_code = $resetCode = $this->generateResetCode();
+        $this->reset_time = Carbon::now();
+        $this->save();
 
-        $update = [
-            'reset_code' => $this->createResetCode($customerModel),
-            'reset_time' => mdate('%Y-%m-%d %H:%i:%a', time()),
-        ];
-
-        $updated = $this->newQuery()->where('email', $email)->update($update);
-        if ($updated < 1)
-            return FALSE;
-
-        $mail_data['first_name'] = $customerModel->first_name;
-        $mail_data['last_name'] = $customerModel->last_name;
-        $mail_data['reset_link'] = site_url('account/reset?code='.$update['reset_code']);
-        $mail_data['account_login_link'] = site_url('account/login');
-
-        $this->sendMail($email, 'password_reset_request', $mail_data);
-
-        return TRUE;
+        return $resetCode;
+//        $customerModel->reset_code = $this->createResetCode($customerModel);
+//            $customerModel->reset_time = mdate('%Y-%m-%d %H:%i:%a', time());
+//
+//        return $this->newQuery()->where('email', $email)->update($update);
+//        if ($updated < 1)
+//            return FALSE;
+//
+//        $mail_data['first_name'] = $customerModel->first_name;
+//        $mail_data['last_name'] = $customerModel->last_name;
+//        $mail_data['reset_link'] = site_url('account/reset?code='.$update['reset_code']);
+//        $mail_data['account_login_link'] = site_url('account/login');
+//
+//        $this->sendMail($email, 'password_reset_request', $mail_data);
+//
+//        return TRUE;
     }
 
     /**
@@ -292,47 +277,42 @@ class Customers_model extends AuthUserModel
      *
      * @return bool
      */
-    public function completeResetPassword($identity, $credentials)
-    {
-        $code = $credentials['reset_code'];
-        $password = $credentials['password'];
+//    public function completeResetPassword($code, $password)
+//    {
+//        if (!$this->checkResetPasswordCode($code))
+//            return FALSE;
+//
+//        $this->password = App::make('hash')->make($password);
+//        $this->reset_time = null;
+//        $this->reset_code = null;
+//
+//        return $this->save();
 
-        $customerModel = $this->newQuery()
-                              ->where($this->getAuthIdentifierName(), $identity)
-                              ->where('reset_code', $code)->first();
+//        $mail_data['first_name'] = $customerModel->first_name;
+//        $mail_data['last_name'] = $customerModel->last_name;
+//        $mail_data['created_password'] = str_repeat('*', strlen($password));
+//        $mail_data['account_login_link'] = site_url('account/login');
+//
+//        $this->sendMail($this->getReminderEmail(), 'password_reset', $mail_data);
 
-        if (is_null($customerModel))
-            return FALSE;
-
-        $customerModel->password = $this->getHasher()->make($password);
-        $customerModel->reset_code = null;
-        $customerModel->save();
-
-        $mail_data['first_name'] = $customerModel->first_name;
-        $mail_data['last_name'] = $customerModel->last_name;
-        $mail_data['created_password'] = str_repeat('*', strlen($password));
-        $mail_data['account_login_link'] = site_url('account/login');
-
-        $this->sendMail($this->getReminderEmail(), 'password_reset', $mail_data);
-
-        return TRUE;
-    }
+//        return TRUE;
+//    }
 
     /**
      * Update the customer password
      */
-    public function updatePassword($identity, array $credentials)
-    {
-        $password = $credentials['password'];
-
-        $model = $this->newQuery()
-                      ->where($this->getAuthIdentifierName(), $identity)->first();
-
-        if (is_null($model))
-            return FALSE;
-
-        $model->password = $this->getHasher()->make($password);
-    }
+//    public function updatePassword($identity, array $credentials)
+//    {
+//        $password = $credentials['password'];
+//
+//        $model = $this->newQuery()
+//                      ->where($this->getAuthIdentifierName(), $identity)->first();
+//
+//        if (is_null($model))
+//            return FALSE;
+//
+//        $model->password = $this->getHasher()->make($password);
+//    }
 
     /**
      * Update guest orders, address and reservations
@@ -418,18 +398,18 @@ class Customers_model extends AuthUserModel
      *
      * @return bool FALSE on failure
      */
-    public function sendRegistrationEmail()
-    {
-        if (empty($this->email))
-            return FALSE;
-
+//    public function sendRegistrationEmail()
+//    {
+//        if (empty($this->email))
+//            return FALSE;
+//
 //        $mail_data['first_name'] = $this->first_name;
 //        $mail_data['last_name'] = $this->last_name;
 //        $mail_data['email'] = $this->email;
 //        $mail_data['account_login_link'] = root_url('account/login');
-
-        $this->notify(new CustomerRegistered($this));
-
+//
+//        $this->notify(new CustomerRegistered($this));
+//
 //        $config = setting('registration_email', ['customer', 'admin']);
 //        if (in_array('customer', $config))
 //            $this->sendMail($mail_data['email'], 'registration', $mail_data);
@@ -437,19 +417,19 @@ class Customers_model extends AuthUserModel
 //        if (in_array('admin', $config))
 //            $this->sendMail('registration_alert');
 //            $this->sendMail($this->config->item('site_email'), 'registration_alert', $mail_data);
-    }
+//    }
 
-    public function routeNotificationForMail()
-    {
-        $emails = [];
-        $config = setting('registration_email', ['customer', 'admin']);
-        if (in_array('customer', $config)) {
-            $emails[] = $this->email;
-        }
-        else {
-            $emails[] = setting('site_email');
-        }
-
-        return $emails;
-    }
+//    public function routeNotificationForMail()
+//    {
+//        $emails = [];
+//        $config = setting('registration_email', ['customer', 'admin']);
+//        if (in_array('customer', $config)) {
+//            $emails[] = $this->email;
+//        }
+//        else {
+//            $emails[] = setting('site_email');
+//        }
+//
+//        return $emails;
+//    }
 }

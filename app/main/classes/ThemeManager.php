@@ -1,7 +1,6 @@
 <?php namespace Main\Classes;
 
 use App;
-use Config;
 use File;
 use Igniter\Flame\Traits\Singleton;
 use Lang;
@@ -47,10 +46,8 @@ class ThemeManager
 
     public function initialize()
     {
-        $this->app = app();
-
         // This prevents reading settings from the database before its been created
-        if ($this->app->hasDatabase()) {
+        if (App::hasDatabase()) {
             $this->loadInstalled();
             $this->loadThemes();
         }
@@ -104,6 +101,8 @@ class ThemeManager
     /**
      * Finds all available themes and loads them in to the $themes array.
      * @return array
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \SystemException
      */
     public function loadThemes()
     {
@@ -121,6 +120,8 @@ class ThemeManager
      * @param string $path Ex: base_path().'directory_name';
      *
      * @return bool|object
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \SystemException
      */
     public function loadTheme($themeCode, $path)
     {
@@ -351,47 +352,6 @@ class ThemeManager
     // Theme Helper Methods
     //--------------------------------------------------------------------------
 
-    public function findPartialAreas($themeCode)
-    {
-        $config = $this->getConfigFromFile($themeCode);
-
-        if (!isset($config['partial_area']) OR !is_array($config['partial_area']))
-            return null;
-
-        return $config['partial_area'];
-    }
-
-    public function getCustomizerFields($themeCode)
-    {
-        $config = $this->getConfigFromFile($themeCode);
-
-        if (!isset($config['customize']) OR !is_array($config['customize']))
-            return null;
-
-        return $config['customize'];
-    }
-
-    /**
-     * Build the theme files tree.
-     *
-     * @param array $files
-     * @param string $url
-     * @param string $currentFile
-     *
-     * @return string $themeTree
-     */
-    public function buildFilesTree($files, $url, $currentFile = null)
-    {
-        ksort($files);
-        $currentPaths = (!is_null($currentFile)) ? explode('/', $currentFile) : [];
-
-        $html = '<nav class="nav">';
-        $html .= $this->_buildFilesTree($files, $url, $currentPaths);
-        $html .= '</nav>';
-
-        return $html;
-    }
-
     /**
      * Load a single theme generic file into an array.
      *
@@ -401,6 +361,7 @@ class ThemeManager
      *
      * @return bool|array The $theme_file array from the file or false if not found. Returns
      * null if $filename is empty.
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function readFile($filename, $themeCode)
     {
@@ -469,11 +430,11 @@ class ThemeManager
      * Create child theme.
      *
      * @param string $themeCode The name of the theme to create child from.
-     * @param array $childData The child theme DB data, the child theme data
-     *                          should be inserted in DB before creating files.
+     * @param $childThemeCode
      *
      * @return bool Returns false if child them could not be created
      * or $child_theme already exist.
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function createChild($themeCode, $childThemeCode)
     {
@@ -512,12 +473,11 @@ class ThemeManager
      * Extract uploaded/downloaded theme zip folder
      *
      * @param string $zipPath The path to the zip folder
-     * @param string $domain The domain in which to extract the theme to
      *
      * @return bool
      * @throws \SystemException
      */
-    public function extractTheme($zipPath, $domain = null)
+    public function extractTheme($zipPath)
     {
         if (file_exists($zipPath) AND class_exists('ZipArchive', FALSE)) {
 
@@ -596,6 +556,8 @@ class ThemeManager
      * @param string $themeCode
      *
      * @return array|null
+     * @throws \SystemException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getMetaFromFile($themeCode)
     {
@@ -619,6 +581,7 @@ class ThemeManager
      *
      * @return array|null
      * @throws \SystemException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function validateMetaFile($path, $themeCode)
     {
@@ -643,47 +606,5 @@ class ThemeManager
         }
 
         return $config;
-    }
-
-    /**
-     * Internal method to build the theme files tree.
-     *
-     * @param array $files
-     * @param string $url
-     * @param array $currentPaths
-     * @param string $parentDir
-     *
-     * @return string $themeTree
-     */
-    protected function _buildFilesTree($files, $url, $currentPaths = [], $parentDir = null)
-    {
-        $html = is_null($parentDir) ? '<ul class="metisFolder">' : '<ul>';
-
-        foreach ($files as $dir => $file) {
-            if (is_string($dir)) {
-                $active = (in_array($dir, $currentPaths)) ? ' active' : '';
-                $html .= '<li class="directory'.$active.'"><a><i class="fa fa-folder-open"></i>&nbsp;&nbsp;'.htmlspecialchars($dir).'</a>';
-                $html .= $this->_buildFilesTree($file, $url, $currentPaths, $dir);
-                $html .= '</li>';
-            }
-            else {
-                $active = (in_array($file, $currentPaths)) ? ' active' : '';
-                $fileExt = strtolower(substr(strrchr($file, '.'), 1));
-                $fileName = htmlspecialchars($file);
-
-                if (in_array($fileExt, $this->config['allowed_image_ext'])) {
-                    $link = str_replace('{link}', $parentDir.'/'.urlencode($file), $url);
-                    $html .= '<li class="img'.$active.'"><a href="'.$link.'"><i class="fa fa-file-image-o"></i>&nbsp;&nbsp;'.$fileName.'</a></li>';
-                }
-                else if (in_array($fileExt, $this->config['allowed_file_ext'])) {
-                    $link = str_replace('{link}', $parentDir.'/'.urlencode($file), $url);
-                    $html .= '<li class="file'.$active.'"><a href="'.$link.'"><i class="fa fa-file-code-o"></i>&nbsp;&nbsp;'.$fileName.'</a></li>';
-                }
-            }
-        }
-
-        $html .= '</ul>';
-
-        return $html;
     }
 }

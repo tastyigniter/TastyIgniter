@@ -10,9 +10,9 @@
             <thead>
             <tr>
                 <th class="list-action"></th>
-                <th><?= lang('label_area_charge'); ?></th>
-                <th width="50%"><?= lang('label_charge_condition'); ?></th>
-                <th><?= lang('label_area_min_amount'); ?></th>
+                <th><?= lang('admin::locations.label_area_charge'); ?></th>
+                <th width="50%"><?= lang('admin::locations.label_charge_condition'); ?></th>
+                <th><?= lang('admin::locations.label_area_min_amount'); ?></th>
             </tr>
             </thead>
             <tbody data-append-to>

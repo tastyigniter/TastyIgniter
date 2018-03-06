@@ -63,7 +63,7 @@ class Themes extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        Themes_model::syncLocal();
+        Themes_model::syncAll();
 
         AdminMenu::setContext('themes', 'design');
     }
@@ -441,7 +441,6 @@ class Themes extends \Admin\Classes\AdminController
     protected function validateUpload()
     {
         $zipFile = Request::file('theme_zip');
-        dump($zipFile);
         if (!Request::hasFile('theme_zip') OR !$zipFile->isValid())
             throw new SystemException("Please upload a zip file");
 

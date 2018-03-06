@@ -1,6 +1,8 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
+use Admin\Models\Payments_model;
+use AdminAuth;
 use AdminMenu;
 use Exception;
 use Igniter\Flame\Database\Model;
@@ -52,11 +54,19 @@ class Payments extends \Admin\Classes\AdminController
         AdminMenu::setContext('payments', 'sales');
     }
 
+    public function index()
+    {
+        if (AdminAuth::hasPermission('Admin.Payments.Manage'))
+            Payments_model::syncAll();
+
+        $this->asExtension('ListController')->index();
+    }
+
     /**
      * Finds a Model record by its primary identifier, used by edit actions. This logic
      * can be changed by overriding it in the controller.
      *
-     * @param string $recordId
+     * @param string $paymentCode
      *
      * @return Model
      * @throws \Exception
@@ -85,7 +95,8 @@ class Payments extends \Admin\Classes\AdminController
 
     public function formExtendModel($model)
     {
-        $model->applyGatewayClass();
+        if (!$model->exists)
+            $model->applyGatewayClass();
 
         return $model;
     }
@@ -97,7 +108,7 @@ class Payments extends \Admin\Classes\AdminController
         $formWidget->addTabFields($configFields);
 
         // Add the set up help partial
-//        $setupPartial = $model->getPartialPath().'/setup_help.htm';
+//        $setupPartial = $model->getPartialPath().'/setup_help.php';
 //        if (file_exists($setupPartial)) {
 //            $formWidget->addFields([
 //                'setup_help' => [
@@ -111,8 +122,6 @@ class Payments extends \Admin\Classes\AdminController
 
     protected function getGateway($code)
     {
-//        $alias = post('gateway_alias', $this->gatewayAlias);
-
         if ($this->gateway !== null) {
             return $this->gateway;
         }

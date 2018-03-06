@@ -64,6 +64,8 @@ class BaseWidget extends Extendable
         $this->assetPath = '~/app/'.$classPath.'/assets';
         $this->assetCollection = 'widget';
 
+        $this->configPath = $controller->configPath;
+
         // Set config values, if a parent constructor hasn't set already.
         if ($this->config === null)
             $this->setConfig($config);

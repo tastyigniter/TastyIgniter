@@ -88,10 +88,12 @@ class BasePaymentGateway extends ModelAction
      *
      * @param array $config
      * @param array $required Required config items
+     *
+     * @throws \SystemException
      */
     public function setConfig($config, $required = [])
     {
-        $this->configArray = $this->config->validate($config, $required);
+        $this->config = $this->makeConfig($config, $required);
     }
 
     /**
@@ -179,6 +181,10 @@ class BasePaymentGateway extends ModelAction
      * @param Model $order Order model object.
      */
     public function processPaymentForm($data, $host, $order)
+    {
+    }
+
+    public function beforeRenderPaymentForm($host)
     {
     }
 

@@ -43,9 +43,36 @@ class Menu_item_options_model extends Model
         'option_values' => 'serialize',
     ];
 
+    public $appends = ['option_name', 'display_type'];
+
+    public function getOptionNameAttribute()
+    {
+        return $this->option->option_name;
+    }
+
+    public function getDisplayTypeAttribute()
+    {
+        return $this->option->display_type;
+    }
+
+    public function getOptionValues()
+    {
+        return $this->optionValues()->get();
+    }
+
+    public function optionValues()
+    {
+        return $this->menu_option_values()->with('option_value');
+    }
+
     //
     // Helpers
     //
+
+    public function isRequired()
+    {
+        return $this->required == 1;
+    }
 
     public function listOptionValues($form, $field)
     {

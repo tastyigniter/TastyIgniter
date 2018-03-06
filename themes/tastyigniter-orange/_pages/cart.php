@@ -5,7 +5,7 @@ permalink: /cart
 
 '[local]':
 
-'[cart]':
+'[cartBox]':
 ---
 <div id="page-content">
     <div class="container">
@@ -19,7 +19,7 @@ permalink: /cart
                 </div>
             </div>
             
-            <?= component('cart'); ?>
+            <?= component('cartBox'); ?>
         </div>
     </div>
 </div>

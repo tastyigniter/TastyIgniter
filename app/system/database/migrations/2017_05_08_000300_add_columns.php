@@ -30,7 +30,7 @@ class AddColumns extends Migration
         });
 
         Schema::table('countries', function (Blueprint $table) {
-            $table->integer('priority')->default(0);
+            $table->integer('priority')->default(999);
         });
 
         Schema::table('categories', function (Blueprint $table) {

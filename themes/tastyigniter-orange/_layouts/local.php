@@ -2,8 +2,9 @@
 description: Local layout
 
 '[local]':
+    paramFrom: location
 
-'[cart]':
+'[cartBox]':
 ---
 <?
 function onInit()
@@ -29,7 +30,9 @@ function onEnd()
 
     <?= partial('nav/menu'); ?>
 
-    <?= partial('flash'); ?>
+    <div id="notification">
+        <?= partial('flash'); ?>
+    </div>
 
     <div id="page-wrapper" class="content-area">
 
@@ -43,8 +46,6 @@ function onEnd()
 
     </div>
     <footer id="page-footer">
-        <?= partial_area('content_footer'); ?>
-
         <?= partial('footer'); ?>
     </footer>
     <?= partial('scripts'); ?>

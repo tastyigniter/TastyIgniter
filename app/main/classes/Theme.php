@@ -35,6 +35,11 @@ class Theme
     public $author;
 
     /**
+     * @var string The theme domain
+     */
+    public $domain;
+
+    /**
      * @var string List of extension code and version required by this theme
      */
     public $requires = [];
@@ -158,6 +163,11 @@ class Theme
         return basename($this->path);
     }
 
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
     public function requires($require)
     {
         if (!is_array($require))
@@ -168,8 +178,6 @@ class Theme
 
     /**
      * Determines if a theme is a child by looking in the theme meta file.
-     *
-     * @param $themeCode
      *
      * @return bool
      */

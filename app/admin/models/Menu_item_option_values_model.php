@@ -35,4 +35,21 @@ class Menu_item_option_values_model extends Model
             'menu_option_value' => ['Admin\Models\Menu_item_option_values_model'],
         ],
     ];
+
+    public $appends = ['name', 'price'];
+
+    public function getNameAttribute()
+    {
+        return $this->option_value->value;
+    }
+
+    public function getPriceAttribute()
+    {
+        return (!$this->new_price OR $this->new_price <= 0) ? $this->option_value->price : $this->new_price;
+    }
+
+    public function isDefault()
+    {
+        return $this->is_default == 1;
+    }
 }

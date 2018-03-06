@@ -37,6 +37,11 @@ class Coupons_history_model extends Model
         return ($this->customer AND $this->customer->exists) ? $this->customer->customer_name : $value;
     }
 
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('status', '1');
+    }
+
     public function touchStatus()
     {
         $this->status = ($this->status < 1) ? 1 : 0;

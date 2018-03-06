@@ -159,27 +159,29 @@ class Locations extends \Admin\Classes\AdminController
                 $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.day', 'lang:admin::locations.label_opening_days', $requiredIf.'|numeric'];
                 $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.open', 'lang:admin::locations.label_open_hour', $requiredIf.'|valid_time'];
                 $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.close', 'lang:admin::locations.label_close_hour', $requiredIf.'|valid_time'];
-                $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.status', 'lang:admin::locations.label_opening_status', $requiredIf.'|trim|integer'];
+                $rules[] = ['options.hours.'.$type.'.flexible.'.$key.'.status', 'lang:admin::locations.label_opening_status', $requiredIf.'|integer'];
             }
         }
 
-        if (post('Location[options][delivery_areas]')) {
-//            foreach (post('Location.options.delivery_areas') as $key => $value) {
-//                $rules[] = ['options.delivery_areas.'.$key.'.polygon', '['.$key.'] '.lang('label_area_shape'), 'required'];
-//                $rules[] = ['options.delivery_areas.'.$key.'.circle', '['.$key.'] '.lang('label_area_circle'), 'required'];
-//                $rules[] = ['options.delivery_areas.'.$key.'.vertices', '['.$key.'] '.lang('label_area_vertices'), 'required'];
-//                $rules[] = ['options.delivery_areas.'.$key.'.type', '['.$key.'] '.lang('label_area_type'), 'required'];
-//                $rules[] = ['options.delivery_areas.'.$key.'.name', '['.$key.'] '.lang('label_area_name'), 'required'];
-//
-//                $rules[] = ['options.delivery_areas.'.$key.'.conditions', '['.$key.'] '.lang('label_delivery_condition'), 'required'];
-//                if (post('Location.options.delivery_areas.'.$key.'.conditions')) {
-//                    foreach (post('Location.options.delivery_areas.'.$key.'.conditions') as $k => $v) {
-//                        $rules[] = ['options.delivery_areas.'.$key.'.conditions.'.$k.'.amount', '['.$key.'] '.lang('label_area_charge'), 'required|numeric'];
-//                        $rules[] = ['options.delivery_areas.'.$key.'.conditions.'.$k.'.type', '['.$key.'] '.lang('label_charge_condition'), 'required|alpha_dash'];
-//                        $rules[] = ['options.delivery_areas.'.$key.'.conditions.'.$k.'.total', '['.$key.'] '.lang('label_area_min_amount'), 'required|numeric'];
-//                    }
-//                }
-//            }
+        if ($areas = post('Location.options.delivery_areas')) {
+            foreach ($areas as $key => $value) {
+                $rules[] = ['options.delivery_areas.'.$key.'.type', '['.$key.'] '.lang('label_area_type'), 'required'];
+                $rules[] = ['options.delivery_areas.'.$key.'.name', '['.$key.'] '.lang('label_area_name'), 'required'];
+                $rules[] = ['options.delivery_areas.'.$key.'.area_id', '['.$key.'] '.lang('label_area_id'), 'integer'];
+
+                $rules[] = ['options.delivery_areas.'.$key.'.boundaries.polygon', '['.$key.'] '.lang('label_area_shape'), 'required'];
+                $rules[] = ['options.delivery_areas.'.$key.'.boundaries.circle', '['.$key.'] '.lang('label_area_circle'), 'required'];
+                $rules[] = ['options.delivery_areas.'.$key.'.boundaries.vertices', '['.$key.'] '.lang('label_area_vertices'), 'required'];
+
+                $rules[] = ['options.delivery_areas.'.$key.'.conditions', '['.$key.'] '.lang('label_delivery_condition'), 'required'];
+                if (post('Location.options.delivery_areas.'.$key.'.conditions')) {
+                    foreach (post('Location.options.delivery_areas.'.$key.'.conditions') as $k => $v) {
+                        $rules[] = ['options.delivery_areas.'.$key.'.conditions.'.$k.'.amount', '['.$key.'] '.lang('label_area_charge'), 'required|numeric'];
+                        $rules[] = ['options.delivery_areas.'.$key.'.conditions.'.$k.'.type', '['.$key.'] '.lang('label_charge_condition'), 'required|alpha_dash'];
+                        $rules[] = ['options.delivery_areas.'.$key.'.conditions.'.$k.'.total', '['.$key.'] '.lang('label_area_min_amount'), 'required|numeric'];
+                    }
+                }
+            }
         }
 
         $rules[] = ['gallery.title', 'lang:admin::locations.label_gallery_title', 'max:128'];

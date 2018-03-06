@@ -5,11 +5,6 @@ use Session;
 trait SessionMaker
 {
     /**
-     * @var array List of controller configuration
-     */
-    protected $session;
-
-    /**
      * Retrieves key/value pair from session data.
      *
      * @param string $key Unique key for the data store.

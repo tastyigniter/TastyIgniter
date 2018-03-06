@@ -7,11 +7,10 @@ class Auth extends IlluminateFacade
     /**
      * Get the registered name of the component.
      *
-     * @see \Admin\Helpers\Admin
      * @return string
      */
     protected static function getFacadeAccessor()
     {
-        return 'customer.auth';
+        return 'main.auth';
     }
 }

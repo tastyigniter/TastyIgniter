@@ -27,9 +27,9 @@ $enableFilter = (count($fieldOptions) > 20);
             <option
                 <?= in_array($value, $checkedValues) ? 'selected="selected"' : '' ?>
                 value="<?= $value ?>">
-                <?= e(lang($option[0])) ?>
+                <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
                 <?php if (isset($option[1])) { ?>
-                    <?= e("<span>{$option[1]}</span>") ?>
+                    <span><?= e((sscanf($option[1], 'lang:%s', $line) === 1) ? lang($line) : $option[1]) ?></span>
                 <?php } ?>
             </option>
         <?php } ?>

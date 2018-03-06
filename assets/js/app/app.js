@@ -18,7 +18,7 @@ if (jQuery === undefined)
 
         // Prepare the options and execute the request
         var
-            $form = $el.closest('form'),
+            $form = options.form ? $(options.form) : $el.closest('form'),
             $triggerEl = !!$form.length ? $form : $el,
             context = {handler: handler, options: options},
             loading = options.loading !== undefined && options.loading.length ? $(options.loading) : null,
@@ -180,6 +180,8 @@ if (jQuery === undefined)
             confirm: $this.data('request-confirm'),
             redirect: $this.data('request-redirect'),
             loading: $this.data('request-loading'),
+            flash: $this.data('request-flash'),
+            form: $this.data('request-form'),
             update: stringToObj('data-request-update', $this.data('request-update')),
             data: stringToObj('data-request-data', $this.data('request-data'))
         }
@@ -211,6 +213,13 @@ if (jQuery === undefined)
     $(document).on('submit', '[data-request]', function() {
         $(this).request()
         return false
+    })
+
+    $(document).on('click', 'a[data-request], button[data-request]', function (e) {
+        e.preventDefault()
+        $(this).request()
+        if ($(this).is('[type=submit]'))
+            return false
     })
 
     function stringToObj(name, value) {

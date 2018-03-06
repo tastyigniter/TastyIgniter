@@ -12,3 +12,11 @@ if (!function_exists('format_address')) {
         return app('country')->addressFormat($address, $useLineBreaks);
     }
 }
+
+if (!function_exists('countries')) {
+
+    function countries($column = 'country_name', $key = 'country_id')
+    {
+        return app('country')->listAll($column, $key);
+    }
+}
