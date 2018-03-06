@@ -3,7 +3,6 @@
 use App;
 use Config;
 use Exception;
-use File;
 use Igniter\Flame\Traits\Singleton;
 use Main\Classes\ThemeManager;
 use Schema;

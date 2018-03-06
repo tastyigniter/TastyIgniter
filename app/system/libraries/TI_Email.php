@@ -8,32 +8,31 @@
  */
 class TI_Email extends CI_Email
 {
+    public $useragent = 'TastyIgniter';
 
-	public $useragent = 'TastyIgniter';
+    public $mailtype = 'html';
 
-	public $mailtype = 'html';
-
-	/**
-	 * Initialize preferences
-	 *
-	 * @param    array
-	 *
-	 * @return    CI_Email
-	 */
-	public function initialize(array $config = [])
-	{
+    /**
+     * Initialize preferences
+     *
+     * @param    array
+     *
+     * @return    CI_Email
+     */
+    public function initialize(array $config = [])
+    {
         $CI =& get_instance();
 
-		$config['protocol'] = $CI->config->item('protocol');
-		$config['smtp_host'] = $CI->config->item('smtp_host');
-		$config['smtp_port'] = $CI->config->item('smtp_port');
-		$config['smtp_user'] = $CI->config->item('smtp_user');
-		$config['smtp_pass'] = $CI->config->item('smtp_pass');
-		$config['crlf'] = "\r\n";
-		$config['newline'] = "\r\n";
+        $config['protocol'] = $CI->config->item('protocol');
+        $config['smtp_host'] = $CI->config->item('smtp_host');
+        $config['smtp_port'] = $CI->config->item('smtp_port');
+        $config['smtp_user'] = $CI->config->item('smtp_user');
+        $config['smtp_pass'] = $CI->config->item('smtp_pass');
+        $config['crlf'] = "\r\n";
+        $config['newline'] = "\r\n";
 
-		return parent::initialize($config);
-	}
+        return parent::initialize($config);
+    }
 
     public function set_template($template, $data = [])
     {
@@ -47,31 +46,31 @@ class TI_Email extends CI_Email
         $this->message($template['body'], $data);
     }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	public function subject($subject, $parse_data = null)
-	{
-		if (!empty($parse_data)) {
-			$subject = $this->parse_template($subject, $parse_data);
-		}
+    public function subject($subject, $parse_data = null)
+    {
+        if (!empty($parse_data)) {
+            $subject = $this->parse_template($subject, $parse_data);
+        }
 
-		return parent::subject($subject);
-	}
+        return parent::subject($subject);
+    }
 
-	public function message($body, $parse_data = null)
-	{
-		if (!empty($parse_data)) {
-			$body = $this->parse_template($body, $parse_data);
-		}
+    public function message($body, $parse_data = null)
+    {
+        if (!empty($parse_data)) {
+            $body = $this->parse_template($body, $parse_data);
+        }
 
-		$body = ($this->mailtype === 'html') ? $this->_build_html_mail($body) : strip_tags($body);
+        $body = ($this->mailtype === 'html') ? $this->_build_html_mail($body) : strip_tags($body);
 
-		return parent::message($body);
-	}
+        return parent::message($body);
+    }
 
-	public function parse_template($template, $data = [])
-	{
-		if (!is_string($template) OR !is_array($data)) return null;
+    public function parse_template($template, $data = [])
+    {
+        if (!is_string($template) OR !is_array($data)) return null;
 
         $CI =& get_instance();
 
@@ -82,18 +81,18 @@ class TI_Email extends CI_Email
 
         $CI->load->library('parser');
 
-		return $CI->parser->parse_string($template, $data);
-	}
+        return $CI->parser->parse_string($template, $data);
+    }
 
-	protected function _build_html_mail($body = '')
-	{
-		$build = '';
-		$build .= '<!DOCTYPE html>';
-		$build .= '<html xmlns="http://www.w3.org/1999/xhtml">';
-		$build .= '<head>';
-		$build .= '<title>' . str_replace(["\n", "\r"], '', $this->_headers['Subject']) . '</title>';
-		$build .= '<meta http-equiv="Content-Type" content="text/html; charset=' . strtolower($this->charset) . '">';
-		$build .= '<style type="text/css">
+    protected function _build_html_mail($body = '')
+    {
+        $build = '';
+        $build .= '<!DOCTYPE html>';
+        $build .= '<html xmlns="http://www.w3.org/1999/xhtml">';
+        $build .= '<head>';
+        $build .= '<title>'.str_replace(["\n", "\r"], '', $this->_headers['Subject']).'</title>';
+        $build .= '<meta http-equiv="Content-Type" content="text/html; charset='.strtolower($this->charset).'">';
+        $build .= '<style type="text/css">
 						body {
 							font-family: Arial, Verdana, Helvetica, sans-serif;
 							font-size: 16px;
@@ -138,16 +137,16 @@ class TI_Email extends CI_Email
                             width: 680px;
                         }
 					</style>';
-		$build .= '</head>';
-		$build .= '<body>';
-		$build .= '<div id="container">';
-		$build .= '<div id="content">' . $body . '</div>';
-		$build .= '</div>';
-		$build .= '</body>';
-		$build .= '</html>';
+        $build .= '</head>';
+        $build .= '<body>';
+        $build .= '<div id="container">';
+        $build .= '<div id="content">'.$body.'</div>';
+        $build .= '</div>';
+        $build .= '</body>';
+        $build .= '</html>';
 
-		return $build;
-	}
+        return $build;
+    }
 }
 
 /* End of file TI_Email.php */

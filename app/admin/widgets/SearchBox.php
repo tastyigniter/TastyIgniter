@@ -80,6 +80,7 @@ class SearchBox extends BaseWidget
         $result = $this->fireEvent('search.submit', [$params]);
         if ($result && is_array($result)) {
             list($redirect) = $result;
+
             return ($redirect instanceof RedirectResponse) ?
                 $redirect : call_user_func_array('array_merge', $result);
         }

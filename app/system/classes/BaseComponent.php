@@ -250,24 +250,26 @@ abstract class BaseComponent extends Extendable
 
     /**
      * Dynamically handle calls into the controller instance.
+     *
      * @param string $method
      * @param array $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
     {
         try {
             return parent::__call($method, $parameters);
+        } catch (BadMethodCallException $ex) {
         }
-        catch (BadMethodCallException $ex) {}
 
         if (method_exists($this->controller, $method)) {
             return call_user_func_array([$this->controller, $method], $parameters);
         }
 
         throw new BadMethodCallException(Lang::get('main::default.not_found.method', [
-            'name' => get_class($this),
-            'method' => $method
+            'name'   => get_class($this),
+            'method' => $method,
         ]));
     }
 

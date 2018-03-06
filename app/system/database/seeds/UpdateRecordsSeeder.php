@@ -83,15 +83,15 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function fixPermalinkSlugColumns()
     {
-        Categories_model::all()->each(function($model) {
+        Categories_model::all()->each(function ($model) {
             $model->save();
         });
 
-        Pages_model::all()->each(function($model) {
+        Pages_model::all()->each(function ($model) {
             $model->save();
         });
 
-        Locations_model::all()->each(function($model) {
+        Locations_model::all()->each(function ($model) {
             $model->save();
         });
     }

@@ -38,6 +38,7 @@ class Settings_model extends Model
     public static function getDateFormatOptions()
     {
         $now = Carbon::now();
+
         return [
             'd m Y' => $now->format('d m Y'),
             'd/m/Y' => $now->format('d/m/Y'),
@@ -49,10 +50,11 @@ class Settings_model extends Model
     public static function getTimeFormatOptions()
     {
         $now = Carbon::now();
+
         return [
             'h:i A' => $now->format('h:i A'),
             'h:i a' => $now->format('h:i a'),
-            'H:i'    => $now->format('H:i'),
+            'H:i'   => $now->format('H:i'),
         ];
     }
 

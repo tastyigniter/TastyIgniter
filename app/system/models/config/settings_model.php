@@ -779,7 +779,7 @@ $config['form']['advanced'] = [
                 'type'    => 'switch',
                 'comment' => 'lang:system::settings.help_maintenance',
             ],
-            'custom_code'      => [
+            'maintenance_message'      => [
                 'label' => 'lang:system::settings.label_maintenance_message',
                 'type'  => 'textarea',
             ],

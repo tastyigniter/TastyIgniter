@@ -6,7 +6,6 @@ use Exception;
 use File;
 use Illuminate\Support\ServiceProvider;
 use Lang;
-use ReflectionClass;
 use SystemException;
 
 /**

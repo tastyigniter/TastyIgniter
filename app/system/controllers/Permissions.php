@@ -1,7 +1,6 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
-use System\Models\Permissions_model;
 
 class Permissions extends \Admin\Classes\AdminController
 {

@@ -115,7 +115,7 @@ class Theme
     public function getFields()
     {
         if ($this->fields)
-            return$this->fields;
+            return $this->fields;
 
         $fields = [];
         if ($parentConfigPath = $this->getParentPath()) {

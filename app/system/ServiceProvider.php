@@ -145,6 +145,7 @@ class ServiceProvider extends AppServiceProvider
     {
         Event::listen('exception.beforeRender', function ($exception, $httpCode, $request) {
             $handler = new ErrorHandler;
+
             return $handler->handleException($exception);
         });
     }

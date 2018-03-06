@@ -149,25 +149,25 @@ class Coupons_model extends Model
 
         switch ($this->validity) {
             case 'forever':
-                return false;
+                return FALSE;
             case 'fixed':
                 return $this->fixed_date->eq($now) AND !$now->between($this->fixed_from_time, $this->fixed_to_time);
             case 'period':
-                return $now->between($this->period_start_date, $this->period_end_date) ? false : true;
+                return $now->between($this->period_start_date, $this->period_end_date) ? FALSE : TRUE;
             case 'recurring':
                 if (!in_array($now->format('l'), $this->recurring_every))
-                    return true;
+                    return TRUE;
 
-                return $now->between($this->recurring_from_time, $this->recurring_to_time) ? false : true;
+                return $now->between($this->recurring_from_time, $this->recurring_to_time) ? FALSE : TRUE;
         }
 
-        return false;
+        return FALSE;
     }
 
     public function hasRestriction($orderType)
     {
         if (is_null($this->order_restriction))
-            false;
+            FALSE;
 
         return $orderType != $this->order_restriction;
     }

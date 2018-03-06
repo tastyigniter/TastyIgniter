@@ -1,8 +1,6 @@
 <?php namespace Admin\Models;
 
-use Carbon\Carbon;
 use Igniter\Flame\Location\Models\WorkingHour;
-use Model;
 
 /**
  * Working hours Model Class

@@ -2,7 +2,6 @@
 
 namespace Admin\Models;
 
-use Igniter\Flame\Location\GeoPosition;
 use Igniter\Flame\Location\Models\Area as AreaModel;
 
 /**

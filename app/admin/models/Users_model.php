@@ -1,7 +1,6 @@
 <?php namespace Admin\Models;
 
 use Carbon\Carbon;
-use Hash;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
 

@@ -156,6 +156,7 @@ class Filter extends BaseWidget
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
             list($redirect) = $result;
+
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
     }
@@ -174,6 +175,7 @@ class Filter extends BaseWidget
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
             list($redirect) = $result;
+
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
     }

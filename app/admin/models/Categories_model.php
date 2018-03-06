@@ -1,9 +1,9 @@
 <?php namespace Admin\Models;
 
 use DB;
+use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Sortable;
-use Igniter\Flame\Database\Traits\HasPermalink;
 use Model;
 
 /**

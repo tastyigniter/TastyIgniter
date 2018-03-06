@@ -443,10 +443,10 @@ if (!function_exists('time_range')) {
      * Date range
      * Returns a list of time within a specified period.
      *
-     * @param    int    $unix_start    UNIX timestamp of period start time
-     * @param    int    $unix_end    UNIX timestamp of period end time
-     * @param    int    $interval        Specifies the second interval
-     * @param    string  $time_format    Output time format, same as in date()
+     * @param    int $unix_start UNIX timestamp of period start time
+     * @param    int $unix_end UNIX timestamp of period end time
+     * @param    int $interval Specifies the second interval
+     * @param    string $time_format Output time format, same as in date()
      *
      * @return    array
      */
@@ -532,8 +532,8 @@ if (!function_exists('log_message')) {
      * We use this as a simple mechanism to access the logging
      * class and send messages to be logged.
      *
-     * @param    string    $level the error level: 'error', 'debug' or 'info'
-     * @param    string    $message the error message
+     * @param    string $level the error level: 'error', 'debug' or 'info'
+     * @param    string $message the error message
      *
      * @return    void
      */

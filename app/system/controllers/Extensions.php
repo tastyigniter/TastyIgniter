@@ -217,13 +217,14 @@ class Extensions extends \Admin\Classes\AdminController
 
             if (!$config)
                 throw new Exception(lang('system::extensions.error_config_no_found'));
-
         } catch (Exception $ex) {
             flash()->danger($ex->getMessage());
+
             return $this->refresh();
         }
 
         flash()->success(sprintf(lang('admin::default.alert_success'), "Extension uploaded "));
+
         return $this->redirect('extensions');
     }
 
@@ -342,6 +343,6 @@ class Extensions extends \Admin\Classes\AdminController
         if (ExtensionManager::instance()->hasExtension($name))
             throw new SystemException(lang('system::extensions.error_extension_exists'));
 
-        return true;
+        return TRUE;
     }
 }

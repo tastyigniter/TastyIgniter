@@ -1,6 +1,5 @@
 <?php namespace Admin\Models;
 
-use Hash;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
 
@@ -186,7 +185,7 @@ class Staffs_model extends Model
             $userModel->password = $user['password'];
 
         if (!$userModel->exists) {
-            $userModel->is_activated = true;
+            $userModel->is_activated = TRUE;
             $userModel->date_activated = date('Y-m-d');
         }
 

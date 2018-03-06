@@ -1,6 +1,5 @@
 <?php namespace System\Libraries;
 
-use Illuminate\Contracts\Support\Arrayable;
 use System\Models\Countries_model;
 
 /**
@@ -11,6 +10,7 @@ use System\Models\Countries_model;
 class Country
 {
     const ISO_CODE_2 = 2;
+
     const ISO_CODE_3 = 3;
 
     protected $defaultFormat = [];
@@ -110,7 +110,8 @@ class Country
     {
         if (is_numeric($country)) {
             return $this->getCountryNameById($country);
-        } else if (!is_string($country) AND isset($country['country_name'])) {
+        }
+        else if (!is_string($country) AND isset($country['country_name'])) {
             return $country['country_name'];
         }
 

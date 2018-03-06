@@ -16,7 +16,7 @@ class Captcha
 
     public function usesAssets()
     {
-        return false;
+        return FALSE;
     }
 
     public function getAssets()

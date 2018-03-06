@@ -1,7 +1,6 @@
 <?php namespace Admin\Classes;
 
 use Igniter\Flame\Auth\Manager;
-use Redirect;
 use Request;
 use System\Classes\Controller;
 use System\Models\Permissions_model;

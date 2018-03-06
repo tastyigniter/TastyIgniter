@@ -181,7 +181,7 @@ class Themes_model extends Model
     public static function activateTheme($code)
     {
         if (empty($code) OR !$theme = self::whereCode($code)->first())
-            return false;
+            return FALSE;
 
         params()->set('default_themes.main', $theme->code);
 

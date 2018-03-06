@@ -54,12 +54,12 @@ class Navigation
     public function isActiveNavItem($code)
     {
         if ($code == self::$navContextParentCode)
-            return true;
+            return TRUE;
 
         if ($code == self::$navContextItemCode)
-            return true;
+            return TRUE;
 
-        return false;
+        return FALSE;
     }
 
     public function getMainItems()
@@ -85,7 +85,7 @@ class Navigation
         $navItems = $this->getVisibleNavItems();
 
         return $this->makePartial($partial, [
-            'navItems' => $navItems
+            'navItems' => $navItems,
         ]);
     }
 
@@ -145,7 +145,8 @@ class Navigation
         foreach (array_filter($collection) as $permission) {
             if (strpos($permission, '|') !== FALSE) {
                 $results = explode('|', $permission);
-            } else {
+            }
+            else {
                 $results = [$permission];
             }
 
@@ -212,7 +213,8 @@ class Navigation
     {
         if (!is_null($parent)) {
             $this->navItems[$parent]['child'][$code] = $item;
-        } else {
+        }
+        else {
             $this->navItems[$code] = $item;
         }
     }

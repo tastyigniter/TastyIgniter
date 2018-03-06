@@ -9,8 +9,6 @@ use File;
 use Illuminate\Mail\Message;
 use Mail;
 use System\Models\Currencies_model;
-use System\Models\Settings_model;
-use SystemException;
 use Template;
 
 class Settings extends \Admin\Classes\AdminController

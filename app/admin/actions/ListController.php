@@ -68,6 +68,8 @@ class ListController extends ControllerAction
      * List_Controller constructor.
      *
      * @param BaseController $controller
+     *
+     * @throws \Exception
      */
     public function __construct($controller)
     {

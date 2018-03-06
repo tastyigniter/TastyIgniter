@@ -1,6 +1,5 @@
 <?php namespace System\Classes;
 
-use Exception;
 use Modules;
 use SystemException;
 

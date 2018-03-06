@@ -1,11 +1,7 @@
 <?php namespace Admin\Classes;
 
-use File;
 use Html;
 use Main\Classes\Page;
-use Main\Classes\ThemeManager;
-use System\Classes\BaseController;
-use SystemException;
 
 /**
  * Template Class

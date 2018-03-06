@@ -1,9 +1,7 @@
 <?php namespace Admin\Models;
 
-use Admin\Classes\PaymentGateways;
-use DB;
-use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\HasPermalink;
+use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Location\Models\Location as LocationModel;
 
 /**

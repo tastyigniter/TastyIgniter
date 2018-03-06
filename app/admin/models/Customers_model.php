@@ -1,14 +1,11 @@
 <?php namespace Admin\Models;
 
-use App;
 use Carbon\Carbon;
 use DB;
-use Hash;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Notifications\Notifiable;
-use Model;
 
 /**
  * Customers Model Class

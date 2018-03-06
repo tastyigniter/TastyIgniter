@@ -11,14 +11,20 @@
  */
 class Feed_parser
 {
-
     public $feed_uri = null;                    // Feed URI
+
     public $data = FALSE;                    // Associative array containing all the feed items
+
     public $channel_data = [];                    // Store RSS Channel Data in an array
+
     public $feed_unavailable = null;                    // Boolean variable which indicates whether an RSS feed was unavailable
+
     public $cache_life = 0;                        // Cache lifetime
+
     public $cache_dir;    // Cache directory
+
     public $write_cache_flag = FALSE;                    // Flag to write to cache
+
     public $callback = FALSE;                    // Callback to read custom data
 
     function __construct($callback = FALSE)
@@ -45,11 +51,13 @@ class Feed_parser
 
                 if ($timedif < ($this->cache_life * 60 * 60)) {
                     $rawFeed = @file_get_contents($filename);
-                } else {
+                }
+                else {
                     // So raise the falg
                     $this->write_cache_flag = TRUE;
                 }
-            } else {
+            }
+            else {
                 // Raise the flag to write the cache
                 $this->write_cache_flag = TRUE;
             }
@@ -95,7 +103,8 @@ class Feed_parser
 
                 $this->data[] = $data;
             }
-        } else if (isset($xml->title)) {
+        }
+        else if (isset($xml->title)) {
             // Assign the channel data
             $this->channel_data['title'] = $xml->title;
             $this->channel_data['description'] = $xml->subtitle;
@@ -188,7 +197,8 @@ class Feed_parser
 
         if (!empty($this->channel_data)) {
             return $this->channel_data;
-        } else {
+        }
+        else {
             return $flag;
         }
     }

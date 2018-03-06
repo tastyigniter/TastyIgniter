@@ -2,7 +2,6 @@
 
 namespace Main\Template\Concerns;
 
-use Igniter\Flame\Pagic\Parsers\FileParser;
 use System\Classes\ComponentManager;
 
 trait HasComponents

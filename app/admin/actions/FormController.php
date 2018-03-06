@@ -5,7 +5,6 @@ use Admin\Classes\FormField;
 use Admin\Traits\FormExtendable;
 use Admin\Widgets\Toolbar;
 use Exception;
-use Igniter\Flame\Database\Builder;
 use Model;
 use Redirect;
 use System\Classes\ControllerAction;
@@ -83,6 +82,8 @@ class FormController extends ControllerAction
      * FormController constructor.
      *
      * @param AdminController $controller
+     *
+     * @throws \Exception
      */
     public function __construct($controller)
     {
@@ -129,6 +130,7 @@ class FormController extends ControllerAction
      * @param \Model $model
      *
      * @return void
+     * @throws \Exception
      */
     public function initForm($model, $context = null)
     {
@@ -216,7 +218,7 @@ class FormController extends ControllerAction
         $this->initForm($model, $context);
 
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return false;
+            return FALSE;
 
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeCreate($model);
@@ -260,7 +262,7 @@ class FormController extends ControllerAction
         $this->initForm($model, $context);
 
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return false;
+            return FALSE;
 
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeUpdate($model);
@@ -455,10 +457,11 @@ class FormController extends ControllerAction
     /**
      * Sets a data collection to a model attributes, relations will also be set.
      *
-     * @param array $saveData Data to save.
      * @param \Model $model Model to save to
      *
-     * @return array The collection of models to save.
+     * @param array $saveData Data to save.
+     *
+     * @return void
      */
     protected function setModelAttributes($model, $saveData)
     {

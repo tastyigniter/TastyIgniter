@@ -17,13 +17,16 @@ class CodeEditor extends BaseFormWidget
     //
 
     public $mode = 'css';
+
     public $theme = 'material';
 
     /**
      * @var boolean Determines whether content has HEAD and HTML tags.
      */
     public $fullPage = FALSE;
+
     public $lineSeparator;
+
     public $readOnly = FALSE;
 
     //

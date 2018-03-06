@@ -251,7 +251,7 @@ class Extensions_model extends Model
         $extensionModel = self::firstOrNew(['type' => 'module', 'name' => $code]);
 
         if ($extensionModel AND $extensionModel->meta) {
-            $extensionModel->status = true;
+            $extensionModel->status = TRUE;
             $extensionModel->fill([
                 'title'   => $extensionModel->meta['name'],
                 'version' => $extensionModel->meta['version'],
@@ -279,7 +279,7 @@ class Extensions_model extends Model
                 $query = $extensionModel->delete();
             }
             else {
-                $extensionModel->status = false;
+                $extensionModel->status = FALSE;
                 $query = $extensionModel->save();
             }
         }

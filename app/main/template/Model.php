@@ -118,6 +118,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     public function getId()
     {
         $fileName = $this->getBaseFileName();
+
         return str_replace('/', '-', $fileName);
     }
 

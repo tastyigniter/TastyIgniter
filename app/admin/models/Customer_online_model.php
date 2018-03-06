@@ -109,7 +109,7 @@ class Customer_online_model extends Model
     public function getLastOnline($ip)
     {
 //        if ($this->input->valid_ip($ip)) {
-            return $this->selectRaw('*, MAX(date_added) as date_added')->where('ip_address', $ip)->first();
+        return $this->selectRaw('*, MAX(date_added) as date_added')->where('ip_address', $ip)->first();
 //        }
     }
 

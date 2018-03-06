@@ -178,7 +178,7 @@ class ServiceProvider extends AppServiceProvider
                     'optionsFrom' => ['System\Models\Messages_model', 'listMenuMessages'],
                     'partial'     => '~/app/system/views/messages/latest',
                     'menuLink'    => 'messages',
-                    'permission' => 'Admin.Messages',
+                    'permission'  => 'Admin.Messages',
                     'attributes'  => [
                         'class'       => 'dropdown-toggle',
                         'data-toggle' => 'dropdown',
@@ -191,7 +191,7 @@ class ServiceProvider extends AppServiceProvider
                     'optionsFrom' => ['System\Models\Activities_model', 'listMenuActivities'],
                     'partial'     => '~/app/system/views/activities/latest',
                     'menuLink'    => 'activities',
-                    'permission' => 'Admin.Activities',
+                    'permission'  => 'Admin.Activities',
                     'attributes'  => [
                         'class'       => 'dropdown-toggle',
                         'data-toggle' => 'dropdown',

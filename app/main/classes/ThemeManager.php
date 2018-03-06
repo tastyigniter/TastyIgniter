@@ -35,9 +35,9 @@ class ThemeManager
     protected $paths = [];
 
     protected $config = [
-        'filesToCopy' => ['theme.json', 'theme.php', 'screenshot.png'],
+        'filesToCopy'     => ['theme.json', 'theme.php', 'screenshot.png'],
         'allowedImageExt' => ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'],
-        'allowedFileExt' => ['html', 'txt', 'xml', 'js', 'css', 'php', 'json'],
+        'allowedFileExt'  => ['html', 'txt', 'xml', 'js', 'css', 'php', 'json'],
     ];
 
     protected $loadedConfig;
@@ -169,6 +169,7 @@ class ThemeManager
     public function getActiveThemeCode()
     {
         $theme = params('default_themes.main', config('system.defaultTheme'));
+
         return trim($theme, '/');
     }
 
@@ -369,11 +370,11 @@ class ThemeManager
         $filePath = $themePath.'/'.$filename;
 
         if (!$filename OR !File::isFile($filePath))
-            return false;
+            return FALSE;
 
         $fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
         if (!in_array($fileExt, $this->config['allowedFileExt']))
-            return false;
+            return FALSE;
 
         return File::get($filePath);
     }
@@ -451,7 +452,7 @@ class ThemeManager
 
         foreach ($this->config['filesToCopy'] as $file) {
             if ($file == 'theme.json') {
-                $themeMeta = json_decode(File::get("{$parentPath}/{$file}"), true);
+                $themeMeta = json_decode(File::get("{$parentPath}/{$file}"), TRUE);
                 $content = array_merge($themeMeta, [
                     'code'   => $childThemeCode,
                     'name'   => $themeMeta['name'].' Child',
