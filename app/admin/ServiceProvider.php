@@ -205,7 +205,6 @@ class ServiceProvider extends AppServiceProvider
                         'updates'    => 'lang:admin::default.menu_updates',
                         'pages'      => 'lang:admin::default.menu_page',
                         'banners'    => 'lang:admin::default.menu_banner',
-                        'layouts'    => 'lang:admin::default.menu_layout',
                         'error_logs' => 'lang:admin::default.menu_error_log',
                         'settings'   => 'lang:admin::default.menu_setting',
                     ],
@@ -387,13 +386,6 @@ class ServiceProvider extends AppServiceProvider
                             'href'       => admin_url('pages'),
                             'title'      => lang('admin::default.menu_page'),
                             'permission' => 'Site.Pages',
-                        ],
-                        'layouts'        => [
-                            'priority'   => '2',
-                            'class'      => 'layouts',
-                            'href'       => admin_url('layouts'),
-                            'title'      => lang('admin::default.menu_layout'),
-                            'permission' => 'Site.Layouts',
                         ],
                         'themes'         => [
                             'priority'   => '3',

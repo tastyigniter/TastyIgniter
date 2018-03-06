@@ -77,7 +77,6 @@ return [
     'menu_storefront'        => 'Storefront',
     'menu_page'              => 'Pages',
     'menu_banner'            => 'Banners',
-    'menu_layout'            => 'Layouts',
     'menu_uri_route'         => 'URI Routes',
     'menu_error_log'         => 'Error Logs',
     'menu_setting'           => 'Settings',
