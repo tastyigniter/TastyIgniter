@@ -30,23 +30,6 @@ $config['list']['columns'] = [
             'href'  => 'languages/edit/{language_id}',
         ],
     ],
-    'default'     => [
-        'type'         => 'button',
-        'iconCssClass' => 'fa fa-star-o',
-        'attributes'   => [
-            'class'             => 'btn btn-outline btn-warning',
-            'data-request'      => 'onSetDefault',
-            'data-request-data' => 'default:{language_id}',
-        ],
-        'formatter'    => function ($record, $column, $value) {
-            $column->iconCssClass = 'fa fa-star-o';
-            if (($record->getKey() == setting('language_id'))) {
-                $column->iconCssClass = 'fa fa-star';
-
-                return 'class="btn btn-warning disabled"';
-            }
-        },
-    ],
     'name'        => [
         'label'      => 'lang:system::languages.column_name',
         'type'       => 'text',
@@ -82,7 +65,7 @@ $config['form']['toolbar'] = [
         'delete'    => [
             'label'                => 'lang:admin::default.button_icon_delete', 'class' => 'btn btn-danger',
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
+            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => 'edit'
         ],
         'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'languages'],
     ],
@@ -95,8 +78,7 @@ $config['form']['tabs'] = [
             'tab'     => 'lang:system::languages.text_tab_edit_file',
             'type'    => 'partial',
             'context' => 'edit',
-            'path'    => 'languages/lang_file.php',
-            'hidden'  => TRUE,
+            'path'    => 'languages/lang_file',
         ],
         'name'              => [
             'label' => 'lang:system::languages.label_name',
@@ -124,7 +106,7 @@ $config['form']['tabs'] = [
             'options' => [
                 'none'   => 'lang:admin::default.text_none',
                 'clone'  => 'lang:system::languages.label_clone',
-                'remote' => 'lang:system::languages.label_remote',
+//                'remote' => 'lang:system::languages.label_remote',
             ],
         ],
         'language_to_clone' => [
@@ -153,12 +135,11 @@ $config['form']['tabs'] = [
             'default' => TRUE,
             'type'    => 'switch',
         ],
-
         'files' => [
             'type'    => 'partial',
             'tab'     => 'lang:system::languages.text_tab_files',
             'context' => 'edit',
-            'path'    => 'languages/lang_files_list.php',
+            'path'    => 'languages/lang_files_list',
             'options' => 'listAllFiles',
         ],
     ],

@@ -4,7 +4,8 @@ $config['list']['toolbar'] = [
         'create' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'mail_layouts/create'],
         'delete' => [
             'label'        => 'lang:admin::default.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form',
-            'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
+            'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",  'context' => 'edit',
+            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
         ],
     ],
 ];
@@ -81,7 +82,7 @@ $config['form']['toolbar'] = [
         'delete'    => [
             'label'                => 'lang:admin::default.button_icon_delete', 'class' => 'btn btn-danger',
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
+            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => 'edit',
         ],
         'create'    => [
             'label'   => 'lang:system::mail_templates.button_new_template',

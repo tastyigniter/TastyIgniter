@@ -79,7 +79,7 @@ $config['form']['toolbar'] = [
         'delete'    => [
             'label'                => 'lang:admin::default.button_icon_delete', 'class' => 'btn btn-danger',
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
+            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => ['edit'],
         ],
         'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'pages'],
     ],
@@ -118,18 +118,10 @@ $config['form']['fields'] = [
             'footer'   => 'lang:admin::pages.text_footer',
         ],
     ],
-    'layout_id'        => [
-        'label'        => 'lang:admin::pages.label_layout',
-        'type'         => 'relation',
-        'relationFrom' => 'layout',
-        'span'         => 'left',
-        'placeholder'  => 'lang:admin::default.text_please_select',
-    ],
     'language_id'      => [
         'label'        => 'lang:admin::pages.label_language',
         'type'         => 'relation',
         'relationFrom' => 'language',
-        'span'         => 'right',
         'placeholder'  => 'lang:admin::default.text_please_select',
     ],
     'meta_description' => [
