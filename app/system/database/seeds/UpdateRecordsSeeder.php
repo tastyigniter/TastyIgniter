@@ -46,7 +46,7 @@ class UpdateRecordsSeeder extends Seeder
 
         $this->copyRecordsFromLocationsToLocationAreas();
 
-        $this->fillLabelColumnOnMailTemplatesData();
+        $this->fillColumnsOnMailTemplatesData();
     }
 
     protected function updateMorphsOnStatusHistory()
@@ -108,7 +108,7 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function updateMorphsOnMessagesMeta()
     {
-        if (Message_meta_model::where('messageable_type', 'System\Models\Customers_model')->count())
+        if (Message_meta_model::where('messagable_type', 'System\Models\Customers_model')->count())
             return;
 
         $replace = [
@@ -120,8 +120,8 @@ class UpdateRecordsSeeder extends Seeder
             if (!array_key_exists($model->item, $replace))
                 return FALSE;
 
-            $model->messageable_id = $model->value;
-            $model->messageable_type = $replace[$model->item];
+            $model->messagable_id = $model->value;
+            $model->messagable_type = $replace[$model->item];
             $model->save();
         });
     }
@@ -215,7 +215,7 @@ class UpdateRecordsSeeder extends Seeder
         });
     }
 
-    protected function fillLabelColumnOnMailTemplatesData()
+    protected function fillColumnsOnMailTemplatesData()
     {
         $labels = [
             'registration'                 => 'lang:system::mail_templates.text_registration',
@@ -235,10 +235,8 @@ class UpdateRecordsSeeder extends Seeder
         ];
 
         Mail_templates_data_model::all()->each(function ($model) use ($labels) {
-            if (!isset($labels[$model->code]))
-                return TRUE;
-
-            $model->label = $labels[$model->code];
+            $model->is_custom = 1;
+            $model->label = (!isset($labels[$model->code])) ? null : $labels[$model->code];
             $model->save();
         });
     }

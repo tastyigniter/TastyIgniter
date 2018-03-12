@@ -72,6 +72,7 @@ class AddColumns extends Migration
         });
 
         Schema::table('mail_templates_data', function (Blueprint $table) {
+            $table->text('is_custom')->nullable();
             $table->text('plain_body')->nullable();
         });
 

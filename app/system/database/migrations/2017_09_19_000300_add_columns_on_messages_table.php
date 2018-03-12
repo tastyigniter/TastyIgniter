@@ -24,10 +24,10 @@ class AddColumnsOnMessagesTable extends Migration
         });
 
         Schema::table('message_meta', function (Blueprint $table) {
-            $table->integer('messageable_id');
-            $table->string('messageable_type', 128);
+            $table->integer('messagable_id');
+            $table->string('messagable_type', 128);
             $table->dateTime('date_deleted');
-            $table->unique(['message_id', 'messageable_id', 'messageable_type']);
+            $table->unique(['message_id', 'messagable_id', 'messagable_type']);
         });
     }
 
