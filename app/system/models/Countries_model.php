@@ -1,6 +1,6 @@
 <?php namespace System\Models;
 
-use Admin\Models\Image_tool_model;
+use Main\Models\Image_tool_model;
 use Igniter\Flame\Database\Traits\Sortable;
 use Model;
 
@@ -57,26 +57,5 @@ class Countries_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('status', 1);
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['country_name']);
-        }
-
-        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-            $query->where('status', $filter['filter_status']);
-        }
-
-        return $query;
     }
 }

@@ -31,8 +31,8 @@ class ServiceProvider extends AppServiceProvider
         parent::register('admin');
 
         if ($this->app->runningInAdmin()) {
-            $this->registerWidgets();
             $this->registerBaseTags();
+            $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
         }
@@ -74,7 +74,7 @@ class ServiceProvider extends AppServiceProvider
     /**
      * Register widgets
      */
-    protected function registerWidgets()
+    protected function registerFormWidgets()
     {
         Widgets::instance()->registerFormWidgets(function (Widgets $manager) {
             $manager->registerFormWidget('Admin\FormWidgets\StarRating', [
@@ -229,7 +229,7 @@ class ServiceProvider extends AppServiceProvider
         Navigation::registerCallback(function (Navigation $manager) {
             $manager->registerNavItems([
                 'dashboard'    => [
-                    'priority'   => '0',
+                    'priority'   => 0,
                     'class'      => 'dashboard admin',
                     'href'       => admin_url('dashboard'),
                     'icon'       => 'fa-dashboard',
@@ -237,20 +237,20 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => 'Admin.Dashboard',
                 ],
                 'restaurant'   => [
-                    'priority' => '1',
+                    'priority' => 10,
                     'class'    => 'restaurant',
                     'icon'     => 'fa-bank',
                     'title'    => lang('admin::default.menu_restaurant'),
                     'child'    => [
                         'locations' => [
-                            'priority'   => '1',
+                            'priority'   => 10,
                             'class'      => 'locations',
                             'href'       => admin_url('locations'),
                             'title'      => lang('admin::default.menu_location'),
                             'permission' => 'Admin.Locations',
                         ],
                         'tables'    => [
-                            'priority'   => '2',
+                            'priority'   => 20,
                             'class'      => 'tables',
                             'href'       => admin_url('tables'),
                             'title'      => lang('admin::default.menu_table'),
@@ -259,34 +259,34 @@ class ServiceProvider extends AppServiceProvider
                     ],
                 ],
                 'kitchen'      => [
-                    'priority' => '2',
+                    'priority' => 20,
                     'class'    => 'kitchen',
                     'icon'     => 'fa-cutlery',
                     'title'    => lang('admin::default.menu_kitchen'),
                     'child'    => [
                         'menus'        => [
-                            'priority'   => '1',
+                            'priority'   => 10,
                             'class'      => 'menus',
                             'href'       => admin_url('menus'),
                             'title'      => lang('admin::default.menu_menu'),
                             'permission' => 'Admin.Menus',
                         ],
                         'menu_options' => [
-                            'priority'   => '2',
+                            'priority'   => 20,
                             'class'      => 'menu_options',
                             'href'       => admin_url('menu_options'),
                             'title'      => lang('admin::default.menu_option'),
                             'permission' => 'Admin.MenuOptions',
                         ],
                         'categories'   => [
-                            'priority'   => '3',
+                            'priority'   => 30,
                             'class'      => 'categories',
                             'href'       => admin_url('categories'),
                             'title'      => lang('admin::default.menu_category'),
                             'permission' => 'Admin.Categories',
                         ],
                         'mealtimes'    => [
-                            'priority'   => '4',
+                            'priority'   => 40,
                             'class'      => 'mealtimes',
                             'href'       => admin_url('mealtimes'),
                             'title'      => lang('admin::default.menu_mealtimes'),
@@ -295,41 +295,41 @@ class ServiceProvider extends AppServiceProvider
                     ],
                 ],
                 'sales'        => [
-                    'priority' => '3',
+                    'priority' => 30,
                     'class'    => 'sales',
                     'icon'     => 'fa-bar-chart-o',
                     'title'    => lang('admin::default.menu_sale'),
                     'child'    => [
                         'orders'       => [
-                            'priority'   => '1',
+                            'priority'   => 10,
                             'class'      => 'orders',
                             'href'       => admin_url('orders'),
                             'title'      => lang('admin::default.menu_order'),
                             'permission' => 'Admin.Orders',
                         ],
                         'reservations' => [
-                            'priority'   => '2',
+                            'priority'   => 20,
                             'class'      => 'reservations',
                             'href'       => admin_url('reservations'),
                             'title'      => lang('admin::default.menu_reservation'),
                             'permission' => 'Admin.Reservations',
                         ],
                         'reviews'      => [
-                            'priority'   => '3',
+                            'priority'   => 30,
                             'class'      => 'reviews',
                             'href'       => admin_url('reviews'),
                             'title'      => lang('admin::default.menu_review'),
                             'permission' => 'Admin.Reviews',
                         ],
                         'statuses'     => [
-                            'priority'   => '4',
+                            'priority'   => 40,
                             'class'      => 'statuses',
                             'href'       => admin_url('statuses'),
                             'title'      => lang('admin::default.menu_status'),
                             'permission' => 'Admin.Statuses',
                         ],
                         'payments'     => [
-                            'priority'   => '5',
+                            'priority'   => 50,
                             'class'      => 'payments',
                             'href'       => admin_url('payments'),
                             'title'      => lang('admin::default.menu_payment'),
@@ -338,27 +338,27 @@ class ServiceProvider extends AppServiceProvider
                     ],
                 ],
                 'marketing'    => [
-                    'priority' => '4',
+                    'priority' => 40,
                     'class'    => 'marketing',
                     'icon'     => 'fa-line-chart',
                     'title'    => lang('admin::default.menu_marketing'),
                     'child'    => [
                         'coupons'  => [
-                            'priority'   => '1',
+                            'priority'   => 10,
                             'class'      => 'coupons',
                             'href'       => admin_url('coupons'),
                             'title'      => lang('admin::default.menu_coupon'),
                             'permission' => 'Admin.Coupons',
                         ],
                         'messages' => [
-                            'priority'   => '2',
+                            'priority'   => 20,
                             'class'      => 'messages',
                             'href'       => admin_url('messages'),
                             'title'      => lang('admin::default.menu_messages'),
                             'permission' => 'Admin.Messages',
                         ],
                         'banners'  => [
-                            'priority'   => '3',
+                            'priority'   => 30,
                             'class'      => 'banners',
                             'href'       => admin_url('banners'),
                             'title'      => lang('admin::default.menu_banner'),
@@ -367,7 +367,7 @@ class ServiceProvider extends AppServiceProvider
                     ],
                 ],
                 'extensions'   => [
-                    'priority'   => '10',
+                    'priority'   => 50,
                     'class'      => 'extensions',
                     'href'       => admin_url('extensions'),
                     'icon'       => 'fa-puzzle-piece',
@@ -375,28 +375,21 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => 'Admin.Extensions',
                 ],
                 'design'       => [
-                    'priority' => '20',
+                    'priority' => 200,
                     'class'    => 'design',
                     'icon'     => 'fa-paint-brush',
                     'title'    => lang('admin::default.menu_design'),
                     'child'    => [
-                        'pages'          => [
-                            'priority'   => '1',
-                            'class'      => 'pages',
-                            'href'       => admin_url('pages'),
-                            'title'      => lang('admin::default.menu_page'),
-                            'permission' => 'Site.Pages',
-                        ],
                         'themes'         => [
-                            'priority'   => '3',
+                            'priority'   => 10,
                             'class'      => 'themes',
                             'href'       => admin_url('themes'),
                             'title'      => lang('admin::default.menu_theme'),
                             'permission' => 'Site.Themes',
                         ],
-                        'mail_templates' => [
-                            'priority'   => '4',
-                            'class'      => 'mail_templates',
+                        'mail_layouts' => [
+                            'priority'   => 20,
+                            'class'      => 'mail_layouts',
                             'href'       => admin_url('mail_layouts'),
                             'title'      => lang('admin::default.menu_mail_template'),
                             'permission' => 'Admin.MailTemplates',
@@ -404,48 +397,48 @@ class ServiceProvider extends AppServiceProvider
                     ],
                 ],
                 'users'        => [
-                    'priority' => '30',
+                    'priority' => 100,
                     'class'    => 'users',
                     'icon'     => 'fa-user',
                     'title'    => lang('admin::default.menu_user'),
                     'child'    => [
                         'customers'        => [
-                            'priority'   => '1',
+                            'priority'   => 10,
                             'class'      => 'customers',
                             'href'       => admin_url('customers'),
                             'title'      => lang('admin::default.menu_customer'),
                             'permission' => 'Admin.Customers',
                         ],
                         'customer_groups'  => [
-                            'priority'   => '2',
+                            'priority'   => 20,
                             'class'      => 'customer_groups',
                             'href'       => admin_url('customer_groups'),
                             'title'      => lang('admin::default.menu_customer_group'),
                             'permission' => 'Admin.CustomerGroups',
                         ],
                         'customers_online' => [
-                            'priority'   => '3',
+                            'priority'   => 30,
                             'class'      => 'customers_online',
                             'href'       => admin_url('customers_online'),
                             'title'      => lang('admin::default.menu_customer_online'),
                             'permission' => 'Admin.CustomersOnline',
                         ],
                         'staffs'           => [
-                            'priority'   => '4',
+                            'priority'   => 40,
                             'class'      => 'staffs',
                             'href'       => admin_url('staffs'),
                             'title'      => lang('admin::default.menu_staff'),
                             'permission' => 'Admin.Staffs',
                         ],
                         'staff_groups'     => [
-                            'priority'   => '5',
+                            'priority'   => 50,
                             'class'      => 'staff_groups',
                             'href'       => admin_url('staff_groups'),
                             'title'      => lang('admin::default.menu_staff_group'),
                             'permission' => 'Admin.StaffGroups',
                         ],
                         'permissions'      => [
-                            'priority'   => '6',
+                            'priority'   => 60,
                             'class'      => 'permissions',
                             'href'       => admin_url('permissions'),
                             'title'      => lang('admin::default.menu_permission'),
@@ -454,41 +447,34 @@ class ServiceProvider extends AppServiceProvider
                     ],
                 ],
                 'localisation' => [
-                    'priority' => '40',
+                    'priority' => 300,
                     'class'    => 'localisation',
                     'icon'     => 'fa-globe',
                     'title'    => lang('admin::default.menu_localisation'),
                     'child'    => [
                         'languages'          => [
-                            'priority'   => '1',
+                            'priority'   => 10,
                             'class'      => 'languages',
                             'href'       => admin_url('languages'),
                             'title'      => lang('admin::default.menu_language'),
                             'permission' => 'Site.Languages',
                         ],
                         'currencies'         => [
-                            'priority'   => '2',
+                            'priority'   => 20,
                             'class'      => 'currencies',
                             'href'       => admin_url('currencies'),
                             'title'      => lang('admin::default.menu_currency'),
                             'permission' => 'Site.Currencies',
                         ],
                         'countries'          => [
-                            'priority'   => '3',
+                            'priority'   => 30,
                             'class'      => 'countries',
                             'href'       => admin_url('countries'),
                             'title'      => lang('admin::default.menu_country'),
                             'permission' => 'Site.Countries',
                         ],
-                        'security_questions' => [
-                            'priority'   => '5',
-                            'class'      => 'security_questions',
-                            'href'       => admin_url('security_questions'),
-                            'title'      => lang('admin::default.menu_security_question'),
-                            'permission' => 'Admin.SecurityQuestions',
-                        ],
                         'ratings'            => [
-                            'priority'   => '6',
+                            'priority'   => 40,
                             'class'      => 'ratings',
                             'href'       => admin_url('ratings'),
                             'title'      => lang('admin::default.menu_rating'),
@@ -497,56 +483,49 @@ class ServiceProvider extends AppServiceProvider
                     ],
                 ],
                 'tools'        => [
-                    'priority' => '50',
+                    'priority' => 400,
                     'class'    => 'tools',
                     'icon'     => 'fa-wrench',
                     'title'    => lang('admin::default.menu_tool'),
                     'child'    => [
-                        'image_manager' => [
-                            'priority'   => '1',
-                            'class'      => 'image_manager',
-                            'href'       => admin_url('image_manager'),
+                        'media_manager' => [
+                            'priority'   => 10,
+                            'class'      => 'media_manager',
+                            'href'       => admin_url('media_manager'),
                             'title'      => lang('admin::default.menu_media_manager'),
                             'permission' => 'Admin.MediaManager',
-                        ],
-                        'maintenance'   => [
-                            'priority'   => '2',
-                            'class'      => 'maintenance',
-                            'href'       => admin_url('maintenance'),
-                            'title'      => lang('admin::default.menu_maintenance'),
-                            'permission' => 'Admin.Maintenance',
                         ],
                     ],
                 ],
                 'system'       => [
-                    'priority' => '999',
+                    'priority' => 999,
                     'class'    => 'system',
                     'icon'     => 'fa-cog',
                     'title'    => lang('admin::default.menu_system'),
                     'child'    => [
                         'activities' => [
-                            'priority'   => '1',
+                            'priority'   => 10,
                             'class'      => 'activities',
                             'href'       => admin_url('activities'),
                             'title'      => lang('admin::default.menu_activities'),
                             'permission' => 'Admin.Activities',
                         ],
                         'updates'    => [
-                            'priority'   => '1',
+                            'priority'   => 20,
                             'class'      => 'updates',
                             'href'       => admin_url('updates'),
                             'title'      => lang('admin::default.menu_updates'),
                             'permission' => 'Site.Updates',
                         ],
                         'settings'   => [
-                            'priority'   => '2',
+                            'priority'   => 30,
                             'class'      => 'settings',
                             'href'       => admin_url('settings'),
                             'title'      => lang('admin::default.menu_setting'),
                             'permission' => 'Site.Settings',
                         ],
                         'error_logs' => [
-                            'priority'   => '4',
+                            'priority'   => 40,
                             'class'      => 'error_logs',
                             'href'       => admin_url('error_logs'),
                             'title'      => lang('admin::default.menu_error_log'),

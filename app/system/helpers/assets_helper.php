@@ -53,7 +53,7 @@ if (!function_exists('get_style_tags')) {
     /**
      * Get multiple stylesheet html tags
      *
-     * @param null $collection
+     * @param mixed $collection
      *
      * @return string
      */
@@ -93,7 +93,7 @@ if (!function_exists('set_style_tags')) {
      *
      * @param array $tags
      */
-    function set_style_tags($tags = [])
+    function set_style_tags(array $tags = [])
     {
         Assets::collection()->addCss($tags);
     }
@@ -102,7 +102,10 @@ if (!function_exists('set_style_tags')) {
 if (!function_exists('get_script_tags')) {
     /**
      * Get multiple scripts html tags
-     * @return    string
+     *
+     * @param mixed $collection
+     *
+     * @return string
      */
     function get_script_tags($collection = null)
     {
@@ -140,7 +143,7 @@ if (!function_exists('set_script_tags')) {
      *
      * @param array $tags
      */
-    function set_script_tags($tags = [])
+    function set_script_tags(array $tags = [])
     {
         Assets::collection()->addJs($tags);
     }

@@ -50,7 +50,6 @@ return [
         'label_remember'   => 'Remember me',
         'label_newsletter' => 'Keep me up-to-date with offers by email.',
         'label_terms'      => 'By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="%s" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.',
-        'label_captcha'    => 'Type the code shown',
         'label_i_agree'    => 'I Agree',
         'label_subscribe'  => 'Subscribe',
 
@@ -60,7 +59,6 @@ return [
         'button_register'    => 'Register',
 
         'error_email_exist' => 'The Email address already has an account, please log in',
-        'error_captcha'     => 'The letters you entered does not match the image.',
 
         'alert_logout_success'  => 'You have been logged out successfully.',
         'alert_expired_login'   => 'Session expired, please login',

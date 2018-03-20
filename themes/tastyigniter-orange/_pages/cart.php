@@ -1,5 +1,5 @@
 ---
-title: main::default.cart.text_heading
+title: Cart
 layout: default
 permalink: /cart
 

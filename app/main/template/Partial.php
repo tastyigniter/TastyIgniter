@@ -120,9 +120,8 @@ class Partial extends Extendable implements TemplateSource
         }
 
         $theme = $this->theme;
-        $path = $theme->getPath().'/'.$this->dirName.'/'.$fileName;
 
-        return $path;
+        return $theme->getPath().'/'.$this->dirName.'/'.$fileName;
     }
 
     /**

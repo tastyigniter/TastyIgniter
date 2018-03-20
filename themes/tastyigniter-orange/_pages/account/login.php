@@ -1,5 +1,5 @@
 ---
-title: main::account.login.text_heading
+title: Login
 layout: default
 permalink: /login
 

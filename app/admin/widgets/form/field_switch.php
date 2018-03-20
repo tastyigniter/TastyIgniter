@@ -12,7 +12,7 @@
         data-toggle="toggle"
         data-onstyle="success" data-offstyle="danger"
         data-on="<?= e(lang('admin::default.text_enabled')) ?>"
-        data-off="<?= e(lang('lang:admin::default.text_disabled')) ?>"
+        data-off="<?= e(lang('admin::default.text_disabled')) ?>"
         value="1"
         <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
         <?= $field->value == 1 ? 'checked="checked"' : '' ?>

@@ -4,7 +4,7 @@
     <?php if (count($totalItems)) { ?>
         <?= $this->makePartial('mediamanager/list_grid') ?>
     <?php } else { ?>
-        <p><?php echo lang('text_empty'); ?></p>
+        <p><?php echo lang('admin::default.text_empty'); ?></p>
     <?php } ?>
 
 </div>

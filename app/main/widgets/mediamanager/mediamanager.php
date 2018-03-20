@@ -3,7 +3,7 @@
     data-control="media-manager"
     data-alias="<?= $this->alias ?>"
     data-max-upload-size="<?= e($maxUploadSize) ?>"
-    data-allowed-ext="<?= e(json_encode($allowedExt)) ?>"
+    data-allowed-extensions="<?= e(json_encode($allowedExtensions)) ?>"
     data-select-mode="<?= e($selectMode) ?>"
     data-unique-id="<?= $this->getId() ?>"
 >

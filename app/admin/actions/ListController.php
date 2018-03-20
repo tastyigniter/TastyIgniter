@@ -108,7 +108,7 @@ class ListController extends ControllerAction
     public function index_onDelete()
     {
         $checkedIds = post('checked');
-        if (!$checkedIds || !is_array($checkedIds) || !count($checkedIds)) {
+        if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds)) {
             flash()->success(lang('admin::default.alert_list_delete_empty'));
 
             return $this->controller->refreshList();
@@ -267,7 +267,7 @@ class ListController extends ControllerAction
 
         $list = [];
 
-        if (isset($this->toolbarWidget)) {
+        if (!is_null($this->toolbarWidget)) {
             $list[] = $this->toolbarWidget->render();
         }
 
@@ -286,7 +286,7 @@ class ListController extends ControllerAction
             $this->makeLists();
         }
 
-        if (!$alias || !isset($this->listConfig[$alias])) {
+        if (!$alias OR !isset($this->listConfig[$alias])) {
             $alias = $this->primaryAlias;
         }
 

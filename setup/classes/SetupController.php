@@ -613,7 +613,7 @@ class SetupController
     {
         $info = [
             'domain' => $this->getBaseUrl(),
-            'ver'    => TI_VERSION,
+//            'ver'    => TI_VERSION,
             'web'    => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : null,
             'os'     => php_uname(),
             'php'    => phpversion(),

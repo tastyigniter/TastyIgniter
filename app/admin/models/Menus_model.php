@@ -1,8 +1,8 @@
 <?php namespace Admin\Models;
 
-use DB;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Main\Models\Image_tool_model;
 use Model;
 
 /**
@@ -78,7 +78,7 @@ class Menus_model extends Model
             if (in_array($_sort, self::$allowedSortingColumns)) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
-                    array_push($parts, 'desc');
+                    $parts[] = 'desc';
                 }
                 list($sortField, $sortDirection) = $parts;
                 $query->orderBy($sortField, $sortDirection);
@@ -92,60 +92,6 @@ class Menus_model extends Model
         }
 
         return $query->paginate($pageLimit, $page);
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        $current_date = DB::quote(mdate('%Y-%m-%d', time()));
-        $current_time = DB::quote(mdate('%H:%i:%s', time()));
-
-        $menusTable = $this->getTablePrefix('menus');
-        $categoriesTable = $this->getTablePrefix('categories');
-        $menusSpecialsTable = $this->getTablePrefix('menus_specials');
-        $mealtimesTable = $this->getTablePrefix('mealtimes');
-
-        if (APPDIR === ADMINDIR) {
-            $queryBuilder = "*, {$menusTable}.menu_id, IF(start_date <= {$current_date}, IF(end_date >= {$current_date}, \"1\", \"0\"), \"0\") AS is_special";
-        }
-        else {
-            $queryBuilder = "{$menusTable}.menu_id, menu_name, menu_description, menu_photo, menu_price, minimum_qty,
-				{$categoriesTable}.category_id, menu_priority, {$categoriesTable}.name AS category_name, special_status,
-				start_date, end_date, special_price, {$menusTable}.mealtime_id, {$mealtimesTable}.mealtime_name,
-				{$mealtimesTable}.start_time, {$mealtimesTable}.end_time, mealtime_status, ".
-                "IF({$menusSpecialsTable}.start_date <= {$current_date}, IF({$menusSpecialsTable}.end_date >= {$current_date}, \"1\", \"0\"), \"0\") AS is_special, ".
-                "IF({$mealtimesTable}.start_time <= {$current_time}, IF({$mealtimesTable}.end_time >= {$current_time}, \"1\", \"0\"), \"0\") AS is_mealtime";
-        }
-
-        $query->selectRaw($queryBuilder);
-        $query->leftJoin('categories', 'categories.category_id', '=', 'menus.menu_category_id');
-        $query->leftJoin('menus_specials', 'menus_specials.menu_id', '=', 'menus.menu_id');
-        $query->leftJoin('mealtimes', 'mealtimes.mealtime_id', '=', 'menus.mealtime_id');
-
-        if (APPDIR === ADMINDIR) {
-            if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-                $query->search($filter['filter_search'], ['menu_name', 'menu_price', 'stock_qty']);
-            }
-
-            if (is_numeric($filter['filter_status'])) {
-                $query->where('menu_status', $filter['filter_status']);
-            }
-        }
-
-        if (!empty($filter['filter_category'])) {
-            $query->where('category_id', $filter['filter_category']);
-        }
-
-        $query->groupBy('menus.menu_id');
-
-        return $query;
     }
 
     //
@@ -206,7 +152,7 @@ class Menus_model extends Model
         if ($this->subtract_stock == '1' AND !empty($quantity)) {
             $stock_qty = $this->stock_qty + $quantity;
 
-            if ($action === 'subtract') {
+            if ($action == 'subtract') {
                 $stock_qty = $this->stock_qty - $quantity;
             }
 

@@ -3,6 +3,7 @@
 namespace Admin\Classes;
 
 use File;
+use Model;
 use System\Actions\ModelAction;
 
 /**
@@ -102,7 +103,7 @@ class BasePaymentGateway extends ModelAction
      * @param string $name Config name, supports array names like "field[key]"
      * @param mixed $default Default value if nothing is found
      *
-     * @return string
+     * @return mixed
      */
     public function getConfig($name = null, $default = null)
     {
@@ -194,9 +195,8 @@ class BasePaymentGateway extends ModelAction
     protected function createOrderModel()
     {
         $class = '\\'.ltrim($this->orderModel, '\\');
-        $model = new $class();
 
-        return $model;
+        return new $class();
     }
 
     /**
@@ -205,8 +205,7 @@ class BasePaymentGateway extends ModelAction
     protected function createOrderStatusModel()
     {
         $class = '\\'.ltrim($this->orderStatusModel, '\\');
-        $model = new $class();
 
-        return $model;
+        return new $class();
     }
 }

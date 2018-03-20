@@ -34,7 +34,7 @@ class Coupons_history_model extends Model
 
     public function getCustomerNameAttribute($value)
     {
-        return ($this->customer AND $this->customer->exists) ? $this->customer->customer_name : $value;
+        return ($this->customer AND $this->customer->exists) ? $this->customer->full_name : $value;
     }
 
     public function scopeIsEnabled($query)

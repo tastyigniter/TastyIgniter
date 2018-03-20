@@ -9,8 +9,6 @@ trait FormExtendable
 {
     /**
      * Called to validate create or edit form.
-     *
-     * @param Model
      */
     public function formValidate($model, $form)
     {
@@ -18,8 +16,6 @@ trait FormExtendable
 
     /**
      * Called before the creation or updating form is saved.
-     *
-     * @param Model
      */
     public function formBeforeSave($model)
     {
@@ -27,8 +23,6 @@ trait FormExtendable
 
     /**
      * Called after the creation or updating form is saved.
-     *
-     * @param Model
      */
     public function formAfterSave($model)
     {
@@ -36,8 +30,6 @@ trait FormExtendable
 
     /**
      * Called before the creation form is saved.
-     *
-     * @param Model
      */
     public function formBeforeCreate($model)
     {
@@ -45,8 +37,6 @@ trait FormExtendable
 
     /**
      * Called after the creation form is saved.
-     *
-     * @param Model
      */
     public function formAfterCreate($model)
     {
@@ -54,8 +44,6 @@ trait FormExtendable
 
     /**
      * Called before the updating form is saved.
-     *
-     * @param Model
      */
     public function formBeforeUpdate($model)
     {
@@ -63,8 +51,6 @@ trait FormExtendable
 
     /**
      * Called after the updating form is saved.
-     *
-     * @param Model
      */
     public function formAfterUpdate($model)
     {
@@ -72,8 +58,6 @@ trait FormExtendable
 
     /**
      * Called after the form model is deleted.
-     *
-     * @param Model
      */
     public function formAfterDelete($model)
     {

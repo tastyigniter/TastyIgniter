@@ -83,7 +83,7 @@ $config['list']['columns'] = [
     ],
     'date_added'    => [
         'label' => 'lang:admin::reviews.column_date_added',
-        'type'  => 'date',
+        'type'  => 'datesince',
     ],
     'review_id'     => [
         'label'     => 'lang:admin::reviews.column_id',
@@ -124,7 +124,7 @@ $config['form']['fields'] = [
         'label'        => 'lang:admin::reviews.label_author',
         'type'         => 'relation',
         'relationFrom' => 'customer',
-        'nameFrom'     => 'customer_name',
+        'nameFrom'     => 'full_name',
         'span'         => 'right',
         'placeholder'  => 'lang:admin::default.text_please_select',
     ],

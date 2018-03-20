@@ -159,12 +159,7 @@ class Payments_model extends Model
      */
     public static function listPayments()
     {
-        $payments = self::isEnabled()->get();
-//        $payments->each(function ($payment) {
-//            $payment->applyGatewayClass();
-//        });
-
-        return $payments;
+        return self::isEnabled()->get();
     }
 
     public static function syncAll()

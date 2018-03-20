@@ -1,7 +1,11 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
+use AdminAuth;
 use AdminMenu;
+use Assets;
+use Main\Models\Image_tool_model;
+use Template;
 
 class Orders extends \Admin\Classes\AdminController
 {
@@ -23,11 +27,6 @@ class Orders extends \Admin\Classes\AdminController
     public $formConfig = [
         'name'       => 'lang:admin::orders.text_form_name',
         'model'      => 'Admin\Models\Orders_model',
-        'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
-            'redirect'      => 'orders/edit/{order_id}',
-            'redirectClose' => 'orders',
-        ],
         'edit'       => [
             'title'         => 'lang:admin::default.form.edit_title',
             'redirect'      => 'orders/edit/{order_id}',
@@ -117,7 +116,7 @@ class Orders extends \Admin\Classes\AdminController
         $data = $this->getInvoice();
 
         if ($action === 'view') {
-            $this->load->view($this->config->item(ADMINDIR, 'default_themes').'orders_invoice', $data);
+            $this->makeView('orders/invoice', $data);
         }
     }
 
@@ -309,7 +308,6 @@ class Orders extends \Admin\Classes\AdminController
 
         $data = $this->getForm($invoice_info);
 
-        $this->load->model('Image_tool_model');
         $data['invoice_logo'] = Image_tool_model::resize($this->config->item('site_logo'));
 
         return $data;
@@ -319,19 +317,19 @@ class Orders extends \Admin\Classes\AdminController
     {
         if (is_numeric(get('id')) AND $this->validateForm() === TRUE) {
             if ($order_id = $this->Orders_model->updateOrder(get('id'), post())) {
-                log_activity(AdminAuth::getStaffId(), 'updated', 'orders', get_activity_message('activity_custom',
-                    ['{staff}', '{action}', '{context}', '{link}', '{item}'],
-                    [AdminAuth::getStaffName(), 'updated', 'order', current_url(), '#'.get('id')]
-                ));
+//                activity()->log(AdminAuth::getStaffId(), 'updated', 'orders', get_activity_message('activity_custom',
+//                    ['{staff}', '{action}', '{context}', '{link}', '{item}'],
+//                    [AdminAuth::getStaffName(), 'updated', 'order', current_url(), '#'.get('id')]
+//                ));
 
                 if (post('assignee_id') AND post('old_assignee_id') !== post('assignee_id')) {
                     $staff = $this->Staffs_model->getStaff(post('assignee_id'));
                     $staff_assignee = $this->pageUrl('staffs/edit?id='.$staff['staff_id']);
 
-                    log_activity(AdminAuth::getStaffId(), 'assigned', 'orders', get_activity_message('activity_assigned',
-                        ['{staff}', '{action}', '{context}', '{link}', '{item}', '{assignee}'],
-                        [AdminAuth::getStaffName(), 'assigned', 'order', current_url(), '#'.get('id'), "<a href=\"{$staff_assignee}\">{$staff['staff_name']}</a>"]
-                    ));
+//                    log_activity(AdminAuth::getStaffId(), 'assigned', 'orders', get_activity_message('activity_assigned',
+//                        ['{staff}', '{action}', '{context}', '{link}', '{item}', '{assignee}'],
+//                        [AdminAuth::getStaffName(), 'assigned', 'order', current_url(), '#'.get('id'), "<a href=\"{$staff_assignee}\">{$staff['staff_name']}</a>"]
+//                    ));
                 }
 
                 flash()->success(sprintf($this->lang->line('alert_success'), 'Order updated'));

@@ -21,33 +21,33 @@ $config['form']['general'] = [
     'form'     => [
         'tabs'  => [
             'fields' => [
-                'site_name'           => [
+                'site_name'          => [
                     'label' => 'lang:system::settings.label_site_name',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'text',
                     'span'  => 'left',
                 ],
-                'site_email'          => [
+                'site_email'         => [
                     'label' => 'lang:system::settings.label_site_email',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'text',
                     'span'  => 'right',
                 ],
-                'site_url'            => [
-                    'label' => 'lang:system::settings.label_site_url',
-                    'tab'   => 'lang:system::settings.text_tab_restaurant',
-                    'type'  => 'text',
-                    'span'  => 'left',
+                'site_url'           => [
+                    'label'   => 'lang:system::settings.label_site_url',
+                    'tab'     => 'lang:system::settings.text_tab_restaurant',
+                    'type'    => 'text',
+                    'span'    => 'left',
                     'default' => root_url(),
                 ],
-                'country_id'          => [
+                'country_id'         => [
                     'label'   => 'lang:system::settings.label_country',
                     'tab'     => 'lang:system::settings.text_tab_restaurant',
                     'type'    => 'select',
                     'span'    => 'right',
                     'options' => ['System\Models\Countries_model', 'getDropdownOptions'],
                 ],
-                'site_location_mode'  => [
+                'site_location_mode' => [
                     'label'   => 'lang:system::settings.label_site_location_mode',
                     'tab'     => 'lang:system::settings.text_tab_restaurant',
                     'type'    => 'radio',
@@ -58,23 +58,23 @@ $config['form']['general'] = [
                     ],
                     'comment' => 'lang:system::settings.help_site_location_mode',
                 ],
-                'site_logo'           => [
+                'site_logo'          => [
                     'label' => 'lang:system::settings.label_site_logo',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'mediafinder',
                 ],
-                'maps'                => [
+                'maps'               => [
                     'label' => 'lang:system::settings.text_tab_title_maps',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'section',
                 ],
-                'maps_api_key'        => [
+                'maps_api_key'       => [
                     'label'   => 'lang:system::settings.label_maps_api_key',
                     'tab'     => 'lang:system::settings.text_tab_restaurant',
                     'type'    => 'text',
                     'comment' => 'lang:system::settings.help_maps_api_key',
                 ],
-                'distance_unit'       => [
+                'distance_unit'      => [
                     'label'   => 'lang:system::settings.label_distance_unit',
                     'tab'     => 'lang:system::settings.text_tab_restaurant',
                     'type'    => 'radio',
@@ -83,13 +83,13 @@ $config['form']['general'] = [
                         'km' => 'lang:system::settings.text_kilometers',
                     ],
                 ],
-                'meta_description'    => [
+                'meta_description'   => [
                     'label' => 'lang:system::settings.label_meta_description',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'textarea',
                     'span'  => 'left',
                 ],
-                'meta_keywords'       => [
+                'meta_keywords'      => [
                     'label' => 'lang:system::settings.label_meta_keyword',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'textarea',
@@ -104,7 +104,7 @@ $config['form']['general'] = [
                     'options' => 'getPageLimitOptions',
                     'comment' => 'lang:system::settings.help_page_limit',
                 ],
-                'main_page_limit'           => [
+                'main_page_limit'            => [
                     'label'   => 'lang:system::settings.label_main_page_limit',
                     'tab'     => 'lang:system::settings.text_tab_site',
                     'span'    => 'right',
@@ -117,21 +117,21 @@ $config['form']['general'] = [
                     'tab'   => 'lang:system::settings.text_tab_site',
                     'type'  => 'section',
                 ],
-                'default_language'                => [
+                'default_language'           => [
                     'label'       => 'lang:system::settings.label_site_language',
                     'tab'         => 'lang:system::settings.text_tab_site',
                     'type'        => 'select',
-                    'default'  => 'en',
+                    'default'     => 'en',
                     'span'        => 'left',
                     'options'     => ['System\Models\Languages_model', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::default.text_please_select',
                 ],
-                'supported_languages'                => [
+                'supported_languages'        => [
                     'label'       => 'lang:system::settings.label_supported_languages',
                     'tab'         => 'lang:system::settings.text_tab_site',
                     'type'        => 'select',
                     'multiOption' => TRUE,
-                    'default'  => ['en'],
+                    'default'     => ['en'],
                     'span'        => 'left',
                     'options'     => ['System\Models\Languages_model', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::default.text_please_select',
@@ -185,18 +185,18 @@ $config['form']['general'] = [
                     'placeholder' => 'lang:admin::default.text_please_select',
                 ],
                 'date_format'                => [
-                    'label' => 'lang:system::settings.label_date_format',
-                    'tab'   => 'lang:system::settings.text_tab_site',
-                    'span'  => 'left',
-                    'type'  => 'select',
-                    'default'  => 'd/m/Y',
+                    'label'   => 'lang:system::settings.label_date_format',
+                    'tab'     => 'lang:system::settings.text_tab_site',
+                    'span'    => 'left',
+                    'type'    => 'select',
+                    'default' => 'd/m/Y',
                 ],
                 'time_format'                => [
-                    'label' => 'lang:system::settings.label_time_format',
-                    'tab'   => 'lang:system::settings.text_tab_site',
-                    'span'  => 'right',
-                    'type'  => 'select',
-                    'default'  => 'h:i a',
+                    'label'   => 'lang:system::settings.label_time_format',
+                    'tab'     => 'lang:system::settings.text_tab_site',
+                    'span'    => 'right',
+                    'type'    => 'select',
+                    'default' => 'h:i a',
                 ],
             ],
         ],
@@ -312,21 +312,21 @@ $config['form']['order'] = [
                     ],
                 ],
 
-                'delivery_time'      => [
+                'delivery_time'   => [
                     'label'   => 'lang:system::settings.label_delivery_time',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'span'    => 'left',
                     'type'    => 'number',
                     'comment' => 'lang:system::settings.help_delivery_time',
                 ],
-                'collection_time'    => [
+                'collection_time' => [
                     'label'   => 'lang:system::settings.label_collection_time',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'span'    => 'right',
                     'type'    => 'number',
                     'comment' => 'lang:system::settings.help_collection_time',
                 ],
-                'order_email'        => [
+                'order_email'     => [
                     'label'   => 'lang:system::settings.label_order_email',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'type'    => 'checkbox',
@@ -337,25 +337,25 @@ $config['form']['order'] = [
                     ],
                     'comment' => 'lang:system::settings.help_order_email',
                 ],
-                'guest_order'        => [
+                'guest_order'     => [
                     'label'   => 'lang:system::settings.label_guest_order',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'type'    => 'switch',
                     'comment' => 'lang:system::settings.help_guest_order',
                 ],
-                'future_orders'      => [
+                'future_orders'   => [
                     'label'   => 'lang:system::settings.label_future_order',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'type'    => 'switch',
                     'comment' => 'lang:system::settings.help_future_order',
                 ],
-                'location_order'     => [
+                'location_order'  => [
                     'label'   => 'lang:system::settings.label_location_order',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'type'    => 'switch',
                     'comment' => 'lang:system::settings.help_location_order',
                 ],
-                'terms'              => [
+                'terms'           => [
                     'label' => 'lang:system::settings.text_tab_title_terms',
                     'tab'   => 'lang:system::settings.text_tab_title_checkout',
                     'type'  => 'section',
@@ -364,7 +364,7 @@ $config['form']['order'] = [
 //                    'label'       => 'lang:system::settings.label_checkout_terms',
 //                    'tab'         => 'lang:system::settings.text_tab_title_checkout',
 //                    'type'        => 'select',
-//                    'options'     => ['Admin\Models\Pages_model', 'getDropdownOptions'],
+//                    'options'     => ['System\Models\Pages_model', 'getDropdownOptions'],
 //                    'comment'     => 'lang:system::settings.help_checkout_terms',
 //                    'placeholder' => 'lang:admin::default.text_please_select',
 //                ],
@@ -516,7 +516,7 @@ $config['form']['user'] = [
             'registration_terms'         => [
                 'label'       => 'lang:system::settings.label_registration_terms',
                 'type'        => 'select',
-                'options'     => ['Admin\Models\Pages_model', 'getDropdownOptions'],
+                'options'     => ['System\Models\Pages_model', 'getDropdownOptions'],
                 'comment'     => 'lang:system::settings.help_registration_terms',
                 'placeholder' => 'lang:admin::default.text_please_select',
             ],
@@ -525,18 +525,11 @@ $config['form']['user'] = [
                 'type'    => 'select',
                 'options' => ['Admin\Models\Customer_groups_model', 'getDropdownOptions'],
             ],
-            'disable_security_questions' => [
-                'label'   => 'lang:system::settings.label_security_questions',
-                'type'    => 'radio',
-                'comment' => 'lang:system::settings.help_security_questions',
-                'options' => ['lang:admin::default.text_no', 'lang:admin::default.text_yes'],
-            ],
         ],
         'rules'  => [
             ['registration_email.*', 'lang:system::settings.label_registration_email', 'required|alpha'],
             ['registration_terms', 'lang:system::settings.label_registration_terms', 'required|numeric'],
             ['customer_group_id', 'lang:system::settings.label_customer_group', 'required|integer'],
-            ['disable_security_questions', 'lang:system::settings.label_security_questions', 'required|integer'],
         ],
     ],
 ];
@@ -636,17 +629,27 @@ $config['form']['mail'] = [
     'url'      => admin_url('settings/edit/mail'),
     'form'     => [
         'fields' => [
-            'sender_name'  => [
+            'sender_name'           => [
                 'label' => 'lang:system::settings.label_sender_name',
                 'type'  => 'text',
                 'span'  => 'left',
             ],
-            'sender_email' => [
+            'sender_email'          => [
                 'label' => 'lang:system::settings.label_sender_email',
                 'type'  => 'text',
                 'span'  => 'right',
             ],
-            'protocol'     => [
+            'mailtype'              => [
+                'label'   => 'lang:system::settings.label_mailtype',
+                'type'    => 'radio',
+                'default' => 'plain',
+                'options' => [
+                    'plain' => 'lang:system::settings.text_plain',
+                    'html'  => 'lang:system::settings.text_html',
+                ],
+                'span'    => 'left',
+            ],
+            'protocol'              => [
                 'label'   => 'lang:system::settings.label_protocol',
                 'type'    => 'radio',
                 'default' => 'sendmail',
@@ -656,7 +659,7 @@ $config['form']['mail'] = [
                 ],
                 'span'    => 'left',
             ],
-            'smtp_host'    => [
+            'smtp_host'             => [
                 'label'   => 'lang:system::settings.label_smtp_host',
                 'type'    => 'text',
                 'span'    => 'right',
@@ -666,7 +669,7 @@ $config['form']['mail'] = [
                     'condition' => 'value[smtp]',
                 ],
             ],
-            'smtp_port'    => [
+            'smtp_port'             => [
                 'label'   => 'lang:system::settings.label_smtp_port',
                 'type'    => 'text',
                 'span'    => 'left',
@@ -676,7 +679,7 @@ $config['form']['mail'] = [
                     'condition' => 'value[smtp]',
                 ],
             ],
-            'smtp_user'    => [
+            'smtp_user'             => [
                 'label'   => 'lang:system::settings.label_smtp_user',
                 'type'    => 'text',
                 'span'    => 'right',
@@ -686,7 +689,7 @@ $config['form']['mail'] = [
                     'condition' => 'value[smtp]',
                 ],
             ],
-            'smtp_pass'    => [
+            'smtp_pass'             => [
                 'label'   => 'lang:system::settings.label_smtp_pass',
                 'type'    => 'text',
                 'span'    => 'left',
@@ -696,20 +699,9 @@ $config['form']['mail'] = [
                     'condition' => 'value[smtp]',
                 ],
             ],
-            'mailtype'     => [
-                'label'   => 'lang:system::settings.label_mailtype',
-                'type'    => 'radio',
-                'default' => 'plain',
-                'options' => [
-                    'plain' => 'lang:system::settings.text_plain',
-                    'html'  => 'lang:system::settings.text_html',
-                ],
-                'span'    => 'right',
-            ],
-            'test_email'   => [
+            'test_email'            => [
                 'label' => 'lang:system::settings.label_test_email',
                 'type'  => 'partial',
-                'span'  => 'left',
                 'path'  => 'settings/test_email_button',
             ],
         ],
@@ -717,6 +709,7 @@ $config['form']['mail'] = [
             ['sender_name', 'lang:system::settings.label_sender_name', 'required'],
             ['sender_email', 'lang:system::settings.label_sender_email', 'required'],
             ['protocol', 'lang:system::settings.label_protocol', 'required'],
+            ['mailtype', 'lang:system::settings.label_mailtype', 'required'],
             ['smtp_host', 'lang:system::settings.label_smtp_host', 'required_if:protocol,smtp'],
             ['smtp_port', 'lang:system::settings.label_smtp_port', 'required_if:protocol,smtp'],
             ['smtp_user', 'lang:system::settings.label_smtp_user', 'required_if:protocol,smtp'],
@@ -732,55 +725,16 @@ $config['form']['advanced'] = [
     'url'      => admin_url('settings/edit/advanced'),
     'form'     => [
         'fields' => [
-            'captcha'              => [
-                'label' => 'lang:system::settings.text_tab_title_captcha',
-                'type'  => 'section',
-            ],
-            'captcha_mode'         => [
-                'label'   => 'lang:system::settings.label_captcha_mode',
-                'type'    => 'radio',
-                'comment' => 'lang:system::settings.help_captcha_mode',
-                'default' => 'default',
-                'options' => [
-                    'none'             => 'lang:admin::default.text_none',
-                    'default'             => 'lang:admin::default.text_default',
-                    'recaptcha'           => 'lang:system::settings.text_recaptcha',
-                    'invisible-recaptcha' => 'lang:system::settings.text_invisible_recaptcha',
-                ],
-            ],
-            'recaptcha_site_key'   => [
-                'label'   => 'lang:system::settings.label_recaptcha_site_key',
-                'type'    => 'text',
-                'span'    => 'left',
-                'comment' => 'lang:system::settings.help_recaptcha_site_key',
-                'trigger' => [
-                    'action'    => 'show',
-                    'field'     => 'captcha_mode',
-                    'condition' => 'value[recaptcha]',
-                ],
-            ],
-            'recaptcha_secret_key' => [
-                'label'   => 'lang:system::settings.label_recaptcha_secret_key',
-                'type'    => 'text',
-                'span'    => 'right',
-                'comment' => 'lang:system::settings.help_recaptcha_secret_key',
-                'trigger' => [
-                    'action'    => 'show',
-                    'field'     => 'captcha_mode',
-                    'condition' => 'value[recaptcha]',
-                ],
-            ],
-
-            'maintenance'      => [
+            'maintenance'         => [
                 'label' => 'lang:system::settings.text_tab_title_maintenance',
                 'type'  => 'section',
             ],
-            'maintenance_mode' => [
+            'maintenance_mode'    => [
                 'label'   => 'lang:system::settings.label_maintenance_mode',
                 'type'    => 'switch',
                 'comment' => 'lang:system::settings.help_maintenance',
             ],
-            'maintenance_message'      => [
+            'maintenance_message' => [
                 'label' => 'lang:system::settings.label_maintenance_message',
                 'type'  => 'textarea',
             ],
@@ -837,9 +791,6 @@ $config['form']['advanced'] = [
             ],
         ],
         'rules'  => [
-            ['captcha_mode', 'lang:system::settings.label_recaptcha_site_key', 'required'],
-            ['recaptcha_site_key', 'lang:system::settings.label_recaptcha_site_key', 'required_if:captcha_mode,recaptcha'],
-            ['recaptcha_secret_key', 'lang:system::settings.label_recaptcha_secret_key', 'required_if:captcha_mode,recaptcha'],
             ['customer_online_time_out', 'lang:system::settings.label_customer_online_time_out', 'required|integer'],
             ['customer_online_time_out', 'lang:system::settings.label_customer_online_time_out', 'required|integer'],
             ['customer_online_archive_time_out', 'lang:system::settings.label_customer_online_archive_time_out', 'required|integer'],

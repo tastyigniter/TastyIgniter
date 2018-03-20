@@ -70,8 +70,8 @@ class BaseWidget extends Extendable
         if ($this->config === null)
             $this->setConfig($config);
 
-        if (!isset($this->alias))
-            $this->alias = (isset($this->config['alias'])) ? $this->config['alias'] : $this->defaultAlias;
+        if (is_null($this->alias))
+            $this->alias = isset($this->config['alias']) ? $this->config['alias'] : $this->defaultAlias;
 
         $this->loadAssets();
 

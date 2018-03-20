@@ -3,7 +3,7 @@
         <?php if ($this->previewMode) { ?>
             <a>
                 <div class="img-cover">
-                    <img src="<?= $this->resizeImage($value ? $value : $blankImage) ?>" class="img-responsive">
+                    <img src="<?= $this->getMediaUrl($value ? $value : $blankImage) ?>" class="img-responsive">
                 </div>
             </a>
         <?php } else { ?>
@@ -12,14 +12,14 @@
                     <i class="fa fa-plus"></i>
                 </a>
             <?php } else { ?>
-                <i class="find-remove-button fa fa-times-circle" title="<?= lang('text_remove'); ?>"></i>
+                <i class="find-remove-button fa fa-times-circle" title="<?= lang('admin::default.text_remove'); ?>"></i>
                 <div class="icon-container">
                     <span data-find-name><?= ltrim($value, '/') ?></span>
                 </div>
                 <a class="find-button">
                     <div class="img-cover">
                         <img data-find-image
-                             src="<?= $this->resizeImage($value ? $value : $blankImage) ?>"
+                             src="<?= $this->getMediaUrl($value ? $value : $blankImage) ?>"
                              class="img-responsive">
                     </div>
                 </a>

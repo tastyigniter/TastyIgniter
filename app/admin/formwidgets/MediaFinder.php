@@ -1,8 +1,8 @@
 <?php namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
-use Admin\Models\Image_tool_model;
-use System\Libraries\MediaManager;
+use Main\Libraries\MediaManager as MediaLibrary;
+use SystemException;
 
 /**
  * Media Finder
@@ -66,7 +66,7 @@ class MediaFinder extends BaseFormWidget
      */
     public function prepareVars()
     {
-        $this->vars['value'] = $this->formField->value;
+        $this->vars['value'] = $this->getFormValue();
         $this->vars['fieldName'] = $this->isMulti ? $this->formField->getName().'[]' : $this->formField->getName();
         $this->vars['field'] = $this->formField;
         $this->vars['prompt'] = str_replace('%s', '<i class="icon-folder"></i>', $this->prompt ? lang($this->prompt) : '');
@@ -81,14 +81,25 @@ class MediaFinder extends BaseFormWidget
         $this->addCss('css/mediafinder.css', 'mediafinder-css');
     }
 
-    public function resizeImage($image)
+    public function getMediaUrl($imagePath)
     {
-        $image = trim($image, '/');
+        $imagePath = trim($imagePath, '/');
 
-        $rootFolder = MediaManager::instance()->getRootFolder();
-        if (!starts_with($image, $rootFolder))
-            $image = $rootFolder.$image;
+        return MediaLibrary::instance()->getMediaUrl($imagePath);
+    }
 
-        return Image_tool_model::resize(!empty($image) ? $image : $this->blankImage);
+    protected function getFormValue()
+    {
+        $value = $this->formField->value;
+        try {
+            if (is_array($value))
+                array_map(function ($val) {
+                    return MediaLibrary::instance()->getMediaRelativePath($val);
+                }, $value);
+
+            return MediaLibrary::instance()->getMediaRelativePath($value);
+        } catch (SystemException $e) {
+            return $value;
+        }
     }
 }

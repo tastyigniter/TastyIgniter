@@ -21,15 +21,15 @@ class Updates extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        if (!setting('carte_key')) {
-            Flash::warning(lang('system::default.missing.carte_key'))->now();
-        }
-
         AdminMenu::setContext('updates', 'system');
     }
 
     public function index()
     {
+        if (!params()->has('carte_key')) {
+            Flash::warning(lang('system::default.missing.carte_key'))->now();
+        }
+
         if ($force = get('check')) {
             UpdateManager::instance()->requestUpdateList($force == 'force');
 
@@ -68,6 +68,10 @@ class Updates extends \Admin\Classes\AdminController
 
     public function browse($context, $itemType = null)
     {
+        if (!params()->has('carte_key')) {
+            Flash::warning(lang('system::default.missing.carte_key'))->now();
+        }
+
         $updateManager = UpdateManager::instance();
 
         $pageTitle = ($itemType == 'extensions') ? lang('system::updates.text_tab_title_extensions') : lang('system::updates.text_tab_title_themes');

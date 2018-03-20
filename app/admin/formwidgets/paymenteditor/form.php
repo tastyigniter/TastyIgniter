@@ -33,7 +33,6 @@
                                 role="tabpanel">
 
                                 <div class="panel-body">
-                                    <?= var_dump($payment->data); ?>
                                     <!--                                    --><? //= $this->renderPaymentForm($payment); ?>
                                 </div>
                             </div>

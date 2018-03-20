@@ -1,9 +1,11 @@
 <?php namespace System\Models;
 
 use Carbon\Carbon;
+use Config;
 use DateTime;
 use DateTimeZone;
 use Model;
+use Setting;
 use System\Classes\ExtensionManager;
 use System\Traits\ConfigMaker;
 
@@ -41,8 +43,13 @@ class Settings_model extends Model
 
         return [
             'd m Y' => $now->format('d m Y'),
+            'm d Y' => $now->format('m d Y'),
+            'Y m d' => $now->format('Y m d'),
             'd/m/Y' => $now->format('d/m/Y'),
             'm/d/Y' => $now->format('m/d/Y'),
+            'Y/m/d' => $now->format('Y/m/d'),
+            'd-m-Y' => $now->format('d-m-Y'),
+            'm-d-Y' => $now->format('m-d-Y'),
             'Y-m-d' => $now->format('Y-m-d'),
         ];
     }
@@ -198,6 +205,19 @@ class Settings_model extends Model
             $this->items[] = (object)$item;
         }
     }
+
+
+    public static function applyMailerConfigValues()
+    {
+        Config::set('mail.driver', Setting::get('protocol', Config::get('mail.driver')));
+        Config::set('mail.host', Setting::get('smtp_host', Config::get('mail.host')));
+        Config::set('mail.port', Setting::get('smtp_port', Config::get('mail.port')));
+        Config::set('mail.from.address', Setting::get('sender_email', Config::get('mail.from.address')));
+        Config::set('mail.from.name', Setting::get('sender_name', Config::get('mail.from.name')));
+        Config::set('mail.username', Setting::get('smtp_user', Config::get('mail.username')));
+        Config::set('mail.password', Setting::get('smtp_pass', Config::get('mail.password')));
+    }
+
 
     //
     // Form Dropdown options

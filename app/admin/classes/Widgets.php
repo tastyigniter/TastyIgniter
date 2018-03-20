@@ -3,7 +3,6 @@
 namespace Admin\Classes;
 
 use Igniter\Flame\Traits\Singleton;
-use Modules;
 use System\Classes\ExtensionManager;
 
 /**

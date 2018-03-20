@@ -2,7 +2,6 @@
 
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Model;
-use Modules;
 use System\Classes\ExtensionManager;
 
 /**
@@ -28,7 +27,7 @@ class Permissions_model extends Model
     ];
 
     protected static $permissionDefaults = [
-        'code'        => null,
+        'name'        => null,
         'description' => null,
         'action'      => ['access', 'add', 'manage', 'delete'],
     ];
@@ -41,7 +40,7 @@ class Permissions_model extends Model
     /**
      * @var array Cache of registration callbacks.
      */
-    private static $callbacks = [];
+    protected static $callbacks = [];
 
     protected static $registeredPermissions;
 
@@ -52,27 +51,6 @@ class Permissions_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('status', 1);
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['name']);
-        }
-
-        if (is_numeric($filter['filter_status'])) {
-            $query->where('status', $filter['filter_status']);
-        }
-
-        return $query;
     }
 
     //
@@ -106,6 +84,37 @@ class Permissions_model extends Model
     //
     // Manager
     //
+
+    /**
+     * Synchronise all permissions to the database.
+     * @return void
+     */
+    public static function syncAll()
+    {
+        $permissions = (array)self::listRegisteredPermissions();
+        $dbPermissions = (array)self::lists('is_custom', 'name')->toArray();
+        $newPermissions = array_diff_key($permissions, $dbPermissions);
+
+        // Clean up non-customized permissions
+        foreach ($dbPermissions as $name => $is_custom) {
+            if ($is_custom)
+                continue;
+
+            if (!array_key_exists($name, $permissions))
+                self::whereCode($name)->delete();
+        }
+
+        // Create new permissions
+        foreach ($newPermissions as $name => $permission) {
+            $permissionModel = self::make();
+            $permissionModel->name = $name;
+            $permissionModel->action = $permission->action;
+            $permissionModel->description = $permission->description;
+            $permissionModel->status = 1;
+            $permissionModel->is_custom = 0;
+            $permissionModel->save();
+        }
+    }
 
     public static function listPermissions()
     {

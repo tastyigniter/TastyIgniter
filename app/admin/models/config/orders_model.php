@@ -103,7 +103,7 @@ $config['list']['columns'] = [
     ],
     'date_added'      => [
         'label'     => 'lang:admin::orders.column_date_added',
-        'type'      => 'date',
+        'type'      => 'datesince',
         'invisible' => TRUE,
     ],
     'order_id'        => [

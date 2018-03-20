@@ -92,11 +92,6 @@ class Locations_model extends LocationModel
     // Scopes
     //
 
-    public function scopeJoinCountry($query)
-    {
-        return $query->join('countries', 'countries.country_id', '=', 'locations.location_country_id', 'left');
-    }
-
     /**
      * Scope a query to only include enabled location
      *
@@ -107,27 +102,7 @@ class Locations_model extends LocationModel
         return $query->where('location_status', 1);
     }
 
-    /**
-     * Filter database records
-     *
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['location_name', 'location_city', 'location_state', 'location_postcode']);
-        }
-
-        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-            $query->where('location_status', $filter['filter_status']);
-        }
-
-        return $query;
-    }
-
-    public function scopeListFrontEnd($query, $options = [])
+    public function scopeListFrontEnd($query, array $options = [])
     {
         extract(array_merge([
             'page'      => 1,
@@ -263,25 +238,6 @@ class Locations_model extends LocationModel
         return $value;
     }
 
-//    public function listPaymentGateways()
-//    {
-//        $result = [];
-//        $gatewayManager = PaymentGateways::instance();
-//        $payments = $gatewayManager->listGateways();
-//        foreach ($payments as $payment) {
-//            $gateway = $gatewayManager->findGateway($payment['code']);
-//            if (!$gateway) continue;
-//
-//            $payment['edit'] = method_exists($gateway, 'registerSettings')
-//                ? $gateway->registerSettings()
-//                : '';
-//
-//            $result[$payment['code']] = [$payment['name'], $payment['description']];
-//        }
-//
-//        return $result;
-//    }
-
     public function listAvailablePayments()
     {
         $paymentGateways = Payments_model::listPayments();
@@ -323,11 +279,11 @@ class Locations_model extends LocationModel
     /**
      * Update the default location
      *
-     * @param array $address
+     * @param array $update
      *
      * @return bool|int
      */
-    public static function updateDefault($update = [])
+    public static function updateDefault(array $update = [])
     {
         $location_id = isset($update['location_id'])
             ? (int)$update['location_id']
@@ -354,12 +310,11 @@ class Locations_model extends LocationModel
     /**
      * Create a new or update existing location working hours
      *
-     * @param int $location_id
      * @param array $data
      *
      * @return bool
      */
-    public function addOpeningHours($data = [])
+    public function addOpeningHours(array $data = [])
     {
         $created = FALSE;
 
@@ -422,12 +377,11 @@ class Locations_model extends LocationModel
     /**
      * Create a new or update existing location tables
      *
-     * @param int $location_id
      * @param array $tables
      *
      * @return bool
      */
-    public function addLocationTables($tables = [])
+    public function addLocationTables(array $tables = [])
     {
         return $this->tables()->sync($tables);
     }

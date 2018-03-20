@@ -1,6 +1,8 @@
 ---
 description: Local layout
 
+'[pageNav]':
+
 '[local]':
     paramFrom: location
 
@@ -38,8 +40,8 @@ function onEnd()
 
         <?= partial('breadcrumb'); ?>
 
-        <?php if ($page_heading = get_heading()) { ?>
-            <?= partial('heading', ['heading' => $page_heading]); ?>
+        <?php if (isset($this->page->heading)) { ?>
+            <?= partial('heading', ['heading' => $this->page->heading]); ?>
         <?php } ?>
 
         <?= page(); ?>

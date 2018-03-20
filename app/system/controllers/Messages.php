@@ -1,5 +1,6 @@
 <?php namespace System\Controllers;
 
+use AdminAuth;
 use AdminMenu;
 use System\Models\Messages_model;
 
@@ -26,7 +27,7 @@ class Messages extends \Admin\Classes\AdminController
         'model'      => 'System\Models\Messages_model',
         'create'     => [
             'title'         => 'lang:admin::default.form.create_title',
-            'redirect'      => 'messages/compose',
+            'redirect'      => 'messages/compose/{message_id}',
             'redirectClose' => 'messages',
             'context'       => 'compose',
         ],
@@ -38,7 +39,7 @@ class Messages extends \Admin\Classes\AdminController
 //        ],
         'edit'       => [
             'title'         => 'lang:admin::default.form.edit_title',
-            'redirect'      => 'messages/draft/{code}',
+            'redirect'      => 'messages/draft/{message_id}',
             'redirectClose' => 'messages',
             'context'       => 'draft',
         ],
@@ -58,28 +59,39 @@ class Messages extends \Admin\Classes\AdminController
 
     public function index()
     {
-        $this->listMessages('inbox');
+        $this->prepareVars('inbox');
+
+        $this->asExtension('ListController')->index();
     }
 
-    public function sent()
+    public function sent($context)
     {
-        $this->listMessages('sent');
+        $this->prepareVars($context);
 
-        $this->template->setView('messages/index');
+        $this->asExtension('ListController')->index();
+
+        return $this->makeView('messages/index');
     }
 
-    public function all()
+    public function all($context)
     {
-        $this->listMessages('all');
+        if (!AdminAuth::hasPermission('Admin.Messages.Manage', true))
+            return $this->redirect('messages');
 
-        $this->template->setView('messages/index');
+        $this->prepareVars($context);
+
+        $this->asExtension('ListController')->index();
+
+        return $this->makeView('messages/index');
     }
 
-    public function archive()
+    public function archive($context)
     {
-        $this->listMessages('archive');
+        $this->prepareVars($context);
 
-        $this->template->setView('messages/index');
+        $this->asExtension('ListController')->index();
+
+        return $this->makeView('messages/index');
     }
 
     public function compose()
@@ -89,20 +101,23 @@ class Messages extends \Admin\Classes\AdminController
 
     public function view($context, $recordId = null)
     {
-        $this->formConfig['edit']['context'] = 'view';
-        $this->asExtension('FormController')->edit('view', $recordId);
+        $this->formConfig['edit']['context'] = $context;
+        $this->asExtension('FormController')->edit($context, $recordId);
     }
 
     public function draft($context, $recordId = null)
     {
         if (!is_null($recordId)) {
             $this->asExtension('FormController')->edit(null, $recordId);
-            $this->template->setView('messages/compose');
+            $view = 'messages/compose';
         }
         else {
-            $this->listMessages($context);
-            $this->template->setView('messages/index');
+            $this->prepareVars($context);
+            $this->asExtension('ListController')->index();
+            $view = 'messages/index';
         }
+
+        return $this->makeView($view);
     }
 
     public function view_onSend($context, $recordId = null)
@@ -120,17 +135,21 @@ class Messages extends \Admin\Classes\AdminController
         $this->asExtension('FormController')->edit_onSave(null, $recordId);
     }
 
+    public function compose_onSend()
+    {
+        $this->asExtension('FormController')->create_onSave();
+    }
+
     public function compose_onSave()
     {
         $this->asExtension('FormController')->create_onSave();
     }
 
-    protected function listMessages($context = 'inbox')
+    protected function prepareVars($context = 'inbox')
     {
-        $this->asExtension('ListController')->index();
         $this->vars['listContext'] = $this->messageContext = $context;
         $this->vars['folders'] = Messages_model::listFolders();
-        $this->vars['messageLoggedUser'] = $user = $this->getUser();
+        $this->vars['messageLoggedUser'] = $user = $this->getUser()->staff;
         $this->vars['unreadCount'] = Messages_model::countUnread($user);
     }
 
@@ -138,7 +157,7 @@ class Messages extends \Admin\Classes\AdminController
     {
         $query->with(['recipients', 'sender'])->listMessages([
             'context'   => $this->messageContext,
-            'recipient' => $this->getUser(),
+            'recipient' => $this->getUser()->staff,
         ]);
     }
 
@@ -153,8 +172,21 @@ class Messages extends \Admin\Classes\AdminController
     public function formExtendQuery($query)
     {
         $query->with(['recipients', 'sender'])->viewConversation([
-            'recipient' => $this->getUser(),
+            'recipient' => $this->getUser()->staff,
         ]);
+    }
+
+    public function formBeforeCreate($model)
+    {
+        $user = AdminAuth::getUser();
+        $model->sender_id = $user->staff->getKey();
+        $model->sender_type = get_class($user->staff);
+    }
+
+    public function formAfterSave($model)
+    {
+        if (post('send') === 1)
+            $model->send();
     }
 
     public function formValidate($model, $form)
@@ -162,10 +194,10 @@ class Messages extends \Admin\Classes\AdminController
         $rules[] = ['recipient', 'lang:system::messages.label_to', 'required|min:2|max:128'];
         $rules[] = ['subject', 'lang:system::messages.label_subject', 'required|min:2|max:128'];
         $rules[] = ['send_type', 'lang:system::messages.label_send_type', 'required|alpha'];
-        $rules[] = ['customer_groups[]', 'lang:system::messages.label_customer_group', 'required_if:send_type,customer_group|integer'];
-        $rules[] = ['staff_groups[]', 'lang:system::messages.label_staff_group', 'required_if:send_type,staff_group|integer'];
-        $rules[] = ['customers[]', 'lang:system::messages.label_customers', 'required_if:send_type,customers|integer'];
-        $rules[] = ['staffs[]', 'lang:system::messages.label_staff', 'required_if:send_type,staffs|integer'];
+        $rules[] = ['customer_groups.*', 'lang:system::messages.label_customer_group', 'required_if:recipient,customer_group|integer'];
+        $rules[] = ['staff_groups.*', 'lang:system::messages.label_staff_group', 'required_if:recipient,staff_group|integer'];
+        $rules[] = ['customers.*', 'lang:system::messages.label_customers', 'required_if:recipient,customers|integer'];
+        $rules[] = ['staffs.*', 'lang:system::messages.label_staff', 'required_if:recipient,staffs|integer'];
         $rules[] = ['body', 'lang:system::messages.label_body', 'required|min:3'];
 
         return $this->validatePasses(post($form->arrayName), $rules);

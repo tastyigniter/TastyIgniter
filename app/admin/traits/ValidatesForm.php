@@ -10,12 +10,12 @@ use Session;
 
 trait ValidatesForm
 {
-    protected $validateAfterCallback;
+//    protected $validateAfterCallback;
 
     /**
      * Validate the given request with the given rules.
      *
-     * @param  $data
+     * @param  $request
      * @param  array $rules
      * @param  array $messages
      * @param  array $customAttributes
@@ -48,7 +48,7 @@ trait ValidatesForm
     /**
      * Validate the given request with the given rules.
      *
-     * @param  $data
+     * @param  $request
      * @param  array $rules
      * @param  array $messages
      * @param  array $customAttributes

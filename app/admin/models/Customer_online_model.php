@@ -58,43 +58,6 @@ class Customer_online_model extends Model
         return $query;
     }
 
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        $dateAddedColumn = DB::getTablePrefix().'customers_online.date_added';
-        $query->selectRaw('*, '.DB::getTablePrefix().'customers_online.ip_address, '.$dateAddedColumn);
-
-        $query->leftJoin('customers', 'customers.customer_id', '=', 'customers_online.customer_id');
-        $query->leftJoin('countries', 'countries.iso_code_3', '=', 'customers_online.country_code');
-
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['first_name', 'last_name', 'browser', 'ip_address', 'country_code']);
-        }
-
-        if (!empty($filter['filter_access'])) {
-            $query->where('access_type', $filter['filter_access']);
-        }
-
-        if (!empty($filter['time_out']) AND !empty($filter['filter_type']) AND $filter['filter_type'] === 'online') {
-            $query->whereDate('customers_online.date_added', '>=', $filter['time_out']);
-        }
-
-        if (!empty($filter['filter_date'])) {
-            $date = explode('-', $filter['filter_date']);
-            $query->whereYear('customers_online.date_added', $date[0]);
-            $query->whereMonth('customers_online.date_added', $date[1]);
-        }
-
-        return $query;
-    }
-
     //
     // Helpers
     //

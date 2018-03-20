@@ -78,7 +78,7 @@ $config['list']['columns'] = [
     ],
     'staff_name'     => [
         'label' => 'lang:admin::reservations.column_staff',
-        'type'  => 'date',
+        'type'  => 'text',
     ],
     'reserve_time'   => [
         'label'     => 'lang:admin::reservations.column_time',

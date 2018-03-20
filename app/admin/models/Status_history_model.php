@@ -29,6 +29,8 @@ class Status_history_model extends Model
         ],
     ];
 
+    protected $fillable = ['status_id', 'notify', 'status_for', 'comment'];
+
     protected $appends = ['staff_name', 'assignee_name', 'status_name', 'notified'];
 
     public $timestamps = TRUE;
@@ -51,13 +53,5 @@ class Status_history_model extends Model
     public function getNotifiedAttribute()
     {
         return $this->notify == 1 ? lang('admin::default.text_yes') : lang('admin::default.text_no');
-    }
-
-    public function scopeJoinStatusAndStaffTables($query)
-    {
-        $query->join('statuses', 'statuses.status_id', '=', 'status_history.status_id', 'left');
-        $query->join('staffs', 'staffs.staff_id', '=', 'status_history.staff_id', 'left');
-
-        return $query;
     }
 }

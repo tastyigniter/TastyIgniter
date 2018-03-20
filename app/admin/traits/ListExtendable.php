@@ -2,6 +2,9 @@
 
 namespace Admin\Traits;
 
+use Event;
+use Model;
+
 trait ListExtendable
 {
     /**

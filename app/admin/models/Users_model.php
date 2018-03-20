@@ -40,14 +40,7 @@ class Users_model extends AuthUserModel
 
     protected $purgeable = ['password_confirm'];
 
-    public function scopeJoinStaffTable($query)
-    {
-        $query->join('staffs', 'staffs.staff_id', '=', 'users.staff_id', 'left');
-
-        return $query;
-    }
-
-    public function getStaffNameAttribute($value)
+    public function getStaffNameAttribute()
     {
         if (!$staff = $this->staff)
             return null;
@@ -92,7 +85,7 @@ class Users_model extends AuthUserModel
 //        $mail_data['staff_username'] = $userModel->username;
 //        $mail_data['reset_link'] = admin_url('login/reset?code='.$update['reset_code']);
 //
-//        $mail_template = Mail_templates_model::getDefaultTemplateData('password_reset_request_alert');
+//        $mail_template = Mail_layouts_model::getDefaultTemplateData('password_reset_request_alert');
 //        $this->sendMail($this->getReminderEmail(), $mail_template, $mail_data);
 //
 //        return TRUE;
@@ -121,7 +114,7 @@ class Users_model extends AuthUserModel
 //        $mail_data['staff_username'] = $userModel->username;
 //        $mail_data['created_password'] = str_repeat('*', strlen($password));
 //
-//        $mail_template = Mail_templates_model::getDefaultTemplateData('password_reset_alert');
+//        $mail_template = Mail_layouts_model::getDefaultTemplateData('password_reset_alert');
 //
 //        $this->sendMail($this->getReminderEmail(), $mail_template, $mail_data);
 //

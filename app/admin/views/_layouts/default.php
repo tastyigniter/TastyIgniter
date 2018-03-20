@@ -27,7 +27,7 @@
     <div id="footer" class="navbar-footer">
         <div class="row-fluid">
             <p class="col-xs-9 text-copyright"><?= lang('system::default.tastyigniter.copyright'); ?></p>
-            <p class="col-xs-3 text-version"><?= sprintf(lang('system::default.tastyigniter.version'), setting('ti_version')); ?></p>
+            <p class="col-xs-3 text-version"><?= sprintf(lang('system::default.tastyigniter.version'), params('ti_version')); ?></p>
         </div>
     </div>
     <?= get_script_tags(['widget', 'custom', 'theme']); ?>

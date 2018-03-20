@@ -5,7 +5,6 @@ use DB;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Igniter\Flame\Notifications\Notifiable;
 
 /**
  * Customers Model Class
@@ -16,13 +15,8 @@ class Customers_model extends AuthUserModel
 {
     use LogsActivity;
     use Purgeable;
-    use Notifiable;
 
     protected static $logAttributes = ['name'];
-
-//    protected static $mailables = [
-//        'Igniter\Mail\CustomerRegistration' => ['registration', 'registration_alert'],
-//    ];
 
     const CREATED_AT = 'date_added';
 
@@ -36,7 +30,6 @@ class Customers_model extends AuthUserModel
      */
     protected $primaryKey = 'customer_id';
 
-//    protected $fillable = ['first_name', 'last_name', 'email', 'telephone', 'newsletter'];
     protected $guarded = ['reset_code', 'activation_code', 'remember_token'];
 
     protected $hidden = ['password'];
@@ -50,15 +43,11 @@ class Customers_model extends AuthUserModel
             'reservations' => ['Admin\Models\Reservations_model', 'delete' => TRUE],
         ],
         'belongsTo'     => [
-            'group'             => 'Admin\Models\Customer_groups_model',
+            'group'             => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
             'address'           => 'Admin\Models\Addresses_model',
-            'security_question' => 'Admin\Models\Security_questions_model',
-        ],
-        'belongsToMany' => [
-            'security_question' => 'Admin\Models\Security_questions_model',
         ],
         'morphMany'     => [
-            'messages' => ['System\Models\Message_meta_model', 'name' => 'messageable'],
+            'messages' => ['System\Models\Message_meta_model', 'name' => 'messagable'],
         ],
     ];
 
@@ -70,14 +59,14 @@ class Customers_model extends AuthUserModel
 
     public static function getDropdownOptions()
     {
-        return static::isEnabled()->selectRaw('concat(first_name, " ", last_name) as fullname')->dropdown('fullname');
+        return static::isEnabled()->selectRaw('concat(first_name, " ", last_name) as full_name')->dropdown('full_name');
     }
 
     //
     // Accessors & Mutators
     //
 
-    public function getCustomerNameAttribute($value)
+    public function getFullNameAttribute($value)
     {
         return $this->first_name.' '.$this->last_name;
     }
@@ -95,33 +84,6 @@ class Customers_model extends AuthUserModel
     //
     // Scopes
     //
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['first_name', 'last_name', 'email']);
-        }
-
-        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-            $query->where('status', $filter['filter_status']);
-        }
-
-        if (!empty($filter['filter_date'])) {
-            $date = explode('-', $filter['filter_date']);
-            $query->whereYear('date_added', $date[0]);
-            $query->whereMonth('date_added', $date[1]);
-        }
-
-        return $query;
-    }
 
     public function scopeIsEnabled($query)
     {
@@ -169,11 +131,6 @@ class Customers_model extends AuthUserModel
         });
     }
 
-    public function getReminderEmail()
-    {
-        return $this->email;
-    }
-
     /**
      * List all customers matching the filter,
      * to fill select auto-complete options
@@ -186,7 +143,7 @@ class Customers_model extends AuthUserModel
     {
         if (is_array($filter) AND !empty($filter)) {
             $query = self::query()->select('customer_id', 'first_name', 'last_name')
-                         ->selectRaw('concat(first_name, " ", last_name) AS customer_name');
+                         ->selectRaw('concat(first_name, " ", last_name) AS full_name');
 
             if (!empty($filter['customer_name'])) {
                 $query->like('CONCAT(first_name, last_name)', $filter['customer_name']);
@@ -201,7 +158,7 @@ class Customers_model extends AuthUserModel
                 foreach ($results as $result) {
                     $return['results'][] = [
                         'id'   => $result['customer_id'],
-                        'text' => utf8_encode($result['customer_name']),
+                        'text' => utf8_encode($result['full_name']),
                     ];
                 }
             }
@@ -223,19 +180,9 @@ class Customers_model extends AuthUserModel
         return $this->pluckDates('date_added');
     }
 
-//    public function getResetPasswordCode()
-//    {
-//        $this->reset_code = $resetCode = str_random(42);
-//        $this->reset_time = Carbon::now();
-//        $this->forceSave();
-//        return $resetCode;
-//    }
-
     /**
      * Reset a customer password,
      * new password is sent to registered email
-     *
-     * @param string $email
      *
      * @return bool
      */
@@ -249,67 +196,7 @@ class Customers_model extends AuthUserModel
         $this->save();
 
         return $resetCode;
-//        $customerModel->reset_code = $this->createResetCode($customerModel);
-//            $customerModel->reset_time = mdate('%Y-%m-%d %H:%i:%a', time());
-//
-//        return $this->newQuery()->where('email', $email)->update($update);
-//        if ($updated < 1)
-//            return FALSE;
-//
-//        $mail_data['first_name'] = $customerModel->first_name;
-//        $mail_data['last_name'] = $customerModel->last_name;
-//        $mail_data['reset_link'] = site_url('account/reset?code='.$update['reset_code']);
-//        $mail_data['account_login_link'] = site_url('account/login');
-//
-//        $this->sendMail($email, 'password_reset_request', $mail_data);
-//
-//        return TRUE;
     }
-
-    /**
-     * Sets the new password on customer requested reset
-     *
-     * @param $identity
-     * @param $credentials
-     *
-     * @return bool
-     */
-//    public function completeResetPassword($code, $password)
-//    {
-//        if (!$this->checkResetPasswordCode($code))
-//            return FALSE;
-//
-//        $this->password = App::make('hash')->make($password);
-//        $this->reset_time = null;
-//        $this->reset_code = null;
-//
-//        return $this->save();
-
-//        $mail_data['first_name'] = $customerModel->first_name;
-//        $mail_data['last_name'] = $customerModel->last_name;
-//        $mail_data['created_password'] = str_repeat('*', strlen($password));
-//        $mail_data['account_login_link'] = site_url('account/login');
-//
-//        $this->sendMail($this->getReminderEmail(), 'password_reset', $mail_data);
-
-//        return TRUE;
-//    }
-
-    /**
-     * Update the customer password
-     */
-//    public function updatePassword($identity, array $credentials)
-//    {
-//        $password = $credentials['password'];
-//
-//        $model = $this->newQuery()
-//                      ->where($this->getAuthIdentifierName(), $identity)->first();
-//
-//        if (is_null($model))
-//            return FALSE;
-//
-//        $model->password = $this->getHasher()->make($password);
-//    }
 
     /**
      * Update guest orders, address and reservations
@@ -354,79 +241,4 @@ class Customers_model extends AuthUserModel
 
         return $query;
     }
-
-    /**
-     * Send email to customer
-     *
-     * @param string $email
-     * @param array
-     * @param array $data
-     *
-     * @return bool
-     */
-//    public function sendMail($email, $template = [], $data = [])
-//    {
-//        if (!$template OR !strlen($email) OR !$data)
-//            return FALSE;
-//
-////        if (!is_array($template)) {
-////            $this->load->model('Mail_templates_model');
-////            $template = $this->Mail_templates_model->getDefaultTemplateData($template);
-////        }
-//
-//        if (!isset($template['subject'], $template['body']))
-//            return FALSE;
-//
-//        $this->ci()->load->library('email');
-//        $this->ci()->email->initialize();
-//        $this->ci()->email->set_template($template, $data);
-//        $this->ci()->email->from($this->ci()->config->item('site_email'), $this->ci()->config->item('site_name'));
-//        $this->ci()->email->to(strtolower($email));
-//
-//        if ($this->ci()->email->send()) {
-//            return TRUE;
-//        } else {
-//            log_message('debug', $this->ci()->email->print_debugger(['headers']));
-//        }
-//    }
-
-    /**
-     * Send the registration confirmation email
-     *
-     * @return bool FALSE on failure
-     */
-//    public function sendRegistrationEmail()
-//    {
-//        if (empty($this->email))
-//            return FALSE;
-//
-//        $mail_data['first_name'] = $this->first_name;
-//        $mail_data['last_name'] = $this->last_name;
-//        $mail_data['email'] = $this->email;
-//        $mail_data['account_login_link'] = root_url('account/login');
-//
-//        $this->notify(new CustomerRegistered($this));
-//
-//        $config = setting('registration_email', ['customer', 'admin']);
-//        if (in_array('customer', $config))
-//            $this->sendMail($mail_data['email'], 'registration', $mail_data);
-
-//        if (in_array('admin', $config))
-//            $this->sendMail('registration_alert');
-//            $this->sendMail($this->config->item('site_email'), 'registration_alert', $mail_data);
-//    }
-
-//    public function routeNotificationForMail()
-//    {
-//        $emails = [];
-//        $config = setting('registration_email', ['customer', 'admin']);
-//        if (in_array('customer', $config)) {
-//            $emails[] = $this->email;
-//        }
-//        else {
-//            $emails[] = setting('site_email');
-//        }
-//
-//        return $emails;
-//    }
 }

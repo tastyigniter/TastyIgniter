@@ -130,7 +130,7 @@ class MenuItem
         if (is_array($this->optionsFrom) AND count($this->optionsFrom) == 2) {
             $itemOptions = $this->optionsFrom;
 
-            return call_user_func($itemOptions, $this);
+            return $itemOptions($this);
         }
         elseif (is_array($this->optionsFrom)) {
             return $this->optionsFrom;

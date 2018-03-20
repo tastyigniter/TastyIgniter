@@ -1,7 +1,7 @@
 ---
-title: main::account.address.text_heading
+title: Address Book
 layout: default
-permalink: /account/address/:id?
+permalink: /account/address/:addressId?
 
 '[account]':
     security: customer

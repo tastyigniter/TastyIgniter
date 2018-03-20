@@ -1,5 +1,5 @@
 ---
-title: main::account.reservations.text_heading
+title: Account Reservations
 layout: default
 permalink: /account/reservations
 

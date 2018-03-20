@@ -24,10 +24,10 @@ $isScrollable = count($fieldOptions) > 10;
                     checked="checked">
 
                 <label for="<?= $checkboxId ?>">
-                    <?= e(lang($option[0])) ?>
+                    <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
                 </label>
                 <?php if (isset($option[1])) { ?>
-                    <p class="help-block"><?= e(lang($option[1])) ?></p>
+                    <p class="help-block"><?= e((sscanf($option[1], 'lang:%s', $line) === 1) ? lang($line) : $option[1]) ?></p>
                 <?php } ?>
             </div>
         <?php } ?>
@@ -38,9 +38,9 @@ $isScrollable = count($fieldOptions) > 10;
     <div class="field-checkboxlist <?= $isScrollable ? 'is-scrollable' : '' ?>">
         <?php if ($isScrollable) { ?>
         <small>
-            <?= e(lang('text_select')) ?>:
-            <a href="javascript:;" data-field-checkboxlist-all><?= e(lang('text_select_all')) ?></a>,
-            <a href="javascript:;" data-field-checkboxlist-none><?= e(lang('text_select_none')) ?></a>
+            <?= e(lang('admin::default.text_select')) ?>:
+            <a href="javascript:;" data-field-checkboxlist-all><?= e(lang('admin::default.text_select_all')) ?></a>,
+            <a href="javascript:;" data-field-checkboxlist-none><?= e(lang('admin::default.text_select_none')) ?></a>
         </small>
 
         <div class="field-checkboxlist-scrollable">

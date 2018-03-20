@@ -4,7 +4,7 @@
         <a
             class="btn btn-danger btn-xs"
             onclick="confirm(
-                '<?= lang('lang:admin::default.alert_warning_confirm'); ?>')
+                '<?= lang('admin::default.alert_warning_confirm'); ?>')
                 ? $(this).parents('#<?= $this->getId('area-'.$areaIndex.'condition-row-'.$index) ?>').remove()
                 : false">
             <i class="fa fa-times-circle"></i>

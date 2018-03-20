@@ -6,12 +6,12 @@ use Admin;
 use Admin\Traits\HasAuthentication;
 use Admin\Traits\ValidatesForm;
 use Admin\Traits\WidgetMaker;
-use Admin\Widgets\MediaManager;
 use Admin\Widgets\Menu;
 use Admin\Widgets\Toolbar;
 use AdminAuth;
 use AdminMenu;
 use Exception;
+use Main\widgets\MediaManager;
 use Redirect;
 use Request;
 use Response;
@@ -69,7 +69,7 @@ class AdminController extends BaseController
         $this->definePaths();
 
         // Create a new instance of the admin user
-        $this->setUser(AdminAuth::getUser());
+        $this->setUser(AdminAuth::user());
 
         parent::__construct();
 
@@ -89,6 +89,7 @@ class AdminController extends BaseController
         // Add paths from the extension / module context
         $relativePath = dirname(dirname($classPath = strtolower(str_replace('\\', '/', get_called_class()))));
         $this->viewPath[] = '~/extensions/'.$relativePath.'/views';
+        $this->viewPath[] = '~/extensions/'.$relativePath.'/views/'.basename($classPath);
         $this->viewPath[] = '~/app/'.$relativePath.'/views/'.basename($classPath);
         $this->viewPath[] = '~/app/'.$relativePath.'/views';
         $this->viewPath[] = '~/app/admin/views/'.basename($classPath);
@@ -103,11 +104,11 @@ class AdminController extends BaseController
         // We will also make sure the admin module context is always present
         $this->partialPath[] = '~/extensions/'.$relativePath.'/views/_partials';
         $this->partialPath[] = '~/app/'.$relativePath.'/views/_partials';
-//        $this->partialPath[] = '~/app/' . $relativePath . '/views/'.basename($classPath);
         $this->partialPath[] = '~/app/admin/views/_partials';
         $this->partialPath = array_merge($this->partialPath, $this->viewPath);
 
-        $this->configPath = '~/app/'.$relativePath.'/models/config';
+        $this->configPath[] = '~/extensions/'.$relativePath.'/models/config';
+        $this->configPath[] = '~/app/'.$relativePath.'/models/config';
     }
 
     public function remap($action, $params)
@@ -136,8 +137,8 @@ class AdminController extends BaseController
         $this->makeMainMenuWidget();
 
         // Execute post handler and AJAX event
-        if ($ajaxResponse = $this->processHandlers() AND $ajaxResponse !== TRUE) {
-            return $ajaxResponse;
+        if ($handlerResponse = $this->processHandlers() AND $handlerResponse !== TRUE) {
+            return $handlerResponse;
         }
 
         // Loads the requested controller action

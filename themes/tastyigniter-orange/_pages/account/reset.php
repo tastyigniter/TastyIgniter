@@ -1,5 +1,5 @@
 ---
-title: main::account.reset.text_heading
+title: Reset Password
 layout: default
 permalink: /forgot-password/:code?
 

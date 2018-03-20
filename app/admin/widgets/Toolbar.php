@@ -49,9 +49,6 @@ class Toolbar extends BaseWidget
     {
         if ($templateButtons = Template::getButtonList())
             $this->buttons['templateButtons'] = $templateButtons;
-
-        if ($templateIcons = Template::getIconList())
-            $this->buttons['templateIcons'] = $templateIcons;
     }
 
     public function getContext()

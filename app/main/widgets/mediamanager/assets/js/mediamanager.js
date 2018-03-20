@@ -293,14 +293,14 @@
     // Uploader
 
     MediaManager.prototype.initUploader = function () {
-        var $uploader = $('media-uploader', this.$mediaListElement)
+        var $uploader = $('[data-control="media-upload"]', this.$mediaListElement)
         if (!$uploader.length || this.dropzone)
             return
 
         var dropzoneOptions = {
             url: this.options.url,
             headers: {},
-            paramName: 'file',
+            paramName: 'file_data',
             addRemoveLinks: true,
             maxFilesize: this.options.maxUploadSize, // MB
             clickable: this.$el.find('[data-media-control="upload"]').get(0),
@@ -312,8 +312,9 @@
         if (this.options.uniqueId) {
             dropzoneOptions.headers['X-IGNITER-FILEUPLOAD'] = this.options.uniqueId
         }
+
         Dropzone.autoDiscover = false
-        this.dropzone = new Dropzone(this.$el.find('[data-control="media-upload"]').get(0), dropzoneOptions);
+        this.dropzone = new Dropzone($uploader.get(0), dropzoneOptions);
         this.dropzone.on('addedfile', $.proxy(this.uploadFileAdded, this))
         this.dropzone.on('error', $.proxy(this.uploadError, this))
         this.dropzone.on('sending', $.proxy(this.uploadSending, this))
@@ -331,7 +332,7 @@
     MediaManager.prototype.checkUploadAllowedType = function (file, done) {
         var fileExt = file.name.split('.').pop().toLowerCase();
 
-        done($.inArray(fileExt, this.options.allowedExt) == -1 ? 'File extension is not allowed.' : null);
+        done($.inArray(fileExt, this.options.allowedExtensions) == -1 ? 'File extension is not allowed.' : null);
     }
 
     MediaManager.prototype.destroyUploader = function () {
@@ -782,7 +783,7 @@
         chooseButton: false,
         uniqueId: null,
         maxUploadSize: 0,
-        allowedExt: [],
+        allowedExtensions: [],
         renameDisabled: 'Folder can not be renamed.',
         moveDisabled: 'Folder can not be moved.',
         deleteDisabled: 'Folder can not be deleted.',

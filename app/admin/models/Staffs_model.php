@@ -36,7 +36,7 @@ class Staffs_model extends Model
             'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id'],
         ],
         'belongsTo' => [
-            'group'    => ['Admin\Models\Staff_groups_model', 'foreignKey' => 'staff_group_id', 'otherKey' => 'staff_group_id'],
+            'group'    => ['Admin\Models\Staff_groups_model', 'foreignKey' => 'staff_group_id'],
             'location' => ['Admin\Models\Locations_model', 'foreignKey' => 'staff_location_id'],
         ],
     ];
@@ -47,6 +47,16 @@ class Staffs_model extends Model
 
     protected $with = ['group'];
 
+    public function getFullNameAttribute($value)
+    {
+        return $this->staff_name;
+    }
+
+    public function getEmailAttribute()
+    {
+        return $this->staff_email;
+    }
+
     public static function getDropdownOptions()
     {
         return static::isEnabled()->dropdown('staff_name');
@@ -56,22 +66,6 @@ class Staffs_model extends Model
     // Scopes
     //
 
-    public function scopeJoinTables($query)
-    {
-        $query->join('users', 'users.staff_id', '=', 'staffs.staff_id', 'left');
-        $query->join('staff_groups', 'staff_groups.staff_group_id', '=', 'staffs.staff_group_id', 'left');
-        $query->join('locations', 'locations.location_id', '=', 'staffs.staff_location_id', 'left');
-
-        return $query;
-    }
-
-    public function scopeJoinUserTable($query)
-    {
-        $query->join('users', 'users.staff_id', '=', 'staffs.staff_id', 'left');
-
-        return $query;
-    }
-
     /**
      * Scope a query to only include enabled staff
      * @return $this
@@ -79,46 +73,6 @@ class Staffs_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('staff_status', 1);
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        $query->selectRaw($this->getTablePrefix('staffs').'.staff_id, staff_name, staff_email, staff_group_name, '.
-            'location_name, date_added, staff_status');
-
-        $query->joinTables();
-
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['staff_name', 'location_name', 'staff_email']);
-        }
-
-        if (isset($filter['filter_group']) AND is_numeric($filter['filter_group'])) {
-            $query->where('staffs.staff_group_id', $filter['filter_group']);
-        }
-
-        if (!empty($filter['filter_location'])) {
-            $query->where('staffs.staff_location_id', $filter['filter_location']);
-        }
-
-        if (!empty($filter['filter_date'])) {
-            $date = explode('-', $filter['filter_date']);
-            $query->whereYear('date_added', $date[0]);
-            $query->whereMonth('date_added', $date[1]);
-        }
-
-        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-            $query->where('staff_status', $filter['filter_status']);
-        }
-
-        return $query;
     }
 
     //

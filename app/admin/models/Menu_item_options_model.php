@@ -82,43 +82,4 @@ class Menu_item_options_model extends Model
 
         return self::$valuesCollection->pluck('value', 'option_value_id');
     }
-
-    /**
-     * Create a new or update existing menu options
-     *
-     * @param bool $menu_id
-     * @param array $menu_options
-     *
-     * @return bool
-     */
-    public function addMenuOption($menu_id, $menu_options = [])
-    {
-        if (!is_numeric($menu_id) OR !count($menu_options))
-            return FALSE;
-
-        $idsToKeep = [];
-        foreach ($menu_options as $option) {
-            if (!isset($option['option_id'])) continue;
-
-            $menuOption = $this->firstOrNew([
-                'menu_option_id' => $option['menu_option_id'],
-                'menu_id'        => $menu_id,
-                'option_id'      => $option['option_id'],
-            ])->fill(array_merge($option, [
-                'option_values' => isset($option['menu_option_values']) ? serialize($option['menu_option_values']) : [],
-            ]));
-
-            if ($menuOption->save() AND isset($option['menu_option_values'])) {
-                Menu_item_option_values_model::addMenuOptionValues(
-                    $menuOption->getKey(), $menu_id, $option['option_id'], $option['menu_option_values']
-                );
-            }
-
-            $idsToKeep[] = $menuOption->getKey();
-        }
-
-        $this->where('menu_id', $menu_id)->whereNotIn('menu_option_id', $idsToKeep)->delete();
-
-        return TRUE;
-    }
 }

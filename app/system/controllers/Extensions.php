@@ -217,15 +217,15 @@ class Extensions extends \Admin\Classes\AdminController
 
             if (!$config)
                 throw new Exception(lang('system::extensions.error_config_no_found'));
+
+            flash()->success(sprintf(lang('admin::default.alert_success'), "Extension uploaded "));
+
+            return $this->redirect('extensions');
         } catch (Exception $ex) {
             flash()->danger($ex->getMessage());
 
             return $this->refresh();
         }
-
-        flash()->success(sprintf(lang('admin::default.alert_success'), "Extension uploaded "));
-
-        return $this->redirect('extensions');
     }
 
     public function delete_onDelete($context = null, $extensionCode = null)

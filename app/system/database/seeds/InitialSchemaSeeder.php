@@ -2,7 +2,7 @@
 
 use Admin\Models\Customer_groups_model;
 use Admin\Models\Mealtimes_model;
-use Admin\Models\Pages_model;
+use System\Models\Pages_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Statuses_model;
 use Illuminate\Database\Seeder;
@@ -33,8 +33,6 @@ class InitialSchemaSeeder extends Seeder
         $this->seedLanguages();
 
         $this->seedMealtimes();
-
-//        $this->seedMailTemplates();
 
         $this->seedPages();
 

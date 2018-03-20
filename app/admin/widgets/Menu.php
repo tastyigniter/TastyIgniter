@@ -85,7 +85,7 @@ class Menu extends BaseWidget
         if ($this->itemsDefined)
             return;
 
-        if (!isset($this->items) || !is_array($this->items)) {
+        if (!isset($this->items) OR !is_array($this->items)) {
             $this->items = [];
         }
 

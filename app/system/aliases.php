@@ -35,7 +35,6 @@ return [
 
     // TastyIgniter aliases
     'Assets'       => System\Facades\Assets::class,
-    'Captcha'      => Main\Facades\Captcha::class,
     'File'         => Igniter\Flame\Support\Facades\File::class,
     'Flash'        => Igniter\Flame\Flash\Facades\Flash::class,
     'Form'         => Igniter\Flame\Html\FormFacade::class,
@@ -49,7 +48,6 @@ return [
     'AdminMenu' => Admin\Facades\AdminMenu::class,
     'AdminAuth' => Admin\Facades\AdminAuth::class,
     'Auth'      => Main\Facades\Auth::class,
-    'Main'      => Main\Facades\Main::class,
     'Template'  => Admin\Facades\Template::class,
 
     'SystemException'      => Igniter\Flame\Exception\SystemException::class,

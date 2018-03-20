@@ -5,6 +5,8 @@ use AdminAuth;
 use AdminMenu;
 use Exception;
 use Main\Classes\ThemeManager;
+use Main\Template\Layout;
+use Main\Template\Page;
 use Request;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
@@ -94,6 +96,11 @@ class Themes extends \Admin\Classes\AdminController
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
+            Template::setButton(lang('system::themes.text_customize'), [
+                'class' => 'btn btn-default',
+                'href'  => admin_url('themes/edit/'.$themeCode),
+            ]);
+
             $model = $this->formFindModelObject($themeCode);
             $this->initFormWidget($model, $context);
         } catch (Exception $ex) {
@@ -140,9 +147,10 @@ class Themes extends \Admin\Classes\AdminController
             $themeManager = ThemeManager::instance();
             $themeClass = $themeManager->findTheme($themeCode);
             $model = Themes_model::whereCode($themeCode)->first();
+            $installedThemes = params()->get('default_themes.main');
 
             // Theme must be disabled before it can be deleted
-            if ($model AND $model->status) {
+            if ($model AND $model->code == $installedThemes) {
                 flash()->warning(sprintf(
                     lang('admin::default.alert_error_nothing'),
                     lang('admin::default.text_deleted').lang('system::themes.text_theme_is_active')
@@ -216,10 +224,18 @@ class Themes extends \Admin\Classes\AdminController
             return;
 
         $filename = array_get(post($this->formWidget->arrayName), 'file');
-        $content = array_get($this->formWidget->getSaveData(), 'source');
+//        $filename = substr($filePath, strpos($filePath, '/')+1);
+        $content = array_get(post($this->formWidget->arrayName), 'source');
         if (is_int($content))
             $filename = null;
 
+//        $theme = ThemeManager::instance()->findTheme($themeCode);
+//
+//        $page = Layout::load($theme, $filename);
+//
+//        $page->update();
+//
+//        dd($filename, $page, $content);
         if (ThemeManager::instance()->writeFile($filename, $themeCode, $content)) {
             flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme file ['.$filename.'] updated '));
         }
@@ -232,10 +248,9 @@ class Themes extends \Admin\Classes\AdminController
     public function copy_onCreateChild($context, $themeCode = null)
     {
         $theme = ThemeManager::instance()->findTheme($themeCode);
-        $meta = $theme->config;
 
         if (Themes_model::copyTheme($themeCode, (post('copy_data') == 1))) {
-            $name = isset($meta['name']) ? $meta['name'] : '';
+            $name = $theme->getName();
 
             flash()->success(sprintf(lang('admin::default.alert_success'), "Theme {$name} copied "));
         }
@@ -258,15 +273,15 @@ class Themes extends \Admin\Classes\AdminController
 
             if (!$config)
                 throw new Exception(lang('system::themes.error_config_no_found'));
+
+            flash()->success(sprintf(lang('admin::default.alert_success'), "Theme uploaded "));
+
+            return $this->redirect('themes');
         } catch (Exception $ex) {
             flash()->danger($ex->getMessage());
 
             return $this->refresh();
         }
-
-        flash()->success(sprintf(lang('admin::default.alert_success'), "Theme uploaded "));
-
-        return $this->redirect('themes');
     }
 
     public function delete_onDelete($context = null, $themeCode = null)

@@ -5,8 +5,8 @@ $options = $field->options;
     <table class="table table-striped table-border table-no-spacing">
         <thead>
         <tr>
-            <th class="text-right" width="30%"><?= lang('column_variable'); ?></th>
-            <th width="70%"><?= lang('column_language'); ?></th>
+            <th class="text-right" width="20%"><?= lang('system::languages.column_variable'); ?></th>
+            <th width="80%"><?= lang('system::languages.column_language'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -15,10 +15,11 @@ $options = $field->options;
                 <tr>
                     <td class="text-right"><span class="text-muted"><?= $key; ?></span></td>
                     <td>
-                        <input
+                        <textarea
                             class="form-control"
+                            rows="1"
                             name="<?= $field->getName(); ?>[<?= $key; ?>]"
-                            value="<?= e($value); ?>">
+                        ><?= e($value); ?></textarea>
                     </td>
                 </tr>
             <?php } ?>

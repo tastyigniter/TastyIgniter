@@ -82,7 +82,7 @@ class Relation extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->formField->disabled || $this->formField->hidden) {
+        if ($this->formField->disabled OR $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 
@@ -135,10 +135,10 @@ class Relation extends BaseFormWidget
 
             $field->type = 'selectlist';
             if (in_array($relationType, ['belongsToMany', 'morphToMany', 'morphedByMany', 'hasMany'])) {
-                $field->mode = 'checkbox';
+                $field->config['mode'] = 'checkbox';
             }
             elseif (in_array($relationType, ['belongsTo', 'hasOne'])) {
-                $field->mode = 'radio';
+                $field->config['mode'] = 'radio';
             }
 
             $field->value = $this->processFieldValue($this->relatedModel, $this->getLoadValue());

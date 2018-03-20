@@ -4,7 +4,7 @@ $news_feed = null;
 $top_customers = null;
 $orders = null;
 ?>
-<div class="row content dashboard">
+<div class="row content dashboard hide">
     <div class="col-md-12">
         <div class="row mini-statistics">
             <div class="col-xs-12 col-sm-6 col-lg-3">

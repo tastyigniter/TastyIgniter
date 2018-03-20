@@ -84,8 +84,8 @@
     MarkdownEditor.prototype.launchMediaManager = function(onSuccess) {
         var self = this
 
-        new $.oc.mediaManager.popup({
-            alias: 'ocmediamanager',
+        new $.ti.mediaManager.popup({
+            alias: 'timediamanager',
             cropAndInsertButton: true,
             onInsert: function(items) {
                 if (!items.length) {

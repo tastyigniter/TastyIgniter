@@ -1,7 +1,7 @@
 <?php namespace Admin\Controllers;
 
+use AdminAuth;
 use AdminMenu;
-use Assets;
 use Request;
 use Template;
 
@@ -22,12 +22,12 @@ class Dashboard extends \Admin\Classes\AdminController
         Template::setTitle(lang('admin::dashboard.text_title'));
         Template::setHeading(lang('admin::dashboard.text_heading'));
 
-        Assets::addCss(assets_url('js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css');
-        Assets::addJs(assets_url('js/daterange/moment.min.js'), 'daterange-moment-js');
-        Assets::addJs(assets_url('js/daterange/daterangepicker.js'), 'daterangepicker-js');
-        Assets::addCss(assets_url('js/morris/morris.css'), 'chart-css');
-        Assets::addJs(assets_url('js/morris/raphael-min.js'), 'raphael-min-js');
-        Assets::addJs(assets_url('js/morris/morris.min.js'), 'morris-min-js');
+//        Assets::addCss(assets_url('js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css');
+//        Assets::addJs(assets_url('js/daterange/moment.min.js'), 'daterange-moment-js');
+//        Assets::addJs(assets_url('js/daterange/daterangepicker.js'), 'daterangepicker-js');
+//        Assets::addCss(assets_url('js/morris/morris.css'), 'chart-css');
+//        Assets::addJs(assets_url('js/morris/raphael-min.js'), 'raphael-min-js');
+//        Assets::addJs(assets_url('js/morris/morris.min.js'), 'morris-min-js');
 
 //        $data['activities'] = $this->getActivities();
 //        $data['top_customers'] = $this->getTopCustomers();

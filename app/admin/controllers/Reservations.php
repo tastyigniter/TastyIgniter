@@ -1,6 +1,8 @@
 <?php namespace Admin\Controllers;
 
+use AdminAuth;
 use AdminMenu;
+use Template;
 
 class Reservations extends \Admin\Classes\AdminController
 {
@@ -47,8 +49,6 @@ class Reservations extends \Admin\Classes\AdminController
     public function __construct()
     {
         parent::__construct();
-
-        $this->load->library('calendar');
 
         AdminMenu::setContext('reservations', 'sales');
     }

@@ -1,5 +1,5 @@
 ---
-title: main::account.text_heading
+title: Account Dashboard
 layout: default
 permalink: /account
 

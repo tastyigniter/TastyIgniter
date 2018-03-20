@@ -1,13 +1,13 @@
 <div class="logo">
     <a class="" href="<?= page_url('home'); ?>">
-        <?php if (get_theme_options('logo_image')) { ?>
+        <?php if ($this->theme->logo_image) { ?>
             <img
                 alt="<?= setting('site_name'); ?>"
-                src="<?= image_url(get_theme_options('logo_image')) ?>"
+                src="<?= image_url($this->theme->logo_image) ?>"
                 height="40"
             >
-        <?php } else if (get_theme_options('logo_text')) { ?>
-            <?= get_theme_options('logo_text'); ?>
+        <?php } else if ($this->theme->logo_text) { ?>
+            <?= $this->theme->logo_text; ?>
         <?php } else if (setting('site_logo') === 'data/no_photo.png') { ?>
             <?= setting('site_name'); ?>
         <?php } else { ?>

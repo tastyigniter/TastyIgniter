@@ -1,7 +1,7 @@
 ---
-title: main::account.orders.text_heading
+title: Account Orders
 layout: default
-permalink: /account/orders
+permalink: /account/orders/:orderId?
 
 '[account]':
     security: customer

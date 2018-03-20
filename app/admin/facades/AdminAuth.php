@@ -1,8 +1,8 @@
 <?php namespace Admin\Facades;
 
-use Illuminate\Support\Facades\Facade as IlluminateFacade;
+use Illuminate\Support\Facades\Facade;
 
-class AdminAuth extends IlluminateFacade
+class AdminAuth extends Facade
 {
     /**
      * Get the registered name of the component.

@@ -1,19 +1,19 @@
 <?php namespace System\Database\Seeds;
 
 use Admin\Models\Categories_model;
-use Admin\Models\Layout_modules_model;
 use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
-use Admin\Models\Pages_model;
+use System\Models\Pages_model;
 use Admin\Models\Payments_model;
 use Admin\Models\Reviews_model;
 use Admin\Models\Status_history_model;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use System\Models\Extensions_model;
-use System\Models\Mail_templates_data_model;
+use System\Models\Mail_templates_model;
 use System\Models\Message_meta_model;
 use System\Models\Messages_model;
+use System\Models\Permissions_model;
 use System\Models\Themes_model;
 
 /**
@@ -38,8 +38,6 @@ class UpdateRecordsSeeder extends Seeder
 
         $this->updateMorphsOnMessagesMeta();
 
-        $this->fillAliasColumnOnLayoutModules();
-
         $this->copyRecordsFromExtensionsToThemes();
 
         $this->copyRecordsFromExtensionsToPayments();
@@ -47,6 +45,8 @@ class UpdateRecordsSeeder extends Seeder
         $this->copyRecordsFromLocationsToLocationAreas();
 
         $this->fillColumnsOnMailTemplatesData();
+
+        $this->fillIsCustomOnPermissions();
     }
 
     protected function updateMorphsOnStatusHistory()
@@ -122,29 +122,6 @@ class UpdateRecordsSeeder extends Seeder
 
             $model->messagable_id = $model->value;
             $model->messagable_type = $replace[$model->item];
-            $model->save();
-        });
-    }
-
-    protected function fillAliasColumnOnLayoutModules()
-    {
-        if (!Layout_modules_model::where('module_code', 'local_module')->count())
-            return;
-
-        $replaceAlias = [
-            'pages_module'       => 'pages',
-            'local_module'       => 'local',
-            'account_module'     => 'account',
-            'categories_module'  => 'categories',
-            'cart_module'        => 'cart',
-            'reservation_module' => 'seatbooker',
-        ];
-
-        Layout_modules_model::all()->each(function ($model) use ($replaceAlias) {
-            $model->alias = isset($replaceAlias[$model->module_code])
-                ? $replaceAlias[$model->module_code]
-                : $model->module_code;
-
             $model->save();
         });
     }
@@ -234,10 +211,15 @@ class UpdateRecordsSeeder extends Seeder
             'contact'                      => 'lang:system::mail_templates.text_contact',
         ];
 
-        Mail_templates_data_model::all()->each(function ($model) use ($labels) {
+        Mail_templates_model::all()->each(function ($model) use ($labels) {
             $model->is_custom = 1;
             $model->label = (!isset($labels[$model->code])) ? null : $labels[$model->code];
             $model->save();
         });
+    }
+
+    protected function fillIsCustomOnPermissions()
+    {
+        Permissions_model::update(['is_custom' => 1]);
     }
 }

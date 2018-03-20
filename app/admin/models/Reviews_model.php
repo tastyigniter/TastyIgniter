@@ -74,9 +74,7 @@ class Reviews_model extends Model
         ], $options));
 
         if (is_numeric($location)) {
-            $query->whereHas('location', function ($q) use ($location) {
-                $q->where('location_id', $location);
-            });
+            $query->where('location_id', $location);
         }
 
         if (!is_array($sort)) {
@@ -97,51 +95,16 @@ class Reviews_model extends Model
         return $query->paginate($pageLimit, $page);
     }
 
-    public function scopeJoinLocationsTable($query)
-    {
-        return $query->join('locations', 'locations.location_id', '=', 'reviews.location_id', 'left');
-    }
-
     public function scopeIsApproved($query)
     {
         return $query->where('review_status', 1);
     }
 
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
+    public function scopeHasBeenReviewed($query, $sale, $customerId)
     {
-        $query->joinLocationsTable();
-
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['author', 'location_name', 'order_id']);
-        }
-
-        if (!empty($filter['filter_location'])) {
-            $query->where('reviews.location_id', $filter['filter_location']);
-        }
-
-        if (!empty($filter['customer_id'])) {
-            $query->where('customer_id', $filter['customer_id']);
-        }
-
-        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-            $query->where('review_status', $filter['filter_status']);
-        }
-
-        if (!empty($filter['filter_date'])) {
-            $date = explode('-', $filter['filter_date']);
-            $query->whereYear('date_added', $date[0]);
-            $query->whereMonth('date_added', $date[1]);
-        }
-
-        return $query;
+        return $query->where('sale_type', get_class($sale))
+                     ->where('sale_id', $sale->getKey())
+                     ->where('customer_id', $customerId);
     }
 
     //

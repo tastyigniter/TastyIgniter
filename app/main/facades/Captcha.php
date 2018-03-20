@@ -1,8 +1,8 @@
 <?php namespace Main\Facades;
 
-use Illuminate\Support\Facades\Facade as IlluminateFacade;
+use Illuminate\Support\Facades\Facade;
 
-class Captcha extends IlluminateFacade
+class Captcha extends Facade
 {
     /**
      * Get the registered name of the component.

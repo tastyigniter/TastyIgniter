@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Main\Models\Image_tool_model;
 use Model;
 
 /**

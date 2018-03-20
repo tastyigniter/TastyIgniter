@@ -8,6 +8,7 @@ use DB;
 use Event;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
 use Request;
 
 /**
@@ -228,7 +229,7 @@ class Filter extends BaseWidget
      *
      * @param $scope
      *
-     * @return \Admin\Widgets\Collection
+     * @return Collection
      */
     protected function getOptionsFromModel($scope)
     {
@@ -281,7 +282,7 @@ class Filter extends BaseWidget
         if ($this->scopesDefined)
             return;
 
-        if (!isset($this->scopes) || !is_array($this->scopes)) {
+        if (!isset($this->scopes) OR !is_array($this->scopes)) {
             $this->scopes = [];
         }
 

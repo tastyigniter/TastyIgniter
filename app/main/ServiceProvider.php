@@ -2,7 +2,6 @@
 
 namespace Main;
 
-use App;
 use Config;
 use File;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
@@ -42,9 +41,6 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerSingletons()
     {
-        App::singleton('captcha', function ($app) {
-            return new Libraries\Captcha($app);
-        });
     }
 
     protected function registerBaseTags()

@@ -7,9 +7,6 @@
  *
  * JavaScript API:
  * $('a#someElement').recordFinder({ option: 'value' })
- *
- * Dependences:
- * - Some other plugin (filename.js)
  */
 
 +function ($) { "use strict";
@@ -33,19 +30,6 @@
     }
 
     RecordFinder.prototype.updateRecord = function(linkEl, recordId) {
-        if (!this.options.dataLocker) return
-        var self = this
-        $(this.options.dataLocker).val(recordId)
-
-        this.$el.loadIndicator({ opaque: true })
-        this.$el.request(this.options.refreshHandler, {
-            success: function(data) {
-                this.success(data)
-                $(self.options.dataLocker).trigger('change')
-            }
-        })
-
-        $(linkEl).closest('.recordfinder-popup').popup('hide')
     }
 
     // RECORDFINDER PLUGIN DEFINITION
@@ -57,9 +41,9 @@
         var args = Array.prototype.slice.call(arguments, 1), result
         this.each(function () {
             var $this   = $(this)
-            var data    = $this.data('oc.recordfinder')
+            var data    = $this.data('ti.recordfinder')
             var options = $.extend({}, RecordFinder.DEFAULTS, $this.data(), typeof option == 'object' && option)
-            if (!data) $this.data('oc.recordfinder', (data = new RecordFinder(this, options)))
+            if (!data) $this.data('ti.recordfinder', (data = new RecordFinder(this, options)))
             if (typeof option == 'string') result = data[option].apply(data, args)
             if (typeof result != 'undefined') return false
         })

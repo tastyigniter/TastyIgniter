@@ -3,7 +3,6 @@
 use Admin\Facades\AdminAuth;
 use Artisan;
 use Carbon\Carbon;
-use Igniter\Traits\DelegateToCI;
 use Model;
 
 /**
@@ -56,38 +55,6 @@ class Currencies_model extends Model
     //
     // Scopes
     //
-
-    public function scopeJoinCountry($query)
-    {
-        return $query->join('countries', 'countries.iso_code_3', '=', 'currencies.iso_alpha3', 'left');
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        $query->joinCountry();
-
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['currency_name', 'currency_code']);
-
-            $query->orWhereHas('country', function ($q) use ($filter) {
-                $q->search($filter['filter_search'], ['country_name']);
-            });
-        }
-
-        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-            $query->where('currency_status', $filter['filter_status']);
-        }
-
-        return $query;
-    }
 
     //
     // Events

@@ -1,5 +1,5 @@
 ---
-title: Checkout Success
+title: Checkout Confirmation
 layout: default
 permalink: /checkout/success/:hash?
 

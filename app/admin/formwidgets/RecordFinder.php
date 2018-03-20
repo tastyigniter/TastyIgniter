@@ -1,6 +1,7 @@
 <?php namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
+use Model;
 
 /**
  * Record Finder
@@ -198,7 +199,7 @@ class RecordFinder extends BaseFormWidget
 
     public function getNameValue()
     {
-        if (!$this->relationModel || !$this->nameFrom) {
+        if (!$this->relationModel OR !$this->nameFrom) {
             return null;
         }
 
@@ -207,7 +208,7 @@ class RecordFinder extends BaseFormWidget
 
     public function getDescriptionValue()
     {
-        if (!$this->relationModel || !$this->descriptionFrom) {
+        if (!$this->relationModel OR !$this->descriptionFrom) {
             return null;
         }
 

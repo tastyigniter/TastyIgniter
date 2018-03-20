@@ -96,35 +96,11 @@ $config['form']['tabs'] = [
             'span'    => 'right',
             'comment' => 'lang:system::languages.help_idiom',
         ],
-        'clone_language'    => [
-            'label'   => 'lang:system::languages.label_import',
-            'type'    => 'radio',
-            'span'    => 'left',
-            'default' => 'none',
-            'context' => 'create',
-            'comment' => 'lang:system::languages.help_import',
-            'options' => [
-                'none'   => 'lang:admin::default.text_none',
-                'clone'  => 'lang:system::languages.label_clone',
-//                'remote' => 'lang:system::languages.label_remote',
-            ],
-        ],
-        'language_to_clone' => [
-            'label'   => 'lang:system::languages.label_clone',
-            'type'    => 'select',
-            'context' => 'create',
-            'options' => 'listCloneableLanguages',
-            'trigger' => [
-                'action'    => 'show',
-                'field'     => 'clone_language',
-                'condition' => 'value[clone]',
-            ],
-        ],
         'image'             => [
             'label'      => 'lang:system::languages.label_image',
             'type'       => 'mediafinder',
             'mode'       => 'inline',
-            'blankImage' => 'flags/no_flag.png',
+            'default' => 'flags/no_flag.png',
         ],
         'can_delete'        => [
             'label' => 'lang:system::languages.label_can_delete',

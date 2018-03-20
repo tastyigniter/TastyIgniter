@@ -144,10 +144,7 @@ class BaseExtension extends ServiceProvider
      * Registers any mail templates implemented by this extension.
      * The templates must be returned in the following format:
      * [
-     *  'extension_code/mail/registration' => [
-     *      'label' => 'Registration email to customer.',
-     *      'subject => 'Welcome to {site_name}'
-     *  ]
+     *  'igniter.demo::mail.registration' => 'Registration email to customer.',
      * ]
      * The array key will be used as the template code
      * @return array

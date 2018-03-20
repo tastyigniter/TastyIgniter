@@ -2,9 +2,9 @@
 
 namespace System\Facades;
 
-use Illuminate\Support\Facades\Facade as IlluminateFacade;
+use Illuminate\Support\Facades\Facade;
 
-class Assets extends IlluminateFacade
+class Assets extends Facade
 {
     /**
      * Get the registered name of the component.

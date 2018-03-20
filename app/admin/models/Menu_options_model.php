@@ -53,26 +53,6 @@ class Menu_options_model extends Model
             $this->addOptionValues($this->attributes['option_values']);
     }
 
-    /**
-     * Filter database records
-     *
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['option_name']);
-        }
-
-        if (!empty($filter['filter_display_type'])) {
-            $query->where('display_type', $filter['filter_display_type']);
-        }
-
-        return $query;
-    }
-
     //
     // Helpers
     //
@@ -150,7 +130,7 @@ class Menu_options_model extends Model
             $idsToKeep[] = $optionValue->getKey();
         }
 
-        $this->newQuery()->where('option_id', $optionId)
+        $this->option_values()->where('option_id', $optionId)
              ->whereNotIn('option_value_id', $idsToKeep)->delete();
 
         return TRUE;

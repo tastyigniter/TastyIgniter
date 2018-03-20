@@ -2,7 +2,7 @@
 
 use AdminMenu;
 use Exception;
-use System\Models\Mail_templates_model;
+use System\Models\Mail_layouts_model;
 
 class MailTemplates extends \Admin\Classes\AdminController
 {
@@ -13,17 +13,17 @@ class MailTemplates extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'System\Models\Mail_templates_data_model',
-            'title'        => 'lang:system::mail_templates.text_title',
+            'model'        => 'System\Models\Mail_templates_model',
+            'title'        => 'lang:system::mail_templates.text_template_title',
             'emptyMessage' => 'lang:system::mail_templates.text_empty',
-            'defaultSort'  => ['template_id', 'DESC'],
+            'defaultSort'  => ['date_updated', 'DESC'],
             'configFile'   => 'mail_templates_model',
         ],
     ];
 
     public $formConfig = [
         'name'       => 'lang:system::mail_templates.text_form_name',
-        'model'      => 'System\Models\Mail_templates_data_model',
+        'model'      => 'System\Models\Mail_templates_model',
         'create'     => [
             'title'         => 'lang:system::mail_templates.text_new_template_title',
             'redirect'      => 'mail_templates/edit/{template_data_id}',
@@ -41,53 +41,16 @@ class MailTemplates extends \Admin\Classes\AdminController
         'delete'     => [
             'redirect' => 'mail_templates',
         ],
-        'configFile' => 'mail_templates_data_model',
+        'configFile' => 'mail_templates_model',
     ];
 
     protected $requiredPermissions = 'Admin.MailTemplates';
-
-    public $defaultTemplate;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->defaultTemplate = Mail_templates_model::$defaultTemplateId;
-
-        AdminMenu::setContext('mail_templates', 'design');
-    }
-
-    public function edit($context, $recordId = null)
-    {
-        try {
-            $this->asExtension('FormController')->edit($context, $recordId);
-
-            $model = $this->getFormModel();
-            if ($model->template_id == $this->defaultTemplate) {
-                flash()->info(lang('admin::mail_templates.alert_caution_edit'));
-            }
-
-            $this->widgets['toolbar']->bindEvent('toolbar.extendButtons', function ($toolbar) use ($model) {
-                $toolbar->mergeAttributes('back', [
-                    'href' => parse_values($model->toArray(), 'mail_layouts/edit/{template_id}'),
-                ]);
-            });
-        } catch (Exception $ex) {
-            $this->handleError($ex);
-        }
-    }
-
-    public function formExtendFields($formWidget)
-    {
-        foreach ($formWidget->getFields() as $field) {
-            switch ($formWidget->context) {
-                case 'edit':
-                case 'preview':
-                    if (in_array($field->fieldName, ['code', 'title', 'template_id']))
-                        $field->disabled = TRUE;
-                    break;
-            }
-        }
+        AdminMenu::setContext('mail_layouts', 'design');
     }
 
     public function formValidate($model, $form)
@@ -95,13 +58,13 @@ class MailTemplates extends \Admin\Classes\AdminController
         $rules[] = ['subject', 'lang:system::mail_templates.label_code', 'required'];
 
         if ($form->context == 'create') {
-            $rules[] = ['title', 'lang:system::mail_templates.label_name', 'required'];
+            $rules[] = ['title', 'lang:system::mail_templates.label_description', 'required'];
             $rules[] = ['code', 'lang:system::mail_templates.label_code', 'required|min:2|max:32'];
             $rules[] = ['template_id', 'lang:system::mail_templates.label_layout', 'required|integer'];
         }
 
-        $rules[] = ['body', 'lang:system::mail_templates.label_layout', 'required'];
-        $rules[] = ['plain_body', 'lang:system::mail_templates.label_plain_layout', 'required'];
+        $rules[] = ['body', 'lang:system::mail_templates.label_body', 'required'];
+        $rules[] = ['plain_body', 'lang:system::mail_templates.label_plain', 'required'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

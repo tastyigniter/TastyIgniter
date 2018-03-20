@@ -1,9 +1,9 @@
 ---
-title: Reservation Confirmation
+title: main::default.reservation.text_success_heading
 layout: default
 permalink: /reservation/success/:hash?
 
-'booking':
+'[booking]':
 ---
 <div id="page-content">
     <div class="container top-spacing">

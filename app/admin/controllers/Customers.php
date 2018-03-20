@@ -96,8 +96,6 @@ class Customers extends \Admin\Classes\AdminController
             ['email', 'lang:admin::customers.label_email', 'required|email|max:96'
                 .(!$model->exists ? '|unique:customers,email' : null)],
             ['telephone', 'lang:admin::customers.label_telephone', 'required|integer'],
-            ['security_question_id', 'lang:admin::customers.label_security_question', 'integer'],
-            ['security_answer', 'lang:admin::customers.label_security_answer', 'min:2'],
             ['newsletter', 'lang:admin::customers.label_newsletter', 'required|integer'],
             ['customer_group_id', 'lang:admin::customers.label_customer_group', 'required|integer'],
             ['status', 'lang:admin::default.label_status', 'required|integer'],
@@ -110,11 +108,11 @@ class Customers extends \Admin\Classes\AdminController
 
         if (post($form->arrayName.'.addresses')) {
             foreach (post($form->arrayName.'.addresses') as $key => $value) {
-                $rules[] = ['addresses.'.$key.'.address_1', '['.$key.'] '.lang('lang:admin::customers.label_address_1'), 'required|min:3|max:128'];
-                $rules[] = ['addresses.'.$key.'.city', '['.$key.'] '.lang('lang:admin::customers.label_city'), 'required|min:2|max:128'];
-                $rules[] = ['addresses.'.$key.'.state', '['.$key.'] '.lang('lang:admin::customers.label_state'), 'max:128'];
-                $rules[] = ['addresses.'.$key.'.postcode', '['.$key.'] '.lang('lang:admin::customers.label_postcode')];
-                $rules[] = ['addresses.'.$key.'.country_id', '['.$key.'] '.lang('lang:admin::customers.label_country'), 'required|integer'];
+                $rules[] = ['addresses.'.$key.'.address_1', '['.$key.'] '.lang('admin::customers.label_address_1'), 'required|min:3|max:128'];
+                $rules[] = ['addresses.'.$key.'.city', '['.$key.'] '.lang('admin::customers.label_city'), 'required|min:2|max:128'];
+                $rules[] = ['addresses.'.$key.'.state', '['.$key.'] '.lang('admin::customers.label_state'), 'max:128'];
+                $rules[] = ['addresses.'.$key.'.postcode', '['.$key.'] '.lang('admin::customers.label_postcode')];
+                $rules[] = ['addresses.'.$key.'.country_id', '['.$key.'] '.lang('admin::customers.label_country'), 'required|integer'];
             }
         }
 

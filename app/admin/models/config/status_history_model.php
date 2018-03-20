@@ -2,7 +2,7 @@
 $config['list']['columns'] = [
     'date_added'    => [
         'label' => 'lang:admin::statuses.column_time_date',
-        'type'  => 'datetime',
+        'type'  => 'datesince',
     ],
     'staff_name'    => [
         'label'    => 'lang:admin::statuses.column_staff',

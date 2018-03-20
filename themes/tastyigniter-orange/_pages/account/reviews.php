@@ -1,7 +1,7 @@
 ---
-title: main::account.reviews.text_heading
+title: Account Reviews
 layout: default
-permalink: /account/reviews
+permalink: /account/reviews/:saleType?/:saleId?
 
 '[account]':
     security: customer

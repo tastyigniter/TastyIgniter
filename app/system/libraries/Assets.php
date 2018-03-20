@@ -87,7 +87,7 @@ class Assets
         $this->registeredLoaded = TRUE;
     }
 
-    public function addTags($headTags = [])
+    public function addTags(array $headTags = [])
     {
         foreach ($headTags as $type => $value) {
             $this->addTag($type, $value);
@@ -207,7 +207,7 @@ class Assets
         return $this;
     }
 
-    public function addMeta($meta = [])
+    public function addMeta(array $meta = [])
     {
         $metaAssets = isset($this->assets[$this->collection]['meta'])
             ? $this->assets[$this->collection]['meta'] : [];
@@ -269,83 +269,30 @@ class Assets
         return $this->active_styles."\n\t\t";
     }
 
-    public function getActiveThemeOptions($item = null, $default = null)
-    {
-        return $default;
-
-        // @todo: implement
-//        if (setting(strtolower(APPDIR), 'active_theme_options')) {
-//            $active_theme_options = setting(strtolower(APPDIR), 'active_theme_options');
-//        }
-//        else if (setting(strtolower(APPDIR), 'customizer_active_style')) {
-//            $active_theme_options = setting(strtolower(APPDIR), 'customizer_active_style');
-//        }
-//
-//        if (empty($active_theme_options) OR !isset($active_theme_options[0]) OR !isset($active_theme_options[1])) {
-//            return null;
-//        }
-//
-//        if ($active_theme_options[0] !== $this->ci()->template->getTheme()) {
-//            return null;
-//        }
-//
-//        $theme_options = null;
-//        if (is_array($active_theme_options[1])) {
-//            $theme_options = $active_theme_options[1];
-//        }
-//
-//        if ($item === null) {
-//            return $theme_options;
-//        }
-//        else if (isset($theme_options[$item])) {
-//            return $theme_options[$item];
-//        }
-//        else {
-//            return null;
-//        }
-    }
-
     public function flushAssets()
     {
         $this->assets[$this->collection] = ['meta' => [], 'js' => [], 'css' => []];
     }
 
-    protected function evalOptions($type, $href, $options)
+    protected function getAssetPath($href)
     {
-        if (!is_array($options))
-            $options = ['name' => $options];
+        if (substr($href, 0, 2) == '~/')
+            return File::localToPublic(File::symbolizePath($href));
 
-        if ($type == 'css') {
-            $defaults = [
-                'name'       => null,
-                'filter'     => [],
-                'reference'  => null,
-                'collection' => $this->collection,
-                'path'       => $this->prepUrl($href, 'ver='.App::version()),
-//                'path'       => $href,
-                'attributes' => [
-                    'rel'  => 'stylesheet',
-                    'type' => 'text/css',
-                ],
-            ];
-        }
-        else {
-            $defaults = [
-                'name'       => null,
-                'depends'    => null,
-                'filter'     => [],
-                'reference'  => null,
-                'collection' => $this->collection,
-                'path'       => $this->prepUrl($href, 'ver='.App::version()),
-//                'path'       => $href,
-                'attributes' => [
-                    'charset' => strtolower(setting('charset')),
-                    'type'    => 'text/javascript',
-                ],
-            ];
+        if (starts_with($href, ['/', '//', 'http://', 'https://']))
+            return $href;
+
+        $paths = static::$defaultPaths;
+        if (!is_array($paths))
+            $paths = [$paths];
+
+        foreach ($paths as $path) {
+            if (File::exists($path = $path.'/'.$href))
+                return File::localToPublic($path);
         }
 
-        return array_merge($defaults, $options);
+        // Not found
+        return $href;
     }
 
     /**
@@ -410,48 +357,41 @@ class Assets
 //        return $content;
     }
 
-    protected function getAssetPath($href)
+    protected function evalOptions($type, $href, $options)
     {
-        if (substr($href, 0, 2) == '~/')
-            return File::localToPublic(File::symbolizePath($href));
+        if (!is_array($options))
+            $options = ['name' => $options];
 
-        if (starts_with($href, ['/', '//', 'http://', 'https://']))
-            return $href;
-
-        $paths = static::$defaultPaths;
-        if (!is_array($paths))
-            $paths = [$paths];
-
-        foreach ($paths as $path) {
-            if (File::exists($path = $path.'/'.$href))
-                return File::localToPublic($path);
+        if ($type == 'css') {
+            $defaults = [
+                'name'       => null,
+                'filter'     => [],
+                'reference'  => null,
+                'collection' => $this->collection,
+                'path'       => $this->prepUrl($href, 'ver='.params('core.build')),
+//                'path'       => $href,
+                'attributes' => [
+                    'rel'  => 'stylesheet',
+                    'type' => 'text/css',
+                ],
+            ];
+        }
+        else {
+            $defaults = [
+                'name'       => null,
+                'depends'    => null,
+                'filter'     => [],
+                'reference'  => null,
+                'collection' => $this->collection,
+                'path'       => $this->prepUrl($href, 'ver='.params('core.build')),
+//                'path'       => $href,
+                'attributes' => [
+                    'charset' => strtolower(setting('charset')),
+                    'type'    => 'text/javascript',
+                ],
+            ];
         }
 
-//        if (App::runningInAdmin()) {
-//            $viewPath = $this->themeManager->folders()['admin'];
-//            if (File::exists($path = base_path($viewPath.'/'.$_href)))
-//                return File::localToPublic($path);
-//        }
-//        else {
-//            $activeTheme = $this->themeManager->getActiveTheme();
-//
-//            // We will first look in the active theme path,
-//            // then its parent theme path if it has any before
-//            // finally looking in the current app context views folder
-//            foreach ([
-//                         $activeTheme->getPath(),
-//                         $activeTheme->getParentPath(),
-//                         app_path(app()->appContext().'/views'),
-//                     ] as $path) {
-//
-////            foreach (['/', '/_layouts/', '/_partials/'] as $folder) {
-//                if (File::exists($path.'/'.$_href))
-//                    return File::localToPublic($path.'/'.$_href);
-////            }
-//            }
-//        }
-
-        // Not found
-        return $href;
+        return array_merge($defaults, $options);
     }
 }

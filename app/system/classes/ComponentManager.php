@@ -1,6 +1,5 @@
 <?php namespace System\Classes;
 
-use Modules;
 use SystemException;
 
 /**
@@ -259,7 +258,7 @@ class ComponentManager
      * @param array $params The properties set by the Page or Layout.
      *
      * @return \System\Classes\BaseComponent The component object.
-     * @throws \Exception
+     * @throws \SystemException
      */
     public function makeComponent($name, $page = null, $params = [])
     {

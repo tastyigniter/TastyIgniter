@@ -11,6 +11,7 @@ use Exception;
 use Html;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Model;
 
 class Lists extends BaseWidget
@@ -151,8 +152,6 @@ class Lists extends BaseWidget
             'showSorting',
             'defaultSort',
         ]);
-
-//        $this->resetSession();
 
         $this->pageLimit = $this->getSession('page_limit',
             isset($this->pageLimit) ? $this->pageLimit : setting('page_limit', 10)
@@ -744,7 +743,7 @@ class Lists extends BaseWidget
      */
     protected function evalSwitchTypeValue($record, $column, $value)
     {
-        return ($value) ? lang('admin::default.text_enabled') : lang('lang:admin::default.text_disabled');
+        return ($value) ? lang('admin::default.text_enabled') : lang('admin::default.text_disabled');
     }
 
     /**
@@ -809,6 +808,22 @@ class Lists extends BaseWidget
         $value = mdate('%d-%m-%Y %H:%i:%s', $timestamp);
 
         return time_elapsed($value);
+    }
+
+    /**
+     * Process as diff for humans (today)
+     */
+    protected function evalDatesinceTypeValue($record, $column, $value)
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $timestamp = $this->validateDateTimeValue($value, $column);
+
+        $value = mdate('%d-%m-%Y %H:%i:%s', $timestamp);
+
+        return day_elapsed($value);
     }
 
     /**
@@ -1103,10 +1118,6 @@ class Lists extends BaseWidget
      */
     protected function isColumnPivot($column)
     {
-        if (!isset($column->relation) OR $column->relation != 'pivot') {
-            return FALSE;
-        }
-
-        return TRUE;
+        return isset($column->relation) AND $column->relation == 'pivot';
     }
 }

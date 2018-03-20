@@ -6,6 +6,7 @@ use App;
 use File;
 use Igniter\Flame\Pagic\Source\FileSource;
 use Main\Template\Page as PageTemplate;
+use System\Models\Themes_model;
 
 class Theme
 {
@@ -60,6 +61,11 @@ class Theme
     public $disabled;
 
     /**
+     * @var boolean Determine if this theme is active (false) or not (true).
+     */
+    public $active;
+
+    /**
      * @var string Other theme code this theme was derived from.
      */
     public $parent;
@@ -70,65 +76,27 @@ class Theme
     public $screenshot;
 
     /**
-     * @var array Raw theme configuration.
+     * @var array Cached theme configuration.
      */
-    public $config;
+    public $configCache;
 
     /**
-     * @var array Raw theme partials configuration.
+     * Loads the theme.
+     *
+     * @param $path
+     * @param array $config
+     *
+     * @return self
      */
-    public $partials;
-
-    /**
-     * @var array Raw theme fields for styling.
-     */
-    public $fields;
-
-    public $active;
-
-    public function __construct($name, $path)
+    public static function load($path, array $config = [])
     {
-        $this->name = $name;
-        $this->path = realpath($path);
-    }
+        $theme = new static;
+        $theme->path = realpath($path);
+        $theme->publicPath = File::localToPublic($theme->path);
+        $theme->fillFromArray($config);
+        $theme->registerAsSource();
 
-    public function setUpAs($config)
-    {
-        $this->publicPath = File::localToPublic($this->path);
-        $this->config = $this->evalConfig($config);
-    }
-
-    /**
-     * Ensures this theme is registered as a Pagic source.
-     * @return void
-     */
-    public function registerAsSource()
-    {
-        $resolver = App::make('pagic');
-
-        if (!$resolver->hasSource($this->getDirName())) {
-            $source = new FileSource($this->getPath(), App::make('files'));
-            $resolver->addSource($this->getDirName(), $source);
-        }
-    }
-
-    public function getFields()
-    {
-        if ($this->fields)
-            return $this->fields;
-
-        $fields = [];
-        if ($parentConfigPath = $this->getParentPath()) {
-            $parentConfigPath = $parentConfigPath.'/_meta/fields.php';
-            if (File::exists($parentConfigPath))
-                $fields = File::getRequire($parentConfigPath);
-        }
-
-        $configPath = $this->getPath().'/_meta/fields.php';
-        if (File::exists($configPath))
-            $fields = array_merge($fields, File::getRequire($configPath));
-
-        return $this->fields = $fields;
+        return $theme;
     }
 
     /**
@@ -196,14 +164,34 @@ class Theme
         return PageTemplate::listInTheme($this);
     }
 
-    /**
-     * Process options and apply them to this object.
-     *
-     * @param array $config
-     *
-     * @return array
-     */
-    protected function evalConfig($config)
+    public function getConfig()
+    {
+        if (!is_null($this->configCache))
+            return $this->configCache;
+
+        $config = [];
+        if (File::exists($configPath = $this->getPath().'/_meta/fields.php'))
+            $config = File::getRequire($configPath);
+
+        return $this->configCache = $config;
+    }
+
+    public function getConfigValue($name, $default = null)
+    {
+        return array_get($this->getConfig(), $name, $default);
+    }
+
+    public function hasCustomData()
+    {
+        return $this->getConfigValue('form', false);
+    }
+
+    public function getCustomData()
+    {
+        return Themes_model::getDataFromTheme($this);
+    }
+
+    public function fillFromArray($config)
     {
         if (isset($config['code']))
             $this->name = $config['code'];
@@ -237,7 +225,47 @@ class Theme
 
         if (array_key_exists('disabled', $config))
             $this->disabled = $config['disabled'];
+    }
 
-        return $config;
+    /**
+     * Ensures this theme is registered as a Pagic source.
+     * @return void
+     */
+    public function registerAsSource()
+    {
+        $resolver = App::make('pagic');
+
+        if (!$resolver->hasSource($this->getDirName())) {
+            $source = new FileSource($this->getPath(), App::make('files'));
+            $resolver->addSource($this->getDirName(), $source);
+        }
+    }
+
+    /**
+     * Implements the getter functionality.
+     * @param  string  $name
+     * @return void
+     */
+    public function __get($name)
+    {
+        if ($this->hasCustomData()) {
+            return array_get($this->getCustomData(), $name);
+        }
+
+        return null;
+    }
+
+    /**
+     * Determine if an attribute exists on the object.
+     * @param  string  $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        if ($this->hasCustomData()) {
+            return array_has($this->getCustomData(), $key);
+        }
+
+        return false;
     }
 }

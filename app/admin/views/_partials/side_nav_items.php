@@ -1,7 +1,7 @@
 <ul class="<?= $cssClass; ?>" id="side-menu">
     <?php foreach ($navItems as $code => $menu) { ?>
-    <?php
-        if (!$this->filterPermittedNavItem($menu)) continue;
+        <?php
+        if (isset($menu['child']) AND empty($menu['child'])) continue;
         ?>
         <li
             <?= $this->isActiveNavItem($code) ? 'class="active"' : '' ?>
@@ -30,7 +30,7 @@
             <?php if (isset($menu['child']) AND count($menu['child'])) { ?>
                 <?= $this->makePartial('side_nav_items', [
                     'navItems' => $menu['child'],
-                    'cssClass' => 'nav nav-second-level'
+                    'cssClass' => 'nav nav-second-level',
                 ]) ?>
             <?php } ?>
         </li>

@@ -9,7 +9,7 @@ if (!function_exists('format_address')) {
 
     function format_address($address, $useLineBreaks = TRUE)
     {
-        return app('country')->addressFormat($address, $useLineBreaks);
+        return Country::addressFormat($address, $useLineBreaks);
     }
 }
 
@@ -17,6 +17,6 @@ if (!function_exists('countries')) {
 
     function countries($column = 'country_name', $key = 'country_id')
     {
-        return app('country')->listAll($column, $key);
+        return Country::listAll($column, $key);
     }
 }

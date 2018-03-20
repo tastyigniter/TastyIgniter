@@ -1,6 +1,7 @@
 <?php namespace System\Models;
 
 use File;
+use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 use Model;
 use URL;
@@ -11,6 +12,11 @@ use URL;
  */
 class Themes_model extends Model
 {
+    /**
+     * @var array data cached array
+     */
+    protected static $dataCache = [];
+
     /**
      * @var string The database table code
      */
@@ -36,6 +42,20 @@ class Themes_model extends Model
      * @var \Main\Classes\Theme
      */
     public $themeClass = null;
+
+    public static function getDataFromTheme(Theme $theme)
+    {
+        $dirName = $theme->getDirName();
+        if ($data = array_get(self::$dataCache, $dirName)) {
+            return $data;
+        }
+
+        $model = self::whereCode($dirName)->first();
+
+        $data = ($model AND is_array($model->data)) ? $model->data : [];
+
+        return self::$dataCache[$dirName] = $data;
+    }
 
     //
     // Events
@@ -94,10 +114,12 @@ class Themes_model extends Model
     public function getFieldsConfig()
     {
         $fields = [];
-        $customizeConfig = array_get($this->themeClass->getFields(), 'sections', []);
+        $customizeConfig = $this->themeClass->getConfigValue('form', []);
         foreach ($customizeConfig as $section => $item) {
             foreach (array_get($item, 'fields', []) as $name => $field) {
-                $field['tab'] = $item['title'];
+                if (!isset($field['tab']))
+                    $field['tab'] = $item['title'];
+
                 $fields[$name] = $field;
             }
         }
@@ -107,6 +129,7 @@ class Themes_model extends Model
 
     public function getFieldValues()
     {
+        $customizeConfig = $this->themeClass->getConfigValue('form', []);
         return $this->data ?: [];
     }
 
@@ -127,8 +150,8 @@ class Themes_model extends Model
             $themeMeta = (object)$themeClass;
             $installedThemes[] = $themeMeta->name;
 
-            // Only add themes whose meta code matched their directory name
-            // or theme has no record in extensions table
+            // Only add themes whose meta code match their directory name
+            // or theme has no record
             if (
                 !isset($themeMeta->name) OR $code != $themeMeta->name OR
                 $extension = $themes->where('code', $themeMeta->name)->first()

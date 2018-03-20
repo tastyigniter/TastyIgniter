@@ -53,16 +53,16 @@ $config['list']['columns'] = [
     ],
     'email'       => [
         'label'      => 'lang:admin::customers.column_email',
-        'type'       => 'number',
+        'type'       => 'text',
         'searchable' => TRUE,
     ],
     'telephone'   => [
         'label' => 'lang:admin::customers.column_telephone',
-        'type'  => 'switch',
+        'type'       => 'text',
     ],
     'date_added'  => [
         'label' => 'lang:admin::customers.column_date_added',
-        'type'  => 'date',
+        'type'  => 'datesince',
     ],
     'status'      => [
         'label' => 'lang:admin::customers.column_status',

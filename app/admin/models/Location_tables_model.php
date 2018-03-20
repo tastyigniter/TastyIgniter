@@ -14,7 +14,7 @@ class Location_tables_model extends Model
      */
     protected $table = 'location_tables';
 
-    protected $primaryKey = ['table_id'];
+    protected $primaryKey = 'table_id';
 
     public $incrementing = FALSE;
 

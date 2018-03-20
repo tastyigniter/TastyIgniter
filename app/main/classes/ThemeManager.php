@@ -120,7 +120,6 @@ class ThemeManager
      * @param string $path Ex: base_path().'directory_name';
      *
      * @return bool|object
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @throws \SystemException
      */
     public function loadTheme($themeCode, $path)
@@ -131,12 +130,11 @@ class ThemeManager
             return $this->themes[$themeCode];
         }
 
-        $themeObject = new Theme($themeCode, $path);
-
-        $themeObject->setUpAs($this->getMetaFromFile($themeCode));
-        $themeObject->registerAsSource();
+        $config = $this->getMetaFromFile($themeCode);
+        $themeObject = Theme::load($path, $config);
 
         $themeObject->active = $this->isActive($themeCode);
+
         $this->themes[$themeCode] = $themeObject;
         $this->paths[$themeCode] = $path;
 
@@ -149,9 +147,8 @@ class ThemeManager
     public function createThemeModel()
     {
         $class = '\\'.ltrim($this->themeModel, '\\');
-        $user = new $class();
 
-        return $user;
+        return new $class();
     }
 
     //
@@ -190,7 +187,7 @@ class ThemeManager
         $path = $this->findPath($theme);
 
         $themePath = rtrim($path, '/');
-        $file = (pathinfo($filename, PATHINFO_EXTENSION)) ? $filename : $filename.'.php';
+        $file = pathinfo($filename, PATHINFO_EXTENSION) ? $filename : $filename.'.php';
 
         if (is_null($base)) {
             $base = ['/'];
@@ -346,7 +343,7 @@ class ThemeManager
         if (is_string($subFolder))
             $subFolder = [$subFolder];
 
-        return ($subFolder) ? array_only($result, $subFolder) : $result;
+        return $subFolder ? array_only($result, $subFolder) : $result;
     }
 
     //--------------------------------------------------------------------------

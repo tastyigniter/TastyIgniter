@@ -45,7 +45,7 @@ $config['list']['columns'] = [
     ],
     'date_updated' => [
         'label' => 'lang:admin::payments.column_date_updated',
-        'type'  => 'datetime',
+        'type'  => 'datesince',
     ],
     'payment_id'   => [
         'label'     => 'lang:admin::payments.column_id',

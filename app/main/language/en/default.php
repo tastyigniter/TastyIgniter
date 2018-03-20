@@ -50,36 +50,6 @@ return [
         'text_step_enjoy'  => 'Food is prepared & delivered to your door step or ready for pick-up at the restaurant.',
     ],
 
-    'reservation' => [
-        'text_heading'         => 'Reserve A Table',
-        'text_success_heading' => 'Reservation Confirmation',
-        'text_registered'      => 'Already have an account? <a href="%s">Login Here</a>',
-        'text_login'           => 'Already have an account? <a href="%s">Login Here</a>',
-        'text_logout'          => 'Welcome back <b>%s</b>, Not You? <a href="%s">Logout</a>',
-        'text_time_format'     => '%l, %F %j, %Y',
-
-        'label_first_name'    => 'First Name',
-        'label_last_name'     => 'Last Name',
-        'label_email'         => 'Email Address',
-        'label_confirm_email' => 'Confirm Email Address',
-        'label_telephone'     => 'Telephone',
-        'label_comment'       => 'Special Requests',
-        'label_captcha'       => 'Type the code shown',
-
-        'button_find_again'  => 'Find Table Again',
-        'button_reservation' => 'Make Reservation',
-
-        'error_captcha' => 'The letters you entered does not match the image.',
-
-        'alert_no_table'             => 'Please check table availability using the Find A Table form.',
-        'alert_reservation_disabled' => 'Table reservation has been disabled, please contact site administrator.',
-
-        'text_subject'   => 'Table Reserved - %s!',
-        'text_greetings' => 'Thank You %s,',
-        'text_success'   => 'Your reservation at %s has been booked for %s on %s at %s.<br />Thanks for reserving with us online!',
-        'text_signature' => 'Regards, <br />%s <br /><br />We hope to see you again soon.',
-    ],
-
     'local' => [
         'text_heading'                      => 'Restaurants',
         'text_tab_menu'                     => 'Menu',
@@ -147,7 +117,7 @@ return [
         'page_label'        => 'Page not found',
         'page_message'      => 'The requested page cannot be found',
         'active_theme'      => 'Unable to load the active theme',
-        'controller_action' => "Action [%s] is not found in the controller [%s]",
+        'controller_action' => 'Action [%s] is not found in the controller [%s]',
         'layout'            => 'The layout [%s] is not found.',
         'component'         => 'The component [%s] is not found.',
         'partial'           => 'The partial [%s] is not found.',

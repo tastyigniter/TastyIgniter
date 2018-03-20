@@ -57,7 +57,7 @@ class Coupons_model extends Model
 
     public function getRecurringEveryAttribute($value)
     {
-        return (empty($value)) ? [] : explode(', ', $value);
+        return (empty($value)) ? [0, 1, 2, 3, 4, 5, 6] : explode(', ', $value);
     }
 
     public function setRecurringEveryAttribute($value)
@@ -78,31 +78,6 @@ class Coupons_model extends Model
     //
     // Scopes
     //
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['name', 'code']);
-        }
-
-        if (isset($filter['filter_type']) AND is_string($filter['filter_type'])) {
-            $query->where('type', $filter['filter_type']);
-        }
-
-        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-            $query->where('status', $filter['filter_status']);
-        }
-
-        return $query;
-    }
 
     public function scopeIsEnabled($query)
     {

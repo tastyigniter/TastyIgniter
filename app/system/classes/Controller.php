@@ -67,23 +67,9 @@ class Controller extends IlluminateController
      */
     public function run($url = '/')
     {
-        $segments = RouterHelper::segmentizeUrl($url);
-
         if (!App::hasDatabase()) {
             return Response::make(View::make('system::no_database'), 200);
         }
-
-        // Look for a controller within app
-//        $controller = isset($segments[0]) ? $segments[0] : 'home';
-
-        self::$action = $action = isset($segments[1]) ? $this->processAction($segments[1]) : 'index';
-        self::$segments = $params = array_slice($segments, 2);
-//        if ($controllerObj = $this->locateController(
-//            $controller, ['main' => 'Main'], app_path()
-//        )
-//        ) {
-//            return $controllerObj->remap($action, $params);
-//        }
 
         return App::make('Main\Classes\MainController')->remap($url);
     }
@@ -106,12 +92,30 @@ class Controller extends IlluminateController
 
         // Look for a controller within app
         $controller = isset($segments[0]) ? $segments[0] : 'dashboard';
-
         self::$action = $action = isset($segments[1]) ? $this->processAction($segments[1]) : 'index';
         self::$segments = $params = array_slice($segments, 2);
-        $checkApps = ['admin' => 'Admin', 'system' => 'System'];
-        if ($controllerObj = $this->locateController($controller, $checkApps, app_path())) {
+        if ($controllerObj = $this->locateController(
+            $controller,
+            ['admin' => 'Admin', 'system' => 'System'],
+            app_path()
+        )) {
             return $controllerObj->remap($action, $params);
+        }
+
+        // Look for a controller within extensions
+        if (count($segments) >= 2) {
+            list($author, $extension) = $segments;
+            $controller = isset($segments[2]) ? $segments[2] : 'dashboard';
+            self::$action = $action = isset($segments[3]) ? $this->processAction($segments[3]) : 'index';
+            self::$segments = $params = array_slice($segments, 4);
+
+            if ($controllerObj = $this->locateController(
+                $controller,
+                ["{$author}/{$extension}" => "{$author}\\{$extension}"],
+                extension_path()
+            )) {
+                return $controllerObj->remap($action, $params);
+            }
         }
 
         return App::make('Main\Classes\MainController')->remap($url);

@@ -32,6 +32,11 @@ class Form extends BaseWidget
     public $secondaryTabs;
 
     /**
+     * @var string The active tab name of this form.
+     */
+    public $activeTab;
+
+    /**
      * @var Model Form model object.
      */
     public $model;
@@ -215,9 +220,9 @@ class Form extends BaseWidget
     {
         if (is_string($field)) {
             if (!isset($this->allFields[$field])) {
-                throw new Exception(lang(
-                    'text_form_missing_definition',
-                    compact('field')
+                throw new Exception(sprintf(
+                    lang('admin::default.form.missing_definition'),
+                    $field
                 ));
             }
 
@@ -361,9 +366,9 @@ class Form extends BaseWidget
      * @return \Admin\Classes\FormField
      * @throws \Exception
      */
-    public function makeFormField($name, $config = [])
+    public function makeFormField($name, $config)
     {
-        $label = (isset($config['label'])) ? $config['label'] : null;
+        $label = isset($config['label']) ? $config['label'] : null;
         list($fieldName, $fieldContext) = $this->getFieldName($name);
 
         $field = new FormField($fieldName, $label);
@@ -387,8 +392,8 @@ class Form extends BaseWidget
 
             $fieldType = isset($config['type']) ? $config['type'] : null;
             if (!is_string($fieldType) AND !is_null($fieldType)) {
-                throw new Exception(lang(
-                    sprintf('text_form_field_invalid_type', gettype($fieldType))
+                throw new Exception(sprintf(
+                    lang('admin::default.form.field_invalid_type'), gettype($fieldType)
                 ));
             }
 
@@ -624,14 +629,12 @@ class Form extends BaseWidget
      */
     public function showFieldLabels($field)
     {
-        if (in_array($field->type, ['section'])) {
+        if ($field->type == 'section') {
             return FALSE;
         }
 
         if ($field->type === 'widget') {
-            $widget = $this->makeFormFieldWidget($field);
-
-            return $widget->showLabels;
+            return $this->makeFormFieldWidget($field)->showLabels;
         }
 
         return TRUE;
@@ -684,13 +687,20 @@ class Form extends BaseWidget
         return $result;
     }
 
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
+    }
+
     public function getActiveTab()
     {
         $activeTabs = @json_decode($_COOKIE['ti_activeFormTabs'], TRUE);
 
         $cookieKey = $this->getCookieKey();
 
-        return isset($activeTabs[$cookieKey]) ? $activeTabs[$cookieKey] : null;
+        $activeTab = isset($activeTabs[$cookieKey]) ? $activeTabs[$cookieKey] : null;
+
+        return $this->activeTab = $activeTab;
     }
 
     public function getCookieKey()
@@ -732,12 +742,12 @@ class Form extends BaseWidget
     protected function validateModel()
     {
         if (!$this->model) {
-            throw new Exception(lang(
-                sprintf('text_form_missing_model', get_class($this->controller))
+            throw new Exception(sprintf(
+                lang('admin::default.form.missing_model'), get_class($this->controller)
             ));
         }
 
-        $this->data = isset($this->data) ? (object)$this->data : $this->model;
+        $this->data = !is_null($this->data) ? (object)$this->data : $this->model;
 
         return $this->model;
     }

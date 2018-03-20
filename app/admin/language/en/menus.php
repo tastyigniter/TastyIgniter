@@ -21,7 +21,6 @@ return [
     'text_select_category'  => 'Select category',
     'text_mealtime_all'     => 'Available all day',
     'text_select'           => 'Select',
-    'text_remove'           => 'Remove',
 
     'column_name'      => 'Name',
     'column_category'  => 'Category',

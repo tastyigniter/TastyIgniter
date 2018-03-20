@@ -78,7 +78,7 @@ class Reviews extends \Admin\Classes\AdminController
     {
         $saleId = post('Review.sale_id');
         $saleType = post('Review.sale_type');
-        $saleModel = '\\Admin\\Models\\'.ucwords($saleType.'s_model');
+        $saleModel = 'Admin\\Models\\'.ucwords($saleType.'s_model');
 
         if (!$saleModel::find($saleId)) {
             return lang(($saleType == 'order')

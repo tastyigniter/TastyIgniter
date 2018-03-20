@@ -1,6 +1,7 @@
 <div class="social-bottom">
-    <h4 class="footer-title"><?= lang('text_follow_us'); ?></h4>
+    <h4 class="footer-title"><?= lang('main::default.text_follow_us'); ?></h4>
     <ul class="social-icons">
+        <?php $socialIcons = $this->theme->social; ?>
         <?php if (!empty($socialIcons['facebook'])) { ?>
             <li>
                 <a

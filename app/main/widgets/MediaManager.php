@@ -1,11 +1,15 @@
 <?php
 
-namespace Admin\Widgets;
+namespace Main\Widgets;
 
 use Admin\Classes\BaseWidget;
+use ApplicationException;
 use Exception;
 use File;
-use System\Libraries\MediaManager as MediaLibrary;
+use Input;
+use Main\Libraries\MediaManager as MediaLibrary;
+use Request;
+use Response;
 
 /**
  * Media Manager widget.
@@ -40,15 +44,13 @@ class MediaManager extends BaseWidget
 
     public $configSetting;
 
-    protected $rootFolder = 'data/';
-
-    protected $currentFolderSize = 0;
-
     protected $popupLoaded = FALSE;
 
-    public function initialize()
+    public function __construct($controller, $config = [])
     {
-//        $this->getController()->load->library('media_manager', setting('image_manager'));
+        parent::__construct($controller, $config);
+
+        $this->checkUploadHandler();
     }
 
     public function render()
@@ -73,14 +75,14 @@ class MediaManager extends BaseWidget
         $this->vars['folderSize'] = $this->getCurrentFolderSize();
         $this->vars['totalItems'] = count($this->vars['items']);
         $this->vars['folderList'] = $this->getFolderList();
-        $this->vars['folderTree'] = $this->getFolderTree();
+        $this->vars['folderTree'] = $this->getFolderTreeNodes();
         $this->vars['sortBy'] = $sortBy;
+        $this->vars['searchTerm'] = $searchTerm;
         $this->vars['isPopup'] = $this->popupLoaded;
         $this->vars['selectMode'] = $this->selectMode;
         $this->vars['selectItem'] = $this->selectItem;
-        $this->vars['maxUploadSize'] = round($this->getMediaLibrary()->getUploadMaxSize() / 1024, 2);
-        $this->vars['allowedExt'] = $this->getMediaLibrary()->getAllowedExt();
-        $this->vars['searchTerm'] = $searchTerm;
+        $this->vars['maxUploadSize'] = round($this->getSetting('max_size', 380) / 1024, 2);
+        $this->vars['allowedExtensions'] = $this->getMediaLibrary()->getAllowedExtensions();
         $this->vars['chooseButton'] = $this->chooseButton;
         $this->vars['breadcrumbs'] = $this->makeBreadcrumb();
     }
@@ -99,21 +101,9 @@ class MediaManager extends BaseWidget
         $this->addJs('js/mediamanager.modal.js', 'mediamanager-modal-js');
     }
 
-    public function getFolderTree()
+    public function getSetting($name, $default = null)
     {
-        $rootFolder = image_path($this->rootFolder);
-        $directoryMap = File::directories($rootFolder);
-        $result = $this->makeFolderTreeNodes([static::ROOT_FOLDER => []] + $directoryMap);
-
-        return $result;
-    }
-
-    public function getSetting($action, $default = null)
-    {
-        if (!$this->configSetting)
-            $this->configSetting = $this->getMediaLibrary()->getOptions();
-
-        return isset($this->configSetting[$action]) ? $this->configSetting[$action] : $default;
+        return $this->getMediaLibrary()->getConfig($name, $default);
     }
 
     //
@@ -152,6 +142,10 @@ class MediaManager extends BaseWidget
     {
         $path = post('path');
 
+        if (post('resetCache')) {
+            $this->getMediaLibrary()->resetCache();
+        }
+
         if (post('resetSearch')) {
             $this->setSearchTerm(null);
         }
@@ -187,33 +181,29 @@ class MediaManager extends BaseWidget
         $mediaLibrary = $this->getMediaLibrary();
 
         try {
-            if (!$this->getSetting('new_folder')) {
-                throw new Exception(lang('alert_new_folder_disabled'));
-            }
+            if (!$this->getSetting('new_folder'))
+                throw new ApplicationException(lang('main::media_manager.alert_new_folder_disabled'));
+
+            if (!$path = $mediaLibrary->validatePath(post('path')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
 
             $name = trim(post('name'));
-            if (!strlen($name)) {
-                throw new Exception(lang('alert_file_name_required'));
-            }
+            if (!strlen($name))
+                throw new ApplicationException(lang('main::media_manager.alert_file_name_required'));
 
-            $name = $mediaLibrary->fixFileName($name);
-            $path = $this->getController()->security->sanitize_filename(
-                post('path'), TRUE
-            );
+            if (!$this->validateFileName($name))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_file_name'));
 
-            if ($path !== '' AND !$mediaLibrary->validatePath($path)) {
-                throw new Exception(lang('alert_invalid_file_name'));
-            }
+            $fullPath = $path.'/'.$name;
+            if ($mediaLibrary->exists($fullPath))
+                throw new ApplicationException(lang('main::media_manager.alert_file_exists'));
 
-            $newFolderPath = $path.'/'.$name;
-            if ($mediaLibrary->fileExists($newFolderPath)) {
-                throw new Exception(lang('alert_file_exists'));
-            }
+            $mediaLibrary->makeFolder($fullPath);
 
-            $mediaLibrary->newFolder($newFolderPath);
+            $mediaLibrary->resetCache();
 
-//        $json['success'] = lang('alert_success_new_folder');
-            $this->setCurrentFolder($newFolderPath);
+            $this->setCurrentFolder($fullPath);
+
             $this->prepareVars();
 
             return [
@@ -232,72 +222,35 @@ class MediaManager extends BaseWidget
         $mediaLibrary = $this->getMediaLibrary();
 
         try {
-            if (!$this->getSetting('rename')) {
-                throw new Exception(lang('alert_rename_disabled'));
-            }
+            if (!$this->getSetting('rename'))
+                throw new ApplicationException(lang('main::media_manager.alert_rename_disabled'));
+
+            if (!$path = $mediaLibrary->validatePath(post('path')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
 
             $name = trim(post('name'));
-            if (!strlen($name)) {
-                throw new Exception(lang('alert_file_name_required'));
-            }
+            if (!strlen($name))
+                throw new ApplicationException(lang('main::media_manager.alert_file_name_required'));
 
-            $name = $mediaLibrary->fixFileName($name);
-            $path = $this->getController()->security->sanitize_filename(
-                post('path'), TRUE
-            );
+            if (!$this->validateFileName($name))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_file_name'));
 
-            if (!$mediaLibrary->validatePath($path)) {
-                throw new Exception(lang('alert_invalid_path'));
-            }
+            $newPath = File::dirname($path).'/'.$name;
+            if ($mediaLibrary->exists($newPath))
+                throw new ApplicationException(lang('main::media_manager.alert_file_exists'));
 
-            if (!$mediaLibrary->rename($path, $name))
-                throw new Exception(lang('alert_file_exists'));
+            $mediaLibrary->rename($path, $newPath);
 
-//            $json['success'] = lang('alert_success_rename');
-            $this->setCurrentFolder(dirname($path).'/'.$name);
+            $mediaLibrary->resetCache();
+
+            $this->setCurrentFolder($newPath);
+
             $this->prepareVars();
 
             return [
                 '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
                 '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-            ];
-        } catch (Exception $ex) {
-            return $ex->getMessage();
-        }
-    }
-
-    public function onDeleteFolder()
-    {
-        $mediaLibrary = $this->getMediaLibrary();
-
-        try {
-            if (!$this->getSetting('delete')) {
-                $json['alert'] = lang('alert_delete_disabled');
-            }
-
-            $path = $this->getController()->security->sanitize_filename(
-                post('path'), TRUE
-            );
-
-            if (!$mediaLibrary->validatePath($path)) {
-                throw new Exception(lang('alert_invalid_path'));
-            }
-
-            if (!$mediaLibrary->isWritable($path)) {
-                throw new Exception(lang('alert_file_not_writable'));
-            }
-
-            $mediaLibrary->delete($path);
-
-            $this->setCurrentFolder(dirname($path));
-            $this->prepareVars();
-
-            return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
-                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
             ];
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -309,39 +262,33 @@ class MediaManager extends BaseWidget
         $mediaLibrary = $this->getMediaLibrary();
 
         try {
-            if (!$this->getSetting('rename')) {
-                throw new Exception(lang('alert_rename_disabled'));
-            }
+            if (!$this->getSetting('rename'))
+                throw new ApplicationException(lang('main::media_manager.alert_rename_disabled'));
+
+            if (!$path = $mediaLibrary->validatePath(post('path')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+
+            $oldName = trim(post('file'));
+            if (!strlen($oldName))
+                throw new ApplicationException(lang('main::media_manager.alert_file_name_required'));
 
             $name = trim(post('name'));
-            if (!strlen($name)) {
-                throw new Exception(lang('alert_invalid_new_file_name'));
-            }
+            if (!strlen($name))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_new_file_name'));
 
-            $fileName = trim(post('file'));
-            if (!strlen($fileName)) {
-                throw new Exception(lang('alert_file_name_required'));
-            }
+            if (!$mediaLibrary->isAllowedExtension($name))
+                throw new ApplicationException(lang('main::media_manager.alert_extension_not_allowed'));
 
-            $path = $this->getController()->security->sanitize_filename(
-                post('path'), TRUE
-            );
+            if (!$this->validateFileName($name) OR !$this->validateFileName($oldName))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_file_name'));
 
-            if ($path !== '' AND !$mediaLibrary->validatePath($path)) {
-                throw new Exception(lang('alert_invalid_path'));
-            }
+            $newPath = $path.'/'.$name;
+            if ($mediaLibrary->exists($newPath))
+                throw new ApplicationException(lang('main::media_manager.alert_file_exists'));
 
-            $name = $mediaLibrary->fixFileName($name);
-            $fileName = $mediaLibrary->fixFileName($fileName);
+            $mediaLibrary->rename($path.'/'.$oldName, $newPath);
 
-            $allowedExt = $this->getMediaLibrary()->getAllowedExt();
-            if ($nameExt = pathinfo($name, PATHINFO_EXTENSION) AND !in_array($nameExt, $allowedExt)) {
-                throw new Exception(lang('alert_extension_not_allowed'));
-            }
-
-            $name = $nameExt ? $name : $name.'.'.pathinfo($fileName, PATHINFO_EXTENSION);
-            if (!$mediaLibrary->rename($path.'/'.$fileName, $name))
-                throw new Exception(lang('alert_file_exists'));
+            $mediaLibrary->resetCache();
 
             $this->prepareVars();
 
@@ -356,85 +303,23 @@ class MediaManager extends BaseWidget
         }
     }
 
-    public function onMoveFiles()
+    public function onDeleteFolder()
     {
         $mediaLibrary = $this->getMediaLibrary();
 
         try {
-            if (!$this->getSetting('move')) {
-                throw new Exception(lang('alert_move_disabled'));
-            }
+            if (!$this->getSetting('delete'))
+                throw new ApplicationException(lang('main::media_manager.alert_delete_disabled'));
 
-            $destination = $this->getController()->security->sanitize_filename(
-                post('destination'), TRUE
-            );
+            if (!$path = $mediaLibrary->validatePath(post('path')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
 
-            if (!$mediaLibrary->validatePath($destination)) {
-                throw new Exception(lang('alert_select_move_folder'));
-            }
+            $mediaLibrary->deleteFolder($path);
 
-            $path = $this->getController()->security->sanitize_filename(
-                post('path'), TRUE
-            );
+            $mediaLibrary->resetCache();
 
-            $files = post('files');
-            if (!$files OR !is_array($files)) {
-                throw new Exception(lang('alert_select_move_file'));
-            }
+            $this->setCurrentFolder(dirname($path));
 
-            foreach ($files as $file) {
-                $fileName = $file['path'];
-                $fileName = $mediaLibrary->fixFileName($fileName);
-                $mediaLibrary->move(trim($path, '/').'/'.$fileName, trim($destination, '/').'/'.$fileName);
-            }
-
-            $this->setCurrentFolder($destination);
-            $this->prepareVars();
-
-            return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
-                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
-            ];
-        } catch (Exception $ex) {
-            return $ex->getMessage();
-        }
-    }
-
-    public function onCopyFiles()
-    {
-        $mediaLibrary = $this->getMediaLibrary();
-
-        try {
-            if (!$this->getSetting('copy')) {
-                throw new Exception(lang('alert_copy_disabled'));
-            }
-
-            $destination = $this->getController()->security->sanitize_filename(
-                post('destination'), TRUE
-            );
-
-            if (!$mediaLibrary->validatePath($destination)) {
-                throw new Exception(lang('alert_invalid_path'));
-            }
-
-            $path = $this->getController()->security->sanitize_filename(
-                post('path'), TRUE
-            );
-
-            $files = post('files');
-            if (!$files OR !is_array($files)) {
-                throw new Exception(lang('alert_select_copy_file'));
-            }
-
-            foreach ($files as $file) {
-                $fileName = $file['path'];
-                $fileName = $mediaLibrary->fixFileName($fileName);
-                $mediaLibrary->copy(trim($path, '/').'/'.$fileName, trim($destination, '/').'/'.$fileName);
-            }
-
-            $this->setCurrentFolder($destination);
             $this->prepareVars();
 
             return [
@@ -454,27 +339,108 @@ class MediaManager extends BaseWidget
 
         try {
             if (!$this->getSetting('delete')) {
-                $json['alert'] = lang('alert_delete_disabled');
+                $json['alert'] = lang('main::media_manager.alert_delete_disabled');
             }
 
-            $path = $this->getController()->security->sanitize_filename(
-                post('path'), TRUE
-            );
-
-            if (!$mediaLibrary->validatePath($path)) {
-                throw new Exception(lang('alert_invalid_path'));
-            }
+            if (!$path = $mediaLibrary->validatePath(post('path')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
 
             $files = post('files');
-            if (!$files OR !is_array($files)) {
-                throw new Exception(lang('alert_select_delete_file'));
+            if (empty($files) OR !is_array($files)) {
+                throw new ApplicationException(lang('main::media_manager.alert_select_delete_file'));
             }
 
+            $files = array_map(function ($value) use ($path) {
+                return $this->validateFileName($value['path'])
+                    ? $path.'/'.$value['path']
+                    : FALSE;
+            }, $files);
+
+            $mediaLibrary->deleteFiles($files);
+
+            $mediaLibrary->resetCache();
+
+            $this->prepareVars();
+
+            return [
+                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
+                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+            ];
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function onMoveFiles()
+    {
+        $mediaLibrary = $this->getMediaLibrary();
+
+        try {
+            if (!$this->getSetting('move'))
+                throw new ApplicationException(lang('main::media_manager.alert_move_disabled'));
+
+            if (!$source = $mediaLibrary->validatePath(post('path')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+
+            if (!$destination = $mediaLibrary->validatePath(post('destination')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+
+            $files = post('files');
+            if (empty($files) OR !is_array($files))
+                throw new ApplicationException(lang('main::media_manager.alert_select_move_file'));
+
             foreach ($files as $file) {
-                $fileName = $file['path'];
-                $fileName = $mediaLibrary->fixFileName($fileName);
-                $mediaLibrary->delete(trim($path, '/').'/'.$fileName);
+                $name = $file['path'];
+                if ($this->validateFileName($name))
+                    $mediaLibrary->moveFile($source.'/'.$name, $destination.'/'.$name);
             }
+
+            $mediaLibrary->resetCache();
+
+            $this->setCurrentFolder($destination);
+
+            $this->prepareVars();
+
+            return [
+                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
+                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+            ];
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function onCopyFiles()
+    {
+        $mediaLibrary = $this->getMediaLibrary();
+
+        try {
+            if (!$this->getSetting('copy'))
+                throw new ApplicationException(lang('main::media_manager.alert_copy_disabled'));
+
+            if (!$source = $mediaLibrary->validatePath(post('path')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+
+            if (!$destination = $mediaLibrary->validatePath(post('destination')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+
+            $files = post('files');
+            if (empty($files) OR !is_array($files))
+                throw new ApplicationException(lang('main::media_manager.alert_select_copy_file'));
+
+            foreach ($files as $file) {
+                $name = $file['path'];
+                if ($this->validateFileName($name))
+                    $mediaLibrary->copyFile($source.'/'.$name, $destination.'/'.$name);
+            }
+
+            $mediaLibrary->resetCache();
+
+            $this->setCurrentFolder($destination);
 
             $this->prepareVars();
 
@@ -501,31 +467,9 @@ class MediaManager extends BaseWidget
         return MediaLibrary::instance();
     }
 
-    protected function listFolderItems($folder, $sortBy, $searchTerm)
+    protected function listFolderItems($folder, $sortBy, $filter)
     {
-        $folder = rtrim($folder, '/').'/';
-        $items = $this->getMediaLibrary()->fetchFiles($folder, [
-            'by'     => $sortBy[0],
-            'order'  => $sortBy[1],
-            'filter' => $searchTerm,
-        ]);
-
-        foreach ($items as &$item) {
-            $itemName = $item['name'];
-            $itemType = $item['type'];
-            $item['path'] = $folder.$itemName;
-            $item['url'] = image_url($this->rootFolder.$folder.$itemName);
-
-            if ($itemType == 'img') {
-                $thumbnail = $this->getMediaLibrary()->getThumbnail($itemName, ltrim($folder, '/'));
-                $item['thumb'] = $thumbnail;
-            }
-
-            $this->currentFolderSize += $item['size'];
-            $item['size'] = $this->makeReadableSize($item['size']);
-        }
-
-        return $items;
+        return $this->getMediaLibrary()->fetchFiles($folder, $sortBy, $filter);
     }
 
     protected function getFolderList()
@@ -533,10 +477,10 @@ class MediaManager extends BaseWidget
         $result = [];
 
         $currentFolder = $this->getCurrentFolder();
-        $folderList = $this->getMediaLibrary()->recursiveFolders();
+        $folderList = $this->getMediaLibrary()->listAllFolders();
 
         foreach ($folderList as $value) {
-            if ($value == $currentFolder OR $value == '/')
+            if ($value == $currentFolder)
                 continue;
 
             $result[] = $value;
@@ -545,9 +489,41 @@ class MediaManager extends BaseWidget
         return $result;
     }
 
+    protected function getFolderTreeNodes()
+    {
+        $result = [];
+
+        $mediaLibrary = $this->getMediaLibrary();
+
+        $folderTree = function ($path) use (&$folderTree, $mediaLibrary, $result) {
+
+            if(!($folders = $mediaLibrary->listFolders($path)))
+                return null;
+
+            foreach ($folders as $folder) {
+                $node = [];
+                $node['text'] = $folder;
+                $node['path'] = $folder;
+
+                $node['state']['expanded'] = $this->isFolderTreeNodeExpanded($folder);
+                $node['state']['selected'] = $this->isFolderTreeNodeSelected($folder);
+
+                $node['nodes'] = ($folder != static::ROOT_FOLDER)
+                    ? $folderTree($folder)
+                    : null;
+
+                $result[] = $node;
+            }
+
+            return $result;
+        };
+
+        return $folderTree(static::ROOT_FOLDER);
+    }
+
     protected function getCurrentFolderSize()
     {
-        return $this->makeReadableSize($this->currentFolderSize);
+        return $this->makeReadableSize($this->getMediaLibrary()->folderSize($this->getCurrentFolder()));
     }
 
     protected function setCurrentFolder($path)
@@ -558,7 +534,7 @@ class MediaManager extends BaseWidget
 
     protected function getCurrentFolder()
     {
-        return trim($this->getSession('media_folder', static::ROOT_FOLDER), '/');
+        return $this->getSession('media_folder', static::ROOT_FOLDER);
     }
 
     protected function setSearchTerm($searchTerm)
@@ -575,7 +551,7 @@ class MediaManager extends BaseWidget
     {
         $sort = $this->getSortBy();
         $direction = 'descending';
-        if (in_array($direction, $sort))
+        if ($sort AND in_array($direction, $sort))
             $direction = 'ascending';
 
         $sortBy = [$sortBy, $direction];
@@ -586,6 +562,68 @@ class MediaManager extends BaseWidget
     protected function getSortBy()
     {
         return $this->getSession('media_sort_by', null);
+    }
+
+    protected function checkUploadHandler()
+    {
+        if (!($uniqueId = Request::header('X-IGNITER-FILEUPLOAD')) OR $uniqueId != $this->getId())
+            return;
+
+        $mediaLibrary = $this->getMediaLibrary();
+
+        try {
+            if (!Input::hasFile('file_data'))
+                throw new ApplicationException(lang('main::media_manager.alert_file_not_found'));
+
+            $uploadedFile = Input::file('file_data');
+
+            $fileName = $uploadedFile->getClientOriginalName();
+
+            if (!$path = $mediaLibrary->validatePath(Input::get('path')))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+
+            $extension = strtolower($uploadedFile->getClientOriginalExtension());
+            $fileName = File::name($fileName).'.'.$extension;
+            $filePath = $path.'/'.$fileName;
+
+            if (!$this->validateFileName($fileName))
+                throw new ApplicationException(lang('main::media_manager.alert_invalid_new_file_name'));
+
+            if (!$mediaLibrary->isAllowedExtension($extension))
+                throw new ApplicationException(lang('main::media_manager.alert_extension_not_allowed'));
+
+            if (!$uploadedFile->isValid())
+                throw new ApplicationException($uploadedFile->getErrorMessage());
+
+            $mediaLibrary->put(
+                $filePath,
+                File::get($uploadedFile->getRealPath())
+            );
+
+            $this->fireSystemEvent('media.file.upload', [$filePath, $uploadedFile]);
+
+            Response::json([
+                'link'   => $mediaLibrary->getMediaUrl($filePath),
+                'result' => 'success',
+            ])->send();
+        } catch (Exception $ex) {
+            Response::json($ex->getMessage(), 400)->send();
+        }
+
+        exit;
+    }
+
+    protected function validateFileName($name)
+    {
+        if (!preg_match('/^[0-9a-z@\.\s_\-]+$/i', $name)) {
+            return FALSE;
+        }
+
+        if (strpos($name, '..') !== FALSE) {
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     protected function makeBreadcrumb()
@@ -622,34 +660,13 @@ class MediaManager extends BaseWidget
         return (number_format($size, 0)." ".$units[$u]);
     }
 
-    protected function makeFolderTreeNodes($directoryMap, $parent = null, $result = [])
+    protected function isFolderTreeNodeExpanded($node)
     {
-        foreach ($directoryMap as $key => $value) {
-            if (!is_string($key)) continue;
-
-            $path = ($parent ? $parent.'/' : null).$key;
-            $node = [];
-            $node['text'] = $key;
-            $node['path'] = $path;
-            $nodes = $this->makeFolderTreeNodes($value, $path);
-            if (count($nodes))
-                $node['nodes'] = $nodes;
-
-            if ($this->isFolderTreeNodeActive($key)) {
-                $node['state']['expanded'] = TRUE;
-                $node['state']['selected'] = TRUE;
-            }
-
-            $result[] = $node;
-        }
-
-        return $result;
+        return starts_with($this->getCurrentFolder(), $node);
     }
 
-    protected function isFolderTreeNodeActive($node)
+    protected function isFolderTreeNodeSelected($node)
     {
-        $currentFolder = explode('/', $this->getCurrentFolder());
-
-        return in_array($node, $currentFolder);
+        return $this->getCurrentFolder() == $node;
     }
 }

@@ -337,7 +337,7 @@ class FormController extends ControllerAction
             throw new Exception(lang('admin::default.form.not_ready'));
         }
 
-        if (isset($this->toolbarWidget)) {
+        if (!is_null($this->toolbarWidget)) {
             $form[] = $this->toolbarWidget->render();
         }
 
@@ -386,9 +386,8 @@ class FormController extends ControllerAction
     protected function createModel()
     {
         $class = $this->config['model'];
-        $model = new $class;
 
-        return $model;
+        return new $class;
     }
 
     /**

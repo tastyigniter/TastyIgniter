@@ -1,7 +1,8 @@
 <?php namespace System\Classes;
 
+use Cache;
 use Exception;
-use Igniter\Flame\Traits\Singleton;
+use Request;
 
 /**
  * Hub Manager Class
@@ -9,7 +10,9 @@ use Igniter\Flame\Traits\Singleton;
  */
 class HubManager
 {
-    use Singleton;
+    use \Igniter\Flame\Traits\Singleton;
+
+    const ENDPOINT = 'http://api.tasty-cms.com';
 
     protected $siteKey;
 
@@ -23,7 +26,6 @@ class HubManager
 
     public function initialize()
     {
-//        $this->load->driver('cache', ['adapter' => $this->config->item('cache_driver')]);
         $this->cachePrefix = 'hub_';
         $this->downloadsPath = storage_path('temp/hub');
     }
@@ -39,11 +41,11 @@ class HubManager
     {
         $cacheFile = $this->getCacheFilePath('items', serialize($filter));
 
-        if (!$items = $this->cache->get($cacheFile)) {
+        if (!$items = Cache::get($cacheFile)) {
             $items = $this->requestRemoteData('items', array_merge(['include' => 'require'], $filter));
 
             if (!empty($items) AND is_array($items))
-                $this->cache->save($cacheFile, $items, $this->cacheLife);
+                Cache::put($cacheFile, $items, $this->cacheLife);
         }
 
         return $items;
@@ -62,7 +64,7 @@ class HubManager
     public function applyItems($type, $itemNames = [])
     {
         $postData = [
-            'version' => TI_VERSION,
+            'version' => params('ti_version'),
             'items'   => json_encode($itemNames),
         ];
 
@@ -77,16 +79,16 @@ class HubManager
 
         $cacheFile = $this->getCacheFilePath('updates', $itemNames);
 
-        if ($force OR !$response = $this->cache->get($cacheFile)) {
+        if ($force OR !$response = Cache::get($cacheFile)) {
             $response = $this->requestRemoteData('core/apply', [
-                'version' => TI_VERSION,
+                'version' => params('ti_version'),
                 'items'   => $itemNames,
                 'include' => 'tags',
             ]);
 
             if (is_array($response)) {
                 $response['check_time'] = time();
-                $this->cache->save($cacheFile, $response, $this->cacheLife);
+                Cache::put($cacheFile, $response, $this->cacheLife);
             }
         }
 
@@ -142,29 +144,24 @@ class HubManager
         if (!is_string($key))
             return null;
 
-        $this->load->library('encrypt');
-        $key = $this->encrypt->encode($key);
-        $this->config->set_item('carte_key', $key);
-        params()->set('carte_key', $key);
-//        $this->siteKey = $this->config->item('carte_key');
+        params()->set('carte_key', encrypt($key));
     }
 
     public function getSecurity()
     {
-        $this->load->library('encrypt');
-
-        return (!$siteKey = $this->config->item('carte_key')) ? md5('NULL') : $this->encrypt->decode($siteKey);
+        return (!$carteKey = params('carte_key')) ? md5('NULL') : decrypt($carteKey);
     }
 
-    /**
-     * @return \System\Classes\InstallerManager
-     */
-    public function getInstaller()
+    public function getSysInfo()
     {
-        if (!$this->installer)
-            $this->installer = InstallerManager::instance();
+        $info = [
+            'domain' => root_url(),
+            'ver'    => params('ti_version'),
+            'os'     => php_uname(),
+            'php'    => phpversion(),
+        ];
 
-        return $this->installer;
+        return $info;
     }
 
     protected function requestRemoteData($url, $params = [])
@@ -173,12 +170,10 @@ class HubManager
             $curl = $this->prepareRequest($url, $params);
             $result = curl_exec($curl);
 
-            log_message('debug', sprintf('Server request: %s', $url));
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
                 throw new Exception('Server error try again');
 
-            log_message('debug', sprintf('Request information: %s', print_r(curl_getinfo($curl), TRUE)));
             curl_close($curl);
         } catch (Exception $ex) {
             throw new Exception('Server responded with error: '.$ex->getMessage());
@@ -191,7 +186,6 @@ class HubManager
         }
 
         if (isset($response['message']) AND !in_array($httpCode, [200, 201])) {
-            if (isset($response['errors'])) log_message('debug', print_r($response['errors'], TRUE));
             throw new Exception($response['message']);
         }
 
@@ -209,12 +203,10 @@ class HubManager
             curl_setopt($curl, CURLOPT_FILE, $fileStream);
             $result = curl_exec($curl);
 
-            log_message('debug', sprintf('Server request: %s', $url));
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
                 throw new Exception('Server error try again');
 
-            log_message('debug', sprintf('Request information: %s', print_r(curl_getinfo($curl), TRUE)));
             curl_close($curl);
         } catch (Exception $ex) {
             throw new Exception('Server responded with error: '.$ex->getMessage());
@@ -230,8 +222,7 @@ class HubManager
                     throw new Exception(isset($response['message']) ? $response['message'] : '');
                 }
                 else {
-                    log_message('error', "File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
-                    throw new Exception("Download failed, check error log.");
+                    throw new Exception("Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
                 }
             }
         }
@@ -239,59 +230,33 @@ class HubManager
         return TRUE;
     }
 
-    protected function buildPostData($params = [], $options = [])
+    protected function prepareRequest($uri, $params)
     {
-        $options['USERAGENT'] = $this->agent->agent_string();
-        $options['REFERER'] = page_url();
-        $options['AUTOREFERER'] = TRUE;
-        $options['FOLLOWLOCATION'] = 1;
+        $curl = curl_init();
 
-        if (empty($options['TIMEOUT']))
-            $options['TIMEOUT'] = 3600;
+        curl_setopt($curl, CURLOPT_URL, static::ENDPOINT.'/'.$uri);
+        curl_setopt($curl, CURLOPT_USERAGENT, Request::userAgent());
+        curl_setopt($curl, CURLOPT_TIMEOUT, 3600);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_REFERER, page_url());
+        curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
 
-        $info = $this->getInstaller()->getSysInfo();
-        $params['version'] = $info['ver'];
+        $info = $this->getSysInfo();
         $params['server'] = base64_encode(serialize($info));
 
-        if (!empty($params))
-            $options['POSTFIELDS'] = $params;
+        if ($siteKey = $this->getSecurity()) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ["TI-Rest-Key: bearer {$siteKey}"]);
+//            curl_setopt($curl, CURLOPT_HTTPHEADER, ["TI-Signature: ".$this->createSignature($params, $siteKey)]);
+        }
 
-        if ($this->siteKey)
-            $options['HTTPHEADER'][] = TI_SITE_AUTH.": {$this->siteKey}";
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, '', '&'));
 
-        $options['HTTPHEADER'][] = TI_SIGN_REQUEST.": ".$this->createSignature($params, $this->siteKey);
-
-        return $options;
+        return $curl;
     }
 
     protected function createSignature($postData, $siteKey)
     {
         return base64_encode(hash_hmac('sha256', serialize($postData), $siteKey));
-    }
-
-    protected function prepareRequest($uri, $params)
-    {
-        $curl = curl_init();
-
-        curl_setopt($curl, CURLOPT_URL, TI_ENDPOINT.'/'.$uri);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 3600);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
-
-        if ($this->agent->agent_string())
-            curl_setopt($curl, CURLOPT_USERAGENT, $this->agent->agent_string());
-
-        if ($siteKey = $this->getSecurity())
-            curl_setopt($curl, CURLOPT_HTTPHEADER, [TI_REST_AUTH.": bearer {$siteKey}"]);
-
-        $info = $this->getInstaller()->getSysInfo();
-        $params['server'] = base64_encode(serialize($info));
-        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, '', '&'));
-
-        log_message('debug', sprintf('Hub request data: %s', serialize($params)));
-
-        return $curl;
     }
 }

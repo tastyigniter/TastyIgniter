@@ -21,7 +21,7 @@
                 class="text-danger"
                 title="Remove"
                 role="button"
-                data-confirm="<?= lang('lang:admin::default.alert_warning_confirm'); ?>"
+                data-confirm="<?= lang('admin::default.alert_warning_confirm'); ?>"
                 data-control="remove-panel"
                 data-target="#<?= $this->getId('area-panel-'.$index) ?>">
                 <i class="fa fa-times-circle"></i>

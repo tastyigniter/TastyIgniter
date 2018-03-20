@@ -2,10 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-3 pull-right">
-                <?php $socialIcons = get_theme_options('social', []); ?>
-                <?php if (!empty(array_filter($socialIcons))) { ?>
-                    <?= partial('social_icons', ['socialIcons' => $socialIcons]); ?>
-                <?php } ?>
+                <?= partial('social_icons', ['socialIcons' => $this->theme->social]); ?>
             </div>
 
             <div class="col-xs-4 col-sm-3">
@@ -41,10 +38,12 @@
                                 <?= lang('main::default.menu_contact'); ?>
                             </a>
                         </li>
-                        <?php if (get_theme_options('hide_admin_link') != '1') { ?>
+                        <?php if ($this->theme->hide_admin_link != 1) { ?>
                             <li>
-                                <a target="_blank"
-                                   href="<?= admin_url(); ?>">
+                                <a
+                                    target="_blank"
+                                    href="<?= admin_url(); ?>"
+                                >
                                     <?= lang('main::default.menu_admin'); ?>
                                 </a>
                             </li>
@@ -56,17 +55,14 @@
                 <div class="footer-links">
                     <h4 class="footer-title hidden-xs"><?= lang('main::default.text_information'); ?></h4>
                     <ul>
-                        <?php $pages = [];//$this->Pages_model->getPages(); ?>
-                        <?php if ($pages) { ?>
-                            <?php foreach ($pages as $page) { ?>
-                                <?php if (is_array($page['navigation']) AND in_array('footer', $page['navigation'])) { ?>
-                                    <li>
-                                        <a href="<?= site_url('pages?page_id='.$page['page_id']); ?>">
-                                            <?= $page['name']; ?>
-                                        </a>
-                                    </li>
-                                <?php } ?>
-                            <?php } ?>
+                        <?php if (!empty($footerPageList)) foreach ($footerPageList as $page) { ?>
+                            <li>
+                                <a
+                                    href="<?= page_url('pages', ['slug' => $page->permalink_slug]); ?>"
+                                >
+                                    <?= $page->name; ?>
+                                </a>
+                            </li>
                         <?php } ?>
                     </ul>
                 </div>

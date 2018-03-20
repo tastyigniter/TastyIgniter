@@ -32,7 +32,7 @@ class Customer extends \Igniter\Flame\Auth\Manager
 
     public function getName()
     {
-        return $this->user->customer_name;
+        return $this->user->full_name;
     }
 
     public function getFirstName()
@@ -58,16 +58,6 @@ class Customer extends \Igniter\Flame\Auth\Manager
     public function getAddressId()
     {
         return $this->user->address_id;
-    }
-
-    public function getSecurityQuestionId()
-    {
-        return $this->user->security_question_id;
-    }
-
-    public function getSecurityAnswer()
-    {
-        return $this->user->security_answer;
     }
 
     public function getGroupId()

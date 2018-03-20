@@ -157,9 +157,8 @@ class MapArea extends BaseFormWidget
             'lng' => $this->model->{$this->lngFrom},
         ];
         $config['height'] = 640;
-        $widget = new MapView($this->getController(), $config);
 
-        return $widget;
+        return new MapView($this->getController(), $config);
     }
 
     protected function listAreas()

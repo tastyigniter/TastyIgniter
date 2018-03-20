@@ -3,7 +3,6 @@
 use App;
 use Config;
 use Exception;
-use Igniter\Flame\Traits\Singleton;
 use Main\Classes\ThemeManager;
 use Schema;
 use ZipArchive;
@@ -14,7 +13,7 @@ use ZipArchive;
  */
 class UpdateManager
 {
-    use Singleton;
+    use \Igniter\Flame\Traits\Singleton;
 
     protected $logs = [];
 
@@ -249,7 +248,7 @@ class UpdateManager
 //        $this->CI->Extensions_model->updateInstalledExtensions($extensionCode);
 //
 //        // set extension migration to the latest version
-//        ExtensionManager::instance()->updateExtension($extensionCode);
+//        $this->extensionManager->updateExtension($extensionCode);
 //
 //        return TRUE;
 //    }
@@ -351,7 +350,7 @@ class UpdateManager
 
             switch ($update['type']) {
                 case 'extension':
-                    if (ExtensionManager::instance()->isDisabled($update['code']))
+                    if ($this->extensionManager->isDisabled($update['code']))
                         continue 2;
                     break;
                 case 'theme':
@@ -383,12 +382,14 @@ class UpdateManager
     public function getInstalledItems($type = null)
     {
         if ($this->installedItems)
-            return isset($this->installedItems[$type]) ? $this->installedItems[$type] : $this->installedItems;
+            return ($type AND isset($this->installedItems[$type]))
+                ? $this->installedItems[$type] : $this->installedItems;
 
         $installedItems = [];
 
-        foreach (ExtensionManager::instance()->listExtensions() as $extension) {
-            if ($extension = ExtensionManager::instance()->findExtension($extension) AND $meta = $extension->extensionMeta()) {
+        foreach ($this->extensionManager->listExtensions() as $extensionCode) {
+            $extensionObj = $this->extensionManager->findExtension($extensionCode);
+            if ($extensionObj AND $meta = $extensionObj->extensionMeta()) {
                 $installedItems['extensions'][] = [
                     'name' => $meta['code'],
                     'ver'  => $meta['version'],
@@ -512,7 +513,7 @@ class UpdateManager
             case 'core':
                 return base_path();
             case 'extension':
-                return current(ExtensionManager::instance()->folders());
+                return current($this->extensionManager->folders());
             case 'theme':
                 return $this->getThemeManager()->folders()[MAINDIR];
             case 'translation':

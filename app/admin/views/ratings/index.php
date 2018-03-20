@@ -52,14 +52,13 @@
         <?= form_close(); ?>
     </div>
 </div>
-</div>
 <script type="text/javascript"><!--
     var table_row = <?= $table_row; ?>
 
         function addRating() {
             html = '<tr id="table-row' + table_row + '">'
             html += '	<td class="list-action text-center handle"><i class="fa fa-sort"></i></td>'
-            html += '	<td class="list-action handle"><a class="btn btn-danger" onclick="confirm(\'<?= lang('lang:admin::default.alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>'
+            html += '	<td class="list-action handle"><a class="btn btn-danger" onclick="confirm(\'<?= lang('admin::default.alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>'
             html += '	<td><input type="text" name="ratings[' + table_row + ']" class="form-control" value="<?= set_value("ratings[' + table_row + ']"); ?>" /></td>'
             html += '</tr>'
 

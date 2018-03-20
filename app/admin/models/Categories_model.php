@@ -4,6 +4,7 @@ use DB;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Sortable;
+use Main\Models\Image_tool_model;
 use Model;
 
 /**
@@ -83,27 +84,6 @@ class Categories_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('status', 1);
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['name']);
-        }
-
-        if (is_numeric($filter['filter_status'])) {
-            $query->where('menu_status', $filter['filter_status']);
-        }
-
-        return $query;
     }
 
     //

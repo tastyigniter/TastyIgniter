@@ -16,6 +16,8 @@ use Main\Classes\Customer;
 use Request;
 use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
+use System\Models\Mail_templates_model;
+use System\Models\Settings_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -36,7 +38,7 @@ class ServiceProvider extends AppServiceProvider
 
         $this->registerConsole();
         $this->registerErrorHandler();
-//        $this->registerMailer();
+        $this->registerMailer();
         $this->registerPaginator();
 
         // Register admin and main module providers
@@ -97,7 +99,7 @@ class ServiceProvider extends AppServiceProvider
         });
 
         App::singleton('admin.template', function ($app) {
-            return new Template($app['config']['template']);
+            return new Template;
         });
 
         App::singleton('country', function ($app) {
@@ -160,13 +162,25 @@ class ServiceProvider extends AppServiceProvider
         });
 
         Validator::extend('valid_date', function ($attribute, $value, $parameters, $validator) {
-            return (!preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $value)
-                AND !preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value)) ? FALSE : TRUE;
+            return !(!preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $value)
+                AND !preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value));
         });
 
         Validator::extend('valid_time', function ($attribute, $value, $parameters, $validator) {
-            return (!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
-                AND !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value)) ? FALSE : TRUE;
+            return !(!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
+                AND !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value));
+        });
+    }
+
+    protected function registerMailer()
+    {
+        Event::listen('mailer.beforeRegister', function () {
+            Settings_model::applyMailerConfigValues();
+        });
+
+        Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data) {
+            Mail_templates_model::addContentToMailer($message, $view, $data);
+            return false;
         });
     }
 

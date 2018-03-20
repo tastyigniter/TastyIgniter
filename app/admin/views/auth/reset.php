@@ -19,7 +19,7 @@
                         <label for="input-user"
                                class="control-label"><?= lang('admin::login.label_username'); ?></label>
                         <div class="">
-                            <input name="username" type="text" id="input-user" class="form-control"/></td>
+                            <input name="username" type="text" id="input-user" class="form-control"/>
                             <?= form_error('username', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>

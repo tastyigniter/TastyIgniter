@@ -73,7 +73,6 @@ class Payments extends \Admin\Classes\AdminController
      */
     public function formFindModelObject($paymentCode = null)
     {
-//        $code = get('code');
         if (!strlen($paymentCode)) {
             throw new Exception(lang('admin::payments.alert_setting_missing_id'));
         }

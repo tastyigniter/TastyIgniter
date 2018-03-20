@@ -8,7 +8,6 @@ permalink: /:location?local/reviews
 <div id="page-content">
 
     <div class="container">
-
         <div class="row">
             <div class="content col-sm-8">
                 <div class="row">

@@ -39,16 +39,25 @@ class Navigation
 
     public function getVisibleNavItems()
     {
-        $navItems = $this->getNavItems();
+        uasort($this->navItems, function ($a, $b) {
+            return $a['priority'] - $b['priority'];
+        });
 
-        foreach ($navItems as $key => $navItem) {
-            $sort_array[$key] = isset($navItem['priority'])
-                ? $navItem['priority'] : 9999999;
+        $this->navItems = $this->filterPermittedNavItems($this->navItems);
+
+        foreach ($this->navItems as $code => &$navItem) {
+            if (!isset($navItem['child']) OR !count($navItem['child'])) {
+                continue;
+            }
+
+            uasort($navItem['child'], function ($a, $b) {
+                return $a['priority'] - $b['priority'];
+            });
+
+            $navItem['child'] = $this->filterPermittedNavItems($navItem['child']);
         }
 
-        array_multisort($sort_array, SORT_ASC, $navItems);
-
-        return $navItems;
+        return $this->navItems;
     }
 
     public function isActiveNavItem($code)
@@ -67,15 +76,7 @@ class Navigation
         if (!self::$mainItems)
             $this->loadItems();
 
-        $mainItems = [];
-        foreach (self::$mainItems as $code => $mainItem) {
-            if ($this->filterPermittedNavItem($mainItem) === FALSE)
-                continue;
-
-            $mainItems[$code] = $mainItem;
-        }
-
-        return $mainItems;
+        return $this->filterPermittedNavItems(self::$mainItems);
     }
 
     public function render($partial)
@@ -89,7 +90,7 @@ class Navigation
         ]);
     }
 
-    public function addNavItem($itemCode, $options = [], $parentCode = null)
+    public function addNavItem($itemCode, array $options = [], $parentCode = null)
     {
         if (!is_null($parentCode)) {
             $this->navItems[$parentCode]['child'][$itemCode] = $options;
@@ -135,34 +136,14 @@ class Navigation
         self::$navItemsLoaded = TRUE;
     }
 
-    public function filterPermittedNavItem($menu)
+    public function filterPermittedNavItems($items)
     {
-        $permissions = array_get($menu, 'child', []) ?: [$menu];
+        return collect($items)->filter(function ($item) {
+            if (!$permission = array_get($item, 'permission'))
+                return true;
 
-        $collection = collect($permissions)->pluck('permission')->toArray();
-
-        $filtered = [];
-        foreach (array_filter($collection) as $permission) {
-            if (strpos($permission, '|') !== FALSE) {
-                $results = explode('|', $permission);
-            }
-            else {
-                $results = [$permission];
-            }
-
-            $filtered = array_merge($filtered, $results);
-        }
-
-        $permitted = [];
-        foreach ($filtered as $permission) {
-            $permissionName = (count(explode('.', $permission)) > 2)
-                ? $permission
-                : $permission.'.Access';
-
-            $permitted[$permissionName] = AdminAuth::hasPermission($permissionName);
-        }
-
-        return array_filter($permitted);
+            return AdminAuth::hasPermission($permission);
+        })->toArray();
     }
 
     //
@@ -205,7 +186,9 @@ class Navigation
                 $this->registerNavItems($navItem['child'], $navItem['code']);
             }
 
-            $this->registerNavItem($navItem['code'], $navItem, $parent);
+            if (array_except($definition, 'child')) {
+                $this->addNavItem($navItem['code'], $navItem, $parent);
+            }
         }
     }
 

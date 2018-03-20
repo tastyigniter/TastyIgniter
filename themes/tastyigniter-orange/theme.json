@@ -6,12 +6,12 @@
   "author": "TastyIgniter Dev Team",
   "version": "2.1.0",
   "require": {
-    "cart": "*",
-    "local": "*",
-    "reservation": "*",
     "account": "*",
+    "cart": "*",
     "frontend": "*",
-    "pages": "*"
+    "local": "*",
+    "pages": "*",
+    "reservation": "*"
   },
   "tags": {
     "1.0.0": "Theme initialization",

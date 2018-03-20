@@ -1,5 +1,6 @@
 <?php namespace System\Classes;
 
+use App;
 use File;
 use Igniter\Flame\Traits\Singleton;
 use Lang;
@@ -16,11 +17,6 @@ use ZipArchive;
 class ExtensionManager
 {
     use Singleton;
-
-    /**
-     * @var \Igniter\Flame\Foundation\Application
-     */
-    public $app;
 
     /**
      * @var
@@ -59,10 +55,8 @@ class ExtensionManager
 
     public function initialize()
     {
-        $this->app = app();
-
         // This prevents reading settings from the database before its been created
-        if ($this->app->hasDatabase())
+        if (App::hasDatabase())
             $this->loadInstalled();
 
         $this->loadExtensions();
@@ -164,7 +158,7 @@ class ExtensionManager
      */
     public function folders()
     {
-        return [$this->app->extensionsPath()];
+        return [App::extensionsPath()];
     }
 
     /**
@@ -174,22 +168,15 @@ class ExtensionManager
     public function listExtensions()
     {
         $map = [];
-        foreach ($this->paths() as $dir => $path) {
-            $map[] = $dir;
+        foreach ($this->paths() as $vendor => $paths) {
+            foreach ($paths as $code => $path) {
+                $map[] = "{$vendor}.{$code}";
+            }
         }
 
         $count = count($map);
         if (!$count) {
             return $map;
-        }
-
-        // Clean out any html or php files.
-        for ($i = 0; $i < $count; $i++) {
-            if (stripos($map[$i], '.html') !== FALSE
-                || stripos($map[$i], '.php') !== FALSE
-            ) {
-                unset($map[$i]);
-            }
         }
 
         return $map;
@@ -254,7 +241,7 @@ class ExtensionManager
         if (!isset($extension->require) OR !$extension->require)
             return null;
 
-        return is_array($extension->require) ? $extension->require : [$extension->require];
+        return (array)$extension->require;
     }
 
     /**
@@ -365,7 +352,7 @@ class ExtensionManager
             throw new SystemException("Missing Extension class '{$class}' in '{$identifier}', create the Extension class to override extensionMeta() method.");
         }
 
-        $classObj = new $class($this->app);
+        $classObj = new $class(App::getInstance());
 
         // Check for disabled extensions
         if ($this->isDisabled($identifier)) {
@@ -465,16 +452,14 @@ class ExtensionManager
 
         $extension->register();
 
-//        get_instance()->load->add_package_path($extensionPath);
-
         // Register views path
-        $viewsPath = $extensionPath.'views';
+        $viewsPath = $extensionPath.'/views';
         if (File::isDirectory($viewsPath)) {
             View::addNamespace($name, $viewsPath);
         }
 
         // Add routes, if available
-        $routesFile = $extensionPath.'routes.php';
+        $routesFile = $extensionPath.'/routes.php';
         if (file_exists($routesFile)) {
             require $routesFile;
         }
@@ -536,7 +521,7 @@ class ExtensionManager
      *
      * @param $name
      *
-     * @return bool
+     * @return string
      */
     public function checkName($name)
     {
@@ -599,11 +584,7 @@ class ExtensionManager
      */
     public function isDisabled($name)
     {
-        if (!$this->checkName($name) OR !array_get($this->installedExtensions, $name, FALSE)) {
-            return TRUE;
-        }
-
-        return FALSE;
+        return !$this->checkName($name) OR !array_get($this->installedExtensions, $name, FALSE);
     }
 
     /**
@@ -653,6 +634,9 @@ class ExtensionManager
         $manifestFile = $extractedPath.'extension.json';
         $config = json_decode(File::get($manifestFile));
         $extensionPath = extension_path($this->getNamePath($config->code));
+
+        if (!File::isDirectory($extensionPath))
+            File::makeDirectory($extensionPath, 0777, TRUE);
 
         File::moveDirectory($extractedPath, $extensionPath, TRUE);
 

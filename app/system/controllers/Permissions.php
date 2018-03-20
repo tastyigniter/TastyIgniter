@@ -1,6 +1,8 @@
 <?php namespace System\Controllers;
 
+use AdminAuth;
 use AdminMenu;
+use System\Models\Permissions_model;
 
 class Permissions extends \Admin\Classes\AdminController
 {
@@ -51,7 +53,15 @@ class Permissions extends \Admin\Classes\AdminController
         AdminMenu::setContext('permissions', 'users');
     }
 
-    public function formBeforeCreate($model)
+    public function index()
+    {
+        if (AdminAuth::hasPermission('Admin.Permissions.Manage'))
+            Permissions_model::syncAll();
+
+        $this->asExtension('ListController')->index();
+    }
+
+    public function formBeforeSave($model)
     {
         $model->is_custom = TRUE;
     }

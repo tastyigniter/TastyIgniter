@@ -1,7 +1,6 @@
 <?php
 
 // Constants
-define('TI_VERSION', '3.0.0-alpha');
 define('TI_PHP_VERSION', '7.0');
 define('SETUPPATH', dirname(__FILE__));
 define('BASEPATH', dirname(SETUPPATH));

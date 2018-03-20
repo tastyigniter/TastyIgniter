@@ -1,15 +1,19 @@
 <div class="media-finder">
     <div class="input-group">
-    <span class="input-group-addon lg-addon">
-        <?php if (!$value) { ?>
-            <i class="fa"></i>
-        <?php } else { ?>
-            <i><img data-find-image
-                    src="<?= $this->resizeImage($value ? $value : $blankImage) ?>"
-                    class="img-responsive"
-                    width="24px"></i>
-        <?php } ?>
-    </span>
+        <span class="input-group-addon lg-addon">
+            <?php if (!$value) { ?>
+                <i class="fa"></i>
+            <?php } else { ?>
+                <i>
+                    <img
+                        data-find-image
+                        src="<?= $this->getMediaUrl($value ?: $blankImage) ?>"
+                        class="img-responsive"
+                        width="24px"
+                    >
+                </i>
+            <?php } ?>
+        </span>
         <input
             type="text"
             name="<?= $fieldName ?>"
@@ -17,7 +21,8 @@
             id="<?= $field->getId() ?>"
             data-find-value
             value="<?= e($value) ?>"
-            <?= $this->previewMode ? 'disabled="disabled"' : '' ?>>
+            <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
+        >
         <?php if (!$this->previewMode) { ?>
             <span class="input-group-btn">
                 <button class="btn btn-primary find-button" type="button">

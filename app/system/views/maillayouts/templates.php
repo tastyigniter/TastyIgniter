@@ -23,8 +23,8 @@
                         </a>
                     </td>
                     <td><b><?= $template->code; ?></b> - <?= $template->title; ?></td>
-                    <td class="text-right"><?= $template->date_updated; ?></td>
-                    <td class="text-right"><?= $template->date_added; ?></td>
+                    <td class="text-right"><?= day_elapsed($template->date_updated); ?></td>
+                    <td class="text-right"><?= day_elapsed($template->date_added); ?></td>
                 </tr>
             <?php } ?>
             </tbody>

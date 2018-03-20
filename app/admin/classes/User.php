@@ -29,33 +29,28 @@ class User extends Manager
 
     protected $permissionsLoaded = FALSE;
 
-    public function login($userModel, $remember = FALSE)
-    {
-        parent::login($userModel, $remember);
-    }
-
     public function restrictLocation($location_id, $permission, $redirect = FALSE)
     {
-        if ($this->isSuperUser()) return FALSE;
-
-        if (empty($location_id)) return FALSE;
-
-        $is_strict_location = $this->isStrictLocation();
-        if ($is_strict_location AND $location_id !== $this->getLocationId()) {
-            $permission = (substr_count($permission, '.') === 2) ? substr($permission, 0, strrpos($permission, '.')) : $permission;
-            $context = substr($permission, strpos($permission, '.') + 1);
-            $action = end($this->permission_action);
-
-            flash()->warning(sprintf(lang('admin::users.alert_location_restricted'), $action, $context));
-            if (!$redirect) {
-                return TRUE;
-            }
-            else {
-                redirect($redirect);
-            }
-        }
-
-        return FALSE;
+//        if ($this->isSuperUser()) return FALSE;
+//
+//        if (empty($location_id)) return FALSE;
+//
+//        $is_strict_location = $this->isStrictLocation();
+//        if ($is_strict_location AND $location_id !== $this->getLocationId()) {
+//            $permission = (substr_count($permission, '.') === 2) ? substr($permission, 0, strrpos($permission, '.')) : $permission;
+//            $context = substr($permission, strpos($permission, '.') + 1);
+//            $action = end($this->permission_action);
+//
+//            flash()->warning(sprintf(lang('admin::users.alert_location_restricted'), $action, $context));
+//            if (!$redirect) {
+//                return TRUE;
+//            }
+//            else {
+//                redirect($redirect);
+//            }
+//        }
+//
+//        return FALSE;
     }
 
     public function isLogged()
@@ -142,8 +137,6 @@ class User extends Manager
             default:
                 return isset($user[$key]) ? $user[$key] : $default;
         }
-
-        return $default;
     }
 
 

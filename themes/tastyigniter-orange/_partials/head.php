@@ -1,5 +1,5 @@
 <?= get_metas(); ?>
-<?php if ($favicon = get_theme_options('favicon')) { ?>
+<?php if ($favicon = $this->theme->favicon) { ?>
     <link href="<?= image_url($favicon); ?>" rel="shortcut icon" type="image/ico">
 <?php }
 else { ?>
@@ -10,5 +10,6 @@ else { ?>
 <?= get_active_styles(); ?>
 <?= get_style_tags(['app', 'widget', 'component', 'theme']); ?>
 <?= get_script_tags('app'); ?>
-<?php $custom_script = get_theme_options('custom_script'); ?>
-<?= !empty($custom_script['head']) ? '<script type="text/javascript">'.$custom_script['head'].'</script>' : ''; ?>
+<?= !empty($this->theme->custom_script['head'])
+    ? '<script type="text/javascript">'.$this->theme->custom_script['head'].'</script>'
+    : ''; ?>

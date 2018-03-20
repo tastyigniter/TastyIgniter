@@ -32,8 +32,6 @@ return [
     'label_password'          => 'Password',
     'label_confirm_password'  => 'Confirm Password',
     'label_telephone'         => 'Telephone',
-    'label_security_question' => 'Security Question',
-    'label_security_answer'   => 'Security Answer',
     'label_newsletter'        => 'Newsletter',
     'label_customer_group'    => 'Customer Group',
     'label_status'            => 'Status',

@@ -56,21 +56,4 @@ class Activities_model extends Activity
 
         return $query->take($pageLimit);
     }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-            $query->where('status', $filter['filter_status']);
-        }
-
-        return $query;
-    }
 }

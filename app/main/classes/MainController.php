@@ -186,7 +186,7 @@ class MainController extends BaseController
 
             // Log the 404 request
             if (!App::runningUnitTests())
-                Log::error(sprintf('main::default.not_found.page_message', $url));
+                Log::error(sprintf(lang('main::default.not_found.page_message'), $url));
 
             if (!$page = $this->router->findByUrl('/404'))
                 return Response::make(View::make('main::404'), $this->statusCode);
@@ -595,7 +595,7 @@ class MainController extends BaseController
         // Inject global view variables
         $globalVars = $this->template->getGlobals();
         if (!empty($globalVars)) {
-            $params = (array)$params + $globalVars;
+            $params = $params + $globalVars;
         }
 
         // Parse basic template variables

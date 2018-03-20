@@ -1,14 +1,11 @@
 ---
-title: main::account.login.text_register_heading
+title: Register
 layout: default
 permalink: /register
 
 '[account]':
     security: guest
 ---
-<?php
-$registrationTermsUrl = TRUE;
-?>
 <div id="page-content">
     <div class="container">
         <div class="row">

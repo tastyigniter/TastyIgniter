@@ -35,16 +35,6 @@ class ComponentPartial extends Partial
     protected $maxNesting = 2;
 
     /**
-     * @var array Allowable file extensions.
-     */
-    protected $allowedExtensions = ['php'];
-
-    /**
-     * @var string Default file extension.
-     */
-    protected $defaultExtension = 'php';
-
-    /**
      * Creates an instance of the object and associates it with a component.
      *
      * @param \System\Classes\BaseComponent $component
@@ -75,7 +65,7 @@ class ComponentPartial extends Partial
      */
     public function find($fileName)
     {
-        if (!strlen(File::extension($fileName)))
+        if ('' === File::extension($fileName))
             $fileName .= '.'.$this->defaultExtension;
 
         $filePath = $this->getFilePath($fileName);
@@ -107,20 +97,11 @@ class ComponentPartial extends Partial
     {
         $partial = new static($component);
         $filePath = $partial->getFilePath($fileName);
-        if (!strlen(File::extension($filePath))) {
+        if ('' === File::extension($filePath)) {
             $filePath .= '.'.$partial->getDefaultExtension();
         }
 
         return File::isFile($filePath);
-    }
-
-    /**
-     * Returns the file content.
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
     }
 
     /**
@@ -133,35 +114,12 @@ class ComponentPartial extends Partial
     }
 
     /**
-     * Returns the file name.
-     * @return string
-     */
-    public function getFileName()
-    {
-        return $this->fileName;
-    }
-
-    /**
      * Returns the default extension used by this template.
      * @return string
      */
     public function getDefaultExtension()
     {
         return $this->defaultExtension;
-    }
-
-    /**
-     * Returns the file name without the extension.
-     * @return string
-     */
-    public function getBaseFileName()
-    {
-        $pos = strrpos($this->fileName, '.');
-        if ($pos === FALSE) {
-            return $this->fileName;
-        }
-
-        return substr($this->fileName, 0, $pos);
     }
 
     /**
@@ -178,8 +136,7 @@ class ComponentPartial extends Partial
         }
 
         $component = $this->component;
-        $path = $component->getPath().'/'.$fileName;
 
-        return $path;
+        return $component->getPath().'/'.$fileName;
     }
 }

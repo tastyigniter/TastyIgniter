@@ -51,8 +51,9 @@ $config['form']['toolbar'] = [
             'label'             => 'lang:system::messages.button_respond',
             'class'             => 'btn btn-primary',
             'context'           => ['view'],
-            'data-request-form' => '#edit-form',
             'data-request'      => 'onSend',
+            'data-request-form' => '#edit-form',
+            'data-request-data' => 'send:1',
         ],
         'draftResponse' => [
             'label'             => 'lang:system::messages.button_save_draft',
@@ -62,47 +63,49 @@ $config['form']['toolbar'] = [
             'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
-        'save'          => [
-            'label'             => 'lang:admin::default.button_save',
-            'class'             => 'btn btn-primary',
-            'context'           => ['compose'],
-            'data-request-form' => '#edit-form',
-            'data-request'      => 'onSave',
-        ],
-        'saveClose'     => [
-            'label'             => 'lang:admin::default.button_save_close',
-            'class'             => 'btn btn-default',
-            'context'           => ['compose'],
-            'data-request'      => 'onSave',
-            'data-request-form' => '#edit-form',
-            'data-request-data' => 'close:1',
-        ],
+//        'save'          => [
+//            'label'             => 'lang:admin::default.button_save',
+//            'class'             => 'btn btn-primary',
+//            'context'           => ['compose'],
+//            'data-request'      => 'onSave',
+//            'data-request-form' => '#edit-form',
+//            'data-request-data' => 'draft:1',
+//        ],
+//        'saveClose'     => [
+//            'label'             => 'lang:admin::default.button_save_close',
+//            'class'             => 'btn btn-default',
+//            'context'           => ['compose'],
+//            'data-request'      => 'onSave',
+//            'data-request-form' => '#edit-form',
+//            'data-request-data' => 'close:1',
+//        ],
         'send'          => [
             'label'             => 'lang:system::messages.button_send',
-            'class'             => 'btn btn-primary',
-            'context'           => ['draft'],
+            'class'             => 'btn btn-success',
+            'context'           => ['compose'],
             'data-request-form' => '#edit-form',
             'data-request'      => 'onSend',
-            'data-request-data' => 'close:1',
+            'data-request-data' => 'send:1',
+//            'data-request-data' => 'close:1',
         ],
         'draftCompose'  => [
             'label'             => 'lang:system::messages.button_save_draft',
             'class'             => 'btn btn-default',
-            'context'           => ['draft'],
+            'context'           => ['compose'],
             'data-request'      => 'onDraft',
             'data-request-form' => '#edit-form',
+            'data-request-data' => 'draft:1',
         ],
         'back'          => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'messages'],
     ],
 ];
 
 $config['form']['fields'] = [
-    'recipient'       => [
-        'label'    => 'lang:system::messages.label_to',
-        'type'     => 'radio',
-        'cssClass' => 'recipient',
-        'default'  => 'all_newsletters',
-        'context'  => ['compose', 'draft'],
+    'subject'         => [
+        'label'   => 'lang:system::messages.label_subject',
+        'type'    => 'text',
+        'span'    => 'left',
+        'context' => ['compose', 'draft'],
     ],
     'send_type'       => [
         'label'   => 'lang:system::messages.label_send_type',
@@ -116,11 +119,26 @@ $config['form']['fields'] = [
             'condition' => 'value[all_newsletters]',
         ],
     ],
+    'recipient'       => [
+        'label'    => 'lang:system::messages.label_to',
+        'type'     => 'radio',
+        'span'    => 'left',
+        'options' => 'listReceivers',
+        'cssClass' => 'recipient',
+        'default'  => 'customers',
+        'context'  => ['compose', 'draft'],
+    ],
+    'layout_id'       => [
+        'label'       => 'lang:system::messages.label_layout',
+        'type'        => 'relation',
+        'span'        => 'right',
+        'valueFrom'   => 'layout',
+        'placeholder' => 'lang:admin::default.text_none',
+    ],
     'customers'       => [
         'label'    => 'lang:system::messages.label_customers',
         'type'     => 'relation',
-        'span'     => 'left',
-        'nameFrom' => 'customer_name',
+        'nameFrom' => 'full_name',
         'context'  => ['compose', 'draft'],
         'trigger'  => [
             'action'    => 'show',
@@ -128,10 +146,9 @@ $config['form']['fields'] = [
             'condition' => 'value[customers]',
         ],
     ],
-    'customer_groups' => [
+    'customer_group' => [
         'label'    => 'lang:system::messages.label_customer_group',
         'type'     => 'relation',
-        'span'     => 'left',
         'nameFrom' => 'group_name',
         'context'  => ['compose', 'draft'],
         'trigger'  => [
@@ -140,22 +157,20 @@ $config['form']['fields'] = [
             'condition' => 'value[customer_group]',
         ],
     ],
-    'staffs'          => [
+    'staff'          => [
         'label'    => 'lang:system::messages.label_staff',
         'type'     => 'relation',
-        'span'     => 'left',
         'nameFrom' => 'staff_name',
         'context'  => ['compose', 'draft'],
         'trigger'  => [
             'action'    => 'show',
             'field'     => 'recipient',
-            'condition' => 'value[staffs]',
+            'condition' => 'value[staff]',
         ],
     ],
-    'staff_groups'    => [
+    'staff_group'    => [
         'label'    => 'lang:system::messages.label_staff_group',
         'type'     => 'relation',
-        'span'     => 'left',
         'nameFrom' => 'staff_group_name',
         'context'  => ['compose', 'draft'],
         'trigger'  => [
@@ -163,18 +178,6 @@ $config['form']['fields'] = [
             'field'     => 'recipient',
             'condition' => 'value[staff_group]',
         ],
-    ],
-    'subject'         => [
-        'label'   => 'lang:system::messages.label_subject',
-        'span'    => 'left',
-        'type'    => 'text',
-        'context' => ['compose', 'draft'],
-    ],
-    'layout'          => [
-        'label'       => 'lang:system::messages.label_layout',
-        'type'        => 'relation',
-        'span'        => 'right',
-        'placeholder' => 'lang:admin::default.text_none',
     ],
     'conversation'    => [
         'type'     => 'partial',

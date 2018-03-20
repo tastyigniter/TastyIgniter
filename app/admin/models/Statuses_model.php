@@ -35,7 +35,15 @@ class Statuses_model extends Model
      */
     public function getStatusForNameAttribute($value)
     {
-        return ($this->status_for == 'reserve') ? lang('text_reservation') : lang('text_order');
+        return ($this->status_for == 'reserve') ? lang('admin::statuses.text_reservation') : lang('admin::statuses.text_order');
+    }
+
+    public function getStatusForDropdownOptions()
+    {
+        return [
+            'order'   => lang('admin::statuses.text_order'),
+            'reserve' => lang('admin::statuses.text_reservation'),
+        ];
     }
 
     public static function getDropdownOptionsForOrder()
@@ -74,23 +82,6 @@ class Statuses_model extends Model
     public function scopeIsForReservation($query)
     {
         return $query->where('status_for', 'reserve');
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['filter_type']) AND is_numeric($filter['filter_type'])) {
-            $query->where('status_for', $filter['filter_type']);
-        }
-
-        return $query;
     }
 
     //

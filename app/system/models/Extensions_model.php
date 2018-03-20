@@ -3,8 +3,6 @@
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Builder;
 use Model;
-use Modules;
-use System\Classes\BaseExtention;
 use System\Classes\ExtensionManager;
 
 /**
@@ -69,19 +67,6 @@ class Extensions_model extends Model
     //
     // Scopes
     //
-
-    public function scopeFilter($query, $filter = [])
-    {
-        if (!isset($filter['filter_type']) OR is_string($filter['filter_type'])) {
-            $filter['filter_type'] = ['module', 'payment', 'widget'];
-        }
-
-        if (!empty($filter['filter_type']) AND is_array($filter['filter_type'])) {
-            $query->whereIn('type', $filter['filter_type']);
-        }
-
-        return $query;
-    }
 
     public function scopeIsEnabled($query)
     {
@@ -208,7 +193,7 @@ class Extensions_model extends Model
      */
     public function syncMailTemplates()
     {
-        Mail_templates_data_model::syncAll();
+        Mail_templates_model::syncAll();
     }
 
     /**

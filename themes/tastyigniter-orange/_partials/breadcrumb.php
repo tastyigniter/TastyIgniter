@@ -1,4 +1,4 @@
-<?php if (get_theme_options('display_crumbs') == '1' AND ($breadcrumbs = get_breadcrumbs()) !== '') { ?>
+<?php if ($this->theme->display_crumbs == '1' AND $breadcrumbs = []) { ?>
     <div id="breadcrumb">
         <div class="container">
             <div class="row">

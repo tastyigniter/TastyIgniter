@@ -50,7 +50,6 @@ class Addresses_model extends Model
             'page'      => 1,
             'pageLimit' => 20,
             'customer'  => null,
-            'location'  => null,
             'sort'      => 'address_id desc',
         ], $options));
 
@@ -77,11 +76,6 @@ class Addresses_model extends Model
         }
 
         return $query->paginate($pageLimit, $page);
-    }
-
-    public function scopeJoinCountry($query)
-    {
-        return $query->join('countries', 'countries.country_id', '=', 'addresses.country_id', 'left');
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
-use System\Models\Languages_model;
 
 class Languages extends \Admin\Classes\AdminController
 {
@@ -59,46 +58,40 @@ class Languages extends \Admin\Classes\AdminController
         $model = $this->asExtension('FormController')->getFormModel();
 
         if ($model->isDefault()) {
-            flash()->info(lang('admin::languages.alert_caution_edit'));
+            flash()->info(lang('system::languages.alert_caution_edit'))->now();
         }
-    }
-
-    public function index_onSetDefault($context = null)
-    {
-        $defaultId = post('default');
-
-        if (Languages_model::updateDefault($defaultId)) {
-            flash()->success(sprintf(lang('alert_success'), lang('alert_set_default')));
-        }
-
-        return $this->refreshList($alias);
     }
 
     public function formExtendFields($form, $fields)
     {
-        $domain = input('domain');
         $file = input('file');
+        $namespace = input('namespace');
 
         if (!$field = $form->getField('file'))
             return;
 
-        if (!$domain OR !$file OR !$form->model->exists) {
+        if (!$namespace OR !$file OR !$form->model->exists) {
             $form->removeField($field->fieldName);
 
             return;
         }
 
-        if (!$fileContent = load_lang_file($file, $form->model->idiom, $domain))
-            return;
+        flash()->warning(lang('system::languages.alert_save_changes'));
 
-        flash()->warning(lang('admin::languages.alert_save_changes'));
+        $form->setActiveTab(lang('system::languages.text_tab_edit_file'));
 
-        $field->options = [];
-        foreach ($fileContent as $key => $value) {
-            $field->options[$key] = $value;
-        }
+        $field->options = $form->model->getTranslations($file, $namespace);
 
         $field->hidden = FALSE;
+    }
+
+    public function formAfterUpdate($model)
+    {
+        $file = input('file');
+        $namespace = input('namespace');
+        $translations = post('Language.file');
+
+        $model->updateTranslations($file, $namespace, $translations);
     }
 
     public function formValidate($model, $form)
@@ -109,23 +102,11 @@ class Languages extends \Admin\Classes\AdminController
             ['image', 'lang:system::languages.label_image', 'min:2|max:32'],
             ['idiom', 'lang:system::languages.label_idiom', 'required|min:2|max:32'.
                 ((!$model->exists) ? '|unique:languages,idiom' : '')],
-            ['language_to_clone', 'lang:system::languages.label_language', 'required_if:clone_language,1|alpha'],
             ['can_delete', 'lang:system::languages.label_can_delete', 'required|integer'],
             ['status', 'lang:admin::default.label_status', 'required|integer'],
+            ['file.*', 'lang:system::languages.text_tab_edit_file', 'sometimes|max:1000'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }
-
-//    public function _valid_idiom($str)
-//    {
-//        $lang_files = list_lang_files($str);
-//        if (empty($lang_files['admin']) AND empty($lang_files['main']) AND empty($lang_files['module'])) {
-//            $this->form_validation->set_message('_valid_idiom', lang('admin::languages.error_invalid_idiom'));
-//
-//            return FALSE;
-//        } else {                                                                                // else validation is not successful
-//            return TRUE;
-//        }
-//    }
 }

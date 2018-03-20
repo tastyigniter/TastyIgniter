@@ -17,7 +17,7 @@
         <b><?= e(lang($component->name)); ?></b>
         <a
             class="pull-right"
-            data-confirm="<?= lang('lang:admin::default.alert_warning_confirm'); ?>"
+            data-confirm="<?= lang('admin::default.alert_warning_confirm'); ?>"
             data-control="remove-component"
             data-parent="#<?= $this->getId('partial-'.$component->partial); ?>"
         >

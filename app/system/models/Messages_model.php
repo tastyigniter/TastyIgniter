@@ -1,7 +1,13 @@
 <?php namespace System\Models;
 
+use Admin\Models\Customers_model;
+use Admin\Models\Staffs_model;
+use DB;
 use Igniter\Flame\Database\Traits\NestedTree;
+use Igniter\Flame\Database\Traits\Purgeable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Mail\Message;
+use Mail;
 use Model;
 
 /**
@@ -12,6 +18,7 @@ class Messages_model extends Model
 {
     use SoftDeletes;
     use NestedTree;
+    use Purgeable;
 
     const DELETED_AT = 'date_deleted';
 
@@ -33,14 +40,14 @@ class Messages_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'layout' => ['System\Models\Mail_templates_model'],
+            'layout' => ['System\Models\Mail_layouts_model'],
         ],
         'hasMany'   => [
-            'recipients'      => ['System\Models\Message_meta_model'],
-            'customers'       => ['Admin\Models\Customers_model'],
-            'customer_groups' => ['Admin\Models\Customer_groups_model'],
-            'staffs'          => ['Admin\Models\Staffs_model'],
-            'staff_groups'    => ['Admin\Models\Staff_groups_model'],
+            'recipients'     => ['System\Models\Message_meta_model'],
+            'customers'      => ['Admin\Models\Customers_model'],
+            'customer_group' => ['Admin\Models\Customer_groups_model'],
+            'staff'          => ['Admin\Models\Staffs_model'],
+            'staff_group'    => ['Admin\Models\Staff_groups_model'],
         ],
         'morphTo'   => [
             'sender' => [],
@@ -49,155 +56,48 @@ class Messages_model extends Model
 
     public $purgeable = [
         'customers',
-        'customer_groups',
-        'staffs',
-        'staff_groups',
+        'customer_group',
+        'staff',
+        'staff_group',
     ];
+
+    public static $allowedSortingColumns = [
+        'date_added asc', 'date_added desc',
+        'subject asc', 'subject desc',
+    ];
+
+    public static function findRecipient($type, array $ids = [])
+    {
+        $model = str_contains($type, 'customer')
+            ? Customers_model::class : Staffs_model::class;
+
+        if (ends_with($type, '_group')) {
+            return $model::whereHas('group', function ($query) use ($ids) {
+                $query->whereKey($ids);
+            })->get();
+        }
+
+        if ($type == 'all_newsletters')
+            return $model::where('newsletter', 1)->get();
+
+        return $model::findMany($ids);
+    }
+
+    public static function getSendTypeOptions()
+    {
+        return [
+            'email'   => lang('system::messages.text_email'),
+            'account' => lang('system::messages.text_account'),
+        ];
+    }
 
     public static function countUnread($messagable)
     {
         if (!$messagable instanceof Model)
             return null;
 
-        return Message_meta_model::where('messageable_id', $messagable->getKey())
-                                 ->where('messageable_type', get_class($messagable))->isUnread()->count();
+        return Message_meta_model::whereMessagable($messagable)->isUnread()->count();
     }
-
-    public function getRecipientOptions()
-    {
-        $receivers = collect($this->listReceivers());
-
-        return $receivers->transform(function ($receiver) {
-            return $receiver['label'];
-        });
-    }
-
-    //
-    // Accessors & Mutators
-    //
-
-    public function getSummaryAttribute($value)
-    {
-        return str_limit(strip_tags($this->body), 120);
-    }
-
-    public function getRecipientAttribute($value)
-    {
-        if (!isset($this->attributes['recipient']))
-            return $value;
-
-        $replace = ['all_customers' => 'customers', 'all_staffs' => 'staffs'];
-        if (array_key_exists($this->attributes['recipient'], $replace))
-            return $replace[$this->attributes['recipient']];
-
-        return $this->attributes['recipient'];
-    }
-
-    public function getReceiverAttribute($value)
-    {
-        $receivers = $this->listReceivers();
-
-        $replace = ['all_customers' => 'customers', 'all_staffs' => 'staffs'];
-        $recipient = array_key_exists($this->recipient, $replace) ? $replace[$this->recipient] : $this->recipient;
-
-        return isset($receivers[$recipient]) ? (object)$receivers[$recipient] : null;
-    }
-
-    //
-    // Scopes
-    //
-
-    public function scopeListFrontEnd($query, $options = [])
-    {
-        extract(array_merge([
-            'page'      => 1,
-            'pageLimit' => 20,
-            'sort'      => null,
-        ], $options));
-
-        $query->isAccountSendType()->listMessages($options);
-
-        return $query->paginate($pageLimit);
-    }
-
-    public function scopeSelectRecipientStatus($query)
-    {
-        return $query->selectRaw('*, '.DB::prefix('message_meta').'.status AS recipient_status');
-    }
-
-    public function scopeFilterState($query, $state)
-    {
-        return $query->whereHas('recipients', function ($q) use ($state) {
-            $q->where('state', $state);
-        });
-    }
-
-    public function scopeListMessages($query, $options = [])
-    {
-        extract(array_merge([
-            'context'   => 'inbox',
-            'recipient' => null,
-        ], $options));
-
-        if (!is_null($recipient)) {
-
-            if ($context == 'inbox') {
-                $query->whereNull('parent_id')->whereHas('recipients', function ($q) use ($recipient) {
-                    $q->where('messageable_id', $recipient->getKey())
-                      ->where('messageable_type', get_class($recipient));
-                });
-            }
-            else if ($context == 'draft') {
-                $query->where('status', 0)->orWhereNull('status')
-                      ->where('sender_id', $recipient->getKey())
-                      ->where('sender_type', get_class($recipient));
-            }
-            else if ($context == 'sent') {
-                $query->whereNull('parent_id')->where('status', 1)
-                      ->where('sender_id', $recipient->getKey())
-                      ->where('sender_type', get_class($recipient));
-            }
-            else if ($context == 'archive') {
-                $query->whereNull('parent_id')->where('sender_id', $recipient->getKey())
-                      ->where('sender_type', get_class($recipient))->onlyTrashed();
-            }
-        }
-
-        return $query;
-    }
-
-    public function scopeViewConversation($query, $options = [])
-    {
-        extract(array_merge([
-            'recipient' => null,
-        ], $options));
-
-        $query->whereNull('parent_id')->where('status', 1);
-
-        if (!is_null($recipient)) {
-
-            $query->whereHas('recipients', function ($q) use ($recipient) {
-                $q->where('messageable_id', $recipient->getKey())
-                  ->where('messageable_type', get_class($recipient));
-            });
-
-            $query->orWhere(function ($q) use ($recipient) {
-                $q->where('sender_id', $recipient->getKey())
-                  ->where('sender_type', get_class($recipient));
-            });
-        }
-
-        return $query;
-    }
-
-    public function scopeIsAccountSendType($query)
-    {
-        return $query->where('send_type', 'account');
-    }
-
-    //
-    // Helpers
-    //
 
     public static function listMenuMessages($menu, $item, $user)
     {
@@ -212,45 +112,15 @@ class Messages_model extends Model
         ];
     }
 
-    public function listReceivers()
+    public static function listReceivers()
     {
         return [
-            'all_newsletters' => [
-                'label' => 'lang:system::messages.text_all_newsletters',
-            ],
-            'customers'       => [
-                'label' => 'lang:system::messages.text_customers',
-                'model' => 'Admin\Models\Customers_model',
-            ],
-            'customer_group'  => [
-                'label' => 'lang:system::messages.text_customer_group',
-                'model' => 'Admin\Models\Customer_groups_model',
-            ],
-            'staffs'          => [
-                'label' => 'lang:system::messages.text_staff',
-                'model' => 'Admin\Models\Staffs_model',
-            ],
-            'staff_group'     => [
-                'label' => 'lang:system::messages.text_staff_group',
-                'model' => 'Admin\Models\Staff_groups_model',
-            ],
+            'all_newsletters' => 'lang:system::messages.text_all_newsletters',
+            'customers'       => 'lang:system::messages.text_customers',
+            'customer_group'  => 'lang:system::messages.text_customer_group',
+            'staff'           => 'lang:system::messages.text_staff',
+            'staff_group'     => 'lang:system::messages.text_staff_group',
         ];
-    }
-
-    public function listParticipants()
-    {
-        $participants = $this->recipients;
-        if (!count($participants))
-            return null;
-
-        $participants->transform(function ($participant) {
-            if (!$participant->messageable) return FALSE;
-            if (!$participant->messageable->staff) return FALSE;
-
-            return $participant->messageable->staff;
-        });
-
-        return $participants;
     }
 
     public static function listFolders()
@@ -284,25 +154,187 @@ class Messages_model extends Model
         ];
     }
 
-    public function readState($messagable)
+    //
+    // Events
+    //
+
+    public function afterSave()
     {
-        if (!$messagable instanceof Model OR !$this->recipients)
-            return null;
-
-        $meta = $this->recipients->where('messageable_id', $messagable->getKey())
-                                 ->where('messageable_type', get_class($messagable))->first();
-        if (!count($meta))
-            return null;
-
-        return $meta->state == 1 ? 'read' : 'unread';
+        $this->performAfterSave();
     }
 
-    public function getSendTypeOptions()
+    //
+    // Accessors & Mutators
+    //
+
+    public function getSummaryAttribute($value)
     {
-        return [
-            'email'   => 'lang:system::messages.text_email',
-            'account' => 'lang:system::messages.text_account',
-        ];
+        return str_limit(strip_tags($this->body), 120);
+    }
+
+    public function getRecipientAttribute($value)
+    {
+        $replace = ['all_customers' => 'customers', 'all_staffs' => 'staff'];
+        if (array_key_exists($value, $replace))
+            return $replace[$value];
+
+        return $value;
+    }
+
+    public function getRecipientLabelAttribute($value)
+    {
+        return array_get(self::listReceivers(), $this->recipient);
+    }
+
+    //
+    // Scopes
+    //
+
+    public function scopeListFrontEnd($query, array $options = [])
+    {
+        $options = array_merge([
+            'page'      => 1,
+            'pageLimit' => 20,
+            'sort'      => null,
+        ], $options);
+
+        $options['context'] = 'inbox';
+
+        $query->whereSentToInbox()->listMessages($options);
+
+        return $query->paginate($options['pageLimit'], $options['page']);
+    }
+
+    public function scopeListMessages($query, array $options = [])
+    {
+        extract(array_merge([
+            'sort'      => null,
+            'context'   => 'inbox',
+            'recipient' => null,
+        ], $options));
+
+        switch ($context) {
+            case 'inbox':
+                $query->whereNull('parent_id')->whereHas('recipients', function ($q) use ($recipient) {
+                    $q->whereMessagable($recipient);
+                });
+                break;
+            case 'draft':
+                $query->where('status', 0)->orWhereNull('status')->whereSender($recipient);
+                break;
+            case 'sent':
+                $query->whereNull('parent_id')->where('status', 1)->whereSender($recipient);
+                break;
+            case 'archive':
+                $query->whereNull('parent_id')->whereSender($recipient)->onlyTrashed();
+                break;
+        }
+
+        if (!is_array($sort)) {
+            $sort = [$sort];
+        }
+
+        foreach ($sort as $_sort) {
+            if (in_array($_sort, self::$allowedSortingColumns)) {
+                $parts = explode(' ', $_sort);
+                if (count($parts) < 2) {
+                    array_push($parts, 'desc');
+                }
+                list($sortField, $sortDirection) = $parts;
+                $query->orderBy($sortField, $sortDirection);
+            }
+        }
+
+        return $query;
+    }
+
+    public function scopeViewConversation($query, array $options = [])
+    {
+        extract(array_merge([
+            'recipient' => null,
+        ], $options));
+
+        $query->whereNull('parent_id')->where('status', 1);
+
+        if (!is_null($recipient)) {
+
+            $query->whereHas('recipients', function ($q) use ($recipient) {
+                $q->whereMessagable($recipient);
+            });
+
+            $query->orWhere(function ($q) use ($recipient) {
+                $q->whereSender($recipient);
+            });
+        }
+
+        return $query;
+    }
+
+    public function scopeWhereSender($query, $sender)
+    {
+        return $query->where('sender_id', $sender->getKey())
+                     ->where('sender_type', get_class($sender));
+    }
+
+    public function scopeSelectRecipientStatus($query)
+    {
+        return $query->selectRaw('*, '.DB::prefix('message_meta').'.status AS recipient_status');
+    }
+
+    public function scopeFilterState($query, $state)
+    {
+        return $query->whereHas('recipients', function ($q) use ($state) {
+            $q->where('state', $state);
+        });
+    }
+
+    public function scopeWhereSentToInbox($query)
+    {
+        return $query->where('send_type', 'account');
+    }
+
+    public function scopeWhereSentToEmail($query)
+    {
+        return $query->where('send_type', 'email');
+    }
+
+    //
+    // Helpers
+    //
+
+    public function send()
+    {
+        if ($this->status)
+            return;
+
+        $subject = $this->subject;
+        $recipients = $this->recipients;
+        Mail::sendToMany(
+            $recipients,
+            [
+                'html' => $this->body,
+                'raw'  => TRUE,
+            ],
+            $this->toArray(),
+            function (Message $message) use ($subject) {
+                $message->subject($subject)
+                        ->replyTo(config('mail.from.address'), config('mail.from.name'));
+            },
+            ['bcc' => TRUE]
+        );
+
+        $this->status = 1;
+        $this->save();
+    }
+
+    public function sendToEmail()
+    {
+        return $this->send_type == 'email';
+    }
+
+    public function sendToInbox()
+    {
+        return $this->send_type == 'account';
     }
 
     /**
@@ -312,27 +344,57 @@ class Messages_model extends Model
      *
      * @return array
      */
-    public function getRecipients($message_id)
+    public function listRecipients()
     {
-//        $staffTable = DB::getTablePrefix().'staffs';
-//        $customersTable = DB::getTablePrefix().'customers';
-//        $metaTable = DB::getTablePrefix().'message_meta';
-//
-//        $query = Message_meta_model::selectRaw("{$metaTable}.*, {$staffTable}.staff_id, {$staffTable}.staff_name, ".
-//            "{$staffTable}.staff_email, {$customersTable}.customer_id, {$customersTable}.first_name, {$customersTable}.last_name, {$customersTable}.email");
-//
-//        $query->leftJoin('staffs', function ($join) {
-//            $join->on('staffs.staff_id', '=', 'message_meta.value')
-//                 ->orOn('staffs.staff_email', '=', 'message_meta.value');
-//        });
-//        $query->leftJoin('customers', function ($join) {
-//            $join->on('customers.customer_id', '=', 'message_meta.value')
-//                 ->orOn('customers.email', '=', 'message_meta.value');
-//        });
-//
-//        $query->where('item', '!=', 'sender_id');
-//        $query->where('message_id', $message_id);
-//
-//        return $query->get();
+        $recipients = $this->recipients;
+        if (!count($recipients))
+            return null;
+
+        $recipients->transform(function ($recipient) {
+            if (!$recipient->messagable) return FALSE;
+            if (!$recipient->messagable->staff) return FALSE;
+
+            return $recipient->messagable->staff;
+        });
+
+        return $recipients;
+    }
+
+    public function readState($messagable)
+    {
+        if (!$messagable instanceof Model OR !$this->recipients)
+            return null;
+
+        $meta = $this->recipients()->whereMessagable($messagable)->first();
+        if (!count($meta))
+            return null;
+
+        return $meta->state == 1 ? 'read' : 'unread';
+    }
+
+    public function addRecipients($type, $ids)
+    {
+        $recipientList = self::findRecipient($type, $ids)->each(function ($model) {
+            $this->recipients()->create([
+                'messagable_id'   => $model->getKey(),
+                'messagable_type' => get_class($model),
+            ]);
+
+            return $model;
+        })->mapWithKeys(function ($model) {
+            return [$model->email => $model->full_name];
+        })->toArray();
+
+        return $recipientList;
+    }
+
+    protected function performAfterSave()
+    {
+        $this->restorePurgedValues();
+
+        if ($this->wasRecentlyCreated AND !empty($this->attributes[$this->recipient])) {
+            $this->addRecipients($this->recipient, $this->attributes[$this->recipient]);
+            unset($this->attributes[$this->recipient]);
+        }
     }
 }

@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use Igniter\Flame\Location\Facades\Location;
-use Illuminate\Routing\UrlGenerator;
 
 if (!function_exists('controller')) {
     /**
@@ -12,19 +11,6 @@ if (!function_exists('controller')) {
     function controller()
     {
         return \Main\Classes\MainController::getController();
-    }
-}
-
-if (!function_exists('current_url')) {
-    /**
-     * Current URL
-     * Returns the full URL (including segments and query string) of the page where this
-     * function is placed
-     * @return    string
-     */
-    function current_url()
-    {
-        return app(UrlGenerator::class)->current();
     }
 }
 
@@ -39,7 +25,7 @@ if (!function_exists('page_url')) {
      *
      * @return string
      */
-    function page_url($uri = null, $params = [])
+    function page_url($uri = null, array $params = [])
     {
         return controller()->pageUrl($uri, $params);
     }
@@ -69,48 +55,16 @@ if (!function_exists('restaurant_url')) {
      * else locations URL is returned
      *
      * @param string $uri
-     * @param string $protocol
+     * @param array $params
      *
      * @return string
      */
-    function restaurant_url($uri = null, $params = [])
+    function restaurant_url($uri = null, array $params = [])
     {
         if (!isset($params['location']) AND $current = Location::current())
             $params['location'] = $current->permalink_slug;
 
         return page_url($uri, $params);
-    }
-}
-
-if (!function_exists('assets_url')) {
-    /**
-     * Assets URL
-     * Returns the full URL (including segments) of the assets directory
-     *
-     * @param string $uri
-     * @param null $protocol
-     *
-     * @return string
-     */
-    function assets_url($uri = null, $protocol = null)
-    {
-        return app(UrlGenerator::class)->asset('assets/'.$uri, $protocol);
-    }
-}
-
-if (!function_exists('image_url')) {
-    /**
-     * Image Assets URL
-     * Returns the full URL (including segments) of the assets image directory
-     *
-     * @param string $uri
-     * @param null $protocol
-     *
-     * @return string
-     */
-    function image_url($uri = null, $protocol = null)
-    {
-        return app(UrlGenerator::class)->asset('assets/images/'.$uri, $protocol);
     }
 }
 
@@ -125,187 +79,9 @@ if (!function_exists('admin_url')) {
      *
      * @return    string
      */
-    function admin_url($uri = '', $params = [])
+    function admin_url($uri = '', array $params = [])
     {
         return Admin::url($uri, $params);
-    }
-}
-
-if (!function_exists('theme_url')) {
-    /**
-     * Theme URL
-     * Create a local URL based on your theme path.
-     * Segments can be passed in as a string.
-     *
-     * @param    string $uri
-     * @param    string $params
-     *
-     * @return    string
-     */
-    function theme_url($uri = '', $protocol = null)
-    {
-        return app(UrlGenerator::class)->asset('themes/'.$uri, $protocol);
-    }
-}
-
-if (!function_exists('referrer_url')) {
-    /**
-     * Referrer URL
-     * Returns the full URL (including segments) of the page where this
-     * function is placed
-     * @return    string
-     */
-    function referrer_url()
-    {
-        return app(UrlGenerator::class)->previous();
-    }
-}
-
-if (!function_exists('root_url')) {
-    /**
-     * Root URL
-     * Create a local URL based on your root path.
-     * Segments can be passed in as a string.
-     *
-     * @param    string $uri
-     * @param    array $params
-     *
-     * @return    string
-     */
-    function root_url($uri = '', $params = [])
-    {
-        return app(UrlGenerator::class)->to($uri, $params);
-    }
-}
-
-if (!function_exists('extension_path')) {
-    /**
-     * Get the path to the extensions folder.
-     *
-     * @param    string $path The path to prepend
-     *
-     * @return    string
-     */
-    function extension_path($path = null)
-    {
-        return rtrim(app('path.extensions'), DIRECTORY_SEPARATOR).($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
-if (!function_exists('assets_path')) {
-    /**
-     * Get the path to the assets folder.
-     *
-     * @param    string $path The path to prepend
-     *
-     * @return    string
-     */
-    function assets_path($path = null)
-    {
-        return rtrim(app('path.assets'), DIRECTORY_SEPARATOR).($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
-if (!function_exists('image_path')) {
-    /**
-     * Get the path to the assets image folder.
-     *
-     * @param    string $path The path to prepend
-     *
-     * @return    string
-     */
-    function image_path($path = null)
-    {
-        return assets_path('images').($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
-if (!function_exists('temp_path')) {
-    /**
-     * Get the path to the downloads temp folder.
-     *
-     * @param    string $path The path to prepend
-     *
-     * @return    string
-     */
-    function temp_path($path = null)
-    {
-        return storage_path('temp').($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
-if (!function_exists('get_remote_data')) {
-    /**
-     * Get remote data (cURL)
-     *
-     * @param       $url
-     * @param array $options
-     *
-     * @return string
-     */
-    function get_remote_data($url, $options = ['TIMEOUT' => 10])
-    {
-        // Set the curl parameters.
-        $curl = curl_init($url);
-
-        curl_setopt($curl, CURLOPT_HEADER, FALSE);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
-
-        if (!empty($options['TIMEOUT'])) {
-            curl_setopt($curl, CURLOPT_TIMEOUT, $options['TIMEOUT']);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $options['TIMEOUT']);
-        }
-
-        if (!empty($options['HTTPHEADER'])) {
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $options['HTTPHEADER']);
-        }
-
-        if (!empty($options['USERAGENT'])) {
-            curl_setopt($curl, CURLOPT_USERAGENT, $options['USERAGENT']);
-        }
-
-        if (isset($options['AUTOREFERER'])) {
-            curl_setopt($curl, CURLOPT_AUTOREFERER, $options['AUTOREFERER']);
-        }
-
-        if (isset($options['FAILONERROR'])) {
-            curl_setopt($curl, CURLOPT_FAILONERROR, $options['FAILONERROR']);
-        }
-
-        if (isset($options['FOLLOWLOCATION'])) {
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, $options['FOLLOWLOCATION']);
-        }
-
-        if (!empty($options['REFERER'])) {
-            curl_setopt($curl, CURLOPT_REFERER, current_url());
-        }
-
-        if (!empty($options['POSTFIELDS'])) {
-            curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($options['POSTFIELDS'], '', '&'));
-        }
-
-        if (!empty($options['FILE'])) {
-            curl_setopt($curl, CURLOPT_FILE, $options['FILE']);
-        }
-
-        // Get response from the server.
-        $response = curl_exec($curl);
-
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        if ($httpCode == 500) {
-            log_message('error', 'cURL: Error --> '.print_r(curl_getinfo($curl)).' '.$url);
-        }
-
-        if (curl_error($curl)) {
-            log_message('error', 'cURL: Error --> '.curl_errno($curl).': '.curl_error($curl).' '.$url);
-        }
-
-        curl_close($curl);
-
-        return $response;
     }
 }
 

@@ -21,7 +21,7 @@ $fieldOptions = $field->options();
                         <?= $field->value == $key ? 'checked="checked"' : '' ?>
                         <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                         <?= $field->getAttributes() ?>>
-                    <?= e(lang($value)) ?>
+                    <?= e((sscanf($value, 'lang:%s', $line) === 1) ? lang($line) : $value) ?>
                 </label>
             <?php } ?>
         </div>
@@ -42,7 +42,7 @@ $fieldOptions = $field->options();
                     <?= $field->value == $key ? 'checked="checked"' : '' ?>
                     <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                     <?= $field->getAttributes() ?>>
-                <?= e(lang($value)) ?>
+                <?= e((sscanf($value, 'lang:%s', $line) === 1) ? lang($line) : $value) ?>
             </label>
         </div>
     <?php } ?>

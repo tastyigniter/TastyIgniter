@@ -27,7 +27,7 @@ class ErrorLogs extends \Admin\Classes\AdminController
 
     public function index_onClearLogs()
     {
-        if (AdminAuth::hasPermission('Admin.ErrorLogs.Delete', TRUE))
+        if (!AdminAuth::hasPermission('Admin.ErrorLogs.Delete', TRUE))
             return $this->redirectBack();
 
         if (File::isWritable(storage_path('logs/system.log'))) {

@@ -1,7 +1,9 @@
 <?php namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
+use Carbon\Carbon;
 use DB;
+use Igniter\Flame\Location\Models\Location;
 use Model;
 use Request;
 
@@ -56,6 +58,7 @@ class Orders_model extends Model
         'belongsTo' => [
             'customer'       => 'Admin\Models\Customers_model',
             'location'       => 'Admin\Models\Locations_model',
+            'address'        => 'Admin\Models\Addresses_model',
             'status'         => 'Admin\Models\Statuses_model',
             'assignee'       => 'Admin\Models\Staffs_model',
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
@@ -75,6 +78,18 @@ class Orders_model extends Model
     ];
 
     //
+    // Events
+    //
+
+    public function beforeCreate()
+    {
+        $this->generateHash();
+
+        $this->ip_address = Request::getClientIp();
+        $this->user_agent = Request::userAgent();
+    }
+
+    //
     // Scopes
     //
 
@@ -87,6 +102,13 @@ class Orders_model extends Model
             'location'  => null,
             'sort'      => 'address_id desc',
         ], $options));
+
+        if ($location instanceof Location) {
+            $query->where('location_id', $location->getKey());
+        }
+        else if (strlen($location)) {
+            $query->where('location_id', $location);
+        }
 
         if ($customer instanceof Customers_model) {
             $query->where('customer_id', $customer->getKey());
@@ -113,70 +135,6 @@ class Orders_model extends Model
         return $query->paginate($pageLimit, $page);
     }
 
-    public function scopeJoinTables($query)
-    {
-        $query->join('locations', 'locations.location_id', '=', 'orders.location_id', 'left');
-        $query->join('statuses', 'statuses.status_id', '=', 'orders.status_id', 'left');
-
-        return $query;
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        $ordersTable = $this->getTablePrefix('orders');
-
-        $query->selectRaw("*, {$ordersTable}.status_id, status_name, status_color, {$ordersTable}.date_added, {$ordersTable}.date_modified");
-        $query->joinTables();
-
-        if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-            $query->search($filter['filter_search'], ['order_id', 'location_name', 'first_name', 'last_name']);
-        }
-
-        if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-            $query->where('customer_id', $filter['customer_id']);
-        }
-
-        if (!empty($filter['filter_location'])) {
-            $query->where('orders.location_id', $filter['filter_location']);
-        }
-
-        if (isset($filter['filter_type']) AND is_numeric($filter['filter_type'])) {
-            $query->where('order_type', $filter['filter_type']);
-        }
-
-        if (!empty($filter['filter_payment'])) {
-            $query->where('payment', $filter['filter_payment']);
-        }
-
-        if (APPDIR === MAINDIR) {
-            $query->where('orders.status_id', '!=', '0');
-        }
-        else {
-            if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-                $query->where('orders.status_id', $filter['filter_status']);
-            }
-            else {
-                $query->where('orders.status_id', '!=', '0');
-            }
-        }
-
-        if (!empty($filter['filter_date'])) {
-            $date = explode('-', $filter['filter_date']);
-            $query->whereYear('date_added', $date[0]);
-            $query->whereMonth('date_added', $date[1]);
-        }
-
-        return $query;
-    }
-
     //
     // Accessors & Mutators
     //
@@ -188,38 +146,23 @@ class Orders_model extends Model
 
     public function getOrderDateTimeAttribute($value)
     {
-        return $this->order_date.' '.$this->order_time;
+        return Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            "{$this->attributes['order_date']} {$this->attributes['order_time']}"
+        );
+    }
+
+    public function getOrderTypeAttribute($value)
+    {
+        if (isset(self::$orderTypes[$value]))
+            return self::$orderTypes[$value];
+
+        return $value;
     }
 
     public function getOrderTypeNameAttribute()
     {
-        if (!isset(self::$orderTypes[$this->attributes['order_type']]))
-            return null;
-
-        return ucwords(self::$orderTypes[$this->attributes['order_type']]);
-    }
-
-    public function getPaymentTitleAttribute()
-    {
-        $payments = $this->getPaymentOptions();
-
-        if (!isset($payments[$this->attributes['payment']]))
-            return null;
-
-        return $payments[$this->attributes['payment']];
-    }
-
-    public function beforeCreate()
-    {
-        $this->generateHash();
-
-        $this->ip_address = Request::getClientIp();
-        $this->user_agent = Request::userAgent();
-    }
-
-    public function afterUpdate()
-    {
-//        $this->updateOrder();
+        return ucwords($this->order_type);
     }
 
     //
@@ -249,16 +192,27 @@ class Orders_model extends Model
 
     public function getPaymentOptions()
     {
-        if (isset($this->availablePayments))
+        if (!is_null($this->availablePayments))
             return $this->availablePayments;
 
         $this->availablePayments = [];
         $payments = \Admin\Classes\PaymentGateways::instance()->listGateways();
         foreach ($payments as $payment) {
-            $this->availablePayments[$payment['code']] = !empty($payment['name']) ? lang($payment['name']) : $payment['code'];
+            $this->availablePayments[$payment['code']] = !empty($payment['name'])
+                ? lang($payment['name']) : $payment['code'];
         }
 
         return $this->availablePayments;
+    }
+
+    public function isDeliveryType()
+    {
+        return $this->order_type == static::DELIVERY;
+    }
+
+    public function isCollectionType()
+    {
+        return $this->order_type == static::COLLECTION;
     }
 
     /**
@@ -597,7 +551,7 @@ class Orders_model extends Model
                 'price'         => $cartItem->price,
                 'subtotal'      => $cartItem->subtotal,
                 'comment'       => $cartItem->comment,
-                'option_values' => $cartItem->options,
+                'option_values' => serialize($cartItem->options),
             ]);
 
             if ($orderMenuId AND count($cartItem->options)) {
@@ -728,14 +682,11 @@ class Orders_model extends Model
      *
      * @return bool
      */
-    public function subtractStock($order_id)
+    public function subtractStock()
     {
-        $this->load->model('Menus_model');
-
-        $order_menus = $this->getOrderMenus($order_id);
-
-        foreach ($order_menus as $order_menu) {
-            $this->Menus_model->updateStock($order_menu['menu_id'], $order_menu['quantity'], 'subtract');
+        foreach ($this->getOrderMenus() as $orderMenu) {
+            if ($menu = Menus_model::find($orderMenu->menu_id))
+                $menu->updateStock($orderMenu->quantity, 'subtract');
         }
     }
 
@@ -748,7 +699,7 @@ class Orders_model extends Model
      */
     public function sendConfirmationMail($order_id)
     {
-        $this->load->model('Mail_templates_model');
+        $this->load->model('Mail_layouts_model');
 
         $mail_data = $this->getMailData($order_id);
         $config_order_email = is_array(setting('order_email')) ? setting('order_email') : [];

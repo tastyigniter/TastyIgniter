@@ -3,7 +3,7 @@
 namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
-use Markdown;
+use October\Rain\Parse\Markdown;
 
 /**
  * Code Editor
@@ -65,7 +65,7 @@ class MarkdownEditor extends BaseFormWidget
     public function onRefresh()
     {
         $value = post($this->formField->getName());
-        $previewHtml = Markdown::parse($value);
+        $previewHtml = (new Markdown)->parse($value);
 
         return [
             'preview' => $previewHtml,

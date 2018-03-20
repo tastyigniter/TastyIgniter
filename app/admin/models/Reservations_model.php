@@ -1,7 +1,9 @@
 <?php namespace Admin\Models;
 
-use DB;
+use Carbon\Carbon;
+use Igniter\Flame\Location\Models\Location;
 use Model;
+use Request;
 
 /**
  * Reservations Model Class
@@ -31,14 +33,19 @@ class Reservations_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'reserved_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
+            'table'          => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
             'location'       => 'Admin\Models\Locations_model',
-            'status'         => ['Admin\Models\Statuses_model', 'foreignKey' => 'status'],
+            'reserve_status' => ['Admin\Models\Statuses_model', 'foreignKey' => 'status'],
             'staffs'         => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
         ],
         'morphMany' => [
             'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
         ],
+    ];
+
+    public $casts = [
+//        'reserve_time' => 'time',
+//        'reserve_date' => 'date',
     ];
 
     public static $allowedSortingColumns = [
@@ -47,27 +54,25 @@ class Reservations_model extends Model
     ];
 
     //
-    // Scopes
+    // Events
     //
 
-    public function scopeFindAvailableTimeSlots($query, $options = [])
+    public function beforeCreate()
     {
-        extract(array_merge([
-            'sort'     => 'address_id desc',
-            'customer' => null,
-            'location' => null,
-        ], $options));
+        $this->generateHash();
 
-        dd($query->select(DB::raw("
-SELECT if (d.name = 'Free', @timeSlider, b.timeBooked) AS free_from,
-       if (d.name = 'Free', b.timeBooked, @timeSlider := b.timeBooked + INTERVAL b.duration MINUTE) AS free_until,
-       d.name AS Free
-FROM (SELECT 1 AS place, 'Free' AS name UNION SELECT 2 AS place, 'Booked' AS name) AS d 
-INNER JOIN bookingEvents b 
-HAVING free_from < free_until
-ORDER BY b.timeBooked, d.place;
-"))->get());
+        $this->ip_address = Request::getClientIp();
+        $this->user_agent = Request::userAgent();
     }
+
+    public function afterSave()
+    {
+        $this->updateStatusHistory();
+    }
+
+    //
+    // Scopes
+    //
 
     public function scopeListFrontEnd($query, $options = [])
     {
@@ -78,6 +83,20 @@ ORDER BY b.timeBooked, d.place;
             'customer'  => null,
             'location'  => null,
         ], $options));
+
+        if ($location instanceof Location) {
+            $query->where('location_id', $location->getKey());
+        }
+        else if (strlen($location)) {
+            $query->where('location_id', $location);
+        }
+
+        if ($customer instanceof Customers_model) {
+            $query->where('customer_id', $customer->getKey());
+        }
+        else if (strlen($customer)) {
+            $query->where('customer_id', $customer);
+        }
 
         if (!is_array($sort)) {
             $sort = [$sort];
@@ -97,80 +116,9 @@ ORDER BY b.timeBooked, d.place;
         return $query->paginate($pageLimit, $page);
     }
 
-    public function scopeSelectQuery($query)
+    public function scopeWhereBetweenPeriod($query, $start, $end)
     {
-        if (APPDIR === ADMINDIR) {
-//            $query->select('*, reservations.date_added, reservations.date_modified, reservations.status, tables.table_id, staffs.staff_id, locations.location_id');
-//        } else {
-//            $query->select('reservation_id, table_name, reservations.location_id, location_name, location_address_1, location_address_2, location_city, location_postcode, location_country_id, table_name, min_capacity, max_capacity, guest_num, occasion_id, customer_id, first_name, last_name, telephone, email, reserve_time, reserve_date, status_name, reservations.date_added, reservations.date_modified, reservations.status, comment, notify, ip_address, user_agent');
-        }
-
-        return $query;
-    }
-
-    public function scopeJoinSelectTables($query)
-    {
-        $query->join('tables', 'tables.table_id', '=', 'reservations.table_id', 'left');
-        $query->join('locations', 'locations.location_id', '=', 'reservations.location_id', 'left');
-        $query->join('statuses', 'statuses.status_id', '=', 'reservations.status', 'left');
-
-        if (APPDIR === ADMINDIR) {
-            $query->join('staffs', 'staffs.staff_id', '=', 'reservations.assignee_id', 'left');
-        }
-
-        return $query;
-    }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        $query->joinSelectTables();
-
-        if (APPDIR === ADMINDIR) {
-            if (isset($filter['filter_search']) AND is_string($filter['filter_search'])) {
-                $query->search($filter['filter_search'], [
-                    'reservation_id', 'location_name', 'first_name', 'last_name',
-                    'table_name', 'staff_name',
-                ]);
-            }
-
-            if (!empty($filter['filter_status'])) {
-                $query->where('reservations.status', $filter['filter_status']);
-            }
-
-            if (!empty($filter['filter_location'])) {
-                $query->where('reservations.location_id', $filter['filter_location']);
-            }
-
-            if (!empty($filter['filter_date'])) {
-                $date = explode('-', $filter['filter_date']);
-                $query->whereYear('reserve_date', $date[0]);
-                $query->whereMonth('reserve_date', $date[1]);
-
-                if (isset($date[2])) {
-                    $query->whereDay('reserve_date', (int)$date[2]);
-                }
-            }
-            else if (!empty($filter['filter_year']) AND !empty($filter['filter_month']) AND !empty($filter['filter_day'])) {
-                $query->whereYear('reserve_date', $filter['filter_year']);
-                $query->whereMonth('reserve_date', $filter['filter_month']);
-                $query->whereDay('reserve_date', $filter['filter_day']);
-            }
-            else if (!empty($filter['filter_year']) AND !empty($filter['filter_month'])) {
-                $query->whereYear('reserve_date', $filter['filter_year']);
-                $query->whereMonth('reserve_date', $filter['filter_month']);
-            }
-        }
-        else if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-            $query->where('customer_id', $filter['customer_id']);
-        }
+        $query->whereRaw('ADDTIME(reserve_date, reserve_time) between ? and ?', [$start, $end]);
 
         return $query;
     }
@@ -184,9 +132,29 @@ ORDER BY b.timeBooked, d.place;
         return $this->first_name.' '.$this->last_name;
     }
 
-    public function getReservationDateTimeAttribute($value)
+    public function getReservationDatetimeAttribute($value)
     {
-        return $this->order_date.' '.$this->order_time;
+        return Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            "{$this->attributes['reserve_date']} {$this->attributes['reserve_time']}"
+        );
+    }
+
+    public function getReservationEndDatetimeAttribute($value)
+    {
+        return $this->reservation_datetime->copy()->addMinutes($this->duration ?: 0);
+    }
+
+    public function getOccasionAttribute()
+    {
+        $occasions = $this->getOccasionOptions();
+
+        return isset($occasions[$this->occasion_id]) ? $occasions[$this->occasion_id] : $occasions[0];
+    }
+
+    public function getTableNameAttribute()
+    {
+        return isset($this->table) ? $this->table->table_name : null;
     }
 
     //
@@ -214,16 +182,25 @@ ORDER BY b.timeBooked, d.place;
         ];
     }
 
-    public function getOccasionAttribute()
+    /**
+     * Generate a unique hash for this reservation.
+     * @return string
+     */
+    protected function generateHash()
     {
-        $occasions = $this->getOccasionOptions();
-
-        return isset($occasions[$this->occasion_id]) ? $occasions[$this->occasion_id] : $occasions[0];
+        $this->hash = $this->createHash();
+        while ($this->newQuery()->where('hash', $this->hash)->count() > 0) {
+            $this->hash = $this->createHash();
+        }
     }
 
-    public function getTableNameAttribute()
+    /**
+     * Create a hash for this reservation.
+     * @return string
+     */
+    protected function createHash()
     {
-        return isset($this->reserved_table) ? $this->reserved_table->table_name : null;
+        return md5(uniqid('reservation', microtime()));
     }
 
     /**
@@ -233,7 +210,7 @@ ORDER BY b.timeBooked, d.place;
      */
     public function getReservations()
     {
-        return $this->orderBy('reservation_id')->joinSelectTables()->get();
+        return $this->orderBy('reservation_id')->get();
     }
 
     /**
@@ -503,8 +480,8 @@ ORDER BY b.timeBooked, d.place;
                 $mail_data['status_name'] = $status['status_name'];
                 $mail_data['status_comment'] = !empty($update['status_comment']) ? $update['status_comment'] : lang('admin::reservations.text_no_comment');
 
-                $this->load->model('Mail_templates_model');
-                $mail_template = $this->Mail_templates_model->getDefaultTemplateData('reservation_update');
+                $this->load->model('Mail_layouts_model');
+                $mail_template = $this->Mail_layouts_model->getDefaultTemplateData('reservation_update');
                 $update['notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
             }
 
@@ -520,6 +497,22 @@ ORDER BY b.timeBooked, d.place;
 
             return TRUE;
         }
+    }
+
+    protected function updateStatusHistory()
+    {
+        if (!$status = $this->reserve_status)
+            return;
+
+        if ($this->status_history()->where('status_id', $status->getKey())->first())
+            return;
+
+        $this->status_history()->create([
+            'status_id'  => $status->getKey(),
+            'notify'     => $status->notify_customer,
+            'status_for' => $status->status_for,
+            'comment'    => $status->status_comment,
+        ]);
     }
 
     /**
@@ -577,23 +570,23 @@ ORDER BY b.timeBooked, d.place;
      */
     protected function sendConfirmationMail($reservation_id)
     {
-        $this->load->model('Mail_templates_model');
+        $this->load->model('Mail_layouts_model');
         $mail_data = $this->getMailData($reservation_id);
         $config_reservation_email = is_array($this->config->item('reservation_email')) ? $this->config->item('reservation_email') : [];
 
         $notify = '0';
         if ($this->config->item('customer_reserve_email') == '1' OR in_array('customer', $config_reservation_email)) {
-            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('reservation');
+            $mail_template = $this->Mail_layouts_model->getDefaultTemplateData('reservation');
             $notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
         }
 
         if (!empty($mail_data['location_email']) AND ($this->config->item('location_reserve_email') == '1' OR in_array('location', $config_reservation_email))) {
-            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('reservation_alert');
+            $mail_template = $this->Mail_layouts_model->getDefaultTemplateData('reservation_alert');
             $this->sendMail($mail_data['location_email'], $mail_template, $mail_data);
         }
 
         if (in_array('admin', $config_reservation_email)) {
-            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('reservation_alert');
+            $mail_template = $this->Mail_layouts_model->getDefaultTemplateData('reservation_alert');
             $this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
         }
 

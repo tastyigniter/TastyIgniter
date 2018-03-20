@@ -2,9 +2,9 @@
 
 namespace Admin\Facades;
 
-use Illuminate\Support\Facades\Facade as IlluminateFacade;
+use Illuminate\Support\Facades\Facade;
 
-class Template extends IlluminateFacade
+class Template extends Facade
 {
     /**
      * Get the registered name of the component.
