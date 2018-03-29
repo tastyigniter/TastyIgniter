@@ -101,13 +101,29 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'subject'         => [
+    'subject'        => [
         'label'   => 'lang:system::messages.label_subject',
         'type'    => 'text',
         'span'    => 'left',
         'context' => ['compose', 'draft'],
     ],
-    'send_type'       => [
+    'layout_id'      => [
+        'label'       => 'lang:system::messages.label_layout',
+        'type'        => 'relation',
+        'span'        => 'right',
+        'valueFrom'   => 'layout',
+        'placeholder' => 'lang:admin::default.text_none',
+    ],
+    'recipient'      => [
+        'label'    => 'lang:system::messages.label_to',
+        'type'     => 'radio',
+        'span'     => 'left',
+        'options'  => 'listReceivers',
+        'cssClass' => 'recipient',
+        'default'  => 'customers',
+        'context'  => ['compose', 'draft'],
+    ],
+    'send_type'      => [
         'label'   => 'lang:system::messages.label_send_type',
         'type'    => 'radio',
         'span'    => 'right',
@@ -119,78 +135,66 @@ $config['form']['fields'] = [
             'condition' => 'value[all_newsletters]',
         ],
     ],
-    'recipient'       => [
-        'label'    => 'lang:system::messages.label_to',
-        'type'     => 'radio',
-        'span'    => 'left',
-        'options' => 'listReceivers',
-        'cssClass' => 'recipient',
-        'default'  => 'customers',
-        'context'  => ['compose', 'draft'],
-    ],
-    'layout_id'       => [
-        'label'       => 'lang:system::messages.label_layout',
-        'type'        => 'relation',
-        'span'        => 'right',
-        'valueFrom'   => 'layout',
-        'placeholder' => 'lang:admin::default.text_none',
-    ],
-    'customers'       => [
-        'label'    => 'lang:system::messages.label_customers',
-        'type'     => 'relation',
-        'nameFrom' => 'full_name',
-        'context'  => ['compose', 'draft'],
-        'trigger'  => [
+    'customers'      => [
+        'label'   => 'lang:system::messages.label_customers',
+        'type'    => 'selectlist',
+        'mode'    => 'checkbox',
+        'options' => ['Admin\Models\Customers_model', 'getDropdownOptions'],
+        'context' => ['compose', 'draft'],
+        'trigger' => [
             'action'    => 'show',
             'field'     => 'recipient',
             'condition' => 'value[customers]',
         ],
     ],
     'customer_group' => [
-        'label'    => 'lang:system::messages.label_customer_group',
-        'type'     => 'relation',
-        'nameFrom' => 'group_name',
-        'context'  => ['compose', 'draft'],
-        'trigger'  => [
+        'label'   => 'lang:system::messages.label_customer_group',
+        'type'    => 'selectlist',
+        'mode'    => 'checkbox',
+        'options' => ['Admin\Models\Customer_groups_model', 'getDropdownOptions'],
+        'context' => ['compose', 'draft'],
+        'trigger' => [
             'action'    => 'show',
             'field'     => 'recipient',
             'condition' => 'value[customer_group]',
         ],
     ],
     'staff'          => [
-        'label'    => 'lang:system::messages.label_staff',
-        'type'     => 'relation',
-        'nameFrom' => 'staff_name',
-        'context'  => ['compose', 'draft'],
-        'trigger'  => [
+        'label'   => 'lang:system::messages.label_staff',
+        'type'    => 'selectlist',
+        'mode'    => 'checkbox',
+        'options' => ['Admin\Models\Staffs_model', 'getDropdownOptions'],
+        'context' => ['compose', 'draft'],
+        'trigger' => [
             'action'    => 'show',
             'field'     => 'recipient',
             'condition' => 'value[staff]',
         ],
     ],
     'staff_group'    => [
-        'label'    => 'lang:system::messages.label_staff_group',
-        'type'     => 'relation',
-        'nameFrom' => 'staff_group_name',
-        'context'  => ['compose', 'draft'],
-        'trigger'  => [
+        'label'   => 'lang:system::messages.label_staff_group',
+        'type'    => 'selectlist',
+        'mode'    => 'checkbox',
+        'options' => ['Admin\Models\Staff_groups_model', 'getDropdownOptions'],
+        'context' => ['compose', 'draft'],
+        'trigger' => [
             'action'    => 'show',
             'field'     => 'recipient',
             'condition' => 'value[staff_group]',
         ],
     ],
-    'conversation'    => [
+    'conversation'   => [
         'type'     => 'partial',
         'path'     => 'messages/conversation',
         'cssClass' => 'conversation',
         'context'  => ['view'],
     ],
-    'body'            => [
+    'body'           => [
         'type'     => 'richeditor',
         'cssClass' => 'message-respond richeditor-fluid',
         'context'  => ['compose', 'draft'],
     ],
-    'respond'         => [
+    'respond'        => [
         'type'     => 'richeditor',
         'cssClass' => 'message-respond richeditor-fluid',
         'context'  => ['view'],

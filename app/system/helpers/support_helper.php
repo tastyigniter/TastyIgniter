@@ -115,6 +115,11 @@ if (!function_exists('mdate')) {
      */
     function mdate($format = null, $time = null)
     {
+        if (is_null($time) AND $format) {
+            $time = $format;
+            $format = null;
+        }
+
         if (is_null($format))
             $format = setting('date_format', config('system.dateFormat'));
 
@@ -124,11 +129,12 @@ if (!function_exists('mdate')) {
         if (empty($time))
             $time = time();
 
-        $format = str_replace(
-            '%\\',
-            '',
-            preg_replace('/([a-z]+?){1}/i', '\\\\\\1', $format)
-        );
+        if (str_contains($format, '%'))
+            $format = str_replace(
+                '%\\',
+                '',
+                preg_replace('/([a-z]+?){1}/i', '\\\\\\1', $format)
+            );
 
         return date($format, $time);
     }

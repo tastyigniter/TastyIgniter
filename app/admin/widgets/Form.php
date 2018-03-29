@@ -284,16 +284,16 @@ class Form extends BaseWidget
     {
         foreach ($fields as $name => $config) {
 
-            $fieldObj = $this->makeFormField($name, $config);
-            $fieldTab = is_array($config) ? array_get($config, 'tab') : null;
-
             // Check that the form field matches the active context
-            if ($fieldObj->context !== null) {
-                $context = (is_array($fieldObj->context)) ? $fieldObj->context : [$fieldObj->context];
+            if (array_key_exists('context', $config)) {
+                $context = (array)$config['context'];
                 if (!in_array($this->getContext(), $context)) {
                     continue;
                 }
             }
+
+            $fieldObj = $this->makeFormField($name, $config);
+            $fieldTab = is_array($config) ? array_get($config, 'tab') : null;
 
             $this->allFields[$name] = $fieldObj;
 
@@ -694,7 +694,7 @@ class Form extends BaseWidget
 
     public function getActiveTab()
     {
-        $activeTabs = @json_decode($_COOKIE['ti_activeFormTabs'], TRUE);
+        $activeTabs = @json_decode(array_get($_COOKIE, 'ti_activeFormTabs'), TRUE);
 
         $cookieKey = $this->getCookieKey();
 
@@ -929,7 +929,7 @@ class Form extends BaseWidget
                 ));
             }
 
-            $fieldOptions = $this->model->$fieldOptions($field->value, $field->fieldName);
+            $fieldOptions = $this->model->$fieldOptions($field->value, $field->fieldName, $this->data);
         }
 
         return $fieldOptions;

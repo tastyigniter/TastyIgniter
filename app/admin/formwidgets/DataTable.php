@@ -154,7 +154,7 @@ class DataTable extends BaseFormWidget
         $records = $this->getLoadValue() ?: [];
 
         $dataSource->purge();
-        $dataSource->initRecords((array)$records);
+        $dataSource->initRecords($records);
     }
 
     protected function makeTableWidget()

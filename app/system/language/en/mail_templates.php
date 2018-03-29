@@ -34,7 +34,7 @@ return [
     'text_reservation_update'           => 'Reservation status update email to admin',
     'text_is_default'                   => 'Default',
 
-    'button_icon_update'  => '<i class="fa fa-refresh"></i>',
+    'button_icon_update' => '<i class="fa fa-refresh"></i>',
 
     'column_name'         => 'Name',
     'column_code'         => 'Code',
@@ -53,6 +53,7 @@ return [
     'label_code'         => 'Code',
     'label_subject'      => 'Subject',
     'label_layout'       => 'Layout',
+    'label_layout_css'   => 'Layout CSS',
     'label_body'         => 'HTML Body',
     'label_plain_body'   => 'Body Plain Text',
     'label_plain_layout' => 'Plain Text',

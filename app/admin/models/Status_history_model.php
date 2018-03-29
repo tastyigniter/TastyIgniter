@@ -29,7 +29,7 @@ class Status_history_model extends Model
         ],
     ];
 
-    protected $fillable = ['status_id', 'notify', 'status_for', 'comment'];
+    protected $fillable = ['status_id', 'staff_id', 'assignee_id', 'notify', 'status_for', 'comment'];
 
     protected $appends = ['staff_name', 'assignee_name', 'status_name', 'notified'];
 

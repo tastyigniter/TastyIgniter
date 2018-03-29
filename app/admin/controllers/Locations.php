@@ -106,8 +106,6 @@ class Locations extends \Admin\Classes\AdminController
 
     public function formExtendQuery($query)
     {
-        $query->with(['country', 'tables', 'delivery_areas', 'working_hours']);
-
         if (is_single_location())
             $query->where('location_id', params('default_location_id'));
     }

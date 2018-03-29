@@ -10,10 +10,12 @@ use App;
 use Config;
 use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Igniter\Flame\Translation\Drivers\Database;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use Main\Classes\Customer;
 use Request;
+use Setting;
 use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 use System\Models\Mail_templates_model;
@@ -60,7 +62,12 @@ class ServiceProvider extends AppServiceProvider
 
         ExtensionManager::instance()->initializeExtensions();
 
+        $this->updateTimezone();
         $this->extendValidator();
+
+        if ($this->app->hasDatabase()) {
+            $this->app['translation.loader']->addDriver(Database::class);
+        }
     }
 
     /*
@@ -71,6 +78,11 @@ class ServiceProvider extends AppServiceProvider
         foreach (glob(__DIR__.'/helpers/*_helper.php') as $file) {
             include_once $file;
         }
+    }
+
+    protected function updateTimezone()
+    {
+        date_default_timezone_set(Setting::get('timezone', Config::get('app.timezone', 'UTC')));
     }
 
     /**
@@ -139,10 +151,10 @@ class ServiceProvider extends AppServiceProvider
             $this->registerConsoleCommand($command, $class);
         }
     }
-
     /*
      * Error handling for uncaught Exceptions
      */
+
     protected function registerErrorHandler()
     {
         Event::listen('exception.beforeRender', function ($exception, $httpCode, $request) {

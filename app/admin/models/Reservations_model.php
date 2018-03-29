@@ -2,8 +2,10 @@
 
 use Carbon\Carbon;
 use Igniter\Flame\Location\Models\Location;
+use Main\Classes\MainController;
 use Model;
 use Request;
+use System\Traits\CanSendMailTemplates;
 
 /**
  * Reservations Model Class
@@ -12,6 +14,8 @@ use Request;
  */
 class Reservations_model extends Model
 {
+    use CanSendMailTemplates;
+
     const CREATED_AT = 'date_added';
 
     const UPDATED_AT = 'date_modified';
@@ -31,12 +35,16 @@ class Reservations_model extends Model
      */
     public $timestamps = TRUE;
 
+    public $timeFormat = 'H:i';
+
+    public $guarded = ['ip_address', 'user_agent', 'hash'];
+
     public $relation = [
         'belongsTo' => [
-            'table'          => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
+            'related_table'  => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
             'location'       => 'Admin\Models\Locations_model',
-            'reserve_status' => ['Admin\Models\Statuses_model', 'foreignKey' => 'status'],
-            'staffs'         => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
+            'related_status' => ['Admin\Models\Statuses_model', 'foreignKey' => 'status'],
+            'assignee'       => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
         ],
         'morphMany' => [
             'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
@@ -44,14 +52,38 @@ class Reservations_model extends Model
     ];
 
     public $casts = [
-//        'reserve_time' => 'time',
-//        'reserve_date' => 'date',
+        'reserve_time' => 'time',
+        'reserve_date' => 'date',
     ];
 
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',
         'reserve_date asc', 'reserve_date desc',
     ];
+
+    protected static $previewPageName;
+
+    public function setPreviewPageName($pageName)
+    {
+        self::$previewPageName = $pageName;
+    }
+
+    public function getPreviewPageUrl()
+    {
+        $controller = MainController::getController() ?: new MainController;
+
+        $pageName = self::$previewPageName;
+
+        return $controller->pageUrl($pageName, $this->getUrlParams());
+    }
+
+    public function getUrlParams()
+    {
+        return [
+            'reservationId' => $this->reservation_id,
+            'hash'          => $this->hash,
+        ];
+    }
 
     //
     // Events
@@ -63,11 +95,6 @@ class Reservations_model extends Model
 
         $this->ip_address = Request::getClientIp();
         $this->user_agent = Request::userAgent();
-    }
-
-    public function afterSave()
-    {
-        $this->updateStatusHistory();
     }
 
     //
@@ -132,6 +159,25 @@ class Reservations_model extends Model
         return $this->first_name.' '.$this->last_name;
     }
 
+    public function getDurationAttribute($value)
+    {
+        if (!is_null($value))
+            return $value;
+
+        if (!$location = $this->location)
+            return $value;
+
+        return $location->reservation_stay_time;
+    }
+
+    public function getReserveEndTimeAttribute($value)
+    {
+        if ($this->duration)
+            return $this->reserve_time->copy()->addMinutes($this->duration);
+
+        return $this->reserve_time->copy()->endOfDay();
+    }
+
     public function getReservationDatetimeAttribute($value)
     {
         return Carbon::createFromFormat(
@@ -142,7 +188,10 @@ class Reservations_model extends Model
 
     public function getReservationEndDatetimeAttribute($value)
     {
-        return $this->reservation_datetime->copy()->addMinutes($this->duration ?: 0);
+        if ($this->duration)
+            return $this->reservation_datetime->copy()->addMinutes($this->duration);
+
+        return $this->reservation_datetime->copy()->endOfDay();
     }
 
     public function getOccasionAttribute()
@@ -154,16 +203,65 @@ class Reservations_model extends Model
 
     public function getTableNameAttribute()
     {
-        return isset($this->table) ? $this->table->table_name : null;
+        return isset($this->related_table) ? $this->related_table->table_name : null;
     }
 
     //
     // Helpers
     //
 
+    public static function listCalendarEvents($startAt, $endAt)
+    {
+        $collection = self::whereBetween('reserve_date', [
+            date('Y-m-d H:i:s', strtotime($startAt)),
+            date('Y-m-d H:i:s', strtotime($endAt)),
+        ])->get();
+
+        $collection->transform(function ($reservation) {
+            return $reservation->getEventDetails();
+        });
+
+        return $collection->toArray();
+    }
+
+    public function getEventDetails()
+    {
+        $status = $this->related_status;
+        $table = $this->related_table;
+
+        return [
+            'id'               => $this->getKey(),
+            'title'            => $this->customer_name,
+            'start'            => $this->reservation_datetime->toIso8601String(),
+            'end'              => $this->reservation_end_datetime->toIso8601String(),
+            'allDay'           => $this->isReservedAllDay(),
+            'color'            => $status->status_color,
+            'location_name'    => ($location = $this->location) ? $location->location_name : null,
+            'first_name'       => $this->first_name,
+            'last_name'        => $this->last_name,
+            'email'            => $this->email,
+            'telephone'        => $this->telephone,
+            'last_name'        => $this->last_name,
+            'guest_num'        => $this->guest_num,
+            'reserve_date'     => $this->reserve_date->toDateString(),
+            'reserve_time'     => $this->reserve_time->toTimeString(),
+            'reserve_end_time' => $this->reserve_end_time->toTimeString(),
+            'duration'         => $this->duration,
+            'status'           => $status ? $status->toArray() : [],
+            'table'            => $table ? $table->toArray() : [],
+        ];
+    }
+
+    public function isReservedAllDay()
+    {
+        $diffInHours = $this->reservation_datetime->diffInHours($this->reservation_end_datetime);
+
+        return $diffInHours >= 23 OR $diffInHours == 0;
+    }
+
     public function getStatusColor()
     {
-        $status = $this->status()->first();
+        $status = $this->related_status()->first();
         if (!$status)
             return null;
 
@@ -180,6 +278,43 @@ class Reservations_model extends Model
             'hen party',
             'stag party',
         ];
+    }
+
+    /**
+     * Return the dates of all reservations
+     *
+     * @return array
+     */
+    public function getReservationDates()
+    {
+        return $this->pluckDates('reserve_date');
+    }
+
+    /**
+     * Add order status to status history
+     *
+     * @param array $statusData
+     *
+     * @return mixed
+     */
+    public function addStatusHistory(array $statusData = [])
+    {
+        if (!$this->exists OR !$this->related_status)
+            return;
+
+        $status = $this->related_status->toArray();
+
+        $statusHistory = $this->status_history()->updateOrCreate([
+            'status_for' => array_get($statusData, 'status_for', array_get($status, 'status_for')),
+            'status_id'  => array_get($statusData, 'status_id', array_get($status, 'status_id')),
+        ], [
+            'staff_id'    => array_get($statusData, 'staff_id'),
+            'assignee_id' => array_get($statusData, 'assignee_id', $this->assignee_id),
+            'notify'      => array_get($statusData, 'notify', array_get($status, 'status_notify')),
+            'comment'     => strlen($comment = array_get($statusData, 'comment')) ? $comment : array_get($status, 'status_comment'),
+        ]);
+
+        return $statusHistory;
     }
 
     /**
@@ -203,479 +338,58 @@ class Reservations_model extends Model
         return md5(uniqid('reservation', microtime()));
     }
 
-    /**
-     * Return all reservations
-     *
-     * @return array|bool
-     */
-    public function getReservations()
+    //
+    // Mail
+    //
+
+    public function mailGetRecipients($type)
     {
-        return $this->orderBy('reservation_id')->get();
+        $emailSetting = setting('reservation_email', []);
+        is_array($emailSetting) OR $emailSetting = [];
+
+        $recipients = [];
+        if (in_array($type, $emailSetting)) {
+            switch ($type) {
+                case 'customer':
+                    $recipients[] = [$this->email, $this->customer_name];
+                    break;
+                case 'location':
+                    $recipients[] = [$this->location->location_email, $this->location->location_name];
+                    break;
+                case 'admin':
+                    $recipients[] = [setting('site_email'), setting('site_name')];
+                    break;
+            }
+        }
+
+        return $recipients;
     }
 
     /**
-     * Find a single reservation by reservation_id
-     *
-     * @param int $reservation_id
-     * @param int $customer_id
+     * Return the order data to build mail template
      *
      * @return array
      */
-    public function getReservation($reservation_id = null, $customer_id = null)
-    {
-        if ($reservation_id !== FALSE) {
-            $query = $this->selectQuery()->joinSelectTables();
-
-            if (APPDIR === MAINDIR AND $customer_id !== FALSE) {
-                $query->where('customer_id', $customer_id);
-            }
-
-            return $query->findOrNew($reservation_id)->toArray();
-        }
-    }
-
-    /**
-     * Return the dates of all reservations
-     *
-     * @return array
-     */
-    public function getReservationDates()
-    {
-        return $this->pluckDates('reserve_date');
-    }
-
-    /**
-     * Return maximum table capacity by location_id
-     *
-     * @param int $location_id
-     *
-     * @return int
-     */
-    public function getTotalCapacityByLocation($location_id = null)
-    {
-        $result = 0;
-
-        $tablesTable = $this->getTablePrefix('tables');
-
-        $this->load->model('Location_tables_model');
-        $query = $this->Location_tables_model->selectRaw("SUM({$tablesTable}.max_capacity) as total_seats");
-
-        if (!empty($location_id)) {
-            $query->where('location_id', $location_id);
-        }
-
-        $query->join('tables', 'tables.table_id', '=', 'location_tables.table_id', 'left');
-
-        $row = $query->first();
-        if (!empty($row['total_seats'])) {
-            $result = $row['total_seats'];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return total reserved guest by location_id
-     *
-     * @param int $location_id
-     * @param string|array $dates
-     *
-     * @return int
-     */
-    public function getTotalGuestsByLocation($location_id = null, $dates = null)
-    {
-        $result = [];
-
-        $reservationsTable = $this->getTablePrefix('reservations');
-        $query = $this->selectRaw("reserve_date, SUM({$reservationsTable}.guest_num) as total_guest, DAY(reserve_date) as reserve_day");
-        //$query->where('status', (int)$this->config->item('default_reservation_status'));
-
-        if (!empty($location_id)) {
-            $query->where('location_id', $location_id);
-        }
-
-        if (!empty($dates)) {
-            $dates = !is_array($dates) ? [$dates] : $dates;
-            $query->whereDate('reserve_date', $dates);
-        }
-
-        $query->groupBy('reserve_day');
-
-        if ($rows = $query->get()) {
-            foreach ($rows as $row) {
-                $result[$row['reserve_date']] = $row['total_guest'];
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return all location tables by location_id and,
-     * group by minimum table capacity
-     *
-     * @param int $location_id
-     * @param int $guest_num
-     *
-     * @return array
-     */
-    public function getLocationTablesByMinCapacity($location_id, $guest_num)
-    {
-        $tables = [];
-
-        if (isset($location_id, $guest_num)) {
-            $this->load->model('Location_tables_model');
-
-            $query = $this->Location_tables_model->where('location_id', $location_id)->where('table_status', '1');
-
-            $query->where(function ($query) use ($guest_num) {
-                $query->where('min_capacity', '<=', $guest_num);
-                $query->where('max_capacity', '>=', $guest_num);
-            });
-
-            $query->orderBy('min_capacity');
-
-            $query->join('tables', 'tables.table_id', '=', 'reservations.table_id', 'left');
-
-            if ($rows = $query->get()) {
-                foreach ($rows as $row) {
-                    $tables[$row['table_id']] = $row;
-                }
-            }
-        }
-
-        return $tables;
-    }
-
-    /**
-     * Find a single table available for reservation
-     *
-     * @param array $find
-     *
-     * @return array|string
-     */
-    public function findATable($find = [])
-    {
-
-        if (!isset($find['location']) OR !isset($find['guest_num']) OR empty($find['reserve_date']) OR empty($find['reserve_time']) OR empty($find['time_interval'])) {
-            return 'NO_ARGUMENTS';
-        }
-
-        if (!($available_tables = $this->getLocationTablesByMinCapacity($find['location'], $find['guest_num']))) {
-            return 'NO_TABLE';
-        }
-
-        $find['reserve_date_time'] = strtotime($find['reserve_date'].' '.$find['reserve_time']);
-        $find['unix_start_time'] = strtotime('-'.($find['time_interval'] * 2).' mins', $find['reserve_date_time']);
-        $find['unix_end_time'] = strtotime('+'.($find['time_interval'] * 2).' mins', $find['reserve_date_time']);
-
-        $time_slots = time_range(mdate('%H:%i', $find['unix_start_time']), mdate('%H:%i', $find['unix_end_time']), $find['time_interval'], '%H:%i');
-        $reserve_time_slot = array_flip($time_slots);
-
-        $reserved_tables = $this->getReservedTableByDate($find, array_keys($available_tables));
-
-        foreach ($reserved_tables as $reserved) {
-            // remove available table if already reserved
-            if (isset($available_tables[$reserved['table_id']])) {
-                unset($available_tables[$reserved['table_id']]);
-            }
-
-            // remove reserve time slot if already reserved
-            $reserve_time = mdate('%H:%i', strtotime($reserved['reserve_date'].' '.$reserved['reserve_time']));
-            if (isset($reserve_time_slot[$reserve_time])) {
-                unset($reserve_time_slot[$reserve_time]);
-            }
-        }
-
-        if (empty($available_tables) OR empty($reserve_time_slot)) {
-            return 'FULLY_BOOKED';
-        }
-
-        return ['table_found' => $available_tables, 'time_slots' => array_flip($reserve_time_slot)];
-    }
-
-    /**
-     * Return all reserved tables by specified date
-     *
-     * @param array $find
-     * @param int $table_id
-     * @param bool $group
-     *
-     * @return array|bool
-     */
-    public function getReservedTableByDate($find = [], $table_id, $group = FALSE)
-    {
-        if (!isset($find['location']) OR !is_numeric($find['location']) OR empty($find['reserve_date']) OR empty($table_id)) {
-            return FALSE;
-        }
-
-        $query = $this->where('location_id', $find['location']);
-
-        is_array($table_id) OR $table_id = [$table_id];
-        if (!empty($table_id)) {
-            $query->whereIn('table_id', $table_id);
-        }
-
-        $query->where(function ($query) {
-            $query->whereRaw('ADDTIME(reserve_date, reserve_time) >=', mdate('%Y-%m-%d %H:%i:%s', $find['unix_start_time']));
-            $query->whereRaw('ADDTIME(reserve_date, reserve_time) <=', mdate('%Y-%m-%d %H:%i:%s', $find['unix_end_time']));
-        });
-
-        $results = [];
-        if ($rows = $query->get()) {
-            if ($group) {
-                foreach ($rows as $row) {
-                    $results[$row['table_id']][] = $row;
-                }
-            }
-            else {
-                $results = $rows;
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     * Return the total number of seats available by location_id
-     *
-     * @param int $location_id
-     *
-     * @return array
-     */
-    public function getTotalSeats($location_id)
-    {
-        $this->load->model('Location_tables_model');
-        $query = $this->Location_tables_model->selectRaw("SUM(tables.max_capacity) as total_seats")
-                                             ->where('location_id', $location_id);
-
-        $query->join('tables', 'tables.table_id', '=', 'reservations.table_id', 'left');
-
-        $row = $query->first();
-        if (!empty($row['total_seats'])) {
-            return $row['total_seats'];
-        }
-    }
-
-    /**
-     * Update an existing reservation
-     *
-     * @param int $reservation_id
-     * @param array $update
-     *
-     * @return bool
-     */
-    public function updateReservation($reservation_id, $update = [])
-    {
-        if (empty($update)) return FALSE;
-
-        if (is_numeric($reservation_id)) {
-            $query = $this->find($reservation_id)->fill($update)->save();
-
-            $status = $this->Statuses_model->getStatus($update['status']);
-
-            if (isset($update['notify']) AND $update['notify'] == '1') {
-                $mail_data = $this->getMailData($reservation_id);
-
-                $mail_data['status_name'] = $status['status_name'];
-                $mail_data['status_comment'] = !empty($update['status_comment']) ? $update['status_comment'] : lang('admin::reservations.text_no_comment');
-
-                $this->load->model('Mail_layouts_model');
-                $mail_template = $this->Mail_layouts_model->getDefaultTemplateData('reservation_update');
-                $update['notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
-            }
-
-            if ($query === TRUE AND (int)$update['old_status_id'] !== (int)$update['status']) {
-                $update['object_id'] = $reservation_id;
-                $update['staff_id'] = AdminAuth::getStaffId();
-                $update['status_id'] = (int)$update['status'];
-                $update['comment'] = $update['status_comment'];
-                $update['date_added'] = mdate('%Y-%m-%d %H:%i:%s', time());
-
-                $this->Statuses_model->addStatusHistory('reserve', $update);
-            }
-
-            return TRUE;
-        }
-    }
-
-    protected function updateStatusHistory()
-    {
-        if (!$status = $this->reserve_status)
-            return;
-
-        if ($this->status_history()->where('status_id', $status->getKey())->first())
-            return;
-
-        $this->status_history()->create([
-            'status_id'  => $status->getKey(),
-            'notify'     => $status->notify_customer,
-            'status_for' => $status->status_for,
-            'comment'    => $status->status_comment,
-        ]);
-    }
-
-    /**
-     * Create a new reservation
-     *
-     * @param array $add
-     *
-     * @return bool
-     */
-    public function addReservation($add = [])
-    {
-        if (empty($add)) return FALSE;
-
-        if (isset($add['reserve_date'])) {
-            $add['reserve_date'] = mdate('%Y-%m-%d', strtotime($add['reserve_date']));
-        }
-
-        if ($reservation_id = $this->insertGetId($add)) {
-
-            if (APPDIR === MAINDIR) {
-                log_activity($add['customer_id'], 'reserved', 'reservations', get_activity_message('activity_reserved_table', ['{customer}', '{link}', '{reservation_id}'], [$add['first_name'].' '.$add['last_name'], admin_url('reservations/edit?id='.$reservation_id), $reservation_id]));
-            }
-
-            $notify = $this->sendConfirmationMail($reservation_id);
-
-            $update = [
-                'notify' => $notify,
-                'status' => $this->config->item('default_reservation_status'),
-            ];
-
-            if ($this->where('reservation_id', $reservation_id)->update($update)) {
-                $this->load->model('Statuses_model');
-                $status = $this->Statuses_model->getStatus($this->config->item('default_reservation_status'));
-                $reserve_history = [
-                    'object_id'  => $reservation_id,
-                    'status_id'  => $status['status_id'],
-                    'notify'     => $notify,
-                    'comment'    => $status['status_comment'],
-                    'date_added' => mdate('%Y-%m-%d %H:%i:%s', time()),
-                ];
-
-                $this->Statuses_model->addStatusHistory('reserve', $reserve_history);
-            }
-        }
-
-        return $reservation_id;
-    }
-
-    /**
-     * Send the reservation confirmation email
-     *
-     * @param int $reservation_id
-     *
-     * @return string 0 on failure, or 1 on success
-     */
-    protected function sendConfirmationMail($reservation_id)
-    {
-        $this->load->model('Mail_layouts_model');
-        $mail_data = $this->getMailData($reservation_id);
-        $config_reservation_email = is_array($this->config->item('reservation_email')) ? $this->config->item('reservation_email') : [];
-
-        $notify = '0';
-        if ($this->config->item('customer_reserve_email') == '1' OR in_array('customer', $config_reservation_email)) {
-            $mail_template = $this->Mail_layouts_model->getDefaultTemplateData('reservation');
-            $notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
-        }
-
-        if (!empty($mail_data['location_email']) AND ($this->config->item('location_reserve_email') == '1' OR in_array('location', $config_reservation_email))) {
-            $mail_template = $this->Mail_layouts_model->getDefaultTemplateData('reservation_alert');
-            $this->sendMail($mail_data['location_email'], $mail_template, $mail_data);
-        }
-
-        if (in_array('admin', $config_reservation_email)) {
-            $mail_template = $this->Mail_layouts_model->getDefaultTemplateData('reservation_alert');
-            $this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
-        }
-
-        return $notify;
-    }
-
-    /**
-     * Return the reservation data to build mail template
-     *
-     * @param int $reservation_id
-     *
-     * @return array
-     */
-    public function getMailData($reservation_id)
+    public function mailGetData()
     {
         $data = [];
 
-        if ($result = $this->getReservation($reservation_id)) {
-            $this->load->library('country');
+        $data['reservation_number'] = $this->reservation_id;
+        $data['reservation_view_url'] = $this->getPreviewPageUrl();
+        $data['reservation_time'] = $this->reserve_time->format('H:i');
+        $data['reservation_date'] = $this->reserve_date->format('l, F j, Y');
+        $data['reservation_guest_no'] = $this->guest_num;
+        $data['first_name'] = $this->first_name;
+        $data['last_name'] = $this->last_name;
+        $data['email'] = $this->email;
+        $data['telephone'] = $this->telephone;
+        $data['reservation_comment'] = $this->comment;
 
-            $data['reservation_number'] = $result['reservation_id'];
-            $data['reservation_view_url'] = site_url('main/reservations?id='.$result['reservation_id']);
-            $data['reservation_time'] = mdate('%H:%i', strtotime($result['reserve_time']));
-            $data['reservation_date'] = mdate('%l, %F %j, %Y', strtotime($result['reserve_date']));
-            $data['reservation_guest_no'] = $result['guest_num'];
-            $data['first_name'] = $result['first_name'];
-            $data['last_name'] = $result['last_name'];
-            $data['email'] = $result['email'];
-            $data['telephone'] = $result['telephone'];
-            $data['location_name'] = $result['location_name'];
-            $data['location_email'] = $result['location_email'];
-            $data['reservation_comment'] = $result['comment'];
+        if ($this->location) {
+            $data['location_name'] = $this->location->location_name;
+            $data['location_email'] = $this->location->location_email;
         }
 
         return $data;
-    }
-
-    /**
-     * Send an email
-     *
-     * @param string $email
-     * @param array $mail_template
-     * @param array $mail_data
-     *
-     * @return bool|string
-     */
-    public function sendMail($email, $mail_template = [], $mail_data = [])
-    {
-        if (empty($mail_template) OR !isset($mail_template['subject'], $mail_template['body']) OR empty($mail_data)) {
-            return FALSE;
-        }
-
-        $this->load->library('email');
-
-        $this->email->initialize();
-
-        if (!empty($mail_data['status_comment'])) {
-            $mail_data['status_comment'] = $this->email->parse_template($mail_data['status_comment'], $mail_data);
-        }
-
-        $this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
-        $this->email->to(strtolower($email));
-        $this->email->subject($mail_template['subject'], $mail_data);
-        $this->email->message($mail_template['body'], $mail_data);
-
-        if (!$this->email->send()) {
-            log_message('debug', $this->email->print_debugger(['headers']));
-            $notify = '0';
-        }
-        else {
-            $notify = '1';
-        }
-
-        return $notify;
-    }
-
-    /**
-     * Delete a single or multiple reservation by reservation_id
-     *
-     * @param string|array $reservation_id
-     *
-     * @return int  The number of deleted rows
-     */
-    public function deleteReservation($reservation_id)
-    {
-        if (is_numeric($reservation_id)) $reservation_id = [$reservation_id];
-
-        if (!empty($reservation_id) AND ctype_digit(implode('', $reservation_id))) {
-            return $this->whereIn('reservation_id', $reservation_id)->delete();
-        }
     }
 }

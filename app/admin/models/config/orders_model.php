@@ -32,8 +32,8 @@ $config['list']['filter'] = [
             'label'      => 'lang:admin::orders.text_filter_payment',
             'type'       => 'select',
             'conditions' => 'payment = :filtered',
-            'modelClass' => 'Admin\Models\Orders_model',
-            'options'    => 'getPaymentOptions',
+            'modelClass' => 'Admin\Models\Payments_model',
+            'options'    => 'getDropdownOptions',
         ],
         'date'     => [
             'label'      => 'lang:admin::orders.text_filter_date',
@@ -151,17 +151,11 @@ $config['form']['fields'] = [
     'status_id'   => [
         'label'   => 'lang:admin::default.label_status',
         'type'    => 'statuseditor',
-        'span'     => 'left',
+        'span'    => 'left',
         'options' => ['Admin\Models\Statuses_model', 'listStatuses'],
         'form'    => [
             'fields' => [
-                'assignee_id' => [
-                    'label'       => 'lang:admin::orders.label_assign_staff',
-                    'type'        => 'select',
-                    'options'     => ['Admin\Models\Staffs_model', 'getDropdownOptions'],
-                    'placeholder' => 'lang:admin::default.text_please_select',
-                ],
-                'status_id'   => [
+                'status_id' => [
                     'label'       => 'lang:admin::default.label_status',
                     'type'        => 'select',
                     'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
@@ -170,14 +164,14 @@ $config['form']['fields'] = [
                         'data-status-value' => '',
                     ],
                 ],
-                'comment'     => [
+                'comment'   => [
                     'label'      => 'lang:admin::orders.label_comment',
                     'type'       => 'textarea',
                     'attributes' => [
                         'data-status-comment' => '',
                     ],
                 ],
-                'notify'      => [
+                'notify'    => [
                     'label'      => 'lang:admin::orders.label_notify',
                     'type'       => 'radio',
                     'default'    => 1,
@@ -196,7 +190,7 @@ $config['form']['fields'] = [
     'order_total' => [
         'label'    => 'lang:admin::orders.label_order_total',
         'type'     => 'money',
-        'span'    => 'right',
+        'span'     => 'right',
         'disabled' => TRUE,
         'context'  => ['edit', 'preview'],
     ],
@@ -205,82 +199,80 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::orders.text_tab_general',
     'fields'     => [
-        'location_id'   => [
+        'location_id'          => [
             'label'        => 'lang:admin::orders.text_restaurant',
             'type'         => 'relation',
             'relationFrom' => 'location',
             'nameFrom'     => 'location_name',
-            'span'     => 'left',
+            'span'         => 'left',
             'placeholder'  => 'lang:admin::default.text_please_select',
         ],
-        'customer_name' => [
+        'customer_name'        => [
             'label'    => 'lang:admin::orders.label_customer_name',
             'type'     => 'text',
             'disabled' => TRUE,
             'span'     => 'right',
         ],
-        'order_type'    => [
-            'label'   => 'lang:admin::orders.label_order_type',
-            'type'    => 'radio',
-            'span'    => 'left',
-            'default' => 'delivery',
-            'options' => [
-                'delivery' => 'lang:admin::orders.text_delivery',
-                'collection' => 'lang:admin::orders.text_collection',
-            ],
+        'order_type_name'      => [
+            'label'    => 'lang:admin::orders.label_order_type',
+            'type'     => 'text',
+            'span'     => 'left',
+            'disabled' => TRUE,
         ],
-        'invoice'       => [
+        'invoice'              => [
             'label'    => 'lang:admin::orders.label_invoice',
             'type'     => 'text',
             'disabled' => TRUE,
-            'span'         => 'right',
+            'span'     => 'right',
             'context'  => ['edit', 'preview'],
         ],
-        'order_date'    => [
+        'order_date'           => [
             'label'    => 'lang:admin::orders.label_order_date',
             'type'     => 'datepicker',
+            'disabled' => TRUE,
             'mode'     => 'date',
             'span'     => 'left',
             'cssClass' => 'flex-width',
         ],
-        'order_time'    => [
+        'order_time'           => [
             'label'    => 'lang:admin::orders.label_order_time',
             'type'     => 'datepicker',
+            'disabled' => TRUE,
             'mode'     => 'time',
             'span'     => 'left',
             'cssClass' => 'flex-width',
         ],
-        'payment'       => [
-            'label'     => 'lang:admin::orders.label_payment_method',
-            'span'      => 'right',
-            'type'      => 'text',
+        'payment_method[name]' => [
+            'label'    => 'lang:admin::orders.label_payment_method',
+            'span'     => 'right',
+            'type'     => 'text',
             'disabled' => TRUE,
-            'valueFrom' => 'payment_method',
         ],
-        'address_id'    => [
-            'label'       => 'lang:admin::orders.text_tab_delivery_address',
-            'span'        => 'left',
-            'type'        => 'select',
-            'options'     => 'getAddressOptions',
-            'placeholder' => 'lang:admin::default.text_please_select',
-            'trigger'     => [
+        'address_id'           => [
+            'label'    => 'lang:admin::orders.text_tab_delivery_address',
+            'span'     => 'left',
+            'type'     => 'partial',
+            'disabled' => TRUE,
+            'path'     => 'orders/delivery_address',
+            'trigger'  => [
                 'action'    => 'show',
-                'field'     => 'order_type',
-                'condition' => 'value[delivery]',
+                'field'     => 'order_type_name',
+                'condition' => 'value[Delivery]',
             ],
         ],
-        'total_items'   => [
+        'total_items'          => [
             'label'    => 'lang:admin::orders.label_total_items',
             'type'     => 'number',
             'span'     => 'right',
             'disabled' => TRUE,
             'context'  => ['edit', 'preview'],
         ],
-        'comment'       => [
-            'label' => 'lang:admin::orders.label_comment',
-            'type'  => 'textarea',
+        'comment'              => [
+            'label'    => 'lang:admin::orders.label_comment',
+            'type'     => 'textarea',
+            'disabled' => TRUE,
         ],
-        'date_added'    => [
+        'date_added'           => [
             'label'    => 'lang:admin::orders.label_date_added',
             'type'     => 'datepicker',
             'mode'     => 'date',
@@ -288,14 +280,14 @@ $config['form']['tabs'] = [
             'span'     => 'left',
             'context'  => ['edit', 'preview'],
         ],
-        'ip_address'    => [
+        'ip_address'           => [
             'label'    => 'lang:admin::orders.label_ip_address',
             'type'     => 'text',
             'disabled' => TRUE,
             'span'     => 'right',
             'context'  => ['edit', 'preview'],
         ],
-        'date_modified' => [
+        'date_modified'        => [
             'label'    => 'lang:admin::orders.label_date_modified',
             'type'     => 'datepicker',
             'mode'     => 'date',
@@ -303,20 +295,19 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
             'context'  => ['edit', 'preview'],
         ],
-        'user_agent'    => [
+        'user_agent'           => [
             'label'    => 'lang:admin::orders.label_user_agent',
             'disabled' => TRUE,
             'type'     => 'text',
             'span'     => 'right',
             'context'  => ['edit', 'preview'],
         ],
-
-        'order_menus' => [
+        'order_menus'          => [
             'tab'  => 'lang:admin::orders.text_tab_menu',
-            'type' => 'textarea',
+            'type' => 'partial',
+            'path' => 'orders/order_menus',
         ],
-
-        'status_history' => [
+        'status_history'       => [
             'tab'     => 'lang:admin::orders.text_tab_status',
             'type'    => 'datatable',
             'columns' => [

@@ -5,8 +5,8 @@
 	width: 124px;
 	height: 124px;
 	position: relative;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 .media-finder .grid:focus,
 .media-finder .grid:hover {
@@ -14,7 +14,7 @@
 	box-shadow: 0 1px 0px #AABCD3;
 }
 .media-finder .grid .img-cover {
-	transform: translate(50%,50%);
+	transform: translate(50%, 50%);
 	display: block;
 	height: 100%;
 }
@@ -62,7 +62,7 @@
 	z-index: 9;
 }
 .grid:hover .icon-container span {
-	background-color: #fff;
+	background-color: #FFF;
 	padding: 3px 5px;
 	word-wrap: break-word;
 }

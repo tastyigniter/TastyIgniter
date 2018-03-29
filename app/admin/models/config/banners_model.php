@@ -24,7 +24,7 @@ $config['list']['toolbar'] = [
             'label'                => 'lang:admin::default.button_delete',
             'class'                => 'btn btn-danger',
             'data-request-form'    => '#list-form',
-            'data-request'         => 'onDelete',
+            'data-request-handler' => 'onDelete',
             'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
         ],
         'filter' => [

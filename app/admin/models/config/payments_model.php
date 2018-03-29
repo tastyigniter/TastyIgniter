@@ -76,7 +76,7 @@ $config['form']['toolbar'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::payments.text_tab_config',
     'fields'     => [
-        'payments'    => [
+        'payment'     => [
             'label'       => 'lang:admin::payments.label_payments',
             'type'        => 'select',
             'options'     => 'listGateways',
@@ -89,15 +89,14 @@ $config['form']['tabs'] = [
             'span'  => 'left',
         ],
         'code'        => [
-            'label'    => 'lang:admin::payments.label_code',
-            'type'     => 'text',
-            'span'     => 'right',
-            'disabled' => TRUE,
+            'label' => 'lang:admin::payments.label_code',
+            'type'  => 'text',
+            'span'  => 'right',
         ],
-        'priority'  => [
-            'label' => 'lang:admin::payments.label_priority',
-            'type'  => 'number',
-            'default'  => 999,
+        'priority'    => [
+            'label'   => 'lang:admin::payments.label_priority',
+            'type'    => 'number',
+            'default' => 999,
         ],
         'description' => [
             'label' => 'lang:admin::payments.label_description',

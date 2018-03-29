@@ -65,7 +65,7 @@ $config['form']['toolbar'] = [
         'delete'    => [
             'label'                => 'lang:admin::default.button_icon_delete', 'class' => 'btn btn-danger',
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => 'edit'
+            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => 'edit',
         ],
         'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'languages'],
     ],
@@ -74,44 +74,44 @@ $config['form']['toolbar'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:system::languages.text_tab_general',
     'fields'     => [
-        'file'              => [
+        'file'       => [
             'tab'     => 'lang:system::languages.text_tab_edit_file',
             'type'    => 'partial',
             'context' => 'edit',
             'path'    => 'languages/lang_file',
         ],
-        'name'              => [
+        'name'       => [
             'label' => 'lang:system::languages.label_name',
             'type'  => 'text',
         ],
-        'code'              => [
+        'code'       => [
             'label'   => 'lang:system::languages.label_code',
             'type'    => 'text',
             'span'    => 'left',
             'comment' => 'lang:system::languages.help_language',
         ],
-        'idiom'             => [
+        'idiom'      => [
             'label'   => 'lang:system::languages.label_idiom',
             'type'    => 'text',
             'span'    => 'right',
             'comment' => 'lang:system::languages.help_idiom',
         ],
-        'image'             => [
-            'label'      => 'lang:system::languages.label_image',
-            'type'       => 'mediafinder',
-            'mode'       => 'inline',
+        'image'      => [
+            'label'   => 'lang:system::languages.label_image',
+            'type'    => 'mediafinder',
+            'mode'    => 'inline',
             'default' => 'flags/no_flag.png',
         ],
-        'can_delete'        => [
+        'can_delete' => [
             'label' => 'lang:system::languages.label_can_delete',
             'type'  => 'switch',
         ],
-        'status'            => [
+        'status'     => [
             'label'   => 'lang:admin::default.label_status',
             'default' => TRUE,
             'type'    => 'switch',
         ],
-        'files' => [
+        'files'      => [
             'type'    => 'partial',
             'tab'     => 'lang:system::languages.text_tab_files',
             'context' => 'edit',

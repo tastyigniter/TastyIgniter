@@ -252,6 +252,20 @@ class CreateTables extends Migration
         };
     }
 
+    protected function _create_layout_modules()
+    {
+        return function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->integer('layout_module_id', TRUE);
+            $table->integer('layout_id');
+            $table->string('module_code', 128);
+            $table->string('partial', 32);
+            $table->integer('priority');
+            $table->text('options');
+            $table->boolean('status');
+        };
+    }
+
     protected function _create_languages()
     {
         return function (Blueprint $table) {
@@ -656,9 +670,10 @@ class CreateTables extends Migration
             $table->engine = 'InnoDB';
             $table->integer('setting_id', TRUE);
             $table->string('sort', 45);
-            $table->string('item', 128)->unique('item');
+            $table->string('item', 128);
             $table->text('value');
             $table->boolean('serialized');
+            $table->unique(['sort', 'item']);
         };
     }
 

@@ -5,8 +5,6 @@ use AdminAuth;
 use AdminMenu;
 use Exception;
 use Main\Classes\ThemeManager;
-use Main\Template\Layout;
-use Main\Template\Page;
 use Request;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;

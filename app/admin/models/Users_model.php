@@ -64,79 +64,7 @@ class Users_model extends AuthUserModel
         $this->save();
 
         return $resetCode;
-
-//        if (!is_string($username))
-//            return FALSE;
-//
-//        $query = $this->newQuery()->where('username', $username);
-//        if (!$userModel = $query->first())
-//            return FALSE;
-//
-//        $update = [
-//            'reset_code' => $this->createResetCode($userModel),
-//            'reset_time' => mdate('%Y-%m-%d %H:%i:%a', time()),
-//        ];
-//
-//        $updated = $userModel->update($update);
-//        if ($updated < 1)
-//            return FALSE;
-//
-//        $mail_data['staff_name'] = $userModel->staff_name;
-//        $mail_data['staff_username'] = $userModel->username;
-//        $mail_data['reset_link'] = admin_url('login/reset?code='.$update['reset_code']);
-//
-//        $mail_template = Mail_layouts_model::getDefaultTemplateData('password_reset_request_alert');
-//        $this->sendMail($this->getReminderEmail(), $mail_template, $mail_data);
-//
-//        return TRUE;
     }
-
-    /**
-     * Sets the new password on user requested reset
-     *
-     * @param $code
-     * @param $password
-     *
-     * @return bool
-     */
-//    public function completeResetPassword($code, $password)
-//    {
-//        if (!$this->checkResetPasswordCode($code))
-//            return FALSE;
-//
-//        $this->password = App::make('hash')->make($password);
-//        $this->reset_time = null;
-//        $this->reset_code = null;
-//
-//        return $this->save();
-
-//        $mail_data['staff_name'] = $userModel->staff_name;
-//        $mail_data['staff_username'] = $userModel->username;
-//        $mail_data['created_password'] = str_repeat('*', strlen($password));
-//
-//        $mail_template = Mail_layouts_model::getDefaultTemplateData('password_reset_alert');
-//
-//        $this->sendMail($this->getReminderEmail(), $mail_template, $mail_data);
-//
-//        return TRUE;
-//    }
-
-    /**
-     * Update the user password
-     */
-//    public function updatePassword($identity, array $credentials)
-//    {
-//        $password = $credentials['password'];
-//
-//        $userModel = $this->newQuery()
-//                          ->where($this->getAuthIdentifierName(), $identity)->first();
-//
-//        if (is_null($userModel))
-//            return FALSE;
-//
-//        $userModel->password = $this->getHasher()->make($password);
-//        $userModel->save();
-//    }
 
     public function getReminderEmail()
     {

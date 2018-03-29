@@ -206,7 +206,6 @@ class Settings_model extends Model
         }
     }
 
-
     public static function applyMailerConfigValues()
     {
         Config::set('mail.driver', Setting::get('protocol', Config::get('mail.driver')));

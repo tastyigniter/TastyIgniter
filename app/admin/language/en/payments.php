@@ -27,7 +27,7 @@ return [
     'label_data'        => 'Config',
     'label_status'      => 'Status',
     'label_default'     => 'Is Default',
-    'label_priority'     => 'Priority',
+    'label_priority'    => 'Priority',
 
     'alert_setting_missing_id' => 'Extension setting code has not been specified.',
 ];

@@ -11,6 +11,7 @@ use Admin\Widgets\Toolbar;
 use AdminAuth;
 use AdminMenu;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Main\widgets\MediaManager;
 use Redirect;
 use Request;
@@ -156,6 +157,16 @@ class AdminController extends BaseController
             ? Response::make($response, $this->statusCode) : $response;
     }
 
+    public function pageAction()
+    {
+        if (!$this->action) {
+            return;
+        }
+
+        $this->suppressView = TRUE;
+        $this->execPageAction($this->action, $this->params);
+    }
+
     protected function processHandlers()
     {
         if (!$handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
@@ -167,51 +178,15 @@ class AdminController extends BaseController
         $params = $this->params;
         array_unshift($params, $this->action);
 
-        // Process Widget handler
-        if (strpos($handler, '::')) {
-            list($widgetName, $handlerName) = explode('::', $handler);
+        $result = $this->runHandler($handler, $params);
 
-            $this->suppressView = TRUE;
-
-            // Execute the page action so widgets are initialized
-            $this->execPageAction($this->action, $this->params);
-
-            if (!isset($this->widgets[$widgetName])) {
-                throw new Exception(sprintf(
-                    "A widget with class name '%s' has not been bound to the controller",
-                    $widgetName
-                ));
-            }
-
-            if (($widget = $this->widgets[$widgetName]) AND method_exists($widget, $handlerName)) {
-                $result = call_user_func_array([$widget, $handlerName], $params);
-
-                return ($result) ?: TRUE;
-            }
-        } // Process page specific handler (index_onSomething)
-        else {
-            $pageHandler = $this->action.'_'.$handler;
-
-            if ($this->methodExists($pageHandler)) {
-                $result = call_user_func_array([$this, $pageHandler], $params);
-
-                return ($result) ?: TRUE;
-            }
-
-            $this->suppressView = TRUE;
-
-            $this->execPageAction($this->action, $this->params);
-
-            foreach ((array)$this->widgets as $widget) {
-                if ($widget->methodExists($handler)) {
-                    $result = call_user_func_array([$widget, $handler], $params);
-
-                    return ($result) ?: TRUE;
-                }
-            }
+        $response = [];
+        if ($result instanceof RedirectResponse AND !post('_handler')) {
+            $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
+            $result = null;
         }
 
-        return FALSE;
+        return $result ?: $response;
     }
 
     protected function execPageAction($action, $params)
@@ -240,6 +215,9 @@ class AdminController extends BaseController
 
     protected function makeMainMenuWidget()
     {
+        if (AdminMenu::isCollapsed())
+            $this->bodyClass .= 'sidebar-collapsed';
+
         $config = [];
         $config['alias'] = 'mainmenu';
         $config['items'] = AdminMenu::getMainItems();
@@ -280,5 +258,53 @@ class AdminController extends BaseController
     public function refresh()
     {
         return Redirect::back();
+    }
+
+    protected function runHandler($handler, $params)
+    {
+        // Process Widget handler
+        if (strpos($handler, '::')) {
+            list($widgetName, $handlerName) = explode('::', $handler);
+
+            // Execute the page action so widgets are initialized
+            $this->pageAction();
+
+            if (!isset($this->widgets[$widgetName])) {
+                throw new Exception(sprintf(
+                    "A widget with class name '%s' has not been bound to the controller",
+                    $widgetName
+                ));
+            }
+
+            if (($widget = $this->widgets[$widgetName]) AND method_exists($widget, $handlerName)) {
+                $result = call_user_func_array([$widget, $handlerName], $params);
+
+                return $result ?: TRUE;
+            }
+        }
+        // Process page specific handler (index_onSomething)
+        else {
+            $pageHandler = $this->action.'_'.$handler;
+
+            if ($this->methodExists($pageHandler)) {
+                $result = call_user_func_array([$this, $pageHandler], $params);
+
+                return $result ?: TRUE;
+            }
+
+            $this->suppressView = TRUE;
+
+            $this->execPageAction($this->action, $this->params);
+
+            foreach ((array)$this->widgets as $widget) {
+                if ($widget->methodExists($handler)) {
+                    $result = call_user_func_array([$widget, $handler], $params);
+
+                    return $result ?: TRUE;
+                }
+            }
+        }
+
+        return FALSE;
     }
 }

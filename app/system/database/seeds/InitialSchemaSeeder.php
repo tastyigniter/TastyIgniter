@@ -2,13 +2,13 @@
 
 use Admin\Models\Customer_groups_model;
 use Admin\Models\Mealtimes_model;
-use System\Models\Pages_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Statuses_model;
 use Illuminate\Database\Seeder;
 use System\Models\Countries_model;
 use System\Models\Currencies_model;
 use System\Models\Languages_model;
+use System\Models\Pages_model;
 use System\Models\Permissions_model;
 use System\Models\Settings_model;
 

@@ -31,7 +31,7 @@ $config['list']['columns'] = [
             'href'  => 'themes/edit/{code}',
         ],
     ],
-    'source'     => [
+    'source'   => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
         'attributes'   => [
@@ -108,20 +108,20 @@ $config['form']['fields'] = [
 
 $config['form']['tabs'] = [
     'cssClass' => 'theme-editor',
-    'fields' => [
-        'files' => [
-            'tab'  => 'lang:system::themes.text_tab_edit_source',
-            'type' => 'partial',
-            'span' => 'flex',
+    'fields'   => [
+        'files'  => [
+            'tab'      => 'lang:system::themes.text_tab_edit_source',
+            'type'     => 'partial',
+            'span'     => 'flex',
             'cssClass' => 'col-sm-3 wrap-none',
-            'path' => 'themes/source_files',
+            'path'     => 'themes/source_files',
         ],
         'source' => [
-            'tab'  => 'lang:system::themes.text_tab_edit_source',
-            'type' => 'codeeditor',
-            'span' => 'flex',
+            'tab'      => 'lang:system::themes.text_tab_edit_source',
+            'type'     => 'codeeditor',
+            'span'     => 'flex',
             'cssClass' => 'col-sm-9 pull-right wrap-none',
-            'mode' => 'css',
+            'mode'     => 'css',
         ],
     ],
 ];

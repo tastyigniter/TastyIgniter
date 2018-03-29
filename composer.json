@@ -28,7 +28,7 @@
     "php": ">=7.0.0",
     "composer/installers": "~1.0",
     "laravel/framework": "5.5.*",
-    "tastyigniter/flame": "dev-master"
+    "tastyigniter/flame": "~1.0"
   },
   "extra": {
     "merge-plugin": {

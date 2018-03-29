@@ -45,10 +45,10 @@
                 .append($('<span />').addClass('spinner'))
 
         var data = {
-                selectMode: this.options.selectMode,
-                goToItem: this.options.goToItem,
-                chooseButton: this.options.chooseButton ? 1 : 0,
-            }
+            selectMode: this.options.selectMode,
+            goToItem: this.options.goToItem,
+            chooseButton: this.options.chooseButton ? 1 : 0,
+        }
 
         $loadingIndicator.find('.spinner').html(spinner)
         $(document.body).append($loadingIndicator);

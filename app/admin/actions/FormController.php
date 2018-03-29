@@ -415,7 +415,7 @@ class FormController extends ControllerAction
             $redirectUrl = parse_values($model->getAttributes(), $redirectUrl);
         }
 
-        return ($redirectUrl) ? $this->controller->redirect($redirectUrl) : null;
+        return $redirectUrl ? $this->controller->redirect($redirectUrl) : null;
     }
 
     /**

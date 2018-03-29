@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class Connector extends BaseFormWidget
 {
+    const INDEX_SEARCH = '___index__';
+
     const SORT_PREFIX = '___dragged_';
 
     //
@@ -47,6 +49,8 @@ class Connector extends BaseFormWidget
      */
     protected $keyFrom = 'option_id';
 
+    protected $valueFromName = 'menu_option_id';
+
     /**
      * @var array Form field configuration
      */
@@ -68,6 +72,7 @@ class Connector extends BaseFormWidget
             'form',
             'prompt',
             'sortable',
+            'valueFromName',
             'keyFrom',
         ]);
 
@@ -126,17 +131,8 @@ class Connector extends BaseFormWidget
 
         $this->vars['prompt'] = $this->prompt;
         $this->vars['sortable'] = $this->sortable;
+        $this->vars['keyFromName'] = $this->keyFrom;
         $this->vars['sortableName'] = self::SORT_PREFIX.strtolower($this->alias).'[]';
-    }
-
-    public function getFormWidgetTitle($widget, $options)
-    {
-        if (!$widget->data)
-            return null;
-
-        $keyValue = $widget->data->{$this->keyFrom};
-
-        return isset($options[$keyValue]) ? $options[$keyValue] : '';
     }
 
     public function onAddItem()
@@ -144,7 +140,8 @@ class Connector extends BaseFormWidget
         self::$onAddItemCalled = TRUE;
 
         $postData = post();
-        if (!$postData)
+        $keyFromValue = array_get($postData, $this->keyFrom);
+        if (!strlen($keyFromValue))
             return FALSE;
 
         $model = $this->createRelatedModelObject($postData);
@@ -155,13 +152,21 @@ class Connector extends BaseFormWidget
         $this->prepareVars();
 
         $this->relatedModels[$indexCount] = $model;
-        $loadValue[$indexCount] = $model->toArray();
-        $this->vars['widget'] = $this->makeItemFormWidget($indexCount, $loadValue);
-        $this->vars['index'] = $indexCount;
 
-        $itemContainer = '@#'.$this->getId('items');
+        return ['@#'.$this->getId('items') => $this->makePartial('connector/connector_item', [
+            'index'  => $indexCount,
+            'widget' => $this->makeItemFormWidget($indexCount),
+        ])];
+    }
 
-        return [$itemContainer => $this->makePartial('connector/connector_item')];
+    public function onRemoveItem()
+    {
+        $postData = post();
+        $valueFromName = array_get($postData, $this->valueFromName);
+        if (!strlen($valueFromName))
+            return FALSE;
+
+        $this->getRelationModel()->where($this->valueFromName, $valueFromName)->delete();
     }
 
     /**
@@ -190,19 +195,16 @@ class Connector extends BaseFormWidget
         if (!is_array($itemIndexes)) return;
 
         foreach ($itemIndexes as $itemIndex) {
-            $this->makeItemFormWidget($itemIndex, $loadValue);
+            $this->makeItemFormWidget($itemIndex);
             $this->indexCount = max((int)$itemIndex, $this->indexCount);
         }
     }
 
-    protected function makeItemFormWidget($index = 0, $loadValue)
+    protected function makeItemFormWidget($index = 0)
     {
-        if (!is_array($loadValue)) $loadValue = [];
-
-        $data = array_get($loadValue, $index, []);
         $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-        $config['model'] = array_get($this->relatedModels, $index, $this->createRelatedModelObject($data));
-        $config['data'] = $data;
+        $config['model'] = array_get($this->relatedModels, $index, $this->getRelationModel());
+        $config['data'] = array_get($this->getLoadValue(), $index, array_get($this->relatedModels, $index, []));
         $config['alias'] = $this->alias.'Form'.$index;
         $config['arrayName'] = $this->formField->getName().'['.$index.']';
 
@@ -233,38 +235,11 @@ class Connector extends BaseFormWidget
         return $model->makeRelation($attribute);
     }
 
-    /**
-     * Returns the value as a relation object from the model,
-     * supports nesting via HTML array.
-     * @return \Admin\FormWidgets\Relation
-     * @throws \Exception
-     */
-    protected function getRelationObject()
-    {
-        list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
-
-        if (!$model OR !$model->hasRelation($attribute)) {
-            throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",
-                get_class($this->model),
-                $this->valueFrom
-            ));
-        }
-
-        return $model->{$attribute}();
-    }
-
-    /**
-     * @param $postData
-     *
-     * @return mixed
-     */
     protected function createRelatedModelObject($postData)
     {
-        $model = $this->getRelationModel()->newInstance(array_merge($postData, [
+        return $this->getRelationModel()->create(array_merge($postData, [
             $this->model->getKeyName() => $this->model->getKey(),
         ]));
-
-        return $model;
     }
 
     protected function evalItems($items)
@@ -277,7 +252,7 @@ class Connector extends BaseFormWidget
         // Give widgets an opportunity to process the data.
         foreach ($this->formWidgets as $index => $widget) {
             if (!array_key_exists($index, $items)) continue;
-            $items[$index] = $widget->getSaveData();
+//            $items[$index] = $widget->getSaveData();
         }
 
         foreach ($items as $index => &$item) {
@@ -285,8 +260,11 @@ class Connector extends BaseFormWidget
                 $item[$this->sortColumn] = $draggedFlipped[$index];
         }
 
-        if ($this->sortColumn AND $this->sortable)
-            $items = sort_array($items, $this->sortColumn);
+        if ($this->sortColumn AND $this->sortable) {
+            $items = ($items instanceof Collection)
+                ? $items->sortBy($this->sortColumn)->values()
+                : sort_array($items, $this->sortColumn);
+        }
 
         return $items;
     }

@@ -44,7 +44,7 @@
                                 data-item-version="<?= $item['version'] ?>"
                                 data-item-action="ignore"
                             >
-                                <span class="text-danger"><?= lang('admin::default.text_ignore') ?></span>
+                                <span class="text-danger"><?= lang('system::updates.text_ignore') ?></span>
                             </button>
                         <?php } ?>
                     </div>

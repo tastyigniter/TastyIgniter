@@ -61,7 +61,8 @@
             <p><span class="small text-muted"><?= lang('main::media_manager.label_dimension'); ?> </span>{dimension}</p>
             <p><span class="small text-muted"><?= lang('main::media_manager.label_size'); ?> </span>{size}</p>
             <p><span class="small text-muted">URL </span><a href="{url}" target="_blank">Click here</a></p>
-            <p><span class="small text-muted"><?= lang('main::media_manager.label_modified_date'); ?> </span>{modified}</p>
+            <p><span class="small text-muted"><?= lang('main::media_manager.label_modified_date'); ?> </span>{modified}
+            </p>
         </div>
         <?php if ($chooseButton) { ?>
             <button

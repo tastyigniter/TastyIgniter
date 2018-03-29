@@ -118,11 +118,6 @@ class User extends Manager
         return $this->fromModel('customer_account_access', 'group');
     }
 
-    public function extendUserQuery($query)
-    {
-        $query->with(['staff.group', 'staff.location']);
-    }
-
     protected function fromModel($key, $related = null, $default = null)
     {
         $user = $this->user();

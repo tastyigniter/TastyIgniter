@@ -8,7 +8,7 @@
             >
         <?php } else if ($this->theme->logo_text) { ?>
             <?= $this->theme->logo_text; ?>
-        <?php } else if (setting('site_logo') === 'data/no_photo.png') { ?>
+        <?php } else if (str_contains(setting('site_logo'), 'no_photo')) { ?>
             <?= setting('site_name'); ?>
         <?php } else { ?>
             <img

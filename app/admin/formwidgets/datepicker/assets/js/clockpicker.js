@@ -7,7 +7,7 @@
 +function ($) {
     "use strict";
 
-    // FIELD REPEATER CLASS DEFINITION
+    // FIELD CLOCKPCIKER CLASS DEFINITION
     // ============================
 
     var ColorPicker = function (element, options) {

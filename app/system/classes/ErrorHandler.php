@@ -37,11 +37,14 @@ class ErrorHandler extends BaseErrorHandler
             return null;
         }
 
+        if (!App::hasDatabase())
+            return View::make('main::error');
+
         $theme = ThemeManager::instance()->getActiveTheme();
         $router = new Router($theme);
 
         // Use the default view if no "/error" URL is found.
-        if (!$router->findByUrl('/error')) {
+        if (!$router OR !$router->findByUrl('/error')) {
             return View::make('main::error');
         }
 

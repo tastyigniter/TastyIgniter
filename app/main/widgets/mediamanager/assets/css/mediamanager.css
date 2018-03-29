@@ -18,7 +18,7 @@
 	padding: 0;
 }
 .media-manager .navbar-media {
-	border:0 none;
+	border: 0 none;
 }
 .navbar-media .btn-toolbar {
 	margin: 15px 0;
@@ -37,7 +37,7 @@
 	margin-top: 50px;
 }
 .media-list {
-	padding-top:25px;
+	padding-top: 25px;
 	margin: 0;
 }
 .media-list .media-item {
@@ -49,7 +49,7 @@
 	width: 13.667%;
 }
 .media-list .media-thumb {
-	background-color: #f8fafc;
+	background-color: #F8FAFC;
 	border-radius: 3px;
 	box-shadow: 0px 0px 15px rgba(235, 240, 245, 0.9) inset, 0px 0px 0px 1px rgba(235, 240, 245, 0.5) inset;
 	cursor: pointer;
@@ -68,12 +68,12 @@
 	vertical-align: middle;
 	width: 100%;
 	height: 75px;
-	transform: translate(50%,50%);
+	transform: translate(50%, 50%);
 	display: block;
 }
 .media-list .media-thumb > a img {
 	margin: 0 auto;
-	transform: translate(-50%,-50%);
+	transform: translate(-50%, -50%);
 	position: absolute;
 	left: 0;
 }
@@ -81,7 +81,6 @@
 	font-size: 26px;
 	font-weight: 300;
 }
-
 /*
 Sidebar
 */
@@ -120,7 +119,6 @@ Sidebar
 .media-sidebar [data-control="media-choose"] {
 	margin-top: 15px;
 }
-
 /*
 Breadcrumb
 */
@@ -130,7 +128,6 @@ Breadcrumb
 	margin-bottom: 0;
 	border-radius: 3px 3px 0 0;
 }
-
 /*
 Statusbar
 */
@@ -143,7 +140,6 @@ Statusbar
 	float: none;
 	text-align: center;
 }
-
 /*
 Modal
 */
@@ -169,14 +165,13 @@ Modal
 .bootbox .modal-footer .btn-primary {
 	font-weight: 700;
 }
-
 /*
 Uploader
 */
 .media-uploader {
 	background: none repeat scroll 0 0 #FFFFFF;
-	border:0 none;
-	border-bottom:1px solid #DCE4EC;
+	border: 0 none;
+	border-bottom: 1px solid #DCE4EC;
 	display: none;
 	margin: 0 auto;
 	overflow: hidden;
@@ -195,7 +190,6 @@ Uploader
 	opacity: .2;
 	margin-top: -2px;
 }
-
 /*
 Folder Tree
 */

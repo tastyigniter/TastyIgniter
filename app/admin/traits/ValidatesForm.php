@@ -10,7 +10,7 @@ use Session;
 
 trait ValidatesForm
 {
-//    protected $validateAfterCallback;
+    protected $validateAfterCallback;
 
     /**
      * Validate the given request with the given rules.
@@ -62,11 +62,9 @@ trait ValidatesForm
 
         $rules = $this->parseRules($rules);
 
-        $validator = $this->getValidationFactory()
-                          ->make($request, $rules, $messages, $customAttributes);
-
-        if ($this->validateAfterCallback instanceof Closure)
-            $validator->after($this->validateAfterCallback);
+        $validator = $this->getValidationFactory()->make(
+            $request, $rules, $messages, $customAttributes
+        );
 
         if ($this->validateAfterCallback instanceof Closure)
             $validator->after($this->validateAfterCallback);

@@ -1,7 +1,6 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
-use Igniter\Flame\Database\Builder;
 
 class Activities extends \Admin\Classes\AdminController
 {
@@ -26,10 +25,5 @@ class Activities extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('activities', 'system');
-    }
-
-    public function listExtendQuery(Builder $query)
-    {
-        return $query->with(['causer']);
     }
 }

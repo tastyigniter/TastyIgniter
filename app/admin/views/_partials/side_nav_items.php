@@ -1,4 +1,7 @@
-<ul class="<?= $cssClass; ?>" id="side-menu">
+<ul
+    class="<?= $cssClass; ?>"
+    id="side-nav-menu"
+>
     <?php foreach ($navItems as $code => $menu) { ?>
         <?php
         if (isset($menu['child']) AND empty($menu['child'])) continue;

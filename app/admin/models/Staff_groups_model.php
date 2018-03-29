@@ -23,6 +23,11 @@ class Staff_groups_model extends Model
         'permissions' => 'serialize',
     ];
 
+    public static function getDropdownOptions()
+    {
+        return static::dropdown('staff_group_name');
+    }
+
     public function getStaffCountAttribute($value)
     {
         return Staffs_model::where('staff_group_id', $this->staff_group_id)->count();

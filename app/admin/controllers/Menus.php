@@ -52,18 +52,6 @@ class Menus extends AdminController
         AdminMenu::setContext('menus', 'kitchen');
     }
 
-    public function formExtendQuery($query)
-    {
-        $query->with([
-            'categories',
-            'menu_options.option',
-            'menu_options.menu_option_values',
-            'menu_options.menu_option_values.option_value',
-            'menu_options.values',
-            'special',
-        ]);
-    }
-
     public function formValidate($model, $form)
     {
         $rules = [

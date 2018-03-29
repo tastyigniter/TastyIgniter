@@ -1,5 +1,5 @@
 <?= get_metas(); ?>
-<?php if ($favicon = $this->theme->favicon) { ?>
+<?php if (trim($favicon = $this->theme->favicon, '/')) { ?>
     <link href="<?= image_url($favicon); ?>" rel="shortcut icon" type="image/ico">
 <?php }
 else { ?>

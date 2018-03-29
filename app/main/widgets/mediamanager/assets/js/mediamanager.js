@@ -125,7 +125,7 @@
     }
 
     MediaManager.prototype.scrollToTop = function () {
-        this.$mediaListElement.animate({ scrollTop: 0 }, "fast");
+        this.$mediaListElement.animate({scrollTop: 0}, "fast");
     }
 
     MediaManager.prototype.selectMarkedItem = function () {

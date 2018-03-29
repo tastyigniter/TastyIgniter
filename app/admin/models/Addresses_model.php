@@ -77,21 +77,4 @@ class Addresses_model extends Model
 
         return $query->paginate($pageLimit, $page);
     }
-
-    /**
-     * Filter database records
-     *
-     * @param $query
-     * @param array $filter an associative array of field/value pairs
-     *
-     * @return $this
-     */
-    public function scopeFilter($query, $filter = [])
-    {
-        if (isset($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-            $query->where('customer_id', $filter['customer_id']);
-        }
-
-        return $query;
-    }
 }

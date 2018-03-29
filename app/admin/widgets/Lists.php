@@ -27,11 +27,6 @@ class Lists extends BaseWidget
     public $model;
 
     /**
-     * @var string Link for each record row. Replace :id with the record id.
-     */
-    public $recordUrl;
-
-    /**
      * @var string Message to display when there are no records in the list.
      */
     public $emptyMessage = 'lang:admin::default.text_empty';
@@ -142,7 +137,6 @@ class Lists extends BaseWidget
         $this->fillFromConfig([
             'columns',
             'model',
-            'recordUrl',
             'emptyMessage',
             'pageLimit',
             'showSetup',
@@ -210,7 +204,7 @@ class Lists extends BaseWidget
     protected function validateModel()
     {
         if (!$this->model OR !$this->model instanceof Model) {
-            throw new Exception(sprintf(lang('alert_list_action_no_model'), get_class($this->controller)));
+            throw new Exception(sprintf(lang('admin::default.list.missing_model'), get_class($this->controller)));
         }
 
         return $this->model;
@@ -502,6 +496,11 @@ class Lists extends BaseWidget
 
     /**
      * Creates a list column object from it's name and configuration.
+     *
+     * @param $name
+     * @param array $config
+     *
+     * @return \Admin\Classes\ListColumn
      */
     public function makeListColumn($name, $config)
     {
@@ -517,13 +516,11 @@ class Lists extends BaseWidget
 
         if (starts_with($name, 'pivot[') AND strpos($name, ']') !== FALSE) {
             $_name = name_to_array($name);
-//            $_name = ends_with($_name, '_id') ? rtrim($_name, '_id') : $_name;
             $config['relation'] = array_shift($_name);
             $config['valueFrom'] = array_shift($_name);
             $config['searchable'] = FALSE;
         }
         elseif (strpos($name, '[') !== FALSE AND strpos($name, ']') !== FALSE) {
-//            $config['valueFrom'] = ends_with($name, '_id') ? rtrim($name, '_id') : $name;
             $config['valueFrom'] = $name;
             $config['sortable'] = FALSE;
             $config['searchable'] = FALSE;

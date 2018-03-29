@@ -5,7 +5,7 @@
         </div>
         <div class="media-body wrap-left">
             <h3 class="no-margin-top"><?= $carteInfo['name']; ?></h3>
-            <p><?= $carteInfo['description']; ?></p>
+            <p><?= isset($carteInfo['description']) ? $carteInfo['description'] : ''; ?></p>
             <p><strong>Owner:</strong> <?= $carteInfo['owner']; ?></p>
             <p class="small">
                 <strong>Updated:</strong> <?= mdate(setting('date_format').' '.setting('time_format'), strtotime($carteInfo['updated_at'])); ?>

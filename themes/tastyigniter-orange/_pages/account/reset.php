@@ -3,6 +3,9 @@ title: Reset Password
 layout: default
 permalink: /forgot-password/:code?
 
+'[account]':
+    security: guest
+
 '[resetPassword]':
 ---
 <div id="page-content">

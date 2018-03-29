@@ -12,7 +12,7 @@ $fieldOptions = $field->options();
                 <?php
                 $index++;
                 ?>
-                <label class="btn btn-default <?= $field->value == $key ? 'active' : ($this->previewMode ? 'disabled' : '') ?>">
+                <label class="btn btn-default <?= $this->previewMode ? 'disabled' : ($field->value == $key ? 'active' : '') ?>">
                     <input
                         type="radio"
                         id="<?= $field->getId($index) ?>"

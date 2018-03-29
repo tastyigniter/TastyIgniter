@@ -1,7 +1,9 @@
 ---
-title: main::default.reservation.text_heading
+title: Reservation
 layout: default
 permalink: /reservation
+
+'[account]':
 
 '[booking]':
 ---
@@ -11,6 +13,8 @@ permalink: /reservation
 
         <div class="row">
             <div class="content col-sm-10 center-block">
+                <?= partial('account::welcome') ?>
+
                 <?= component('booking'); ?>
             </div>
         </div>

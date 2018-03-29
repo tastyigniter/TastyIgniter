@@ -12,7 +12,7 @@ class HubManager
 {
     use \Igniter\Flame\Traits\Singleton;
 
-    const ENDPOINT = 'http://api.tasty-cms.com';
+    const ENDPOINT = 'http://api.tasty-cms.com/v2';
 
     protected $siteKey;
 
@@ -139,12 +139,14 @@ class HubManager
         return $this->cachePrefix.$fileName.'_'.md5($suffix);
     }
 
-    public function setSecurity($key)
+    public function setSecurity($key, $info)
     {
-        if (!is_string($key))
-            return null;
+        params()->set('carte_key', $key ? encrypt($key) : '');
 
-        params()->set('carte_key', encrypt($key));
+        if ($info AND is_array($info))
+            params()->set('carte_info', $info);
+
+        params()->save();
     }
 
     public function getSecurity()
@@ -238,7 +240,7 @@ class HubManager
         curl_setopt($curl, CURLOPT_USERAGENT, Request::userAgent());
         curl_setopt($curl, CURLOPT_TIMEOUT, 3600);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_REFERER, page_url());
+        curl_setopt($curl, CURLOPT_REFERER, url()->current());
         curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
 
@@ -247,7 +249,6 @@ class HubManager
 
         if ($siteKey = $this->getSecurity()) {
             curl_setopt($curl, CURLOPT_HTTPHEADER, ["TI-Rest-Key: bearer {$siteKey}"]);
-//            curl_setopt($curl, CURLOPT_HTTPHEADER, ["TI-Signature: ".$this->createSignature($params, $siteKey)]);
         }
 
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, '', '&'));

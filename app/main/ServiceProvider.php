@@ -7,7 +7,9 @@ use File;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Pagic\Cache\FileSystem as FileCache;
 use Igniter\Flame\Pagic\Parsers\FileParser;
+use Illuminate\Support\Facades\View;
 use Main\Classes\ThemeManager;
+use Setting;
 use System\Libraries\Assets;
 
 class ServiceProvider extends AppServiceProvider
@@ -20,6 +22,9 @@ class ServiceProvider extends AppServiceProvider
     public function boot()
     {
         parent::boot('main');
+
+        View::share('site_name', Setting::get('site_name'));
+        View::share('site_logo', Setting::get('site_logo'));
     }
 
     /**

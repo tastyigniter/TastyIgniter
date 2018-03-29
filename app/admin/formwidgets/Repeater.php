@@ -195,7 +195,7 @@ class Repeater extends BaseFormWidget
 
         $config = $this->form;
         $config['model'] = $this->model;
-        $config['data'] = array_get($loadValue, $index, []);
+        $config['data'] = array_get($loadValue, $index, array_get($loadValue, 0, []));
         $config['alias'] = $this->alias.'Form'.$index;
         $config['arrayName'] = $this->formField->getName().'['.$index.']';
 
@@ -228,8 +228,11 @@ class Repeater extends BaseFormWidget
             }
         }
 
-        if ($this->sortColumn AND $this->sortable)
-            $items = sort_array($items, $this->sortColumn);
+        if ($this->sortColumn AND $this->sortable) {
+            $items = ($items instanceof Collection)
+                ? $items->sortBy($this->sortColumn)->values()
+                : sort_array($items, $this->sortColumn);
+        }
 
         return $items;
     }

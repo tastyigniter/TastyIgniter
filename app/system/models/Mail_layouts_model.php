@@ -12,6 +12,8 @@ class Mail_layouts_model extends Model
 
     const UPDATED_AT = 'date_updated';
 
+    protected static $codeCache;
+
     /**
      * @var string The database table name
      */
@@ -22,7 +24,7 @@ class Mail_layouts_model extends Model
      */
     protected $primaryKey = 'template_id';
 
-    protected $fillable = ['name', 'language_id', 'date_added', 'date_updated', 'status'];
+    protected $fillable = ['name', 'code', 'language_id', 'layout', 'layout_css', 'plain_layout', 'status'];
 
     /**
      * @var array The model table column to convert to dates on insert/update
@@ -54,5 +56,23 @@ class Mail_layouts_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('status', 1);
+    }
+
+    //
+    // Helpers
+    //
+
+    public static function listCodes()
+    {
+        if (self::$codeCache !== null) {
+            return self::$codeCache;
+        }
+
+        return self::$codeCache = self::lists('template_id', 'code');
+    }
+
+    public static function getIdFromCode($code)
+    {
+        return array_get(self::listCodes(), $code);
     }
 }

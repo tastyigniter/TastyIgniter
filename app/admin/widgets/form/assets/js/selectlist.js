@@ -49,8 +49,8 @@
     }
 
     SelectList.prototype.onChange = function (option, checked, select) {
-        console.log($('input[value="'+$(option).val()+'"]'))
-        $('input[value="'+$(option).val()+'"]').trigger('click')
+        console.log($('input[value="' + $(option).val() + '"]'))
+        $('input[value="' + $(option).val() + '"]').trigger('click')
     }
 
     // MEDIA MANAGER PLUGIN DEFINITION

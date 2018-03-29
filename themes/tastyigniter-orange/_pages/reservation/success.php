@@ -1,5 +1,5 @@
 ---
-title: main::default.reservation.text_success_heading
+title: Reservation Confirmation
 layout: default
 permalink: /reservation/success/:hash?
 

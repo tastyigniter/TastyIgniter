@@ -9,9 +9,11 @@ use File;
 class MediaItem
 {
     const TYPE_FILE = 'file';
+
     const TYPE_FOLDER = 'folder';
 
     const FILE_TYPE_IMAGE = 'image';
+
     const FILE_TYPE_DOCUMENT = 'document';
 
     /**

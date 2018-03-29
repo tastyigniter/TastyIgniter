@@ -58,7 +58,7 @@ $config['list']['columns'] = [
     ],
     'telephone'   => [
         'label' => 'lang:admin::customers.column_telephone',
-        'type'       => 'text',
+        'type'  => 'text',
     ],
     'date_added'  => [
         'label' => 'lang:admin::customers.column_date_added',

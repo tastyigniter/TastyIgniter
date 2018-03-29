@@ -104,14 +104,6 @@ $config['form']['general'] = [
                     'options' => 'getPageLimitOptions',
                     'comment' => 'lang:system::settings.help_page_limit',
                 ],
-                'main_page_limit'            => [
-                    'label'   => 'lang:system::settings.label_main_page_limit',
-                    'tab'     => 'lang:system::settings.text_tab_site',
-                    'span'    => 'right',
-                    'type'    => 'radio',
-                    'options' => 'getPageLimitOptions',
-                    'comment' => 'lang:system::settings.help_main_page_limit',
-                ],
                 'language'                   => [
                     'label' => 'lang:system::settings.text_tab_title_language',
                     'tab'   => 'lang:system::settings.text_tab_site',
@@ -132,13 +124,14 @@ $config['form']['general'] = [
                     'type'        => 'select',
                     'multiOption' => TRUE,
                     'default'     => ['en'],
-                    'span'        => 'left',
+                    'span'        => 'right',
                     'options'     => ['System\Models\Languages_model', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::default.text_please_select',
                 ],
                 'detect_language'            => [
                     'label'   => 'lang:system::settings.label_detect_language',
                     'tab'     => 'lang:system::settings.text_tab_site',
+                    'span'    => 'left',
                     'type'    => 'switch',
                     'comment' => 'lang:system::settings.help_detect_language',
                 ],
@@ -210,10 +203,10 @@ $config['form']['general'] = [
             ['currency_id', 'lang:system::settings.label_site_currency', 'required|integer'],
             ['site_location_mode', 'lang:system::settings.label_site_location_mode', 'required|string'],
             ['auto_update_currency_rates', 'lang:system::settings.label_auto_update_rates', 'required|integer'],
-            ['accepted_currencies.*', 'lang:system::settings.label_accepted_currency', 'required|integer'],
+            ['accepted_currencies[]', 'lang:system::settings.label_accepted_currency', 'required|integer'],
             ['detect_language', 'lang:system::settings.label_default_language', 'required|integer'],
-            ['language_id', 'lang:system::settings.label_site_language', 'required'],
-            ['admin_language_id', 'lang:system::settings.label_admin_language', 'required'],
+            ['default_language', 'lang:system::settings.label_site_language', 'required'],
+            ['supported_languages[]', 'lang:system::settings.label_supported_languages', 'required'],
             ['page_limit', 'lang:system::settings.label_page_limit', 'required|integer'],
             ['meta_description', 'lang:system::settings.label_meta_description'],
             ['meta_keywords', 'lang:system::settings.label_meta_keyword'],
@@ -312,21 +305,21 @@ $config['form']['order'] = [
                     ],
                 ],
 
-                'delivery_time'   => [
+                'delivery_time'       => [
                     'label'   => 'lang:system::settings.label_delivery_time',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'span'    => 'left',
                     'type'    => 'number',
                     'comment' => 'lang:system::settings.help_delivery_time',
                 ],
-                'collection_time' => [
+                'collection_time'     => [
                     'label'   => 'lang:system::settings.label_collection_time',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'span'    => 'right',
                     'type'    => 'number',
                     'comment' => 'lang:system::settings.help_collection_time',
                 ],
-                'order_email'     => [
+                'order_email'         => [
                     'label'   => 'lang:system::settings.label_order_email',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'type'    => 'checkbox',
@@ -337,40 +330,24 @@ $config['form']['order'] = [
                     ],
                     'comment' => 'lang:system::settings.help_order_email',
                 ],
-                'guest_order'     => [
+                'guest_order'         => [
                     'label'   => 'lang:system::settings.label_guest_order',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'type'    => 'switch',
                     'comment' => 'lang:system::settings.help_guest_order',
                 ],
-                'future_orders'   => [
+                'future_orders'       => [
                     'label'   => 'lang:system::settings.label_future_order',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'type'    => 'switch',
                     'comment' => 'lang:system::settings.help_future_order',
                 ],
-                'location_order'  => [
+                'location_order'      => [
                     'label'   => 'lang:system::settings.label_location_order',
                     'tab'     => 'lang:system::settings.text_tab_title_checkout',
                     'type'    => 'switch',
                     'comment' => 'lang:system::settings.help_location_order',
                 ],
-                'terms'           => [
-                    'label' => 'lang:system::settings.text_tab_title_terms',
-                    'tab'   => 'lang:system::settings.text_tab_title_checkout',
-                    'type'  => 'section',
-                ],
-//                'checkout_terms'     => [
-//                    'label'       => 'lang:system::settings.label_checkout_terms',
-//                    'tab'         => 'lang:system::settings.text_tab_title_checkout',
-//                    'type'        => 'select',
-//                    'options'     => ['System\Models\Pages_model', 'getDropdownOptions'],
-//                    'comment'     => 'lang:system::settings.help_checkout_terms',
-//                    'placeholder' => 'lang:admin::default.text_please_select',
-//                ],
-
-                //
-
                 'tax_mode'            => [
                     'label'   => 'lang:system::settings.label_tax_mode',
                     'tab'     => 'lang:system::settings.text_tab_title_taxation',
@@ -414,7 +391,6 @@ $config['form']['order'] = [
             ['tax_delivery_charge', 'lang:system::settings.label_tax_delivery_charge', 'numeric'],
             ['allow_reviews', 'lang:system::settings.label_allow_reviews', 'required|integer'],
             ['approve_reviews', 'lang:system::settings.label_approve_reviews', 'required|integer'],
-//            ['checkout_terms', 'lang:system::settings.label_checkout_terms', 'numeric'],
             ['default_order_status', 'lang:system::settings.label_default_order_status', 'required|integer'],
             ['processing_order_status.*', 'lang:system::settings.label_processing_order_status', 'required|integer'],
             ['completed_order_status.*', 'lang:system::settings.label_completed_order_status', 'required|integer'],
@@ -504,7 +480,7 @@ $config['form']['user'] = [
     'url'      => admin_url('settings/edit/user'),
     'form'     => [
         'fields' => [
-            'registration_email'         => [
+            'registration_email' => [
                 'label'   => 'lang:system::settings.label_registration_email',
                 'type'    => 'checkbox',
                 'options' => [
@@ -513,14 +489,14 @@ $config['form']['user'] = [
                 ],
                 'comment' => 'lang:system::settings.help_registration_email',
             ],
-            'registration_terms'         => [
+            'registration_terms' => [
                 'label'       => 'lang:system::settings.label_registration_terms',
                 'type'        => 'select',
                 'options'     => ['System\Models\Pages_model', 'getDropdownOptions'],
                 'comment'     => 'lang:system::settings.help_registration_terms',
                 'placeholder' => 'lang:admin::default.text_please_select',
             ],
-            'customer_group_id'          => [
+            'customer_group_id'  => [
                 'label'   => 'lang:system::settings.label_customer_group',
                 'type'    => 'select',
                 'options' => ['Admin\Models\Customer_groups_model', 'getDropdownOptions'],
@@ -629,17 +605,17 @@ $config['form']['mail'] = [
     'url'      => admin_url('settings/edit/mail'),
     'form'     => [
         'fields' => [
-            'sender_name'           => [
+            'sender_name'  => [
                 'label' => 'lang:system::settings.label_sender_name',
                 'type'  => 'text',
                 'span'  => 'left',
             ],
-            'sender_email'          => [
+            'sender_email' => [
                 'label' => 'lang:system::settings.label_sender_email',
                 'type'  => 'text',
                 'span'  => 'right',
             ],
-            'mailtype'              => [
+            'mailtype'     => [
                 'label'   => 'lang:system::settings.label_mailtype',
                 'type'    => 'radio',
                 'default' => 'plain',
@@ -649,7 +625,7 @@ $config['form']['mail'] = [
                 ],
                 'span'    => 'left',
             ],
-            'protocol'              => [
+            'protocol'     => [
                 'label'   => 'lang:system::settings.label_protocol',
                 'type'    => 'radio',
                 'default' => 'sendmail',
@@ -657,21 +633,31 @@ $config['form']['mail'] = [
                     'sendmail' => 'lang:system::settings.text_sendmail',
                     'smtp'     => 'lang:system::settings.text_smtp',
                 ],
-                'span'    => 'left',
+                'span'    => 'right',
             ],
-            'smtp_host'             => [
+            'smtp_host'    => [
                 'label'   => 'lang:system::settings.label_smtp_host',
                 'type'    => 'text',
-                'span'    => 'right',
+                'span'    => 'left',
                 'trigger' => [
                     'action'    => 'show',
                     'field'     => 'protocol',
                     'condition' => 'value[smtp]',
                 ],
             ],
-            'smtp_port'             => [
+            'smtp_port'    => [
                 'label'   => 'lang:system::settings.label_smtp_port',
                 'type'    => 'text',
+                'span'    => 'right',
+                'trigger' => [
+                    'action'    => 'show',
+                    'field'     => 'protocol',
+                    'condition' => 'value[smtp]',
+                ],
+            ],
+            'smtp_user'    => [
+                'label'   => 'lang:system::settings.label_smtp_user',
+                'type'    => 'text',
                 'span'    => 'left',
                 'trigger' => [
                     'action'    => 'show',
@@ -679,8 +665,8 @@ $config['form']['mail'] = [
                     'condition' => 'value[smtp]',
                 ],
             ],
-            'smtp_user'             => [
-                'label'   => 'lang:system::settings.label_smtp_user',
+            'smtp_pass'    => [
+                'label'   => 'lang:system::settings.label_smtp_pass',
                 'type'    => 'text',
                 'span'    => 'right',
                 'trigger' => [
@@ -689,17 +675,7 @@ $config['form']['mail'] = [
                     'condition' => 'value[smtp]',
                 ],
             ],
-            'smtp_pass'             => [
-                'label'   => 'lang:system::settings.label_smtp_pass',
-                'type'    => 'text',
-                'span'    => 'left',
-                'trigger' => [
-                    'action'    => 'show',
-                    'field'     => 'protocol',
-                    'condition' => 'value[smtp]',
-                ],
-            ],
-            'test_email'            => [
+            'test_email'   => [
                 'label' => 'lang:system::settings.label_test_email',
                 'type'  => 'partial',
                 'path'  => 'settings/test_email_button',

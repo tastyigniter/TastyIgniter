@@ -1,13 +1,13 @@
 /*
- * Color Picker plugin
+ * Table plugin
  *
  * Data attributes:
- * - data-control="colorpicker" - enables the plugin on an element
+ * - data-control="table" - enables the plugin on an element
  */
 +function ($) {
     "use strict";
 
-    // FIELD REPEATER CLASS DEFINITION
+    // FIELD TABLE CLASS DEFINITION
     // ============================
 
     var Table = function (element, options) {
@@ -28,7 +28,7 @@
 
     Table.prototype.init = function () {
         this.$table = $('<table/>', {
-            id: this.$el.attr('id')+'-table',
+            id: this.$el.attr('id') + '-table',
         })
 
         this.$el.append(this.$table)

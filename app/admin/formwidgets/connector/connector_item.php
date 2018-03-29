@@ -21,13 +21,15 @@
                 type="button"
                 class="btn btn-danger btn-outline pull-right"
                 aria-label="Remove"
+                data-request="<?= $this->getEventHandler('onRemoveItem') ?>"
+                data-request-data="menu_option_id: <?= $widget->data->{$this->valueFromName} ?>"
                 <?php if (!$this->previewMode) { ?>
-                    onclick="$(this).closest('#<?= $this->getId('item-'.$index) ?>').remove()"
+                    onclick="$(this).closest('#<?= $this->getId('item-'.$index) ?>').remove();"
                 <?php } ?>
             >
                 <span aria-hidden="true">X</span>
             </button>
-            <span><?= $this->getFormWidgetTitle($widget, $fieldOptions) ?></span>
+            <span><?= array_get($fieldOptions, $widget->data->{$keyFromName}) ?></span>
         </h4>
     </div>
     <div

@@ -1,9 +1,9 @@
 +function ($) {
     "use strict";
 
-    var StatusEditor = function(element, options) {
+    var StatusEditor = function (element, options) {
         this.$el = $(element)
-        this.options   = options
+        this.options = options
         this.editorModal = null
 
         this.init()
@@ -11,23 +11,23 @@
 
     StatusEditor.prototype.constructor = StatusEditor
 
-    StatusEditor.prototype.init = function() {
+    StatusEditor.prototype.init = function () {
         this.$el.on('shown.bs.modal', '[data-status-editor]', $.proxy(this.onModalShown, this))
         this.$el.on('hidden.bs.modal', '[data-status-editor]', $.proxy(this.onModalHidden, this))
     }
 
-    StatusEditor.prototype.updateStatusField = function(status) {
+    StatusEditor.prototype.updateStatusField = function (status) {
         this.$el.find('[data-status-color]').css('color', status.status_color)
         this.$el.find('[data-status-name]').text(status.status_name)
         this.$el.find('[data-status-value]').val(status.status_id)
     }
 
-    StatusEditor.prototype.updateModalValues = function(status) {
+    StatusEditor.prototype.updateModalValues = function (status) {
         if (!this.editorModal)
             return
 
         this.editorModal.find('[data-status-comment]').html(status.status_comment)
-        this.editorModal.find('[data-status-notify]').each(function() {
+        this.editorModal.find('[data-status-notify]').each(function () {
             if (this.value == status.notify_customer)
                 $(this).trigger('click')
         })
@@ -36,7 +36,7 @@
     // EVENT HANDLERS
     // ============================
 
-    StatusEditor.prototype.onStatusChanged = function(event) {
+    StatusEditor.prototype.onStatusChanged = function (event) {
         var value = $(event.target).val()
 
         if (!this.options.data[value])
@@ -48,12 +48,12 @@
         this.updateModalValues(status)
     }
 
-    StatusEditor.prototype.onModalShown = function(event) {
+    StatusEditor.prototype.onModalShown = function (event) {
         this.editorModal = $(event.target)
         this.editorModal.on('change', '[data-status-value]', $.proxy(this.onStatusChanged, this))
     }
 
-    StatusEditor.prototype.onModalHidden = function(event) {
+    StatusEditor.prototype.onModalHidden = function (event) {
         this.editorModal = $(event.target)
         this.editorModal.off('change', '[data-status-value]', $.proxy(this.onStatusChanged, this))
     }
@@ -70,8 +70,8 @@
     $.fn.statusEditor = function (option) {
         var args = Array.prototype.slice.call(arguments, 1), result
         this.each(function () {
-            var $this   = $(this)
-            var data    = $this.data('ti.statusEditor')
+            var $this = $(this)
+            var data = $this.data('ti.statusEditor')
             var options = $.extend({}, StatusEditor.DEFAULTS, $this.data(), typeof option == 'object' && option)
             if (!data) $this.data('ti.statusEditor', (data = new StatusEditor(this, options)))
             if (typeof option == 'string') result = data[option].apply(data, args)

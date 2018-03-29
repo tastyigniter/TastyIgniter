@@ -1,11 +1,12 @@
 <?php namespace Admin\Models;
 
-use Admin\Classes\PaymentGateways;
 use Carbon\Carbon;
 use DB;
+use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Location\Models\Location;
 use Model;
 use Request;
+use System\Traits\CanSendMailTemplates;
 
 /**
  * Orders Model Class
@@ -14,6 +15,8 @@ use Request;
  */
 class Orders_model extends Model
 {
+    use CanSendMailTemplates;
+
     const CREATED_AT = 'date_added';
 
     const UPDATED_AT = 'date_modified';
@@ -60,17 +63,16 @@ class Orders_model extends Model
             'location'       => 'Admin\Models\Locations_model',
             'address'        => 'Admin\Models\Addresses_model',
             'status'         => 'Admin\Models\Statuses_model',
-            'assignee'       => 'Admin\Models\Staffs_model',
+            'assignee'       => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
             'payment_logs'   => 'Admin\Models\Payment_logs_model',
+            'coupon_history' => 'Admin\Models\Coupons_history_model',
         ],
         'morphMany' => [
             'review'         => ['Admin\Models\Reviews_model'],
             'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
         ],
     ];
-
-    public $availablePayments;
 
     public static $allowedSortingColumns = [
         'order_id asc', 'order_id desc',
@@ -110,7 +112,7 @@ class Orders_model extends Model
             $query->where('location_id', $location);
         }
 
-        if ($customer instanceof Customers_model) {
+        if ($customer instanceof User) {
             $query->where('customer_id', $customer->getKey());
         }
         else if (strlen($customer)) {
@@ -169,40 +171,16 @@ class Orders_model extends Model
     // Helpers
     //
 
-    public function getStatusColor()
+    /**
+     * Check if an order was successfully placed
+     *
+     * @param int $order_id
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function isPlaced()
     {
-        $status = $this->status()->first();
-        if (!$status)
-            return null;
-
-        return $status->status_color;
-    }
-
-    public function getAddressOptions()
-    {
-        return Addresses_model::selectRaw('*, concat_ws(" ", address_1, city, postcode) AS display_name')
-                              ->where('customer_id', $this->customer_id)
-                              ->dropdown('display_name');
-    }
-
-    public function getStatusOptions()
-    {
-        return $this->newQuery()->status()->isForOrder()->get();
-    }
-
-    public function getPaymentOptions()
-    {
-        if (!is_null($this->availablePayments))
-            return $this->availablePayments;
-
-        $this->availablePayments = [];
-        $payments = \Admin\Classes\PaymentGateways::instance()->listGateways();
-        foreach ($payments as $payment) {
-            $this->availablePayments[$payment['code']] = !empty($payment['name'])
-                ? lang($payment['name']) : $payment['code'];
-        }
-
-        return $this->availablePayments;
+        return $this->status_id > 0;
     }
 
     public function isDeliveryType()
@@ -216,80 +194,52 @@ class Orders_model extends Model
     }
 
     /**
-     * Generate a unique hash for this order.
-     * @return string
+     * Subtract cart item quantity from menu stock quantity
+     *
+     * @param int $order_id
+     *
+     * @return bool
      */
-    protected function generateHash()
+    public function subtractStock()
     {
-        $this->hash = $this->createHash();
-        while ($this->newQuery()->where('hash', $this->hash)->count() > 0) {
-            $this->hash = $this->createHash();
+        $this->getOrderMenus()->each(function ($orderMenu) {
+            if ($menu = Menus_model::find($orderMenu->menu_id))
+                $menu->updateStock($orderMenu->quantity, 'subtract');
+        });
+    }
+
+    /**
+     * Redeem coupon by order_id
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function redeemCoupon()
+    {
+        $couponModel = $this->coupon_history()->where('status', '!=', '1')->last();
+
+        if ($couponModel) {
+            return $couponModel->touchStatus();
         }
     }
 
-    /**
-     * Create a hash for this order.
-     * @return string
-     */
-    protected function createHash()
+    public function getStatusColor()
     {
-        return md5(uniqid('order', microtime()));
+        $status = $this->status()->first();
+        if (!$status)
+            return null;
+
+        return $status->status_color;
     }
 
     /**
-     * Find a single order by order_id
+     * Return the dates of all orders
      *
-     * @param int $order_id
-     * @param int $customer_id
-     *
-     * @return bool|object
+     * @return array
      */
-//    public function getOrder($order_id = null, $customer_id = null)
-//    {
-//        if (!empty($order_id)) {
-//            if (!empty($customer_id)) {
-//                $this->where('customer_id', $customer_id);
-//            }
-//
-//            return $this->joinTables()->findOrNew($order_id)->toArray();
-//        }
-//
-//        return $order_id;
-//    }
-
-    /**
-     * Find a single invoice by order_id
-     *
-     * @param int $order_id
-     *
-     * @return bool|object
-     */
-//    public function getInvoice($order_id = null)
-//    {
-//        if (!empty($order_id) AND is_numeric($order_id)) {
-//            return $this->joinTables()->findOrNew($order_id)->toArray();
-//        }
-//
-//        return FALSE;
-//    }
-
-    /**
-     * Find a single order by order_id during checkout
-     *
-     * @param int $order_id
-     * @param int $customer_id
-     *
-     * @return bool|object
-     */
-//    public function getCheckoutOrder($order_id, $customer_id)
-//    {
-//        if (isset($order_id, $customer_id)) {
-//            return $this->where('customer_id', $customer_id)
-//                        ->where('status_id', null)->findOrNew($order_id)->toArray();
-//        }
-//
-//        return FALSE;
-//    }
+    public function getOrderDates()
+    {
+        return $this->pluckDates('date_added');
+    }
 
     /**
      * Return all order menu by order_id
@@ -312,7 +262,7 @@ class Orders_model extends Model
      */
     public function getOrderMenuOptions()
     {
-        return DB::table('order_options')->where('order_id', $this->getKey())->get();
+        return DB::table('order_options')->where('order_id', $this->getKey())->get()->groupBy('menu_id');
     }
 
     /**
@@ -328,210 +278,13 @@ class Orders_model extends Model
     }
 
     /**
-     * Find a single used coupon by order_id
-     *
-     * @param int $order_id
-     *
-     * @return mixed
-     */
-    public function getOrderCoupon()
-    {
-        return Coupons_history_model::where('order_id', $this->getKey())->first();
-    }
-
-    /**
-     * Return the dates of all orders
-     *
-     * @return array
-     */
-    public function getOrderDates()
-    {
-        return $this->pluckDates('date_added');
-    }
-
-    /**
-     * Check if an order was successfully placed
-     *
-     * @param int $order_id
-     *
-     * @return bool TRUE on success, or FALSE on failure
-     */
-    public function isPlaced()
-    {
-        return $this->status_id;
-    }
-
-    /**
-     * Update an existing order by order_id
-     *
-     * @param int $order_id
-     * @param array $update
-     *
-     * @return bool
-     */
-    public function updateOrder()
-    {
-        if (!is_numeric($order_id)) return FALSE;
-//        $this->sendConfirmationMail();
-
-        if (isset($update['order_status']) AND !isset($update['status_id'])) {
-            $update['status_id'] = $update['order_status'];
-        }
-
-        $statusesModel = Statuses_model::make();
-        if ($query = $this->find($order_id)->fill($update)->update()) {
-            $status = $statusesModel->getStatus($update['status_id']);
-
-            // Make sure order status has not been previously updated
-            // to one of the processing order status. If so,
-            // skip to avoid updating stock twice.
-            $processing_status_exists = $statusesModel->statusExists('order', $order_id, setting('processing_order_status'));
-
-            if (!$processing_status_exists AND in_array($update['status_id'], (array)setting('processing_order_status'))) {
-                $this->subtractStock($order_id);
-
-                Coupons_model::redeemCoupon($order_id);
-            }
-
-            if (isset($update['status_notify']) AND $update['status_notify'] == '1') {
-                $mail_data = $this->getMailData($order_id);
-
-                $mail_data['status_name'] = $status['status_name'];
-                $mail_data['status_comment'] = !empty($update['status_comment']) ? $update['status_comment'] : lang('admin::orders.text_no_comment');
-
-                $mail_template = Mail_templates_model::getDefaultTemplateData('order_update');
-                $update['status_notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
-            }
-
-            $this->addStatusHistory($order_id, $update, $status);
-
-            if (setting('auto_invoicing') == '1' AND in_array($update['status_id'], (array)setting('completed_order_status'))) {
-                $this->createInvoiceNo($order_id);
-            }
-        }
-
-        return $query;
-    }
-
-    /**
-     * Generate and save an invoice number
-     *
-     * @param int $order_id
-     *
-     * @return bool|string invoice number on success, or FALSE on failure
-     */
-    public function createInvoiceNo($order_id = null)
-    {
-
-        $order_status_exists = $statusesModel->statusExists('order', $order_id, setting('completed_order_status'));
-        if ($order_status_exists !== TRUE) return TRUE;
-
-        $order_info = $this->getOrder($order_id);
-
-        if ($order_info AND empty($order_info['invoice_no'])) {
-            $order_info['invoice_prefix'] = str_replace('{year}', date('Y'), str_replace('{month}', date('m'), str_replace('{day}', date('d'), setting('invoice_prefix'))));
-
-            $this;
-            $row = $this->selectRaw('MAX(invoice_no)')->where('invoice_prefix', $order_info['invoice_prefix'])->first();
-
-            $invoice_no = !empty($row['invoice_no']) ? $row['invoice_no'] + 1 : 1;
-
-            if ($orderModel = $this->find($order_id)) {
-                $orderModel->update([
-                    'invoice_prefix' => $order_info['invoice_prefix'],
-                    'invoice_no'     => $invoice_no,
-                    'invoice_date'   => mdate('%Y-%m-%d %H:%i:%s', time()),
-                ]);
-            }
-
-            return $order_info['invoice_prefix'].$invoice_no;
-        }
-
-        return FALSE;
-    }
-
-    /**
-     * Create a new order
-     *
-     * @param array $order_info
-     * @param array $cart_contents
-     *
-     * @return bool|int order_id on success, FALSE on failure
-     */
-//    public function addOrder($order_info = [], $cart_contents = [])
-//    {
-//        if (empty($order_info) OR empty($cart_contents)) return FALSE;
-//
-//        if (isset($order_info['order_time'])) {
-//            $current_time = time();
-//            $order_time = (strtotime($order_info['order_time']) < strtotime($current_time)) ? $current_time : $order_info['order_time'];
-//            $order_info['order_time'] = mdate('%H:%i', strtotime($order_time));
-//            $order_info['order_date'] = mdate('%Y-%m-%d', strtotime($order_time));
-//            $order_info['ip_address'] = $this->input->ip_address();
-//            $order_info['user_agent'] = $this->input->user_agent();
-//        }
-//
-//        $order_info['status_id'] = $order_info['notify'] = $order_info['assignee_id'] = $order_info['invoice_no'] = $order_info['invoice_prefix'] = $order_info['invoice_date'] = '';
-//
-//        $order_info['cart'] = $cart_contents;
-//        if (isset($cart_contents['order_total'])) {
-//            $order_info['order_total'] = $cart_contents['order_total'];
-//        }
-//
-//        if (isset($cart_contents['total_items'])) {
-//            $order_info['total_items'] = $cart_contents['total_items'];
-//        }
-//
-//        $order_id = (isset($order_info['order_id']) AND is_numeric($order_info['order_id'])) ? $order_info['order_id'] : null;
-//
-//        $orderModel = $this->findOrNew($order_id);
-//
-//        if ($saved = $orderModel->fill($order_info)->save()) {
-//            $order_id = $orderModel->getKey();
-//
-//            if (isset($order_info['address_id'])) {
-//                Addresses_model::updateDefault($order_info['customer_id'], $order_info['address_id']);
-//            }
-//
-//            $this->addOrderMenus($order_id, $cart_contents);
-//
-//            $this->addOrderTotals($order_id, $cart_contents);
-//
-//            if (!empty($cart_contents['totals']['coupon'])) {
-//                $this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['totals']['coupon']);
-//            }
-//
-//            return $order_id;
-//        }
-//    }
-
-    /**
-     * Complete order by sending email confirmation and,
-     * updating order status
-     *
-     * @param int $order_id
-     * @param array $order_info
-     * @param array $cart_contents
-     *
-     * @return bool
-     */
-    public function completeOrder($status)
-    {
-        if (!$status instanceof Statuses_model)
-            return FALSE;
-
-        $this->status_id = $status->getKey();
-        $this->save();
-    }
-
-    /**
      * Add cart menu items to order by order_id
      *
      * @param array $cartContent
      *
      * @return bool
      */
-    public function addOrderMenus($cartContent = [])
+    public function addOrderMenus(array $cartContent = [])
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
@@ -541,21 +294,21 @@ class Orders_model extends Model
         DB::table('order_options')->where('order_id', $orderId)->delete();
 
         foreach ($cartContent as $rowId => $cartItem) {
-            if ($rowId != $cartItem->rowId) continue;
+            if ($rowId != $cartItem['rowId']) continue;
 
             $orderMenuId = DB::table('order_menus')->insertGetId([
                 'order_id'      => $orderId,
-                'menu_id'       => $cartItem->id,
-                'name'          => $cartItem->name,
-                'quantity'      => $cartItem->qty,
-                'price'         => $cartItem->price,
-                'subtotal'      => $cartItem->subtotal,
-                'comment'       => $cartItem->comment,
-                'option_values' => serialize($cartItem->options),
+                'menu_id'       => $cartItem['id'],
+                'name'          => $cartItem['name'],
+                'quantity'      => $cartItem['qty'],
+                'price'         => $cartItem['price'],
+                'subtotal'      => $cartItem['subtotal'],
+                'comment'       => $cartItem['comment'],
+                'option_values' => serialize($cartItem['options']),
             ]);
 
-            if ($orderMenuId AND count($cartItem->options)) {
-                $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
+            if ($orderMenuId AND count($cartItem['options'])) {
+                $this->addOrderMenuOptions($orderMenuId, $cartItem['id'], $cartItem['options']);
             }
         }
     }
@@ -598,7 +351,7 @@ class Orders_model extends Model
      *
      * @return bool
      */
-    public function addOrderTotals($totals = [])
+    public function addOrderTotals(array $totals = [])
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
@@ -620,250 +373,173 @@ class Orders_model extends Model
     /**
      * Add cart coupon to order by order_id
      *
-     * @param int $order_id
-     * @param int $customer_id
-     * @param array $coupon
+     * @param \Admin\Models\Coupons_model $coupon
+     * @param \Admin\Models\Customers_model $customer
      *
      * @return int|bool
      */
-    public function addOrderCoupon($order_id, $customer_id, $coupon)
+    public function addOrderCoupon($coupon, $customer)
     {
-        if (is_array($coupon) AND is_numeric($coupon['amount'])) {
-            $this->load->model('Coupons_model');
-            $this->load->model('Coupons_history_model');
+        $orderId = $this->getKey();
+        if (!is_numeric($orderId))
+            return FALSE;
 
-            $this->Coupons_history_model->where('order_id', $order_id)->delete();
+        $this->coupon_history()->delete();
 
-            $temp_coupon = $this->Coupons_model->getCouponByCode($coupon['code']);
+        $couponHistory = $this->coupon_history()->create([
+            'customer_id' => $customer ? $customer->getKey() : null,
+            'coupon_id'   => $coupon->coupon_id,
+            'code'        => $coupon->code,
+            'amount'      => '-'.$coupon->amount,
+            'min_total'   => $coupon->min_total,
+            'date_used'   => Carbon::now(),
+        ]);
 
-            $insert = [
-                'order_id'    => $order_id,
-                'customer_id' => empty($customer_id) ? '0' : $customer_id,
-                'coupon_id'   => $temp_coupon['coupon_id'],
-                'code'        => $temp_coupon['code'],
-                'amount'      => '-'.$coupon['amount'],
-                'min_total'   => $temp_coupon['min_total'],
-                'date_used'   => mdate('%Y-%m-%d %H:%i:%s', time()),
-            ];
-
-            return $this->Coupons_history_model->insertGetId($insert);
-        }
+        return $couponHistory;
     }
 
     /**
      * Add order status to status history
      *
-     * @param int $order_id
-     * @param array $update
-     * @param array $status
+     * @param array $statusData
      *
      * @return mixed
      */
-    protected function addStatusHistory($order_id, $update, $status)
+    public function addStatusHistory(array $statusData = [])
     {
-        $status_update = [];
-        if (APPDIR === ADMINDIR) {
-            $status_update['staff_id'] = AdminAuth::getStaffId();
-        }
+        if (!$this->exists OR !$this->status)
+            return;
 
-        $status_update['object_id'] = (int)$order_id;
-        $status_update['status_id'] = (int)$update['status_id'];
-        $status_update['comment'] = isset($update['status_comment']) ? $update['status_comment'] : $status['status_comment'];
-        $status_update['notify'] = isset($update['status_notify']) ? $update['status_notify'] : $status['notify_customer'];
-        $status_update['date_added'] = mdate('%Y-%m-%d %H:%i:%s', time());
+        $status = $this->status->toArray();
 
-        return Statuses_model::addStatusHistory('order', $status_update);
+        $statusHistory = $this->status_history()->updateOrCreate([
+            'status_for' => array_get($statusData, 'status_for', array_get($status, 'status_for')),
+            'status_id'  => array_get($statusData, 'status_id', array_get($status, 'status_id')),
+        ], [
+            'staff_id'    => array_get($statusData, 'staff_id'),
+            'assignee_id' => array_get($statusData, 'assignee_id', $this->assignee_id),
+            'notify'      => array_get($statusData, 'notify'),
+            'comment'     => strlen($comment = array_get($statusData, 'comment')) ? $comment : array_get($status, 'status_comment'),
+        ]);
+
+        return $statusHistory;
     }
 
     /**
-     * Subtract cart item quantity from menu stock quantity
-     *
-     * @param int $order_id
-     *
-     * @return bool
+     * Generate a unique hash for this order.
+     * @return string
      */
-    public function subtractStock()
+    protected function generateHash()
     {
-        foreach ($this->getOrderMenus() as $orderMenu) {
-            if ($menu = Menus_model::find($orderMenu->menu_id))
-                $menu->updateStock($orderMenu->quantity, 'subtract');
+        $this->hash = $this->createHash();
+        while ($this->newQuery()->where('hash', $this->hash)->count() > 0) {
+            $this->hash = $this->createHash();
         }
     }
 
     /**
-     * Send the order confirmation email
-     *
-     * @param int $order_id
-     *
-     * @return string 0 on failure, or 1 on success
+     * Create a hash for this order.
+     * @return string
      */
-    public function sendConfirmationMail($order_id)
+    protected function createHash()
     {
-        $this->load->model('Mail_layouts_model');
+        return md5(uniqid('order', microtime()));
+    }
 
-        $mail_data = $this->getMailData($order_id);
-        $config_order_email = is_array(setting('order_email')) ? setting('order_email') : [];
+    //
+    // Mail
+    //
 
-        $notify = '0';
-        if (setting('customer_order_email') == '1' OR in_array('customer', $config_order_email)) {
-            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('order');
-            $notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
+    public function mailGetRecipients($type)
+    {
+        $emailSetting = setting('order_email');
+        is_array($emailSetting) OR $emailSetting = [];
+
+        $recipients = [];
+        if (in_array($type, $emailSetting)) {
+            switch ($type) {
+                case 'customer':
+                    $recipients[] = [$this->email, $this->customer_name];
+                    break;
+                case 'location':
+                    $recipients[] = [$this->location->location_email, $this->location->location_name];
+                    break;
+                case 'admin':
+                    $recipients[] = [setting('site_email'), setting('site_name')];
+                    break;
+            }
         }
 
-        if (!empty($mail_data['location_email']) AND (setting('location_order_email') == '1' OR in_array('location', $config_order_email))) {
-            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('order_alert');
-            $this->sendMail($mail_data['location_email'], $mail_template, $mail_data);
-        }
-
-        if (in_array('admin', $config_order_email)) {
-            $mail_template = $this->Mail_templates_model->getDefaultTemplateData('order_alert');
-            $this->sendMail(setting('site_email'), $mail_template, $mail_data);
-        }
-
-        return $notify;
+        return $recipients;
     }
 
     /**
      * Return the order data to build mail template
      *
-     * @param int $order_id
-     *
      * @return array
      */
-    public function getMailData($order_id)
+    public function mailGetData()
     {
         $data = [];
 
-        if ($result = $this->getOrder($order_id)) {
-            $this->load->library('country');
+        $data['order_number'] = $this->order_id;
+        $data['first_name'] = $this->first_name;
+        $data['last_name'] = $this->last_name;
+        $data['email'] = $this->email;
+        $data['telephone'] = $this->telephone;
+        $data['order_comment'] = $this->comment;
 
-            $data['order_number'] = $result['order_id'];
-            $data['order_view_url'] = site_url('account/orders/view/'.$result['order_id']);
-            $data['order_type'] = ($result['order_type'] == '1') ? 'delivery' : 'collection';
-            $data['order_time'] = mdate('%H:%i', strtotime($result['order_time'])).' '.mdate('%d %M', strtotime($result['order_date']));
-            $data['order_date'] = mdate('%d %M %y', strtotime($result['date_added']));
-            $data['first_name'] = $result['first_name'];
-            $data['last_name'] = $result['last_name'];
-            $data['email'] = $result['email'];
-            $data['telephone'] = $result['telephone'];
-            $data['order_comment'] = $result['comment'];
+        $data['order_type'] = ($this->order_type == '1') ? 'delivery' : 'collection';
+        $data['order_time'] = $this->order_time->format('H:i').' '.$this->order_date->format('d M');
+        $data['order_date'] = $this->date_added->format('d M y');
 
-            $payments = PaymentGateways::instance()->listGateways();
-            if (isset($payments[$result['payment']]) AND $payment = $payments[$result['payment']]) {
-                $data['order_payment'] = !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'];
-            }
-            else {
-                $data['order_payment'] = lang('admin::orders.text_no_payment');
-            }
+        $data['order_payment'] = ($this->payment_method)
+            ? $this->payment_method->name
+            : lang('admin::orders.text_no_payment');
 
-            $data['order_menus'] = [];
-            $menus = $this->getOrderMenus($result['order_id']);
-            $options = $this->getOrderMenuOptions($result['order_id']);
-            if ($menus) {
-                foreach ($menus as $menu) {
-                    $option_data = [];
+        $data['order_menus'] = [];
+        $menus = $this->getOrderMenus();
+        $menuOptions = $this->getOrderMenuOptions();
+        foreach ($menus as $menu) {
 
-                    if (!empty($options)) {
-                        foreach ($options as $key => $option) {
-                            if ($menu['order_menu_id'] == $option['order_menu_id']) {
-                                $option_data[] = $option['order_option_name'].lang('admin::orders.text_equals').$this->currency->format($option['order_option_price']);
-                            }
-                        }
-                    }
-
-                    $data['order_menus'][] = [
-                        'menu_name'     => $menu['name'],
-                        'menu_quantity' => $menu['quantity'],
-                        'menu_price'    => $this->currency->format($menu['price']),
-                        'menu_subtotal' => $this->currency->format($menu['subtotal']),
-                        'menu_options'  => implode('<br /> ', $option_data),
-                        'menu_comment'  => $menu['comment'],
-                    ];
+            $optionData = [];
+            if ($menuItemOptions = $menuOptions->get($menu->menu_id)) {
+                foreach ($menuItemOptions as $menuItemOption) {
+                    $optionData[] = $menuItemOption->order_option_name
+                        .lang('admin::default.text_equals')
+                        .currency_format($menuItemOption->order_option_price);
                 }
             }
 
-            $data['order_totals'] = [];
-            $order_totals = $this->getOrderTotals($result['order_id']);
-            if ($order_totals) {
-                foreach ($order_totals as $total) {
-                    $data['order_totals'][] = [
-                        'order_total_title' => htmlspecialchars_decode($total['title']),
-                        'order_total_value' => $this->currency->format($total['value']),
-                        'priority'          => $total['priority'],
-                    ];
-                }
-            }
+            $data['order_menus'][] = [
+                'menu_name'     => $menu->name,
+                'menu_quantity' => $menu->quantity,
+                'menu_price'    => currency_format($menu->price),
+                'menu_subtotal' => currency_format($menu->subtotal),
+                'menu_options'  => implode('<br /> ', $optionData),
+                'menu_comment'  => $menu->comment,
+            ];
+        }
 
-            $data['order_address'] = lang('admin::orders.text_collection_order_type');
-            if (!empty($result['address_id'])) {
-                $this->load->model('Addresses_model');
-                $order_address = $this->Addresses_model->getAddress($result['customer_id'], $result['address_id']);
-                $data['order_address'] = $this->country->addressFormat($order_address);
-            }
+        $data['order_totals'] = [];
+        $orderTotals = $this->getOrderTotals();
+        foreach ($orderTotals as $total) {
+            $data['order_totals'][] = [
+                'order_total_title' => htmlspecialchars_decode($total->title),
+                'order_total_value' => currency_format($total->value),
+                'priority'          => $total->priority,
+            ];
+        }
 
-            if (!empty($result['location_id'])) {
-                $this->load->model('Locations_model');
-                $location = $this->Locations_model->getLocation($result['location_id']);
-                $data['location_name'] = $location['location_name'];
-                $data['location_email'] = $location['location_email'];
-            }
+        $data['order_address'] = lang('admin::orders.text_collection_order_type');
+        if ($this->address)
+            $data['order_address'] = format_address($this->address->toArray());
+
+        if ($this->location) {
+            $data['location_name'] = $this->location->location_name;
+            $data['location_email'] = $this->location->location_email;
         }
 
         return $data;
-    }
-
-    /**
-     * Send an email
-     *
-     * @param int $email
-     * @param array $mail_template
-     * @param array $mail_data
-     *
-     * @return bool|string
-     */
-    public function sendMail($email, $mail_template = [], $mail_data = [])
-    {
-        if (empty($mail_template) OR !isset($mail_template['subject'], $mail_template['body']) OR empty($mail_data)) {
-            return FALSE;
-        }
-
-        $this->load->library('email');
-
-        $this->email->initialize();
-
-        if (!empty($mail_data['status_comment'])) {
-            $mail_data['status_comment'] = $this->email->parse_template($mail_data['status_comment'], $mail_data);
-        }
-
-        $this->email->from(setting('site_email'), setting('site_name'));
-        $this->email->to(strtolower($email));
-        $this->email->subject($mail_template['subject'], $mail_data);
-        $this->email->message($mail_template['body'], $mail_data);
-
-        if (!$this->email->send()) {
-            log_message('error', $this->email->print_debugger(['headers']));
-            $notify = '0';
-        }
-        else {
-            $notify = '1';
-        }
-
-        return $notify;
-    }
-
-    /**
-     * Delete a single or multiple order by order_id, with relationships
-     *
-     * @param int $order_id
-     *
-     * @return int  The number of deleted rows
-     */
-    public function deleteOrder($order_id)
-    {
-        if (is_numeric($order_id)) $order_id = [$order_id];
-
-        if (!empty($order_id) AND ctype_digit(implode('', $order_id))) {
-            return $this->newQuery()->whereIn('order_id', $order_id)->delete();
-        }
     }
 }

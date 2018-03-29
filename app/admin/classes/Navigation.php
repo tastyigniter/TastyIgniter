@@ -37,6 +37,11 @@ class Navigation
         return $this->navItems;
     }
 
+    public function isCollapsed()
+    {
+        return array_get($_COOKIE, 'ti_sidebarToggleState') == 'collapsed';
+    }
+
     public function getVisibleNavItems()
     {
         uasort($this->navItems, function ($a, $b) {
@@ -140,7 +145,7 @@ class Navigation
     {
         return collect($items)->filter(function ($item) {
             if (!$permission = array_get($item, 'permission'))
-                return true;
+                return TRUE;
 
             return AdminAuth::hasPermission($permission);
         })->toArray();

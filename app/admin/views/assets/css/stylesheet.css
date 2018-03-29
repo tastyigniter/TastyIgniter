@@ -160,9 +160,6 @@ h4 small, h5 .small, h5 small, h6 .small, h6 small {
 	-webkit-transition: all .4s ease 0s;
 	transition: all .4s ease 0s;
 }
-.sidebar.collapse {
-	width: 46px;
-}
 .nav-sidebar {
 	background-color: #213358;
 	position: absolute;
@@ -227,6 +224,44 @@ h4 small, h5 .small, h5 small, h6 .small, h6 small {
 }
 .sidebar .nav .nav a.active {
 }
+.sidebar-collapsed .sidebar {
+	width: 55px;
+}
+.sidebar-collapsed .sidebar .navbar-brand {
+	overflow: hidden;
+}
+.sidebar-collapsed #page-wrapper,
+.sidebar-collapsed .navbar-footer {
+	padding-left: 55px;
+}
+.sidebar-collapsed .navbar-top {
+	margin-left: 55px;
+}
+.sidebar-collapsed .sidebar .content,
+.sidebar-collapsed .sidebar .arrow {
+	display: none;
+}
+.sidebar-collapsed .sidebar .collapse {
+	position: absolute;
+	width: 200px;
+	display: none;
+}
+.sidebar-collapsed .sidebar .nav-second-level {
+	margin: -39px 0 0 60px;
+}
+.sidebar-collapsed .sidebar .nav-third-level {
+	margin: 0;
+}
+.sidebar-collapsed .sidebar .nav > li:hover .nav-second-level,
+.sidebar-collapsed .sidebar .nav-second-level > li:hover .nav-third-level {
+	display: block;
+	visibility: visible;
+	/*height: auto !important;*/
+}
+.sidebar-collapsed .fa-chevron-circle-left::before {
+	content: "\f138";
+}
+
 /*
 	Footer
  */

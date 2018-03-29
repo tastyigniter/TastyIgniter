@@ -17,7 +17,8 @@
 }
 .multiselect-all .checkbox label {
 	font-weight: 500;
-}.multiselect-container .multiselect-item > a {
+}
+.multiselect-container .multiselect-item > a {
 	padding: 0 0 0 15px;
 }
 .multiselect-item .checkbox,

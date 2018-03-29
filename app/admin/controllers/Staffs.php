@@ -92,11 +92,6 @@ class Staffs extends \Admin\Classes\AdminController
         }
     }
 
-    public function formExtendQuery($query)
-    {
-        $query->with(['user']);
-    }
-
     public function formValidate($model, $form)
     {
         $rules = [

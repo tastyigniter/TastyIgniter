@@ -10,7 +10,7 @@ class Activities_model extends Activity
 {
     public static function listMenuActivities($menu, $item, $user)
     {
-        $query = self::with(['causer'])->listRecent([
+        $query = self::listRecent([
             'exceptUser' => $user,
         ]);
 

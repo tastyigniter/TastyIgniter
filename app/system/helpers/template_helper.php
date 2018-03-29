@@ -4,7 +4,6 @@
  * Template helper functions
  */
 
-
 if (!function_exists('page')) {
     /**
      * Get the page content

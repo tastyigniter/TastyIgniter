@@ -8,6 +8,7 @@ use AdminAuth;
 use File;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use System\Libraries\Assets;
+use System\Models\Mail_templates_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -30,12 +31,26 @@ class ServiceProvider extends AppServiceProvider
     {
         parent::register('admin');
 
+        $this->registerMailTemplates();
+
         if ($this->app->runningInAdmin()) {
             $this->registerBaseTags();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
         }
+    }
+
+    protected function registerMailTemplates()
+    {
+        Mail_templates_model::registerCallback(function ($template) {
+            $template->registerTemplates([
+                'admin::_mail.order_update'           => 'lang:system::mail_templates.text_order_update',
+                'admin::_mail.reservation_update'     => 'lang:system::mail_templates.text_reservation_update',
+                'admin::_mail.password_reset'         => 'lang:system::mail_templates.text_password_reset_alert',
+                'admin::_mail.password_reset_request' => 'lang:system::mail_templates.text_password_reset_request_alert',
+            ]);
+        });
     }
 
     protected function registerBaseTags()
@@ -387,10 +402,10 @@ class ServiceProvider extends AppServiceProvider
                             'title'      => lang('admin::default.menu_theme'),
                             'permission' => 'Site.Themes',
                         ],
-                        'mail_layouts' => [
+                        'mail_templates' => [
                             'priority'   => 20,
-                            'class'      => 'mail_layouts',
-                            'href'       => admin_url('mail_layouts'),
+                            'class'      => 'mail_templates',
+                            'href'       => admin_url('mail_templates'),
                             'title'      => lang('admin::default.menu_mail_template'),
                             'permission' => 'Admin.MailTemplates',
                         ],
@@ -452,28 +467,28 @@ class ServiceProvider extends AppServiceProvider
                     'icon'     => 'fa-globe',
                     'title'    => lang('admin::default.menu_localisation'),
                     'child'    => [
-                        'languages'          => [
+                        'languages'  => [
                             'priority'   => 10,
                             'class'      => 'languages',
                             'href'       => admin_url('languages'),
                             'title'      => lang('admin::default.menu_language'),
                             'permission' => 'Site.Languages',
                         ],
-                        'currencies'         => [
+                        'currencies' => [
                             'priority'   => 20,
                             'class'      => 'currencies',
                             'href'       => admin_url('currencies'),
                             'title'      => lang('admin::default.menu_currency'),
                             'permission' => 'Site.Currencies',
                         ],
-                        'countries'          => [
+                        'countries'  => [
                             'priority'   => 30,
                             'class'      => 'countries',
                             'href'       => admin_url('countries'),
                             'title'      => lang('admin::default.menu_country'),
                             'permission' => 'Site.Countries',
                         ],
-                        'ratings'            => [
+                        'ratings'    => [
                             'priority'   => 40,
                             'class'      => 'ratings',
                             'href'       => admin_url('ratings'),

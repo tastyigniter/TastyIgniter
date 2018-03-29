@@ -5,6 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Widgets\Table\Source\DataSource;
 use Exception;
+use Input;
 use Request;
 
 class Table extends BaseWidget
@@ -59,7 +60,7 @@ class Table extends BaseWidget
         $dataSourceClass = $this->dataSourceAliases;
 
         if (!class_exists($dataSourceClass)) {
-            throw new Exception(sprintf('The Table widget data source class "%s" is could not be found.', $dataSourceClass));
+            throw new Exception(sprintf('The Table widget data source class "%s" could not be found.', $dataSourceClass));
         }
 
         $this->dataSource = new $dataSourceClass($this->recordsKeyFrom);
@@ -149,5 +150,22 @@ class Table extends BaseWidget
     protected function isClientDataSource()
     {
         return $this->dataSource instanceof DataSource;
+    }
+
+    public function onGetDropdownOptions()
+    {
+        $columnName = Input::get('column');
+        $rowData = Input::get('rowData');
+
+        $eventResults = $this->fireEvent('table.getDropdownOptions', [$columnName, $rowData]);
+
+        $options = [];
+        if (count($eventResults)) {
+            $options = $eventResults[0];
+        }
+
+        return [
+            'options' => $options,
+        ];
     }
 }

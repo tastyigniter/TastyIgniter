@@ -1,4 +1,4 @@
-<?php if ($this->previewMode){ ?>
+<?php if ($this->previewMode) { ?>
     <div class="form-control-static"><?= $value ?></div>
 <?php } else { ?>
     <div

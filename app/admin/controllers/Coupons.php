@@ -58,14 +58,6 @@ class Coupons extends \Admin\Classes\AdminController
         }
     }
 
-    public function formExtendQuery($query)
-    {
-        $query->with([
-//            'history',
-            'history.customer',
-        ]);
-    }
-
     public function formValidate($model, $form)
     {
         $namedRules = [

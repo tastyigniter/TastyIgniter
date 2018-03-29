@@ -103,21 +103,6 @@ class Coupons_model extends Model
         return $this->min_total;
     }
 
-    /**
-     * Redeem coupon by order_id
-     *
-     * @param int $order_id
-     *
-     * @return bool TRUE on success, or FALSE on failure
-     */
-    public function redeemCoupon($order_id)
-    {
-        $query = $this->history()->where('status', '!=', '1')->where('order_id', $order_id);
-        if ($couponModel = $query->first()) {
-            return $couponModel->touchStatus();
-        }
-    }
-
     public function isExpired()
     {
         $now = Carbon::now();

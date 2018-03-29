@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Igniter\Flame\Auth\Models\User;
 use Model;
 use System\Models\Settings_model;
 
@@ -75,6 +76,13 @@ class Reviews_model extends Model
 
         if (is_numeric($location)) {
             $query->where('location_id', $location);
+        }
+
+        if ($customer instanceof User) {
+            $query->where('customer_id', $customer->getKey());
+        }
+        else if (strlen($customer)) {
+            $query->where('customer_id', $customer);
         }
 
         if (!is_array($sort)) {

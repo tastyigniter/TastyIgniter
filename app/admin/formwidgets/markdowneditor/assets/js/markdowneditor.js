@@ -1,18 +1,19 @@
-+function ($) { "use strict";
++function ($) {
+    "use strict";
 
     var MarkdownEditor = function (element, options) {
         this.$el = $(element)
         this.options = options || {}
         this.$textarea = $('textarea:first', this.$el)
-        this.editor    = null
-        this.$form     = null
+        this.editor = null
+        this.$form = null
 
         this.init()
     }
 
     MarkdownEditor.prototype.constructor = MarkdownEditor
 
-    MarkdownEditor.prototype.init = function() {
+    MarkdownEditor.prototype.init = function () {
 
         // Control must have an identifier
         if (!this.$el.attr('id')) {
@@ -26,7 +27,7 @@
         // this.$toolbar.on('click', '.btn, .md-dropdown-button', this.proxy(this.onClickToolbarButton))
     }
 
-    MarkdownEditor.prototype.dispose = function() {
+    MarkdownEditor.prototype.dispose = function () {
         this.$el.off('dispose-control', this.proxy(this.dispose))
 
         this.$toolbar.off('click', '.btn, .md-dropdown-button', this.proxy(this.onClickToolbarButton))
@@ -45,10 +46,10 @@
     MarkdownEditor.prototype.initEditor = function () {
 
         this.editor = editormd({
-            id      : this.$el.attr('id'),
+            id: this.$el.attr('id'),
             // width   : "90%",
-            height  : 640,
-            path    : "/app/admin/formwidgets/markdowneditor/assets/vendor/editormd/lib/"
+            height: 640,
+            path: "/app/admin/formwidgets/markdowneditor/assets/vendor/editormd/lib/"
         });
     }
 
@@ -56,7 +57,7 @@
     // Events
     //
 
-    MarkdownEditor.prototype.onClickToolbarButton = function(ev) {
+    MarkdownEditor.prototype.onClickToolbarButton = function (ev) {
         var $target = $(ev.target),
             $button = $target.is('a') ? $target : $target.closest('.btn'),
             action = $button.data('button-action'),
@@ -81,13 +82,13 @@
     // Media Manager
     //
 
-    MarkdownEditor.prototype.launchMediaManager = function(onSuccess) {
+    MarkdownEditor.prototype.launchMediaManager = function (onSuccess) {
         var self = this
 
         new $.ti.mediaManager.popup({
             alias: 'timediamanager',
             cropAndInsertButton: true,
-            onInsert: function(items) {
+            onInsert: function (items) {
                 if (!items.length) {
                     alert('Please select image(s) to insert.')
                     return
@@ -99,7 +100,7 @@
                 }
 
                 var path, publicUrl
-                for (var i=0, len=items.length; i<len; i++) {
+                for (var i = 0, len = items.length; i < len; i++) {
                     path = items[i].path
                     publicUrl = items[i].publicUrl
                 }
@@ -130,8 +131,8 @@
         var args = Array.prototype.slice.call(arguments, 1), items, result
 
         items = this.each(function () {
-            var $this   = $(this)
-            var data    = $this.data('ti.markdownEditor')
+            var $this = $(this)
+            var data = $this.data('ti.markdownEditor')
             var options = $.extend({}, MarkdownEditor.DEFAULTS, $this.data(), typeof option == 'object' && option)
             if (!data) $this.data('ti.markdownEditor', (data = new MarkdownEditor(this, options)))
             if (typeof option == 'string') result = data[option].apply(data, args)
@@ -148,7 +149,7 @@
         return this
     }
 
-    $(document).ready(function (){
+    $(document).ready(function () {
         $('[data-control="markdowneditor"]').markdownEditor()
     })
 
@@ -158,7 +159,6 @@
     if ($.ti === undefined)
         $.ti = {}
 
-    $.ti.markdownEditorButtons = {
-    }
+    $.ti.markdownEditorButtons = {}
 
 }(window.jQuery);

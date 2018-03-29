@@ -75,7 +75,7 @@ class Messages extends \Admin\Classes\AdminController
 
     public function all($context)
     {
-        if (!AdminAuth::hasPermission('Admin.Messages.Manage', true))
+        if (!AdminAuth::hasPermission('Admin.Messages.Manage', TRUE))
             return $this->redirect('messages');
 
         $this->prepareVars($context);
@@ -122,27 +122,27 @@ class Messages extends \Admin\Classes\AdminController
 
     public function view_onSend($context, $recordId = null)
     {
-        $this->asExtension('FormController')->edit_onSave(null, $recordId);
+        return $this->asExtension('FormController')->edit_onSave(null, $recordId);
     }
 
     public function view_onDraft($context, $recordId = null)
     {
-        $this->asExtension('FormController')->edit_onSave(null, $recordId);
+        return $this->asExtension('FormController')->edit_onSave(null, $recordId);
     }
 
     public function draft_onSend($context, $recordId = null)
     {
-        $this->asExtension('FormController')->edit_onSave(null, $recordId);
+        return $this->asExtension('FormController')->edit_onSave(null, $recordId);
     }
 
     public function compose_onSend()
     {
-        $this->asExtension('FormController')->create_onSave();
+        return $this->asExtension('FormController')->create_onSave();
     }
 
-    public function compose_onSave()
+    public function compose_onDraft()
     {
-        $this->asExtension('FormController')->create_onSave();
+        return $this->asExtension('FormController')->create_onSave();
     }
 
     protected function prepareVars($context = 'inbox')
@@ -155,7 +155,7 @@ class Messages extends \Admin\Classes\AdminController
 
     public function listExtendQuery($query, $alias)
     {
-        $query->with(['recipients', 'sender'])->listMessages([
+        $query->listMessages([
             'context'   => $this->messageContext,
             'recipient' => $this->getUser()->staff,
         ]);
@@ -171,22 +171,30 @@ class Messages extends \Admin\Classes\AdminController
 
     public function formExtendQuery($query)
     {
-        $query->with(['recipients', 'sender'])->viewConversation([
+        $query->viewConversation([
             'recipient' => $this->getUser()->staff,
         ]);
     }
 
-    public function formBeforeCreate($model)
+    public function formBeforeSave($model)
     {
-        $user = AdminAuth::getUser();
-        $model->sender_id = $user->staff->getKey();
-        $model->sender_type = get_class($user->staff);
+        if (!$model->exists) {
+            $user = AdminAuth::getUser();
+            $model->sender_id = $user->staff->getKey();
+            $model->sender_type = get_class($user->staff);
+        }
+
+        // If status hasn't already been set, we will
+        // set it to -1 to send or 0 to save as draft
+        if (!$model->isSent())
+            $model->status = ($send = post('send') AND $send == 1) ? -1 : 0;
     }
 
     public function formAfterSave($model)
     {
+        // Update message as sent, sets status to 1
         if (post('send') === 1)
-            $model->send();
+            $model->sent();
     }
 
     public function formValidate($model, $form)

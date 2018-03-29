@@ -86,11 +86,6 @@
   },
   {
     "sort": "config",
-    "item": "main_page_limit",
-    "value": "20"
-  },
-  {
-    "sort": "config",
     "item": "registration_terms",
     "value": "1"
   },

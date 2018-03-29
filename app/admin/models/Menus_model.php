@@ -103,15 +103,14 @@ class Menus_model extends Model
         $this->restorePurgedValues();
 
         if (array_key_exists('special', $this->attributes))
-            $this->addMenuSpecial($this->attributes['special']);
+            $this->addMenuSpecial((array)$this->attributes['special']);
 
         if (array_key_exists('categories', $this->attributes)) {
-            $menuCategories = $this->attributes['categories'];
-            $this->addMenuCategories($menuCategories);
+            $this->addMenuCategories((array)$this->attributes['categories']);
         }
 
         if (array_key_exists('menu_options', $this->attributes))
-            $this->addMenuOption($this->attributes['menu_options']);
+            $this->addMenuOption((array)$this->attributes['menu_options']);
     }
 
     public function beforeDelete()
@@ -216,7 +215,6 @@ class Menus_model extends Model
     /**
      * Create new or update existing menu options
      *
-     * @param bool $menuId
      * @param array $menuOptions if empty all existing records will be deleted
      *
      * @return bool
@@ -236,11 +234,11 @@ class Menus_model extends Model
                 'menu_option_id' => $option['menu_option_id'],
                 'option_id'      => $option['option_id'],
             ], array_merge(array_except($option, 'menu_option_id'), [
-                'option_values' => isset($option['menu_option_values']) ? serialize($option['menu_option_values']) : [],
+                'option_values' => isset($option['menu_option_values']) ? $option['menu_option_values'] : [],
             ]));
 
-            if ($menuOption AND isset($option['menu_option_values'])) {
-                $this->addMenuOptionValues($menuOption->getKey(), $option['option_id'], $option['menu_option_values']);
+            if ($menuOption AND is_array($menuOption->option_values)) {
+                $this->addMenuOptionValues($menuOption->getKey(), $menuOption->option_id, (array)$menuOption->option_values);
             }
 
             $idsToKeep[] = $menuOption->getKey();
@@ -256,8 +254,10 @@ class Menus_model extends Model
      * @param int $menuOptionId
      * @param int $optionId
      * @param array $optionValues if empty all existing records will be deleted
+     *
+     * @return bool
      */
-    public function addMenuOptionValues($menuOptionId, $optionId, $optionValues = [])
+    public function addMenuOptionValues($menuOptionId, $optionId, array $optionValues = [])
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId))

@@ -3,6 +3,7 @@ return [
     'site_title'     => '%s - %s',
     'site_copyright' => '&copy; %s %s - ',
 
+    'text_free'        => 'Free',
     'text_equals'      => ' = ',
     'text_plus'        => '+ ',
     'text_minutes'     => 'minutes',
@@ -122,7 +123,7 @@ return [
         'component'         => 'The component [%s] is not found.',
         'partial'           => 'The partial [%s] is not found.',
         'content'           => 'The content [%s] is not found.',
-        'method'           => 'The method [:method] is not found in [:name].',
+        'method'            => 'The method [:method] is not found in [:name].',
         'ajax_handler'      => 'Ajax handler [%s] is not found.',
     ],
 ];

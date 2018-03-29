@@ -1,5 +1,6 @@
 <?php namespace Admin\Controllers;
 
+use Admin\Models\Users_model;
 use Admin\Traits\ValidatesForm;
 use AdminAuth;
 use Template;
@@ -64,8 +65,9 @@ class Login extends \Admin\Classes\AdminController
     {
         if ($this->validateResetForm() === TRUE) {
             if (!input('code')) {
-                $username = post('username');
-                if (AdminAuth::resetPassword($username)) {
+                $user = Users_model::whereUsername(post('username'))->first();
+
+                if ($user AND $user->resetPassword()) {
                     flash()->success(lang('admin::login.alert_email_sent'));
 
                     return TRUE;
@@ -74,13 +76,9 @@ class Login extends \Admin\Classes\AdminController
                 $error = lang('admin::login.alert_email_not_sent');
             }
             else {
-                $credentials = [
-                    'reset_code' => input('code'),
-                    'password'   => post('password'),
-                ];
+                $user = Users_model::whereResetCode($code = post('reset_code'))->first();
 
-                if (AdminAuth::validateResetPassword($credentials)) {
-                    AdminAuth::completeResetPassword($credentials);
+                if ($user AND $user->completeResetPassword($code, post('password'))) {
                     flash()->success(lang('admin::login.alert_success_reset'));
 
                     return TRUE;

@@ -1,6 +1,7 @@
 <?php namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
+use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
 use Model;
 
@@ -12,8 +13,13 @@ use Model;
 class Payments_model extends Model
 {
     use Sortable;
+    use Purgeable;
 
     const SORT_ORDER = 'priority';
+
+    const CREATED_AT = 'date_added';
+
+    const UPDATED_AT = 'date_updated';
 
     /**
      * @var string The database table name
@@ -25,11 +31,15 @@ class Payments_model extends Model
      */
     protected $primaryKey = 'payment_id';
 
+    public $timestamps = TRUE;
+
     public $casts = [
         'data' => 'serialize',
     ];
 
     protected $fillable = ['name', 'code', 'class_name', 'description', 'data', 'status', 'is_default', 'priority'];
+
+    protected $purgeable = ['payment'];
 
     public function getDropdownOptions()
     {
@@ -57,6 +67,15 @@ class Payments_model extends Model
         return $result;
     }
 
+    //
+    // Accessors & Mutators
+    //
+
+    public function setCodeAttribute($value)
+    {
+        $this->attributes['code'] = str_slug($value, '_');
+    }
+
     public function scopeIsEnabled($query)
     {
         return $query->where('status', 1);
@@ -76,6 +95,9 @@ class Payments_model extends Model
 
     public function beforeSave()
     {
+        if (!$this->exists)
+            return;
+
         $data = [];
         $fields = ($configFields = $this->getConfigFields()) ? $configFields : [];
         foreach ($fields as $name => $config) {
@@ -125,8 +147,6 @@ class Payments_model extends Model
         }
 
         $this->class_name = $class;
-//        if (is_array($this->data))
-//            $this->attributes = array_merge($this->data, $this->attributes);
 
         return TRUE;
     }
@@ -178,7 +198,6 @@ class Payments_model extends Model
                 'name'        => $gateway['name'],
                 'description' => $gateway['description'],
                 'class_name'  => $gateway['class'],
-                'status'      => TRUE,
             ]);
 
             $model->applyGatewayClass();

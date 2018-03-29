@@ -1,6 +1,7 @@
 <?php namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
+use Admin\Widgets\Form;
 use Exception;
 
 /**
@@ -20,7 +21,7 @@ class StatusEditor extends BaseFormWidget
      */
     public $colorFrom = 'status_color';
 
-    public $relationFrom = 'status_history';
+    public $relationFrom = 'status';
 
     /**
      * @var string Text to display for the title of the popup list form
@@ -34,8 +35,6 @@ class StatusEditor extends BaseFormWidget
     //
 
     protected $defaultAlias = 'statuseditor';
-
-    protected $statusCollection;
 
     protected $form;
 
@@ -83,8 +82,8 @@ class StatusEditor extends BaseFormWidget
         $widgetConfig['model'] = $model = $this->getRelationModel();
         $widgetConfig['data'] = $model->first();
         $widgetConfig['alias'] = $this->alias.'status-editor';
-        $widgetConfig['arrayName'] = $this->formField->arrayName.'[status]';
-        $widget = $this->makeWidget('Admin\Widgets\Form', $widgetConfig);
+        $widgetConfig['arrayName'] = $this->formField->arrayName.'[statusData]';
+        $widget = $this->makeWidget(Form::class, $widgetConfig);
 
         $widget->bindToController();
 
@@ -107,6 +106,6 @@ class StatusEditor extends BaseFormWidget
             ));
         }
 
-        return $model->makeRelation($attribute);
+        return $model->{$attribute}();
     }
 }

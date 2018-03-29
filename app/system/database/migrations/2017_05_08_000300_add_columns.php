@@ -66,8 +66,10 @@ class AddColumns extends Migration
         });
 
         Schema::table('mail_templates', function (Blueprint $table) {
+            $table->string('code');
             $table->text('layout')->nullable();
             $table->text('plain_layout')->nullable();
+            $table->text('layout_css')->nullable();
         });
 
         Schema::table('mail_templates_data', function (Blueprint $table) {

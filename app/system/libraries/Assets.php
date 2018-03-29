@@ -1,6 +1,5 @@
 <?php namespace System\Libraries;
 
-use App;
 use File;
 use Html;
 use URL;

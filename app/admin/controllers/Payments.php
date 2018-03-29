@@ -92,6 +92,19 @@ class Payments extends \Admin\Classes\AdminController
         return $result;
     }
 
+    protected function getGateway($code)
+    {
+        if ($this->gateway !== null) {
+            return $this->gateway;
+        }
+
+        if (!$gateway = PaymentGateways::instance()->findGateway($code)) {
+            throw new Exception('Unable to find payment gateway with code '.$code);
+        }
+
+        return $this->gateway = $gateway;
+    }
+
     public function formExtendModel($model)
     {
         if (!$model->exists)
@@ -100,11 +113,18 @@ class Payments extends \Admin\Classes\AdminController
         return $model;
     }
 
-    public function formExtendFields($formWidget)
+    public function formExtendFields($form)
     {
-        $model = $formWidget->model;
-        $configFields = $model->getConfigFields();
-        $formWidget->addTabFields($configFields);
+        $model = $form->model;
+        if ($model->exists) {
+            $configFields = $model->getConfigFields();
+            $form->addTabFields($configFields);
+        }
+
+        if ($form->context != 'create') {
+            $field = $form->getField('code');
+            $field->disabled = TRUE;
+        }
 
         // Add the set up help partial
 //        $setupPartial = $model->getPartialPath().'/setup_help.php';
@@ -119,16 +139,28 @@ class Payments extends \Admin\Classes\AdminController
 //        }
     }
 
-    protected function getGateway($code)
+    public function formBeforeCreate($model)
     {
-        if ($this->gateway !== null) {
-            return $this->gateway;
-        }
+        $paymentGateway = PaymentGateways::instance()->findGateway(post('Payment.payment'));
 
-        if (!$gateway = PaymentGateways::instance()->findGateway($code)) {
-            throw new Exception('Unable to find payment gateway with code '.$code);
-        }
+        $model->class_name = $paymentGateway['class'];
+    }
 
-        return $this->gateway = $gateway;
+    public function formValidate($model, $form)
+    {
+        $rules = [
+            ['payment', 'lang:admin::payments.label_payments', 'sometimes|required|alpha_dash'],
+            ['name', 'lang:admin::payments.label_name', 'required|min:2|max:128'],
+            ['code', 'lang:admin::payments.label_code', 'sometimes|required|alpha_dash|unique:payments,code'],
+            ['priority', 'lang:admin::payments.label_priority', 'required|integer'],
+            ['description', 'lang:admin::payments.label_description', 'required|max:255'],
+            ['is_default', 'lang:admin::payments.label_default', 'required|integer'],
+            ['status', 'lang:admin::payments.label_status', 'required|integer'],
+        ];
+
+        if (isset($form->config['rules']))
+            $rules = array_merge($rules, $form->config['rules']);
+
+        return $this->validatePasses($form->getSaveData(), $rules);
     }
 }

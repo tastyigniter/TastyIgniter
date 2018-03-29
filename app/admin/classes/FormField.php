@@ -344,7 +344,6 @@ class FormField
         }
         else {
             $this->valueFrom = $this->fieldName;
-//            $this->valueFrom = ends_with($this->fieldName, '_id') ? rtrim($this->fieldName, '_id') : $this->fieldName;
         }
 
         return $config;

@@ -21,7 +21,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes'   => [
             'class' => 'btn btn-edit',
-            'href'  => 'mail_templates/edit/{template_id}',
+            'href'  => 'mail_templates/edit/{template_data_id}',
         ],
     ],
     'code'         => [
@@ -35,9 +35,9 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'template_id'  => [
-        'label' => 'lang:system::mail_templates.column_layout',
-        'relation'   => 'layout',
-        'valueFrom'  => 'name',
+        'label'     => 'lang:system::mail_templates.column_layout',
+        'relation'  => 'layout',
+        'valueFrom' => 'name',
     ],
     'date_updated' => [
         'label'      => 'lang:system::mail_templates.column_date_updated',
@@ -76,11 +76,11 @@ $config['form']['fields'] = [
         'span'  => 'left',
         'type'  => 'text',
     ],
-    'title'       => [
-        'label' => 'lang:system::mail_templates.label_description',
-        'span'  => 'right',
-        'type'  => 'text',
-        'disabled'  => true,
+    'label'       => [
+        'label'     => 'lang:system::mail_templates.label_description',
+        'span'      => 'right',
+        'valueFrom' => 'title',
+        'type'      => 'text',
     ],
     'subject'     => [
         'label' => 'lang:system::mail_templates.label_subject',
@@ -100,7 +100,7 @@ $config['form']['tabs'] = [
     'fields' => [
         'body'       => [
             'tab'  => 'lang:system::mail_templates.label_body',
-            'type' => 'richeditor',
+            'type' => 'codeeditor',
         ],
         'plain_body' => [
             'tab'        => 'lang:system::mail_templates.label_plain_body',

@@ -14,7 +14,7 @@ class Menu_item_options_model extends Model
 
     const SORT_ORDER = 'priority';
 
-    protected static $valuesCollection;
+    protected static $optionValuesCollection;
 
     /**
      * @var string The database table name
@@ -74,12 +74,11 @@ class Menu_item_options_model extends Model
         return $this->required == 1;
     }
 
-    public function listOptionValues($form, $field)
+    public function listOptionValues($data, $field)
     {
-        if (!self::$valuesCollection)
-            self::$valuesCollection = Menu_option_values_model::select('option_value_id', 'option_id', 'value')
-                                                              ->where('option_id', $this->option_id)->get();
-
-        return self::$valuesCollection->pluck('value', 'option_value_id');
+        return Menu_option_values_model::select('option_value_id', 'option_id', 'value')
+                                       ->where('option_id', $this->option_id)
+                                       ->get()
+                                       ->pluck('value', 'option_value_id');
     }
 }

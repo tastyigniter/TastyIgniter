@@ -1,8 +1,8 @@
 <?php namespace System\Controllers;
 
+use AdminAuth;
 use AdminMenu;
-use Exception;
-use System\Models\Mail_layouts_model;
+use System\Models\Mail_templates_model;
 
 class MailTemplates extends \Admin\Classes\AdminController
 {
@@ -50,21 +50,39 @@ class MailTemplates extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('mail_layouts', 'design');
+        AdminMenu::setContext('mail_templates', 'design');
+    }
+
+    public function index()
+    {
+        if (AdminAuth::hasPermission('Admin.MailTemplates.Manage'))
+            Mail_templates_model::syncAll();
+
+        $this->asExtension('ListController')->index();
+    }
+
+    public function formExtendFields($form)
+    {
+        if ($form->context != 'create') {
+            $field = $form->getField('code');
+            $field->disabled = TRUE;
+        }
+    }
+
+    public function formBeforeSave($model)
+    {
+        $model->is_custom = TRUE;
     }
 
     public function formValidate($model, $form)
     {
+        $rules[] = ['template_id', 'lang:system::mail_templates.label_layout', 'required|integer'];
+        $rules[] = ['label', 'lang:system::mail_templates.label_description', 'required'];
         $rules[] = ['subject', 'lang:system::mail_templates.label_code', 'required'];
 
         if ($form->context == 'create') {
-            $rules[] = ['title', 'lang:system::mail_templates.label_description', 'required'];
             $rules[] = ['code', 'lang:system::mail_templates.label_code', 'required|min:2|max:32'];
-            $rules[] = ['template_id', 'lang:system::mail_templates.label_layout', 'required|integer'];
         }
-
-        $rules[] = ['body', 'lang:system::mail_templates.label_body', 'required'];
-        $rules[] = ['plain_body', 'lang:system::mail_templates.label_plain', 'required'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

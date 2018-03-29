@@ -497,7 +497,7 @@ class MediaManager extends BaseWidget
 
         $folderTree = function ($path) use (&$folderTree, $mediaLibrary, $result) {
 
-            if(!($folders = $mediaLibrary->listFolders($path)))
+            if (!($folders = $mediaLibrary->listFolders($path)))
                 return null;
 
             foreach ($folders as $folder) {

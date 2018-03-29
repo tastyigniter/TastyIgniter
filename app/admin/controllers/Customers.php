@@ -83,11 +83,6 @@ class Customers extends \Admin\Classes\AdminController
         return $this->redirectBack();
     }
 
-    public function formExtendQuery($query)
-    {
-        return $query->with(['addresses']);
-    }
-
     public function formValidate($model, $form)
     {
         $rules = [

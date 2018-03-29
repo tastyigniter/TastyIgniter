@@ -3,17 +3,19 @@
 use Admin\Models\Categories_model;
 use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
-use System\Models\Pages_model;
 use Admin\Models\Payments_model;
 use Admin\Models\Reviews_model;
 use Admin\Models\Status_history_model;
 use Carbon\Carbon;
+use DB;
+use File;
 use Illuminate\Database\Seeder;
 use System\Models\Extensions_model;
+use System\Models\Mail_layouts_model;
 use System\Models\Mail_templates_model;
 use System\Models\Message_meta_model;
 use System\Models\Messages_model;
-use System\Models\Permissions_model;
+use System\Models\Pages_model;
 use System\Models\Themes_model;
 
 /**
@@ -194,32 +196,24 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function fillColumnsOnMailTemplatesData()
     {
-        $labels = [
-            'registration'                 => 'lang:system::mail_templates.text_registration',
-            'registration_alert'           => 'lang:system::mail_templates.text_registration_alert',
-            'password_reset_request'       => 'lang:system::mail_templates.text_password_reset_request',
-            'password_reset_request_alert' => 'lang:system::mail_templates.text_password_reset_request_alert',
-            'password_reset'               => 'lang:system::mail_templates.text_password_reset',
-            'password_reset_alert'         => 'lang:system::mail_templates.text_password_reset_alert',
-            'order'                        => 'lang:system::mail_templates.text_order',
-            'order_alert'                  => 'lang:system::mail_templates.text_order_alert',
-            'order_update'                 => 'lang:system::mail_templates.text_order_update',
-            'reservation'                  => 'lang:system::mail_templates.text_reservation',
-            'reservation_alert'            => 'lang:system::mail_templates.text_reservation_alert',
-            'reservation_update'           => 'lang:system::mail_templates.text_reservation_update',
-            'internal'                     => 'lang:system::mail_templates.text_internal',
-            'contact'                      => 'lang:system::mail_templates.text_contact',
-        ];
-
-        Mail_templates_model::all()->each(function ($model) use ($labels) {
+        Mail_templates_model::all()->each(function ($model) {
             $model->is_custom = 1;
-            $model->label = (!isset($labels[$model->code])) ? null : $labels[$model->code];
             $model->save();
         });
+
+        $path = __DIR__.'/mail/';
+
+        Mail_layouts_model::create([
+            'name'         => 'Default Layout',
+            'code'         => 'default',
+            'layout'       => File::get($path.'layout.htm'),
+            'plain_layout' => File::get($path.'plain_layout.txt'),
+            'layout_css'   => File::get($path.'style.css'),
+        ]);
     }
 
     protected function fillIsCustomOnPermissions()
     {
-        Permissions_model::update(['is_custom' => 1]);
+        DB::table('permissions')->update(['is_custom' => 1]);
     }
 }

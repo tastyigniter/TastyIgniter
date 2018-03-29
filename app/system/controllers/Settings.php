@@ -135,7 +135,7 @@ class Settings extends \Admin\Classes\AdminController
 
         $formConfig = array_get($definition, 'form', []);
         $formConfig['model'] = $model;
-        $formConfig['data'] = $model->getFieldValues();
+        $formConfig['data'] = array_undot($model->getFieldValues());
         $formConfig['alias'] = 'form-'.$this->settingCode;
         $formConfig['arrayName'] = str_singular(strip_class_basename($model, '_model'));
         $formConfig['context'] = 'edit';

@@ -96,6 +96,9 @@ class Filter extends BaseWidget
         $this->vars['scopes'] = $this->getScopes();
     }
 
+    /**
+     * @return \Admin\Classes\BaseWidget
+     */
     public function getSearchWidget()
     {
         return $this->searchWidget;

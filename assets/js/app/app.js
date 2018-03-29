@@ -28,7 +28,32 @@ if (jQuery === undefined)
         $triggerEl.trigger(_event, context)
         if (_event.isDefaultPrevented()) return
 
-        var data = (options.data !== undefined && Object.keys(options.data).length) ? options.data : [$form.serialize()].join('&')
+        var requestData,
+            inputName,
+            submitForm = !!$(options.form).length,
+            data = {}
+
+        $.each($el.parents('[data-request-data]').toArray().reverse(), function extendRequest() {
+            $.extend(data, stringToObj('data-request-data', $(this).data('request-data')))
+        })
+
+        if ($el.is(':input') && !$form.length) {
+            inputName = $el.attr('name')
+            if (inputName !== undefined && options.data[inputName] === undefined) {
+                options.data[inputName] = $el.val()
+            }
+        }
+
+        if (options.data !== undefined && !$.isEmptyObject(options.data)) {
+            $.extend(data, options.data)
+        }
+
+        if (submitForm) {
+            data['_handler'] = handler
+            $form.append(appendObjToForm(data, $form))
+        } else {
+            requestData = [$form.serialize(), $.param(data)].filter(Boolean).join('&')
+        }
 
         var requestOptions = {
             context: context,
@@ -75,7 +100,7 @@ if (jQuery === undefined)
                     if (options.fireError && eval('(function($el, context, textStatus, jqXHR) {' + options.fireError + '}.call($el.get(0), $el, context, textStatus, jqXHR))') === false)
                         return
 
-                    requestOptions.handleErrorResponse(errorMsg)
+                    requestOptions.handleErrorMessage(errorMsg)
                 })
 
                 return updatePromise
@@ -85,11 +110,34 @@ if (jQuery === undefined)
                 $triggerEl.trigger('ajaxComplete', [context, data, textStatus, jqXHR])
                 options.fireComplete && eval('(function($el, context, data, textStatus, jqXHR) {' + options.fireComplete + '}.call($el.get(0), $el, context, data, textStatus, jqXHR))')
             },
-            handleErrorResponse: function (message) {
+
+            // Custom function, requests confirmation from the user
+            handleConfirmMessage: function (message) {
+                var _event = jQuery.Event('ajaxConfirmMessage')
+
+                _event.promise = $.Deferred()
+                if ($(window).triggerHandler(_event, [message]) !== undefined) {
+                    _event.promise.done(function () {
+                        options.confirm = null
+                        new Request(element, handler, options)
+                    })
+                    return false
+                }
+
+                if (_event.isDefaultPrevented()) return
+                if (message) return confirm(message)
+            },
+
+            handleErrorMessage: function (message) {
                 var _event = jQuery.Event('ajaxErrorMessage')
                 $(window).trigger(_event, [message])
                 if (_event.isDefaultPrevented()) return
                 if (message) alert(message)
+            },
+
+            // Custom function, redirect the browser to another location
+            handleRedirectResponse: function (url) {
+                window.location.href = url
             },
 
             // Custom function, handle any application specific response
@@ -128,7 +176,7 @@ if (jQuery === undefined)
                 }
 
                 if (isRedirect)
-                    window.location.href = options.redirect
+                    requestOptions.handleRedirectResponse(options.redirect)
 
                 updatePromise.resolve()
 
@@ -141,18 +189,33 @@ if (jQuery === undefined)
         context.error = requestOptions.error
         context.complete = requestOptions.complete
         requestOptions = $.extend(requestOptions, options)
+        requestOptions.data = requestData
 
-        context = {}
-        requestOptions.data = data
+        // Initiate request
+        if (options.confirm && !requestOptions.handleConfirmMessage(options.confirm)) {
+            return
+        }
+
+        if (submitForm) {
+            $form.submit()
+            return;
+        }
 
         $(window).trigger('ajaxBeforeSend', [context])
         $el.trigger('ajaxPromise', [context])
         return $.ajax(requestOptions)
             .fail(function (jqXHR, textStatus, errorThrown) {
+                if (!isRedirect) {
+                    $el.trigger('ajaxFail', [context, textStatus, jqXHR])
+                }
             })
             .done(function (data, textStatus, jqXHR) {
+                if (!isRedirect) {
+                    $el.trigger('ajaxDone', [context, data, textStatus, jqXHR])
+                }
             })
             .always(function (dataOrXhr, textStatus, xhrOrError) {
+                $el.trigger('ajaxAlways', [context, dataOrXhr, textStatus, xhrOrError])
             })
     }
 
@@ -170,7 +233,9 @@ if (jQuery === undefined)
     // REQUEST PLUGIN DEFINITION
     // ============================
 
-    function Plugin(handler, option) {
+    var old = $.fn.request
+
+    $.fn.request = function (handler, option) {
         var $this = $(this).first()
         var data = {
             fireBeforeUpdate: $this.data('request-before-update'),
@@ -190,9 +255,6 @@ if (jQuery === undefined)
         return new Request($this, handler, options)
     }
 
-    var old = $.fn.request
-
-    $.fn.request = Plugin
     $.fn.request.Constructor = Request
 
     $.request = function (handler, option) {
@@ -210,7 +272,7 @@ if (jQuery === undefined)
     // REQUEST DATA-API
     // ==============
 
-    $(document).on('submit', '[data-request]', function() {
+    $(document).on('submit', '[data-request]', function () {
         $(this).request()
         return false
     })
@@ -232,6 +294,17 @@ if (jQuery === undefined)
         catch (e) {
             throw new Error('Error parsing the ' + name + ' attribute value. ' + e)
         }
+    }
+
+    function appendObjToForm(objToAppend, $appendToForm) {
+        $.each(objToAppend, function (key, value) {
+            var input = $("<input>").attr({
+                'type': 'hidden',
+                'name': key
+            }).val(value)
+
+            $appendToForm.append(input)
+        })
     }
 }(jQuery);
 
@@ -331,25 +404,26 @@ if (jQuery === undefined)
 
 }(window.jQuery)
 
-var TI = {
-    helpers: {
-        addAlert: function (message, type, autoDismiss) {
-            $('#notification').append(
-                '<div class="alert alert-' + type + '">' +
-                '<button type="button" class="close" data-dismiss="alert">' +
-                '&times;</button>' + message.replace(/^"(.*)"$/, '$1') + '</div>')
+// var TI = {
+//     helpers: {
+//         addAlert: function (message, type, autoDismiss) {
+//             $('#notification').append(
+//                 '<div class="alert alert-' + type + '">' +
+//                 '<button type="button" class="close" data-dismiss="alert">' +
+//                 '&times;</button>' + message.replace(/^"(.*)"$/, '$1') + '</div>')
+//
+//             var $alert = $('#notification .alert')
+//             $alert.slideDown('slow').fadeTo('slow', 0.1).fadeTo('slow', 1.0)
+//             if (autoDismiss) $alert.delay(5000).slideUp('slow')
+//
+//             $('.alert .close').on('click', function (e) {
+//                 $(this).parent().hide()
+//             })
+//         }
+//     }
+// }
 
-            var $alert = $('#notification .alert')
-            $alert.slideDown('slow').fadeTo('slow', 0.1).fadeTo('slow', 1.0)
-            if (autoDismiss) $alert.delay(5000).slideUp('slow')
-
-            $('.alert .close').on('click', function (e) {
-                $(this).parent().hide()
-            })
-        }
-    }
-}
-
-String.prototype.truncate = String.prototype.truncate || function (n) {
-        return (this.length > n) ? this.substr(0, n - 1) + '&hellip;' : this
-    }
+// String.prototype.truncate = String.prototype.truncate || function (n) {
+//     return (this.length > n) ? this.substr(0, n - 1) + '&hellip;' : this
+// }
+//

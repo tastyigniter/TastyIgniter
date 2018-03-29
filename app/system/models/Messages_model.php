@@ -43,11 +43,11 @@ class Messages_model extends Model
             'layout' => ['System\Models\Mail_layouts_model'],
         ],
         'hasMany'   => [
-            'recipients'     => ['System\Models\Message_meta_model'],
-            'customers'      => ['Admin\Models\Customers_model'],
-            'customer_group' => ['Admin\Models\Customer_groups_model'],
-            'staff'          => ['Admin\Models\Staffs_model'],
-            'staff_group'    => ['Admin\Models\Staff_groups_model'],
+            'recipients' => ['System\Models\Message_meta_model'],
+//            'customers'      => ['Admin\Models\Customers_model'],
+//            'customer_group' => ['Admin\Models\Customer_groups_model'],
+//            'staff'          => ['Admin\Models\Staffs_model'],
+//            'staff_group'    => ['Admin\Models\Staff_groups_model'],
         ],
         'morphTo'   => [
             'sender' => [],
@@ -66,7 +66,7 @@ class Messages_model extends Model
         'subject asc', 'subject desc',
     ];
 
-    public static function findRecipient($type, array $ids = [])
+    public static function findRecipients($type, array $ids = [])
     {
         $model = str_contains($type, 'customer')
             ? Customers_model::class : Staffs_model::class;
@@ -174,6 +174,7 @@ class Messages_model extends Model
 
     public function getRecipientAttribute($value)
     {
+        // Backward compatibility
         $replace = ['all_customers' => 'customers', 'all_staffs' => 'staff'];
         if (array_key_exists($value, $replace))
             return $replace[$value];
@@ -302,13 +303,12 @@ class Messages_model extends Model
     // Helpers
     //
 
-    public function send()
+    public function send($recipients)
     {
-        if ($this->status)
+        if ($this->status !== -1)
             return;
 
         $subject = $this->subject;
-        $recipients = $this->recipients;
         Mail::sendToMany(
             $recipients,
             [
@@ -322,9 +322,19 @@ class Messages_model extends Model
             },
             ['bcc' => TRUE]
         );
+    }
 
+    public function sent()
+    {
         $this->status = 1;
         $this->save();
+
+        $this->recipients()->update(['status' => 1]);
+    }
+
+    public function isSent()
+    {
+        return $this->status > 0;
     }
 
     public function sendToEmail()
@@ -372,29 +382,38 @@ class Messages_model extends Model
         return $meta->state == 1 ? 'read' : 'unread';
     }
 
-    public function addRecipients($type, $ids)
+    public function addRecipients($recipients)
     {
-        $recipientList = self::findRecipient($type, $ids)->each(function ($model) {
+        if ($recipients->isEmpty())
+            return;
+
+        $this->recipients()->delete();
+
+        $recipients->each(function ($model) {
             $this->recipients()->create([
                 'messagable_id'   => $model->getKey(),
                 'messagable_type' => get_class($model),
             ]);
 
             return $model;
-        })->mapWithKeys(function ($model) {
-            return [$model->email => $model->full_name];
-        })->toArray();
-
-        return $recipientList;
+        });
     }
 
     protected function performAfterSave()
     {
         $this->restorePurgedValues();
 
-        if ($this->wasRecentlyCreated AND !empty($this->attributes[$this->recipient])) {
-            $this->addRecipients($this->recipient, $this->attributes[$this->recipient]);
+        if (!empty($this->attributes[$this->recipient]) AND is_array($this->attributes[$this->recipient])) {
+
+            $recipientList = self::findRecipients($this->recipient, $this->attributes[$this->recipient]);
             unset($this->attributes[$this->recipient]);
+
+            if ($this->sendToEmail()) {
+                $this->send($recipientList);
+            }
+            else {
+                $this->addRecipients($recipientList);
+            }
         }
     }
 }

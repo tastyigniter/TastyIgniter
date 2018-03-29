@@ -20,14 +20,14 @@ return [
     'text_no_reservations'    => 'There are no reservations available to show.',
     'text_no_inbox'           => 'There are no messages available to show',
 
-    'label_first_name' => 'First Name',
-    'label_last_name'  => 'Last Name',
-    'label_email'      => 'Email Address',
-    'label_password'   => 'Password',
+    'label_first_name'       => 'First Name',
+    'label_last_name'        => 'Last Name',
+    'label_email'            => 'Email Address',
+    'label_password'         => 'Password',
     'label_password_confirm' => 'Password Confirm',
-    'label_telephone'  => 'Telephone',
-    'label_s_question' => 'Security Question',
-    'label_s_answer'   => 'Security Answer',
+    'label_telephone'        => 'Telephone',
+    'label_s_question'       => 'Security Question',
+    'label_s_answer'         => 'Security Answer',
 
     'column_cart_items' => 'Total Items',
     'column_cart_total' => 'Total Amount',
@@ -65,8 +65,8 @@ return [
         'alert_invalid_login'   => 'Username and password not found!',
         'alert_account_created' => 'Account created successfully, login below!',
 
-        'activity_logged_in'        => ' <b>logged</b> in.',
-        'activity_registered_account'        => ' <b>created</b> an account.',
+        'activity_logged_in'          => ' <b>logged</b> in.',
+        'activity_registered_account' => ' <b>created</b> an account.',
     ],
 
     'reset' => [

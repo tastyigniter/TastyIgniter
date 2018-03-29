@@ -24,10 +24,6 @@
       "name": "metis-menu-css"
     },
     {
-      "href": "assets/css/metisMenu.min.css",
-      "name": "metis-menu-css"
-    },
-    {
       "href": ":assets_url,css/vendor/select2.min.css",
       "name": "select2-css"
     },

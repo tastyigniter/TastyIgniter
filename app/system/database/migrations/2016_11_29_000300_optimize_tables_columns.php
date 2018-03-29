@@ -382,6 +382,9 @@ class OptimizeTablesColumns extends Migration
     {
         return function (Blueprint $table) {
             $table->string('status_for')->change();
+            $table->integer('staff_id')->nullable()->change();
+            $table->integer('assignee_id')->nullable()->change();
+            $table->tinyInteger('notify')->nullable()->change();
             $table->text('comment')->nullable()->change();
         };
     }

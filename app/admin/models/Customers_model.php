@@ -37,16 +37,16 @@ class Customers_model extends AuthUserModel
     public $timestamps = TRUE;
 
     public $relation = [
-        'hasMany'       => [
+        'hasMany'   => [
             'addresses'    => ['Admin\Models\Addresses_model', 'delete' => TRUE],
             'orders'       => ['Admin\Models\Orders_model', 'delete' => TRUE],
             'reservations' => ['Admin\Models\Reservations_model', 'delete' => TRUE],
         ],
-        'belongsTo'     => [
-            'group'             => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
-            'address'           => 'Admin\Models\Addresses_model',
+        'belongsTo' => [
+            'group'   => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
+            'address' => 'Admin\Models\Addresses_model',
         ],
-        'morphMany'     => [
+        'morphMany' => [
             'messages' => ['System\Models\Message_meta_model', 'name' => 'messagable'],
         ],
     ];
@@ -59,7 +59,7 @@ class Customers_model extends AuthUserModel
 
     public static function getDropdownOptions()
     {
-        return static::isEnabled()->selectRaw('concat(first_name, " ", last_name) as full_name')->dropdown('full_name');
+        return static::isEnabled()->selectRaw('customer_id, concat(first_name, " ", last_name) as name')->dropdown('name');
     }
 
     //
@@ -126,7 +126,7 @@ class Customers_model extends AuthUserModel
 
     public function listAddresses()
     {
-        return $this->addresses()->with(['country'])->get()->groupBy(function ($address) {
+        return $this->addresses()->get()->groupBy(function ($address) {
             return $address->getKey();
         });
     }
@@ -184,7 +184,7 @@ class Customers_model extends AuthUserModel
      * Reset a customer password,
      * new password is sent to registered email
      *
-     * @return bool
+     * @return string Reset code
      */
     public function resetPassword()
     {

@@ -174,7 +174,7 @@ class BaseWidget extends Extendable
      * @param array $config
      * @param array $required Required config items
      */
-    public function setConfig($config, $required = [])
+    public function setConfig($config, array $required = [])
     {
         $this->config = $this->makeConfig($config, $required);
     }
@@ -185,7 +185,7 @@ class BaseWidget extends Extendable
      * @param string $name Config name, supports array names like "field[key]"
      * @param mixed $default Default value if nothing is found
      *
-     * @return string
+     * @return mixed
      */
     public function getConfig($name = null, $default = null)
     {

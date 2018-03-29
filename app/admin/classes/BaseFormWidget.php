@@ -121,7 +121,9 @@ class BaseFormWidget extends BaseWidget
      */
     public function getLoadValue()
     {
-        $defaultValue = $this->formField->getDefaultFromData($this->data ?: $this->model);
+        $defaultValue = !$this->model->exists
+            ? $this->formField->getDefaultFromData($this->data ?: $this->model)
+            : null;
 
         if ($value = post($this->formField->getName()))
             return $value;

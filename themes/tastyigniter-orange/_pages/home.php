@@ -3,6 +3,8 @@ title: main::default.home.text_heading
 layout: default
 permalink: /
 
+'[account]':
+
 '[slider]':
 
 '[localSearch]':

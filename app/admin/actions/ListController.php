@@ -26,9 +26,7 @@ class ListController extends ControllerAction
      *  $listConfig = [
      *      'list'  => [
      *          'title'         => 'lang:text_title',
-     *          'recordUrl'    => null,
      *          'emptyMessage' => 'lang:admin::default.text_empty',
-     *          'join'          => null,
      *          'configFile'   => null,
      *          'showSetup'         => TRUE,
      *          'showSorting'       => TRUE,
@@ -109,7 +107,7 @@ class ListController extends ControllerAction
     {
         $checkedIds = post('checked');
         if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds)) {
-            flash()->success(lang('admin::default.alert_list_delete_empty'));
+            flash()->success(lang('admin::default.list.delete_empty'));
 
             return $this->controller->refreshList();
         }

@@ -86,6 +86,7 @@ class Updates extends \Admin\Classes\AdminController
 
         $this->prepareAssets();
 
+        $this->vars['searchActionUrl'] = admin_url('updates/search');
         $this->vars['itemType'] = str_singular($itemType);
         $this->vars['carteInfo'] = $updateManager->getSiteDetail();
         $this->vars['installedItems'] = $updateManager->getInstalledItems();
@@ -199,7 +200,7 @@ class Updates extends \Admin\Classes\AdminController
             if (!strlen($carteKey))
                 throw new Exception('No carte key specified.');
 
-            $json = UpdateManager::instance()->getSiteDetail($carteKey);
+            $json = UpdateManager::instance()->applySiteDetail($carteKey);
 
             $json = [
                 '#carte-details' => $this->makePartial('updates/carte_info', ['carteInfo' => $json]),

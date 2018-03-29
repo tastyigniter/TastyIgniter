@@ -1,87 +1,29 @@
-// Creates event handler input tags and append to form before submitting
 $(function () {
-    $(document).on('click', 'a[data-request], button[data-request]', function () {
-        var $element = $(this),
-            handler = $element.data('request'),
-            $form = $($element.data('requestForm'))
-
-        $form = $form.length ? $form : $element.closest('form')
-
-        if (handler && $form) {
-            if ($element.data('requestConfirm') && !confirm($element.data('requestConfirm'))) {
-                return false
-            }
-
-            var params = stringToObj('data-request-data', $(this).data('request-data'))
-            for (var index in params) {
-                $form.find('input[name="' + index + '"]').remove()
-                $form.append('<input type="hidden" name="' + index + '" value="' + params[index] + '" />')
-            }
-
-            $form.find('input[name="_handler"]').remove()
-            $form.append('<input type="hidden" name="_handler" value="' + handler + '" />')
-
-            $form.submit()
-        }
-    })
-
-    function stringToObj(name, value) {
-        if (value === undefined) value = ''
-        if (typeof value == 'object') return value
-
-        try {
-            return JSON.parse(JSON.stringify(eval("({" + value + "})")))
-        }
-        catch (e) {
-            throw new Error('Error parsing the ' + name + ' attribute value. ' + e)
-        }
-    }
-})
-
-$(function () {
-    $("#side-menu").metisMenu()
+    $("#side-nav-menu").metisMenu()
 })
 
 //Loads the correct sidebar on window load,
 //collapses the sidebar on window resize.
 // Sets the min-height of #page-wrapper to window size
-// $(function () {
-//
-//     var collapseState = Cookies.set('ti_sidebarToggleState')
-//
-//     $(window).bind("load resize", function () {
-//         topOffset = 50
-//         width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width
-//         if (width < 768) {
-//             $('.navbar-top .navbar-collapse').addClass('collapse')
-//             $('#wrapper').removeClass('hide-sidebar')
-//             topOffset = 100 // 2-row-menu
-//         } else {
-//             $('.navbar-top .navbar-collapse').removeClass('collapse')
-//             if (collapseState == 'hide') {
-//                 $('#wrapper').addClass('hide-sidebar')
-//             }
-//         }
-//
-//         height = (this.window.innerHeight > 0) ? this.window.innerHeight : this.screen.height
-//         height = height - topOffset
-//         if (height < 1) height = 1
-//         if (height > topOffset) {
-//             $("#page-wrapper").css("min-height", (height - 35) + "px")
-//             $("#page-wrapper").css("height", "100%")
-//         }
-//     })
-//
-//     $(document).on('click', '.sidebar-toggle', function () {
-//         if ($('#wrapper').hasClass('hide-sidebar')) {
-//             $('#wrapper').removeClass('hide-sidebar')
-//             Cookies.set('ti_sidebarToggleState', 'show')
-//         } else {
-//             $('#wrapper').addClass('hide-sidebar')
-//             Cookies.set('ti_sidebarToggleState', 'hide')
-//         }
-//     })
-// })
+$(function () {
+    var collapseState = Cookies.set('ti_sidebarToggleState'),
+        $container = $('body')
+
+    if (collapseState === 'collapsed') {
+        $container.addClass('sidebar-collapsed')
+    }
+
+    $(document).on('click', '[data-toggle="sidebar"]', function () {
+        console.log('ddd')
+        if ($container.hasClass('sidebar-collapsed')) {
+            $container.removeClass('sidebar-collapsed')
+            Cookies.set('ti_sidebarToggleState', 'expanded')
+        } else {
+            $container.addClass('sidebar-collapsed')
+            Cookies.set('ti_sidebarToggleState', 'collapsed')
+        }
+    })
+})
 
 // List Filter State Toggle
 // Uses user cookie value to show/hide list filter bar
@@ -192,32 +134,6 @@ $(function () {
         init()
     })
 })
-
-$(document).ready(function () {
-    $('[data-toggle="score"]').on('click', function () {
-        displayRatings($(this).attr('data-score-hints'))
-    })
-})
-
-function displayRatings(ratings) {
-    $('.rating-star').raty({
-        score: function () {
-            return $(this).attr('data-score')
-        },
-        scoreName: function () {
-            return $(this).attr('data-score-name')
-        },
-        readOnly: function () {
-            return $(this).attr('data-readonly') == 'true'
-        },
-        hints: ratings,
-        starOff: 'fa fa-star-o',
-        starOn: 'fa fa-star',
-        cancel: false, half: false, starType: 'i'
-    })
-
-    $('.rating-star i[title]').tooltip({placement: 'bottom'})
-}
 
 // Multiple Modal Fix
 $(document).on('show.bs.modal', '.modal', function () {

@@ -358,7 +358,8 @@
         var self = this,
             $field = $(field),
             $container = $field.closest(this.options.searchContainer),
-            searchType = $field.data('searchType')
+            searchType = $field.data('searchType'),
+            searchAction = $field.data('searchAction')
 
         if ($field.length === 0) return
 
@@ -376,7 +377,7 @@
             method: 'POST',
             limit: 15,
             remote: {
-                url: js_admin_url('updates/search?filter[type]=' + searchType + '&filter[search]=%QUERY'),
+                url: searchAction+'?filter[type]=' + searchType + '&filter[search]=%QUERY',
                 wildcard: '%QUERY',
                 transform: function (response) {
                     return (response && response.hasOwnProperty('data')) ? response.data : []

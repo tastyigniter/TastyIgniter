@@ -1,7 +1,7 @@
 ---
 title: Account Reservations
 layout: default
-permalink: /account/reservations
+permalink: /account/reservations/:reservationId?
 
 '[account]':
     security: customer

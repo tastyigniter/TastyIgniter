@@ -313,25 +313,25 @@ class UpdateManager
         return $items;
     }
 
-    public function getSiteDetail($key = null)
+    public function getSiteDetail()
     {
-        if (!is_null($key)) {
-            $this->getHubManager()->setSecurity($key);
+        return params('carte_info');
+    }
 
-            $result = $this->getHubManager()->getDetail('site');
-            if (isset($result['data']) AND is_array($result['data']))
-                setting()->add('carte_info', $result['data']);
-        }
+    public function applySiteDetail($key)
+    {
+        $info = [];
+        $result = $this->getHubManager()->getDetail('site');
+        if (isset($result['data']) AND is_array($result['data']))
+            $info = $result['data'];
 
-        return setting('carte_info');
+        $this->getHubManager()->setSecurity($key, $info);
+
+        return $info;
     }
 
     public function requestUpdateList($force = FALSE)
     {
-        // Delete setting entry as its no longer in use... remove code in next version
-//        if ($this->config->item('last_version_check'))
-        params()->forget('prefs', 'last_version_check');
-
         $installedItems = $this->getInstalledItems();
 
         // cache updates for 6 hours.
@@ -445,7 +445,7 @@ class UpdateManager
             $ignoredUpdates[$item['name']] = $item;
         }
 
-        setting()->add('ignored_updates', $ignoredUpdates);
+        setting()->set('ignored_updates', $ignoredUpdates);
 
         return TRUE;
     }

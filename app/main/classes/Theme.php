@@ -183,7 +183,7 @@ class Theme
 
     public function hasCustomData()
     {
-        return $this->getConfigValue('form', false);
+        return $this->getConfigValue('form', FALSE);
     }
 
     public function getCustomData()
@@ -243,7 +243,9 @@ class Theme
 
     /**
      * Implements the getter functionality.
-     * @param  string  $name
+     *
+     * @param  string $name
+     *
      * @return void
      */
     public function __get($name)
@@ -257,7 +259,9 @@ class Theme
 
     /**
      * Determine if an attribute exists on the object.
-     * @param  string  $key
+     *
+     * @param  string $key
+     *
      * @return bool
      */
     public function __isset($key)
@@ -266,6 +270,6 @@ class Theme
             return array_has($this->getCustomData(), $key);
         }
 
-        return false;
+        return FALSE;
     }
 }

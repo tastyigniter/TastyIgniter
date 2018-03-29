@@ -2,10 +2,7 @@
 
 use AdminAuth;
 use AdminMenu;
-use Exception;
 use System\Models\Mail_templates_model;
-use System\Models\Mail_layouts_model;
-use Template;
 
 class MailLayouts extends \Admin\Classes\AdminController
 {
@@ -67,11 +64,6 @@ class MailLayouts extends \Admin\Classes\AdminController
     public function formExtendQuery($query)
     {
         $query->with('templates');
-    }
-
-    public function formBeforeSave($model)
-    {
-        $model->is_custom = TRUE;
     }
 
     public function formValidate($model, $form)

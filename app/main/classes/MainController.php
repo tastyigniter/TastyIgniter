@@ -25,6 +25,7 @@ use Response;
 use System\Classes\BaseComponent;
 use System\Classes\BaseController;
 use System\Classes\ComponentManager;
+use System\Helpers\ViewHelper;
 use System\Traits\AssetMaker;
 use SystemException;
 use URL;
@@ -368,7 +369,7 @@ class MainController extends BaseController
                 $this->componentContext = $componentObj;
                 $result = $componentObj->runEventHandler($handlerName);
 
-                return ($result) ?: TRUE;
+                return $result ?: TRUE;
             }
         } // Process page specific handler (index_onSomething)
         else {
@@ -376,14 +377,14 @@ class MainController extends BaseController
             if ($this->methodExists($pageHandler)) {
                 $result = call_user_func_array([$this, $pageHandler], $this->params);
 
-                return ($result) ?: TRUE;
+                return $result ?: TRUE;
             }
 
             if (($componentObj = $this->findComponentByHandler($handler)) !== null) {
                 $this->componentContext = $componentObj;
                 $result = $componentObj->runEventHandler($handler);
 
-                return ($result) ?: TRUE;
+                return $result ?: TRUE;
             }
         }
 
@@ -593,7 +594,7 @@ class MainController extends BaseController
         $fileContent = $content->parsedMarkup;
 
         // Inject global view variables
-        $globalVars = $this->template->getGlobals();
+        $globalVars = ViewHelper::getGlobalVars();
         if (!empty($globalVars)) {
             $params = $params + $globalVars;
         }
@@ -760,9 +761,11 @@ class MainController extends BaseController
         list($componentAlias, $partialName) = explode('::', $name);
 
         // Component alias not supplied
-        $componentObj = $this->componentContext;
-        if (!strlen($componentAlias) AND is_null($componentObj)) {
-            if (($componentObj = $this->findComponentByPartial($partialName)) === null) {
+        if (!strlen($componentAlias)) {
+            if (!is_null($this->componentContext)) {
+                $componentObj = $this->componentContext;
+            }
+            elseif (($componentObj = $this->findComponentByPartial($partialName)) === null) {
                 if ($throwException)
                     throw new ApplicationException(sprintf(
                         Lang::get('main::default.not_found.partial'), $partialName
@@ -771,8 +774,7 @@ class MainController extends BaseController
                 return FALSE;
             }
         }
-
-        if (is_null($componentObj)) {
+        else {
             if (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
                 if ($throwException)
                     throw new ApplicationException(sprintf(

@@ -168,8 +168,13 @@ class SetupController
                 break;
         }
 
-        $status = ($code == 'writable') ? 'complete' : $code;
-        $this->repository->set('requirement', $result ? $status : 'fail')->save();
+        $checked = $this->repository->get('checkedRequirement', []);
+        $checked[$code] = $result ? true : false;
+        $status = (count(array_filter($checked)) == 10) ? 'complete' : $code;
+
+        $this->repository->set('requirement', $result ? $status : 'fail')
+                         ->set('checkedRequirement', $checked)->save();
+
         $this->writeLog('Requirement %s %s', $code, ($result ? '+OK' : '=FAIL'));
 
         return ['result' => $result];
@@ -535,10 +540,10 @@ class SetupController
         return htmlentities($value, ENT_QUOTES, 'UTF-8', FALSE);
     }
 
-    protected function server($var, $default = null)
+    protected function server($key, $default = null)
     {
-        if (array_key_exists($var, $_SERVER)) {
-            $result = $_SERVER[$var];
+        if (array_key_exists($key, $_SERVER)) {
+            $result = $_SERVER[$key];
             if (is_string($result)) $result = trim($result);
 
             return $result;
@@ -547,13 +552,13 @@ class SetupController
         return $default;
     }
 
-    protected function post($var = null, $default = null)
+    protected function post($key = null, $default = null)
     {
-        if (is_null($var))
+        if (is_null($key))
             return $_POST;
 
-        if (array_key_exists($var, $_POST)) {
-            $result = $_POST[$var];
+        if (array_key_exists($key, $_POST)) {
+            $result = $_POST[$key];
             if (is_string($result)) $result = trim($result);
 
             return $result;
@@ -562,10 +567,10 @@ class SetupController
         return $default;
     }
 
-    protected function session($var, $default = null)
+    protected function session($key, $default = null)
     {
-        if (array_key_exists($var, $_SESSION)) {
-            $result = $_SESSION[$var];
+        if (array_key_exists($key, $_SESSION)) {
+            $result = $_SESSION[$key];
             if (is_string($result)) $result = trim($result);
 
             return $result;
@@ -666,9 +671,6 @@ class SetupController
             $this->writeLog('Failed to get server data (ignored): '.$ex->getMessage());
         }
 
-        if (!$result || !strlen($result))
-            throw new SetupException('Server responded with no response.');
-
         try {
             $_result = @json_decode($result, TRUE);
         } catch (Exception $ex) {
@@ -677,6 +679,10 @@ class SetupController
         if (!is_array($_result)) {
             $this->writeLog('Server response: '.$result);
             throw new SetupException('Server returned an invalid response.');
+        }
+
+        if (isset($_result['message']) AND !in_array($httpCode, [200, 201])) {
+            throw new Exception($_result['message']);
         }
 
         return $_result;

@@ -3,7 +3,7 @@
 	box-shadow: unset;
 }
 .selected .panel-partial {
-	border:1px solid #ACB5C7;
+	border: 1px solid #ACB5C7;
 }
 .panel-partial .panel-component > .panel-heading {
 	background-color: #E9E9ED;

@@ -2,10 +2,11 @@
 
 use File;
 use Igniter\Flame\Support\StringParser;
-use Illuminate\Mail\Markdown;
+use Main\Models\Image_tool_model;
 use Model;
 use October\Rain\Mail\MailParser;
 use System\Classes\ExtensionManager;
+use System\Helpers\ViewHelper;
 use View;
 
 /**
@@ -85,16 +86,6 @@ class Mail_templates_model extends Model
         $langLabel = !empty($this->attributes['label']) ? $this->attributes['label'] : '';
 
         return (sscanf($langLabel, 'lang:%s', $lang) === 1) ? lang($langLabel) : $langLabel;
-    }
-
-    public function getBodyAttribute($value)
-    {
-        return html_entity_decode($value);
-    }
-
-    public function setBodyAttribute($value)
-    {
-        $this->attributes['body'] = trim(preg_replace('~>\s+<~m', '><', $value));
     }
 
     public function getVariablesAttribute($value)
@@ -183,6 +174,9 @@ class Mail_templates_model extends Model
         $this->subject = array_get($sections, 'settings.subject', 'No subject');
         $this->body = $sections['html'];
         $this->plain_body = $sections['text'];
+
+        $layoutCode = array_get($sections, 'settings.layout', 'default');
+        $this->layout_id = Mail_layouts_model::getIdFromCode($layoutCode);
     }
 
     /**
@@ -200,22 +194,21 @@ class Mail_templates_model extends Model
             if ($is_custom)
                 continue;
 
-//            if (!array_key_exists($code, $templates))
-//                self::whereCode($code)->delete();
+            if (!array_key_exists($code, $templates))
+                self::whereCode($code)->delete();
         }
 
         // Create new templates
         foreach ($newTemplates as $name => $label) {
+            $sections = self::getTemplateSections($name);
+            $layoutCode = array_get($sections, 'settings.layout', 'default');
+
             $templateModel = self::make();
             $templateModel->code = $name;
             $templateModel->label = $label;
             $templateModel->is_custom = 0;
+            $templateModel->template_id = Mail_layouts_model::getIdFromCode($layoutCode);
             $templateModel->save();
-
-//            $templateModel->subject = $template->subject;
-//            $templateSections = explode("\n==\n", $template->body, 2);
-//            $templateModel->body = trim($templateSections[0]);
-//            $templateModel->plain_body = isset($templateSections[1]) ? trim($templateSections[1]) : null;
         }
     }
 
@@ -239,20 +232,28 @@ class Mail_templates_model extends Model
             self::$templateCache[$code] = $template = self::findOrMakeTemplate($code);
         }
 
+        $globalVars = ViewHelper::getGlobalVars();
+        if (!empty($globalVars)) {
+            $data = (array)$data + $globalVars;
+        }
+
+        if ($siteLogo = array_get($data, 'site_logo') AND !starts_with($siteLogo, ['//', 'http://', 'https://']))
+            $data['site_logo'] = Image_tool_model::resize($siteLogo, 200, 50);
+
         $stringParser = new StringParser;
 
         // Subject
         $customSubject = $message->getSwiftMessage()->getSubject();
         if (empty($customSubject)) {
-            $message->subject($stringParser->parse(Markdown::parse($template->subject), $data));
+            $message->subject($stringParser->parse($template->subject, $data));
         }
 
         // HTML contents
-        $html = $stringParser->parse(Markdown::parse($template->body), $data);
+        $html = $stringParser->parse($template->body, $data);
         if ($template->layout AND strlen($template->layout->layout)) {
-            $html = $stringParser->parse(Markdown::parse($template->layout->layout), [
-                    'content' => $html,
-                    'css'     => $template->layout->custom_css,
+            $html = $stringParser->parse($template->layout->layout, [
+                    'body'       => $html,
+                    'layout_css' => $template->layout->layout_css,
                 ] + (array)$data);
         }
 
@@ -260,15 +261,15 @@ class Mail_templates_model extends Model
 
         // Text contents
         if (strlen($template->plain_body)) {
-            $text = $stringParser->parse(Markdown::parse($template->plain_body), $data);
+            $text = $stringParser->parse($template->plain_body, $data);
             if ($template->layout AND strlen($template->layout->plain_layout)) {
-                $text = $template->layout->parsePlain($text, $data);
-                $text = $stringParser->parse(Markdown::parse($template->layout->plain_layout), [
-                        'content' => $text,
+                $text = $stringParser->parse($template->layout->plain_layout, [
+                        'body' => $text,
                     ] + (array)$data);
             }
 
-            $message->addPart($text, 'text/plain');
+            $cleanText = preg_replace('/<br\s?\/?>/i', "\r\n", $text);
+            $message->addPart($cleanText, 'text/plain');
         }
     }
 

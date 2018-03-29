@@ -1,22 +1,22 @@
 <?php
 $config['list']['toolbar'] = [
-    'buttons'   => [
-        'create' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'mail_layouts/create'],
-        'delete' => [
+    'buttons' => [
+        'create'    => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'mail_layouts/create'],
+        'delete'    => [
             'label'                => 'lang:admin::default.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form',
             'data-request'         => 'onDelete', 'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
         ],
         'templates' => [
-            'label'   => 'lang:system::mail_templates.text_templates',
-            'class'   => 'btn btn-default',
-            'href'    => 'mail_templates',
+            'label' => 'lang:system::mail_templates.text_templates',
+            'class' => 'btn btn-default',
+            'href'  => 'mail_templates',
         ],
     ],
 ];
 
 $config['list']['columns'] = [
-    'edit'          => [
+    'edit'         => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
         'attributes'   => [
@@ -24,26 +24,26 @@ $config['list']['columns'] = [
             'href'  => 'mail_layouts/edit/{template_id}',
         ],
     ],
-    'name'          => [
+    'name'         => [
         'label'      => 'lang:system::mail_templates.column_name',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'status'        => [
+    'status'       => [
         'label' => 'lang:system::mail_templates.column_status',
         'type'  => 'switch',
     ],
-    'date_updated'  => [
+    'date_updated' => [
         'label'      => 'lang:system::mail_templates.column_date_updated',
         'type'       => 'datesince',
         'searchable' => TRUE,
     ],
-    'date_added'    => [
+    'date_added'   => [
         'label'      => 'lang:system::mail_templates.column_date_added',
         'type'       => 'datesince',
         'searchable' => TRUE,
     ],
-    'template_id'   => [
+    'template_id'  => [
         'label'     => 'lang:system::mail_templates.column_id',
         'invisible' => TRUE,
     ],
@@ -69,9 +69,9 @@ $config['form']['toolbar'] = [
         ],
         'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'mail_layouts'],
         'templates' => [
-            'label'   => 'lang:system::mail_templates.text_templates',
-            'class'   => 'btn btn-default',
-            'href'    => 'mail_templates',
+            'label' => 'lang:system::mail_templates.text_templates',
+            'class' => 'btn btn-default',
+            'href'  => 'mail_templates',
         ],
     ],
 ];
@@ -100,7 +100,11 @@ $config['form']['tabs'] = [
     'fields' => [
         'layout'       => [
             'tab'  => 'lang:system::mail_templates.label_body',
-            'type' => 'richeditor',
+            'type' => 'codeeditor',
+        ],
+        'layout_css'   => [
+            'tab'  => 'lang:system::mail_templates.label_layout_css',
+            'type' => 'codeeditor',
         ],
         'plain_layout' => [
             'tab'        => 'lang:system::mail_templates.label_plain_layout',

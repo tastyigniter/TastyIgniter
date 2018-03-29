@@ -35,6 +35,7 @@ return [
 
     // TastyIgniter aliases
     'Assets'       => System\Facades\Assets::class,
+    'Country'      => System\Facades\Country::class,
     'File'         => Igniter\Flame\Support\Facades\File::class,
     'Flash'        => Igniter\Flame\Flash\Facades\Flash::class,
     'Form'         => Igniter\Flame\Html\FormFacade::class,

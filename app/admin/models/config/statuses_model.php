@@ -89,7 +89,7 @@ $config['form']['fields'] = [
         'type'        => 'select',
         'span'        => 'right',
         'placeholder' => 'lang:admin::default.text_please_select',
-        'options'     => 'getStatusForDropdownOptions'
+        'options'     => 'getStatusForDropdownOptions',
     ],
     'status_color'    => [
         'label' => 'lang:admin::statuses.label_color',

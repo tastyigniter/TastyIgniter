@@ -7,7 +7,7 @@
 +function ($) {
     "use strict";
 
-    // FIELD REPEATER CLASS DEFINITION
+    // FIELD DATEPICKER CLASS DEFINITION
     // ============================
 
     var DatePicker = function (element, options) {

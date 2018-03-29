@@ -130,6 +130,7 @@ class Themes_model extends Model
     public function getFieldValues()
     {
         $customizeConfig = $this->themeClass->getConfigValue('form', []);
+
         return $this->data ?: [];
     }
 
@@ -250,7 +251,7 @@ class Themes_model extends Model
                 $active_theme_options = setting('active_theme_options');
                 $active_theme_options['main'] = [$update['name'], $update['data']];
 
-                setting()->add('active_theme_options', $active_theme_options);
+                setting()->set('active_theme_options', $active_theme_options);
             }
         }
 

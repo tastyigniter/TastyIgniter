@@ -22,11 +22,7 @@ permalink: /checkout
                     <?= component('local'); ?>
                 </div>
 
-                <p class="well">
-                    <?= $customer
-                        ? sprintf(lang('sampoyigi.cart::default.checkout.text_logout'), $customer->first_name, 'account::onLogout')
-                        : sprintf(lang('sampoyigi.cart::default.checkout.text_registered'), site_url('account/login')); ?>
-                </p>
+                <?= partial('account::welcome'); ?>
 
                 <div id="checkout-container">
                     <?= partial('checkout::checkout_form'); ?>
