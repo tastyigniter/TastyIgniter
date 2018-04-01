@@ -145,10 +145,10 @@ class Themes extends \Admin\Classes\AdminController
             $themeManager = ThemeManager::instance();
             $themeClass = $themeManager->findTheme($themeCode);
             $model = Themes_model::whereCode($themeCode)->first();
-            $installedThemes = params()->get('default_themes.main');
+            $activeThemeCode = params()->get('default_themes.main');
 
             // Theme must be disabled before it can be deleted
-            if ($model AND $model->code == $installedThemes) {
+            if ($model AND $model->code == $activeThemeCode) {
                 flash()->warning(sprintf(
                     lang('admin::default.alert_error_nothing'),
                     lang('admin::default.text_deleted').lang('system::themes.text_theme_is_active')
@@ -222,18 +222,10 @@ class Themes extends \Admin\Classes\AdminController
             return;
 
         $filename = array_get(post($this->formWidget->arrayName), 'file');
-//        $filename = substr($filePath, strpos($filePath, '/')+1);
         $content = array_get(post($this->formWidget->arrayName), 'source');
         if (is_int($content))
             $filename = null;
 
-//        $theme = ThemeManager::instance()->findTheme($themeCode);
-//
-//        $page = Layout::load($theme, $filename);
-//
-//        $page->update();
-//
-//        dd($filename, $page, $content);
         if (ThemeManager::instance()->writeFile($filename, $themeCode, $content)) {
             flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme file ['.$filename.'] updated '));
         }
@@ -407,48 +399,6 @@ class Themes extends \Admin\Classes\AdminController
         $model = new $class;
 
         return $model;
-    }
-
-    protected function _addTheme()
-    {
-        if (isset($_FILES['theme_zip'])) {
-            AdminAuth::hasPermission('Site.Themes.Add', admin_url('themes/add'));
-
-            if ($this->validateUpload() === TRUE) {
-                $extractedPath = ThemeManager::instance()->extractTheme($_FILES['theme_zip']['tmp_name']);
-                $theme_code = basename($extractedPath);
-
-                if (file_exists($extractedPath) AND ThemeManager::instance()->loadTheme($theme_code, $extractedPath)) {
-                    $theme_meta = ThemeManager::instance()->themeMeta($theme_code);
-
-                    if (is_array($theme_meta)) {
-                        $update['name'] = $theme_meta['code'];
-                        $update['title'] = $theme_meta['name'];
-                        $update['version'] = $theme_meta['version'];
-                        $update['status'] = 1;
-                        $this->Themes_model->updateTheme($update);
-                    }
-
-                    $theme_name = isset($theme_meta['name']) ? $theme_meta['name'] : $theme_code;
-
-                    log_activity(AdminAuth::getStaffId(), 'added', 'themes',
-                        get_activity_message('activity_custom_no_link',
-                            ['{staff}', '{action}', '{context}', '{item}'],
-                            [AdminAuth::getStaffName(), 'added', 'a new theme', $theme_name]
-                        )
-                    );
-
-                    flash()->success(sprintf(lang('system::themes.alert_success'), "Theme {$theme_name} added "));
-
-                    return TRUE;
-                }
-
-                $this->alert->danger_now(is_string($extractedPath) ?
-                    sprintf(lang('system::themes.alert_error'), $extractedPath) : lang('system::themes.error_config_no_found'));
-            }
-        }
-
-        return FALSE;
     }
 
     protected function validateUpload()

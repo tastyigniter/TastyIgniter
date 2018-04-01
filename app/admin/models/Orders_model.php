@@ -6,7 +6,7 @@ use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Location\Models\Location;
 use Model;
 use Request;
-use System\Traits\CanSendMailTemplates;
+use System\Traits\SendsMailTemplate;
 
 /**
  * Orders Model Class
@@ -15,7 +15,7 @@ use System\Traits\CanSendMailTemplates;
  */
 class Orders_model extends Model
 {
-    use CanSendMailTemplates;
+    use SendsMailTemplate;
 
     const CREATED_AT = 'date_added';
 

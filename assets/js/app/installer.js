@@ -12,30 +12,41 @@ var Installer = {
     },
 
     Steps: {
-        requirement: {handler: "onCheckRequirements"},
+        requirement: {handler: "onCheckRequirement"},
         database: {handler: "onCheckDatabase"},
+        settings: {handler: "onValidateSettings"},
         install: {
+            dataCache: {},
+            handler: "onInstall",
             steps: {
                 download: {
-                    msg: "Downloading foundation framework...",
-                    error: "Downloading failed. See installation log."
+                    msg: "Downloading {{name}} {{type}}...",
+                    error: "Downloading {{name}} {{type}} failed. See setup log."
                 },
-                extract: {msg: "Extracting foundation framework...", error: "Extracting failed. See installation log."},
+                extract: {
+                    msg: "Extracting {{name}} {{type}}...",
+                    error: "Extracting {{name}} {{type}} failed. See setup log."
+                },
                 install: {
-                    msg: "Installing foundation framework (this might take a while)... <i class=\"fa fa-smile-o\"></i>",
-                    error: "Installing failed. See installation log."
+                    msg: "Finishing site setup...",
+                    error: "Finishing site setup failed. See setup log."
                 }
+                // steps: {
+                //     // getMeta: {msg: "Fetching extension meta information...", completed: false},
+                //     download: {msg: "Downloading %s extension...", completed: false},
+                //     extract: {msg: "Extracting %s extension...", completed: false},
+                //     install: {msg: "Installing %s extension...", completed: false},
+                //     finish: {msg: "Completing installation...", completed: false},
+                // },
             }
         },
         proceed: {proceedUrl: '/admin/settings', frontUrl: '/'},
-
-        settings: {handler: "onValidateSettings"},
-
         success: {}
     },
 
     init: function () {
         Installer.$page = $(Installer.options.page)
+        Installer.$pageContent = Installer.$page.find('[data-html="content"]')
         Installer.$progressBox = $(Installer.options.progressBox)
         Installer.currentStep = $(Installer.options.currentStepSelector).val()
 
@@ -48,6 +59,7 @@ var Installer = {
 
             Installer.$submitBtn = $(Installer.options.submitButton)
             Installer.$form.submit(Installer.submitForm)
+            Installer.$page.on('click', '[data-install-control]', Installer.onControlClick)
 
             if (Installer.currentStep === 'requirement')
                 Installer.checkRequirements()
@@ -59,6 +71,29 @@ var Installer = {
         if (!Installer.$submitBtn.hasClass('disabled')) {
             Installer.currentStep = $(Installer.options.currentStepSelector).val()
             Installer.processForm()
+        }
+    },
+
+    onControlClick: function (event) {
+        var $button = $(event.currentTarget),
+            control = $button.data('installControl')
+
+        switch (control) {
+            case 'retry-check':
+                Installer.checkRetry()
+                break
+            case 'accept-license':
+                Installer.sendRequest('onCheckLicense', {}).done(function (json) {
+                    Installer.processResponse(json)
+                })
+                break
+            case 'fetch-theme':
+                Installer.fetchThemes()
+                break
+            case 'install-core':
+            case 'install-theme':
+                Installer.processInstall($button)
+                break
         }
     },
 
@@ -92,7 +127,7 @@ var Installer = {
         data.handler = handler
         var postData = (typeof Installer.$form !== "undefined")
             ? Installer.$form.serialize() + (typeof data === "undefined" ? ""
-                : "&" + $.param(data)) : []
+            : "&" + $.param(data)) : []
 
         Installer.disableSubmitButton(true)
 
@@ -223,6 +258,8 @@ var Installer = {
             $checkMessage = $(Installer.options.progressBox).find('.message'),
             $checkResult = $('#check-result').empty(),
             alertTemplate = $('[data-view="check_alert"]').clone().html(),
+            licenseTemplate = $('[data-view="license"]').html(),
+            requestHandler = Installer.Steps.requirement.handler,
             requestChain = [],
             failCodes = [],
             failMessages = [],
@@ -242,7 +279,7 @@ var Installer = {
 
                 $requirementList.append(item)
 
-                Installer.sendRequest('onCheckRequirement', {
+                Installer.sendRequest(requestHandler, {
                     code: data.code
                 }).always(function () {
                     Installer.refreshProgress("left", "Checking system requirements [" + data.code + "]...")
@@ -289,65 +326,80 @@ var Installer = {
                 }))
                 $checkResult.show().addClass('animated fadeInDown')
             } else {
-                Installer.renderView('database')
-                Installer.updateWizard('database')
                 Installer.$form.append('<input type="hidden" name="requirement" value="complete">')
+                Installer.$pageContent.append(Mustache.render(licenseTemplate))
             }
         })
     },
 
-    installFoundation: function () {
-        Installer.$form.append('<input type="hidden" name="db" value="success">')
-
+    installFoundation: function (steps) {
         var success = true,
             requestChain = [],
             failMessages = [],
             proceedUrl = null,
-            $checkMessage = $(Installer.options.progressBox).find('.message')
+            $progressMessage = Installer.$pageContent.find('.install-progress .message')
 
-        $checkMessage.text('Installing application...')
+        $progressMessage.text('Installing application...')
 
-        $.each(Installer.Steps.install.steps, function (index, step) {
-            var timeout = 500
+        $.each(steps, function (index, stepItems) {
 
-            requestChain.push(function () {
-                var deferred = $.Deferred()
+            var step = Installer.Steps.install.steps[index]
 
-                Installer.sendRequest('onInstallDependencies', {
-                    step: index,
-                    disableLog: true
-                }, step.msg).done(function (json) {
-                    setTimeout(function () {
-                        if (json.result) {
-                            if (index === "install") proceedUrl = json.result
-                            deferred.resolve()
-                        }
-                        else {
-                            success = false
-                            failMessages.push(step.error)
-                            deferred.resolve()
-                        }
-                        deferred.resolve()
-                    }, timeout)
-                }).fail(function () {
-                    setTimeout(function () {
-                        success = false
-                        deferred.resolve()
-                    }, timeout)
+            $.each(stepItems, function (itemIndex, item) {
+                var timeout = 500
+
+                console.log(item)
+                requestChain.push(function () {
+                    var postData,
+                        deferred = $.Deferred(),
+                        beforeSendMessage = Mustache.render(step.msg, item)
+
+                    postData = {
+                        process: item.process,
+                        disableLog: true,
+                        item: item
+                    }
+
+                    $progressMessage.text(beforeSendMessage)
+
+                    Installer.sendRequest('onInstall', postData, beforeSendMessage)
+                        .done(function (json) {
+                            setTimeout(function () {
+                                if (json.result) {
+                                    if (index === "install") proceedUrl = json.result
+                                    deferred.resolve()
+                                }
+                                else {
+                                    success = false
+                                    var errorMessage = Mustache.render(step.error, item)
+                                    $progressMessage.text(errorMessage)
+                                    failMessages.push(errorMessage)
+                                    deferred.resolve()
+                                }
+                                deferred.resolve()
+                            }, timeout)
+                        })
+                        .fail(function () {
+                            setTimeout(function () {
+                                success = false
+                                deferred.resolve()
+                            }, timeout)
+                        })
+
+                    return deferred
                 })
-
-                return deferred
             })
         })
+
 
         $.waterfall.apply(this, requestChain).always(function () {
         }).done(function () {
             if (!success) {
                 Installer.refreshProgress("danger", failMessages.join('<br> '))
             } else {
-                Installer.$page.find('[data-wizard="database"]').addClass('complete')
                 Installer.hideProgress()
                 Installer.renderView('proceed', {proceedUrl: proceedUrl, frontUrl: '/'})
+                Installer.updateWizard('proceed')
             }
         })
     },
@@ -369,7 +421,7 @@ var Installer = {
 
         if (name) {
             var viewHtml = Mustache.render($(view).html(), $.extend(pageData, data, {}))
-            Installer.$page.find('[data-html="content"]').html(viewHtml)
+            Installer.$pageContent.html(viewHtml)
         }
     },
 
@@ -406,6 +458,7 @@ var Installer = {
             case 'database':
                 Installer.hideProgress()
                 Installer.renderView(nextStep)
+                Installer.updateWizard(nextStep)
                 break
             case 'settings':
                 Installer.hideProgress()
@@ -416,13 +469,74 @@ var Installer = {
                 Installer.hideProgress()
                 Installer.renderView(nextStep)
                 Installer.updateWizard(nextStep)
-                setTimeout(Installer.installFoundation(), 500)
-                break
-            case 'proceed':
-                Installer.hideProgress()
-                Installer.renderView(nextStep)
+                // setTimeout(Installer.installFoundation(), 500)
                 break
         }
+    },
+
+    fetchThemes: function () {
+        var $container = Installer.$pageContent.find('[data-html="install-type"]'),
+            $themeView = $('[data-view="themes"]'),
+            themesTemplate = $themeView.html()
+
+        $container.html(Mustache.render(themesTemplate))
+        Installer.$pageContent.find('.install-progress').removeClass('hide')
+
+        Installer.sendRequest('onFetchItems', {})
+            .done(function (json) {
+                Installer.buildThemesList(json.data)
+                // Installer.watchCheckboxes()
+                // Installer.renderView('themes', json)
+                // Installer.processResponse(json)
+            })
+            .fail(function () {
+                $container.empty()
+            })
+            .always(function () {
+                Installer.$pageContent.find('.install-progress').addClass('hide')
+                Installer.hideProgress()
+            })
+    },
+
+    buildThemesList: function (results) {
+        var $themesContainer = Installer.$pageContent.find('[data-html="themes"]'),
+            $themeTemplate = $('[data-view="theme"]'),
+            dataCache = []
+
+        $themesContainer.removeClass('hide')
+        Installer.$pageContent.find('.install-progress').addClass('hide')
+
+        for (var key in results) {
+            var item = results[key], html
+
+            html = Mustache.render($themeTemplate.clone().html(), item)
+            $themesContainer.append(html)
+
+            dataCache[item.code] = item
+        }
+
+        Installer.Steps.install.dataCache = dataCache
+    },
+
+    processInstall: function ($btn) {
+        var _themeData,
+            themeCode = $btn.data('themeCode'),
+            themeData = Installer.Steps.install.dataCache[themeCode]
+
+        _themeData = $.extend(themeData, {process: 'apply', disableLog: true})
+
+        $btn.attr('disabled', true)
+
+        Installer.sendRequest('onInstall', _themeData).done(function (json) {
+            Installer.$pageContent.find('[data-html="themes"]').addClass('hide')
+            Installer.$pageContent.find('[data-html="install-type"]').addClass('hide')
+            Installer.$pageContent.find('.panel-carte').addClass('hide')
+            Installer.$pageContent.find('.install-progress').removeClass('hide')
+            Installer.installFoundation(json.result)
+            Installer.updateWizard('install')
+        }).fail(function () {
+            $btn.attr('disabled', false)
+        })
     },
 
     TEMPLATES: {

@@ -20,7 +20,7 @@ class Layout extends Model
 
     public static function initFallback($theme)
     {
-        $model = self::on($theme);
+        $model = self::inTheme($theme);
         $model->markup = '<?= page(); ?>';
         $model->fileName = 'default';
 

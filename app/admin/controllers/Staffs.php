@@ -56,31 +56,6 @@ class Staffs extends \Admin\Classes\AdminController
         AdminMenu::setContext('staffs', 'users');
     }
 
-    public function autocomplete()
-    {
-        $json = [];
-
-        if (get('term')) {
-            $filter['staff_name'] = get('term');
-            $filter['staff_id'] = get('staff_id');
-
-            $results = Staffs_model::getAutoComplete($filter);
-            if ($results) {
-                foreach ($results as $result) {
-                    $json['results'][] = [
-                        'id'   => $result['staff_id'],
-                        'text' => utf8_encode($result['staff_name']),
-                    ];
-                }
-            }
-            else {
-                $json['results'] = ['id' => '0', 'text' => lang('admin::staffs.text_no_match')];
-            }
-        }
-
-        return $json;
-    }
-
     public function formExtendFields($form, $fields)
     {
         if (!AdminAuth::isSuperUser()) {

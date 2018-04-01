@@ -15,6 +15,8 @@ class Menus_model extends Model
     use LogsActivity;
     use Purgeable;
 
+    protected static $recordEvents = ['created', 'deleted'];
+
     /**
      * @var string The database table name
      */
@@ -122,6 +124,11 @@ class Menus_model extends Model
     // Helpers
     //
 
+    public function getMessageForEvent($eventName)
+    {
+        return parse_values(['event' => $eventName], lang('admin::menus.activity_event_log'));
+    }
+
     public function getThumb($options = [])
     {
         return Image_tool_model::resize($this->menu_photo, array_merge([
@@ -159,42 +166,6 @@ class Menus_model extends Model
         }
 
         return $update;
-    }
-
-    /**
-     * List all menus matching the filter,
-     * to fill select auto-complete options
-     *
-     * @param array $filter
-     *
-     * @return array
-     */
-    public static function getAutoComplete($filter = [])
-    {
-        $return = [];
-        if (is_array($filter) AND !empty($filter)) {
-            //selecting all records from the menu and categories tables.
-            $query = self::query()->where('menu_status', '1');
-
-            if (!empty($filter['menu_name'])) {
-                $query->like('menu_name', $filter['menu_name']);
-            }
-
-            $limit = isset($filter['limit']) ? $filter['limit'] : 20;
-            if ($results = $query->take($limit)->get()) {
-                foreach ($results as $result) {
-                    $return['results'][] = [
-                        'id'   => $result['customer_id'],
-                        'text' => utf8_encode($result['customer_name']),
-                    ];
-                }
-            }
-            else {
-                $return['results'] = ['id' => '0', 'text' => lang('text_no_match')];
-            }
-
-            return $return;
-        }
     }
 
     /**

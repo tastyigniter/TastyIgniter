@@ -78,7 +78,7 @@ class MediaManager
         $this->storagePath = rtrim(Config::get('system.assets.media.path', '/assets/images/data'), '/');
 
         if (!starts_with($this->storagePath, ['//', 'http://', 'https://'])) {
-            $this->storagePath = Request::getBasePath().$this->storagePath;
+            $this->storagePath = asset($this->storagePath);
         }
 
         $this->ignoreNames = Config::get('system.assets.media.ignore', []);

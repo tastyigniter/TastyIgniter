@@ -66,26 +66,4 @@ class Tables_model extends Model
 
         return $query;
     }
-
-    /**
-     * List all tables matching the filter,
-     * to fill select auto-complete options
-     *
-     * @param array $filter
-     *
-     * @return array
-     */
-    public static function getAutoComplete($filter = [])
-    {
-        if (is_array($filter) && !empty($filter)) {
-
-            $query = self::query()->where('table_status', '>', '0');
-
-            if (!empty($filter['table_name'])) {
-                $query->like('table_name', $filter['table_name']);
-            }
-
-            return $query->get();
-        }
-    }
 }

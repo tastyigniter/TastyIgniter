@@ -5,7 +5,7 @@ use Igniter\Flame\Location\Models\Location;
 use Main\Classes\MainController;
 use Model;
 use Request;
-use System\Traits\CanSendMailTemplates;
+use System\Traits\SendsMailTemplate;
 
 /**
  * Reservations Model Class
@@ -14,7 +14,7 @@ use System\Traits\CanSendMailTemplates;
  */
 class Reservations_model extends Model
 {
-    use CanSendMailTemplates;
+    use SendsMailTemplate;
 
     const CREATED_AT = 'date_added';
 

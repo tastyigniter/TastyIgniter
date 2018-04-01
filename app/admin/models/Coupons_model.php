@@ -88,6 +88,11 @@ class Coupons_model extends Model
     // Helpers
     //
 
+    public function getMessageForEvent($eventName)
+    {
+        return parse_values(['event' => $eventName], lang('admin::coupons.activity_event_log'));
+    }
+
     public function isFixed()
     {
         return $this->type == 'F';

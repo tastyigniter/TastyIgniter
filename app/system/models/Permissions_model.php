@@ -71,6 +71,11 @@ class Permissions_model extends Model
     // Helpers
     //
 
+    public function getMessageForEvent($eventName)
+    {
+        return parse_values(['event' => $eventName], lang('system::permissions.activity_event_log'));
+    }
+
     public function getActionOptions()
     {
         return [

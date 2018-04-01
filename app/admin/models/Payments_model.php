@@ -158,8 +158,6 @@ class Payments_model extends Model
         $paymentMethodFile = strtolower(class_basename($this->class_name));
         $partialName = 'payregister/'.$paymentMethodFile;
 
-//        dd($this->class_name, $paymentMethodFile, $partialName);
-
         return $controller->renderPartial($partialName, ['paymentMethod' => $this]);
     }
 

@@ -76,36 +76,6 @@ class Menu_options_model extends Model
     }
 
     /**
-     * List all options matching the filter,
-     * to fill select auto-complete options
-     *
-     * @param array $filter
-     *
-     * @return array
-     */
-    public static function getAutoComplete($filter = [])
-    {
-        if (is_array($filter) AND !empty($filter)) {
-            $query = self::query();
-
-            if (!empty($filter['option_name'])) {
-                $query->like('option_name', $filter['option_name']);
-            }
-
-            $result = [];
-            if ($rows = $query->get()) {
-                foreach ($rows as $row) {
-                    $result[] = array_merge($row, [
-                        'option_values' => self::getOptionValues($row['option_id']),
-                    ]);
-                }
-            }
-
-            return $result;
-        }
-    }
-
-    /**
      * Create a new or update existing option values
      *
      * @param bool $option_id

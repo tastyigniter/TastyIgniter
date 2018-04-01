@@ -16,9 +16,11 @@ class Customers_model extends AuthUserModel
     use LogsActivity;
     use Purgeable;
 
+    const CREATED_AT = 'date_added';
+
     protected static $logAttributes = ['name'];
 
-    const CREATED_AT = 'date_added';
+    protected static $recordEvents = ['created', 'deleted'];
 
     /**
      * @var string The database table name
@@ -114,6 +116,11 @@ class Customers_model extends AuthUserModel
     // Helpers
     //
 
+    public function getMessageForEvent($eventName)
+    {
+        return parse_values(['event' => $eventName], lang('admin::customers.activity_event_log'));
+    }
+
     public function enabled()
     {
         return $this->status;
@@ -129,45 +136,6 @@ class Customers_model extends AuthUserModel
         return $this->addresses()->get()->groupBy(function ($address) {
             return $address->getKey();
         });
-    }
-
-    /**
-     * List all customers matching the filter,
-     * to fill select auto-complete options
-     *
-     * @param array $filter
-     *
-     * @return array
-     */
-    public static function getAutoComplete($filter = [])
-    {
-        if (is_array($filter) AND !empty($filter)) {
-            $query = self::query()->select('customer_id', 'first_name', 'last_name')
-                         ->selectRaw('concat(first_name, " ", last_name) AS full_name');
-
-            if (!empty($filter['customer_name'])) {
-                $query->like('CONCAT(first_name, last_name)', $filter['customer_name']);
-            }
-
-            if (!empty($filter['customer_id'])) {
-                $query->where('customer_id', $filter['customer_id']);
-            }
-
-            $limit = isset($filter['limit']) ? $filter['limit'] : 20;
-            if ($results = $query->take($limit)->get()) {
-                foreach ($results as $result) {
-                    $return['results'][] = [
-                        'id'   => $result['customer_id'],
-                        'text' => utf8_encode($result['full_name']),
-                    ];
-                }
-            }
-            else {
-                $return['results'] = ['id' => '0', 'text' => lang('text_no_match')];
-            }
-
-            return $return;
-        }
     }
 
     /**

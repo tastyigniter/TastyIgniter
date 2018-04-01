@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'defaultTheme' => 'tastyigniter-orange',
+    'defaultTheme' => 'demo',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,7 +161,7 @@ return [
         'media' => [
             'disk' => 'media',
             'folder' => 'data',
-            'path' => 'assets/images/data',
+            'path' => '/assets/images/data',
         ],
 
     ],

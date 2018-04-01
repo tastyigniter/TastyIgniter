@@ -61,9 +61,12 @@ class MailLayouts extends \Admin\Classes\AdminController
         $this->asExtension('ListController')->index();
     }
 
-    public function formExtendQuery($query)
+    public function formExtendFields($form)
     {
-        $query->with('templates');
+        if ($form->context != 'create') {
+            $field = $form->getField('code');
+            $field->disabled = TRUE;
+        }
     }
 
     public function formValidate($model, $form)

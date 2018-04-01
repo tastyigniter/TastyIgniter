@@ -94,7 +94,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      */
     public static function listInTheme(Theme $theme, $skipCache = FALSE)
     {
-        $instance = static::on($theme->getDirName());
+        $instance = static::inTheme($theme);
 
         if ($skipCache) {
             return $instance->get();
@@ -108,6 +108,15 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
         }
 
         return $instance->newCollection($result);
+    }
+
+    public static function inTheme($theme)
+    {
+        if (is_string($theme)) {
+            $theme = Theme::load($theme);
+        }
+
+        return static::on($theme->getDirName());
     }
 
     /**

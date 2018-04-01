@@ -55,30 +55,6 @@ class Tables extends \Admin\Classes\AdminController
         AdminMenu::setContext('tables', 'restaurant');
     }
 
-    public function autocomplete()
-    {
-        $json = [];
-
-        if (get('term')) {
-            $results = Tables_model::getAutoComplete(['table_name' => get('term')]);
-            if ($results) {
-                foreach ($results as $result) {
-                    $json['results'][] = [
-                        'id'   => $result['table_id'],
-                        'text' => utf8_encode($result['table_name']),
-                        'min'  => $result['min_capacity'],
-                        'max'  => $result['max_capacity'],
-                    ];
-                }
-            }
-            else {
-                $json['results'] = ['id' => '0', 'text' => lang('admin::tables.text_no_match')];
-            }
-        }
-
-        return $json;
-    }
-
     public function formValidate($model, $form)
     {
         $rules = [

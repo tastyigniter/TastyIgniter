@@ -24,6 +24,11 @@ $config['list']['columns'] = [
             'href'  => 'mail_layouts/edit/{template_id}',
         ],
     ],
+    'code'         => [
+        'label'      => 'lang:system::mail_templates.column_code',
+        'type'       => 'text',
+        'searchable' => TRUE,
+    ],
     'name'         => [
         'label'      => 'lang:system::mail_templates.column_name',
         'type'       => 'text',
@@ -82,9 +87,14 @@ $config['form']['fields'] = [
         'span'  => 'left',
         'type'  => 'text',
     ],
+    'code'        => [
+        'label' => 'lang:system::mail_templates.label_code',
+        'span'  => 'right',
+        'type'  => 'text',
+    ],
     'language_id' => [
         'label'        => 'lang:system::mail_templates.label_language',
-        'span'         => 'right',
+        'span'         => 'left',
         'type'         => 'relation',
         'relationFrom' => 'language',
         'placeholder'  => 'lang:admin::default.text_please_select',
@@ -92,6 +102,7 @@ $config['form']['fields'] = [
     'status'      => [
         'label'   => 'lang:admin::default.label_status',
         'type'    => 'switch',
+        'span'  => 'right',
         'default' => TRUE,
     ],
 ];

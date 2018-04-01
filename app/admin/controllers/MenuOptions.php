@@ -52,31 +52,6 @@ class MenuOptions extends \Admin\Classes\AdminController
         AdminMenu::setContext('menu_options', 'kitchen');
     }
 
-    public function autocomplete()
-    {
-        $json = [];
-
-        if (get('term')) {
-            $results = Menu_options_model::getAutoComplete(['option_name' => get('term')]);
-            if ($results) {
-                foreach ($results as $result) {
-                    $json['results'][] = [
-                        'id'            => $result['option_id'],
-                        'text'          => utf8_encode($result['option_name']),
-                        'display_type'  => utf8_encode($result['display_type']),
-                        'priority'      => $result['priority'],
-                        'option_values' => $result['option_values'],
-                    ];
-                }
-            }
-            else {
-                $json['results'] = ['id' => '0', 'text' => lang('admin::menu_options.text_no_match')];
-            }
-        }
-
-        return $json;
-    }
-
     public function formExtendQuery($query)
     {
         $query->with('option_values');

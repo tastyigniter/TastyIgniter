@@ -384,7 +384,7 @@ class OptimizeTablesColumns extends Migration
             $table->string('status_for')->change();
             $table->integer('staff_id')->nullable()->change();
             $table->integer('assignee_id')->nullable()->change();
-            $table->tinyInteger('notify')->nullable()->change();
+            $table->boolean('notify')->nullable()->change();
             $table->text('comment')->nullable()->change();
         };
     }

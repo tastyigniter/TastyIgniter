@@ -334,6 +334,9 @@ class MainController extends BaseController
         if (!$handler)
             return FALSE;
 
+        if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handler))
+            throw new ApplicationException("Ajax handler {$handler} must start with 'on', example. onSubmit");
+
         $response = [];
 
         // Process Components handler

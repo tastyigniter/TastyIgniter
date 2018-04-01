@@ -88,20 +88,16 @@ class ThemeManager
      */
     public function loadInstalled()
     {
-        $installedThemes = setting('installed_themes');
-//        if (is_null($installedThemes)) {
-//            $this->createThemeModel()->updateInstalledThemes();
-//        }
-
-        if ($installedThemes AND is_array($installedThemes)) {
-            $this->installedThemes = setting('installed_themes');
+        if (!setting('installed_themes')) {
+            $this->createThemeModel()->updateInstalledThemes();
         }
+
+        $this->installedThemes = setting('installed_themes');
     }
 
     /**
      * Finds all available themes and loads them in to the $themes array.
      * @return array
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @throws \SystemException
      */
     public function loadThemes()
@@ -165,9 +161,9 @@ class ThemeManager
 
     public function getActiveThemeCode()
     {
-        $theme = params('default_themes.main', config('system.defaultTheme'));
+        $code = params('default_themes.main', config('system.defaultTheme'));
 
-        return trim($theme, '/');
+        return trim($code, '/');
     }
 
     /**

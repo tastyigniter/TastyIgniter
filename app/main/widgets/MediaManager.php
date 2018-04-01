@@ -600,6 +600,8 @@ class MediaManager extends BaseWidget
                 File::get($uploadedFile->getRealPath())
             );
 
+            $mediaLibrary->resetCache();
+
             $this->fireSystemEvent('media.file.upload', [$filePath, $uploadedFile]);
 
             Response::json([

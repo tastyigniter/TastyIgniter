@@ -149,20 +149,20 @@ class Themes_model extends Model
             if (!($themeClass = $themeManager->findTheme($code))) continue;
 
             $themeMeta = (object)$themeClass;
-            $installedThemes[] = $themeMeta->name;
+            $installedThemes[] = $name = isset($themeMeta->name) ? $themeMeta->name : $code;
 
             // Only add themes whose meta code match their directory name
             // or theme has no record
             if (
-                !isset($themeMeta->name) OR $code != $themeMeta->name OR
-                $extension = $themes->where('code', $themeMeta->name)->first()
+                $code != $name OR
+                $extension = $themes->where('code', $name)->first()
             ) continue;
 
             self::create([
-                'name'        => $themeMeta->label,
-                'code'        => $themeMeta->name,
-                'version'     => $themeMeta->version,
-                'description' => $themeMeta->description,
+                'name'        => isset($themeMeta->label) ? $themeMeta->label : title_case($code),
+                'code'        => $name,
+                'version'     => isset($themeMeta->version) ? $themeMeta->version : '1.0.0',
+                'description' => isset($themeMeta->description) ? $themeMeta->description : '',
             ]);
         }
 
@@ -210,52 +210,6 @@ class Themes_model extends Model
         params()->set('default_themes.main', $theme->code);
 
         return $theme;
-    }
-
-    /**
-     * Create a new or update existing theme
-     *
-     * @param array $update
-     *
-     * @return bool
-     */
-    public function updateTheme($update = [])
-    {
-        if (empty($update)) return FALSE;
-
-        $update['status'] = '1';
-
-        $query = FALSE;
-
-        $themeModel = $this->where([
-            ['type', '=', 'theme'],
-            ['code', '=', $update['name']],
-        ])->first();
-
-        if ($themeModel) {
-            $themeModel->fill($update)->save();
-            $query = TRUE;
-        }
-        else if (!empty($update['name'])) {
-            unset($update['old_title']);
-            $query = $this->insertGetId(array_merge($update, [
-                'type' => 'theme',
-                'code' => $update['name'],
-            ]));
-        }
-
-        if ($query) {
-            $this->updateInstalledThemes($update['name']);
-
-            if (!empty($update['data']) AND setting('main', 'default_themes') == $update['name'].'/') {
-                $active_theme_options = setting('active_theme_options');
-                $active_theme_options['main'] = [$update['name'], $update['data']];
-
-                setting()->set('active_theme_options', $active_theme_options);
-            }
-        }
-
-        return $query;
     }
 
     /**

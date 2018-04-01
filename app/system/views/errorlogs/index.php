@@ -13,9 +13,9 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>Level</th>
-                <th>Date</th>
-                <th width="75%">Content</th>
+                <th width="10%">Level</th>
+                <th width="15%">Date</th>
+                <th>Content</th>
             </tr>
             </thead>
             <tbody>

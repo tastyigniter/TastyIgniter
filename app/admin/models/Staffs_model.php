@@ -92,31 +92,6 @@ class Staffs_model extends Model
     //
 
     /**
-     * List all staff matching the filter,
-     * to fill select auto-complete options
-     *
-     * @param array $filter
-     *
-     * @return array
-     */
-    public static function getAutoComplete($filter = [])
-    {
-        if (is_array($filter) AND !empty($filter)) {
-            $query = self::query();
-
-            if (!empty($filter['staff_name'])) {
-                $query->like('staff_name', $filter['staff_name']);
-            }
-
-            if (!empty($filter['staff_id'])) {
-                $query->where('staff_id', $filter['staff_id']);
-            }
-
-            return $query->get();
-        }
-    }
-
-    /**
      * Return the dates of all staff
      * @return array
      */

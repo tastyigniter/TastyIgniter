@@ -15,8 +15,8 @@ class CreateThemesTable extends Migration
             $table->integer('theme_id', TRUE);
             $table->string('name');
             $table->string('code', 128)->unique();
-            $table->text('description');
-            $table->string('version')->default('0.0.1');
+            $table->text('description')->nullable();
+            $table->string('version')->nullable()->default('0.0.1');
             $table->text('data')->nullable();
             $table->boolean('status')->default(0);
             $table->boolean('is_default')->default(0);

@@ -129,13 +129,6 @@ class HubManager
 
     private function getCacheFilePath($fileName, $suffix)
     {
-        $cachePath = str_split(substr(md5($this->cachePrefix.$fileName), 0, 9), 3);
-        $cachePath = implode(DIRECTORY_SEPARATOR, $cachePath);
-
-//        dd($this->cachePrefix);
-//        if (!is_dir($this->cachePrefix))
-//            mkdir($this->cachePrefix, 0777, true);
-
         return $this->cachePrefix.$fileName.'_'.md5($suffix);
     }
 
