@@ -1,10 +1,13 @@
 <?php namespace System\Controllers;
 
+use AdminAuth;
 use AdminMenu;
 use Assets;
 use Exception;
 use Flash;
 use System\Classes\UpdateManager;
+use System\Models\Extensions_model;
+use System\Models\Themes_model;
 use Template;
 
 class Updates extends \Admin\Classes\AdminController
@@ -26,6 +29,11 @@ class Updates extends \Admin\Classes\AdminController
 
     public function index()
     {
+        if (AdminAuth::hasPermission('Admin.Extensions.Manage'))
+            Extensions_model::syncAll();
+
+        Themes_model::syncAll();
+
         if (!params()->has('carte_key')) {
             Flash::warning(lang('system::default.missing.carte_key'))->now();
         }
@@ -40,26 +48,30 @@ class Updates extends \Admin\Classes\AdminController
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
 
-        Template::setButton(lang('system::updates.button_check'), ['class' => 'btn btn-success', 'href' => admin_url($this->forceCheckUrl)]);
         Template::setButton(sprintf(lang('system::updates.button_browse'), 'extensions'), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/extensions')]);
+        Template::setButton(lang('system::updates.button_check'), ['class' => 'btn btn-success', 'href' => admin_url($this->forceCheckUrl)]);
         Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
         $this->prepareAssets();
 
-        $updateManager = UpdateManager::instance();
-
-        $this->vars['carteInfo'] = $updateManager->getSiteDetail();
-        $this->vars['installedItems'] = $updateManager->getInstalledItems();
-
         try {
+            $updateManager = UpdateManager::instance();
+            $this->vars['carteInfo'] = $updateManager->getSiteDetail();
             $this->vars['updates'] = $updates = $updateManager->requestUpdateList();
 
-            $lastChecked = isset($updates['last_check']) ? time_elapsed($updates['last_check']) : lang('system::updates.text_never');
+            $lastChecked = isset($updates['last_check'])
+                ? time_elapsed($updates['last_check'])
+                : lang('system::updates.text_never');
 
-            Template::setButton(sprintf(lang('system::updates.text_last_checked'), $lastChecked), ['class' => 'btn disabled text-muted pull-right']);
+            Template::setButton(sprintf(lang('system::updates.text_last_checked'), $lastChecked), [
+                'class' => 'btn disabled text-muted pull-right',
+            ]);
 
-            if (isset($updates['items']) AND $updates['items'] > 0) {
-                Template::setButton(lang('system::updates.button_update'), ['class' => 'btn btn-primary pull-left', 'id' => 'apply-updates']);
+            if (isset($updates['items']) AND count($updates['items'])) {
+                Template::setButton(lang('system::updates.button_update'), [
+                    'class' => 'btn btn-primary pull-left',
+                    'id'    => 'apply-updates',
+                ]);
             }
         } catch (Exception $ex) {
             Flash::warning($ex->getMessage())->now();
@@ -79,9 +91,12 @@ class Updates extends \Admin\Classes\AdminController
         Template::setHeading(sprintf(lang('system::updates.text_browse_title'), $pageTitle));
 
         $buttonType = ($itemType == 'extensions') ? 'themes' : 'extensions';
-        $buttonTitle = ($buttonType == 'extensions') ? lang('system::updates.text_tab_title_extensions') : lang('system::updates.text_tab_title_themes');
-        Template::setButton(lang('system::updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
+        $buttonTitle = ($buttonType == 'extensions')
+            ? lang('system::updates.text_tab_title_extensions')
+            : lang('system::updates.text_tab_title_themes');
+
         Template::setButton(sprintf(lang('system::updates.button_browse'), $buttonTitle), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
+        Template::setButton(lang('system::updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
         Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
         $this->prepareAssets();
@@ -169,7 +184,10 @@ class Updates extends \Admin\Classes\AdminController
             $items = UpdateManager::instance()->listItems($itemType);
 
             return [
-                '#list-items' => $this->makePartial('browse/list', ['items' => $items]),
+                '#list-items' => $this->makePartial('browse/list', [
+                    'items' => $items,
+                    'itemType' => $itemType
+                ]),
             ];
         } catch (Exception $ex) {
             $this->statusCode = 500;
@@ -317,25 +335,26 @@ class Updates extends \Admin\Classes\AdminController
                 case 'downloadCore':
                 case 'downloadExtension':
                 case 'downloadTheme':
-                case 'downloadTranslation':
-                    $result = $updateManager->downloadFile($meta['code'], $meta['hash'], $params);
+                    $result = true; //$updateManager->downloadFile($meta['code'], $meta['hash'], $params);
                     if ($result) $json['result'] = 'success';
                     break;
 
                 case 'extractCore':
-                    $response = $updateManager->extractCore($meta['code']);
+                    $response = true; //$updateManager->extractCore($meta['code']);
                     if ($response) $json['result'] = 'success';
                     break;
 
                 case 'extractExtension':
+                    $response = true; //$updateManager->extractFile($meta['code'], 'extensions/');
+                    if ($response) $json['result'] = 'success';
+                    break;
                 case 'extractTheme':
-                case 'extractTranslation':
-                    $response = $updateManager->extractFile($meta['code'], $meta['type']);
+                    $response = true; //$updateManager->extractFile($meta['code'], 'themes/');
                     if ($response) $json['result'] = 'success';
                     break;
 
                 case 'complete':
-                    $response = $this->completeProcess($meta['items']);
+                    $response = true; //$this->completeProcess($meta['items']);
                     if ($response) $json['result'] = 'success';
                     break;
             }
@@ -378,36 +397,33 @@ class Updates extends \Admin\Classes\AdminController
 
     protected function validateItems()
     {
-        foreach (post('items') as $key => $value) {
-            $this->form_validation->set_rules('items['.$key.'][name]', 'lang:system::updates.label_meta_code', 'required');
-            $this->form_validation->set_rules('items['.$key.'][type]', 'lang:system::updates.label_meta_type', 'required');
-            $this->form_validation->set_rules('items['.$key.'][ver]', 'lang:system::updates.label_meta_version', 'required');
-            $this->form_validation->set_rules('items['.$key.'][action]', 'lang:system::updates.label_meta_action', 'required|in_list[install,update]');
-        }
+        $rules = [
+            ['items.*.name', 'lang:system::updates.label_meta_code', 'required'],
+            ['items.*.type', 'lang:system::updates.label_meta_type', 'required'],
+            ['items.*.ver', 'lang:system::updates.label_meta_version', 'required'],
+            ['items.*.action', 'lang:system::updates.label_meta_action', 'required|in_list:install,update'],
+        ];
 
-        if ($this->form_validation->run() === FALSE) {
-            throw new Exception($this->form_validation->error_string());
-        }
+        return $this->validatePasses(post(), $rules);
     }
 
     protected function validateProcess()
     {
+        $rules = [];
         if (post('step') != 'complete') {
-            $this->form_validation->set_rules('meta[code]', 'lang:system::updates.label_meta_code', 'required');
-            $this->form_validation->set_rules('meta[type]', 'lang:system::updates.label_meta_type', 'required');
-            $this->form_validation->set_rules('meta[version]', 'lang:system::updates.label_meta_version', 'required');
-            $this->form_validation->set_rules('meta[hash]', 'lang:system::updates.label_meta_hash', 'required');
-            $this->form_validation->set_rules('meta[description]', 'lang:system::updates.label_meta_description', 'required');
-            $this->form_validation->set_rules('meta[action]', 'lang:system::updates.label_meta_action', 'required|in_list[install,update]');
+            $rules[] = ['meta.code', 'lang:system::updates.label_meta_code', 'required'];
+            $rules[] = ['meta.type', 'lang:system::updates.label_meta_type', 'required'];
+            $rules[] = ['meta.version', 'lang:system::updates.label_meta_version', 'required'];
+            $rules[] = ['meta.hash', 'lang:system::updates.label_meta_hash', 'required'];
+            $rules[] = ['meta.description', 'lang:system::updates.label_meta_description', 'required'];
+            $rules[] = ['meta.action', 'lang:system::updates.label_meta_action', 'required|in_list:install,update'];
         }
         else {
-            $this->form_validation->set_rules('meta[items]', 'lang:system::updates.label_meta_items', 'required');
+            $rules[] = ['meta.items', 'lang:system::updates.label_meta_items', 'required|array'];
         }
 
-        $this->form_validation->set_rules('step', 'lang:system::updates.label_meta_step', 'required|in_list[download,extract,complete]');
+        $rules[] = ['step', 'lang:system::updates.label_meta_step', 'required|in_list:download,extract,complete'];
 
-        if ($this->form_validation->run() === FALSE) {
-            throw new Exception($this->form_validation->error_string());
-        }
+        return $this->validatePasses(post(), $rules);
     }
 }

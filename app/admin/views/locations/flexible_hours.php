@@ -7,9 +7,9 @@ $weekdays = $formModel->getWeekDaysOptions();
             <thead>
             <tr>
                 <th></th>
-                <th><?= lang('label_open_hour'); ?></th>
-                <th><?= lang('label_close_hour'); ?></th>
-                <th><?= lang('label_opening_status'); ?></th>
+                <th><?= lang('admin::locations.label_open_hour'); ?></th>
+                <th><?= lang('admin::locations.label_close_hour'); ?></th>
+                <th><?= lang('admin::locations.label_opening_status'); ?></th>
             </tr>
             </thead>
             <tbody>
@@ -63,8 +63,8 @@ $weekdays = $formModel->getWeekDaysOptions();
                                 name="<?= $field->getName() ?>[<?= $index; ?>][status]"
                                 data-toggle="toggle"
                                 data-onstyle="success" data-offstyle="danger"
-                                data-on="<?= e(lang('text_open')) ?>"
-                                data-off="<?= e(lang('text_closed')) ?>"
+                                data-on="<?= e(lang('admin::locations.text_open')) ?>"
+                                data-off="<?= e(lang('admin::locations.text_closed')) ?>"
                                 value="1"
                                 <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                                 <?= $hour['status'] == 1 ? 'checked="checked"' : '' ?>

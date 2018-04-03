@@ -101,15 +101,11 @@ class Customers extends \Admin\Classes\AdminController
             $rules[] = ['_confirm_password', 'lang:admin::customers.label_confirm_password'];
         }
 
-        if (post($form->arrayName.'.addresses')) {
-            foreach (post($form->arrayName.'.addresses') as $key => $value) {
-                $rules[] = ['addresses.'.$key.'.address_1', '['.$key.'] '.lang('admin::customers.label_address_1'), 'required|min:3|max:128'];
-                $rules[] = ['addresses.'.$key.'.city', '['.$key.'] '.lang('admin::customers.label_city'), 'required|min:2|max:128'];
-                $rules[] = ['addresses.'.$key.'.state', '['.$key.'] '.lang('admin::customers.label_state'), 'max:128'];
-                $rules[] = ['addresses.'.$key.'.postcode', '['.$key.'] '.lang('admin::customers.label_postcode')];
-                $rules[] = ['addresses.'.$key.'.country_id', '['.$key.'] '.lang('admin::customers.label_country'), 'required|integer'];
-            }
-        }
+        $rules[] = ['addresses.*.address_1', 'lang:admin::customers.label_address_1', 'required|min:3|max:128'];
+        $rules[] = ['addresses.*.city', 'lang:admin::customers.label_city', 'required|min:2|max:128'];
+        $rules[] = ['addresses.*.state', 'lang:admin::customers.label_state', 'max:128'];
+        $rules[] = ['addresses.*.postcode', 'lang:admin::customers.label_postcode'];
+        $rules[] = ['addresses.*.country_id', 'lang:admin::customers.label_country', 'required|integer'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

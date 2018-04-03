@@ -65,13 +65,7 @@ class Ratings extends \Admin\Classes\AdminController
 
     protected function validateForm()
     {
-        if (!$post = post('ratings'))
-            return FALSE;
-
-        $rules = [];
-        foreach ($post as $key => $value) {
-            $rules[] = ['ratings.'.$key, 'lang:admin::ratings.label_name', 'required|min:2|max:32'];
-        }
+        $rules[] = ['ratings.*', 'lang:admin::ratings.label_name', 'required|min:2|max:32'];
 
         return $this->validatePasses(post(), $rules);
     }

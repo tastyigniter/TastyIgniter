@@ -62,12 +62,9 @@ class MenuOptions extends \Admin\Classes\AdminController
         $rules[] = ['option_name', 'lang:admin::menu_options.label_option_name', 'required|min:2|max:32'];
         $rules[] = ['display_type', 'lang:admin::menu_options.label_display_type', 'required|alpha'];
 
-        if (post($form->arrayName.'.option_values')) {
-            foreach (post($form->arrayName.'.option_values') as $key => $value) {
-                $rules[] = ['option_values.'.$key.'.value', '['.$key.'] '.lang('admin::menu_options.label_option_value'), 'required|min:2|max:128'];
-                $rules[] = ['option_values.'.$key.'.price', '['.$key.'] '.lang('admin::menu_options.label_option_price'), 'required|numeric'];
-            }
-        }
+        $rules[] = ['option_values', 'lang:admin::menu_options.label_option_value', 'required'];
+        $rules[] = ['option_values.*.value', 'lang:admin::menu_options.label_option_value', 'required|min:2|max:128'];
+        $rules[] = ['option_values.*.price', 'lang:admin::menu_options.label_option_price', 'required|numeric'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

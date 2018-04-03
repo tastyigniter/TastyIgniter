@@ -109,7 +109,7 @@ class Customers_model extends AuthUserModel
             return;
 
         if (array_key_exists('addresses', $this->attributes))
-            $this->saveAddress($this->getKey(), $this->attributes['addresses']);
+            $this->saveAddresses($this->attributes['addresses']);
     }
 
     //
@@ -164,6 +164,25 @@ class Customers_model extends AuthUserModel
         $this->save();
 
         return $resetCode;
+    }
+
+    public function saveAddresses($addresses)
+    {
+        $customerId = $this->getKey();
+        if (!is_numeric($customerId))
+            return FALSE;
+
+        $idsToKeep = [];
+        foreach ($addresses as $address) {
+            $customerAddress = $this->addresses()->updateOrCreate(
+                array_only($address, ['customer_id', 'address_id']),
+                $address
+            );
+
+            $idsToKeep[] = $customerAddress->getKey();
+        }
+
+        $this->addresses()->whereNotIn('address_id', $idsToKeep)->delete();
     }
 
     /**

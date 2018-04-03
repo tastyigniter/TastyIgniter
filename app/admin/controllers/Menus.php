@@ -70,32 +70,21 @@ class Menus extends AdminController
             ['special.special_status', 'lang:admin::menus.label_special_status', 'required|integer'],
         ];
 
-        $options = post($form->arrayName.'.menu_options') ?: [];
-        foreach ($options as $index => $option) {
-            $key = $index;
-            $rules[] = ['menu_options.'.$index.'.option_id', '['.$key.']'.lang('label_option_id'), 'required|integer'];
-            $rules[] = ['menu_options.'.$index.'.menu_id', '['.$key.']'.lang('label_option'), 'integer'];
-            $rules[] = ['menu_options.'.$index.'.menu_option_id', '['.$key.']'.lang('label_option'), 'integer'];
-            $rules[] = ['menu_options.'.$index.'.required', '['.$key.']'.lang('label_option_required'), 'required|integer'];
+        $rules[] = ['menu_options.*.option_id', 'lang:admin::menus.label_option_id', 'required|integer'];
+        $rules[] = ['menu_options.*.menu_id', 'lang:admin::menus.label_option', 'integer'];
+        $rules[] = ['menu_options.*.menu_option_id', 'lang:admin::menus.label_option', 'integer'];
+        $rules[] = ['menu_options.*.required', 'lang:admin::menus.label_option_required', 'required|integer'];
 
-            $rules[] = ['menu_options.'.$index.'.menu_option_values', '['.$key.']'.lang('label_option'), 'required'];
+        $rules[] = ['menu_options.*.menu_option_values', 'lang:admin::locations.label_option', 'required'];
+        $rules[] = ['menu_options.*.menu_option_values.*.menu_option_value_id', 'lang:admin::menus.label_option_value_id', 'numeric'];
+        $rules[] = ['menu_options.*.menu_option_values.*.option_value_id', 'lang:admin::menus.label_option_value', 'required|integer'];
+        $rules[] = ['menu_options.*.menu_option_values.*.new_price', 'lang:admin::menus.label_option_price', 'numeric'];
+        $rules[] = ['menu_options.*.menu_option_values.*.quantity', 'lang:admin::menus.label_option_qty', 'numeric'];
+        $rules[] = ['menu_options.*.menu_option_values.*.subtract_stock', 'lang:admin::menus.label_option_subtract_stock', 'numeric'];
 
-            if (!isset($option['menu_option_values'])) continue;
-
-            foreach ($option['menu_option_values'] as $optionIndex => $value) {
-                $rules[] = ['menu_options.'.$index.'.menu_option_values.'.$optionIndex.'.menu_option_value_id', '['.$key.']'.lang('label_option_value_id'), 'numeric'];
-                $rules[] = ['menu_options.'.$index.'.menu_option_values.'.$optionIndex.'.option_value_id', '['.$key.']'.lang('label_option_value'), 'required|integer'];
-                $rules[] = ['menu_options.'.$index.'.menu_option_values.'.$optionIndex.'.new_price', '['.$key.']'.lang('label_option_price'), 'numeric'];
-                $rules[] = ['menu_options.'.$index.'.menu_option_values.'.$optionIndex.'.quantity', '['.$key.']'.lang('label_option_qty'), 'numeric'];
-                $rules[] = ['menu_options.'.$index.'.menu_option_values.'.$optionIndex.'.subtract_stock', '['.$key.']'.lang('label_option_subtract_stock'), 'numeric'];
-            }
-        }
-
-        if (post($form->arrayName.'.special.special_status') == '1') {
-            $rules[] = ['special.start_date', 'lang:admin::menus.label_start_date', 'required'];
-            $rules[] = ['special.end_date', 'lang:admin::menus.label_end_date', 'required'];
-            $rules[] = ['special.special_price', 'lang:admin::menus.label_special_price', 'required|numeric'];
-        }
+        $rules[] = ['special.start_date', 'lang:admin::menus.label_start_date', 'valid_date'];
+        $rules[] = ['special.end_date', 'lang:admin::menus.label_end_date', 'valid_date'];
+        $rules[] = ['special.special_price', 'lang:admin::menus.label_special_price', 'numeric'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

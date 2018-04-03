@@ -60,7 +60,7 @@ class Country
     {
         $this->loadCountries();
 
-        if (!$countryModel = $this->countriesCollection->where('location_id', $id)->first())
+        if (!$countryModel = $this->countriesCollection->where('country_id', $id)->first())
             return null;
 
         return (is_null($codeType) OR $codeType == static::ISO_CODE_2)

@@ -2,14 +2,14 @@
 
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Igniter\Flame\Location\Models\Location as LocationModel;
+use Igniter\Flame\Location\Models\Location as BaseLocationModel;
 
 /**
  * Locations Model Class
  *
  * @package Admin
  */
-class Locations_model extends LocationModel
+class Locations_model extends BaseLocationModel
 {
     use HasPermalink;
     use Purgeable;
@@ -314,7 +314,7 @@ class Locations_model extends LocationModel
      *
      * @return bool
      */
-    public function addOpeningHours(array $data = [])
+    public function addOpeningHours($data = [])
     {
         $created = FALSE;
 
@@ -381,7 +381,7 @@ class Locations_model extends LocationModel
      *
      * @return bool
      */
-    public function addLocationTables(array $tables = [])
+    public function addLocationTables($tables = [])
     {
         return $this->tables()->sync($tables);
     }

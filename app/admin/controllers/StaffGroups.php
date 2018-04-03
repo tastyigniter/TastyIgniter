@@ -59,13 +59,7 @@ class StaffGroups extends \Admin\Classes\AdminController
             ['location_access', 'lang:admin::staff_groups.label_location_access', 'required|integer'],
         ];
 
-        if (post($form->arrayName.'.permissions')) {
-            foreach (post($form->arrayName.'.permissions') as $name => $actions) {
-                foreach ($actions as $index => $action) {
-                    $rules[] = ['permissions.'.$name.'.'.$index, ucfirst($name).' Permission', 'alpha|max:6'];
-                }
-            }
-        }
+        $rules[] = ['permissions.*', 'Permission', 'alpha|max:6'];
 
         return $this->validatePasses($form->getSaveData(), $rules);
     }
