@@ -1,7 +1,5 @@
 <div class="text-center">
-    <h3>Yippee!</h3>
     <i class="fa fa-check-circle fa-5x"></i>
-    <h5>Setup has been successfully completed</h5>
 </div>
 
 <div class="buttons">

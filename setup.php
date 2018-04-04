@@ -115,8 +115,8 @@ $viewsList = [
     Installer.Steps.install.subTitle = "<?= lang('text_complete_sub_heading'); ?>"
 
     Installer.Steps.proceed.view = "[data-view=\"proceed\"]"
-    Installer.Steps.proceed.title = "&nbsp;"
-    Installer.Steps.proceed.subTitle = "&nbsp;"
+    Installer.Steps.proceed.title = "Yippee!"
+    Installer.Steps.proceed.subTitle = "Setup has been successfully completed"
 
     Installer.init()
 </script>
