@@ -7,6 +7,6 @@
     <p>
         Please see <a href="//docs.tastyigniter.com" target="_blank">the documentation</a> for more information.
     </p>
-    <p><a href="javascript:Installer.checkRetry()" class="btn btn-default btn-sm">Retry Check</a></p>
+    <p><a data-install-control="retry-check" class="btn btn-default btn-sm">Retry Check</a></p>
     <small>Error message code: {{code}}</small>
 </div>

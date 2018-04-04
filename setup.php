@@ -35,8 +35,6 @@
                 <?php include_once 'setup/views/wizard.php'; ?>
 
                 <div class="card">
-                    <?php include_once 'setup/views/license.php'; ?>
-
                     <div class="content">
 
                         <form id="setup-form" accept-charset="utf-8" method="POST" role="form">
@@ -77,11 +75,14 @@
 
 <?php
 $viewsList = [
+    'license',
     'check_alert',
     'requirements',
     'database',
     'settings',
     'install',
+    'themes',
+    'theme',
     'proceed',
 ];
 ?>
@@ -110,8 +111,8 @@ $viewsList = [
     Installer.Steps.settings.subTitle = "<?= lang('text_settings_sub_heading'); ?>"
 
     Installer.Steps.install.view = "[data-view=\"install\"]"
-    Installer.Steps.install.title = "&nbsp;"
-    Installer.Steps.install.subTitle = "&nbsp;"
+    Installer.Steps.install.title = "<?= lang('text_complete_heading'); ?>"
+    Installer.Steps.install.subTitle = "<?= lang('text_complete_sub_heading'); ?>"
 
     Installer.Steps.proceed.view = "[data-view=\"proceed\"]"
     Installer.Steps.proceed.title = "&nbsp;"

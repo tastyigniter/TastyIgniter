@@ -96,7 +96,7 @@ class Permissions_model extends Model
      */
     public static function syncAll()
     {
-        $permissions = (array)self::listRegisteredPermissions();
+        $permissions = (array)(new static())->listRegisteredPermissions();
         $dbPermissions = (array)self::lists('is_custom', 'name')->toArray();
         $newPermissions = array_diff_key($permissions, $dbPermissions);
 
@@ -106,7 +106,7 @@ class Permissions_model extends Model
                 continue;
 
             if (!array_key_exists($name, $permissions))
-                self::whereCode($name)->delete();
+                self::whereName($name)->delete();
         }
 
         // Create new permissions

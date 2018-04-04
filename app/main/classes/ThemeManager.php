@@ -88,11 +88,9 @@ class ThemeManager
      */
     public function loadInstalled()
     {
-        if (!setting('installed_themes')) {
-            $this->createThemeModel()->updateInstalledThemes();
+        if (($installedThemes = setting('installed_themes')) AND is_array($installedThemes)) {
+            $this->installedThemes = $installedThemes;
         }
-
-        $this->installedThemes = setting('installed_themes');
     }
 
     /**
@@ -300,6 +298,18 @@ class ThemeManager
         }
 
         return (rtrim($themeCode, '/') == $this->getActiveThemeCode());
+    }
+
+    /**
+     * Determines if a theme is disabled by looking at the installed themes config.
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public function isDisabled($name)
+    {
+        return !$this->checkName($name) OR !array_get($this->installedThemes, $name, FALSE);
     }
 
     /**

@@ -19,7 +19,7 @@ return [
     'text_update'                 => 'Update',
     'text_ignore'                 => 'Ignore',
     'text_search'                 => 'Search the marketplace for %s to install',
-    'text_recommended_title'      => 'Recommended %s',
+    'text_popular_title'      => 'Popular %s',
     'text_last_checked'           => '<b>Last checked:</b> %s',
 
     'text_no_updates' => 'No updates available.',
@@ -45,7 +45,7 @@ return [
 
     'progress_download' => '<i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Downloading %s&#8230;',
     'progress_extract'  => '<i class="fa fa-file-archive-o fa-fw"></i>&nbsp;&nbsp;&nbsp;Extracting %s&#8230;',
-    'progress_complete' => '<i class="fa fa-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Completing %s&#8230;',
+    'progress_complete' => '<i class="fa fa-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Finishing installation&#8230;',
 
     'label_meta_code'        => 'Meta Code',
     'label_meta_type'        => 'Meta Type',

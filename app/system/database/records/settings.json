@@ -30,11 +30,6 @@
     "value": "11"
   },
   {
-    "sort": "prefs",
-    "item": "main_address",
-    "value": "a:6:{s:9:\"address_1\";s:0:\"\";s:9:\"address_2\";s:0:\"\";s:4:\"city\";s:0:\"\";s:8:\"postcode\";s:0:\"\";s:11:\"location_id\";s:2:\"11\";s:10:\"country_id\";s:1:\"1\";}"
-  },
-  {
     "sort": "config",
     "item": "site_logo",
     "value": "tastyigniter-logo.png"

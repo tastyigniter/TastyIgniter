@@ -18,7 +18,7 @@ class MapArea extends BaseFormWidget
 
     protected $defaultAlias = 'maparea';
 
-    protected $prompt = 'lang:text_add_new_area';
+    protected $prompt = 'lang:admin::locations.text_add_new_area';
 
     protected $relationFrom;
 

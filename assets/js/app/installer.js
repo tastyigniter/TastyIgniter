@@ -332,7 +332,7 @@ var Installer = {
         })
     },
 
-    installFoundation: function (steps) {
+    processInstallSteps: function (steps) {
         var success = true,
             requestChain = [],
             failMessages = [],
@@ -485,9 +485,6 @@ var Installer = {
         Installer.sendRequest('onFetchItems', {})
             .done(function (json) {
                 Installer.buildThemesList(json.data)
-                // Installer.watchCheckboxes()
-                // Installer.renderView('themes', json)
-                // Installer.processResponse(json)
             })
             .fail(function () {
                 $container.empty()
@@ -532,7 +529,7 @@ var Installer = {
             Installer.$pageContent.find('[data-html="install-type"]').addClass('hide')
             Installer.$pageContent.find('.panel-carte').addClass('hide')
             Installer.$pageContent.find('.install-progress').removeClass('hide')
-            Installer.installFoundation(json.result)
+            Installer.processInstallSteps(json.result)
             Installer.updateWizard('install')
         }).fail(function () {
             $btn.attr('disabled', false)

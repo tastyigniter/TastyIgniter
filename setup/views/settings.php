@@ -1,21 +1,6 @@
 <?php
 $settings = $setup->getSettingsDetails();
 ?>
-<div class="panel panel-carte">
-    <div class="panel-body">
-        <label for="">
-            <?= lang('label_site_key'); ?>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a class="small" href="//docs.tastyigniter.com/tutorial/site"><?= lang('text_whats_this'); ?></a>
-            <span class="help-block"><?= lang('help_site_key'); ?></span>
-        </label>
-        <input type="text"
-               class="form-control"
-               name="site_key"
-               value="<?= $settings->site_key; ?>"
-               placeholder="Enter your Carté Key... (Optional)">
-    </div>
-</div>
-
 <h5><?= lang('text_restaurant_details'); ?></h5>
 <hr>
 <div class="row">

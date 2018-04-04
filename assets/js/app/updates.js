@@ -75,10 +75,9 @@
                         data: {step: group, meta: step},
                         beforeSend: self.setProgressBar(step.label, 'success')
                     }).done(function (json) {
-                        var data = $.parseJSON(json)
                         self.setProgressBar(step.success, 'success')
                         setTimeout(function () {
-                            if (!data.result)
+                            if (!json.result)
                                 success = false
                             deferred.resolve()
                         }, timeout)
@@ -288,9 +287,8 @@
             $modal.modal('hide')
             $.ti.flashMessage({class: 'danger', text: xhr.responseText})
         }).done(function (json) {
-            var data = $.parseJSON(json)
-            if (data['steps'])
-                self.executeSteps(data['steps'])
+            if (json['steps'])
+                self.executeSteps(json['steps'])
         })
 
         this.options.itemsToApply = []
@@ -322,9 +320,8 @@
         }).fail(function (xhr) {
             $.ti.flashMessage({class: 'danger', text: xhr.responseText})
         }).done(function (json) {
-            var data = $.parseJSON(json)
-            if (data['steps'])
-                self.executeSteps(data['steps'])
+            if (json['steps'])
+                self.executeSteps(json['steps'])
         })
 
         this.options.itemsToApply = []

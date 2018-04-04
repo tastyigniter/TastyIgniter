@@ -4,6 +4,7 @@ use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Builder;
 use Model;
 use System\Classes\ExtensionManager;
+use System\Classes\UpdateManager;
 
 /**
  * Extensions Model Class
@@ -82,35 +83,6 @@ class Extensions_model extends Model
         $this->applyExtensionClass();
     }
 
-    public function afterSave()
-    {
-        if (array_get($this->original, 'status') == array_get($this->attributes, 'status'))
-            return;
-
-        $this->updateInstalledExtensions($this->name, ($this->status == 1));
-
-        $this->syncMailTemplates();
-
-        // set extension migration to the latest version
-        ExtensionManager::instance()->updateExtension($this->name);
-    }
-
-    public function beforeDelete()
-    {
-        if ($this->status == 1)
-            return FALSE;
-
-        $extensionManager = ExtensionManager::instance();
-
-        // downgrade extension migration
-        $extensionManager->updateExtension($this->name, TRUE);
-
-        self::updateInstalledExtensions($this->name, FALSE);
-
-        // delete extensions from file system
-        $extensionManager->removeExtension($this->name);
-    }
-
     //
     // Helpers
     //
@@ -184,53 +156,21 @@ class Extensions_model extends Model
         // Disable extensions not found in file system
         // This allows admin to remove an enabled extension from admin UI after deleting files
         self::whereNotIn('name', $installedExtensions)->update(['status' => FALSE]);
-
-        self::updateInstalledExtensions();
-    }
-
-    /**
-     * Save all extension registered mail templates to database
-     */
-    public function syncMailTemplates()
-    {
-        Mail_templates_model::syncAll();
-    }
-
-    /**
-     * Update installed extensions config value
-     *
-     * @param string $extension
-     * @param bool $install
-     *
-     * @return bool TRUE on success, FALSE on failure
-     */
-    public static function updateInstalledExtensions($extension = null, $install = TRUE)
-    {
-        $installedExtensions = self::select('status', 'name')->lists('status', 'name')->all();
-
-        if (!is_array($installedExtensions))
-            $installedExtensions = [];
-
-        if ($extension) {
-            $installedExtensions[$extension] = $install;
-        }
-
-        setting()->set('installed_extensions', $installedExtensions);
     }
 
     /**
      * Install a new or existing extension by code
      *
      * @param string $code
-     * @param object $extension Extension
      *
      * @return bool|null
      */
-    public static function install($code, $extension = null)
+    public static function install($code)
     {
-        $code = str_replace('/', '.', $code);
+        $extensionManager = ExtensionManager::instance();
 
-        if (!ExtensionManager::instance()->hasExtension($code))
+        $code = $extensionManager->getIdentifier($code);
+        if (!$extensionManager->hasExtension($code))
             return FALSE;
 
         $extensionModel = self::firstOrNew(['type' => 'module', 'name' => $code]);
@@ -243,6 +183,13 @@ class Extensions_model extends Model
             ])->save();
         }
 
+        // set extension migration to the latest version
+        UpdateManager::instance()->migrateExtension($extensionModel->name);
+
+        $extensionManager->updateExtension(
+            $extensionModel->name, $extensionModel->status
+        );
+
         return TRUE;
     }
 
@@ -250,24 +197,22 @@ class Extensions_model extends Model
      * Uninstall a new or existing extension by code
      *
      * @param string $code
-     * @param object $extension Extension
      *
      * @return bool|null
      */
-    public static function uninstall($code = '', $extension = null)
+    public static function uninstall($code = '')
     {
         $query = FALSE;
 
         $extensionModel = self::where('name', $code)->first();
         if ($extensionModel) {
-            if (preg_match('/\s/', $code) > 0) {
-                $query = $extensionModel->delete();
-            }
-            else {
-                $extensionModel->status = FALSE;
-                $query = $extensionModel->save();
-            }
+            $extensionModel->status = FALSE;
+            $query = $extensionModel->save();
         }
+
+        ExtensionManager::instance()->updateExtension(
+            $extensionModel->name, $extensionModel->status
+        );
 
         return $query;
     }
@@ -284,17 +229,17 @@ class Extensions_model extends Model
     {
         $extensionModel = self::where('name', trim($code, '.'))->first();
 
-        $dataDeleted = FALSE;
-        $filesDeleted = TRUE;
-
         if ($extensionModel AND ($deleteData OR !$extensionModel->data)) {
-            $dataDeleted = $extensionModel->delete();
+            $extensionModel->delete();
         }
 
-        // This is to make sure files are deleted
-        // since the beforeDelete() event only fires on disabled extensions
-        if (!$dataDeleted)
-            $filesDeleted = ExtensionManager::instance()->removeExtension($code);
+        $extensionManager = ExtensionManager::instance();
+
+        // delete extensions from file system
+        $filesDeleted = $extensionManager->removeExtension($code);
+
+        // disable extension
+        $extensionManager->updateExtension($code, false);
 
         return $filesDeleted;
     }

@@ -1,7 +1,10 @@
 <?php namespace System\Classes;
 
 use Cache;
+use Carbon\Carbon;
+use Config;
 use Exception;
+use Log;
 use Request;
 
 /**
@@ -12,29 +15,16 @@ class HubManager
 {
     use \Igniter\Flame\Traits\Singleton;
 
-    const ENDPOINT = 'http://api.tasty-cms.com/v2';
-
-    protected $siteKey;
+    const ENDPOINT = 'https://api.tastyiginiter.io/v2';
 
     protected $cachePrefix;
 
-    protected $cacheLife;
-
-    protected $downloadsPath;
-
-    protected $installer;
+    protected $cacheTtl;
 
     public function initialize()
     {
         $this->cachePrefix = 'hub_';
-        $this->downloadsPath = storage_path('temp/hub');
-    }
-
-    public function setCacheLife($period = null)
-    {
-        $this->cacheLife = $period * 60;
-
-        return $this;
+        $this->cacheTtl = 15;
     }
 
     public function listItems($filter = [])
@@ -45,7 +35,7 @@ class HubManager
             $items = $this->requestRemoteData('items', array_merge(['include' => 'require'], $filter));
 
             if (!empty($items) AND is_array($items))
-                Cache::put($cacheFile, $items, $this->cacheLife);
+                Cache::put($cacheFile, $items, $this->cacheTtl);
         }
 
         return $items;
@@ -75,31 +65,27 @@ class HubManager
 
     public function applyItemsToUpdate($itemNames, $force = FALSE)
     {
-        $itemNames = json_encode($itemNames);
+        $itemNames = json_encode(array_map(function ($item) {
+            $item['action'] = 'update';
+
+            return $item;
+        }, $itemNames));
 
         $cacheFile = $this->getCacheFilePath('updates', $itemNames);
 
         if ($force OR !$response = Cache::get($cacheFile)) {
             $response = $this->requestRemoteData('core/apply', [
-                'version' => params('ti_version'),
                 'items'   => $itemNames,
                 'include' => 'tags',
             ]);
 
             if (is_array($response)) {
-                $response['check_time'] = time();
-                Cache::put($cacheFile, $response, $this->cacheLife);
+                $response['check_time'] = Carbon::now()->toDateTimeString();
+                Cache::put($cacheFile, $response, $this->cacheTtl);
             }
         }
 
         return $response;
-    }
-
-    public function downloadFile($fileType, $filePath, $fileHash, $params = [])
-    {
-        return $this->requestRemoteFile("{$fileType}/download", [
-            'item' => json_encode($params),
-        ], $filePath, $fileHash);
     }
 
     public function buildMetaArray($response)
@@ -127,11 +113,6 @@ class HubManager
         return $response;
     }
 
-    private function getCacheFilePath($fileName, $suffix)
-    {
-        return $this->cachePrefix.$fileName.'_'.md5($suffix);
-    }
-
     public function setSecurity($key, $info)
     {
         params()->set('carte_key', $key ? encrypt($key) : '');
@@ -147,20 +128,22 @@ class HubManager
         return (!$carteKey = params('carte_key')) ? md5('NULL') : decrypt($carteKey);
     }
 
-    public function getSysInfo()
+    public function downloadFile($filePath, $fileHash, $params = [])
     {
-        $info = [
-            'domain' => root_url(),
-            'ver'    => params('ti_version'),
-            'os'     => php_uname(),
-            'php'    => phpversion(),
-        ];
+        return $this->requestRemoteFile('core/download', [
+            'item' => json_encode($params),
+        ], $filePath, $fileHash);
+    }
 
-        return $info;
+    protected function getCacheFilePath($fileName, $suffix)
+    {
+        return $this->cachePrefix.$fileName.'_'.md5($suffix);
     }
 
     protected function requestRemoteData($url, $params = [])
     {
+        $result = null;
+
         try {
             $curl = $this->prepareRequest($url, $params);
             $result = curl_exec($curl);
@@ -181,6 +164,9 @@ class HubManager
         }
 
         if (isset($response['message']) AND !in_array($httpCode, [200, 201])) {
+            if (isset($response['errors']))
+                Log::debug('Server validation errors: '.print_r($response['errors'], TRUE));
+
             throw new Exception($response['message']);
         }
 
@@ -190,36 +176,29 @@ class HubManager
     protected function requestRemoteFile($url, $params = [], $filePath, $fileHash)
     {
         if (!is_dir($fileDir = dirname($filePath)))
-            throw new Exception("Downloading failed, download path not found.");
+            throw new Exception("Downloading failed, download path ({$filePath}) not found.");
 
         try {
             $curl = $this->prepareRequest($url, $params);
-            $fileStream = fopen($filePath, 'w+');
+            $fileStream = fopen($filePath, 'wb');
             curl_setopt($curl, CURLOPT_FILE, $fileStream);
-            $result = curl_exec($curl);
+            curl_exec($curl);
 
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
                 throw new Exception('Server error try again');
 
             curl_close($curl);
+            fclose($fileStream);
         } catch (Exception $ex) {
             throw new Exception('Server responded with error: '.$ex->getMessage());
         }
 
-        if (file_exists($filePath)) {
-            $fileSha = sha1_file($filePath);
-            if ($fileHash != $fileSha) {
-                $response = @json_decode(file_get_contents($filePath), TRUE);
-                @unlink($filePath);
+        $fileSha = sha1_file($filePath);
 
-                if (isset($response['message'])) {
-                    throw new Exception(isset($response['message']) ? $response['message'] : '');
-                }
-                else {
-                    throw new Exception("Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
-                }
-            }
+        if ($fileHash != $fileSha) {
+            @unlink($filePath);
+            throw new Exception("Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
         }
 
         return TRUE;
@@ -229,7 +208,7 @@ class HubManager
     {
         $curl = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, static::ENDPOINT.'/'.$uri);
+        curl_setopt($curl, CURLOPT_URL, Config::get('system.hubEndpoint', static::ENDPOINT).'/'.$uri);
         curl_setopt($curl, CURLOPT_USERAGENT, Request::userAgent());
         curl_setopt($curl, CURLOPT_TIMEOUT, 3600);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
@@ -237,8 +216,7 @@ class HubManager
         curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
 
-        $info = $this->getSysInfo();
-        $params['server'] = base64_encode(serialize($info));
+        $params['url'] = base64_encode(root_url());
 
         if ($siteKey = $this->getSecurity()) {
             curl_setopt($curl, CURLOPT_HTTPHEADER, ["TI-Rest-Key: bearer {$siteKey}"]);
@@ -247,10 +225,5 @@ class HubManager
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, '', '&'));
 
         return $curl;
-    }
-
-    protected function createSignature($postData, $siteKey)
-    {
-        return base64_encode(hash_hmac('sha256', serialize($postData), $siteKey));
     }
 }

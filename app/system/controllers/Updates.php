@@ -160,15 +160,12 @@ class Updates extends \Admin\Classes\AdminController
 
             $updates = $updateManager->requestUpdateList();
 
-            $json = [
+            return [
                 '#updates' => $this->makePartial('updates/list', ['updates' => $updates]),
             ];
         } catch (Exception $ex) {
-            $this->statusCode = 500;
-            $json = $ex->getMessage();
+            $this->handleError($ex);
         }
-
-        return $json;
     }
 
     public function index_onProcess()
@@ -190,9 +187,7 @@ class Updates extends \Admin\Classes\AdminController
                 ]),
             ];
         } catch (Exception $ex) {
-            $this->statusCode = 500;
-
-            return $ex->getMessage();
+            $this->handleError($ex);
         }
     }
 
@@ -218,17 +213,14 @@ class Updates extends \Admin\Classes\AdminController
             if (!strlen($carteKey))
                 throw new Exception('No carte key specified.');
 
-            $json = UpdateManager::instance()->applySiteDetail($carteKey);
+            $response = UpdateManager::instance()->applySiteDetail($carteKey);
 
-            $json = [
-                '#carte-details' => $this->makePartial('updates/carte_info', ['carteInfo' => $json]),
+            return [
+                '#carte-details' => $this->makePartial('updates/carte_info', ['carteInfo' => $response]),
             ];
         } catch (Exception $ex) {
-            $this->statusCode = 500;
-            $json = $ex->getMessage();
+            $this->handleError($ex);
         }
-
-        return $json;
     }
 
     protected function applyInstallOrUpdate($context)
@@ -246,13 +238,12 @@ class Updates extends \Admin\Classes\AdminController
             $context = ($context != 'index') ? 'install' : 'update';
             $response = UpdateManager::instance()->applyItems($items, $context);
 
-            $json['steps'] = $this->buildProcessSteps($response, $items);
+            return [
+                'steps' => $this->buildProcessSteps($response, $items)
+            ];
         } catch (Exception $ex) {
-            $this->statusCode = 500;
-            $json = $ex->getMessage();
+            $this->handleError($ex);
         }
-
-        return $json;
     }
 
     protected function buildProcessSteps($meta, $params = [])
@@ -273,20 +264,20 @@ class Updates extends \Admin\Classes\AdminController
                 $processSteps[$step][] = [
                     'items'   => $meta['data'],
                     'process' => $step,
-                    'label'   => lang("progress_{$step}"),
-                    'success' => sprintf(lang("progress_success"), rtrim($step, 'e').'ing', ''),
+                    'label'   => lang("system::updates.progress_{$step}"),
+                    'success' => sprintf(lang('system::updates.progress_success'), rtrim($step, 'e').'ing', ''),
                 ];
 
                 continue;
             }
 
-            foreach ($meta['data'] as $item) {
+            foreach (array_get($meta, 'data') as $item) {
                 if ($item['type'] == 'core') {
                     $applySteps['core'][] = array_merge([
                         'action'  => 'update',
                         'process' => "{$step}Core",
-                        'label'   => sprintf(lang("progress_{$step}"), "{$item['name']}".' update'),
-                        'success' => sprintf(lang("progress_success"), $step.'ing', $item['name']),
+                        'label'   => sprintf(lang("system::updates.progress_{$step}"), $item['name'].' update'),
+                        'success' => sprintf(lang('system::updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
                 }
                 else {
@@ -296,9 +287,9 @@ class Updates extends \Admin\Classes\AdminController
                     $action = $this->getActionFromItems($item['code'], $params);
                     $applySteps[$pluralType][] = array_merge([
                         'action'  => $action,
-                        'process' => camelize(underscore("{$step} {$singularType}")),
-                        'label'   => sprintf(lang("progress_{$step}"), "{$item['name']} {$singularType}".' '.$action),
-                        'success' => sprintf(lang("progress_success"), $step.'ing', $item['name']),
+                        'process' => $step.ucfirst($singularType),
+                        'label'   => sprintf(lang("system::updates.progress_{$step}"), "{$item['name']} {$singularType}"),
+                        'success' => sprintf(lang('system::updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
                 }
             }
@@ -335,51 +326,50 @@ class Updates extends \Admin\Classes\AdminController
                 case 'downloadCore':
                 case 'downloadExtension':
                 case 'downloadTheme':
-                    $result = true; //$updateManager->downloadFile($meta['code'], $meta['hash'], $params);
+                    $result = $updateManager->downloadFile($meta['code'], $meta['hash'], $params);
                     if ($result) $json['result'] = 'success';
                     break;
 
                 case 'extractCore':
-                    $response = true; //$updateManager->extractCore($meta['code']);
+                    $response = $updateManager->extractCore($meta['code']);
                     if ($response) $json['result'] = 'success';
                     break;
 
                 case 'extractExtension':
-                    $response = true; //$updateManager->extractFile($meta['code'], 'extensions/');
+                    $response = $updateManager->extractFile($meta['code'], 'extensions/');
                     if ($response) $json['result'] = 'success';
                     break;
                 case 'extractTheme':
-                    $response = true; //$updateManager->extractFile($meta['code'], 'themes/');
+                    $response = $updateManager->extractFile($meta['code'], 'themes/');
                     if ($response) $json['result'] = 'success';
                     break;
 
                 case 'complete':
-                    $response = true; //$this->completeProcess($meta['items']);
+                    $response = $this->completeProcess($meta['items']);
                     if ($response) $json['result'] = 'success';
                     break;
             }
         } catch (Exception $ex) {
-            $this->statusCode = 500;
-            $json = $ex->getMessage();
+            $this->handleError($ex);
         }
 
         return $json;
     }
 
-    protected function completeProcess($meta)
+    protected function completeProcess($items)
     {
-        if (isset($post['type'], $post['action']) AND $post['action'] == 'update') {
-            $updateManager = UpdateManager::instance();
+        if (!count($items))
+            return false;
 
-            switch ($post['type']) {
+        $updateManager = UpdateManager::instance();
+
+        foreach ($items as $item) {
+            switch ($item['type']) {
+                case 'core':
+                    $updateManager->update();
+                    break;
                 case 'extension':
-                    $updateManager->updateExtension($post['code']);
-                    break;
-                case 'theme':
-                    $updateManager->updateTheme($post['code']);
-                    break;
-                case 'translation':
-                    $updateManager->updateTranslation($post['code']);
+                    Extensions_model::install($item['code']);
                     break;
             }
         }
@@ -401,7 +391,7 @@ class Updates extends \Admin\Classes\AdminController
             ['items.*.name', 'lang:system::updates.label_meta_code', 'required'],
             ['items.*.type', 'lang:system::updates.label_meta_type', 'required'],
             ['items.*.ver', 'lang:system::updates.label_meta_version', 'required'],
-            ['items.*.action', 'lang:system::updates.label_meta_action', 'required|in_list:install,update'],
+            ['items.*.action', 'lang:system::updates.label_meta_action', 'required|in:install,update'],
         ];
 
         return $this->validatePasses(post(), $rules);
@@ -416,13 +406,13 @@ class Updates extends \Admin\Classes\AdminController
             $rules[] = ['meta.version', 'lang:system::updates.label_meta_version', 'required'];
             $rules[] = ['meta.hash', 'lang:system::updates.label_meta_hash', 'required'];
             $rules[] = ['meta.description', 'lang:system::updates.label_meta_description', 'required'];
-            $rules[] = ['meta.action', 'lang:system::updates.label_meta_action', 'required|in_list:install,update'];
+            $rules[] = ['meta.action', 'lang:system::updates.label_meta_action', 'required|in:install,update'];
         }
         else {
             $rules[] = ['meta.items', 'lang:system::updates.label_meta_items', 'required|array'];
         }
 
-        $rules[] = ['step', 'lang:system::updates.label_meta_step', 'required|in_list:download,extract,complete'];
+        $rules[] = ['step', 'lang:system::updates.label_meta_step', 'required|in:download,extract,complete'];
 
         return $this->validatePasses(post(), $rules);
     }

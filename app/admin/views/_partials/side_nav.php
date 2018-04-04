@@ -20,11 +20,10 @@ $systemName = lang('system::default.tastyigniter.system_name');
 
     <div class="hidden-xs sidebar-toggle">
         <a
-            data-toggle="sidebar"
             role="button"
         >
-            <i class="fa fa-chevron-circle-left fa-fw"></i>
-            <span class="content"><?= lang('admin::default.menu_collapse'); ?></span>
+            <i class="fa fa-fw"></i>
+            <span class="content hide"><?= lang('admin::default.menu_collapse'); ?></span>
         </a>
     </div>
 </div>

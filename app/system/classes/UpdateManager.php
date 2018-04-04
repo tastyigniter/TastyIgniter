@@ -1,6 +1,7 @@
 <?php namespace System\Classes;
 
 use App;
+use Carbon\Carbon;
 use Config;
 use Exception;
 use Main\Classes\ThemeManager;
@@ -242,29 +243,9 @@ class UpdateManager
         return extension_path($name.'/database/migrations');
     }
 
-//    public function updateExtension($extensionCode)
-//    {
-//        $this->CI->load->model('Extensions_model');
-//        $this->CI->Extensions_model->updateInstalledExtensions($extensionCode);
-//
-//        // set extension migration to the latest version
-//        $this->extensionManager->updateExtension($extensionCode);
-//
-//        return TRUE;
-//    }
-//
-//    public function updateTheme($themeCode)
-//    {
-//        $this->CI->load->model('Themes_model');
-//
-//        return $this->CI->Themes_model->updateInstalledThemes($themeCode);
-//    }
-//
-//    public function updateTranslation($translationCode)
-//    {
-//        // @TODO: complete with new translation implementation
-//        return TRUE;
-//    }
+    //
+    //
+    //
 
     public function isLastCheckDue()
     {
@@ -281,10 +262,8 @@ class UpdateManager
     {
         $installedItems = $this->getInstalledItems();
 
-        // cache recommended items for 6 hours.
-        $cacheTime = 6 * 60 * 60;
-        $items = $this->getHubManager()->setCacheLife($cacheTime)->listItems([
-            'browse' => 'recommended',
+        $items = $this->getHubManager()->listItems([
+            'browse' => 'popular',
             'type'   => $itemType,
         ]);
 
@@ -334,38 +313,27 @@ class UpdateManager
     {
         $installedItems = $this->getInstalledItems();
 
-        // cache updates for 6 hours.
-        $cacheTime = 6 * 60 * 60;
-        $updates = $this->getHubManager()->setCacheLife($cacheTime)->applyItemsToUpdate($installedItems, $force);
+        $updates = $this->hubManager->applyItemsToUpdate($installedItems, $force);
+
         if (is_string($updates))
             return $updates;
 
         $result = $items = $ignoredUpdates = [];
-        $result['last_check'] = mdate('%d-%m-%Y %H:%i:%s', isset($updates['check_time']) ? $updates['check_time'] : time());
+        $result['last_check'] = isset($updates['check_time'])
+            ? $updates['check_time'] : Carbon::now()->toDateTimeString();
 
         $installedItems = collect($installedItems)->keyBy('name')->all();
 
         $updateCount = 0;
-        foreach ($updates['data'] as $update) {
-
-            switch ($update['type']) {
-                case 'extension':
-                    if ($this->extensionManager->isDisabled($update['code']))
-                        continue 2;
-                    break;
-                case 'theme':
-                    if (!$this->getThemeManager()->hasTheme($update['code']))
-                        continue 2;
-                    break;
-//                case 'translation':
-//                    break;
-            }
-
+        foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
-            $update['ver'] = $installedItems[$update['code']]['ver'];
+            $installItem = array_get($installedItems, $update['code']);
+            $installItemCode = array_get($installItem, 'code');
+            $installItemVersion = array_get($installItem, 'ver');
+            $update['ver'] = $installItemVersion;
 
-            if ($this->isUpdateIgnored($update)) {
-                $ignoredUpdates[] = $update;
+            if ($this->isUpdateIgnored($installItemCode, $installItemVersion)) {
+                $ignoredUpdates[] = $installItemCode;
                 continue;
             }
 
@@ -422,7 +390,7 @@ class UpdateManager
         $applies = $this->getHubManager()->applyItems('core', $names);
 
         if (isset($applies['data'])) foreach ($applies['data'] as $index => $item) {
-            if ($context == 'update' AND $this->isUpdateIgnored($item))
+            if ($context == 'update' AND $this->isUpdateIgnored($item['code'], $item['ver']))
                 unset($applies['data'][$index]);
         }
 
@@ -452,28 +420,24 @@ class UpdateManager
 
     public function getIgnoredUpdates()
     {
-        $ignoredUpdates = setting('ignored_updates');
-
-        return is_array($ignoredUpdates) ? $ignoredUpdates : [];
+        return setting()->get('ignored_updates', []);
     }
 
-    public function isUpdateIgnored($update = [])
+    public function isUpdateIgnored($code, $version)
     {
         $ignoredUpdates = $this->getIgnoredUpdates();
 
-        if (!isset($update['code']))
+        $ignoredUpdate = array_get($ignoredUpdates, $code, []);
+
+        if (!$ignoredUpdateVersion = array_get($ignoredUpdate, 'ver'))
             return FALSE;
 
-        if (!isset($ignoredUpdates[$update['code']]))
-            return FALSE;
-
-        $ignoredUpdate = $ignoredUpdates[$update['code']];
-
-        if (!isset($ignoredUpdate['ver']))
-            return TRUE;
-
-        return isset($update['version']) AND $ignoredUpdate['ver'] == $update['version'];
+        return $ignoredUpdateVersion == $version;
     }
+
+    //
+    //
+    //
 
     public function downloadFile($fileCode, $fileHash, $params = [])
     {
@@ -482,91 +446,36 @@ class UpdateManager
         if (!is_dir($fileDir = dirname($filePath)))
             mkdir($fileDir, 0777, TRUE);
 
-        return $this->getHubManager()->downloadFile('core', $filePath, $fileHash, $params);
+        return $this->getHubManager()->downloadFile($filePath, $fileHash, $params);
     }
 
     public function extractCore($fileCode)
     {
         ini_set('max_execution_time', 3600);
 
-        $extractTo = $this->getBaseDirectory('core');
-
-        if (!$this->extractTo($fileCode, $extractTo, TRUE))
-            throw new Exception('Failed to extract %s archive file', $fileCode);
-
-        return TRUE;
+        return $this->extractFile($fileCode);
     }
 
-    public function extractFile($fileCode, $fileType)
+    public function extractFile($fileCode, $directory = null)
     {
-        $extractTo = $this->getBaseDirectory($fileType);
+        $filePath = $this->getFilePath($fileCode);
+        $extractTo =  base_path();
+        if ($directory)
+            $extractTo .= '/'.$directory.str_replace('.', '/', $fileCode);
 
-        if (!$this->extractTo($fileCode, $extractTo.$fileCode))
-            throw new Exception('Failed to extract %s archive file', $fileCode);
-
-        return TRUE;
-    }
-
-    public function getBaseDirectory($fileType)
-    {
-        switch ($fileType) {
-            case 'core':
-                return base_path();
-            case 'extension':
-                return current($this->extensionManager->folders());
-            case 'theme':
-                return $this->getThemeManager()->folders()[MAINDIR];
-            case 'translation':
-                break; // @TODO improve translations
-        }
-    }
-
-    /**
-     * Extract a directory contents within a zip File
-     *
-     * @param string $fileCode
-     * @param string $extractTo
-     * @param bool $checkIgnored
-     *
-     * @return string
-     */
-    public function extractTo($fileCode, $extractTo, $checkIgnored = FALSE)
-    {
-        if (!class_exists('ZipArchive')) return FALSE;
+        if (!file_exists($extractTo))
+            mkdir($extractTo, 0777, TRUE);
 
         $zip = new ZipArchive();
+        if ($zip->open($filePath) === TRUE) {
+            $zip->extractTo($extractTo);
+            $zip->close();
+            @unlink($filePath);
 
-        $zipPath = $this->getFilePath($fileCode);
-        if (!file_exists($zipPath)) return FALSE;
-
-        chmod($zipPath, 0777);
-
-        if ($zip->open($zipPath) === TRUE) {
-            $extractTo = rtrim($extractTo, DIRECTORY_SEPARATOR);
-
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = $zip->getNameIndex($i);
-
-                $relativePath = $extractTo.DIRECTORY_SEPARATOR.$filename;
-
-                // Ignore the themes, extensions, logs and sessions folder
-                if ($checkIgnored AND $this->isFileIgnored($filename)) continue;
-
-                if (substr($filename, -1) == '/') {
-                    // Delete existing directory to replace all contents
-                    if (!is_dir($relativePath))
-                        mkdir($relativePath, 0777, TRUE);
-                }
-                else {
-                    $this->copyFiles("zip://".$zipPath."#".$filename, $relativePath);
-                }
-            }
+            return TRUE;
         }
 
-        @unlink($zipPath);
-        log_message('debug', sprintf("Extracted {$fileCode} files: %s", json_encode($this->updatedFiles)));
-
-        return TRUE;
+        throw new Exception('Failed to extract '.$fileCode.' archive file');
     }
 
     public function getFilePath($fileCode)
@@ -574,78 +483,6 @@ class UpdateManager
         $fileName = md5($fileCode).'.zip';
 
         return storage_path("temp/{$fileName}");
-    }
-
-    protected function getIgnoredFiles()
-    {
-        return [
-            '/extensions',
-            '/setup',
-            '/storage',
-            '/themes',
-            '/tests',
-        ];
-    }
-
-    protected function isFileIgnored($file)
-    {
-        foreach ($this->getIgnoredFiles() as $ignoredFile) {
-            if (strpos($file, $ignoredFile) !== FALSE)
-                return TRUE;
-        }
-
-        return FALSE;
-    }
-
-    protected function copyFiles($source, $destination)
-    {
-        $source = rtrim($source, '/');
-        $destination = rtrim($destination, '/');
-        $baseDir = trim(str_replace(rtrim(ROOTPATH, '/'), '', $destination), '/');
-
-        if (!is_dir($dir = dirname($destination)))
-            mkdir($dir, 0777, TRUE);
-
-        if (file_exists($destination)) {
-            if ($this->isFilesIdentical($source, $destination) === FALSE) {
-                $this->updatedFiles['modified'][] = $baseDir;
-            }
-            else {
-                $this->updatedFiles['unchanged'][] = $baseDir;
-            }
-        }
-        else {
-            $this->updatedFiles['added'][] = $baseDir;
-        }
-
-        if (!copy($source, $destination)) {
-            $this->updatedFiles['failed'][] = $baseDir;
-        }
-    }
-
-    protected function isFilesIdentical($file_one, $file_two)
-    {
-        // Check if filesize is different
-        if (@filesize($file_one) !== @filesize($file_two)) {
-            return FALSE;
-        }
-
-        // Check if content is different
-        $open_file_one = @fopen($file_one, 'rb');
-        $open_file_two = @fopen($file_two, 'rb');
-
-        $result = TRUE;
-        while (!@feof($open_file_one)) {
-            if (@fread($open_file_one, 8192) != @fread($open_file_two, 8192)) {
-                $result = FALSE;
-                break;
-            }
-        }
-
-        @fclose($open_file_one);
-        @fclose($open_file_two);
-
-        return $result;
     }
 
     /**

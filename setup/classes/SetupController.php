@@ -5,7 +5,7 @@
  */
 class SetupController
 {
-    const TI_ENDPOINT = 'https://api.tastyigniter.com/v2';
+    const TI_ENDPOINT = 'https://api.tastyigniter.io/v2';
 
     const COMPOSER_INSTALLER_URL = 'https://getcomposer.org/composer.phar';
 
@@ -23,7 +23,7 @@ class SetupController
     {
         // Establish directory paths
         $this->baseDirectory = BASEPATH;
-        $this->tempDirectory = SETUPPATH.'/temp'; //
+        $this->tempDirectory = SETUPPATH.'/temp';
         $this->configDirectory = $this->baseDirectory.'/config';
         $this->logFile = SETUPPATH.'/setup.log';
         $this->writePostToLog();
@@ -37,94 +37,15 @@ class SetupController
     public function getPage()
     {
         if (!$this->page)
-            $this->evalPage();
+            $this->page = new stdClass;
+
+        $this->page->currentStep = 'requirement';
 
         return $this->page;
     }
 
-    public function getDatabaseDetails()
-    {
-        $defaults = [
-            'database' => '',
-            'host'     => '127.0.0.1',
-            'username' => '',
-            'password' => '',
-            'prefix'   => 'ti_',
-        ];
-
-        $settings = [];
-        $db = $this->repository->get('database');
-        foreach ($defaults as $item => $value) {
-            if ($this->post($item)) {
-                $settings[$item] = $this->post($item);
-            }
-            else if (isset($db[$item])) {
-                $settings[$item] = $db[$item];
-            }
-            else {
-                $settings[$item] = $value;
-            }
-        }
-
-        return (object)$settings;
-    }
-
-    public function getSettingsDetails()
-    {
-        $defaults = [
-            'site_location_mode' => 'single',
-            'site_name'          => 'TastyIgniter',
-            'site_email'         => 'admin@restaurant.com',
-            'staff_name'         => 'Chef Sam',
-            'username'           => 'admin',
-            'demo_data'          => 1,
-            'site_key'           => '',
-        ];
-
-        $settings = [];
-        foreach ($defaults as $item => $value) {
-            if ($this->post($item)) {
-                $settings[$item] = $this->post($item);
-            }
-            else if ($this->repository->has($item)) {
-                $settings[$item] = $this->repository->get($item);
-            }
-            else {
-                $settings[$item] = $value;
-            }
-        }
-
-        return (object)$settings;
-    }
-
-    protected function evalPage()
-    {
-        $this->page = new stdClass;
-
-        if ($this->isBooted()) {
-            $this->page->currentStep = 'proceed';
-        }
-        else {
-            $this->page->currentStep = 'requirement';
-        }
-    }
-
-    protected function isBooted()
-    {
-        if (!$this->vendorInstalled())
-            return FALSE;
-
-        if ($this->repository->get('install') != 'complete')
-            return FALSE;
-
-        if (!$this->checkDatabase())
-            return FALSE;
-
-        return TRUE;
-    }
-
     //
-    // Event Handlers
+    // Post Handlers
     //
 
     public function onCheckRequirement()
@@ -168,16 +89,26 @@ class SetupController
                 break;
         }
 
-        $checked = $this->repository->get('checkedRequirement', []);
-        $checked[$code] = $result ? true : false;
-        $status = (count(array_filter($checked)) == 10) ? 'complete' : $code;
-
-        $this->repository->set('requirement', $result ? $status : 'fail')
-                         ->set('checkedRequirement', $checked)->save();
+        $this->repository->set('requirement', $result ? $code : 'fail')->save();
 
         $this->writeLog('Requirement %s %s', $code, ($result ? '+OK' : '=FAIL'));
 
         return ['result' => $result];
+    }
+
+    public function onCheckLicense()
+    {
+        if ($this->post('license_agreed') != 1)
+            throw new SetupException('Please accept the TastyIgniter license before proceeding.');
+
+        if (($requirement = $this->post('requirement')) != 'complete')
+            throw new SetupException('Error checking server requirements, please make sure all lights are green.');
+
+        $this->repository->set('requirement', $requirement)->save();
+
+        $this->writeLog('License & requirement check: %s', $requirement);
+
+        return ['step' => 'database'];
     }
 
     public function onCheckDatabase()
@@ -261,42 +192,97 @@ class SetupController
         return $result ? ['step' => 'install'] : ['result' => $result];
     }
 
-    public function onInstallDependencies()
+    public function onFetchItems()
     {
-        $installStep = $this->post('step');
-        $this->writeLog('Foundation framework check: %s', $installStep);
+        return $this->requestRemoteData('items', [
+            'browse'  => 'popular',
+            'type'    => 'theme',
+            'include' => 'require',
+        ]);
+    }
+
+    public function onInstall()
+    {
+        $installStep = $this->post('process');
+        $this->writeLog('Foundation setup: %s', $installStep);
         $result = FALSE;
 
-        if (!strlen($this->post('db')) OR $this->post('db') != 'success')
-            throw new SetupException('Database connection was not successful');
+        $item = $this->post('item');
 
-        if ($installed = $this->confirmInstallation())
-            $installStep = 'install';
+        $params = [];
+        if ($this->post('step') != 'complete' AND isset($item['code'])) {
+            $params = [
+                'name'   => $item['code'],
+                'type'   => $item['type'],
+                'ver'    => $item['version'],
+                'action' => $item['action'],
+            ];
+        }
 
         switch ($installStep) {
-            case 'download':
-                if ($this->downloadFoundation())
+            case 'apply':
+                $result = $this->applyInstall();
+                break;
+            case 'downloadExtension':
+            case 'downloadTheme':
+            case 'downloadCore':
+                if ($this->downloadFile($item['code'], $item['hash'], $params))
                     $result = TRUE;
                 break;
-            case 'extract':
-                if ($this->extractFoundation())
+            case 'extractExtension':
+                if ($this->extractFile($item['code'], 'extensions/'))
                     $result = TRUE;
                 break;
-            case 'install':
-                if ($installed OR $this->installFoundation())
-                    $result = $this->getBaseUrl().'admin/settings';
+            case 'extractTheme':
+                if ($this->extractFile($item['code'], 'themes/'))
+                    $result = TRUE;
 
+                $this->repository->set('activeTheme', $item['code']);
+                break;
+            case 'extractCore':
+                if ($this->extractFile($item['code']))
+                    $result = TRUE;
+
+                $this->repository->set('core', $item);
+                break;
+            case 'finishInstall':
                 $this->writeExampleFiles();
+                $this->completeSetup();
                 $this->cleanUpAfterInstall();
+                $result = admin_url('login');
                 break;
         }
 
         $status = $installStep == 'install' ? 'complete' : $installStep;
         $this->repository->set('install', $result ? $status : 'fail')->save();
 
-        $this->writeLog('Foundation framework check: %s %s', $installStep, ($result ? '+OK' : '=FAIL'));
+        $this->writeLog('Foundation setup: %s %s', $installStep, ($result ? '+OK' : '=FAIL'));
 
         return ['result' => $result];
+    }
+
+    protected function execPostHandler()
+    {
+        $handler = $this->post('handler');
+        if (!is_null($handler)) {
+            if (!strlen($handler)) exit;
+
+            try {
+                if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handler))
+                    throw new SetupException(sprintf('Invalid handler: %s', $this->e($handler)));
+                if (method_exists($this, $handler) AND ($result = $this->$handler()) !== null) {
+                    $this->writeLog('Execute handler (%s): %s', $handler, print_r($result, TRUE));
+                    header('Content-Type: application/json');
+                    die(json_encode($result));
+                }
+            } catch (Exception $ex) {
+                header($_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error', TRUE, 500);
+                $this->writeLog('Handler error (%s): %s', $handler, $ex->getMessage());
+                $this->writeLog(['Trace log:', '%s'], $ex->getTraceAsString());
+                die($ex->getMessage());
+            }
+            exit;
+        }
     }
 
     //
@@ -380,162 +366,358 @@ class SetupController
     }
 
     //
-    // Install
+    // Setup steps
     //
 
-    protected function downloadFoundation()
+    protected function applyInstall()
     {
-        $composerPhar = $this->tempDirectory.'/'.static::COMPOSER_PHAR;
-        if (is_dir($composerPhar) OR $this->vendorExists()) {
-            $this->writeLog('Skipping download: dependencies already installed.');
+        $params = [];
 
-            return TRUE;
-        }
+        if ($themeCode = $this->post('code'))
+            $params['items'] = json_encode([
+                [
+                    'name'   => $themeCode,
+                    'type'   => 'theme',
+                    'action' => 'install',
+                ],
+            ]);
 
-        $this->ensureTempDirExists();
+        if ($siteKey = $this->post('site_key'))
+            $params['site_key'] = $siteKey;
 
-        try {
-            $installerStream = fopen($composerPhar, 'w+');
-            $curl = curl_init(static::COMPOSER_INSTALLER_URL);
-            curl_setopt($curl, CURLOPT_HEADER, FALSE);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
-            curl_setopt($curl, CURLOPT_FILE, $installerStream);
-            $response = curl_exec($curl);
+        $response = $this->requestRemoteData('core/install', $params);
 
-            $this->writeLog('Server request: %s', static::COMPOSER_INSTALLER_URL);
-            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            if ($httpCode == 500) {
-                $this->writeLog('Request information: %s', print_r(curl_getinfo($curl), TRUE));
+        return $this->buildProcessSteps($response);
+    }
+
+    protected function buildProcessSteps($meta)
+    {
+        $processSteps = [];
+
+        foreach (['download', 'extract', 'install'] as $step) {
+
+            $applySteps = [];
+
+            if ($step == 'install') {
+                $processSteps[$step][] = [
+                    'items'   => $meta['data'],
+                    'process' => 'finishInstall',
+                ];
+
+                continue;
             }
-            curl_close($curl);
-        } catch (Exception $ex) {
-            $this->writeLog('Failed to get server data (ignored): '.$ex->getMessage());
+
+            foreach ($meta['data'] as $item) {
+                if ($item['type'] == 'core') {
+                    $applySteps[] = array_merge([
+                        'action'  => 'install',
+                        'process' => "{$step}Core",
+                    ], $item);
+                }
+                else {
+                    $singularType = $item['type'];
+
+                    $applySteps[] = array_merge([
+                        'action'  => 'install',
+                        'process' => $step.ucfirst($singularType),
+                    ], $item);
+                }
+            }
+
+            $processSteps[$step] = $applySteps;
         }
 
-        return file_exists($composerPhar);
+        return $processSteps;
     }
 
-    protected function extractFoundation()
+    protected function completeSetup()
     {
-        if ($this->vendorExists()) {
-            $this->writeLog('Skipping extract: dependencies already installed.');
+        $this->bootFramework();
 
+        // Install the database tables
+        \System\Classes\UpdateManager::instance()->update();
+
+        // Create the default location if not already created
+        $this->createDefaultLocation();
+
+        // Create the admin user if no admin exists.
+        $this->createSuperUser();
+
+        // Save the site configuration to the settings table
+        $this->addSystemSettings();
+    }
+
+    protected function createDefaultLocation()
+    {
+        // Abort: a location already exists
+        if (\Admin\Models\Locations_model::count())
             return TRUE;
-        }
 
-        $composerPhar = $this->tempDirectory.'/'.static::COMPOSER_PHAR;
-        $extractedPhar = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR;
-        if (!is_file($composerPhar))
-            return FALSE;
+        $config = $this->repository->get('settings');
 
-        mkdir($extractedPhar, 0777, TRUE);
-        $composer = new Phar($composerPhar);
-        $composer->extractTo($extractedPhar);
-        @unlink($composerPhar);
-
-        return TRUE;
+        \Admin\Models\Locations_model::insert([
+            'location_name'  => $config['site_name'],
+            'location_email' => $config['site_email'],
+        ]);
     }
 
-    protected function installFoundation()
+    protected function createSuperUser()
     {
-        if ($this->vendorInstalled()) {
-            $this->writeLog('Skipping install: dependencies already installed.');
-
+        // Abort: a super admin user already exists
+        if (\Admin\Models\Users_model::where('super_user', 1)->count())
             return TRUE;
-        }
 
-        $vendorPath = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR.'/bin';
-        if (!is_dir($vendorPath)) {
-            $this->writeLog('Missing vendor autoload file');
+        $config = $this->repository->get('settings');
 
-            return FALSE;
-        }
+        $staffEmail = strtolower($config['site_email']);
+        $staff = \Admin\Models\Staffs_model::firstOrNew([
+            'staff_email' => $staffEmail,
+        ]);
 
-        $vendorPath = dirname($vendorPath);
+        $staff->staff_name = $config['staff_name'];
+        $staff->staff_group_id = \Admin\Models\Staff_groups_model::first()->staff_group_id;
+        $staff->staff_location_id = \Admin\Models\Locations_model::first()->location_id;
+        $staff->language_id = \System\Models\Languages_model::first()->language_id;
+        $staff->timezone = FALSE;
+        $staff->staff_status = TRUE;
+        $staff->save();
 
-        set_time_limit(-1);
-        ini_set('memory_limit', -1); // @todo: remove later
-        putenv("COMPOSER_HOME={$vendorPath}/bin/composer");
-        require_once($vendorPath.'/vendor/autoload.php');
+        $user = \Admin\Models\Users_model::firstOrNew([
+            'username' => $config['username'],
+        ]);
 
-        ob_start();
-        $command = $this->vendorInstalled() ? 'update' : 'install';
-        $output = new Symfony\Component\Console\Output\StreamOutput(fopen('php://output', 'w'));
-        $input = new Symfony\Component\Console\Input\StringInput($command.' -v -d '.$this->baseDirectory);
-        $composerApp = new Composer\Console\Application();
-        $composerApp->setAutoExit(FALSE);
-        $composerApp->run($input, $output);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $user->staff_id = $staff->staff_id;
+        $user->password = $config['password'];
+        $user->super_user = TRUE;
+        $user->is_activated = TRUE;
+        $user->date_activated = \Carbon\Carbon::now();
 
-        $this->writeLog('Composer Console output: %s => %s', $command, print_r($content, TRUE));
-
-        if (!$this->vendorInstalled())
-            return FALSE;
-
-        return TRUE;
+        return $user->save();
     }
 
-    //
-    // Logging
-    //
-
-    public function cleanLog()
+    protected function addSystemSettings()
     {
-        $message = ".========================== SETUP LOG ========================.";
-        file_put_contents($this->logFile, $message.PHP_EOL);
-    }
+        $core = $this->repository->get('core');
+        $config = $this->repository->get('settings');
 
-    public function writeLog()
-    {
-        $args = func_get_args();
-
-        $message = array_shift($args);
-        if (is_array($message))
-            $message = implode(PHP_EOL, $message);
-
-        $date = "";
-        if (!array_key_exists('hideTime', $args))
-            $date = "[".date("Y/m/d h:i:s", time())."] => ";
-
-        $message = vsprintf($date.$message, $args).PHP_EOL;
-
-        file_put_contents($this->logFile, $message, FILE_APPEND);
-    }
-
-    protected function writePostToLog()
-    {
-        if (!isset($_POST) OR !count($_POST)) return;
-
-        $postData = $_POST;
-        if (array_key_exists('disableLog', $postData))
-            $postData = ['disableLog' => TRUE];
-
-        // Filter sensitive data fields
-        $fieldsToErase = [
-            'encryption_code',
-            'admin_password',
-            'admin_confirm_password',
-            'db_pass',
-            'project_id',
+        $settings = [
+            'site_name'           => $config['site_name'],
+            'site_email'          => $config['site_email'],
+            'site_location_mode'  => $config['use_multi'] ? 'multiple' : 'single',
+            'ti_setup'            => 'installed',
+            'ti_version'          => array_get($core, 'version'),
+            'sys_hash'            => array_get($core, 'hash'),
+            'site_key'            => isset($config['site_key']) ? $config['site_key'] : null,
+            'default_location_id' => \Admin\Models\Locations_model::first()->location_id,
         ];
 
-        if (isset($postData['admin_email'])) $postData['admin_email'] = '*******@*****.com';
-        foreach ($fieldsToErase as $field) {
-            if (isset($postData[$field])) $postData[$field] = '*******';
+        params()->set('default_themes.main', $this->repository->get('activeTheme', 'demo'));
+
+        $paramsKeyNames = ['ti_setup', 'ti_version', 'sys_hash', 'site_key', 'default_location_id'];
+        foreach ($settings as $key => $value) {
+            $setting = in_array($key, $paramsKeyNames)
+                ? params() : setting();
+
+            $setting->set($key, $value);
         }
 
-        $this->writeLog('.============================ POST REQUEST ==========================.', ['hideTime' => TRUE]);
-        $this->writeLog('Postback payload: %s', print_r($postData, TRUE));
+        params()->save();
+        setting()->save();
+    }
+
+    protected function cleanUpAfterInstall()
+    {
+        if (file_exists($this->tempDirectory)) {
+            File::deleteDirectory($this->tempDirectory);
+        }
+
+        // Delete the setup repository file since its no longer needed
+        $this->repository->destroy();
+    }
+
+    //
+    // File
+    //
+
+    protected function getFilePath($fileCode)
+    {
+        $fileName = md5($fileCode).'.zip';
+
+        return "{$this->tempDirectory}/{$fileName}";
+    }
+
+    protected function downloadFile($fileCode, $fileHash, $params)
+    {
+        return $this->requestRemoteFile('core/download', [
+            'item' => json_encode($params),
+        ], $fileCode, $fileHash);
+    }
+
+    protected function extractFile($fileCode, $directory = null)
+    {
+        $filePath = $this->getFilePath($fileCode);
+        $this->writeLog('Extracting [%s] file %s', $fileCode, basename($filePath));
+
+        $extractTo = $this->baseDirectory;
+        if ($directory)
+            $extractTo .= '/'.$directory.str_replace('.', '/', $fileCode);
+
+        if (!file_exists($extractTo))
+            mkdir($extractTo, 0777, TRUE);
+
+        $zip = new ZipArchive();
+        if ($zip->open($filePath) === TRUE) {
+            $zip->extractTo($extractTo);
+            $zip->close();
+            @unlink($filePath);
+
+            return TRUE;
+        }
+
+        $this->writeLog('Unable to open [%s] archive file %s', $fileCode, basename($filePath));
+
+        return FALSE;
+    }
+
+    protected function writeExampleFiles()
+    {
+        $this->moveExampleFile('env', null, 'backup');
+        $this->moveExampleFile('env', 'example', null);
+
+        $exampleEnvFile = $this->baseDirectory.'/.env';
+        $contents = file_get_contents($exampleEnvFile);
+
+        foreach ($this->envReplacementPatterns() as $pattern => $replace) {
+            $contents = preg_replace($pattern, $replace, $contents);
+            putenv($replace);
+        }
+
+        file_put_contents($exampleEnvFile, $contents);
+
+        $this->moveExampleFile('htaccess', null, 'backup');
+        $this->moveExampleFile('htaccess', 'example', null);
+    }
+
+    protected function moveExampleFile($name, $old, $new)
+    {
+        // /$old.$name => /$new.$name
+        if (file_exists($this->baseDirectory.'/'.$old.'.'.$name)) {
+            rename(
+                $this->baseDirectory.'/'.$old.'.'.$name,
+                $this->baseDirectory.'/'.$new.'.'.$name
+            );
+        }
+    }
+
+    protected function envReplacementPatterns()
+    {
+        $setting = $this->repository->get('settings');
+        $db = $this->repository->get('database');
+
+        return [
+            '/^APP_NAME=TastyIgniter/m' => 'APP_NAME='.$setting['site_name'],
+            '/^APP_URL=/m'              => 'APP_URL='.$this->getBaseUrl(),
+            '/^APP_KEY=/m'              => 'APP_KEY='.$this->generateKey(),
+            '/^DB_HOST=127.0.0.1/m'     => 'DB_HOST='.$db['host'],
+            '/^DB_DATABASE=database/m'  => 'DB_DATABASE='.$db['database'],
+            '/^DB_USERNAME=username/m'  => 'DB_USERNAME='.$db['username'],
+            '/^DB_PASSWORD=password/m'  => 'DB_PASSWORD='.$db['password'],
+            '/^DB_PREFIX=ti_/m'         => 'DB_PREFIX='.$db['prefix'],
+        ];
+    }
+
+    public static function generateKey()
+    {
+        return 'base64:'.base64_encode(random_bytes(32));
     }
 
     //
     // Helpers
     //
 
-    public function e($value)
+    public function getDatabaseDetails()
+    {
+        $defaults = [
+            'database' => '',
+            'host'     => '127.0.0.1',
+            'username' => '',
+            'password' => '',
+            'prefix'   => 'ti_',
+        ];
+
+        $settings = [];
+        $db = $this->repository->get('database');
+        foreach ($defaults as $item => $value) {
+            if ($this->post($item)) {
+                $settings[$item] = $this->post($item);
+            }
+            else if (isset($db[$item])) {
+                $settings[$item] = $db[$item];
+            }
+            else {
+                $settings[$item] = $value;
+            }
+        }
+
+        return (object)$settings;
+    }
+
+    public function getSettingsDetails()
+    {
+        $defaults = [
+            'site_location_mode' => 'single',
+            'site_name'          => 'TastyIgniter',
+            'site_email'         => 'admin@restaurant.com',
+            'staff_name'         => 'Chef Sam',
+            'username'           => 'admin',
+            'demo_data'          => 1,
+            'site_key'           => '',
+        ];
+
+        $settings = [];
+        foreach ($defaults as $item => $value) {
+            if ($this->post($item)) {
+                $settings[$item] = $this->post($item);
+            }
+            else if ($this->repository->has($item)) {
+                $settings[$item] = $this->repository->get($item);
+            }
+            else {
+                $settings[$item] = $value;
+            }
+        }
+
+        return (object)$settings;
+    }
+
+    protected function confirmRequirements()
+    {
+        $requirement = $this->post('requirement', $this->repository->get('requirement'));
+        if (!strlen($requirement) OR $requirement != 'complete')
+            throw new SetupException('Please make sure your system meets all requirements');
+    }
+
+    protected function bootFramework()
+    {
+        if (!is_file($this->baseDirectory.'/vendor/tastyigniter/flame/src/Support/helpers.php'))
+            throw new SetupException('Missing vendor files.');
+
+        $autoloadFile = $this->baseDirectory.'/bootstrap/autoload.php';
+        if (!file_exists($autoloadFile))
+            throw new SetupException('Autoloader file was not found.');
+
+        include $autoloadFile;
+
+        $appFile = $this->baseDirectory.'/bootstrap/app.php';
+        if (!file_exists($appFile))
+            throw new SetupException('App loader file was not found.');
+
+        $app = require_once $appFile;
+        $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+        $kernel->bootstrap();
+    }
+
+    protected function e($value)
     {
         return htmlentities($value, ENT_QUOTES, 'UTF-8', FALSE);
     }
@@ -579,27 +761,6 @@ class SetupController
         return $default;
     }
 
-    protected function vendorExists()
-    {
-        if ($this->vendorInstalled())
-            return TRUE;
-
-        $extractedPhar = $this->tempDirectory.'/'.static::COMPOSER_EXTRACTED_PHAR;
-
-        return is_dir($extractedPhar.'/vendor');
-    }
-
-    protected function vendorInstalled()
-    {
-        if (!is_file($this->baseDirectory.'/vendor/tastyigniter/flame/src/Support/helpers.php'))
-            return FALSE;
-
-        if (!is_file($this->baseDirectory.'/vendor/laravel/framework/src/Illuminate/Support/helpers.php'))
-            return FALSE;
-
-        return TRUE;
-    }
-
     protected function getBaseUrl()
     {
         if (isset($_SERVER['HTTP_HOST'])) {
@@ -614,54 +775,19 @@ class SetupController
         return $baseUrl;
     }
 
-    protected function getSysInfo()
-    {
-        $info = [
-            'domain' => $this->getBaseUrl(),
-//            'ver'    => TI_VERSION,
-            'web'    => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : null,
-            'os'     => php_uname(),
-            'php'    => phpversion(),
-        ];
-
-        return $info;
-    }
-
-    protected function execPostHandler()
-    {
-        $handler = $this->post('handler');
-        if (!is_null($handler)) {
-            if (!strlen($handler)) exit;
-
-            try {
-                if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handler))
-                    throw new SetupException(sprintf('Invalid handler: %s', $this->e($handler)));
-                if (method_exists($this, $handler) AND ($result = $this->$handler()) !== null) {
-                    $this->writeLog('Execute handler (%s): %s', $handler, print_r($result, TRUE));
-                    header('Content-Type: application/json');
-                    die(json_encode($result));
-                }
-            } catch (Exception $ex) {
-                header($_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error', TRUE, 500);
-                $this->writeLog('Handler error (%s): %s', $handler, $ex->getMessage());
-                $this->writeLog(['Trace log:', '%s'], $ex->getTraceAsString());
-                die($ex->getMessage());
-            }
-            exit;
-        }
-    }
-
-    protected function requestRemoteData($uri = null, $params = [])
+    protected function requestRemoteData($uri, $params = [])
     {
         $result = null;
         $error = null;
         try {
+            $this->writeLog('Server request: %s', $uri);
+
             $curl = $this->prepareRequest($uri, $params);
             $result = curl_exec($curl);
 
-            $this->writeLog('Server request: %s', $uri);
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500) {
+                $error = $result;
                 $result = '';
             }
 
@@ -670,6 +796,9 @@ class SetupController
         } catch (Exception $ex) {
             $this->writeLog('Failed to get server data (ignored): '.$ex->getMessage());
         }
+
+        if ($error !== null)
+            throw new SetupException('Server responded with error: '.$error);
 
         try {
             $_result = @json_decode($result, TRUE);
@@ -682,125 +811,123 @@ class SetupController
         }
 
         if (isset($_result['message']) AND !in_array($httpCode, [200, 201])) {
-            throw new Exception($_result['message']);
+            if (isset($_result['errors']))
+                $this->writeLog('Server validation errors: '.print_r($_result['errors'], TRUE));
+
+            throw new SetupException($_result['message']);
         }
 
         return $_result;
     }
 
-    protected function prepareRequest($uri, $params)
-    {
-        $curl = curl_init();
+    protected function requestRemoteFile($uri, $params = [], $code, $expectedHash)
 
+    {
+        if (!mkdir($this->tempDirectory, 0777, TRUE) AND !is_dir($this->tempDirectory))
+            throw new SetupException(sprintf('Failed to create temp directory: %s', $this->tempDirectory));
+
+        try {
+            $filePath = $this->getFilePath($code);
+            $curl = $this->prepareRequest($uri, $params);
+            $fileStream = fopen($filePath, 'wb');
+            curl_setopt($curl, CURLOPT_FILE, $fileStream);
+            curl_exec($curl);
+
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            if ($httpCode == 500)
+                throw new SetupException(file_get_contents($filePath));
+
+            curl_close($curl);
+            fclose($fileStream);
+        } catch (Exception $ex) {
+            $this->writeLog('Server responded with error: '.$ex->getMessage());
+            throw new SetupException('Server responded with error: '.$ex->getMessage());
+        }
+
+        $fileSha = sha1_file($filePath);
+        if ($expectedHash != $fileSha) {
+            $this->writeLog(file_get_contents($filePath));
+            $this->writeLog("Download failed, File hash mismatch: {$expectedHash} (expected) vs {$fileSha} (actual)");
+            @unlink($filePath);
+            throw new SetupException('Downloaded files from server are corrupt');
+        }
+
+        $this->writeLog('Downloaded file (%s) to %s', $code, $filePath);
+
+        return TRUE;
+    }
+
+    protected function prepareRequest($uri, $params = [])
+    {
+        $params['url'] = base64_encode($this->getBaseUrl());
+
+        $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, static::TI_ENDPOINT.'/'.$uri);
         curl_setopt($curl, CURLOPT_TIMEOUT, 3600);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
-
-        if (isset($_SERVER['HTTP_USER_AGENT']))
-            curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-
-        $info = $this->getSysInfo();
-        $params['server'] = base64_encode(serialize($info));
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, '', '&'));
+
+        if (isset($params['site_key']) AND $siteKey = $params['site_key']) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ["TI-Rest-Key: bearer {$siteKey}"]);
+        }
 
         return $curl;
     }
 
-    protected function confirmRequirements()
+    //
+    // Logging
+    //
+
+    public function cleanLog()
     {
-        $requirement = $this->post('requirement', $this->repository->get('requirement'));
-        if (!strlen($requirement) OR $requirement != 'complete')
-            throw new SetupException('Please make sure your system meets all requirements');
+        $message = '.++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.'."\n";
+        $message .= '.------------------- TASTYIGNITER SETUP LOG ------------------.'."\n";
+        $message .= '.++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.';
+        file_put_contents($this->logFile, $message.PHP_EOL);
     }
 
-    protected function confirmInstallation()
+    public function writeLog()
     {
-        $installation = $this->repository->get('install');
+        $args = func_get_args();
 
-        return $installation == 'complete';
+        $message = array_shift($args);
+        if (is_array($message))
+            $message = implode(PHP_EOL, $message);
+
+        $date = "";
+        if (!array_key_exists('hideTime', $args))
+            $date = '['.date('Y/m/d h:i:s').'] => ';
+
+        $message = vsprintf($date.$message, $args).PHP_EOL;
+
+        file_put_contents($this->logFile, $message, FILE_APPEND);
     }
 
-    protected function cleanUpAfterInstall()
+    protected function writePostToLog()
     {
-        if (file_exists($this->tempDirectory)) {
-            $this->deleteTempFiles($this->tempDirectory);
-            @rmdir($this->tempDirectory);
-        }
-    }
+        if (!isset($_POST) OR !count($_POST)) return;
 
-    protected function deleteTempFiles($path, $depth = 0)
-    {
-        // Trim the trailing slash
-        $path = rtrim($path, '/\\');
+        $postData = $_POST;
+        if (array_key_exists('disableLog', $postData))
+            $postData = ['disableLog' => TRUE];
 
-        if (!$dir = @opendir($path)) {
-            return FALSE;
-        }
-
-        while (FALSE !== ($filename = @readdir($dir))) {
-            if ($filename !== '.' AND $filename !== '..') {
-                $filepath = $path.'/'.$filename;
-                if (is_dir($filepath) AND $filename[0] !== '.' AND !is_link($filepath)) {
-                    $this->deleteTempFiles($filepath, $depth + 1);
-                }
-                else {
-                    @unlink($filepath);
-                }
-            }
-        }
-
-        closedir($dir);
-
-        return (is_dir($path) AND $depth > 0) ? @rmdir($path) : TRUE;
-    }
-
-    protected function ensureTempDirExists()
-    {
-        if (!is_dir($this->tempDirectory))
-            @mkdir($this->tempDirectory, 0777);
-    }
-
-    protected function writeExampleFiles()
-    {
-        if (!file_exists($exampleEnvFile = $this->baseDirectory.'/example.env'))
-            $exampleEnvFile = $this->baseDirectory.'/.env';
-
-        if (file_exists($exampleEnvFile)) {
-            $contents = file_get_contents($exampleEnvFile);
-
-            $search = $this->envReplacementPatterns();
-            foreach ($search as $pattern => $replace) {
-                $contents = preg_replace($pattern, $replace, $contents);
-                putenv($replace);
-            }
-
-            file_put_contents($exampleEnvFile, $contents);
-            rename($exampleEnvFile, $this->baseDirectory.'/.env');
-        }
-
-        if (file_exists($this->baseDirectory.'/example.htaccess')) {
-            rename(
-                $this->baseDirectory.'/example.htaccess',
-                $this->baseDirectory.'/.htaccess'
-            );
-        }
-    }
-
-    protected function envReplacementPatterns()
-    {
-        $setting = $this->repository->get('settings');
-        $db = $this->repository->get('database');
-
-        return [
-            '/^APP_NAME=TastyIgniter/m' => 'APP_NAME='.$setting['site_name'],
-            '/^DB_HOST=127.0.0.1/m'     => 'DB_HOST='.$db['host'],
-            '/^DB_DATABASE=database/m'  => 'DB_DATABASE='.$db['database'],
-            '/^DB_USERNAME=username/m'  => 'DB_USERNAME='.$db['username'],
-            '/^DB_PASSWORD=password/m'  => 'DB_PASSWORD='.$db['password'],
-            '/^DB_PREFIX=ti_/m'         => 'DB_PREFIX='.$db['prefix'],
+        // Filter sensitive data fields
+        $fieldsToErase = [
+            'encryption_code',
+            'admin_password',
+            'admin_confirm_password',
+            'db_pass',
+            'project_id',
         ];
+
+        if (isset($postData['admin_email'])) $postData['admin_email'] = '*******@*****.com';
+        foreach ($fieldsToErase as $field) {
+            if (isset($postData[$field])) $postData[$field] = '*******';
+        }
+
+        $this->writeLog('.============================ POST REQUEST ==========================.', ['hideTime' => TRUE]);
+        $this->writeLog('Postback payload: %s', print_r($postData, TRUE));
     }
 }

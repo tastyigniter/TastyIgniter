@@ -2,7 +2,7 @@
 
 // Constants
 define('TI_PHP_VERSION', '7.0');
-define('SETUPPATH', dirname(__FILE__));
+define('SETUPPATH', __DIR__);
 define('BASEPATH', dirname(SETUPPATH));
 define('VIEWPATH', SETUPPATH.'/views');
 

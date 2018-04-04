@@ -1,10 +1,18 @@
 <div class="text-center">
-    <h3>Almost there!</h3>
+    <h3>Yippee!</h3>
     <i class="fa fa-check-circle fa-5x"></i>
-    <h5>Ignite your website to start receiving orders</h5>
-    <p class="small">*NOTE: After clicking "Complete Setup" button, make sure you see the administrator login page BEFORE deleting the setup directory and setup.php file</p>
+    <h5>Setup has been successfully completed</h5>
 </div>
 
 <div class="buttons">
-    <a href="{{proceedUrl}}" class="btn btn-success pull-right"><?= lang('button_proceed'); ?></a>
+    <a href="{{frontUrl}}" class="btn btn-default pull-left"><?= lang('text_goto_storefront'); ?></a>
+    <a href="{{proceedUrl}}" class="btn btn-success pull-right"><?= lang('text_login_to_admin'); ?></a>
+</div>
+
+<div class="callout callout-info">
+    <h5>SECURITY WARNING!</h5>
+    <p>
+        Delete the setup files to stop someone else from overwriting your site,
+        the <strong>setup.php</strong> script and the <strong>setup</strong> directory.
+    </p>
 </div>

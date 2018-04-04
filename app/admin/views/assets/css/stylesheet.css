@@ -225,17 +225,17 @@ h4 small, h5 .small, h5 small, h6 .small, h6 small {
 .sidebar .nav .nav a.active {
 }
 .sidebar-collapsed .sidebar {
-	width: 55px;
+	width: 65px;
 }
 .sidebar-collapsed .sidebar .navbar-brand {
 	overflow: hidden;
 }
 .sidebar-collapsed #page-wrapper,
 .sidebar-collapsed .navbar-footer {
-	padding-left: 55px;
+	padding-left: 65px;
 }
 .sidebar-collapsed .navbar-top {
-	margin-left: 55px;
+	margin-left: 65px;
 }
 .sidebar-collapsed .sidebar .content,
 .sidebar-collapsed .sidebar .arrow {
@@ -247,7 +247,7 @@ h4 small, h5 .small, h5 small, h6 .small, h6 small {
 	display: none;
 }
 .sidebar-collapsed .sidebar .nav-second-level {
-	margin: -39px 0 0 60px;
+	margin: -39px 0 0 65px;
 }
 .sidebar-collapsed .sidebar .nav-third-level {
 	margin: 0;
@@ -261,7 +261,10 @@ h4 small, h5 .small, h5 small, h6 .small, h6 small {
 .sidebar-collapsed .fa-chevron-circle-left::before {
 	content: "\f138";
 }
-
+.sidebar-collapsed .sidebar > .nav > li > a {
+	font-size: 22px;
+	padding: 15px;
+}
 /*
 	Footer
  */

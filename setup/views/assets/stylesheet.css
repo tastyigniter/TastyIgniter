@@ -29,11 +29,6 @@ hr {
 .center-block {
 	float: none;
 }
-.btn-primary {
-	color: #FFF;
-	background-color: #1A8EED;
-	border-color: #1A8EED;
-}
 #page {
 	border-top: 10px solid #000c2f;
 	margin: 0 auto;
@@ -154,14 +149,10 @@ button.btn-dropdown {
 	color: #263A65;
 }
 .panel-license {
-	border-width: 0 0 1px;
-}
-.panel-license > .panel-heading {
 	background-color: #fff;
-	padding: 15px 25px;
-}
-.panel-license .panel-body {
-	padding: 15px 25px;
+	border-width: 0 0 1px;
+	margin-bottom: 0;
+	padding: 15px;
 }
 /** FORMS **/
 .form-control {
@@ -236,6 +227,14 @@ button.btn-dropdown {
 }
 .buttons .btn-default {
 	color: #848F9D;
+}
+.btn-group-sm > .btn, .btn-sm {
+	font-size: 20px;
+}
+.btn-primary {
+	color: #FFF;
+	background-color: #1A8EED;
+	border-color: #1A8EED;
 }
 /** ICONS **/
 .requirements .fa {
@@ -449,6 +448,21 @@ h4, .h4 {
 .panel-carte .panel-body {
 	padding: 25px;
 }
+.panel-install {
+	background-color: #FFF;
+	padding: 30px;
+	box-shadow: unset;
+}
+.panel-install .btn {
+	margin-bottom: 10px;
+}
+.panel-theme {
+	background-color: #FFF;
+	padding: 15px 25px;
+}
+.theme-thumb {
+	padding: 15px 50px;
+}
 .panel-next-steps {
 	margin: -25px;
 	border-radius: 0;
@@ -478,27 +492,19 @@ h4, .h4 {
 .panel-next-steps .btn-cta .fa {
 	margin-bottom: 10px;
 }
-.btn-orange {
-	background-color: #E96531;
-	border-color: #E96531;
-	color: #FFF;
-}
-.btn-orange:hover, .btn-orange:focus {
-	background-color: #CB582A;
-	border-color: #CB582A;
-	color: #FFF;
-}
-.btn-cta .fa {
-	color: #FFF;
-}
-.call-to-action h3 {
-	margin-top: 0px;
-}
-.call-to-action .btn {
-	margin-top: 10px;
-}
 .bs-wizard {
 	margin-top: 0px;
+}
+.callout {
+	margin-top: 40px;
+	margin-bottom: 20px;
+	padding: 20px;
+	color: #f0f0f0;
+	border-radius: 3px;
+	font-weight: 400;
+}
+.callout-info {
+	background-color: #5f708a;
 }
 .bs-wizard {
 	padding: 0 15px 15px;

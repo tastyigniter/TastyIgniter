@@ -60,6 +60,10 @@ class ExtensionManager
             $this->loadInstalled();
 
         $this->loadExtensions();
+
+        if (App::runningInAdmin()) {
+            $this->loadDependencies();
+        }
     }
 
     /**
@@ -216,13 +220,13 @@ class ExtensionManager
             if (!$required = $this->getDependencies($extension))
                 continue;
 
-            $disable = FALSE;
+            $enable = FALSE;
             foreach ($required as $require) {
                 $extensionObj = $this->findExtension($require);
-                $disable = !$extensionObj OR $extensionObj->disabled;
+                $enable = !(!$extensionObj OR $extensionObj->disabled);
             }
 
-            $this->updateExtension($code, $disable);
+            $this->updateExtension($code, $enable);
         }
     }
 
@@ -593,54 +597,28 @@ class ExtensionManager
     public function loadInstalled()
     {
         if (($installedExtensions = setting('installed_extensions')) AND is_array($installedExtensions)) {
-            $this->installedExtensions = setting('installed_extensions');
+            $this->installedExtensions = $installedExtensions;
         }
     }
 
     /**
-     * Extract uploaded extension zip folder
+     * @param string $code
+     * @param bool $disable
      *
-     * @param $zipPath
-     * @param array $extCode extension code
-     *
-     * @return array
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \SystemException
+     * @return bool
      */
-    public function extractExtension($zipPath, $extCode = null)
+    public function updateExtension($code, $enable = true)
     {
-        if (!File::exists($zipPath) OR !class_exists('ZipArchive', FALSE))
-            return [FALSE, FALSE];
+        $code = $this->getIdentifier($code);
 
-        $zip = new ZipArchive;
-        if ($zip->open($zipPath) !== TRUE)
-            throw new SystemException('Failed to open zip file');
+        $this->installedExtensions[$code] = $enable;
+        $this->saveInstalled();
 
-        $extensionDir = $zip->getNameIndex(0);
+        if (!$enable AND $extension = $this->findExtension($code)) {
+            $extension->disabled = true;
+        }
 
-        if (
-            $zip->locateName($extensionDir.'Extension.php') === FALSE
-            AND $zip->locateName($extensionDir.'extension.json') === FALSE
-        )
-            throw new SystemException('Missing extension registration class file');
-
-        if (!$this->checkName($extensionDir))
-            throw new SystemException(lang('system::extensions.error_upload_name'));
-
-        $zip->extractTo($extractTo = temp_path());
-        $zip->close();
-
-        $extractedPath = $extractTo.'/'.$extensionDir;
-        $manifestFile = $extractedPath.'extension.json';
-        $config = json_decode(File::get($manifestFile));
-        $extensionPath = extension_path($this->getNamePath($config->code));
-
-        if (!File::isDirectory($extensionPath))
-            File::makeDirectory($extensionPath, 0777, TRUE);
-
-        File::moveDirectory($extractedPath, $extensionPath, TRUE);
-
-        return [$config, $extensionPath];
+        return true;
     }
 
     /**
@@ -669,37 +647,9 @@ class ExtensionManager
         return TRUE;
     }
 
-    /**
-     * Migrate to the latest version or drop all migrations
-     * for a given extension migration
-     *
-     * @param string $extension
-     * @param bool $downgrade
-     *
-     * @return bool
-     */
-    public function updateExtension($extension, $downgrade = FALSE)
+    protected function saveInstalled()
     {
-        // @todo: implement
-//        dd($extension);
-//        list($path) = $this->find('migration', $extension, 'config/');
-//
-//        if (!$path) {
-//            return FALSE;
-//        }
-//
-//        $migration = $this->load_file('migration', $path, 'config');
-//
-//        if (!isset($migration['migration_enabled'])) $migration['migration_enabled'] = TRUE;
-//
-//        $CI =& get_instance();
-//        $CI->load->library('migration', $migration);
-//
-//        if ($downgrade === TRUE) {
-//            return $CI->migration->version('0', $extension);
-//        }
-//        else {
-//            return $CI->migration->current($extension);
-//        }
+        setting()->set('installed_extensions', $this->installedExtensions);
+        setting()->save();
     }
 }

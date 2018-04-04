@@ -175,24 +175,20 @@ class Themes_model extends Model
 
     /**
      * Update installed extensions config value
-     *
-     * @param string $theme
-     * @param bool $install
-     *
-     * @return bool TRUE on success, FALSE on failure
      */
-    public static function updateInstalledThemes($theme = null, $install = TRUE)
+    public static function updateInstalledThemes()
     {
-        $installedThemes = self::lists('status', 'code')->all();
+        $installedThemes = self::select('status', 'name')->lists('status', 'code')->all();
 
         if (!is_array($installedThemes))
             $installedThemes = [];
 
-        if ($theme) {
-            $installedThemes[$theme] = $install;
-        }
+        $installedThemes = array_map(function ($status) {
+            return (bool) $status;
+        }, $installedThemes);
 
         setting()->set('installed_themes', $installedThemes);
+        setting()->save();
     }
 
     /**
