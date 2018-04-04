@@ -247,8 +247,12 @@ class SetupController
                 break;
             case 'finishInstall':
                 $this->writeExampleFiles();
+
+                // Boot framework and run migration
                 $this->completeSetup();
+                $this->completeInstall();
                 $this->cleanUpAfterInstall();
+
                 $result = admin_url('login');
                 break;
         }
@@ -511,8 +515,6 @@ class SetupController
             'default_location_id' => \Admin\Models\Locations_model::first()->location_id,
         ];
 
-        params()->set('default_themes.main', $this->repository->get('activeTheme', 'demo'));
-
         $paramsKeyNames = ['ti_setup', 'ti_version', 'sys_hash', 'site_key', 'default_location_id'];
         foreach ($settings as $key => $value) {
             $setting = in_array($key, $paramsKeyNames)
@@ -523,6 +525,21 @@ class SetupController
 
         params()->save();
         setting()->save();
+    }
+
+    protected function completeInstall()
+    {
+        $item = $this->post('item');
+        $items = isset($item['items']) ? $item['items'] : [];
+        foreach ($items as $item) {
+            if ($item['type'] != 'extension')
+                continue;
+
+            \System\Models\Extensions_model::install($item['code']);
+        }
+
+        \System\Models\Themes_model::syncAll();
+        \System\Models\Themes_model::activateTheme($this->repository->get('activeTheme', 'demo'));
     }
 
     protected function cleanUpAfterInstall()

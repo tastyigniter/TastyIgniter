@@ -3,7 +3,7 @@
         <?php
         if (!$theme->themeClass) continue;
         ?>
-        <div class="col-xs-12 col-sm-6 wrap-bottom">
+        <div class="col-xs-12 wrap-bottom">
         <div class="panel panel-theme">
             <div class="theme-label">
                 <?php if ($theme->themeClass->isActive()) { ?>
@@ -23,11 +23,25 @@
                         <img class="img-rounded"
                              alt=""
                              src="<?= URL::asset($theme->themeClass->screenshot); ?>"
-                             style="width:150px!important;height:214px!important"/>
+                             style="width:250px;"/>
                     </a>
-                    <div class="media-body">
+                    <div class="media-body wrap-left">
                         <h4 class="media-heading"><?= $theme->name; ?></h4>
                         <p class="description text-muted"><?= $theme->description; ?></p>
+                        <div class="buttons action">
+
+                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('source')]) ?>
+
+                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('edit')]) ?>
+
+                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('default')]) ?>
+
+                            <?php if (!$theme->themeClass->isChild()) { ?>
+                                <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('copy')]) ?>
+                            <?php } ?>
+
+                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('delete')]) ?>
+                        </div>
                         <div class="row metas">
                             <div class="pull-left wrap-vertical text-muted text-sm">
                                 <b><?= lang('system::themes.text_author'); ?>:</b><br/>
@@ -37,29 +51,6 @@
                                 <b><?= lang('system::themes.text_version'); ?>:</b><br/>
                                 <?= $theme->version; ?>
                             </div>
-                        </div>
-                        <div class="buttons action">
-
-                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('source')]) ?>
-
-                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('edit')]) ?>
-
-                            <?php
-//                            $column = $this->getColumn('default');
-//                            dump($theme->themeClass->isActive());
-//                            if ($theme->themeClass->isActive()) {
-//                                $column->iconCssClass = 'fa fa-star';
-//                                $column->attributes['title'] = 'lang:system::themes.text_is_default';
-//                                $column->attributes['data-request'] = null;
-//                            }
-                            ?>
-                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('default')]) ?>
-
-                            <?php if (!$theme->themeClass->isChild()) { ?>
-                                <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('copy')]) ?>
-                            <?php } ?>
-
-                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('delete')]) ?>
                         </div>
                     </div>
                 </div>

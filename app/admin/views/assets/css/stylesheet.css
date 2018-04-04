@@ -862,7 +862,7 @@ fieldset[disabled] .form-control {
 	margin-bottom: 0;
 }
 .panel-theme .buttons {
-	padding-top: 20px;
+	padding: 25px 0 30px;
 }
 /*
 	Popover
