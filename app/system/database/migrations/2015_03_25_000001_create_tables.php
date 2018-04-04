@@ -252,6 +252,30 @@ class CreateTables extends Migration
         };
     }
 
+    protected function _create_languages()
+    {
+        return function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->integer('language_id', TRUE);
+            $table->string('code', 7);
+            $table->string('name', 32);
+            $table->string('image', 32);
+            $table->string('idiom', 32);
+            $table->boolean('status');
+            $table->boolean('can_delete');
+        };
+    }
+
+    protected function _create_layout_routes()
+    {
+        return function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->increments('layout_route_id');
+            $table->integer('layout_id');
+            $table->string('uri_route', 128);
+        };
+    }
+
     protected function _create_layout_modules()
     {
         return function (Blueprint $table) {
@@ -266,17 +290,12 @@ class CreateTables extends Migration
         };
     }
 
-    protected function _create_languages()
+    protected function _create_layouts()
     {
         return function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('language_id', TRUE);
-            $table->string('code', 7);
-            $table->string('name', 32);
-            $table->string('image', 32);
-            $table->string('idiom', 32);
-            $table->boolean('status');
-            $table->boolean('can_delete');
+            $table->increments('layout_id');
+            $table->string('name', 45);
         };
     }
 
