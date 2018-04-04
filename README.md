@@ -1,16 +1,16 @@
 TastyIgniter
 ============
 
-[TastyIgniter](http://tastyigniter.com/) is a free open source restaurant ordering and management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
+[TastyIgniter](https://tastyigniter.com/) is a free open source restaurant ordering and management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
 Installation
 ============
-1. Download and unzip the TastyIgniter package.
+1. Download and unzip the TastyIgniter package into an empty directory on your server.
 2. Create a MySQL user database for TastyIgniter on your web server.
-3. Upload the TastyIgniter folders and files to your server. Normally the index.php file will be at your root.
-4. Run the TastyIgniter installation script by accessing the URL in a web browser. This should be the URL where you uploaded the TasyIgniter files. Example, http://example.com/ or http://example.com/folder
-5. Follow all onscreen information and make sure all installation requirements are checked.
-7. That's it! TastyIgniter should now be installed.
+3. Upload the TastyIgniter folders and files to your server. Normally the setup.php file will be at your root.
+4. Grant write permissions on the setup directory, its subdirectories and files.
+4. Run the TastyIgniter setup script by accessing setup.php in your web browser. Example, http://example.com/setup.php or http://example.com/folder/setup.php
+5. Follow all onscreen instructions and make sure all installation requirements are checked.
 
 How to Contribute
 ============
@@ -21,10 +21,8 @@ If you like this software and you'd like to help keep this project you can help 
 Community and Support
 =====================
 Bug fixes and feature patches may be submitted using github pull requests, and bug reports or feature requests as github issues.
-Visit the [TastyIgniter Community Forums](http://forum.tastyigniter.com) or [Documentation](http://docs.tastyigniter.com) for support.
-
-[Broswerstack](http://www.browserstack.com/) provides an amazing tool for testing across all major browsers
+Visit the [TastyIgniter Community Forums](https://forum.tastyigniter.com) or [Documentation](https://docs.tastyigniter.com) for support.
 
 License
 ============
-TastyIgniter is licensed under the [GNU General Public License version 3(GPLv3)](http://tastyigniter.com/licence/)
+TastyIgniter is licensed under the [The MIT License (MIT)](https://tastyigniter.com/licence/)
