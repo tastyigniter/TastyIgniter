@@ -15,7 +15,7 @@ class HubManager
 {
     use \Igniter\Flame\Traits\Singleton;
 
-    const ENDPOINT = 'https://api.tastyiginiter.io/v2';
+    const ENDPOINT = 'https://api.tastyigniter.io/v2';
 
     protected $cachePrefix;
 
@@ -215,6 +215,8 @@ class HubManager
         curl_setopt($curl, CURLOPT_REFERER, url()->current());
         curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
 
         $params['url'] = base64_encode(root_url());
 
