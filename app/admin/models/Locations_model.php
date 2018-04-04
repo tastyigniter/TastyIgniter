@@ -396,7 +396,7 @@ class Locations_model extends BaseLocationModel
      */
     public function createWorkingHoursArray($type, $data)
     {
-        $hours = ['open' => '00:00', 'close' => '23:59'];
+        $hours = ['open' => '00:00', 'close' => '23:59', 'status' => 1];
         if ($type != '24_7')
             $hours = ['open' => $data['open'], 'close' => $data['close']];
 
@@ -411,7 +411,7 @@ class Locations_model extends BaseLocationModel
                 'type'   => $type,
                 'open'   => $_hours['open'],
                 'close'  => $_hours['close'],
-                'status' => (int)in_array($day, $days),
+                'status' => isset($_hours['status']) ? $_hours['status'] : (int)in_array($day, $days),
             ];
         }
 
