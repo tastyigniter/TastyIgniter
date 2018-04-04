@@ -334,9 +334,6 @@ class MainController extends BaseController
         if (!$handler)
             return FALSE;
 
-        if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handler))
-            throw new ApplicationException("Ajax handler {$handler} must start with 'on', example. onSubmit");
-
         $response = [];
 
         // Process Components handler
@@ -366,6 +363,10 @@ class MainController extends BaseController
     {
         if (strpos($handler, '::')) {
             list($componentName, $handlerName) = explode('::', $handler);
+
+            if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handlerName))
+                throw new ApplicationException("Ajax handler {$handler} must start with 'on', example. onSubmit");
+
             $componentObj = $this->findComponentByAlias($componentName);
 
             if ($componentObj AND $componentObj->methodExists($handlerName)) {
@@ -376,6 +377,9 @@ class MainController extends BaseController
             }
         } // Process page specific handler (index_onSomething)
         else {
+            if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handler))
+                throw new ApplicationException("Ajax handler {$handler} must start with 'on', example. onSubmit");
+
             $pageHandler = $this->action.'_'.$handler;
             if ($this->methodExists($pageHandler)) {
                 $result = call_user_func_array([$this, $pageHandler], $this->params);
