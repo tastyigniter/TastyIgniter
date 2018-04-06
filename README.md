@@ -1,6 +1,8 @@
 TastyIgniter
 ============
 
+[![Join the chat at https://gitter.im/tastyigniter-/Lobby](https://badges.gitter.im/tastyigniter-/Lobby.svg)](https://gitter.im/tastyigniter-/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [TastyIgniter](http://tastyigniter.com/) is a free open source restaurant ordering and management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
 Installation
