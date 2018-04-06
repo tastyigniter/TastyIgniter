@@ -1,6 +1,7 @@
 <?php namespace Admin\Classes;
 
 use Igniter\Flame\Traits\Singleton;
+use Lang;
 use Response;
 use System\Classes\ExtensionManager;
 
@@ -119,12 +120,12 @@ class PaymentGateways
             $this->gateways = [];
 
         foreach ($classes as $classPath => $paymentGateway) {
-            $code = isset($paymentGateway['code']) ? $paymentGateway['code'] : strtolower(basename($classPath));
+            $code = $paymentGateway['code'] ?? strtolower(basename($classPath));
 
             $this->gateways[$code] = array_merge($paymentGateway, [
-                'owner' => $owner,
-                'class' => $classPath,
-                'code'  => $code,
+                'owner'       => $owner,
+                'class'       => $classPath,
+                'code'        => $code,
             ]);
         }
     }

@@ -3,6 +3,7 @@
 use Admin\Classes\PaymentGateways;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
+use Lang;
 use Model;
 
 /**
@@ -193,8 +194,8 @@ class Payments_model extends Model
 
             $model = self::make([
                 'code'        => $code,
-                'name'        => $gateway['name'],
-                'description' => $gateway['description'],
+                'name'        => Lang::get($gateway['name']),
+                'description' => Lang::get($gateway['description']),
                 'class_name'  => $gateway['class'],
             ]);
 
