@@ -249,6 +249,8 @@ class Updates extends \Admin\Classes\AdminController
     protected function buildProcessSteps($meta, $params = [])
     {
         $processSteps = [];
+        if (!count($meta['data']))
+            return $processSteps;
 
         foreach (['download', 'extract', 'complete'] as $step) {
 

@@ -51,14 +51,11 @@ class HubManager
         return $this->requestRemoteData("{$type}/details", ['items' => json_encode($itemNames)]);
     }
 
-    public function applyItems($type, $itemNames = [])
+    public function applyItems($itemNames = [])
     {
-        $postData = [
-            'version' => params('ti_version'),
+        $response = $this->requestRemoteData('core/apply', [
             'items'   => json_encode($itemNames),
-        ];
-
-        $response = $this->requestRemoteData("{$type}/apply", $postData);
+        ]);
 
         return $response;
     }

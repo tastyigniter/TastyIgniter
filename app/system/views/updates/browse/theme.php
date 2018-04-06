@@ -3,9 +3,8 @@
         <div class="media">
             <a class="media-top">
                 <img src="<?= $item['icon'] ?>"
-                     class="img-rounded"
-                     alt="No Image"
-                     style="width: 64px; height: 64px;">
+                     class="img-responsive img-rounded"
+                     alt="No Image">
             </a>
             <div class="media-body small">
                 <?php if (!empty($item['installed'])) { ?>

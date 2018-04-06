@@ -11,10 +11,7 @@
 |
 */
 
-// @todo get rid of BASEPATH constant, used here to reduce errors while migrating code from CI
-define('BASEPATH', realpath(__DIR__.'/../'));
-
-$app = new Igniter\Flame\Foundation\Application(BASEPATH);
+$app = new Igniter\Flame\Foundation\Application(dirname(__DIR__).'/');
 
 /*
 |--------------------------------------------------------------------------

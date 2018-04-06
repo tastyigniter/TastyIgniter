@@ -387,7 +387,7 @@ class UpdateManager
 
     public function applyItems($names, $context = 'update')
     {
-        $applies = $this->getHubManager()->applyItems('core', $names);
+        $applies = $this->getHubManager()->applyItems($names);
 
         if (isset($applies['data'])) foreach ($applies['data'] as $index => $item) {
             if ($context == 'update' AND $this->isUpdateIgnored($item['code'], $item['ver']))
