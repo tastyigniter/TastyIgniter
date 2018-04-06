@@ -146,7 +146,7 @@ class Connector extends BaseFormWidget
 
         $model = $this->createRelatedModelObject($postData);
 
-        $indexCount = is_numeric($postData['indexValue']) ? $postData['indexValue'] : $this->indexCount;
+        $indexCount = $postData['indexValue'] ?? $this->indexCount;
         $indexCount++;
 
         $this->prepareVars();

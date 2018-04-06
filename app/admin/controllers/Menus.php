@@ -75,7 +75,7 @@ class Menus extends AdminController
         $rules[] = ['menu_options.*.menu_option_id', 'lang:admin::menus.label_option', 'integer'];
         $rules[] = ['menu_options.*.required', 'lang:admin::menus.label_option_required', 'required|integer'];
 
-        $rules[] = ['menu_options.*.menu_option_values', 'lang:admin::locations.label_option', 'required'];
+        $rules[] = ['menu_options.*.menu_option_values.*', 'lang:admin::menus.label_option', 'required'];
         $rules[] = ['menu_options.*.menu_option_values.*.menu_option_value_id', 'lang:admin::menus.label_option_value_id', 'numeric'];
         $rules[] = ['menu_options.*.menu_option_values.*.option_value_id', 'lang:admin::menus.label_option_value', 'required|integer'];
         $rules[] = ['menu_options.*.menu_option_values.*.new_price', 'lang:admin::menus.label_option_price', 'numeric'];

@@ -205,11 +205,11 @@ class Menus_model extends Model
                 'menu_option_id' => $option['menu_option_id'],
                 'option_id'      => $option['option_id'],
             ], array_merge(array_except($option, 'menu_option_id'), [
-                'option_values' => isset($option['menu_option_values']) ? $option['menu_option_values'] : [],
+                'option_values' => $option['option_values'] ?? [],
             ]));
 
             if ($menuOption AND is_array($menuOption->option_values)) {
-                $this->addMenuOptionValues($menuOption->getKey(), $menuOption->option_id, (array)$menuOption->option_values);
+                $this->addMenuOptionValues($menuOption->getKey(), $menuOption->option_id, $menuOption->option_values);
             }
 
             $idsToKeep[] = $menuOption->getKey();
