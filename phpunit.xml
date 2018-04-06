@@ -10,15 +10,15 @@
          stopOnFailure="false">
     <testsuites>
         <testsuite name="TastyIgniter Feature Test Suite">
-            <directory suffix="Test.php">./tests/Feature</directory>
+            <directory>./tests/Feature</directory>
         </testsuite>
 
         <testsuite name="TastyIgniter Unit Test Suite">
-            <directory suffix="Test.php">./tests/Unit</directory>
+            <directory>./tests/Unit</directory>
         </testsuite>
 
         <testsuite name="TastyIgniter Flame Test Suite">
-            <directory suffix="Test.php">./vendor/tastyigniter/flame/tests</directory>
+            <directory>./vendor/tastyigniter/flame/tests</directory>
         </testsuite>
     </testsuites>
     <filter>

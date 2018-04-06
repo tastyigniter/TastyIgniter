@@ -2,8 +2,10 @@
 
 namespace Tests\Unit;
 
+use App;
+use Carbon\Carbon;
+use SamPoyigi\Local\Classes\Location;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ExampleTest extends TestCase
 {
