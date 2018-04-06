@@ -2,10 +2,8 @@ language: php
 
 # list of PHP version to test against
 php:
-  - 5.6
   - 7.0
   - 7.1
-  - hhvm
 
 sudo: false
 
@@ -13,9 +11,12 @@ sudo: false
 branches:
   only:
     - master
+    - dev/3.x
 
 before_script:
-  - travis_retry composer self-update
-  - travis_retry composer install --prefer-source --no-interaction --dev
+  - git reset --hard HEAD
+  - mysql -e 'create database homestead_test;'
+  - composer self-update
+  - travis_retry composer install --prefer-source --no-interaction
 
 script: vendor/bin/phpunit --verbose
