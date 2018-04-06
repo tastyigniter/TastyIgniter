@@ -6,7 +6,6 @@ return [
     Illuminate\Broadcasting\BroadcastServiceProvider::class,
     Illuminate\Bus\BusServiceProvider::class,
     Illuminate\Cache\CacheServiceProvider::class,
-    Igniter\Flame\Foundation\Providers\ConsoleSupportServiceProvider::class,
     Illuminate\Cookie\CookieServiceProvider::class,
     Illuminate\Encryption\EncryptionServiceProvider::class,
     Illuminate\Foundation\Providers\FoundationServiceProvider::class,
@@ -20,6 +19,7 @@ return [
     Illuminate\View\ViewServiceProvider::class,
 
     // TastyIgniter flame providers
+    Igniter\Flame\Foundation\Providers\ConsoleSupportServiceProvider::class,
     Igniter\Flame\Database\DatabaseServiceProvider::class,
     Igniter\Flame\Filesystem\FilesystemServiceProvider::class,
     Igniter\Flame\Flash\FlashServiceProvider::class,
@@ -28,6 +28,6 @@ return [
     Igniter\Flame\Mail\MailServiceProvider::class,
     Igniter\Flame\Notifications\NotificationServiceProvider::class,
 //    Igniter\Flame\Html\UrlServiceProvider::class, // force https -- url policy
-//    Igniter\Flame\Scaffold\ScaffoldServiceProvider::class, // register command generators
+    Igniter\Flame\Scaffold\ScaffoldServiceProvider::class,
     Igniter\Flame\Setting\SettingServiceProvider::class,
 ];
