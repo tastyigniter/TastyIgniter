@@ -1,0 +1,21 @@
+language: php
+
+# list of PHP version to test against
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - hhvm
+
+sudo: false
+
+# build only the specified branches
+branches:
+  only:
+    - master
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer install --prefer-source --no-interaction --dev
+
+script: vendor/bin/phpunit --verbose

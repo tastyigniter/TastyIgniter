@@ -1,3 +1,94 @@
+### v3.0.0
+
+Release Date: --
+
+* MOVE TO LARAVEL, refer to git commit history ;)
+
+### v2.2.0 - dev
+
+Release Date: August 2016 ()
+
+#### Added
+* Admin dashboard permission in theme config
+* New Authenticated Controller to provide a base class for all controllers that must check authenticated user. (435b2ce)
+* User Library: `auth()` method to redirect unauthorised users (4802e01)
+* Template Library: new methods to add and remove nav menu items (24a521e)
+* New Event hook points: before_controller, after_controller_constructor, before_main_controller, after_main_controller
+* Display active modules on admin layout list page (76ad3fd)
+* Display number of customers in customer group (8dab2e1)
+* New Assets library to handle working with html head tags, css and js (71e09e2)
+* New array helper with array_get method to get array item using dot notation (bd02bb9)
+* Eloquent ORM library for models and other subclass to provide extra functions
+* New Location_hours, Location_delivery, Location_geocode libraries to extend and extract Location library functions
+* Can now add extensions and themes from marketplace
+* New Composer manager class to manage composer dependencies
+* New Updates manager class to manage core, extensions & themes updates and installation from marketplace
+* Admin List & Form Controller Behaviours(Actions) to keep controller DRY and ease CRUD operations
+* Admin Widgets and Form Widgets
+* Restructured admin view files into directories [controller/method]
+
+#### Changed
+* Improve nav menu to switch between single and multi location settings
+* Removed all index.html files, use htaccess to block access instead (2bf9172)
+* Improved Models: Use Eloquent ORM instead of custom-CRUD library (232c012 & 232c012 & 7772f24 & 43b5a98 & 2a9401e & 86ce6d5 & fe1ef4a)
+* Remove getList and getCount methods from models to use parent method or override instead (c63fc9b)
+* Moved `currency_format` function from `tastyigniter_helper` to new `TI_number_helper` (d3365e4)
+* Improved debug profiler: new Console library to log message to console and new profiler interface (8cb4f51 & 9e10c3b)
+* Code style consistency: changed all controllers, models and libraries private methods to protected (579e7e6)
+* Improved BASE controller (c34a825 & e288175)
+* Improved Installer library (81c202e)
+* Improved Controllers - reduced code (747e758 & dafb154 & a4300da & fd260bb)
+* Migration files extends TI_Migration instead of CI_Migration library, and load demo data within migration like initial data (86c0e0b)
+* Enforce split single and multi restaurant location mode (937dd7a)
+* Improve local module display search box functionality (f987e8f)
+* Improved pagination and calendar libraries (92fde25)
+* Improve app setup and installer library (5504683)
+* Admin theme changes (775b214)
+* Moved load_db_config to Config library and new restaurant_url method (b85f32c)
+* New is_single_location method to check restaurant location mode (4aa38c4)
+* Moved extractExtension from Extensions_model to Modules::extract_extension
+* Moved runMigration from extension_manager library to Modules::run_migration
+* Removed Extension library, use Extensions_model or Modules library instead (7a59677)
+* Improved Extensions api (2d0e759 & 162a72a & ece3167 & 4ad6da5 & 84c552d)
+* Use Modules class instead of Extensions model within controllers ()
+* Improve Template library: move methods working with html head tags to new Assets library (1532de9)
+* Improved Lang: line() method now accepts dotted array module.line_key_name (87a40bb)
+* Improved design patterns: Use Fat model thin controller
+* Improve Location Library: extract functions to new libraries Location_hours, Location_delivery, Location_geocode
+* Code style consistency: use loose instead of strict comparision where appropriate
+* Improved updates center, now requires a site key to install/update core, extensions & themes
+* Improved Extensions & Themes functionality - upload, install, duplicate & delete
+* Improved installer library to use only the Setup_model during setup
+* Removed extensions files & schema from codebase
+  ​
+
+
+#### Fixed
+* Fix module lang file check (ae7e5e2) thanks @behigh
+* Fix save on translate phrase (012a290) thanks @behigh
+* Hardcoded menu image dimension in storefront
+* Avoid duplicate order/reservation status history
+* Issue with adding order coupon and avoid multiple stock update on update order status
+* Paypal orders not sending email to location
+* Fixed extension delete functionality (2dffaaa)
+* Ensure mealtimes migration does not duplicate records (a1406fb)
+* Redirect url to use relative url (05a1a1b)
+* Fixed categories link on storefront, menu list category filter and location slug (2e640e6)
+* Minor changes (be8f975 & 00983ad)
+* Fix issue with going back to previous setup step (debca3c)
+
+### v2.1.1
+
+Release Date: June 2016
+
+#### Fixed
+* Issue with saving new menu option
+* Issue with adding new customer from admin
+* Issue with permalink reverse routing
+* Fixed faulty backend url #121
+* Fixed menu category permalinks and reverse routing
+* Issue saving theme customizer options
+
 ### v2.1.0
 
 Release Date: May 2016

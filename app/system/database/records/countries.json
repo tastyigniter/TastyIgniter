@@ -1,0 +1,1914 @@
+[
+  {
+    "country_name": "Afghanistan",
+    "iso_code_2": "AF",
+    "iso_code_3": "AFG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/af.png"
+  },
+  {
+    "country_name": "Albania",
+    "iso_code_2": "AL",
+    "iso_code_3": "ALB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/al.png"
+  },
+  {
+    "country_name": "Algeria",
+    "iso_code_2": "DZ",
+    "iso_code_3": "DZA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/dz.png"
+  },
+  {
+    "country_name": "American Samoa",
+    "iso_code_2": "AS",
+    "iso_code_3": "ASM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/as.png"
+  },
+  {
+    "country_name": "Andorra",
+    "iso_code_2": "AD",
+    "iso_code_3": "AND",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ad.png"
+  },
+  {
+    "country_name": "Angola",
+    "iso_code_2": "AO",
+    "iso_code_3": "AGO",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ao.png"
+  },
+  {
+    "country_name": "Anguilla",
+    "iso_code_2": "AI",
+    "iso_code_3": "AIA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ai.png"
+  },
+  {
+    "country_name": "Antarctica",
+    "iso_code_2": "AQ",
+    "iso_code_3": "ATA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/aq.png"
+  },
+  {
+    "country_name": "Antigua and Barbuda",
+    "iso_code_2": "AG",
+    "iso_code_3": "ATG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ag.png"
+  },
+  {
+    "country_name": "Argentina",
+    "iso_code_2": "AR",
+    "iso_code_3": "ARG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ar.png"
+  },
+  {
+    "country_name": "Armenia",
+    "iso_code_2": "AM",
+    "iso_code_3": "ARM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/am.png"
+  },
+  {
+    "country_name": "Aruba",
+    "iso_code_2": "AW",
+    "iso_code_3": "ABW",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/aw.png"
+  },
+  {
+    "country_name": "Australia",
+    "iso_code_2": "AU",
+    "iso_code_3": "AUS",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/au.png"
+  },
+  {
+    "country_name": "Austria",
+    "iso_code_2": "AT",
+    "iso_code_3": "AUT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/at.png"
+  },
+  {
+    "country_name": "Azerbaijan",
+    "iso_code_2": "AZ",
+    "iso_code_3": "AZE",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/az.png"
+  },
+  {
+    "country_name": "Bahamas",
+    "iso_code_2": "BS",
+    "iso_code_3": "BHS",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bs.png"
+  },
+  {
+    "country_name": "Bahrain",
+    "iso_code_2": "BH",
+    "iso_code_3": "BHR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bh.png"
+  },
+  {
+    "country_name": "Bangladesh",
+    "iso_code_2": "BD",
+    "iso_code_3": "BGD",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bd.png"
+  },
+  {
+    "country_name": "Barbados",
+    "iso_code_2": "BB",
+    "iso_code_3": "BRB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bb.png"
+  },
+  {
+    "country_name": "Belarus",
+    "iso_code_2": "BY",
+    "iso_code_3": "BLR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/by.png"
+  },
+  {
+    "country_name": "Belgium",
+    "iso_code_2": "BE",
+    "iso_code_3": "BEL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/be.png"
+  },
+  {
+    "country_name": "Belize",
+    "iso_code_2": "BZ",
+    "iso_code_3": "BLZ",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bz.png"
+  },
+  {
+    "country_name": "Benin",
+    "iso_code_2": "BJ",
+    "iso_code_3": "BEN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bj.png"
+  },
+  {
+    "country_name": "Bermuda",
+    "iso_code_2": "BM",
+    "iso_code_3": "BMU",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bm.png"
+  },
+  {
+    "country_name": "Bhutan",
+    "iso_code_2": "BT",
+    "iso_code_3": "BTN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bt.png"
+  },
+  {
+    "country_name": "Bolivia",
+    "iso_code_2": "BO",
+    "iso_code_3": "BOL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bo.png"
+  },
+  {
+    "country_name": "Bosnia and Herzegowina",
+    "iso_code_2": "BA",
+    "iso_code_3": "BIH",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ba.png"
+  },
+  {
+    "country_name": "Botswana",
+    "iso_code_2": "BW",
+    "iso_code_3": "BWA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bw.png"
+  },
+  {
+    "country_name": "Bouvet Island",
+    "iso_code_2": "BV",
+    "iso_code_3": "BVT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bv.png"
+  },
+  {
+    "country_name": "Brazil",
+    "iso_code_2": "BR",
+    "iso_code_3": "BRA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/br.png"
+  },
+  {
+    "country_name": "British Indian Ocean Territory",
+    "iso_code_2": "IO",
+    "iso_code_3": "IOT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/io.png"
+  },
+  {
+    "country_name": "Brunei Darussalam",
+    "iso_code_2": "BN",
+    "iso_code_3": "BRN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bn.png"
+  },
+  {
+    "country_name": "Bulgaria",
+    "iso_code_2": "BG",
+    "iso_code_3": "BGR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bg.png"
+  },
+  {
+    "country_name": "Burkina Faso",
+    "iso_code_2": "BF",
+    "iso_code_3": "BFA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bf.png"
+  },
+  {
+    "country_name": "Burundi",
+    "iso_code_2": "BI",
+    "iso_code_3": "BDI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/bi.png"
+  },
+  {
+    "country_name": "Cambodia",
+    "iso_code_2": "KH",
+    "iso_code_3": "KHM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/kh.png"
+  },
+  {
+    "country_name": "Cameroon",
+    "iso_code_2": "CM",
+    "iso_code_3": "CMR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cm.png"
+  },
+  {
+    "country_name": "Canada",
+    "iso_code_2": "CA",
+    "iso_code_3": "CAN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ca.png"
+  },
+  {
+    "country_name": "Cape Verde",
+    "iso_code_2": "CV",
+    "iso_code_3": "CPV",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cv.png"
+  },
+  {
+    "country_name": "Cayman Islands",
+    "iso_code_2": "KY",
+    "iso_code_3": "CYM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ky.png"
+  },
+  {
+    "country_name": "Central African Republic",
+    "iso_code_2": "CF",
+    "iso_code_3": "CAF",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cf.png"
+  },
+  {
+    "country_name": "Chad",
+    "iso_code_2": "TD",
+    "iso_code_3": "TCD",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/td.png"
+  },
+  {
+    "country_name": "Chile",
+    "iso_code_2": "CL",
+    "iso_code_3": "CHL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cl.png"
+  },
+  {
+    "country_name": "China",
+    "iso_code_2": "CN",
+    "iso_code_3": "CHN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cn.png"
+  },
+  {
+    "country_name": "Christmas Island",
+    "iso_code_2": "CX",
+    "iso_code_3": "CXR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cx.png"
+  },
+  {
+    "country_name": "Cocos (Keeling) Islands",
+    "iso_code_2": "CC",
+    "iso_code_3": "CCK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cc.png"
+  },
+  {
+    "country_name": "Colombia",
+    "iso_code_2": "CO",
+    "iso_code_3": "COL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/co.png"
+  },
+  {
+    "country_name": "Comoros",
+    "iso_code_2": "KM",
+    "iso_code_3": "COM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/km.png"
+  },
+  {
+    "country_name": "Congo",
+    "iso_code_2": "CG",
+    "iso_code_3": "COG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cg.png"
+  },
+  {
+    "country_name": "Cook Islands",
+    "iso_code_2": "CK",
+    "iso_code_3": "COK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ck.png"
+  },
+  {
+    "country_name": "Costa Rica",
+    "iso_code_2": "CR",
+    "iso_code_3": "CRI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cr.png"
+  },
+  {
+    "country_name": "Cote D'Ivoire",
+    "iso_code_2": "CI",
+    "iso_code_3": "CIV",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ci.png"
+  },
+  {
+    "country_name": "Croatia",
+    "iso_code_2": "HR",
+    "iso_code_3": "HRV",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/hr.png"
+  },
+  {
+    "country_name": "Cuba",
+    "iso_code_2": "CU",
+    "iso_code_3": "CUB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cu.png"
+  },
+  {
+    "country_name": "Cyprus",
+    "iso_code_2": "CY",
+    "iso_code_3": "CYP",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cy.png"
+  },
+  {
+    "country_name": "Czech Republic",
+    "iso_code_2": "CZ",
+    "iso_code_3": "CZE",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cz.png"
+  },
+  {
+    "country_name": "Denmark",
+    "iso_code_2": "DK",
+    "iso_code_3": "DNK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/dk.png"
+  },
+  {
+    "country_name": "Djibouti",
+    "iso_code_2": "DJ",
+    "iso_code_3": "DJI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/dj.png"
+  },
+  {
+    "country_name": "Dominica",
+    "iso_code_2": "DM",
+    "iso_code_3": "DMA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/dm.png"
+  },
+  {
+    "country_name": "Dominican Republic",
+    "iso_code_2": "DO",
+    "iso_code_3": "DOM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/do.png"
+  },
+  {
+    "country_name": "East Timor",
+    "iso_code_2": "TP",
+    "iso_code_3": "TMP",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tp.png"
+  },
+  {
+    "country_name": "Ecuador",
+    "iso_code_2": "EC",
+    "iso_code_3": "ECU",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ec.png"
+  },
+  {
+    "country_name": "Egypt",
+    "iso_code_2": "EG",
+    "iso_code_3": "EGY",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/eg.png"
+  },
+  {
+    "country_name": "El Salvador",
+    "iso_code_2": "SV",
+    "iso_code_3": "SLV",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sv.png"
+  },
+  {
+    "country_name": "Equatorial Guinea",
+    "iso_code_2": "GQ",
+    "iso_code_3": "GNQ",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gq.png"
+  },
+  {
+    "country_name": "Eritrea",
+    "iso_code_2": "ER",
+    "iso_code_3": "ERI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/er.png"
+  },
+  {
+    "country_name": "Estonia",
+    "iso_code_2": "EE",
+    "iso_code_3": "EST",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ee.png"
+  },
+  {
+    "country_name": "Ethiopia",
+    "iso_code_2": "ET",
+    "iso_code_3": "ETH",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/et.png"
+  },
+  {
+    "country_name": "Falkland Islands (Malvinas)",
+    "iso_code_2": "FK",
+    "iso_code_3": "FLK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/fk.png"
+  },
+  {
+    "country_name": "Faroe Islands",
+    "iso_code_2": "FO",
+    "iso_code_3": "FRO",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/fo.png"
+  },
+  {
+    "country_name": "Fiji",
+    "iso_code_2": "FJ",
+    "iso_code_3": "FJI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/fj.png"
+  },
+  {
+    "country_name": "Finland",
+    "iso_code_2": "FI",
+    "iso_code_3": "FIN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/fi.png"
+  },
+  {
+    "country_name": "France",
+    "iso_code_2": "FR",
+    "iso_code_3": "FRA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/fr.png"
+  },
+  {
+    "country_name": "France, Metropolitan",
+    "iso_code_2": "FX",
+    "iso_code_3": "FXX",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/fx.png"
+  },
+  {
+    "country_name": "French Guiana",
+    "iso_code_2": "GF",
+    "iso_code_3": "GUF",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gf.png"
+  },
+  {
+    "country_name": "French Polynesia",
+    "iso_code_2": "PF",
+    "iso_code_3": "PYF",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pf.png"
+  },
+  {
+    "country_name": "French Southern Territories",
+    "iso_code_2": "TF",
+    "iso_code_3": "ATF",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tf.png"
+  },
+  {
+    "country_name": "Gabon",
+    "iso_code_2": "GA",
+    "iso_code_3": "GAB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ga.png"
+  },
+  {
+    "country_name": "Gambia",
+    "iso_code_2": "GM",
+    "iso_code_3": "GMB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gm.png"
+  },
+  {
+    "country_name": "Georgia",
+    "iso_code_2": "GE",
+    "iso_code_3": "GEO",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ge.png"
+  },
+  {
+    "country_name": "Germany",
+    "iso_code_2": "DE",
+    "iso_code_3": "DEU",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/de.png"
+  },
+  {
+    "country_name": "Ghana",
+    "iso_code_2": "GH",
+    "iso_code_3": "GHA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gh.png"
+  },
+  {
+    "country_name": "Gibraltar",
+    "iso_code_2": "GI",
+    "iso_code_3": "GIB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gi.png"
+  },
+  {
+    "country_name": "Greece",
+    "iso_code_2": "GR",
+    "iso_code_3": "GRC",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gr.png"
+  },
+  {
+    "country_name": "Greenland",
+    "iso_code_2": "GL",
+    "iso_code_3": "GRL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gl.png"
+  },
+  {
+    "country_name": "Grenada",
+    "iso_code_2": "GD",
+    "iso_code_3": "GRD",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gd.png"
+  },
+  {
+    "country_name": "Guadeloupe",
+    "iso_code_2": "GP",
+    "iso_code_3": "GLP",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gp.png"
+  },
+  {
+    "country_name": "Guam",
+    "iso_code_2": "GU",
+    "iso_code_3": "GUM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gu.png"
+  },
+  {
+    "country_name": "Guatemala",
+    "iso_code_2": "GT",
+    "iso_code_3": "GTM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gt.png"
+  },
+  {
+    "country_name": "Guinea",
+    "iso_code_2": "GN",
+    "iso_code_3": "GIN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gn.png"
+  },
+  {
+    "country_name": "Guinea-bissau",
+    "iso_code_2": "GW",
+    "iso_code_3": "GNB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gw.png"
+  },
+  {
+    "country_name": "Guyana",
+    "iso_code_2": "GY",
+    "iso_code_3": "GUY",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gy.png"
+  },
+  {
+    "country_name": "Haiti",
+    "iso_code_2": "HT",
+    "iso_code_3": "HTI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ht.png"
+  },
+  {
+    "country_name": "Heard and Mc Donald Islands",
+    "iso_code_2": "HM",
+    "iso_code_3": "HMD",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/hm.png"
+  },
+  {
+    "country_name": "Honduras",
+    "iso_code_2": "HN",
+    "iso_code_3": "HND",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/hn.png"
+  },
+  {
+    "country_name": "Hong Kong",
+    "iso_code_2": "HK",
+    "iso_code_3": "HKG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/hk.png"
+  },
+  {
+    "country_name": "Hungary",
+    "iso_code_2": "HU",
+    "iso_code_3": "HUN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/hu.png"
+  },
+  {
+    "country_name": "Iceland",
+    "iso_code_2": "IS",
+    "iso_code_3": "ISL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/is.png"
+  },
+  {
+    "country_name": "India",
+    "iso_code_2": "IN",
+    "iso_code_3": "IND",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/in.png"
+  },
+  {
+    "country_name": "Indonesia",
+    "iso_code_2": "ID",
+    "iso_code_3": "IDN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/id.png"
+  },
+  {
+    "country_name": "Iran (Islamic Republic of)",
+    "iso_code_2": "IR",
+    "iso_code_3": "IRN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ir.png"
+  },
+  {
+    "country_name": "Iraq",
+    "iso_code_2": "IQ",
+    "iso_code_3": "IRQ",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/iq.png"
+  },
+  {
+    "country_name": "Ireland",
+    "iso_code_2": "IE",
+    "iso_code_3": "IRL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ie.png"
+  },
+  {
+    "country_name": "Israel",
+    "iso_code_2": "IL",
+    "iso_code_3": "ISR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/il.png"
+  },
+  {
+    "country_name": "Italy",
+    "iso_code_2": "IT",
+    "iso_code_3": "ITA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/it.png"
+  },
+  {
+    "country_name": "Jamaica",
+    "iso_code_2": "JM",
+    "iso_code_3": "JAM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/jm.png"
+  },
+  {
+    "country_name": "Japan",
+    "iso_code_2": "JP",
+    "iso_code_3": "JPN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/jp.png"
+  },
+  {
+    "country_name": "Jordan",
+    "iso_code_2": "JO",
+    "iso_code_3": "JOR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/jo.png"
+  },
+  {
+    "country_name": "Kazakhstan",
+    "iso_code_2": "KZ",
+    "iso_code_3": "KAZ",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/kz.png"
+  },
+  {
+    "country_name": "Kenya",
+    "iso_code_2": "KE",
+    "iso_code_3": "KEN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ke.png"
+  },
+  {
+    "country_name": "Kiribati",
+    "iso_code_2": "KI",
+    "iso_code_3": "KIR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ki.png"
+  },
+  {
+    "country_name": "North Korea",
+    "iso_code_2": "KP",
+    "iso_code_3": "PRK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/kp.png"
+  },
+  {
+    "country_name": "Korea, Republic of",
+    "iso_code_2": "KR",
+    "iso_code_3": "KOR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/kr.png"
+  },
+  {
+    "country_name": "Kuwait",
+    "iso_code_2": "KW",
+    "iso_code_3": "KWT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/kw.png"
+  },
+  {
+    "country_name": "Kyrgyzstan",
+    "iso_code_2": "KG",
+    "iso_code_3": "KGZ",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/kg.png"
+  },
+  {
+    "country_name": "Lao People's Democratic Republic",
+    "iso_code_2": "LA",
+    "iso_code_3": "LAO",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/la.png"
+  },
+  {
+    "country_name": "Latvia",
+    "iso_code_2": "LV",
+    "iso_code_3": "LVA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/lv.png"
+  },
+  {
+    "country_name": "Lebanon",
+    "iso_code_2": "LB",
+    "iso_code_3": "LBN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/lb.png"
+  },
+  {
+    "country_name": "Lesotho",
+    "iso_code_2": "LS",
+    "iso_code_3": "LSO",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ls.png"
+  },
+  {
+    "country_name": "Liberia",
+    "iso_code_2": "LR",
+    "iso_code_3": "LBR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/lr.png"
+  },
+  {
+    "country_name": "Libyan Arab Jamahiriya",
+    "iso_code_2": "LY",
+    "iso_code_3": "LBY",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ly.png"
+  },
+  {
+    "country_name": "Liechtenstein",
+    "iso_code_2": "LI",
+    "iso_code_3": "LIE",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/li.png"
+  },
+  {
+    "country_name": "Lithuania",
+    "iso_code_2": "LT",
+    "iso_code_3": "LTU",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/lt.png"
+  },
+  {
+    "country_name": "Luxembourg",
+    "iso_code_2": "LU",
+    "iso_code_3": "LUX",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/lu.png"
+  },
+  {
+    "country_name": "Macau",
+    "iso_code_2": "MO",
+    "iso_code_3": "MAC",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mo.png"
+  },
+  {
+    "country_name": "FYROM",
+    "iso_code_2": "MK",
+    "iso_code_3": "MKD",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mk.png"
+  },
+  {
+    "country_name": "Madagascar",
+    "iso_code_2": "MG",
+    "iso_code_3": "MDG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mg.png"
+  },
+  {
+    "country_name": "Malawi",
+    "iso_code_2": "MW",
+    "iso_code_3": "MWI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mw.png"
+  },
+  {
+    "country_name": "Malaysia",
+    "iso_code_2": "MY",
+    "iso_code_3": "MYS",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/my.png"
+  },
+  {
+    "country_name": "Maldives",
+    "iso_code_2": "MV",
+    "iso_code_3": "MDV",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mv.png"
+  },
+  {
+    "country_name": "Mali",
+    "iso_code_2": "ML",
+    "iso_code_3": "MLI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ml.png"
+  },
+  {
+    "country_name": "Malta",
+    "iso_code_2": "MT",
+    "iso_code_3": "MLT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mt.png"
+  },
+  {
+    "country_name": "Marshall Islands",
+    "iso_code_2": "MH",
+    "iso_code_3": "MHL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mh.png"
+  },
+  {
+    "country_name": "Martinique",
+    "iso_code_2": "MQ",
+    "iso_code_3": "MTQ",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mq.png"
+  },
+  {
+    "country_name": "Mauritania",
+    "iso_code_2": "MR",
+    "iso_code_3": "MRT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mr.png"
+  },
+  {
+    "country_name": "Mauritius",
+    "iso_code_2": "MU",
+    "iso_code_3": "MUS",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mu.png"
+  },
+  {
+    "country_name": "Mayotte",
+    "iso_code_2": "YT",
+    "iso_code_3": "MYT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/yt.png"
+  },
+  {
+    "country_name": "Mexico",
+    "iso_code_2": "MX",
+    "iso_code_3": "MEX",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mx.png"
+  },
+  {
+    "country_name": "Micronesia, Federated States of",
+    "iso_code_2": "FM",
+    "iso_code_3": "FSM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/fm.png"
+  },
+  {
+    "country_name": "Moldova, Republic of",
+    "iso_code_2": "MD",
+    "iso_code_3": "MDA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/md.png"
+  },
+  {
+    "country_name": "Monaco",
+    "iso_code_2": "MC",
+    "iso_code_3": "MCO",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mc.png"
+  },
+  {
+    "country_name": "Mongolia",
+    "iso_code_2": "MN",
+    "iso_code_3": "MNG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mn.png"
+  },
+  {
+    "country_name": "Montserrat",
+    "iso_code_2": "MS",
+    "iso_code_3": "MSR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ms.png"
+  },
+  {
+    "country_name": "Morocco",
+    "iso_code_2": "MA",
+    "iso_code_3": "MAR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ma.png"
+  },
+  {
+    "country_name": "Mozambique",
+    "iso_code_2": "MZ",
+    "iso_code_3": "MOZ",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mz.png"
+  },
+  {
+    "country_name": "Myanmar",
+    "iso_code_2": "MM",
+    "iso_code_3": "MMR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mm.png"
+  },
+  {
+    "country_name": "Namibia",
+    "iso_code_2": "NA",
+    "iso_code_3": "NAM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/na.png"
+  },
+  {
+    "country_name": "Nauru",
+    "iso_code_2": "NR",
+    "iso_code_3": "NRU",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/nr.png"
+  },
+  {
+    "country_name": "Nepal",
+    "iso_code_2": "NP",
+    "iso_code_3": "NPL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/np.png"
+  },
+  {
+    "country_name": "Netherlands",
+    "iso_code_2": "NL",
+    "iso_code_3": "NLD",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/nl.png"
+  },
+  {
+    "country_name": "Netherlands Antilles",
+    "iso_code_2": "AN",
+    "iso_code_3": "ANT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/an.png"
+  },
+  {
+    "country_name": "New Caledonia",
+    "iso_code_2": "NC",
+    "iso_code_3": "NCL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/nc.png"
+  },
+  {
+    "country_name": "New Zealand",
+    "iso_code_2": "NZ",
+    "iso_code_3": "NZL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/nz.png"
+  },
+  {
+    "country_name": "Nicaragua",
+    "iso_code_2": "NI",
+    "iso_code_3": "NIC",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ni.png"
+  },
+  {
+    "country_name": "Niger",
+    "iso_code_2": "NE",
+    "iso_code_3": "NER",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ne.png"
+  },
+  {
+    "country_name": "Nigeria",
+    "iso_code_2": "NG",
+    "iso_code_3": "NGA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ng.png"
+  },
+  {
+    "country_name": "Niue",
+    "iso_code_2": "NU",
+    "iso_code_3": "NIU",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/nu.png"
+  },
+  {
+    "country_name": "Norfolk Island",
+    "iso_code_2": "NF",
+    "iso_code_3": "NFK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/nf.png"
+  },
+  {
+    "country_name": "Northern Mariana Islands",
+    "iso_code_2": "MP",
+    "iso_code_3": "MNP",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/mp.png"
+  },
+  {
+    "country_name": "Norway",
+    "iso_code_2": "NO",
+    "iso_code_3": "NOR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/no.png"
+  },
+  {
+    "country_name": "Oman",
+    "iso_code_2": "OM",
+    "iso_code_3": "OMN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/om.png"
+  },
+  {
+    "country_name": "Pakistan",
+    "iso_code_2": "PK",
+    "iso_code_3": "PAK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pk.png"
+  },
+  {
+    "country_name": "Palau",
+    "iso_code_2": "PW",
+    "iso_code_3": "PLW",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pw.png"
+  },
+  {
+    "country_name": "Panama",
+    "iso_code_2": "PA",
+    "iso_code_3": "PAN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pa.png"
+  },
+  {
+    "country_name": "Papua New Guinea",
+    "iso_code_2": "PG",
+    "iso_code_3": "PNG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pg.png"
+  },
+  {
+    "country_name": "Paraguay",
+    "iso_code_2": "PY",
+    "iso_code_3": "PRY",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/py.png"
+  },
+  {
+    "country_name": "Peru",
+    "iso_code_2": "PE",
+    "iso_code_3": "PER",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pe.png"
+  },
+  {
+    "country_name": "Philippines",
+    "iso_code_2": "PH",
+    "iso_code_3": "PHL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ph.png"
+  },
+  {
+    "country_name": "Pitcairn",
+    "iso_code_2": "PN",
+    "iso_code_3": "PCN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pn.png"
+  },
+  {
+    "country_name": "Poland",
+    "iso_code_2": "PL",
+    "iso_code_3": "POL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pl.png"
+  },
+  {
+    "country_name": "Portugal",
+    "iso_code_2": "PT",
+    "iso_code_3": "PRT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pt.png"
+  },
+  {
+    "country_name": "Puerto Rico",
+    "iso_code_2": "PR",
+    "iso_code_3": "PRI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pr.png"
+  },
+  {
+    "country_name": "Qatar",
+    "iso_code_2": "QA",
+    "iso_code_3": "QAT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/qa.png"
+  },
+  {
+    "country_name": "Reunion",
+    "iso_code_2": "RE",
+    "iso_code_3": "REU",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/re.png"
+  },
+  {
+    "country_name": "Romania",
+    "iso_code_2": "RO",
+    "iso_code_3": "ROM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ro.png"
+  },
+  {
+    "country_name": "Russian Federation",
+    "iso_code_2": "RU",
+    "iso_code_3": "RUS",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ru.png"
+  },
+  {
+    "country_name": "Rwanda",
+    "iso_code_2": "RW",
+    "iso_code_3": "RWA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/rw.png"
+  },
+  {
+    "country_name": "Saint Kitts and Nevis",
+    "iso_code_2": "KN",
+    "iso_code_3": "KNA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/kn.png"
+  },
+  {
+    "country_name": "Saint Lucia",
+    "iso_code_2": "LC",
+    "iso_code_3": "LCA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/lc.png"
+  },
+  {
+    "country_name": "Saint Vincent and the Grenadines",
+    "iso_code_2": "VC",
+    "iso_code_3": "VCT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/vc.png"
+  },
+  {
+    "country_name": "Samoa",
+    "iso_code_2": "WS",
+    "iso_code_3": "WSM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ws.png"
+  },
+  {
+    "country_name": "San Marino",
+    "iso_code_2": "SM",
+    "iso_code_3": "SMR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sm.png"
+  },
+  {
+    "country_name": "Sao Tome and Principe",
+    "iso_code_2": "ST",
+    "iso_code_3": "STP",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/st.png"
+  },
+  {
+    "country_name": "Saudi Arabia",
+    "iso_code_2": "SA",
+    "iso_code_3": "SAU",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sa.png"
+  },
+  {
+    "country_name": "Senegal",
+    "iso_code_2": "SN",
+    "iso_code_3": "SEN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sn.png"
+  },
+  {
+    "country_name": "Seychelles",
+    "iso_code_2": "SC",
+    "iso_code_3": "SYC",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sc.png"
+  },
+  {
+    "country_name": "Sierra Leone",
+    "iso_code_2": "SL",
+    "iso_code_3": "SLE",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sl.png"
+  },
+  {
+    "country_name": "Singapore",
+    "iso_code_2": "SG",
+    "iso_code_3": "SGP",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sg.png"
+  },
+  {
+    "country_name": "Slovak Republic",
+    "iso_code_2": "SK",
+    "iso_code_3": "SVK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sk.png"
+  },
+  {
+    "country_name": "Slovenia",
+    "iso_code_2": "SI",
+    "iso_code_3": "SVN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/si.png"
+  },
+  {
+    "country_name": "Solomon Islands",
+    "iso_code_2": "SB",
+    "iso_code_3": "SLB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sb.png"
+  },
+  {
+    "country_name": "Somalia",
+    "iso_code_2": "SO",
+    "iso_code_3": "SOM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/so.png"
+  },
+  {
+    "country_name": "South Africa",
+    "iso_code_2": "ZA",
+    "iso_code_3": "ZAF",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/za.png"
+  },
+  {
+    "country_name": "South Georgia &amp; South Sandwich Islands",
+    "iso_code_2": "GS",
+    "iso_code_3": "SGS",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gs.png"
+  },
+  {
+    "country_name": "Spain",
+    "iso_code_2": "ES",
+    "iso_code_3": "ESP",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/es.png"
+  },
+  {
+    "country_name": "Sri Lanka",
+    "iso_code_2": "LK",
+    "iso_code_3": "LKA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/lk.png"
+  },
+  {
+    "country_name": "St. Helena",
+    "iso_code_2": "SH",
+    "iso_code_3": "SHN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sh.png"
+  },
+  {
+    "country_name": "St. Pierre and Miquelon",
+    "iso_code_2": "PM",
+    "iso_code_3": "SPM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/pm.png"
+  },
+  {
+    "country_name": "Sudan",
+    "iso_code_2": "SD",
+    "iso_code_3": "SDN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sd.png"
+  },
+  {
+    "country_name": "Suriname",
+    "iso_code_2": "SR",
+    "iso_code_3": "SUR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sr.png"
+  },
+  {
+    "country_name": "Svalbard and Jan Mayen Islands",
+    "iso_code_2": "SJ",
+    "iso_code_3": "SJM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sj.png"
+  },
+  {
+    "country_name": "Swaziland",
+    "iso_code_2": "SZ",
+    "iso_code_3": "SWZ",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sz.png"
+  },
+  {
+    "country_name": "Sweden",
+    "iso_code_2": "SE",
+    "iso_code_3": "SWE",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/se.png"
+  },
+  {
+    "country_name": "Switzerland",
+    "iso_code_2": "CH",
+    "iso_code_3": "CHE",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ch.png"
+  },
+  {
+    "country_name": "Syrian Arab Republic",
+    "iso_code_2": "SY",
+    "iso_code_3": "SYR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/sy.png"
+  },
+  {
+    "country_name": "Taiwan",
+    "iso_code_2": "TW",
+    "iso_code_3": "TWN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tw.png"
+  },
+  {
+    "country_name": "Tajikistan",
+    "iso_code_2": "TJ",
+    "iso_code_3": "TJK",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tj.png"
+  },
+  {
+    "country_name": "Tanzania, United Republic of",
+    "iso_code_2": "TZ",
+    "iso_code_3": "TZA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tz.png"
+  },
+  {
+    "country_name": "Thailand",
+    "iso_code_2": "TH",
+    "iso_code_3": "THA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/th.png"
+  },
+  {
+    "country_name": "Togo",
+    "iso_code_2": "TG",
+    "iso_code_3": "TGO",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tg.png"
+  },
+  {
+    "country_name": "Tokelau",
+    "iso_code_2": "TK",
+    "iso_code_3": "TKL",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tk.png"
+  },
+  {
+    "country_name": "Tonga",
+    "iso_code_2": "TO",
+    "iso_code_3": "TON",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/to.png"
+  },
+  {
+    "country_name": "Trinidad and Tobago",
+    "iso_code_2": "TT",
+    "iso_code_3": "TTO",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tt.png"
+  },
+  {
+    "country_name": "Tunisia",
+    "iso_code_2": "TN",
+    "iso_code_3": "TUN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tn.png"
+  },
+  {
+    "country_name": "Turkey",
+    "iso_code_2": "TR",
+    "iso_code_3": "TUR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tr.png"
+  },
+  {
+    "country_name": "Turkmenistan",
+    "iso_code_2": "TM",
+    "iso_code_3": "TKM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tm.png"
+  },
+  {
+    "country_name": "Turks and Caicos Islands",
+    "iso_code_2": "TC",
+    "iso_code_3": "TCA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tc.png"
+  },
+  {
+    "country_name": "Tuvalu",
+    "iso_code_2": "TV",
+    "iso_code_3": "TUV",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/tv.png"
+  },
+  {
+    "country_name": "Uganda",
+    "iso_code_2": "UG",
+    "iso_code_3": "UGA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ug.png"
+  },
+  {
+    "country_name": "Ukraine",
+    "iso_code_2": "UA",
+    "iso_code_3": "UKR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ua.png"
+  },
+  {
+    "country_name": "United Arab Emirates",
+    "iso_code_2": "AE",
+    "iso_code_3": "ARE",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ae.png"
+  },
+  {
+    "country_name": "United Kingdom",
+    "iso_code_2": "GB",
+    "iso_code_3": "GBR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/gb.png"
+  },
+  {
+    "country_name": "United States",
+    "iso_code_2": "US",
+    "iso_code_3": "USA",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/us.png"
+  },
+  {
+    "country_name": "United States Minor Outlying Islands",
+    "iso_code_2": "UM",
+    "iso_code_3": "UMI",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/um.png"
+  },
+  {
+    "country_name": "Uruguay",
+    "iso_code_2": "UY",
+    "iso_code_3": "URY",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/uy.png"
+  },
+  {
+    "country_name": "Uzbekistan",
+    "iso_code_2": "UZ",
+    "iso_code_3": "UZB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/uz.png"
+  },
+  {
+    "country_name": "Vanuatu",
+    "iso_code_2": "VU",
+    "iso_code_3": "VUT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/vu.png"
+  },
+  {
+    "country_name": "Vatican City State (Holy See)",
+    "iso_code_2": "VA",
+    "iso_code_3": "VAT",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/va.png"
+  },
+  {
+    "country_name": "Venezuela",
+    "iso_code_2": "VE",
+    "iso_code_3": "VEN",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ve.png"
+  },
+  {
+    "country_name": "Viet Nam",
+    "iso_code_2": "VN",
+    "iso_code_3": "VNM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/vn.png"
+  },
+  {
+    "country_name": "Virgin Islands (British)",
+    "iso_code_2": "VG",
+    "iso_code_3": "VGB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/vg.png"
+  },
+  {
+    "country_name": "Virgin Islands (U.S.)",
+    "iso_code_2": "VI",
+    "iso_code_3": "VIR",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/vi.png"
+  },
+  {
+    "country_name": "Wallis and Futuna Islands",
+    "iso_code_2": "WF",
+    "iso_code_3": "WLF",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/wf.png"
+  },
+  {
+    "country_name": "Western Sahara",
+    "iso_code_2": "EH",
+    "iso_code_3": "ESH",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/eh.png"
+  },
+  {
+    "country_name": "Yemen",
+    "iso_code_2": "YE",
+    "iso_code_3": "YEM",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/ye.png"
+  },
+  {
+    "country_name": "Yugoslavia",
+    "iso_code_2": "YU",
+    "iso_code_3": "YUG",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/yu.png"
+  },
+  {
+    "country_name": "Democratic Republic of Congo",
+    "iso_code_2": "CD",
+    "iso_code_3": "COD",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/cd.png"
+  },
+  {
+    "country_name": "Zambia",
+    "iso_code_2": "ZM",
+    "iso_code_3": "ZMB",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/zm.png"
+  },
+  {
+    "country_name": "Zimbabwe",
+    "iso_code_2": "ZW",
+    "iso_code_3": "ZWE",
+    "format": "{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}",
+    "status": 1,
+    "flag": "flags/zw.png"
+  }
+]

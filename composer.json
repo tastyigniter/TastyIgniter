@@ -3,14 +3,20 @@
   "description": "TastyIgniter is a free open source online ordering and restaurant management system",
   "type": "project",
   "keywords": [
-    "tastyigniter",
+    "tastyigniter", "igniter",
     "restaurant",
-    "ordering",
-    "ecommerce",
+    "ordering", "ecommerce",
     "opensource"
   ],
+  "authors": [
+    {
+      "name": "Samuel Adepoyigi",
+      "email": "sam@sampoyigi.com",
+      "role": "Creator"
+    }
+  ],
+  "license": "MIT",
   "homepage": "https://tastyigniter.com",
-  "license": "GPL-3.0+",
   "support": {
     "issues": "https://github.com/tastyigniter/TastyIgniter/issues",
     "forum": "https://forum.tastyigniter.com/",
@@ -19,6 +25,26 @@
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
   "require": {
-    "php": ">=5.4.0"
-  }
+    "php": ">=7.0.0",
+    "composer/installers": "~1.0",
+    "laravel/framework": "5.5.*",
+    "tastyigniter/flame": "~1.0"
+  },
+  "extra": {
+    "merge-plugin": {
+      "include": [
+        "extensions/*/*/composer.json"
+      ],
+      "replace": false,
+      "recurse": true,
+      "merge-dev": false
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": false
 }

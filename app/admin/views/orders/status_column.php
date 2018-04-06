@@ -1,0 +1,1 @@
+<span class="label label-default" style="background-color: <?= $record->getStatusColor(); ?>;"><?= $value; ?></span>

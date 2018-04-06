@@ -1,0 +1,19 @@
+.colorpicker-element .component.input-group-addo i,
+.colorpicker-element .component.input-group-addon i {
+	width: 24px;
+	height: auto;
+	vertical-align: unset;
+}
+.colorpicker-2x .colorpicker-saturation {
+	width: 200px;
+	height: 200px;
+}
+.colorpicker-2x .colorpicker-hue,
+.colorpicker-2x .colorpicker-alpha {
+	width: 30px;
+	height: 200px;
+}
+.colorpicker-2x .colorpicker-color,
+.colorpicker-2x .colorpicker-color div {
+	height: 30px;
+}

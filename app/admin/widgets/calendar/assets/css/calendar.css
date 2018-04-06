@@ -1,0 +1,8 @@
+.calendar-widget .popover-title {
+	padding: 15px;
+}
+.calendar-popover-toolbar {
+	position: absolute;
+	right: 15px;
+	top: 8px;
+}

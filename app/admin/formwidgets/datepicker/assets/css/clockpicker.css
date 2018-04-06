@@ -1,0 +1,14 @@
+.clockpicker-popover
+.popover-content {
+	background-color: #E9E9ED;
+}
+.clockpicker-canvas-bg {
+	stroke: none;
+	fill: #A1DBED;
+}
+.clockpicker-plate {
+	border: 1px solid #CFD6E2;
+}
+.clockpicker-tick {
+	color: #263A65;
+}
