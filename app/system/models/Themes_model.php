@@ -46,8 +46,8 @@ class Themes_model extends Model
     public static function getDataFromTheme(Theme $theme)
     {
         $dirName = $theme->getDirName();
-        if ($data = array_get(self::$dataCache, $dirName)) {
-            return $data;
+        if (array_key_exists($dirName, self::$dataCache)) {
+            return array_get(self::$dataCache, $dirName);
         }
 
         $model = self::whereCode($dirName)->first();

@@ -136,14 +136,10 @@ class Extensions_model extends Model
             if (!($extensionClass = $extensionManager->findExtension($code))) continue;
 
             $extensionMeta = (object)$extensionClass->extensionMeta();
-            $installedExtensions[] = $extensionMeta->code;
+            $installedExtensions[] = $code;
 
-            // Only add  extensions whose meta code matched their directory name
-            // or extension has no record in extensions table
-            if (
-                !isset($extensionMeta->code) OR $code != $extensionMeta->code OR
-                $extension = $extensions->where('name', $extensionMeta->code)->first()
-            ) continue;
+            // Only add  extensions with no existing record in extensions table
+            if ($extension = $extensions->where('name', $code)->first()) continue;
 
             self::create([
                 'type'    => 'module',

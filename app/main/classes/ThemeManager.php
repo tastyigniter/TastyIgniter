@@ -58,18 +58,6 @@ class ThemeManager
     //--------------------------------------------------------------------------
 
     /**
-     * Returns a list of all modules in the system.
-     *
-     * @param $theme
-     *
-     * @return array A list of all modules in the system.
-     */
-    public function themeMeta($theme)
-    {
-        return isset($this->themes[$theme]->config) ? $this->themes[$theme]->config : [];
-    }
-
-    /**
      * Returns a list of all themes in the system.
      * @return array A list of all themes in the system.
      */
