@@ -104,8 +104,7 @@ class Controller extends IlluminateController
 
         // Look for a controller within extensions
         if (count($segments) >= 2) {
-            list($author, $extension) = $segments;
-            $controller = isset($segments[2]) ? $segments[2] : 'dashboard';
+            list($author, $extension, $controller) = $segments;
             self::$action = $action = isset($segments[3]) ? $this->processAction($segments[3]) : 'index';
             self::$segments = $params = array_slice($segments, 4);
 
@@ -142,7 +141,7 @@ class Controller extends IlluminateController
             $controller = strtolower(str_replace(['\\', '_'], ['/', ''], $controller));
             $controllerFile = sprintf($matchPath, $module, $controller);
             if (File::exists($controllerFile)) {
-                $controllerClass = '\\'.$namespace.'\Controllers\\'.ucfirst($controller);
+                $controllerClass = '\\'.$namespace.'\Controllers\\'.$controller;
             }
         }
 

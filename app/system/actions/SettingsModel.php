@@ -11,7 +11,7 @@ use Model;
  * Usage:
  * In the model class definition:
  *   public $implement = ['System\Actions\SettingsModel'];
- *   public $settingsCode = 'owner.extension_code';
+ *   public $settingsCode = 'owner_extension_settings';
  *   public $settingsFieldsConfig = 'settings_model';
  */
 class SettingsModel extends ModelAction
@@ -38,9 +38,9 @@ class SettingsModel extends ModelAction
     {
         parent::__construct($model);
 
-        $this->model->setTable('extensions');
-        $this->model->setKeyName('extension_id');
-        $this->model->casts = array_merge($this->model->casts, ['data' => 'serialize']);
+        $this->model->setTable('extension_settings');
+        $this->model->setKeyName('id');
+        $this->model->casts = ['data' => 'serialize'];
         $this->model->guard([]);
         $this->model->timestamps = FALSE;
 
@@ -94,7 +94,7 @@ class SettingsModel extends ModelAction
      */
     public function getSettingsRecord()
     {
-        $record = $this->model->where('name', $this->recordCode)->first();
+        $record = $this->model->where('item', $this->recordCode)->first();
 
         return $record ?: null;
     }
@@ -178,7 +178,7 @@ class SettingsModel extends ModelAction
      */
     public function beforeModelSave()
     {
-        $this->model->name = $this->recordCode;
+        $this->model->item = $this->recordCode;
         if ($this->fieldValues) {
             $this->model->data = $this->fieldValues;
         }
@@ -204,7 +204,7 @@ class SettingsModel extends ModelAction
     protected function isKeyAllowed($key)
     {
         // core columns
-        if ($key == 'extension_id' OR $key == 'name' OR $key == 'data' OR $key == 'title') {
+        if ($key == 'id' OR $key == 'item' OR $key == 'data') {
             return TRUE;
         }
 

@@ -64,7 +64,8 @@ class Extensions extends \Admin\Classes\AdminController
                 throw new SystemException(lang('system::extensions.alert_setting_missing_id'));
             }
 
-            if (!$settingItem = Settings_model::make()->getSettingItem($vendor.'.'.$extension.'.'.$context)) {
+            $extensionCode = $vendor.'.'.$extension.'.'.$context;
+            if (!$settingItem = Settings_model::make()->getSettingItem($extensionCode)) {
                 throw new SystemException(lang('system::extensions.alert_setting_not_found'));
             }
 
@@ -299,11 +300,10 @@ class Extensions extends \Admin\Classes\AdminController
         $model = $this->createModel($settingItem->model);
 
         // Prepare query and find model record
-        $query = $model->newQuery();
-        $result = $query->where('name', $settingItem->owner)->first();
+        $result = $model->getSettingsRecord();
 
         if (!$result) {
-            throw new SystemException(lang('system::extensions.alert_setting_not_found'));
+            return $model;
         }
 
         return $result;
