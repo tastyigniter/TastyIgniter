@@ -358,6 +358,7 @@ $config['form']['order'] = [
                     'label'   => 'lang:system::settings.label_tax_percentage',
                     'tab'     => 'lang:system::settings.text_tab_title_taxation',
                     'type'    => 'number',
+                    'default'    => 0,
                     'comment' => 'lang:system::settings.help_tax_percentage',
                 ],
                 'tax_menu_price'      => [
@@ -725,30 +726,6 @@ $config['form']['advanced'] = [
                 'comment' => 'lang:system::settings.help_permalink',
             ],
 
-            'customer_online'                  => [
-                'label' => 'lang:system::settings.text_tab_title_customer_online',
-                'type'  => 'section',
-            ],
-            'customer_online_time_out'         => [
-                'label'   => 'lang:system::settings.label_customer_online_time_out',
-                'type'    => 'number',
-                'span'    => 'left',
-                'comment' => 'lang:system::settings.help_customer_online',
-            ],
-            'customer_online_archive_time_out' => [
-                'label'   => 'lang:system::settings.label_customer_online_archive_time_out',
-                'type'    => 'select',
-                'span'    => 'right',
-                'options' => [
-                    '0'  => 'lang:system::settings.text_never_delete',
-                    '1'  => 'lang:system::settings.text_1_month',
-                    '3'  => 'lang:system::settings.text_3_months',
-                    '6'  => 'lang:system::settings.text_6_months',
-                    '12' => 'lang:system::settings.text_12_months',
-                ],
-                'comment' => 'lang:system::settings.help_customer_online_archive',
-            ],
-
             'caching'    => [
                 'label' => 'lang:system::settings.text_tab_title_caching',
                 'type'  => 'section',
@@ -767,9 +744,6 @@ $config['form']['advanced'] = [
             ],
         ],
         'rules'  => [
-            ['customer_online_time_out', 'lang:system::settings.label_customer_online_time_out', 'required|integer'],
-            ['customer_online_time_out', 'lang:system::settings.label_customer_online_time_out', 'required|integer'],
-            ['customer_online_archive_time_out', 'lang:system::settings.label_customer_online_archive_time_out', 'required|integer'],
             ['permalink', 'lang:system::settings.label_permalink', 'required|integer'],
             ['maintenance_mode', 'lang:system::settings.label_maintenance_mode', 'required|integer'],
             ['maintenance_message', 'lang:system::settings.label_maintenance_message', 'required'],

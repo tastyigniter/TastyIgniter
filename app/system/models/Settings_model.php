@@ -96,7 +96,7 @@ class Settings_model extends Model
         $this->configPath = '~/app/system/models/config';
         $config = $this->makeConfig($this->settingsFields, ['form']);
 
-        return $this->fieldConfig = isset($config['form']) ? $config['form'] : [];
+        return $this->fieldConfig = $config['form'] ?? [];
     }
 
     public function getFieldValues()
@@ -117,7 +117,7 @@ class Settings_model extends Model
     {
         $fieldConfig = $this->getFieldConfig();
 
-        return isset($fieldConfig[$code]) ? $fieldConfig[$code] : [];
+        return $fieldConfig[$code] ?? [];
     }
 
     public function getSettingItem($code)
@@ -125,7 +125,7 @@ class Settings_model extends Model
         if (!$this->allItems)
             $this->loadSettingItems();
 
-        return isset($this->allItems[$code]) ? $this->allItems[$code] : null;
+        return $this->allItems[$code] ?? null;
     }
 
     public function listSettingItems()
