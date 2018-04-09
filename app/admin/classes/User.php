@@ -134,7 +134,6 @@ class User extends Manager
         }
     }
 
-
     //
     // Permissions
     //

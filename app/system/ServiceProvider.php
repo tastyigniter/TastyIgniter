@@ -98,7 +98,7 @@ class ServiceProvider extends AppServiceProvider
             return new User;
         });
 
-        App::singleton('main.auth', function () {
+        App::singleton('auth', function () {
             return new Customer;
         });
 
