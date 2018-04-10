@@ -38,6 +38,7 @@ class Staffs_model extends Model
         'belongsTo' => [
             'group'    => ['Admin\Models\Staff_groups_model', 'foreignKey' => 'staff_group_id'],
             'location' => ['Admin\Models\Locations_model', 'foreignKey' => 'staff_location_id'],
+            'language' => ['System\Models\Languages_model'],
         ],
     ];
 

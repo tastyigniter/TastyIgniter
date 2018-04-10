@@ -118,6 +118,15 @@ $config['form']['fields'] = [
     'user[username]'         => [
         'label' => 'lang:admin::staffs.label_username',
         'type'  => 'text',
+        'span'  => 'left',
+    ],
+    'language_id'      => [
+        'label'        => 'lang:admin::staffs.label_language',
+        'type'         => 'relation',
+        'relationFrom' => 'language',
+        'nameFrom'     => 'name',
+        'span'         => 'right',
+        'placeholder'  => 'lang:admin::default.text_please_select',
     ],
     'user[password]'         => [
         'label' => 'lang:admin::staffs.label_password',

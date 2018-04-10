@@ -30,6 +30,7 @@ return [
     'label_password'         => 'Password',
     'label_confirm_password' => 'Password Confirm',
     'label_group'            => 'Department',
+    'label_language'         => 'Language',
     'label_location'         => 'Location',
     'label_status'           => 'Status',
 

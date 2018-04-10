@@ -40,6 +40,12 @@ class Users_model extends AuthUserModel
 
     protected $purgeable = ['password_confirm'];
 
+    public function beforeLogin()
+    {
+        if ($language = $this->staff->language)
+            app('translator.localization')->setSessionLocale($language->code);
+    }
+
     public function getStaffNameAttribute()
     {
         if (!$staff = $this->staff)
@@ -70,32 +76,4 @@ class Users_model extends AuthUserModel
     {
         return $this->staff_email;
     }
-
-    /**
-     * Send email to staff
-     *
-     * @param string $email
-     * @param array $template
-     * @param array $data
-     *
-     * @return bool
-     */
-//    public function sendMail($email, $template, $data = [])
-//    {
-//        $this->ci()->load->library('email');
-//
-//        $this->ci()->email->initialize();
-//
-//        $this->ci()->email->from(setting('site_email'), setting('site_name'));
-//        $this->ci()->email->to(strtolower($email));
-//        $this->ci()->email->subject($template['subject'], $data);
-//        $this->ci()->email->message($template['body'], $data);
-//
-//        if ($this->ci()->email->send()) {
-//            return TRUE;
-//        }
-//        else {
-//            log_message('debug', $this->ci()->email->print_debugger(['headers']));
-//        }
-//    }
 }
