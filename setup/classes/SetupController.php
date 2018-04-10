@@ -319,7 +319,6 @@ class SetupController
         $config = $this->verifyDbConfiguration($db);
 
         extract($config);
-        $port = 3306;
 
         // Try connecting to database using the specified driver
         $dsn = 'mysql:host='.$host.';dbname='.$database;
@@ -349,6 +348,10 @@ class SetupController
         $result['host'] = '127.0.0.1';
         if (isset($config['host']) AND is_string($config['host']))
             $result['host'] = trim($config['host']);
+
+        $result['port'] = 3306;
+        if (isset($config['port']) AND is_string($config['port']))
+            $result['port'] = trim($config['port']);
 
         $result['database'] = '';
         if (isset($config['database']) AND is_string($config['database']))
@@ -657,6 +660,7 @@ class SetupController
         $defaults = [
             'database' => '',
             'host'     => '127.0.0.1',
+            'port'     => 3306,
             'username' => '',
             'password' => '',
             'prefix'   => 'ti_',

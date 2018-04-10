@@ -20,6 +20,14 @@ $db = $setup->getDatabaseDetails();
            placeholder="<?= lang('help_hostname'); ?>"/>
 </div>
 <div class="form-group">
+    <label for="input-db-port" class="control-label"><?= lang('label_port'); ?></label>
+    <input type="text"
+           name="host"
+           id="input-db-port"
+           class="form-control"
+           value="<?= $db->port; ?>"/>
+</div>
+<div class="form-group">
     <label for="input-db-user" class="control-label"><?= lang('label_username'); ?></label>
     <input type="text"
            name="username"

@@ -27,12 +27,11 @@
   "require": {
     "php": ">=7.0.0",
     "composer/installers": "~1.0",
-    "tastyigniter/flame": "*",
     "laravel/framework": "5.5.*",
+    "tastyigniter/flame": "*",
     "wikimedia/composer-merge-plugin": "dev-master"
   },
   "require-dev": {
-    "barryvdh/laravel-ide-helper": "^2.4",
     "fzaninotto/faker": "~1.7",
     "phpunit/phpunit": "~5.7",
     "phpunit/phpunit-selenium": "~1.2"

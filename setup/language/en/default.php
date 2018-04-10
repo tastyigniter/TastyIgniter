@@ -74,6 +74,7 @@ function lang($key)
 
         'label_database' => 'Database Name',
         'label_hostname' => 'Hostname',
+        'label_port'     => 'Port',
         'label_username' => 'Username',
         'label_password' => 'Password',
         'label_prefix'   => 'Table Prefix',
