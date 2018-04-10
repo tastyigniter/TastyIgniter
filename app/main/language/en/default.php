@@ -40,7 +40,7 @@ return [
     'alert_info_outdated_browser' => 'You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.',
 
     'home' => [
-        'text_heading'     => 'Welcome To TastyIgniter!',
+        'title'            => 'Welcome To TastyIgniter!',
         'text_step_one'    => 'Search',
         'text_step_two'    => 'Choose',
         'text_step_three'  => 'Pay by cash or card',
@@ -49,6 +49,96 @@ return [
         'text_step_choose' => 'Browse hundreds of menus to find the food you like.',
         'text_step_pay'    => 'It\'s quick, easy and secure. Pay by Cash on Delivery or PayPal.',
         'text_step_enjoy'  => 'Food is prepared & delivered to your door step or ready for pick-up at the restaurant.',
+    ],
+
+    'local' => [
+        'menus'   => [
+            'title' => 'Menu',
+        ],
+        'info'    => [
+            'title' => 'Info',
+        ],
+        'gallery' => [
+            'title' => 'Gallery',
+        ],
+        'reviews' => [
+            'title' => 'Reviews',
+        ],
+    ],
+
+    'checkout' => [
+        'title' => 'Checkout',
+        'success' => [
+            'title' => 'Checkout Confirmation',
+        ],
+    ],
+
+    'reservation' => [
+        'title' => 'Reservation',
+        'success' => [
+            'title' => 'Reservation Confirmation',
+        ],
+    ],
+
+    'cart' => [
+        'title' => 'Cart',
+    ],
+
+    'locations' => [
+        'title' => 'Locations',
+    ],
+
+    'contact' => [
+        'title' => 'Contact',
+    ],
+
+    'pages' => [
+        'title' => 'Pages',
+    ],
+
+    'account' => [
+        'login' => [
+            'title'               => 'Login',
+            'text_login'          => 'Log In',
+            'text_register'       => 'Please Register <small>It\'s easy and always will be.</small>',
+            'text_forgot'         => 'Forgot password?',
+            'text_login_register' => 'Already registered? <a href="%s">Login</a>',
+
+            'button_login'    => 'Login',
+            'button_register' => 'Register',
+
+            'activity_logged_in'          => ' <b>logged</b> in.',
+            'activity_registered_account' => ' <b>created</b> an account.',
+        ],
+
+        'register' => [
+            'title' => 'Register',
+        ],
+        
+        'settings' => [
+            'title' => 'Settings',
+        ],
+        
+        'orders' => [
+            'title' => 'Orders',
+        ],
+        
+        'reservations' => [
+            'title' => 'Reservations',
+        ],
+        
+        'reviews' => [
+            'title' => 'Reviews',
+        ],
+
+        'inbox' => [
+            'title' => 'Inbox',
+        ],
+        
+        'reset'    => [
+            'title'        => 'Account Password Reset',
+            'text_heading' => 'Account Password Reset',
+        ],
     ],
 
     'not_found' => [

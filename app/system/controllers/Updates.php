@@ -115,7 +115,7 @@ class Updates extends \Admin\Classes\AdminController
 
         if ($filter = input('filter') AND is_array($filter)) {
 
-            $itemType = isset($filter['type']) ? $filter['type'] : 'extension';
+            $itemType = $filter['type'] ?? 'extension';
             $searchQuery = isset($filter['search']) ? strtolower($filter['search']) : '';
 
             try {

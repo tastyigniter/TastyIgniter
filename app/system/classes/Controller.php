@@ -140,7 +140,7 @@ class Controller extends IlluminateController
         foreach ($modules as $module => $namespace) {
             $controller = strtolower(str_replace(['\\', '_'], ['/', ''], $controller));
             $controllerFile = sprintf($matchPath, $module, $controller);
-            if (File::exists($controllerFile)) {
+            if (File::existsInsensitive($controllerFile)) {
                 $controllerClass = '\\'.$namespace.'\Controllers\\'.$controller;
             }
         }
