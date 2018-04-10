@@ -2,6 +2,7 @@ config.php
 routes.php
 schedule-*
 compiled.php
+classes.php
 packages.php
 services.php
 services.json

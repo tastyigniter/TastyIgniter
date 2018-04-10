@@ -7,6 +7,7 @@ use Admin\Classes\Widgets;
 use AdminAuth;
 use File;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Igniter\Flame\Translation\Localization;
 use System\Libraries\Assets;
 use System\Models\Mail_templates_model;
 
@@ -417,42 +418,35 @@ class ServiceProvider extends AppServiceProvider
                     'icon'     => 'fa-user',
                     'title'    => lang('admin::default.menu_user'),
                     'child'    => [
-                        'customers'        => [
+                        'customers'       => [
                             'priority'   => 10,
                             'class'      => 'customers',
                             'href'       => admin_url('customers'),
                             'title'      => lang('admin::default.menu_customer'),
                             'permission' => 'Admin.Customers',
                         ],
-                        'customer_groups'  => [
+                        'customer_groups' => [
                             'priority'   => 20,
                             'class'      => 'customer_groups',
                             'href'       => admin_url('customer_groups'),
                             'title'      => lang('admin::default.menu_customer_group'),
                             'permission' => 'Admin.CustomerGroups',
                         ],
-                        'customers_online' => [
-                            'priority'   => 30,
-                            'class'      => 'customers_online',
-                            'href'       => admin_url('customers_online'),
-                            'title'      => lang('admin::default.menu_customer_online'),
-                            'permission' => 'Admin.CustomersOnline',
-                        ],
-                        'staffs'           => [
+                        'staffs'          => [
                             'priority'   => 40,
                             'class'      => 'staffs',
                             'href'       => admin_url('staffs'),
                             'title'      => lang('admin::default.menu_staff'),
                             'permission' => 'Admin.Staffs',
                         ],
-                        'staff_groups'     => [
+                        'staff_groups'    => [
                             'priority'   => 50,
                             'class'      => 'staff_groups',
                             'href'       => admin_url('staff_groups'),
                             'title'      => lang('admin::default.menu_staff_group'),
                             'permission' => 'Admin.StaffGroups',
                         ],
-                        'permissions'      => [
+                        'permissions'     => [
                             'priority'   => 60,
                             'class'      => 'permissions',
                             'href'       => admin_url('permissions'),

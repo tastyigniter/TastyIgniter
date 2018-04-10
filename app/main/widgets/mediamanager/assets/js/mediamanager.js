@@ -832,30 +832,30 @@
         $('div[data-control=media-manager]').mediaManager()
     })
 
-}(window.jQuery);
+    var Notification = (function () {
+        "use strict";
 
-var Notification = (function () {
-    "use strict";
+        var elem,
+            hideHandler,
+            that = {};
 
-    var elem,
-        hideHandler,
-        that = {};
+        that.init = function (options) {
+            elem = $(options.selector);
+        };
 
-    that.init = function (options) {
-        elem = $(options.selector);
-    };
+        that.show = function (text) {
+            clearTimeout(hideHandler);
 
-    that.show = function (text) {
-        clearTimeout(hideHandler);
+            elem.find("span").html(text);
+            elem.delay(200).fadeIn().delay(4000).fadeOut();
+        };
 
-        elem.find("span").html(text);
-        elem.delay(200).fadeIn().delay(4000).fadeOut();
-    };
+        return that;
+    }());
 
-    return that;
-}());
-$(function () {
-    Notification.init({
-        "selector": "#notification"
+    $(document).ready(function () {
+        Notification.init({
+            "selector": "#notification"
+        });
     });
-});
+}(window.jQuery);

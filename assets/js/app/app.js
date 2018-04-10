@@ -403,27 +403,3 @@ if (jQuery === undefined)
     // })
 
 }(window.jQuery)
-
-// var TI = {
-//     helpers: {
-//         addAlert: function (message, type, autoDismiss) {
-//             $('#notification').append(
-//                 '<div class="alert alert-' + type + '">' +
-//                 '<button type="button" class="close" data-dismiss="alert">' +
-//                 '&times;</button>' + message.replace(/^"(.*)"$/, '$1') + '</div>')
-//
-//             var $alert = $('#notification .alert')
-//             $alert.slideDown('slow').fadeTo('slow', 0.1).fadeTo('slow', 1.0)
-//             if (autoDismiss) $alert.delay(5000).slideUp('slow')
-//
-//             $('.alert .close').on('click', function (e) {
-//                 $(this).parent().hide()
-//             })
-//         }
-//     }
-// }
-
-// String.prototype.truncate = String.prototype.truncate || function (n) {
-//     return (this.length > n) ? this.substr(0, n - 1) + '&hellip;' : this
-// }
-//

@@ -55,6 +55,7 @@ class HubManager
     {
         $response = $this->requestRemoteData('core/apply', [
             'items'   => json_encode($itemNames),
+            'version' => params('ti_version'),
         ]);
 
         return $response;
@@ -62,11 +63,7 @@ class HubManager
 
     public function applyItemsToUpdate($itemNames, $force = FALSE)
     {
-        $itemNames = json_encode(array_map(function ($item) {
-            $item['action'] = 'update';
-
-            return $item;
-        }, $itemNames));
+        $itemNames = json_encode($itemNames);
 
         $cacheFile = $this->getCacheFilePath('updates', $itemNames);
 
@@ -74,6 +71,8 @@ class HubManager
             $response = $this->requestRemoteData('core/apply', [
                 'items'   => $itemNames,
                 'include' => 'tags',
+                'version' => params('ti_version'),
+                'force' => $force,
             ]);
 
             if (is_array($response)) {
@@ -194,6 +193,7 @@ class HubManager
         $fileSha = sha1_file($filePath);
 
         if ($fileHash != $fileSha) {
+            Log::info(file_get_contents($filePath));
             @unlink($filePath);
             throw new Exception("Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
         }

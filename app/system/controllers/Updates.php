@@ -334,7 +334,10 @@ class Updates extends \Admin\Classes\AdminController
 
                 case 'extractCore':
                     $response = $updateManager->extractCore($meta['code']);
-                    if ($response) $json['result'] = 'success';
+                    if ($response) {
+                        $updateManager->applyCoreVersion($meta['ver'], $meta['hash']);
+                        $json['result'] = 'success';
+                    }
                     break;
 
                 case 'extractExtension':

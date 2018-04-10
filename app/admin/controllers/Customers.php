@@ -90,7 +90,7 @@ class Customers extends \Admin\Classes\AdminController
             ['last_name', 'lang:admin::customers.label_last_name', 'required|min:2|max:32'],
             ['email', 'lang:admin::customers.label_email', 'required|email|max:96'
                 .(!$model->exists ? '|unique:customers,email' : null)],
-            ['telephone', 'lang:admin::customers.label_telephone', 'required|integer'],
+            ['telephone', 'lang:admin::customers.label_telephone', 'sometimes'],
             ['newsletter', 'lang:admin::customers.label_newsletter', 'required|integer'],
             ['customer_group_id', 'lang:admin::customers.label_customer_group', 'required|integer'],
             ['status', 'lang:admin::default.label_status', 'required|integer'],

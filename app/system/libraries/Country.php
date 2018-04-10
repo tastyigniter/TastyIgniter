@@ -67,6 +67,16 @@ class Country
             ? $countryModel->iso_code_2 : $countryModel->iso_code_3;
     }
 
+    public function getCountryNameByCode($isoCodeTwo)
+    {
+        $this->loadCountries();
+
+        if (!$countryModel = $this->countriesCollection->where('iso_code_2', $isoCodeTwo)->first())
+            return null;
+
+        return $countryModel->country_name;
+    }
+
     public function getDefaultFormat()
     {
         return $this->defaultFormat;

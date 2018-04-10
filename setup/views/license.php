@@ -1,7 +1,7 @@
 <div class="panel-license">
     <h5><?= lang('text_license_sub_heading'); ?></h5>
     <input type="hidden" name="license_agreed" value="1">
-    <?= nl2br(file_get_contents('license.txt')); ?>
+    <?= nl2br(file_get_contents(BASEPATH.'/LICENSE.txt')); ?>
 </div>
 
 <div class="buttons">

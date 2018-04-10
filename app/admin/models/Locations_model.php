@@ -251,7 +251,7 @@ class Locations_model extends BaseLocationModel
             $result[$payment->code] = $payment;
         }
 
-        return $result;
+        return collect($result);
     }
 
     public function performAfterSave()

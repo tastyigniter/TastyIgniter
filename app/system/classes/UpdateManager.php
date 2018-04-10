@@ -144,6 +144,13 @@ class UpdateManager
         return $this;
     }
 
+    public function applyCoreVersion($sysVersion, $sysHash)
+    {
+        params()->set('ti_version', $sysVersion);
+        params()->set('sys_hash', $sysHash);
+        params()->save();
+    }
+
     protected function prepareDatabase()
     {
         $migrationTable = Config::get('database.migrations', 'migrations');
@@ -319,8 +326,7 @@ class UpdateManager
             return $updates;
 
         $result = $items = $ignoredUpdates = [];
-        $result['last_check'] = isset($updates['check_time'])
-            ? $updates['check_time'] : Carbon::now()->toDateTimeString();
+        $result['last_check'] = $updates['check_time'] ?? Carbon::now()->toDateTimeString();
 
         $installedItems = collect($installedItems)->keyBy('name')->all();
 
@@ -359,7 +365,7 @@ class UpdateManager
             $extensionObj = $this->extensionManager->findExtension($extensionCode);
             if ($extensionObj AND $meta = $extensionObj->extensionMeta()) {
                 $installedItems['extensions'][] = [
-                    'name' => $meta['code'],
+                    'name' => $extensionCode,
                     'ver'  => $meta['version'],
                     'type' => 'extension',
                 ];
@@ -368,10 +374,10 @@ class UpdateManager
 
         $themeManager = $this->getThemeManager();
         foreach ($themeManager->listThemes() as $themeCode) {
-            if ($meta = $themeManager->themeMeta($themeCode)) {
+            if ($theme = $themeManager->findTheme($themeCode)) {
                 $installedItems['themes'][] = [
-                    'name' => $themeCode,
-                    'ver'  => isset($meta['version']) ? $meta['version'] : null,
+                    'name' => $theme->name,
+                    'ver'  => $theme->version ?? null,
                     'type' => 'theme',
                 ];
             }
@@ -380,7 +386,7 @@ class UpdateManager
         $this->installedItems = array_collapse($installedItems);
 
         if (!is_null($type))
-            return isset($installedItems[$type]) ? $installedItems[$type] : [];
+            return $installedItems[$type] ?? [];
 
         return $this->installedItems;
     }

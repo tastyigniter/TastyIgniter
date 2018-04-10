@@ -3,6 +3,7 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
+use Event;
 use Html;
 use Template;
 
@@ -87,6 +88,7 @@ class Toolbar extends BaseWidget
 
         $this->showToolbar = TRUE;
 
+        Event::fire('admin.toolbar.extendButtons', [$this]);
         $this->fireEvent('toolbar.extendButtons', [$this]);
 
         foreach ($this->buttons as $name => $attributes) {
@@ -97,7 +99,7 @@ class Toolbar extends BaseWidget
 
             // Check that the toolbar button matches the active context
             if (isset($attributes['context'])) {
-                $context = (is_array($attributes['context'])) ? $attributes['context'] : [$attributes['context']];
+                $context = (array)$attributes['context'];
                 if (!in_array($this->getContext(), $context)) {
                     continue;
                 }

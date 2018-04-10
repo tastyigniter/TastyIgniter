@@ -93,7 +93,7 @@ class MediaFinder extends BaseFormWidget
         $value = $this->formField->value;
         try {
             if (is_array($value))
-                array_map(function ($val) {
+                return array_map(function ($val) {
                     return MediaLibrary::instance()->getMediaRelativePath($val);
                 }, $value);
 
