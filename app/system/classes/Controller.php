@@ -139,8 +139,8 @@ class Controller extends IlluminateController
         $matchPath = $inPath.'/%s/controllers/%s.php';
         foreach ($modules as $module => $namespace) {
             $controller = strtolower(str_replace(['\\', '_'], ['/', ''], $controller));
-            $controllerFile = sprintf($matchPath, $module, $controller);
-            if (File::existsInsensitive($controllerFile)) {
+            if ($controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller))) {
+                include_once $controllerFile;
                 $controllerClass = '\\'.$namespace.'\Controllers\\'.$controller;
             }
         }

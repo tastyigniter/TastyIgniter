@@ -22,7 +22,7 @@ $db = $setup->getDatabaseDetails();
 <div class="form-group">
     <label for="input-db-port" class="control-label"><?= lang('label_port'); ?></label>
     <input type="text"
-           name="host"
+           name="port"
            id="input-db-port"
            class="form-control"
            value="<?= $db->port; ?>"/>

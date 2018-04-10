@@ -1,5 +1,5 @@
 ---
-title: Demonstration
+title: Getting Started
 layout: default
 permalink: /
 ---

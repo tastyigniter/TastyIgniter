@@ -163,13 +163,9 @@ class Extensions_model extends Model
      */
     public static function install($code)
     {
-        $extensionManager = ExtensionManager::instance();
-
-        $code = $extensionManager->getIdentifier($code);
-        if (!$extensionManager->hasExtension($code))
-            return FALSE;
-
         $extensionModel = self::firstOrNew(['type' => 'module', 'name' => $code]);
+        if (!$extensionModel->applyExtensionClass())
+            return FALSE;
 
         if ($extensionModel AND $extensionModel->meta) {
             $extensionModel->status = TRUE;
@@ -182,7 +178,7 @@ class Extensions_model extends Model
         // set extension migration to the latest version
         UpdateManager::instance()->migrateExtension($extensionModel->name);
 
-        $extensionManager->updateExtension(
+        ExtensionManager::instance()->updateExtension(
             $extensionModel->name, $extensionModel->status
         );
 

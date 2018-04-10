@@ -182,8 +182,8 @@ class Updates extends \Admin\Classes\AdminController
 
             return [
                 '#list-items' => $this->makePartial('browse/list', [
-                    'items' => $items,
-                    'itemType' => $itemType
+                    'items'    => $items,
+                    'itemType' => $itemType,
                 ]),
             ];
         } catch (Exception $ex) {
@@ -239,7 +239,7 @@ class Updates extends \Admin\Classes\AdminController
             $response = UpdateManager::instance()->applyItems($items, $context);
 
             return [
-                'steps' => $this->buildProcessSteps($response, $items)
+                'steps' => $this->buildProcessSteps($response, $items),
             ];
         } catch (Exception $ex) {
             $this->handleError($ex);
@@ -306,56 +306,52 @@ class Updates extends \Admin\Classes\AdminController
     {
         $json = [];
 
-        try {
-            $this->validateProcess();
+        $this->validateProcess();
 
-            $meta = post('meta');
+        $meta = post('meta');
 
-            $params = [];
-            if (post('step') != 'complete') {
-                $params = !isset($meta['code']) ? [] : [
-                    'name'   => $meta['code'],
-                    'type'   => $meta['type'],
-                    'ver'    => $meta['version'],
-                    'action' => $meta['action'],
-                ];
-            }
+        $params = [];
+        if (post('step') != 'complete') {
+            $params = !isset($meta['code']) ? [] : [
+                'name'   => $meta['code'],
+                'type'   => $meta['type'],
+                'ver'    => $meta['version'],
+                'action' => $meta['action'],
+            ];
+        }
 
-            $updateManager = UpdateManager::instance();
+        $updateManager = UpdateManager::instance();
 
-            $processMeta = $meta['process'];
-            switch ($processMeta) {
-                case 'downloadCore':
-                case 'downloadExtension':
-                case 'downloadTheme':
-                    $result = $updateManager->downloadFile($meta['code'], $meta['hash'], $params);
-                    if ($result) $json['result'] = 'success';
-                    break;
+        $processMeta = $meta['process'];
+        switch ($processMeta) {
+            case 'downloadCore':
+            case 'downloadExtension':
+            case 'downloadTheme':
+                $result = $updateManager->downloadFile($meta['code'], $meta['hash'], $params);
+                if ($result) $json['result'] = 'success';
+                break;
 
-                case 'extractCore':
-                    $response = $updateManager->extractCore($meta['code']);
-                    if ($response) {
-                        $updateManager->applyCoreVersion($meta['ver'], $meta['hash']);
-                        $json['result'] = 'success';
-                    }
-                    break;
+            case 'extractCore':
+                $response = $updateManager->extractCore($meta['code']);
+                if ($response) {
+                    $updateManager->applyCoreVersion($meta['ver'], $meta['hash']);
+                    $json['result'] = 'success';
+                }
+                break;
 
-                case 'extractExtension':
-                    $response = $updateManager->extractFile($meta['code'], 'extensions/');
-                    if ($response) $json['result'] = 'success';
-                    break;
-                case 'extractTheme':
-                    $response = $updateManager->extractFile($meta['code'], 'themes/');
-                    if ($response) $json['result'] = 'success';
-                    break;
+            case 'extractExtension':
+                $response = $updateManager->extractFile($meta['code'], 'extensions/');
+                if ($response) $json['result'] = 'success';
+                break;
+            case 'extractTheme':
+                $response = $updateManager->extractFile($meta['code'], 'themes/');
+                if ($response) $json['result'] = 'success';
+                break;
 
-                case 'complete':
-                    $response = $this->completeProcess($meta['items']);
-                    if ($response) $json['result'] = 'success';
-                    break;
-            }
-        } catch (Exception $ex) {
-            $this->handleError($ex);
+            case 'complete':
+                $response = $this->completeProcess($meta['items']);
+                if ($response) $json['result'] = 'success';
+                break;
         }
 
         return $json;
@@ -364,7 +360,7 @@ class Updates extends \Admin\Classes\AdminController
     protected function completeProcess($items)
     {
         if (!count($items))
-            return false;
+            return FALSE;
 
         $updateManager = UpdateManager::instance();
 
