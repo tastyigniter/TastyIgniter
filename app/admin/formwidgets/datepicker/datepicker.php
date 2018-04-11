@@ -1,5 +1,5 @@
 <?php if ($this->previewMode) { ?>
-    <div class="form-control-static"><?= mdate($formatAlias, strtotime($value)) ?></div>
+    <div class="form-control-static"><?= $value ? $value->format($formatAlias) : null ?></div>
 <?php } else { ?>
 
     <div
@@ -13,10 +13,7 @@
                 </div>
             <?php } elseif ($mode == 'datetime') { ?>
                 <div class="col-md-6">
-                    <?= $this->makePartial('datepicker/picker_date') ?>
-                </div>
-                <div class="col-md-6">
-                    <?= $this->makePartial('datepicker/picker_time') ?>
+                    <?= $this->makePartial('datepicker/picker_datetime') ?>
                 </div>
             <?php } elseif ($mode == 'time') { ?>
                 <div class="col-md-6">

@@ -113,6 +113,13 @@ class Reservations extends \Admin\Classes\AdminController
             ['statusData.comment', 'lang:admin::reservations.label_comment', 'max:1500'],
             ['statusData.notify', 'lang:admin::reservations.label_notify', 'required|integer'],
             ['assignee_id', 'lang:admin::reservations.label_assign_staff', 'required|integer'],
+            ['first_name', 'lang:admin::reservations.label_first_name', 'required|min:2|max:32'],
+            ['last_name', 'lang:admin::reservations.label_last_name', 'required|min:2|max:32'],
+            ['email', 'lang:admin::reservations.label_customer_email', 'required|email|max:96'],
+            ['telephone', 'lang:admin::reservations.label_customer_telephone', 'sometimes'],
+            ['reserve_date', 'lang:admin::reservations.label_reservation_date', 'required|valid_date'],
+            ['reserve_time', 'lang:admin::reservations.label_reservation_time', 'required|valid_time'],
+            ['guest_num', 'lang:admin::reservations.label_guest', 'required|integer'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $namedRules);

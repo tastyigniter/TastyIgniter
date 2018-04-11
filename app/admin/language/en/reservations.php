@@ -63,11 +63,13 @@ return [
     'label_table_name'           => 'Table Name',
     'label_table_capacity'       => 'Table Maximum Capacity',
     'label_table_min_capacity'   => 'Table Minimum Capacity',
-    'label_customer_name'        => 'Name',
+    'label_first_name'           => 'First Name',
+    'label_last_name'            => 'Last Name',
     'label_customer_email'       => 'Email',
     'label_customer_telephone'   => 'Telephone',
 
     'error_status_exists' => 'The reservation can not be updated twice with the same reservation status',
 
     'help_notify_customer' => 'Set whether to send an order update email to the customer',
+    'help_reservation_duration' => 'Stay time in minutes. Leave blank to use the default stay time',
 ];

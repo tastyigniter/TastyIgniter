@@ -20,6 +20,7 @@
 
     DatePicker.DEFAULTS = {
         autoclose: true,
+        mode: 'date',
         format: 'dd-mm-yyyy',
         todayHighlight: true,
         templates: {
@@ -29,7 +30,18 @@
     }
 
     DatePicker.prototype.bindPicker = function () {
-        this.picker = this.$el.datepicker(this.options);
+        if (this.options.mode === 'datetime') {
+            this.picker = this.$el.datetimepicker({
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+            });
+        } else {
+            this.picker = this.$el.datepicker(this.options);
+        }
     }
 
     //

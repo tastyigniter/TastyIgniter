@@ -7,7 +7,7 @@
         id="<?= $this->getId('time') ?>"
         class="form-control"
         autocomplete="off"
-        value="<?= $value ?>"
+        value="<?= $value ? $value->format($timeFormat) : null ?>"
         <?= $field->getAttributes() ?>
         <?= $this->previewMode ? 'readonly="readonly"' : '' ?>
     />

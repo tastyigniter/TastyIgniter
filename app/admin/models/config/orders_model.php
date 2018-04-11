@@ -133,17 +133,16 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'assignee_id' => [
-        'label'        => 'lang:admin::orders.label_assign_staff',
-        'type'         => 'relation',
-        'relationFrom' => 'assignee',
-        'nameFrom'     => 'staff_name',
-        'span'         => 'left',
-        'placeholder'  => 'lang:admin::default.text_please_select',
-    ],
     'order_id'    => [
         'label'    => 'lang:admin::orders.label_order_id',
         'type'     => 'text',
+        'disabled' => TRUE,
+        'span'     => 'left',
+        'context'  => ['edit', 'preview'],
+    ],
+    'order_total' => [
+        'label'    => 'lang:admin::orders.label_order_total',
+        'type'     => 'money',
         'disabled' => TRUE,
         'span'     => 'right',
         'context'  => ['edit', 'preview'],
@@ -187,12 +186,13 @@ $config['form']['fields'] = [
             ],
         ],
     ],
-    'order_total' => [
-        'label'    => 'lang:admin::orders.label_order_total',
-        'type'     => 'money',
-        'span'     => 'right',
-        'disabled' => TRUE,
-        'context'  => ['edit', 'preview'],
+    'assignee_id' => [
+        'label'        => 'lang:admin::orders.label_assign_staff',
+        'type'         => 'relation',
+        'relationFrom' => 'assignee',
+        'nameFrom'     => 'staff_name',
+        'span'         => 'right',
+        'placeholder'  => 'lang:admin::default.text_please_select',
     ],
 ];
 

@@ -2,13 +2,14 @@
     <input
         type="text"
         name="<?= $field->getName() ?>"
-        id="<?= $this->getId('date') ?>"
+        id="<?= $this->getId('datetime') ?>"
         class="form-control"
         autocomplete="off"
-        value="<?= $value ? $value->format($dateFormat) : null ?>"
+        value="<?= $value ? $value->format($dateTimeFormat) : null ?>"
         <?= $field->getAttributes() ?>
         <?= $this->previewMode ? 'readonly="readonly"' : '' ?>
         data-control="datepicker"
+        data-mode="<?= $this->mode ?>"
         <?php if ($startDate) { ?>data-start-date="<?= $startDate ?>"<?php } ?>
         <?php if ($endDate) { ?>data-end-date="<?= $endDate ?>"<?php } ?>
         <?php if ($datesDisabled) { ?>data-dates-disabled="<?= $datesDisabled ?>"<?php } ?>
