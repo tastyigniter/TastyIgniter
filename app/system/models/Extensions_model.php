@@ -147,6 +147,8 @@ class Extensions_model extends Model
                 'title'   => $extensionMeta->name,
                 'version' => $extensionMeta->version,
             ]);
+
+            $extensionManager->updateExtension($code, FALSE);
         }
 
         // Disable extensions not found in file system

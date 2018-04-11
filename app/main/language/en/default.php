@@ -52,6 +52,11 @@ return [
     ],
 
     'local' => [
+        'text_tab_menu'                     => 'Menu',
+        'text_tab_review'                   => 'Reviews',
+        'text_tab_info'                     => 'Info',
+        'text_tab_gallery'                  => 'Gallery',
+
         'menus'   => [
             'title' => 'Menu',
         ],
@@ -67,14 +72,14 @@ return [
     ],
 
     'checkout' => [
-        'title' => 'Checkout',
+        'title'   => 'Checkout',
         'success' => [
             'title' => 'Checkout Confirmation',
         ],
     ],
 
     'reservation' => [
-        'title' => 'Reservation',
+        'title'   => 'Reservation',
         'success' => [
             'title' => 'Reservation Confirmation',
         ],
@@ -97,6 +102,8 @@ return [
     ],
 
     'account' => [
+        'title' => 'Account',
+
         'login' => [
             'title'               => 'Login',
             'text_login'          => 'Log In',
@@ -114,19 +121,23 @@ return [
         'register' => [
             'title' => 'Register',
         ],
-        
+
+        'address' => [
+            'title' => 'Account',
+        ],
+
         'settings' => [
             'title' => 'Settings',
         ],
-        
+
         'orders' => [
             'title' => 'Orders',
         ],
-        
+
         'reservations' => [
             'title' => 'Reservations',
         ],
-        
+
         'reviews' => [
             'title' => 'Reviews',
         ],
@@ -134,8 +145,8 @@ return [
         'inbox' => [
             'title' => 'Inbox',
         ],
-        
-        'reset'    => [
+
+        'reset' => [
             'title'        => 'Account Password Reset',
             'text_heading' => 'Account Password Reset',
         ],

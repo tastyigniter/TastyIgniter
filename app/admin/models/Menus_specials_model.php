@@ -27,7 +27,7 @@ class Menus_specials_model extends Model
         if (!$this->special_status)
             return FALSE;
 
-        return $this->start_date->lessThan(Carbon::now()) AND $this->end_date->greaterThan(Carbon::now());
+        return Carbon::now()->between($this->start_date, $this->end_date);
     }
 
     public function daysRemaining()

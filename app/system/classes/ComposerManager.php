@@ -25,7 +25,7 @@ class ComposerManager
 
     public function initialize()
     {
-        $this->loader = require BASEPATH.'/vendor/autoload.php';
+        $this->loader = require base_path('/vendor/autoload.php');
         $this->preloadPools();
     }
 

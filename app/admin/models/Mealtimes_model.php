@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Carbon\Carbon;
 use Model;
 
 /**
@@ -37,5 +38,10 @@ class Mealtimes_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('mealtime_status', 1);
+    }
+
+    public function isAvailableNow()
+    {
+        return Carbon::now()->between($this->start_time, $this->end_time);
     }
 }
