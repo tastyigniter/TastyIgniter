@@ -18,5 +18,6 @@ before_script:
   - mysql -e 'create database homestead_test;'
   - composer self-update
   - travis_retry composer install --prefer-source --no-interaction
+  - php artisan key:generate
 
 script: vendor/bin/phpunit --verbose
