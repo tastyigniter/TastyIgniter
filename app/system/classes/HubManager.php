@@ -29,13 +29,13 @@ class HubManager
 
     public function listItems($filter = [])
     {
-        $cacheFile = $this->getCacheFilePath('items', serialize($filter));
+        $cacheKey = $this->getCacheKey('items', $filter);
 
-        if (!$items = Cache::get($cacheFile)) {
+        if (!$items = Cache::get($cacheKey)) {
             $items = $this->requestRemoteData('items', array_merge(['include' => 'require'], $filter));
 
             if (!empty($items) AND is_array($items))
-                Cache::put($cacheFile, $items, $this->cacheTtl);
+                Cache::put($cacheKey, $items, $this->cacheTtl);
         }
 
         return $items;
@@ -63,13 +63,11 @@ class HubManager
 
     public function applyItemsToUpdate($itemNames, $force = FALSE)
     {
-        $itemNames = json_encode($itemNames);
+        $cacheKey = $this->getCacheKey('updates', $itemNames);
 
-        $cacheFile = $this->getCacheFilePath('updates', $itemNames);
-
-        if ($force OR !$response = Cache::get($cacheFile)) {
+        if ($force OR !$response = Cache::get($cacheKey)) {
             $response = $this->requestRemoteData('core/apply', [
-                'items'   => $itemNames,
+                'items'   => json_encode($itemNames),
                 'include' => 'tags',
                 'version' => params('ti_version'),
                 'force' => $force,
@@ -77,7 +75,7 @@ class HubManager
 
             if (is_array($response)) {
                 $response['check_time'] = Carbon::now()->toDateTimeString();
-                Cache::put($cacheFile, $response, $this->cacheTtl);
+                Cache::put($cacheKey, $response, $this->cacheTtl);
             }
         }
 
@@ -131,9 +129,9 @@ class HubManager
         ], $filePath, $fileHash);
     }
 
-    protected function getCacheFilePath($fileName, $suffix)
+    protected function getCacheKey($fileName, $suffix)
     {
-        return $this->cachePrefix.$fileName.'_'.md5($suffix);
+        return $this->cachePrefix.$fileName.'_'.md5(serialize($suffix));
     }
 
     protected function requestRemoteData($url, $params = [])

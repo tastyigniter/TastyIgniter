@@ -647,6 +647,42 @@ class ExtensionManager
         return TRUE;
     }
 
+    /**
+     * Extract uploaded extension zip folder
+     *
+     * @param $zipPath
+     * @param array $extCode extension code
+     *
+     * @return bool TRUE on success, FALSE on failure
+     */
+    public function extractExtension($zipPath)
+    {
+        $extensionCode = null;
+        $extractTo = current($this->folders());
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath) === TRUE) {
+            $extensionDir = $zip->getNameIndex(0);
+
+            if (!$this->checkName($extensionDir))
+                throw new SystemException('Extension name can not have spaces.');
+
+            if ($zip->locateName($extensionDir.'Extension.php') === FALSE)
+                throw new SystemException('Extension registration class was not found.');
+
+            $meta = @json_decode($zip->getFromName($extensionDir.'extension.json'));
+            if (!$meta OR !strlen($meta->code))
+                throw new SystemException(lang('system::extensions.error_config_no_found'));
+
+            $extensionCode = $meta->code;
+            $extractToPath = $extractTo.'/'.$this->getNamePath($meta->code);
+            $zip->extractTo($extractToPath);
+            $zip->close();
+        }
+
+        return $extensionCode;
+    }
+
     protected function saveInstalled()
     {
         setting()->set('installed_extensions', $this->installedExtensions);

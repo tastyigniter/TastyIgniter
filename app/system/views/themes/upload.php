@@ -8,6 +8,7 @@
                 'method'  => 'PATCH',
             ]
         ); ?>
+        <input type="hidden" name="_handler" value="onUpload">
 
         <div class="toolbar">
             <div class="toolbar-action">
@@ -38,7 +39,7 @@
                                                $('.btn-file-input-browse').addClass('hide')"
                                         />
                                     </div>
-                                    <button type="submit" class="btn btn-primary" data-request="onUpload">
+                                    <button type="submit" class="btn btn-primary">
                                         <i class="fa fa-fw fa-upload">&nbsp;&nbsp;</i><?= lang('system::themes.button_upload'); ?>
                                     </button>
                                 </span>

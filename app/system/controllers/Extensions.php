@@ -214,12 +214,9 @@ class Extensions extends \Admin\Classes\AdminController
             $this->validateUpload();
 
             $zipFile = Request::file('extension_zip');
-            list($config, $path) = $extensionManager->extractExtension($zipFile->path());
+            $extensionManager->extractExtension($zipFile->path());
 
-            if (!$config)
-                throw new Exception(lang('system::extensions.error_config_no_found'));
-
-            flash()->success(sprintf(lang('admin::default.alert_success'), "Extension uploaded "));
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Extension uploaded '));
 
             return $this->redirect('extensions');
         } catch (Exception $ex) {

@@ -166,11 +166,11 @@ class MainController extends BaseController
         $page = $this->router->findByUrl($url);
 
         // Hidden page
-        if ($page AND $page->published) {
-            if (!AdminAuth::getUser()) {
-                $page = null;
-            }
-        }
+//        if ($page AND !$page->published) {
+//            if (!AdminAuth::getUser()) {
+//                $page = null;
+//            }
+//        }
 
         // Show maintenance message if maintenance is enabled
         if (setting('maintenance_mode') == 1 AND !AdminAuth::isLogged())
@@ -479,8 +479,6 @@ class MainController extends BaseController
 
     public function initTemplateObjects()
     {
-        $this->layoutObj = null;
-
         $parser = FileParser::on($this->layout);
         $this->layoutObj = $parser->source($this->page, $this->layout, $this);
 

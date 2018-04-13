@@ -61,7 +61,7 @@ try {
     $setup->cleanLog();
     $setup->writeLog('Host: %s', php_uname());
     $setup->writeLog('PHP version: %s', PHP_VERSION);
-    $setup->writeLog('Server software: %s', isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'Unknown');
+    $setup->writeLog('Server software: %s', $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown');
     $setup->writeLog('Operating system: %s', PHP_OS);
     $setup->writeLog('Memory limit: %s', ini_get('memory_limit'));
     $setup->writeLog('Max execution time: %s', ini_get('max_execution_time'));
