@@ -35,7 +35,6 @@ class ThemeManager
     protected $paths = [];
 
     protected $config = [
-        'filesToCopy'     => ['theme.json', 'theme.php', 'screenshot.png'],
         'allowedImageExt' => ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'],
         'allowedFileExt'  => ['html', 'txt', 'xml', 'js', 'css', 'php', 'json'],
     ];
@@ -354,6 +353,7 @@ class ThemeManager
      * @return bool|array The $theme_file array from the file or false if not found. Returns
      * null if $filename is empty.
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @todo: move to template model
      */
     public function readFile($filename, $themeCode)
     {
@@ -382,6 +382,8 @@ class ThemeManager
      * @return bool|string False if there was a problem loading the file. Otherwise,
      * returns true when $return is false or a string containing the file's contents
      * when $return is true.
+     *
+     * @todo: move to template model
      */
     public function writeFile($filename, $themeCode, $content = null, $return = FALSE)
     {
@@ -407,60 +409,6 @@ class ThemeManager
         return ($return === TRUE) ? $content : TRUE;
     }
 
-    public function getFilesToCopy($themeCode)
-    {
-        $files = [];
-        foreach ($this->config['filesToCopy'] as $file) {
-            $path = $this->findFile($file, $themeCode);
-            $files[] = File::localToPublic($path);
-        }
-
-        return $files;
-    }
-
-    /**
-     * Create child theme.
-     *
-     * @param string $themeCode The name of the theme to create child from.
-     * @param $childThemeCode
-     *
-     * @return bool Returns false if child them could not be created
-     * or $child_theme already exist.
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function createChild($themeCode, $childThemeCode)
-    {
-        if (!strlen($childThemeCode) OR !strlen($themeCode))
-            return FALSE;
-
-        // preparing the paths
-        $parentPath = $this->findPath($themeCode);
-        $childPath = dirname($parentPath).'/'.$childThemeCode;
-
-        // creating the destination directory
-        if (!File::isDirectory($childPath))
-            File::makeDirectory($childPath);
-
-        foreach ($this->config['filesToCopy'] as $file) {
-            if ($file == 'theme.json') {
-                $themeMeta = json_decode(File::get("{$parentPath}/{$file}"), TRUE);
-                $content = array_merge($themeMeta, [
-                    'code'   => $childThemeCode,
-                    'name'   => $themeMeta['name'].' Child',
-                    'parent' => $themeCode,
-                ]);
-
-                $content = stripslashes(json_encode($content, JSON_PRETTY_PRINT));
-                File::put("{$childPath}/{$file}", $content);
-            }
-            else {
-                File::copy("{$parentPath}/{$file}", "{$childPath}/{$file}");
-            }
-        }
-
-        return TRUE;
-    }
-
     /**
      * Extract uploaded/downloaded theme zip folder
      *
@@ -471,29 +419,34 @@ class ThemeManager
      */
     public function extractTheme($zipPath)
     {
-        if (file_exists($zipPath) AND class_exists('ZipArchive', FALSE)) {
+        $themeCode = null;
+        $zip = new ZipArchive;
 
-            $zip = new ZipArchive;
+        $themesFolder = App::themesPath();
 
-            chmod($zipPath, config('system.filePermission'));
+        if ($zip->open($zipPath) === TRUE) {
+            $themeDir = $zip->getNameIndex(0);
 
-            $themesFolder = App::themesPath();
+            if ($zip->locateName($themeDir.'theme.json') === FALSE)
+                return FALSE;
 
-            if ($zip->open($zipPath) === TRUE) {
-                $themeDir = $zip->getNameIndex(0);
-
-                if ($zip->locateName($themeDir.'theme.json') === FALSE)
-                    return FALSE;
-
-                if (!$this->checkName($themeDir) OR file_exists($themesFolder.'/'.$themeDir)) {
-                    throw new SystemException(lang('system::themes.error_theme_exists'));
-                }
-
-                $zip->extractTo($themesFolder);
-                $zip->close();
-
-                return $themesFolder.'/'.$themeDir;
+            if (file_exists($themesFolder.'/'.$themeDir)) {
+                throw new SystemException(lang('system::themes.error_theme_exists'));
             }
+
+            $meta = @json_decode($zip->getFromName($themeDir.'theme.json'));
+            if (!$meta OR !strlen($meta->code))
+                throw new SystemException(lang('system::themes.error_config_no_found'));
+
+            $themeCode = $meta->code;
+            if (!$this->checkName($themeDir) OR !$this->checkName($themeCode))
+                throw new SystemException('Theme directory name can not have spaces.');
+
+            $extractToPath = $themesFolder.'/'.$themeCode;
+            $zip->extractTo($extractToPath);
+            $zip->close();
+
+            return $themeCode;
         }
 
         return FALSE;

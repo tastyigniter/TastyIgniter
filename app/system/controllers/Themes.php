@@ -106,25 +106,6 @@ class Themes extends \Admin\Classes\AdminController
         }
     }
 
-    public function copy($context, $themeCode = null)
-    {
-        try {
-            $pageTitle = lang('system::themes.text_copy_title');
-            Template::setTitle($pageTitle);
-            Template::setHeading($pageTitle);
-
-            $themeManager = ThemeManager::instance();
-
-            $model = $this->formFindModelObject($themeCode);
-            $this->vars['themeModel'] = $model;
-            $this->vars['themeName'] = $model->name;
-            $this->vars['themeData'] = $model->data;
-            $this->vars['filesToCopy'] = $themeManager->getFilesToCopy($model->code);
-        } catch (Exception $ex) {
-            $this->handleError($ex);
-        }
-    }
-
     public function upload($context)
     {
         $pageTitle = lang('system::themes.text_edit_title');
@@ -235,22 +216,6 @@ class Themes extends \Admin\Classes\AdminController
         return $this->refresh();
     }
 
-    public function copy_onCreateChild($context, $themeCode = null)
-    {
-        $theme = ThemeManager::instance()->findTheme($themeCode);
-
-        if (Themes_model::copyTheme($themeCode, (post('copy_data') == 1))) {
-            $name = $theme->getName();
-
-            flash()->success(sprintf(lang('admin::default.alert_success'), "Theme {$name} copied "));
-        }
-        else {
-            flash()->danger(lang('admin::default.alert_error_try_again'));
-        }
-
-        return $this->redirect('themes');
-    }
-
     public function upload_onUpload($context = null)
     {
         try {
@@ -259,12 +224,9 @@ class Themes extends \Admin\Classes\AdminController
             $this->validateUpload();
 
             $zipFile = Request::file('theme_zip');
-            list($config, $path) = $themeManager->extractTheme($zipFile->path());
+            $themeManager->extractTheme($zipFile->path());
 
-            if (!$config)
-                throw new Exception(lang('system::themes.error_config_no_found'));
-
-            flash()->success(sprintf(lang('admin::default.alert_success'), "Theme uploaded "));
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme uploaded '));
 
             return $this->redirect('themes');
         } catch (Exception $ex) {

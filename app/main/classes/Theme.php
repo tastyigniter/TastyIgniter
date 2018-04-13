@@ -66,11 +66,6 @@ class Theme
     public $active;
 
     /**
-     * @var string Other theme code this theme was derived from.
-     */
-    public $parent;
-
-    /**
      * @var string Path to the screenshot image, relative to this theme folder.
      */
     public $screenshot;
@@ -118,14 +113,6 @@ class Theme
     /**
      * @return string
      */
-    public function getParentPath()
-    {
-        return $this->isChild() ? dirname($this->path).'/'.$this->parent : null;
-    }
-
-    /**
-     * @return string
-     */
     public function getDirName()
     {
         return basename($this->path);
@@ -142,16 +129,6 @@ class Theme
             $require = [$require];
 
         return $require;
-    }
-
-    /**
-     * Determines if a theme is a child by looking in the theme meta file.
-     *
-     * @return bool
-     */
-    public function isChild()
-    {
-        return strlen($this->parent) > 1;
     }
 
     public function isActive()
@@ -219,9 +196,6 @@ class Theme
 
         if (isset($config['require']))
             $this->requires = $this->requires($config['require']);
-
-        if (isset($config['parent']))
-            $this->parent = $config['parent'];
 
         if (array_key_exists('disabled', $config))
             $this->disabled = $config['disabled'];

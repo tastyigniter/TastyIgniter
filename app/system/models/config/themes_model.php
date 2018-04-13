@@ -50,14 +50,6 @@ $config['list']['columns'] = [
             'data-request-data' => 'code:\'{code}\'',
         ],
     ],
-    'copy'     => [
-        'type'         => 'button',
-        'iconCssClass' => 'fa fa-files-o',
-        'attributes'   => [
-            'class' => 'btn btn-outline btn-info',
-            'href'  => 'themes/copy/{code}',
-        ],
-    ],
     'delete'   => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-trash-o',

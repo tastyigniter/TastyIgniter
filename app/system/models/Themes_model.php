@@ -213,62 +213,6 @@ class Themes_model extends Model
     }
 
     /**
-     * Create child theme from existing theme files and data
-     *
-     * @param string $theme_code
-     * @param array $files
-     * @param bool $copy_data
-     *
-     * @return bool
-     */
-    public static function copyTheme($themeCode, $copy_data = TRUE)
-    {
-        $themeModel = self::where('code', $themeCode)->first();
-        if (!$themeModel)
-            return FALSE;
-
-        $childTheme = $themeModel->replicate();
-        $childTheme->code = self::getUniqueThemeCode("{$themeCode}-child");
-        $childTheme->name = "{$themeModel->name} Child";
-        $childTheme->save();
-
-        ThemeManager::instance()->createChild($themeCode, $childTheme->code);
-
-        return TRUE;
-    }
-
-    /**
-     * Find an existing theme in DB by theme code
-     *
-     * @param string $code
-     *
-     * @return bool TRUE on success, FALSE on failure
-     */
-    public static function themeExists($code)
-    {
-        return self::where('code', $code)->first() ? TRUE : FALSE;
-    }
-
-    /**
-     * Create a unique theme code
-     *
-     * @param string $theme_code
-     * @param int $count
-     *
-     * @return string
-     */
-    protected static function getUniqueThemeCode($themeCode, $count = 0)
-    {
-        do {
-            $newThemeCode = ($count > 0) ? "{$themeCode}-{$count}" : $themeCode;
-            $count++;
-        } // Already exist in DB? Try again
-        while (self::themeExists($newThemeCode));
-
-        return $newThemeCode;
-    }
-
-    /**
      * Delete a single theme by code
      *
      * @param string $theme_code

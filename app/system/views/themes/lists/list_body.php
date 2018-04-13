@@ -9,10 +9,6 @@
                 <?php if ($theme->themeClass->isActive()) { ?>
                     <span class="activated" title="<?= lang('system::themes.text_is_default'); ?>"></span>
                 <?php } ?>
-
-                <?php if ($theme->themeClass->isChild()) { ?>
-                    <span class="child-theme" title="<?= lang('system::themes.text_is_child'); ?>"></span>
-                <?php } ?>
             </div>
             <div class="panel-body">
                 <div class="media">
@@ -35,10 +31,6 @@
                             <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('edit')]) ?>
 
                             <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('default')]) ?>
-
-                            <?php if (!$theme->themeClass->isChild()) { ?>
-                                <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('copy')]) ?>
-                            <?php } ?>
 
                             <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('delete')]) ?>
                         </div>
