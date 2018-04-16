@@ -1,6 +1,8 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Models\Reservations_model;
+use Admin\Models\Status_history_model;
+use Admin\Models\Statuses_model;
 use AdminAuth;
 use AdminMenu;
 use Exception;
@@ -97,17 +99,23 @@ class Reservations extends \Admin\Classes\AdminController
         if (!$statusData = post('Reservation.statusData'))
             return;
 
+        if (!$status = Statuses_model::find($statusData['status_id']))
+            return;
+
+        if (Status_history_model::alreadyExists($model, $statusData['status_id']))
+            return;
+
         $statusData = array_merge($statusData, [
             'staff_id' => AdminAuth::getUser()->staff->getKey(),
         ]);
 
-        $model->addStatusHistory($statusData);
+        Status_history_model::addStatusHistory($status, $model, $statusData);
     }
 
     public function formValidate($model, $form)
     {
         $namedRules = [
-            ['status', 'lang:admin::default.label_status', 'required|integer|exists:statuses,status_id'],
+            ['status_id', 'lang:admin::default.label_status', 'required|integer|exists:statuses,status_id'],
             ['location_id', 'lang:admin::reservations.text_restaurant', 'required|integer'],
             ['statusData.status_id', 'lang:admin::reservations.label_status', 'required|same:status'],
             ['statusData.comment', 'lang:admin::reservations.label_comment', 'max:1500'],

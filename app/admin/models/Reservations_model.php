@@ -41,10 +41,10 @@ class Reservations_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'related_table'  => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
-            'location'       => 'Admin\Models\Locations_model',
-            'related_status' => ['Admin\Models\Statuses_model', 'foreignKey' => 'status'],
-            'assignee'       => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
+            'related_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
+            'location'      => 'Admin\Models\Locations_model',
+            'status'        => ['Admin\Models\Statuses_model', 'foreignKey' => 'status_id'],
+            'assignee'      => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
         ],
         'morphMany' => [
             'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
@@ -60,30 +60,6 @@ class Reservations_model extends Model
         'reservation_id asc', 'reservation_id desc',
         'reserve_date asc', 'reserve_date desc',
     ];
-
-    protected static $previewPageName;
-
-    public function setPreviewPageName($pageName)
-    {
-        self::$previewPageName = $pageName;
-    }
-
-    public function getPreviewPageUrl()
-    {
-        $controller = MainController::getController() ?: new MainController;
-
-        $pageName = self::$previewPageName;
-
-        return $controller->pageUrl($pageName, $this->getUrlParams());
-    }
-
-    public function getUrlParams()
-    {
-        return [
-            'reservationId' => $this->reservation_id,
-            'hash'          => $this->hash,
-        ];
-    }
 
     //
     // Events
@@ -226,7 +202,7 @@ class Reservations_model extends Model
 
     public function getEventDetails()
     {
-        $status = $this->related_status;
+        $status = $this->status;
         $table = $this->related_table;
 
         return [
@@ -261,7 +237,7 @@ class Reservations_model extends Model
 
     public function getStatusColor()
     {
-        $status = $this->related_status()->first();
+        $status = $this->status()->first();
         if (!$status)
             return null;
 
@@ -299,22 +275,12 @@ class Reservations_model extends Model
      */
     public function addStatusHistory(array $statusData = [])
     {
-        if (!$this->exists OR !$this->related_status)
+        if (!$this->exists OR !$this->status)
             return;
 
-        $status = $this->related_status->toArray();
+        $status = $this->status;
 
-        $statusHistory = $this->status_history()->updateOrCreate([
-            'status_for' => array_get($statusData, 'status_for', array_get($status, 'status_for')),
-            'status_id'  => array_get($statusData, 'status_id', array_get($status, 'status_id')),
-        ], [
-            'staff_id'    => array_get($statusData, 'staff_id'),
-            'assignee_id' => array_get($statusData, 'assignee_id', $this->assignee_id),
-            'notify'      => array_get($statusData, 'notify', array_get($status, 'status_notify')),
-            'comment'     => strlen($comment = array_get($statusData, 'comment')) ? $comment : array_get($status, 'status_comment'),
-        ]);
-
-        return $statusHistory;
+        return Status_history_model::addStatusHistory($status, $this, $statusData);
     }
 
     /**
@@ -374,21 +340,30 @@ class Reservations_model extends Model
     {
         $data = [];
 
-        $data['reservation_number'] = $this->reservation_id;
-        $data['reservation_view_url'] = $this->getPreviewPageUrl();
-        $data['reservation_time'] = $this->reserve_time->format('H:i');
-        $data['reservation_date'] = $this->reserve_date->format('l, F j, Y');
-        $data['reservation_guest_no'] = $this->guest_num;
-        $data['first_name'] = $this->first_name;
-        $data['last_name'] = $this->last_name;
-        $data['email'] = $this->email;
-        $data['telephone'] = $this->telephone;
-        $data['reservation_comment'] = $this->comment;
+        $model = $this->fresh();
+        $data['reservation_number'] = $model->reservation_id;
+        $data['reservation_time'] = $model->reserve_time->format('H:i');
+        $data['reservation_date'] = $model->reserve_date->format('l, F j, Y');
+        $data['reservation_guest_no'] = $model->guest_num;
+        $data['first_name'] = $model->first_name;
+        $data['last_name'] = $model->last_name;
+        $data['email'] = $model->email;
+        $data['telephone'] = $model->telephone;
+        $data['reservation_comment'] = $model->comment;
 
-        if ($this->location) {
-            $data['location_name'] = $this->location->location_name;
-            $data['location_email'] = $this->location->location_email;
+        if ($model->location) {
+            $data['location_name'] = $model->location->location_name;
+            $data['location_email'] = $model->location->location_email;
         }
+
+        $status = $model->status()->first();
+        $data['status_name'] = $status ? $status->status_name : null;
+        $data['status_comment'] = $status ? $status->status_comment : null;
+
+        $controller = MainController::getController() ?: new MainController;
+        $data['reservation_view_url'] = $controller->pageUrl('account/reservations', [
+            'reservationId' => $model->reservation_id,
+        ]);
 
         return $data;
     }

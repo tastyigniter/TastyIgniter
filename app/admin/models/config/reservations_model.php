@@ -75,9 +75,9 @@ $config['list']['columns'] = [
         'select'     => 'table_name',
         'searchable' => TRUE,
     ],
-    'status'         => [
+    'status_id'         => [
         'label'      => 'lang:admin::reservations.column_status',
-        'relation'   => 'related_status',
+        'relation'   => 'status',
         'select'     => 'status_name',
         'type'       => 'partial',
         'path'       => 'reservations/status_column',
@@ -148,11 +148,11 @@ $config['form']['fields'] = [
         'disabled' => TRUE,
         'context'  => ['edit', 'preview'],
     ],
-    'status'         => [
+    'status_id'         => [
         'label'        => 'lang:admin::default.label_status',
         'type'         => 'statuseditor',
         'span'         => 'left',
-        'relationFrom' => 'related_status',
+        'relationFrom' => 'status',
         'options'      => ['Admin\Models\Statuses_model', 'listStatuses'],
         'list'         => 'status_history_model',
         'form'         => [
