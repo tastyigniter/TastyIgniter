@@ -92,23 +92,4 @@ class Statuses_model extends Model
     {
         return static::all()->keyBy('status_id');
     }
-
-    /**
-     * Create a new status history
-     *
-     * @param string $for
-     * @param array $add
-     *
-     * @return bool
-     */
-    public function addStatusHistory($for = '', $add = [])
-    {
-        if (empty($add)) return FALSE;
-
-        if ($for !== '') {
-            $add['status_for'] = $for;
-        }
-
-        return Status_history_model::insertGetId($add);
-    }
 }

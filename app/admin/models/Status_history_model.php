@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Event;
 use Model;
 
 /**
@@ -35,6 +36,13 @@ class Status_history_model extends Model
 
     public $timestamps = TRUE;
 
+    public static function alreadyExists($model, $statusId)
+    {
+        return self::where('object_id', $model->getKey())
+                   ->where('object_type', get_class($model))
+                   ->where('status_id', $statusId)->first();
+    }
+
     public function getStaffNameAttribute($value)
     {
         return ($this->staff AND $this->staff->exists) ? $this->staff->staff_name : $value;
@@ -53,5 +61,49 @@ class Status_history_model extends Model
     public function getNotifiedAttribute()
     {
         return $this->notify == 1 ? lang('admin::default.text_yes') : lang('admin::default.text_no');
+    }
+
+    public static function addStatusHistory($status, $object, $options = [])
+    {
+        if (!$status instanceof Model)
+            return FALSE;
+
+        $statusId = $status->getKey();
+        $previousStatus = $object->status_id;
+
+        if ($previousStatus == $statusId)
+            return FALSE;
+
+        $model = new static;
+        $model->status_id = $statusId;
+        $model->object_id = $object->getKey();
+        $model->object_type = get_class($object);
+        $model->status_for = $object instanceof Orders_model ? 'order' : 'reserve';
+        $model->staff_id = array_get($options, 'staff_id');
+        $model->assignee_id = array_get($options, 'assignee_id', $object->assignee_id);
+        $model->comment = array_get($options, 'comment', $status->comment);
+
+        if (Event::fire('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
+            return FALSE;
+
+        if ($model->fireEvent('statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
+            return FALSE;
+
+        $model->save();
+
+        $object->newQuery()
+               ->where($object->getKeyName(), $object->getKey())
+               ->update(['status_id' => $statusId]);
+
+        if (array_get($options, 'notify', $status->notify_customer)) {
+            $statusFor = $model->status_for == 'reserve' ? 'reservation' : $model->status_for;
+            $object->mailSend('admin::_mail.'.$statusFor.'_update', 'customer');
+
+            $model->notify = TRUE;
+            $model->timestamps = FALSE;
+            $model->save();
+        }
+
+        return TRUE;
     }
 }

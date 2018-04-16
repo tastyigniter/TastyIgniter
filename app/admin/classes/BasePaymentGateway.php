@@ -5,6 +5,7 @@ namespace Admin\Classes;
 use File;
 use Model;
 use System\Actions\ModelAction;
+use URL;
 
 /**
  * Base Payment Gateway Class
@@ -81,11 +82,11 @@ class BasePaymentGateway extends ModelAction
         if (is_null($index))
             return $configArray;
 
-        return isset($configArray[$index]) ? $configArray[$index] : null;
+        return $configArray[$index] ?? null;
     }
 
     /**
-     * Sets the controller configuration values
+     * Sets the gateway configuration values
      *
      * @param array $config
      * @param array $required Required config items
@@ -98,7 +99,7 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * Get the controller configuration values.
+     * Get the gateway configuration values.
      *
      * @param string $name Config name, supports array names like "field[key]"
      * @param mixed $default Default value if nothing is found
@@ -113,7 +114,7 @@ class BasePaymentGateway extends ModelAction
         $nameArray = name_to_array($name);
 
         $fieldName = array_shift($nameArray);
-        $result = isset($this->configArray[$fieldName]) ? $this->configArray[$fieldName] : null;
+        $result = $this->configArray[$fieldName] ?? null;
 
         foreach ($nameArray as $key) {
             if (!is_array($result) OR !array_key_exists($key, $result))
@@ -142,6 +143,31 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
+     * Registers a entry page with specific URL. For example,
+     * PayPal needs a landing page for the auto-return feature.
+     * Important! Payment module access point names should have a prefix.
+     * @return array Returns an array containing page URLs and methods to call for each URL:
+     * return ['paypal_return'=>'processPaypalReturn']. The processing methods must be declared
+     * in the payment type class. Processing methods must accept one parameter - an array of URL segments
+     * following the access point. For example, if URL is /paypal_return/12/34 an array
+     * ['12', '34'] will be passed to processPaypalReturn method.
+     */
+    public function registerEntryPoints()
+    {
+        return [];
+    }
+
+    /**
+     * Utility function, creates a link to a registered entry point.
+     * @param  string $code Key used to define the entry point
+     * @return string
+     */
+    public function makeEntryPointUrl($code)
+    {
+        return URL::to('ti_payregister/'.$code);
+    }
+
+    /**
      * Returns true if the payment type is applicable for a specified order amount
      *
      * @param float $amount Specifies an order amount
@@ -155,26 +181,6 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * Executed when this gateway is rendered on the checkout page.
-     */
-    public function onRender()
-    {
-    }
-
-    /**
-     * Renders a requested partial in context of this component,
-     * see Main\Classes\MainController@renderPartial for usage.
-     */
-    public function renderPartial()
-    {
-        $this->controller->setComponentContext($this);
-        $result = call_user_func_array([$this->controller, 'renderPartial'], func_get_args());
-        $this->controller->setComponentContext(null);
-
-        return $result;
-    }
-
-    /**
      * Processes payment using passed data.
      *
      * @param array $data Posted payment form data.
@@ -185,7 +191,10 @@ class BasePaymentGateway extends ModelAction
     {
     }
 
-    public function beforeRenderPaymentForm($host)
+    /**
+     * Executed when this gateway is rendered on the checkout page.
+     */
+    public function beforeRenderPaymentForm($host, $controller)
     {
     }
 

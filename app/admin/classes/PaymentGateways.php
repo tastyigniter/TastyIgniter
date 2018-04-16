@@ -1,7 +1,9 @@
 <?php namespace Admin\Classes;
 
+use Admin\Models\Payments_model;
+use File;
 use Igniter\Flame\Traits\Singleton;
-use Lang;
+use Main\Classes\ThemeManager;
 use Response;
 use System\Classes\ExtensionManager;
 
@@ -43,14 +45,14 @@ class PaymentGateways
 
     /**
      * Returns a list of the payment gateway objects
-     * @return array
+     * @return \Admin\Classes\BasePaymentGateway[]
      */
     public function listGatewayObjects()
     {
         $collection = [];
         $gateways = $this->listGateways();
         foreach ($gateways as $gateway) {
-            $collection[$gateway['alias']] = $gateway['object'];
+            $collection[$gateway['code']] = $gateway['object'];
         }
 
         return $collection;
@@ -123,9 +125,9 @@ class PaymentGateways
             $code = $paymentGateway['code'] ?? strtolower(basename($classPath));
 
             $this->gateways[$code] = array_merge($paymentGateway, [
-                'owner'       => $owner,
-                'class'       => $classPath,
-                'code'        => $code,
+                'owner' => $owner,
+                'class' => $classPath,
+                'code'  => $code,
             ]);
         }
     }
@@ -160,7 +162,7 @@ class PaymentGateways
 
         $gateways = self::instance()->listGatewayObjects();
         foreach ($gateways as $gateway) {
-            $points = $gateway->registerAccessPoints();
+            $points = $gateway->registerEntryPoints();
 
             if (isset($points[$code]))
                 return $gateway->{$points[$code]}($params);
@@ -180,20 +182,24 @@ class PaymentGateways
      */
     public static function createPartials()
     {
-        // @todo: implement
-    }
+        $themeManager = ThemeManager::instance();
+        $theme = $themeManager->getActiveTheme();
+        $partials = $theme->listPartials()->pluck('baseFileName', 'baseFileName')->all();
+        $paymentMethods = Payments_model::all();
 
-    /**
-     * Creates a partial using the contents of a specified file.
-     *
-     * @param  string $name New Partial name
-     * @param  string $filePath File containing partial contents
-     * @param  string $themeCode Theme to create the partial
-     *
-     * @return void
-     */
-    protected static function createPartialFromFile($name, $filePath, $themeCode)
-    {
-        // @todo: implement
+        foreach ($paymentMethods as $paymentMethod) {
+            $class = $paymentMethod->getGatewayClass();
+
+            if (!$class OR get_parent_class($class) != BasePaymentGateway::class)
+                continue;
+
+            $partialName = 'payregister/'.strtolower(class_basename($class));
+            $partialPath = $theme->getPath().'/_partials/'.$partialName.'.php';
+
+            if (!array_key_exists($partialName, $partials)) {
+                $filePath = dirname(File::fromClass($class)).'/'.strtolower(class_basename($class)).'/payment_form.php';
+                File::put($partialPath, File::get($filePath));
+            }
+        }
     }
 }

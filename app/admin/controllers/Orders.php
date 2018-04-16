@@ -1,5 +1,7 @@
 <?php namespace Admin\Controllers;
 
+use Admin\Models\Status_history_model;
+use Admin\Models\Statuses_model;
 use AdminAuth;
 use AdminMenu;
 
@@ -55,16 +57,31 @@ class Orders extends \Admin\Classes\AdminController
     {
     }
 
-    public function formAfterSave($model)
+    public function formExtendQuery($query)
+    {
+        $query->with([
+            'status_history' => function ($q) {
+                $q->orderBy('date_added', 'desc');
+            },
+        ]);
+    }
+
+    public function formBeforeSave($model)
     {
         if (!$statusData = post('Order.statusData'))
             return;
+
+        if (!$status = Statuses_model::find($statusData['status_id']))
+            return;
+//
+//        if (Status_history_model::alreadyExists($model, $statusData['status_id']))
+//            return;
 
         $statusData = array_merge($statusData, [
             'staff_id' => AdminAuth::getUser()->staff->getKey(),
         ]);
 
-        $model->addStatusHistory($statusData);
+        Status_history_model::addStatusHistory($status, $model, $statusData);
     }
 
     public function formValidate($model, $form)

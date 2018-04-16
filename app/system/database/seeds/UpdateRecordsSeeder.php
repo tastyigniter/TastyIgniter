@@ -153,10 +153,11 @@ class UpdateRecordsSeeder extends Seeder
 
         Extensions_model::getQuery()->where('type', 'payment')->get()->each(function ($model) {
 
+            $code = str_replace(['-', '_'], '', $model->name);
             Payments_model::insert([
                 'name'         => $model->title,
-                'code'         => $model->name,
-                'class_name'   => 'SamPoyigi\\PayRegister\\Payments\\'.ucwords($model->name),
+                'code'         => $code,
+                'class_name'   => 'SamPoyigi\\PayRegister\\Payments\\'.studly_case($model->name),
                 'data'         => $model->data,
                 'status'       => $model->status,
                 'is_default'   => FALSE,

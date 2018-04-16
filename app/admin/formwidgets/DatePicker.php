@@ -143,17 +143,16 @@ class DatePicker extends BaseFormWidget
         $this->vars['datesDisabled'] = $this->datesDisabled;
     }
 
-//    public function getSaveValue($value)
-//    {
-//        if ($this->formField->disabled OR $this->formField->hidden) {
-//            return FormField::NO_SAVE_DATA;
-//        }
-//
-//        $defaultValue = ($this->mode == 'time') ? '00:00' : '0000-00-00';
-//        if (!strlen($value) OR $value == $defaultValue) {
-//            return $defaultValue;
-//        }
-//
-//        return $value;
-//    }
+    public function getSaveValue($value)
+    {
+        if ($this->formField->disabled OR $this->formField->hidden) {
+            return FormField::NO_SAVE_DATA;
+        }
+
+        if (!strlen($value)) {
+            return null;
+        }
+
+        return $value;
+    }
 }

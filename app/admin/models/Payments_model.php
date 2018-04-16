@@ -154,7 +154,7 @@ class Payments_model extends Model
 
     public function renderPaymentForm($controller)
     {
-        $this->beforeRenderPaymentForm($this);
+        $this->beforeRenderPaymentForm($this, $controller);
 
         $paymentMethodFile = strtolower(class_basename($this->class_name));
         $partialName = 'payregister/'.$paymentMethodFile;
@@ -202,5 +202,7 @@ class Payments_model extends Model
             $model->applyGatewayClass();
             $model->save();
         }
+
+        PaymentGateways::createPartials();
     }
 }

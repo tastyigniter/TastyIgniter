@@ -2,8 +2,10 @@
 
 use Carbon\Carbon;
 use DB;
+use Event;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Location\Models\Location;
+use Main\Classes\MainController;
 use Model;
 use Request;
 use System\Traits\SendsMailTemplate;
@@ -40,7 +42,7 @@ class Orders_model extends Model
     protected $guarded = ['*'];
 
     protected $fillable = ['customer_id', 'first_name', 'last_name', 'email', 'telephone', 'location_id', 'address_id', 'cart',
-        'total_items', 'comment', 'payment', 'order_type', 'date_added', 'date_modified', 'order_time', 'order_date', 'order_total',
+        'total_items', 'comment', 'payment', 'order_type', 'order_time', 'order_date', 'order_total',
         'status_id', 'ip_address', 'user_agent', 'notify', 'assignee_id', 'invoice_no', 'invoice_prefix', 'invoice_date',
     ];
 
@@ -78,6 +80,14 @@ class Orders_model extends Model
         'order_id asc', 'order_id desc',
         'date_added asc', 'date_added desc',
     ];
+
+    public function listCustomerAddresses()
+    {
+        if (!$this->customer)
+            return [];
+
+        return $this->customer->addresses();
+    }
 
     //
     // Events
@@ -178,9 +188,9 @@ class Orders_model extends Model
      *
      * @return bool TRUE on success, or FALSE on failure
      */
-    public function isPlaced()
+    public function isPaymentProcessed()
     {
-        return $this->status_id > 0;
+        return $this->processed;
     }
 
     public function isDeliveryType()
@@ -398,6 +408,40 @@ class Orders_model extends Model
         return $couponHistory;
     }
 
+    public function markAsPaymentProcessed()
+    {
+        if ($this->processed)
+            return true;
+
+        $this->processed = 1;
+        $this->save();
+
+        Event::fire('admin.order.paymentProcessed', [$this]);
+
+        return $this->processed;
+    }
+
+    public function logPaymentAttempt($message, $status, $request = [], $response = [])
+    {
+        $record = new Payment_logs_model;
+        $record->message = $message;
+        $record->order_id = $this->order_id;
+        $record->payment_name = $this->payment_method->code;
+        $record->status = $status;
+
+        $record->request = $request;
+        $record->response = $response;
+
+        $record->save();
+    }
+
+    public function updateOrderStatus($id, $options = [])
+    {
+        if ($status = Statuses_model::find($id)) {
+            return Status_history_model::addStatusHistory($status, $this, $options);
+        }
+    }
+
     /**
      * Add order status to status history
      *
@@ -410,19 +454,9 @@ class Orders_model extends Model
         if (!$this->exists OR !$this->status)
             return;
 
-        $status = $this->status->toArray();
+        $status = $this->status;
 
-        $statusHistory = $this->status_history()->updateOrCreate([
-            'status_for' => array_get($statusData, 'status_for', array_get($status, 'status_for')),
-            'status_id'  => array_get($statusData, 'status_id', array_get($status, 'status_id')),
-        ], [
-            'staff_id'    => array_get($statusData, 'staff_id'),
-            'assignee_id' => array_get($statusData, 'assignee_id', $this->assignee_id),
-            'notify'      => array_get($statusData, 'notify'),
-            'comment'     => strlen($comment = array_get($statusData, 'comment')) ? $comment : array_get($status, 'status_comment'),
-        ]);
-
-        return $statusHistory;
+        return Status_history_model::addStatusHistory($status, $this, $statusData);
     }
 
     /**
@@ -482,24 +516,25 @@ class Orders_model extends Model
     {
         $data = [];
 
-        $data['order_number'] = $this->order_id;
-        $data['first_name'] = $this->first_name;
-        $data['last_name'] = $this->last_name;
-        $data['email'] = $this->email;
-        $data['telephone'] = $this->telephone;
-        $data['order_comment'] = $this->comment;
+        $model = $this->fresh();
+        $data['order_number'] = $model->order_id;
+        $data['first_name'] = $model->first_name;
+        $data['last_name'] = $model->last_name;
+        $data['email'] = $model->email;
+        $data['telephone'] = $model->telephone;
+        $data['order_comment'] = $model->comment;
 
-        $data['order_type'] = ($this->order_type == '1') ? 'delivery' : 'collection';
-        $data['order_time'] = $this->order_time->format('H:i').' '.$this->order_date->format('d M');
-        $data['order_date'] = $this->date_added->format('d M y');
+        $data['order_type'] = ($model->order_type == '1') ? 'delivery' : 'collection';
+        $data['order_time'] = $model->order_time->format('H:i').' '.$model->order_date->format('d M');
+        $data['order_date'] = $model->date_added->format('d M y');
 
-        $data['order_payment'] = ($this->payment_method)
-            ? $this->payment_method->name
+        $data['order_payment'] = ($model->payment_method)
+            ? $model->payment_method->name
             : lang('admin::orders.text_no_payment');
 
         $data['order_menus'] = [];
-        $menus = $this->getOrderMenus();
-        $menuOptions = $this->getOrderMenuOptions();
+        $menus = $model->getOrderMenus();
+        $menuOptions = $model->getOrderMenuOptions();
         foreach ($menus as $menu) {
 
             $optionData = [];
@@ -522,7 +557,7 @@ class Orders_model extends Model
         }
 
         $data['order_totals'] = [];
-        $orderTotals = $this->getOrderTotals();
+        $orderTotals = $model->getOrderTotals();
         foreach ($orderTotals as $total) {
             $data['order_totals'][] = [
                 'order_total_title' => htmlspecialchars_decode($total->title),
@@ -532,13 +567,22 @@ class Orders_model extends Model
         }
 
         $data['order_address'] = lang('admin::orders.text_collection_order_type');
-        if ($this->address)
-            $data['order_address'] = format_address($this->address->toArray());
+        if ($model->address)
+            $data['order_address'] = format_address($model->address->toArray());
 
-        if ($this->location) {
-            $data['location_name'] = $this->location->location_name;
-            $data['location_email'] = $this->location->location_email;
+        if ($model->location) {
+            $data['location_name'] = $model->location->location_name;
+            $data['location_email'] = $model->location->location_email;
         }
+
+        $status = $model->status()->first();
+        $data['status_name'] = $status ? $status->status_name : null;
+        $data['status_comment'] = $status ? $status->status_comment : null;
+
+        $controller = MainController::getController() ?: new MainController;
+        $data['order_view_url'] = $controller->pageUrl('account/orders', [
+            'orderId' => $model->order_id,
+        ]);
 
         return $data;
     }
