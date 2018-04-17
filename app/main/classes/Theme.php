@@ -6,6 +6,7 @@ use App;
 use File;
 use Igniter\Flame\Pagic\Source\FileSource;
 use Main\Template\Page as PageTemplate;
+use Main\Template\Partial;
 use System\Models\Themes_model;
 
 class Theme
@@ -139,6 +140,11 @@ class Theme
     public function listPages()
     {
         return PageTemplate::listInTheme($this);
+    }
+
+    public function listPartials()
+    {
+        return Partial::listInTheme($this);
     }
 
     public function getConfig()

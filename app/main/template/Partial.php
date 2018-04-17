@@ -4,8 +4,10 @@ namespace Main\Template;
 
 use File;
 use Igniter\Flame\Support\Extendable;
+use Illuminate\Support\Collection;
 use Main\Classes\Theme;
 use Main\Contracts\TemplateSource;
+use Symfony\Component\Finder\Finder;
 
 class Partial extends Extendable implements TemplateSource
 {
@@ -81,6 +83,54 @@ class Partial extends Extendable implements TemplateSource
     }
 
     /**
+     * Get an array with the values of a given column.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function get($dirName = null, $columns = ['*'])
+    {
+        $result = [];
+        $dirPath = $this->theme->getPath().'/'.$this->dirName;
+        if ($dirName)
+            $dirPath .= '/'.$dirName;
+
+        $finder = Finder::create()
+                        ->files()->ignoreVCS(TRUE)
+                        ->ignoreDotFiles(TRUE)
+                        ->depth('<= 1');
+
+        $finder->filter(function (\SplFileInfo $file) {
+            // Filter by extension
+            $fileExt = $file->getExtension();
+            if (!is_null($this->allowedExtensions) AND !in_array($fileExt, $this->allowedExtensions))
+                return FALSE;
+        });
+
+        $files = iterator_to_array($finder->in($dirPath), FALSE);
+
+        foreach ($files as $file) {
+            $item = [];
+
+            $path = $file->getPathName();
+
+            $item['fileName'] = $fileName = $file->getRelativePathName();
+            $item['baseFileName'] = ($pos = strrpos($fileName, '.')) == false ? $fileName : substr($fileName, 0, $pos);
+
+            if (!$columns OR array_key_exists('mTime', $columns)) {
+                $item['mTime'] = $this->files->lastModified($path);
+            }
+
+            if (!$columns OR array_key_exists('content', $columns)) {
+                $item['content'] = $this->files->get($path);
+            }
+
+            $result[] = $item;
+        }
+
+        return new Collection($result);
+    }
+
+    /**
      * Loads the template.
      *
      * @param  \Main\Classes\Theme|\System\Classes\BaseComponent $source
@@ -106,6 +156,15 @@ class Partial extends Extendable implements TemplateSource
         return static::load($source, $fileName);
     }
 
+    public static function listInTheme(Theme $theme, $dirName = null, $columns = ['*'])
+    {
+        if (is_string($theme)) {
+            $theme = Theme::load($theme);
+        }
+
+        return (new static($theme))->get($dirName, $columns);
+    }
+
     /**
      * Returns the local file path to the template.
      *
@@ -119,9 +178,7 @@ class Partial extends Extendable implements TemplateSource
             $fileName = $this->fileName;
         }
 
-        $theme = $this->theme;
-
-        return $theme->getPath().'/'.$this->dirName.'/'.$fileName;
+        return $this->theme->getPath().'/'.$this->dirName.'/'.$fileName;
     }
 
     /**
@@ -175,7 +232,6 @@ class Partial extends Extendable implements TemplateSource
      */
     public function getCode()
     {
-        // TODO: Implement getCode() method.
     }
 
     /**
@@ -184,6 +240,5 @@ class Partial extends Extendable implements TemplateSource
      */
     public function getTemplateCacheKey()
     {
-        // TODO: Implement getTemplateCacheKey() method.
     }
 }
