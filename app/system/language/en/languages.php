@@ -7,8 +7,8 @@ return [
     'text_preview_title' => 'Language: Preview',
     'text_form_name'     => 'Language',
     'text_tab_general'   => 'Details',
-    'text_tab_files'     => 'Files',
-    'text_tab_edit_file' => 'Edit Lang File',
+    'text_tab_files'     => 'Translations',
+    'text_tab_edit_file' => 'Edit Translations',
     'text_filter_search' => 'Search name.',
     'text_filter_status' => 'View all status',
     'text_empty'         => 'There are no languages available.',
@@ -32,6 +32,8 @@ return [
     'label_language'   => 'Language to Clone',
     'label_can_delete' => 'Can Delete',
     'label_status'     => 'Status',
+
+    'button_new'     => 'New Group',
 
     'help_idiom'    => 'Language idiom, must be same as the language directory name.',
     'help_language' => 'Language url prefix',

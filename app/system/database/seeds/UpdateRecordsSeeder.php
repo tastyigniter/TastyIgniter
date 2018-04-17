@@ -16,6 +16,7 @@ use System\Models\Mail_templates_model;
 use System\Models\Message_meta_model;
 use System\Models\Messages_model;
 use System\Models\Pages_model;
+use System\Models\Permissions_model;
 use System\Models\Themes_model;
 
 /**
@@ -53,6 +54,9 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function updateMorphsOnStatusHistory()
     {
+        if (Status_history_model::where('object_type', 'Admin\Models\Orders_model')->count())
+            return;
+
         $morphs = [
             'order'   => 'Admin\Models\Orders_model',
             'reserve' => 'Admin\Models\Reservations_model',
@@ -69,6 +73,9 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function updateMorphsOnReviews()
     {
+        if (Reviews_model::where('sale_type', 'Admin\Models\Orders_model')->count())
+            return;
+
         $morphs = [
             'order'       => 'Admin\Models\Orders_model',
             'reservation' => 'Admin\Models\Reservations_model',
@@ -148,7 +155,7 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function copyRecordsFromExtensionsToPayments()
     {
-        if (Payments_model::count() OR !Extensions_model::getQuery()->where('type', 'payment')->count())
+        if (Payments_model::count())
             return;
 
         Extensions_model::getQuery()->where('type', 'payment')->get()->each(function ($model) {
@@ -215,6 +222,9 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function fillIsCustomOnPermissions()
     {
+        if (Permissions_model::where('is_custom', 1)->count())
+            return;
+
         DB::table('permissions')->update(['is_custom' => 1]);
     }
 }

@@ -51,17 +51,6 @@ class Languages extends \Admin\Classes\AdminController
         AdminMenu::setContext('languages', 'localisation');
     }
 
-    public function edit($context = null, $recordId = null)
-    {
-        $this->asExtension('FormController')->edit($context, $recordId);
-
-        $model = $this->asExtension('FormController')->getFormModel();
-
-        if ($model->isDefault()) {
-            flash()->info(lang('system::languages.alert_caution_edit'))->now();
-        }
-    }
-
     public function formExtendFields($form, $fields)
     {
         $file = input('file');
@@ -78,8 +67,7 @@ class Languages extends \Admin\Classes\AdminController
 
         flash()->warning(lang('system::languages.alert_save_changes'));
 
-        $form->setActiveTab(lang('system::languages.text_tab_edit_file'));
-
+        $field->label = $namespace;
         $field->options = $form->model->getTranslations($file, $namespace);
 
         $field->hidden = FALSE;
@@ -90,6 +78,8 @@ class Languages extends \Admin\Classes\AdminController
         $file = input('file');
         $namespace = input('namespace');
         $translations = post('Language.file');
+        if (!$translations OR !is_array($translations))
+            return;
 
         $model->updateTranslations($file, $namespace, $translations);
     }

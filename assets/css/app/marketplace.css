@@ -112,7 +112,7 @@
 	width: 100%;
 	background-color: #FFF;
 	border-radius: 3px;
-	border: 1px solid #DFE6EE;
+	border: 1px solid #E6E6ED;
 	-webkit-box-shadow: 0 3px 8px rgba(95, 128, 171, 0.376);
 	-moz-box-shadow: 0 3px 8px rgba(95, 128, 171, 0.376);
 	box-shadow: 0 3px 8px rgba(95, 128, 171, 0.376);
@@ -130,11 +130,11 @@
 	padding: 10px 0;
 }
 .search-group .item-details + .item-details {
-	border-top: 1px solid #ECF0F5;
+	border-top: 1px solid #E6E6ED;
 }
 .search-group .tt-suggestion:hover,
 .search-group .tt-suggestion:focus {
-	background-color: #E8EDF3;
+	background-color: #E6E6ED;
 	cursor: pointer;
 }
 .item-details .item-thumb {

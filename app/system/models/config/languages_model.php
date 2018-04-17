@@ -74,12 +74,6 @@ $config['form']['toolbar'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:system::languages.text_tab_general',
     'fields'     => [
-        'file'       => [
-            'tab'     => 'lang:system::languages.text_tab_edit_file',
-            'type'    => 'partial',
-            'context' => 'edit',
-            'path'    => 'languages/lang_file',
-        ],
         'name'       => [
             'label' => 'lang:system::languages.label_name',
             'type'  => 'text',
@@ -117,6 +111,12 @@ $config['form']['tabs'] = [
             'context' => 'edit',
             'path'    => 'languages/lang_files_list',
             'options' => 'listAllFiles',
+        ],
+        'file'       => [
+            'tab'     => 'lang:system::languages.text_tab_edit_file',
+            'type'    => 'partial',
+            'context' => 'edit',
+            'path'    => 'languages/lang_file',
         ],
     ],
 ];

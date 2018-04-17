@@ -246,14 +246,6 @@ $config['form']['tabs'] = [
             'span'         => 'right',
             'placeholder'  => 'lang:admin::default.text_please_select',
         ],
-        'related_table[max_capacity]' => [
-            'label'    => 'lang:admin::reservations.label_table_capacity',
-            'type'     => 'number',
-            'span'     => 'left',
-            'cssClass' => 'flex-width',
-            'context'  => ['edit', 'preview'],
-//            'disabled' => TRUE,
-        ],
         'table_id'                    => [
             'label'    => 'lang:admin::reservations.label_table_name',
             'type' => 'relation',
@@ -261,7 +253,6 @@ $config['form']['tabs'] = [
             'nameFrom' => 'table_name',
             'span'     => 'left',
             'cssClass' => 'flex-width',
-            'context'  => ['create'],
 //            'disabled' => TRUE,
         ],
         'guest_num'                   => [
@@ -269,14 +260,6 @@ $config['form']['tabs'] = [
             'type'     => 'number',
             'span'     => 'left',
             'cssClass' => 'flex-width',
-//            'disabled' => TRUE,
-        ],
-        'related_table[min_capacity]' => [
-            'label'    => 'lang:admin::reservations.label_table_min_capacity',
-            'type'     => 'number',
-            'span'     => 'left',
-            'cssClass' => 'flex-width',
-            'context'  => ['edit', 'preview'],
 //            'disabled' => TRUE,
         ],
         'duration'                    => [

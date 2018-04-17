@@ -14,7 +14,7 @@ use System\Models\Settings_model;
 
 class InitialSchemaSeeder extends Seeder
 {
-    protected $recordsPath;
+    protected $recordsPath = __DIR__.'/../records';
 
     /**
      * Run the initial schema seeds.
@@ -22,8 +22,6 @@ class InitialSchemaSeeder extends Seeder
      */
     public function run()
     {
-        $this->recordsPath = __DIR__.'/../records';
-
         $this->seedCountries();
 
         $this->seedCurrencies();
@@ -41,6 +39,8 @@ class InitialSchemaSeeder extends Seeder
         $this->seedSettings();
 
         $this->seedStaffGroups();
+
+        $this->seedStatuses();
     }
 
     protected function seedCountries()
@@ -48,7 +48,7 @@ class InitialSchemaSeeder extends Seeder
         if (Countries_model::count())
             return;
 
-        $countries = json_decode(file_get_contents($this->recordsPath.'/countries.json'), TRUE);
+        $countries = $this->getSeedRecords('countries');
 
         foreach ($countries as $country) {
             Countries_model::insert($country);
@@ -60,7 +60,7 @@ class InitialSchemaSeeder extends Seeder
         if (Currencies_model::count())
             return;
 
-        $currencies = json_decode(file_get_contents($this->recordsPath.'/currencies.json'), TRUE);
+        $currencies = $this->getSeedRecords('currencies');
 
         foreach ($currencies as $currency) {
             Currencies_model::insert($currency);
@@ -163,7 +163,7 @@ class InitialSchemaSeeder extends Seeder
         if (Permissions_model::count())
             return;
 
-        $permissions = json_decode(file_get_contents($this->recordsPath.'/permissions.json'), TRUE);
+        $permissions = $this->getSeedRecords('permissions');
 
         foreach ($permissions as $permission) {
             Permissions_model::insert($permission);
@@ -175,7 +175,7 @@ class InitialSchemaSeeder extends Seeder
         if (Settings_model::count())
             return;
 
-        $settings = json_decode(file_get_contents($this->recordsPath.'/settings.json'), TRUE);
+        $settings = $this->getSeedRecords('settings');
 
         foreach ($settings as $setting) {
             Settings_model::insert($setting);
@@ -200,10 +200,15 @@ class InitialSchemaSeeder extends Seeder
         if (Statuses_model::count())
             return;
 
-        $statuses = json_decode(file_get_contents($this->recordsPath.'/statuses.json'), TRUE);
+        $statuses = $this->getSeedRecords('statuses');
 
         foreach ($statuses as $status) {
             Statuses_model::insert($status);
         }
+    }
+
+    protected function getSeedRecords($name)
+    {
+        return json_decode(file_get_contents($this->recordsPath.'/'.$name.'.json'), TRUE);
     }
 }

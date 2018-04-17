@@ -235,8 +235,13 @@ class Updates extends \Admin\Classes\AdminController
 
             $this->validateItems();
 
-            $context = ($context != 'index') ? 'install' : 'update';
-            $response = UpdateManager::instance()->applyItems($items, $context);
+            if ($context == 'index') {
+                $updates = UpdateManager::instance()->requestUpdateList();
+                $response['data'] = array_get($updates, 'items');
+            }
+            else {
+                $response = UpdateManager::instance()->applyItems($items, 'install');
+            }
 
             return [
                 'steps' => $this->buildProcessSteps($response, $items),

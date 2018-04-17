@@ -211,7 +211,7 @@ class Reservations_model extends Model
             'start'            => $this->reservation_datetime->toIso8601String(),
             'end'              => $this->reservation_end_datetime->toIso8601String(),
             'allDay'           => $this->isReservedAllDay(),
-            'color'            => $status->status_color,
+            'color'            => $status ? $status->status_color : null,
             'location_name'    => ($location = $this->location) ? $location->location_name : null,
             'first_name'       => $this->first_name,
             'last_name'        => $this->last_name,
