@@ -49,7 +49,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'template_id'  => [
-        'label'     => 'lang:system::mail_templates.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

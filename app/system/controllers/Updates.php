@@ -61,7 +61,7 @@ class Updates extends \Admin\Classes\AdminController
 
             $lastChecked = isset($updates['last_check'])
                 ? time_elapsed($updates['last_check'])
-                : lang('system::updates.text_never');
+                : lang('admin::default.text_never');
 
             Template::setButton(sprintf(lang('system::updates.text_last_checked'), $lastChecked), [
                 'class' => 'btn disabled text-muted pull-right',

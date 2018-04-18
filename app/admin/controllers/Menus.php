@@ -59,7 +59,7 @@ class Menus extends AdminController
             ['menu_description', 'lang:admin::menus.label_description', 'min:2|max:1028'],
             ['menu_price', 'lang:admin::menus.label_price', 'required|numeric'],
             ['categories.*', 'lang:admin::menus.label_category', 'required|integer'],
-            ['menu_photo', 'lang:admin::menus.label_photo'],
+            ['menu_photo', 'lang:admin::menus.label_image'],
             ['stock_qty', 'lang:admin::menus.label_stock_qty', 'integer'],
             ['minimum_qty', 'lang:admin::menus.label_minimum_qty', 'required|integer'],
             ['subtract_stock', 'lang:admin::menus.label_subtract_stock', 'required|integer'],

@@ -2,9 +2,6 @@
 
 return [
     'text_title'         => 'Mealtimes',
-    'text_new_title'     => 'Mealtime: New',
-    'text_edit_title'    => 'Mealtime: Update',
-    'text_preview_title' => 'Mealtime: Preview',
     'text_form_name'     => 'Mealtime',
     'text_filter_search' => 'Search mealtime name.',
     'text_filter_status' => 'View all status',
@@ -16,7 +13,6 @@ return [
     'column_end_time'        => 'End Time',
     'column_mealtime_status' => 'Status',
 
-    'label_mealtime_id'     => 'Mealtime Id',
     'label_mealtime_name'   => 'Mealtime Name',
     'label_start_time'      => 'Start Time',
     'label_end_time'        => 'End Time',

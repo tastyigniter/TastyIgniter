@@ -286,7 +286,7 @@ $orders = null;
                         <thead>
                         <tr>
                             <th class="action action-one"></th>
-                            <th><?= lang('admin::dashboard.column_id'); ?></th>
+                            <th><?= lang('admin::default.column_id'); ?></th>
                             <th><?= lang('admin::dashboard.column_location'); ?></th>
                             <th><?= lang('admin::dashboard.column_name'); ?></th>
                             <th class="text-center"><?= lang('admin::dashboard.column_status'); ?></th>
@@ -299,7 +299,7 @@ $orders = null;
                         <?php foreach ($orders as $order) { ?>
                             <tr>
                                 <td class="action action-one"><a class="btn btn-edit"
-                                                                 title="<?= lang('admin::dashboard.text_edit'); ?>"
+                                                                 title="<?= lang('admin::default.text_edit'); ?>"
                                                                  href="<?= $order['edit']; ?>"><i class="fa fa-pencil"></i></a>
                                 </td>
                                 <td><?= $order['order_id']; ?></td>

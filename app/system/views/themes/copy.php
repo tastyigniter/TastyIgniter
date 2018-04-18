@@ -39,7 +39,7 @@
                             data-toggle="toggle"
                             data-onstyle="success" data-offstyle="danger"
                             data-on="<?= e(lang('admin::default.text_yes')) ?>"
-                            data-off="<?= e(lang('system::themes.copy_data')) ?>"
+                            data-off="<?= e(lang('system::themes.label_copy_data')) ?>"
                             value="1">
                     </div>
                 </div>

@@ -68,7 +68,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'menu_id'        => [
-        'label'     => 'lang:admin::menus.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

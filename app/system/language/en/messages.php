@@ -2,15 +2,8 @@
 
 return [
     'text_title'             => 'Messages',
-    'text_new_title'         => 'Message: New',
-    'text_edit_title'        => 'Message: Update',
-    'text_preview_title'     => 'Message: Preview',
     'text_form_name'         => 'Message',
-    'text_form_edit_title'   => 'View Message',
-    'text_form_create_title' => 'Compose Message',
     'text_filter_search'     => 'Search subject.',
-    'text_filter_date'       => 'View all dates',
-    'text_filter_recipient'  => 'View all recipients',
     'text_filter_type'       => 'View all send type',
     'text_filter_unread'     => 'View unread messages',
     'text_empty'             => 'No messages found in this folder.',
@@ -42,8 +35,6 @@ return [
     'text_view_message'      => 'View Message',
     'text_read'              => 'Read',
     'text_unread'            => 'Unread',
-    'text_recipient'         => 'Recipient',
-    'text_recipient_list'    => 'Recipients List',
 
     'button_compose'       => '+ Compose',
     'button_send'          => 'Send',
@@ -74,6 +65,6 @@ return [
     'alert_move_to_trash'                            => 'has been deleted.',
     'alert_saved_to_draft'                           => 'saved to draft',
     'alert_success_sent'                             => 'sent',
-    'lang:admin::default.alert_warning_confirm'      => 'Are you sure you want to do this?',
-    'lang:admin::default.alert_warning_confirm_undo' => 'Are you sure you want to do this? This can not be undone!',
+    'alert_warning_confirm'      => 'Are you sure you want to do this?',
+    'alert_warning_confirm_undo' => 'Are you sure you want to do this? This can not be undone!',
 ];

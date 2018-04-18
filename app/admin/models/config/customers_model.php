@@ -69,7 +69,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'customer_id' => [
-        'label'     => 'lang:admin::customers.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 
@@ -121,6 +121,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::customers.label_password',
             'type'  => 'password',
             'span'  => 'left',
+            'comment'  => 'lang:admin::customers.help_password',
         ],
         '_confirm_password' => [
             'label' => 'lang:admin::customers.label_confirm_password',
@@ -137,6 +138,8 @@ $config['form']['tabs'] = [
         'newsletter'        => [
             'label' => 'lang:admin::customers.label_newsletter',
             'type'  => 'switch',
+            'on' => 'lang:admin::customers.text_subscribe',
+            'off' => 'lang:admin::customers.text_un_subscribe',
         ],
         'status'            => [
             'label' => 'lang:admin::default.label_status',

@@ -332,11 +332,11 @@ class ComponentManager
         if ($addAliasProperty) {
             $property = [
                 'property'          => 'alias',
-                'label'             => lang('label_module_alias'),
+                'label'             => '',
                 'type'              => 'text',
-                'comment'           => lang('help_module_alias'),
+                'comment'           => '',
                 'validationPattern' => '^[a-zA-Z]+[0-9a-z\_]*$',
-                'validationMessage' => lang('text_component_validation_message'),
+                'validationMessage' => '',
                 'required'          => TRUE,
                 'showExternalParam' => FALSE,
             ];

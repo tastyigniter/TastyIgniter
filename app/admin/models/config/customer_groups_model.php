@@ -30,7 +30,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'customer_group_id' => [
-        'label'     => 'lang:admin::customer_groups.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

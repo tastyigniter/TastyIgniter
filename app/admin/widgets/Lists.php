@@ -424,7 +424,7 @@ class Lists extends BaseWidget
             $invalidColumns = array_diff($this->columnOverride, array_keys($definitions));
             if (!count($definitions)) {
                 throw new Exception(sprintf(
-                    lang('alert_list_missing_column'), implode(',', $invalidColumns)
+                    lang('admin::default.list.missing_column'), implode(',', $invalidColumns)
                 ));
             }
 

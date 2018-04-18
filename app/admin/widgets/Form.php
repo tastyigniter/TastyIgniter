@@ -583,7 +583,7 @@ class Form extends BaseWidget
         if (is_string($field)) {
             if (!isset($this->allFields[$field])) {
                 throw new Exception(lang(
-                    'text_form_missing_definition',
+                    'admin::default.form.missing_definition',
                     compact('field')
                 ));
             }

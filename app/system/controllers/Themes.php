@@ -108,7 +108,7 @@ class Themes extends \Admin\Classes\AdminController
 
     public function upload($context)
     {
-        $pageTitle = lang('system::themes.text_edit_title');
+        $pageTitle = lang('system::themes.text_add_title');
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
 
@@ -303,7 +303,7 @@ class Themes extends \Admin\Classes\AdminController
     public function formFindModelObject($recordId)
     {
         if (!strlen($recordId)) {
-            throw new Exception(lang('system::default.form.missing_id'));
+            throw new Exception(lang('admin::default.form.missing_id'));
         }
 
         $model = $this->createModel();
@@ -313,7 +313,7 @@ class Themes extends \Admin\Classes\AdminController
         $result = $query->where('code', $recordId)->first();
 
         if (!$result) {
-            throw new Exception(lang('system::default.form.not_found'));
+            throw new Exception(lang('admin::default.form.not_found'));
         }
 
         return $result;
@@ -355,7 +355,7 @@ class Themes extends \Admin\Classes\AdminController
         $class = $this->formConfig['model'];
 
         if (!isset($class) OR !strlen($class)) {
-            throw new Exception(lang('system::themes.alert_themes_missing_model'));
+            throw new Exception(lang('admin::default.form.missing_model'));
         }
 
         $model = new $class;

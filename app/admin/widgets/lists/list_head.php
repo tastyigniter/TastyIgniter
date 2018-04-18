@@ -47,7 +47,7 @@
             <button
                 type="button"
                 class="btn btn-default btn-xs"
-                title="<?= lang('text_list_setup') ?>"
+                title="<?= lang('admin::default.list.text_setup') ?>"
                 data-toggle="modal"
                 data-target="#<?= $listId ?>-setup-modal"
             >

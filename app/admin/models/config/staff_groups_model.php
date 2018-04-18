@@ -26,7 +26,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'staff_group_id'   => [
-        'label'     => 'lang:admin::staff_groups.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

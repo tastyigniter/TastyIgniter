@@ -46,7 +46,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'language_id' => [
-        'label'     => 'lang:system::languages.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

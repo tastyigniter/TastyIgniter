@@ -53,7 +53,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'status_id'       => [
-        'label'     => 'lang:admin::statuses.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

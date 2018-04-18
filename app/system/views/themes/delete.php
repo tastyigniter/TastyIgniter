@@ -47,14 +47,14 @@
                                         type="radio"
                                         name="delete_data"
                                         value="0" <?= set_radio('delete_data', '0'); ?>
-                                    ><?= lang('system::themes.admin::default.text_no'); ?>
+                                    ><?= lang('admin::default.text_no'); ?>
                                 </label>
                                 <label class="btn btn-default active">
                                     <input
                                         type="radio"
                                         name="delete_data"
                                         value="1" <?= set_radio('delete_data', '1', TRUE); ?>
-                                    ><?= lang('system::themes.admin::default.text_yes'); ?>
+                                    ><?= lang('admin::default.text_yes'); ?>
                                 </label>
                             </div>
                         </div>

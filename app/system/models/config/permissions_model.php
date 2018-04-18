@@ -49,7 +49,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'permission_id' => [
-        'label'     => 'lang:system::permissions.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

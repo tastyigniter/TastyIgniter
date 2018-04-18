@@ -2,9 +2,6 @@
 
 return [
     'text_title'            => 'Staff',
-    'text_new_title'        => 'Staff: New',
-    'text_edit_title'       => 'Staff: Update',
-    'text_preview_title'    => 'Staff: Preview',
     'text_form_name'        => 'Staff',
     'text_filter_search'    => 'Search location, name or email.',
     'text_filter_group'     => 'View all groups',
@@ -12,8 +9,6 @@ return [
     'text_filter_date'      => 'View all dates',
     'text_filter_status'    => 'View all status',
     'text_empty'            => 'There are no staffs available.',
-    'text_no_match'         => 'No Matches Found',
-    'text_default_location' => 'Default',
 
     'column_name'       => 'Name',
     'column_email'      => 'Email',
@@ -32,7 +27,6 @@ return [
     'label_group'            => 'Department',
     'label_language'         => 'Language',
     'label_location'         => 'Location',
-    'label_status'           => 'Status',
 
     'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
     'help_groups'      => 'Specify which groups the staff should belong to. Groups define staff permissions, which can be overridden under Staff Groups, on the Permissions tab.',

@@ -2,25 +2,15 @@
 
 return [
     'text_title'            => 'Menus',
-    'text_new_title'        => 'Menu: New',
-    'text_edit_title'       => 'Menu: Update',
-    'text_preview_title'    => 'Menu: Preview',
     'text_form_name'        => 'Menu',
     'text_tab_general'      => 'Menu',
-    'text_tab_menu_details' => 'Details',
     'text_tab_menu_option'  => 'Menu Option',
     'text_tab_special'      => 'Specials',
-    'text_no_match'         => 'No Matches Found',
     'text_empty'            => 'There are no menus available.',
     'text_filter_search'    => 'Search name, price or stock qty.',
     'text_filter_category'  => 'View all categories',
     'text_filter_status'    => 'View all status',
-    'text_special_enabled'  => 'Special is active',
-    'text_special_disabled' => 'Special is inactive',
-    'text_special_expired'  => 'Special has expired',
-    'text_select_category'  => 'Select category',
     'text_mealtime_all'     => 'Available all day',
-    'text_select'           => 'Select',
 
     'column_name'      => 'Name',
     'column_category'  => 'Category',
@@ -39,13 +29,11 @@ return [
     'label_subtract_stock'        => 'Subtract Stock',
     'label_mealtime'              => 'Mealtime',
     'label_menu_priority'         => 'Priority',
-    'label_special'               => 'Special',
     'label_special_status'        => 'Special Status',
     'label_option'                => 'Menu Item Option',
     'label_option_id'             => 'Option ID',
     'label_option_name'           => 'Option Name',
     'label_option_display_type'   => 'Option Display Type',
-    'label_default_value_id'      => 'Option Default Value',
     'label_option_priority'       => 'Option Priority',
     'label_option_required'       => 'Option Required',
     'label_option_value'          => 'Option Value',
@@ -64,8 +52,6 @@ return [
     'help_minimum_qty'     => 'The minimum quantity that can be ordered. Default is 1, unless set otherwise.',
     'help_menu_option'     => 'Choose from the dropdown to add option to this menu.',
     'help_option_required' => 'Enable/Disable if customer must choose option.',
-
-    'button_add_menu_options' => 'Add New Menu Option',
 
     'activity_event_log' => '{event} menu <b>:subject.menu_name</b>',
 ];

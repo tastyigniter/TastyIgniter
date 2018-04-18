@@ -2,9 +2,6 @@
 
 return [
     'text_title'             => 'Customers',
-    'text_new_title'         => 'Customer: New',
-    'text_edit_title'        => 'Customer: Update',
-    'text_preview_title'     => 'Customer: Preview',
     'text_form_name'         => 'Customer',
     'text_tab_general'       => 'Customer',
     'text_tab_address'       => 'Address',
@@ -12,14 +9,10 @@ return [
     'text_filter_status'     => 'View all status',
     'text_filter_date'       => 'View all dates',
     'text_empty'             => 'There are no customers available.',
-    'text_no_match'          => 'No Matches Found',
     'text_subscribe'         => 'Subscribe',
     'text_un_subscribe'      => 'Un-subscribe',
-    'text_login_as_customer' => 'Login as Customer',
 
     'column_full_name'  => 'Full Name',
-    'column_first_name' => 'First Name',
-    'column_last_name'  => 'Last Name',
     'column_email'      => 'Email',
     'column_telephone'  => 'Telephone',
     'column_date_added' => 'Date Registered',
@@ -34,7 +27,6 @@ return [
     'label_telephone'        => 'Telephone',
     'label_newsletter'       => 'Newsletter',
     'label_customer_group'   => 'Customer Group',
-    'label_status'           => 'Status',
     'label_address_1'        => 'Address 1',
     'label_address_2'        => 'Address 2',
     'label_city'             => 'City',
@@ -46,5 +38,4 @@ return [
 
     'alert_login_restricted'    => 'Warning: You do not have the right permission to <b>access customer account</b>, please contact system administrator.',
     'activity_event_log'        => '{event} customer <b>:subject.first_name :subject.last_name</b>',
-    'activity_master_logged_in' => 'logged in as <b>:subject.first_name :subject.last_name</b>.',
 ];

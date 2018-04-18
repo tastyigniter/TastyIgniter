@@ -107,7 +107,7 @@ $config['list']['columns'] = [
         'invisible' => TRUE,
     ],
     'order_id'        => [
-        'label'     => 'lang:admin::orders.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 
@@ -199,11 +199,10 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::orders.text_tab_general',
     'fields'     => [
-        'location_id'          => [
+        'location[location_name]'          => [
             'label'        => 'lang:admin::orders.text_restaurant',
-            'type'         => 'relation',
-            'relationFrom' => 'location',
-            'nameFrom'     => 'location_name',
+            'type'         => 'text',
+            'disabled' => TRUE,
             'span'         => 'left',
             'placeholder'  => 'lang:admin::default.text_please_select',
         ],
@@ -219,8 +218,8 @@ $config['form']['tabs'] = [
             'span'     => 'left',
             'disabled' => TRUE,
         ],
-        'invoice'              => [
-            'label'    => 'lang:admin::orders.label_invoice',
+        'email'              => [
+            'label'    => 'lang:admin::orders.label_email',
             'type'     => 'text',
             'disabled' => TRUE,
             'span'     => 'right',
@@ -242,14 +241,15 @@ $config['form']['tabs'] = [
             'span'     => 'left',
             'cssClass' => 'flex-width',
         ],
-        'payment_method[name]' => [
-            'label'    => 'lang:admin::orders.label_payment_method',
-            'span'     => 'right',
+        'telephone'              => [
+            'label'    => 'lang:admin::orders.label_telephone',
             'type'     => 'text',
             'disabled' => TRUE,
+            'span'     => 'right',
+            'context'  => ['edit', 'preview'],
         ],
         'address_id'           => [
-            'label'    => 'lang:admin::orders.text_tab_delivery_address',
+            'label'    => 'lang:admin::orders.label_delivery_address',
             'span'     => 'left',
             'type'     => 'partial',
             'disabled' => TRUE,
@@ -265,6 +265,19 @@ $config['form']['tabs'] = [
             'type'     => 'number',
             'span'     => 'right',
             'disabled' => TRUE,
+            'context'  => ['edit', 'preview'],
+        ],
+        'payment_method[name]' => [
+            'label'    => 'lang:admin::orders.label_payment_method',
+            'span'     => 'left',
+            'type'     => 'text',
+            'disabled' => TRUE,
+        ],
+        'invoice'              => [
+            'label'    => 'lang:admin::orders.label_invoice',
+            'type'     => 'text',
+            'disabled' => TRUE,
+            'span'     => 'right',
             'context'  => ['edit', 'preview'],
         ],
         'comment'              => [
@@ -308,7 +321,7 @@ $config['form']['tabs'] = [
             'path' => 'orders/order_menus',
         ],
         'status_history'       => [
-            'tab'     => 'lang:admin::orders.text_tab_status',
+            'tab'     => 'lang:admin::orders.text_status_history',
             'type'    => 'datatable',
             'columns' => [
                 'date_added'    => [

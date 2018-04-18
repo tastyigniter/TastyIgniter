@@ -2,9 +2,6 @@
 
 return [
     'text_title'         => 'Countries',
-    'text_new_title'     => 'Country: New',
-    'text_edit_title'    => 'Country: Update',
-    'text_preview_title' => 'Country: Preview',
     'text_form_name'     => 'Country',
     'text_filter_search' => 'Search name or code.',
     'text_filter_status' => 'View all status',
@@ -22,7 +19,6 @@ return [
     'label_format'    => 'Format',
     'label_iso_code2' => 'ISO Code 2',
     'label_iso_code3' => 'ISO Code 3',
-    'label_status'    => 'Status',
 
     'help_format' => 'Address 1 = {address_1}<br />Address 2 = {address_2}<br />City = {city}<br />Postcode = {postcode}<br />State = {state}<br />Country = {country}',
     'help_iso'    => 'Learn more about <a target="_blank" href="http://en.wikipedia.org/wiki/ISO_3166-1">ISO Alpha 2 & 3</a>',

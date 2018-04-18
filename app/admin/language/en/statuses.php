@@ -2,9 +2,6 @@
 
 return [
     'text_title'         => 'Statuses',
-    'text_new_title'     => 'Status: New',
-    'text_edit_title'    => 'Status: Update',
-    'text_preview_title' => 'Status: Preview',
     'text_form_name'     => 'Status',
     'text_filter_search' => 'Search name or code.',
     'text_filter_status' => 'View all status types',
@@ -16,6 +13,10 @@ return [
     'column_comment' => 'Status Comment',
     'column_type'    => 'Status Type',
     'column_notify'  => 'Notify',
+    'column_time_date'  => 'Date Time',
+    'column_staff'  => 'Staff',
+    'column_assignee'  => 'Assigned Staff',
+    'column_status'  => 'Status',
 
     'label_name'    => 'Name',
     'label_for'     => 'Status For',

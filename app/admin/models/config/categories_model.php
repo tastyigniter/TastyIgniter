@@ -52,7 +52,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'category_id' => [
-        'label'     => 'lang:admin::categories.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

@@ -41,7 +41,7 @@ class User extends Manager
 //            $context = substr($permission, strpos($permission, '.') + 1);
 //            $action = end($this->permission_action);
 //
-//            flash()->warning(sprintf(lang('admin::users.alert_location_restricted'), $action, $context));
+//            flash()->warning(sprintf(lang('admin::default.alert_location_restricted'), $action, $context));
 //            if (!$redirect) {
 //                return TRUE;
 //            }

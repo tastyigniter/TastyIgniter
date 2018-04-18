@@ -140,7 +140,7 @@ $config['form']['general'] = [
                     'tab'   => 'lang:system::settings.text_tab_site',
                     'type'  => 'section',
                 ],
-                'currency_id'                => [
+                'default_currency_code'                => [
                     'label'       => 'lang:system::settings.label_site_currency',
                     'tab'         => 'lang:system::settings.text_tab_site',
                     'span'        => 'left',
@@ -157,12 +157,6 @@ $config['form']['general'] = [
                     'options'     => ['System\Models\Currencies_model', 'getDropdownOptions'],
                     'comment'     => 'lang:system::settings.help_accepted_currency',
                     'placeholder' => 'lang:admin::default.text_please_select',
-                ],
-                'auto_update_currency_rates' => [
-                    'label'   => 'lang:system::settings.label_auto_update_rates',
-                    'tab'     => 'lang:system::settings.text_tab_site',
-                    'type'    => 'switch',
-                    'comment' => 'lang:system::settings.help_auto_update_rates',
                 ],
                 'date'                       => [
                     'label' => 'lang:system::settings.text_tab_title_date_time',
@@ -200,11 +194,10 @@ $config['form']['general'] = [
             ['timezone', 'lang:system::settings.label_timezone', 'required'],
             ['date_format', 'lang:system::settings.label_date_format', 'required'],
             ['time_format', 'lang:system::settings.label_time_format', 'required'],
-            ['currency_id', 'lang:system::settings.label_site_currency', 'required|integer'],
+            ['default_currency_code', 'lang:system::settings.label_site_currency', 'required|string'],
             ['site_location_mode', 'lang:system::settings.label_site_location_mode', 'required|string'],
-            ['auto_update_currency_rates', 'lang:system::settings.label_auto_update_rates', 'required|integer'],
-            ['accepted_currencies.*', 'lang:system::settings.label_accepted_currency', 'required|integer'],
-            ['detect_language', 'lang:system::settings.label_default_language', 'required|integer'],
+            ['accepted_currencies.*', 'lang:system::settings.label_accepted_currency', 'required|string'],
+            ['detect_language', 'lang:system::settings.label_detect_language', 'required|integer'],
             ['default_language', 'lang:system::settings.label_site_language', 'required'],
             ['supported_languages.*', 'lang:system::settings.label_supported_languages', 'required'],
             ['page_limit', 'lang:system::settings.label_page_limit', 'required|integer'],

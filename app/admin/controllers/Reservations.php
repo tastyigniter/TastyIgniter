@@ -102,9 +102,6 @@ class Reservations extends \Admin\Classes\AdminController
         if (!$status = Statuses_model::find($statusData['status_id']))
             return;
 
-        if (Status_history_model::alreadyExists($model, $statusData['status_id']))
-            return;
-
         $statusData = array_merge($statusData, [
             'staff_id' => AdminAuth::getUser()->staff->getKey(),
         ]);

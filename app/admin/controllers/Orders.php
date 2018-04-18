@@ -73,9 +73,6 @@ class Orders extends \Admin\Classes\AdminController
 
         if (!$status = Statuses_model::find($statusData['status_id']))
             return;
-//
-//        if (Status_history_model::alreadyExists($model, $statusData['status_id']))
-//            return;
 
         $statusData = array_merge($statusData, [
             'staff_id' => AdminAuth::getUser()->staff->getKey(),
@@ -88,7 +85,6 @@ class Orders extends \Admin\Classes\AdminController
     {
         $namedRules = [
             ['status_id', 'lang:admin::default.label_status', 'required|integer|exists:statuses'],
-            ['location_id', 'lang:admin::orders.text_restaurant', 'required|integer'],
             ['statusData.status_id', 'lang:admin::orders.label_status', 'required|same:status_id'],
             ['statusData.comment', 'lang:admin::orders.label_comment', 'max:1500'],
             ['statusData.notify', 'lang:admin::orders.label_notify', 'required|integer'],

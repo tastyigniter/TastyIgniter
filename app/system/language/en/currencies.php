@@ -2,9 +2,6 @@
 
 return [
     'text_title'         => 'Currencies',
-    'text_new_title'     => 'Currency: New',
-    'text_edit_title'    => 'Currency: Update',
-    'text_preview_title' => 'Currency: Preview',
     'text_form_name'     => 'Currency',
     'text_filter_search' => 'Search name or code.',
     'text_filter_status' => 'View all status',
@@ -19,8 +16,6 @@ return [
     'column_rate'    => 'Rate',
     'column_status'  => 'Status',
 
-    'button_update_rate' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Update Rates',
-
     'label_title'            => 'Title',
     'label_code'             => 'Code',
     'label_country'          => 'Country',
@@ -30,10 +25,6 @@ return [
     'label_thousand_sign'    => 'Thousand Sign',
     'label_decimal_sign'     => 'Decimal Sign',
     'label_decimal_position' => 'Decimal Place',
-    'label_status'           => 'Status',
 
     'help_iso' => 'Learn more about <a target="_blank" href="http://en.wikipedia.org/wiki/ISO_3166-1">ISO Alpha 2, 3, numeric</a>',
-
-    'alert_rates_updated'        => 'Currency rates has been updated automatically',
-    'activity_updated_event_log' => 'updated currency rates',
 ];

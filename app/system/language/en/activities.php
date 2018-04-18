@@ -2,7 +2,6 @@
 
 return [
     'text_title'                => 'Activities',
-    'text_heading'              => 'Activities',
     'button_mark_as_read'       => 'Mark all as read',
     'text_empty'                => 'There are no activities available.',
     'activity_self'             => 'You',

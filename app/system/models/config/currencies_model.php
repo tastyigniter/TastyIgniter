@@ -18,7 +18,6 @@ $config['list']['toolbar'] = [
         'create' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'currencies/create'],
         'delete' => ['label' => 'lang:admin::default.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::default.alert_warning_confirm'],
         'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
-        'update' => ['label' => 'lang:system::currencies.button_update_rate', 'class' => 'btn btn-success pull-right', 'data-request-form' => '#list-form', 'data-request' => 'onUpdateRate', 'data-request-data' => "force:1"],
     ],
 ];
 
@@ -59,8 +58,8 @@ $config['list']['columns'] = [
         'label' => 'lang:system::currencies.column_status',
         'type'  => 'switch',
     ],
-    'currency_id'     => [
-        'label'     => 'lang:system::currencies.column_id',
+    'default_currency_code'     => [
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 
@@ -102,6 +101,7 @@ $config['form']['fields'] = [
         'label' => 'lang:system::currencies.label_code',
         'type'  => 'text',
         'span'  => 'right',
+        'comment'  => 'lang:system::currencies.help_iso',
     ],
     'symbol_position'  => [
         'label'   => 'lang:system::currencies.label_symbol_position',

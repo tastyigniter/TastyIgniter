@@ -1,17 +1,5 @@
 <?php
-/**
- * TastyIgniter
- *
- * An open source online ordering, reservation and management system for restaurants.
- *
- * @package Igniter
- * @author Samuel Adepoyigi
- * @copyright (c) 2013 - 2016. Samuel Adepoyigi
- * @copyright (c) 2016 - 2018. TastyIgniter Dev Team
- * @link https://tastyigniter.com
- * @license http://opensource.org/licenses/MIT The MIT License
- * @since File available since Release 1.0
- */
+
 return [
     'text_title'              => 'Media Manager',
     'text_heading'            => 'Media Manager',
@@ -20,6 +8,7 @@ return [
     'text_read_write'         => 'Read & Write',
     'text_footer_note'        => '%s items selected, %s',
     'text_no_access'          => 'No Access',
+    'text_items'              => 'Items',
     'text_choose'             => 'Choose',
     'text_sort_by'            => 'Sort By',
     'text_filter_search'      => 'Search files and folders...',

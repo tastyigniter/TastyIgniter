@@ -57,7 +57,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'country_id'   => [
-        'label'     => 'lang:system::countries.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

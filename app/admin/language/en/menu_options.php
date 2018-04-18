@@ -2,12 +2,9 @@
 
 return [
     'text_title'               => 'Menu Options',
-    'text_new_title'           => 'Menu Option: New',
-    'text_edit_title'          => 'Menu Option: Update',
-    'text_preview_title'       => 'Menu Option: Preview',
     'text_form_name'           => 'Menu Option',
+    'text_tab_general'         => 'General',
     'text_tab_values'          => 'Option Values',
-    'text_no_match'            => 'No Matches Found',
     'text_empty'               => 'There are no menu options available.',
     'text_filter_search'       => 'Search name or price.',
     'text_filter_display_type' => 'View all display types',
@@ -18,7 +15,6 @@ return [
 
     'column_name'         => 'Name',
     'column_display_type' => 'Display Type',
-    'column_priority'     => 'Priority',
     'column_id'           => 'ID',
 
     'label_option_name'   => 'Option Name',

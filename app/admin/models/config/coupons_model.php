@@ -81,7 +81,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'coupon_id'          => [
-        'label'     => 'lang:admin::coupons.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

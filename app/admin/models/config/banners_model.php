@@ -60,7 +60,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'banner_id'  => [
-        'label'     => 'lang:admin::banners.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 
@@ -107,7 +107,6 @@ $config['form']['fields'] = [
         'default' => 'image',
         'options' => [
             'image'    => 'lang:admin::banners.text_image',
-            'carousel' => 'lang:admin::banners.text_carousel',
             'custom'   => 'lang:admin::banners.text_custom',
         ],
     ],

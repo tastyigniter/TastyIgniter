@@ -154,7 +154,7 @@ class Settings extends \Admin\Classes\AdminController
     protected function findSettingDefinitions($code)
     {
         if (!strlen($code))
-            throw new Exception(lang('system::settings.text_form_missing_id'));
+            throw new Exception(lang('admin::default.form.missing_id'));
 
         // Prep the list widget config
         $model = $this->createModel();

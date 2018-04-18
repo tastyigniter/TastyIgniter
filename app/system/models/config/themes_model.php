@@ -15,7 +15,7 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'upload' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'themes/upload'],
+        'upload' => ['label' => 'lang:system::themes.button_new', 'class' => 'btn btn-primary', 'href' => 'themes/upload'],
         'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
         'check'  => ['label' => 'lang:system::themes.button_check', 'class' => 'btn btn-success pull-right', 'href' => 'updates'],
         'browse' => ['label' => 'lang:system::themes.button_browse', 'class' => 'btn btn-default pull-right', 'href' => 'updates/browse/themes'],
@@ -64,7 +64,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'theme_id' => [
-        'label'     => 'lang:system::themes.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 ];

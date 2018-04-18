@@ -49,7 +49,7 @@ $config['list']['columns'] = [
         },
     ],
     'option_id'    => [
-        'label'     => 'lang:admin::menu_options.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

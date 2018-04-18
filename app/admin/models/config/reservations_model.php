@@ -96,7 +96,7 @@ $config['list']['columns'] = [
         'type'  => 'date',
     ],
     'reservation_id' => [
-        'label'     => 'lang:admin::reservations.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

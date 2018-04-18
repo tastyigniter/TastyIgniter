@@ -37,7 +37,7 @@ class Dashboard extends \Admin\Classes\AdminController
 //        if ($this->config->item('auto_update_currency_rates') == '1') {
 //            $this->load->model('Currencies_model');
 //            if ($this->Currencies_model->updateRates()) {
-//                flash()->success_now(lang('admin::dashboard.alert_rates_updated'));
+//                flash()->success_now(lang('system::currencies.alert_rates_updated'));
 //            }
 //        }
 //

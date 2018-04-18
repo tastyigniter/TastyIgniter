@@ -69,7 +69,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'location_id'        => [
-        'label'     => 'lang:admin::locations.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

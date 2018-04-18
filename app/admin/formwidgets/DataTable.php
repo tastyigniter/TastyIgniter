@@ -127,7 +127,7 @@ class DataTable extends BaseFormWidget
         $methodName = 'get'.studly_case($this->fieldName).'DataTableOptions';
 
         if (!$this->model->methodExists($methodName) AND !$this->model->methodExists('getDataTableOptions')) {
-            throw new Exception(sprintf(lang('text_missing_method'), get_class($this->model), 'getDataTableOptions'));
+            throw new Exception(sprintf('Missing method [%s] in %s', 'getDataTableOptions', get_class($this->model)));
         }
 
         if ($this->model->methodExists($methodName)) {

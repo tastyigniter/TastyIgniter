@@ -20,7 +20,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'activity_id'     => [
-        'label'     => 'lang:system::activities.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

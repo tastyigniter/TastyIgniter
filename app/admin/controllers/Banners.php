@@ -60,9 +60,8 @@ class Banners extends \Admin\Classes\AdminController
             ['custom_code', 'lang:admin::banners.label_custom_code', 'required_if:type,custom'],
             ['alt_text', 'lang:admin::banners.label_alt_text', 'required_if:type,image|min:2|max:255'],
             ['image_code', 'lang:admin::banners.label_image', 'required_if:type,image'],
-            ['carousels.*', 'lang:admin::banners.label_alt_text', 'required_if:type,carousel'],
-            ['language_id', 'lang:admin::banners.label_images', 'required|integer'],
-            ['status', 'lang:admin::banners.label_language', 'required|integer'],
+            ['language_id', 'lang:admin::banners.label_language', 'required|integer'],
+            ['status', 'lang:admin::default.label_status', 'required|integer'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $namedRules);

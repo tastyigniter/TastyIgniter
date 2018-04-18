@@ -2,11 +2,9 @@
 
 return [
     'text_title'                 => 'Themes',
-    'text_new_title'             => 'Theme: New',
-    'text_edit_title'            => 'Theme: Update',
+    'text_edit_title'            => 'Theme: Customize',
     'text_add_title'             => 'Theme: Upload',
     'text_delete_title'          => 'Theme: Delete',
-    'text_copy_title'            => 'Theme: Copy (create a child theme)',
     'text_form_name'             => 'Theme',
     'text_tab_customize'         => 'Customize',
     'text_tab_edit_source'       => 'Edit Source',
@@ -15,25 +13,14 @@ return [
     'text_upload_title'          => 'Upload the theme .zip file.',
     'text_empty'                 => 'There are no themes available.',
     'text_customize'             => 'Customize',
-    'text_theme'                 => 'Theme',
     'text_editing'               => 'Editing file "%s" in theme "%s".',
-    'text_viewing'               => 'Viewing image "%s" in theme "%s".',
-    'text_preview'               => 'Preview',
-    'text_delete'                => 'Delete',
-    'text_custom_theme'          => 'Add Custom Theme',
-    'text_enlarge'               => 'Click to enlarge.',
     'text_is_default'            => 'Active',
     'text_set_default'           => 'Activate',
     'text_author'                => 'Author',
     'text_version'               => 'Version',
     'text_theme_is_active'       => '. You can not delete an active theme.',
-    'text_theme_is_child_active' => '. You can not delete a parent theme with an active child theme.',
-    'text_select_file_summary'   => '<h3>Select a File!</h3><p>You can select from a number of options to alter the look of your theme. <br /> The Theme Editor only supports source files(php, css, js,...) and image files.</p>',
-    'text_view_files'            => 'Hide/View files',
-    'text_copy_theme'            => 'Copy (create child theme)',
     'text_files'                 => 'files',
     'text_files_data'            => 'files and data',
-    'text_copied'                => 'copied (child theme created)',
 
     'column_name' => 'Name',
 
@@ -54,7 +41,6 @@ return [
     'button_yes_copy'       => 'Yes, copy',
     'button_return_to_list' => 'No, return to list',
 
-    'error_theme_not_found'    => 'An error occurred, theme can not be found or loaded.',
     'error_config_no_found'    => 'An error occurred, theme registration file could not be found',
     'error_file_not_supported' => 'Selected file is not supported',
     'error_upload_name'        => 'The theme name must not contain whitespace or spacing, use hyphens(-) instead..',
@@ -66,7 +52,4 @@ return [
     'alert_delete_confirm'        => 'Are you sure you wish to delete these %s? This cannot be undone!',
     'alert_copy_warning'          => 'You are about to create a copy the following %s from theme <b>%s</b>',
     'alert_copy_confirm'          => 'Are you sure you wish to copy these %s?',
-    'alert_setting_missing_model' => 'Missing defined model %s.',
-
-    'activity_event_log' => '{event} theme <b>:subject.title</b>',
 ];

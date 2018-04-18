@@ -48,7 +48,7 @@ $config['list']['columns'] = [
         'type'  => 'datesince',
     ],
     'payment_id'   => [
-        'label'     => 'lang:admin::payments.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 

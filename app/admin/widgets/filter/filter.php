@@ -17,13 +17,13 @@
                                 <?= $this->makePartial('filter/filter_scopes') ?>
 
                                 <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-default" type="submit" title="<?= lang('text_filter'); ?>">
+                                    <button class="btn btn-default" type="submit" title="<?= lang('admin::default.text_filter'); ?>">
                                         <i class="fa fa-filter"></i>
                                     </button>&nbsp;
                                     <button class="btn btn-default"
                                             type="button"
                                             data-request="<?= $onClearHandler; ?>"
-                                            title="<?= lang('text_clear'); ?>">
+                                            title="<?= lang('admin::default.text_clear'); ?>">
                                         <i class="fa fa-times text-danger"></i>
                                     </button>
                                 </div>

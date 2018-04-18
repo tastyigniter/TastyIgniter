@@ -15,7 +15,7 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'upload'  => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'extensions/upload'],
+        'upload'  => ['label' => 'lang:system::extensions.button_new', 'class' => 'btn btn-primary', 'href' => 'extensions/upload'],
         'setting' => ['label' => 'lang:system::extensions.button_settings', 'class' => 'btn btn-default', 'href' => 'settings'],
         'payment' => ['label' => 'lang:system::extensions.button_payments', 'class' => 'btn btn-default', 'href' => 'payments'],
         'filter'  => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],

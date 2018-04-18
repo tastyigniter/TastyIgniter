@@ -86,7 +86,7 @@ $config['list']['columns'] = [
         'type'  => 'datesince',
     ],
     'review_id'     => [
-        'label'     => 'lang:admin::reviews.column_id',
+        'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
 
