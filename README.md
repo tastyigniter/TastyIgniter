@@ -19,7 +19,7 @@ Manual Installation
 
 Community and Support
 =====================
-- Bug fixes and feature patches may be submitted using github pull requests, and bug reports or feature requests as github issues.
+- If you believe you have found a bug, please report it using the [GitHub issue tracker](https://github.com/tastyigniter/TastyIgniter/issues), or better yet, fork the repo and submit a pull request.
 - Visit the [TastyIgniter Community Forums](https://forum.tastyigniter.com) or [Documentation](https://docs.tastyigniter.com) for support.
 - [Join us on IRC]() to chat with us.
 
