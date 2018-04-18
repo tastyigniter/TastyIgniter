@@ -42,6 +42,7 @@ class ServiceProvider extends AppServiceProvider
         $this->registerErrorHandler();
         $this->registerMailer();
         $this->registerPaginator();
+        $this->registerCurrency();
 
         // Register admin and main module providers
         collect(Config::get('system.modules', []))->each(function ($module) {
@@ -65,9 +66,7 @@ class ServiceProvider extends AppServiceProvider
         $this->updateTimezone();
         $this->extendValidator();
 
-        if ($this->app->hasDatabase()) {
-            $this->app['translation.loader']->addDriver(Database::class);
-        }
+        $this->addTranslationDriver();
     }
 
     /*
@@ -213,5 +212,17 @@ class ServiceProvider extends AppServiceProvider
 
             return 1;
         });
+    }
+
+    protected function addTranslationDriver()
+    {
+        if ($this->app->hasDatabase()) {
+            $this->app['translation.loader']->addDriver(Database::class);
+        }
+    }
+
+    protected function registerCurrency()
+    {
+        $this->app['config']->set('currency.default', setting('default_currency_code'));
     }
 }

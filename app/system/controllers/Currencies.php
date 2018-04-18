@@ -53,23 +53,6 @@ class Currencies extends \Admin\Classes\AdminController
         AdminMenu::setContext('currencies', 'localisation');
     }
 
-    public function index()
-    {
-        if (AdminAuth::hasPermission('Site.Currencies.Manage'))
-            Currencies_model::autoUpdateRates();
-
-        $this->asExtension('ListController')->index();
-    }
-
-    public function index_onUpdateRate()
-    {
-        if (Currencies_model::make()->updateRates(TRUE)) {
-            flash()->success(lang('system::currencies.alert_rates_updated'));
-        }
-
-        return $this->redirectBack();
-    }
-
     public function formValidate($model, $form)
     {
         $rules = [

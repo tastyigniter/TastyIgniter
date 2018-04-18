@@ -8,13 +8,9 @@
             ]
         ); ?>
 
-        <div class="panel-body">
-            <div class="row">
-                <?= $this->makePartial('lists/list_body') ?>
-            </div>
-        </div>
+        <div class="row">
+            <?= $this->makePartial('lists/list_body') ?>
 
-        <div class="panel-footer">
             <?= $this->makePartial('lists/list_pagination') ?>
         </div>
 

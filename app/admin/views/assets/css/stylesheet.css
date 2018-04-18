@@ -855,8 +855,6 @@ fieldset[disabled] .form-control {
 }
 .panel-table {
 	border-color: #EEE;
-	margin-left: 10px;
-	margin-right: 10px;
 }
 .panel-table .table {
 	margin-bottom: 0;

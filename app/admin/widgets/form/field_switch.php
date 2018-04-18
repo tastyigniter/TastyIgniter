@@ -1,3 +1,7 @@
+<?php
+$on = $field->config['on'] ?? 'admin::default.text_enabled';
+$off = $field->config['off'] ?? 'admin::default.text_disabled';
+?>
 <input
     type="hidden"
     name="<?= $field->getName() ?>"
@@ -11,8 +15,8 @@
         name="<?= $field->getName() ?>"
         data-toggle="toggle"
         data-onstyle="success" data-offstyle="danger"
-        data-on="<?= e(lang('admin::default.text_enabled')) ?>"
-        data-off="<?= e(lang('admin::default.text_disabled')) ?>"
+        data-on="<?= e(lang($on)) ?>"
+        data-off="<?= e(lang($off)) ?>"
         value="1"
         <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
         <?= $field->value == 1 ? 'checked="checked"' : '' ?>
