@@ -76,6 +76,8 @@ class Orders_model extends Model
         ],
     ];
 
+    public $appends = ['customer_name', 'status_name', 'order_type_name', 'order_date_time'];
+
     public static $allowedSortingColumns = [
         'order_id asc', 'order_id desc',
         'date_added asc', 'date_added desc',
@@ -161,7 +163,7 @@ class Orders_model extends Model
         return Carbon::createFromFormat(
             'Y-m-d H:i:s',
             "{$this->attributes['order_date']} {$this->attributes['order_time']}"
-        );
+        )->toDateTimeString();
     }
 
     public function getOrderTypeAttribute($value)
@@ -175,6 +177,11 @@ class Orders_model extends Model
     public function getOrderTypeNameAttribute()
     {
         return ucwords($this->order_type);
+    }
+
+    public function getStatusNameAttribute()
+    {
+        return $this->status ? $this->status->status_name : null;
     }
 
     //

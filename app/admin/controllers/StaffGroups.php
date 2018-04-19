@@ -59,7 +59,7 @@ class StaffGroups extends \Admin\Classes\AdminController
             ['location_access', 'lang:admin::staff_groups.label_location_access', 'required|integer'],
         ];
 
-        $rules[] = ['permissions.*', 'Permission', 'alpha|max:6'];
+        $rules[] = ['permissions.*.*', 'Permission', 'string'];
 
         return $this->validatePasses($form->getSaveData(), $rules);
     }

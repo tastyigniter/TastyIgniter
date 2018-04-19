@@ -200,12 +200,10 @@ class Customers_model extends AuthUserModel
             $customer_email = $this->email;
             $update = ['customer_id' => $customer_id];
 
+            Orders_model::where('email', $customer_email)->update($update);
             if ($orders = Orders_model::where('email', $customer_email)->get()) {
                 foreach ($orders as $row) {
                     if (empty($row['order_id'])) continue;
-
-                    Coupons_model::where('email', $customer_email)
-                                 ->where('order_id', $row['order_id'])->update($update);
 
                     Coupons_history_model::where('order_id', $row['order_id'])->update($update);
 

@@ -56,6 +56,8 @@ class Reservations_model extends Model
         'reserve_date' => 'date',
     ];
 
+    public $appends = ['customer_name', 'duration', 'reservation_datetime', 'status_name', 'table_name'];
+
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',
         'reserve_date asc', 'reserve_date desc',
@@ -180,6 +182,11 @@ class Reservations_model extends Model
     public function getTableNameAttribute()
     {
         return isset($this->related_table) ? $this->related_table->table_name : null;
+    }
+
+    public function getStatusNameAttribute()
+    {
+        return $this->status ? $this->status->status_name : null;
     }
 
     //

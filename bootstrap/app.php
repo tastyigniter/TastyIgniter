@@ -11,7 +11,7 @@
 |
 */
 
-$app = new Igniter\Flame\Foundation\Application(dirname(__DIR__).'/');
+$app = new Igniter\Flame\Foundation\Application(dirname(__DIR__));
 
 /*
 |--------------------------------------------------------------------------

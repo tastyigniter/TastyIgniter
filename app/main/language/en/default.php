@@ -35,6 +35,7 @@ return [
     'alert_error_nothing'   => 'An error occurred, nothing %s.',
     'alert_error_try_again' => 'An error occurred, please try again.',
     'alert_warning_confirm' => 'This cannot be undone! Are you sure you want to do this?',
+    'alert_custom_error'    => 'Something went wrong and the page cannot be displayed',
 
     'alert_no_search_query'       => 'Please type in a postcode/address to check if we can deliver to you.',
     'alert_info_outdated_browser' => 'You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.',
@@ -52,10 +53,10 @@ return [
     ],
 
     'local' => [
-        'text_tab_menu'                     => 'Menu',
-        'text_tab_review'                   => 'Reviews',
-        'text_tab_info'                     => 'Info',
-        'text_tab_gallery'                  => 'Gallery',
+        'text_tab_menu'    => 'Menu',
+        'text_tab_review'  => 'Reviews',
+        'text_tab_info'    => 'Info',
+        'text_tab_gallery' => 'Gallery',
 
         'menus'   => [
             'title' => 'Menu',

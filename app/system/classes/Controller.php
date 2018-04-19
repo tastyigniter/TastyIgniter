@@ -103,7 +103,7 @@ class Controller extends IlluminateController
         }
 
         // Look for a controller within extensions
-        if (count($segments) >= 2) {
+        if (count($segments) >= 3) {
             list($author, $extension, $controller) = $segments;
             self::$action = $action = isset($segments[3]) ? $this->processAction($segments[3]) : 'index';
             self::$segments = $params = array_slice($segments, 4);

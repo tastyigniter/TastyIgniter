@@ -1,9 +1,11 @@
 <?php namespace System\Classes;
 
 use App;
+use ApplicationException;
 use Config;
 use Exception;
 use Igniter\Flame\Exception\ErrorHandler as BaseErrorHandler;
+use Log;
 use Main\Classes\MainController;
 use Main\Classes\Router;
 use Main\Classes\ThemeManager;
@@ -18,12 +20,11 @@ use View;
  */
 class ErrorHandler extends BaseErrorHandler
 {
-    public function handleException(Exception $proposedException)
+    public function beforeHandleError($exception)
     {
-        if (Config::get('app.debug', FALSE) AND !Request::ajax())
-            return null;
-
-        return parent::handleException($proposedException);
+        if ($exception instanceof ApplicationException) {
+            Log::error($exception);
+        }
     }
 
     /**
@@ -34,7 +35,7 @@ class ErrorHandler extends BaseErrorHandler
     public function handleCustomError()
     {
         if (Config::get('app.debug', FALSE)) {
-            return null;
+            return false;
         }
 
         if (!App::hasDatabase())

@@ -151,6 +151,54 @@ $config['form']['tabs'] = [
             'path'    => 'customers/address_tabs',
             'options' => 'listAddresses',
         ],
+        'orders'              => [
+            'tab'     => 'lang:admin::customers.text_tab_orders',
+            'type'    => 'datatable',
+            'columns' => [
+                'order_id'      => [
+                    'title'     => 'lang:admin::default.column_id',
+                ],
+                'customer_name' => [
+                    'title'      => 'lang:admin::orders.column_customer_name',
+                ],
+                'status_name'     => [
+                    'title'    => 'lang:admin::orders.column_status',
+                ],
+                'order_type_name'        => [
+                    'title'    => 'lang:admin::orders.column_type',
+                ],
+                'payment_title'     => [
+                    'label'    => 'lang:admin::orders.column_payment',
+                ],
+                'order_total'     => [
+                    'title' => 'lang:admin::orders.column_total',
+                ],
+                'order_date_time'      => [
+                    'title' => 'lang:admin::orders.column_time',
+                ],
+            ],
+        ],
+        'reservations'              => [
+            'tab'     => 'lang:admin::customers.text_tab_reservations',
+            'type'    => 'datatable',
+            'columns' => [
+                'reservation_id'      => [
+                    'title'     => 'lang:admin::default.column_id',
+                ],
+                'customer_name' => [
+                    'title'      => 'lang:admin::reservations.column_customer_name',
+                ],
+                'status_name'     => [
+                    'title'    => 'lang:admin::reservations.column_status',
+                ],
+                'table_name'        => [
+                    'title'      => 'lang:admin::reservations.column_table',
+                ],
+                'table_name'        => [
+                    'title'      => 'lang:admin::reservations.column_table',
+                ],
+            ],
+        ],
     ],
 ];
 

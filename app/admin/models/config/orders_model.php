@@ -72,7 +72,7 @@ $config['list']['columns'] = [
         'select'     => "concat(first_name, ' ', last_name)",
         'searchable' => TRUE,
     ],
-    'order_status'    => [
+    'status_name'    => [
         'label'    => 'lang:admin::orders.column_status',
         'relation' => 'status',
         'select'   => 'status_name',
