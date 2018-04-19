@@ -1,6 +1,6 @@
 <div id="list-items">
     <div class="panel panel-default panel-inverse">
-        <?php $countIgnored = count($updates['ignored']); ?>
+        <?php $countIgnored = count($updates['ignoredItems']); ?>
         <div class="panel-heading">
             <h3 class="panel-title">
                 <i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;
@@ -25,7 +25,7 @@
                 </h3>
             </div>
 
-            <?= $this->makePartial('updates/list_items', ['items' => $updates['ignored'], 'ignored' => TRUE]); ?>
+            <?= $this->makePartial('updates/list_items', ['items' => $updates['ignoredItems'], 'ignored' => TRUE]); ?>
         <?php } ?>
 
     </div>

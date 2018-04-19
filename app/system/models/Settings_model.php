@@ -37,6 +37,19 @@ class Settings_model extends Model
 
     protected $items;
 
+    public static function listMenuSettingItems($menu, $item, $user)
+    {
+        $fieldConfig = (new static)->getFieldConfig();
+        $settingsConfig = array_except($fieldConfig, 'toolbar');
+
+        $options = [];
+        foreach ($settingsConfig as $settingItem) {
+            $options[$settingItem['url']] = lang($settingItem['label']);
+        }
+
+        return $options;
+    }
+
     public static function getDateFormatOptions()
     {
         $now = Carbon::now();
@@ -84,7 +97,7 @@ class Settings_model extends Model
     }
 
     //
-    // Config & Registration
+    // Registration
     //
 
     public function getFieldConfig()
@@ -206,6 +219,10 @@ class Settings_model extends Model
         }
     }
 
+    //
+    // Mailer Config
+    //
+
     public static function applyMailerConfigValues()
     {
         Config::set('mail.driver', Setting::get('protocol', Config::get('mail.driver')));
@@ -216,7 +233,6 @@ class Settings_model extends Model
         Config::set('mail.username', Setting::get('smtp_user', Config::get('mail.username')));
         Config::set('mail.password', Setting::get('smtp_pass', Config::get('mail.password')));
     }
-
 
     //
     // Form Dropdown options

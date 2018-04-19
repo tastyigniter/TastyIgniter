@@ -127,11 +127,24 @@ class Menu extends BaseWidget
      */
     protected function makeMenuItem($name, $config)
     {
-        $label = (isset($config['label'])) ? $config['label'] : null;
-        $itemType = isset($config['type']) ? $config['type'] : null;
+        $label = $config['label'] ?? null;
+        $itemType = $config['type'] ?? null;
 
         $item = new MenuItem($name, $label);
         $item->displayAs($itemType, $config);
+
+        // Get menu item options from model
+        $optionModelTypes = ['dropdown', 'partial'];
+        if (in_array($item->type, $optionModelTypes, FALSE)) {
+
+            // Defer the execution of option data collection
+            $item->options(function () use ($item, $config) {
+                $itemOptions = $config['options'] ?? null;
+                $itemOptions = $this->getOptionsFromModel($item, $itemOptions);
+
+                return $itemOptions;
+            });
+        }
 
         return $item;
     }
@@ -189,16 +202,7 @@ class Menu extends BaseWidget
         if (!$item = $this->getItem($itemName))
             throw new SystemException("No main menu item found matching {$itemName}");
 
-        $options = [];
-        $itemOptions = $item->optionsFrom;
-        if (is_array($itemOptions) AND is_callable($itemOptions)) {
-
-            $user = $this->getLoggedUser();
-            $options = call_user_func($itemOptions, $this, $item, $user);
-        }
-        elseif (is_array($itemOptions)) {
-            $options = $itemOptions;
-        }
+        $itemOptions = $item->options();
 
 //        if (array_key_exists('total', $options))
 //            $this->setBadgeCount($item, $options['total']);
@@ -207,13 +211,13 @@ class Menu extends BaseWidget
         if (strlen($item->partial)) {
             return [
                 '#'.$item->getId($item->itemName.'-options') => $this->makePartial(
-                    $item->partial, ['item' => $item, 'itemOptions' => $options]
+                    $item->partial, ['item' => $item, 'itemOptions' => $itemOptions]
                 ),
             ];
         }
 
         return [
-            'options' => $options,
+            'options' => $itemOptions,
         ];
     }
 
@@ -224,5 +228,15 @@ class Menu extends BaseWidget
     public function getContext()
     {
         return $this->context;
+    }
+
+    protected function getOptionsFromModel($item, $itemOptions)
+    {
+        if (is_array($itemOptions) AND is_callable($itemOptions)) {
+            $user = $this->getLoggedUser();
+            $itemOptions = call_user_func($itemOptions, $this, $item, $user);
+        }
+
+        return $itemOptions;
     }
 }

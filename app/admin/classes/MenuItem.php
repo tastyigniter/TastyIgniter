@@ -41,11 +41,6 @@ class MenuItem
     public $options;
 
     /**
-     * @var string Menu dropdown menu options.
-     */
-    public $optionsFrom;
-
-    /**
      * @var string Specifies contextual visibility of this menu item.
      */
     public $context = null;
@@ -68,7 +63,7 @@ class MenuItem
     /**
      * @var array Contains a list of attributes specified in the item configuration.
      */
-    public $menuLink;
+    public $viewMoreUrl;
 
     /**
      * @var string Specifies a path for partial-type fields.
@@ -106,37 +101,24 @@ class MenuItem
      *
      * @return self|array
      */
-    public function options()
+    public function options($value = null)
     {
-        if (is_array($this->options)) {
-            return $this->options;
-        }
-        elseif (is_callable($this->options)) {
-            $callable = $this->options;
+        if ($value === null) {
+            if (is_array($this->options)) {
+                return $this->options;
+            }
+            elseif (is_callable($this->options)) {
+                $callable = $this->options;
 
-            return $callable();
-        }
+                return $callable();
+            }
 
-        return [];
-    }
-
-    /**
-     * Sets item options, for remote dropdowns.
-     *
-     * @return self|array
-     */
-    public function optionsFrom()
-    {
-        if (is_array($this->optionsFrom) AND count($this->optionsFrom) == 2) {
-            $itemOptions = $this->optionsFrom;
-
-            return $itemOptions($this);
-        }
-        elseif (is_array($this->optionsFrom)) {
-            return $this->optionsFrom;
+            return [];
         }
 
-        return [];
+        $this->options = $value;
+
+        return $this;
     }
 
     /**
@@ -172,9 +154,6 @@ class MenuItem
         if (isset($config['options']))
             $this->options = $config['options'];
 
-        if (isset($config['optionsFrom']))
-            $this->optionsFrom = $config['optionsFrom'];
-
         if (isset($config['context']))
             $this->context = $config['context'];
 
@@ -184,8 +163,8 @@ class MenuItem
         if (isset($config['badge']))
             $this->badge = $config['badge'];
 
-        if (isset($config['menuLink']))
-            $this->menuLink = $config['menuLink'];
+        if (isset($config['viewMoreUrl']))
+            $this->viewMoreUrl = $config['viewMoreUrl'];
 
         if (isset($config['path']))
             $this->path = $config['path'];

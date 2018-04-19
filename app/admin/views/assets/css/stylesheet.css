@@ -130,6 +130,9 @@ h4 small, h5 .small, h5 small, h6 .small, h6 small {
 	overflow-x: hidden;
 	padding: 10px 0 0;
 }
+.navbar-top-links .dropdown-menu .menu a {
+	display: block;
+}
 .navbar-top-links .dropdown-menu .menu .menu-item {
 	padding: 0 20px;
 }
@@ -1189,6 +1192,9 @@ fieldset[disabled] .form-control {
 }
 .message {
 	border-radius: 0;
+}
+.message.unread a {
+	font-weight: 500;
 }
 .message .message-heading {
 	background-color: #EAEAED;

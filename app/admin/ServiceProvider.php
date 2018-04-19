@@ -7,7 +7,6 @@ use Admin\Classes\Widgets;
 use AdminAuth;
 use File;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
-use Igniter\Flame\Translation\Localization;
 use System\Libraries\Assets;
 use System\Models\Mail_templates_model;
 
@@ -191,9 +190,9 @@ class ServiceProvider extends AppServiceProvider
                     'icon'        => 'fa-envelope',
                     'badge'       => 'label-danger',
                     'type'        => 'dropdown',
-                    'optionsFrom' => ['System\Models\Messages_model', 'listMenuMessages'],
+                    'options'     => ['System\Models\Messages_model', 'listMenuMessages'],
                     'partial'     => '~/app/system/views/messages/latest',
-                    'menuLink'    => 'messages',
+                    'viewMoreUrl' => admin_url('messages'),
                     'permission'  => 'Admin.Messages',
                     'attributes'  => [
                         'class'       => 'dropdown-toggle',
@@ -204,26 +203,21 @@ class ServiceProvider extends AppServiceProvider
                     'label'       => 'lang:admin::default.text_activity_title',
                     'icon'        => 'fa-bell',
                     'type'        => 'dropdown',
-                    'optionsFrom' => ['System\Models\Activities_model', 'listMenuActivities'],
+                    'options' => ['System\Models\Activities_model', 'listMenuActivities'],
                     'partial'     => '~/app/system/views/activities/latest',
-                    'menuLink'    => 'activities',
+                    'viewMoreUrl' => admin_url('activities'),
                     'permission'  => 'Admin.Activities',
                     'attributes'  => [
                         'class'       => 'dropdown-toggle',
                         'data-toggle' => 'dropdown',
                     ],
                 ],
-                'links'    => [
-                    'label'      => 'lang:admin::default.text_links_title',
-                    'icon'       => 'fa-ellipsis-v',
+                'settings' => [
+                    'label'      => 'lang:admin::default.text_settings_title',
+                    'icon'       => 'fa-gear',
                     'type'       => 'dropdown',
-                    'options'    => [
-                        'updates'    => 'lang:admin::default.menu_updates',
-                        'pages'      => 'lang:admin::default.menu_page',
-                        'banners'    => 'lang:admin::default.menu_banner',
-                        'error_logs' => 'lang:admin::default.menu_error_log',
-                        'settings'   => 'lang:admin::default.menu_setting',
-                    ],
+                    'options'    => ['System\Models\Settings_model', 'listMenuSettingItems'],
+                    'permission'  => 'Site.Settings',
                     'attributes' => [
                         'class'       => 'dropdown-toggle',
                         'data-toggle' => 'dropdown',

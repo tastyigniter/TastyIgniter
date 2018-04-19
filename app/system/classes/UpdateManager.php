@@ -325,7 +325,7 @@ class UpdateManager
         if (is_string($updates))
             return $updates;
 
-        $result = $items = $ignoredUpdates = [];
+        $result = $items = $ignoredItems = [];
         $result['last_check'] = $updates['check_time'] ?? Carbon::now()->toDateTimeString();
 
         $installedItems = collect($installedItems)->keyBy('name')->all();
@@ -333,13 +333,13 @@ class UpdateManager
         $updateCount = 0;
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
-            $installItem = array_get($installedItems, $update['code']);
-            $installItemCode = array_get($installItem, 'code');
-            $installItemVersion = array_get($installItem, 'ver');
-            $update['ver'] = $installItemVersion;
+            $installedItem = array_get($installedItems, $update['code']);
+            $installedItemCode = array_get($installedItem, 'name');
+            $installedItemVersion = array_get($installedItem, 'ver');
+            $update['ver'] = $installedItemVersion;
 
-            if ($this->isUpdateIgnored($installItemCode, $installItemVersion)) {
-                $ignoredUpdates[] = $installItemCode;
+            if ($this->isUpdateIgnored($installedItemCode, $installedItemVersion)) {
+                $ignoredItems[] = $update;
                 continue;
             }
 
@@ -348,7 +348,7 @@ class UpdateManager
 
         $result['count'] = $updateCount;
         $result['items'] = $items;
-        $result['ignored'] = $ignoredUpdates;
+        $result['ignoredItems'] = $ignoredItems;
 
         return $result;
     }
@@ -411,12 +411,12 @@ class UpdateManager
             if (!isset($item['ver']) OR !version_compare($item['ver'], '0.0.1', '>'))
                 continue;
 
-            if (isset($item['action']) AND $item['action'] == 'remove') {
+            if (array_get($item, 'action', 'ignore') == 'remove') {
                 unset($ignoredUpdates[$item['name']]);
                 continue;
             }
 
-            $ignoredUpdates[$item['name']] = $item;
+            $ignoredUpdates[$item['name']] = $item['ver'];
         }
 
         setting()->set('ignored_updates', $ignoredUpdates);
@@ -433,10 +433,7 @@ class UpdateManager
     {
         $ignoredUpdates = $this->getIgnoredUpdates();
 
-        $ignoredUpdate = array_get($ignoredUpdates, $code, []);
-
-        if (!$ignoredUpdateVersion = array_get($ignoredUpdate, 'ver'))
-            return FALSE;
+        $ignoredUpdateVersion = array_get($ignoredUpdates, $code);
 
         return $ignoredUpdateVersion == $version;
     }

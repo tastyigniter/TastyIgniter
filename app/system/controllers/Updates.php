@@ -29,6 +29,12 @@ class Updates extends \Admin\Classes\AdminController
 
     public function index()
     {
+        if ($force = get('check')) {
+            UpdateManager::instance()->requestUpdateList($force == 'force');
+
+            return $this->redirectBack();
+        }
+
         if (AdminAuth::hasPermission('Admin.Extensions.Manage'))
             Extensions_model::syncAll();
 
@@ -36,12 +42,6 @@ class Updates extends \Admin\Classes\AdminController
 
         if (!params()->has('carte_key')) {
             Flash::warning(lang('system::default.missing.carte_key'))->now();
-        }
-
-        if ($force = get('check')) {
-            UpdateManager::instance()->requestUpdateList($force == 'force');
-
-            return $this->redirectBack();
         }
 
         $pageTitle = lang('system::updates.text_title');
@@ -147,7 +147,7 @@ class Updates extends \Admin\Classes\AdminController
         return $this->applyInstallOrUpdate($context);
     }
 
-    public function index_onIgnoreUpdates()
+    public function index_onIgnoreUpdate()
     {
         try {
             $items = post('items');

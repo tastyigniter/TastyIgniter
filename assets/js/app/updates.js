@@ -342,7 +342,7 @@
             action: $button.data('itemAction')
         })
 
-        $.request('onIgnoreUpdates', {
+        $.request('onIgnoreUpdate', {
             data: {items: itemsToIgnore}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')

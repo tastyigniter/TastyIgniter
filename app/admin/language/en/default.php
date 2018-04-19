@@ -61,7 +61,7 @@ return [
     'alert_location_restricted' => 'Warning: You do not have the right permission to <b>%s</b> [%s] context outside your location, please contact the system administrator.',
     'alert_form_error_message'  => 'Sorry but form validation has failed, please check for errors.',
 
-    'text_links_title'       => 'Quick links',
+    'text_settings_title'    => 'Settings',
     'text_message_title'     => 'Your messages',
     'text_activity_title'    => 'Recent activities',
     'text_empty_activity'    => 'No recent activity',

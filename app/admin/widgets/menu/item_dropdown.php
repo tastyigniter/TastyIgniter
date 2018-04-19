@@ -1,6 +1,7 @@
 <?php
-$itemOptions = $item->options();
-$hasDropdown = count($itemOptions);
+$hasPartial = strlen($item->partial);
+$itemOptions = $hasPartial ? [] : $item->options();
+is_array($itemOptions) OR $itemOptions = [];
 ?>
 <li
     id="<?= $item->getId(); ?>"
@@ -14,13 +15,13 @@ $hasDropdown = count($itemOptions);
 
     <ul
         class="dropdown-menu"
-        <?php if (!$hasDropdown) { ?>data-request-options="<?= $item->itemName; ?>"<?php } ?>
+        <?php if ($hasPartial) { ?>data-request-options="<?= $item->itemName; ?>"<?php } ?>
     >
         <li class="dropdown-header"><?php if ($item->label) { ?><?= e(lang($item->label)); ?><?php } ?></li>
-        <?php if ($hasDropdown) { ?>
+        <?php if (!$hasPartial) { ?>
             <?php foreach ($itemOptions as $key => $value) { ?>
                 <li>
-                    <a href="<?= admin_url($key); ?>"><?= e(lang($value)); ?></a>
+                    <a href="<?= $key; ?>"><?= e(lang($value)); ?></a>
                 </li>
             <?php } ?>
         <?php } else { ?>
@@ -31,8 +32,8 @@ $hasDropdown = count($itemOptions);
             </li>
         <?php } ?>
         <li class="dropdown-footer">
-            <?php if ($item->menuLink) { ?>
-                <a class="text-center" href="<?= admin_url($item->menuLink); ?>"><i class="fa fa-ellipsis-h"></i></a>
+            <?php if ($item->viewMoreUrl) { ?>
+                <a class="text-center" href="<?= $item->viewMoreUrl; ?>"><i class="fa fa-ellipsis-h"></i></a>
             <?php } ?>
         </li>
     </ul>
