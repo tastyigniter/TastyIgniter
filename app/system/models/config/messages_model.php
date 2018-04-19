@@ -5,17 +5,6 @@ $config['list']['filter'] = [
         'prompt' => 'lang:system::messages.text_filter_search',
         'mode'   => 'all',
     ],
-    'scopes' => [
-        'send_type' => [
-            'label'      => 'lang:system::messages.text_filter_type',
-            'type'       => 'select',
-            'conditions' => 'send_type = :filtered',
-            'options'    => [
-                'email'   => 'lang:system::messages.text_email',
-                'account' => 'lang:system::messages.text_account',
-            ],
-        ],
-    ],
 ];
 
 $config['list']['toolbar'] = [
@@ -53,40 +42,22 @@ $config['form']['toolbar'] = [
             'context'           => ['view'],
             'data-request'      => 'onSend',
             'data-request-form' => '#edit-form',
-            'data-request-data' => 'send:1',
-        ],
-        'draftResponse' => [
-            'label'             => 'lang:system::messages.button_save_draft',
-            'class'             => 'btn btn-default',
-            'context'           => ['view'],
-            'data-request'      => 'onDraft',
-            'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
-//        'save'          => [
-//            'label'             => 'lang:admin::default.button_save',
-//            'class'             => 'btn btn-primary',
-//            'context'           => ['compose'],
-//            'data-request'      => 'onSave',
-//            'data-request-form' => '#edit-form',
-//            'data-request-data' => 'draft:1',
-//        ],
-//        'saveClose'     => [
-//            'label'             => 'lang:admin::default.button_save_close',
-//            'class'             => 'btn btn-default',
-//            'context'           => ['compose'],
-//            'data-request'      => 'onSave',
-//            'data-request-form' => '#edit-form',
-//            'data-request-data' => 'close:1',
-//        ],
+        'save'          => [
+            'label'             => 'lang:system::messages.button_save_draft',
+            'class'             => 'btn btn-default',
+            'context'           => ['draft'],
+            'data-request'      => 'onDraft',
+            'data-request-form' => '#edit-form',
+        ],
         'send'          => [
             'label'             => 'lang:system::messages.button_send',
             'class'             => 'btn btn-success',
-            'context'           => ['compose'],
+            'context'           => ['compose', 'draft'],
             'data-request-form' => '#edit-form',
             'data-request'      => 'onSend',
-            'data-request-data' => 'send:1',
-//            'data-request-data' => 'close:1',
+            'data-request-data' => 'close:1',
         ],
         'draftCompose'  => [
             'label'             => 'lang:system::messages.button_save_draft',
@@ -94,7 +65,6 @@ $config['form']['toolbar'] = [
             'context'           => ['compose'],
             'data-request'      => 'onDraft',
             'data-request-form' => '#edit-form',
-            'data-request-data' => 'draft:1',
         ],
         'back'          => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'messages'],
     ],
@@ -112,6 +82,7 @@ $config['form']['fields'] = [
         'type'        => 'relation',
         'span'        => 'right',
         'valueFrom'   => 'layout',
+        'context' => ['compose', 'draft'],
         'placeholder' => 'lang:admin::default.text_none',
     ],
     'recipient'      => [

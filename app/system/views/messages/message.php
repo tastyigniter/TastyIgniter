@@ -8,7 +8,7 @@
         aria-controls="<?= $field->getId('message'); ?>"
     >
         <time class="pull-right time">
-            <i class="fa fa-clock-o"></i> <?= day_elapsed($model->date_added); ?>
+            <i class="fa fa-clock-o"></i> <?= time_elapsed($model->date_added); ?>
         </time>
         <h5 class="panel-title">
             <i class="fa fa-user small"></i>

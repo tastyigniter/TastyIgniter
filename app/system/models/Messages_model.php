@@ -2,6 +2,7 @@
 
 use Admin\Models\Customers_model;
 use Admin\Models\Staffs_model;
+use Carbon\Carbon;
 use DB;
 use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -24,6 +25,8 @@ class Messages_model extends Model
 
     const CREATED_AT = 'date_added';
 
+    const UPDATED_AT = 'date_updated';
+
     /**
      * @var string The database table name
      */
@@ -36,7 +39,7 @@ class Messages_model extends Model
 
     public $timestamps = TRUE;
 
-    protected $fillable = ['date_added', 'send_type', 'parent_id', 'subject', 'body', 'status'];
+    protected $fillable = [];
 
     public $relation = [
         'belongsTo' => [
@@ -59,6 +62,7 @@ class Messages_model extends Model
         'customer_group',
         'staff',
         'staff_group',
+        'respond',
     ];
 
     public static $allowedSortingColumns = [
@@ -96,15 +100,18 @@ class Messages_model extends Model
         if (!$messagable instanceof Model)
             return null;
 
-        return Message_meta_model::whereMessagable($messagable)->isUnread()->count();
+        return self::whereHas('recipients', function ($query) use ($messagable) {
+            $query->whereMessagable($messagable)->whereIsUnread();
+        })->whereIsSent()->count();
     }
 
     public static function listMenuMessages($menu, $item, $user)
     {
         $query = self::listMessages([
             'context'   => 'inbox',
-            'recipient' => $user,
-        ]);
+            'recipient' => $user->staff,
+            'state' => 'unread'
+        ])->orderBy('date_updated', 'desc');
 
         return [
             'total' => $query->toBase()->getCountForPagination(),
@@ -140,11 +147,6 @@ class Messages_model extends Model
                 'title' => 'lang:system::messages.text_sent',
                 'icon'  => 'fa-paper-plane-o',
                 'url'   => 'messages/sent',
-            ],
-            'all'     => [
-                'title' => 'lang:system::messages.text_all',
-                'icon'  => 'fa-briefcase',
-                'url'   => 'messages/all',
             ],
             'archive' => [
                 'title' => 'lang:system::messages.text_archive',
@@ -211,20 +213,28 @@ class Messages_model extends Model
         extract(array_merge([
             'sort'      => null,
             'context'   => 'inbox',
+            'state'     => null,
             'recipient' => null,
         ], $options));
 
         switch ($context) {
             case 'inbox':
-                $query->whereNull('parent_id')->whereHas('recipients', function ($q) use ($recipient) {
-                    $q->whereMessagable($recipient);
-                });
+                $query->whereNull('parent_id')
+                      ->where('status', 1)
+                      ->whereHas('recipients', function ($q) use ($recipient, $state) {
+                          $q->whereMessagable($recipient);
+                          if ($state == 'read') {
+                              $q->whereIsRead();
+                          } else if ($state == 'unread') {
+                              $q->whereIsUnread();
+                          }
+                      });
                 break;
             case 'draft':
-                $query->where('status', 0)->orWhereNull('status')->whereSender($recipient);
+                $query->where('status', '!=', 1)->orWhereNull('status')->whereSender($recipient);
                 break;
             case 'sent':
-                $query->whereNull('parent_id')->where('status', 1)->whereSender($recipient);
+                $query->where('status', 1)->whereSender($recipient);
                 break;
             case 'archive':
                 $query->whereNull('parent_id')->whereSender($recipient)->onlyTrashed();
@@ -289,6 +299,11 @@ class Messages_model extends Model
         });
     }
 
+    public function scopeWhereIsSent($query)
+    {
+        return $query->where('status', 1);
+    }
+
     public function scopeWhereSentToInbox($query)
     {
         return $query->where('send_type', 'account');
@@ -327,9 +342,11 @@ class Messages_model extends Model
     public function sent()
     {
         $this->status = 1;
+        $this->setUpdatedAt(Carbon::now());
         $this->save();
 
-        $this->recipients()->update(['status' => 1]);
+        // Mark as unread
+        $this->recipients()->update(['status' => 1, 'state' => 0]);
     }
 
     public function isSent()
@@ -370,16 +387,39 @@ class Messages_model extends Model
         return $recipients;
     }
 
-    public function readState($messagable)
+    public function getRecipient($messagable)
     {
         if (!$messagable instanceof Model OR !$this->recipients)
             return null;
 
-        $meta = $this->recipients()->whereMessagable($messagable)->first();
-        if (!count($meta))
+        return $this->recipients->where('messagable_id', $messagable->getKey())
+                                ->where('messagable_type', get_class($messagable))->first();
+    }
+
+    public function isMarkedAsRead($messagable)
+    {
+        if (!$meta = $this->getRecipient($messagable))
             return null;
 
-        return $meta->state == 1 ? 'read' : 'unread';
+        return $meta->state == 1;
+    }
+
+    public function markAsRead($messagable)
+    {
+        if (!$meta = $this->getRecipient($messagable))
+            return null;
+
+        $meta->state = 1;
+        $meta->save();
+    }
+
+    public function markAsUnread($messagable)
+    {
+        if (!$meta = $this->getRecipient($messagable))
+            return null;
+
+        $meta->state = 0;
+        $meta->save();
     }
 
     public function addRecipients($recipients)
@@ -387,15 +427,13 @@ class Messages_model extends Model
         if ($recipients->isEmpty())
             return;
 
-        $this->recipients()->delete();
+        $this->recipients()->forceDelete();
 
         $recipients->each(function ($model) {
             $this->recipients()->create([
                 'messagable_id'   => $model->getKey(),
                 'messagable_type' => get_class($model),
             ]);
-
-            return $model;
         });
     }
 

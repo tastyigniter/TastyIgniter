@@ -4,15 +4,14 @@ $itemOptions = isset($itemOptions['items']) ? $itemOptions['items'] : $itemOptio
 <ul class="menu">
     <?php if (count($itemOptions)) { ?>
         <?php foreach ($itemOptions as $message) { ?>
-            <li class="<?= $message['state']; ?>">
-                <a href="<?= $message['view']; ?>">
-                    <div>
-                        <span class="message-subject"><?= $message['subject']; ?></span>
-                        <span class="pull-right text-muted">
-                            <em><?= $message['date_added']; ?></em>
-                        </span>
-                    </div>
-                    <div><?= $message['body']; ?></div>
+            <li>
+                <a
+                    class="menu-item"
+                   href="<?= admin_url('messages/view/'.$message->message_id); ?>"
+                >
+                    <p><span class="message-subject"><b><?= str_limit($message['subject'], 25); ?></b></span></p>
+                    <p><?= str_limit($message['body'], 35); ?></p>
+                    <span class="small menu-item-meta"><em><?= time_elapsed($message['date_added']); ?></em></span>
                 </a>
             </li>
             <li class="divider"></li>

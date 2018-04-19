@@ -24,11 +24,11 @@ $participants = $model->listRecipients();
     <div class="divider"></div>
 
     <?php
-    $descendants = $model->descendants();
+    $descendants = $model->descendants()->get();
     ?>
     <?php if (count($descendants)) { ?>
         <?php foreach ($descendants as $descendant) { ?>
-            <?= $this->makePartial('messages/message', ['model' => $descendant]); ?>
+            <?= $this->makePartial('messages/message', ['model' => $descendant, 'field' => $field]); ?>
         <?php } ?>
     <?php } ?>
 </div>

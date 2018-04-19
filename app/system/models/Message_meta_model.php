@@ -30,9 +30,14 @@ class Message_meta_model extends Model
 
     protected $with = ['messagable'];
 
-    public function scopeIsUnread($query)
+    public function scopeWhereIsUnread($query)
     {
         return $query->where('state', '!=', '1');
+    }
+
+    public function scopeWhereIsRead($query)
+    {
+        return $query->where('state', '1');
     }
 
     public function scopeWhereMessagable($query, $messagable)

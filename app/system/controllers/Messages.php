@@ -26,19 +26,13 @@ class Messages extends \Admin\Classes\AdminController
         'name'       => 'lang:system::messages.text_form_name',
         'model'      => 'System\Models\Messages_model',
         'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
-            'redirect'      => 'messages/compose/{message_id}',
+            'title'         => 'lang:system::messages.text_create_title',
+            'redirect'      => 'messages/draft/{message_id}',
             'redirectClose' => 'messages',
             'context'       => 'compose',
         ],
-//        'preview'       => [
-//            'title'         => 'lang:admin::default.form.edit_title',
-//            'redirect'      => 'messages/view/{code}',
-//            'redirectClose' => 'messages',
-//            'context' => 'view',
-//        ],
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:system::messages.text_draft_title',
             'redirect'      => 'messages/draft/{message_id}',
             'redirectClose' => 'messages',
             'context'       => 'draft',
@@ -73,18 +67,6 @@ class Messages extends \Admin\Classes\AdminController
         return $this->makeView('messages/index');
     }
 
-    public function all($context)
-    {
-        if (!AdminAuth::hasPermission('Admin.Messages.Manage', TRUE))
-            return $this->redirect('messages');
-
-        $this->prepareVars($context);
-
-        $this->asExtension('ListController')->index();
-
-        return $this->makeView('messages/index');
-    }
-
     public function archive($context)
     {
         $this->prepareVars($context);
@@ -101,31 +83,64 @@ class Messages extends \Admin\Classes\AdminController
 
     public function view($context, $recordId = null)
     {
-        $this->formConfig['edit']['context'] = $context;
         $this->asExtension('FormController')->edit($context, $recordId);
     }
 
     public function draft($context, $recordId = null)
     {
-        if (!is_null($recordId)) {
-            $this->asExtension('FormController')->edit(null, $recordId);
-            $view = 'messages/compose';
-        }
-        else {
+        if ($recordId == null) {
             $this->prepareVars($context);
             $this->asExtension('ListController')->index();
             $view = 'messages/index';
+        }
+        else {
+            $formController = $this->asExtension('FormController');
+            $formController->edit(null, $recordId);
+            $view = 'messages/compose';
+            if ($formController->getFormModel()->isSent()) {
+                flash()->danger(lang('system::messages.alert_warning_draft'));
+
+                return $this->redirect('messages/draft');
+            }
         }
 
         return $this->makeView($view);
     }
 
-    public function view_onSend($context, $recordId = null)
+    public function index_onMark()
     {
-        return $this->asExtension('FormController')->edit_onSave(null, $recordId);
+        $checkedIds = post('checked');
+        if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds)) {
+            flash()->success(lang('admin::default.list.delete_empty'));
+
+            return $this->refreshList();
+        }
+
+        $markAction = post('action');
+        $records = Messages_model::whereIn('message_id', $checkedIds)->get();
+        foreach ($records as $record) {
+            if ($markAction == 'read') {
+                $record->markAsRead($this->getUser()->staff);
+            }
+            else {
+                $record->markAsUnread($this->getUser()->staff);
+            }
+        }
+
+        $count = count($records);
+        $prefix = ($count > 1) ? ' records' : 'record';
+        flash()->success(sprintf(
+            lang('admin::default.alert_success'),
+            '['.$count.']'.$prefix.' '.lang('system::messages.alert_mark_as_'.$markAction)
+        ));
     }
 
-    public function view_onDraft($context, $recordId = null)
+    public function view_onSend($context, $recordId = null)
+    {
+        return $this->asExtension('FormController')->edit_onSave($context, $recordId);
+    }
+
+    public function draft_onDraft($context, $recordId = null)
     {
         return $this->asExtension('FormController')->edit_onSave(null, $recordId);
     }
@@ -155,7 +170,7 @@ class Messages extends \Admin\Classes\AdminController
 
     public function listExtendQuery($query, $alias)
     {
-        $query->listMessages([
+        $query->with(['sender', 'recipients'])->listMessages([
             'context'   => $this->messageContext,
             'recipient' => $this->getUser()->staff,
         ]);
@@ -176,6 +191,13 @@ class Messages extends \Admin\Classes\AdminController
         ]);
     }
 
+    public function formExtendModel($model)
+    {
+        if ($this->action == 'view') {
+            $model->markAsRead($this->getUser()->staff);
+        }
+    }
+
     public function formBeforeSave($model)
     {
         if (!$model->exists) {
@@ -187,26 +209,37 @@ class Messages extends \Admin\Classes\AdminController
         // If status hasn't already been set, we will
         // set it to -1 to send or 0 to save as draft
         if (!$model->isSent())
-            $model->status = ($send = post('send') AND $send == 1) ? -1 : 0;
+            $model->status = ($send = post('close') AND $send == 1) ? -1 : 0;
     }
 
     public function formAfterSave($model)
     {
         // Update message as sent, sets status to 1
-        if (post('send') === 1)
+        if (post('close') == 1)
             $model->sent();
+
+        if ($this->action == 'view') {
+            $user = AdminAuth::getUser();
+            $response = $model->replicate();
+            $response->sender_id = $user->staff->getKey();
+            $response->sender_type = get_class($user->staff);
+            $response->parent_id = $model->message_id;
+            $response->body = post('Message.respond');
+            $response->save();
+        }
     }
 
     public function formValidate($model, $form)
     {
-        $rules[] = ['recipient', 'lang:system::messages.label_to', 'required|min:2|max:128'];
-        $rules[] = ['subject', 'lang:system::messages.label_subject', 'required|min:2|max:128'];
-        $rules[] = ['send_type', 'lang:system::messages.label_send_type', 'required|alpha'];
+        $rules[] = ['recipient', 'lang:system::messages.label_to', 'sometimes|min:2|max:128'];
+        $rules[] = ['subject', 'lang:system::messages.label_subject', 'sometimes|min:2|max:128'];
+        $rules[] = ['send_type', 'lang:system::messages.label_send_type', 'sometimes|alpha'];
         $rules[] = ['customer_groups.*', 'lang:system::messages.label_customer_group', 'required_if:recipient,customer_group|integer'];
         $rules[] = ['staff_groups.*', 'lang:system::messages.label_staff_group', 'required_if:recipient,staff_group|integer'];
         $rules[] = ['customers.*', 'lang:system::messages.label_customers', 'required_if:recipient,customers|integer'];
         $rules[] = ['staffs.*', 'lang:system::messages.label_staff', 'required_if:recipient,staffs|integer'];
-        $rules[] = ['body', 'lang:system::messages.label_body', 'required|min:3'];
+        $rules[] = ['body', 'lang:system::messages.label_body', 'sometimes|min:3'];
+        $rules[] = ['respond', 'lang:system::messages.label_respond', 'sometimes|min:3'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }
