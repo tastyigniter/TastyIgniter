@@ -64,7 +64,6 @@
             $lastAddedItem = $itemGroup.find('.panel:last-child')
             $lastAddedItem.find('[data-toggle="toggle"]').bootstrapToggle();
             $lastAddedItem.find('[data-control="repeater"]').repeater()
-
         })
     }
 

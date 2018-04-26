@@ -72,15 +72,16 @@ class Menus extends AdminController
 
         $rules[] = ['menu_options.*.option_id', 'lang:admin::menus.label_option_id', 'required|integer'];
         $rules[] = ['menu_options.*.menu_id', 'lang:admin::menus.label_option', 'integer'];
+        $rules[] = ['menu_options.*.priority', 'lang:admin::menus.label_option', 'integer'];
         $rules[] = ['menu_options.*.menu_option_id', 'lang:admin::menus.label_option', 'integer'];
         $rules[] = ['menu_options.*.required', 'lang:admin::menus.label_option_required', 'required|integer'];
 
-        $rules[] = ['menu_options.*.menu_option_values.*', 'lang:admin::menus.label_option', 'required'];
-        $rules[] = ['menu_options.*.menu_option_values.*.menu_option_value_id', 'lang:admin::menus.label_option_value_id', 'numeric'];
-        $rules[] = ['menu_options.*.menu_option_values.*.option_value_id', 'lang:admin::menus.label_option_value', 'required|integer'];
-        $rules[] = ['menu_options.*.menu_option_values.*.new_price', 'lang:admin::menus.label_option_price', 'numeric'];
-        $rules[] = ['menu_options.*.menu_option_values.*.quantity', 'lang:admin::menus.label_option_qty', 'numeric'];
-        $rules[] = ['menu_options.*.menu_option_values.*.subtract_stock', 'lang:admin::menus.label_option_subtract_stock', 'numeric'];
+        $rules[] = ['menu_options.*.option_values', 'lang:admin::menus.label_option', 'required'];
+        $rules[] = ['menu_options.*.option_values.*.menu_option_value_id', 'lang:admin::menus.label_option_value_id', 'numeric'];
+        $rules[] = ['menu_options.*.option_values.*.option_value_id', 'lang:admin::menus.label_option_value', 'required|integer'];
+        $rules[] = ['menu_options.*.option_values.*.new_price', 'lang:admin::menus.label_option_price', 'numeric'];
+        $rules[] = ['menu_options.*.option_values.*.quantity', 'lang:admin::menus.label_option_qty', 'numeric'];
+        $rules[] = ['menu_options.*.option_values.*.subtract_stock', 'lang:admin::menus.label_option_subtract_stock', 'numeric'];
 
         $rules[] = ['special.start_date', 'lang:admin::menus.label_start_date', 'valid_date'];
         $rules[] = ['special.end_date', 'lang:admin::menus.label_end_date', 'valid_date'];

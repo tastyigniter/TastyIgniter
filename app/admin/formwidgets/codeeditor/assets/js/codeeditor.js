@@ -77,7 +77,6 @@
     CodeEditor.prototype.initCodeMirror = function () {
         this.editor = CodeMirror.fromTextArea(this.$textarea[0], this.options)
         this.editor.setSize(null, this.options.height)
-        console.log(this.options)
     }
 
     CodeEditor.prototype.onSaveChanges = function () {

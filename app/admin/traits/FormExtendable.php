@@ -86,7 +86,7 @@ trait FormExtendable
         $result = $query->find($recordId);
 
         if (!$result) {
-            throw new Exception(lang('admin::default.form.not_found'));
+            throw new Exception(sprintf(lang('admin::default.form.not_found'), $recordId));
         }
 
         $result = $this->controller->formExtendModel($result) ?: $result;

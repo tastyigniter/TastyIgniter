@@ -36,7 +36,7 @@ class Filter extends BaseWidget
      * @var string The context of this filter, scopes that do not belong
      * to this context will not be shown.
      */
-    public $context = null;
+    public $context;
 
     protected $defaultAlias = 'filter';
 
@@ -88,7 +88,7 @@ class Filter extends BaseWidget
         $this->defineFilterScopes();
         $this->vars['filterAlias'] = $this->alias;
         $this->vars['filterId'] = $this->getId();
-        $this->vars['cookieStoreName'] = setting('cookie_prefix').'displayFilterPanel';
+        $this->vars['cookieStoreName'] = $this->getCookieKey();
         $this->vars['onSubmitHandler'] = $this->getEventHandler('onSubmit');
         $this->vars['onClearHandler'] = $this->getEventHandler('onClear');
         $this->vars['cssClasses'] = implode(' ', $this->cssClasses);
@@ -307,7 +307,7 @@ class Filter extends BaseWidget
 
             // Check that the filter scope matches the active context
             if ($scopeObj->context !== null) {
-                $context = (is_array($scopeObj->context)) ? $scopeObj->context : [$scopeObj->context];
+                $context = (array)$scopeObj->context;
                 if (!in_array($this->getContext(), $context)) {
                     continue;
                 }
@@ -340,8 +340,8 @@ class Filter extends BaseWidget
      */
     protected function makeFilterScope($name, $config)
     {
-        $label = (isset($config['label'])) ? $config['label'] : null;
-        $scopeType = isset($config['type']) ? $config['type'] : null;
+        $label = $config['label'] ?? null;
+        $scopeType = $config['type'] ?? null;
 
         $scope = new FilterScope($name, $label);
         $scope->displayAs($scopeType, $config);
@@ -388,7 +388,7 @@ class Filter extends BaseWidget
             $scope = $this->getScope($scope);
         }
 
-        if ($scope->value !== '0' AND !$scope->value) {
+        if ($scope->disabled OR ($scope->value !== '0' AND !$scope->value)) {
             return;
         }
 
@@ -544,9 +544,14 @@ class Filter extends BaseWidget
 
     public function isActiveState()
     {
-        $cookiePrefix = setting('cookie_prefix');
+        $cookieKey = $this->getCookieKey();
 
-        return (bool)Request::cookie($cookiePrefix.'displayFilterPanel');
+        return (bool)@json_decode(array_get($_COOKIE, $cookieKey));
+    }
+
+    public function getCookieKey()
+    {
+        return 'ti_displayListFilter';
     }
 
     /**
@@ -557,7 +562,7 @@ class Filter extends BaseWidget
     protected function getScopeModel($scope)
     {
         if (!isset($this->scopeModels[$scope]))
-            return $this->model;
+            return null;
 
         return $this->scopeModels[$scope];
     }

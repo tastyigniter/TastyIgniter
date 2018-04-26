@@ -114,7 +114,7 @@ class Reservations extends \Admin\Classes\AdminController
         $namedRules = [
             ['status_id', 'lang:admin::default.label_status', 'required|integer|exists:statuses,status_id'],
             ['location_id', 'lang:admin::reservations.text_restaurant', 'required|integer'],
-            ['statusData.status_id', 'lang:admin::reservations.label_status', 'required|same:status'],
+            ['statusData.status_id', 'lang:admin::reservations.label_status', 'required|same:status_id'],
             ['statusData.comment', 'lang:admin::reservations.label_comment', 'max:1500'],
             ['statusData.notify', 'lang:admin::reservations.label_notify', 'required|integer'],
             ['assignee_id', 'lang:admin::reservations.label_assign_staff', 'required|integer'],

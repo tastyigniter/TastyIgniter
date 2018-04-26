@@ -1,5 +1,9 @@
 <div class="filter-scope select form-group">
-    <select name="<?= $this->getScopeName($scope) ?>" class="form-control input-sm">
+    <select
+        name="<?= $this->getScopeName($scope) ?>"
+        class="form-control input-sm"
+        <?= $scope->disabled ? 'disabled="disabled"' : ''?>
+    >
         <option value=""><?= lang($scope->label) ?></option>
         <?php $options = $this->getSelectOptions($scope->scopeName) ?>
         <?php foreach ($options['available'] as $key => $value) { ?>

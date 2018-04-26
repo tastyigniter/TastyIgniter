@@ -121,7 +121,6 @@ class Repeater extends BaseFormWidget
      */
     public function loadAssets()
     {
-//        $this->addCss('css/repeater.css', 'repeater-css', ['depends'=>'jquery-sortable-js']);
         $this->addJs(assets_url('js/vendor/jquery-sortable.js'), 'jquery-sortable-js');
         $this->addJs('js/repeater.js', 'repeater-js');
     }
@@ -158,7 +157,7 @@ class Repeater extends BaseFormWidget
             if (isset($field['type']) AND $field['type'] == 'hidden')
                 continue;
 
-            $columns[$name] = isset($field['label']) ? $field['label'] : '';
+            $columns[$name] = $field['label'] ?? '';
         }
 
         return $columns;
@@ -215,7 +214,7 @@ class Repeater extends BaseFormWidget
         $checked = (array)post(self::CHECKED_PREFIX.strtolower($this->alias));
         $radioed = (array)post(self::CHECKED_PREFIX.'radio_'.strtolower($this->alias));
 
-        foreach ($items as $index => &$item) {
+        foreach ($items as $index => $item) {
             if ($draggedFlipped AND $this->sortable)
                 $item[$this->sortColumn] = $draggedFlipped[$index];
 
@@ -226,6 +225,8 @@ class Repeater extends BaseFormWidget
             if ($radioed AND $this->radioFrom) {
                 $item[$this->radioFrom] = (int)in_array($index, $radioed);
             }
+
+            $items[$index] = $item;
         }
 
         if ($this->sortColumn AND $this->sortable) {

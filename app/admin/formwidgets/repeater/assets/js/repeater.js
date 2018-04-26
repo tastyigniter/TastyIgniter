@@ -33,6 +33,7 @@
 
     Repeater.prototype.init = function () {
         this.$el.on('click', '[data-control="add-item"]', $.proxy(this.addItem, this))
+        this.$el.on('click', '[data-control="remove-item"]', $.proxy(this.removeItem, this))
 
         this.bindSorting()
     }
@@ -53,6 +54,17 @@
     Repeater.prototype.unbind = function () {
         this.$sortable.sortable('destroy')
         this.$el.removeData('ti.repeater')
+    }
+
+    Repeater.prototype.removeItem = function (event) {
+        var $element = $(event.currentTarget),
+            $parent = $($element.data('target')),
+            prompt = $element.data('prompt')
+
+        if (prompt.length && !confirm(prompt))
+            return false;
+
+        $parent.remove()
     }
 
     Repeater.prototype.addItem = function (event) {

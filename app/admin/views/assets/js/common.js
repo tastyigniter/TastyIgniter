@@ -13,7 +13,6 @@ jQuery(function ($) {
         }
 
         $(document).on('click', '[data-toggle="sidebar"]', function () {
-            console.log('ddd')
             if ($container.hasClass('sidebar-collapsed')) {
                 $container.removeClass('sidebar-collapsed')
                 Cookies.set('ti_sidebarToggleState', 'expanded')
@@ -24,25 +23,38 @@ jQuery(function ($) {
         })
     })
 
+    $(function () {
+        $('a, span, button').tooltip({placement: 'bottom'});
+
+        $.fn.select2.defaults.set('theme', 'bootstrap');
+        $('select.form-control').select2({minimumResultsForSearch: 10});
+
+        $('.alert').alert();
+    });
+
     // List Filter State Toggle
     // Uses user cookie value to show/hide list filter bar
     // todo: move to widget assets file.
     $(function () {
-        var $listFilterElement = $('[data-toggle="list-filter"]'),
-            displayFilterPanel = Cookies.set('ti_displayFilterPanel')
+        var $listFilterButton = $('[data-toggle="list-filter"]'),
+            $listFilterTarget = $($listFilterButton.data('target')),
+            listFilterStoreName = $listFilterTarget.data('storeName'),
+            displayFilterPanel = Cookies.set(listFilterStoreName)
 
-        $listFilterElement.on('click', function () {
-            var $filterButton = $(this),
-                $filterTarget = $($filterButton.data('target'))
+        $listFilterButton.on('click', function () {
+            var $button = $(this)
 
-            $filterTarget.slideToggle(function () {
-                $filterButton.button('toggle')
-                Cookies.set($filterTarget.data('storeName'), $filterTarget.is(':visible') ? 1 : 0)
+            $listFilterTarget.slideToggle(function () {
+                $button.button('toggle')
+                if (!listFilterStoreName || !listFilterStoreName.length)
+                    return
+
+                Cookies.set(listFilterStoreName, $listFilterTarget.is(':visible') ? 1 : 0)
             })
         })
 
         if (displayFilterPanel > 0) {
-            $listFilterElement.addClass('active')
+            $listFilterButton.addClass('active')
         }
     })
 

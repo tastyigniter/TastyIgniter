@@ -141,8 +141,8 @@ class Relation extends BaseFormWidget
                 $field->config['mode'] = 'radio';
             }
 
-            $field->value = $this->processFieldValue($this->relatedModel, $this->getLoadValue());
-            $field->placeholder = $field->placeholder ? $field->placeholder : $this->emptyOption;
+            $field->value = $this->processFieldValue($field->value, $this->relatedModel);
+            $field->placeholder = $field->placeholder ?: $this->emptyOption;
 
             // It is safe to assume that if the model and related model are of
             // the exact same class, then it cannot be related to itself
@@ -173,7 +173,7 @@ class Relation extends BaseFormWidget
         });
     }
 
-    protected function processFieldValue($model, $value)
+    protected function processFieldValue($value, $model)
     {
         if ($value instanceof Collection)
             $value = $value->pluck($model->getKeyName())->toArray();

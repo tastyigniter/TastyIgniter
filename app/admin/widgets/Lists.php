@@ -148,7 +148,7 @@ class Lists extends BaseWidget
         ]);
 
         $this->pageLimit = $this->getSession('page_limit',
-            isset($this->pageLimit) ? $this->pageLimit : setting('page_limit', 10)
+            $this->pageLimit ?? setting('page_limit', 10)
         );
 
         if ($this->showPagination == 'auto') {
@@ -472,7 +472,19 @@ class Lists extends BaseWidget
             $this->allColumns = array_merge($orderedDefinitions, $this->allColumns);
         }
 
+        $this->applyFiltersFromModel();
+
         return $this->allColumns;
+    }
+
+    /**
+     * Allow the model to filter columns.
+     */
+    protected function applyFiltersFromModel()
+    {
+        if (method_exists($this->model, 'filterColumns')) {
+            $this->model->filterColumns((object)$this->allColumns);
+        }
     }
 
     /**

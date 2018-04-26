@@ -177,7 +177,7 @@ class Locations_model extends BaseLocationModel
 
     public function setUrl($suffix = null)
     {
-        if (setting('site_location_mode') == 'single')
+        if (is_single_location())
             $suffix = '/menus';
 
         $this->url = site_url($this->permalink_slug.$suffix);

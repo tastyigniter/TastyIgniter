@@ -15,6 +15,11 @@ class Connector extends BaseFormWidget
 
     const SORT_PREFIX = '___dragged_';
 
+    /**
+     * @var bool Stops nested repeaters populating from previous sibling.
+     */
+    protected static $onAddItemCalled = FALSE;
+
     //
     // Object properties
     //
@@ -25,8 +30,6 @@ class Connector extends BaseFormWidget
      * @var int Count of repeated items.
      */
     protected $indexCount = 0;
-
-    public $sortColumn = 'priority';
 
     /**
      * @var array Collection of form widgets.
@@ -39,10 +42,7 @@ class Connector extends BaseFormWidget
     // Configurable properties
     //
 
-    /**
-     * @var bool Stops nested repeaters populating from previous sibling.
-     */
-    protected static $onAddItemCalled = FALSE;
+    public $sortColumn = 'priority';
 
     /**
      * @var string Model column to use for the name reference
@@ -161,12 +161,13 @@ class Connector extends BaseFormWidget
 
     public function onRemoveItem()
     {
-        $postData = post();
-        $valueFromName = array_get($postData, $this->valueFromName);
+        $valueFromName = array_get(post(), $this->valueFromName);
         if (!strlen($valueFromName))
             return FALSE;
 
-        $this->getRelationModel()->where($this->valueFromName, $valueFromName)->delete();
+        $this->getRelationModel()
+             ->where($this->valueFromName, $valueFromName)
+             ->delete();
     }
 
     /**
@@ -195,16 +196,16 @@ class Connector extends BaseFormWidget
         if (!is_array($itemIndexes)) return;
 
         foreach ($itemIndexes as $itemIndex) {
-            $this->makeItemFormWidget($itemIndex);
+            $this->makeItemFormWidget($itemIndex, $loadValue);
             $this->indexCount = max((int)$itemIndex, $this->indexCount);
         }
     }
 
-    protected function makeItemFormWidget($index = 0)
+    protected function makeItemFormWidget($index = 0, $loadValue = [])
     {
         $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $config['model'] = array_get($this->relatedModels, $index, $this->getRelationModel());
-        $config['data'] = array_get($this->getLoadValue(), $index, array_get($this->relatedModels, $index, []));
+        $config['data'] = array_get($loadValue, $index, array_get($this->relatedModels, $index, []));
         $config['alias'] = $this->alias.'Form'.$index;
         $config['arrayName'] = $this->formField->getName().'['.$index.']';
 
@@ -252,12 +253,14 @@ class Connector extends BaseFormWidget
         // Give widgets an opportunity to process the data.
         foreach ($this->formWidgets as $index => $widget) {
             if (!array_key_exists($index, $items)) continue;
-//            $items[$index] = $widget->getSaveData();
+            $items[$index] = $widget->getSaveData();
         }
 
-        foreach ($items as $index => &$item) {
+        foreach ($items as $index => $item) {
             if ($draggedFlipped AND $this->sortable)
                 $item[$this->sortColumn] = $draggedFlipped[$index];
+
+            $items[$index] = $item;
         }
 
         if ($this->sortColumn AND $this->sortable) {

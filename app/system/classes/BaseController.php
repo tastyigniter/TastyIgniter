@@ -113,21 +113,4 @@ class BaseController extends Extendable
     {
         $this->statusCode = $code;
     }
-
-    /**
-     * Sets standard page variables in the case of a controller error.
-     *
-     * @param \Exception $exception
-     *
-     * @throws \Exception
-     */
-    public function handleError(Exception $exception)
-    {
-        $errorMessage = $exception->getMessage();
-        $this->fatalError = $errorMessage;
-        if (!Request::ajax())
-            throw $exception;
-
-        flash()->error($errorMessage);
-    }
 }

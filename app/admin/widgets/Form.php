@@ -50,7 +50,7 @@ class Form extends BaseWidget
      * @var string The context of this form, fields that do not belong
      * to this context will not be shown.
      */
-    public $context = null;
+    public $context;
 
     /**
      * @var string If the field element names should be contained in an array.
@@ -267,7 +267,6 @@ class Form extends BaseWidget
         $this->applyFiltersFromModel();
         $this->vars['cookieKey'] = $this->getCookieKey();
         $this->vars['activeTab'] = $this->getActiveTab();
-//        $this->vars['sessionKey'] = $this->getSessionKey();
         $this->vars['outsideTabs'] = $this->allTabs->outside;
         $this->vars['primaryTabs'] = $this->allTabs->primary;
     }
@@ -368,7 +367,7 @@ class Form extends BaseWidget
      */
     public function makeFormField($name, $config)
     {
-        $label = isset($config['label']) ? $config['label'] : null;
+        $label = $config['label'] ?? null;
         list($fieldName, $fieldContext) = $this->getFieldName($name);
 
         $field = new FormField($fieldName, $label);
@@ -390,7 +389,7 @@ class Form extends BaseWidget
         } // Defined field type
         else {
 
-            $fieldType = isset($config['type']) ? $config['type'] : null;
+            $fieldType = $config['type'] ?? null;
             if (!is_string($fieldType) AND !is_null($fieldType)) {
                 throw new Exception(sprintf(
                     lang('admin::default.form.field_invalid_type'), gettype($fieldType)
@@ -420,7 +419,7 @@ class Form extends BaseWidget
 
             // Defer the execution of option data collection
             $field->options(function () use ($field, $config) {
-                $fieldOptions = isset($config['options']) ? $config['options'] : null;
+                $fieldOptions = $config['options'] ?? null;
                 $fieldOptions = $this->getOptionsFromModel($field, $fieldOptions);
 
                 return $fieldOptions;
@@ -698,7 +697,7 @@ class Form extends BaseWidget
 
         $cookieKey = $this->getCookieKey();
 
-        $activeTab = isset($activeTabs[$cookieKey]) ? $activeTabs[$cookieKey] : null;
+        $activeTab = $activeTabs[$cookieKey] ?? null;
 
         return $this->activeTab = $activeTab;
     }

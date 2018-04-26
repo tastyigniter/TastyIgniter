@@ -21,10 +21,11 @@
                 type="button"
                 class="btn btn-danger btn-outline pull-right"
                 aria-label="Remove"
-                data-request="<?= $this->getEventHandler('onRemoveItem') ?>"
-                data-request-data="menu_option_id: <?= $widget->data->{$this->valueFromName} ?>"
                 <?php if (!$this->previewMode) { ?>
-                    onclick="$(this).closest('#<?= $this->getId('item-'.$index) ?>').remove();"
+                    data-request="<?= $this->getEventHandler('onRemoveItem') ?>"
+                    data-request-data="menu_option_id: <?= $widget->data->{$this->valueFromName} ?>"
+                    data-request-confirm="<?= lang('admin::default.alert_warning_confirm') ?>"
+                    data-request-success="$(this).closest('#<?= $this->getId('item-'.$index) ?>').remove()"
                 <?php } ?>
             >
                 <span aria-hidden="true">X</span>

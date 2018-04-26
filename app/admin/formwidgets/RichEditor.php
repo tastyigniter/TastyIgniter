@@ -6,7 +6,7 @@ use Admin\Classes\BaseFormWidget;
  * Rich Editor
  * Renders a rich content editor field.
  *
- * Adapted from october\backend\classes\DataTable
+ * Adapted from october\backend\classes\RichEditor
  *
  * @package Admin
  */
