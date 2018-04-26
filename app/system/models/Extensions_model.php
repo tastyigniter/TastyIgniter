@@ -215,26 +215,28 @@ class Extensions_model extends Model
      * Delete a single extension by code
      *
      * @param string $code
-     * @param bool $delete_data whether to delete extension data
+     * @param bool $deleteData whether to delete extension data
      *
      * @return bool
      */
-    public static function deleteExtension($code = '', $deleteData = TRUE)
+    public static function deleteExtension($code = '', $deleteData = TRUE, $keepFiles = false)
     {
-        $extensionModel = self::where('name', trim($code, '.'))->first();
+        $extensionModel = self::where('name', $code)->first();
 
-        if ($extensionModel AND ($deleteData OR !$extensionModel->data)) {
+        if ($extensionModel AND $deleteData) {
             $extensionModel->delete();
+            UpdateManager::instance()->purgeExtension($code);
         }
 
         $extensionManager = ExtensionManager::instance();
 
         // delete extensions from file system
-        $filesDeleted = $extensionManager->removeExtension($code);
+        if (!$keepFiles)
+            $extensionManager->removeExtension($code);
 
         // disable extension
         $extensionManager->updateExtension($code, false);
 
-        return $filesDeleted;
+        return true;
     }
 }

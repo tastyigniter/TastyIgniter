@@ -145,6 +145,11 @@ class ServiceProvider extends AppServiceProvider
                 'igniter.down'    => Console\Commands\IgniterDown::class,
                 'igniter.install' => Console\Commands\IgniterInstall::class,
                 'igniter.update'  => Console\Commands\IgniterUpdate::class,
+                'extension.install'  => Console\Commands\ExtensionInstall::class,
+                'extension.refresh'  => Console\Commands\ExtensionRefresh::class,
+                'extension.remove'  => Console\Commands\ExtensionRemove::class,
+                'theme.install'  => Console\Commands\ThemeInstall::class,
+                'theme.remove'  => Console\Commands\ThemeRemove::class,
             ] as $command => $class
         ) {
             $this->registerConsoleCommand($command, $class);

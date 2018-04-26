@@ -240,7 +240,7 @@ class Updates extends \Admin\Classes\AdminController
                 $response['data'] = array_get($updates, 'items');
             }
             else {
-                $response = UpdateManager::instance()->applyItems($items, 'install');
+                $response = UpdateManager::instance()->requestApplyItems($items);
             }
 
             return [

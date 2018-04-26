@@ -391,12 +391,12 @@ class UpdateManager
         return $this->installedItems;
     }
 
-    public function applyItems($names, $context = 'update')
+    public function requestApplyItems($names)
     {
         $applies = $this->getHubManager()->applyItems($names);
 
         if (isset($applies['data'])) foreach ($applies['data'] as $index => $item) {
-            if ($context == 'update' AND $this->isUpdateIgnored($item['code'], $item['ver']))
+            if ($this->isUpdateIgnored($item['code'], $item['version']))
                 unset($applies['data'][$index]);
         }
 

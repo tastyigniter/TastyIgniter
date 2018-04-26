@@ -114,7 +114,7 @@ class Extensions extends \Admin\Classes\AdminController
             // Extension not found in filesystem
             // so delete from database
             if (!$extensionClass) {
-                Extensions_model::deleteExtension($extensionCode, TRUE);
+                Extensions_model::deleteExtension($extensionCode);
                 flash()->success(sprintf(lang('admin::default.alert_success'), "Extension deleted "));
 
                 return $this->redirectBack();
@@ -125,7 +125,7 @@ class Extensions extends \Admin\Classes\AdminController
             $meta = $extensionClass->extensionMeta();
             $this->vars['extensionModel'] = $model;
             $this->vars['extensionMeta'] = $meta;
-            $this->vars['extensionName'] = isset($meta['name']) ? $meta['name'] : '';
+            $this->vars['extensionName'] = $meta['name'] ?? '';
             $this->vars['extensionData'] = $model->data;
             $this->vars['filesToDelete'] = $extensionManager->files($extensionCode);
         } catch (Exception $ex) {
