@@ -117,11 +117,6 @@ class ServiceProvider extends AppServiceProvider
                 'code'  => 'components',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\PaymentEditor', [
-                'label' => 'Payment Editor',
-                'code'  => 'paymenteditor',
-            ]);
-
             $manager->registerFormWidget('Admin\FormWidgets\Relation', [
                 'label' => 'Relationship',
                 'code'  => 'relation',
