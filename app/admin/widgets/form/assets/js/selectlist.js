@@ -4,11 +4,6 @@
 +function ($) {
     "use strict";
 
-    if ($.ti === undefined) $.ti = {}
-
-    if ($.ti.starRating === undefined)
-        $.ti.starRating = {}
-
     var SelectList = function (element, options) {
         this.$el = $(element)
         this.$container = null
@@ -23,7 +18,7 @@
     SelectList.prototype.init = function () {
         this.options.onInitialized = $.proxy(this.onInitialized, this)
         this.options.onDropdownShown = $.proxy(this.onDropdownShown, this)
-        // this.options.onChange = $.proxy(this.onChange, this)
+        this.options.onDropdownHide = $.proxy(this.onDropdownHidden, this)
 
         this.$el.multiselect(this.options)
     }
@@ -45,12 +40,11 @@
     }
 
     SelectList.prototype.onDropdownShown = function (event) {
-        // $(event.relatedTarget).tooltip('destroy')
+        $(event.relatedTarget).tooltip('destroy')
     }
 
-    SelectList.prototype.onChange = function (option, checked, select) {
-        console.log($('input[value="' + $(option).val() + '"]'))
-        $('input[value="' + $(option).val() + '"]').trigger('click')
+    SelectList.prototype.onDropdownHidden = function (event) {
+        $(event.relatedTarget).tooltip('destroy')
     }
 
     // MEDIA MANAGER PLUGIN DEFINITION

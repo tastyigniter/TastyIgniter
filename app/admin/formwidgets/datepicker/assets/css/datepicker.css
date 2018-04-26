@@ -1,5 +1,5 @@
 .datepicker-dropdown {
-	background-color: #ECF0F5;
+	background-color: #E9E9ED;
 }
 .datepicker-dropdown.datepicker-orient-bottom:before {
 	bottom: -7px;
@@ -25,7 +25,8 @@
 .datepicker table tr td.focused,
 .datepicker table tr td span.focused,
 .datepicker table tr td span:hover {
-	background: #A1DBED;
+	background: #39B3D7;
+	color: #fff;
 }
 .datepicker table tr td.active.active,
 .datepicker table tr td.active.highlighted.active,

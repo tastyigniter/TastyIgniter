@@ -348,7 +348,6 @@ var Installer = {
             $.each(stepItems, function (itemIndex, item) {
                 var timeout = 500
 
-                console.log(item)
                 requestChain.push(function () {
                     var postData,
                         deferred = $.Deferred(),

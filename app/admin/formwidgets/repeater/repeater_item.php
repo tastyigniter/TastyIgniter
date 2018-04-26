@@ -16,7 +16,6 @@
                 <input
                     type="radio"
                     id="<?= $widget->getId().'radio-'.$indexValue ?>"
-                    class="styled"
                     name="<?= $radioName ?>"
                     value="<?= $indexValue; ?>"
                     <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
@@ -32,7 +31,6 @@
                 <input
                     type="checkbox"
                     id="<?= $widget->getId().'checkbox-'.$indexValue ?>"
-                    class="styled"
                     name="<?= $checkedName ?>"
                     value="<?= $indexValue; ?>"
                     <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
@@ -47,7 +45,9 @@
             <a
                 class="btn btn-outline btn-danger"
                 <?php if (!$this->previewMode) { ?>
-                    onclick="$(this).closest('#<?= $this->getId('item-'.$indexValue) ?>').remove()"
+                    data-control="remove-item"
+                    data-target="#<?= $this->getId('item-'.$indexValue) ?>"
+                    data-prompt="<?= lang('admin::default.alert_confirm') ?>"
                 <?php } ?>
             >
                 <i class="fa fa-times-circle"></i>
