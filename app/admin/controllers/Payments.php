@@ -56,7 +56,7 @@ class Payments extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if (AdminAuth::hasPermission('Admin.Payments.Manage'))
+        if ($this->getUser()->hasPermission('Admin.Payments.Manage'))
             Payments_model::syncAll();
 
         $this->asExtension('ListController')->index();
@@ -85,7 +85,7 @@ class Payments extends \Admin\Classes\AdminController
         $result = $query->whereCode($paymentCode)->first();
 
         if (!$result)
-            throw new Exception(lang('admin::default.form.not_found'));
+            throw new Exception(sprintf(lang('admin::default.form.not_found'), $paymentCode));
 
         $result = $this->formExtendModel($result) ?: $result;
 

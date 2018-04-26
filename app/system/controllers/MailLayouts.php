@@ -55,7 +55,7 @@ class MailLayouts extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if (AdminAuth::hasPermission('Admin.MailTemplates.Manage'))
+        if ($this->getUser()->hasPermission('Admin.MailTemplates.Manage'))
             Mail_templates_model::syncAll();
 
         $this->asExtension('ListController')->index();

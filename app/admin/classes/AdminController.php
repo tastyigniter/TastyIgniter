@@ -17,6 +17,7 @@ use Redirect;
 use Request;
 use Response;
 use System\Classes\BaseController;
+use System\Classes\ErrorHandler;
 use System\Traits\ConfigMaker;
 use System\Traits\ViewMaker;
 
@@ -88,7 +89,7 @@ class AdminController extends BaseController
     protected function definePaths()
     {
         // Add paths from the extension / module context
-        $relativePath = dirname(dirname($classPath = strtolower(str_replace('\\', '/', get_called_class()))));
+        $relativePath = dirname($classPath = strtolower(str_replace('\\', '/', get_called_class())), 2);
         $this->viewPath[] = '~/extensions/'.$relativePath.'/views';
         $this->viewPath[] = '~/extensions/'.$relativePath.'/views/'.basename($classPath);
         $this->viewPath[] = '~/app/'.$relativePath.'/views/'.basename($classPath);
@@ -129,7 +130,7 @@ class AdminController extends BaseController
             }
 
             // Check that user has permission to view this page
-            if ($this->requiredPermissions AND !AdminAuth::hasPermission($this->requiredPermissions, TRUE)) {
+            if ($this->requiredPermissions AND !$this->getUser()->hasPermission($this->requiredPermissions, TRUE)) {
                 return $this->redirectBack(302, [], 'dashboard');
             }
         }
@@ -230,6 +231,11 @@ class AdminController extends BaseController
     // Helper Methods
     //
 
+    public function locationContext()
+    {
+        return Admin::locationContext();
+    }
+
     public function pageUrl($path = null, $parameters = [], $secure = null)
     {
         return Admin::url($path, $parameters, $secure);
@@ -306,5 +312,21 @@ class AdminController extends BaseController
         }
 
         return FALSE;
+    }
+
+    /**
+     * Sets standard page variables in the case of a controller error.
+     *
+     * @param \Exception $exception
+     *
+     * @throws \Exception
+     */
+    public function handleError(Exception $exception)
+    {
+        $errorMessage = ErrorHandler::getDetailedMessage($exception);
+        $this->fatalError = $errorMessage;
+        $this->vars['fatalError'] = $errorMessage;
+
+        flash()->error($errorMessage);
     }
 }

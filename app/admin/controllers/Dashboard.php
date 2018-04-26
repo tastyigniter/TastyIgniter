@@ -155,7 +155,7 @@ class Dashboard extends \Admin\Classes\AdminController
         $filter['sort_by'] = 'orders.date_added';
         $filter['order_by'] = 'DESC';
 
-        if (AdminAuth::isStrictLocation()) {
+        if (AdminAuth::user()->hasStrictLocationAccess()) {
             $filter['filter_location'] = AdminAuth::getLocationId();
         }
 

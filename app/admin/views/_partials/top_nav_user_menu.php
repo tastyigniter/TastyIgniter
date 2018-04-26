@@ -2,7 +2,7 @@
 $staffName = AdminAuth::getStaffName();
 $staffEmail = AdminAuth::getStaffEmail();
 $staffAvatar = md5(strtolower(trim($staffEmail)));
-$staffGroup = AdminAuth::staffGroup();
+$staffGroupName = AdminAuth::staffGroupName();
 $staffLocation = AdminAuth::getLocationName();
 $staffEditLink = admin_url('staffs/edit/'.AdminAuth::getStaffId());
 $logoutLink = admin_url('logout');
@@ -15,7 +15,7 @@ $logoutLink = admin_url('logout');
         <li>
             <div class="wrap-vertical">
                 <div class="wrap-top wrap-vertical">
-                    <p class="small text-uppercase"><?= $staffGroup; ?></p>
+                    <p class="small text-uppercase"><?= $staffGroupName; ?></p>
                     <h5><strong><?= $staffName; ?></strong></h5>
                     <p class="small">
                         <i class="fa fa-map-marker"></i>&nbsp;&nbsp;<?= $staffLocation; ?>

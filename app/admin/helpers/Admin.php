@@ -1,5 +1,7 @@
 <?php namespace Admin\Helpers;
 
+use Admin\Facades\AdminAuth;
+use App;
 use Config;
 use Igniter\Flame\Support\RouterHelper;
 use Redirect;
@@ -101,5 +103,18 @@ class Admin
         $path = $path == '/' ? $path : '/'.$path;
 
         return Redirect::intended($this->uri().$path, $status, $headers, $secure);
+    }
+
+    public function locationContext()
+    {
+        if (AdminAuth::user()->hasStrictLocationAccess())
+            return 'single';
+
+        return setting()->get('site_location_mode');
+    }
+
+    public function locationModeIsSingle()
+    {
+        return $this->locationContext() == 'single';
     }
 }

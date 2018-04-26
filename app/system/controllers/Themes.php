@@ -161,7 +161,7 @@ class Themes extends \Admin\Classes\AdminController
 
     public function index_onSetDefault()
     {
-        if (!AdminAuth::hasPermission('Site.Themes.Manage', TRUE))
+        if (!$this->getUser()->hasPermission('Site.Themes.Manage', TRUE))
             return $this->redirectBack();
 
         $themeName = post('code');
@@ -313,7 +313,7 @@ class Themes extends \Admin\Classes\AdminController
         $result = $query->where('code', $recordId)->first();
 
         if (!$result) {
-            throw new Exception(lang('admin::default.form.not_found'));
+            throw new Exception(sprintf(lang('admin::default.form.not_found'), $recordId));
         }
 
         return $result;

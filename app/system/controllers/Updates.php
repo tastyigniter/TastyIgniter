@@ -35,7 +35,7 @@ class Updates extends \Admin\Classes\AdminController
             return $this->redirectBack();
         }
 
-        if (AdminAuth::hasPermission('Admin.Extensions.Manage'))
+        if ($this->getUser()->hasPermission('Admin.Extensions.Manage'))
             Extensions_model::syncAll();
 
         Themes_model::syncAll();

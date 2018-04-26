@@ -51,7 +51,7 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if (AdminAuth::hasPermission('Admin.Extensions.Manage'))
+        if ($this->getUser()->hasPermission('Admin.Extensions.Manage'))
             Extensions_model::syncAll();
 
         $this->asExtension('ListController')->index();
@@ -69,7 +69,7 @@ class Extensions extends \Admin\Classes\AdminController
                 throw new SystemException(lang('system::extensions.alert_setting_not_found'));
             }
 
-            if ($settingItem->permissions AND !AdminAuth::hasPermission($settingItem->permissions, TRUE))
+            if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions, TRUE))
                 return $this->redirectBack();
 
             $pageTitle = lang($settingItem->label ?: 'text_edit_title');
@@ -185,7 +185,7 @@ class Extensions extends \Admin\Classes\AdminController
             throw new SystemException(lang('system::extensions.alert_setting_not_found'));
         }
 
-        if ($settingItem->permissions AND !AdminAuth::hasPermission($settingItem->permissions, TRUE))
+        if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions, TRUE))
             return $this->redirectBack();
 
         $model = $this->formFindModelObject($settingItem);

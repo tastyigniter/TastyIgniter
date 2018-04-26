@@ -120,6 +120,9 @@ class Navigation
         if (self::$navItemsLoaded)
             return;
 
+        if (!AdminAuth::check())
+            return;
+
         // Load app items
         foreach (self::$callbacks as $callback) {
             $callback($this);
@@ -147,7 +150,7 @@ class Navigation
             if (!$permission = array_get($item, 'permission'))
                 return TRUE;
 
-            return AdminAuth::hasPermission($permission);
+            return AdminAuth::user()->hasPermission($permission);
         })->toArray();
     }
 

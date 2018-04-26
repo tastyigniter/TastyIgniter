@@ -55,7 +55,7 @@ class Permissions extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if (AdminAuth::hasPermission('Admin.Permissions.Manage'))
+        if ($this->getUser()->hasPermission('Admin.Permissions.Manage'))
             Permissions_model::syncAll();
 
         $this->asExtension('ListController')->index();
