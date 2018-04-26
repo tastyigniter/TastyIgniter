@@ -4,9 +4,11 @@ use Admin\Classes\AdminController;
 use Admin\Classes\FormField;
 use Admin\Traits\FormExtendable;
 use Admin\Widgets\Toolbar;
+use DB;
 use Exception;
 use Model;
 use Redirect;
+use Str;
 use System\Classes\ControllerAction;
 use Template;
 
@@ -217,16 +219,18 @@ class FormController extends ControllerAction
         $model = $this->controller->formExtendModel($model) ?: $model;
         $this->initForm($model, $context);
 
-        if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return FALSE;
-
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeCreate($model);
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
-        foreach ($modelsToSave as $modelToSave) {
-            $modelToSave->save();
-        }
+        if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
+            return FALSE;
+
+        DB::transaction(function () use ($modelsToSave) {
+            foreach ($modelsToSave as $modelToSave) {
+                $modelToSave->save();
+            }
+        });
 
         $this->controller->formAfterSave($model);
         $this->controller->formAfterCreate($model);
@@ -261,16 +265,18 @@ class FormController extends ControllerAction
         $model = $this->controller->formFindModelObject($recordId);
         $this->initForm($model, $context);
 
-        if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return FALSE;
-
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeUpdate($model);
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
-        foreach ($modelsToSave as $modelToSave) {
-            $modelToSave->save();
-        }
+        if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
+            return FALSE;
+
+        DB::transaction(function () use ($modelsToSave) {
+            foreach ($modelsToSave as $modelToSave) {
+                $modelToSave->save();
+            }
+        });
 
         $this->controller->formAfterSave($model);
         $this->controller->formAfterUpdate($model);
@@ -481,7 +487,8 @@ class FormController extends ControllerAction
                 $this->setModelAttributes($model->{$attribute}, $value);
             }
             elseif ($value !== FormField::NO_SAVE_DATA) {
-                $model->{$attribute} = $value;
+                if (!starts_with($attribute, '_'))
+                    $model->{$attribute} = $value;
             }
         }
     }
