@@ -15,7 +15,7 @@ class HubManager
 {
     use \Igniter\Flame\Traits\Singleton;
 
-    const ENDPOINT = 'https://api.tastyigniter.io/v2';
+    const ENDPOINT = 'https://api.tastyigniter.com/v2';
 
     protected $cachePrefix;
 

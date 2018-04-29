@@ -5,7 +5,7 @@
  */
 class SetupController
 {
-    const TI_ENDPOINT = 'https://api.tastyigniter.io/v2';
+    const TI_ENDPOINT = 'https://api.tastyigniter.com/v2';
 
     const COMPOSER_INSTALLER_URL = 'https://getcomposer.org/composer.phar';
 
