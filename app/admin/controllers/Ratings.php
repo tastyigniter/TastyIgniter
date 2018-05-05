@@ -19,7 +19,7 @@ class Ratings extends \Admin\Classes\AdminController
 
         Template::setTitle(lang('admin::ratings.text_title'));
         Template::setHeading(lang('admin::ratings.text_heading'));
-        Template::setButton(lang('admin::default.button_save'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
+        Template::setButton(lang('admin::default.button_save'), ['class' => 'btn btn-primary', 'role' => 'button', 'onclick' => '$(\'#edit-form\').submit();']);
 
         Assets::addJs(assets_url('js/vendor/jquery-sortable.js'), 'jquery-sortable-js');
 

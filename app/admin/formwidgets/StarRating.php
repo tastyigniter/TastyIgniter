@@ -14,7 +14,7 @@ class StarRating extends BaseFormWidget
     /**
      * @var array Default available hints
      */
-    public $hints;
+    public static $hints = [];
 
     protected $defaultAlias = 'starrating';
 
@@ -24,8 +24,8 @@ class StarRating extends BaseFormWidget
             'hints',
         ]);
 
-        if (!$this->hints) {
-            $this->hints = $this->getHints();
+        if (!self::$hints) {
+            self::$hints = $this->getHints();
         }
     }
 
@@ -44,7 +44,7 @@ class StarRating extends BaseFormWidget
         $this->vars['field'] = $this->formField;
         $this->vars['name'] = $this->formField->getName();
         $this->vars['value'] = $value = $this->getLoadValue();
-        $this->vars['hints'] = array_values($this->hints);
+        $this->vars['hints'] = array_values(self::$hints);
     }
 
     public function loadAssets()

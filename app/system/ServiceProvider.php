@@ -206,7 +206,7 @@ class ServiceProvider extends AppServiceProvider
         Paginator::defaultSimpleView('system::_partials/pagination/simple_default');
 
         Paginator::currentPathResolver(function () {
-            return current_url();
+            return url()->current();
         });
 
         Paginator::currentPageResolver(function ($pageName = 'page') {

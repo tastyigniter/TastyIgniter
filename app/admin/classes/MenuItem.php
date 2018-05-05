@@ -66,6 +66,11 @@ class MenuItem
     public $viewMoreUrl;
 
     /**
+     * @var array Contains a list of attributes specified in the item configuration.
+     */
+    public $optionsView;
+
+    /**
      * @var string Specifies a path for partial-type fields.
      */
     public $path;
@@ -165,6 +170,9 @@ class MenuItem
 
         if (isset($config['viewMoreUrl']))
             $this->viewMoreUrl = $config['viewMoreUrl'];
+
+        if (isset($config['optionsView']))
+            $this->optionsView = $config['optionsView'];
 
         if (isset($config['path']))
             $this->path = $config['path'];

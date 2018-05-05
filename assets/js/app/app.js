@@ -277,6 +277,11 @@ if (jQuery === undefined)
         return false
     })
 
+    $(document).on('change', 'select[data-request]', function () {
+        $(this).request()
+        return false
+    })
+
     $(document).on('click', 'a[data-request], button[data-request]', function (e) {
         e.preventDefault()
         $(this).request()

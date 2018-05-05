@@ -70,7 +70,7 @@ class User extends Manager
 
     public function location()
     {
-        return $this->user()->staff->location;
+        return $this->staff()->location;
     }
 
     public function staffGroup()

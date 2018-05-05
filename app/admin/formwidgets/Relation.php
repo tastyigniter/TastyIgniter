@@ -141,7 +141,7 @@ class Relation extends BaseFormWidget
                 $field->config['mode'] = 'radio';
             }
 
-            $field->value = $this->processFieldValue($field->value, $this->relatedModel);
+            $field->value = $this->processFieldValue($this->getLoadValue(), $this->relatedModel);
             $field->placeholder = $field->placeholder ?: $this->emptyOption;
 
             // It is safe to assume that if the model and related model are of
