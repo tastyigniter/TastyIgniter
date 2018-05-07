@@ -8,8 +8,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
                 <h4 class="modal-title"><?= $formTitle ? e(lang($formTitle)) : '' ?></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
             </div>
             <div class="modal-body">
                 <?php foreach ($statusFormWidget->getFields() as $field): ?>

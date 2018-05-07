@@ -368,7 +368,6 @@ class Assets
                 'reference'  => null,
                 'collection' => $this->collection,
                 'path'       => $this->prepUrl($href, 'ver='.params('core.build')),
-//                'path'       => $href,
                 'attributes' => [
                     'rel'  => 'stylesheet',
                     'type' => 'text/css',
@@ -383,7 +382,6 @@ class Assets
                 'reference'  => null,
                 'collection' => $this->collection,
                 'path'       => $this->prepUrl($href, 'ver='.params('core.build')),
-//                'path'       => $href,
                 'attributes' => [
                     'charset' => strtolower(setting('charset')),
                     'type'    => 'text/javascript',

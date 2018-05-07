@@ -1,0 +1,13 @@
+html {
+    min-height: 100%;
+    position: relative;
+}
+
+body {
+    margin-bottom: 50px;
+}
+
+label {
+    font-weight: $font-weight-500;
+    font-size: $font-size-base;
+}

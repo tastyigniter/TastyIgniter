@@ -10,8 +10,8 @@
     <link type="text/css" rel="stylesheet" href="assets/css/vendor/font-awesome.min.css">
     <link type="text/css" rel="stylesheet" href="assets/css/vendor/animate.css">
     <link type="text/css" rel="stylesheet" href="assets/css/vendor/awesome-checkbox.css">
-    <link type="text/css" rel="stylesheet" href="setup/views/assets/fonts.css">
-    <link type="text/css" rel="stylesheet" href="setup/views/assets/stylesheet.css">
+    <link type="text/css" rel="stylesheet" href="setup/assets/fonts.css">
+    <link type="text/css" rel="stylesheet" href="setup/assets/stylesheet.css">
 </head>
 <body>
 <div id="page">

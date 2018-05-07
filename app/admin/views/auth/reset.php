@@ -1,10 +1,13 @@
-<div class="row-fluid">
-    <div class="col-md-4 center-block float-none">
-        <div class="panel panel-default panel-login">
-            <div class="thumbnail">
-                <img src="<?= image_url('tastyigniter-logo.png'); ?>" width="250px">
+<div class="container-fluid">
+    <div class="login-container">
+        <div class="card">
+            <div class="card-header">
+                <?php $logo = setting('site_logo', 'tastyigniter-logo.png'); ?>
+                <img alt="<?= setting('site_name'); ?>"
+                     src="<?= image_url($logo) ?>"
+                     height="64px" width="250px">
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <h5><?= lang('admin::login.text_reset_password_title'); ?></h5>
                 <?= form_open(current_url(),
                     [
@@ -28,7 +31,7 @@
                     <div class="form-group">
                         <input type="password"
                                id="password"
-                               class="form-control input-lg"
+                               class="form-control"
                                name="password"
                                placeholder="<?= lang('admin::login.label_password'); ?>">
                         <?= form_error('password', '<span class="text-danger">', '</span>'); ?>
@@ -36,7 +39,7 @@
                     <div class="form-group">
                         <input type="password"
                                id="password-confirm"
-                               class="form-control input-lg"
+                               class="form-control"
                                name="password_confirm"
                                placeholder="<?= lang('admin::login.label_password_confirm'); ?>">
                         <?= form_error('password_confirm', '<span class="text-danger">', '</span>'); ?>
@@ -48,7 +51,7 @@
                            href="<?= admin_url('login'); ?>"><?= lang('admin::login.text_back_to_login'); ?></a>
                     </div>
                     <button type="submit"
-                            class="btn btn-success pull-right"><?= lang('admin::login.button_reset_password'); ?></button>
+                            class="btn btn-primary pull-right"><?= lang('admin::login.button_reset_password'); ?></button>
                 </div>
                 <?= form_close(); ?>
             </div>

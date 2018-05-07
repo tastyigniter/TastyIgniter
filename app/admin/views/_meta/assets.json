@@ -20,28 +20,12 @@
   ],
   "style": [
     {
-      "href": "assets/css/metisMenu.min.css",
-      "name": "metis-menu-css"
-    },
-    {
-      "href": ":assets_url,css/vendor/select2.min.css",
-      "name": "select2-css"
-    },
-    {
-      "href": ":assets_url,css/vendor/select2-bootstrap.min.css",
-      "name": "select2-bootstrap-css"
-    },
-    {
-      "href": ":assets_url,css/vendor/awesome-checkbox.css",
-      "name": "awesome-checkbox-css"
-    },
-    {
-      "href": "assets/css/fonts.css",
+      "href": "css/fonts.css",
       "name": "fonts-css"
     },
     {
-      "href": "assets/css/stylesheet.css",
-      "name": "stylesheet-css"
+      "href": "css/admin.css",
+      "name": "admin-css"
     }
   ],
   "script": [
@@ -54,7 +38,7 @@
       "name": "trigger-js"
     },
     {
-      "src": "assets/js/metisMenu.min.js",
+      "src": "js/metisMenu.min.js",
       "name": "metis-menu-js"
     },
     {
@@ -66,7 +50,7 @@
       "name": "js-cookie-js"
     },
     {
-      "src": "assets/js/common.js",
+      "src": "js/common.js",
       "name": "common-js"
     }
   ]

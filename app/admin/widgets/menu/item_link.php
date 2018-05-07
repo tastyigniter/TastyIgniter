@@ -1,6 +1,6 @@
 <li
     id="<?= $item->getId(); ?>"
-    class="menu-link">
+    class="nav-item">
     <a <?= $item->getAttributes(); ?>>
         <i class="fa <?= e($item->icon); ?>"></i>
         <?php if ($item->badge) { ?>

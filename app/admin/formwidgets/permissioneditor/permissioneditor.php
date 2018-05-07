@@ -3,8 +3,8 @@
         <ul class="nav nav-tabs">
             <?php $index = 0;
             foreach ($tabs as $name => $tab) { ?>
-                <li class="<?= $index++ == 0 ? 'active' : '' ?>">
-                    <a href="#<?= $name.'-tab-'.$index ?>" data-toggle="tab"><?= e(lang($tab)) ?></a>
+                <li class="nav-item<?= $index++ == 0 ? ' active' : '' ?>">
+                    <a class="nav-link" href="#<?= $name.'-tab-'.$index ?>" data-toggle="tab"><?= e(lang($tab)) ?></a>
                 </li>
             <?php } ?>
         </ul>

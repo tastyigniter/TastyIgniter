@@ -1,11 +1,5 @@
-.panel-area-group {
-	background-color: #D7D7DE;
-	box-shadow: unset;
-}
-.panel-area-group .panel-footer {
-	background-color: transparent;
-}
 .panel-area-body {
+	padding: 0;
 	height: 546px;
 	overflow-y: auto;
 }

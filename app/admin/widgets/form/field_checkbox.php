@@ -7,7 +7,7 @@ $checkedValues = (array)$field->value;
     <?php if ($this->previewMode AND $field->value) { ?>
         <div
             id="<?= $field->getId() ?>"
-            class="btn-group"
+            class="btn-group btn-group-toggle"
             data-toggle="buttons">
             <?php $index = 0;
             foreach ($fieldOptions as $value => $option) { ?>
@@ -16,7 +16,7 @@ $checkedValues = (array)$field->value;
                 $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
                 if (is_string($option)) $option = [$option];
                 ?>
-                <label class="btn btn-default <?= in_array($value, $checkedValues) ? 'active' : ($this->previewMode ? 'disabled' : '') ?>">
+                <label class="btn btn-light <?= in_array($value, $checkedValues) ? 'active' : ($this->previewMode ? 'disabled' : '') ?>">
                     <input
                         type="checkbox"
                         id="<?= $checkboxId ?>"
@@ -31,7 +31,7 @@ $checkedValues = (array)$field->value;
     <?php } elseif (!$this->previewMode AND count($fieldOptions)) { ?>
         <div
             id="<?= $field->getId() ?>"
-            class="btn-group"
+            class="btn-group btn-group-toggle"
             data-toggle="buttons">
             <?php $index = 0;
             foreach ($fieldOptions as $value => $option) { ?>
@@ -40,7 +40,7 @@ $checkedValues = (array)$field->value;
                 $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
                 if (is_string($option)) $option = [$option];
                 ?>
-                <label class="btn btn-default <?= in_array($value, $checkedValues) ? 'active' : '' ?>">
+                <label class="btn btn-light <?= in_array($value, $checkedValues) ? 'active' : '' ?>">
                     <input
                         type="checkbox"
                         id="<?= $checkboxId ?>"
@@ -60,16 +60,17 @@ $checkedValues = (array)$field->value;
             value="0"
             <?= $this->previewMode ? 'disabled="disabled"' : '' ?>>
 
-        <div class="checkbox" tabindex="0">
-            <label>
-                <input
-                    type="checkbox"
-                    id="<?= $field->getId() ?>"
-                    name="<?= $field->getName() ?>"
-                    value="1"
-                    <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
-                    <?= $field->value == 1 ? 'checked="checked"' : '' ?>
-                    <?= $field->getAttributes() ?>>
+        <div class="custom-control custom-control-checkbox" tabindex="0">
+            <input
+                type="checkbox"
+                class="custom-control-input"
+                id="<?= $field->getId() ?>"
+                name="<?= $field->getName() ?>"
+                value="1"
+                <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
+                <?= $field->value == 1 ? 'checked="checked"' : '' ?>
+                <?= $field->getAttributes() ?>>
+            <label class="custom-control-label">
                 <?= $field->label ? e(lang($field->label)) : '' ?>
             </label>
         </div>

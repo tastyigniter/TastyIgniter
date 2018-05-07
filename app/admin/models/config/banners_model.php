@@ -31,7 +31,7 @@ $config['list']['toolbar'] = [
             'label'       => 'lang:admin::default.button_icon_filter',
             'class'       => 'btn btn-default btn-filter',
             'data-toggle' => 'list-filter',
-            'data-target' => '.panel-filter .panel-body',
+            'data-target' => '.list-filter',
         ],
     ],
 ];

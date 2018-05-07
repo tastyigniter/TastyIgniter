@@ -11,5 +11,7 @@
         <?= $field->getAttributes() ?>
         <?= $this->previewMode ? 'readonly="readonly"' : '' ?>
     />
-    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+    <span class="input-group-prepend">
+        <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
+    </span>
 </div>

@@ -4,24 +4,15 @@
 
     <div
         id="<?= $this->getId() ?>"
-        class="control-datepicker">
-
-        <div class="row">
-            <?php if ($mode == 'date') { ?>
-                <div class="col-md-6">
-                    <?= $this->makePartial('datepicker/picker_date') ?>
-                </div>
-            <?php } elseif ($mode == 'datetime') { ?>
-                <div class="col-md-6">
-                    <?= $this->makePartial('datepicker/picker_datetime') ?>
-                </div>
-            <?php } elseif ($mode == 'time') { ?>
-                <div class="col-md-6">
-                    <?= $this->makePartial('datepicker/picker_time') ?>
-                </div>
-            <?php } ?>
-        </div>
-
+        class="control-datepicker"
+    >
+        <?php if ($mode == 'date') { ?>
+            <?= $this->makePartial('datepicker/picker_date') ?>
+        <?php } elseif ($mode == 'datetime') { ?>
+            <?= $this->makePartial('datepicker/picker_datetime') ?>
+        <?php } elseif ($mode == 'time') { ?>
+            <?= $this->makePartial('datepicker/picker_time') ?>
+        <?php } ?>
     </div>
 
 <?php } ?>

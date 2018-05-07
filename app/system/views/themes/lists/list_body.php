@@ -3,46 +3,37 @@
         <?php
         if (!$theme->themeClass) continue;
         ?>
-        <div class="col-xs-12 wrap-bottom">
-        <div class="panel panel-theme">
-            <div class="theme-label">
-                <?php if ($theme->themeClass->isActive()) { ?>
-                    <span class="activated" title="<?= lang('system::themes.text_is_default'); ?>"></span>
-                <?php } ?>
-            </div>
-            <div class="panel-body">
-                <div class="media">
-                    <a class="media-left preview-thumb"
-                       data-toggle="modal"
-                       data-target="#theme-preview-<?= $theme->code; ?>"
-                       data-img-src="<?=  URL::asset($theme->themeClass->screenshot); ?>">
-                        <img class="img-rounded"
-                             alt=""
-                             src="<?= URL::asset($theme->themeClass->screenshot); ?>"
-                             style="width:250px;"/>
-                    </a>
-                    <div class="media-body wrap-left">
-                        <h4 class="media-heading"><?= $theme->name; ?></h4>
-                        <p class="description text-muted"><?= $theme->description; ?></p>
-                        <div class="buttons action">
+        <div class="col col-6">
+            <div class="media p-3">
+                <a class="media-left align-self-center mr-3 preview-thumb"
+                    data-toggle="modal"
+                    data-target="#theme-preview-<?= $theme->code; ?>"
+                    data-img-src="<?=  URL::asset($theme->themeClass->screenshot); ?>">
+                    <img class="im-responsive img-rounded"
+                            alt=""
+                            src="<?= URL::asset($theme->themeClass->screenshot); ?>"
+                            style="width:150px;"/>
+                </a>
+                <div class="media-body">
+                    <h4 class="media-heading"><?= $theme->name; ?></h4>
+                    <p class="description text-muted"><?= $theme->description; ?></p>
+                    <div class="buttons action mb-3">
+                        <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('source')]) ?>
 
-                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('source')]) ?>
+                        <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('edit')]) ?>
 
-                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('edit')]) ?>
+                        <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('default')]) ?>
 
-                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('default')]) ?>
-
-                            <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('delete')]) ?>
+                        <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('delete')]) ?>
+                    </div>
+                    <div class="row metas align-self-end">
+                        <div class="pull-left wrap-vertical text-muted text-sm">
+                            <b><?= lang('system::themes.text_author'); ?>:</b><br/>
+                            <?= $theme->themeClass->author; ?>
                         </div>
-                        <div class="row metas">
-                            <div class="pull-left wrap-vertical text-muted text-sm">
-                                <b><?= lang('system::themes.text_author'); ?>:</b><br/>
-                                <?= $theme->themeClass->author; ?>
-                            </div>
-                            <div class="pull-left wrap-vertical text-muted text-sm text-left">
-                                <b><?= lang('system::themes.text_version'); ?>:</b><br/>
-                                <?= $theme->version; ?>
-                            </div>
+                        <div class="pull-left wrap-vertical text-muted text-sm text-left">
+                            <b><?= lang('system::themes.text_version'); ?>:</b><br/>
+                            <?= $theme->version; ?>
                         </div>
                     </div>
                 </div>
@@ -53,15 +44,14 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
                             <h4 class="modal-title">Preview Theme</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
                         </div>
                         <div class="modal-body wrap-none">
                             <img src="<?= $theme->themeClass->screenshot; ?>" width="100%"/>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         <?php } ?>
     <?php } ?>

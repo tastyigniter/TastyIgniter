@@ -1,14 +1,15 @@
 <tr id="<?= $this->getId('area-'.$areaIndex.'-condition-row-'.$index) ?>"
     data-row="<?= $index ?>">
     <td class="list-action handle">
-        <a
-            class="btn btn-danger btn-xs"
+        <button
+            type="button"
+            class="btn btn-danger btn-sm"
             onclick="confirm(
                 '<?= lang('admin::default.alert_warning_confirm'); ?>')
                 ? $(this).parents('#<?= $this->getId('area-'.$areaIndex.'-condition-row-'.$index) ?>').remove()
                 : false">
             <i class="fa fa-times-circle"></i>
-        </a>
+        </button>
     </td>
     <td>
         <input

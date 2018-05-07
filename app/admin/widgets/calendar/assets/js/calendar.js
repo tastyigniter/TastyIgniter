@@ -125,7 +125,7 @@
         customButtons: {
             datePicker: {}
         },
-        themeSystem: 'bootstrap3',
+        themeSystem: 'bootstrap4',
         bootstrapGlyphicons: false,
         eventLimit: 5,
         navLinks: true,

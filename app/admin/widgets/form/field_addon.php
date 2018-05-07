@@ -1,5 +1,5 @@
 <?php
-$addonCssClass = isset($field->config['addonCssClass']) ? $field->config['addonCssClass'] : ['input-group-addon'];
+$addonCssClass = isset($field->config['addonCssClass']) ? $field->config['addonCssClass'] : ['input-group-text'];
 $addonLeft = isset($field->config['addonLeft']) ? $field->config['addonLeft'] : null;
 $addonRight = isset($field->config['addonRight']) ? $field->config['addonRight'] : null;
 ?>
@@ -23,6 +23,8 @@ $addonRight = isset($field->config['addonRight']) ? $field->config['addonRight']
     />
 
     <?php if ($addonRight) { ?>
-        <span class="<?= implode(' ', $addonCssClass) ?>"><?= $addonRight ?></span>
+        <span class="input-group-prepend">
+            <span class="<?= implode(' ', $addonCssClass) ?>"><?= $addonRight ?></span>
+        </span>
     <?php } ?>
 </div>

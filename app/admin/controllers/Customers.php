@@ -52,7 +52,7 @@ class Customers extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        Assets::addJs('assets/js/addresstabs.js', 'addresstabs-js');
+        Assets::addJs('js/addresstabs.js', 'addresstabs-js');
 
         AdminMenu::setContext('customers', 'users');
     }

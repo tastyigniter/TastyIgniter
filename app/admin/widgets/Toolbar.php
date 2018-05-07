@@ -119,7 +119,7 @@ class Toolbar extends BaseWidget
                 }
 
                 $_attributes = Html::attributes(array_except($attributes, ['label', 'context', 'partial']));
-                $buttons[$name] = '<a'.$_attributes.'>'.(isset($attributes['label']) ? $attributes['label'] : $name).'</a>';
+                $buttons[$name] = '<a'.$_attributes.' tabindex="0">'.(isset($attributes['label']) ? $attributes['label'] : $name).'</a>';
             }
         }
 

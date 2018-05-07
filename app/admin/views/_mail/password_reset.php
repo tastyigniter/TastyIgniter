@@ -1,7 +1,7 @@
 subject = "Password reset at {site_name}"
 ==
 
-Hi, {first_name} {last_name}
+Hi, {staff_name}
 
 Your password was changed successfully!
 

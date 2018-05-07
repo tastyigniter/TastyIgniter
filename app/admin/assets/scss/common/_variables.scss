@@ -1,0 +1,28 @@
+$theme-colors: map-merge($theme-colors, (
+  "default":    $secondary,
+));
+
+$page-padding-left:         230px;
+
+$login-page-bg:                     #12224c;
+
+$form-fields-padding-y:             15px;
+$form-fields-padding-x:         20px;
+
+$form-nav-link-padding-y:                .7rem;
+$form-nav-link-padding-x:                1.2rem;
+
+$navbar-nav-link-padding-x: .7rem;
+
+$mainmenu-font-size:                      28px;
+$mainmenu-icon-size:                      20px;
+$mainmenu-dropdown-width:                      300px;
+$mainmenu-menu-max-height:                      225px;
+
+$sidenav-bg: #12224c;
+$sidenav-bg-light: lighten($sidenav-bg, 2%);
+$sidenav-bg-dark: darken($sidenav-bg, 3%);
+
+$sidenav-font-size-sm: 1.066rem;
+$sidenav-font-size: 1.1rem;
+$sidenav-line-height: 24px;

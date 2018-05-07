@@ -23,7 +23,7 @@ $config['list']['toolbar'] = [
     'buttons' => [
         'create' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'customers/create'],
         'delete' => ['label' => 'lang:admin::default.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::default.alert_warning_confirm'],
-        'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
+        'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
     ],
 ];
 
@@ -40,7 +40,7 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-user',
         'attributes'   => [
-            'class'  => 'btn btn-info',
+            'class'  => 'btn btn-outline-info',
             'target' => '_blank',
             'href'   => 'customers/impersonate/{customer_id}',
         ],

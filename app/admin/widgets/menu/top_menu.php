@@ -1,5 +1,5 @@
 <ul id="<?= $this->getId(); ?>"
-    class="nav navbar-nav navbar-top-links navbar-right"
+    class="navbar-nav"
     data-control="mainmenu"
     data-alias="<?= $this->alias; ?>">
     <?php foreach ($items as $item) { ?>

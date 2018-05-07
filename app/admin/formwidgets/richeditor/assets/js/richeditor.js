@@ -25,25 +25,6 @@
 
     RichEditor.prototype.constructor = RichEditor
 
-    RichEditor.DEFAULTS = {
-        // linksHandler: null,
-        // stylesheet: null,
-        mediaSelectMode: "multi",
-        height: 300,
-        // fullpage: false,
-        // editorLang: 'en',
-        // toolbarButtons: null,
-        // allowEmptyTags: null,
-        // allowTags: null,
-        // noWrapTags: null,
-        // removeTags: null,
-        // imageStyles: null,
-        // linkStyles: null,
-        // paragraphStyles: null,
-        // tableStyles: null,
-        // tableCellStyles: null
-    }
-
     RichEditor.prototype.init = function () {
         this.$el.one("dispose-control", $.proxy(this.dispose))
 
@@ -59,16 +40,6 @@
     }
 
     RichEditor.prototype.registerHandlers = function () {
-        this.$textarea.on("summernote.init", $.proxy(this.onInit, this))
-
-        // this.$el.on('dblclick', '[data-control="media-list"]', $.proxy(this.onChoose, this))
-        // this.$el.on('click', '[data-control="media-choose"]', $.proxy(this.onChoose, this))
-        // this.$el.on('click', '[data-media-control]', $.proxy(this.onControlClick, this))
-        //
-        // this.$el.on('click', '[data-media-sort]', $.proxy(this.onSortingChanged, this))
-        // this.$el.on('keyup', '[data-media-control="search"]', $.proxy(this.onSearchChanged, this))
-        //
-        // $(window).bind("load resize", $.proxy(this.initScroll, this));
     }
 
     RichEditor.prototype.unregisterHandlers = function () {
@@ -90,20 +61,22 @@
     }
 
     RichEditor.prototype.initSummerNote = function () {
+        if (this.options.buttons.mediafinder === undefined) {
+            this.options.buttons.mediafinder = $.proxy(this.mediaFinderButton, this)
+        }
+
         this.editor = this.$textarea.summernote(this.options)
     }
 
-    RichEditor.prototype.onInit = function () {
-        this.replaceImageDialogButton()
-    }
+    RichEditor.prototype.mediaFinderButton = function (context) {
+        var ui = $.summernote.ui;
 
-    RichEditor.prototype.replaceImageDialogButton = function () {
-        var $button = $("[data-event=\"showImageDialog\"]")
+        var $finderButton = ui.button({
+            contents: '<i class="fa fa-image"/>',
+            click: $.proxy(this.onShowImageDialog, this)
+        });
 
-        if (!$button.length) return
-
-        $button.attr("data-event", false)
-        $button.on("click", $.proxy(this.onShowImageDialog, this))
+        return $finderButton.render();
     }
 
     RichEditor.prototype.onShowImageDialog = function (event) {
@@ -137,6 +110,22 @@
 
             this.$textarea.summernote('insertImage', url, filename);
         }
+    }
+
+    RichEditor.DEFAULTS = {
+        mediaSelectMode: "multi",
+        height: 300,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'mediafinder']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        buttons: { mediafinder: undefined }        
     }
 
     // RICHEDITOR PLUGIN DEFINITION
@@ -173,32 +162,5 @@
     $(document).ready(function () {
         $("[data-control=\"rich-editor\"]").richEditor()
     })
-
-
-    // BUTTON DEFINITIONS
-    // =================
-
-    if ($.ti === undefined)
-        $.ti = {}
-
-    $.ti.richEditorButtons = [
-        "paragraphFormat",
-        "paragraphStyle",
-        "quote",
-        "bold",
-        "italic",
-        "align",
-        "formatOL",
-        "formatUL",
-        "insertTable",
-        "insertLink",
-        "insertImage",
-        "insertVideo",
-        "insertAudio",
-        "insertFile",
-        "insertHR",
-        "fullscreen",
-        "html"
-    ]
 
 }(window.jQuery)

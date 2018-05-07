@@ -35,7 +35,7 @@ $config['list']['toolbar'] = [
     'buttons' => [
         'create' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'reviews/create'],
         'delete' => ['label' => 'lang:admin::default.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::default.alert_warning_confirm'],
-        'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
+        'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
     ],
 ];
 
@@ -50,6 +50,7 @@ $config['list']['columns'] = [
     ],
     'location'      => [
         'label'      => 'lang:admin::reviews.column_location',
+        'locationContext'   => 'multiple',
         'relation'   => 'location',
         'select'     => 'location_name',
         'searchable' => TRUE,
@@ -115,6 +116,7 @@ $config['form']['fields'] = [
     'location_id'   => [
         'label'        => 'lang:admin::reviews.label_location',
         'type'         => 'relation',
+        'locationContext'   => 'multiple',
         'relationFrom' => 'location',
         'nameFrom'     => 'location_name',
         'span'         => 'left',

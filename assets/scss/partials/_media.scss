@@ -1,0 +1,6 @@
+.media {
+    background-color: $card-bg;
+}
+.media-middle {
+    @extend .align-self-center;
+}

@@ -1,9 +1,10 @@
-<div class="media-list row">
+<div class="media-list row no-gutters">
     <?php $index = 0;
     foreach ($items as $item) { ?>
         <?php $index++; ?>
-        <div class="media-item col-xs-2">
-            <div class="media-thumb"
+        <div class="media-item col-2">
+            <div 
+                class="media-thumb"
                  data-media-item
                  data-media-item-name="<?= $item->name; ?>"
                  data-media-item-type="<?= $item->type; ?>"

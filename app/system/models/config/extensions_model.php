@@ -18,7 +18,7 @@ $config['list']['toolbar'] = [
         'upload'  => ['label' => 'lang:system::extensions.button_new', 'class' => 'btn btn-primary', 'href' => 'extensions/upload'],
         'setting' => ['label' => 'lang:system::extensions.button_settings', 'class' => 'btn btn-default', 'href' => 'settings'],
         'payment' => ['label' => 'lang:system::extensions.button_payments', 'class' => 'btn btn-default', 'href' => 'payments'],
-        'filter'  => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
+        'filter'  => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
         'check'   => ['label' => 'lang:system::extensions.button_check', 'class' => 'btn btn-success pull-right', 'href' => 'updates'],
         'browse'  => ['label' => 'lang:system::extensions.button_browse', 'class' => 'btn btn-default pull-right', 'href' => 'updates/browse/extensions'],
     ],
@@ -29,7 +29,7 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-play',
         'attributes'   => [
-            'class'             => 'btn btn-outline btn-success',
+            'class'             => 'btn btn-outline-success',
             'data-request'      => 'onInstall',
             'data-request-form' => '#list-form',
             'data-request-data' => 'code:\'{name}\'',
@@ -39,7 +39,7 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-stop text-muted',
         'attributes'   => [
-            'class'             => 'btn btn-default',
+            'class'             => 'btn btn-outline-default',
             'data-request'      => 'onUninstall',
             'data-request-form' => '#list-form',
             'data-request-data' => 'code:\'{name}\'',
@@ -49,7 +49,7 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-trash-o',
         'attributes'   => [
-            'class' => 'btn btn-outline btn-danger',
+            'class' => 'btn btn-outline-danger',
             'href'  => 'extensions/delete/{name}',
         ],
     ],

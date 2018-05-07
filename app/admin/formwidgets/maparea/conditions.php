@@ -29,12 +29,13 @@
             <tfoot>
             <tr id="tfoot">
                 <td class="list-action text-center">
-                    <a
-                        class="btn btn-primary btn-xs"
+                    <button
+                        type="button"
+                        class="btn btn-primary btn-sm"
                         data-control="add-row"
                         data-parent="#<?= $this->getId('area-'.$areaIndex.'-conditions') ?>">
                         <i class="fa fa-plus"></i>
-                    </a>
+                    </button>
                 </td>
                 <td></td>
                 <td></td>

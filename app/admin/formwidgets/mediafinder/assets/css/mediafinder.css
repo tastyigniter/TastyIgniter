@@ -1,7 +1,7 @@
 .media-finder .grid {
-	background-color: #FFFFFF;
+	background-color: var(--gray-100);
 	border-radius: 3px;
-	border: 1px solid #CFD6E2;
+	border: 1px solid var(--gray-400);
 	width: 124px;
 	height: 124px;
 	position: relative;
@@ -10,8 +10,8 @@
 }
 .media-finder .grid:focus,
 .media-finder .grid:hover {
-	border-color: #AABCD3;
-	box-shadow: 0 1px 0px #AABCD3;
+	border-color: var(--primary);
+	box-shadow: 0 1px 0px var(--primary);
 }
 .media-finder .grid .img-cover {
 	transform: translate(50%, 50%);
@@ -27,9 +27,6 @@
 	padding-top: 100%;
 	cursor: pointer;
 	display: block;
-}
-.media-finder .grid .blank-cover:hover {
-	color: #AABCD3;
 }
 .media-finder .grid .blank-cover i {
 	position: absolute;
@@ -62,7 +59,7 @@
 	z-index: 9;
 }
 .grid:hover .icon-container span {
-	background-color: #FFF;
+	background-color: var(--gray-100);
 	padding: 3px 5px;
 	word-wrap: break-word;
 }

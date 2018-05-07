@@ -26,7 +26,7 @@
 
         this.$modalRootElement = $('<div/>', {
             id: 'media-manager',
-            class: 'modal',
+            class: 'media-modal modal',
             role: 'dialog',
             tabindex: -1,
             ariaLabelled: '#media-manager',

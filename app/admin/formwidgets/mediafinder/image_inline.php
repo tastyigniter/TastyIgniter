@@ -1,18 +1,16 @@
 <div class="media-finder">
     <div class="input-group">
-        <span class="input-group-addon lg-addon">
-            <?php if (!$value) { ?>
-                <i class="fa"></i>
-            <?php } else { ?>
-                <i>
+        <span class="input-group-prepend">
+            <i class="input-group-icon">
+                <?php if ($value) { ?>
                     <img
                         data-find-image
                         src="<?= $this->getMediaUrl($value ?: $blankImage) ?>"
                         class="img-responsive"
                         width="24px"
                     >
-                </i>
-            <?php } ?>
+                <?php } ?>
+            </i>
         </span>
         <input
             type="text"

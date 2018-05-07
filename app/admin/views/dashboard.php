@@ -84,7 +84,7 @@ $orders = null;
                                 <div class="col-md-5 pull-right text-right">
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <button class="btn btn-default btn-xs daterange">
+                                            <button class="btn btn-default btn-sm daterange">
                                                 <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?= lang('admin::dashboard.text_select_range'); ?></span>&nbsp;&nbsp;<i
                                                     class="fa fa-caret-down"></i>
                                             </button>
@@ -117,7 +117,7 @@ $orders = null;
                                 <div class="col-md-5 pull-right text-right">
                                     <div class="form-group">
                                         <button type="button"
-                                                class="btn btn-default btn-xs dropdown-toggle"
+                                                class="btn btn-default btn-sm dropdown-toggle"
                                                 data-toggle="dropdown">
                                             <?= lang('admin::dashboard.text_range'); ?>&nbsp;&nbsp;<span class="caret"></span>
                                         </button>
@@ -374,7 +374,7 @@ $orders = null;
     //                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     //            },
     //            opens: 'left',
-    //            buttonClasses: ['btn', 'btn-xs'],
+    //            buttonClasses: ['btn', 'btn-sm'],
     //            applyClass: 'btn-primary',
     //            cancelClass: 'btn-default',
     //            separator: ' to ',

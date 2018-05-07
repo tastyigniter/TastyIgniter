@@ -20,7 +20,7 @@
                     <?php } ?>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group" data-toggle="buttons">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         <?php if ($ignored) { ?>
                             <button
                                 class="btn btn-default"

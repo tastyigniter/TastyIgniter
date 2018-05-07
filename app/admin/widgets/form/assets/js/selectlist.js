@@ -26,7 +26,7 @@
     SelectList.prototype.onInitialized = function (select, container) {
         this.$container = $(container);
 
-        this.$container.find('.multiselect').tooltip('destroy')
+        this.$container.find('.multiselect').tooltip('dispose')
 
         var $options = this.$container.find('.multiselect-container > li')
         $options.each(function () {
@@ -40,11 +40,11 @@
     }
 
     SelectList.prototype.onDropdownShown = function (event) {
-        $(event.relatedTarget).tooltip('destroy')
+        $(event.relatedTarget).tooltip('dispose')
     }
 
     SelectList.prototype.onDropdownHidden = function (event) {
-        $(event.relatedTarget).tooltip('destroy')
+        $(event.relatedTarget).tooltip('dispose')
     }
 
     // MEDIA MANAGER PLUGIN DEFINITION
@@ -57,14 +57,14 @@
         maxHeight: 200,
         enableFiltering: false,
         enableCaseInsensitiveFiltering: true,
-        buttonClass: 'btn btn-default btn-block',
+        buttonClass: 'btn btn-light btn-block',
         optionClass: function (element) {
-            return 'multiselect-item'
+            return 'dropdown-item multiselect-item'
         },
         templates: {
-            filter: '<li class="multiselect-item filter"><div class="input-group input-group-sm"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
-            filterClearBtn: '<span class="input-group-addon"><i class="fa fa-times-circle multiselect-clear-filter"></i></span>',
-            li: '<li><a href="javascript:void(0);"><div><label></label></div></a></li>',
+            filter: '<li class="dropdown-item multiselect-item filter"><div class="input-group"><span class="input-group-prepend"><span class="input-group-icon"><i class="fa fa-search"></i></span></span><input class="form-control multiselect-search" type="text"></div></li>',
+            filterClearBtn: '<span class="input-group-prepend"><span class="input-group-icon"><i class="fa fa-times-circle multiselect-clear-filter"></i></span></span>',
+            li: '<li class="dropdown-item"><a class="dropdown-link" href="javascript:void(0);"><div class="custom-control"><label></label></div></a></li>',
         }
     }
 

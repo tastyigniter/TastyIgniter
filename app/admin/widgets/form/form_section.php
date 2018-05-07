@@ -6,7 +6,7 @@ $type = $tabs->section;
     <div
         id="<?= $this->getId($type.'-tabs') ?>"
         class="<?= $tabs->cssClass ?>">
-        <div class="panel panel-form">
+        <div class="form-fields">
             <?= $this->makePartial('form/form_fields', ['fields' => $tabs]) ?>
         </div>
     </div>

@@ -1,10 +1,7 @@
-.richeditor-fluid,
-.richeditor-fluid .note-editor .panel-heading {
-	padding-left: 20px;
-	padding-right: 20px;
+.note-editor.note-frame {
+	border-color: var(--gray-400);
 }
-.richeditor-fluid,
-.richeditor-fluid .note-editor {
-	margin-left: -20px;
-	margin-right: -20px;
+.note-editor.note-frame .note-statusbar {
+	background-color: var(--gray-300);
+	border-top: 1px solid var(--gray-400);
 }

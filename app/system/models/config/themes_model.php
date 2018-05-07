@@ -16,7 +16,7 @@ $config['list']['filter'] = [
 $config['list']['toolbar'] = [
     'buttons' => [
         'upload' => ['label' => 'lang:system::themes.button_new', 'class' => 'btn btn-primary', 'href' => 'themes/upload'],
-        'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
+        'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
         'check'  => ['label' => 'lang:system::themes.button_check', 'class' => 'btn btn-success pull-right', 'href' => 'updates'],
         'browse' => ['label' => 'lang:system::themes.button_browse', 'class' => 'btn btn-default pull-right', 'href' => 'updates/browse/themes'],
     ],
@@ -43,7 +43,7 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-star-o',
         'attributes'   => [
-            'class'             => 'btn btn-outline btn-warning',
+            'class'             => 'btn btn-outline-warning',
             'title'             => 'lang:system::themes.text_set_default',
             'data-request'      => 'onSetDefault',
             'data-request-form' => '#list-form',
@@ -101,18 +101,22 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'cssClass' => 'theme-editor',
     'fields'   => [
-        'files'  => [
+        'file'  => [
             'tab'      => 'lang:system::themes.text_tab_edit_source',
-            'type'     => 'partial',
-            'span'     => 'flex',
-            'cssClass' => 'col-sm-3 wrap-none',
-            'path'     => 'themes/source_files',
+            'type'     => 'select',
+            'attributes'  => [
+                'data-request' => 'onChooseFile',
+                'data--request-form' => '#edit-form',
+            ]
+        //     'span'     => 'flex',
+        //     'cssClass' => 'col-sm-3 span-left wrap-none',
+        //     'path'     => 'themes/source_files',
         ],
         'source' => [
             'tab'      => 'lang:system::themes.text_tab_edit_source',
             'type'     => 'codeeditor',
-            'span'     => 'flex',
-            'cssClass' => 'col-sm-9 pull-right wrap-none',
+            // 'span'     => 'flex',
+            // 'cssClass' => 'col-sm-9 span-right wrap-none',
             'mode'     => 'css',
         ],
     ],

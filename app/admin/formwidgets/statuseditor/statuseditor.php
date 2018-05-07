@@ -11,10 +11,13 @@ $statusItem = isset($fieldOptions[$value]) ? $fieldOptions[$value] : [];
         class="input-group" data-toggle="modal"
         data-target="#<?= $this->getId('form-modal') ?>"
     >
-        <span class="input-group-addon">
-            <i class="fa fa-2x fa-square"
-               data-status-color
-               style="color: <?= $statusItem ? e($statusItem[$colorFrom]) : '' ?>"></i>
+        <span class="input-group-prepend">
+            <span class="input-group-icon">
+                <i class="fa fa-square"
+                    data-status-color
+                    style="color: <?= $statusItem ? e($statusItem[$colorFrom]) : '' ?>"
+                ></i>
+            </span>
         </span>
         <span
             data-status-name

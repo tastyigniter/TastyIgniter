@@ -1,0 +1,12 @@
+.page-wrapper {
+  margin-left: $page-padding-left;
+
+  > .content {
+    margin: 0;
+  }
+}
+@include media-breakpoint-down(sm) {
+  .page-wrapper {
+    margin-left: 0;
+  }
+}

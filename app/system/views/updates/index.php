@@ -2,15 +2,15 @@
 
     <?= $this->widgets['toolbar']->render(); ?>
 
-    <?php if (!empty($updates)) { ?>
+    <?php if (!empty($updates['items']) OR !empty($updates['ignoreItems'])) { ?>
         <div id="updates">
             <?= $this->makePartial('updates/list'); ?>
         </div>
     <?php }
     else { ?>
-        <div class="panel panel-default">
+        <div class="panel panel-light">
             <div class="panel-body">
-                <h4 class="text-w-400"><?= lang('system::updates.text_no_updates'); ?></h4>
+                <h5 class="text-w-400"><?= lang('system::updates.text_no_updates'); ?></h5>
             </div>
         </div>
     <?php } ?>

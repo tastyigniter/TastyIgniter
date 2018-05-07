@@ -50,7 +50,7 @@ class Updates extends \Admin\Classes\AdminController
 
         Template::setButton(sprintf(lang('system::updates.button_browse'), 'extensions'), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/extensions')]);
         Template::setButton(lang('system::updates.button_check'), ['class' => 'btn btn-success', 'href' => admin_url($this->forceCheckUrl)]);
-        Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
+        Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
         $this->prepareAssets();
 
@@ -97,7 +97,7 @@ class Updates extends \Admin\Classes\AdminController
 
         Template::setButton(sprintf(lang('system::updates.button_browse'), $buttonTitle), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
         Template::setButton(lang('system::updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
-        Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
+        Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
         $this->prepareAssets();
 
@@ -130,7 +130,6 @@ class Updates extends \Admin\Classes\AdminController
 
     protected function prepareAssets()
     {
-        Assets::addCss(assets_url('css/app/marketplace.css'), 'marketplace-css');
         Assets::addJs(assets_url('js/vendor/mustache.js'), 'mustache-js');
         Assets::addJs(assets_url('js/vendor/typeahead.js'), 'typeahead-js');
         Assets::addJs(assets_url('js/app/flashmessage.js'), 'flashmessage-js');

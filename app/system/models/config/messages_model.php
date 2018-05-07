@@ -9,9 +9,9 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
+        'compose' => ['label' => 'lang:system::messages.button_compose', 'class' => 'btn btn-primary', 'href' => 'messages/compose'],
         'control' => ['label' => 'lang:admin::default.button_delete', 'partial' => 'messages/message_controls', 'context' => 'index'],
-//        'delete' => ['label' => 'lang:admin::default.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:alert_warning_confirm'],
-        'filter'  => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
+        'filter'  => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
     ],
 ];
 

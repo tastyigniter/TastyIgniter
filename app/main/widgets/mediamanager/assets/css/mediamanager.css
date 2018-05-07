@@ -1,56 +1,50 @@
-#media-manager {
+.media-modal {
 	padding: 0 !important;
 }
-#media-manager .modal-dialog {
-	width: 100% !important;
+.media-modal .modal-dialog {
+	max-width: 100%;
 	margin-top: 0;
 	margin-bottom: 0;
 }
-.media-manager {
-	background-color: #E3E6EE;
-}
-.media-manager .navbar,
-#media-manager .modal-content {
+.media-modal .modal-content {
 	border-radius: unset;
 	margin-bottom: 0;
+	border: 0 none;
+}
+.media-modal .modal-body {
+    padding: 0;
+}
+.media-manager {
+	width: 100%;
 }
 .media-container {
 	padding: 0;
+	background-color: var(--gray-200);
 }
 .media-manager .navbar-media {
 	border: 0 none;
 }
-.navbar-media .btn-toolbar {
-	margin: 15px 0;
+/*
+Toolbar
+*/
+.media-toolbar {
+	padding: 15px;
 }
-.toolbar-item .btn-group + .btn-group {
-	margin-left: 15px;
-}
-.toolbar-item .btn {
-	font-size: 16px;
-}
-.toolbar-item .form-control {
-	padding: 6px 12px;
-	height: 37px;
-}
-.toolbar-item .dropdown-menu {
-	margin-top: 50px;
-}
+/*
+Media list
+*/
 .media-list {
 	padding-top: 25px;
-	margin: 0;
 }
 .media-list .media-item {
-	padding-left: 0px;
-	padding-right: 0;
 	margin-bottom: 30px;
 	margin-left: 15px;
 	margin-right: 15px;
-	width: 13.667%;
 }
 .media-list .media-thumb {
-	background-color: #F8FAFC;
+	background-color: var(--gray-100);
 	border-radius: 3px;
+	border: 1px solid var(--gray-300);
 	box-shadow: 0px 0px 15px rgba(235, 240, 245, 0.9) inset, 0px 0px 0px 1px rgba(235, 240, 245, 0.5) inset;
 	cursor: pointer;
 	padding: 15% 10px;
@@ -58,24 +52,19 @@
 	overflow: hidden;
 }
 .media-list .selected .media-thumb {
-	box-shadow: 0px 0px 2px 3px rgb(241, 241, 241) inset, 0px 0px 2px 3px rgb(0, 136, 204);
+	box-shadow: 0px 0px 2px 3px rgb(241, 241, 241) inset, 0px 0px 2px 3px var(--primary);
 }
 .media-list .media-thumb > a {
 	border: 0 none;
 	margin: auto;
 	padding: 0;
-	text-align: center;
-	vertical-align: middle;
 	width: 100%;
 	height: 75px;
 	transform: translate(50%, 50%);
 	display: block;
 }
 .media-list .media-thumb > a img {
-	margin: 0 auto;
 	transform: translate(-50%, -50%);
-	position: absolute;
-	left: 0;
 }
 .modal-lg .modal-header .close {
 	font-size: 26px;
@@ -85,26 +74,23 @@
 Sidebar
 */
 .media-sidebar .sidebar-preview-toolbar,
-.media-sidebar .sidebar-preview-info {
-	text-align: center;
-}
-.media-sidebar .sidebar-preview-toolbar {
-	padding: 15px;
-}
+.media-sidebar .sidebar-preview-info,
 .media-sidebar .sidebar-preview-placeholder {
 	text-align: center;
 }
+.media-sidebar .sidebar-preview-toolbar,
+.media-sidebar .sidebar-preview-info {
+	padding: 10px 0;
+}
 .media-sidebar .sidebar-preview-placeholder i {
 	font-size: 14em;
-	color: #F6F8FA;
 	padding-top: 25px;
 }
 .media-sidebar .sidebar-preview-placeholder img {
 	margin: 0 auto;
 }
-.media-sidebar .sidebar-preview-info {
-	font-size: 16px;
-	padding: 10px 0;
+.media-sidebar .sidebar-choose-btn {
+	padding: 15px;
 }
 .media-sidebar .sidebar-preview-meta p {
 	margin-bottom: 8px;
@@ -112,32 +98,31 @@ Sidebar
 .media-sidebar .sidebar-preview-meta p > span {
 	display: inline-block;
 	width: 50%;
-	float: left;
 	text-align: right;
 	padding-right: 10px;
 }
-.media-sidebar [data-control="media-choose"] {
-	margin-top: 15px;
+.sidebar-preview-placeholder .fa {
+	color: var(--gray-400);
 }
 /*
 Breadcrumb
 */
 
-.media-manager .breadcrumb {
-	background-color: #EDEFF4;
+.media-breadcrumb .breadcrumb {
+	background-color: var(--gray-400);
 	margin-bottom: 0;
 	border-radius: 3px 3px 0 0;
 }
 /*
 Statusbar
 */
-
-.media-manager .navbar-statusbar {
-	background-color: #D9DFE8;
+.media-statusbar {
+	background-color: var(--gray-400);
 	border: 0 none;
+	padding: 10px 15px;
 }
-.media-manager .navbar-statusbar .navbar-text {
-	float: none;
+.media-statusbar .statusbar-text {
+	margin-bottom: 0;
 	text-align: center;
 }
 /*
@@ -146,32 +131,26 @@ Modal
 .bootbox .modal-dialog {
 	margin: 10% auto;
 }
-.bootbox .modal-header,
-.bootbox .modal-body,
-.bootbox .modal-footer {
-	padding: 15px 20px;
-}
 .bootbox .modal-header {
 	border-bottom: 0;
 }
 .bootbox .modal-footer {
 	border-top: 0;
 }
-.bootbox .modal-footer .btn {
-	padding: 6px 20px;
-	margin-bottom: 0;
-	font-size: 16px;
+/* Fix modal header */
+.bootbox .modal-header h4 {
+    order: 0;
 }
-.bootbox .modal-footer .btn-primary {
-	font-weight: 700;
+.bootbox .modal-header button {
+    order: 1;
 }
 /*
 Uploader
 */
 .media-uploader {
-	background: none repeat scroll 0 0 #FFFFFF;
+	background: none repeat scroll 0 0 var(--gray-200);
 	border: 0 none;
-	border-bottom: 1px solid #DCE4EC;
+	border-bottom: 1px solid var(--gray-300);
 	display: none;
 	margin: 0 auto;
 	overflow: hidden;
@@ -197,8 +176,4 @@ Folder Tree
 	position: absolute;
 	min-width: 20%;
 	z-index: 99;
-}
-.folder-tree .list-group {
-	border: 1px solid #DCE4EC;
-	margin-bottom: 0;
 }

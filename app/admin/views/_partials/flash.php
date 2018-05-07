@@ -22,23 +22,27 @@
     <?php } ?>
 <?php } ?>
 
-<?php if ($messages = session('errors', collect())->all()) { ?>
-    <div class="alert alert-danger"
-         role="button"
-         data-toggle="collapse"
-         href="#collapseErrors"
-         aria-expanded="false"
-         aria-controls="collapseErrors">
-        <i class="fa fa-angle-down"></i>
-        <b><?= lang('admin::default.alert_form_error_message') ?></b>
-    </div>
-
-    <div class="collapse" id="collapseErrors">
-        <?php foreach ($messages as $message) { ?>
-            <div class="alert alert-danger" role="alert">
-                <?= $message; ?>
+<?php if (AdminAuth::isLogged()) { ?>
+    <?php if ($messages = session('errors', collect())->all()) { ?>
+        <div class="alert-collapse">
+            <div class="alert alert-danger"
+                role="button"
+                data-toggle="collapse"
+                href="#collapseErrors"
+                aria-expanded="false"
+                aria-controls="collapseErrors">
+                <i class="fa fa-angle-down"></i>
+                <b><?= lang('admin::default.alert_form_error_message') ?></b>
             </div>
-        <?php } ?>
-    </div>
-    <?php session()->forget('errors'); ?>
+
+            <div class="collapse" id="collapseErrors">
+                <?php foreach ($messages as $message) { ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= $message; ?>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+        <?php session()->forget('errors'); ?>
+    <?php } ?>
 <?php } ?>

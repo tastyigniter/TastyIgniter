@@ -1,6 +1,6 @@
 <div
     id="<?= $this->getId('item-'.$index) ?>"
-    class="panel panel-default"
+    class="panel panel-light"
     data-item-index="<?= $index ?>"
 >
     <div
@@ -10,8 +10,10 @@
         data-parent="#<?= $this->getId('items') ?>"
         href="#<?= $this->getId('item-collapse-'.$index) ?>"
         aria-expanded="true"
-        aria-controls="<?= $this->getId('item-'.$index) ?>">
-        <h4 class="panel-title">
+        aria-controls="<?= $this->getId('item-'.$index) ?>"
+        role="button"
+    >
+        <h5 class="panel-title">
             <?php if (!$this->previewMode AND $sortable) { ?>
                 <button class="btn btn-handle <?= $this->getId('items') ?>-handle">
                     <i class="fa fa-sort"></i>
@@ -31,7 +33,7 @@
                 <span aria-hidden="true">X</span>
             </button>
             <span><?= array_get($fieldOptions, $widget->data->{$keyFromName}) ?></span>
-        </h4>
+        </h5>
     </div>
     <div
         id="<?= $this->getId('item-collapse-'.$index) ?>"

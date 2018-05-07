@@ -1,19 +1,19 @@
 <div class="row-fluid">
-    <div class="panel panel-inverse">
-        <?= form_open(current_url(),
-            [
-                'id'   => 'list-form',
-                'role' => 'form',
-                'method' => 'POST'
-            ]
-        ); ?>
+    <?= form_open(current_url(),
+        [
+            'id'   => 'list-form',
+            'role' => 'form',
+            'method' => 'POST'
+        ]
+    ); ?>
 
-        <div class="row">
-            <?= $this->makePartial('lists/list_body') ?>
-
-            <?= $this->makePartial('lists/list_pagination') ?>
+        <div class="container-fluid">
+            <div class="row">
+                <?= $this->makePartial('lists/list_body') ?>
+            </div>
         </div>
 
-        <?= form_close(); ?>
-    </div>
+    <?= form_close(); ?>
+    
+    <?= $this->makePartial('lists/list_pagination') ?>
 </div>

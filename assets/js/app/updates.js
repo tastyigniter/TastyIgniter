@@ -429,32 +429,32 @@
             '{{/thumb}}',
             '</div>',
             '<div class="item-name">{{name}}</div>',
-            '<div class="item-description small text-muted text-overflow">{{{description}}}</div>',
+            '<div class="item-description text-muted text-overflow">{{{description}}}</div>',
             '</div>'
         ].join(''),
 
         modal: [
             '<div id="item-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">',
             '<div class="modal-dialog"><div class="modal-content"><div class="modal-header">',
-            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>',
             '<h4 class="modal-title"></h4>',
+            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>',
             '</div><div class="modal-body wrap-none">',
-            '<div class="panel panel-default panel-item-modal"><div class="item-details"></div>',
+            '<div class="panel panel-light panel-item-modal"><div class="item-details"></div>',
             '<div class="panel-footer border-top">',
             '</div></div></div></div></div></div>',
         ].join(''),
 
         modalBody: [
-            '<div class="panel-body"><div class="media"><a class="media-left media-middle">',
+            '<div class="media p-3"><a class="media-left media-middle">',
             '{{#thumb}}',
             '<img src="{{thumb}}" class="img-rounded" alt="No Image" style="width: 68px; height: 68px;">',
             '{{/thumb}}{{^thumb}}',
             '<i class="fa {{icon}} fa-3x text-muted"></i>',
             '{{/thumb}}',
-            '</a><div class="media-body">',
-            '<p>{{{description}}}</p><span class="small"><span class="text-muted">Version:</span> <strong>{{version}}</strong>, ',
-            '<span class="text-muted">Author:</span> <strong>{{author}}</strong></span>',
-            '</div></div></div>',
+            '</a><div class="media-body pl-3">',
+            '<p>{{{description}}}</p><span class="text-muted">Version:</span> <strong>{{version}}</strong>, ',
+            '<span class="text-muted">Author:</span> <strong>{{author}}</strong>',
+            '</div></div>',
         ].join(''),
 
         modalRequire: [

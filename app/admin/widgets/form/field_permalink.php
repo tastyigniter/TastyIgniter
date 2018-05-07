@@ -3,7 +3,9 @@
 <?php } else { ?>
     <div class="field-permalink">
         <div class="input-group">
-            <span class="input-group-addon"><?= root_url(); ?></span>
+            <span class="input-group-prepend">
+                <span class="input-group-text"><?= root_url(); ?></span>
+            </span>
             <input
                 type="text"
                 name="<?= $field->getName() ?>"

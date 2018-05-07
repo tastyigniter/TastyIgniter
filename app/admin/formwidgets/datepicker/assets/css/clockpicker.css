@@ -12,3 +12,6 @@
 .clockpicker-tick {
 	color: #263A65;
 }
+.clockpicker-popover .popover-title {
+	padding: 0.5rem 0.75rem;
+}

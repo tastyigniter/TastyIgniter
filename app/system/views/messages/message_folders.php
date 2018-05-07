@@ -1,9 +1,8 @@
-<div class="panel panel-message-folders">
-    <div class="panel-heading">
-        <h3 class="panel-title"><?= lang('system::messages.text_folders'); ?></h3>
+<div class="message-folders panel">
+    <div class="panel-header">
+        <h5 class="panel-title"><?= lang('system::messages.text_folders'); ?></h5>
     </div>
-    <div class="panel-body wrap-none">
-        <div class="list-group list-group-hover">
+    <div class="list-group list-group-flush">
             <?php foreach ($folders as $key => $folder) { ?>
                 <a
                     class="list-group-item <?= ($key == $listContext) ? 'active' : '' ?>"
@@ -17,5 +16,4 @@
                 </a>
             <?php } ?>
         </div>
-    </div>
 </div>

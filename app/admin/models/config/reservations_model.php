@@ -39,7 +39,7 @@ $config['list']['toolbar'] = [
             'href'    => 'reservations/calendar',
             'context' => 'index',
         ],
-        'filter'   => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.panel-filter .panel-body'],
+        'filter'   => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
     ],
 ];
 
@@ -56,6 +56,7 @@ $config['list']['columns'] = [
         'label'      => 'lang:admin::reservations.column_location',
         'relation'   => 'location',
         'select'     => 'location_name',
+        'locationContext' => 'multiple',
         'searchable' => TRUE,
     ],
     'full_name'      => [
@@ -83,9 +84,11 @@ $config['list']['columns'] = [
         'path'       => 'reservations/status_column',
         'searchable' => TRUE,
     ],
-    'staff_name'     => [
+    'assignee_id'     => [
         'label' => 'lang:admin::reservations.column_staff',
         'type'  => 'text',
+        'relation'   => 'assignee',
+        'select'     => 'staff_name',
     ],
     'reserve_time'   => [
         'label' => 'lang:admin::reservations.column_time',
@@ -206,13 +209,11 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::reservations.label_first_name',
             'type'  => 'text',
             'span'  => 'left',
-//            'disabled' => TRUE,
         ],
         'last_name'                   => [
             'label' => 'lang:admin::reservations.label_last_name',
             'type'  => 'text',
             'span'  => 'right',
-//            'disabled' => TRUE,
         ],
         'email'                       => [
             'label' => 'lang:admin::reservations.label_customer_email',
@@ -241,6 +242,7 @@ $config['form']['tabs'] = [
         'location_id'                 => [
             'label'        => 'lang:admin::reservations.text_tab_restaurant',
             'type'         => 'relation',
+            'locationContext' => 'multiple',
             'relationFrom' => 'location',
             'nameFrom'     => 'location_name',
             'span'         => 'right',
@@ -253,14 +255,12 @@ $config['form']['tabs'] = [
             'nameFrom' => 'table_name',
             'span'     => 'left',
             'cssClass' => 'flex-width',
-//            'disabled' => TRUE,
         ],
         'guest_num'                   => [
             'label'    => 'lang:admin::reservations.label_guest',
             'type'     => 'number',
             'span'     => 'left',
             'cssClass' => 'flex-width',
-//            'disabled' => TRUE,
         ],
         'duration'                    => [
             'label' => 'lang:admin::reservations.label_reservation_duration',

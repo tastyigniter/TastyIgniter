@@ -1,5 +1,5 @@
 <div id="list-items">
-    <div class="panel panel-default panel-inverse">
+    <div class="panel panel-light">
         <?php $countIgnored = count($updates['ignoredItems']); ?>
         <div class="panel-heading">
             <h3 class="panel-title">

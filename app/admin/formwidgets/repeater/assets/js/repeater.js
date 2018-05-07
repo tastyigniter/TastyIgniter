@@ -84,7 +84,6 @@
 
         var $added = this.$appendTo.find('> :last-child')
         $added.find('select.form-control').select2({minimumResultsForSearch: Infinity})
-        $added.find('[data-toggle="toggle"]').bootstrapToggle()
     }
 
     // FIELD REPEATER PLUGIN DEFINITION

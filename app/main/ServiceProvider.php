@@ -52,7 +52,7 @@ class ServiceProvider extends AppServiceProvider
     {
         Assets::defaultPaths([
             $this->app->themesPath(),
-            app_path($this->app->appContext().'/views'),
+            app_path($this->app->appContext().'/assets'),
         ]);
 
         Assets::registerAssets(function (Assets $manager) {
@@ -64,7 +64,6 @@ class ServiceProvider extends AppServiceProvider
                 'css'  => [
                     [assets_url('css/vendor/bootstrap.min.css'), 'bootstrap-css'],
                     [assets_url('css/vendor/font-awesome.min.css'), 'font-awesome-css'],
-                    [assets_url('css/app/app.css'), 'app-css'],
                 ],
                 'js'   => [
                     [assets_url('js/app/vendor.js'), 'vendor-js'],

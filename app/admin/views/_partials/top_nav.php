@@ -1,22 +1,28 @@
 <?php
 $isLogged = AdminAuth::isLogged();
 ?>
-<nav class="navbar navbar-default navbar-top navbar-static-top" role="navigation">
-    <div class="container-fluid">
-        <?php if ($isLogged) { ?>
+<?php if ($isLogged) {?>
+    <nav class="navbar navbar-top navbar-expand" role="navigation">
+        <div class="container-fluid">
+            <div class="page-title">
+                <span><?=Template::getHeading();?></span>
+            </div>
 
-            <?= $this->widgets['mainmenu']->render(); ?>
+            <div class="navbar">
+                <?=$this->widgets['mainmenu']->render();?>
 
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-            <h1 class="navbar-heading">
-                <?= Template::getHeading(); ?>
-            </h1>
-        <?php } ?>
-    </div>
-</nav>
+                <button
+                    type="button"
+                    class="navbar-toggler"
+                    data-toggle="collapse"
+                    data-target="#navSidebar"
+                    aria-controls="navSidebar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="fa fa-bars"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+<?php }?>

@@ -3,7 +3,9 @@
 <?php } else { ?>
     <div class="field-money">
         <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-money"></i></span>
+            <span class="input-group-prepend">
+                <span class="input-group-icon"><i class="fa fa-money"></i></span>
+            </span>
             <input
                 type="number"
                 name="<?= $field->getName() ?>"

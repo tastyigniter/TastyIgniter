@@ -1,9 +1,9 @@
 <?php if (isset($items) AND count($items)) { ?>
-    <ul class="select-box">
+    <div class="row select-box">
         <?php foreach ($items['data'] as $item) { ?>
-            <li class="col-xs-12 col-sm-4">
+            <div class="col col-4">
                 <?= $this->makePartial('updates/browse/'.$itemType, ['item' => $item]); ?>
-            </li>
+            </div>
         <?php } ?>
-    </ul>
+    </div>
 <?php } ?>

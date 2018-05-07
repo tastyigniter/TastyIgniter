@@ -44,7 +44,7 @@ class Settings_model extends Model
 
         $options = [];
         foreach ($settingsConfig as $settingItem) {
-            $options[$settingItem['url']] = lang($settingItem['label']);
+            $options[$settingItem['label']] = [$settingItem['icon'], $settingItem['url']];
         }
 
         return $options;

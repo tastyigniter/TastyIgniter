@@ -5,21 +5,19 @@
       action="<?= current_url(); ?>"
       role="form">
     <input type="hidden" name="_handler" value="<?= $searchBox->getEventHandler('onSubmit'); ?>">
-    <div class="form-group">
-        <div class="input-group input-group-sm">
-            <input
-                type="text"
-                name="<?= $searchBox->getName() ?>"
-                class="form-control <?= $cssClasses ?>"
-                value="<?= $value ?>"
-                placeholder="<?= $placeholder ?>"
-                autocomplete="off"
-            />
-            <span class="input-group-btn">
-            <button class="btn btn-default btn-xs" type="submit">
+    <div class="input-group input-group-sm flex-fill">
+        <input
+            type="text"
+            name="<?= $searchBox->getName() ?>"
+            class="form-control <?= $cssClasses ?>"
+            value="<?= $value ?>"
+            placeholder="<?= $placeholder ?>"
+            autocomplete="off"
+        />
+        <span class="input-group-prepend">
+            <button class="btn btn-outline-default btn-sm" type="submit">
                 <i class="fa fa-search"></i>
             </button>
         </span>
-        </div>
     </div>
 </form>

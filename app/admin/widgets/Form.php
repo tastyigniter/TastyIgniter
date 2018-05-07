@@ -136,9 +136,6 @@ class Form extends BaseWidget
 
     public function loadAssets()
     {
-        $this->addJs('vendor/bootstrap-toggle/bootstrap-toggle.min.js', 'bootstrap-toggle-js');
-        $this->addCss('vendor/bootstrap-toggle/bootstrap-toggle.min.css', 'bootstrap-toggle-css');
-
         $this->addJs('vendor/bootstrap-multiselect/bootstrap-multiselect.js', 'bootstrap-multiselect-js');
         $this->addCss('vendor/bootstrap-multiselect/bootstrap-multiselect.css', 'bootstrap-multiselect-css');
 

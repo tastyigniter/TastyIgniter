@@ -10,11 +10,14 @@
 
         <?php if ($showCheckboxes) { ?>
             <td class="list-action">
-                <div class="checkbox checkbox-primary">
+                <div class="custom-control custom-checkbox">
                     <input
-                        type="checkbox" id="<?= 'checkbox-'.$record->getKey() ?>"
-                        class="styled" value="<?= $record->getKey(); ?>" name="checked[]"/>
-                    <label for="<?= 'checkbox-'.$record->getKey() ?>"></label>
+                        type="checkbox" 
+                        id="<?= 'checkbox-'.$record->getKey() ?>"
+                        class="custom-control-input" 
+                        value="<?= $record->getKey(); ?>" name="checked[]"
+                    />
+                    <label class="custom-control-label" for="<?= 'checkbox-'.$record->getKey() ?>"></label>
                 </div>
             </td>
         <?php } ?>
@@ -28,7 +31,7 @@
                 </td>
             <?php } else { ?>
                 <td
-                    class="list-cell-index-<?= $index ?> list-cell-name-<?= $column->getName() ?> list-cell-type-<?= $column->type ?> <?= $column->cssClass ?>"
+                    class="list-col-index-<?= $index ?> list-col-name-<?= $column->getName() ?> list-col-type-<?= $column->type ?> <?= $column->cssClass ?>"
                 >
                     <?= $this->getColumnValue($record, $column) ?>
                 </td>

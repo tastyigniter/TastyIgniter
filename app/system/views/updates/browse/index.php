@@ -4,9 +4,9 @@
 
     <?= $this->makePartial('updates/search'); ?>
 
-    <div class="panel panel-items">
+    <div class="panel panel-light panel-items">
         <div class="panel-heading">
-            <h4 class="panel-title"><?= sprintf(lang('system::updates.text_popular_title'), ucwords(str_plural($itemType))) ?></h4>
+            <h5 class="panel-title"><?= sprintf(lang('system::updates.text_popular_title'), ucwords(str_plural($itemType))) ?></h5>
         </div>
 
         <div

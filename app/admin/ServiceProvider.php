@@ -56,7 +56,7 @@ class ServiceProvider extends AppServiceProvider
     protected function registerBaseTags()
     {
         Assets::defaultPaths([
-            app_path($this->app->appContext().'/views'),
+            app_path($this->app->appContext().'/assets'),
         ]);
 
         Assets::registerAssets(function (Assets $manager) {
@@ -66,9 +66,9 @@ class ServiceProvider extends AppServiceProvider
                     ['name' => 'keywords', 'content' => setting('meta_keywords')],
                 ],
                 'css'  => [
-                    [assets_url('css/vendor/bootstrap.min.css'), 'bootstrap-css'],
+                    [assets_url('css/app.css'), 'app-css'],
+                    [assets_url('css/vendor/select2-bootstrap.min.css'), 'select2-bootstrap-css'],
                     [assets_url('css/vendor/font-awesome.min.css'), 'font-awesome-css'],
-                    [assets_url('css/app/app.css'), 'app-css'],
                 ],
                 'js'   => [
                     [assets_url('js/app/vendor.js'), 'vendor-js'],
@@ -174,7 +174,7 @@ class ServiceProvider extends AppServiceProvider
                 'preview'  => [
                     'icon'       => 'fa-home',
                     'attributes' => [
-                        'class'  => 'front-end',
+                        'class'  => 'nav-link front-end',
                         'title'  => 'lang:admin::default.menu_storefront',
                         'href'   => root_url(),
                         'target' => '_blank',
@@ -190,7 +190,8 @@ class ServiceProvider extends AppServiceProvider
                     'viewMoreUrl' => admin_url('messages'),
                     'permission'  => 'Admin.Messages',
                     'attributes'  => [
-                        'class'       => 'dropdown-toggle',
+                        'class'       => 'nav-link',
+                        'href'   => '',
                         'data-toggle' => 'dropdown',
                     ],
                 ],
@@ -203,20 +204,16 @@ class ServiceProvider extends AppServiceProvider
                     'viewMoreUrl' => admin_url('activities'),
                     'permission'  => 'Admin.Activities',
                     'attributes'  => [
-                        'class'       => 'dropdown-toggle',
+                        'class'       => 'nav-link',
+                        'href'   => '',
                         'data-toggle' => 'dropdown',
                     ],
                 ],
                 'settings' => [
-                    'label'      => 'lang:admin::default.text_settings_title',
-                    'icon'       => 'fa-gear',
-                    'type'       => 'dropdown',
+                    'type'       => 'partial',
+                    'path' => 'top_settings_menu',
                     'options'    => ['System\Models\Settings_model', 'listMenuSettingItems'],
                     'permission'  => 'Site.Settings',
-                    'attributes' => [
-                        'class'       => 'dropdown-toggle',
-                        'data-toggle' => 'dropdown',
-                    ],
                 ],
                 'user'     => [
                     'type' => 'partial',

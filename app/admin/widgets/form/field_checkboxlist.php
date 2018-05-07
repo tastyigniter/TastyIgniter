@@ -14,16 +14,17 @@ $isScrollable = count($fieldOptions) > 10;
             if (!in_array($value, $checkedValues)) continue;
             if (!is_array($option)) $option = [$option];
             ?>
-            <div class="checkbox custom-checkbox">
+            <div class="custom-control custom-checkbox">
                 <input
                     type="checkbox"
                     id="<?= $checkboxId ?>"
+                    class="custom-control-input"
                     name="<?= $field->getName() ?>[]"
                     value="<?= $value ?>"
                     disabled="disabled"
-                    checked="checked">
-
-                <label for="<?= $checkboxId ?>">
+                    checked="checked"
+                >
+                <label class="custom-control-label" for="<?= $checkboxId ?>">
                     <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
                 </label>
                 <?php if (isset($option[1])) { ?>
@@ -59,20 +60,21 @@ $isScrollable = count($fieldOptions) > 10;
                     $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
                     if (is_string($option)) $option = [$option];
                     ?>
-                    <div class="checkbox custom-checkbox">
+                    <div class="custom-control custom-checkbox">
                         <input
                             type="checkbox"
                             id="<?= $checkboxId ?>"
+                            class="custom-control-input"
                             name="<?= $field->getName() ?>[]"
                             value="<?= $value ?>"
                             <?= in_array($value, $checkedValues) ? 'checked="checked"' : '' ?>>
 
-                        <label for="<?= $checkboxId ?>">
+                        <label class="custom-control-label" for="<?= $checkboxId ?>">
                             <?= isset($option[0]) ? e(lang($option[0])) : '&nbsp;' ?>
+                            <?php if (isset($option[1])) { ?>
+                                <p class="help-block"><?= e(lang($option[1])) ?></p>
+                            <?php } ?>
                         </label>
-                        <?php if (isset($option[1])) { ?>
-                            <p class="help-block"><?= e(lang($option[1])) ?></p>
-                        <?php } ?>
                     </div>
                 <?php } ?>
 

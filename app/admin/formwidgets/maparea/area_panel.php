@@ -1,7 +1,7 @@
 <div
     id="<?= $this->getId('area-panel-'.$index) ?>"
     data-row="<?= $index ?>"
-    class="panel panel-default">
+    class="panel panel-light">
 
     <div class="panel-heading collapsed"
          data-toggle="collapse"

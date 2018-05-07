@@ -3,23 +3,23 @@
     data-last-counter="<?= count($areas) ?>"
     data-template="#area-template">
 
-    <div class="panel panel-group panel-area-group">
-        <div class="panel-heading">
-            <h3 class="panel-title"><?php echo lang('admin::locations.text_delivery_area'); ?></h3>
-        </div>
-        <div
-            id="<?= $this->getId('areas') ?>"
-            class="panel-body panel-area-body"
-            role="tablist"
-            aria-multiselectable="true"
-            data-append-to>
-            <?php foreach ($areas as $index => $area) { ?>
-                <?= $this->makePartial('maparea/area_panel', ['area' => $area, 'index' => $index]) ?>
-            <?php } ?>
-        </div>
+    <div class="panel-group panel-area-group">
+        <div class="panel">
+            <div
+                id="<?= $this->getId('areas') ?>"
+                class="panel-body panel-area-body"
+                role="tablist"
+                aria-multiselectable="true"
+                data-append-to
+            >
+                <h5 class="panel-title"><?php echo lang('admin::locations.text_delivery_area'); ?></h5>
 
-        <div class="panel-footer">
-            <div class="text-center">
+                <?php foreach ($areas as $index => $area) { ?>
+                    <?= $this->makePartial('maparea/area_panel', ['area' => $area, 'index' => $index]) ?>
+                <?php } ?>
+            </div>
+
+            <div class="panel-footer">
                 <button
                     type="button"
                     class="btn btn-default"

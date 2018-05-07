@@ -27,7 +27,7 @@ $weekdays = $formModel->getWeekDaysOptions();
                             value="<?= $hour['day']; ?>"/>
                     </td>
                     <td>
-                        <div class="input-group clockpicker" data-autoclose="true">
+                        <div class="input-group" data-control="clockpicker" data-autoclose="true">
                             <input
                                 type="text"
                                 name="<?= $field->getName() ?>[<?= $index; ?>][open]"
@@ -35,11 +35,13 @@ $weekdays = $formModel->getWeekDaysOptions();
                                 autocomplete="off"
                                 value="<?= $hour['open'] ?>"
                                 <?= $field->getAttributes() ?> />
-                            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                            <span class="input-group-prepend">
+                                <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
+                            </span>
                         </div>
                     </td>
                     <td>
-                        <div class="input-group clockpicker" data-autoclose="true">
+                        <div class="input-group" data-control="clockpicker" data-autoclose="true">
                             <input
                                 type="text"
                                 name="<?= $field->getName() ?>[<?= $index; ?>][close]"
@@ -47,7 +49,9 @@ $weekdays = $formModel->getWeekDaysOptions();
                                 autocomplete="off"
                                 value="<?= $hour['close'] ?>"
                                 <?= $field->getAttributes() ?> />
-                            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                            <span class="input-group-prepend">
+                                <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
+                            </span>
                         </div>
                     </td>
                     <td>
@@ -55,20 +59,35 @@ $weekdays = $formModel->getWeekDaysOptions();
                             type="hidden"
                             name="<?= $field->getName() ?>[<?= $index; ?>][status]"
                             value="0"
-                            <?= $this->previewMode ? 'disabled="disabled"' : '' ?>>
-
-                        <div class="field-switch">
-                            <input
+                            <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
+                        >
+                        <div 
+                            class="field-switch"
+                            data-control="switch"
+                        >
+                            <input 
                                 type="checkbox"
                                 name="<?= $field->getName() ?>[<?= $index; ?>][status]"
-                                data-toggle="toggle"
-                                data-onstyle="success" data-offstyle="danger"
-                                data-on="<?= e(lang('admin::locations.text_open')) ?>"
-                                data-off="<?= e(lang('admin::locations.text_closed')) ?>"
+                                id="<?= $field->getId($index.'status') ?>"
+                                class="field-switch-input" 
                                 value="1"
                                 <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                                 <?= $hour['status'] == 1 ? 'checked="checked"' : '' ?>
-                                <?= $field->getAttributes() ?>>
+                                <?= $field->getAttributes() ?>
+                            >
+                            <label 
+                                class="field-switch-label" 
+                                for="<?= $field->getId($index.'status') ?>"
+                            >
+                                <span class="field-switch-container">
+                                    <span class="field-switch-active">
+                                        <span class="field-switch-toggle bg-success"><?= e(lang('admin::locations.text_open')) ?></span>
+                                    </span>
+                                    <span class="field-switch-inactive">
+                                        <span class="field-switch-toggle bg-danger"><?= e(lang('admin::locations.text_closed')) ?></span>
+                                    </span>
+                                </span>
+                            </label>
                         </div>
                     </td>
                 </tr>

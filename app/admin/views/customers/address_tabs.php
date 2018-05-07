@@ -8,8 +8,8 @@ $countries = System\Models\Countries_model::pluck('country_name');
         <?php if (count($addresses)) { ?>
             <?php $index = 0;
             foreach ($addresses as $address) { ?>
-                <li class="<?= $index++ == 0 ? 'active' : '' ?>">
-                    <a href="#<?= $field->getId('address-'.$index); ?>" data-toggle="tab">
+                <li class="nav-item<?= $index++ == 0 ? ' active' : '' ?>">
+                    <a class="nav-link" href="#<?= $field->getId('address-'.$index); ?>" data-toggle="tab">
                         <?= lang('admin::customers.text_tab_address').' '.$index; ?>&nbsp;&nbsp;
                         <i class="fa fa-times-circle"
                            data-confirm="<?= lang('admin::default.alert_warning_confirm'); ?>"
@@ -18,8 +18,8 @@ $countries = System\Models\Countries_model::pluck('country_name');
                 </li>
             <?php } ?>
         <?php } ?>
-        <li>
-            <a role="button" data-add-address><i class="fa fa-book"></i>&nbsp;<i class="fa fa-plus"></i></a>
+        <li class="nav-item">
+            <a class="nav-link" role="button" data-add-address><i class="fa fa-book"></i>&nbsp;<i class="fa fa-plus"></i></a>
         </li>
     </ul>
 

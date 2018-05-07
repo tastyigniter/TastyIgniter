@@ -7,36 +7,37 @@
     data-select-mode="<?= e($selectMode) ?>"
     data-unique-id="<?= $this->getId() ?>"
 >
-    <div id="<?= $this->getId('toolbar') ?>">
+    <div id="<?= $this->getId('toolbar') ?>" class="media-toolbar">
         <?= $this->makePartial('mediamanager/toolbar') ?>
     </div>
 
     <div id="notification"></div>
 
-    <div id="<?= $this->getId('breadcrumb') ?>" class="container-fluid">
+    <div id="<?= $this->getId('breadcrumb') ?>" class="media-breadcrumb">
         <?= $this->makePartial('mediamanager/breadcrumb') ?>
     </div>
 
-    <div class="media-container container-fluid">
+    <div class="media-container">
 
         <div id="<?= $this->getId('folder-tree') ?>"
              data-control="folder-tree">
             <?= $this->makePartial('mediamanager/folder_tree') ?>
         </div>
 
-        <div class="row-fluid">
-            <div class="col-sm-9 border-right wrap-none wrap-left"
-                 data-control="media-list">
+        <div class="row no-gutters">
+            <div 
+                class="col-9 border-right wrap-none wrap-left"
+                data-control="media-list"
+            >
+                <div id="<?= $this->getId('item-list') ?>" class="media-list-container">
+                    <?php if ($this->getSetting('uploads')) { ?>
+                        <?= $this->makePartial('mediamanager/uploader') ?>
+                    <?php } ?>
 
-                <?php if ($this->getSetting('uploads')) { ?>
-                    <?= $this->makePartial('mediamanager/uploader') ?>
-                <?php } ?>
-
-                <div id="<?= $this->getId('item-list') ?>">
                     <?= $this->makePartial('mediamanager/item_list') ?>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-3">
                 <?= $this->makePartial('mediamanager/sidebar') ?>
             </div>
         </div>

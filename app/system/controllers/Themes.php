@@ -211,7 +211,21 @@ class Themes extends \Admin\Classes\AdminController
             flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme file ['.$filename.'] updated '));
         }
 
-        session()->flash('file', input('file'));
+        if (post('close') != '1')
+            session()->flash('Theme.customize', input('Theme.customize'));
+
+        return $this->refresh();
+    }
+
+    public function source_onChooseFile($context, $themeCode = null) {
+        $model = $this->formFindModelObject($themeCode);
+
+        $this->initFormWidget($model, $context);
+
+        if ($this->formValidate($model, $this->formWidget) === FALSE)
+            return;
+
+        session()->flash('Theme.customize', input('Theme.customize'));
 
         return $this->refresh();
     }
@@ -322,19 +336,20 @@ class Themes extends \Admin\Classes\AdminController
     public function formExtendFields($form, $fields)
     {
         $sourceField = $form->getField('source');
-        $filesField = $form->getField('files');
-        if (!$sourceField OR !$filesField)
+        $fileField = $form->getField('file');
+        if (!$sourceField OR !$fileField)
             return;
 
-        $file = input('file', session('file'));
+        $file = array_get(session('Theme.customize', []), 'file', input('Theme.customize.file'));;
         $themeCode = $form->model->code;
-        $filesField->options = $this->prepareFilesList($themeCode, $file);
+        $fileField->options = $this->prepareFilesList($themeCode, $file);
+        $fileField->value = $file;
 
         $themeManager = ThemeManager::instance();
         if (!$fileSource = $themeManager->readFile($file, $themeCode))
             return;
 
-        $form->data->source = $fileSource;
+        $sourceField->value = $fileSource;
 
         switch (pathinfo($file, PATHINFO_EXTENSION)) {
             case 'js':
@@ -419,17 +434,10 @@ class Themes extends \Admin\Classes\AdminController
         foreach (array_sort($list) as $directory => $files) {
             foreach ($files as $file) {
                 $group = pathinfo($file, PATHINFO_DIRNAME);
-                $result[$group][] = (object)[
-                    'path'  => $file,
-                    'group' => $group,
-                    'name'  => pathinfo($file, PATHINFO_FILENAME),
-                ];
+                $result[$file] = $group.'/'.pathinfo($file, PATHINFO_FILENAME);
             }
         }
 
-        return [
-            'currentFile' => $currentFile,
-            'list'        => $result,
-        ];
+        return $result;
     }
 }

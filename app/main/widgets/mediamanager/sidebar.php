@@ -65,11 +65,13 @@
             </p>
         </div>
         <?php if ($chooseButton) { ?>
-            <button
-                class="btn btn-primary btn-block"
-                data-control="media-choose">
-                <?= lang('main::media_manager.text_choose'); ?>
-            </button>
+            <div class="sidebar-choose-btn">
+                <button
+                    class="btn btn-primary btn-block"
+                    data-control="media-choose">
+                    <?= lang('main::media_manager.text_choose'); ?>
+                </button>
+            </div>
         <?php } ?>
     </div>
 </script>
@@ -122,11 +124,13 @@
             <p><span class="text-muted small"><?= lang('main::media_manager.text_items_selected'); ?></span></p>
         </div>
         <?php if ($chooseButton) { ?>
-            <button
-                class="btn btn-primary btn-block"
-                data-control="media-choose">
-                <?= lang('main::media_manager.text_choose'); ?>
-            </button>
+            <div class="sidebar-choose-btn">
+                <button
+                    class="btn btn-primary btn-block"
+                    data-control="media-choose">
+                    <?= lang('main::media_manager.text_choose'); ?>
+                </button>
+            </div>
         <?php } ?>
     </div>
 </script>

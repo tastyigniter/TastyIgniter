@@ -12,7 +12,7 @@ $type = $tabs->section;
         <?php $index = 0;
         foreach ($tabs as $name => $fields) { ?>
             <?php $index++; ?>
-            <div class="panel panel-inverse">
+            <div class="panel panel-light">
                 <div class="panel-heading <?= $index == 1 ? '' : 'collapsed' ?>"
                      role="button"
                      data-toggle="collapse"
@@ -21,7 +21,7 @@ $type = $tabs->section;
                      aria-expanded="true"
                      aria-controls="<?= $this->getId('section-'.$index) ?>"
                 >
-                    <h4 class="panel-title"><?= e(lang($name)) ?></h4>
+                    <h5 class="panel-title"><?= e(lang($name)) ?></h5>
                 </div>
                 <div
                     id="<?= $this->getId('section-'.$index) ?>"

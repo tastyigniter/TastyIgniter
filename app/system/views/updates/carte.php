@@ -2,11 +2,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title"><?= lang('system::updates.text_title_carte'); ?></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body wrap-none">
-                <div class="panel panel-default panel-carte">
+                <div class="panel panel-light panel-carte">
                     <div id="carte-details" class="panel-body border-bottom">
                         <?= $this->makePartial('updates/carte_info', ['carteInfo' => $carteInfo]); ?>
                     </div>

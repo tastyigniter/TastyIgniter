@@ -77,7 +77,7 @@
         if (listHeight < 1)
             return
 
-        $('.media-list', this.$mediaListElement)
+        $('.media-list-container', this.$mediaListElement)
             .css('height', listHeight)
             .css('overflow-y', 'scroll')
     }

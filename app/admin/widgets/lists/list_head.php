@@ -5,11 +5,11 @@
 
     <?php if ($showCheckboxes) { ?>
         <th class="list-action">
-            <div class="checkbox checkbox-primary">
+            <div class="custom-control custom-checkbox">
                 <input
                     type="checkbox" id="<?= 'checkboxAll-'.$listId ?>"
-                    class="styled" onclick="$('input[name*=\'checked\']').prop('checked', this.checked)"/>
-                <label for="<?= 'checkboxAll-'.$listId ?>"></label>
+                    class="custom-control-input" onclick="$('input[name*=\'checked\']').prop('checked', this.checked)"/>
+                <label class="custom-control-label" for="<?= 'checkboxAll-'.$listId ?>"></label>
             </div>
         </th>
     <?php } ?>
@@ -24,7 +24,7 @@
                     echo 'style="width: '.$column->width.'"';
                 } ?>>
                 <a
-                    class="sort"
+                    class="sort-col"
                     data-request="<?= $this->getEventHandler('onSort') ?>"
                     data-request-form="#list-form"
                     data-request-data="sort_by: '<?= $column->columnName ?>'">
@@ -46,7 +46,7 @@
         <th class="list-setup">
             <button
                 type="button"
-                class="btn btn-default btn-xs"
+                class="btn btn-default btn-sm"
                 title="<?= lang('admin::default.list.text_setup') ?>"
                 data-toggle="modal"
                 data-target="#<?= $listId ?>-setup-modal"

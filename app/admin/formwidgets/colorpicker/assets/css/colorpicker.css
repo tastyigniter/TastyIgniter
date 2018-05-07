@@ -1,8 +1,5 @@
-.colorpicker-element .component.input-group-addo i,
-.colorpicker-element .component.input-group-addon i {
-	width: 24px;
-	height: auto;
-	vertical-align: unset;
+.colorpicker.dropdown-menu {
+	padding: 10px;
 }
 .colorpicker-2x .colorpicker-saturation {
 	width: 200px;
@@ -14,6 +11,17 @@
 	height: 200px;
 }
 .colorpicker-2x .colorpicker-color,
-.colorpicker-2x .colorpicker-color div {
+.colorpicker-2x .colorpicker-color div,
+.colorpicker-2x .colorpicker-preview,
+.colorpicker-2x .colorpicker-preview div {
 	height: 30px;
+	font-size: 16px;
+	line-height: 160%;
+}
+
+.colorpicker-saturation .colorpicker-guide,
+.colorpicker-saturation .colorpicker-guide i {
+	height: 10px;
+	width: 10px;
+	border-radius: 10px;
 }

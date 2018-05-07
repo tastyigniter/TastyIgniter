@@ -1,5 +1,6 @@
 .calendar-widget {
-	padding: 0 15px;
+	padding: 15px;
+	background-color: var(--light);
 }
 .calendar-widget .popover-title {
 	padding: 15px;
