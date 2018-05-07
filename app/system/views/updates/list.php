@@ -2,15 +2,15 @@
     <div class="panel panel-light">
         <?php $countIgnored = count($updates['ignoredItems']); ?>
         <div class="panel-heading">
-            <h3 class="panel-title">
+            <h5 class="panel-title">
                 <i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;
                 <?= sprintf(lang('system::updates.text_update_found'), $updates['count']); ?>
                 <?= $countIgnored ? ', '.sprintf(lang('system::updates.text_update_ignored'), $countIgnored) : null; ?>
-            </h3>
+            </h5>
         </div>
 
         <?php if (count($updates['items'])) { ?>
-            <div class="panel-body bg-white">
+            <div class="panel-body">
                 <p><?= lang('system::updates.text_maintenance_mode'); ?></p>
             </div>
 
@@ -19,10 +19,10 @@
 
         <?php if ($countIgnored) { ?>
             <div class="panel-heading">
-                <h3 class="panel-title">
+                <h5 class="panel-title">
                     <i class="fa fa-times-circle fa-fw"></i>&nbsp;&nbsp;
                     <?= sprintf(lang('system::updates.text_update_ignored'), $countIgnored); ?>
-                </h3>
+                </h5>
             </div>
 
             <?= $this->makePartial('updates/list_items', ['items' => $updates['ignoredItems'], 'ignored' => TRUE]); ?>

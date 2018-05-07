@@ -1,4 +1,4 @@
-<div class="table-responsive wrap-vertical">
+<div class="table-responsive">
     <table class="table table-striped<?= $ignored ? ' table-muted' : ''; ?>">
         <tbody>
         <?php foreach ($items as $item) { ?>
@@ -7,12 +7,12 @@
                     <i class="fa <?= $item['icon'] ?> fa-2x text-muted"></i>
                 </td>
                 <td>
-                    <h4 class="<?= $ignored ? 'text-muted' : ''; ?>">
+                    <h5 class="<?= $ignored ? 'text-muted' : ''; ?>">
                         <?= str_limit($item['name'], 22) ?> <i class="fa fa-long-arrow-right"></i>
                         <span class="small">
                                 <?= sprintf(lang('system::updates.text_item_update_summary'), $item['ver'], $item['version']) ?>
                             </span>
-                    </h4>
+                    </h5>
                     <?php if (isset($item['tags']['data'])) foreach ($item['tags']['data'] as $tag) { ?>
                         <p class="<?= $ignored ? 'text-muted ' : ''; ?>small">
                             <strong><?= $tag['tag']; ?>:</strong> <?= $tag['description'] ?>
@@ -23,7 +23,7 @@
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         <?php if ($ignored) { ?>
                             <button
-                                class="btn btn-default"
+                                class="btn btn-light"
                                 type="button"
                                 data-control="ignore-item"
                                 data-item-code="<?= $item['code'] ?>"
@@ -31,12 +31,12 @@
                                 data-item-version="<?= $item['version'] ?>"
                                 data-item-action="remove"
                             >
-                                <span class="text-danger"><?= lang('admin::default.text_remove') ?></span>
+                                <span class="text-success"><?= lang('admin::default.text_remove') ?></span>
                             </button>
                         <?php }
                         else { ?>
                             <button
-                                class="btn btn-default"
+                                class="btn btn-light"
                                 type="button"
                                 data-control="update-item"
                                 data-item-code="<?= $item['code'] ?>"

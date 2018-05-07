@@ -64,13 +64,13 @@ class Updates extends \Admin\Classes\AdminController
                 : lang('admin::default.text_never');
 
             Template::setButton(sprintf(lang('system::updates.text_last_checked'), $lastChecked), [
-                'class' => 'btn disabled text-muted pull-right',
+                'class' => 'btn disabled text-muted pull-right', 'role' => 'button',
             ]);
 
             if (isset($updates['items']) AND count($updates['items'])) {
                 Template::setButton(lang('system::updates.button_update'), [
                     'class' => 'btn btn-primary pull-left',
-                    'id'    => 'apply-updates',
+                    'id'    => 'apply-updates', 'role' => 'button',
                 ]);
             }
         } catch (Exception $ex) {

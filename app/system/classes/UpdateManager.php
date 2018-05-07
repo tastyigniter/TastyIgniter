@@ -405,7 +405,7 @@ class UpdateManager
 
     public function ignoreUpdates($names)
     {
-        $ignoredUpdates = setting('ignored_updates');
+        $ignoredUpdates = $this->getIgnoredUpdates();
 
         foreach ($names as $item) {
             if (!isset($item['ver']) OR !version_compare($item['ver'], '0.0.1', '>'))
@@ -426,7 +426,7 @@ class UpdateManager
 
     public function getIgnoredUpdates()
     {
-        return setting()->get('ignored_updates', []);
+        return array_dot(setting()->get('ignored_updates', []));
     }
 
     public function isUpdateIgnored($code, $version)
@@ -435,7 +435,7 @@ class UpdateManager
 
         $ignoredUpdateVersion = array_get($ignoredUpdates, $code);
 
-        return $ignoredUpdateVersion == $version;
+        return strlen($version) AND $ignoredUpdateVersion == $version;
     }
 
     //
