@@ -182,7 +182,7 @@ class AdminController extends BaseController
         $result = $this->runHandler($handler, $params);
 
         $response = [];
-        if ($result instanceof RedirectResponse AND !post('_handler')) {
+        if ($result instanceof RedirectResponse AND Request::ajax()) {
             $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
             $result = null;
         }

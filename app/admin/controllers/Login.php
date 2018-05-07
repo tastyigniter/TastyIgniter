@@ -1,9 +1,10 @@
 <?php namespace Admin\Controllers;
 
+use Template;
+use AdminAuth;
 use Admin\Models\Users_model;
 use Admin\Traits\ValidatesForm;
-use AdminAuth;
-use Template;
+use Mail;
 
 class Login extends \Admin\Classes\AdminController
 {
@@ -52,7 +53,7 @@ class Login extends \Admin\Classes\AdminController
 
         Template::setTitle(lang('admin::login.text_password_reset_title'));
 
-        $data['resetCode'] = input('code');
+        $this->vars['resetCode'] = input('code');
 
         if ($this->_resetPassword()) {
             return $this->redirect('login');
@@ -63,11 +64,20 @@ class Login extends \Admin\Classes\AdminController
 
     protected function _resetPassword()
     {
-        if ($this->validateResetForm() === TRUE) {
-            if (!input('code')) {
+        if ($this->validateResetForm()) {
+            if (!$code = input('code')) {
                 $user = Users_model::whereUsername(post('username'))->first();
 
                 if ($user AND $user->resetPassword()) {
+                    $data = [
+                        'staff_name' => $user->staff->staff_name,
+                        'reset_link' => admin_url('login/reset?code='.$user->reset_code),
+                    ];
+
+                    Mail::send('admin::_mail.password_reset_request', $data, function ($message) use ($user) {
+                        $message->to($user->staff->staff_email, $user->staff->staff_name);
+                    });
+
                     flash()->success(lang('admin::login.alert_email_sent'));
 
                     return TRUE;
@@ -76,9 +86,18 @@ class Login extends \Admin\Classes\AdminController
                 $error = lang('admin::login.alert_email_not_sent');
             }
             else {
-                $user = Users_model::whereResetCode($code = post('reset_code'))->first();
+                $user = Users_model::whereResetCode($code)->first();
 
                 if ($user AND $user->completeResetPassword($code, post('password'))) {
+        
+                    $data = [
+                        'staff_name' => $user->staff->staff_name,
+                    ];
+
+                    Mail::send('admin::_mail.password_reset', $data, function ($message) use ($user) {
+                        $message->to($user->staff->staff_email, $user->staff->staff_name);
+                    });
+        
                     flash()->success(lang('admin::login.alert_success_reset'));
 
                     return TRUE;
@@ -111,12 +130,12 @@ class Login extends \Admin\Classes\AdminController
 
         if (input('code')) {
             $rules = [
-                ['password', 'lang:admin::login.label_password', 'required|min:6|max:32|same:password_confirm]'],
+                ['password', 'lang:admin::login.label_password', 'required|min:6|max:32|same:password_confirm'],
                 ['password_confirm', 'lang:admin::login.label_password_confirm', 'required'],
             ];
         }
         else {
-            $rules = ['username', 'lang:admin::login.label_username', 'required|exists:users'];
+            $rules[] = ['username', 'lang:admin::login.label_username', 'required|exists:users,username'];
         }
 
         return $this->validatePasses($post, $rules);
