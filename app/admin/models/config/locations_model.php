@@ -423,12 +423,6 @@ $config['form']['tabs'] = [
             'default' => 1,
             'type'    => 'switch',
         ],
-        'location_radius'                        => [
-            'label'   => 'lang:admin::locations.label_radius',
-            'tab'     => 'lang:admin::locations.text_tab_order',
-            'type'    => 'number',
-            'comment' => 'lang:admin::locations.help_location_radius',
-        ],
         'delivery_time'                          => [
             'label'   => 'lang:admin::locations.label_delivery_time',
             'tab'     => 'lang:admin::locations.text_tab_order',

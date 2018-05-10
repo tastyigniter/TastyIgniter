@@ -5,6 +5,9 @@
 
     <div class="panel-group panel-area-group">
         <div class="panel">
+            <div class="panel-header">
+                <h5 class="panel-title"><?php echo lang('admin::locations.text_delivery_area'); ?></h5>
+            </div>
             <div
                 id="<?= $this->getId('areas') ?>"
                 class="panel-body panel-area-body"
@@ -12,8 +15,6 @@
                 aria-multiselectable="true"
                 data-append-to
             >
-                <h5 class="panel-title"><?php echo lang('admin::locations.text_delivery_area'); ?></h5>
-
                 <?php foreach ($areas as $index => $area) { ?>
                     <?= $this->makePartial('maparea/area_panel', ['area' => $area, 'index' => $index]) ?>
                 <?php } ?>

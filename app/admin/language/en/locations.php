@@ -91,14 +91,13 @@ return [
     'label_gallery_image_status'      => 'Status',
     'label_delivery_condition'        => 'Delivery Condition',
 
-    'error_no_zero_total' => 'The %s can not be a value zero on conditions other than \'on all orders\'.',
-    'alert_delivery_area' => 'Delivery area map will be visible after location has been added.',
-    'alert_set_default'   => 'Location set as default',
+    'error_no_zero_total'           => 'The %s can not be a value zero on conditions other than \'on all orders\'.',
+    'alert_delivery_area'           => 'To make this location searchable by your customers, please add delivery area(s) under the \'Delivery\' tab.',
+    'alert_set_default'             => 'Location set as default',
 
     'help_permalink'                 => 'Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.',
     'help_permalink_disabled'        => 'Permalink is disabled while single location mode is activated.',
     'help_image'                     => 'Select an image to use as the location logo, this image is displayed in the restaurant list.',
-    'help_location_radius'           => 'Set the default overall delivery radius of this location in meters/kilometers depending on system setting [distance unit] value',
     'help_delivery_time'             => 'Set number of minutes an order will be delivered after being placed, or set to 0 to use default',
     'help_collection_time'           => 'Set number of minutes an order will be ready for pick-up after being placed, or set to 0 to use default',
     'help_last_order_time'           => 'Set number of minutes before closing time for last order, or set to 0 to use closing hour.',

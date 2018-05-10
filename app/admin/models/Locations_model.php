@@ -16,7 +16,7 @@ class Locations_model extends BaseLocationModel
 
     public $fillable = ['location_name', 'location_email', 'description', 'location_address_1',
         'location_address_2', 'location_city', 'location_state', 'location_postcode', 'location_country_id',
-        'location_telephone', 'location_lat', 'location_lng', 'location_radius', 'offer_delivery', 'offer_collection',
+        'location_telephone', 'location_lat', 'location_lng', 'offer_delivery', 'offer_collection',
         'delivery_time', 'last_order_time', 'reservation_time_interval', 'reservation_stay_time', 'location_status',
         'collection_time', 'options', 'location_image'];
 

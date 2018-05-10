@@ -63,6 +63,16 @@ class Locations extends \Admin\Classes\AdminController
         return parent::remap($action, $params);
     }
 
+    public function edit($context = null, $recordId = null)
+    {
+        $formController = $this->asExtension('FormController');
+        $formController->edit($context, $recordId);
+        
+        if (!count($formController->getFormModel()->listDeliveryAreas())) {
+            flash()->warning(lang('admin::locations.alert_delivery_area'))->now();
+        }
+    }
+
     public function settings($context = null)
     {
         $this->asExtension('FormController')->edit('edit', params('default_location_id'));
@@ -160,7 +170,8 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['options.hours.*.flexible.*.open', 'lang:admin::locations.label_open_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.close', 'lang:admin::locations.label_close_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::locations.label_opening_status', $requiredIf.'|integer'];
-
+        
+        $rules[] = ['delivery_areas', 'lang:admin::locations.text_delivery_area', 'required'];
         $rules[] = ['delivery_areas.*.type', 'lang:admin::locations.label_area_type', 'required'];
         $rules[] = ['delivery_areas.*.name', 'lang:admin::locations.label_area_name', 'required'];
         $rules[] = ['delivery_areas.*.area_id', 'lang:admin::locations.label_area_id', 'integer'];
@@ -178,14 +189,14 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['gallery.description', 'lang:admin::locations.label_gallery_description', 'max:255'];
         $rules[] = ['gallery.images.*', 'lang:admin::locations.label_gallery_image_name', 'sometimes'];
 
-        $this->validateAfter(function ($validator) {
-            $this->validateCoordinates($validator);
+        $this->validateAfter(function ($validator) use ($model) {
+            $this->validateCoordinates($validator, $model);
         });
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }
 
-    public function validateCoordinates($validator)
+    public function validateCoordinates($validator, $model)
     {
         if (post('Location.options.auto_lat_lng')) {
             $address = format_address([
@@ -200,10 +211,10 @@ class Locations extends \Admin\Classes\AdminController
             $geoPosition = app('geocoder')->geocode(['address' => $address]);
 
             if ($geoPosition instanceof GeoPosition AND $geoPosition->isValid()) {
-                $_POST['Location']['location_lat'] = $geoPosition->latitude;
-                $_POST['Location']['location_lng'] = $geoPosition->longitude;
+                $model->location_lat = $geoPosition->latitude;
+                $model->location_lng = $geoPosition->longitude;
 
-                return TRUE;
+                return $geoPosition;
             }
 
             $validator->errors()->add('options.auto_lat_lng', is_string($geoPosition)
