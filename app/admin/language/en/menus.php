@@ -47,7 +47,7 @@ return [
     'label_special_price'         => 'Special Price',
 
     'help_image'           => 'Select a file to update menu image, otherwise leave blank.',
-    'help_mealtime'        => 'Set what mealtime of day your customers can order this menu. Mealtimes can be managed under Localisation -> Mealtimes',
+    'help_mealtime'        => 'Set what mealtime of day your customers can order this menu. Mealtimes can be managed under Kitchen -> Mealtimes',
     'help_stock_qty'       => 'Set to 0 for unlimited stock quantity.',
     'help_minimum_qty'     => 'The minimum quantity that can be ordered. Default is 1, unless set otherwise.',
     'help_menu_option'     => 'Choose from the dropdown to add option to this menu.',

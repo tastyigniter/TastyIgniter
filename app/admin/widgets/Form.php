@@ -877,7 +877,7 @@ class Form extends BaseWidget
     protected function applyFiltersFromModel()
     {
         if (method_exists($this->model, 'filterFields')) {
-            $this->model->filterFields((object)$this->allFields, $this->getContext());
+            $this->model->filterFields($this);
         }
     }
 

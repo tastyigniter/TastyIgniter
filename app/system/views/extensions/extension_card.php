@@ -7,7 +7,7 @@ if ($record->class) foreach ($record->class->registerComponents() as $component)
 ?>
 <h5 class="extension-name<?= (!$record->class) ? ' text-muted' : ''; ?>">
     <?php if ($record->class) { ?>
-        <strong><?= $record->title; ?></strong>&nbsp;&nbsp;
+        <?= $record->title; ?>
     <?php }
     else { ?>
         <s><?= $record->title; ?></s>&nbsp;&nbsp;
