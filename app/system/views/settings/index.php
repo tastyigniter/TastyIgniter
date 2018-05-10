@@ -20,7 +20,7 @@
                             <?php } ?>
                             <?= e(lang($category->label)) ?>
                         </h5>
-                        <p><?= $category->description ? e(lang($category->description)) : '' ?></p>
+                        <p class="no-margin"><?= $category->description ? e(lang($category->description)) : '' ?></p>
                     </a>
                 <?php } ?>
             </div>

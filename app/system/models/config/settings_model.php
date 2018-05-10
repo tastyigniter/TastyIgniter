@@ -15,6 +15,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['general'] = [
     'label'    => 'lang:system::settings.text_tab_general',
+    'description' => 'lang:system::settings.text_tab_desc_general',
     'icon'     => 'fa fa-sliders',
     'priority' => 0,
     'url'      => admin_url('settings/edit/general'),
@@ -212,6 +213,7 @@ $config['form']['general'] = [
 
 $config['form']['order'] = [
     'label'    => 'lang:system::settings.text_tab_order',
+    'description' => 'lang:system::settings.text_tab_desc_order',
     'icon'     => 'fa fa-shopping-cart',
     'priority' => 1,
     'url'      => admin_url('settings/edit/order'),
@@ -402,6 +404,7 @@ $config['form']['order'] = [
 
 $config['form']['reservation'] = [
     'label'    => 'lang:system::settings.text_tab_reservation',
+    'description' => 'lang:system::settings.text_tab_desc_reservation',
     'icon'     => 'fa fa-book',
     'priority' => 2,
     'url'      => admin_url('settings/edit/reservation'),
@@ -469,6 +472,7 @@ $config['form']['reservation'] = [
 
 $config['form']['user'] = [
     'label'    => 'lang:system::settings.text_tab_user',
+    'description' => 'lang:system::settings.text_tab_desc_user',
     'icon'     => 'fa fa-user',
     'priority' => 3,
     'url'      => admin_url('settings/edit/user'),
@@ -506,6 +510,7 @@ $config['form']['user'] = [
 
 $config['form']['media'] = [
     'label'    => 'lang:system::settings.text_tab_media_manager',
+    'description' => 'lang:system::settings.text_tab_desc_media_manager',
     'icon'     => 'fa fa-image',
     'priority' => 4,
     'url'      => admin_url('settings/edit/media'),
@@ -594,6 +599,7 @@ $config['form']['media'] = [
 
 $config['form']['mail'] = [
     'label'    => 'lang:system::settings.text_tab_mail',
+    'description' => 'lang:system::settings.text_tab_desc_mail',
     'icon'     => 'fa fa-envelope',
     'priority' => 5,
     'url'      => admin_url('settings/edit/mail'),
@@ -690,6 +696,7 @@ $config['form']['mail'] = [
 
 $config['form']['advanced'] = [
     'label'    => 'lang:system::settings.text_tab_server',
+    'description' => 'lang:system::settings.text_tab_desc_server',
     'icon'     => 'fa fa-cog',
     'priority' => 6,
     'url'      => admin_url('settings/edit/advanced'),
@@ -709,39 +716,28 @@ $config['form']['advanced'] = [
                 'type'  => 'textarea',
             ],
 
-            'slug'      => [
-                'label' => 'lang:system::settings.text_tab_title_permalink',
-                'type'  => 'section',
-            ],
-            'permalink' => [
-                'label'   => 'lang:system::settings.label_permalink',
-                'type'    => 'switch',
-                'comment' => 'lang:system::settings.help_permalink',
-            ],
-
-            'caching'    => [
-                'label' => 'lang:system::settings.text_tab_title_caching',
-                'type'  => 'section',
-            ],
-            'cache_mode' => [
-                'label'   => 'lang:system::settings.label_cache_mode',
-                'type'    => 'switch',
-                'span'    => 'left',
-                'comment' => 'lang:system::settings.help_cache_mode',
-            ],
-            'cache_time' => [
-                'label'   => 'lang:system::settings.label_cache_time',
-                'type'    => 'number',
-                'span'    => 'right',
-                'comment' => 'lang:system::settings.help_cache_time',
-            ],
+//            'caching'    => [
+//                'label' => 'lang:system::settings.text_tab_title_caching',
+//                'type'  => 'section',
+//            ],
+//            'cache_mode' => [
+//                'label'   => 'lang:system::settings.label_cache_mode',
+//                'type'    => 'switch',
+//                'span'    => 'left',
+//                'comment' => 'lang:system::settings.help_cache_mode',
+//            ],
+//            'cache_time' => [
+//                'label'   => 'lang:system::settings.label_cache_time',
+//                'type'    => 'number',
+//                'span'    => 'right',
+//                'comment' => 'lang:system::settings.help_cache_time',
+//            ],
         ],
         'rules'  => [
-            ['permalink', 'lang:system::settings.label_permalink', 'required|integer'],
             ['maintenance_mode', 'lang:system::settings.label_maintenance_mode', 'required|integer'],
             ['maintenance_message', 'lang:system::settings.label_maintenance_message', 'required'],
-            ['cache_mode', 'lang:system::settings.label_cache_mode', 'required|integer'],
-            ['cache_time', 'lang:system::settings.label_cache_time', 'integer'],
+//            ['cache_mode', 'lang:system::settings.label_cache_mode', 'required|integer'],
+//            ['cache_time', 'lang:system::settings.label_cache_time', 'integer'],
         ],
     ],
 ];

@@ -26,5 +26,5 @@ return [
     'label_decimal_sign'     => 'Decimal Sign',
     'label_decimal_position' => 'Decimal Place',
 
-    'help_iso' => 'Learn more about <a target="_blank" href="http://en.wikipedia.org/wiki/ISO_3166-1">ISO Alpha 2, 3, numeric</a>',
+    'help_iso' => 'Learn more about <a target="_blank" href="https://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a>',
 ];

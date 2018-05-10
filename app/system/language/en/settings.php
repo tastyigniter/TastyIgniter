@@ -15,9 +15,10 @@ return [
     'text_tab_desc_general'       => '',
     'text_tab_desc_order'         => '',
     'text_tab_desc_reservation'   => '',
+    'text_tab_desc_user'         => '',
     'text_tab_desc_media_manager' => '',
     'text_tab_desc_mail'          => '',
-    'text_tab_desc_server'        => '',
+    'text_tab_desc_server'        => 'Manage advanced system settings such as enabling/disabling maintenance.',
 
     'text_tab_site'                  => 'Site',
     'text_tab_title_maps'            => 'Maps',
