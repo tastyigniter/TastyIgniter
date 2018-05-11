@@ -190,7 +190,7 @@ class Navigation
                 'code' => $name,
             ]));
 
-            if ($navItem['child']) && count($navItem['child'])) {
+            if ($navItem['child'] AND count($navItem['child'])) {
                 $this->registerNavItems($navItem['child'], $navItem['code']);
             }
 
