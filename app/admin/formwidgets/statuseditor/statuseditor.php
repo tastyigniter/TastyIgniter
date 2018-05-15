@@ -25,7 +25,7 @@ $statusItem = isset($fieldOptions[$value]) ? $fieldOptions[$value] : [];
         ><?= $statusItem ? e(lang($statusItem[$nameFrom])) : '' ?></span>
         <span class="input-group-btn">
             <button
-                class="btn btn-default"
+                class="btn btn-outline-default"
                 type="button"
                 <?= ($this->previewMode) ? 'disabled="disabled"' : '' ?>
             >

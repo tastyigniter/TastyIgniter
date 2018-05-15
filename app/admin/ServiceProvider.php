@@ -536,7 +536,7 @@ class ServiceProvider extends AppServiceProvider
     {
         Navigation::registerCallback(function (Navigation $manager) {
             // Change nav menu if single location mode is activated
-            if (!AdminAuth::user()->hasStrictLocationAccess() OR !is_single_location())
+            if (!(is_single_location() OR AdminAuth::user()->hasStrictLocationAccess()))
                 return;
 
             $manager->removeNavItem('locations', 'restaurant');

@@ -91,6 +91,15 @@ if (jQuery === undefined)
                 isRedirect = false
                 options.redirect = null
 
+                if (jqXHR.status == 406 && jqXHR.responseJSON) {
+                    errorMsg = jqXHR.responseJSON['X_IGNITER_ERROR_MESSAGE']
+                    updatePromise = requestOptions.handleUpdateResponse(jqXHR.responseJSON, textStatus, jqXHR)
+                }
+                else {
+                    errorMsg = jqXHR.responseText ? jqXHR.responseText : jqXHR.statusText
+                    updatePromise.resolve()
+                }
+
                 updatePromise.done(function () {
                     var _event = jQuery.Event('ajaxError')
                     $triggerEl.trigger(_event, [context, textStatus, jqXHR])

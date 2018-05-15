@@ -1,6 +1,7 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Models\Locations_model;
+use AdminAuth;
 use AdminMenu;
 use Exception;
 use Igniter\Flame\Location\GeoPosition;
@@ -57,7 +58,7 @@ class Locations extends \Admin\Classes\AdminController
 
     public function remap($action, $params)
     {
-        if ($action != 'settings' AND is_single_location())
+        if ($action != 'settings' AND AdminAuth::isStrictLocation())
             return $this->redirect('locations/settings');
 
         return parent::remap($action, $params);
