@@ -93,6 +93,9 @@ if (!function_exists('strip_class_basename')) {
         if (is_null($chop))
             return $basename;
 
+        if (!ends_with($class, $chop))
+            return $basename;
+
         return substr($basename, 0, -strlen($chop));
     }
 }
