@@ -190,6 +190,11 @@ label {
   border-color: #111f46 transparent transparent;
 }
 
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
+  color: #111f46;
+  border-color: #bec2ce;
+}
+
 .navbar-brand {
   background-color: #142654;
   display: block;

@@ -1,8 +1,4 @@
 
-html {
-    // font-size: 14px;
-}
-
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -20,7 +16,33 @@ a:focus, a:hover {
 a[data-request] {
     cursor: pointer;
 }
-
+.text-green {
+	color: $green;
+}
+.text-red {
+	color: $red;
+}
+.text-blue {
+	color: $blue;
+}
+.text-yellow {
+	color: $yellow;
+}
+.bg-white {
+	background-color: $white;
+}
+.bg-green {
+	background-color: $green;
+}
+.bg-red {
+	background-color: $red;
+}
+.bg-blue {
+	background-color: $blue;
+}
+.bg-yellow {
+	background-color: $yellow;
+}
 .text-w-300 { font-weight: 300; }
 .text-w-400 { font-weight: 400; }
 .text-w-500 { font-weight: 500; }

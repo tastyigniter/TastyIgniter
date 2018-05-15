@@ -38,3 +38,7 @@
 .select2-container--bootstrap .select2-selection--single .select2-selection__arrow b {
 	border-color: $input-color transparent transparent;
 }
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
+	color: $input-color;
+	border-color: $input-border-color;
+}

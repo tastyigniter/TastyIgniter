@@ -87,6 +87,7 @@
 .help-block	{
 	@extend .form-text;
 	font-size: $font-size-sm;
+	margin: 0;
 }
 .pull-right	{
 	@extend .float-right;

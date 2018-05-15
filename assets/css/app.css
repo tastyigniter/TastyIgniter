@@ -11831,6 +11831,7 @@ a.text-default:focus {
 
 .help-block {
   font-size: 0.765625rem;
+  margin: 0;
 }
 
 .label {
@@ -12208,6 +12209,42 @@ a:hover {
 
 a[data-request] {
   cursor: pointer;
+}
+
+.text-green {
+  color: #28a745;
+}
+
+.text-red {
+  color: #dc3545;
+}
+
+.text-blue {
+  color: #007bff;
+}
+
+.text-yellow {
+  color: #ffc107;
+}
+
+.bg-white {
+  background-color: #FFFFFF;
+}
+
+.bg-green {
+  background-color: #28a745;
+}
+
+.bg-red {
+  background-color: #dc3545;
+}
+
+.bg-blue {
+  background-color: #007bff;
+}
+
+.bg-yellow {
+  background-color: #ffc107;
 }
 
 .text-w-300 {
