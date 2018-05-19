@@ -53,24 +53,13 @@ if (!function_exists('get_style_tags')) {
     /**
      * Get multiple stylesheet html tags
      *
-     * @param mixed $collection
+     * @param string|array $sortBy
      *
      * @return string
      */
-    function get_style_tags($collection = null)
+    function get_style_tags($sortBy = null)
     {
-        if (is_null($collection))
-            $collection = \System\Libraries\Assets::DEFAULT_COLLECTION;
-
-        if (!is_array($collection))
-            $collection = [$collection];
-
-        $css = '';
-        foreach ($collection as $item) {
-            $css .= Assets::collection($item)->getCss().PHP_EOL;
-        }
-
-        return $css;
+        return Assets::getCss($sortBy);
     }
 }
 
@@ -80,10 +69,11 @@ if (!function_exists('set_style_tag')) {
      *
      * @param string $href
      * @param string $name
-     */
-    function set_style_tag($href = '', $name = '')
+         * @param string $collection
+ */
+    function set_style_tag($href = '', $name = '', $collection = null)
     {
-        Assets::collection()->addCss($href, $name);
+        Assets::collection($collection)->addCss($href, $name);
     }
 }
 
@@ -92,10 +82,11 @@ if (!function_exists('set_style_tags')) {
      * Set multiple stylesheet html tags
      *
      * @param array $tags
-     */
-    function set_style_tags(array $tags = [])
+         * @param string $collection
+ */
+    function set_style_tags(array $tags = [], $collection = null)
     {
-        Assets::collection()->addCss($tags);
+        Assets::collection($collection)->addTags(['css' => $tags]);
     }
 }
 
@@ -103,24 +94,13 @@ if (!function_exists('get_script_tags')) {
     /**
      * Get multiple scripts html tags
      *
-     * @param mixed $collection
+     * @param string|array $sortBy
      *
      * @return string
      */
-    function get_script_tags($collection = null)
+    function get_script_tags($sortBy = null)
     {
-        if (is_null($collection))
-            $collection = \System\Libraries\Assets::DEFAULT_COLLECTION;
-
-        if (!is_array($collection))
-            $collection = [$collection];
-
-        $js = '';
-        foreach ($collection as $item) {
-            $js .= Assets::collection($item)->getJs().PHP_EOL;
-        }
-
-        return $js;
+        return Assets::getJs($sortBy);
     }
 }
 
@@ -130,10 +110,11 @@ if (!function_exists('set_script_tag')) {
      *
      * @param string $href
      * @param string $name
+     * @param string $collection
      */
-    function set_script_tag($href = '', $name = '')
+    function set_script_tag($href = '', $name = '', $collection = null)
     {
-        Assets::collection()->addJs($href, $name);
+        Assets::collection($collection)->addJs($href, $name);
     }
 }
 
@@ -142,9 +123,17 @@ if (!function_exists('set_script_tags')) {
      * Set multiple scripts html tags
      *
      * @param array $tags
+     * @param string $collection
      */
-    function set_script_tags(array $tags = [])
+    function set_script_tags(array $tags = [], $collection = null)
     {
-        Assets::collection()->addJs($tags);
+        Assets::collection($collection)->addTags(['js' => $tags]);
+    }
+}
+
+if (!function_exists('combine')) {
+    function combine($assets = [], $localPath = null)
+    {
+        return Assets::combine($assets, $localPath);
     }
 }

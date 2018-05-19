@@ -18,11 +18,13 @@ use Request;
 use Response;
 use System\Classes\BaseController;
 use System\Classes\ErrorHandler;
+use System\Traits\AssetMaker;
 use System\Traits\ConfigMaker;
 use System\Traits\ViewMaker;
 
 class AdminController extends BaseController
 {
+    use AssetMaker;
     use ViewMaker;
     use ConfigMaker;
     use WidgetMaker;

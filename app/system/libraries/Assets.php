@@ -2,6 +2,8 @@
 
 use File;
 use Html;
+use Main\Classes\ThemeManager;
+use System\Traits\CombinesAssets;
 use URL;
 
 /**
@@ -14,19 +16,15 @@ use URL;
  */
 class Assets
 {
+    use CombinesAssets;
+
     const DEFAULT_COLLECTION = 'custom';
 
-    public static $defaultPaths;
-
-    protected $registeredLoaded;
+    protected static $registeredPaths = [];
 
     protected static $registeredCallback = [];
 
-    protected $favicon = [];
-
-    protected $tags = [];
-
-    protected $assets = [];
+    protected $assets = ['icon' => [], 'meta' => [], 'js' => [], 'css' => []];
 
     /**
      * Holds the current asset collection.
@@ -36,26 +34,23 @@ class Assets
 
     public $active_styles = '';
 
-    public function __construct($app)
+    public function __construct()
     {
-        $this->app = $app;
+        $this->initialize();
     }
 
-    public static function registerAssets(callable $callback)
+    public function initialize()
+    {
+        $this->initCombiner();
+
+        foreach (self::$registeredCallback as $callback) {
+            $callback($this);
+        }
+    }
+
+    public static function registerCallback(callable $callback)
     {
         static::$registeredCallback[] = $callback;
-    }
-
-    /**
-     * Set the default assets paths.
-     *
-     * @param  string|array $paths
-     *
-     * @return void
-     */
-    public static function defaultPaths($paths)
-    {
-        static::$defaultPaths = $paths;
     }
 
     /**
@@ -67,195 +62,108 @@ class Assets
      */
     public function collection($collection = null)
     {
-        $collection = $collection ?: self::DEFAULT_COLLECTION;
-
-        $this->collection = $collection;
+        $this->collection = $collection ?: self::DEFAULT_COLLECTION;
 
         return $this;
     }
 
-    public function loadRegistered()
+    public function addTags(array $tags = [])
     {
-        if ($this->registeredLoaded === TRUE)
-            return;
+        foreach ($tags as $type => $value) {
+            if (!is_array($value))
+                $value = [$value];
 
-        foreach (self::$registeredCallback as $callback) {
-            $callback($this);
-        }
+            foreach ($value as $item) {
+                $options = [];
+                if (isset($item['path'])) {
+                    $options = array_except($item, 'path');
+                    $item = $item['path'];
+                }
 
-        $this->registeredLoaded = TRUE;
-    }
-
-    public function addTags(array $headTags = [])
-    {
-        foreach ($headTags as $type => $value) {
-            $this->addTag($type, $value);
-        }
-    }
-
-    public function addTag($type, $tag)
-    {
-        if (is_string($type)) {
-            switch ($type) {
-                case 'favicon':
-                    $this->addFavIcon($tag);
-                    break;
-                case 'meta':
-                    $this->addMeta($tag);
-                    break;
-                case 'css':
-                case 'style':
-                    $this->addCss($tag);
-                    break;
-                case 'js':
-                case 'script':
-                    $this->addJs($tag);
-                    break;
+                $this->addTag($type, $item, $options);
             }
+        }
+    }
+
+    public function addTag($type, $tag, $options = [])
+    {
+        switch ($type) {
+            case 'favicon':
+                return $this->addFavIcon($tag);
+            case 'meta':
+                return $this->addMeta($tag);
+            case 'css':
+            case 'style':
+                return $this->addCss($tag, $options);
+            case 'js':
+            case 'script':
+                return $this->addJs($tag, $options);
         }
     }
 
     public function getFavIcon()
     {
-        $favicons = array_map(function ($href) {
-            if (!is_array($href))
-                $href = ['href' => $href];
+        $favIcons = array_map(function ($icon) {
+            return "\t\t".$this->renderTag($icon);
+        }, $this->assets['icon']);
 
-            if (isset($href['href']))
-                $href['href'] = $this->prepUrl($href['href']);
-
-            $href = array_merge([
-                'rel'  => 'shortcut icon',
-                'type' => 'image/x-icon',
-            ], $href);
-
-            return '<link'.Html::attributes($href).'>'.PHP_EOL;
-        }, $this->favicon);
-
-        return $favicons ? implode("\t\t", $favicons) : null;
+        return $favIcons ? implode(PHP_EOL, $favIcons) : null;
     }
 
     public function getMetas()
     {
-        $this->loadRegistered();
-
-        if (!isset($this->assets[$this->collection]['meta']))
+        if (!count($this->assets['meta']))
             return null;
 
         $metas = array_map(function ($meta) {
             return '<meta'.Html::attributes($meta).'>'.PHP_EOL;
-        }, $this->assets[$this->collection]['meta']);
+        }, $this->assets['meta']);
 
         return $metas ? implode("\t\t", $metas) : null;
     }
 
-    public function getCss()
+    public function getCss($sortBy = null)
     {
-        $this->loadRegistered();
-
-        if (!isset($this->assets[$this->collection]['css']))
-            return null;
-
-        $this->removeDuplicates();
-
-        $result = null;
-        foreach ($this->assets[$this->collection]['css'] as $asset) {
-            $attributes = $asset['attributes'];
-            if (!isset($attributes['id']))
-                $attributes['id'] = $asset['name'];
-
-            $attributes = Html::attributes(array_merge([
-                'href' => $asset['path'],
-            ], $attributes));
-
-            $result .= '<link'.$attributes.'>'.PHP_EOL;
-        }
-
-        return $result;
+        return $this->getTags('css', $sortBy);
     }
 
-    public function getJs()
+    public function getJs($sortBy = null)
     {
-        $this->loadRegistered();
-
-        if (!isset($this->assets[$this->collection]['js']))
-            return null;
-
-        $this->removeDuplicates();
-
-        $result = null;
-        foreach ($this->assets[$this->collection]['js'] as $asset) {
-            $attributes = $asset['attributes'];
-            if (!isset($attributes['id']))
-                $attributes['id'] = $asset['name'];
-
-            $attributes = Html::attributes(array_merge([
-                'src' => $asset['path'],
-            ], $attributes));
-
-            $result .= '<script'.$attributes.'></script>'.PHP_EOL;
-        }
-
-        return $result;
+        return $this->getTags('js', $sortBy);
     }
 
-    public function addFavIcon($href)
+    public function addFavIcon($icon)
     {
-        $this->favicon[] = $href;
+        $options = [];
+        if (is_array($icon)) {
+            $options = array_except($icon, 'href');
+            $icon = $icon['href'];
+        }
+
+        $this->pushTag('icon', $icon, ['attributes' => $options]);
 
         return $this;
     }
 
     public function addMeta(array $meta = [])
     {
-        $metaAssets = isset($this->assets[$this->collection]['meta'])
-            ? $this->assets[$this->collection]['meta'] : [];
+        $metaAssets = $this->assets['meta'] ?? [];
 
-        $this->assets[$this->collection]['meta'] = array_merge($metaAssets, $meta);
-
-        return $this;
-    }
-
-    public function addCss($href = null, $options = null)
-    {
-        if (is_array($href)) {
-            foreach ($href as $item) {
-                if (isset($item[0]) AND is_string($item[0])) {
-                    $this->addCss($item[0], (isset($item[1])) ? $item[1] : null);
-                }
-                else if (isset($item['href'])) {
-                    $this->addCss($item['href'], isset($item['name']) ? $item['name'] : null);
-                }
-            }
-
-            return $this;
-        }
-
-        $options = $this->evalOptions('css', $href, $options);
-
-        $this->assets[$this->collection]['css'][] = $options;
+        $this->assets['meta'] = array_merge($metaAssets, $meta);
 
         return $this;
     }
 
-    public function addJs($href = null, $options = null)
+    public function addCss($path, $options = null)
     {
-        if (is_array($href)) {
-            foreach ($href as $item) {
-                if (isset($item[0]) AND is_string($item[0])) {
-                    $this->addJs($item[0], (isset($item[1])) ? $item[1] : null);
-                }
-                else if (isset($item['src'])) {
-                    $this->addJs($item['src'], isset($item['name']) ? $item['name'] : null);
-                }
-            }
+        $this->pushTag('css', $path, $options);
 
-            return $this;
-        }
+        return $this;
+    }
 
-        $options = $this->evalOptions('js', $href, $options);
-
-        $this->assets[$this->collection]['js'][] = $options;
+    public function addJs($path, $options = null)
+    {
+        $this->pushTag('js', $path, $options);
 
         return $this;
     }
@@ -268,46 +176,87 @@ class Assets
         return $this->active_styles."\n\t\t";
     }
 
-    public function flushAssets()
+    public function flush()
     {
-        $this->assets[$this->collection] = ['meta' => [], 'js' => [], 'css' => []];
+        $this->assets = ['meta' => [], 'js' => [], 'css' => []];
     }
 
-    protected function getAssetPath($href)
+    protected function pushTag($type, $path, $options = null)
     {
-        if (substr($href, 0, 2) == '~/')
-            return File::localToPublic(File::symbolizePath($href));
+        $tagItem = $this->makeTagItem($type, $options);
 
-        if (starts_with($href, ['/', '//', 'http://', 'https://']))
-            return $href;
+        if (!is_array($path))
+            $path = [$path];
 
-        $paths = static::$defaultPaths;
+        if ($tagItem->combine) {
+            $path = [$this->combine($type, $path)];
+        }
+
+        foreach ($path as $value) {
+            $tagItem->path = $this->prepUrl($value, $tagItem->suffix);
+            $this->assets[$tagItem->type][] = $tagItem;
+        }
+    }
+
+    protected function getTags($type, $sortBy)
+    {
+        if (!count($this->assets[$type]))
+            return null;
+
+        $this->removeDuplicates();
+
+        if (is_null($sortBy))
+            $sortBy = [];
+
+        if (!is_array($sortBy))
+            $sortBy = [$sortBy];
+
+        $result = array_fill_keys($sortBy, []);
+        foreach ($this->assets[$type] as $tag) {
+            if ($sortBy AND !in_array($tag->collection, $sortBy))
+                continue;
+
+            $result[$tag->collection][] = "\t\t".$this->renderTag($tag);
+        }
+
+        return implode(PHP_EOL, array_collapse($result)).PHP_EOL;
+    }
+
+    protected function getAssetPath($name)
+    {
+        if (strpos($name, '~/') === 0)
+            return File::localToPublic(File::symbolizePath($name));
+
+        if (starts_with($name, ['/', '//', 'http://', 'https://']))
+            return $name;
+
+        $paths = static::$registeredPaths;
         if (!is_array($paths))
             $paths = [$paths];
 
         foreach ($paths as $path) {
-            if (File::exists($path = $path.'/'.$href))
+            if (File::exists($path = $path.'/'.$name))
                 return File::localToPublic($path);
         }
 
-        // Not found
-        return $href;
+        return $name;
     }
 
     /**
      * Removes duplicate assets from the entire collection.
+     *
+     * @param $type
+     *
      * @return void
      */
     protected function removeDuplicates()
     {
-        foreach ($this->assets[$this->collection] as $type => &$collection) {
+        foreach ($this->assets as $type => &$collection) {
 
             $pathCache = [];
             foreach ($collection as $key => $asset) {
 
-                if (!$path = array_get($asset, 'path')) {
-                    continue;
-                }
+                if (!isset($asset->path) OR !$path = $asset->path) continue;
 
                 if (isset($pathCache[$path])) {
                     array_forget($collection, $key);
@@ -319,22 +268,14 @@ class Assets
         }
     }
 
-    protected function prepUrl($href, $suffix = null)
+    protected function prepUrl($path, $suffix = null)
     {
-        if (substr($href, 0, 1) == ':') {
-            $callable = explode(',', substr($href, 1));
-            $args = array_splice($callable, 1);
-            if (function_exists($callable[0]))
-                $href = call_user_func_array($callable[0], $args);
-        }
-        else {
-            $href = URL::asset($this->getAssetPath($href));
-        }
+        $path = $this->getAssetPath($path);
 
         if (!is_null($suffix))
-            $suffix = (strpos($href, '?') === FALSE) ? '?'.$suffix : '&'.$suffix;
+            $suffix = (strpos($path, '?') === FALSE) ? '?'.$suffix : '&'.$suffix;
 
-        return $href.$suffix;
+        return URL::asset($path.$suffix);
     }
 
     protected function compileActiveStyle($content = '')
@@ -356,39 +297,93 @@ class Assets
 //        return $content;
     }
 
-    protected function evalOptions($type, $href, $options)
+    protected function makeTagItem($type, $options)
     {
+        $defaults = [
+            'name'       => null,
+            'type'       => $type,
+            'path'       => null,
+            'collection' => $this->collection,
+            'suffix'     => null,
+            'combine'    => FALSE,
+            'attributes' => [],
+        ];
+
         if (!is_array($options))
             $options = ['name' => $options];
 
-        if ($type == 'css') {
-            $defaults = [
-                'name'       => null,
-                'filter'     => [],
-                'reference'  => null,
-                'collection' => $this->collection,
-                'path'       => $this->prepUrl($href, 'ver='.params('core.build')),
-                'attributes' => [
+        if (!isset($options['attributes'])) {
+            if ($type == 'js') {
+                $options['attributes'] = [
+                    'charset' => strtolower(setting('charset', 'UTF-8')),
+                    'type'    => 'text/javascript',
+                ];
+            }
+            elseif ($type == 'icon') {
+                $options['attributes'] = [
+                    'rel'  => 'shortcut icon',
+                    'type' => 'image/x-icon',
+                ];
+            }
+            else {
+                $options['attributes'] = [
                     'rel'  => 'stylesheet',
                     'type' => 'text/css',
-                ],
-            ];
-        }
-        else {
-            $defaults = [
-                'name'       => null,
-                'depends'    => null,
-                'filter'     => [],
-                'reference'  => null,
-                'collection' => $this->collection,
-                'path'       => $this->prepUrl($href, 'ver='.params('core.build')),
-                'attributes' => [
-                    'charset' => strtolower(setting('charset')),
-                    'type'    => 'text/javascript',
-                ],
-            ];
+                ];
+            }
         }
 
-        return array_merge($defaults, $options);
+        if (!isset($options['attributes']['id']) AND isset($options['name']))
+            $options['attributes']['id'] = $options['name'];
+
+        return (object)array_merge($defaults, $options);
+    }
+
+    protected function renderTag($tag)
+    {
+        if ($tag->type == 'js') {
+            if ($tag->path AND !isset($tag->attributes['src']))
+                $tag->attributes['src'] = $tag->path;
+
+            $html = '<script'.Html::attributes($tag->attributes).'></script>'.PHP_EOL;
+        }
+        else {
+            if ($tag->path AND !isset($tag->attributes['href']))
+                $tag->attributes['href'] = $tag->path;
+
+            $html = '<link'.Html::attributes($tag->attributes).'>'.PHP_EOL;
+        }
+
+        return $html;
+    }
+
+    /**
+     * Set the default assets paths.
+     *
+     * @param  string $path
+     *
+     * @return void
+     */
+    public function registerSourcePath($path)
+    {
+        static::$registeredPaths[] = $path;
+    }
+
+    public function loadAssetsFromFile($file, $collection = null)
+    {
+        $assetsConfigPath = base_path().$this->getAssetPath($file);
+
+        if (!File::exists($assetsConfigPath))
+            return;
+
+        $content = json_decode(File::get($assetsConfigPath), TRUE);
+
+        if ($bundle = array_get($content, 'bundle')) {
+            foreach ($bundle as $extension => $files) {
+                $this->registerBundle($extension, $files);
+            }
+        }
+
+        $this->collection($collection)->addTags(array_except($content, 'bundle'));
     }
 }

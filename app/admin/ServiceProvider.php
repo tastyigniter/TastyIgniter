@@ -5,7 +5,6 @@ namespace Admin;
 use Admin\Classes\Navigation;
 use Admin\Classes\Widgets;
 use AdminAuth;
-use File;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use System\Libraries\Assets;
 use System\Models\Mail_templates_model;
@@ -34,7 +33,7 @@ class ServiceProvider extends AppServiceProvider
         $this->registerMailTemplates();
 
         if ($this->app->runningInAdmin()) {
-            $this->registerBaseTags();
+            $this->registerAssets();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
@@ -53,36 +52,12 @@ class ServiceProvider extends AppServiceProvider
         });
     }
 
-    protected function registerBaseTags()
+    protected function registerAssets()
     {
-        Assets::defaultPaths([
-            app_path($this->app->appContext().'/assets'),
-        ]);
+        Assets::registerCallback(function (Assets $manager) {
+            $manager->registerSourcePath(app_path('admin/assets'));
 
-        Assets::registerAssets(function (Assets $manager) {
-            $manager->collection('app')->addTags([
-                'meta' => [
-                    ['name' => 'description', 'content' => setting('meta_description')],
-                    ['name' => 'keywords', 'content' => setting('meta_keywords')],
-                ],
-                'css'  => [
-                    [assets_url('css/app.css'), 'app-css'],
-                    [assets_url('css/vendor/select2-bootstrap.min.css'), 'select2-bootstrap-css'],
-                    [assets_url('css/vendor/font-awesome.min.css'), 'font-awesome-css'],
-                ],
-                'js'   => [
-                    [assets_url('js/app/vendor.js'), 'vendor-js'],
-                    [assets_url('js/app/flashmessage.js'), 'flashmessage-js'],
-                    [assets_url('js/app/app.js'), 'app-js'],
-                ],
-            ]);
-
-            $assetsConfigPath = app_path('admin/views/_meta/assets.json');
-            if (File::exists($assetsConfigPath)) {
-                $manager->collection('theme')->addTags(
-                    json_decode(File::get($assetsConfigPath), TRUE)
-                );
-            }
+            $manager->loadAssetsFromFile('~/app/admin/views/_meta/assets.json', 'theme');
         });
     }
 
@@ -191,7 +166,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission'  => 'Admin.Messages',
                     'attributes'  => [
                         'class'       => 'nav-link',
-                        'href'   => '',
+                        'href'        => '',
                         'data-toggle' => 'dropdown',
                     ],
                 ],
@@ -199,21 +174,21 @@ class ServiceProvider extends AppServiceProvider
                     'label'       => 'lang:admin::default.text_activity_title',
                     'icon'        => 'fa-bell',
                     'type'        => 'dropdown',
-                    'options' => ['System\Models\Activities_model', 'listMenuActivities'],
+                    'options'     => ['System\Models\Activities_model', 'listMenuActivities'],
                     'partial'     => '~/app/system/views/activities/latest',
                     'viewMoreUrl' => admin_url('activities'),
                     'permission'  => 'Admin.Activities',
                     'attributes'  => [
                         'class'       => 'nav-link',
-                        'href'   => '',
+                        'href'        => '',
                         'data-toggle' => 'dropdown',
                     ],
                 ],
                 'settings' => [
                     'type'       => 'partial',
-                    'path' => 'top_settings_menu',
+                    'path'       => 'top_settings_menu',
                     'options'    => ['System\Models\Settings_model', 'listMenuSettingItems'],
-                    'permission'  => 'Site.Settings',
+                    'permission' => 'Site.Settings',
                 ],
                 'user'     => [
                     'type' => 'partial',

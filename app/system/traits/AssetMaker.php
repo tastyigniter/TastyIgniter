@@ -15,6 +15,11 @@ trait AssetMaker
      */
     public $assetCollection;
 
+    public function flushAssets()
+    {
+        Assets::collection($this->assetCollection)->flush();
+    }
+
     /**
      * Locates a file based on it's definition. If the file starts with
      * a forward slash, it will be returned in context of the application public path,
@@ -41,7 +46,7 @@ trait AssetMaker
         if ($assetPath = File::symbolizePath($assetPath))
             $assetPath = File::localToPublic($assetPath);
 
-        if (substr($fileName, 0, 1) == '/' OR $assetPath === null) {
+        if (strpos($fileName, '/') === 0 OR $assetPath === null) {
             return $fileName;
         }
 

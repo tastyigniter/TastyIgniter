@@ -130,10 +130,10 @@ class Updates extends \Admin\Classes\AdminController
 
     protected function prepareAssets()
     {
-        Assets::addJs(assets_url('js/vendor/mustache.js'), 'mustache-js');
-        Assets::addJs(assets_url('js/vendor/typeahead.js'), 'typeahead-js');
-        Assets::addJs(assets_url('js/app/flashmessage.js'), 'flashmessage-js');
-        Assets::addJs(assets_url('js/app/updates.js'), 'updates-js');
+        $this->addJs(assets_url('js/vendor/mustache.js'), 'mustache-js');
+        $this->addJs(assets_url('js/vendor/typeahead.js'), 'typeahead-js');
+        $this->addJs(assets_url('js/app/flashmessage.js'), 'flashmessage-js');
+        $this->addJs(assets_url('js/app/updates.js'), 'updates-js');
     }
 
     public function index_onApplyCarte()

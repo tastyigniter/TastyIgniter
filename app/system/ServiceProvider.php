@@ -18,6 +18,7 @@ use Request;
 use Setting;
 use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
+use System\Libraries\Assets;
 use System\Models\Mail_templates_model;
 use System\Models\Settings_model;
 
@@ -43,6 +44,7 @@ class ServiceProvider extends AppServiceProvider
         $this->registerMailer();
         $this->registerPaginator();
         $this->registerCurrency();
+        $this->registerAssets();
 
         // Register admin and main module providers
         collect(Config::get('system.modules', []))->each(function ($module) {
@@ -101,8 +103,8 @@ class ServiceProvider extends AppServiceProvider
             return new Customer;
         });
 
-        App::singleton('assets', function ($app) {
-            return new Libraries\Assets($app);
+        App::singleton('assets', function () {
+            return new Libraries\Assets();
         });
 
         App::singleton('admin.menu', function ($app) {
@@ -141,6 +143,7 @@ class ServiceProvider extends AppServiceProvider
 
         foreach (
             [
+                'igniter.util'      => Console\Commands\IgniterUtil::class,
                 'igniter.up'      => Console\Commands\IgniterUp::class,
                 'igniter.down'    => Console\Commands\IgniterDown::class,
                 'igniter.install' => Console\Commands\IgniterInstall::class,
@@ -229,5 +232,13 @@ class ServiceProvider extends AppServiceProvider
     protected function registerCurrency()
     {
         $this->app['config']->set('currency.default', setting('default_currency_code'));
+    }
+
+    protected function registerAssets()
+    {
+        Assets::registerCallback(function (Assets $manager) {
+            $manager->registerBundle('scss', '~/assets/ui/scss/flame.scss');
+            $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss');
+        });
     }
 }

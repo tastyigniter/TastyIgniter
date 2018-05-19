@@ -97,11 +97,30 @@ class Navigation
 
     public function addNavItem($itemCode, array $options = [], $parentCode = null)
     {
-        if (!is_null($parentCode)) {
-            $this->navItems[$parentCode]['child'][$itemCode] = $options;
+        $navItemDefaults = [
+            'code'       => $itemCode,
+            'class'      => null,
+            'href'       => null,
+            'icon'       => null,
+            'title'      => null,
+            'child'      => null,
+            'priority'   => 500,
+            'permission' => null,
+        ];
+
+        $navItem = array_merge($navItemDefaults, $options);
+
+        if ($parentCode) {
+            if (!isset($this->navItems[$parentCode]))
+                $this->navItems[$parentCode] = array_merge($navItemDefaults, [
+                    'code' => $parentCode,
+                    'class' => $parentCode
+                ]);
+
+            $this->navItems[$parentCode]['child'][$itemCode] = $navItem;
         }
         else {
-            $this->navItems[$itemCode] = $options;
+            $this->navItems[$itemCode] = $navItem;
         }
     }
 
@@ -171,31 +190,17 @@ class Navigation
 
     public function registerNavItems($definitions = null, $parent = null)
     {
-        $navItemDefaults = $navItemDefaults = [
-            'class'      => null,
-            'href'       => null,
-            'icon'       => null,
-            'title'      => null,
-            'child'      => null,
-            'priority'   => 500,
-            'permission' => null,
-        ];
-
         if (!$this->navItems) {
             $this->navItems = [];
         }
 
         foreach ($definitions as $name => $definition) {
-            $navItem = array_merge($navItemDefaults, array_merge($definition, [
-                'code' => $name,
-            ]));
-
-            if ($navItem['child'] AND count($navItem['child'])) {
-                $this->registerNavItems($navItem['child'], $navItem['code']);
+            if (isset($definition['child']) AND count($definition['child'])) {
+                $this->registerNavItems($definition['child'], $name);
             }
 
             if (array_except($definition, 'child')) {
-                $this->addNavItem($navItem['code'], $navItem, $parent);
+                $this->addNavItem($name, $definition, $parent);
             }
         }
     }
