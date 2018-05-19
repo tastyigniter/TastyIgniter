@@ -10,3 +10,15 @@
     margin-left: 0;
   }
 }
+
+body.dragging, body.dragging {
+  cursor: move !important;
+
+  .dragged {
+    position: absolute;
+    top: 0;
+    opacity: .5;
+    z-index: 2000;
+
+  }
+}

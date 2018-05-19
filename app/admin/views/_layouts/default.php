@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
+    <meta name="description" content="<?= setting('meta_description') ?>">
+    <meta name="keywords" content="<?= setting('meta_keywords') ?>">
     <?= get_metas(); ?>
     <?= get_favicon(); ?>
     <title><?= sprintf(lang('admin::default.site_title'), Template::getTitle(), setting('site_name')); ?></title>
-    <?= get_style_tags(['app', 'widget', 'custom', 'theme']); ?>
+    <?= get_style_tags(['ui', 'widget', 'custom', 'theme']); ?>
     <?= get_script_tags('app'); ?>
 </head>
 <body class="page <?= $this->bodyClass; ?>">

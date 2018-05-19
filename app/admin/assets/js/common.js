@@ -140,4 +140,19 @@ jQuery(function ($) {
     $(document).on('hidden.bs.modal', '.modal', function () {
         $('.modal:visible').length && $(document.body).addClass('modal-open')
     })
-})
+
+    // Varying modal content
+    $(document).on('show.bs.modal', '.modal', function (event) {
+        var $modal = $(this),
+            $button = $(event.relatedTarget)
+
+        $.each($button.get(0).attributes, function(index, attribute) {
+            if (/^data-modal-/.test(attribute.name)) {
+                var attrName = attribute.name.substr(11),
+                    attrValue = attribute.value
+
+                $modal.find('[data-modal-text="'+attrName+'"]').text(attrValue)
+                $modal.find('[data-modal-input="'+attrName+'"]').val(attrValue)
+            }
+        });
+    })})
