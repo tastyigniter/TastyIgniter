@@ -1,7 +1,10 @@
 <?php namespace System\Classes;
 
 use App;
+use ApplicationException;
+use Assets;
 use Closure;
+use Exception;
 use File;
 use Igniter\Flame\Support\RouterHelper;
 use Igniter\Flame\Traits\ExtendableTrait;
@@ -118,6 +121,26 @@ class Controller extends IlluminateController
         }
 
         return App::make('Main\Classes\MainController')->remap($url);
+    }
+
+    /**
+     * Combines JavaScript and StyleSheet assets.
+     * @param string $asset
+     * @return string
+     */
+    public function combineAssets($asset)
+    {
+        try {
+            $parts = explode('-', $asset);
+            $cacheKey = $parts[0];
+
+            return Assets::combineGetContents($cacheKey);
+        }
+        catch (Exception $ex) {
+            $errorMessage = ErrorHandler::getDetailedMessage($ex);
+
+            return '/* '.e($errorMessage).' */';
+        }
     }
 
     /**

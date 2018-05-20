@@ -20,6 +20,7 @@ return [
         'partial' => "The partial ':name' is not found.",
         'config'  => 'Unable to find configuration file %s defined for %s.',
         'class'   => "Unable to find '%s' in %s",
+        'combiner'   => "Unable to find assets '%s'",
     ],
     'missing'      => [
         'config_key' => "Missing required [%s] key in [%s]",
