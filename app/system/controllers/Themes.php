@@ -1,7 +1,6 @@
 <?php namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
-use AdminAuth;
 use AdminMenu;
 use Exception;
 use Main\Classes\ThemeManager;
@@ -33,11 +32,6 @@ class Themes extends \Admin\Classes\AdminController
     public $formConfig = [
         'name'       => 'lang:system::themes.text_form_name',
         'model'      => 'System\Models\Themes_model',
-        'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
-            'redirect'      => 'themes/edit/{code}',
-            'redirectClose' => 'themes',
-        ],
         'edit'       => [
             'title'         => 'lang:admin::default.form.edit_title',
             'redirect'      => 'themes/edit/{code}',
@@ -195,39 +189,96 @@ class Themes extends \Admin\Classes\AdminController
 
     public function source_onSave($context, $themeCode = null)
     {
+        $oldMTime = session('Theme.customize.mTime');
+
         $model = $this->formFindModelObject($themeCode);
 
         $this->initFormWidget($model, $context);
 
+        $this->validateAfter(function ($validator) use ($oldMTime) {
+            if (
+                isset($this->formWidget->data->fileSource) AND
+                $oldMTime != $this->formWidget->data->fileSource->mTime
+            ) {
+                $validator->errors()->add('markup', lang('system::themes.alert_changes_confirm'));
+            }
+        });
+
         if ($this->formValidate($model, $this->formWidget) === FALSE)
             return;
 
-        $filename = array_get(post($this->formWidget->arrayName), 'file');
-        $content = array_get(post($this->formWidget->arrayName), 'source');
-        if (is_int($content))
-            $filename = null;
+        list($fileName, $attributes) = $this->getFileAttributes();
 
-        if (ThemeManager::instance()->writeFile($filename, $themeCode, $content)) {
-            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme file ['.$filename.'] updated '));
+        if (ThemeManager::instance()->writeFile($fileName, $themeCode, $attributes)) {
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme file ['.$fileName.'] updated '));
         }
-
-        if (post('close') != '1')
-            session()->flash('Theme.customize', input('Theme.customize'));
 
         return $this->refresh();
     }
 
-    public function source_onChooseFile($context, $themeCode = null) {
+    public function source_onChooseFile($context, $themeCode = null)
+    {
         $model = $this->formFindModelObject($themeCode);
 
         $this->initFormWidget($model, $context);
 
-        if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return;
-
-        session()->flash('Theme.customize', input('Theme.customize'));
+        session()->put('Theme.customize.file', post('Theme.customize.file'));
 
         return $this->refresh();
+    }
+
+    public function source_onManageSource($context, $themeCode = null)
+    {
+        $model = $this->formFindModelObject($themeCode);
+
+        $this->initFormWidget($model, $context);
+
+        $fileAction = post('action');
+        $newFileName = post('name');
+
+        $passed = $this->validatePasses(post(), [
+            ['action', 'Source Action', 'required|in:rename,new'],
+            ['name', 'Source Name', 'required|string'],
+        ]);
+
+        if ($passed === FALSE)
+            return;
+
+        $sourceField = $this->formWidget->getField('file');
+
+        if ($fileAction == 'new') {
+            ThemeManager::instance()->writeFile($newFileName, $themeCode);
+        }
+        else {
+            $fileName = post($this->formWidget->arrayName.'[file]');
+            ThemeManager::instance()->renameFile($fileName, $themeCode, $newFileName);
+            $sourceField->value = $newFileName;
+        }
+
+        return [
+            '#'.$sourceField->getId('group') => $this->formWidget->renderField($sourceField, [
+                'useContainer' => FALSE,
+            ]),
+        ];
+    }
+
+    public function source_onDelete($context = null, $themeCode = null)
+    {
+        $model = $this->formFindModelObject($themeCode);
+
+        $this->initFormWidget($model, $context);
+
+        $fileName = post($this->formWidget->arrayName.'[file]');
+
+        if (ThemeManager::instance()->deleteFile($fileName, $themeCode)) {
+            session()->forget('Theme.customize');
+            flash()->success(sprintf(lang('admin::default.alert_success'), "Theme file [{$fileName}] deleted "));
+        }
+        else {
+            flash()->danger(lang('admin::default.alert_error_try_again'));
+        }
+
+        return $this->redirectBack();
     }
 
     public function upload_onUpload($context = null)
@@ -288,19 +339,42 @@ class Themes extends \Admin\Classes\AdminController
     {
         $configFile = $this->formConfig['configFile'];
         $config = $this->makeConfig($configFile, ['form']);
-        $modelConfig = isset($config['form']) ? $config['form'] : [];
+        $modelConfig = $config['form'] ?? [];
 
+        $forgetSessionFile = TRUE;
         if ($context != 'source') {
             $modelConfig['tabs']['fields'] = $model->getFieldsConfig();
         }
 
+        $arrayName = str_singular(strip_class_basename($model, '_model')).'[customize]';
         $modelConfig['model'] = $model;
-        $modelConfig['data'] = array_merge($model->getFieldValues(), $model->toArray());
-        $modelConfig['arrayName'] = str_singular(strip_class_basename($model, '_model')).'[customize]';
+
+        if ($context == 'source') {
+            $mergeData = [];
+            $file = session('Theme.customize.file');
+            if ($file AND $mergeData = ThemeManager::instance()->readFile($file, $model->code)) {
+                $forgetSessionFile = FALSE;
+                $mergeData['file'] = $file;
+            }
+        }
+        else {
+            $mergeData = $model->getFieldValues();
+        }
+
+        if ($forgetSessionFile)
+            session()->forget('Theme.customize');
+
+        $modelConfig['data'] = array_merge($mergeData, $model->toArray());
+        $modelConfig['arrayName'] = $arrayName;
         $modelConfig['context'] = $context;
 
         // Form Widget with extensibility
         $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $modelConfig);
+
+        $this->formWidget->bindEvent('form.extendFieldsBefore', function () {
+            $this->formExtendFieldsBefore($this->formWidget);
+        });
+
         $this->formWidget->bindEvent('form.extendFields', function ($fields) {
             $this->formExtendFields($this->formWidget, $fields);
         });
@@ -333,36 +407,64 @@ class Themes extends \Admin\Classes\AdminController
         return $result;
     }
 
+    public function formExtendFieldsBefore($form)
+    {
+        $file = session('Theme.customize.file');
+        $parts = explode('/', $file);
+        $dirName = $parts[0];
+
+        if (strlen($file) AND in_array($dirName, ['_layouts', '_pages'])) {
+            $form->fields['settings[components]']['context'] = ['source'];
+            $form->tabs['fields']['codeSection']['context'] = ['source'];
+        }
+    }
+
     public function formExtendFields($form, $fields)
     {
-        $sourceField = $form->getField('source');
+        $markupField = $form->getField('markup');
         $fileField = $form->getField('file');
-        if (!$sourceField OR !$fileField)
+        if (!$markupField OR !$fileField)
             return;
 
-        $file = array_get(session('Theme.customize', []), 'file', input('Theme.customize.file'));;
+        $file = $fileField->value;
         $themeCode = $form->model->code;
         $fileField->options = $this->prepareFilesList($themeCode, $file);
-        $fileField->value = $file;
 
-        $themeManager = ThemeManager::instance();
-        if (!$fileSource = $themeManager->readFile($file, $themeCode))
+        $parts = explode('/', $file);
+        $dirName = $parts[0];
+
+        if (in_array($dirName, ['_layouts', '_pages'])) {
+            if ($dirName == '_layouts') {
+                $form->removeField('settings[title]');
+                $form->removeField('settings[permalink]');
+                $form->removeField('settings[layout]');
+            }
+        }
+        else {
+            $form->removeTab('lang:system::themes.text_tab_meta');
+        }
+
+        if (!strlen($file)) {
+            $form->removeTab('lang:system::themes.text_tab_markup');
+
             return;
-
-        $sourceField->value = $fileSource;
+        }
 
         switch (pathinfo($file, PATHINFO_EXTENSION)) {
             case 'js':
-                $sourceField->config['mode'] = 'javascript';
+                $markupField->config['mode'] = 'javascript';
                 break;
             case 'css':
-                $sourceField->config['mode'] = 'css';
+                $markupField->config['mode'] = 'css';
                 break;
             case 'php':
             default:
-                $sourceField->config['mode'] = 'application/x-httpd-php';
+                $markupField->config['mode'] = 'application/x-httpd-php';
                 break;
         }
+
+        session()->put('Theme.customize.mTime', isset($form->data->fileSource) ?
+            $form->data->fileSource->mTime : null);
     }
 
     protected function createModel()
@@ -417,27 +519,84 @@ class Themes extends \Admin\Classes\AdminController
         }
         else {
             $rules = [
-                ['file', 'Source File', 'sometimes'],
-                ['source', 'Source Content', 'sometimes'],
+                ['file', 'Source File', 'required'],
+                ['markup', 'lang:system::themes.text_tab_markup', 'sometimes'],
+                ['codeSection', 'lang:system::themes.text_tab_php_section', 'sometimes'],
+                ['settings.components.*.alias', 'lang:system::themes.label_component_alias', 'sometimes|required|alpha'],
+                ['settings.title', 'lang:system::themes.label_title', 'sometimes|required|max:160'],
+                ['settings.description', 'lang:system::themes.label_description', 'sometimes|max:255'],
+                ['settings.layout', 'lang:system::themes.label_layout', 'sometimes|string'],
+                ['settings.permalink', 'lang:system::themes.label_permalink', 'sometimes|required|string'],
             ];
         }
 
-        return $this->validatePasses($form->getSaveData(), $rules);
+        return $this->validatePasses(post($form->arrayName), $rules);
     }
 
     protected function prepareFilesList($themeCode, $currentFile = null)
     {
-        $result = [];
+        return function () use ($themeCode, $currentFile) {
+            $result = [];
 
-        $themeManager = ThemeManager::instance();
-        $list = $themeManager->listFiles($themeCode, ['_layouts', '_pages', '_partials']);
-        foreach (array_sort($list) as $directory => $files) {
-            foreach ($files as $file) {
-                $group = pathinfo($file, PATHINFO_DIRNAME);
-                $result[$file] = $group.'/'.pathinfo($file, PATHINFO_FILENAME);
+            $themeManager = ThemeManager::instance();
+            $list = $themeManager->listFiles($themeCode, ['_layouts', '_pages', '_partials']);
+            foreach (array_sort($list) as $directory => $files) {
+                foreach ($files as $file) {
+                    $group = pathinfo($file, PATHINFO_DIRNAME);
+                    $result[$file] = $group.'/'.pathinfo($file, PATHINFO_FILENAME);
+                }
             }
+
+            return $result;
+        };
+    }
+
+    protected function getFileAttributes()
+    {
+        $fileData = post($this->formWidget->arrayName);
+        $fileName = array_get($fileData, 'file');
+        $code = array_get($fileData, 'codeSection');
+
+        $code = preg_replace('/^\<\?php/', '', $code);
+        $code = preg_replace('/^\<\?/', '', preg_replace('/\?>$/', '', $code));
+        $code = trim($code, PHP_EOL);
+
+        $attributes = [
+            'code'   => $code,
+            'markup' => array_get($fileData, 'markup'),
+            'data'   => $this->parseComponents(array_get($fileData, 'settings')),
+        ];
+
+        return [$fileName, $attributes];
+    }
+
+    protected function parseComponents($settings)
+    {
+        $components = [];
+
+        foreach (array_get($settings, 'components', []) as $component) {
+            $alias = $component['alias'];
+            if ($component['code'] != $component['alias'])
+                $alias = $component['code'].' '.$component['alias'];
+
+            $alias = sprintf('[%s]', $alias);
+            $components[$alias] = $this->parseComponentPropertyValues(array_get($component, 'options', []));
         }
 
-        return $result;
+        $settings['components'] = $components;
+
+        return $settings;
+    }
+
+    private function parseComponentPropertyValues($properties)
+    {
+        $properties = array_map(function (&$propertyValue) {
+            if (is_numeric($propertyValue))
+                $propertyValue += 0; // Convert to int or float
+
+            return $propertyValue;
+        }, $properties);
+
+        return $properties;
     }
 }

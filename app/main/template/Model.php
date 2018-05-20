@@ -178,12 +178,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      */
     public function getBaseFileName()
     {
-        $pos = strrpos($this->fileName, '.');
-        if ($pos === FALSE) {
-            return $this->fileName;
-        }
-
-        return substr($this->fileName, 0, $pos);
+        return $this->baseFileName;
     }
 
     /**

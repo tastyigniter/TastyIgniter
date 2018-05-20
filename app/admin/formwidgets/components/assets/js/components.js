@@ -4,6 +4,7 @@
     var Components = function (element, options) {
         this.$el = $(element)
         this.options = options
+        this.$modalRootElement = null
 
         this.init()
         this.initSortable()
@@ -12,94 +13,54 @@
     Components.prototype.constructor = Components
 
     Components.prototype.init = function () {
-        this.partialContainer = '[data-control="partial"]'
+        this.$modalRootElement = this.$el.find('[data-control="components-modal"]')
 
         this.$el.on('click', '[data-control="add-component"]', $.proxy(this.onAddClicked, this))
         this.$el.on('click', '[data-control="remove-component"]', $.proxy(this.onRemoveClicked, this))
-        this.$el.on('click', '.panel-partial', $.proxy(this.onPanelClicked, this))
     }
 
     Components.prototype.initSortable = function () {
-        var $sortableContainer = $(this.partialContainer, this.$el).find('.panel-partial')
+        var $sortableContainer = $(this.options.sortableContainer, this.$el)
 
-        $(this.options.sortableContainer, $sortableContainer).sortable({
-            group: 'panel-partial',
+        $sortableContainer.sortable({
+            group: 'components',
             containerSelector: this.options.sortableContainer,
-            itemPath: '> .panel-body',
-            itemSelector: '.panel-component',
-            placeholder: '<div class="panel-component placeholder"></div>',
+            containerPath: '> div',
+            itemPath: '> div',
+            itemSelector: '.components-item:not(:first-child)',
+            placeholder: '<div class="placeholder"></div>',
             handle: '.handle',
-            onDrop: $.proxy(this.onDropPanel, this)
         })
-    }
-
-    Components.prototype.highlightPanel = function ($panel) {
-        var $partialPanels = this.$el.find('[data-control="partial"]')
-
-        if (!$partialPanels.length)
-            return
-
-        if (!$panel || !$panel.length)
-            $panel = $partialPanels.get(0)
-
-        $partialPanels.removeClass('selected')
-        $panel.addClass('selected')
     }
 
     // EVENT HANDLERS
     // ============================
 
-    Components.prototype.onDropPanel = function ($item, container, _super) {
-        var $currentPartial = $(container.el.get(0)).closest('[data-control="partial"]'),
-            replacePartial = $currentPartial.data('partial'),
-            findPartial = $item.data('partial'),
-            findPartialRegEx = new RegExp(findPartial, "g")
-
-        if (findPartial != replacePartial) {
-            $item.html($item.get(0).innerHTML
-                .replace(findPartialRegEx, replacePartial))
-        }
-
-        _super($item, container);
-        this.highlightPanel($currentPartial)
-    }
-
     Components.prototype.onAddClicked = function (event) {
-        var $element = $(event.currentTarget),
-            $selectedPartial = this.$el.find('[data-control="partial"].selected'),
-            componentCode = $element.data('component')
+        var self = this,
+            $element = $(event.currentTarget),
+            componentCode = $element.data('componentCode')
 
-        if (!$selectedPartial.length) {
-            alert('Please select a partial.')
-            return;
-        }
-
-        var component = this.options.data[componentCode]
-        component.partial = $selectedPartial.data('partial')
-
-        $.ti.loadingIndicator.show()
-        $element.request(this.options.handler, {
-            data: component
+        $element.request(this.options.addHandler, {
+            data: {code: componentCode}
         }).always(function () {
-            $.ti.loadingIndicator.hide()
-        }).done(function () {
-            $selectedPartial.find('.panel-component:last-child [data-toggle="toggle"]').bootstrapToggle('refresh');
+            self.$modalRootElement.modal('hide')
+        }).done(function (json) {
+            self.$el.find('[data-control="toggle-components"]').parent().after(json)
+            self.$el.find('select.form-control').select2({minimumResultsForSearch: Infinity})
+            self.$el.find('[data-control="selectlist"]').selectList()
         })
     }
 
     Components.prototype.onRemoveClicked = function (event) {
         var $element = $(event.currentTarget)
-        $element.closest('.panel-component').remove()
-    }
 
-    Components.prototype.onPanelClicked = function (event) {
-        var $panel = $(event.target).closest('[data-control="partial"]')
-        this.highlightPanel($panel)
+        $element.closest('.components-item').remove()
     }
 
     Components.DEFAULTS = {
         alias: undefined,
-        handler: undefined,
+        addHandler: undefined,
         sortableContainer: '.is-sortable',
     }
 

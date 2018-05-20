@@ -26,9 +26,9 @@
                     <span class="btn-file-input-browse"><?= lang('system::themes.button_choose'); ?></span>
                     <span class="btn-file-input-change hide"><?= lang('system::themes.button_change'); ?></span>
                     <input type="file"
-                            name="theme_zip"
-                            value="<?= set_value('theme_zip'); ?>"
-                            onchange="var file = this.files[0]
+                           name="theme_zip"
+                           value="<?= set_value('theme_zip'); ?>"
+                           onchange="var file = this.files[0]
                             $('.btn-file-input-value').val(file.name)
                             $('.btn-file-input-change').removeClass('hide')
                             $('.btn-file-input-browse').addClass('hide')"

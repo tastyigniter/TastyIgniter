@@ -7,6 +7,7 @@ use Igniter\Flame\Support\Extendable;
 use Illuminate\Support\Collection;
 use Main\Classes\Theme;
 use Main\Contracts\TemplateSource;
+use October\Rain\Halcyon\Exception\MissingFileNameException;
 use Symfony\Component\Finder\Finder;
 
 class Partial extends Extendable implements TemplateSource
@@ -131,6 +132,64 @@ class Partial extends Extendable implements TemplateSource
     }
 
     /**
+     * Update the source in the filesystem.
+     *
+     * @param  array $attributes
+     *
+     * @return bool|int
+     */
+    public function update(array $attributes = [])
+    {
+        return $this->save($attributes);
+    }
+
+    /**
+     * Save the source to the filesystem.
+     *
+     * @param array $attributes
+     *
+     * @return bool
+     */
+    public function save(array $attributes = [])
+    {
+        $fileName = array_get($attributes, 'fileName', $this->fileName);
+        $content = array_get($attributes, 'markup', $this->content);
+
+        if (!strlen($fileName)) {
+            throw (new MissingFileNameException)->setModel($this);
+        }
+
+        if (!strlen(File::extension($fileName)))
+            $fileName .= '.'.$this->defaultExtension;
+
+        $oldPath = $this->getFilePath($this->fileName);
+        $filePath = $this->getFilePath($fileName);
+
+        if (!File::exists($filePath)) {
+            @File::makeDirectory(dirname($filePath), 0777, true);
+        }
+
+        File::delete($oldPath);
+
+        return File::put($filePath, $content);
+    }
+
+    /**
+     * Delete a source from the filesystem.
+     *
+     * @return bool
+     */
+    public function delete()
+    {
+        if (!$this->fileName)
+            throw (new MissingFileNameException)->setModel($this);
+
+        $filePath = $this->getFilePath($this->fileName);
+
+        return File::delete($filePath);
+    }
+
+    /**
      * Loads the template.
      *
      * @param  \Main\Classes\Theme|\System\Classes\BaseComponent $source
@@ -240,5 +299,30 @@ class Partial extends Extendable implements TemplateSource
      */
     public function getTemplateCacheKey()
     {
+    }
+
+    /**
+     * Returns the base file name and extension. Applies a default extension, if none found.
+     *
+     * @param string $fileName
+     *
+     * @return array
+     */
+    public function getFileNameParts($fileName = null)
+    {
+        if ($fileName === null) {
+            $fileName = $this->fileName;
+        }
+
+        if (!strlen($extension = pathinfo($fileName, PATHINFO_EXTENSION))) {
+            $extension = $this->defaultExtension;
+            $baseFile = $fileName;
+        }
+        else {
+            $pos = strrpos($fileName, '.');
+            $baseFile = substr($fileName, 0, $pos);
+        }
+
+        return [$baseFile, $extension];
     }
 }

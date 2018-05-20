@@ -84,40 +84,85 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'name' => [
+    'name'                 => [
         'label'    => 'lang:system::themes.label_name',
         'type'     => 'text',
         'span'     => 'left',
         'disabled' => TRUE,
     ],
-    'code' => [
+    'code'                 => [
         'label'    => 'lang:system::themes.label_code',
         'type'     => 'text',
         'span'     => 'right',
         'disabled' => TRUE,
+    ],
+    'file'                 => [
+        'label'       => 'lang:system::themes.label_file',
+        'type'        => 'partial',
+        'path'        => 'form/field_source',
+        'placeholder' => 'lang:system::themes.text_select_file',
+        'context'     => ['source'],
+        'attributes'  => [
+            'data-request'      => 'onChooseFile',
+            'data-request-form' => '#edit-form',
+        ],
+    ],
+    'settings[components]' => [
+        'label'   => 'lang:system::themes.text_tab_components',
+        'type'    => 'components',
+        'context' => ['_source'],
+        'prompt'  => 'lang:system::themes.button_choose',
+        'comment'  => 'lang:system::themes.help_components',
+        'form'    => [
+            'fields' => [
+                'code'           => ['type' => 'hidden',],
+                'alias'          => [
+                    'label'      => 'lang:system::themes.label_component_alias',
+                    'type'       => 'text',
+                    'attributes' => [
+                        'data-toggle' => 'disabled',
+                    ],
+                ],
+            ],
+        ],
     ],
 ];
 
 $config['form']['tabs'] = [
     'cssClass' => 'theme-editor',
     'fields'   => [
-        'file'  => [
-            'tab'      => 'lang:system::themes.text_tab_edit_source',
-            'type'     => 'select',
-            'attributes'  => [
-                'data-request' => 'onChooseFile',
-                'data--request-form' => '#edit-form',
-            ]
-        //     'span'     => 'flex',
-        //     'cssClass' => 'col-sm-3 span-left wrap-none',
-        //     'path'     => 'themes/source_files',
+        'markup'                => [
+            'tab'  => 'lang:system::themes.text_tab_markup',
+            'type' => 'codeeditor',
+            'mode' => 'css',
         ],
-        'source' => [
-            'tab'      => 'lang:system::themes.text_tab_edit_source',
-            'type'     => 'codeeditor',
-            // 'span'     => 'flex',
-            // 'cssClass' => 'col-sm-9 span-right wrap-none',
-            'mode'     => 'css',
+        'codeSection'           => [
+            'tab'     => 'lang:system::themes.text_tab_php_section',
+            'type'    => 'codeeditor',
+            'mode'    => 'php',
+            'context' => ['_source'],
+        ],
+        'settings[title]'       => [
+            'label' => 'lang:system::themes.label_title',
+            'tab'   => 'lang:system::themes.text_tab_meta',
+            'type'  => 'text',
+            'span'  => 'left',
+        ],
+        'settings[permalink]'   => [
+            'tab'   => 'lang:system::themes.text_tab_meta',
+            'label' => 'lang:system::themes.label_permalink',
+            'type'  => 'text',
+            'span'  => 'right',
+        ],
+        'settings[description]' => [
+            'tab'   => 'lang:system::themes.text_tab_meta',
+            'label' => 'lang:system::themes.label_description',
+            'type'  => 'textarea',
+        ],
+        'settings[layout]'      => [
+            'tab'   => 'lang:system::themes.text_tab_meta',
+            'label' => 'lang:system::themes.label_layout',
+            'type'  => 'text',
         ],
     ],
 ];

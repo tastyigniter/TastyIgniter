@@ -16,7 +16,7 @@
         <h5 class="panel-title">
             <?php if (!$this->previewMode AND $sortable) { ?>
                 <button class="btn btn-handle <?= $this->getId('items') ?>-handle">
-                    <i class="fa fa-sort"></i>
+                    <i class="fa fa-arrows"></i>
                 </button>
             <?php } ?>
             <button

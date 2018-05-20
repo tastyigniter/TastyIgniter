@@ -6,13 +6,13 @@
         <div class="col col-6">
             <div class="media p-3">
                 <a class="media-left align-self-center mr-3 preview-thumb"
-                    data-toggle="modal"
-                    data-target="#theme-preview-<?= $theme->code; ?>"
-                    data-img-src="<?=  URL::asset($theme->themeClass->screenshot); ?>">
+                   data-toggle="modal"
+                   data-target="#theme-preview-<?= $theme->code; ?>"
+                   data-img-src="<?= URL::asset($theme->themeClass->screenshot); ?>">
                     <img class="im-responsive img-rounded"
-                            alt=""
-                            src="<?= URL::asset($theme->themeClass->screenshot); ?>"
-                            style="width:150px;"/>
+                         alt=""
+                         src="<?= URL::asset($theme->themeClass->screenshot); ?>"
+                         style="width:150px;"/>
                 </a>
                 <div class="media-body">
                     <h4 class="media-heading"><?= $theme->name; ?></h4>

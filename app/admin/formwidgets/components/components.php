@@ -1,59 +1,46 @@
 <div
     data-control="components"
     data-alias="<?= $this->alias ?>"
-    data-handler="<?= $onAddEventHandler ?>"
-    data-data="<?= e(json_encode($components)) ?>">
+    data-add-handler="<?= $onAddEventHandler ?>"
+    data-sortable-container=".components"
+>
 
-    <div class="row">
-        <div class="col-sm-12 col-md-3">
-            <div class="panel panel-components">
-                <div class="list-group">
-                    <?php foreach ($components as $code => $component) { ?>
-                        <?php $component = (object)$component; ?>
-                        <a
-                            class="list-group-item"
-                            data-control="add-component"
-                            data-component="<?= $component->code ?>"
-                            role="button">
-                            <h5>
-                                <?= e(lang($component->name)) ?>
-                            </h5>
-                            <p class="small"><?= $component->description ? e(lang($component->description)) : '' ?></p>
-                        </a>
-                    <?php } ?>
+    <div class="components">
+        <div class="d-flex align-content-stretch">
+            <div class="components-item mr-2 components-picker">
+                <div
+                    class="component btn btn-light"
+                    data-control="toggle-components"
+                    data-toggle="modal"
+                    data-target="#<?= $this->getId('components-modal') ?>"
+                >
+                    <h5><i class="fa fa-plus"></i></h5>
+                    <h6 class="text-muted"><?= lang($this->prompt) ?></h6>
                 </div>
             </div>
+            <?php if (count($components)) { ?>
+                <?php foreach ($components as $code => $component) { ?>
+                    <?= $this->makePartial('component', [
+                        'component' => $component,
+                        'field'     => $field,
+                    ]) ?>
+                <?php } ?>
+            <?php } ?>
         </div>
-        <div class="col-sm-12 col-md-9 wrap-none wrap-right">
-            <div class="partials">
-                <div class="row">
-                    <div
-                        class="col-xs-12 col-md-6">
-                        <?php $index = 0;
-                        foreach ($themePartials as $partial) { ?>
-                            <?php $index++;
-                            if (($index % 2) == 0) continue; ?>
+    </div>
 
-                            <?= $this->loadPartial('components/partial', [
-                                'partial' => $partial,
-                                'index'   => $index,
-                            ]); ?>
-                        <?php } ?>
-                    </div>
-                    <div
-                        class="col-xs-12 col-md-6">
-                        <?php $index = 0;
-                        foreach ($themePartials as $partial) { ?>
-                            <?php $index++;
-                            if (($index % 2) == 1) continue; ?>
-
-                            <?= $this->loadPartial('components/partial', [
-                                'partial' => $partial,
-                                'index'   => $index,
-                            ]); ?>
-                        <?php } ?>
-                    </div>
-                </div>
+    <div
+        id="<?= $this->getId('components-modal') ?>"
+        class="modal show"
+        data-control="components-modal"
+        role="dialog"
+        tabindex="-1"
+        aria-label="#<?= $this->getId('components-modal') ?>"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <?= $this->makePartial('list') ?>
             </div>
         </div>
     </div>

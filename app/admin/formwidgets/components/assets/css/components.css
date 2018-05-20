@@ -1,10 +1,27 @@
-.panel-partial {
-	background-color: #D7D7DE;
-	box-shadow: unset;
+.components {
+  padding-bottom: 5px;
 }
-.selected .panel-partial {
-	border: 1px solid #ACB5C7;
+.components .d-flex {
+  overflow: auto;
 }
-.panel-partial .panel-component > .panel-heading {
-	background-color: #E9E9ED;
+.components .components-item {
+  position: relative;
+}
+.components .components-item .component {
+  padding: 25px;
+}
+.components .components-item-action {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: none;
+}
+.components .components-item:focus .components-item-action,
+.components .components-item:hover .components-item-action {
+  display: block;
+}
+.components .components-item h5,
+.components .components-item h6 {
+  font-weight: 400;
 }

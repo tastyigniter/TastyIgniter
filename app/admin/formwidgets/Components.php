@@ -13,32 +13,37 @@ use System\Classes\ComponentManager as ComponentsManager;
  */
 class Components extends BaseFormWidget
 {
+    protected static $onAddItemCalled;
+
+    /**
+     * @var ComponentsManager
+     */
+    protected $manager;
+
     //
     // Configurable properties
     //
-    protected static $onAddItemCalled;
-
     /**
      * @var array Form field configuration
      */
     public $form;
 
-    protected $components;
+    public $prompt;
 
     protected $indexCount = 0;
 
-    protected $partialComponents;
+    protected $components = [];
 
     public function initialize()
     {
+        $this->manager = ComponentsManager::instance();
         $this->fillFromConfig([
             'form',
             'mode',
+            'prompt',
         ]);
 
-        if (!self::$onAddItemCalled) {
-            $this->processExistingItems();
-        }
+        $this->processExistingItems();
     }
 
     public function render()
@@ -50,28 +55,10 @@ class Components extends BaseFormWidget
 
     public function loadAssets()
     {
+        $this->addJs(assets_url('js/vendor/jquery-sortable.js'), 'jquery-sortable-js');
+
         $this->addCss('css/components.css', 'components-css');
         $this->addJs('js/components.js', 'components-js');
-    }
-
-    public function getLoadValue()
-    {
-        $value = parent::getLoadValue();
-        if ($value instanceof Collection)
-            $value = $value->groupBy('partial')->toArray();
-
-        if (!is_array($value))
-            return [];
-
-        $result = [];
-        foreach ($value as $partial => $components) {
-            foreach ($components as $code => $component) {
-                $component['code'] = isset($component['module_code']) ? $component['module_code'] : $code;
-                $result[$partial][] = $component;
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -79,120 +66,86 @@ class Components extends BaseFormWidget
      */
     public function prepareVars()
     {
-        $this->vars['components'] = $this->getVisibleComponents();
-        $this->vars['themePartials'] = $this->getThemePartials();
+        $this->vars['components'] = $this->components;
+        $this->vars['availableComponents'] = $this->getAvailableComponents();
         $this->vars['onAddEventHandler'] = $this->getEventHandler('onAddComponent');
         $this->vars['field'] = $this->formField;
-    }
-
-    public function getThemePartials()
-    {
-        $result = [];
-        foreach (get_partial_areas('main') as $partial) {
-            $result[$partial['id']] = (object)$partial;
-        }
-
-        return $result;
-    }
-
-    public function getPartialComponents($partial)
-    {
-        if (!$this->partialComponents OR !array_key_exists($partial->id, $this->partialComponents))
-            return [];
-
-        return $this->partialComponents[$partial->id];
     }
 
     public function processExistingItems()
     {
         $itemIndexes = null;
 
-        $loadValue = $this->getLoadValue();
+        if (!$loadValue = $this->getLoadValue())
+            return;
 
-        foreach ($loadValue as $partial => $components) {
+        foreach ($loadValue as $component => $properties) {
+            list($name, $alias) = strpos($component, ' ')
+                ? explode(' ', $component)
+                : [$component, $component];
 
-            foreach ($components as $component) {
-                if (!isset($component['module_code']) OR !strlen($component['module_code']))
-                    return null;
+            if (!$component = $this->manager->findComponent($name))
+                continue;
 
-                $componentCode = $component['module_code'];
-                $componentObj = $this->makeComponentFormWidget($componentCode, $component);
-                $this->indexCount++;
+            $component['alias'] = $alias;
 
-                $this->partialComponents[$componentObj->partial][] = $componentObj;
-            }
+            $this->components[$alias] = $this->makeComponentFormWidget($component, $properties);
         }
     }
 
     public function onAddComponent()
     {
-        self::$onAddItemCalled = TRUE;
-
-        $postData = post();
-        if (!$postData OR !isset($postData['code']))
+        $componentCode = post('code');
+        if (!strlen($componentCode))
             return FALSE;
 
-        $this->prepareVars();
+        $componentAlias = $this->getUniqueAlias($componentCode);
 
-        $postData['layout_id'] = $this->model->getKey();
-        $postData['module_code'] = $postData['code'];
-        $postData['alias'] = $postData['code'];
-        $postData['options'] = [];
-        $this->vars['component'] = $this->makeComponentFormWidget($postData['code'], $postData);
+        $component = $this->manager->findComponent($componentCode);
+        $component['alias'] = $componentAlias;
 
-        $itemContainer = '@#'.$this->getId('partial-'.$postData['partial']);
+        $component = $this->makeComponentFormWidget($component, []);
 
-        return [$itemContainer => $this->makePartial('components/component')];
+        return $this->makePartial('components/component', [
+            'component' => $component,
+            'field' => $this->formField
+        ]);
     }
 
-    protected function makeComponentFormWidget($componentCode, $component)
+    protected function makeComponentFormWidget($component, $properties)
     {
-        $manager = ComponentsManager::instance();
+        $code = $component['code'];
+        $alias = $component['alias'];
 
-        if ($componentFound = $manager->findComponent($componentCode))
-            $component = array_merge($componentFound, $component);
-
-        if (!isset($component['name']))
-            $component['name'] = $component['code'];
-
-        $componentObj = $component;
-        $componentObj['disabled'] = !is_array($componentFound);
-
-        $componentModel = Layout_modules_model::findOrNew(
-            isset($componentObj['layout_module_id']) ? $componentObj['layout_module_id'] : null
-        );
-
-        $componentPropertyConfig = [];
         try {
-            $componentObj['component'] = $manager->makeComponent($componentCode, null, $component);
+            $componentObj = $this->manager->makeComponent($code, $alias, $properties);
 
-            $componentPropertyConfig = $manager->getComponentPropertyConfig($componentObj['component']);
+            $component['options'] = $this->manager->getComponentPropertyValues($componentObj);
 
-            $component['options'] = array_merge(
-                $manager->getComponentPropertyValues($componentObj['component']),
-                is_array($component['options']) ? $component['options'] : []
-            );
+            $componentPropertyConfig = $this->manager->getComponentPropertyConfig($componentObj);
         } catch (Exception $ex) {
             //@todo: create unknown component object
-            $componentObj['component'] = null;
+            $component = null;
         }
 
         $formConfig = $this->mergeComponentFormConfig($this->form, $componentPropertyConfig);
-        $formConfig['model'] = $componentModel->fill($component);
+        $formConfig['model'] = $this->model;
+        $formConfig['data'] = $component;
         $formConfig['previewMode'] = $this->previewMode;
-        $formConfig['alias'] = $this->alias.'Form'.$componentObj['partial'].'-'.uniqid($componentCode);
-        $formConfig['arrayName'] = $this->formField->getName().'['.$componentObj['partial'].']['.uniqid().']';
+        $formConfig['alias'] = $this->alias.'Form'.'-'.$alias;
+        $formConfig['arrayName'] = $this->formField->getName().'['.$alias.']';
 
-        $componentObj['widget'] = $this->makeWidget('Admin\Widgets\Form', $formConfig);
-        $componentObj['widget']->bindToController();
+        $component['component'] = $component;
+        $component['widget'] = $widget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
+        $widget->bindToController();
 
-        return (object)$componentObj;
+        return (object)$component;
     }
 
     /**
      * @return array
      */
-    protected function getVisibleComponents()
+    protected function getAvailableComponents()
     {
         $components = [];
         $manager = ComponentsManager::instance();
@@ -204,7 +157,7 @@ class Components extends BaseFormWidget
             } catch (Exception $ex) {
             }
 
-            $components[$code] = $component;
+            $components[$code] = (object)$component;
         }
 
         return $components;
@@ -212,10 +165,10 @@ class Components extends BaseFormWidget
 
     protected function mergeComponentFormConfig($configForm, $propertyConfig)
     {
-        $fields = [];
+        $fields = array_get($configForm, 'fields');
 
         if (isset($propertyConfig['alias'])) {
-            $fields['alias'] = $propertyConfig['alias'];
+            $fields['alias'] = array_merge($propertyConfig['alias'], $fields['alias']);
         }
 
         $nameArray = 'options';
@@ -228,13 +181,18 @@ class Components extends BaseFormWidget
             $fields[$name] = $property;
         }
 
-        $configForm['fields'] = array_merge($fields, $configForm['fields']);
+        $configForm['fields'] = $fields;
 
         return $configForm;
     }
 
-    protected function fillModelFromComponentProperties($model, $component)
+    protected function getUniqueAlias($alias)
     {
-        $model->fill($properties);
+        if (!isset($this->components[$alias]))
+            return $alias;
+
+        $alias .= 'Copy';
+
+        return $alias;
     }
 }

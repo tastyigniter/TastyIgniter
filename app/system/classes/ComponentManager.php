@@ -41,47 +41,6 @@ class ComponentManager
     protected $components = [];
 
     /**
-     * Run a extension component method. Output from component is buffered and returned.
-     *
-     * @param string $component The extension/component/method to run.
-     * @param string $controller
-     * @param array $module
-     *
-     * @return mixed The output from the module.
-     */
-//    public function run($component, $controller, $module)
-//    {
-//        $method = 'index';
-//
-//        // If a directory separator is found in $module, use the right side of the
-//        // separator as $method, the left side as $module.
-//        if (($pos = strrpos($component, '/')) != FALSE) {
-//            $method = substr($component, $pos + 1);
-//            $component = substr($component, 0, $pos);
-//        }
-//
-//        // Load the class indicated by $module and check whether $method exists.
-//        $class = $this->makeComponent($component, $controller, $module);
-//        if (!$class OR !method_exists($class, $method)) {
-//            log_message('error', "Extension component failed to run: {$component}/{$method}");
-//
-//            return;
-//        }
-//
-//        // Buffer the output.
-//        ob_start();
-//
-//        // Get the remaining arguments and pass them to $method.
-//        $output = call_user_func([$class, $method]);
-//
-//        // Get/clean the current buffer.
-//        $buffer = ob_get_clean();
-//
-//        // If $output is not null, return it, otherwise return the buffered content.
-//        return $output !== null ? $output : $buffer;
-//    }
-
-    /**
      * Scans each extension and loads it components.
      * @return void
      */
@@ -356,7 +315,7 @@ class ComponentManager
                 'showExternalParam' => array_get($params, 'showExternalParam', FALSE),
             ];
 
-            if (!array_key_exists('options', $params)) {
+            if (!in_array($propertyType, ['text', 'number']) AND !array_key_exists('options', $params)) {
                 $methodName = 'get'.studly_case($name).'Options';
                 $property['options'] = [get_class($component), $methodName];
             }
