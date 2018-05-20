@@ -36,7 +36,7 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'respond'       => [
+        'respond'      => [
             'label'             => 'lang:system::messages.button_respond',
             'class'             => 'btn btn-primary',
             'context'           => ['view'],
@@ -44,14 +44,14 @@ $config['form']['toolbar'] = [
             'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
-        'save'          => [
+        'save'         => [
             'label'             => 'lang:system::messages.button_save_draft',
             'class'             => 'btn btn-default',
             'context'           => ['draft'],
             'data-request'      => 'onDraft',
             'data-request-form' => '#edit-form',
         ],
-        'send'          => [
+        'send'         => [
             'label'             => 'lang:system::messages.button_send',
             'class'             => 'btn btn-success',
             'context'           => ['compose', 'draft'],
@@ -59,14 +59,14 @@ $config['form']['toolbar'] = [
             'data-request'      => 'onSend',
             'data-request-data' => 'close:1',
         ],
-        'draftCompose'  => [
+        'draftCompose' => [
             'label'             => 'lang:system::messages.button_save_draft',
             'class'             => 'btn btn-default',
             'context'           => ['compose'],
             'data-request'      => 'onDraft',
             'data-request-form' => '#edit-form',
         ],
-        'back'          => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'messages'],
+        'back'         => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'messages'],
     ],
 ];
 
@@ -82,7 +82,7 @@ $config['form']['fields'] = [
         'type'        => 'relation',
         'span'        => 'right',
         'valueFrom'   => 'layout',
-        'context' => ['compose', 'draft'],
+        'context'     => ['compose', 'draft'],
         'placeholder' => 'lang:admin::default.text_none',
     ],
     'recipient'      => [

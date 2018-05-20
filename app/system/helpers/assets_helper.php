@@ -69,8 +69,8 @@ if (!function_exists('set_style_tag')) {
      *
      * @param string $href
      * @param string $name
-         * @param string $collection
- */
+     * @param string $collection
+     */
     function set_style_tag($href = '', $name = '', $collection = null)
     {
         Assets::collection($collection)->addCss($href, $name);
@@ -82,8 +82,8 @@ if (!function_exists('set_style_tags')) {
      * Set multiple stylesheet html tags
      *
      * @param array $tags
-         * @param string $collection
- */
+     * @param string $collection
+     */
     function set_style_tags(array $tags = [], $collection = null)
     {
         Assets::collection($collection)->addTags(['css' => $tags]);

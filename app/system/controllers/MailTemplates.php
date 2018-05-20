@@ -1,6 +1,5 @@
 <?php namespace System\Controllers;
 
-use AdminAuth;
 use AdminMenu;
 use System\Models\Mail_templates_model;
 

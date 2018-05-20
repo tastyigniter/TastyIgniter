@@ -1,7 +1,6 @@
 <?php namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
-use AdminAuth;
 use AdminMenu;
 use Exception;
 use Request;

@@ -9,7 +9,6 @@ use Event;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
-use Request;
 
 /**
  * Class Filter

@@ -53,11 +53,11 @@ $config['list']['columns'] = [
         ],
     ],
     'location'       => [
-        'label'      => 'lang:admin::reservations.column_location',
-        'relation'   => 'location',
-        'select'     => 'location_name',
+        'label'           => 'lang:admin::reservations.column_location',
+        'relation'        => 'location',
+        'select'          => 'location_name',
         'locationContext' => 'multiple',
-        'searchable' => TRUE,
+        'searchable'      => TRUE,
     ],
     'full_name'      => [
         'label'      => 'lang:admin::reservations.column_customer_name',
@@ -76,7 +76,7 @@ $config['list']['columns'] = [
         'select'     => 'table_name',
         'searchable' => TRUE,
     ],
-    'status_id'         => [
+    'status_id'      => [
         'label'      => 'lang:admin::reservations.column_status',
         'relation'   => 'status',
         'select'     => 'status_name',
@@ -84,11 +84,11 @@ $config['list']['columns'] = [
         'path'       => 'reservations/status_column',
         'searchable' => TRUE,
     ],
-    'assignee_id'     => [
-        'label' => 'lang:admin::reservations.column_staff',
-        'type'  => 'text',
-        'relation'   => 'assignee',
-        'select'     => 'staff_name',
+    'assignee_id'    => [
+        'label'    => 'lang:admin::reservations.column_staff',
+        'type'     => 'text',
+        'relation' => 'assignee',
+        'select'   => 'staff_name',
     ],
     'reserve_time'   => [
         'label' => 'lang:admin::reservations.column_time',
@@ -151,7 +151,7 @@ $config['form']['fields'] = [
         'disabled' => TRUE,
         'context'  => ['edit', 'preview'],
     ],
-    'status_id'         => [
+    'status_id'      => [
         'label'        => 'lang:admin::default.label_status',
         'type'         => 'statuseditor',
         'span'         => 'left',
@@ -205,80 +205,80 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::reservations.text_tab_general',
     'fields'     => [
-        'first_name'                  => [
+        'first_name'    => [
             'label' => 'lang:admin::reservations.label_first_name',
             'type'  => 'text',
             'span'  => 'left',
         ],
-        'last_name'                   => [
+        'last_name'     => [
             'label' => 'lang:admin::reservations.label_last_name',
             'type'  => 'text',
             'span'  => 'right',
         ],
-        'email'                       => [
+        'email'         => [
             'label' => 'lang:admin::reservations.label_customer_email',
             'type'  => 'text',
             'span'  => 'left',
         ],
-        'telephone'                   => [
+        'telephone'     => [
             'label' => 'lang:admin::reservations.label_customer_telephone',
             'type'  => 'text',
             'span'  => 'right',
         ],
-        'reserve_date'                => [
+        'reserve_date'  => [
             'label'    => 'lang:admin::reservations.label_reservation_date',
             'type'     => 'datepicker',
             'mode'     => 'date',
             'span'     => 'left',
             'cssClass' => 'flex-width',
         ],
-        'reserve_time'                => [
+        'reserve_time'  => [
             'label'    => 'lang:admin::reservations.label_reservation_time',
             'type'     => 'datepicker',
             'mode'     => 'time',
             'span'     => 'left',
             'cssClass' => 'flex-width',
         ],
-        'location_id'                 => [
-            'label'        => 'lang:admin::reservations.text_tab_restaurant',
-            'type'         => 'relation',
+        'location_id'   => [
+            'label'           => 'lang:admin::reservations.text_tab_restaurant',
+            'type'            => 'relation',
             'locationContext' => 'multiple',
-            'relationFrom' => 'location',
-            'nameFrom'     => 'location_name',
-            'span'         => 'right',
-            'placeholder'  => 'lang:admin::default.text_please_select',
+            'relationFrom'    => 'location',
+            'nameFrom'        => 'location_name',
+            'span'            => 'right',
+            'placeholder'     => 'lang:admin::default.text_please_select',
         ],
-        'table_id'                    => [
-            'label'    => 'lang:admin::reservations.label_table_name',
-            'type' => 'relation',
+        'table_id'      => [
+            'label'        => 'lang:admin::reservations.label_table_name',
+            'type'         => 'relation',
             'relationFrom' => 'related_table',
-            'nameFrom' => 'table_name',
-            'span'     => 'left',
-            'cssClass' => 'flex-width',
+            'nameFrom'     => 'table_name',
+            'span'         => 'left',
+            'cssClass'     => 'flex-width',
         ],
-        'guest_num'                   => [
+        'guest_num'     => [
             'label'    => 'lang:admin::reservations.label_guest',
             'type'     => 'number',
             'span'     => 'left',
             'cssClass' => 'flex-width',
         ],
-        'duration'                    => [
-            'label' => 'lang:admin::reservations.label_reservation_duration',
-            'type'  => 'number',
-            'span'  => 'right',
-            'comment'  => 'lang:admin::reservations.help_reservation_duration',
+        'duration'      => [
+            'label'   => 'lang:admin::reservations.label_reservation_duration',
+            'type'    => 'number',
+            'span'    => 'right',
+            'comment' => 'lang:admin::reservations.help_reservation_duration',
         ],
-        'notify'                      => [
+        'notify'        => [
             'label'   => 'lang:admin::reservations.label_send_confirmation',
             'type'    => 'switch',
             'span'    => 'left',
             'default' => 1,
         ],
-        'comment'                     => [
+        'comment'       => [
             'label' => 'lang:admin::reservations.label_comment',
             'type'  => 'textarea',
         ],
-        'date_added'                  => [
+        'date_added'    => [
             'label'    => 'lang:admin::reservations.label_date_added',
             'type'     => 'datepicker',
             'mode'     => 'date',
@@ -286,14 +286,14 @@ $config['form']['tabs'] = [
             'span'     => 'left',
             'context'  => ['edit', 'preview'],
         ],
-        'ip_address'                  => [
+        'ip_address'    => [
             'label'    => 'lang:admin::reservations.label_ip_address',
             'type'     => 'text',
             'span'     => 'right',
             'disabled' => TRUE,
             'context'  => ['edit', 'preview'],
         ],
-        'date_modified'               => [
+        'date_modified' => [
             'label'    => 'lang:admin::reservations.label_date_modified',
             'type'     => 'datepicker',
             'mode'     => 'date',
@@ -301,7 +301,7 @@ $config['form']['tabs'] = [
             'span'     => 'left',
             'context'  => ['edit', 'preview'],
         ],
-        'user_agent'                  => [
+        'user_agent'    => [
             'label'    => 'lang:admin::reservations.label_user_agent',
             'type'     => 'text',
             'span'     => 'right',

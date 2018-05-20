@@ -144,20 +144,21 @@ class ServiceProvider extends AppServiceProvider
         foreach (
             [
                 'igniter.util'      => Console\Commands\IgniterUtil::class,
-                'igniter.up'      => Console\Commands\IgniterUp::class,
-                'igniter.down'    => Console\Commands\IgniterDown::class,
-                'igniter.install' => Console\Commands\IgniterInstall::class,
-                'igniter.update'  => Console\Commands\IgniterUpdate::class,
-                'extension.install'  => Console\Commands\ExtensionInstall::class,
-                'extension.refresh'  => Console\Commands\ExtensionRefresh::class,
+                'igniter.up'        => Console\Commands\IgniterUp::class,
+                'igniter.down'      => Console\Commands\IgniterDown::class,
+                'igniter.install'   => Console\Commands\IgniterInstall::class,
+                'igniter.update'    => Console\Commands\IgniterUpdate::class,
+                'extension.install' => Console\Commands\ExtensionInstall::class,
+                'extension.refresh' => Console\Commands\ExtensionRefresh::class,
                 'extension.remove'  => Console\Commands\ExtensionRemove::class,
-                'theme.install'  => Console\Commands\ThemeInstall::class,
-                'theme.remove'  => Console\Commands\ThemeRemove::class,
+                'theme.install'     => Console\Commands\ThemeInstall::class,
+                'theme.remove'      => Console\Commands\ThemeRemove::class,
             ] as $command => $class
         ) {
             $this->registerConsoleCommand($command, $class);
         }
     }
+
     /*
      * Error handling for uncaught Exceptions
      */
@@ -199,7 +200,8 @@ class ServiceProvider extends AppServiceProvider
 
         Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data) {
             Mail_templates_model::addContentToMailer($message, $view, $data);
-            return false;
+
+            return FALSE;
         });
     }
 

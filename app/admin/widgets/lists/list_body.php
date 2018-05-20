@@ -12,9 +12,9 @@
             <td class="list-action">
                 <div class="custom-control custom-checkbox">
                     <input
-                        type="checkbox" 
+                        type="checkbox"
                         id="<?= 'checkbox-'.$record->getKey() ?>"
-                        class="custom-control-input" 
+                        class="custom-control-input"
                         value="<?= $record->getKey(); ?>" name="checked[]"
                     />
                     <label class="custom-control-label" for="<?= 'checkbox-'.$record->getKey() ?>"></label>

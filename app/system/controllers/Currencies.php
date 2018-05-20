@@ -1,8 +1,6 @@
 <?php namespace System\Controllers;
 
-use AdminAuth;
 use AdminMenu;
-use System\Models\Currencies_model;
 
 class Currencies extends \Admin\Classes\AdminController
 {

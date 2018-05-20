@@ -219,7 +219,7 @@ class Extensions_model extends Model
      *
      * @return bool
      */
-    public static function deleteExtension($code = '', $deleteData = TRUE, $keepFiles = false)
+    public static function deleteExtension($code = '', $deleteData = TRUE, $keepFiles = FALSE)
     {
         $extensionModel = self::where('name', $code)->first();
 
@@ -235,8 +235,8 @@ class Extensions_model extends Model
             $extensionManager->removeExtension($code);
 
         // disable extension
-        $extensionManager->updateExtension($code, false);
+        $extensionManager->updateExtension($code, FALSE);
 
-        return true;
+        return TRUE;
     }
 }

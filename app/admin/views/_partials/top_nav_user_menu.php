@@ -34,5 +34,5 @@ $logoutLink = admin_url('logout');
         <a class="dropdown-item" href="https://forum.tastyigniter.com" target="_blank">
             <i class="fa fa-users fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::default.text_community_support'); ?>
         </a>
-    </ul>
+        </ul>
 </li>

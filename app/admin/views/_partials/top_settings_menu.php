@@ -19,7 +19,7 @@ $itemOptions = $item->options();
             <?php } ?>
         </div>
         <div class="dropdown-footer">
-        <a class="text-center" href="<?= admin_url('settings'); ?>"><i class="fa fa-ellipsis-h"></i></a>
+            <a class="text-center" href="<?= admin_url('settings'); ?>"><i class="fa fa-ellipsis-h"></i></a>
         </div>
     </ul>
 </li>

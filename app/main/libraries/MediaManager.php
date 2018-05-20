@@ -4,7 +4,6 @@ use Cache;
 use Config;
 use Igniter\Flame\Traits\Singleton;
 use Main\Classes\MediaItem;
-use Request;
 use Storage;
 use Str;
 use SystemException;

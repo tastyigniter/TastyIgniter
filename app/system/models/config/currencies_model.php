@@ -22,7 +22,7 @@ $config['list']['toolbar'] = [
 ];
 
 $config['list']['columns'] = [
-    'edit'            => [
+    'edit'                  => [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
         'attributes'   => [
@@ -30,35 +30,35 @@ $config['list']['columns'] = [
             'href'  => 'currencies/edit/{currency_id}',
         ],
     ],
-    'currency_name'   => [
+    'currency_name'         => [
         'label'      => 'lang:system::currencies.column_name',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'currency_code'   => [
+    'currency_code'         => [
         'label'      => 'lang:system::currencies.column_code',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'country_name'    => [
+    'country_name'          => [
         'label'      => 'lang:system::currencies.column_country',
         'relation'   => 'country',
         'select'     => 'country_name',
         'searchable' => TRUE,
     ],
-    'currency_rate'   => [
+    'currency_rate'         => [
         'label' => 'lang:system::currencies.column_rate',
         'type'  => 'number',
     ],
-    'currency_symbol' => [
+    'currency_symbol'       => [
         'label' => 'lang:system::currencies.column_symbol',
         'type'  => 'text',
     ],
-    'currency_status' => [
+    'currency_status'       => [
         'label' => 'lang:system::currencies.column_status',
         'type'  => 'switch',
     ],
-    'default_currency_code'     => [
+    'default_currency_code' => [
         'label'     => 'lang:admin::default.column_id',
         'invisible' => TRUE,
     ],
@@ -98,10 +98,10 @@ $config['form']['fields'] = [
         'placeholder'  => 'lang:admin::default.text_please_select',
     ],
     'currency_code'    => [
-        'label' => 'lang:system::currencies.label_code',
-        'type'  => 'text',
-        'span'  => 'right',
-        'comment'  => 'lang:system::currencies.help_iso',
+        'label'   => 'lang:system::currencies.label_code',
+        'type'    => 'text',
+        'span'    => 'right',
+        'comment' => 'lang:system::currencies.help_iso',
     ],
     'symbol_position'  => [
         'label'   => 'lang:system::currencies.label_symbol_position',

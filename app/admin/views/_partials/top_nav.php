@@ -1,15 +1,15 @@
 <?php
 $isLogged = AdminAuth::isLogged();
 ?>
-<?php if ($isLogged) {?>
+<?php if ($isLogged) { ?>
     <nav class="navbar navbar-top navbar-expand" role="navigation">
         <div class="container-fluid">
             <div class="page-title">
-                <span><?=Template::getHeading();?></span>
+                <span><?= Template::getHeading(); ?></span>
             </div>
 
             <div class="navbar">
-                <?=$this->widgets['mainmenu']->render();?>
+                <?= $this->widgets['mainmenu']->render(); ?>
 
                 <button
                     type="button"
@@ -25,4 +25,4 @@ $isLogged = AdminAuth::isLogged();
             </div>
         </div>
     </nav>
-<?php }?>
+<?php } ?>

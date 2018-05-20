@@ -23,7 +23,9 @@ To view your reservation progress, click the link below
                     <tr>
                         <td>
                             <h3>Reservation Update!</h3>
-                            <p>Your reservation <strong>{reservation_number}</strong> at <strong>{location_name}</strong> has been updated to the following status: </strong>{status_name}</strong></p>
+                            <p>Your reservation <strong>{reservation_number}</strong> at
+                                <strong>{location_name}</strong> has been updated to the following status: </strong>{status_name}</strong>
+                            </p>
                             <p><strong>The comments for your reservation are:</strong><br>{status_comment}</p>
                             <p><a href="{reservation_view_url}">Click here</a> to view your reservation status.</p>
                         </td>

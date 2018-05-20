@@ -70,7 +70,7 @@ class HubManager
                 'items'   => json_encode($itemNames),
                 'include' => 'tags',
                 'version' => params('ti_version'),
-                'force' => $force,
+                'force'   => $force,
             ]);
 
             if (is_array($response)) {

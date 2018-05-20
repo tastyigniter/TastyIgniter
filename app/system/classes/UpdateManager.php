@@ -462,7 +462,7 @@ class UpdateManager
     public function extractFile($fileCode, $directory = null)
     {
         $filePath = $this->getFilePath($fileCode);
-        $extractTo =  base_path();
+        $extractTo = base_path();
         if ($directory)
             $extractTo .= '/'.$directory.str_replace('.', '/', $fileCode);
 

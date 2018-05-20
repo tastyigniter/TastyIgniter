@@ -68,6 +68,6 @@ return [
     'alert_move_to_trash'        => 'has been deleted.',
     'alert_saved_to_draft'       => 'saved to draft',
     'alert_success_sent'         => 'sent',
-    'alert_warning_draft'      => 'You can not open a sent message as draft',
+    'alert_warning_draft'        => 'You can not open a sent message as draft',
     'alert_warning_confirm_undo' => 'Are you sure you want to do this? This can not be undone!',
 ];

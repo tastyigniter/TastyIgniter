@@ -1,16 +1,16 @@
 <?php
 
 return [
-    'text_title'            => 'Menus',
-    'text_form_name'        => 'Menu',
-    'text_tab_general'      => 'Menu',
-    'text_tab_menu_option'  => 'Menu Option',
-    'text_tab_special'      => 'Specials',
-    'text_empty'            => 'There are no menus available.',
-    'text_filter_search'    => 'Search name, price or stock qty.',
-    'text_filter_category'  => 'View all categories',
-    'text_filter_status'    => 'View all status',
-    'text_mealtime_all'     => 'Available all day',
+    'text_title'           => 'Menus',
+    'text_form_name'       => 'Menu',
+    'text_tab_general'     => 'Menu',
+    'text_tab_menu_option' => 'Menu Option',
+    'text_tab_special'     => 'Specials',
+    'text_empty'           => 'There are no menus available.',
+    'text_filter_search'   => 'Search name, price or stock qty.',
+    'text_filter_category' => 'View all categories',
+    'text_filter_status'   => 'View all status',
+    'text_mealtime_all'    => 'Available all day',
 
     'column_name'      => 'Name',
     'column_category'  => 'Category',

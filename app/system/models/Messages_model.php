@@ -110,7 +110,7 @@ class Messages_model extends Model
         $query = self::listMessages([
             'context'   => 'inbox',
             'recipient' => $user->staff,
-            'state' => 'unread'
+            'state'     => 'unread',
         ])->orderBy('date_updated', 'desc');
 
         return [
@@ -225,7 +225,8 @@ class Messages_model extends Model
                           $q->whereMessagable($recipient);
                           if ($state == 'read') {
                               $q->whereIsRead();
-                          } else if ($state == 'unread') {
+                          }
+                          else if ($state == 'unread') {
                               $q->whereIsUnread();
                           }
                       });

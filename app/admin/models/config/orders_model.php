@@ -6,12 +6,12 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'location' => [
-            'label'      => 'lang:admin::orders.text_filter_location',
-            'type'       => 'select',
+            'label'           => 'lang:admin::orders.text_filter_location',
+            'type'            => 'select',
             'locationContext' => 'multiple',
-            'conditions' => 'location_id = :filtered',
-            'modelClass' => 'Admin\Models\Locations_model',
-            'nameFrom'   => 'location_name',
+            'conditions'      => 'location_id = :filtered',
+            'modelClass'      => 'Admin\Models\Locations_model',
+            'nameFrom'        => 'location_name',
         ],
         'status'   => [
             'label'      => 'lang:admin::orders.text_filter_status',

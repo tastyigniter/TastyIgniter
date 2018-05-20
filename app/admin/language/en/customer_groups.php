@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'text_title'         => 'Customer Groups',
-    'text_form_name'     => 'Customer Group',
-    'text_empty'         => 'There are no customer groups available.',
+    'text_title'     => 'Customer Groups',
+    'text_form_name' => 'Customer Group',
+    'text_empty'     => 'There are no customer groups available.',
 
     'column_name'      => 'Name',
     'column_customers' => '# Customers',

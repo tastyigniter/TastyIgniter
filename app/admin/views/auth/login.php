@@ -10,9 +10,9 @@
             <div class="card-body">
                 <?= form_open(current_url(),
                     [
-                        'id'   => 'edit-form',
-                        'role' => 'form',
-                        'method' => 'POST'
+                        'id'     => 'edit-form',
+                        'role'   => 'form',
+                        'method' => 'POST',
                     ]
                 ); ?>
 
@@ -22,7 +22,8 @@
                     <?= form_error('user', '<span class="text-danger">', '</span>'); ?>
                 </div>
                 <div class="form-group">
-                    <label for="input-password" class="control-label"><?= lang('admin::login.label_password'); ?></label>
+                    <label for="input-password"
+                           class="control-label"><?= lang('admin::login.label_password'); ?></label>
                     <input name="password" type="password" id="input-password" class="form-control"/>
                     <?= form_error('password', '<span class="text-danger">', '</span>'); ?>
                 </div>

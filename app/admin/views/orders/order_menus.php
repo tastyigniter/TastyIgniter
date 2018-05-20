@@ -20,13 +20,13 @@ $orderTotals = $model->getOrderTotals();
                 <td><?= $menuItem->name; ?><br/>
                     <?php if ($menuItemOptions = $menuItemsOptions->get($menuItem->menu_id)) { ?>
                         <div>
-                        <?php foreach ($menuItemOptions as $menuItemOption) { ?>
-                            <small>
-                                <?= $menuItemOption->order_option_name; ?>
-                                =
-                                <?= currency_format($menuItemOption->order_option_price); ?>
-                            </small><br>
-                        <?php } ?>
+                            <?php foreach ($menuItemOptions as $menuItemOption) { ?>
+                                <small>
+                                    <?= $menuItemOption->order_option_name; ?>
+                                    =
+                                    <?= currency_format($menuItemOption->order_option_price); ?>
+                                </small><br>
+                            <?php } ?>
                         </div>
                     <?php } ?>
                     <?php if (!empty($menuItem->comment)) { ?>

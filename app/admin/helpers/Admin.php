@@ -1,7 +1,6 @@
 <?php namespace Admin\Helpers;
 
 use Admin\Facades\AdminAuth;
-use App;
 use Config;
 use Igniter\Flame\Support\RouterHelper;
 use Redirect;

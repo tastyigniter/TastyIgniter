@@ -1,6 +1,5 @@
 <?php namespace Admin\Controllers;
 
-use Admin\Models\Menu_options_model;
 use AdminMenu;
 
 class MenuOptions extends \Admin\Classes\AdminController

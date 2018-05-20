@@ -112,11 +112,11 @@ $config['form']['fields'] = [
         'type'    => 'components',
         'context' => ['_source'],
         'prompt'  => 'lang:system::themes.button_choose',
-        'comment'  => 'lang:system::themes.help_components',
+        'comment' => 'lang:system::themes.help_components',
         'form'    => [
             'fields' => [
-                'code'           => ['type' => 'hidden',],
-                'alias'          => [
+                'code'  => ['type' => 'hidden',],
+                'alias' => [
                     'label'      => 'lang:system::themes.label_component_alias',
                     'type'       => 'text',
                     'attributes' => [

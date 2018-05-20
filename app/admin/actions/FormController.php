@@ -8,7 +8,6 @@ use DB;
 use Exception;
 use Model;
 use Redirect;
-use Str;
 use System\Classes\ControllerAction;
 use Template;
 

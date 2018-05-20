@@ -3,13 +3,11 @@
 use App;
 use ApplicationException;
 use Config;
-use Exception;
 use Igniter\Flame\Exception\ErrorHandler as BaseErrorHandler;
 use Log;
 use Main\Classes\MainController;
 use Main\Classes\Router;
 use Main\Classes\ThemeManager;
-use Request;
 use Symfony\Component\HttpFoundation\Response;
 use View;
 
@@ -35,7 +33,7 @@ class ErrorHandler extends BaseErrorHandler
     public function handleCustomError()
     {
         if (Config::get('app.debug', FALSE)) {
-            return false;
+            return FALSE;
         }
 
         if (!App::hasDatabase())

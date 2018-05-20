@@ -118,10 +118,10 @@ $config['form']['tabs'] = [
             'span'  => 'right',
         ],
         'password'          => [
-            'label' => 'lang:admin::customers.label_password',
-            'type'  => 'password',
-            'span'  => 'left',
-            'comment'  => 'lang:admin::customers.help_password',
+            'label'   => 'lang:admin::customers.label_password',
+            'type'    => 'password',
+            'span'    => 'left',
+            'comment' => 'lang:admin::customers.help_password',
         ],
         '_confirm_password' => [
             'label' => 'lang:admin::customers.label_confirm_password',
@@ -138,8 +138,8 @@ $config['form']['tabs'] = [
         'newsletter'        => [
             'label' => 'lang:admin::customers.label_newsletter',
             'type'  => 'switch',
-            'on' => 'lang:admin::customers.text_subscribe',
-            'off' => 'lang:admin::customers.text_un_subscribe',
+            'on'    => 'lang:admin::customers.text_subscribe',
+            'off'   => 'lang:admin::customers.text_un_subscribe',
         ],
         'status'            => [
             'label' => 'lang:admin::default.label_status',
@@ -151,51 +151,51 @@ $config['form']['tabs'] = [
             'path'    => 'customers/address_tabs',
             'options' => 'listAddresses',
         ],
-        'orders'              => [
+        'orders'            => [
             'tab'     => 'lang:admin::customers.text_tab_orders',
             'type'    => 'datatable',
             'columns' => [
-                'order_id'      => [
-                    'title'     => 'lang:admin::default.column_id',
+                'order_id'        => [
+                    'title' => 'lang:admin::default.column_id',
                 ],
-                'customer_name' => [
-                    'title'      => 'lang:admin::orders.column_customer_name',
+                'customer_name'   => [
+                    'title' => 'lang:admin::orders.column_customer_name',
                 ],
                 'status_name'     => [
-                    'title'    => 'lang:admin::orders.column_status',
+                    'title' => 'lang:admin::orders.column_status',
                 ],
-                'order_type_name'        => [
-                    'title'    => 'lang:admin::orders.column_type',
+                'order_type_name' => [
+                    'title' => 'lang:admin::orders.column_type',
                 ],
-                'payment_title'     => [
-                    'label'    => 'lang:admin::orders.column_payment',
+                'payment_title'   => [
+                    'label' => 'lang:admin::orders.column_payment',
                 ],
                 'order_total'     => [
                     'title' => 'lang:admin::orders.column_total',
                 ],
-                'order_date_time'      => [
+                'order_date_time' => [
                     'title' => 'lang:admin::orders.column_time',
                 ],
             ],
         ],
-        'reservations'              => [
+        'reservations'      => [
             'tab'     => 'lang:admin::customers.text_tab_reservations',
             'type'    => 'datatable',
             'columns' => [
-                'reservation_id'      => [
-                    'title'     => 'lang:admin::default.column_id',
+                'reservation_id' => [
+                    'title' => 'lang:admin::default.column_id',
                 ],
-                'customer_name' => [
-                    'title'      => 'lang:admin::reservations.column_customer_name',
+                'customer_name'  => [
+                    'title' => 'lang:admin::reservations.column_customer_name',
                 ],
-                'status_name'     => [
-                    'title'    => 'lang:admin::reservations.column_status',
+                'status_name'    => [
+                    'title' => 'lang:admin::reservations.column_status',
                 ],
-                'table_name'        => [
-                    'title'      => 'lang:admin::reservations.column_table',
+                'table_name'     => [
+                    'title' => 'lang:admin::reservations.column_table',
                 ],
-                'table_name'        => [
-                    'title'      => 'lang:admin::reservations.column_table',
+                'table_name'     => [
+                    'title' => 'lang:admin::reservations.column_table',
                 ],
             ],
         ],

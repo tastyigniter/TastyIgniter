@@ -26,11 +26,11 @@
     <?php if ($messages = session('errors', collect())->all()) { ?>
         <div class="alert-collapse">
             <div class="alert alert-danger"
-                role="button"
-                data-toggle="collapse"
-                href="#collapseErrors"
-                aria-expanded="false"
-                aria-controls="collapseErrors">
+                 role="button"
+                 data-toggle="collapse"
+                 href="#collapseErrors"
+                 aria-expanded="false"
+                 aria-controls="collapseErrors">
                 <i class="fa fa-angle-down"></i>
                 <b><?= lang('admin::default.alert_form_error_message') ?></b>
             </div>

@@ -1,6 +1,5 @@
 <?php namespace Admin\Controllers;
 
-use Admin\Models\Staffs_model;
 use AdminAuth;
 use AdminMenu;
 

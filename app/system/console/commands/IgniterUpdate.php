@@ -38,6 +38,7 @@ class IgniterUpdate extends Command
 
         if (!$itemsToUpdate) {
             $this->output->writeln('<info>No new updates found</info>');
+
             return;
         }
 
@@ -55,7 +56,7 @@ class IgniterUpdate extends Command
             $updateManager->downloadFile($coreCode, $coreHash, [
                 'name' => $coreCode,
                 'type' => 'core',
-                'ver' => $coreVersion,
+                'ver'  => $coreVersion,
             ]);
         }
 
@@ -71,7 +72,7 @@ class IgniterUpdate extends Command
             $updateManager->downloadFile($addonCode, $addonHash, [
                 'name' => $addonCode,
                 'type' => $addonType,
-                'ver' => $addonVersion,
+                'ver'  => $addonVersion,
             ]);
         });
 

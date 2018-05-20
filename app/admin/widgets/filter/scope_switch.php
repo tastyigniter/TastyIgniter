@@ -2,7 +2,7 @@
     <select
         name="<?= $this->getScopeName($scope) ?>"
         class="form-control input-sm"
-        <?= $scope->disabled ? 'disabled="disabled"' : ''?>
+        <?= $scope->disabled ? 'disabled="disabled"' : '' ?>
     >
         <option value=""><?= lang($scope->label) ?></option>
         <option value="1" <?= ($scope->value == '1') ? 'selected="selected"' : '' ?>><?= lang('admin::default.text_enabled') ?></option>

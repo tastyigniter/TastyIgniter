@@ -61,22 +61,22 @@ $weekdays = $formModel->getWeekDaysOptions();
                             value="0"
                             <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                         >
-                        <div 
+                        <div
                             class="field-switch"
                             data-control="switch"
                         >
-                            <input 
+                            <input
                                 type="checkbox"
                                 name="<?= $field->getName() ?>[<?= $index; ?>][status]"
                                 id="<?= $field->getId($index.'status') ?>"
-                                class="field-switch-input" 
+                                class="field-switch-input"
                                 value="1"
                                 <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                                 <?= $hour['status'] == 1 ? 'checked="checked"' : '' ?>
                                 <?= $field->getAttributes() ?>
                             >
-                            <label 
-                                class="field-switch-label" 
+                            <label
+                                class="field-switch-label"
                                 for="<?= $field->getId($index.'status') ?>"
                             >
                                 <span class="field-switch-container">

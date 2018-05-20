@@ -8,7 +8,7 @@
         ?>
         <li class="nav-item<?= $isActive ? ' active' : '' ?>">
             <a
-                class="nav-link<?= (isset($menu['class'])) ? ' '.$menu['class'] : '' 
+                class="nav-link<?= (isset($menu['class'])) ? ' '.$menu['class'] : ''
                 ?><?= $hasChild ? ' has-arrow' : ''; ?>"
                 href="<?= (isset($menu['href'])) ? $menu['href'] : '#' ?>"
                 aria-expanded="<?= $isActive ? 'true' : 'false' ?>"
@@ -26,11 +26,11 @@
 
             <?php if ($hasChild) { ?>
                 <?= $this->makePartial('side_nav_items', [
-                    'navItems' => $menu['child'],
+                    'navItems'      => $menu['child'],
                     'navAttributes' => [
-                        'class' => 'nav collapse'.($isActive ? ' show' : ''),
+                        'class'         => 'nav collapse'.($isActive ? ' show' : ''),
                         'aria-expanded' => $isActive ? 'true' : 'false',
-                    ]
+                    ],
                 ]) ?>
             <?php } ?>
         </li>

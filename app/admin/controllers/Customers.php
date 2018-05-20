@@ -2,7 +2,6 @@
 
 use AdminAuth;
 use AdminMenu;
-use Assets;
 use Auth;
 use Redirect;
 

@@ -348,7 +348,9 @@ trait CombinesAssets
 
     /**
      * Clears any registered filters.
+     *
      * @param string $extension
+     *
      * @return self
      */
     public function resetFilters($extension = null)

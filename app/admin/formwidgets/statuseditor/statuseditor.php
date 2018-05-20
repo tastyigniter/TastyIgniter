@@ -14,8 +14,8 @@ $statusItem = isset($fieldOptions[$value]) ? $fieldOptions[$value] : [];
         <span class="input-group-prepend">
             <span class="input-group-icon">
                 <i class="fa fa-square"
-                    data-status-color
-                    style="color: <?= $statusItem ? e($statusItem[$colorFrom]) : '' ?>"
+                   data-status-color
+                   style="color: <?= $statusItem ? e($statusItem[$colorFrom]) : '' ?>"
                 ></i>
             </span>
         </span>

@@ -11,23 +11,23 @@ $labelWith = $field->config['labelWith'] ?? '200';
     value="0"
     <?= $this->previewMode ? 'disabled="disabled"' : '' ?>>
 
-<div 
+<div
     class="field-switch"
     data-control="switch"
     style="width: <?= e($labelWith) ?>px;"
 >
-    <input 
+    <input
         type="checkbox"
         name="<?= $field->getName() ?>"
         id="<?= $field->getId() ?>"
-        class="field-switch-input" 
+        class="field-switch-input"
         value="1"
         <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
         <?= $field->value == 1 ? 'checked="checked"' : '' ?>
         <?= $field->getAttributes() ?>
     >
-    <label 
-        class="field-switch-label" 
+    <label
+        class="field-switch-label"
         for="<?= $field->getId() ?>"
     >
         <span class="field-switch-container">

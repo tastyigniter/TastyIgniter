@@ -1,5 +1,5 @@
-<div 
-    id="<?= $toolbarId ?>" 
+<div
+    id="<?= $toolbarId ?>"
     class="toolbar btn-toolbar <?= $cssClasses ?><?= (!$this->showToolbar) ? ' hide' : '' ?>"
 >
     <div class="toolbar-action">

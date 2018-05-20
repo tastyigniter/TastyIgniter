@@ -7,11 +7,11 @@ return [
     'text_filter_status' => 'View all status',
     'text_empty'         => 'There are no categories available.',
 
-    'column_name'        => 'Name',
-    'column_parent'      => 'Parent',
-    'column_priority'    => 'Priority',
-    'column_status'      => 'Status',
-    'column_id'          => 'ID',
+    'column_name'     => 'Name',
+    'column_parent'   => 'Parent',
+    'column_priority' => 'Priority',
+    'column_status'   => 'Status',
+    'column_id'       => 'ID',
 
     'label_name'           => 'Name',
     'label_description'    => 'Description',

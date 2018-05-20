@@ -184,7 +184,7 @@ class Themes_model extends Model
             $installedThemes = [];
 
         $installedThemes = array_map(function ($status) {
-            return (bool) $status;
+            return (bool)$status;
         }, $installedThemes);
 
         setting()->set('installed_themes', $installedThemes);

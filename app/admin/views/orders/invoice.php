@@ -92,7 +92,8 @@
                                 <thead>
                                 <tr>
                                     <th></th>
-                                    <th class="text-left" width="65%"><?= lang('admin::orders.column_name_option'); ?></th>
+                                    <th class="text-left"
+                                        width="65%"><?= lang('admin::orders.column_name_option'); ?></th>
                                     <th class="text-left"><?= lang('admin::orders.column_price'); ?></th>
                                     <th class="text-right"><?= lang('admin::orders.column_total'); ?></th>
                                 </tr>

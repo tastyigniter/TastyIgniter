@@ -3,9 +3,9 @@
         <a class="media-left media-middle">
             <?php if (!empty($item['thumb'])) { ?>
                 <img src="<?= $item['thumb'] ?>"
-                        class="img-rounded"
-                        alt="No Image"
-                        style="width: 64px; height: 64px;">
+                     class="img-rounded"
+                     alt="No Image"
+                     style="width: 64px; height: 64px;">
             <?php }
             else { ?>
                 <i class="fa <?= $item['icon'] ?> fa-3x text-muted"></i>

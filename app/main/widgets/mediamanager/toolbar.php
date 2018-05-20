@@ -65,7 +65,7 @@
             <div class="input-group-prepend">
                 <?php if (!$isPopup) { ?>
                     <a class="btn btn-default btn-options"
-                        href="<?= admin_url('settings/edit/media'); ?>">
+                       href="<?= admin_url('settings/edit/media'); ?>">
                         <i class="fa fa-gears"></i>
                     </a>
                 <?php } ?>

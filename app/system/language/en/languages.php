@@ -23,6 +23,8 @@ return [
     'label_idiom'      => 'Idiom',
     'label_can_delete' => 'Can Delete',
 
+    'button_new' => 'New Group',
+
     'help_idiom'    => 'Language idiom, must be same as the language directory name.',
     'help_language' => 'Language url prefix',
 

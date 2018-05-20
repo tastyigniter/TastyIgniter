@@ -7,7 +7,7 @@ $itemOptions = isset($itemOptions['items']) ? $itemOptions['items'] : $itemOptio
             <li class="menu-item">
                 <a
                     class="menu-link"
-                   href="<?= admin_url('messages/view/'.$message->message_id); ?>"
+                    href="<?= admin_url('messages/view/'.$message->message_id); ?>"
                 >
                     <div class="message-subject text-nowrap text-truncate"><b><?= $message['subject']; ?></b></div>
                     <div class="message-body text-nowrap text-truncate"><?= str_limit($message['body'], 128); ?></div>

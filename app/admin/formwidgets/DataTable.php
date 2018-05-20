@@ -26,7 +26,6 @@ class DataTable extends BaseFormWidget
 
     /**
      * @var bool Allow rows to be sorted
-     * @todo Not implemented...
      */
     public $rowSorting = FALSE;
 

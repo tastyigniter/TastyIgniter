@@ -226,7 +226,7 @@ class Users_model extends AuthUserModel
     public function hasStrictLocationAccess()
     {
         if ($this->isSuperUser())
-            return false;
+            return FALSE;
 
         return (bool)$this->staff->group->location_access;
     }

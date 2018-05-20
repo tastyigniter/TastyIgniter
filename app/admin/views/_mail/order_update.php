@@ -23,7 +23,9 @@ To view your order progress, click the link below
                     <tr>
                         <td>
                             <h3>Order Update!</h3>
-                            <p>Your order <strong>{order_number}</strong> has been updated to the following status: </strong>{status_name}</strong></p>
+                            <p>Your order
+                                <strong>{order_number}</strong> has been updated to the following status: </strong>{status_name}</strong>
+                            </p>
                             <p><strong>The comments for your order are:</strong><br>{status_comment}</p>
                             <p><a href="{order_view_url}">Click here</a> to view your order progress.</p>
                         </td>

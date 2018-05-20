@@ -168,7 +168,7 @@ $config['form']['tabs'] = [
             'form'     => 'menu_item_options_model',
             'sortable' => TRUE,
             'prompt'   => 'lang:admin::menus.help_menu_option',
-            'context'  => ['edit', 'preview']
+            'context'  => ['edit', 'preview'],
         ],
 
         'special[special_id]'     => [

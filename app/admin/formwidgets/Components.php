@@ -2,7 +2,6 @@
 
 use Admin\Classes\BaseFormWidget;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 use System\Classes\ComponentManager as ComponentsManager;
 
 /**
@@ -108,7 +107,7 @@ class Components extends BaseFormWidget
 
         return $this->makePartial('components/component', [
             'component' => $component,
-            'field' => $this->formField
+            'field'     => $this->formField,
         ]);
     }
 

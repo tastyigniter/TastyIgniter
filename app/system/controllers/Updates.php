@@ -1,8 +1,6 @@
 <?php namespace System\Controllers;
 
-use AdminAuth;
 use AdminMenu;
-use Assets;
 use Exception;
 use Flash;
 use System\Classes\UpdateManager;

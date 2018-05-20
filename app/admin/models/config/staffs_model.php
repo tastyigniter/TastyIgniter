@@ -120,7 +120,7 @@ $config['form']['fields'] = [
         'type'  => 'text',
         'span'  => 'left',
     ],
-    'language_id'      => [
+    'language_id'            => [
         'label'        => 'lang:admin::staffs.label_language',
         'type'         => 'relation',
         'relationFrom' => 'language',

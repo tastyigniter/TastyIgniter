@@ -1,7 +1,6 @@
 <?php namespace System\Classes;
 
 use App;
-use ApplicationException;
 use Assets;
 use Closure;
 use Exception;
@@ -125,7 +124,9 @@ class Controller extends IlluminateController
 
     /**
      * Combines JavaScript and StyleSheet assets.
+     *
      * @param string $asset
+     *
      * @return string
      */
     public function combineAssets($asset)
@@ -135,8 +136,7 @@ class Controller extends IlluminateController
             $cacheKey = $parts[0];
 
             return Assets::combineGetContents($cacheKey);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             $errorMessage = ErrorHandler::getDetailedMessage($ex);
 
             return '/* '.e($errorMessage).' */';

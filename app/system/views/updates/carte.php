@@ -13,9 +13,9 @@
                     <div class="panel-footer">
                         <?= form_open(current_url(),
                             [
-                                'id'   => 'carte-form',
-                                'role' => 'form',
-                                'method' => 'POST'
+                                'id'     => 'carte-form',
+                                'role'   => 'form',
+                                'method' => 'POST',
                             ]
                         ); ?>
                         <div class="input-group">

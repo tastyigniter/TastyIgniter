@@ -44,7 +44,7 @@ $fieldOptions = $field->options();
                 <?= $field->getAttributes() ?>
             >
             <label class="custom-control-label">
-                    <?= e((sscanf($value, 'lang:%s', $line) === 1) ? lang($line) : $value) ?>
+                <?= e((sscanf($value, 'lang:%s', $line) === 1) ? lang($line) : $value) ?>
             </label>
         </div>
     <?php } ?>

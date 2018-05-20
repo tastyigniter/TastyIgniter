@@ -1,10 +1,10 @@
 <?php namespace Admin\Controllers;
 
-use Template;
-use AdminAuth;
 use Admin\Models\Users_model;
 use Admin\Traits\ValidatesForm;
+use AdminAuth;
 use Mail;
+use Template;
 
 class Login extends \Admin\Classes\AdminController
 {
@@ -89,7 +89,7 @@ class Login extends \Admin\Classes\AdminController
                 $user = Users_model::whereResetCode($code)->first();
 
                 if ($user AND $user->completeResetPassword($code, post('password'))) {
-        
+
                     $data = [
                         'staff_name' => $user->staff->staff_name,
                     ];
@@ -97,7 +97,7 @@ class Login extends \Admin\Classes\AdminController
                     Mail::send('admin::_mail.password_reset', $data, function ($message) use ($user) {
                         $message->to($user->staff->staff_email, $user->staff->staff_name);
                     });
-        
+
                     flash()->success(lang('admin::login.alert_success_reset'));
 
                     return TRUE;

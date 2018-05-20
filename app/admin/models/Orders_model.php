@@ -418,7 +418,7 @@ class Orders_model extends Model
     public function markAsPaymentProcessed()
     {
         if ($this->processed)
-            return true;
+            return TRUE;
 
         $this->processed = 1;
         $this->save();

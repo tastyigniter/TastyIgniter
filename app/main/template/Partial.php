@@ -115,7 +115,7 @@ class Partial extends Extendable implements TemplateSource
             $path = $file->getPathName();
 
             $item['fileName'] = $fileName = $file->getRelativePathName();
-            $item['baseFileName'] = ($pos = strrpos($fileName, '.')) == false ? $fileName : substr($fileName, 0, $pos);
+            $item['baseFileName'] = ($pos = strrpos($fileName, '.')) == FALSE ? $fileName : substr($fileName, 0, $pos);
 
             if (!$columns OR array_key_exists('mTime', $columns)) {
                 $item['mTime'] = $this->files->lastModified($path);
@@ -166,7 +166,7 @@ class Partial extends Extendable implements TemplateSource
         $filePath = $this->getFilePath($fileName);
 
         if (!File::exists($filePath)) {
-            @File::makeDirectory(dirname($filePath), 0777, true);
+            @File::makeDirectory(dirname($filePath), 0777, TRUE);
         }
 
         File::delete($oldPath);

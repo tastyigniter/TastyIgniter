@@ -1,6 +1,5 @@
 <?php namespace Admin\Controllers;
 
-use Admin\Models\Tables_model;
 use AdminMenu;
 
 /**

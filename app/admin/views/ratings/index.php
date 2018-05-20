@@ -5,9 +5,9 @@
     <div class="panel panel-light panel-table">
         <?= form_open(current_url(),
             [
-                'id'   => 'edit-form',
-                'role' => 'form',
-                'method' => 'PATCH'
+                'id'     => 'edit-form',
+                'role'   => 'form',
+                'method' => 'PATCH',
             ]
         ); ?>
 
@@ -25,18 +25,18 @@
                 <tr id="table-row<?= $table_row; ?>">
                     <td class="list-action text-center handle"><i class="fa fa-sort"></i></td>
                     <td class="list-action handle">
-                        <a 
+                        <a
                             class="btn btn-outline-danger"
                             role="button"
                             onclick="confirm('<?= lang('admin::default.alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false"><i
-                            class="fa fa-times-circle"
-                        ></i></a>
+                                class="fa fa-times-circle"
+                            ></i></a>
                     </td>
                     <td>
                         <input type="text"
-                            name="ratings[<?= $table_row; ?>]"
-                            class="form-control"
-                            value="<?= set_value('ratings['.$table_row.']', $value); ?>"/>
+                               name="ratings[<?= $table_row; ?>]"
+                               class="form-control"
+                               value="<?= set_value('ratings['.$table_row.']', $value); ?>"/>
                         <?= form_error('ratings['.$table_row.']', '<span class="text-danger">', '</span>'); ?>
                     </td>
                 </tr>

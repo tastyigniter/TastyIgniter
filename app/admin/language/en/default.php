@@ -57,7 +57,7 @@ return [
     'alert_error_nothing'       => 'An error occurred, nothing %s.',
     'alert_error_try_again'     => 'An error occurred, please try again.',
     'alert_warning_confirm'     => 'This cannot be undone! Are you sure you want to do this?',
-    'alert_confirm' => 'Are you sure you want to do this?',
+    'alert_confirm'             => 'Are you sure you want to do this?',
     'alert_user_not_logged_in'  => 'You must be logged in to access that page.',
     'alert_user_restricted'     => 'Warning: You do not have the right permission to <b>%s</b> [%s] context, please contact the system administrator.',
     'alert_location_restricted' => 'Warning: You do not have the right permission to access context outside your location, please contact the system administrator.',

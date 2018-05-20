@@ -1,13 +1,13 @@
 <?php
 
 return [
-    'text_title'               => 'Banners',
-    'text_form_name'           => 'Banner',
-    'text_filter_search'       => 'Search banner name, description or status.',
-    'text_filter_status'       => 'View all status',
-    'text_empty'               => 'There are no banners available.',
-    'text_image'               => 'Image',
-    'text_custom'              => 'Custom',
+    'text_title'         => 'Banners',
+    'text_form_name'     => 'Banner',
+    'text_filter_search' => 'Search banner name, description or status.',
+    'text_filter_status' => 'View all status',
+    'text_empty'         => 'There are no banners available.',
+    'text_image'         => 'Image',
+    'text_custom'        => 'Custom',
 
     'column_name'   => 'Name',
     'column_type'   => 'Type',

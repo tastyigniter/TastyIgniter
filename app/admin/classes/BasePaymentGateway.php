@@ -159,7 +159,9 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Utility function, creates a link to a registered entry point.
+     *
      * @param  string $code Key used to define the entry point
+     *
      * @return string
      */
     public function makeEntryPointUrl($code)

@@ -350,11 +350,13 @@ class Themes extends \Admin\Classes\AdminController
         $modelConfig['model'] = $model;
 
         if ($context == 'source') {
-            $mergeData = [];
             $file = session('Theme.customize.file');
             if ($file AND $mergeData = ThemeManager::instance()->readFile($file, $model->code)) {
                 $forgetSessionFile = FALSE;
                 $mergeData['file'] = $file;
+            }
+            else {
+                $mergeData = [];
             }
         }
         else {

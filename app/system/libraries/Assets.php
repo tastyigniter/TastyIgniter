@@ -2,7 +2,6 @@
 
 use File;
 use Html;
-use Main\Classes\ThemeManager;
 use System\Traits\CombinesAssets;
 use URL;
 

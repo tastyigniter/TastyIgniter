@@ -106,8 +106,8 @@ $config['form']['fields'] = [
         'type'    => 'radio',
         'default' => 'image',
         'options' => [
-            'image'    => 'lang:admin::banners.text_image',
-            'custom'   => 'lang:admin::banners.text_custom',
+            'image'  => 'lang:admin::banners.text_image',
+            'custom' => 'lang:admin::banners.text_custom',
         ],
     ],
     'image_code'  => [

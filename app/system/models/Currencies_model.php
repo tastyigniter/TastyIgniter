@@ -1,8 +1,5 @@
 <?php namespace System\Models;
 
-use Admin\Facades\AdminAuth;
-use Artisan;
-use Carbon\Carbon;
 use Model;
 
 /**
@@ -37,10 +34,10 @@ class Currencies_model extends Model
     public static function getDropdownOptions()
     {
         return static::select(['currencies.country_id', 'priority', 'currency_code'])
-            ->selectRaw("CONCAT_WS(' - ', country_name, currency_code, currency_symbol) as name")
-            ->leftJoin('countries', 'currencies.country_id', '=', 'countries.country_id')
-            ->orderBy('priority')
-            ->dropdown('name', 'currency_code');
+                     ->selectRaw("CONCAT_WS(' - ', country_name, currency_code, currency_symbol) as name")
+                     ->leftJoin('countries', 'currencies.country_id', '=', 'countries.country_id')
+                     ->orderBy('priority')
+                     ->dropdown('name', 'currency_code');
     }
 
     //

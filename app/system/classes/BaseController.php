@@ -2,10 +2,8 @@
 
 namespace System\Classes;
 
-use Exception;
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
-use Request;
 
 /**
  * Base Controller Class

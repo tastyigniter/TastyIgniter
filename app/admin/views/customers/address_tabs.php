@@ -19,7 +19,9 @@ $countries = System\Models\Countries_model::pluck('country_name');
             <?php } ?>
         <?php } ?>
         <li class="nav-item">
-            <a class="nav-link" role="button" data-add-address><i class="fa fa-book"></i>&nbsp;<i class="fa fa-plus"></i></a>
+            <a class="nav-link"
+               role="button"
+               data-add-address><i class="fa fa-book"></i>&nbsp;<i class="fa fa-plus"></i></a>
         </li>
     </ul>
 

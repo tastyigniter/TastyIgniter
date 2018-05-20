@@ -5,7 +5,7 @@
         id="<?= $scope->getId() ?>"
         name="<?= $this->getScopeName($scope) ?>"
         value="1" <?= $scope->value ? 'checked' : '' ?>
-        <?= $scope->disabled ? 'disabled="disabled"' : ''?>
+        <?= $scope->disabled ? 'disabled="disabled"' : '' ?>
     >
     <label for="<?= $scope->getId() ?>"><?= e(lang($scope->label)) ?></label>
 </div>

@@ -39,11 +39,11 @@ return [
     'progress_enable_maintenance'  => 'Enabling Maintenance mode&#8230;',
     'progress_disable_maintenance' => 'Restoring/Disabling Maintenance mode&#8230;',
 
-    'button_browse'    => '<i class="fa fa-globe"></i> Browse %s',
-    'button_carte'     => '<i class="fa fa-key"></i> Carté',
-    'button_check'     => '<i class="fa fa-refresh"></i> Check Again',
-    'button_updates'   => '<i class="fa fa-refresh"></i> Updates',
-    'button_update'    => '<i class="fa fa-check"></i> Update Available',
+    'button_browse'  => '<i class="fa fa-globe"></i> Browse %s',
+    'button_carte'   => '<i class="fa fa-key"></i> Carté',
+    'button_check'   => '<i class="fa fa-refresh"></i> Check Again',
+    'button_updates' => '<i class="fa fa-refresh"></i> Updates',
+    'button_update'  => '<i class="fa fa-check"></i> Update Available',
 
-    'help_carte_key'   => 'Site key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a carte from your TastyIgniter Account, if you haven\'t already. <a target="_blank" href="https://docs.tastyigniter.com/user-guides/carte">Read more</a>',
+    'help_carte_key' => 'Site key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a carte from your TastyIgniter Account, if you haven\'t already. <a target="_blank" href="https://docs.tastyigniter.com/user-guides/carte">Read more</a>',
 ];

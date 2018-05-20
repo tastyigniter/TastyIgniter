@@ -2,7 +2,6 @@
 
 use Admin\Classes\PaymentGateways;
 use Admin\Models\Payments_model;
-use AdminAuth;
 use AdminMenu;
 use Exception;
 use Igniter\Flame\Database\Model;

@@ -1,8 +1,8 @@
 <?= form_open(current_url(),
     [
-        'id'   => 'list-form',
-        'role' => 'form',
-            'method' => 'POST'
+        'id'     => 'list-form',
+        'role'   => 'form',
+        'method' => 'POST',
     ]
 ); ?>
 

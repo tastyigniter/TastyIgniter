@@ -14,7 +14,7 @@ return [
     'text_switch_to_list'     => 'Switch to list view',
     'text_switch_to_calendar' => 'Switch to calender view',
     'text_no_booking'         => 'No Bookings',
-    'text_restaurant'            => 'Restaurant',
+    'text_restaurant'         => 'Restaurant',
 
     'column_id'            => 'ID',
     'column_location'      => 'Location',
@@ -27,7 +27,7 @@ return [
     'column_date'          => 'Date',
 
     'label_reservation_id'       => 'Reservation ID',
-    'label_customer_name'      => 'Customer Name',
+    'label_customer_name'        => 'Customer Name',
     'label_guest'                => 'Guest Number',
     'label_reservation_date'     => 'Reservation Date',
     'label_reservation_time'     => 'Reservation Time',
@@ -52,6 +52,6 @@ return [
     'label_customer_email'       => 'Email',
     'label_customer_telephone'   => 'Telephone',
 
-    'help_notify_customer' => 'Set whether to send an order update email to the customer',
+    'help_notify_customer'      => 'Set whether to send an order update email to the customer',
     'help_reservation_duration' => 'Stay time in minutes. Leave blank to use the default stay time',
 ];

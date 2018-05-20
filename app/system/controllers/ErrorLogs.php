@@ -1,6 +1,5 @@
 <?php namespace System\Controllers;
 
-use AdminAuth;
 use AdminMenu;
 use File;
 use Igniter\Flame\Support\LogViewer;
@@ -19,13 +18,13 @@ class ErrorLogs extends \Admin\Classes\AdminController
         Template::setTitle(lang('system::error_logs.text_title'));
         Template::setHeading(lang('system::error_logs.text_heading'));
         Template::setButton(lang('system::error_logs.text_clear_logs'), [
-            'class' => 'btn btn-danger',
+            'class'             => 'btn btn-danger',
             'data-request-form' => '#list-form',
-            'data-request' => 'onClearLogs'
+            'data-request'      => 'onClearLogs',
         ]);
         Template::setButton(lang('admin::default.button_refresh'), [
             'class' => 'btn btn-default',
-            'href' => 'error_logs',
+            'href'  => 'error_logs',
         ]);
 
         LogViewer::setFile(storage_path('logs/system.log'));

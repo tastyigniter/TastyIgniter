@@ -9,9 +9,9 @@ $activeTab = $activeTab ? $activeTab : '#'.$type.'tab-1';
             <?php $index++;
             $tabName = '#'.$type.'tab-'.$index ?>
             <li class="nav-item">
-                <a 
-                    class="nav-link<?= ($tabName == $activeTab) ? ' active' : '' ?>" 
-                    href="<?= $tabName ?>" 
+                <a
+                    class="nav-link<?= ($tabName == $activeTab) ? ' active' : '' ?>"
+                    href="<?= $tabName ?>"
                     data-toggle="tab"
                 ><?= e(lang($name)) ?></a>
             </li>

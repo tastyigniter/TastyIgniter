@@ -5,7 +5,6 @@ use AdminAuth;
 use AdminMenu;
 use Exception;
 use Igniter\Flame\Location\GeoPosition;
-use Request;
 
 class Locations extends \Admin\Classes\AdminController
 {
@@ -68,7 +67,7 @@ class Locations extends \Admin\Classes\AdminController
     {
         $formController = $this->asExtension('FormController');
         $formController->edit($context, $recordId);
-        
+
         if (!count($formController->getFormModel()->listDeliveryAreas())) {
             flash()->warning(lang('admin::locations.alert_delivery_area'))->now();
         }
@@ -171,7 +170,7 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['options.hours.*.flexible.*.open', 'lang:admin::locations.label_open_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.close', 'lang:admin::locations.label_close_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::locations.label_opening_status', $requiredIf.'|integer'];
-        
+
         $rules[] = ['delivery_areas', 'lang:admin::locations.text_delivery_area', 'required'];
         $rules[] = ['delivery_areas.*.type', 'lang:admin::locations.label_area_type', 'required'];
         $rules[] = ['delivery_areas.*.name', 'lang:admin::locations.label_area_name', 'required'];

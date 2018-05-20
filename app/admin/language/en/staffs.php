@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'text_title'            => 'Staff',
-    'text_form_name'        => 'Staff',
-    'text_filter_search'    => 'Search location, name or email.',
-    'text_filter_group'     => 'View all groups',
-    'text_filter_location'  => 'View all locations',
-    'text_filter_date'      => 'View all dates',
-    'text_filter_status'    => 'View all status',
-    'text_empty'            => 'There are no staffs available.',
+    'text_title'           => 'Staff',
+    'text_form_name'       => 'Staff',
+    'text_filter_search'   => 'Search location, name or email.',
+    'text_filter_group'    => 'View all groups',
+    'text_filter_location' => 'View all locations',
+    'text_filter_date'     => 'View all dates',
+    'text_filter_status'   => 'View all status',
+    'text_empty'           => 'There are no staffs available.',
 
     'column_name'       => 'Name',
     'column_email'      => 'Email',

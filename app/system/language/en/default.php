@@ -15,12 +15,12 @@ return [
         'config' => "Configuration used in %s must supply a value '%s'.",
     ],
     'not_found'    => [
-        'model'   => "The model ':name' is not found.",
-        'layout'  => "The layout ':name' is not found.",
-        'partial' => "The partial ':name' is not found.",
-        'config'  => 'Unable to find configuration file %s defined for %s.',
-        'class'   => "Unable to find '%s' in %s",
-        'combiner'   => "Unable to find assets '%s'",
+        'model'    => "The model ':name' is not found.",
+        'layout'   => "The layout ':name' is not found.",
+        'partial'  => "The partial ':name' is not found.",
+        'config'   => 'Unable to find configuration file %s defined for %s.',
+        'class'    => "Unable to find '%s' in %s",
+        'combiner' => "Unable to find assets '%s'",
     ],
     'missing'      => [
         'config_key' => "Missing required [%s] key in [%s]",

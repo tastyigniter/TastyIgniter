@@ -607,7 +607,7 @@ class ExtensionManager
      *
      * @return bool
      */
-    public function updateExtension($code, $enable = true)
+    public function updateExtension($code, $enable = TRUE)
     {
         $code = $this->getIdentifier($code);
 
@@ -615,10 +615,10 @@ class ExtensionManager
         $this->saveInstalled();
 
         if (!$enable AND $extension = $this->findExtension($code)) {
-            $extension->disabled = true;
+            $extension->disabled = TRUE;
         }
 
-        return true;
+        return TRUE;
     }
 
     /**

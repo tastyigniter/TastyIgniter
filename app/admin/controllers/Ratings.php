@@ -1,7 +1,6 @@
 <?php namespace Admin\Controllers;
 
 use AdminMenu;
-use Assets;
 use System\Models\Settings_model;
 use Template;
 

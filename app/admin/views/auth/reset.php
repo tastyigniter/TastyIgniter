@@ -11,9 +11,9 @@
                 <h5><?= lang('admin::login.text_reset_password_title'); ?></h5>
                 <?= form_open(current_url(),
                     [
-                        'id'   => 'edit-form',
-                        'role' => 'form',
-                        'method' => 'POST'
+                        'id'     => 'edit-form',
+                        'role'   => 'form',
+                        'method' => 'POST',
                     ]
                 ); ?>
 

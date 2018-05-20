@@ -2,7 +2,8 @@
     <h5>
         <a href="<?= admin_url('reservations/edit') ?>/{{id}}">#{{id}}</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <span class="label label-default" style="background-color: {{status.status_color}};">{{status.status_name}}</span>
+        <span class="label label-default"
+              style="background-color: {{status.status_color}};">{{status.status_name}}</span>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <span class="label label-default">{{table.table_name}}</span>
     </h5>

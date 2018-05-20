@@ -20,7 +20,7 @@ class Payment_logs_model extends Model
     protected $primaryKey = 'payment_log_id';
 
     public $casts = [
-        'request' => 'array',
+        'request'  => 'array',
         'response' => 'array',
     ];
 }

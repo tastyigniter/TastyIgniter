@@ -102,7 +102,7 @@ $config['form']['fields'] = [
     'status'      => [
         'label'   => 'lang:admin::default.label_status',
         'type'    => 'switch',
-        'span'  => 'right',
+        'span'    => 'right',
         'default' => TRUE,
     ],
 ];

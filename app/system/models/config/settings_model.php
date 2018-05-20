@@ -14,12 +14,12 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['general'] = [
-    'label'    => 'lang:system::settings.text_tab_general',
+    'label'       => 'lang:system::settings.text_tab_general',
     'description' => 'lang:system::settings.text_tab_desc_general',
-    'icon'     => 'fa fa-sliders',
-    'priority' => 0,
-    'url'      => admin_url('settings/edit/general'),
-    'form'     => [
+    'icon'        => 'fa fa-sliders',
+    'priority'    => 0,
+    'url'         => admin_url('settings/edit/general'),
+    'form'        => [
         'tabs'  => [
             'fields' => [
                 'site_name'          => [
@@ -97,7 +97,7 @@ $config['form']['general'] = [
                     'span'  => 'right',
                 ],
 
-                'page_limit'                 => [
+                'page_limit'            => [
                     'label'   => 'lang:system::settings.label_page_limit',
                     'tab'     => 'lang:system::settings.text_tab_site',
                     'span'    => 'left',
@@ -105,12 +105,12 @@ $config['form']['general'] = [
                     'options' => 'getPageLimitOptions',
                     'comment' => 'lang:system::settings.help_page_limit',
                 ],
-                'language'                   => [
+                'language'              => [
                     'label' => 'lang:system::settings.text_tab_title_language',
                     'tab'   => 'lang:system::settings.text_tab_site',
                     'type'  => 'section',
                 ],
-                'default_language'           => [
+                'default_language'      => [
                     'label'       => 'lang:system::settings.label_site_language',
                     'tab'         => 'lang:system::settings.text_tab_site',
                     'type'        => 'select',
@@ -119,7 +119,7 @@ $config['form']['general'] = [
                     'options'     => ['System\Models\Languages_model', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::default.text_please_select',
                 ],
-                'supported_languages'        => [
+                'supported_languages'   => [
                     'label'       => 'lang:system::settings.label_supported_languages',
                     'tab'         => 'lang:system::settings.text_tab_site',
                     'type'        => 'select',
@@ -129,19 +129,19 @@ $config['form']['general'] = [
                     'options'     => ['System\Models\Languages_model', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::default.text_please_select',
                 ],
-                'detect_language'            => [
+                'detect_language'       => [
                     'label'   => 'lang:system::settings.label_detect_language',
                     'tab'     => 'lang:system::settings.text_tab_site',
                     'span'    => 'left',
                     'type'    => 'switch',
                     'comment' => 'lang:system::settings.help_detect_language',
                 ],
-                'currency'                   => [
+                'currency'              => [
                     'label' => 'lang:system::settings.text_tab_title_currency',
                     'tab'   => 'lang:system::settings.text_tab_site',
                     'type'  => 'section',
                 ],
-                'default_currency_code'                => [
+                'default_currency_code' => [
                     'label'       => 'lang:system::settings.label_site_currency',
                     'tab'         => 'lang:system::settings.text_tab_site',
                     'span'        => 'left',
@@ -149,7 +149,7 @@ $config['form']['general'] = [
                     'options'     => ['System\Models\Currencies_model', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::default.text_please_select',
                 ],
-                'accepted_currencies'        => [
+                'accepted_currencies'   => [
                     'label'       => 'lang:system::settings.label_accepted_currency',
                     'tab'         => 'lang:system::settings.text_tab_site',
                     'type'        => 'select',
@@ -159,12 +159,12 @@ $config['form']['general'] = [
                     'comment'     => 'lang:system::settings.help_accepted_currency',
                     'placeholder' => 'lang:admin::default.text_please_select',
                 ],
-                'date'                       => [
+                'date'                  => [
                     'label' => 'lang:system::settings.text_tab_title_date_time',
                     'tab'   => 'lang:system::settings.text_tab_site',
                     'type'  => 'section',
                 ],
-                'timezone'                   => [
+                'timezone'              => [
                     'label'       => 'lang:system::settings.label_timezone',
                     'tab'         => 'lang:system::settings.text_tab_site',
                     'type'        => 'select',
@@ -172,14 +172,14 @@ $config['form']['general'] = [
                     'comment'     => 'lang:system::settings.help_timezone',
                     'placeholder' => 'lang:admin::default.text_please_select',
                 ],
-                'date_format'                => [
+                'date_format'           => [
                     'label'   => 'lang:system::settings.label_date_format',
                     'tab'     => 'lang:system::settings.text_tab_site',
                     'span'    => 'left',
                     'type'    => 'select',
                     'default' => 'd/m/Y',
                 ],
-                'time_format'                => [
+                'time_format'           => [
                     'label'   => 'lang:system::settings.label_time_format',
                     'tab'     => 'lang:system::settings.text_tab_site',
                     'span'    => 'right',
@@ -212,12 +212,12 @@ $config['form']['general'] = [
 ];
 
 $config['form']['order'] = [
-    'label'    => 'lang:system::settings.text_tab_order',
+    'label'       => 'lang:system::settings.text_tab_order',
     'description' => 'lang:system::settings.text_tab_desc_order',
-    'icon'     => 'fa fa-shopping-cart',
-    'priority' => 1,
-    'url'      => admin_url('settings/edit/order'),
-    'form'     => [
+    'icon'        => 'fa fa-shopping-cart',
+    'priority'    => 1,
+    'url'         => admin_url('settings/edit/order'),
+    'form'        => [
         'tabs'  => [
             'fields' => [
                 'default_order_status'    => [
@@ -353,7 +353,7 @@ $config['form']['order'] = [
                     'label'   => 'lang:system::settings.label_tax_percentage',
                     'tab'     => 'lang:system::settings.text_tab_title_taxation',
                     'type'    => 'number',
-                    'default'    => 0,
+                    'default' => 0,
                     'comment' => 'lang:system::settings.help_tax_percentage',
                 ],
                 'tax_menu_price'      => [
@@ -403,12 +403,12 @@ $config['form']['order'] = [
 ];
 
 $config['form']['reservation'] = [
-    'label'    => 'lang:system::settings.text_tab_reservation',
+    'label'       => 'lang:system::settings.text_tab_reservation',
     'description' => 'lang:system::settings.text_tab_desc_reservation',
-    'icon'     => 'fa fa-book',
-    'priority' => 2,
-    'url'      => admin_url('settings/edit/reservation'),
-    'form'     => [
+    'icon'        => 'fa fa-book',
+    'priority'    => 2,
+    'url'         => admin_url('settings/edit/reservation'),
+    'form'        => [
         'fields' => [
             'reservation_mode'             => [
                 'label'   => 'lang:system::settings.label_reservation_mode',
@@ -471,12 +471,12 @@ $config['form']['reservation'] = [
 ];
 
 $config['form']['user'] = [
-    'label'    => 'lang:system::settings.text_tab_user',
+    'label'       => 'lang:system::settings.text_tab_user',
     'description' => 'lang:system::settings.text_tab_desc_user',
-    'icon'     => 'fa fa-user',
-    'priority' => 3,
-    'url'      => admin_url('settings/edit/user'),
-    'form'     => [
+    'icon'        => 'fa fa-user',
+    'priority'    => 3,
+    'url'         => admin_url('settings/edit/user'),
+    'form'        => [
         'fields' => [
             'registration_email' => [
                 'label'   => 'lang:system::settings.label_registration_email',
@@ -509,12 +509,12 @@ $config['form']['user'] = [
 ];
 
 $config['form']['media'] = [
-    'label'    => 'lang:system::settings.text_tab_media_manager',
+    'label'       => 'lang:system::settings.text_tab_media_manager',
     'description' => 'lang:system::settings.text_tab_desc_media_manager',
-    'icon'     => 'fa fa-image',
-    'priority' => 4,
-    'url'      => admin_url('settings/edit/media'),
-    'form'     => [
+    'icon'        => 'fa fa-image',
+    'priority'    => 4,
+    'url'         => admin_url('settings/edit/media'),
+    'form'        => [
         'fields' => [
             'image_manager[max_size]'      => [
                 'label'   => 'lang:system::settings.label_media_max_size',
@@ -598,12 +598,12 @@ $config['form']['media'] = [
 ];
 
 $config['form']['mail'] = [
-    'label'    => 'lang:system::settings.text_tab_mail',
+    'label'       => 'lang:system::settings.text_tab_mail',
     'description' => 'lang:system::settings.text_tab_desc_mail',
-    'icon'     => 'fa fa-envelope',
-    'priority' => 5,
-    'url'      => admin_url('settings/edit/mail'),
-    'form'     => [
+    'icon'        => 'fa fa-envelope',
+    'priority'    => 5,
+    'url'         => admin_url('settings/edit/mail'),
+    'form'        => [
         'fields' => [
             'sender_name'  => [
                 'label' => 'lang:system::settings.label_sender_name',
@@ -695,12 +695,12 @@ $config['form']['mail'] = [
 ];
 
 $config['form']['advanced'] = [
-    'label'    => 'lang:system::settings.text_tab_server',
+    'label'       => 'lang:system::settings.text_tab_server',
     'description' => 'lang:system::settings.text_tab_desc_server',
-    'icon'     => 'fa fa-cog',
-    'priority' => 6,
-    'url'      => admin_url('settings/edit/advanced'),
-    'form'     => [
+    'icon'        => 'fa fa-cog',
+    'priority'    => 6,
+    'url'         => admin_url('settings/edit/advanced'),
+    'form'        => [
         'fields' => [
             'maintenance'         => [
                 'label' => 'lang:system::settings.text_tab_title_maintenance',

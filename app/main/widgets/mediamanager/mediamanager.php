@@ -25,7 +25,7 @@
         </div>
 
         <div class="row no-gutters">
-            <div 
+            <div
                 class="col-9 border-right wrap-none wrap-left"
                 data-control="media-list"
             >
