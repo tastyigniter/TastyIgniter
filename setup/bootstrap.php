@@ -52,6 +52,7 @@ function installerShutdown()
 }
 
 require_once 'language/en/default.php';
+require_once 'classes/SetupPDO.php';
 require_once 'classes/SetupException.php';
 require_once 'classes/SetupRepository.php';
 require_once 'classes/SetupController.php';

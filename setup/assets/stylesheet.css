@@ -149,7 +149,7 @@ button.btn-dropdown {
 	color: #263A65;
 }
 .panel-license {
-	background-color: #fff;
+	background-color: #F5F5F5;
 	border-width: 0 0 1px;
 	margin-bottom: 0;
 	padding: 15px;
@@ -491,6 +491,13 @@ h4, .h4 {
 }
 .panel-next-steps .btn-cta .fa {
 	margin-bottom: 10px;
+}
+.modal-dialog {
+	margin: 10% auto;
+}
+.modal-backdrop {
+	background-color: #213358;
+	opacity: .5;
 }
 .bs-wizard {
 	margin-top: 0px;

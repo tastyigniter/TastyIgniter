@@ -40,6 +40,13 @@
                         <form id="setup-form" accept-charset="utf-8" method="POST" role="form">
                             <div data-html="content"></div>
                             <input type="hidden" id="current-step" value="<?= $page->currentStep ?>">
+
+                            <div id="flash-modal"
+                                 class="modal"
+                                 tabindex="-1"
+                                 role="dialog"
+                                 data-html="modal">
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -79,6 +86,7 @@ $viewsList = [
     'check_alert',
     'requirements',
     'database',
+    'upgrade',
     'settings',
     'install',
     'themes',

@@ -55,4 +55,4 @@
     <div class="list-group list-requirement"></div>
 </div>
 
-<div id="check-result"></div>
+<div id="requirement-check-result"></div>

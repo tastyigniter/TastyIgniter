@@ -7,10 +7,12 @@
         <p class="theme-description">{{{description}}}</p>
 
         <div class="theme-action">
-            <button
+            <a
                 type="button"
                 class="btn btn-default"
-            >Demo</button>
+                target="_blank"
+                href="{{homepage}}"
+            >Demo</a>
 
             <button
                 type="button"

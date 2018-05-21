@@ -210,8 +210,6 @@ class HubManager
         curl_setopt($curl, CURLOPT_REFERER, url()->current());
         curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
 
         $params['url'] = base64_encode(root_url());
 

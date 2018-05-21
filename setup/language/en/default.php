@@ -105,6 +105,7 @@ function lang($key)
         'button_proceed'       => 'Complete setup',
         'button_back'          => 'Start Over',
         'button_skip'          => 'Skip',
+        'button_cancel'        => 'Cancel',
         'button_admin'         => 'Administration',
         'button_accept'        => 'Accept License',
         'button_clean_install' => 'Fresh Install',

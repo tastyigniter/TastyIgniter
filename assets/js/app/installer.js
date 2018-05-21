@@ -31,13 +31,6 @@ var Installer = {
                     msg: "Finishing site setup...",
                     error: "Finishing site setup failed. See setup log."
                 }
-                // steps: {
-                //     // getMeta: {msg: "Fetching extension meta information...", completed: false},
-                //     download: {msg: "Downloading %s extension...", completed: false},
-                //     extract: {msg: "Extracting %s extension...", completed: false},
-                //     install: {msg: "Installing %s extension...", completed: false},
-                //     finish: {msg: "Completing installation...", completed: false},
-                // },
             }
         },
         proceed: {proceedUrl: '/admin/settings', frontUrl: '/'},
@@ -47,6 +40,7 @@ var Installer = {
     init: function () {
         Installer.$page = $(Installer.options.page)
         Installer.$pageContent = Installer.$page.find('[data-html="content"]')
+        Installer.$pageModal = Installer.$page.find('[data-html="modal"]')
         Installer.$progressBox = $(Installer.options.progressBox)
         Installer.currentStep = $(Installer.options.currentStepSelector).val()
 
@@ -60,6 +54,7 @@ var Installer = {
             Installer.$submitBtn = $(Installer.options.submitButton)
             Installer.$form.submit(Installer.submitForm)
             Installer.$page.on('click', '[data-install-control]', Installer.onControlClick)
+            Installer.$pageModal.on('hidden.bs.modal', Installer.onModalHidden)
 
             if (Installer.currentStep === 'requirement')
                 Installer.checkRequirements()
@@ -95,6 +90,11 @@ var Installer = {
                 Installer.processInstall($button)
                 break
         }
+    },
+
+    onModalHidden: function (event) {
+        var $modal = $(event.currentTarget)
+        $modal.find('.modal-dialog').remove()
     },
 
     disableSubmitButton: function (disabled) {
@@ -183,12 +183,6 @@ var Installer = {
         var $progressBar = $(".progress-bar", Installer.$progressBox),
             progressMessage = Installer.$progressBox.find(".message")
 
-        // if (message)
-        //     progressMessage.text(message)
-        // Installer.flashMessage(message)
-
-        // if (!Installer.$progressBox.hasClass("waiting")) {
-        // $progressBar.fadeIn()
         Installer.$progressBox.addClass("waiting")
         $progressBar.removeClass('progress-bar-danger')
         progressMessage.removeClass('text-danger')
@@ -217,7 +211,6 @@ var Installer = {
                 }, 200)
                 break
         }
-        // }
     },
 
     hideProgress: function () {
@@ -256,7 +249,7 @@ var Installer = {
     checkRequirements: function () {
         var $requirementList = $('.list-requirement').empty(),
             $checkMessage = $(Installer.options.progressBox).find('.message'),
-            $checkResult = $('#check-result').empty(),
+            $checkResult = $('#requirement-check-result').empty(),
             alertTemplate = $('[data-view="check_alert"]').clone().html(),
             licenseTemplate = $('[data-view="license"]').html(),
             requestHandler = Installer.Steps.requirement.handler,
@@ -327,7 +320,8 @@ var Installer = {
                 $checkResult.show().addClass('animated fadeInDown')
             } else {
                 Installer.$form.append('<input type="hidden" name="requirement" value="complete">')
-                Installer.$pageContent.append(Mustache.render(licenseTemplate))
+                Installer.$pageModal.modal({backdrop: false, keyboard: false})
+                Installer.$pageModal.html(Mustache.render(licenseTemplate))
             }
         })
     },
@@ -422,6 +416,8 @@ var Installer = {
             var viewHtml = Mustache.render($(view).html(), $.extend(pageData, data, {}))
             Installer.$pageContent.html(viewHtml)
         }
+
+        Installer.$pageModal.modal('hide')
     },
 
     flashMessage: function (type, message) {
@@ -446,11 +442,19 @@ var Installer = {
 
     processResponse: function (json) {
         var flashMessage = json.flash,
+            showModal = json.modal,
             nextStep = json.step
 
         if (flashMessage) {
             Installer.hideProgress()
             Installer.flashMessage(flashMessage.type, flashMessage.message)
+        }
+
+        if (showModal) {
+            Installer.hideProgress()
+            var modalTemplate = $('[data-view="' + showModal + '"]').clone().html();
+            Installer.$pageModal.html(Mustache.render(modalTemplate))
+            Installer.$pageModal.modal()
         }
 
         switch (nextStep) {
@@ -468,7 +472,6 @@ var Installer = {
                 Installer.hideProgress()
                 Installer.renderView(nextStep)
                 Installer.updateWizard(nextStep)
-                // setTimeout(Installer.installFoundation(), 500)
                 break
         }
     },

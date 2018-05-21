@@ -124,26 +124,22 @@ class SetupController
         if (!strlen($database = $this->post('database')))
             throw new SetupException('Please specify the database name');
 
-        if (!$config = $this->testDbConnection($this->post())) {
-            return [
-                'flash' => [
-                    'type'    => 'warning',
-                    'message' => sprintf(
-                        'Database "%s" is not empty. Please empty the database or specify a different database table prefix.',
-                        $this->e($database)
-                    ),
-                ],
-            ];
+        $config = $this->verifyDbConfiguration($this->post());
+
+        $db = $this->testDbConnection($config);
+
+        $step = ($db AND $this->hasDbInstalledSettings($db)) ? 'install' : 'settings';
+
+        if ($step == 'install' AND $this->post('upgrade') != 1) {
+            return ['modal' => 'upgrade'];
         }
 
-        $result = $this->verifyDbConfiguration($config);
-
-        $this->repository->set('database', $result);
+        $this->repository->set('database', $config);
         $result = $this->repository->save();
 
         $this->writeLog('Database %s %s', $database, ($result ? '+OK' : '=FAIL'));
 
-        return $result ? ['step' => 'settings'] : ['result' => $result];
+        return $result ? ['step' => $step] : ['result' => $result];
     }
 
     public function onValidateSettings()
@@ -177,13 +173,12 @@ class SetupController
             throw new SetupException('Password does not match');
 
         $this->repository->set('settings', [
-            'include_demo' => ($this->post('demo_data') == '1'),
-            'use_multi'    => ($this->post('site_location_mode') == 'multiple'),
-            'site_name'    => $siteName,
-            'site_email'   => $siteEmail,
-            'staff_name'   => $adminName,
-            'username'     => $username,
-            'password'     => $password,
+            'site_location_mode' => $this->post('site_location_mode'),
+            'site_name'          => $siteName,
+            'site_email'         => $siteEmail,
+            'staff_name'         => $adminName,
+            'username'           => $username,
+            'password'           => $password,
         ]);
 
         $result = $this->repository->save();
@@ -314,10 +309,8 @@ class SetupController
         return TRUE;
     }
 
-    protected function testDbConnection($db = [])
+    protected function testDbConnection($config = [])
     {
-        $config = $this->verifyDbConfiguration($db);
-
         extract($config);
 
         // Try connecting to database using the specified driver
@@ -325,21 +318,13 @@ class SetupController
         if ($port) $dsn .= ";port=".$port;
 
         try {
-            $db = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+            $options = [SetupPDO::ATTR_ERRMODE => SetupPDO::ERRMODE_EXCEPTION];
+            $db = new \SetupPDO($dsn, $username, $password, $options, $config);
         } catch (PDOException $ex) {
             throw new SetupException('Connection failed: '.$ex->getMessage());
         }
 
-        // Check the database table prefix is empty
-        $fetch = $db->query("show tables where tables_in_{$database} like '".str_replace('_', '\\_', $prefix)."%'", PDO::FETCH_NUM);
-
-        $tables = 0;
-        while ($result = $fetch->fetch()) $tables++;
-        if ($tables > 0) {
-            return FALSE;
-        }
-
-        return $config;
+        return $db;
     }
 
     protected function verifyDbConfiguration($config)
@@ -370,6 +355,30 @@ class SetupController
             $result['prefix'] = trim($config['prefix']);
 
         return $result;
+    }
+
+    /**
+     * @param \SetupPDO $db
+     *
+     * @return bool
+     */
+    protected function hasDbInstalledSettings($db)
+    {
+        // Nothing to import if database has no existing tables
+        if ($db->isFreshlyInstalled())
+            return FALSE;
+
+        // Check whether to import existing database tables
+        if ($db->hasPreviouslyInstalledSettings()) {
+            $this->repository->set('settingsInstalled', TRUE);
+
+            return TRUE;
+        }
+
+        throw new SetupException(sprintf(
+            'Database "%s" is not empty. Please empty the database or specify a different database table prefix.',
+            $this->e($db->config('database'))
+        ));
     }
 
     //
@@ -450,6 +459,9 @@ class SetupController
         // Create the admin user if no admin exists.
         $this->createSuperUser();
 
+        if ($this->repository->get('settingsInstalled') === TRUE)
+            return $this->addSystemParameters();
+
         // Save the site configuration to the settings table
         $this->addSystemSettings();
     }
@@ -473,6 +485,9 @@ class SetupController
         // Abort: a super admin user already exists
         if (\Admin\Models\Users_model::where('super_user', 1)->count())
             return TRUE;
+
+        if ($this->repository->get('settingsInstalled') === TRUE)
+            return \Admin\Models\Users_model::first()->update(['super_user' => 1]);
 
         $config = $this->repository->get('settings');
 
@@ -504,36 +519,39 @@ class SetupController
 
     protected function addSystemSettings()
     {
+        $this->addSystemParameters();
+
+        $settings = (array)$this->getSettingsDetails();
+
+        setting()->set($settings);
+
+        setting()->save();
+    }
+
+    protected function addSystemParameters()
+    {
         $core = $this->repository->get('core');
         $config = $this->repository->get('settings');
 
-        $settings = [
-            'site_name'           => $config['site_name'],
-            'site_email'          => $config['site_email'],
-            'site_location_mode'  => $config['use_multi'] ? 'multiple' : 'single',
+        params()->set([
             'ti_setup'            => 'installed',
             'ti_version'          => array_get($core, 'version'),
             'sys_hash'            => array_get($core, 'hash'),
-            'site_key'            => isset($config['site_key']) ? $config['site_key'] : null,
+            'site_key'            => $config['site_key'] ?? null,
             'default_location_id' => \Admin\Models\Locations_model::first()->location_id,
-        ];
+        ]);
 
-        $paramsKeyNames = ['ti_setup', 'ti_version', 'sys_hash', 'site_key', 'default_location_id'];
-        foreach ($settings as $key => $value) {
-            $setting = in_array($key, $paramsKeyNames)
-                ? params() : setting();
-
-            $setting->set($key, $value);
-        }
+        // These parameter are no longer in use
+        params()->forget('default_themes');
+        params()->forget('main_address');
 
         params()->save();
-        setting()->save();
     }
 
     protected function completeInstall()
     {
         $item = $this->post('item');
-        $items = isset($item['items']) ? $item['items'] : [];
+        $items = $item['items'] ?? [];
         foreach ($items as $item) {
             if ($item['type'] != 'extension')
                 continue;
@@ -886,8 +904,6 @@ class SetupController
         curl_setopt($curl, CURLOPT_URL, static::TI_ENDPOINT.'/'.$uri);
         curl_setopt($curl, CURLOPT_TIMEOUT, 3600);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, '', '&'));
 
         if (isset($params['site_key']) AND $siteKey = $params['site_key']) {
