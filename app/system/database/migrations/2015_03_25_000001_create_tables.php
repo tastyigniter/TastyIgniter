@@ -566,7 +566,7 @@ class CreateTables extends Migration
             $table->string('title');
             $table->decimal('value', 15);
             $table->boolean('priority');
-            $table->unique('order_id'); // was unique
+//            $table->primary(['order_total_id', 'order_id']); will be dropped later, added here for reference only
         };
     }
 
