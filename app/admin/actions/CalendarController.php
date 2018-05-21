@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\actions;
+namespace Admin\Actions;
 
 use System\Classes\BaseController;
 use System\Classes\ControllerAction;
