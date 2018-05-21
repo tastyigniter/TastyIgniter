@@ -87,6 +87,7 @@ class Assets
     public function addTag($type, $tag, $options = [])
     {
         switch ($type) {
+            case 'icon':
             case 'favicon':
                 return $this->addFavIcon($tag);
             case 'meta':
@@ -223,11 +224,11 @@ class Assets
 
     protected function getAssetPath($name)
     {
-        if (strpos($name, '~/') === 0)
-            return File::localToPublic(File::symbolizePath($name));
-
-        if (starts_with($name, ['/', '//', 'http://', 'https://']))
+        if (starts_with($name, ['//', 'http://', 'https://']))
             return $name;
+
+        if (File::isPathSymbol($name))
+            return File::localToPublic(File::symbolizePath($name));
 
         $paths = static::$registeredPaths;
         if (!is_array($paths))
@@ -274,7 +275,7 @@ class Assets
         if (!is_null($suffix))
             $suffix = (strpos($path, '?') === FALSE) ? '?'.$suffix : '&'.$suffix;
 
-        return URL::asset($path.$suffix);
+        return $path.$suffix;
     }
 
     protected function compileActiveStyle($content = '')
@@ -311,31 +312,29 @@ class Assets
         if (!is_array($options))
             $options = ['name' => $options];
 
-        if (!isset($options['attributes'])) {
-            if ($type == 'js') {
-                $options['attributes'] = [
-                    'charset' => strtolower(setting('charset', 'UTF-8')),
-                    'type'    => 'text/javascript',
-                ];
-            }
-            elseif ($type == 'icon') {
-                $options['attributes'] = [
-                    'rel'  => 'shortcut icon',
-                    'type' => 'image/x-icon',
-                ];
-            }
-            else {
-                $options['attributes'] = [
-                    'rel'  => 'stylesheet',
-                    'type' => 'text/css',
-                ];
-            }
+        if ($type == 'js') {
+            $defaults['attributes'] = [
+                'charset' => strtolower(setting('charset', 'UTF-8')),
+                'type'    => 'text/javascript',
+            ];
+        }
+        elseif ($type == 'icon') {
+            $defaults['attributes'] = [
+                'rel'  => 'shortcut icon',
+                'type' => 'image/x-icon',
+            ];
+        }
+        else {
+            $defaults['attributes'] = [
+                'rel'  => 'stylesheet',
+                'type' => 'text/css',
+            ];
         }
 
         if (!isset($options['attributes']['id']) AND isset($options['name']))
             $options['attributes']['id'] = $options['name'];
 
-        return (object)array_merge($defaults, $options);
+        return (object)array_replace_recursive($defaults, $options);
     }
 
     protected function renderTag($tag)

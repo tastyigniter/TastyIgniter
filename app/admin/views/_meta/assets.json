@@ -1,6 +1,6 @@
 {
   "doctype": "html5",
-  "favicon": ":root_url,favicon.ico",
+  "favicon": "/assets/images/favicon.ico",
   "meta": [
     {
       "name": "Content-type",
@@ -20,16 +20,16 @@
   ],
   "style": [
     {
-      "path": "assets/ui/flame.css",
+      "path": "/assets/ui/flame.css",
       "name": "flame-css",
       "collection": "ui"
     },
     {
-      "path": "assets/css/vendor/select2-bootstrap.min.css",
+      "path": "/assets/css/vendor/select2-bootstrap.min.css",
       "name": "select2-bootstrap-css"
     },
     {
-      "path": "assets/css/vendor/font-awesome.min.css",
+      "path": "/assets/css/vendor/font-awesome.min.css",
       "name": "font-awesome-css"
     },
     {
@@ -43,27 +43,27 @@
   ],
   "script": [
     {
-      "path": "assets/js/app/vendor.js",
+      "path": "/assets/js/app/vendor.js",
       "name": "vendor-js",
       "collection": "app"
     },
     {
-      "path": "assets/js/app/flashmessage.js",
+      "path": "/assets/js/app/flashmessage.js",
       "name": "flashmessage-js",
       "collection": "app"
     },
     {
-      "path": "assets/js/app/app.js",
+      "path": "/assets/js/app/app.js",
       "name": "app-js",
       "collection": "app"
     },
     {
-      "path": "assets/js/app/toggler.js",
+      "path": "/assets/js/app/toggler.js",
       "name": "toggle-js",
       "collection": "app"
     },
     {
-      "path": "assets/js/app/trigger.js",
+      "path": "/assets/js/app/trigger.js",
       "name": "trigger-js",
       "collection": "app"
     },
@@ -72,11 +72,11 @@
       "name": "metis-menu-js"
     },
     {
-      "path": "assets/js/vendor/select2.min.js",
+      "path": "/assets/js/vendor/select2.min.js",
       "name": "select-2-js"
     },
     {
-      "path": "assets/js/vendor/js.cookie.js",
+      "path": "/assets/js/vendor/js.cookie.js",
       "name": "js-cookie-js"
     },
     {
