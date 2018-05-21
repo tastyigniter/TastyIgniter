@@ -195,10 +195,16 @@ class Locations_model extends BaseLocationModel
                     if (isset($hours["{$type}_{$suffix}"])) {
                         $valueItem = $hours["{$type}_{$suffix}"];
                         if ($suffix == 'type')
-                            $valueItem = $valueItem != '24_7' ? '24_7' : $valueItem;
+                            $valueItem = $valueItem != '24_7' ? $valueItem : '24_7';
 
                         $typeIndex = $type == 'daily' ? 'opening' : $type;
-                        $value['hours'][$typeIndex][$suffix] = $valueItem;
+
+                        if ($suffix == 'hours') {
+                            $value['hours'][$typeIndex]['open'] = $valueItem['open'] ?? '00:00';
+                            $value['hours'][$typeIndex]['close'] = $valueItem['close'] ?? '23:59';
+                        } else {
+                            $value['hours'][$typeIndex][$suffix] = $valueItem;
+                        }
                     }
                 }
             }
