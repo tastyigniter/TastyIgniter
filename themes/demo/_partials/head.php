@@ -8,7 +8,10 @@ else { ?>
     <?= get_favicon(); ?>
 <?php } ?>
 <title><?= sprintf(lang('main::default.site_title'), lang(get_title()), setting('site_name')); ?></title>
-<?= get_style_tags(['ui', 'widget', 'component', 'theme']); ?>
+<?= get_style_tags(['ui']); ?>
+<link href="<?= assets_url('css/vendor/bootstrap.min.css') ?>" rel="stylesheet" type="text/css" id="bootstrap-css">
+<link href="<?= assets_url('css/vendor/font-awesome.min.css') ?>" rel="stylesheet" type="text/css" id="font-awesome-css">
+<?= get_style_tags(['widget', 'component', 'theme']); ?>
 <link href="<?= theme_url('demo/assets/css/stylesheet.css') ?>" rel="stylesheet" type="text/css" id="stylesheet-css">
 <?= get_script_tags('app'); ?>
 <?= !empty($this->theme->custom_script['head'])

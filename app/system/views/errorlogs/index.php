@@ -29,8 +29,9 @@
                     </td>
                     <td class="date"><?= date('Y-m-d H:i:s', strtotime($log['date'])); ?></td>
                     <td
-                        class="text clickable"
+                        class="text"
                         <?php if ($log['stack']) { ?>
+                            role="button"
                             data-toggle="collapse"
                             data-target="#stack-<?= e($key); ?>"
                             aria-expanded="false"

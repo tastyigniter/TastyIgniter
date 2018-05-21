@@ -34,5 +34,8 @@ description: Default layout
     <footer id="page-footer">
         <?= partial('footer'); ?>
     </footer>
-    <?= get_script_tags(['widget', 'component', 'custom', 'theme']); ?></body>
+    <script type="text/javascript" src="<?= assets_url('js/app/vendor.js') ?>" id="vendor-js"></script>
+    <script type="text/javascript" src="<?= assets_url('js/app/flashmessage.js') ?>" id="flashmessage-js"></script>
+    <script type="text/javascript" src="<?= assets_url('js/app/app.js') ?>" id="app-js"></script>
+    <?= get_script_tags(['ui', 'widget', 'component', 'custom', 'theme']); ?></body>
 </html>
