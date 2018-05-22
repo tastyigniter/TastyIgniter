@@ -6,7 +6,7 @@
             data-control="drag-component"
             class="handle btn btn-light btn-sm"
             role="button"
-        ><i class="fa fa-arrows"></i></a>
+        ><i class="fa fa-bars"></i></a>
         <a
             data-control="remove-component"
             class="remove btn btn-light btn-sm pull-right"

@@ -5,7 +5,7 @@
         <td class="repeater-item-handle <?= $this->getId('items') ?>-handle">
             <input type="hidden" name="<?= $sortableName ?>" value="<?= $indexValue; ?>">
             <div class="btn btn-handle">
-                <i class="fa fa-sort"></i>
+                <i class="fa fa-bars"></i>
             </div>
         </td>
     <?php } ?>

@@ -11,17 +11,15 @@
         href="#<?= $this->getId('item-collapse-'.$index) ?>"
         aria-expanded="true"
         aria-controls="<?= $this->getId('item-'.$index) ?>"
-        role="button"
     >
         <h5 class="panel-title">
             <?php if (!$this->previewMode AND $sortable) { ?>
-                <button class="btn btn-handle <?= $this->getId('items') ?>-handle">
-                    <i class="fa fa-arrows"></i>
-                </button>
+                <a class="handle <?= $this->getId('items') ?>-handle">
+                    <i class="fa fa-bars"></i>
+                </a>
             <?php } ?>
-            <button
-                type="button"
-                class="btn btn-danger btn-outline pull-right"
+            <a
+                class="pull-right"
                 aria-label="Remove"
                 <?php if (!$this->previewMode) { ?>
                     data-request="<?= $this->getEventHandler('onRemoveItem') ?>"
@@ -30,8 +28,8 @@
                     data-request-success="$(this).closest('#<?= $this->getId('item-'.$index) ?>').remove()"
                 <?php } ?>
             >
-                <span aria-hidden="true">X</span>
-            </button>
+                <span content="text-danger" aria-hidden="true">X</span>
+            </a>
             <span><?= array_get($fieldOptions, $widget->data->{$keyFromName}) ?></span>
         </h5>
     </div>

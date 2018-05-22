@@ -3,7 +3,7 @@
         <?php if ($showDragHandle) { ?>
             <td class="list-action">
                 <div class="btn btn-handle">
-                    <i class="fa fa-sort handle"></i>
+                    <i class="fa fa-bars"></i>
                 </div>
             </td>
         <?php } ?>

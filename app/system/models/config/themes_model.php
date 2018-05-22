@@ -27,7 +27,7 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-paint-brush',
         'attributes'   => [
-            'class' => 'btn btn-outline btn-default',
+            'class' => 'btn btn-outline-default',
             'href'  => 'themes/edit/{code}',
         ],
     ],
@@ -35,7 +35,7 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-pencil',
         'attributes'   => [
-            'class' => 'btn btn-outline btn-default',
+            'class' => 'btn btn-outline-default',
             'href'  => 'themes/source/{code}',
         ],
     ],
@@ -54,7 +54,7 @@ $config['list']['columns'] = [
         'type'         => 'button',
         'iconCssClass' => 'fa fa-trash-o',
         'attributes'   => [
-            'class' => 'btn btn-outline btn-danger',
+            'class' => 'btn btn-outline-danger',
             'href'  => 'themes/delete/{code}',
         ],
     ],
