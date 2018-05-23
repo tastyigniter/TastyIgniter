@@ -55,6 +55,11 @@ class Menu_item_options_model extends Model
         return $this->option->display_type;
     }
 
+    public function getOptionValuesAttribute()
+    {
+        return $this->getOptionValues();
+    }
+
     public function getOptionValues()
     {
         return $this->optionValues()->get();
@@ -76,9 +81,16 @@ class Menu_item_options_model extends Model
 
     public function listOptionValues($data, $field)
     {
-        return Menu_option_values_model::select('option_value_id', 'option_id', 'value')
-                                       ->where('option_id', $this->option_id)
-                                       ->get()
-                                       ->pluck('value', 'option_value_id');
+        if (!empty(self::$optionValuesCollection[$this->option_id]))
+            return self::$optionValuesCollection[$this->option_id];
+
+        $result = Menu_option_values_model::select('option_value_id', 'option_id', 'value')
+                                         ->where('option_id', $this->option_id)
+                                         ->get()
+                                         ->pluck('value', 'option_value_id');
+
+        self::$optionValuesCollection[$this->option_id] = $result;
+
+        return self::$optionValuesCollection;
     }
 }

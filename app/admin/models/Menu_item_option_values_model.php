@@ -40,11 +40,14 @@ class Menu_item_option_values_model extends Model
 
     public function getNameAttribute()
     {
-        return $this->option_value->value;
+        return $this->option_value ? $this->option_value->value : null;
     }
 
     public function getPriceAttribute()
     {
+        if (!$this->option_value)
+            return $this->new_price;
+
         return (!$this->new_price OR $this->new_price <= 0) ? $this->option_value->price : $this->new_price;
     }
 

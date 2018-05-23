@@ -204,12 +204,11 @@ class Menus_model extends Model
             $menuOption = $this->menu_options()->updateOrCreate([
                 'menu_option_id' => $option['menu_option_id'],
                 'option_id'      => $option['option_id'],
-            ], array_merge(array_except($option, 'menu_option_id'), [
-                'option_values' => $option['option_values'] ?? [],
-            ]));
+            ], array_except($option, ['menu_option_id', 'option_values']));
 
-            if ($menuOption AND is_array($menuOption->option_values)) {
-                $this->addMenuOptionValues($menuOption->getKey(), $menuOption->option_id, $menuOption->option_values);
+            $menuOptionValues = $option['option_values'] ?? null;
+            if ($menuOption AND is_array($menuOptionValues)) {
+                $this->addMenuOptionValues($menuOption->getKey(), $menuOption->option_id, $menuOptionValues);
             }
 
             $idsToKeep[] = $menuOption->getKey();
@@ -236,8 +235,12 @@ class Menus_model extends Model
 
         $idsToKeep = [];
         foreach ($optionValues as $value) {
+            $menuOptionValueId = $value['menu_option_value_id'];
+            if (in_array($menuOptionValueId, $idsToKeep))
+                $menuOptionValueId = null;
+
             $menuOptionValue = $this->menu_option_values()->updateOrCreate([
-                'menu_option_value_id' => $value['menu_option_value_id'],
+                'menu_option_value_id' => $menuOptionValueId,
                 'menu_option_id'       => $menuOptionId,
             ], array_merge(array_except($value, 'menu_option_value_id'), [
                 'menu_id'        => $menuId,
