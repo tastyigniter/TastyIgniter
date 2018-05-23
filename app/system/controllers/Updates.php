@@ -370,6 +370,7 @@ class Updates extends \Admin\Classes\AdminController
             switch ($item['type']) {
                 case 'core':
                     $updateManager->update();
+                    $updateManager->applyCoreVersion($item['version'], $item['hash']);
                     break;
                 case 'extension':
                     Extensions_model::install($item['code']);
@@ -408,7 +409,7 @@ class Updates extends \Admin\Classes\AdminController
             $rules[] = ['meta.type', 'lang:system::updates.label_meta_type', 'required'];
             $rules[] = ['meta.version', 'lang:system::updates.label_meta_version', 'required'];
             $rules[] = ['meta.hash', 'lang:system::updates.label_meta_hash', 'required'];
-            $rules[] = ['meta.description', 'lang:system::updates.label_meta_description', 'required'];
+            $rules[] = ['meta.description', 'lang:system::updates.label_meta_description', 'sometimes'];
             $rules[] = ['meta.action', 'lang:system::updates.label_meta_action', 'required|in:install,update'];
         }
         else {

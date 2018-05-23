@@ -146,6 +146,9 @@ jQuery(function ($) {
         var $modal = $(this),
             $button = $(event.relatedTarget)
 
+        if (!$button.length)
+            return
+
         $.each($button.get(0).attributes, function(index, attribute) {
             if (/^data-modal-/.test(attribute.name)) {
                 var attrName = attribute.name.substr(11),

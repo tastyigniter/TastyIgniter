@@ -196,7 +196,7 @@ class UpdateRecordsSeeder extends Seeder
                     'name'        => $option['name'],
                     'type'        => $option['type'] == 'shape' ? 'polygon' : $option['type'],
                     'boundaries'  => serialize($boundaries),
-                    'conditions'  => serialize(isset($option['conditions']) ? $option['conditions'] : $option['charge']),
+                    'conditions'  => serialize($option['conditions'] ?? $option['charge']),
                 ]);
             }
         });

@@ -120,7 +120,7 @@ class UpdateManager
 
     public function update()
     {
-        $this->prepareDatabase();
+        $wasPreviouslyMigrated = $this->prepareDatabase();
 
         // Update app
         $modules = Config::get('system.modules', []);
@@ -129,7 +129,7 @@ class UpdateManager
         }
 
         // Seed app
-        if ($this->repository->wasFreshlyMigrated) {
+        if (!$wasPreviouslyMigrated) {
             foreach ($modules as $module) {
                 $this->seedApp($module);
             }
@@ -158,12 +158,12 @@ class UpdateManager
         if ($hasColumn = Schema::hasColumns($migrationTable, ['group', 'batch'])) {
             $this->log('Migration table already created');
 
-            return;
+            return true;
         }
 
         $this->repository->createRepository();
 
-        $action = $this->repository->wasFreshlyMigrated ? 'created' : 'updated';
+        $action = $hasColumn ? 'updated' : 'created';
         $this->log("Migration table {$action}");
     }
 
