@@ -74,7 +74,9 @@ class Staffs extends \Admin\Classes\AdminController
                 .($form->context == 'create' ? '|unique:staffs,staff_email' : '')],
         ];
 
-        $rules[] = ['user.password', 'lang:admin::staffs.label_password', 'sometimes|min:6|max:32|same:user.password_confirm'];
+        $rules[] = ['user.password', 'lang:admin::staffs.label_password',
+            ($form->context == 'create' ? 'required' : 'sometimes')
+            .'|min:6|max:32|same:user.password_confirm'];
         $rules[] = ['user.password_confirm', 'lang:admin::staffs.label_confirm_password'];
 
         if (AdminAuth::isSuperUser()) {
