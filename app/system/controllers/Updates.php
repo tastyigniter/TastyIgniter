@@ -1,6 +1,7 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
+use ApplicationException;
 use Exception;
 use Flash;
 use System\Classes\UpdateManager;
@@ -27,12 +28,6 @@ class Updates extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($force = get('check')) {
-            UpdateManager::instance()->requestUpdateList($force == 'force');
-
-            return $this->redirectBack();
-        }
-
         if ($this->getUser()->hasPermission('Admin.Extensions.Manage'))
             Extensions_model::syncAll();
 
@@ -47,7 +42,12 @@ class Updates extends \Admin\Classes\AdminController
         Template::setHeading($pageTitle);
 
         Template::setButton(sprintf(lang('system::updates.button_browse'), 'extensions'), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/extensions')]);
-        Template::setButton(lang('system::updates.button_check'), ['class' => 'btn btn-success', 'href' => admin_url($this->forceCheckUrl)]);
+        if (input('check') == 'force') {
+            Template::setButton(lang('system::updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
+        }
+        else {
+            Template::setButton(lang('system::updates.button_check'), ['class' => 'btn btn-success', 'href' => admin_url($this->forceCheckUrl)]);
+        }
         Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
         $this->prepareAssets();
@@ -55,7 +55,7 @@ class Updates extends \Admin\Classes\AdminController
         try {
             $updateManager = UpdateManager::instance();
             $this->vars['carteInfo'] = $updateManager->getSiteDetail();
-            $this->vars['updates'] = $updates = $updateManager->requestUpdateList();
+            $this->vars['updates'] = $updates = $updateManager->requestUpdateList(input('check') == 'force');
 
             $lastChecked = isset($updates['last_check'])
                 ? time_elapsed($updates['last_check'])
@@ -65,9 +65,9 @@ class Updates extends \Admin\Classes\AdminController
                 'class' => 'btn disabled text-muted pull-right', 'role' => 'button',
             ]);
 
-            if (isset($updates['items']) AND count($updates['items'])) {
+            if (!empty($updates['items']) OR !empty($updates['ignoredItems'])) {
                 Template::setButton(lang('system::updates.button_update'), [
-                    'class' => 'btn btn-primary pull-left',
+                    'class' => 'btn btn-primary pull-left mr-2',
                     'id'    => 'apply-updates', 'role' => 'button',
                 ]);
             }
@@ -146,23 +146,19 @@ class Updates extends \Admin\Classes\AdminController
 
     public function index_onIgnoreUpdate()
     {
-        try {
-            $items = post('items');
-            if (!$items OR count($items) < 1)
-                throw new Exception('Select item(s) to ignore.');
+        $items = post('items');
+        if (!$items OR count($items) < 1)
+            throw new ApplicationException('Select item(s) to ignore.');
 
-            $updateManager = UpdateManager::instance();
+        $updateManager = UpdateManager::instance();
 
-            $updateManager->ignoreUpdates($items);
+        $updateManager->ignoreUpdates($items);
 
-            $updates = $updateManager->requestUpdateList();
+        $updates = $updateManager->requestUpdateList(input('check') == 'force');
 
-            return [
-                '#updates' => $this->makePartial('updates/list', ['updates' => $updates]),
-            ];
-        } catch (Exception $ex) {
-            $this->handleError($ex);
-        }
+        return [
+            '#updates' => $this->makePartial('updates/list', ['updates' => $updates]),
+        ];
     }
 
     public function index_onProcess()
@@ -172,20 +168,15 @@ class Updates extends \Admin\Classes\AdminController
 
     public function browse_onFetchItems()
     {
+        $itemType = post('type');
+        $items = UpdateManager::instance()->listItems($itemType);
 
-        try {
-            $itemType = post('type');
-            $items = UpdateManager::instance()->listItems($itemType);
-
-            return [
-                '#list-items' => $this->makePartial('browse/list', [
-                    'items'    => $items,
-                    'itemType' => $itemType,
-                ]),
-            ];
-        } catch (Exception $ex) {
-            $this->handleError($ex);
-        }
+        return [
+            '#list-items' => $this->makePartial('browse/list', [
+                'items'    => $items,
+                'itemType' => $itemType,
+            ]),
+        ];
     }
 
     public function browse_onApplyCarte()
@@ -205,47 +196,39 @@ class Updates extends \Admin\Classes\AdminController
 
     protected function applyCarte()
     {
-        try {
-            $carteKey = post('carte_key');
-            if (!strlen($carteKey))
-                throw new Exception('No carte key specified.');
+        $carteKey = post('carte_key');
+        if (!strlen($carteKey))
+            throw new ApplicationException('No carte key specified.');
 
-            $response = UpdateManager::instance()->applySiteDetail($carteKey);
+        $response = UpdateManager::instance()->applySiteDetail($carteKey);
 
-            return [
-                '#carte-details' => $this->makePartial('updates/carte_info', ['carteInfo' => $response]),
-            ];
-        } catch (Exception $ex) {
-            $this->handleError($ex);
-        }
+        return [
+            '#carte-details' => $this->makePartial('updates/carte_info', ['carteInfo' => $response]),
+        ];
     }
 
     protected function applyInstallOrUpdate($context)
     {
         $error = null;
 
-        try {
-            $items = input('items');
+        $items = input('items');
 
-            if (!count($items))
-                throw new Exception('No item(s) specified.');
+        if (!count($items))
+            throw new ApplicationException('No item(s) specified.');
 
-            $this->validateItems();
+        $this->validateItems();
 
-            if ($context == 'index') {
-                $updates = UpdateManager::instance()->requestUpdateList();
-                $response['data'] = array_get($updates, 'items');
-            }
-            else {
-                $response = UpdateManager::instance()->requestApplyItems($items);
-            }
-
-            return [
-                'steps' => $this->buildProcessSteps($response, $items),
-            ];
-        } catch (Exception $ex) {
-            $this->handleError($ex);
+        if ($context == 'index') {
+            $updates = UpdateManager::instance()->requestUpdateList(input('check') == 'force');
+            $response['data'] = array_get($updates, 'items');
         }
+        else {
+            $response = UpdateManager::instance()->requestApplyItems($items);
+        }
+
+        return [
+            'steps' => $this->buildProcessSteps($response, $items),
+        ];
     }
 
     protected function buildProcessSteps($meta, $params = [])
@@ -335,10 +318,7 @@ class Updates extends \Admin\Classes\AdminController
 
             case 'extractCore':
                 $response = $updateManager->extractCore($meta['code']);
-                if ($response) {
-                    $updateManager->applyCoreVersion($meta['ver'], $meta['hash']);
-                    $json['result'] = 'success';
-                }
+                if ($response) $json['result'] = 'success';
                 break;
 
             case 'extractExtension':

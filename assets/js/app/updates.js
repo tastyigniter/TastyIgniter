@@ -26,19 +26,13 @@
         itemInModal: null,
         itemsToApply: [],
         fetchItems: null,
-        // items: [],
-        // updatesItems: [],
         installedItems: []
     }
 
     Updates.prototype.init = function () {
-        var self = this
         if (this.options.fetchItems) {
             $.request('onFetchItems', {
                 data: {type: this.options.fetchItems}
-            }).fail(function (xhr) {
-                self.$container.empty()
-                $.ti.flashMessage({class: 'danger', text: xhr.responseText})
             })
         }
 
@@ -71,7 +65,7 @@
                 requestChain.push(function () {
                     var deferred = $.Deferred()
 
-                    self.submitForm('onProcess', {
+                    $.request('onProcess', {
                         data: {step: group, meta: step},
                         beforeSend: self.setProgressBar(step.label, 'success')
                     }).done(function (json) {
@@ -109,12 +103,6 @@
         setTimeout(function () {
             window.location.reload(true)
         }, 500)
-    }
-
-    Updates.prototype.submitForm = function (handler, options) {
-        return $.request(handler, options).fail(function (xhr) {
-            $.ti.flashMessage({class: 'danger', text: xhr.responseText})
-        })
     }
 
     Updates.prototype.openModal = function (itemToOpen, context) {
@@ -197,12 +185,12 @@
             this.$itemModal.modal({backdrop: 'static', keyboard: false, show: true})
         }
 
-        var $footer = this.$itemModal.find('.panel-footer')
+        var $modalContent = this.$itemModal.find('.modal-content')
 
-        $('> div', $footer).slideUp()
+        $('> div', $modalContent).slideUp()
         $('.modal-header', this.$itemModal).slideUp()
-        this.$itemModal.find('.item-details').slideUp()
-        $footer.append(Updates.TEMPLATES.progressBar)
+        // this.$itemModal.find('.item-details').slideUp()
+        $modalContent.html(Updates.TEMPLATES.progressBar)
     }
 
     Updates.prototype.setProgressBar = function (message, type, count) {
@@ -210,8 +198,7 @@
             progressBar = progressBox.find('.progress-bar'),
             progressMessage = progressBox.find('.message'),
             oldProgressCount = progressBar.attr("aria-valuenow"),
-            progressCount = count ? count : parseFloat(oldProgressCount) + (Math.random() * 10),
-            modalCloseButton = progressBox.parents('.modal').find('[data-dismiss="modal"]')
+            progressCount = count ? count : parseFloat(oldProgressCount) + (Math.random() * 10)
 
         progressBox.fadeIn()
 
@@ -219,17 +206,9 @@
         progressBar.attr('aria-valuenow', progressCount).width(progressCount + '%')
 
         if (type !== null) {
-            progressBar.addClass('progress-bar-' + type)
+            progressBar.addClass('bg-' + type)
             progressMessage.addClass('text-' + type)
         }
-
-        // if (complete)
-        //     progressBar.removeClass('active')
-
-        // if (type === 'danger' || (progressCount < 1 || progressCount >= 100))
-        //     modalCloseButton.removeClass('hide').attr('disabled', false)
-        // else
-        //     modalCloseButton.addClass('hide').attr('disabled', true)
     }
 
     Updates.prototype.onUpdateCarteClick = function (event) {
@@ -248,7 +227,6 @@
             $icon.removeClass('fa-spinner fa-spin').addClass('fa-arrow-right')
         }).fail(function (xhr) {
             $modal.modal('hide')
-            $.ti.flashMessage({class: 'danger', text: xhr.responseText})
         })
     }
 
@@ -285,7 +263,6 @@
             $button.attr('disable', false).removeClass('disabled')
         }).fail(function (xhr) {
             $modal.modal('hide')
-            $.ti.flashMessage({class: 'danger', text: xhr.responseText})
         }).done(function (json) {
             if (json['steps'])
                 self.executeSteps(json['steps'])
@@ -317,8 +294,6 @@
             data: {items: this.options.itemsToApply}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')
-        }).fail(function (xhr) {
-            $.ti.flashMessage({class: 'danger', text: xhr.responseText})
         }).done(function (json) {
             if (json['steps'])
                 self.executeSteps(json['steps'])
@@ -346,8 +321,6 @@
             data: {items: itemsToIgnore}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')
-        }).fail(function (xhr) {
-            $.ti.flashMessage({class: 'danger', text: xhr.responseText})
         })
     }
 
@@ -489,8 +462,8 @@
         ].join(''),
 
         progressBar: [
-            '<div id="progressBar"><div class="progress-box">',
-            '<p class="message small"></p><div class="progress">',
+            '<div id="progressBar" class="card p-3"><div class="progress-box">',
+            '<p class="message"></p><div class="progress">',
             '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>',
             '</div></div></div>',
         ].join(''),

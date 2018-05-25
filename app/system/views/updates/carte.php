@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body wrap-none">
                 <div class="panel panel-light panel-carte">
-                    <div id="carte-details" class="panel-body border-bottom">
+                    <div id="carte-details">
                         <?= $this->makePartial('updates/carte_info', ['carteInfo' => $carteInfo]); ?>
                     </div>
                     <div class="panel-footer">
@@ -25,7 +25,7 @@
                                    placeholder="Enter your carte key...">
                             <span class="input-group-btn">
                                 <a
-                                    class="btn btn-default btn-carte-help"
+                                    class="btn btn-outline-default btn-carte-help"
                                     onclick="$('#carte-help').slideToggle()"
                                 >
                                     <i class="fa fa-question-circle"></i>

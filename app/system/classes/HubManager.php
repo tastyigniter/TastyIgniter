@@ -1,5 +1,6 @@
 <?php namespace System\Classes;
 
+use ApplicationException;
 use Cache;
 use Carbon\Carbon;
 use Config;
@@ -24,7 +25,7 @@ class HubManager
     public function initialize()
     {
         $this->cachePrefix = 'hub_';
-        $this->cacheTtl = 15;
+        $this->cacheTtl = 5;
     }
 
     public function listItems($filter = [])
@@ -63,9 +64,9 @@ class HubManager
 
     public function applyItemsToUpdate($itemNames, $force = FALSE)
     {
-        $cacheKey = $this->getCacheKey('updates', $itemNames);
+        $cacheKey = $force ? null : $this->getCacheKey('updates', $itemNames);
 
-        if ($force OR !$response = Cache::get($cacheKey)) {
+        if (!$response = Cache::get($cacheKey)) {
             $response = $this->requestRemoteData('core/apply', [
                 'items'   => json_encode($itemNames),
                 'include' => 'tags',
@@ -73,7 +74,7 @@ class HubManager
                 'force'   => $force,
             ]);
 
-            if (is_array($response)) {
+            if ($cacheKey AND is_array($response)) {
                 $response['check_time'] = Carbon::now()->toDateTimeString();
                 Cache::put($cacheKey, $response, $this->cacheTtl);
             }
@@ -144,11 +145,11 @@ class HubManager
 
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
-                throw new Exception('Server error try again');
+                throw new ApplicationException('Server error try again');
 
             curl_close($curl);
         } catch (Exception $ex) {
-            throw new Exception('Server responded with error: '.$ex->getMessage());
+            throw new ApplicationException('Server responded with error: '.$ex->getMessage());
         }
 
         $response = null;
@@ -161,7 +162,7 @@ class HubManager
             if (isset($response['errors']))
                 Log::debug('Server validation errors: '.print_r($response['errors'], TRUE));
 
-            throw new Exception($response['message']);
+            throw new ApplicationException($response['message']);
         }
 
         return $response;
@@ -170,7 +171,7 @@ class HubManager
     protected function requestRemoteFile($url, $params = [], $filePath, $fileHash)
     {
         if (!is_dir($fileDir = dirname($filePath)))
-            throw new Exception("Downloading failed, download path ({$filePath}) not found.");
+            throw new ApplicationException("Downloading failed, download path ({$filePath}) not found.");
 
         try {
             $curl = $this->prepareRequest($url, $params);
@@ -180,12 +181,12 @@ class HubManager
 
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
-                throw new Exception('Server error try again');
+                throw new ApplicationException('Server error try again');
 
             curl_close($curl);
             fclose($fileStream);
         } catch (Exception $ex) {
-            throw new Exception('Server responded with error: '.$ex->getMessage());
+            throw new ApplicationException('Server responded with error: '.$ex->getMessage());
         }
 
         $fileSha = sha1_file($filePath);
@@ -193,7 +194,7 @@ class HubManager
         if ($fileHash != $fileSha) {
             Log::info(file_get_contents($filePath));
             @unlink($filePath);
-            throw new Exception("Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
+            throw new ApplicationException("Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
         }
 
         return TRUE;

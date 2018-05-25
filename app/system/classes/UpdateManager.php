@@ -3,7 +3,7 @@
 use App;
 use Carbon\Carbon;
 use Config;
-use Exception;
+use ApplicationException;
 use Main\Classes\ThemeManager;
 use Schema;
 use ZipArchive;
@@ -158,7 +158,7 @@ class UpdateManager
         if ($hasColumn = Schema::hasColumns($migrationTable, ['group', 'batch'])) {
             $this->log('Migration table already created');
 
-            return true;
+            return TRUE;
         }
 
         $this->repository->createRepository();
@@ -333,12 +333,9 @@ class UpdateManager
         $updateCount = 0;
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
-            $installedItem = array_get($installedItems, $update['code']);
-            $installedItemCode = array_get($installedItem, 'name');
-            $installedItemVersion = array_get($installedItem, 'ver');
-            $update['ver'] = $installedItemVersion;
+            $update['installedVer'] = array_get($installedItems, $update['code'].'.ver');
 
-            if ($this->isUpdateIgnored($installedItemCode, $installedItemVersion)) {
+            if ($this->isMarkedAsIgnored($update['code'])) {
                 $ignoredItems[] = $update;
                 continue;
             }
@@ -396,7 +393,7 @@ class UpdateManager
         $applies = $this->getHubManager()->applyItems($names);
 
         if (isset($applies['data'])) foreach ($applies['data'] as $index => $item) {
-            if ($this->isUpdateIgnored($item['code'], $item['version']))
+            if ($this->isMarkedAsIgnored($item['code']))
                 unset($applies['data'][$index]);
         }
 
@@ -408,15 +405,12 @@ class UpdateManager
         $ignoredUpdates = $this->getIgnoredUpdates();
 
         foreach ($names as $item) {
-            if (!isset($item['ver']) OR !version_compare($item['ver'], '0.0.1', '>'))
-                continue;
-
             if (array_get($item, 'action', 'ignore') == 'remove') {
                 unset($ignoredUpdates[$item['name']]);
                 continue;
             }
 
-            $ignoredUpdates[$item['name']] = $item['ver'];
+            $ignoredUpdates[$item['name']] = true;
         }
 
         setting()->set('ignored_updates', $ignoredUpdates);
@@ -426,16 +420,14 @@ class UpdateManager
 
     public function getIgnoredUpdates()
     {
-        return array_dot(setting()->get('ignored_updates', []));
+        return array_dot(setting()->get('ignored_updates') ?? []);
     }
 
-    public function isUpdateIgnored($code, $version)
+    public function isMarkedAsIgnored($code)
     {
         $ignoredUpdates = $this->getIgnoredUpdates();
 
-        $ignoredUpdateVersion = array_get($ignoredUpdates, $code);
-
-        return strlen($version) AND $ignoredUpdateVersion == $version;
+        return array_get($ignoredUpdates, $code, FALSE);
     }
 
     //
@@ -478,7 +470,7 @@ class UpdateManager
             return TRUE;
         }
 
-        throw new Exception('Failed to extract '.$fileCode.' archive file');
+        throw new ApplicationException('Failed to extract '.$fileCode.' archive file');
     }
 
     public function getFilePath($fileCode)
