@@ -53,8 +53,8 @@ class Calendar extends BaseWidget
         $this->addCss('~/app/admin/formwidgets/datepicker/assets/css/datepicker.css', 'datepicker-css');
         $this->addJs('~/app/admin/formwidgets/datepicker/assets/js/datepicker.js', 'datepicker-js');
 
-        $this->addJs(assets_url('js/vendor/mustache.js'), 'mustache-js');
-        $this->addJs(assets_url('js/vendor/moment.min.js'), 'moment-js');
+        $this->addJs('~/app/system/assets/ui/js/vendor/mustache.js', 'mustache-js');
+        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
 
         $this->addJs('vendor/fullcalendar/fullcalendar.min.js', 'fullcalendar-js');
         $this->addCss('vendor/fullcalendar/fullcalendar.min.css', 'fullcalendar-css');

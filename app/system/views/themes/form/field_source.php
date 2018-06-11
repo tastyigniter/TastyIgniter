@@ -6,8 +6,7 @@ $fieldValue = $field->value;
 <?php if ($this->previewMode) { ?>
     <div class="form-control-static"><?= (isset($fieldOptions[$field->value])) ? e(lang($fieldOptions[$field->value])) : '' ?></div>
 <?php } else { ?>
-    <div class="row no-gutters">
-        <div class="col-8">
+    <div class="input-group">
             <select
                 id="<?= $field->getId() ?>"
                 name="<?= $field->getName() ?>"
@@ -29,11 +28,10 @@ $fieldValue = $field->value;
                     </option>
                 <?php } ?>
             </select>
-        </div>
-        <div class="col-4">
+        <div class="input-group-prepend ml-1">
             <button
                 type="button"
-                class="btn btn-outline-default d-inline-block ml-1"
+                class="btn btn-outline-default"
                 data-toggle="modal"
                 data-target="#<?= $field->getId('modal') ?>"
                 data-modal-title="<?= lang('system::themes.text_new_source_title') ?>"
@@ -43,7 +41,7 @@ $fieldValue = $field->value;
             <?php if (!empty($field->value)) { ?>
                 <button
                     type="button"
-                    class="btn btn-outline-default d-inline-block"
+                    class="btn btn-outline-default"
                     data-toggle="modal"
                     data-target="#<?= $field->getId('modal') ?>"
                     data-modal-title="<?= lang('system::themes.text_rename_source_title') ?>"
@@ -52,7 +50,7 @@ $fieldValue = $field->value;
                 ><?= lang('system::themes.button_rename_source') ?></button>
                 <button
                     type="button"
-                    class="btn btn-outline-danger d-inline-block"
+                    class="btn btn-outline-danger"
                     data-request="onDelete"
                     data-request-form="#edit-form"
                     data-request-confirm="<?= lang('admin::default.alert_warning_confirm') ?>"

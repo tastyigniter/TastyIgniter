@@ -10,13 +10,11 @@
         <div class="alert alert-<?= $message['level']; ?> <?= $message['important'] ? 'alert-important' : ''; ?>"
              role="alert"
         >
-            <?php if ($message['important']) { ?>
-                <button type="button"
-                        class="close"
-                        data-dismiss="alert"
-                        aria-hidden="true"
-                >&times;</button>
-            <?php } ?>
+            <button type="button"
+                    class="close"
+                    data-dismiss="alert"
+                    aria-hidden="true"
+            >&times;</button>
             <?= $message['message']; ?>
         </div>
     <?php } ?>

@@ -26,7 +26,7 @@
             <?php } ?>
             <input
                 type="hidden"
-                name="<?= $fieldName ?>"
+                name="<?= $value ? $fieldName : '' ?>"
                 value="<?= e($value) ?>"
                 data-find-value
             />

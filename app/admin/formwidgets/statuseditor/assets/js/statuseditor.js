@@ -52,7 +52,6 @@
         this.editorModal = $(event.target)
         this.editorModal.on('change', '[data-status-value]', $.proxy(this.onStatusChanged, this))
         this.editorModal.find('[data-status-value]').trigger('change')
-        this.editorModal.find('select.form-control').select2({minimumResultsForSearch: Infinity})
     }
 
     StatusEditor.prototype.onModalHidden = function (event) {

@@ -28,7 +28,7 @@
             containerPath: '> div',
             itemPath: '> div',
             itemSelector: '.components-item:not(:first-child)',
-            placeholder: '<div class="placeholder"></div>',
+            placeholder: '<div class="placeholder sortable-placeholder"></div>',
             handle: '.handle',
         })
     }
@@ -47,7 +47,7 @@
             self.$modalRootElement.modal('hide')
         }).done(function (json) {
             self.$el.find('[data-control="toggle-components"]').parent().after(json)
-            self.$el.find('select.form-control').select2({minimumResultsForSearch: Infinity})
+            self.$el.find('select.form-control').select2()
             self.$el.find('[data-control="selectlist"]').selectList()
         })
     }

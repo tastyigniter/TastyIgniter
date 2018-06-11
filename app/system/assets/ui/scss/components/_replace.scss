@@ -1,0 +1,146 @@
+.well,
+.thumbnail {
+	@extend .card;
+	@extend .card-body;
+}
+
+.list-inline > li {
+	@extend .list-inline-item;
+}
+
+.navbar-btn,
+.nav navbar > li {
+	@extend .nav-item;
+}
+
+.nav navbar > li > a {
+	@extend .nav-link;
+}
+
+.navbar-right {
+	@extend .ml-auto;
+}
+
+.navbar-fixed-top {
+	@extend .fixed-top;
+}
+
+.nav-stacked {
+	@extend .flex-column;
+}
+
+.btn-default {
+	@extend .btn-secondary;
+}
+
+.img-responsive {
+	@extend .img-fluid;
+}
+
+.img-circle {
+	@extend .rounded-circle;
+}
+
+.img-rounded {
+	@extend .rounded;
+}
+
+.radio {
+	@extend .form-check;
+}
+
+.checkbox {
+	@extend .form-check;
+}
+
+.input-lg {
+	@extend .form-control-lg;
+}
+
+.input-sm {
+	@extend .form-control-sm;
+}
+
+.has-error {
+	.form-control {
+		@extend .is-invalid;
+	}
+}
+
+.control-label {
+	@extend .col-form-label;
+	font-size: $font-size-base;
+}
+
+.table-condensed {
+	@extend .table-sm;
+}
+.pagination > li	{
+	@extend .page-item;
+}
+.pagination > li > a	{
+	@extend .page-link;
+}
+.item	{
+	@extend .carousel-item;
+}
+.help-block	{
+	@extend .form-text;
+	color: $text-muted;
+	font-size: $font-size-sm;
+	margin: 0;
+}
+.pull-right	{
+	@extend .float-right;
+}
+.pull-left {
+	@extend .float-left;
+}
+.center-block {
+	@extend .mx-auto;
+	@extend .d-block;
+}
+.hidden-xs {
+	@extend .d-none;
+}
+.hidden-sm {
+	@extend .d-sm-none;
+}
+.hidden-md {
+	@extend .d-md-none;
+}
+.hidden-lg {
+	@extend .d-lg-none;
+}
+.visible-xs {
+	@extend .d-block;
+	@extend .d-sm-none;
+}
+.visible-sm {
+	@extend .d-none;
+	@extend .d-sm-block;
+	@extend .d-md-none;
+}
+.visible-md {
+	@extend .d-none;
+	@extend .d-md-block;
+	@extend .d-lg-none;
+}
+.visible-lg	{
+	@extend .d-none;
+	@extend .d-lg-block;
+	@extend .d-xl-none;
+}
+.label {
+	@extend .badge;
+	padding: $label-padding-y $label-padding-x;
+}
+@each $color, $value in $theme-colors {
+	.label-#{$color} {
+		@extend .badge-#{$color};
+	}
+}
+
+.badge {
+	@extend .badge-pill;
+}

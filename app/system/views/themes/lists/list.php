@@ -8,9 +8,7 @@
     ); ?>
 
     <div class="container-fluid">
-        <div class="row">
-            <?= $this->makePartial('lists/list_body') ?>
-        </div>
+        <?= $this->makePartial('lists/list_body') ?>
     </div>
 
     <?= form_close(); ?>

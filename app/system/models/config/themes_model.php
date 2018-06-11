@@ -1,22 +1,7 @@
 <?php
-$config['list']['filter'] = [
-    'search' => [
-        'prompt' => 'lang:system::themes.text_filter_search',
-        'mode'   => 'all',
-    ],
-    'scopes' => [
-        'status' => [
-            'label'      => 'lang:system::themes.text_filter_status',
-            'type'       => 'switch',
-            'conditions' => 'status = :filtered',
-        ],
-    ],
-];
-
 $config['list']['toolbar'] = [
     'buttons' => [
         'upload' => ['label' => 'lang:system::themes.button_new', 'class' => 'btn btn-primary', 'href' => 'themes/upload'],
-        'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
         'check'  => ['label' => 'lang:system::themes.button_check', 'class' => 'btn btn-success pull-right', 'href' => 'updates'],
         'browse' => ['label' => 'lang:system::themes.button_browse', 'class' => 'btn btn-default pull-right', 'href' => 'updates/browse/themes'],
     ],

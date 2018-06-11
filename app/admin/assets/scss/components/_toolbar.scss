@@ -1,0 +1,58 @@
+.toolbar {
+  padding: 20px 15px;
+
+  .toolbar-action {
+    clear: both;
+    width: 100%;
+
+    .btn {
+      border-bottom-width: 4px;
+      outline: 0 none;
+      margin-left: 5px;
+      margin-right: 5px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    @each $color, $value in $theme-colors {
+      .btn-#{$color} {
+        border-bottom-color: darken($value, 7.5%);
+      }
+
+      @include hover-focus {
+        border-bottom-color: $value;
+      }
+    }
+  }
+}
+//.toolbar-action .btn-default {
+//  border-width: 1px 1px 4px 1px;
+//}
+//.toolbar-action .btn-filter {
+//  float: right;
+//}
+//.toolbar-action .btn:hover,
+//.toolbar-action .btn:focus {
+//  margin-top: 1px;
+//  border-bottom-width: 3px;
+//}
+//.toolbar-action .btn.active,
+//.toolbar-action .btn:active {
+//  box-shadow: none;
+//  border-bottom-width: 2px;
+//  margin-top: 2px;
+//}
+//.toolbar-action .fa {
+//  font-size: 18px;
+//  padding: 0;
+//}
+//.toolbar-action .btn .fa {
+//  font-size: 14px;
+//  padding-right: 3px;
+//}

@@ -60,7 +60,7 @@ $checkedValues = (array)$field->value;
             value="0"
             <?= $this->previewMode ? 'disabled="disabled"' : '' ?>>
 
-        <div class="custom-control custom-control-checkbox" tabindex="0">
+        <div class="custom-control custom-checkbox" tabindex="0">
             <input
                 type="checkbox"
                 class="custom-control-input"
@@ -70,8 +70,8 @@ $checkedValues = (array)$field->value;
                 <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                 <?= $field->value == 1 ? 'checked="checked"' : '' ?>
                 <?= $field->getAttributes() ?>>
-            <label class="custom-control-label">
-                <?= $field->label ? e(lang($field->label)) : '' ?>
+            <label class="custom-control-label" for="<?= $field->getId() ?>">
+                <?= $field->placeholder ? e(lang($field->placeholder)) : '' ?>
             </label>
         </div>
     <?php } ?>

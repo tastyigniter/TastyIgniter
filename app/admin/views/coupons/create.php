@@ -1,4 +1,4 @@
-<div class="row content">
+<div class="row-fluid">
     <?= form_open(current_url(),
         [
             'id'     => 'edit-form',

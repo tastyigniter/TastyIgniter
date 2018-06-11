@@ -113,6 +113,8 @@ class AdminController extends BaseController
 
         $this->configPath[] = '~/extensions/'.$relativePath.'/models/config';
         $this->configPath[] = '~/app/'.$relativePath.'/models/config';
+
+        $this->assetPath = '~/app/'.$relativePath.'/assets';
     }
 
     public function remap($action, $params)

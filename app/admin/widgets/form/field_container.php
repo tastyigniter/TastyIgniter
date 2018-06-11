@@ -5,7 +5,7 @@ $fieldError = form_error($field->fieldName);
     class="form-group <?=
     $this->previewMode ? 'form-group-preview' : ''
     ?> <?=
-    ($fieldError != '') ? 'has-error' : ''
+    ($fieldError != '') ? 'is-invalid' : ''
     ?> <?= $field->type ?>-field span-<?= $field->span ?> <?= $field->cssClass ?>"
     <?= $field->getAttributes('container') ?>
     id="<?= $field->getId('group') ?>"><?=

@@ -54,7 +54,7 @@ class Components extends BaseFormWidget
 
     public function loadAssets()
     {
-        $this->addJs(assets_url('js/vendor/jquery-sortable.js'), 'jquery-sortable-js');
+        $this->addJs('../../repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
 
         $this->addCss('css/components.css', 'components-css');
         $this->addJs('js/components.js', 'components-js');
@@ -88,7 +88,10 @@ class Components extends BaseFormWidget
 
             $component['alias'] = $alias;
 
-            $this->components[$alias] = $this->makeComponentFormWidget($component, $properties);
+            if (!$component = $this->makeComponentFormWidget($component, $properties))
+                continue;
+
+            $this->components[$alias] = $component;
         }
     }
 
@@ -104,6 +107,8 @@ class Components extends BaseFormWidget
         $component['alias'] = $componentAlias;
 
         $component = $this->makeComponentFormWidget($component, []);
+        if (!$component)
+            return FALSE;
 
         return $this->makePartial('components/component', [
             'component' => $component,
@@ -118,13 +123,14 @@ class Components extends BaseFormWidget
 
         try {
             $componentObj = $this->manager->makeComponent($code, $alias, $properties);
+            if ($componentObj->isHidden)
+                throw new Exception(sprintf('Component %s is hidden', $code));
 
             $component['options'] = $this->manager->getComponentPropertyValues($componentObj);
 
             $componentPropertyConfig = $this->manager->getComponentPropertyConfig($componentObj);
         } catch (Exception $ex) {
-            //@todo: create unknown component object
-            $component = null;
+            return null;
         }
 
         $formConfig = $this->mergeComponentFormConfig($this->form, $componentPropertyConfig);

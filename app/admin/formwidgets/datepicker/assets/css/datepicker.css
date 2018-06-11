@@ -1,5 +1,5 @@
 .datepicker-dropdown {
-	background-color: #E9E9ED;
+	background-color: var(--gray-200);
 }
 .datepicker-dropdown.datepicker-orient-bottom:before {
 	bottom: -7px;
@@ -11,22 +11,23 @@
 .datepicker .next:hover,
 .datepicker .prev:hover,
 .datepicker tfoot tr th:hover {
-	background: #C5CEDC;
+	background: var(--primary);
+	color: var(--white);
 }
 .datepicker table tr td,
 .datepicker table tr th {
 	width: 42px;
-	height: 32px;
+	height: 42px;
 }
 .datepicker table tbody {
-	background-color: #FFF;
+	background-color: var(--light);
 }
 .datepicker table tr td.day:hover,
 .datepicker table tr td.focused,
 .datepicker table tr td span.focused,
 .datepicker table tr td span:hover {
-	background: #39B3D7;
-	color: #fff;
+	background: var(--primary);
+	color: var(--white);
 }
 .datepicker table tr td.active.active,
 .datepicker table tr td.active.highlighted.active,

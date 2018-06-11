@@ -1,7 +1,7 @@
 .field-codeeditor .CodeMirror {
-	line-height: 1.9;
+	line-height: 1.2;
 }
 .field-codeeditor .CodeMirror {
-	font-family: 'Monaco', 'Menlo', monospace;
-	font-size: 13px;
+	font-family: var(--font-family-monospace);
+	font-size: 14px;
 }

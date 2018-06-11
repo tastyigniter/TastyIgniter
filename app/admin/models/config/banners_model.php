@@ -69,16 +69,18 @@ $config['list']['columns'] = [
 $config['form']['toolbar'] = [
     'buttons' => [
         'save'      => [
-            'label'        => 'lang:admin::default.button_save',
-            'context'      => ['create', 'edit'],
-            'class'        => 'btn btn-primary',
-            'data-request' => 'onSave',
+            'label'             => 'lang:admin::default.button_save',
+            'context'           => ['create', 'edit'],
+            'class'             => 'btn btn-primary',
+            'data-request'      => 'onSave',
+            'data-request-form' => '#form-widget',
         ],
         'saveClose' => [
             'label'             => 'lang:admin::default.button_save_close',
             'context'           => ['create', 'edit'],
             'class'             => 'btn btn-default',
             'data-request'      => 'onSave',
+            'data-request-form' => '#form-widget',
             'data-request-data' => 'close:1',
         ],
         'delete'    => [
@@ -86,6 +88,7 @@ $config['form']['toolbar'] = [
             'context'              => ['edit'],
             'class'                => 'btn btn-danger',
             'data-request'         => 'onDelete',
+            'data-request-form'    => '#form-widget',
             'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
         ],
         'back'      => [

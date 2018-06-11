@@ -14,7 +14,7 @@ $isScrollable = count($fieldOptions) > 10;
             if (!in_array($value, $checkedValues)) continue;
             if (!is_array($option)) $option = [$option];
             ?>
-            <div class="custom-control custom-checkbox">
+            <div class="custom-control custom-checkbox mb-2">
                 <input
                     type="checkbox"
                     id="<?= $checkboxId ?>"
@@ -26,10 +26,10 @@ $isScrollable = count($fieldOptions) > 10;
                 >
                 <label class="custom-control-label" for="<?= $checkboxId ?>">
                     <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
+                    <?php if (isset($option[1])) { ?>
+                        <p class="help-block font-weight-normal"><?= e((sscanf($option[1], 'lang:%s', $line) === 1) ? lang($line) : $option[1]) ?></p>
+                    <?php } ?>
                 </label>
-                <?php if (isset($option[1])) { ?>
-                    <p class="help-block"><?= e((sscanf($option[1], 'lang:%s', $line) === 1) ? lang($line) : $option[1]) ?></p>
-                <?php } ?>
             </div>
         <?php } ?>
     </div>
@@ -60,7 +60,7 @@ $isScrollable = count($fieldOptions) > 10;
                     $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
                     if (is_string($option)) $option = [$option];
                     ?>
-                    <div class="custom-control custom-checkbox">
+                    <div class="custom-control custom-checkbox mb-2">
                         <input
                             type="checkbox"
                             id="<?= $checkboxId ?>"
@@ -72,7 +72,7 @@ $isScrollable = count($fieldOptions) > 10;
                         <label class="custom-control-label" for="<?= $checkboxId ?>">
                             <?= isset($option[0]) ? e(lang($option[0])) : '&nbsp;' ?>
                             <?php if (isset($option[1])) { ?>
-                                <p class="help-block"><?= e(lang($option[1])) ?></p>
+                                <p class="help-block font-weight-normal"><?= e(lang($option[1])) ?></p>
                             <?php } ?>
                         </label>
                     </div>

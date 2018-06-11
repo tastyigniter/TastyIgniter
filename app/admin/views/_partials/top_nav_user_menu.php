@@ -15,7 +15,9 @@ $logoutLink = admin_url('logout');
         <div class="user-info">
             <span class="text-uppercase"><?= $staffGroupName; ?></span>
             <div class="username"><?= $staffName; ?></div>
-            <span><i class="fa fa-map-marker"></i>&nbsp;&nbsp;<?= $staffLocation; ?></span>
+            <?php if (strlen($staffLocation)) { ?>
+                <span><i class="fa fa-map-marker"></i>&nbsp;&nbsp;<?= $staffLocation; ?></span>
+            <?php } ?>
         </div>
         <a class="dropdown-item" href="<?= $staffEditLink; ?>">
             <i class="fa fa-user fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::default.text_edit_details'); ?>
@@ -34,5 +36,5 @@ $logoutLink = admin_url('logout');
         <a class="dropdown-item" href="https://forum.tastyigniter.com" target="_blank">
             <i class="fa fa-users fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::default.text_community_support'); ?>
         </a>
-        </ul>
+    </div>
 </li>

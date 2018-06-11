@@ -3,7 +3,7 @@ $on = $field->config['on'] ?? 'admin::default.text_enabled';
 $off = $field->config['off'] ?? 'admin::default.text_disabled';
 $onColor = $field->config['onColor'] ?? 'success';
 $offColor = $field->config['offColor'] ?? 'danger';
-$labelWith = $field->config['labelWith'] ?? '200';
+$labelWith = $field->config['labelWith'] ?? '120';
 ?>
 <input
     type="hidden"
@@ -14,7 +14,6 @@ $labelWith = $field->config['labelWith'] ?? '200';
 <div
     class="field-switch"
     data-control="switch"
-    style="width: <?= e($labelWith) ?>px;"
 >
     <input
         type="checkbox"
@@ -27,8 +26,9 @@ $labelWith = $field->config['labelWith'] ?? '200';
         <?= $field->getAttributes() ?>
     >
     <label
-        class="field-switch-label"
+        class="field-switch-label<?= $this->previewMode ? ' disabled' : '' ?>"
         for="<?= $field->getId() ?>"
+        style="width: <?= e($labelWith) ?>px;"
     >
         <span class="field-switch-container">
             <span class="field-switch-active">

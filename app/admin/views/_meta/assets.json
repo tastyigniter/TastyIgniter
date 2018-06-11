@@ -20,21 +20,9 @@
   ],
   "style": [
     {
-      "path": "/assets/ui/flame.css",
+      "path": "/app/system/assets/ui/flame.css",
       "name": "flame-css",
       "collection": "ui"
-    },
-    {
-      "path": "/assets/css/vendor/select2-bootstrap.min.css",
-      "name": "select2-bootstrap-css"
-    },
-    {
-      "path": "/assets/css/vendor/font-awesome.min.css",
-      "name": "font-awesome-css"
-    },
-    {
-      "path": "css/fonts.css",
-      "name": "fonts-css"
     },
     {
       "path": "css/admin.css",
@@ -43,45 +31,23 @@
   ],
   "script": [
     {
-      "path": "/assets/js/app/vendor.js",
+      "path": "/app/system/assets/ui/js/vendor/vendor.js",
       "name": "vendor-js",
       "collection": "app"
     },
     {
-      "path": "/assets/js/app/flashmessage.js",
-      "name": "flashmessage-js",
+      "path": "/app/system/assets/ui/flame.js",
+      "name": "flame-js",
       "collection": "app"
     },
     {
-      "path": "/assets/js/app/app.js",
-      "name": "app-js",
+      "path": "js/vendor/vendor.js",
+      "name": "admin-vendor-js",
       "collection": "app"
     },
     {
-      "path": "/assets/js/app/toggler.js",
-      "name": "toggle-js",
-      "collection": "app"
-    },
-    {
-      "path": "/assets/js/app/trigger.js",
-      "name": "trigger-js",
-      "collection": "app"
-    },
-    {
-      "path": "js/metisMenu.min.js",
-      "name": "metis-menu-js"
-    },
-    {
-      "path": "/assets/js/vendor/select2.min.js",
-      "name": "select-2-js"
-    },
-    {
-      "path": "/assets/js/vendor/js.cookie.js",
-      "name": "js-cookie-js"
-    },
-    {
-      "path": "js/common.js",
-      "name": "common-js"
+      "path": "js/admin.js",
+      "name": "admin-js"
     }
   ]
 }

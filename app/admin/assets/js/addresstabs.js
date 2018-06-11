@@ -27,7 +27,7 @@ var AddressTab = {
         + lastCounter + '&nbsp;&nbsp;<i class="fa fa-times-circle" data-remove-address></i></a></li>');
 
         $container.attr('data-last-counter', lastCounter)
-        $appendTo.find('select.form-control').select2({minimumResultsForSearch: Infinity})
+        $appendTo.find('select.form-control').select2()
     },
 
     remove: function (event) {

@@ -76,7 +76,8 @@ class Themes extends \Admin\Classes\AdminController
 
             $model = $this->formFindModelObject($themeCode);
             $this->initFormWidget($model, $context);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -84,18 +85,19 @@ class Themes extends \Admin\Classes\AdminController
     public function source($context, $themeCode = null)
     {
         try {
-            $pageTitle = lang('system::themes.text_edit_title');
+            $pageTitle = lang('system::themes.text_source_title');
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
-            Template::setButton(lang('system::themes.text_customize'), [
+            Template::setButton(lang('system::themes.button_customize'), [
                 'class' => 'btn btn-default',
                 'href'  => admin_url('themes/edit/'.$themeCode),
             ]);
 
             $model = $this->formFindModelObject($themeCode);
             $this->initFormWidget($model, $context);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -148,7 +150,8 @@ class Themes extends \Admin\Classes\AdminController
             $this->vars['themeName'] = $themeClass->name;
             $this->vars['themeData'] = $model->data;
             $this->vars['filesToDelete'] = array_collapse($themeManager->listFiles($themeCode));
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -294,7 +297,8 @@ class Themes extends \Admin\Classes\AdminController
             flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme uploaded '));
 
             return $this->redirect('themes');
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             flash()->danger($ex->getMessage());
 
             return $this->refresh();

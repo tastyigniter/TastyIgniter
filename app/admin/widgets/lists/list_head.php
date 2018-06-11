@@ -46,7 +46,7 @@
         <th class="list-setup">
             <button
                 type="button"
-                class="btn btn-default btn-sm"
+                class="btn btn-outline-default btn-sm"
                 title="<?= lang('admin::default.list.text_setup') ?>"
                 data-toggle="modal"
                 data-target="#<?= $listId ?>-setup-modal"

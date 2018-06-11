@@ -57,13 +57,13 @@ $config['list']['columns'] = [
         'label'    => 'lang:system::extensions.column_icon',
         'cssClass' => 'list-action text-center',
         'type'     => 'partial',
-        'path'     => 'extensions/extension_icon',
+        'path'     => 'lists/extension_icon',
         'sortable' => FALSE,
     ],
     'title'     => [
         'label'      => 'lang:system::extensions.column_name',
         'type'       => 'partial',
-        'path'       => 'extensions/extension_card',
+        'path'       => 'lists/extension_card',
         'searchable' => TRUE,
     ],
     'version'   => [

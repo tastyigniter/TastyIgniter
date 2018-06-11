@@ -8,7 +8,7 @@
             <div class="btn-group">
                 <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-outline-default"
                     title="<?= lang('main::media_manager.button_cancel'); ?>"
                     data-media-control="cancel-selection">
                     <i class="fa fa-times text-danger"></i>
@@ -16,7 +16,7 @@
 
                 <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-outline-default"
                     title="<?= lang('main::media_manager.button_rename'); ?>"
                     data-media-control="rename-item"
                     <?= (!$this->getSetting('rename')) ? 'disabled' : null ?>>
@@ -25,7 +25,7 @@
 
                 <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-outline-default"
                     title="<?= lang('main::media_manager.button_move'); ?>"
                     data-media-control="move-item"
                     <?= (!$this->getSetting('move')) ? 'disabled' : null ?>>
@@ -34,7 +34,7 @@
 
                 <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-outline-default"
                     title="<?= lang('main::media_manager.button_copy'); ?>"
                     data-media-control="copy-item"
                     <?= (!$this->getSetting('copy')) ? 'disabled' : null ?>>
@@ -43,7 +43,7 @@
 
                 <button
                     type="button"
-                    class="btn btn-danger"
+                    class="btn btn-outline-danger"
                     title="<?= lang('main::media_manager.button_delete'); ?>"
                     data-media-control="delete-item"
                     <?= (!$this->getSetting('delete')) ? 'disabled' : null ?>>
@@ -82,7 +82,7 @@
             <div class="btn-group">
                 <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-outline-default"
                     title="<?= lang('main::media_manager.button_cancel'); ?>"
                     data-media-control="cancel-selection">
                     <i class="fa fa-times text-danger"></i>
@@ -90,7 +90,7 @@
 
                 <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-outline-default"
                     title="<?= lang('main::media_manager.button_move'); ?>"
                     data-media-control="move-item"
                     <?= (!$this->getSetting('move')) ? 'disabled' : null ?>>
@@ -99,7 +99,7 @@
 
                 <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-outline-default"
                     title="<?= lang('main::media_manager.button_copy'); ?>"
                     data-media-control="copy-item"
                     <?= (!$this->getSetting('copy')) ? 'disabled' : null ?>>
@@ -108,7 +108,7 @@
 
                 <button
                     type="button"
-                    class="btn btn-danger"
+                    class="btn btn-outline-danger"
                     title="<?= lang('main::media_manager.button_delete'); ?>"
                     data-media-control="delete-item"
                     <?= (!$this->getSetting('delete')) ? 'disabled' : null ?>>

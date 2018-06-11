@@ -3,7 +3,6 @@
 use File;
 use Html;
 use System\Traits\CombinesAssets;
-use URL;
 
 /**
  * Assets Class
@@ -147,9 +146,7 @@ class Assets
 
     public function addMeta(array $meta = [])
     {
-        $metaAssets = $this->assets['meta'] ?? [];
-
-        $this->assets['meta'] = array_merge($metaAssets, $meta);
+        $this->assets['meta'][] = $meta;
 
         return $this;
     }
@@ -258,6 +255,7 @@ class Assets
 
                 if (!isset($asset->path) OR !$path = $asset->path) continue;
 
+                $path = realpath(base_path($path)) ?: $path;
                 if (isset($pathCache[$path])) {
                     array_forget($collection, $key);
                     continue;

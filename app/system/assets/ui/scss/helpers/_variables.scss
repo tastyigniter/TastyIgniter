@@ -1,0 +1,135 @@
+// Color system
+//
+
+$white: #FFFFFF;
+$gray-100: #FAFAFB;
+$gray-200: #E9EAEE;
+$gray-300: #D3D6DE;
+$gray-400: #BEC2CE;
+$gray-500: #A8AEBD;
+$gray-600: #939AAD;
+$gray-700: #68728D;
+$gray-800: #27365C;
+$gray-900: #111F46;
+$black: #0C1631;
+
+$colors: () !default;
+$colors: map-merge($colors, (
+  "gray-100": $gray-100,
+  "gray-200": $gray-200,
+  "gray-300": $gray-300,
+  "gray-400": $gray-400,
+  "gray-500": $gray-500,
+  "gray-600": $gray-600,
+  "gray-700": $gray-700,
+  "gray-800": $gray-800,
+  "gray-900": $gray-900
+));
+
+$primary: #4C8CBA;
+$secondary: $gray-700;
+$success: #2AB21C;
+$info: #5BC0DE;
+$warning: #D99B22;
+$danger: #D5222B;
+$light: $gray-100;
+$dark: $gray-900;
+
+$theme-colors: () !default;
+$theme-colors: map-merge($theme-colors, (
+  "primary": $primary,
+  "secondary": $secondary,
+  "default": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+));
+
+// Options
+//
+$icon-font-path: '/app/system/assets/ui/fonts/FontAwesome';
+$fa-font-path: $icon-font-path;
+
+// Body
+//
+$body-bg: $gray-300;
+$body-color: $gray-800;
+
+$link-hover-decoration: none;
+
+$line-height-base: 1.7;
+
+// Fonts
+//
+$font-family-sans-serif: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+$font-family-monospace: "Droid Sans Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+$font-weight-bold: 500;
+
+$text-muted: $gray-700;
+
+$h5-font-size: 16px;
+
+$label-padding-y: .5rem;
+$label-padding-x: .75rem;
+
+// Buttons
+//
+$btn-border-radius: 2px;
+
+$btn-action-padding-y: 5px 10px;
+
+// Tables
+//
+$table-cell-padding: .45rem;
+$table-cell-padding-sm: .1rem;
+$table-head-bg: $gray-200;
+$table-accent-bg: $light;
+
+// Forms
+$input-bg: $white;
+$input-disabled-bg: $gray-300;
+
+$input-color: $dark;
+$input-border-color: $gray-400;
+
+$input-border-radius: 3px;
+
+$custom-control-indicator-size: 1.456rem;
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+$dropdown-padding-x: .5rem;
+
+// Cards
+$card-border-color: $gray-400;
+$card-cap-bg: $gray-300;
+$card-bg: $gray-200;
+
+// Popover
+$popover-bg: $gray-200;
+
+// Dropdowns
+$dropdown-bg: $gray-200;
+$dropdown-border-color: rgba($black, .15);
+$dropdown-divider-bg: $gray-300;
+
+$dropdown-link-color: $gray-900;
+$dropdown-link-hover-color: darken($gray-900, 5%);
+$dropdown-link-hover-bg: $gray-300;
+
+$dropdown-link-disabled-color: $gray-600;
+
+$dropdown-header-color: $gray-600;
+
+// Modal
+$modal-content-bg: $gray-200;
+$modal-header-border-color: $gray-300;
+
+// List group
+$list-group-bg: $gray-200;
+$list-group-hover-bg: $gray-300;
+$list-group-action-color: $body-color;
+

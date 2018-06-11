@@ -204,6 +204,7 @@ class Themes_model extends Model
             return FALSE;
 
         params()->set('default_themes.main', $theme->code);
+        params()->save();
 
         foreach ($theme->themeClass->requires as $require => $version) {
             Extensions_model::install($require);

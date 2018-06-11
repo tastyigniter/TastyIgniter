@@ -1,0 +1,112 @@
+html, html a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.hide {
+  display: none;
+}
+a:focus, a:hover {
+  text-decoration: none;
+  outline: 0;
+}
+[role="button"],
+a[data-request] {
+  cursor: pointer;
+}
+.text-green {
+  color: $green;
+}
+.text-red {
+  color: $red;
+}
+.text-blue {
+  color: $blue;
+}
+.text-yellow {
+  color: $yellow;
+}
+.bg-white {
+  background-color: $white;
+}
+.bg-green {
+  background-color: $green;
+}
+.bg-red {
+  background-color: $red;
+}
+.bg-blue {
+  background-color: $blue;
+}
+.bg-yellow {
+  background-color: $yellow;
+}
+.text-w-300 { font-weight: 300; }
+.text-w-400 { font-weight: 400; }
+.text-w-500 { font-weight: 500; }
+.text-w-700 { font-weight: 700; }
+.text-w-900 { font-weight: 900; }
+.text-sm {
+  font-size: 12px;
+}
+.text-nowrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.border-none {
+  border: 0 none;
+}
+.radius-none {
+  border-radius: 0;
+}
+.wrap-all {
+  padding: 15px;
+}
+.wrap-none {
+  padding: 0;
+}
+.wrap-vertical {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.wrap-horizontal {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.wrap-top {
+  padding-top: 15px;
+}
+.wrap-bottom {
+  padding-bottom: 15px;
+}
+.wrap-left {
+  padding-left: 15px;
+}
+.wrap-right {
+  padding-right: 15px;
+}
+.no-margin {
+  margin: 0;
+}
+.no-margin-top {
+  margin-top: 0;
+}
+.no-margin-bottom {
+  margin-bottom: 0;
+}
+.margin-top {
+  margin-bottom: 15px;
+}
+.margin-bottom {
+  margin-bottom: 15px;
+}
+.inline-block {
+  display: inline-block;
+}
+.center-block {
+  float: none;
+}
+.sortable-placeholder {
+  border: 1px solid $gray-800;
+  margin: 10px auto;
+}

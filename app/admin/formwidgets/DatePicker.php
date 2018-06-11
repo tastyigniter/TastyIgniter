@@ -70,7 +70,7 @@ class DatePicker extends BaseFormWidget
 
     public function loadAssets()
     {
-        $mode = $this->getConfig('mode');
+        $mode = $this->getConfig('mode', 'date');
         if ($mode == 'time') {
             $this->addCss('vendor/clockpicker/bootstrap-clockpicker.min.css', 'bootstrap-clockpicker-css');
             $this->addJs('vendor/clockpicker/bootstrap-clockpicker.min.js', 'bootstrap-clockpicker-js');
@@ -86,7 +86,7 @@ class DatePicker extends BaseFormWidget
         }
 
         if ($mode == 'datetime') {
-            $this->addJs(assets_url('js/vendor/moment.min.js'), 'moment-js');
+            $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
             $this->addCss('vendor/datetimepicker/bootstrap-datetimepicker.min.css', 'bootstrap-datetimepicker-css');
             $this->addJs('vendor/datetimepicker/bootstrap-datetimepicker.min.js', 'bootstrap-datetimepicker-js');
             $this->addCss('css/datepicker.css', 'datepicker-css');

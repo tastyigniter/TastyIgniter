@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container-fluid">
     <?php foreach ($items as $item) { ?>
         <div class="row pt-3 pb-3 border-top">
-            <div class="col-1 align-middle">
+            <div class="col-sm-1 text-center align-middle">
                 <i class="fa <?= $item['icon'] ?> fa-2x text-muted"></i>
             </div>
-            <div class="col col-9">
+            <div class="col col-sm-9">
                 <h5 class="<?= $ignored ? 'text-muted' : ''; ?>">
                     <?= str_limit($item['name'], 22) ?> <i class="fa fa-long-arrow-right"></i>
                     <span class="small">
@@ -17,7 +17,7 @@
                     </p>
                 <?php } ?>
             </div>
-            <div class="col col-2 align-middle">
+            <div class="col col-sm-2 align-middle">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <?php if ($ignored) { ?>
                         <button

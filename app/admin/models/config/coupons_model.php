@@ -179,10 +179,12 @@ $config['form']['tabs'] = [
             ],
         ],
         'fixed_date'           => [
-            'label'   => 'lang:admin::coupons.label_fixed_date',
-            'type'    => 'datepicker',
-            'mode'    => 'date',
-            'trigger' => [
+            'label'    => 'lang:admin::coupons.label_fixed_date',
+            'type'     => 'datepicker',
+            'mode'     => 'date',
+            'span'     => 'left',
+            'cssClass' => 'flex-width',
+            'trigger'  => [
                 'action'    => 'show',
                 'field'     => 'validity',
                 'condition' => 'value[fixed]',

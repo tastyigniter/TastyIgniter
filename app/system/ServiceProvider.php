@@ -239,7 +239,9 @@ class ServiceProvider extends AppServiceProvider
     protected function registerAssets()
     {
         Assets::registerCallback(function (Assets $manager) {
-            $manager->registerBundle('scss', '~/assets/ui/scss/flame.scss');
+            $manager->registerSourcePath(app_path('system/assets'));
+
+            $manager->registerBundle('scss', '~/app/system/assets/ui/scss/flame.scss');
             $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss');
         });
     }
