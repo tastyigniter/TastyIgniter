@@ -89,6 +89,8 @@ class Reservations_model extends Model
             'location'  => null,
         ], $options));
 
+        $query->where('status_id', '>=', 1);
+
         if ($location instanceof Location) {
             $query->where('location_id', $location->getKey());
         }
@@ -151,9 +153,9 @@ class Reservations_model extends Model
     public function getReserveEndTimeAttribute($value)
     {
         if ($this->duration)
-            return $this->reserve_time->copy()->addMinutes($this->duration);
+            return $this->reservation_datetime->copy()->addMinutes($this->duration);
 
-        return $this->reserve_time->copy()->endOfDay();
+        return $this->reservation_datetime->copy()->endOfDay();
     }
 
     public function getReservationDatetimeAttribute($value)
@@ -227,7 +229,7 @@ class Reservations_model extends Model
             'last_name'        => $this->last_name,
             'guest_num'        => $this->guest_num,
             'reserve_date'     => $this->reserve_date->toDateString(),
-            'reserve_time'     => $this->reserve_time->toTimeString(),
+            'reserve_time'     => $this->reserve_time,
             'reserve_end_time' => $this->reserve_end_time->toTimeString(),
             'duration'         => $this->duration,
             'status'           => $status ? $status->toArray() : [],
@@ -349,7 +351,7 @@ class Reservations_model extends Model
 
         $model = $this->fresh();
         $data['reservation_number'] = $model->reservation_id;
-        $data['reservation_time'] = $model->reserve_time->format('H:i');
+        $data['reservation_time'] = $model->reserve_time;
         $data['reservation_date'] = $model->reserve_date->format('l, F j, Y');
         $data['reservation_guest_no'] = $model->guest_num;
         $data['first_name'] = $model->first_name;

@@ -342,7 +342,7 @@ if (!function_exists('sort_array')) {
     {
         if (!empty($array)) {
             foreach ($array as $key => $value) {
-                $sort_array[$key] = $value[$sort_key];
+                $sort_array[$key] = $value[$sort_key] ?? 0;
             }
 
             array_multisort($sort_array, $option, $array);

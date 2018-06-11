@@ -132,8 +132,8 @@ if (!function_exists('set_script_tags')) {
 }
 
 if (!function_exists('combine')) {
-    function combine($assets = [], $localPath = null)
+    function combine($type, $assets = [])
     {
-        return Assets::combine($assets, $localPath);
+        return Assets::combine($type, $assets);
     }
 }

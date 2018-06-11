@@ -26,4 +26,9 @@ class Activities extends \Admin\Classes\AdminController
 
         AdminMenu::setContext('activities', 'system');
     }
+
+    public function listExtendQuery($query)
+    {
+        $query->with(['subject', 'causer']);
+    }
 }

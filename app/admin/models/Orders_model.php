@@ -117,6 +117,8 @@ class Orders_model extends Model
             'sort'      => 'address_id desc',
         ], $options));
 
+        $query->where('status_id', '>=', 1);
+
         if ($location instanceof Location) {
             $query->where('location_id', $location->getKey());
         }
@@ -532,7 +534,7 @@ class Orders_model extends Model
         $data['order_comment'] = $model->comment;
 
         $data['order_type'] = ($model->order_type == '1') ? 'delivery' : 'collection';
-        $data['order_time'] = $model->order_time->format('H:i').' '.$model->order_date->format('d M');
+        $data['order_time'] = $model->order_time.' '.$model->order_date->format('d M');
         $data['order_date'] = $model->date_added->format('d M y');
 
         $data['order_payment'] = ($model->payment_method)

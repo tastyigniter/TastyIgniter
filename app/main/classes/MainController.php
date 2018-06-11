@@ -187,7 +187,7 @@ class MainController extends BaseController
 
             // Log the 404 request
             if (!App::runningUnitTests())
-                Log::error(sprintf(lang('main::default.not_found.page_message'), $url));
+                Log::error(sprintf(lang('main::default.not_found.page_message').': %s', $url));
 
             if (!$page = $this->router->findByUrl('/404'))
                 return Response::make(View::make('main::404'), $this->statusCode);
@@ -646,7 +646,7 @@ class MainController extends BaseController
             return $result;
         }
 
-        $result = $this->renderPartial($name.'::default', [], FALSE);
+        $result = $this->renderPartial($name.'::'.$componentObj->defaultPartial, [], FALSE);
         $this->componentContext = $previousContext;
 
         return $result;
@@ -680,7 +680,8 @@ class MainController extends BaseController
         try {
             $manager = ComponentManager::instance();
             $componentObj = $manager->makeComponent($name, $codeObj, $properties);
-        } catch (SystemException $ex) {
+        }
+        catch (SystemException $ex) {
             throw new ApplicationException(sprintf(
                     lang('main::default.not_found.component'), $name
                 ).' => '.$ex->getMessage()

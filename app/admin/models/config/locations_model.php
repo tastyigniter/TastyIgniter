@@ -515,13 +515,14 @@ $config['form']['tabs'] = [
         ],
 
         'delivery_areas' => [
-            'tab'          => 'lang:admin::locations.text_tab_delivery',
-            'type'         => 'maparea',
-            'context'      => ['edit'],
-            'relationFrom' => 'delivery_areas',
-            'latFrom'      => 'location_lat',
-            'lngFrom'      => 'location_lng',
-            'zoom'         => '14',
+            'tab'     => 'lang:admin::locations.text_tab_delivery',
+            'label'   => 'lang:admin::locations.text_delivery_area',
+            'type'    => 'maparea',
+            'context' => ['edit'],
+            'latFrom' => 'location_lat',
+            'lngFrom' => 'location_lng',
+            'zoom'    => '14',
+            'form'    => 'location_areas_model',
         ],
 
         'options[gallery][title]'       => [

@@ -176,7 +176,7 @@ class Mail_templates_model extends Model
         $this->plain_body = $sections['text'];
 
         $layoutCode = array_get($sections, 'settings.layout', 'default');
-        $this->layout_id = Mail_layouts_model::getIdFromCode($layoutCode);
+        $this->template_id = Mail_layouts_model::getIdFromCode($layoutCode);
     }
 
     /**

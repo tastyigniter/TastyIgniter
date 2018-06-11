@@ -140,10 +140,11 @@ class Payments_model extends Model
         if (is_null($class))
             $class = $this->class_name;
 
-        if (!$class)
-            return FALSE;
+        if (!class_exists($class)) {
+            $class = null;
+        }
 
-        if (!$this->isClassExtendedWith($class)) {
+        if ($class AND !$this->isClassExtendedWith($class)) {
             $this->extendClassWith($class);
         }
 
@@ -178,7 +179,9 @@ class Payments_model extends Model
      */
     public static function listPayments()
     {
-        return self::isEnabled()->get();
+        return self::isEnabled()->get()->filter(function ($model) {
+            return strlen($model->class_name) > 0;
+        });
     }
 
     public static function syncAll()
@@ -187,16 +190,14 @@ class Payments_model extends Model
 
         $gatewayManager = PaymentGateways::instance();
         foreach ($gatewayManager->listGateways() as $code => $gateway) {
-            if (
-                !isset($gateway['code']) OR !isset($gateway['class'])
-                OR $code != $gateway['code'] OR in_array($code, $payments)
-            ) continue;
+            if (in_array($code, $payments)) continue;
 
             $model = self::make([
                 'code'        => $code,
                 'name'        => Lang::get($gateway['name']),
                 'description' => Lang::get($gateway['description']),
                 'class_name'  => $gateway['class'],
+                'status'      => 1,
             ]);
 
             $model->applyGatewayClass();

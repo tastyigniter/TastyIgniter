@@ -6,12 +6,15 @@ use Admin\Classes\BaseWidget;
 use Admin\Classes\FormField;
 use Admin\Classes\FormTabs;
 use Admin\Classes\Widgets;
+use Admin\Traits\FormModelWidget;
 use Event;
 use Exception;
 use Model;
 
 class Form extends BaseWidget
 {
+    use FormModelWidget;
+
     //
     // Configurable properties
     //
@@ -258,7 +261,7 @@ class Form extends BaseWidget
      * Prepares the form data
      * @return void
      */
-    public function prepareVars()
+    protected function prepareVars()
     {
         $this->defineFormFields();
         $this->applyFiltersFromModel();
@@ -269,7 +272,79 @@ class Form extends BaseWidget
     }
 
     /**
-     * Programatically add fields, used internally and for extensibility.
+     * Sets or resets form field values.
+     * @param array $data
+     * @return array
+     */
+    public function setFormValues($data = null)
+    {
+        if ($data === null) {
+            $data = $this->getSaveData();
+        }
+
+        $this->prepareModelsToSave($this->model, $data);
+
+        if ($this->data !== $this->model) {
+            $this->data = (object) array_merge((array) $this->data, (array) $data);
+        }
+
+        foreach ($this->allFields as $field) {
+            $field->value = $this->getFieldValue($field);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Event handler for refreshing the form.
+     *
+     * @return array
+     */
+    public function onRefresh()
+    {
+        $result = [];
+        $saveData = $this->getSaveData();
+
+        // Extensibility
+        $dataHolder = (object) ['data' => $saveData];
+        Event::fire('admin.form.extendFieldsBefore', [$dataHolder]);
+        $this->fireEvent('form.extendFieldsBefore');
+        $saveData = $dataHolder->data;
+
+        $this->setFormValues($saveData);
+        $this->prepareVars();
+
+        // Extensibility
+        Event::fire('admin.form.refreshFields', [$this->allFields]);
+        $this->fireEvent('form.refreshFields');
+
+        if (($updateFields = post('fields')) && is_array($updateFields)) {
+            foreach ($updateFields as $field) {
+                if (!isset($this->allFields[$field])) {
+                    continue;
+                }
+
+                $fieldObject = $this->allFields[$field];
+                $result['#' . $fieldObject->getId('group')] = $this->makePartial('field', ['field' => $fieldObject]);
+            }
+        }
+
+        if (empty($result)) {
+            $result = ['#'.$this->getId() => $this->makePartial('form')];
+        }
+
+        // Extensibility
+        $eventResults = $this->fireSystemEvent('admin.form.refresh', [$result], false);
+
+        foreach ($eventResults as $eventResult) {
+            $result = $eventResult + $result;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Programmatically add fields, used internally and for extensibility.
      *
      * @param array $fields
      * @param string $addToArea
@@ -293,13 +368,11 @@ class Form extends BaseWidget
 
             $this->allFields[$name] = $fieldObj;
 
-            switch (strtolower($addToArea)) {
-                case FormTabs::SECTION_PRIMARY:
-                    $this->allTabs->primary->addField($name, $fieldObj, $fieldTab);
-                    break;
-                default:
-                    $this->allTabs->outside->addField($name, $fieldObj);
-                    break;
+            if (strtolower($addToArea) == FormTabs::SECTION_PRIMARY) {
+                $this->allTabs->primary->addField($name, $fieldObj, $fieldTab);
+            }
+            else {
+                $this->allTabs->outside->addField($name, $fieldObj);
             }
         }
     }
@@ -317,7 +390,7 @@ class Form extends BaseWidget
     }
 
     /**
-     * Programatically remove a field.
+     * Programmatically remove a field.
      *
      * @param string $name
      *
@@ -537,7 +610,7 @@ class Form extends BaseWidget
      * Get a specified tab object.
      * Options: outside, primary, secondary.
      *
-     * @param string $field
+     * @param string $tab
      *
      * @return mixed
      */
@@ -609,7 +682,7 @@ class Form extends BaseWidget
             return '';
         }
 
-        $dependsOn = is_array($field->dependsOn) ? $field->dependsOn : [$field->dependsOn];
+        $dependsOn = (array)$field->dependsOn;
         $dependsOn = htmlspecialchars(json_encode($dependsOn), ENT_QUOTES, 'UTF-8');
 
         return $dependsOn;
@@ -629,7 +702,7 @@ class Form extends BaseWidget
             return FALSE;
         }
 
-        if ($field->type === 'widget') {
+        if ($field->type == 'widget') {
             return $this->makeFormFieldWidget($field)->showLabels;
         }
 
@@ -821,6 +894,9 @@ class Form extends BaseWidget
     /**
      * Converts fields with a span set to 'auto' as either
      * 'left' or 'right' depending on the previous field.
+     *
+     * @param $fields
+     *
      * @return void
      */
     protected function processAutoSpan($fields)
@@ -894,7 +970,7 @@ class Form extends BaseWidget
     {
         // Advanced usage, supplied options are callable
         if (is_array($fieldOptions) AND is_callable($fieldOptions)) {
-            $fieldOptions = call_user_func($fieldOptions, $this, $field);
+            $fieldOptions = $fieldOptions($this, $field);
         }
 
         // Refer to the model method or any of its behaviors
@@ -911,12 +987,9 @@ class Form extends BaseWidget
                 ));
             }
 
-            if ($this->objectMethodExists($model, $methodName)) {
-                $fieldOptions = $model->$methodName($field->value, $this->data);
-            }
-            else {
-                $fieldOptions = $model->getDropdownOptions($attribute, $field->value, $this->data);
-            }
+            $fieldOptions = $this->objectMethodExists($model, $methodName)
+                ? $model->$methodName($field->value, $this->data)
+                : $model->getDropdownOptions($attribute, $field->value, $this->data);
         } // Field options are an explicit method reference
         elseif (is_string($fieldOptions)) {
             if (!$this->objectMethodExists($this->model, $fieldOptions)) {
@@ -968,9 +1041,8 @@ class Form extends BaseWidget
             if (isset($array[$key])) {
                 return $array[$key];
             }
-            else {
-                return $default;
-            }
+
+            return $default;
         }
 
         foreach ($parts as $segment) {

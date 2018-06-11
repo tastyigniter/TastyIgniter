@@ -47,7 +47,6 @@ class StatusEditor extends BaseFormWidget
             'relationFrom',
             'nameFrom',
             'colorFrom',
-            'listFrom',
         ]);
     }
 
