@@ -21,7 +21,7 @@ class Login extends \Admin\Classes\AdminController
 
         Template::setTitle(lang('admin::login.text_title'));
 
-        if ($this->validateLoginForm()) {
+        if (!($this->validateLoginForm() === FALSE)) {
             $credentials = [
                 'username' => post('user'),
                 'password' => post('password'),

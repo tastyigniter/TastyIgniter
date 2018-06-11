@@ -49,15 +49,16 @@ $config['form']['general'] = [
                     'options' => ['System\Models\Countries_model', 'getDropdownOptions'],
                 ],
                 'site_location_mode' => [
-                    'label'   => 'lang:system::settings.label_site_location_mode',
-                    'tab'     => 'lang:system::settings.text_tab_restaurant',
-                    'type'    => 'radio',
-                    'span'    => 'left',
-                    'options' => [
+                    'label'        => 'lang:system::settings.label_site_location_mode',
+                    'tab'          => 'lang:system::settings.text_tab_restaurant',
+                    'type'         => 'radio',
+                    'span'         => 'left',
+                    'options'      => [
                         'single'   => 'lang:system::settings.text_single',
                         'multiple' => 'lang:system::settings.text_multiple',
                     ],
-                    'comment' => 'lang:system::settings.help_site_location_mode',
+                    'comment'      => 'lang:system::settings.help_site_location_mode',
+                    'commentAbove' => '<span class="text-danger">System</span>',
                 ],
                 'site_logo'          => [
                     'label' => 'lang:system::settings.label_site_logo',
@@ -83,18 +84,6 @@ $config['form']['general'] = [
                         'mi' => 'lang:system::settings.text_miles',
                         'km' => 'lang:system::settings.text_kilometers',
                     ],
-                ],
-                'meta_description'   => [
-                    'label' => 'lang:system::settings.label_meta_description',
-                    'tab'   => 'lang:system::settings.text_tab_restaurant',
-                    'type'  => 'textarea',
-                    'span'  => 'left',
-                ],
-                'meta_keywords'      => [
-                    'label' => 'lang:system::settings.label_meta_keyword',
-                    'tab'   => 'lang:system::settings.text_tab_restaurant',
-                    'type'  => 'textarea',
-                    'span'  => 'right',
                 ],
 
                 'page_limit'            => [
@@ -202,8 +191,6 @@ $config['form']['general'] = [
             ['default_language', 'lang:system::settings.label_site_language', 'required'],
             ['supported_languages.*', 'lang:system::settings.label_supported_languages', 'required'],
             ['page_limit', 'lang:system::settings.label_page_limit', 'required|integer'],
-            ['meta_description', 'lang:system::settings.label_meta_description'],
-            ['meta_keywords', 'lang:system::settings.label_meta_keyword'],
             ['country_id', 'lang:system::settings.label_country', 'required|integer'],
             ['maps_api_key', 'lang:system::settings.label_maps_api_key'],
             ['distance_unit', 'lang:system::settings.label_distance_unit'],
@@ -211,112 +198,34 @@ $config['form']['general'] = [
     ],
 ];
 
-$config['form']['order'] = [
-    'label'       => 'lang:system::settings.text_tab_order',
-    'description' => 'lang:system::settings.text_tab_desc_order',
-    'icon'        => 'fa fa-shopping-cart',
+$config['form']['setup'] = [
+    'label'       => 'lang:system::settings.text_tab_setup',
+    'description' => 'lang:system::settings.text_tab_desc_setup',
+    'icon'        => 'fa fa-toggle-on',
     'priority'    => 1,
-    'url'         => admin_url('settings/edit/order'),
+    'url'         => admin_url('settings/edit/setup'),
     'form'        => [
         'tabs'  => [
             'fields' => [
-                'default_order_status'    => [
-                    'label'       => 'lang:system::settings.label_default_order_status',
-                    'tab'         => 'lang:system::settings.text_tab_general',
-                    'type'        => 'select',
-                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
-                    'comment'     => 'lang:system::settings.help_default_order_status',
-                    'placeholder' => 'lang:admin::default.text_please_select',
-                ],
-                'processing_order_status' => [
-                    'label'       => 'lang:system::settings.label_processing_order_status',
-                    'tab'         => 'lang:system::settings.text_tab_general',
-                    'type'        => 'select',
-                    'multiOption' => TRUE,
-                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
-                    'comment'     => 'lang:system::settings.help_processing_order_status',
-                ],
-                'completed_order_status'  => [
-                    'label'       => 'lang:system::settings.label_completed_order_status',
-                    'tab'         => 'lang:system::settings.text_tab_general',
-                    'type'        => 'select',
-                    'multiOption' => TRUE,
-                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
-                    'comment'     => 'lang:system::settings.help_completed_order_status',
-                ],
-                'canceled_order_status'   => [
-                    'label'       => 'lang:system::settings.label_canceled_order_status',
-                    'tab'         => 'lang:system::settings.text_tab_general',
-                    'type'        => 'select',
-                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
-                    'comment'     => 'lang:system::settings.help_canceled_order_status',
-                    'placeholder' => 'lang:admin::default.text_please_select',
-                ],
-                'invoice'                 => [
-                    'label' => 'lang:system::settings.text_tab_title_invoice',
-                    'tab'   => 'lang:system::settings.text_tab_general',
-                    'type'  => 'section',
-                ],
-                'invoice_prefix'          => [
-                    'label'   => 'lang:system::settings.label_invoice_prefix',
-                    'tab'     => 'lang:system::settings.text_tab_general',
-                    'type'    => 'text',
-                    'comment' => 'lang:system::settings.help_invoice_prefix',
-                ],
-                'auto_invoicing'          => [
-                    'label'   => 'lang:system::settings.label_auto_invoicing',
-                    'tab'     => 'lang:system::settings.text_tab_general',
-                    'type'    => 'radio',
-                    'options' => [
-                        'lang:system::settings.text_manual',
-                        'lang:system::settings.text_auto',
-                    ],
-                    'comment' => 'lang:system::settings.help_auto_invoicing',
-                ],
-                'reviews'                 => [
-                    'label' => 'lang:system::settings.text_tab_title_reviews',
-                    'tab'   => 'lang:system::settings.text_tab_general',
-                    'type'  => 'section',
-                ],
-                'allow_reviews'           => [
-                    'label'   => 'lang:system::settings.label_allow_reviews',
-                    'tab'     => 'lang:system::settings.text_tab_general',
+                'guest_order'             => [
+                    'label'   => 'lang:system::settings.label_guest_order',
+                    'tab'     => 'lang:system::settings.text_tab_title_order',
                     'type'    => 'switch',
-                    'comment' => 'lang:system::settings.help_allow_reviews',
+                    'on'      => 'lang:admin::default.text_yes',
+                    'off'     => 'lang:admin::default.text_no',
+                    'comment' => 'lang:system::settings.help_guest_order',
                 ],
-                'approve_reviews'         => [
-                    'label'   => 'lang:system::settings.label_approve_reviews',
-                    'tab'     => 'lang:system::settings.text_tab_general',
-                    'type'    => 'radio',
-                    'options' => [
-                        'lang:system::settings.text_auto',
-                        'lang:system::settings.text_manual',
-                    ],
-                    'comment' => 'lang:system::settings.help_approve_reviews',
-                    'trigger' => [
-                        'action'    => 'show',
-                        'field'     => 'allow_reviews',
-                        'condition' => 'value[1]',
-                    ],
+                'location_order'          => [
+                    'label'   => 'lang:system::settings.label_location_order',
+                    'tab'     => 'lang:system::settings.text_tab_title_order',
+                    'type'    => 'switch',
+                    'on'      => 'lang:admin::default.text_yes',
+                    'off'     => 'lang:admin::default.text_no',
+                    'comment' => 'lang:system::settings.help_location_order',
                 ],
-
-                'delivery_time'       => [
-                    'label'   => 'lang:system::settings.label_delivery_time',
-                    'tab'     => 'lang:system::settings.text_tab_title_checkout',
-                    'span'    => 'left',
-                    'type'    => 'number',
-                    'comment' => 'lang:system::settings.help_delivery_time',
-                ],
-                'collection_time'     => [
-                    'label'   => 'lang:system::settings.label_collection_time',
-                    'tab'     => 'lang:system::settings.text_tab_title_checkout',
-                    'span'    => 'right',
-                    'type'    => 'number',
-                    'comment' => 'lang:system::settings.help_collection_time',
-                ],
-                'order_email'         => [
+                'order_email'             => [
                     'label'   => 'lang:system::settings.label_order_email',
-                    'tab'     => 'lang:system::settings.text_tab_title_checkout',
+                    'tab'     => 'lang:system::settings.text_tab_title_order',
                     'type'    => 'checkbox',
                     'options' => [
                         'customer' => 'lang:system::settings.text_to_customer',
@@ -325,24 +234,112 @@ $config['form']['order'] = [
                     ],
                     'comment' => 'lang:system::settings.help_order_email',
                 ],
-                'guest_order'         => [
-                    'label'   => 'lang:system::settings.label_guest_order',
-                    'tab'     => 'lang:system::settings.text_tab_title_checkout',
-                    'type'    => 'switch',
-                    'comment' => 'lang:system::settings.help_guest_order',
+                'default_order_status'    => [
+                    'label'       => 'lang:system::settings.label_default_order_status',
+                    'tab'         => 'lang:system::settings.text_tab_title_order',
+                    'type'        => 'select',
+                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
+                    'comment'     => 'lang:system::settings.help_default_order_status',
+                    'placeholder' => 'lang:admin::default.text_please_select',
                 ],
-                'future_orders'       => [
-                    'label'   => 'lang:system::settings.label_future_order',
-                    'tab'     => 'lang:system::settings.text_tab_title_checkout',
-                    'type'    => 'switch',
-                    'comment' => 'lang:system::settings.help_future_order',
+                'processing_order_status' => [
+                    'label'       => 'lang:system::settings.label_processing_order_status',
+                    'tab'         => 'lang:system::settings.text_tab_title_order',
+                    'type'        => 'select',
+                    'multiOption' => TRUE,
+                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
+                    'comment'     => 'lang:system::settings.help_processing_order_status',
                 ],
-                'location_order'      => [
-                    'label'   => 'lang:system::settings.label_location_order',
-                    'tab'     => 'lang:system::settings.text_tab_title_checkout',
-                    'type'    => 'switch',
-                    'comment' => 'lang:system::settings.help_location_order',
+                'completed_order_status'  => [
+                    'label'       => 'lang:system::settings.label_completed_order_status',
+                    'tab'         => 'lang:system::settings.text_tab_title_order',
+                    'type'        => 'select',
+                    'multiOption' => TRUE,
+                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
+                    'comment'     => 'lang:system::settings.help_completed_order_status',
                 ],
+                'canceled_order_status'   => [
+                    'label'       => 'lang:system::settings.label_canceled_order_status',
+                    'tab'         => 'lang:system::settings.text_tab_title_order',
+                    'type'        => 'select',
+                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForOrder'],
+                    'comment'     => 'lang:system::settings.help_canceled_order_status',
+                    'placeholder' => 'lang:admin::default.text_please_select',
+                ],
+
+                'reservation_email'            => [
+                    'label'   => 'lang:system::settings.label_reservation_email',
+                    'tab'     => 'lang:system::settings.text_tab_title_reservation',
+                    'type'    => 'checkbox',
+                    'options' => [
+                        'customer' => 'lang:system::settings.text_to_customer',
+                        'admin'    => 'lang:system::settings.text_to_admin',
+                        'location' => 'lang:system::settings.text_to_location',
+                    ],
+                    'comment' => 'lang:system::settings.help_reservation_email',
+                ],
+                'default_reservation_status'   => [
+                    'label'       => 'lang:system::settings.label_default_reservation_status',
+                    'tab'         => 'lang:system::settings.text_tab_title_reservation',
+                    'type'        => 'select',
+                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
+                    'comment'     => 'lang:system::settings.help_default_reservation_status',
+                    'placeholder' => 'lang:admin::default.text_please_select',
+                ],
+                'confirmed_reservation_status' => [
+                    'label'       => 'lang:system::settings.label_confirmed_reservation_status',
+                    'tab'         => 'lang:system::settings.text_tab_title_reservation',
+                    'type'        => 'select',
+                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
+                    'comment'     => 'lang:system::settings.help_confirmed_reservation_status',
+                    'placeholder' => 'lang:admin::default.text_please_select',
+                ],
+                'canceled_reservation_status'  => [
+                    'label'       => 'lang:system::settings.label_canceled_reservation_status',
+                    'tab'         => 'lang:system::settings.text_tab_title_reservation',
+                    'type'        => 'select',
+                    'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
+                    'comment'     => 'lang:system::settings.help_canceled_reservation_status',
+                    'placeholder' => 'lang:admin::default.text_please_select',
+                ],
+
+                'invoice_prefix' => [
+                    'label'   => 'lang:system::settings.label_invoice_prefix',
+                    'tab'     => 'lang:system::settings.text_tab_title_invoice',
+                    'type'    => 'text',
+                    'comment' => 'lang:system::settings.help_invoice_prefix',
+                ],
+                'auto_invoicing' => [
+                    'label'   => 'lang:system::settings.label_auto_invoicing',
+                    'tab'     => 'lang:system::settings.text_tab_title_invoice',
+                    'type'    => 'switch',
+                    'on'      => 'lang:system::settings.text_auto',
+                    'off'     => 'lang:system::settings.text_manual',
+                    'comment' => 'lang:system::settings.help_auto_invoicing',
+                ],
+
+                'allow_reviews'   => [
+                    'label'   => 'lang:system::settings.label_allow_reviews',
+                    'tab'     => 'lang:system::settings.text_tab_title_reviews',
+                    'type'    => 'switch',
+                    'on'      => 'lang:admin::default.text_yes',
+                    'off'     => 'lang:admin::default.text_no',
+                    'comment' => 'lang:system::settings.help_allow_reviews',
+                ],
+                'approve_reviews' => [
+                    'label'   => 'lang:system::settings.label_approve_reviews',
+                    'tab'     => 'lang:system::settings.text_tab_title_reviews',
+                    'type'    => 'switch',
+                    'on'      => 'lang:system::settings.text_auto',
+                    'off'     => 'lang:system::settings.text_manual',
+                    'comment' => 'lang:system::settings.help_approve_reviews',
+                    'trigger' => [
+                        'action'    => 'show',
+                        'field'     => 'allow_reviews',
+                        'condition' => 'checked',
+                    ],
+                ],
+
                 'tax_mode'            => [
                     'label'   => 'lang:system::settings.label_tax_mode',
                     'tab'     => 'lang:system::settings.text_tab_title_taxation',
@@ -369,11 +366,9 @@ $config['form']['order'] = [
                 'tax_delivery_charge' => [
                     'label'   => 'lang:system::settings.label_tax_delivery_charge',
                     'tab'     => 'lang:system::settings.text_tab_title_taxation',
-                    'type'    => 'radio',
-                    'options' => [
-                        'lang:admin::default.text_no',
-                        'lang:admin::default.text_yes',
-                    ],
+                    'type'    => 'switch',
+                    'on'      => 'lang:admin::default.text_yes',
+                    'off'     => 'lang:admin::default.text_no',
                     'comment' => 'lang:system::settings.help_tax_delivery_charge',
                 ],
             ],
@@ -391,81 +386,10 @@ $config['form']['order'] = [
             ['processing_order_status.*', 'lang:system::settings.label_processing_order_status', 'required|integer'],
             ['completed_order_status.*', 'lang:system::settings.label_completed_order_status', 'required|integer'],
             ['canceled_order_status', 'lang:system::settings.label_canceled_order_status', 'required|integer'],
-            ['delivery_time', 'lang:system::settings.label_delivery_time', 'required|integer'],
-            ['collection_time', 'lang:system::settings.label_collection_time', 'required|integer'],
             ['guest_order', 'lang:system::settings.label_guest_order', 'required|integer'],
             ['location_order', 'lang:system::settings.label_location_order', 'required|integer'],
-            ['future_orders', 'lang:system::settings.label_future_order', 'required|numeric'],
             ['auto_invoicing', 'lang:system::settings.label_auto_invoicing', 'required|integer'],
             ['invoice_prefix', 'lang:system::settings.label_invoice_prefix'],
-        ],
-    ],
-];
-
-$config['form']['reservation'] = [
-    'label'       => 'lang:system::settings.text_tab_reservation',
-    'description' => 'lang:system::settings.text_tab_desc_reservation',
-    'icon'        => 'fa fa-book',
-    'priority'    => 2,
-    'url'         => admin_url('settings/edit/reservation'),
-    'form'        => [
-        'fields' => [
-            'reservation_mode'             => [
-                'label'   => 'lang:system::settings.label_reservation_mode',
-                'type'    => 'switch',
-                'comment' => 'lang:system::settings.help_reservation_mode',
-            ],
-            'reservation_email'            => [
-                'label'   => 'lang:system::settings.label_reservation_email',
-                'type'    => 'checkbox',
-                'options' => [
-                    'customer' => 'lang:system::settings.text_to_customer',
-                    'admin'    => 'lang:system::settings.text_to_admin',
-                    'location' => 'lang:system::settings.text_to_location',
-                ],
-                'comment' => 'lang:system::settings.help_reservation_email',
-            ],
-            'default_reservation_status'   => [
-                'label'       => 'lang:system::settings.label_default_reservation_status',
-                'type'        => 'select',
-                'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
-                'comment'     => 'lang:system::settings.help_default_reservation_status',
-                'placeholder' => 'lang:admin::default.text_please_select',
-            ],
-            'confirmed_reservation_status' => [
-                'label'       => 'lang:system::settings.label_confirmed_reservation_status',
-                'type'        => 'select',
-                'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
-                'comment'     => 'lang:system::settings.help_confirmed_reservation_status',
-                'placeholder' => 'lang:admin::default.text_please_select',
-            ],
-            'canceled_reservation_status'  => [
-                'label'       => 'lang:system::settings.label_canceled_reservation_status',
-                'type'        => 'select',
-                'options'     => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
-                'comment'     => 'lang:system::settings.help_canceled_reservation_status',
-                'placeholder' => 'lang:admin::default.text_please_select',
-            ],
-            'reservation_time_interval'    => [
-                'label'   => 'lang:system::settings.label_reservation_time_interval',
-                'type'    => 'number',
-                'comment' => 'lang:system::settings.help_reservation_time_interval',
-            ],
-            'reservation_stay_time'        => [
-                'label'   => 'lang:system::settings.label_reservation_stay_time',
-                'type'    => 'number',
-                'comment' => 'lang:system::settings.help_reservation_stay_time',
-            ],
-        ],
-        'rules'  => [
-            ['reservation_email.*', 'lang:system::settings.label_reservation_email', 'required|alpha'],
-            ['reservation_mode', 'lang:system::settings.label_reservation_mode', 'required|integer'],
-            ['default_reservation_status', 'lang:system::settings.label_default_reservation_status', 'required|integer'],
-            ['confirmed_reservation_status', 'lang:system::settings.label_confirmed_reservation_status', 'required|integer'],
-            ['canceled_reservation_status', 'lang:system::settings.label_canceled_reservation_status', 'required|integer'],
-            ['reservation_time_interval', 'lang:system::settings.label_reservation_time_interval', 'required|integer'],
-            ['reservation_stay_time', 'lang:system::settings.label_reservation_stay_time', 'required|integer'],
-
         ],
     ],
 ];
@@ -487,13 +411,6 @@ $config['form']['user'] = [
                 ],
                 'comment' => 'lang:system::settings.help_registration_email',
             ],
-            'registration_terms' => [
-                'label'       => 'lang:system::settings.label_registration_terms',
-                'type'        => 'select',
-                'options'     => ['System\Models\Pages_model', 'getDropdownOptions'],
-                'comment'     => 'lang:system::settings.help_registration_terms',
-                'placeholder' => 'lang:admin::default.text_please_select',
-            ],
             'customer_group_id'  => [
                 'label'   => 'lang:system::settings.label_customer_group',
                 'type'    => 'select',
@@ -502,7 +419,6 @@ $config['form']['user'] = [
         ],
         'rules'  => [
             ['registration_email.*', 'lang:system::settings.label_registration_email', 'required|alpha'],
-            ['registration_terms', 'lang:system::settings.label_registration_terms', 'required|numeric'],
             ['customer_group_id', 'lang:system::settings.label_customer_group', 'required|integer'],
         ],
     ],
@@ -519,64 +435,60 @@ $config['form']['media'] = [
             'image_manager[max_size]'      => [
                 'label'   => 'lang:system::settings.label_media_max_size',
                 'type'    => 'number',
-                'span'    => 'left',
+                'default' => 300,
                 'comment' => 'lang:system::settings.help_media_max_size',
             ],
-            'image_manager[remember_days]' => [
-                'label'   => 'lang:system::settings.label_media_remember_days',
-                'type'    => 'select',
-                'span'    => 'right',
-                'options' => [
-                    1 => 'lang:system::settings.text_24_hour',
-                    3 => 'lang:system::settings.text_3_days',
-                    5 => 'lang:system::settings.text_5_days',
-                    7 => 'lang:system::settings.text_1_week',
-                ],
-                'comment' => 'lang:system::settings.help_media_remember_days',
-            ],
             'image_manager[thumb_width]'   => [
-                'label' => 'lang:system::settings.label_media_thumb_width',
-                'type'  => 'number',
-                'span'  => 'left',
+                'label'   => 'lang:system::settings.label_media_thumb_width',
+                'type'    => 'number',
+                'default' => 320,
+                'span'    => 'left',
             ],
             'image_manager[thumb_height]'  => [
-                'label' => 'lang:system::settings.label_media_thumb_height',
-                'type'  => 'number',
-                'span'  => 'right',
+                'label'   => 'lang:system::settings.label_media_thumb_height',
+                'type'    => 'number',
+                'default' => 220,
+                'span'    => 'right',
             ],
             'image_manager[uploads]'       => [
                 'label'   => 'lang:system::settings.label_media_uploads',
                 'type'    => 'switch',
+                'default' => TRUE,
                 'span'    => 'left',
                 'comment' => 'lang:system::settings.help_media_upload',
             ],
             'image_manager[new_folder]'    => [
                 'label'   => 'lang:system::settings.label_media_new_folder',
                 'type'    => 'switch',
+                'default' => TRUE,
                 'span'    => 'right',
                 'comment' => 'lang:system::settings.help_media_new_folder',
             ],
             'image_manager[copy]'          => [
                 'label'   => 'lang:system::settings.label_media_copy',
                 'type'    => 'switch',
+                'default' => TRUE,
                 'span'    => 'left',
                 'comment' => 'lang:system::settings.help_media_copy',
             ],
             'image_manager[move]'          => [
                 'label'   => 'lang:system::settings.label_media_move',
                 'type'    => 'switch',
+                'default' => TRUE,
                 'span'    => 'right',
                 'comment' => 'lang:system::settings.help_media_move',
             ],
             'image_manager[rename]'        => [
                 'label'   => 'lang:system::settings.label_media_rename',
                 'type'    => 'switch',
+                'default' => TRUE,
                 'span'    => 'left',
                 'comment' => 'lang:system::settings.help_media_rename',
             ],
             'image_manager[delete]'        => [
                 'label'   => 'lang:system::settings.label_media_delete',
                 'type'    => 'switch',
+                'default' => TRUE,
                 'span'    => 'right',
                 'comment' => 'lang:system::settings.help_media_delete',
             ],
@@ -592,7 +504,6 @@ $config['form']['media'] = [
             ['image_manager.rename', 'lang:system::settings.label_media_rename', 'integer'],
             ['image_manager.delete', 'lang:system::settings.label_media_delete', 'integer'],
             ['image_manager.transliteration', 'lang:system::settings.label_media_transliteration', 'integer'],
-            ['image_manager.remember_days', 'lang:system::settings.label_media_remember_days', 'integer'],
         ],
     ],
 ];
@@ -615,16 +526,6 @@ $config['form']['mail'] = [
                 'type'  => 'text',
                 'span'  => 'right',
             ],
-            'mailtype'     => [
-                'label'   => 'lang:system::settings.label_mailtype',
-                'type'    => 'radio',
-                'default' => 'plain',
-                'options' => [
-                    'plain' => 'lang:system::settings.text_plain',
-                    'html'  => 'lang:system::settings.text_html',
-                ],
-                'span'    => 'left',
-            ],
             'protocol'     => [
                 'label'   => 'lang:system::settings.label_protocol',
                 'type'    => 'radio',
@@ -633,12 +534,12 @@ $config['form']['mail'] = [
                     'sendmail' => 'lang:system::settings.text_sendmail',
                     'smtp'     => 'lang:system::settings.text_smtp',
                 ],
-                'span'    => 'right',
+                'span'    => 'left',
             ],
             'smtp_host'    => [
                 'label'   => 'lang:system::settings.label_smtp_host',
                 'type'    => 'text',
-                'span'    => 'left',
+                'span'    => 'right',
                 'trigger' => [
                     'action'    => 'show',
                     'field'     => 'protocol',
@@ -648,7 +549,7 @@ $config['form']['mail'] = [
             'smtp_port'    => [
                 'label'   => 'lang:system::settings.label_smtp_port',
                 'type'    => 'text',
-                'span'    => 'right',
+                'span'    => 'left',
                 'trigger' => [
                     'action'    => 'show',
                     'field'     => 'protocol',
@@ -658,7 +559,7 @@ $config['form']['mail'] = [
             'smtp_user'    => [
                 'label'   => 'lang:system::settings.label_smtp_user',
                 'type'    => 'text',
-                'span'    => 'left',
+                'span'    => 'right',
                 'trigger' => [
                     'action'    => 'show',
                     'field'     => 'protocol',
@@ -668,7 +569,7 @@ $config['form']['mail'] = [
             'smtp_pass'    => [
                 'label'   => 'lang:system::settings.label_smtp_pass',
                 'type'    => 'text',
-                'span'    => 'right',
+                'span'    => 'left',
                 'trigger' => [
                     'action'    => 'show',
                     'field'     => 'protocol',
@@ -679,13 +580,13 @@ $config['form']['mail'] = [
                 'label' => 'lang:system::settings.label_test_email',
                 'type'  => 'partial',
                 'path'  => 'settings/test_email_button',
+                'span'  => 'right',
             ],
         ],
         'rules'  => [
             ['sender_name', 'lang:system::settings.label_sender_name', 'required'],
             ['sender_email', 'lang:system::settings.label_sender_email', 'required'],
             ['protocol', 'lang:system::settings.label_protocol', 'required'],
-            ['mailtype', 'lang:system::settings.label_mailtype', 'required'],
             ['smtp_host', 'lang:system::settings.label_smtp_host', 'required_if:protocol,smtp'],
             ['smtp_port', 'lang:system::settings.label_smtp_port', 'required_if:protocol,smtp'],
             ['smtp_user', 'lang:system::settings.label_smtp_user', 'required_if:protocol,smtp'],
@@ -712,8 +613,14 @@ $config['form']['advanced'] = [
                 'comment' => 'lang:system::settings.help_maintenance',
             ],
             'maintenance_message' => [
-                'label' => 'lang:system::settings.label_maintenance_message',
-                'type'  => 'textarea',
+                'label'   => 'lang:system::settings.label_maintenance_message',
+                'type'    => 'textarea',
+                'default' => 'Site is under maintenance. Please check back later.',
+                'trigger' => [
+                    'action'    => 'show',
+                    'field'     => 'maintenance_mode',
+                    'condition' => 'checked',
+                ],
             ],
 
 //            'caching'    => [

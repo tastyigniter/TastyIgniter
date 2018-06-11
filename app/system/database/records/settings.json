@@ -81,11 +81,6 @@
   },
   {
     "sort": "config",
-    "item": "registration_terms",
-    "value": "1"
-  },
-  {
-    "sort": "config",
     "item": "registration_email",
     "value": "a:1:{i:0;s:8:\"customer\";}"
   },
@@ -108,11 +103,6 @@
     "sort": "config",
     "item": "distance_unit",
     "value": "mi"
-  },
-  {
-    "sort": "config",
-    "item": "future_orders",
-    "value": "0"
   },
   {
     "sort": "config",
@@ -161,11 +151,6 @@
   },
   {
     "sort": "config",
-    "item": "reservation_mode",
-    "value": "1"
-  },
-  {
-    "sort": "config",
     "item": "new_reservation_status",
     "value": "18"
   },
@@ -186,16 +171,6 @@
   },
   {
     "sort": "config",
-    "item": "reservation_time_interval",
-    "value": "45"
-  },
-  {
-    "sort": "config",
-    "item": "reservation_stay_time",
-    "value": "60"
-  },
-  {
-    "sort": "config",
     "item": "image_manager",
     "value": "a:11:{s:8:\"max_size\";s:3:\"300\";s:11:\"thumb_width\";s:3:\"320\";s:12:\"thumb_height\";s:3:\"220\";s:7:\"uploads\";s:1:\"1\";s:10:\"new_folder\";s:1:\"1\";s:4:\"copy\";s:1:\"1\";s:4:\"move\";s:1:\"1\";s:6:\"rename\";s:1:\"1\";s:6:\"delete\";s:1:\"1\";s:15:\"transliteration\";s:1:\"0\";s:13:\"remember_days\";s:1:\"7\";}"
   },
@@ -203,11 +178,6 @@
     "sort": "config",
     "item": "protocol",
     "value": "sendmail"
-  },
-  {
-    "sort": "config",
-    "item": "mailtype",
-    "value": "html"
   },
   {
     "sort": "config",

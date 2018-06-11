@@ -8,6 +8,7 @@ use Exception;
 use File;
 use Illuminate\Mail\Message;
 use Mail;
+use Session;
 use System\Models\Currencies_model;
 use Template;
 
@@ -27,6 +28,8 @@ class Settings extends \Admin\Classes\AdminController
 
     public $settingCode;
 
+    public $settingItemErrors = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -36,9 +39,7 @@ class Settings extends \Admin\Classes\AdminController
 
     public function index()
     {
-        // show modal if required items are not installed
-
-        // show validation errors for missing required settings items
+        $this->validateSettingItems(TRUE);
 
         // For security reasons, delete setup files if still exists.
         if (File::isFile(base_path('setup.php')) OR File::isDirectory(base_path('setup'))) {
@@ -49,6 +50,7 @@ class Settings extends \Admin\Classes\AdminController
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
         $this->vars['settings'] = $this->createModel()->listSettingItems();
+        $this->vars['settingItemErrors'] = $this->settingItemErrors;
     }
 
     public function edit($context, $settingCode = null)
@@ -65,7 +67,12 @@ class Settings extends \Admin\Classes\AdminController
             Template::setHeading($pageTitle);
 
             $this->initWidgets($model, $definition);
-        } catch (Exception $ex) {
+
+            $this->validateSettingItems();
+            if ($errors = array_get($this->settingItemErrors, $settingCode))
+                Session::flash('errors', $errors);
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -92,6 +99,8 @@ class Settings extends \Admin\Classes\AdminController
 
         setting()->set($this->formWidget->getSaveData());
         setting()->save();
+
+        $this->validateSettingItems(TRUE);
 
         flash()->success(sprintf(lang('admin::default.alert_success'), lang($definition['label']).' settings updated '));
 
@@ -179,5 +188,30 @@ class Settings extends \Admin\Classes\AdminController
             return null;
 
         return $this->validatePasses($form->getSaveData(), $form->config['rules']);
+    }
+
+    protected function validateSettingItems($skipSession = FALSE)
+    {
+        $settingItemErrors = Session::get('settings.errors');
+
+        if ($skipSession OR !$settingItemErrors) {
+            $model = $this->createModel();
+            $settingGroup = $model->listSettingItems();
+            $settingValues = array_undot($model->getFieldValues());
+
+            foreach (array_get($settingGroup, 'core') as $listSettingItem) {
+                if (!isset($listSettingItem->form['rules']))
+                    continue;
+
+                $validator = $this->makeValidator($settingValues, $listSettingItem->form['rules']);
+                $errors = $validator->fails() ? $validator->errors() : [];
+
+                $settingItemErrors[$listSettingItem->code] = $errors;
+            }
+
+            Session::put('settings.errors', $settingItemErrors);
+        }
+
+        return $this->settingItemErrors = $settingItemErrors;
     }
 }
