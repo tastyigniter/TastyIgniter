@@ -31,13 +31,12 @@ class Menus_model extends Model
         'stock_qty', 'minimum_qty', 'subtract_stock', 'mealtime_id', 'menu_status', 'menu_priority'];
 
     public $purgeable = [
-        'special', 'menu_options', 'categories',
+        'special', 'options', 'menu_options', 'categories',
     ];
 
     public $relation = [
         'hasMany'       => [
-            'menu_options'       => ['Admin\Models\Menu_item_options_model', 'delete' => TRUE],
-            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model'],
+            'menu_options' => ['Admin\Models\Menu_item_options_model', 'delete' => TRUE],
         ],
         'hasOne'        => [
             'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
@@ -198,63 +197,18 @@ class Menus_model extends Model
 
         $idsToKeep = [];
         foreach ($menuOptions as $option) {
-            if (!isset($option['option_id'])) continue;
-
             $option['menu_id'] = $menuId;
-            $menuOption = $this->menu_options()->updateOrCreate([
+            $menuOption = $this->menu_options()->firstOrNew([
                 'menu_option_id' => $option['menu_option_id'],
-                'option_id'      => $option['option_id'],
-            ], array_except($option, ['menu_option_id', 'option_values']));
+            ])->fill(array_except($option, ['menu_option_id']));
 
-            $menuOptionValues = $option['option_values'] ?? null;
-            if ($menuOption AND is_array($menuOptionValues)) {
-                $this->addMenuOptionValues($menuOption->getKey(), $menuOption->option_id, $menuOptionValues);
-            }
-
+            $menuOption->saveOrFail();
             $idsToKeep[] = $menuOption->getKey();
         }
 
         $this->menu_options()->whereNotIn('menu_option_id', $idsToKeep)->delete();
-        $this->menu_option_values()->whereNotIn('menu_option_id', $idsToKeep)->delete();
-    }
 
-    /**
-     * Create new or update existing menu option values
-     *
-     * @param int $menuOptionId
-     * @param int $optionId
-     * @param array $optionValues if empty all existing records will be deleted
-     *
-     * @return bool
-     */
-    public function addMenuOptionValues($menuOptionId, $optionId, array $optionValues = [])
-    {
-        $menuId = $this->getKey();
-        if (!is_numeric($menuId))
-            return FALSE;
-
-        $idsToKeep = [];
-        foreach ($optionValues as $value) {
-            $menuOptionValueId = $value['menu_option_value_id'];
-            if (in_array($menuOptionValueId, $idsToKeep))
-                $menuOptionValueId = null;
-
-            $menuOptionValue = $this->menu_option_values()->updateOrCreate([
-                'menu_option_value_id' => $menuOptionValueId,
-                'menu_option_id'       => $menuOptionId,
-            ], array_merge(array_except($value, 'menu_option_value_id'), [
-                'menu_id'        => $menuId,
-                'option_id'      => $optionId,
-                'menu_option_id' => $menuOptionId,
-            ]));
-
-            $idsToKeep[] = $menuOptionValue->getKey();
-        }
-
-        $this->menu_option_values()
-             ->where('menu_option_id', $menuOptionId)
-             ->whereNotIn('menu_option_value_id', $idsToKeep)
-             ->delete();
+        return count($idsToKeep);
     }
 
     /**

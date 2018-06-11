@@ -42,6 +42,9 @@ class Mealtimes_model extends Model
 
     public function isAvailableNow()
     {
-        return Carbon::now()->between($this->start_time, $this->end_time);
+        return Carbon::now()->between(
+            Carbon::createFromTimeString($this->start_time),
+            Carbon::createFromTimeString($this->end_time)
+        );
     }
 }

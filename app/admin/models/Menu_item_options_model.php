@@ -1,6 +1,7 @@
 <?php namespace Admin\Models;
 
-use Igniter\Flame\Database\Traits\Sortable;
+use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Database\Traits\Validation;
 use Model;
 
 /**
@@ -10,9 +11,8 @@ use Model;
  */
 class Menu_item_options_model extends Model
 {
-    use Sortable;
-
-    const SORT_ORDER = 'priority';
+    use Purgeable;
+    use Validation;
 
     protected static $optionValuesCollection;
 
@@ -26,12 +26,16 @@ class Menu_item_options_model extends Model
      */
     protected $primaryKey = 'menu_option_id';
 
-    protected $fillable = ['option_id', 'menu_id', 'required', 'priority', 'default_value_id', 'option_values'];
+    protected $fillable = ['option_id', 'menu_id', 'required', 'priority'];
 
     public $relation = [
         'hasMany'   => [
-            'values'             => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
-            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'foreignKey' => 'menu_option_id', 'delete' => TRUE],
+            'option_values'      => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
+            'menu_option_values' => [
+                'Admin\Models\Menu_item_option_values_model',
+                'foreignKey' => 'menu_option_id',
+                'delete'     => TRUE,
+            ],
         ],
         'belongsTo' => [
             'menu'   => ['Admin\Models\Menus_model'],
@@ -39,35 +43,51 @@ class Menu_item_options_model extends Model
         ],
     ];
 
-    public $casts = [
-        'option_values' => 'serialize',
+    public $appends = ['option_name', 'display_type'];
+
+    public $rules = [
+        ['menu_id', 'lang:admin::menus.label_option', 'required|integer'],
+        ['option_id', 'lang:admin::menus.label_option_id', 'required|integer'],
+        ['priority', 'lang:admin::menus.label_option', 'integer'],
+        ['required', 'lang:admin::menus.label_option_required', 'integer'],
     ];
 
-    public $appends = ['option_name', 'display_type'];
+    public $purgeable = ['menu_option_values'];
+
+    public $with = ['option'];
 
     public function getOptionNameAttribute()
     {
-        return $this->option->option_name;
+        return $this->option ? $this->option->option_name : null;
     }
 
     public function getDisplayTypeAttribute()
     {
-        return $this->option->display_type;
+        return $this->option ? $this->option->display_type : null;
     }
 
-    public function getOptionValuesAttribute()
+    public function getOptionValueIdOptions()
     {
-        return $this->getOptionValues();
+        if (!empty(self::$optionValuesCollection[$this->option_id]))
+            return self::$optionValuesCollection[$this->option_id];
+
+        $result = $this->option_values()->dropdown('value');
+
+        self::$optionValuesCollection[$this->option_id] = $result;
+
+        return $result;
     }
 
-    public function getOptionValues()
-    {
-        return $this->optionValues()->get();
-    }
+    //
+    // Events
+    //
 
-    public function optionValues()
+    public function afterSave()
     {
-        return $this->menu_option_values()->with('option_value');
+        $this->restorePurgedValues();
+
+        if (array_key_exists('menu_option_values', $this->attributes))
+            $this->addMenuOptionValues($this->attributes['menu_option_values']);
     }
 
     //
@@ -79,18 +99,37 @@ class Menu_item_options_model extends Model
         return $this->required == 1;
     }
 
-    public function listOptionValues($data, $field)
+    /**
+     * Create new or update existing menu option values
+     *
+     * @param int $menuOptionId
+     * @param int $optionId
+     * @param array $optionValues if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuOptionValues(array $optionValues = [])
     {
-        if (!empty(self::$optionValuesCollection[$this->option_id]))
-            return self::$optionValuesCollection[$this->option_id];
+        $menuOptionId = $this->getKey();
+        if (!is_numeric($menuOptionId))
+            return FALSE;
 
-        $result = Menu_option_values_model::select('option_value_id', 'option_id', 'value')
-                                         ->where('option_id', $this->option_id)
-                                         ->get()
-                                         ->pluck('value', 'option_value_id');
+        $idsToKeep = [];
+        foreach ($optionValues as $value) {
+            $menuOptionValueId = $value['menu_option_value_id'];
 
-        self::$optionValuesCollection[$this->option_id] = $result;
+            $menuOptionValue = $this->menu_option_values()->firstOrNew([
+                'menu_option_value_id' => $menuOptionValueId,
+                'menu_option_id'       => $menuOptionId,
+            ])->fill(array_except($value, ['menu_option_value_id', 'menu_option_id']));
 
-        return self::$optionValuesCollection;
+            $menuOptionValue->saveOrFail();
+            $idsToKeep[] = $menuOptionValue->getKey();
+        }
+
+        $this->menu_option_values()
+             ->where('menu_option_id', $menuOptionId)
+             ->whereNotIn('menu_option_value_id', $idsToKeep)
+             ->delete();
     }
 }

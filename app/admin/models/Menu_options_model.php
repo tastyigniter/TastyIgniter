@@ -1,6 +1,7 @@
 <?php namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Database\Traits\Validation;
 use Model;
 
 /**
@@ -11,6 +12,7 @@ use Model;
 class Menu_options_model extends Model
 {
     use Purgeable;
+    use Validation;
 
     /**
      * @var string The database table name
@@ -28,17 +30,21 @@ class Menu_options_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'menu_options'  => ['Admin\Models\Menu_item_options_model', 'key' => 'option_id'],
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id'],
         ],
     ];
 
+    public $rules = [
+        ['option_name', 'lang:admin::menu_options.label_option_name', 'required|min:2|max:32'],
+        ['display_type', 'lang:admin::menu_options.label_display_type', 'required|alpha'],
+    ];
+
     public $purgeable = ['option_values'];
 
-    public static function listOptions()
+    public static function getRecordEditorOptions()
     {
         return self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name')
-                   ->pluck('display_name', 'option_id')->all();
+                   ->dropdown('display_name');
     }
 
     //
@@ -92,11 +98,9 @@ class Menu_options_model extends Model
             $optionValue = $this->option_values()->firstOrNew([
                 'option_value_id' => $value['option_value_id'],
                 'option_id'       => $optionId,
-            ])->fill(array_merge($value, [
-                'option_id' => $optionId,
-            ]));
+            ])->fill(array_except($value, ['option_value_id', 'option_id']));
 
-            $optionValue->save();
+            $optionValue->saveOrFail();
             $idsToKeep[] = $optionValue->getKey();
         }
 

@@ -11,7 +11,10 @@ return [
     'text_select'              => 'Select',
     'text_radio'               => 'Radio',
     'text_checkbox'            => 'Checkbox',
-    'text_add_option_value'    => 'Add New Option Value',
+    'is_required'              => 'is required',
+    'is_not_required'          => 'is not required',
+    'text_option'              => 'Option',
+    'text_option_summary'      => 'Option %s and will be displayed as a %s HTML tag',
 
     'column_name'         => 'Name',
     'column_display_type' => 'Display Type',

@@ -48,8 +48,6 @@ class Categories_model extends Model
         ],
     ];
 
-//    protected $with = ['permalink_data'];
-
     public static function getDropdownOptions()
     {
         return self::dropdown('name');

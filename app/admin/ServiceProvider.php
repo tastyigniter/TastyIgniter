@@ -82,6 +82,11 @@ class ServiceProvider extends AppServiceProvider
                 'code'  => 'connector',
             ]);
 
+            $manager->registerFormWidget('Admin\FormWidgets\RecordEditor', [
+                'label' => 'Record Editor',
+                'code'  => 'recordeditor',
+            ]);
+
             $manager->registerFormWidget('Admin\FormWidgets\StatusEditor', [
                 'label' => 'Status Editor',
                 'code'  => 'statuseditor',
@@ -147,7 +152,7 @@ class ServiceProvider extends AppServiceProvider
         Navigation::registerCallback(function (Navigation $manager) {
             $manager->registerMainItems([
                 'preview'  => [
-                    'icon'       => 'fa-home',
+                    'icon'       => 'fa-store',
                     'attributes' => [
                         'class'  => 'nav-link front-end',
                         'title'  => 'lang:admin::default.menu_storefront',
@@ -209,14 +214,14 @@ class ServiceProvider extends AppServiceProvider
                     'priority'   => 0,
                     'class'      => 'dashboard admin',
                     'href'       => admin_url('dashboard'),
-                    'icon'       => 'fa-dashboard',
+                    'icon'       => 'fa-tachometer-alt',
                     'title'      => lang('admin::default.menu_dashboard'),
                     'permission' => 'Admin.Dashboard',
                 ],
                 'restaurant'   => [
                     'priority' => 10,
                     'class'    => 'restaurant',
-                    'icon'     => 'fa-bank',
+                    'icon'     => 'fa-store',
                     'title'    => lang('admin::default.menu_restaurant'),
                     'child'    => [
                         'locations' => [
@@ -238,32 +243,25 @@ class ServiceProvider extends AppServiceProvider
                 'kitchen'      => [
                     'priority' => 20,
                     'class'    => 'kitchen',
-                    'icon'     => 'fa-cutlery',
+                    'icon'     => 'fa-utensils',
                     'title'    => lang('admin::default.menu_kitchen'),
                     'child'    => [
-                        'menus'        => [
+                        'menus'      => [
                             'priority'   => 10,
                             'class'      => 'menus',
                             'href'       => admin_url('menus'),
                             'title'      => lang('admin::default.menu_menu'),
                             'permission' => 'Admin.Menus',
                         ],
-                        'menu_options' => [
+                        'categories' => [
                             'priority'   => 20,
-                            'class'      => 'menu_options',
-                            'href'       => admin_url('menu_options'),
-                            'title'      => lang('admin::default.menu_option'),
-                            'permission' => 'Admin.MenuOptions',
-                        ],
-                        'categories'   => [
-                            'priority'   => 30,
                             'class'      => 'categories',
                             'href'       => admin_url('categories'),
                             'title'      => lang('admin::default.menu_category'),
                             'permission' => 'Admin.Categories',
                         ],
-                        'mealtimes'    => [
-                            'priority'   => 40,
+                        'mealtimes'  => [
+                            'priority'   => 30,
                             'class'      => 'mealtimes',
                             'href'       => admin_url('mealtimes'),
                             'title'      => lang('admin::default.menu_mealtimes'),
@@ -274,7 +272,7 @@ class ServiceProvider extends AppServiceProvider
                 'sales'        => [
                     'priority' => 30,
                     'class'    => 'sales',
-                    'icon'     => 'fa-bar-chart-o',
+                    'icon'     => 'fa-chart-bar',
                     'title'    => lang('admin::default.menu_sale'),
                     'child'    => [
                         'orders'       => [
@@ -317,7 +315,7 @@ class ServiceProvider extends AppServiceProvider
                 'marketing'    => [
                     'priority' => 40,
                     'class'    => 'marketing',
-                    'icon'     => 'fa-line-chart',
+                    'icon'     => 'fa-chart-line',
                     'title'    => lang('admin::default.menu_marketing'),
                     'child'    => [
                         'coupons'  => [
@@ -470,7 +468,7 @@ class ServiceProvider extends AppServiceProvider
                 'system'       => [
                     'priority' => 999,
                     'class'    => 'system',
-                    'icon'     => 'fa-cog',
+                    'icon'     => 'fa-cogs',
                     'title'    => lang('admin::default.menu_system'),
                     'child'    => [
                         'activities' => [
