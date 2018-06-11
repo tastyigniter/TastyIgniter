@@ -1,8 +1,11 @@
 <?php namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
-use Exception;
-use Illuminate\Database\Eloquent\Collection;
+use Admin\Traits\FormModelWidget;
+use Admin\Widgets\Form;
+use ApplicationException;
+use DB;
+use Illuminate\Support\Collection;
 
 /**
  * Form Relationship
@@ -11,6 +14,8 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class Connector extends BaseFormWidget
 {
+    use FormModelWidget;
+
     const INDEX_SEARCH = '___index__';
 
     const SORT_PREFIX = '___dragged_';
@@ -26,30 +31,21 @@ class Connector extends BaseFormWidget
 
     protected $defaultAlias = 'connector';
 
-    /**
-     * @var int Count of repeated items.
-     */
-    protected $indexCount = 0;
-
-    /**
-     * @var array Collection of form widgets.
-     */
-    public $formWidgets = [];
-
-    protected $relatedModels = [];
+    protected $sortableInputName;
 
     //
     // Configurable properties
     //
 
-    public $sortColumn = 'priority';
+    public $sortColumnName = 'priority';
 
-    /**
-     * @var string Model column to use for the name reference
-     */
-    protected $keyFrom = 'option_id';
+    public $nameFrom = 'name';
 
-    protected $valueFromName = 'menu_option_id';
+    public $descriptionFrom = 'description';
+
+    public $partial;
+
+    public $formName = 'Record';
 
     /**
      * @var array Form field configuration
@@ -66,19 +62,23 @@ class Connector extends BaseFormWidget
      */
     public $sortable = FALSE;
 
+    public $popupSize;
+
     public function initialize()
     {
         $this->fillFromConfig([
+            'formName',
             'form',
             'prompt',
             'sortable',
-            'valueFromName',
-            'keyFrom',
+            'nameFrom',
+            'descriptionFrom',
+            'partial',
+            'popupSize',
         ]);
 
-        if (!self::$onAddItemCalled) {
-            $this->processExistingItems();
-        }
+        $fieldName = $this->formField->getName(FALSE);
+        $this->sortableInputName = self::SORT_PREFIX.$fieldName;
     }
 
     public function render()
@@ -90,34 +90,19 @@ class Connector extends BaseFormWidget
 
     public function loadAssets()
     {
-        $this->addJs(assets_url('js/vendor/jquery-sortable.js'), 'jquery-sortable-js');
+        $this->addJs('../../repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
         $this->addJs('../../repeater/assets/js/repeater.js', 'repeater-js');
         $this->addJs('js/connector.js', 'connector-js');
     }
 
     public function getSaveValue($value)
     {
-        $items = (array)$value;
-
         if (!$this->sortable)
-            return $items;
+            return [];
 
-        $items = $this->evalItems($items);
+        $items = $this->formField->value;
 
-        return $items;
-    }
-
-    public function getLoadValue()
-    {
-        $value = parent::getLoadValue();
-        if ($value instanceof Collection) {
-            $this->relatedModels = $value;
-            $value = $value->toArray();
-        }
-
-        $value = $this->evalItems($value);
-
-        return $value;
+        return (array)$this->processSaveValue($items);
     }
 
     /**
@@ -125,150 +110,117 @@ class Connector extends BaseFormWidget
      */
     public function prepareVars()
     {
-        $this->vars['formWidgets'] = $this->formWidgets;
         $this->vars['formField'] = $this->formField;
-        $this->vars['fieldOptions'] = $this->formField->options();
+        $this->vars['fieldItems'] = $this->processLoadValue();
 
         $this->vars['prompt'] = $this->prompt;
         $this->vars['sortable'] = $this->sortable;
-        $this->vars['keyFromName'] = $this->keyFrom;
-        $this->vars['sortableName'] = self::SORT_PREFIX.strtolower($this->alias).'[]';
+        $this->vars['nameFrom'] = $this->nameFrom;
+        $this->vars['partial'] = $this->partial;
+        $this->vars['descriptionFrom'] = $this->descriptionFrom;
+        $this->vars['sortableInputName'] = $this->sortableInputName;
     }
 
-    public function onAddItem()
+    public function onLoadRecord()
     {
-        self::$onAddItemCalled = TRUE;
+        $recordId = post('recordId');
+        $model = $this->getRelationModel()->find($recordId);
 
-        $postData = post();
-        $keyFromValue = array_get($postData, $this->keyFrom);
-        if (!strlen($keyFromValue))
-            return FALSE;
+        return $this->makePartial('recordeditor/form', [
+            'formRecordId' => $recordId,
+            'formTitle'    => 'Edit '.lang($this->formName),
+            'formWidget'   => $this->makeItemFormWidget($model, 'edit'),
+        ]);
+    }
 
-        $model = $this->createRelatedModelObject($postData);
+    public function onSaveRecord()
+    {
+        $model = strlen($recordId = post('recordId'))
+            ? $this->getRelationModel()->find($recordId)
+            : $this->getRelationObject();
 
-        $indexCount = $postData['indexValue'] ?? $this->indexCount;
-        $indexCount++;
+        $form = $this->makeItemFormWidget($model, 'edit');
+
+        $modelsToSave = $this->prepareModelsToSave($model, $form->getSaveData());
+
+        DB::transaction(function () use ($modelsToSave) {
+            foreach ($modelsToSave as $modelToSave) {
+                $modelToSave->saveOrFail();
+            }
+        });
+
+        flash()->success(sprintf(lang('admin::default.alert_success'), 'Item updated'))->now();
 
         $this->prepareVars();
 
-        $this->relatedModels[$indexCount] = $model;
-
-        return ['@#'.$this->getId('items') => $this->makePartial('connector/connector_item', [
-            'index'  => $indexCount,
-            'widget' => $this->makeItemFormWidget($indexCount),
-        ])];
+        return [
+            '#notification'                     => $this->makePartial('flash'),
+            '#'.$this->getId('items-container') => $this->makePartial('connector/connector'),
+        ];
     }
 
-    public function onRemoveItem()
+    public function onDeleteRecord()
     {
-        $valueFromName = array_get(post(), $this->valueFromName);
-        if (!strlen($valueFromName))
+        if (!strlen($recordId = post('recordId')))
             return FALSE;
 
-        $this->getRelationModel()
-             ->where($this->valueFromName, $valueFromName)
-             ->delete();
+        $model = $this->getRelationModel()->find($recordId);
+        if (!$model)
+            throw new ApplicationException(sprintf(lang('admin::default.form.not_found'), $recordId));
+
+        $model->delete();
+
+        flash()->success(sprintf(lang('admin::default.alert_success'), lang($this->formName).' deleted'))->now();
+
+        $this->prepareVars();
+
+        return [
+            '#notification' => $this->makePartial('flash'),
+        ];
     }
 
-    /**
-     * Returns the final model and attribute name of
-     * a nested HTML array attribute.
-     * Eg: list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
-     *
-     * @param  string $attribute .
-     *
-     * @return array
-     */
-    public function resolveModelAttribute($attribute)
+    protected function processLoadValue()
     {
-        return $this->formField->resolveModelAttribute($this->model, $attribute);
-    }
-
-    protected function processExistingItems()
-    {
-        $itemIndexes = null;
-
-        $loadValue = $this->getLoadValue();
-        if (is_array($loadValue)) {
-            $itemIndexes = array_keys($loadValue);
+        $value = $this->getLoadValue();
+        if (!$this->sortable) {
+            return $value;
         }
 
-        if (!is_array($itemIndexes)) return;
+        $value = $value instanceof Collection
+            ? $value->sortBy($this->sortColumnName)
+            : sort_array($value, $this->sortColumnName);
 
-        foreach ($itemIndexes as $itemIndex) {
-            $this->makeItemFormWidget($itemIndex, $loadValue);
-            $this->indexCount = max((int)$itemIndex, $this->indexCount);
-        }
+        return $value;
     }
 
-    protected function makeItemFormWidget($index = 0, $loadValue = [])
+    protected function processSaveValue($value)
     {
-        $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-        $config['model'] = array_get($this->relatedModels, $index, $this->getRelationModel());
-        $config['data'] = array_get($loadValue, $index, array_get($this->relatedModels, $index, []));
-        $config['alias'] = $this->alias.'Form'.$index;
-        $config['arrayName'] = $this->formField->getName().'['.$index.']';
+        if ($value instanceof Collection)
+            $value = $value->toArray();
 
-        $widget = $this->makeWidget('Admin\Widgets\Form', $config);
+        if (!is_array($value) OR !$value) return $value;
+
+        $sortedIndexes = (array)post($this->sortableInputName);
+
+        foreach ($value as $index => &$data) {
+            $data[$this->sortColumnName] = $sortedIndexes[$index];
+        }
+
+        return $value;
+    }
+
+    protected function makeItemFormWidget($model, $context)
+    {
+        $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
+        $widgetConfig['model'] = $model;
+        $widgetConfig['alias'] = $this->alias.'Form'.'connector';
+        $widgetConfig['arrayName'] = $this->formField->arrayName.'[connectorData]';
+        $widgetConfig['context'] = $context;
+        $widget = $this->makeWidget(Form::class, $widgetConfig);
+
         $widget->bindToController();
         $widget->previewMode = $this->previewMode;
 
-        return $this->formWidgets[$index] = $widget;
-    }
-
-    /**
-     * Returns the value as a relation object from the model,
-     * supports nesting via HTML array.
-     * @return \Admin\FormWidgets\Relation
-     * @throws \Exception
-     */
-    protected function getRelationModel()
-    {
-        list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
-
-        if (!$model OR !$model->hasRelation($attribute)) {
-            throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",
-                get_class($this->model),
-                $this->valueFrom
-            ));
-        }
-
-        return $model->makeRelation($attribute);
-    }
-
-    protected function createRelatedModelObject($postData)
-    {
-        return $this->getRelationModel()->create(array_merge($postData, [
-            $this->model->getKeyName() => $this->model->getKey(),
-        ]));
-    }
-
-    protected function evalItems($items)
-    {
-        if (!$items) return $items;
-
-        $dragged = (array)post(self::SORT_PREFIX.strtolower($this->alias));
-        $draggedFlipped = array_flip($dragged);
-
-        // Give widgets an opportunity to process the data.
-        foreach ($this->formWidgets as $index => $widget) {
-            if (!array_key_exists($index, $items)) continue;
-            $items[$index] = $widget->getSaveData();
-        }
-
-        foreach ($items as $index => $item) {
-            if ($draggedFlipped AND $this->sortable)
-                $item[$this->sortColumn] = $draggedFlipped[$index];
-
-            $items[$index] = $item;
-        }
-
-        if ($this->sortColumn AND $this->sortable) {
-            $items = ($items instanceof Collection)
-                ? $items->sortBy($this->sortColumn)->values()
-                : sort_array($items, $this->sortColumn);
-        }
-
-        return $items;
+        return $widget;
     }
 }

@@ -32,11 +32,6 @@ class Relation extends BaseFormWidget
     public $nameFrom = 'name';
 
     /**
-     * @var string Model column to use for the description reference
-     */
-    public $descriptionFrom = 'description';
-
-    /**
      * @var string Custom SQL column selection to use for the name reference
      */
     public $sqlSelect;
@@ -46,13 +41,13 @@ class Relation extends BaseFormWidget
      */
     public $emptyOption;
 
-    public $relatedModel;
-
     //
     // Object properties
     //
 
     protected $defaultAlias = 'relation';
+
+    public $relatedModel;
 
     /**
      * @var FormField Object used for rendering a simple field type
@@ -64,7 +59,6 @@ class Relation extends BaseFormWidget
         $this->fillFromConfig([
             'relationFrom',
             'nameFrom',
-            'descriptionFrom',
             'emptyOption',
         ]);
 

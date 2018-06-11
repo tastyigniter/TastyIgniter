@@ -1,50 +1,48 @@
 <div
     id="<?= $this->getId('item-'.$index) ?>"
-    class="panel panel-light"
+    class="card bg-light border-none mb-2"
     data-item-index="<?= $index ?>"
 >
-    <div
-        class="panel-heading"
-        role="button"
-        data-toggle="collapse"
-        data-parent="#<?= $this->getId('items') ?>"
-        href="#<?= $this->getId('item-collapse-'.$index) ?>"
-        aria-expanded="true"
-        aria-controls="<?= $this->getId('item-'.$index) ?>"
-    >
-        <h5 class="panel-title">
+    <div class="card-body p-3">
+        <div class="d-flex w-100 justify-content-between">
             <?php if (!$this->previewMode AND $sortable) { ?>
-                <a class="handle <?= $this->getId('items') ?>-handle">
-                    <i class="fa fa-bars"></i>
-                </a>
+                <div class="align-self-center mr-3">
+                    <a
+                        class="handle <?= $this->getId('items') ?>-handle"
+                        role="button">
+                        <i class="fa fa-bars text-black-50"></i>
+                    </a>
+                </div>
             <?php } ?>
-            <a
-                class="pull-right"
-                aria-label="Remove"
-                <?php if (!$this->previewMode) { ?>
-                    data-request="<?= $this->getEventHandler('onRemoveItem') ?>"
-                    data-request-data="menu_option_id: <?= $widget->data->{$this->valueFromName} ?>"
-                    data-request-confirm="<?= lang('admin::default.alert_warning_confirm') ?>"
-                    data-request-success="$(this).closest('#<?= $this->getId('item-'.$index) ?>').remove()"
-                <?php } ?>
+            <div
+                class="flex-fill"
+                data-control="load-item"
+                data-item-id="<?= $item->getKey() ?>"
+                role="button"
             >
-                <span content="text-danger" aria-hidden="true">X</span>
-            </a>
-            <span><?= array_get($fieldOptions, $widget->data->{$keyFromName}) ?></span>
-        </h5>
-    </div>
-    <div
-        id="<?= $this->getId('item-collapse-'.$index) ?>"
-        class="panel-collapse collapse <?= ($index == 0) ? 'in' : ''; ?>"
-        role="tabpanel"
-        data-control="formwidget">
-
-        <div class="panel-body">
-            <?php foreach ($widget->getFields() as $field) { ?>
-                <?= $widget->renderField($field) ?>
-            <?php } ?>
+                <?php if ($this->partial) { ?>
+                    <?= $this->makePartial($this->partial, ['item' => $item]) ?>
+                <?php } else { ?>
+                    <span class="card-title font-weight-bold mb-0"><?= $item->{$nameFrom} ?></span>
+                    <p class="card-subtitle small mb-0"><?= $item->{$descriptionFrom} ?></p>
+                <?php } ?>
+            </div>
+            <div class="align-self-center ml-auto">
+                <a
+                    class="close fa-2x text-danger"
+                    aria-label="Remove"
+                    <?php if (!$this->previewMode) { ?>
+                        data-control="delete-item"
+                        data-item-id="<?= $item->getKey() ?>"
+                        data-item-selector="#<?= $this->getId('item-'.$index) ?>"
+                        data-confirm-message="<?= lang('admin::default.alert_warning_confirm') ?>"
+                    <?php } ?>
+                >
+                    <span content="text-danger" aria-hidden="true">&times;</span>
+                </a>
+            </div>
         </div>
 
-        <input type="hidden" name="<?= $sortableName ?>" value="<?= $index; ?>">
+        <input type="hidden" name="<?= $sortableInputName ?>[]" value="<?= $index; ?>">
     </div>
 </div>

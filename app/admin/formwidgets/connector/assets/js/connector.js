@@ -14,14 +14,14 @@
     }
 
     Connector.DEFAULTS = {
-        keyFromName: 'option_id',
+        alias: undefined,
         sortableHandle: '.connector-item-handle',
-        sortableContainer: 'ul.field-connector-items'
+        sortableContainer: '.field-connector-items'
     }
 
     Connector.prototype.init = function () {
-        this.$el.on('change', 'select[data-control="add-item"]', $.proxy(this.onChooseOption, this))
-        this.$el.on('click', '[data-control="remove-item"]', $.proxy(this.onChooseOption, this))
+        this.$el.on('click', '[data-control="load-item"]', $.proxy(this.onLoadItem, this))
+        this.$el.on('click', '[data-control="delete-item"]', $.proxy(this.onDeleteItem, this))
 
         this.bindSorting()
     }
@@ -29,8 +29,8 @@
     Connector.prototype.bindSorting = function () {
         var sortableOptions = {
             handle: this.options.sortableHandle,
-            itemSelector: '.panel',
-            placeholder: '<div class="placeholder"></div>'
+            itemSelector: '.card',
+            placeholder: '<div class="placeholder sortable-placeholder"></div>'
         }
 
         this.$sortable.sortable(sortableOptions)
@@ -39,30 +39,37 @@
     Connector.prototype.unbind = function () {
         this.$sortable.sortable('destroy')
         this.$el.removeData('ti.connector')
+        this.$el = null
     }
 
     // EVENT HANDLERS
     // ============================
 
-    Connector.prototype.onChooseOption = function (event) {
-        var self = this,
-            keyFromName = self.options.keyFromName,
-            $element = $(event.target),
-            $itemGroup = self.$el.find('.panel-group'),
-            $lastAddedItem = $itemGroup.find('.panel:last-child'),
-            lastIndex = $lastAddedItem.data('itemIndex'),
-            requestData = {indexValue: lastIndex}
+    Connector.prototype.onLoadItem = function (event) {
+        var $button = $(event.currentTarget)
 
-        requestData[keyFromName] = $element.val()
+        new $.ti.recordEditor.modal({
+            alias: this.options.alias,
+            recordId: $button.data('itemId'),
+            onSave: function () {
+                this.hide()
+            }
+        })
+    }
 
-        $.ti.loadingIndicator.show()
-        $element.request($element.data('handler'), {
-            data: requestData
-        }).always(function () {
-            $.ti.loadingIndicator.hide()
+    Connector.prototype.onDeleteItem = function (event) {
+        var handler = this.options.alias + '::onDeleteRecord',
+            $button = $(event.currentTarget),
+            itemSelector = $button.data('itemSelector'),
+            confirmMsg = $button.data('confirmMessage')
+
+        $.request(handler, {
+            data: {
+                recordId: $button.data('itemId'),
+            },
+            confirm: confirmMsg,
         }).done(function () {
-            $lastAddedItem = $itemGroup.find('.panel:last-child')
-            $lastAddedItem.find('[data-control="repeater"]').repeater()
+            $button.closest(itemSelector).remove()
         })
     }
 
@@ -99,7 +106,7 @@
     // ===============
 
     $(document).ready(function () {
-        $('[data-control="connector"]').connector()
+        $('[data-control="connector"]', document).connector()
     });
 
 }(window.jQuery);

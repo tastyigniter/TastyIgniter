@@ -28,7 +28,7 @@
         sortableItemPath: '> tbody',
         sortableItemSelector: 'tr',
         sortableHandle: '.repeater-item-handle',
-        sortablePlaceholder: '<tr class="placeholder"><td colspan="99"></td></tr>',
+        sortablePlaceholder: '<tr class="placeholder sortable-placeholder"><td colspan="99"></td></tr>',
     }
 
     Repeater.prototype.init = function () {
@@ -83,7 +83,7 @@
         $template.data('replace', parseInt(replace) + 1)
 
         var $added = this.$appendTo.find('> :last-child')
-        $added.find('select.form-control').select2({minimumResultsForSearch: Infinity})
+        $added.find('select.form-control').select2()
     }
 
     // FIELD REPEATER PLUGIN DEFINITION
@@ -119,7 +119,7 @@
     // ===============
 
     $(document).ready(function () {
-        $('[data-control="repeater"]').repeater()
+        $('[data-control="repeater"]', document).repeater()
     });
 
 }(window.jQuery);

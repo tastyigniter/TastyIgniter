@@ -12,8 +12,6 @@ class Repeater extends BaseFormWidget
 
     const SORT_PREFIX = '___dragged_';
 
-    const CHECKED_PREFIX = '___checked_';
-
     //
     // Configurable properties
     //
@@ -33,19 +31,11 @@ class Repeater extends BaseFormWidget
      */
     public $sortable = FALSE;
 
-    public $sortColumn = 'priority';
+    public $sortColumnName = 'priority';
 
     public $showAddButton = TRUE;
 
     public $showRemoveButton = TRUE;
-
-    public $showRadios = FALSE;
-
-    public $showCheckboxes = FALSE;
-
-    public $radioFrom;
-
-    public $checkedFrom;
 
     //
     // Object properties
@@ -58,14 +48,14 @@ class Repeater extends BaseFormWidget
      */
     protected $indexCount = 0;
 
-    public $radioValues = [];
+    protected $itemDefinitions = [];
 
-    public $checkedValues = [];
+    protected $sortableInputName;
 
     /**
      * @var array Collection of form widgets.
      */
-    public $formWidgets = [];
+    protected $formWidgets = [];
 
     public function initialize()
     {
@@ -73,15 +63,15 @@ class Repeater extends BaseFormWidget
             'form',
             'prompt',
             'sortable',
-            'radioFrom',
-            'checkedFrom',
-            'showRadios',
-            'showCheckboxes',
+            'sortColumnName',
             'showAddButton',
             'showRemoveButton',
         ]);
 
-        $this->form = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
+        $this->processItemDefinitions();
+
+        $fieldName = $this->formField->getId();
+        $this->sortableInputName = self::SORT_PREFIX.$fieldName;
 
         $this->processExistingItems();
     }
@@ -99,21 +89,16 @@ class Repeater extends BaseFormWidget
         if ($value instanceof Collection)
             $value = $value->toArray();
 
-        $value = $this->evalItems($value);
-
-        $this->checkedValues = ($value AND $this->checkedFrom) ? array_filter(array_column($value, $this->checkedFrom)) : [];
-        $this->radioValues = ($value AND $this->radioFrom) ? array_filter(array_column($value, $this->radioFrom)) : [];
+        if ($this->sortable) {
+            $value = sort_array($value, $this->sortColumnName);
+        }
 
         return $value;
     }
 
     public function getSaveValue($value)
     {
-        $items = (array)$value;
-
-        $items = $this->evalItems($items);
-
-        return $items;
+        return (array)$this->processSaveValue($value);
     }
 
     /**
@@ -121,7 +106,7 @@ class Repeater extends BaseFormWidget
      */
     public function loadAssets()
     {
-        $this->addJs(assets_url('js/vendor/jquery-sortable.js'), 'jquery-sortable-js');
+        $this->addJs('js/jquery-sortable.js', 'jquery-sortable-js');
         $this->addJs('js/repeater.js', 'repeater-js');
     }
 
@@ -130,8 +115,6 @@ class Repeater extends BaseFormWidget
         $this->vars['formWidgets'] = $this->formWidgets;
         $this->vars['widgetTemplate'] = $this->getFormWidgetTemplate();
         $this->vars['formField'] = $this->formField;
-        $this->vars['radioValues'] = $this->radioValues;
-        $this->vars['checkedValues'] = $this->checkedValues;
 
         $this->indexCount++;
         $this->vars['nextIndex'] = $this->indexCount;
@@ -139,25 +122,21 @@ class Repeater extends BaseFormWidget
         $this->vars['sortable'] = $this->sortable;
         $this->vars['showAddButton'] = $this->showAddButton;
         $this->vars['showRemoveButton'] = $this->showRemoveButton;
-        $this->vars['showCheckboxes'] = $this->showCheckboxes;
-        $this->vars['showRadios'] = $this->showRadios;
         $this->vars['indexSearch'] = self::INDEX_SEARCH;
-        $this->vars['sortableName'] = self::SORT_PREFIX.strtolower($this->alias).'[]';
-        $this->vars['checkedName'] = self::CHECKED_PREFIX.strtolower($this->alias).'[]';
-        $this->vars['radioName'] = self::CHECKED_PREFIX.'radio_'.strtolower($this->alias).'[]';
+        $this->vars['sortableInputName'] = $this->sortableInputName;
     }
 
     public function getVisibleColumns()
     {
-        if (!isset($this->form['fields']))
+        if (!isset($this->itemDefinitions['fields']))
             return [];
 
         $columns = [];
-        foreach ($this->form['fields'] as $name => $field) {
+        foreach ($this->itemDefinitions['fields'] as $name => $field) {
             if (isset($field['type']) AND $field['type'] == 'hidden')
                 continue;
 
-            $columns[$name] = $field['label'] ?? '';
+            $columns[$name] = $field['label'] ?? null;
         }
 
         return $columns;
@@ -170,16 +149,44 @@ class Repeater extends BaseFormWidget
         return $this->makeItemFormWidget($index);
     }
 
+    protected function processSaveValue($value)
+    {
+        if (!is_array($value) OR !$value) return $value;
+
+        $sortedIndexes = (array)post($this->sortableInputName);
+        $sortedIndexes = array_flip($sortedIndexes);
+
+        foreach ($value as $index => &$data) {
+            if ($sortedIndexes AND $this->sortable)
+                $data[$this->sortColumnName] = $sortedIndexes[$index];
+
+            $items[$index] = $data;
+        }
+
+        return $value;
+    }
+
+    protected function processItemDefinitions()
+    {
+        $form = $this->form;
+        if (!is_array($form))
+            $form = $this->loadConfig($form, ['form'], 'form');
+
+        $this->itemDefinitions = ['fields' => array_get($form, 'fields')];
+    }
+
     protected function processExistingItems()
     {
-        $itemIndexes = null;
+        $loadedIndexes = [];
 
         $loadValue = $this->getLoadValue();
         if (is_array($loadValue)) {
-            $itemIndexes = array_keys($loadValue);
+            $loadedIndexes = array_keys($loadValue);
         }
 
-        if (!is_array($itemIndexes)) return;
+        $itemIndexes = post($this->sortableInputName, $loadedIndexes);
+
+        if (!count($itemIndexes)) return;
 
         foreach ($itemIndexes as $itemIndex) {
             $this->formWidgets[$itemIndex] = $this->makeItemFormWidget($itemIndex);
@@ -189,12 +196,9 @@ class Repeater extends BaseFormWidget
 
     protected function makeItemFormWidget($index = 0)
     {
-        $loadValue = $this->getLoadValue();
-        if (!is_array($loadValue)) $loadValue = [];
-
-        $config = $this->form;
+        $config = $this->itemDefinitions;
         $config['model'] = $this->model;
-        $config['data'] = array_get($loadValue, $index, array_get($loadValue, 0, []));
+        $config['data'] = $this->getLoadValueFromIndex($index);
         $config['alias'] = $this->alias.'Form'.$index;
         $config['arrayName'] = $this->formField->getName().'['.$index.']';
 
@@ -204,37 +208,20 @@ class Repeater extends BaseFormWidget
         return $widget;
     }
 
-    protected function evalItems($items)
+    /**
+     * Returns the load data at a given index.
+     *
+     * @param int $index
+     *
+     * @return mixed
+     */
+    protected function getLoadValueFromIndex($index)
     {
-        if (!$items) return $items;
-
-        $dragged = (array)post(self::SORT_PREFIX.strtolower($this->alias));
-        $draggedFlipped = array_flip($dragged);
-
-        $checked = (array)post(self::CHECKED_PREFIX.strtolower($this->alias));
-        $radioed = (array)post(self::CHECKED_PREFIX.'radio_'.strtolower($this->alias));
-
-        foreach ($items as $index => $item) {
-            if ($draggedFlipped AND $this->sortable)
-                $item[$this->sortColumn] = $draggedFlipped[$index];
-
-            if ($checked AND $this->checkedFrom) {
-                $item[$this->checkedFrom] = (int)in_array($index, $checked);
-            }
-
-            if ($radioed AND $this->radioFrom) {
-                $item[$this->radioFrom] = (int)in_array($index, $radioed);
-            }
-
-            $items[$index] = $item;
+        $loadValue = $this->getLoadValue();
+        if (!is_array($loadValue)) {
+            $loadValue = [];
         }
 
-        if ($this->sortColumn AND $this->sortable) {
-            $items = ($items instanceof Collection)
-                ? $items->sortBy($this->sortColumn)->values()
-                : sort_array($items, $this->sortColumn);
-        }
-
-        return $items;
+        return array_get($loadValue, $index, []);
     }
 }

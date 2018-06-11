@@ -172,6 +172,19 @@ class FormController extends ControllerAction
             $this->controller->formExtendFields($this->formWidget, $fields);
         });
 
+        $this->formWidget->bindEvent('form.beforeRefresh', function ($holder) {
+            $result = $this->controller->formExtendRefreshData($this->formWidget, $holder->data);
+            if (is_array($result)) $holder->data = $result;
+        });
+
+        $this->formWidget->bindEvent('form.refreshFields', function ($fields) {
+            return $this->controller->formExtendRefreshFields($this->formWidget, $fields);
+        });
+
+        $this->formWidget->bindEvent('form.refresh', function ($result) {
+            return $this->controller->formExtendRefreshResults($this->formWidget, $result);
+        });
+
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget
@@ -206,7 +219,8 @@ class FormController extends ControllerAction
             $model = $this->controller->formCreateModelObject();
             $model = $this->controller->formExtendModel($model) ?: $model;
             $this->initForm($model, $context);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->controller->handleError($ex);
         }
     }
@@ -252,7 +266,8 @@ class FormController extends ControllerAction
             $model = $this->controller->formFindModelObject($recordId);
 
             $this->initForm($model, $context);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->controller->handleError($ex);
         }
     }
@@ -319,7 +334,8 @@ class FormController extends ControllerAction
 
             $model = $this->controller->formFindModelObject($recordId);
             $this->initForm($model, $context);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->controller->handleError($ex);
         }
     }
@@ -434,13 +450,13 @@ class FormController extends ControllerAction
     protected function getRedirectUrl($context = null)
     {
         $redirects = [
-            'default'      => $this->getConfig('defaultRedirect', ''),
-            'create'       => $this->getConfig('create[redirect]', ''),
+            'default' => $this->getConfig('defaultRedirect', ''),
+            'create' => $this->getConfig('create[redirect]', ''),
             'create-close' => $this->getConfig('create[redirectClose]', ''),
-            'edit'         => $this->getConfig('edit[redirect]', ''),
-            'edit-close'   => $this->getConfig('edit[redirectClose]', ''),
-            'delete'       => $this->getConfig('delete[redirect]', ''),
-            'preview'      => $this->getConfig('preview[redirect]', ''),
+            'edit' => $this->getConfig('edit[redirect]', ''),
+            'edit-close' => $this->getConfig('edit[redirectClose]', ''),
+            'delete' => $this->getConfig('delete[redirect]', ''),
+            'preview' => $this->getConfig('preview[redirect]', ''),
         ];
 
         if (!isset($redirects[$context])) {

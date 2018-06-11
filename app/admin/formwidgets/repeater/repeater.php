@@ -7,16 +7,10 @@
     <div id="<?= $this->getId('items') ?>" class="repeater-items">
         <div class="table-responsive">
             <table id="<?= $this->getId('sortable') ?>"
-                   class="table table-striped <?= ($sortable) ? 'is-sortable' : '' ?>">
+                   class="table table-striped <?= ($sortable) ? 'is-sortable' : '' ?> mb-0">
                 <thead>
                 <tr>
                     <?php if (!$this->previewMode AND $sortable) { ?>
-                        <th class="list-action"></th>
-                    <?php } ?>
-                    <?php if ($showCheckboxes) { ?>
-                        <th class="list-action"></th>
-                    <?php } ?>
-                    <?php if ($showRadios) { ?>
                         <th class="list-action"></th>
                     <?php } ?>
                     <?php if ($showRemoveButton) { ?>

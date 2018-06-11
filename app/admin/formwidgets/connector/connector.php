@@ -2,43 +2,21 @@
     id="<?= $this->getId('items-container') ?>"
     class="field-connector"
     data-control="connector"
-    data-key-from-name="<?= $keyFromName ?>"
+    data-alias="<?= $this->alias ?>"
     data-sortable-container="#<?= $this->getId('items') ?>"
-    data-sortable-handle=".<?= $this->getId('items') ?>-handle">
-
-    <?php if (!$this->previewMode AND count($fieldOptions)) { ?>
-        <form>
-            <div
-                id="<?= $this->getId('options') ?>"
-                class="margin-bottom">
-                <select
-                    class="form-control"
-                    data-control="add-item"
-                    data-handler="<?= $this->getEventHandler('onAddItem') ?>"
-                >
-
-                    <option value=""><?= $prompt ? e(lang($prompt)) : '' ?></option>
-                    <?php foreach ($fieldOptions as $key => $value) { ?>
-                        <option value="<?= $key ?>"><?= $value ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-        </form>
-        <br>
-    <?php } ?>
-
+    data-sortable-handle=".<?= $this->getId('items') ?>-handle"
+>
     <div
         id="<?= $this->getId('items') ?>"
-        class="panel-group"
         role="tablist"
         aria-multiselectable="true">
 
-        <?php foreach ($this->formWidgets as $index => $widget) { ?>
+        <?php $index = 0; foreach ($fieldItems as $fieldItem) { ?>
+            <?php $index++; ?>
             <?= $this->makePartial('connector/connector_item', [
-                'widget' => $widget,
+                'item' => $fieldItem,
                 'index'  => $index,
             ]) ?>
         <?php } ?>
-
     </div>
 </div>
