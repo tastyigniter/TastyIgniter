@@ -82,9 +82,7 @@ class MapView extends BaseWidget
     {
         $result = [];
         foreach ($this->shapes as $key => $shape) {
-            if ($shape['type'] != 'shape')
-                $shape['default'] = $shape['type'];
-
+            $shape['default'] = $shape['type'];
             $result[] = array_merge($this->shapeDefaultProperties, $shape);
         }
 

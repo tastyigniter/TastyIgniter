@@ -4,6 +4,7 @@
     var MapArea = function (element, options) {
         this.$el = $(element)
         this.$form = this.$el.closest('form')
+        this.$mapToolbar = this.$el.find('[data-control="map-toolbar"]')
         this.$mapView = this.$el.find('[data-control="map-view"]')
         this.mapRefreshed = false
         this.options = options || {}
@@ -13,14 +14,15 @@
 
     MapArea.prototype.init = function () {
         $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', $.proxy(this.refreshMap, this))
-        $(document).on('hide.bs.collapse', this.$el.find('.collapse'), $.proxy(this.onPanelHidden, this))
-        $(document).on('show.bs.collapse', this.$el.find('.collapse'), $.proxy(this.onPanelShown, this))
+
+        $(document).on('hide.bs.collapse', this.$el.find('.collapse'), $.proxy(this.onAreaHidden(), this))
+        $(document).on('show.bs.collapse', this.$el.find('.collapse'), $.proxy(this.onAreaShown(), this))
 
         this.$el.on('change', '[data-toggle="map-shape"]', $.proxy(this.onShapeTypeToggle, this))
 
-        this.$el.on('click', '[data-control="add-panel"]', $.proxy(this.addPanel, this))
-        this.$el.on('click', '[data-control="add-row"]', this.addRow)
-        this.$el.on('click', '[data-control="remove-panel"]', $.proxy(this.removePanel, this))
+        this.$el.on('click', '[data-control="toggle-editor"]', $.proxy(this.onToggleEditor, this))
+        this.$el.on('click', '[data-control="add-area"]', $.proxy(this.onAddArea, this))
+        this.$el.on('click', '[data-control="remove-area"]', $.proxy(this.removeArea, this))
 
         this.$mapView.on('click.shape.ti.mapview', $.proxy(this.onShapeClicked, this))
 
@@ -41,72 +43,44 @@
         }
     }
 
-    MapArea.prototype.addPanel = function () {
-        var container = this.$el.get(0).querySelector('[data-control="area-list"]'),
-            counter = parseInt(container.getAttribute('data-last-counter')),
-            appendTo = container.querySelector('[data-append-to]'),
-            template = container.getAttribute('data-template'),
-            $template = $(template).clone(),
-            indexRegEx = new RegExp('\\%\\%index\\%\\%', "g"),
-            colorRegEx = new RegExp('\\%\\%color\\%\\%', "g")
+    MapArea.prototype.addArea = function (lastCounter, shapeId) {
+        var $container = this.$el.find('[data-control="areas"]'),
+            $addedArea = $container.find('#'+shapeId)
 
-        if (!$template.length) {
-            throw new Error("No template element found, set one with attribute [data-template]")
-        }
+        lastCounter++
 
-        counter++
+        this.$el.get(0).setAttribute('data-last-counter', lastCounter)
+        $addedArea.find('[data-control="repeater"]').repeater()
 
-        $(appendTo).append($template.get(0).innerHTML
-            .replace(indexRegEx, counter)
-            .replace(colorRegEx, this.areaColor(counter))
-        )
-
-        container.setAttribute('data-last-counter', counter)
-        $(appendTo).find('select.form-control').select2({minimumResultsForSearch: Infinity})
-
-        var shapeId = $(appendTo).find('.panel:last-child').attr('id')
-        this.createShapeInput(counter, shapeId)
+        this.createShapeInput(shapeId)
     }
 
-    MapArea.prototype.removePanel = function (element) {
-        var $button = $(element.currentTarget),
+    MapArea.prototype.removeArea = function (event) {
+        var $button = $(event.currentTarget),
             confirmMsg = $button.data('confirm'),
-            $container = $('[data-control="area-list"]', this.$el),
-            $targetElement = $($button.data('target'), $container)
+            $selectedArea = this.$el.find('[data-control="area"]:not(.hide)')
+
+        if (!$selectedArea.length || $selectedArea.length !== 1)
+            return alert('Please select an area to delete.')
 
         if (!confirm(confirmMsg))
             return
 
-        $targetElement.remove()
-        this.$el.find('[data-control="map-view"]').mapView('removeShape', $targetElement.attr('id'));
+        $selectedArea.remove()
+        this.$el.find('[data-control="map-view"]').mapView('removeShape', $selectedArea.attr('id'));
+
+        this.selectArea(this.$el.find('[data-control="area"]:first-child').attr('id'))
     }
 
-    MapArea.prototype.addRow = function () {
-        var container = $($(this).data('parent')).get(0),
-            parentRow = container.getAttribute('data-parent-row'),
-            lastCounter = container.getAttribute('data-last-counter'),
-            nextCounter = parseInt(lastCounter) + 1,
-            appendTo = container.querySelector('[data-append-to]'),
-            template = container.getAttribute('data-template'),
-            $template = $(template).clone(),
-            indexRegEx = new RegExp('\\%\\%index\\%\\%', "g"),
-            parentRowRegEx = new RegExp('\\%\\%row\\%\\%', "g")
+    MapArea.prototype.selectArea = function (shapeId) {
+        this.$el.find('[data-control="area"]').addClass('hide')
 
-        if (!$template.length) {
-            throw new Error("No template element found, set one with attribute [data-template]")
-        }
-
-        $(appendTo).append($template.get(0).innerHTML
-            .replace(indexRegEx, nextCounter)
-            .replace(parentRowRegEx, parentRow)
-        )
-
-        container.setAttribute('data-last-counter', nextCounter)
-        $(appendTo).find('select.form-control').select2({minimumResultsForSearch: Infinity})
+        this.$el.find('#' + shapeId).removeClass('hide')
     }
 
-    MapArea.prototype.createShapeInput = function (counter, shapeId) {
-        var color = this.areaColor(counter),
+    MapArea.prototype.createShapeInput = function (shapeId) {
+        var $areaContainer = this.$el.find('#'+shapeId),
+            color = $areaContainer.data('areaColor'),
             shapeOptions = {
                 id: shapeId,
                 default: this.options.defaultShape,
@@ -116,46 +90,92 @@
                 },
             }
 
-        this.$el.find('[data-control="map-view"]').mapView('createShape', shapeOptions);
+        this.$mapView.mapView('createShape', shapeOptions)
     }
 
-    MapArea.prototype.onPanelShown = function (event) {
-        var panel = $(event.target)
-        if (!panel.parents('[data-control="area-list"]'))
+    // EVENT HANDLERS
+    // ============================
+
+    MapArea.prototype.onShapeClicked = function (event, mapObject, shape) {
+        if (!shape)
             return;
 
-        if (!panel.parent('.panel').attr('id'))
+        if (!shape.getId())
             return;
 
-        this.$el.find('[data-control="map-view"]').mapView('editShape', panel.parent('.panel').attr('id'));
+        this.selectArea(shape.getId())
+
+        this.$mapView.mapView('editShape', shape);
     }
 
-    MapArea.prototype.onPanelHidden = function (event) {
-        var panel = $(event.target)
-        if (!panel.parents('[data-control="area-list"]'))
+    MapArea.prototype.onToggleEditor = function (event) {
+        var $button = $(event.currentTarget),
+            showEditor = !$button.hasClass('active')
+
+        if (showEditor) {
+            this.$el.find('.map-area-container').removeClass('hide')
+            this.$mapView.closest('.map-view-container').removeClass('mw-100')
+        } else {
+            this.$el.find('.map-area-container').addClass('hide')
+            this.$mapView.closest('.map-view-container').addClass('mw-100')
+        }
+
+        this.$mapView.mapView('clearAllEditable')
+        this.$mapView.mapView('resize')
+    }
+
+    MapArea.prototype.onAddArea = function (event) {
+        var self = this,
+            lastCounter = parseInt(this.$el.get(0).getAttribute('data-last-counter')),
+            $button = $(event.target),
+            handler = $button.data('handler')
+
+        $.request(handler, {
+            data: {lastCounter: lastCounter},
+            success: function (data, textStatus, jqXHR) {
+                var dataArray = []
+
+                dataArray = data
+
+                for (var partial in dataArray) {
+                    var selector = partial
+                    if (jQuery.type(selector) === 'string' && selector.charAt(0) == '@') {
+                        $(selector.substring(1)).append(dataArray[partial])
+                    }
+                }
+
+                self.addArea(lastCounter, dataArray.areaShapeId)
+            }
+        })
+    }
+
+    MapArea.prototype.onAreaShown = function () {
+        var $toolbar = this.$mapToolbar,
+            shapeId = $toolbar.attr('data-selected-area')
+
+        if (!shapeId)
             return;
 
-        if (!panel.parent('.panel').attr('id'))
+        this.$el.find('[data-control="map-view"]').mapView('editShape', shapeId);
+    }
+
+    MapArea.prototype.onAreaHidden = function () {
+        var $toolbar = this.$mapToolbar,
+            shapeId = $toolbar.attr('data-selected-area')
+
+        if (!shapeId)
             return;
 
-        this.$el.find('[data-control="map-view"]')
-            .mapView('clearEditShape', panel.parent('.panel').attr('id'))
+        this.$el.find('[data-control="map-view"]').mapView('clearEditShape', shapeId)
     }
 
     MapArea.prototype.onShapeTypeToggle = function (event) {
         var $input = $(event.target),
-            $panel = $input.closest('.panel'),
-            shapeId = $panel.attr('id'),
+            $container = $input.closest('[data-control="area"]'),
+            shapeId = $container.attr('id'),
             type = $input.val()
 
-        if (type != 'circle') {
-            $panel.find('[data-area-color]').addClass('fa-stop').removeClass('fa-circle')
-        } else {
-            $panel.find('[data-area-color]').addClass('fa-circle').removeClass('fa-stop')
-        }
-
-        this.$el.find('[data-control="map-view"]')
-            .mapView('hideShape', shapeId)
+        this.$mapView.mapView('hideShape', shapeId)
             .mapView('showShape', shapeId, type)
             .mapView('editShape', shapeId);
     }
@@ -187,17 +207,6 @@
 
         if (this.options.areaColors[index])
             return this.options.areaColors[index];
-    }
-
-    // EVENT HANDLERS
-    // ============================
-
-    MapArea.prototype.onShapeClicked = function (event, mapObject, shape) {
-        if (!shape)
-            return;
-
-        this.$el.find('.collapse').collapse('hide')
-        $('#' + shape.getId()).find('.collapse').collapse('toggle')
     }
 
     MapArea.DEFAULTS = {

@@ -2,8 +2,7 @@
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Widgets\MapView;
-use Illuminate\Support\Collection;
+use Admin\Traits\FormModelWidget;
 
 /**
  * Map Area
@@ -12,6 +11,8 @@ use Illuminate\Support\Collection;
  */
 class MapArea extends BaseFormWidget
 {
+    use FormModelWidget;
+
     //
     // Object properties
     //
@@ -20,11 +21,17 @@ class MapArea extends BaseFormWidget
 
     protected $prompt = 'lang:admin::locations.text_add_new_area';
 
-    protected $relationFrom;
+    protected $indexCount = 0;
 
     protected $latFrom;
 
     protected $lngFrom;
+
+    protected $size = 'normal';
+
+    protected $zoom;
+
+    protected $form;
 
     protected $areaColors = [
         '#F16745', '#FFC65D',
@@ -39,23 +46,39 @@ class MapArea extends BaseFormWidget
         '#F16745', '#FFC65D',
     ];
 
+    protected $availableSizes = [
+        'small'  => 360,
+        'normal' => 640,
+        'large'  => 860,
+    ];
+
+    protected static $onAddItemCalled = FALSE;
+
+    protected $formWidgets = [];
+
     protected $mapViewWidget;
 
     public function initialize()
     {
         $this->fillFromConfig([
             'prompt',
-            'relationFrom',
             'latFrom',
             'lngFrom',
+            'zoom',
+            'size',
+            'form',
         ]);
 
-        $this->mapViewWidget = $this->makeMapViewWidget();
-        $this->mapViewWidget->bindToController();
+        if (!self::$onAddItemCalled)
+            $this->processExistingAreas();
     }
 
     public function loadAssets()
     {
+        $this->addJs('../../repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
+        $this->addJs('../../repeater/assets/js/repeater.js', 'repeater-js');
+        $this->addJs('../../recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
+
         $this->addCss('css/maparea.css', 'maparea-css');
         $this->addJs('js/maparea.js', 'maparea-js');
     }
@@ -70,39 +93,13 @@ class MapArea extends BaseFormWidget
     public function prepareVars()
     {
         $this->vars['field'] = $this->formField;
-        $this->vars['mapViewWidget'] = $this->mapViewWidget;
-        $this->vars['areas'] = $this->listAreas();
-        $this->vars['conditionsTypes'] = $this->getConditionsTypes();
+        $this->vars['formWidgets'] = $this->formWidgets;
+        $this->vars['mapViewWidget'] = $this->makeMapViewWidget();
+        $this->vars['indexCount'] = $this->indexCount;
+
         $this->vars['prompt'] = $this->prompt;
+        $this->vars['zoom'] = $this->zoom;
         $this->vars['areaColors'] = $this->areaColors;
-        $this->vars['emptyArea'] = [
-            'area_id'    => '%%index%%',
-            'type'       => 'polygon',
-            'name'       => 'Area %%index%%',
-            'boundaries' => [
-                'polygon'  => '',
-                'circle'   => '',
-                'vertices' => '',
-            ],
-            'conditions' => [],
-        ];
-        $this->vars['emptyCondition'] = [
-            'amount' => 0,
-            'type'   => 'all',
-            'total'  => 0,
-        ];
-    }
-
-    public function getLoadValue()
-    {
-        $value = parent::getLoadValue();
-
-        if ($value instanceof Collection) {
-            $this->relatedModels = $value;
-            $value = $value->toArray();
-        }
-
-        return $value;
     }
 
     public function getSaveValue($value)
@@ -117,6 +114,12 @@ class MapArea extends BaseFormWidget
 
         if (is_array($value) && !count($value)) {
             return null;
+        }
+
+        // Give widgets an opportunity to process the data.
+        foreach ($this->formWidgets as $index => $form) {
+            if (!array_key_exists($index, $value)) continue;
+            $value[$index] = $form['widget']->getSaveData();
         }
 
         return $value;
@@ -142,87 +145,110 @@ class MapArea extends BaseFormWidget
 
     public function getAreaColor($key)
     {
-        return (isset($this->areaColors[$key - 1]))
-            ? $this->areaColors[$key - 1]
-            : '#F16745';
+        --$key;
+
+        return $this->areaColors[$key] ?? $this->areaColors[0];
+    }
+
+    public function onAddArea()
+    {
+        self::$onAddItemCalled = TRUE;
+
+        $lastCount = post('lastCounter', $this->indexCount);
+        $lastCount++;
+
+        $area = [
+            'name'  => 'Area '.$lastCount,
+            'color' => $this->getAreaColor($lastCount),
+        ];
+
+        $this->vars['index'] = $lastCount;
+        $this->vars['areaForm'] = [
+            'data'   => $area,
+            'widget' => $this->makeAreaFormWidget($lastCount, $area),
+        ];
+
+        $itemContainer = '@#'.$this->getId('areas');
+
+        return [
+            'areaShapeId'  => $this->getId('area-'.$lastCount),
+            $itemContainer => $this->makePartial('area_form'),
+        ];
+    }
+
+    protected function processExistingAreas()
+    {
+        $result = [];
+
+        $value = $this->getLoadValue() ?: [];
+        foreach ($value as $key => $area) {
+            $this->indexCount++;
+
+            if (!isset($area['color']) OR !strlen($area['color']))
+                $area['color'] = $this->getAreaColor($this->indexCount);
+
+            $result[$this->indexCount] = [
+                'data'   => !is_array($area) ? $area->toArray() : $area,
+                'widget' => $this->makeAreaFormWidget($this->indexCount, $area),
+            ];
+        }
+
+        return $this->formWidgets = $result;
     }
 
     protected function makeMapViewWidget()
     {
         $config = $this->config;
 
-        $config['shapes'] = $this->prepareMapShapesArray();
+        $config['shapes'] = $this->getMapShapes();
         $config['center'] = [
             'lat' => $this->model->{$this->latFrom},
             'lng' => $this->model->{$this->lngFrom},
         ];
-        $config['height'] = 640;
+        $config['zoom'] = $this->zoom;
+        $config['height'] = array_get($this->availableSizes, $this->size);
 
-        return new MapView($this->getController(), $config);
+        $widget = $this->makeWidget('Admin\Widgets\MapView', $config);
+        $widget->bindToController();
+
+        return $this->mapViewWidget = $widget;
     }
 
-    protected function listAreas()
+    protected function makeAreaFormWidget($index, $data)
     {
-        $result = [];
-        $value = $this->getLoadValue();
-        if (!is_array($value))
-            return $result;
+        $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
+        $config['model'] = $this->model;
+        $config['data'] = $data;
+        $config['alias'] = $this->alias.'Form'.$index;
+        $config['arrayName'] = $this->formField->getName().'['.$index.']';
 
-        foreach ($value as $key => $item) {
-            $item['conditions'] = $this->parseConditions($item);
-            $result[$key] = $item;
-        }
+        $widget = $this->makeWidget('Admin\Widgets\Form', $config);
+        $widget->bindToController();
 
-        return $result;
+        return $widget;
     }
 
-    protected function getConditionsTypes()
-    {
-        return [
-            'all'   => 'admin::locations.text_all_orders',
-            'above' => 'admin::locations.text_above_order_total',
-            'below' => 'admin::locations.text_below_order_total',
-        ];
-    }
-
-    protected function prepareMapShapesArray()
+    protected function getMapShapes()
     {
         $result = [];
 
-        $areas = $this->getLoadValue() ?: [];
-        foreach ($areas as $key => $area) {
-            $circle = @json_decode($area['boundaries']['circle']);
-            if (is_array($circle) AND isset($circle[0]->center))
-                $circle = (object)['lat' => $circle[0]->center->lng, 'lng' => $circle[0]->center->lng, 'radius' => $circle[1]->radius];
-
-            $polygonArray = @json_decode($polygon = $area['boundaries']['polygon']);
-            if (is_array($polygonArray) AND isset($polygonArray[0]->shape))
-                $polygon = $polygonArray[0]->shape;
-
-            $vertices = @json_decode($area['boundaries']['vertices']);
+        foreach ($this->formWidgets as $key => $area) {
+            $area = (object)$area['data'];
 
             $result[] = [
-                'id'       => $this->getId('area-panel-'.$key),
-                'type'     => isset($area['type']) ? $area['type'] : 'polygon',
-                'polygon'  => $polygon,
-                'circle'   => $circle,
-                'vertices' => $vertices,
+                'id'       => $this->getId('area-'.$key), //$area->area_id,
+                'type'     => $area->type ?? 'polygon',
+                'polygon'  => $area->boundaries['polygon'],
+                'circle'   => @json_decode($area->boundaries['circle']),
+                'vertices' => @json_decode($area->boundaries['vertices']),
                 'editable' => !$this->previewMode,
                 'options'  => [
-                    'fillColor'   => $this->getAreaColor($key),
-                    'strokeColor' => $this->getAreaColor($key),
+                    'fillColor'   => $area->color,
+                    'strokeColor' => $area->color,
                 ],
             ];
         }
 
         return $result;
-    }
-
-    protected function parseConditions(array $item)
-    {
-        if (isset($item['conditions']))
-            return $item['conditions'];
-
-        return [];
     }
 }

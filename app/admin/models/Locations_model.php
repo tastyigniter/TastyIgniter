@@ -153,22 +153,22 @@ class Locations_model extends BaseLocationModel
 
     public function getDeliveryTimeAttribute($value)
     {
-        return (int)$value ?: setting('delivery_time');
+        return (int)$value;
     }
 
     public function getCollectionTimeAttribute($value)
     {
-        return (int)$value ?: setting('collection_time');
+        return (int)$value;
     }
 
     public function getFutureOrdersAttribute($value)
     {
-        return (bool)$value ?: setting('future_orders');
+        return (bool)$value;
     }
 
     public function getReservationTimeIntervalAttribute($value)
     {
-        return (int)$value ?: setting('reservation_time_interval');
+        return (int)$value;
     }
 
     //
@@ -202,7 +202,8 @@ class Locations_model extends BaseLocationModel
                         if ($suffix == 'hours') {
                             $value['hours'][$typeIndex]['open'] = $valueItem['open'] ?? '00:00';
                             $value['hours'][$typeIndex]['close'] = $valueItem['close'] ?? '23:59';
-                        } else {
+                        }
+                        else {
                             $value['hours'][$typeIndex][$suffix] = $valueItem;
                         }
                     }
@@ -326,7 +327,10 @@ class Locations_model extends BaseLocationModel
 
         $this->working_hours()->delete();
 
-        if (is_array($data)) foreach ($data as $type => $hours) {
+        if (!$data)
+            return FALSE;
+
+        foreach ($data as $type => $hours) {
             $hoursArray = [];
 
             if (!isset($hours['type'])) continue;
@@ -367,17 +371,25 @@ class Locations_model extends BaseLocationModel
      */
     public function addLocationAreas($deliveryAreas)
     {
-        $created = FALSE;
+        $locationId = $this->getKey();
+        if (!is_numeric($locationId))
+            return FALSE;
 
-        $this->delivery_areas()->delete();
+        if (!is_array($deliveryAreas))
+            return FALSE;
 
-        if (is_array($deliveryAreas)) foreach ($deliveryAreas as $deliveryArea) {
-            $created = $this->delivery_areas()->create(
-                array_except($deliveryArea, 'area_id')
-            );
+        foreach ($deliveryAreas as $area) {
+            $locationArea = $this->delivery_areas()->firstOrNew([
+                'area_id' => $area['area_id'] ?? null,
+            ])->fill(array_except($area, ['area_id']));
+
+            $locationArea->save();
+            $idsToKeep[] = $locationArea->getKey();
         }
 
-        return $created;
+        $this->delivery_areas()->whereNotIn('area_id', $idsToKeep)->delete();
+
+        return count($idsToKeep);
     }
 
     /**

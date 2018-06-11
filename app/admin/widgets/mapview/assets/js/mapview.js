@@ -41,10 +41,6 @@
 
         // Initialize Google Map
         this.mapTimer = window.setTimeout(this.initMap(), 300)
-
-        this.$mapView.on('show.shape.ti.mapview', $.proxy(this.onShapeChanged, this))
-        this.$mapView.on('edit.shape.ti.mapview', $.proxy(this.onShapeChanged, this))
-        this.$mapView.on('changed.shape.ti.mapview', $.proxy(this.onShapeChanged, this))
     }
 
     MapView.prototype.dispose = function () {
@@ -101,8 +97,11 @@
                 zoom: this.options.mapZoom,
                 center: mapCenter,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
+                zoomControl: true,
+                mapTypeControl: false,
                 rotateControl: true,
                 streetViewControl: false,
+                disableDefaultUI: true
             }
 
         this.map = new google.maps.Map(this.$mapView[0], mapOptions);
@@ -114,6 +113,10 @@
 
         this.initShapes()
     }
+
+    //
+    // Shape
+    //
 
     MapView.prototype.initShapes = function () {
         var self = this

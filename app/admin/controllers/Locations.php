@@ -193,7 +193,7 @@ class Locations extends \Admin\Classes\AdminController
             $this->validateCoordinates($validator, $model);
         });
 
-        return $this->validatePasses(post($form->arrayName), $rules);
+        return $this->validatePasses($form->getSaveData(), $rules);
     }
 
     public function validateCoordinates($validator, $model)

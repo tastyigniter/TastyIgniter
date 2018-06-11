@@ -149,7 +149,7 @@
         shapeObj.setOptions({
             editable: true,
             fillOpacity: this.drawOptions.fillOpacity * 4,
-            zIndex: MapViewShape.DRAWING_DEFAULTS.zIndex * 100
+            zIndex: this.drawOptions.zIndex * 100
         })
 
         this.$mapView.trigger('edit.shape.ti.mapview', [shapeObj, this])
@@ -159,8 +159,8 @@
         this.setObjectsOptions({
             editable: false,
             fillOpacity: this.drawOptions.fillOpacity,
-            strokeWeight: MapViewShape.DRAWING_DEFAULTS.strokeWeight,
-            zIndex: MapViewShape.DRAWING_DEFAULTS.zIndex
+            strokeWeight: this.drawOptions.strokeWeight,
+            zIndex: this.drawOptions.zIndex
         })
     }
 
@@ -170,8 +170,8 @@
         if (!shapeObj) return
 
         shapeObj.setOptions({
-            strokeWeight: MapViewShape.DRAWING_DEFAULTS.strokeWeight * 2,
-            zIndex: MapViewShape.DRAWING_DEFAULTS.zIndex * 100
+            strokeWeight: this.drawOptions.strokeWeight * 2,
+            zIndex: this.drawOptions.zIndex * 100
         })
     }
 
