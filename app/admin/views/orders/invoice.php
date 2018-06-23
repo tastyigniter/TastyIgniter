@@ -2,150 +2,152 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title><?= lang('admin::orders.text_invoice'); ?> - <?= $this->config->item('site_name'); ?></title>
+    <title><?= $model->invoice_id.' - '.lang('admin::orders.text_invoice'); ?> - <?= setting('site_name'); ?></title>
     <?= get_style_tags(); ?>
 
     <style>
         body {
             background-color: #FFF;
-            font-family: "Lato", Arial, sans-serif;
-        }
-        .invoice-title h2, .invoice-title h3 {
-            display: inline-block;
-        }
-        .table > tbody > tr > .no-line {
-            border-top: none;
-        }
-        .table > thead > tr > .no-line {
-            border-bottom: none;
-        }
-        .table > tbody > tr > .thick-line {
-            border-top: 2px solid;
+            color: #000;
         }
     </style>
 </head>
 <body>
-    <div id="invoice-container" class="container">
+    <div class="container-fluid p-5">
         <div class="row">
-            <div class="col-xs-12">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="invoice-title">
-                            <h2><?= lang('admin::orders.text_invoice'); ?></h2>
-                            <h3 class="pull-right"><?= lang('admin::orders.label_order_id'); ?><?= $order_id; ?></h3>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <address>
-                                    <span class="text-muted"><?= lang('admin::orders.text_restaurant'); ?>:</span><br>
-                                    <strong><?= $location_name; ?></strong><br>
-                                    <?= $location_address; ?>
-                                </address>
-                            </div>
-                            <div class="col-xs-6 text-right">
-                                <img src="<?= $invoice_logo; ?>" style="max-width: 100%;"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <address>
-                                    <span class="text-muted"><?= lang('admin::orders.text_customer'); ?>:</span><br>
-                                    <strong><?= $first_name; ?> <?= $last_name; ?></strong><br>
-                                    <?= $email; ?>
-                                </address>
-                                <?php if ($check_order_type == '1') { ?>
-                                    <address>
-                                        <span class="text-muted"><?= lang('admin::orders.text_deliver_to'); ?>:</span><br>
-                                        <?= $customer_address; ?>
-                                    </address>
-                                <?php } ?>
-                            </div>
-                            <div class="col-xs-3 text-left">
-                                <address>
-                                    <strong><?= lang('admin::orders.text_invoice_no'); ?>:</strong><br>
-                                    <?= $invoice_no; ?>
-                                </address>
-                                <address>
-                                    <strong><?= lang('admin::orders.text_invoice_date'); ?>:</strong><br>
-                                    <?= $invoice_date; ?><br><br>
-                                </address>
-                            </div>
-                            <div class="col-xs-3 text-right">
-                                <address>
-                                    <strong><?= lang('admin::orders.text_payment'); ?>:</strong><br>
-                                    <?= $payment; ?>
-                                </address>
-                                <address>
-                                    <strong><?= lang('admin::orders.text_order_date'); ?>:</strong><br>
-                                    <?= $date_added; ?>
-                                </address>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col">
+                <div class="invoice-title">
+                    <h3 class="pull-right"><?= lang('admin::orders.label_order_id'); ?><?= $model->order_id; ?></h3>
+                    <h2><?= lang('admin::orders.text_invoice'); ?></h2>
                 </div>
+            </div>
+        </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-condensed">
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th class="text-left"
-                                        width="65%"><?= lang('admin::orders.column_name_option'); ?></th>
-                                    <th class="text-left"><?= lang('admin::orders.column_price'); ?></th>
-                                    <th class="text-right"><?= lang('admin::orders.column_total'); ?></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach ($cart_items as $cart_item) { ?>
-                                    <tr id="<?= $cart_item['id']; ?>">
-                                        <td><?= $cart_item['qty']; ?>x</td>
-                                        <td class="text-left"><?= $cart_item['name']; ?><br/>
-                                            <?php if (!empty($cart_item['options'])) { ?>
-                                                <div>
-                                                    <small><?= lang('admin::default.text_plus'); ?><?= $cart_item['options']; ?></small>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if (!empty($cart_item['comment'])) { ?>
-                                                <div>
-                                                    <small><b><?= $cart_item['comment']; ?></b></small>
-                                                </div>
-                                            <?php } ?>
-                                        </td>
-                                        <td class="text-left"><?= $cart_item['price']; ?></td>
-                                        <td class="text-right"><?= $cart_item['subtotal']; ?></td>
-                                    </tr>
-                                <?php } ?>
-                                <?php $total_count = 1; ?>
-                                <?php foreach ($totals as $total) { ?>
-                                    <tr>
-                                        <td class="<?= ($total_count === 1) ? 'thick' : 'no'; ?>-line"></td>
-                                        <td class="<?= ($total_count === 1) ? 'thick' : 'no'; ?>-line"></td>
-                                        <?php if ($total['code'] === 'order_total') { ?>
-                                            <td class="thick-line text-left"><b><?= $total['title']; ?></b></td>
-                                            <td class="thick-line text-right"><b><?= $total['value']; ?></b></td>
-                                        <?php }
-                                        else { ?>
-                                            <td class="<?= ($total_count === 1) ? 'thick' : 'no'; ?>-line text-left"><?= $total['title']; ?></td>
-                                            <td class="<?= ($total_count === 1) ? 'thick' : 'no'; ?>-line text-right"><?= $total['value']; ?></td>
-                                        <?php } ?>
-                                    </tr>
-                                    <?php $total_count++; ?>
-                                <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
+        <div class="row">
+            <div class="col py-3">
                 <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p class="text-center"><?= lang('admin::orders.text_invoice_thank_you'); ?></p>
-                    </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <strong><?= lang('admin::orders.text_restaurant'); ?></strong><br>
+                <span><?= $model->location->getName(); ?></span><br>
+                <address><?= format_address($model->location->getAddress(), TRUE); ?></address>
+            </div>
+            <div class="col-6 text-right">
+                <img class="img-responsive" src="<?= image_url(setting('site_logo')); ?>"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <p>
+                    <strong><?= lang('admin::orders.text_customer'); ?></strong><br>
+                    <?= $model->first_name; ?> <?= $model->last_name; ?><br>
+                    <?= $model->email; ?>
+                </p>
+                <?php if ($model->isDeliveryType()) { ?>
+                    <span class="text-muted"><?= lang('admin::orders.text_deliver_to'); ?></span><br>
+                    <address><?= $model->formatted_address; ?></address>
+                <?php } ?>
+            </div>
+            <div class="col-3 text-left">
+                <p>
+                    <strong><?= lang('admin::orders.text_invoice_no'); ?></strong><br>
+                    <?= $model->invoice_id; ?>
+                </p>
+                <p>
+                    <strong><?= lang('admin::orders.text_invoice_date'); ?></strong><br>
+                    <?= $model->invoice_date->format(setting('date_format')); ?><br><br>
+                </p>
+            </div>
+            <div class="col-3 text-right">
+                <p>
+                    <strong><?= lang('admin::orders.text_payment'); ?></strong><br>
+                    <?= $model->payment_method->name; ?>
+                </p>
+                <p>
+                    <strong><?= lang('admin::orders.text_order_date'); ?></strong><br>
+                    <?= $model->order_date->format(setting('date_format')); ?>
+                </p>
+            </div>
+        </div>
+
+        <?php
+        $menuItems = $model->getOrderMenus();
+        $menuItemsOptions = $model->getOrderMenuOptions();
+        $orderTotals = $model->getOrderTotals();
+        ?>
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="2%"></th>
+                            <th class="text-left" width="65%"><b><?= lang('admin::orders.column_name_option'); ?></b>
+                            </th>
+                            <th class="text-left"><b><?= lang('admin::orders.column_price'); ?></b></th>
+                            <th class="text-right"><b><?= lang('admin::orders.column_total'); ?></b></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($menuItems as $menuItem) { ?>
+                            <tr>
+                                <td><?= $menuItem->quantity; ?>x</td>
+                                <td class="text-left"><?= $menuItem->name; ?><br/>
+                                    <?php if ($menuItemOptions = $menuItemsOptions->get($menuItem->menu_id)) { ?>
+                                        <div>
+                                            <?php foreach ($menuItemOptions as $menuItemOption) { ?>
+                                                <small>
+                                                    <?= $menuItemOption->order_option_name; ?>
+                                                    =
+                                                    <?= currency_format($menuItemOption->order_option_price); ?>
+                                                </small><br>
+                                            <?php } ?>
+                                        </div>
+                                    <?php } ?>
+                                    <?php if (!empty($menuItem->comment)) { ?>
+                                        <div>
+                                            <small><b><?= $menuItem->comment; ?></b></small>
+                                        </div>
+                                    <?php } ?>
+                                </td>
+                                <td class="text-left"><?= currency_format($menuItem->price); ?></td>
+                                <td class="text-right"><?= currency_format($menuItem->subtotal); ?></td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                        <tfoot>
+                        <?php $totalCount = 1; ?>
+                        <?php foreach ($orderTotals as $total) { ?>
+                            <?php if ($model->isCollectionType() AND $total->code == 'delivery') continue; ?>
+                            <?php $thickLine = ($total->code == 'order_total' OR $total->code == 'total'); ?>
+                            <tr>
+                                <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line"
+                                    width="1"></td>
+                                <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line"></td>
+                                <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line text-left"><?= $total->title; ?></td>
+                                <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line text-right"><?= currency_format($total->value); ?></td>
+                            </tr>
+                            <?php $totalCount++; ?>
+                        <?php } ?>
+                        </tfoot>
+                    </table>
                 </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <p class="text-center"><?= lang('admin::orders.text_invoice_thank_you'); ?></p>
             </div>
         </div>
     </div>

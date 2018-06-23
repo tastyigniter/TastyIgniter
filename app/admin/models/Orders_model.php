@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\HasInvoice;
 use Carbon\Carbon;
 use DB;
 use Event;
@@ -17,6 +18,7 @@ use System\Traits\SendsMailTemplate;
  */
 class Orders_model extends Model
 {
+    use HasInvoice;
     use SendsMailTemplate;
 
     const CREATED_AT = 'date_added';
@@ -41,9 +43,9 @@ class Orders_model extends Model
 
     protected $guarded = ['*'];
 
-    protected $fillable = ['customer_id', 'first_name', 'last_name', 'email', 'telephone', 'location_id', 'address_id', 'cart',
-        'total_items', 'comment', 'payment', 'order_type', 'order_time', 'order_date', 'order_total',
-        'status_id', 'ip_address', 'user_agent', 'notify', 'assignee_id', 'invoice_no', 'invoice_prefix', 'invoice_date',
+    protected $fillable = ['customer_id', 'first_name', 'last_name', 'email', 'telephone', 'location_id', 'address_id',
+        'cart', 'total_items', 'comment', 'payment', 'order_type', 'order_time', 'order_date', 'order_total',
+        'status_id', 'ip_address', 'user_agent', 'notify', 'assignee_id',
     ];
 
     protected $timeFormat = 'H:i';
@@ -54,9 +56,10 @@ class Orders_model extends Model
     public $timestamps = TRUE;
 
     public $casts = [
-        'cart'       => 'serialize',
-        'order_date' => 'date',
-        'order_time' => 'time',
+        'cart'         => 'serialize',
+        'order_date'   => 'date',
+        'order_time'   => 'time',
+        'invoice_date' => 'dateTime',
     ];
 
     public $relation = [
@@ -184,6 +187,11 @@ class Orders_model extends Model
     public function getStatusNameAttribute()
     {
         return $this->status ? $this->status->status_name : null;
+    }
+
+    public function getFormattedAddressAttribute($value)
+    {
+        return $this->address ? $this->address->formatted_address : null;
     }
 
     //

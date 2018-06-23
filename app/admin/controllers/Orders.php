@@ -51,10 +51,44 @@ class Orders extends \Admin\Classes\AdminController
 
     public function invoice($context, $recordId = null)
     {
+        $model = $this->formFindModelObject($recordId);
+
+        $this->vars['model'] = $model;
+
+        $this->suppressLayout = TRUE;
     }
 
-    public function onGenerateInvoice()
+    public function edit_onGenerateInvoice($context = null, $recordId = null)
     {
+        $model = $this->formFindModelObject($recordId);
+
+        if ($invoiceNo = $model->generateInvoice()) {
+            flash()->success(sprintf(lang('admin::default.alert_success'), 'Invoice generated'));
+        }
+        else {
+            flash()->danger(sprintf(lang('admin::default.alert_error_nothing'), 'generated'));
+        }
+
+        return $this->refresh();
+    }
+
+    public function formExtendFieldsBefore($form)
+    {
+        if (!$form->model->hasInvoice() AND (bool)setting('auto_invoicing')) {
+            array_pull($form->fields['invoice_id'], 'addonRight');
+        }
+
+        if ($form->model->hasInvoice()) {
+            $form->fields['invoice_id']['addonRight']['label'] = 'admin::orders.button_view_invoice';
+            $form->fields['invoice_id']['addonRight']['tag'] = 'a';
+            $form->fields['invoice_id']['addonRight']['attributes']['href'] = admin_url('orders/invoice/'.$form->model->getKey());
+            $form->fields['invoice_id']['addonRight']['attributes']['target'] = '_blank';
+
+            unset(
+                $form->fields['invoice_id']['addonRight']['attributes']['data-request'],
+                $form->fields['invoice_id']['addonRight']['attributes']['type']
+            );
+        }
     }
 
     public function formExtendQuery($query)

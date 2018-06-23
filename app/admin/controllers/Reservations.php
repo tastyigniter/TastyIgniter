@@ -1,7 +1,6 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Models\Reservations_model;
-use Admin\Models\Status_history_model;
 use Admin\Models\Statuses_model;
 use AdminAuth;
 use AdminMenu;
@@ -64,14 +63,6 @@ class Reservations extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('reservations', 'sales');
-    }
-
-    public function invoice($context, $recordId = null)
-    {
-    }
-
-    public function onGenerateInvoice()
-    {
     }
 
     public function calendarGenerateEvents($startAt, $endAt)

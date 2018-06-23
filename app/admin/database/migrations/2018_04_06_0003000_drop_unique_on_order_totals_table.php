@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Drop primary key order_id and add unique keys
-*/
+ */
 class DropUniqueOnOrderTotalsTable extends Migration
 {
     public function up()
@@ -15,7 +15,6 @@ class DropUniqueOnOrderTotalsTable extends Migration
             $table->integer('order_id')->unsigned()->change();
             $table->dropPrimary('order_id');
             $table->primary('order_total_id');
-            $table->unique(['order_total_id', 'order_id']);
         });
     }
 
