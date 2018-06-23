@@ -75,6 +75,17 @@ class StatusEditor extends BaseFormWidget
         $this->vars['statusFormWidget'] = $this->makeStatusFormWidget();
     }
 
+    public function getSaveValue($value)
+    {
+        $statusData = array_merge(post($this->formField->arrayName.'.statusData', []), [
+            'staff_id' => $this->getController()->getUser()->staff->getKey(),
+        ]);
+
+        $this->model->statusData = $statusData;
+
+        return $value;
+    }
+
     protected function makeStatusFormWidget()
     {
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;

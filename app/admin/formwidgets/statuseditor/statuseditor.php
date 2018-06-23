@@ -5,7 +5,8 @@ $statusItem = isset($fieldOptions[$value]) ? $fieldOptions[$value] : [];
     id="<?= $this->getId() ?>"
     class="control-statuseditor"
     data-control="status-editor"
-    data-data="<?= e(json_encode($fieldOptions)) ?>">
+    data-data="<?= e(json_encode($fieldOptions)) ?>"
+>
 
     <div
         class="input-group" data-toggle="modal"

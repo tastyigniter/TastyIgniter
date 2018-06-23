@@ -203,6 +203,10 @@ class Extensions extends \Admin\Classes\AdminController
             flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
         }
 
+        if (post('close')) {
+            return $this->redirect('settings');
+        }
+
         return $this->refresh();
     }
 

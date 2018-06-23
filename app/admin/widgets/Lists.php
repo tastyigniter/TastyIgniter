@@ -268,8 +268,7 @@ class Lists extends BaseWidget
             if (!$this->isColumnRelated($column) OR (!isset($column->sqlSelect) AND !isset($column->valueFrom)))
                 continue;
 
-            if (isset($column->valueFrom))
-                $withs[] = $column->relation;
+            $withs[] = $column->relation;
 
             $joins[] = $column->relation;
         }

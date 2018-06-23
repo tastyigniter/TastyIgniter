@@ -16,8 +16,8 @@
     // ============================
 
     PermissionEditor.prototype.onPermissionActionClick = function (event) {
-        var action = $(event.target).data('action'),
-            $table = $(event.target).closest('table'),
+        var action = $(event.currentTarget).data('action'),
+            $table = $(event.currentTarget).closest('table'),
             $checkbox = $table.find('input[value*="' + action + '"]');
 
         $checkbox.prop('checked', !$checkbox[0].checked);

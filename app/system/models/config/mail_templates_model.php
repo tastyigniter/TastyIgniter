@@ -24,13 +24,13 @@ $config['list']['columns'] = [
             'href'  => 'mail_templates/edit/{template_data_id}',
         ],
     ],
-    'code'         => [
-        'label'      => 'lang:system::mail_templates.column_code',
+    'title'        => [
+        'label'      => 'lang:system::mail_templates.column_title',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
-    'title'        => [
-        'label'      => 'lang:system::mail_templates.column_title',
+    'code'         => [
+        'label'      => 'lang:system::mail_templates.column_code',
         'type'       => 'text',
         'searchable' => TRUE,
     ],

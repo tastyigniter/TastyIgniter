@@ -104,6 +104,10 @@ class Settings extends \Admin\Classes\AdminController
 
         flash()->success(sprintf(lang('admin::default.alert_success'), lang($definition['label']).' settings updated '));
 
+        if (post('close')) {
+            return $this->redirect('settings');
+        }
+
         return $this->refresh();
     }
 
@@ -131,7 +135,8 @@ class Settings extends \Admin\Classes\AdminController
             });
 
             flash()->success(sprintf(lang('system::settings.alert_email_sent'), $email));
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             flash()->error($ex->getMessage());
         }
 

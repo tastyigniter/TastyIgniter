@@ -63,16 +63,10 @@ class Status_history_model extends Model
         return $this->notify == 1 ? lang('admin::default.text_yes') : lang('admin::default.text_no');
     }
 
-    public static function addStatusHistory($status, $object, $options = [])
+    public static function addStatusHistory(Model $status, Model $object, $options = [])
     {
-        if (!$status instanceof Model)
-            return FALSE;
-
         $statusId = $status->getKey();
-        $previousStatus = $object->status_id;
-
-        if ($previousStatus == $statusId)
-            return FALSE;
+        $previousStatus = $object->getOriginal('status_id');
 
         $model = new static;
         $model->status_id = $statusId;
@@ -104,6 +98,6 @@ class Status_history_model extends Model
             $model->save();
         }
 
-        return TRUE;
+        return $model;
     }
 }

@@ -37,7 +37,7 @@ $config['list']['columns'] = [
     ],
     'uninstall' => [
         'type'         => 'button',
-        'iconCssClass' => 'fa fa-stop text-muted',
+        'iconCssClass' => 'fa fa-stop',
         'attributes'   => [
             'class'             => 'btn btn-outline-default',
             'data-request'      => 'onUninstall',

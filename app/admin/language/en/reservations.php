@@ -22,7 +22,11 @@ return [
     'column_guest'         => 'Guest(s)',
     'column_table'         => 'Table',
     'column_status'        => 'Status',
-    'column_staff'         => 'Assigned Staff',
+    'column_staff'         => 'Staff',
+    'column_assignee'      => 'Staff Assignee',
+    'column_notify'        => 'Customer Notified',
+    'column_comment'       => 'Comment',
+    'column_date_time'     => 'Date - Time',
     'column_time'          => 'Time',
     'column_date'          => 'Date',
 

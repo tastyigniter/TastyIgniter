@@ -1,8 +1,6 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Models\Reservations_model;
-use Admin\Models\Statuses_model;
-use AdminAuth;
 use AdminMenu;
 use Exception;
 
@@ -83,21 +81,6 @@ class Reservations extends \Admin\Classes\AdminController
         $reservation->reserve_time = $startAt->toTimeString();
 
         $reservation->save();
-    }
-
-    public function formAfterSave($model)
-    {
-        if (!$statusData = post('Reservation.statusData'))
-            return;
-
-        if (!$status = Statuses_model::find($statusData['status_id']))
-            return;
-
-        $statusData = array_merge($statusData, [
-            'staff_id' => AdminAuth::getUser()->staff->getKey(),
-        ]);
-
-        Status_history_model::addStatusHistory($status, $model, $statusData);
     }
 
     public function formValidate($model, $form)
