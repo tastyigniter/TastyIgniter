@@ -10843,6 +10843,7 @@ a.text-default:focus {
 .fa,
 .fas,
 .far,
+.fa-star-o,
 .fal,
 .fab {
   -moz-osx-font-smoothing: grayscale;
@@ -10948,6 +10949,7 @@ a.text-default:focus {
 .fa.fa-pull-left,
 .fas.fa-pull-left,
 .far.fa-pull-left,
+.fa-pull-left.fa-star-o,
 .fal.fa-pull-left,
 .fab.fa-pull-left {
   margin-right: .3em;
@@ -10956,6 +10958,7 @@ a.text-default:focus {
 .fa.fa-pull-right,
 .fas.fa-pull-right,
 .far.fa-pull-right,
+.fa-pull-right.fa-star-o,
 .fal.fa-pull-right,
 .fab.fa-pull-right {
   margin-left: .3em;
@@ -15368,7 +15371,8 @@ readers do not read off random characters that represent icons */
   src: url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.woff2") format("woff2"), url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.woff") format("woff"), url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.ttf") format("truetype"), url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.svg#fontawesome") format("svg");
 }
 
-.far {
+.far,
+.fa-star-o {
   font-family: 'Font Awesome 5 Free';
   font-weight: 400;
 }
@@ -15385,6 +15389,43 @@ readers do not read off random characters that represent icons */
 
 .label {
   padding: 0.5rem 0.75rem;
+}
+
+@font-face {
+  font-family: 'TastyIgniter Logos';
+  src: url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.eot");
+  src: url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.eot?#iefix") format("embedded-opentype"), url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.ttf") format("truetype"), url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.woff") format("woff"), url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.svg?#TastyIgniter+Logos") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-ti-"],
+[class*=" icon-ti-"] {
+  font-family: 'TastyIgniter Logos' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-ti-horizontal-logo:before {
+  content: "\E901";
+}
+
+.icon-ti-text-logo:before {
+  content: "\E902";
+}
+
+.icon-ti-vertical-logo:before {
+  content: "\E903";
+}
+
+.icon-ti-logo:before {
+  content: "\E900";
 }
 
 .alert-collapse .alert {
@@ -15447,7 +15488,8 @@ readers do not read off random characters that represent icons */
 }
 
 .table > thead > tr > th {
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 2;
 }
 
 .table .list-action,

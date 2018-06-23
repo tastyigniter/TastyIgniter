@@ -77,4 +77,13 @@ class Addresses_model extends Model
 
         return $query->paginate($pageLimit, $page);
     }
+
+    //
+    // Accessors & Mutators
+    //
+
+    public function getFormattedAddressAttribute($value)
+    {
+        return format_address($this->toArray(), FALSE);
+    }
 }

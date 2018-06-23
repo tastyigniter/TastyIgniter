@@ -1,8 +1,14 @@
 html {
-  min-height: 100%;
   position: relative;
+  font-size: 85.5%;
+  min-height: 100%;
+  height: 100%;
 }
 body {
-  margin-bottom: 50px;
   font-size: 15px;
+  margin-bottom: 50px;
+}
+body.page {
+  height: 100%;
+  overflow: hidden;
 }

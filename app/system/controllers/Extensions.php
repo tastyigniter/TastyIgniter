@@ -78,7 +78,8 @@ class Extensions extends \Admin\Classes\AdminController
             $model = $this->formFindModelObject($settingItem);
 
             $this->initFormWidget($model, $action);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -88,8 +89,7 @@ class Extensions extends \Admin\Classes\AdminController
         Template::setTitle(lang('system::extensions.text_add_title'));
         Template::setHeading(lang('system::extensions.text_add_title'));
 
-        Template::setButton(lang('admin::default.button_icon_back'), ['class' => 'btn btn-default', 'href' => admin_url('extensions')]);
-        Template::setButton(lang('system::extensions.button_browse'), ['class' => 'btn btn-default pull-right', 'href' => admin_url('updates/browse/extensions')]);
+        Template::setButton(lang('system::extensions.button_browse'), ['class' => 'btn btn-default', 'href' => admin_url('updates/browse/extensions')]);
     }
 
     public function delete($context, $extensionCode = null)
@@ -127,7 +127,8 @@ class Extensions extends \Admin\Classes\AdminController
             $this->vars['extensionName'] = $meta['name'] ?? '';
             $this->vars['extensionData'] = $model->data;
             $this->vars['filesToDelete'] = $extensionManager->files($extensionCode);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -218,7 +219,8 @@ class Extensions extends \Admin\Classes\AdminController
             flash()->success(sprintf(lang('admin::default.alert_success'), 'Extension uploaded '));
 
             return $this->redirect('extensions');
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             flash()->danger($ex->getMessage());
 
             return $this->refresh();

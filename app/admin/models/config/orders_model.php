@@ -138,7 +138,6 @@ $config['form']['toolbar'] = [
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => ['edit'],
         ],
-        'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'orders'],
     ],
 ];
 
@@ -148,7 +147,26 @@ $config['form']['fields'] = [
         'type'     => 'text',
         'disabled' => TRUE,
         'span'     => 'left',
+        'cssClass' => 'flex-width',
         'context'  => ['edit', 'preview'],
+    ],
+    'invoice_id'  => [
+        'label'         => 'lang:admin::orders.label_invoice',
+        'type'          => 'addon',
+        'disabled'      => TRUE,
+        'span'          => 'left',
+        'cssClass'      => 'flex-width',
+        'context'       => ['edit', 'preview'],
+        'addonCssClass' => ['input-addon-btn'],
+        'addonRight'    => [
+            'tag'        => 'button',
+            'label'      => 'admin::orders.button_create_invoice',
+            'attributes' => [
+                'type'         => 'button',
+                'class'        => 'btn btn-outline-default',
+                'data-request' => 'onGenerateInvoice',
+            ],
+        ],
     ],
     'order_total' => [
         'label'    => 'lang:admin::orders.label_order_total',
@@ -259,13 +277,12 @@ $config['form']['tabs'] = [
             'span'     => 'right',
             'context'  => ['edit', 'preview'],
         ],
-        'address_id'              => [
-            'label'    => 'lang:admin::orders.label_delivery_address',
-            'span'     => 'left',
-            'type'     => 'partial',
-            'disabled' => TRUE,
-            'path'     => 'orders/delivery_address',
-            'trigger'  => [
+        'delivery_address'        => [
+            'label'     => 'lang:admin::orders.label_delivery_address',
+            'span'      => 'left',
+            'valueFrom' => 'formatted_address',
+            'disabled'  => TRUE,
+            'trigger'   => [
                 'action'    => 'show',
                 'field'     => 'order_type_name',
                 'condition' => 'value[Delivery]',

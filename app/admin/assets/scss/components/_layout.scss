@@ -1,5 +1,11 @@
 .page-wrapper {
-  margin-left: $page-padding-left;
+  padding: $page-padding-x $page-padding-y;
+  overflow-y: auto;
+  position: absolute;
+  top: $page-top;
+  bottom: $page-bottom;
+  left: $page-margin-left;
+  right: 0;
 
   > .content {
     margin: 0;
@@ -7,10 +13,9 @@
 }
 @include media-breakpoint-down(sm) {
   .page-wrapper {
-    margin-left: 0;
+    left: 0;
   }
 }
-
 body.dragging, body.dragging {
   cursor: move !important;
 
@@ -19,6 +24,5 @@ body.dragging, body.dragging {
     top: 0;
     opacity: .5;
     z-index: 2000;
-
   }
 }

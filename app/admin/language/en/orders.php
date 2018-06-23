@@ -28,8 +28,8 @@ return [
     'text_collection_order_type' => 'This is a pick-up order',
     'text_no_payment'            => 'No payment method selected',
 
-    'button_create_invoice'   => 'Generate',
-    'button_view_invoice'     => 'View Invoice',
+    'button_create_invoice'   => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;Generate Invoice',
+    'button_view_invoice'     => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;View Invoice',
     'button_print_invoice'    => 'Print Invoice',
     'button_download_invoice' => 'Download Invoice',
 

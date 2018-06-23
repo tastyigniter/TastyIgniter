@@ -1,10 +1,9 @@
 .navbar-top {
   background-color: $gray-200;
   padding: 0;
+  border-bottom: 1px solid $gray-400;
 
   &.navbar-expand {
-    margin-left: $page-padding-left;
-
     .navbar {
       padding: 0 15px;
     }
@@ -221,6 +220,19 @@
         font-size: $mainmenu-icon-size;
       }
     }
+  }
+}
+.navbar-brand {
+  display: block;
+  padding: 0;
+  margin: 0;
+
+  .logo {
+    display: block;
+    padding-left: 10px;
+    line-height: $logo-line-height;
+    font-size: $logo-font-size;
+    color: $logo-font-color;
   }
 }
 .page-title {

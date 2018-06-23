@@ -25,11 +25,15 @@
                             <?php foreach ($actionCssClasses as $action => $class) { ?>
                                 <th class="text-center <?= $class != 'default' ? 'bg-'.$class : ''; ?>">
                                     <?php if (!$this->previewMode) { ?>
-                                        <a role="button" class="action" data-action="<?= $action; ?>">
-                                            <?= lang('admin::staff_groups.column_'.$action); ?>
+                                        <a role="button"
+                                           class="action<?= $class != 'default' ? ' text-white' : ''; ?>"
+                                           data-action="<?= $action; ?>">
+                                            <b><?= lang('admin::staff_groups.column_'.$action); ?></b>
                                         </a>
                                     <?php } else { ?>
-                                        <span><?= lang('admin::staff_groups.column_'.$action); ?></span>
+                                        <span class="<?= $class != 'default' ? 'text-white' : ''; ?>">
+                                            <b><?= lang('admin::staff_groups.column_'.$action); ?></b>
+                                        </span>
                                     <?php } ?>
                                 </th>
                             <?php } ?>

@@ -80,11 +80,6 @@ $config['form']['toolbar'] = [
             'data-request'         => 'onDelete',
             'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
         ],
-        'back'      => [
-            'label' => 'lang:admin::default.button_icon_back',
-            'class' => 'btn btn-default',
-            'href'  => 'categories',
-        ],
     ],
 ];
 

@@ -16,11 +16,11 @@ $config['list']['filter'] = [
 $config['list']['toolbar'] = [
     'buttons' => [
         'upload'  => ['label' => 'lang:system::extensions.button_new', 'class' => 'btn btn-primary', 'href' => 'extensions/upload'],
-        'setting' => ['label' => 'lang:system::extensions.button_settings', 'class' => 'btn btn-default', 'href' => 'settings'],
-        'payment' => ['label' => 'lang:system::extensions.button_payments', 'class' => 'btn btn-default', 'href' => 'payments'],
+        'browse'  => ['label' => 'lang:system::extensions.button_browse', 'class' => 'btn btn-default', 'href' => 'updates/browse/extensions'],
+        'check'   => ['label' => 'lang:system::extensions.button_check', 'class' => 'btn btn-success', 'href' => 'updates'],
         'filter'  => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
-        'check'   => ['label' => 'lang:system::extensions.button_check', 'class' => 'btn btn-success pull-right', 'href' => 'updates'],
-        'browse'  => ['label' => 'lang:system::extensions.button_browse', 'class' => 'btn btn-default pull-right', 'href' => 'updates/browse/extensions'],
+        'setting' => ['label' => 'lang:system::extensions.button_settings', 'class' => 'btn btn-default pull-right', 'href' => 'settings'],
+        'payment' => ['label' => 'lang:system::extensions.button_payments', 'class' => 'btn btn-default pull-right', 'href' => 'payments'],
     ],
 ];
 
@@ -75,6 +75,7 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'settings'],
         'save'      => ['label' => 'lang:admin::default.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
         'saveClose' => [
             'label'             => 'lang:admin::default.button_save_close',
@@ -83,7 +84,6 @@ $config['form']['toolbar'] = [
             'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
-        'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'settings'],
     ],
 ];
 

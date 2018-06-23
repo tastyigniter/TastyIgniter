@@ -66,7 +66,6 @@ $config['form']['toolbar'] = [
             'data-request'      => 'onDraft',
             'data-request-form' => '#edit-form',
         ],
-        'back'         => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'messages'],
     ],
 ];
 

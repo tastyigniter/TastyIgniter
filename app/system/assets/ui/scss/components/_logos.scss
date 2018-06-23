@@ -1,0 +1,33 @@
+@font-face {
+  font-family: 'TastyIgniter Logos';
+  src: url('#{$logo-font-path}/ti-logos.eot');
+  src: url('#{$logo-font-path}/ti-logos.eot?#iefix') format('embedded-opentype'),
+  url('#{$logo-font-path}/ti-logos.ttf') format('truetype'),
+  url('#{$logo-font-path}/ti-logos.woff') format('woff'),
+  url('#{$logo-font-path}/ti-logos.svg?#TastyIgniter+Logos') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+[class^="icon-ti-"], [class*=" icon-ti-"] {
+  font-family: 'TastyIgniter Logos' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-ti-horizontal-logo:before {
+  content: "\e901";
+}
+.icon-ti-text-logo:before {
+  content: "\e902";
+}
+.icon-ti-vertical-logo:before {
+  content: "\e903";
+}
+.icon-ti-logo:before {
+  content: "\e900";
+}

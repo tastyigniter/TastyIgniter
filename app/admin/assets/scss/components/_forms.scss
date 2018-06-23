@@ -1,5 +1,10 @@
 // Widget
 //
+.form-widget {
+  > div:not(:first-child) {
+    margin-top: 25px;
+  }
+}
 .form-fields {
   background-color: $gray-200;
   padding: $form-fields-padding-y $form-fields-padding-x;
@@ -38,7 +43,7 @@
     width: 48.55%;
 
     &.flex-width {
-      max-width: 24.33%;
+      width: 24.33%;
     }
   }
 

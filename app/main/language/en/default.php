@@ -108,7 +108,7 @@ return [
         'login' => [
             'title'               => 'Login',
             'text_login'          => 'Log In',
-            'text_register'       => 'Please Register <small>It\'s easy and always will be.</small>',
+            'text_register'       => 'Register <small>It\'s easy and always will be.</small>',
             'text_forgot'         => 'Forgot password?',
             'text_login_register' => 'Already registered? <a href="%s">Login</a>',
 

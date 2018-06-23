@@ -2,8 +2,8 @@
 $config['list']['toolbar'] = [
     'buttons' => [
         'upload' => ['label' => 'lang:system::themes.button_new', 'class' => 'btn btn-primary', 'href' => 'themes/upload'],
-        'check'  => ['label' => 'lang:system::themes.button_check', 'class' => 'btn btn-success pull-right', 'href' => 'updates'],
-        'browse' => ['label' => 'lang:system::themes.button_browse', 'class' => 'btn btn-default pull-right', 'href' => 'updates/browse/themes'],
+        'browse' => ['label' => 'lang:system::themes.button_browse', 'class' => 'btn btn-default', 'href' => 'updates/browse/themes'],
+        'check'  => ['label' => 'lang:system::themes.button_check', 'class' => 'btn btn-success', 'href' => 'updates'],
     ],
 ];
 
@@ -64,7 +64,6 @@ $config['form']['toolbar'] = [
             'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
-        'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'themes'],
     ],
 ];
 

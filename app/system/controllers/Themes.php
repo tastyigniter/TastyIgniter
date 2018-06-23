@@ -108,8 +108,7 @@ class Themes extends \Admin\Classes\AdminController
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
 
-        Template::setButton(lang('admin::default.button_icon_back'), ['class' => 'btn btn-default', 'href' => admin_url('themes')]);
-        Template::setButton(lang('system::themes.button_browse'), ['class' => 'btn btn-default pull-right', 'href' => admin_url('updates/browse/themes')]);
+        Template::setButton(lang('system::themes.button_browse'), ['class' => 'btn btn-default', 'href' => admin_url('updates/browse/themes')]);
     }
 
     public function delete($context, $themeCode = null)

@@ -28,6 +28,9 @@
 Toolbar
 */
 .media-toolbar {
+	padding: 20px 0;
+}
+.media-modal .media-toolbar {
 	padding: 15px;
 }
 /*

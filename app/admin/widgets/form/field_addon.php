@@ -1,11 +1,20 @@
 <?php
-$addonCssClass = isset($field->config['addonCssClass']) ? $field->config['addonCssClass'] : ['input-group-text'];
-$addonLeft = isset($field->config['addonLeft']) ? $field->config['addonLeft'] : null;
-$addonRight = isset($field->config['addonRight']) ? $field->config['addonRight'] : null;
+$addonDefault = [
+    'tag'        => 'span',
+    'label'      => 'Label',
+    'attributes' => [
+        'class' => 'input-group-text',
+    ],
+];
+$addonLeft = isset($field->config['addonLeft']) ? (object)array_merge($addonDefault, $field->config['addonLeft']) : null;
+$addonRight = isset($field->config['addonRight']) ? (object)array_merge($addonDefault, $field->config['addonRight']) : null;
 ?>
 <div class="input-group">
     <?php if ($addonLeft) { ?>
-        <span class="<?= implode(' ', $addonCssClass) ?>"><?= $addonLeft ?></span>
+        <span class="input-group-append">
+            <?= '<'.$addonLeft->tag.Html::attributes($addonLeft->attributes).'>'
+            .lang($addonLeft->label).'</'.$addonLeft->tag.'>'; ?>
+        </span>
     <?php } ?>
 
     <input
@@ -24,7 +33,8 @@ $addonRight = isset($field->config['addonRight']) ? $field->config['addonRight']
 
     <?php if ($addonRight) { ?>
         <span class="input-group-prepend">
-            <span class="<?= implode(' ', $addonCssClass) ?>"><?= $addonRight ?></span>
+            <?= '<'.$addonRight->tag.Html::attributes($addonRight->attributes).'>'
+            .lang($addonRight->label).'</'.$addonRight->tag.'>'; ?>
         </span>
     <?php } ?>
 </div>

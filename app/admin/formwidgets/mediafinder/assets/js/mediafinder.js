@@ -100,6 +100,7 @@
         if ($findName.length) $findName.text(item.getAttribute('data-media-item-name'))
         if ($findImage.length) $findImage.attr('src', item.getAttribute('data-media-item-url'))
         if ($findValue.length) $findValue.val(item.getAttribute('data-media-item-path'))
+        if ($findValue.length) $findValue.text(item.getAttribute('data-media-item-path'))
 
         // fallback: not sure why val() doesn't work in some cases
         if ($findValue.length) $findValue.attr('value', item.getAttribute('data-media-item-path'))

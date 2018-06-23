@@ -72,7 +72,6 @@ $config['form']['toolbar'] = [
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => 'edit',
         ],
-        'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'mail_layouts'],
         'templates' => [
             'label' => 'lang:system::mail_templates.text_templates',
             'class' => 'btn btn-default',

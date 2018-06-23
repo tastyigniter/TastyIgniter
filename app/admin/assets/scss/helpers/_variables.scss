@@ -1,12 +1,22 @@
-$page-padding-left: 230px;
+$admin-page-bg: #12224C;
 
-$login-page-bg: #12224C;
+$page-padding-x: 0;
+$page-padding-y: 15px;
+$page-top: 74px;
+$page-bottom: 50px;
+$page-margin-left: 230px;
+
+$login-page-bg: $admin-page-bg;
 
 $form-fields-padding-y: 15px;
 $form-fields-padding-x: 20px;
 
 $form-nav-link-padding-y: .7rem;
 $form-nav-link-padding-x: 1.2rem;
+
+$logo-font-size: 3rem;
+$logo-font-color: $admin-page-bg;
+$logo-line-height: 32px;
 
 $mainmenu-font-size: 28px;
 $mainmenu-icon-size: 20px;
@@ -15,10 +25,14 @@ $mainmenu-menu-max-height: 225px;
 $mainmenu-padding-x: 0.5rem;
 $mainmenu-padding-y: 1rem;
 
-$sidenav-bg: #12224C;
+$sidenav-bg: $admin-page-bg;
 $sidenav-bg-light: lighten($sidenav-bg, 2%);
 $sidenav-bg-dark: darken($sidenav-bg, 3%);
 
 $sidenav-font-size-sm: 1.066rem;
 $sidenav-font-size: 1.1rem;
-$sidenav-line-height: 24px;
+
+$sidenav-line-height: 48px;
+$sidenav-line-height-sm: 38px;
+$sidenav-padding-x: 0;
+$sidenav-padding-y: 1rem;

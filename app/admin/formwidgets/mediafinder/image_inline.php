@@ -12,11 +12,11 @@
                 <?php } ?>
             </i>
         </span>
+        <span class="form-control find-button" data-find-value><?= e($value) ?></span>
         <input
-            type="text"
-            name="<?= $fieldName ?>"
-            class="form-control"
             id="<?= $field->getId() ?>"
+            type="hidden"
+            name="<?= $fieldName ?>"
             data-find-value
             value="<?= e($value) ?>"
             <?= $this->previewMode ? 'disabled="disabled"' : '' ?>

@@ -9,7 +9,6 @@ $config['form']['toolbar'] = [
             'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
-        'back'      => ['label' => 'lang:admin::default.button_icon_back', 'class' => 'btn btn-default', 'href' => 'settings'],
     ],
 ];
 
@@ -432,60 +431,60 @@ $config['form']['media'] = [
     'url'         => admin_url('settings/edit/media'),
     'form'        => [
         'fields' => [
-            'image_manager[max_size]'      => [
+            'image_manager[max_size]'     => [
                 'label'   => 'lang:system::settings.label_media_max_size',
                 'type'    => 'number',
                 'default' => 300,
                 'comment' => 'lang:system::settings.help_media_max_size',
             ],
-            'image_manager[thumb_width]'   => [
+            'image_manager[thumb_width]'  => [
                 'label'   => 'lang:system::settings.label_media_thumb_width',
                 'type'    => 'number',
                 'default' => 320,
                 'span'    => 'left',
             ],
-            'image_manager[thumb_height]'  => [
+            'image_manager[thumb_height]' => [
                 'label'   => 'lang:system::settings.label_media_thumb_height',
                 'type'    => 'number',
                 'default' => 220,
                 'span'    => 'right',
             ],
-            'image_manager[uploads]'       => [
+            'image_manager[uploads]'      => [
                 'label'   => 'lang:system::settings.label_media_uploads',
                 'type'    => 'switch',
                 'default' => TRUE,
                 'span'    => 'left',
                 'comment' => 'lang:system::settings.help_media_upload',
             ],
-            'image_manager[new_folder]'    => [
+            'image_manager[new_folder]'   => [
                 'label'   => 'lang:system::settings.label_media_new_folder',
                 'type'    => 'switch',
                 'default' => TRUE,
                 'span'    => 'right',
                 'comment' => 'lang:system::settings.help_media_new_folder',
             ],
-            'image_manager[copy]'          => [
+            'image_manager[copy]'         => [
                 'label'   => 'lang:system::settings.label_media_copy',
                 'type'    => 'switch',
                 'default' => TRUE,
                 'span'    => 'left',
                 'comment' => 'lang:system::settings.help_media_copy',
             ],
-            'image_manager[move]'          => [
+            'image_manager[move]'         => [
                 'label'   => 'lang:system::settings.label_media_move',
                 'type'    => 'switch',
                 'default' => TRUE,
                 'span'    => 'right',
                 'comment' => 'lang:system::settings.help_media_move',
             ],
-            'image_manager[rename]'        => [
+            'image_manager[rename]'       => [
                 'label'   => 'lang:system::settings.label_media_rename',
                 'type'    => 'switch',
                 'default' => TRUE,
                 'span'    => 'left',
                 'comment' => 'lang:system::settings.help_media_rename',
             ],
-            'image_manager[delete]'        => [
+            'image_manager[delete]'       => [
                 'label'   => 'lang:system::settings.label_media_delete',
                 'type'    => 'switch',
                 'default' => TRUE,

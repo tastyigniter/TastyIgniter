@@ -1,5 +1,5 @@
 .toolbar {
-  padding: 20px 15px;
+  padding: 20px 0;
 
   .toolbar-action {
     clear: both;
@@ -18,6 +18,35 @@
       &:last-child {
         margin-right: 0;
       }
+
+      .fa {
+        padding-right: 3px;
+      }
+    }
+
+    .btn:hover,
+    .btn:focus {
+      margin-top: 1px;
+      border-bottom-width: 3px;
+    }
+
+    .btn.active,
+    .btn:active {
+      box-shadow: none;
+      border-bottom-width: 2px;
+      margin-top: 2px;
+    }
+
+    .fa {
+      padding: 0;
+    }
+
+    .btn-default {
+      border-width: 1px 1px 4px 1px;
+    }
+
+    .btn-filter {
+      float: right;
     }
 
     @each $color, $value in $theme-colors {
@@ -31,28 +60,3 @@
     }
   }
 }
-//.toolbar-action .btn-default {
-//  border-width: 1px 1px 4px 1px;
-//}
-//.toolbar-action .btn-filter {
-//  float: right;
-//}
-//.toolbar-action .btn:hover,
-//.toolbar-action .btn:focus {
-//  margin-top: 1px;
-//  border-bottom-width: 3px;
-//}
-//.toolbar-action .btn.active,
-//.toolbar-action .btn:active {
-//  box-shadow: none;
-//  border-bottom-width: 2px;
-//  margin-top: 2px;
-//}
-//.toolbar-action .fa {
-//  font-size: 18px;
-//  padding: 0;
-//}
-//.toolbar-action .btn .fa {
-//  font-size: 14px;
-//  padding-right: 3px;
-//}
