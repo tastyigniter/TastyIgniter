@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\ManagesStatuses;
 use Carbon\Carbon;
 use Igniter\Flame\Location\Models\Location;
 use Main\Classes\MainController;
@@ -14,6 +15,7 @@ use System\Traits\SendsMailTemplate;
  */
 class Reservations_model extends Model
 {
+    use ManagesStatuses;
     use SendsMailTemplate;
 
     const CREATED_AT = 'date_added';
@@ -43,7 +45,7 @@ class Reservations_model extends Model
         'belongsTo' => [
             'related_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
             'location'      => 'Admin\Models\Locations_model',
-            'status'        => ['Admin\Models\Statuses_model', 'foreignKey' => 'status_id'],
+            'status'        => ['Admin\Models\Statuses_model'],
             'assignee'      => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
         ],
         'morphMany' => [
@@ -56,7 +58,7 @@ class Reservations_model extends Model
         'reserve_date' => 'date',
     ];
 
-    public $appends = ['customer_name', 'duration', 'reservation_datetime', 'status_name', 'table_name'];
+    public $appends = ['customer_name', 'duration', 'reservation_datetime', 'table_name'];
 
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',
@@ -186,11 +188,6 @@ class Reservations_model extends Model
         return isset($this->related_table) ? $this->related_table->table_name : null;
     }
 
-    public function getStatusNameAttribute()
-    {
-        return $this->status ? $this->status->status_name : null;
-    }
-
     //
     // Helpers
     //
@@ -244,15 +241,6 @@ class Reservations_model extends Model
         return $diffInHours >= 23 OR $diffInHours == 0;
     }
 
-    public function getStatusColor()
-    {
-        $status = $this->status()->first();
-        if (!$status)
-            return null;
-
-        return $status->status_color;
-    }
-
     public function getOccasionOptions()
     {
         return [
@@ -273,23 +261,6 @@ class Reservations_model extends Model
     public function getReservationDates()
     {
         return $this->pluckDates('reserve_date');
-    }
-
-    /**
-     * Add order status to status history
-     *
-     * @param array $statusData
-     *
-     * @return mixed
-     */
-    public function addStatusHistory(array $statusData = [])
-    {
-        if (!$this->exists OR !$this->status)
-            return;
-
-        $status = $this->status;
-
-        return Status_history_model::addStatusHistory($status, $this, $statusData);
     }
 
     /**
