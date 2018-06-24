@@ -2,10 +2,67 @@
 
 namespace Admin\Traits;
 
+use Admin\Models\Menus_model;
+use Admin\Models\Orders_model;
+use Admin\Models\Status_history_model;
 use DB;
+use Event;
 
 trait ManagesOrderItems
 {
+    public static function bootManagesOrderItems()
+    {
+        Event::listen('admin.statusHistory.beforeAddStatus', function ($model, $object, $statusId, $previousStatus) {
+            if (!$object instanceof Orders_model)
+                return;
+
+            $object->processOrderItemsOnAddStatus($statusId);
+        });
+    }
+
+    protected function processOrderItemsOnAddStatus($statusId)
+    {
+        if (!in_array($statusId, setting('processing_order_status')))
+            return;
+
+        $alreadyExists = Status_history_model::alreadyExists($this, $statusId);
+        if ($alreadyExists)
+            return FALSE;
+
+        $this->subtractStock();
+
+        $this->redeemCoupon();
+    }
+
+    /**
+     * Subtract cart item quantity from menu stock quantity
+     *
+     * @param int $order_id
+     *
+     * @return bool
+     */
+    public function subtractStock()
+    {
+        $this->getOrderMenus()->each(function ($orderMenu) {
+            if ($menu = Menus_model::find($orderMenu->menu_id))
+                $menu->updateStock($orderMenu->quantity, 'subtract');
+        });
+    }
+
+    /**
+     * Redeem coupon by order_id
+     *
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function redeemCoupon()
+    {
+        $couponHistoryModel = $this->coupon_history()->where('status', '!=', '1')->get()->last();
+
+        if ($couponHistoryModel) {
+            return $couponHistoryModel->touchStatus();
+        }
+    }
+
     /**
      * Return all order menu by order_id
      *

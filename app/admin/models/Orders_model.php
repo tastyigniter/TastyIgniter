@@ -219,35 +219,6 @@ class Orders_model extends Model
     }
 
     /**
-     * Subtract cart item quantity from menu stock quantity
-     *
-     * @param int $order_id
-     *
-     * @return bool
-     */
-    public function subtractStock()
-    {
-        $this->getOrderMenus()->each(function ($orderMenu) {
-            if ($menu = Menus_model::find($orderMenu->menu_id))
-                $menu->updateStock($orderMenu->quantity, 'subtract');
-        });
-    }
-
-    /**
-     * Redeem coupon by order_id
-     *
-     * @return bool TRUE on success, or FALSE on failure
-     */
-    public function redeemCoupon()
-    {
-        $couponModel = $this->coupon_history()->where('status', '!=', '1')->last();
-
-        if ($couponModel) {
-            return $couponModel->touchStatus();
-        }
-    }
-
-    /**
      * Return the dates of all orders
      *
      * @return array

@@ -154,7 +154,7 @@ class Menus_model extends Model
     {
         $update = FALSE;
 
-        if ($this->subtract_stock == '1' AND !empty($quantity)) {
+        if ($this->subtract_stock AND !empty($quantity)) {
             $stock_qty = $this->stock_qty + $quantity;
 
             if ($action == 'subtract') {
