@@ -4,6 +4,12 @@ jQuery(function ($) {
         collapseInClass: 'show'
     })
 
+    $("#navSidebar").on('show.bs.collapse', function () {
+        $('.sidebar').addClass('show')
+    }).on('hide.bs.collapse', function () {
+        $('.sidebar').removeClass('show')
+    })
+
     $(function () {
         $('a, span, button').tooltip({placement: 'bottom'});
 

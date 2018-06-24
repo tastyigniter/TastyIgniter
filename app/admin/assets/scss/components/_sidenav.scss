@@ -115,9 +115,11 @@
   }
 
   .sidebar {
-    position: static;
-    height: auto;
     width: 100%;
+
+    &:not(.show) {
+      height: 0;
+    }
   }
 
   .nav-sidebar {

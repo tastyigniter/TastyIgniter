@@ -4097,11 +4097,11 @@ input[type="button"].btn-block {
 
 .custom-control-label::before {
   position: absolute;
-  top: 0.122rem;
+  top: 0.25rem;
   left: 0;
   display: block;
-  width: 1.456rem;
-  height: 1.456rem;
+  width: 1.2rem;
+  height: 1.2rem;
   pointer-events: none;
   content: "";
   -webkit-user-select: none;
@@ -4113,11 +4113,11 @@ input[type="button"].btn-block {
 
 .custom-control-label::after {
   position: absolute;
-  top: 0.122rem;
+  top: 0.25rem;
   left: 0;
   display: block;
-  width: 1.456rem;
-  height: 1.456rem;
+  width: 1.2rem;
+  height: 1.2rem;
   content: "";
   background-repeat: no-repeat;
   background-position: center center;
@@ -7486,8 +7486,7 @@ button.panel-default:focus {
   display: table-cell !important;
 }
 
-.d-flex,
-.field-switch-container {
+.d-flex {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: flex !important;
@@ -14395,12 +14394,16 @@ readers do not read off random characters that represent icons */
 }
 
 .fa-sort-amount-down:before,
-.fa-sort-amount-asc:before {
+.fa-sort-amount-asc:before,
+.table .sort-col .fa-sort-ASC:before,
+.table .sort-col:hover .fa-sort-DESC:before {
   content: "\F160";
 }
 
 .fa-sort-amount-up:before,
-.fa-sort-amount-desc:before {
+.fa-sort-amount-desc:before,
+.table .sort-col .fa-sort-DESC:before,
+.table .sort-col:hover .fa-sort-ASC:before {
   content: "\F161";
 }
 
@@ -15445,24 +15448,13 @@ readers do not read off random characters that represent icons */
   visibility: hidden;
   position: absolute;
   right: 1px;
-  bottom: 4px;
+  top: 7px;
 }
 
 .table .sort-col:hover .fa,
 .table .sort-col:hover,
 .table .sort-col .active {
   visibility: visible;
-  display: block;
-}
-
-.table .sort-col .fa-sort-ASC:before,
-.table .sort-col:hover .fa-sort-DESC:before {
-  content: "\F062";
-}
-
-.table .sort-col .fa-sort-DESC:before,
-.table .sort-col:hover .fa-sort-ASC:before {
-  content: "\F063";
 }
 
 .table-striped thead th {
@@ -15574,6 +15566,9 @@ readers do not read off random characters that represent icons */
 }
 
 .field-switch-container {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
   width: 200%;
   margin-left: -100%;
   -webkit-transition: margin-left 0.5s;

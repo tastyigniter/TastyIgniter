@@ -10,24 +10,23 @@
       visibility: hidden;
       position: absolute;
       right: 1px;
-      bottom: 4px;
+      top: 7px;
     }
 
     &:hover .fa,
     &:hover,
     .active {
       visibility: visible;
-      display: block;
     }
 
     .fa-sort-ASC:before,
     &:hover .fa-sort-DESC:before {
-      content: "\f062";
+      @extend .fa-sort-amount-asc
     }
 
     .fa-sort-DESC:before,
     &:hover .fa-sort-ASC:before {
-      content: "\f063";
+      @extend .fa-sort-amount-desc
     }
   }
 }

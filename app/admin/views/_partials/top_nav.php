@@ -17,8 +17,6 @@ $systemName = lang('system::default.tastyigniter.system_name');
             </div>
 
             <div class="navbar navbar-right">
-                <?= $this->widgets['mainmenu']->render(); ?>
-
                 <button
                     type="button"
                     class="navbar-toggler"
@@ -30,6 +28,8 @@ $systemName = lang('system::default.tastyigniter.system_name');
                 >
                     <span class="fa fa-bars"></span>
                 </button>
+
+                <?= $this->widgets['mainmenu']->render(); ?>
             </div>
         </div>
     </nav>

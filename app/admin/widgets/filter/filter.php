@@ -4,41 +4,36 @@
     data-store-name="<?= $cookieStoreName; ?>"
     <?= !$this->isActiveState() ? ' style="display:none"' : '' ?>
 >
-    <div class="row">
-        <div class="col-sm-9">
-            <?php if (count($scopes)) { ?>
-                <form id="filter-form"
-                      class="form-inline"
-                      accept-charset="utf-8"
-                      method="POST"
-                      action="<?= current_url(); ?>"
-                      role="form">
-                    <input type="hidden" name="_handler" value="<?= $onSubmitHandler; ?>">
+    <?php if (count($scopes)) { ?>
+        <form
+            id="filter-form"
+            class="form-inline mb-3"
+            accept-charset="utf-8"
+            method="POST"
+            action="<?= current_url(); ?>"
+            role="form"
+        >
+            <input type="hidden" name="_handler" value="<?= $onSubmitHandler; ?>">
 
-                    <?= $this->makePartial('filter/filter_scopes') ?>
+            <?= $this->makePartial('filter/filter_scopes') ?>
+        </form>
+    <?php } ?>
 
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-default"
-                                type="submit"
-                                title="<?= lang('admin::default.text_filter'); ?>">
-                            <i class="fa fa-filter"></i>
-                        </button>&nbsp;
-                        <button class="btn btn-outline-danger"
-                                type="button"
-                                data-request="<?= $onClearHandler; ?>"
-                                title="<?= lang('admin::default.text_clear'); ?>">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                </form>
-            <?php } ?>
-        </div>
-
-        <div class="col-sm-3">
+    <div class="d-flex">
+        <?php if (count($scopes)) { ?>
+            <div class="mr-3">
+                <button
+                    class="btn btn-outline-danger"
+                    type="button"
+                    data-request="<?= $onClearHandler; ?>"
+                >
+                    <i class="fa fa-times"></i>&nbsp;&nbsp;<?= lang('admin::default.text_clear'); ?>
+                </button>
+            </div>
+        <?php } ?>
+        <div class="flex-fill">
             <?php if ($search) { ?>
-                <div class="filter-search">
-                    <?= $search ?>
-                </div>
+                <div class="filter-search"><?= $search ?></div>
             <?php } ?>
         </div>
     </div>

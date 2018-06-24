@@ -7,18 +7,11 @@
 }
 .form-fields {
   background-color: $gray-200;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   padding: $form-fields-padding-y $form-fields-padding-x;
-
-  &::before,
-  &::after {
-    display: table;
-    content: " ";
-    box-sizing: border-box;
-  }
-
-  &::after {
-    clear: both;
-  }
 }
 .hidden-field {
   margin: 0;
@@ -28,22 +21,25 @@
 .form-group {
   &.span-full {
     clear: both;
+    width: 100%;
   }
 
   &.span-left {
     float: left;
+    padding-right: 10px;
   }
 
   &.span-right {
     float: right;
+    padding-left: 10px;
   }
 
   &.span-left,
   &.span-right {
-    width: 48.55%;
+    width: 50%;
 
     &.flex-width {
-      width: 24.33%;
+      width: 25%;
     }
   }
 
@@ -57,12 +53,20 @@
 }
 @include media-breakpoint-down(sm) {
   .form-group {
+    &.span-left {
+      padding-right: 0;
+    }
+
+    &.span-right {
+      padding-left: 0;
+    }
+
     &.span-left,
     &.span-right {
       width: 100%;
 
       &.flex-width {
-        max-width: 100%;
+        width: 100%;
       }
     }
   }
@@ -90,6 +94,28 @@
     .nav-link.active {
       background-color: $gray-200;
       font-weight: $font-weight-base;
+    }
+  }
+}
+@include media-breakpoint-down(sm) {
+  .form-widget .tab-heading {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+  }
+
+  .form-nav {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 100%;
+
+    &.nav-tabs {
+      .nav-link {
+        white-space: nowrap
+      }
     }
   }
 }

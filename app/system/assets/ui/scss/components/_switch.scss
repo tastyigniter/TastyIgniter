@@ -22,7 +22,8 @@
   width: 100px;
 }
 .field-switch-container {
-  @extend .d-flex;
+  display: -ms-flexbox;
+  display: flex;
   width: 200%;
   margin-left: -100%;
   -moz-transition: margin-left 0.5s;

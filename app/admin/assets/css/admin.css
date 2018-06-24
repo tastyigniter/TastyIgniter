@@ -1539,19 +1539,12 @@ body.dragging .dragged {
 
 .form-fields {
   background-color: #E9EAEE;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   padding: 15px 20px;
-}
-
-.form-fields::before,
-.form-fields::after {
-  display: table;
-  content: " ";
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
-
-.form-fields::after {
-  clear: both;
 }
 
 .hidden-field {
@@ -1560,24 +1553,27 @@ body.dragging .dragged {
 
 .form-group.span-full {
   clear: both;
+  width: 100%;
 }
 
 .form-group.span-left {
   float: left;
+  padding-right: 10px;
 }
 
 .form-group.span-right {
   float: right;
+  padding-left: 10px;
 }
 
 .form-group.span-left,
 .form-group.span-right {
-  width: 48.55%;
+  width: 50%;
 }
 
 .form-group.span-left.flex-width,
 .form-group.span-right.flex-width {
-  width: 24.33%;
+  width: 25%;
 }
 
 .form-group.flex-width {
@@ -1589,6 +1585,14 @@ body.dragging .dragged {
 }
 
 @media (max-width: 767.98px) {
+  .form-group.span-left {
+    padding-right: 0;
+  }
+
+  .form-group.span-right {
+    padding-left: 0;
+  }
+
   .form-group.span-left,
   .form-group.span-right {
     width: 100%;
@@ -1596,7 +1600,7 @@ body.dragging .dragged {
 
   .form-group.span-left.flex-width,
   .form-group.span-right.flex-width {
-    max-width: 100%;
+    width: 100%;
   }
 }
 
@@ -1623,6 +1627,28 @@ body.dragging .dragged {
 .form-nav.nav-tabs .nav-link.active {
   background-color: #E9EAEE;
   font-weight: 400;
+}
+
+@media (max-width: 767.98px) {
+  .form-widget .tab-heading {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+  }
+
+  .form-nav {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .form-nav.nav-tabs .nav-link {
+    white-space: nowrap;
+  }
 }
 
 .field-checkboxlist .custom-control-label::before,
@@ -1710,6 +1736,10 @@ body.dragging .dragged {
 .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
   color: #111F46;
   border-color: #BEC2CE;
+}
+
+.select2-dropdown {
+  font-size: 1rem;
 }
 
 .sidebar {
@@ -1833,9 +1863,11 @@ body.dragging .dragged {
   }
 
   .sidebar {
-    position: static;
-    height: auto;
     width: 100%;
+  }
+
+  .sidebar:not(.show) {
+    height: 0;
   }
 
   .nav-sidebar {
@@ -2236,7 +2268,7 @@ body.dragging .dragged {
 .list-filter {
   background-color: #E9EAEE;
   margin-bottom: 0px;
-  padding: 10px 15px;
+  padding: 1rem;
 }
 
 .message-folders {
