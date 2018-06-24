@@ -67,9 +67,9 @@ class Statuses extends \Admin\Classes\AdminController
         $rules = [
             ['status_name', 'lang:admin::statuses.label_name', 'required|min:2|max:32'],
             ['status_for', 'lang:admin::statuses.label_for', 'required|alpha'],
-            ['status_color', 'lang:admin::statuses.label_color', 'required|max:7'],
+            ['status_color', 'lang:admin::statuses.label_color', 'max:7'],
             ['status_comment', 'lang:admin::statuses.label_comment', 'max:1028'],
-            ['notify_customer', 'lang:admin::statuses.label_notify', 'integer'],
+            ['notify_customer', 'lang:admin::statuses.label_notify', 'required|integer'],
         ];
 
         return $this->validatePasses($form->getSaveData(), $rules);

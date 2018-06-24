@@ -67,7 +67,7 @@ trait ManagesStatuses
         if (!$statusData OR !is_array($statusData))
             return;
 
-        if (!$this->statusHistoryAlreadyExists($statusData))
+        if ($this->statusHistoryAlreadyExists($statusData))
             return;
 
         return $this->addStatusHistory($status, $statusData);

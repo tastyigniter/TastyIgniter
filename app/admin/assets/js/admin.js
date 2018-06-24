@@ -41,6 +41,24 @@ jQuery(function ($) {
         }
     })
 
+    // Submit list filter form on select change
+    $(function () {
+        $(document).on('change', '.filter-scope select', function (event) {
+            $(event.currentTarget).closest('form').submit()
+        })
+    })
+
+    // List setup form sortables
+    $('#lists-setup-modal-content').sortable({
+        // containerSelector: '.form-check-group',
+        itemPath: '.modal-body .list-group',
+        itemSelector: '.list-group-item',
+        placeholder: '<div class="placeholder sortable-placeholder"></div>',
+        handle: '.form-check-handle',
+        nested: false
+    })
+
+
     // Alert Collapsible
     $(function () {
         var alertMsgs = $('.alert-collapsible .alert-hide')

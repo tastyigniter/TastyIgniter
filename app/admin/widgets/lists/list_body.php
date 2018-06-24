@@ -22,20 +22,22 @@
             </td>
         <?php } ?>
 
+        <?php foreach ($columns as $key => $column) { ?>
+            <?php if ($column->type != 'button') continue; ?>
+            <td class="list-action <?= $column->cssClass ?>">
+                <?= $this->makePartial('lists/list_button', ['record' => $record, 'column' => $column]) ?>
+            </td>
+        <?php } ?>
+
         <?php $index = $url = 0; ?>
         <?php foreach ($columns as $key => $column) { ?>
             <?php $index++; ?>
-            <?php if ($column->type == 'button') { ?>
-                <td class="list-action <?= $column->cssClass ?>">
-                    <?= $this->makePartial('lists/list_button', ['record' => $record, 'column' => $column]) ?>
-                </td>
-            <?php } else { ?>
-                <td
-                    class="list-col-index-<?= $index ?> list-col-name-<?= $column->getName() ?> list-col-type-<?= $column->type ?> <?= $column->cssClass ?>"
-                >
-                    <?= $this->getColumnValue($record, $column) ?>
-                </td>
-            <?php } ?>
+            <?php if ($column->type == 'button') continue; ?>
+            <td
+                class="list-col-index-<?= $index ?> list-col-name-<?= $column->getName() ?> list-col-type-<?= $column->type ?> <?= $column->cssClass ?>"
+            >
+                <?= $this->getColumnValue($record, $column) ?>
+            </td>
         <?php } ?>
 
         <?php if ($showSetup) { ?>

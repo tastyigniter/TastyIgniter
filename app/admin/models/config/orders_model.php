@@ -18,7 +18,7 @@ $config['list']['filter'] = [
             'type'       => 'select',
             'conditions' => 'status_id = :filtered',
             'modelClass' => 'Admin\Models\Statuses_model',
-            'nameFrom'   => 'status_name',
+            'options'    => 'getDropdownOptionsForOrder',
         ],
         'type'     => [
             'label'      => 'lang:admin::orders.text_filter_order_type',

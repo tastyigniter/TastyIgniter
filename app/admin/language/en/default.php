@@ -124,11 +124,18 @@ return [
     'menu_collapse'       => 'Collapse Menu',
 
     'list' => [
-        'missing_model'       => 'List action used in %s does not have a model defined.',
-        'missing_definitions' => 'List action used in %s does not have definitions.',
-        'missing_column'      => 'Missing columns in List definitions %s',
-        'delete_empty'        => 'Nothing selected to delete.',
-        'text_setup'          => 'Setup',
+        'missing_model'         => 'List action used in %s does not have a model defined.',
+        'missing_definitions'   => 'List action used in %s does not have definitions.',
+        'missing_column'        => 'Missing columns in List definitions %s',
+        'delete_empty'          => 'Nothing selected to delete.',
+        'text_setup'            => 'Setup',
+        'setup_title'           => 'List Setup - %s',
+        'label_visible_columns' => 'Visible Columns',
+        'label_page_limit'      => 'Items Per Page',
+        'button_cancel_setup'   => 'Cancel',
+        'button_apply_setup'    => 'Apply changes',
+        'help_visible_columns'  => 'Set which columns are visible and in what order to display them',
+        'help_page_limit'       => 'Limit how many records are shown per page',
     ],
 
     'calendar' => [

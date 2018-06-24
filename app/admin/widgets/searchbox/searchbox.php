@@ -5,7 +5,7 @@
       action="<?= current_url(); ?>"
       role="form">
     <input type="hidden" name="_handler" value="<?= $searchBox->getEventHandler('onSubmit'); ?>">
-    <div class="input-group input-group-sm flex-fill">
+    <div class="input-group flex-fill">
         <input
             type="text"
             name="<?= $searchBox->getName() ?>"
@@ -15,7 +15,7 @@
             autocomplete="off"
         />
         <span class="input-group-prepend">
-            <button class="btn btn-outline-default btn-sm" type="submit">
+            <button class="btn btn-outline-default" type="submit">
                 <i class="fa fa-search"></i>
             </button>
         </span>

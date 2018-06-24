@@ -2,15 +2,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">List Setup</h4>
+                <h4 class="modal-title"><?= sprintf(lang('admin::default.list.setup_title'), lang($this->getConfig('title'))); ?></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
-            <div class="modal-body">
-                Modal body ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+            <div id="<?= $listId ?>-setup-modal-content">
+                <div class="modal-body text-center">
+                    <span class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
+                </div>
             </div>
         </div>
     </div>

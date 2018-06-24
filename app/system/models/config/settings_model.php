@@ -21,33 +21,33 @@ $config['form']['general'] = [
     'form'        => [
         'tabs'  => [
             'fields' => [
-                'site_name'          => [
+                'site_name'             => [
                     'label' => 'lang:system::settings.label_site_name',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'text',
                     'span'  => 'left',
                 ],
-                'site_email'         => [
+                'site_email'            => [
                     'label' => 'lang:system::settings.label_site_email',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'text',
                     'span'  => 'right',
                 ],
-                'site_url'           => [
+                'site_url'              => [
                     'label'   => 'lang:system::settings.label_site_url',
                     'tab'     => 'lang:system::settings.text_tab_restaurant',
                     'type'    => 'text',
                     'span'    => 'left',
                     'default' => root_url(),
                 ],
-                'country_id'         => [
+                'country_id'            => [
                     'label'   => 'lang:system::settings.label_country',
                     'tab'     => 'lang:system::settings.text_tab_restaurant',
                     'type'    => 'select',
                     'span'    => 'right',
                     'options' => ['System\Models\Countries_model', 'getDropdownOptions'],
                 ],
-                'site_location_mode' => [
+                'site_location_mode'    => [
                     'label'        => 'lang:system::settings.label_site_location_mode',
                     'tab'          => 'lang:system::settings.text_tab_restaurant',
                     'type'         => 'radio',
@@ -59,23 +59,23 @@ $config['form']['general'] = [
                     'comment'      => 'lang:system::settings.help_site_location_mode',
                     'commentAbove' => '<span class="text-danger">System</span>',
                 ],
-                'site_logo'          => [
+                'site_logo'             => [
                     'label' => 'lang:system::settings.label_site_logo',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'mediafinder',
                 ],
-                'maps'               => [
+                'maps'                  => [
                     'label' => 'lang:system::settings.text_tab_title_maps',
                     'tab'   => 'lang:system::settings.text_tab_restaurant',
                     'type'  => 'section',
                 ],
-                'maps_api_key'       => [
+                'maps_api_key'          => [
                     'label'   => 'lang:system::settings.label_maps_api_key',
                     'tab'     => 'lang:system::settings.text_tab_restaurant',
                     'type'    => 'text',
                     'comment' => 'lang:system::settings.help_maps_api_key',
                 ],
-                'distance_unit'      => [
+                'distance_unit'         => [
                     'label'   => 'lang:system::settings.label_distance_unit',
                     'tab'     => 'lang:system::settings.text_tab_restaurant',
                     'type'    => 'radio',
@@ -83,15 +83,6 @@ $config['form']['general'] = [
                         'mi' => 'lang:system::settings.text_miles',
                         'km' => 'lang:system::settings.text_kilometers',
                     ],
-                ],
-
-                'page_limit'            => [
-                    'label'   => 'lang:system::settings.label_page_limit',
-                    'tab'     => 'lang:system::settings.text_tab_site',
-                    'span'    => 'left',
-                    'type'    => 'radio',
-                    'options' => 'getPageLimitOptions',
-                    'comment' => 'lang:system::settings.help_page_limit',
                 ],
                 'language'              => [
                     'label' => 'lang:system::settings.text_tab_title_language',
@@ -189,7 +180,6 @@ $config['form']['general'] = [
             ['detect_language', 'lang:system::settings.label_detect_language', 'required|integer'],
             ['default_language', 'lang:system::settings.label_site_language', 'required'],
             ['supported_languages.*', 'lang:system::settings.label_supported_languages', 'required'],
-            ['page_limit', 'lang:system::settings.label_page_limit', 'required|integer'],
             ['country_id', 'lang:system::settings.label_country', 'required|integer'],
             ['maps_api_key', 'lang:system::settings.label_maps_api_key'],
             ['distance_unit', 'lang:system::settings.label_distance_unit'],

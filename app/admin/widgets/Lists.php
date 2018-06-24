@@ -148,7 +148,7 @@ class Lists extends BaseWidget
         ]);
 
         $this->pageLimit = $this->getSession('page_limit',
-            $this->pageLimit ?? setting('page_limit', 10)
+            $this->pageLimit ?? 20
         );
 
         if ($this->showPagination == 'auto') {
@@ -156,6 +156,11 @@ class Lists extends BaseWidget
         }
 
         $this->validateModel();
+    }
+
+    public function loadAssets()
+    {
+        $this->addJs('../../../formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
     }
 
     public function render()
@@ -1041,11 +1046,13 @@ class Lists extends BaseWidget
      */
     public function onLoadSetup()
     {
-//        $this->vars['columns'] = $this->getSetupListColumns();
-//        $this->vars['perPageOptions'] = $this->getSetupPerPageOptions();
-//        $this->vars['pageLimit'] = $this->pageLimit;
+        $this->vars['columns'] = $this->getSetupListColumns();
+        $this->vars['perPageOptions'] = $this->getSetupPerPageOptions();
+        $this->vars['pageLimit'] = $this->pageLimit;
 
-        return $this->makePartial('lists/setup_form');
+        $setupContentId = '#'.$this->getId().'-setup-modal-content';
+
+        return [$setupContentId => $this->makePartial('lists/list_setup_form')];
     }
 
     /**
@@ -1054,16 +1061,29 @@ class Lists extends BaseWidget
     public function onApplySetup()
     {
         if (($visibleColumns = post('visible_columns')) AND is_array($visibleColumns)) {
-            $this->columnOverride = array_keys($visibleColumns);
+            $this->columnOverride = $visibleColumns;
             $this->putSession('visible', $this->columnOverride);
         }
 
-        $pageLimit = post('records_per_page');
+        $pageLimit = post('page_limit');
         $this->pageLimit = $pageLimit ? $pageLimit : $this->pageLimit;
         $this->putSession('order', post('column_order'));
-        $this->putSession('per_page', $this->pageLimit);
+        $this->putSession('page_limit', $this->pageLimit);
 
         return $this->onRefresh();
+    }
+
+    /**
+     * Returns all the list columns used for list set up.
+     */
+    protected function getSetupListColumns()
+    {
+        $columns = $this->defineListColumns();
+        foreach ($columns as $column) {
+            $column->invisible = TRUE;
+        }
+
+        return array_merge($columns, $this->getVisibleColumns());
     }
 
     /**
@@ -1075,6 +1095,8 @@ class Lists extends BaseWidget
         if (!in_array($this->pageLimit, $perPageOptions)) {
             $perPageOptions[] = $this->pageLimit;
         }
+
+        return $perPageOptions;
     }
 
     //

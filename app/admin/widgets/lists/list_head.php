@@ -15,9 +15,13 @@
     <?php } ?>
 
     <?php foreach ($columns as $key => $column) { ?>
-        <?php if ($column->type == 'button') { ?>
-            <th class="list-action <?= $column->cssClass ?>"></th>
-        <?php } else if ($showSorting AND $column->sortable) { ?>
+        <?php if ($column->type != 'button') continue; ?>
+        <th class="list-action <?= $column->cssClass ?>"></th>
+    <?php } ?>
+    <?php foreach ($columns as $key => $column) { ?>
+        <?php if ($column->type == 'button') continue; ?>
+
+        <?php if ($showSorting AND $column->sortable) { ?>
             <th
                 class="list-cell-name-<?= $column->getName() ?> list-cell-type-<?= $column->type ?> <?= $column->cssClass ?>"
                 <?php if ($column->width) {
@@ -50,6 +54,7 @@
                 title="<?= lang('admin::default.list.text_setup') ?>"
                 data-toggle="modal"
                 data-target="#<?= $listId ?>-setup-modal"
+                data-request="<?= $this->getEventHandler('onLoadSetup'); ?>"
             >
                 <i class="fa fa-sliders"></i>
             </button>
