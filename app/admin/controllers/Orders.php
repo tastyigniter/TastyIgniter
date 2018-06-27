@@ -91,6 +91,7 @@ class Orders extends \Admin\Classes\AdminController
     public function formExtendQuery($query)
     {
         $query->with([
+            'assignee',         // Eager loaded for LogsActivities
             'status_history' => function ($q) {
                 $q->orderBy('date_added', 'desc');
             },

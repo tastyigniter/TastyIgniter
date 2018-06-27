@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Models\Orders_model;
 use Carbon\Carbon;
 use Event;
 
@@ -10,6 +11,9 @@ trait HasInvoice
     public static function bootHasInvoice()
     {
         Event::listen('admin.statusHistory.beforeAddStatus', function ($model, $object, $statusId, $previousStatus) {
+            if (!$object instanceof Orders_model)
+                return;
+
             if (!(bool)setting('auto_invoicing'))
                 return;
 

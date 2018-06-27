@@ -2,9 +2,8 @@
 
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
+use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
-use Admin\Traits\ManagesStatuses;
-use Carbon\Carbon;
 use Event;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Location\Models\Location;
@@ -22,7 +21,7 @@ class Orders_model extends Model
 {
     use HasInvoice;
     use ManagesOrderItems;
-    use ManagesStatuses;
+    use LogsStatusHistory;
     use SendsMailTemplate;
     use Locationable;
 
@@ -84,7 +83,7 @@ class Orders_model extends Model
         ],
     ];
 
-    public $appends = ['customer_name', 'order_type_name', 'order_date_time'];
+    public $appends = ['customer_name', 'order_type_name'];
 
     public static $allowedSortingColumns = [
         'order_id asc', 'order_id desc',
@@ -166,14 +165,6 @@ class Orders_model extends Model
     public function getCustomerNameAttribute($value)
     {
         return $this->first_name.' '.$this->last_name;
-    }
-
-    public function getOrderDateTimeAttribute($value)
-    {
-        return Carbon::createFromFormat(
-            'Y-m-d H:i:s',
-            "{$this->attributes['order_date']} {$this->attributes['order_time']}"
-        )->toDateTimeString();
     }
 
     public function getOrderTypeAttribute($value)

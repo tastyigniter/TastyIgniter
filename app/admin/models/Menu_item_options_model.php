@@ -131,5 +131,7 @@ class Menu_item_options_model extends Model
              ->where('menu_option_id', $menuOptionId)
              ->whereNotIn('menu_option_value_id', $idsToKeep)
              ->delete();
+
+        return count($idsToKeep);
     }
 }

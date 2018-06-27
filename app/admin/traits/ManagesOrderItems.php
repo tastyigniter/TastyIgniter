@@ -5,6 +5,7 @@ namespace Admin\Traits;
 use Admin\Models\Menus_model;
 use Admin\Models\Orders_model;
 use Admin\Models\Status_history_model;
+use Carbon\Carbon;
 use DB;
 use Event;
 
@@ -72,7 +73,7 @@ trait ManagesOrderItems
      */
     public function getOrderMenus()
     {
-        return DB::table('order_menus')->where('order_id', $this->getKey())->get();
+        return $this->orderMenusQuery()->where('order_id', $this->getKey())->get();
     }
 
     /**
@@ -84,7 +85,7 @@ trait ManagesOrderItems
      */
     public function getOrderMenuOptions()
     {
-        return DB::table('order_options')->where('order_id', $this->getKey())->get()->groupBy('menu_id');
+        return $this->orderMenuOptionsQuery()->where('order_id', $this->getKey())->get()->groupBy('menu_id');
     }
 
     /**
@@ -96,7 +97,7 @@ trait ManagesOrderItems
      */
     public function getOrderTotals()
     {
-        return DB::table('order_totals')->where('order_id', $this->getKey())->orderBy('priority')->get();
+        return $this->orderTotalsQuery()->where('order_id', $this->getKey())->orderBy('priority')->get();
     }
 
     /**
@@ -112,13 +113,13 @@ trait ManagesOrderItems
         if (!is_numeric($orderId))
             return FALSE;
 
-        DB::table('order_menus')->where('order_id', $orderId)->delete();
-        DB::table('order_options')->where('order_id', $orderId)->delete();
+        $this->orderMenusQuery()->where('order_id', $orderId)->delete();
+        $this->orderMenuOptionsQuery()->where('order_id', $orderId)->delete();
 
         foreach ($cartContent as $rowId => $cartItem) {
             if ($rowId != $cartItem['rowId']) continue;
 
-            $orderMenuId = DB::table('order_menus')->insertGetId([
+            $orderMenuId = $this->orderMenusQuery()->insertGetId([
                 'order_id'      => $orderId,
                 'menu_id'       => $cartItem['id'],
                 'name'          => $cartItem['name'],
@@ -153,7 +154,7 @@ trait ManagesOrderItems
 
         foreach ($options as $option) {
             foreach ($option['values'] as $value) {
-                DB::table('order_options')->insert([
+                $this->orderMenuOptionsQuery()->insert([
                     'order_menu_id'        => $orderMenuId,
                     'order_id'             => $orderId,
                     'menu_id'              => $menuId,
@@ -179,13 +180,13 @@ trait ManagesOrderItems
         if (!is_numeric($orderId))
             return FALSE;
 
-        DB::table('order_totals')->where('order_id', $orderId)->delete();
+        $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
 
         foreach ($totals as $total) {
-            DB::table('order_totals')->insert([
+            $this->orderTotalsQuery()->insert([
                 'order_id' => $orderId,
-                'code'     => $total['name'],
-                'title'    => $total['label'],
+                'code'     => $total['code'],
+                'title'    => $total['title'],
                 'value'    => $total['value'],
                 'priority' => $total['priority'],
             ]);
@@ -200,7 +201,7 @@ trait ManagesOrderItems
      *
      * @return int|bool
      */
-    public function addOrderCoupon($coupon, $customer)
+    public function logCouponHistory($coupon, $customer)
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
@@ -218,5 +219,20 @@ trait ManagesOrderItems
         ]);
 
         return $couponHistory;
+    }
+
+    public function orderMenusQuery()
+    {
+        return DB::table('order_menus');
+    }
+
+    public function orderMenuOptionsQuery()
+    {
+        return DB::table('order_options');
+    }
+
+    public function orderTotalsQuery()
+    {
+        return DB::table('order_totals');
     }
 }

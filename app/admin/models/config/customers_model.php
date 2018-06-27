@@ -113,7 +113,7 @@ $config['form']['tabs'] = [
         ],
         'telephone'         => [
             'label' => 'lang:admin::customers.label_telephone',
-            'type'  => 'number',
+            'type'  => 'text',
             'span'  => 'right',
         ],
         'password'          => [
@@ -166,14 +166,14 @@ $config['form']['tabs'] = [
                 'order_type_name' => [
                     'title' => 'lang:admin::orders.column_type',
                 ],
-                'payment_title'   => [
-                    'label' => 'lang:admin::orders.column_payment',
-                ],
                 'order_total'     => [
                     'title' => 'lang:admin::orders.column_total',
                 ],
-                'order_date_time' => [
+                'order_time'      => [
                     'title' => 'lang:admin::orders.column_time',
+                ],
+                'order_date'      => [
+                    'title' => 'lang:admin::orders.column_date',
                 ],
             ],
         ],
@@ -195,6 +195,12 @@ $config['form']['tabs'] = [
                 ],
                 'table_name'     => [
                     'title' => 'lang:admin::reservations.column_table',
+                ],
+                'reserve_time'   => [
+                    'title' => 'lang:admin::reservations.column_time',
+                ],
+                'reserve_date'   => [
+                    'title' => 'lang:admin::reservations.column_date',
                 ],
             ],
         ],

@@ -1,7 +1,7 @@
 <?php namespace Admin\Models;
 
 use Admin\Traits\Locationable;
-use Admin\Traits\ManagesStatuses;
+use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
 use Igniter\Flame\Location\Models\Location;
 use Main\Classes\MainController;
@@ -16,7 +16,7 @@ use System\Traits\SendsMailTemplate;
  */
 class Reservations_model extends Model
 {
-    use ManagesStatuses;
+    use LogsStatusHistory;
     use SendsMailTemplate;
     use Locationable;
 
@@ -38,6 +38,13 @@ class Reservations_model extends Model
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
+
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
+    protected $dateFormat = 'Y-m-d';
 
     public $timeFormat = 'H:i';
 
@@ -164,8 +171,7 @@ class Reservations_model extends Model
 
     public function getReservationDatetimeAttribute($value)
     {
-        return Carbon::createFromFormat(
-            'Y-m-d H:i:s',
+        return Carbon::createFromTimeString(
             "{$this->attributes['reserve_date']} {$this->attributes['reserve_time']}"
         );
     }

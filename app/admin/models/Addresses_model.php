@@ -32,7 +32,7 @@ class Addresses_model extends Model
         'address_id asc', 'address_id desc',
     ];
 
-    public static function createOrUpdateFromPost($address)
+    public static function createOrUpdateFromRequest($address)
     {
         return self::updateOrCreate(
             array_only($address, ['customer_id', 'address_id']),

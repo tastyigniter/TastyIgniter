@@ -1,6 +1,7 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
+use Mail;
 use System\Models\Mail_templates_model;
 
 class MailTemplates extends \Admin\Classes\AdminController
@@ -71,6 +72,20 @@ class MailTemplates extends \Admin\Classes\AdminController
     public function formBeforeSave($model)
     {
         $model->is_custom = TRUE;
+    }
+
+    public function formAfterSave($model)
+    {
+        if (post('test') != 1)
+            return;
+
+        $adminUser = $this->getUser()->staff;
+
+        Mail::send($model->code, [], function ($message) use ($adminUser) {
+            $message->to($adminUser->staff_email, $adminUser->staff_name);
+        });
+
+        flash()->success(sprintf(lang('system::mail_templates.alert_test_message_sent'), $adminUser->staff_email));
     }
 
     public function formValidate($model, $form)

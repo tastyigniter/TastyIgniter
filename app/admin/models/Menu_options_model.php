@@ -84,8 +84,7 @@ class Menu_options_model extends Model
     /**
      * Create a new or update existing option values
      *
-     * @param bool $option_id
-     * @param array $option_values
+     * @param array $optionValues
      *
      * @return bool
      */
@@ -107,6 +106,6 @@ class Menu_options_model extends Model
         $this->option_values()->where('option_id', $optionId)
              ->whereNotIn('option_value_id', $idsToKeep)->delete();
 
-        return TRUE;
+        return count($idsToKeep);
     }
 }

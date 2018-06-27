@@ -168,9 +168,6 @@ class Filter extends BaseWidget
     {
         $this->defineFilterScopes();
 
-        if (!post())
-            return;
-
         $this->resetSession();
         $this->searchWidget->resetSession();
 

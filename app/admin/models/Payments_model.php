@@ -197,7 +197,6 @@ class Payments_model extends Model
                 'name'        => Lang::get($gateway['name']),
                 'description' => Lang::get($gateway['description']),
                 'class_name'  => $gateway['class'],
-                'status'      => 1,
             ]);
 
             $model->applyGatewayClass();

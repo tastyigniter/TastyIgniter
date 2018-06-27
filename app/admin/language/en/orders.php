@@ -75,4 +75,7 @@ return [
     'label_total_items'        => 'Total Items',
 
     'help_notify_customer' => 'Set whether to send an order update email to the customer',
+
+    'activity_event_log'          => '{event} <b>#:subject.order_id</b> order status to <b>:subject.status.status_name</b>',
+    'activity_event_log_assigned' => 'assigned <b>#:subject.order_id</b> order to <b>:subject.assignee.staff_name</b>',
 ];

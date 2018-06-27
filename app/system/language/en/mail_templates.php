@@ -26,6 +26,8 @@ return [
     'text_order_update'                 => 'Order status update email to customer',
     'text_reservation_update'           => 'Reservation status update email to admin',
 
+    'button_test_message' => 'Send test message',
+
     'column_name'         => 'Name',
     'column_code'         => 'Code',
     'column_title'        => 'Title',
@@ -44,4 +46,6 @@ return [
     'label_body'         => 'HTML Body',
     'label_plain_body'   => 'Body Plain Text',
     'label_plain_layout' => 'Plain Text',
+
+    'alert_test_message_sent' => 'Test message successfully sent to %s',
 ];

@@ -4,11 +4,18 @@ namespace Admin\Traits;
 
 use Admin\Models\Status_history_model;
 use Exception;
+use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Model;
 
-trait ManagesStatuses
+trait LogsStatusHistory
 {
-    public static function bootManagesStatuses()
+    use LogsActivity;
+
+    protected static $recordEvents = ['updated', 'deleted'];
+
+    protected static $logAttributes = ['status_id', 'assignee_id'];
+
+    public static function bootLogsStatusHistory()
     {
         self::extend(function (Model $model) {
             $model->append(['status_name', 'status_color']);
@@ -27,6 +34,11 @@ trait ManagesStatuses
     public function getStatusColorAttribute()
     {
         return $this->getRelatedStatusModel()->status_color;
+    }
+
+    public function getMessageForEvent($eventName)
+    {
+        return parse_values(['event' => $eventName], lang('admin::orders.activity_event_log'));
     }
 
     public function getRelatedStatusModel()

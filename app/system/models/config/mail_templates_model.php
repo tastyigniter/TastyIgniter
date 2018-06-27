@@ -53,18 +53,26 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save'      => ['label' => 'lang:admin::default.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
-        'saveClose' => [
+        'save'         => ['label' => 'lang:admin::default.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
+        'saveClose'    => [
             'label'             => 'lang:admin::default.button_save_close',
             'class'             => 'btn btn-default',
             'data-request'      => 'onSave',
             'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
-        'delete'    => [
+        'delete'       => [
             'label'                => 'lang:admin::default.button_icon_delete', 'class' => 'btn btn-danger',
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => 'edit',
+        ],
+        'test_message' => [
+            'label'             => 'lang:system::mail_templates.button_test_message',
+            'class'             => 'btn btn-default',
+            'data-request'      => 'onSave',
+            'data-request-form' => '#edit-form',
+            'data-request-data' => 'test:1',
+            'context'           => 'edit',
         ],
     ],
 ];
