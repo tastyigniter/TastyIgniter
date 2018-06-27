@@ -332,13 +332,6 @@ class ServiceProvider extends AppServiceProvider
                             'title'      => lang('admin::default.menu_messages'),
                             'permission' => 'Admin.Messages',
                         ],
-                        'banners'  => [
-                            'priority'   => 30,
-                            'class'      => 'banners',
-                            'href'       => admin_url('banners'),
-                            'title'      => lang('admin::default.menu_banner'),
-                            'permission' => 'Admin.Banners',
-                        ],
                     ],
                 ],
                 'extensions'   => [
