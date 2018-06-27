@@ -8,7 +8,7 @@ $config['list']['filter'] = [
         'location' => [
             'label'      => 'lang:admin::reviews.text_filter_location',
             'type'       => 'select',
-            'conditions' => 'location_id = :filtered',
+            'scope'      => 'hasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom'   => 'location_name',
         ],
@@ -49,11 +49,10 @@ $config['list']['columns'] = [
         ],
     ],
     'location'      => [
-        'label'           => 'lang:admin::reviews.column_location',
-        'locationContext' => 'multiple',
-        'relation'        => 'location',
-        'select'          => 'location_name',
-        'searchable'      => TRUE,
+        'label'      => 'lang:admin::reviews.column_location',
+        'relation'   => 'location',
+        'select'     => 'location_name',
+        'searchable' => TRUE,
     ],
     'author'        => [
         'label'      => 'lang:admin::reviews.column_author',
@@ -113,13 +112,12 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'location_id'   => [
-        'label'           => 'lang:admin::reviews.label_location',
-        'type'            => 'relation',
-        'locationContext' => 'multiple',
-        'relationFrom'    => 'location',
-        'nameFrom'        => 'location_name',
-        'span'            => 'left',
-        'placeholder'     => 'lang:admin::default.text_please_select',
+        'label'        => 'lang:admin::reviews.label_location',
+        'type'         => 'relation',
+        'relationFrom' => 'location',
+        'nameFrom'     => 'location_name',
+        'span'         => 'left',
+        'placeholder'  => 'lang:admin::default.text_please_select',
     ],
     'customer_id'   => [
         'label'        => 'lang:admin::reviews.label_author',

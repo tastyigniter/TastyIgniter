@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\Locationable;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Main\Models\Image_tool_model;
@@ -14,6 +15,9 @@ class Menus_model extends Model
 {
     use LogsActivity;
     use Purgeable;
+    use Locationable;
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     protected static $recordEvents = ['created', 'deleted'];
 
@@ -31,7 +35,7 @@ class Menus_model extends Model
         'stock_qty', 'minimum_qty', 'subtract_stock', 'mealtime_id', 'menu_status', 'menu_priority'];
 
     public $purgeable = [
-        'special', 'options', 'menu_options', 'categories',
+        'special', 'menu_options', 'categories', 'locations',
     ];
 
     public $relation = [
@@ -45,7 +49,10 @@ class Menus_model extends Model
             'mealtime' => ['Admin\Models\Mealtimes_model'],
         ],
         'belongsToMany' => [
-            'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories', 'delete' => TRUE],
+            'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
+        ],
+        'morphToMany'   => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -110,6 +117,9 @@ class Menus_model extends Model
             $this->addMenuCategories((array)$this->attributes['categories']);
         }
 
+        if (array_key_exists('locations', $this->attributes))
+            $this->locations()->sync($this->attributes['locations']);
+
         if (array_key_exists('menu_options', $this->attributes))
             $this->addMenuOption((array)$this->attributes['menu_options']);
     }
@@ -117,6 +127,7 @@ class Menus_model extends Model
     public function beforeDelete()
     {
         $this->addMenuCategories([]);
+        $this->locations()->detach();
     }
 
     //

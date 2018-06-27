@@ -14,7 +14,7 @@ return [
     'text_switch_to_list'     => 'Switch to list view',
     'text_switch_to_calendar' => 'Switch to calender view',
     'text_no_booking'         => 'No Bookings',
-    'text_restaurant'         => 'Restaurant',
+    'text_restaurant'         => 'Location',
 
     'column_id'            => 'ID',
     'column_location'      => 'Location',

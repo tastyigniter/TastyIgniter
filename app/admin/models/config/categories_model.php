@@ -5,7 +5,14 @@ $config['list']['filter'] = [
         'mode'   => 'all' // or any, exact
     ],
     'scopes' => [
-        'status' => [
+        'location' => [
+            'label'      => 'lang:admin::default.text_filter_location',
+            'type'       => 'select',
+            'scope'      => 'hasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom'   => 'location_name',
+        ],
+        'status'   => [
             'label'      => 'lang:admin::categories.text_filter_status',
             'type'       => 'switch', // checkbox, switch, date, daterange
             'conditions' => 'status = :filtered',
@@ -41,6 +48,13 @@ $config['list']['columns'] = [
         'relation'   => 'parent_cat',
         'select'     => 'name',
         'searchable' => TRUE,
+    ],
+    'locations'   => [
+        'label'     => 'lang:admin::default.column_location',
+        'type'      => 'text',
+        'relation'  => 'locations',
+        'select'    => 'location_name',
+        'invisible' => TRUE,
     ],
     'priority'    => [
         'label'      => 'lang:admin::categories.column_priority',
@@ -89,35 +103,50 @@ $config['form']['fields'] = [
         'type'  => 'text',
         'span'  => 'left',
     ],
-    'priority'       => [
-        'label' => 'lang:admin::categories.label_priority',
-        'type'  => 'number',
-        'span'  => 'right',
-    ],
     'permalink_slug' => [
         'label'   => 'lang:admin::categories.label_permalink_slug',
         'type'    => 'permalink',
         'comment' => 'lang:admin::categories.help_permalink',
+        'span'    => 'right',
     ],
     'parent_id'      => [
         'label'        => 'lang:admin::categories.label_parent',
         'type'         => 'relation',
+        'span'         => 'left',
         'relationFrom' => 'parent_cat',
         'placeholder'  => 'lang:admin::default.text_please_select',
     ],
-    'description'    => [
-        'label' => 'lang:admin::categories.label_description',
-        'type'  => 'textarea',
+    'locations'      => [
+        'label'     => 'lang:admin::default.label_location',
+        'type'      => 'relation',
+        'span'      => 'right',
+        'valueFrom' => 'locations',
+        'nameFrom'  => 'location_name',
     ],
-    'image'          => [
-        'label'   => 'lang:admin::categories.label_image',
-        'type'    => 'mediafinder',
-        'comment' => 'lang:admin::categories.help_photo',
+    'priority'       => [
+        'label' => 'lang:admin::categories.label_priority',
+        'type'  => 'number',
+        'span'  => 'left',
     ],
     'status'         => [
         'label'   => 'lang:admin::default.label_status',
         'type'    => 'switch',
+        'span'    => 'right',
         'default' => 1,
+    ],
+    'description'    => [
+        'label'      => 'lang:admin::categories.label_description',
+        'type'       => 'textarea',
+        'span'       => 'left',
+        'attributes' => [
+            'rows' => 5,
+        ],
+    ],
+    'image'          => [
+        'label'   => 'lang:admin::categories.label_image',
+        'type'    => 'mediafinder',
+        'span'    => 'right',
+        'comment' => 'lang:admin::categories.help_photo',
     ],
 ];
 

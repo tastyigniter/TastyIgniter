@@ -1,24 +1,6 @@
 <?php
-$config['list']['columns'] = [
-    'value'           => [
-        'label' => 'lang:admin::menu_options.label_option_value',
-    ],
-    'price'           => [
-        'label' => 'lang:admin::menu_options.label_option_price',
-    ],
-    'priority'        => [
-    ],
-    'option_id'       => [
-        'invisible' => TRUE,
-    ],
-    'option_value_id' => [
-        'invisible' => TRUE,
-    ],
-];
-
-$config['form']['tabs'] = [
-    'defaultTab' => 'lang:admin::menu_options.text_tab_general',
-    'fields'     => [
+$config['form'] = [
+    'fields' => [
         'option_id'       => [
             'label'       => 'lang:admin::menu_options.label_option_id',
             'type'        => 'relation',

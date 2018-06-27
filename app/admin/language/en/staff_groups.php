@@ -20,7 +20,7 @@ return [
 
     'label_name'                    => 'Name',
     'label_customer_account_access' => 'Customer Account Access',
-    'label_location_access'         => 'Strict Location',
+    'label_location_access'         => 'Specific Location Access',
 
     'help_customer_account_access' => 'Enabling means staff in this group can login to any customer account using the staff password. The staff must be logged in as admin.',
     'help_location'                => 'Enabling means staff in this group can ONLY view orders, reservations and coupons in their location. Does not apply to super admins',

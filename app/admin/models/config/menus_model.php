@@ -5,6 +5,13 @@ $config['list']['filter'] = [
         'mode'   => 'all',
     ],
     'scopes' => [
+        'location'    => [
+            'label'      => 'lang:admin::default.text_filter_location',
+            'type'       => 'select',
+            'scope'      => 'hasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom'   => 'location_name',
+        ],
         'category'    => [
             'label'      => 'lang:admin::menus.text_filter_category',
             'type'       => 'select',
@@ -39,7 +46,7 @@ $config['list']['columns'] = [
     ],
     'menu_name'      => [
         'label'      => 'lang:admin::menus.column_name',
-        'type'       => 'text', // number, switch, date_time, time, date, timesince, timetense, select, relation, partial
+        'type'       => 'text',
         'searchable' => TRUE,
     ],
     'category'       => [
@@ -47,6 +54,13 @@ $config['list']['columns'] = [
         'relation'   => 'categories',
         'select'     => 'name',
         'searchable' => TRUE,
+    ],
+    'locations'      => [
+        'label'     => 'lang:admin::default.column_location',
+        'type'      => 'text',
+        'relation'  => 'locations',
+        'select'    => 'location_name',
+        'invisible' => TRUE,
     ],
     'menu_price'     => [
         'label'      => 'lang:admin::menus.column_price',
@@ -116,6 +130,22 @@ $config['form']['tabs'] = [
             'span'    => 'right',
             'default' => 0,
         ],
+        'mealtime_id'      => [
+            'label'        => 'lang:admin::menus.label_mealtime',
+            'type'         => 'relation',
+            'span'         => 'left',
+            'relationFrom' => 'mealtime',
+            'nameFrom'     => 'mealtime_name',
+            'comment'      => 'lang:admin::menus.help_mealtime',
+            'placeholder'  => 'lang:admin::menus.text_mealtime_all',
+        ],
+        'locations'        => [
+            'label'     => 'lang:admin::default.label_location',
+            'type'      => 'relation',
+            'span'      => 'right',
+            'valueFrom' => 'locations',
+            'nameFrom'  => 'location_name',
+        ],
         'minimum_qty'      => [
             'label'   => 'lang:admin::menus.label_minimum_qty',
             'type'    => 'number',
@@ -130,23 +160,6 @@ $config['form']['tabs'] = [
             'default' => 0,
             'comment' => 'lang:admin::menus.help_stock_qty',
         ],
-        'menu_description' => [
-            'label' => 'lang:admin::menus.label_description',
-            'type'  => 'textarea',
-        ],
-        'mealtime_id'      => [
-            'label'        => 'lang:admin::menus.label_mealtime',
-            'type'         => 'relation',
-            'relationFrom' => 'mealtime',
-            'nameFrom'     => 'mealtime_name',
-            'comment'      => 'lang:admin::menus.help_mealtime',
-            'placeholder'  => 'lang:admin::menus.text_mealtime_all',
-        ],
-        'menu_photo'       => [
-            'label'   => 'lang:admin::menus.label_image',
-            'type'    => 'mediafinder',
-            'comment' => 'lang:admin::menus.help_image',
-        ],
         'subtract_stock'   => [
             'label' => 'lang:admin::menus.label_subtract_stock',
             'type'  => 'switch',
@@ -158,8 +171,22 @@ $config['form']['tabs'] = [
             'default' => 1,
             'span'    => 'right',
         ],
+        'menu_description' => [
+            'label'      => 'lang:admin::menus.label_description',
+            'type'       => 'textarea',
+            'span'       => 'left',
+            'attributes' => [
+                'rows' => 5,
+            ],
+        ],
+        'menu_photo'       => [
+            'label'   => 'lang:admin::menus.label_image',
+            'type'    => 'mediafinder',
+            'comment' => 'lang:admin::menus.help_image',
+            'span'    => 'right',
+        ],
 
-        'options'      => [
+        '_options'     => [
             'label'       => 'lang:admin::menus.label_option',
             'tab'         => 'lang:admin::menus.text_tab_menu_option',
             'type'        => 'recordeditor',
@@ -169,7 +196,7 @@ $config['form']['tabs'] = [
             'placeholder' => 'lang:admin::menus.help_menu_option',
             'formName'    => 'lang:admin::menu_options.text_option',
             'addonRight'  => [
-                'label'      => '<i class="fa fa-long-arrow-down"></i>',
+                'label'      => '<i class="fa fa-long-arrow-down"></i> Add to Menu',
                 'tag'        => 'button',
                 'attributes' => [
                     'class'                => 'btn btn-default',

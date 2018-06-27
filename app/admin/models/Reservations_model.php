@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\Locationable;
 use Admin\Traits\ManagesStatuses;
 use Carbon\Carbon;
 use Igniter\Flame\Location\Models\Location;
@@ -17,6 +18,7 @@ class Reservations_model extends Model
 {
     use ManagesStatuses;
     use SendsMailTemplate;
+    use Locationable;
 
     const CREATED_AT = 'date_added';
 

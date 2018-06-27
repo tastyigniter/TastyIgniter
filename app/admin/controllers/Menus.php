@@ -55,7 +55,7 @@ class Menus extends AdminController
 
     public function edit_onChooseMenuOption($context, $recordId)
     {
-        $menuOptionId = post('Menu.options');
+        $menuOptionId = post('Menu._options');
         if (!$menuOptionId)
             throw new ApplicationException('Please select a menu option to attach');
 
@@ -73,7 +73,7 @@ class Menus extends AdminController
         $formField = $this->widgets['form']->getField('menu_options');
 
         return [
-            '#notification' => $this->makePartial('flash'),
+            '#notification'                => $this->makePartial('flash'),
             '#'.$formField->getId('group') => $this->widgets['form']->renderField($formField, [
                 'useContainer' => FALSE,
             ]),

@@ -1,6 +1,7 @@
 <?php namespace Admin\Models;
 
 use Admin\Traits\HasInvoice;
+use Admin\Traits\Locationable;
 use Admin\Traits\ManagesOrderItems;
 use Admin\Traits\ManagesStatuses;
 use Carbon\Carbon;
@@ -23,6 +24,7 @@ class Orders_model extends Model
     use ManagesOrderItems;
     use ManagesStatuses;
     use SendsMailTemplate;
+    use Locationable;
 
     const CREATED_AT = 'date_added';
 

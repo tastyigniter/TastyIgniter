@@ -6,12 +6,11 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'location' => [
-            'label'           => 'lang:admin::orders.text_filter_location',
-            'type'            => 'select',
-            'locationContext' => 'multiple',
-            'conditions'      => 'location_id = :filtered',
-            'modelClass'      => 'Admin\Models\Locations_model',
-            'nameFrom'        => 'location_name',
+            'label'      => 'lang:admin::orders.text_filter_location',
+            'type'       => 'select',
+            'conditions' => 'location_id = :filtered',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom'   => 'location_name',
         ],
         'status'   => [
             'label'      => 'lang:admin::orders.text_filter_status',
@@ -63,11 +62,10 @@ $config['list']['columns'] = [
         ],
     ],
     'location'        => [
-        'label'           => 'lang:admin::orders.column_location',
-        'locationContext' => 'multiple',
-        'relation'        => 'location', // number, switch, date_time, time, date, timesince, timetense, select, relation, partial
-        'select'          => 'location_name',
-        'searchable'      => TRUE,
+        'label'      => 'lang:admin::orders.column_location',
+        'relation'   => 'location',
+        'select'     => 'location_name',
+        'searchable' => TRUE,
     ],
     'full_name'       => [
         'label'      => 'lang:admin::orders.column_customer_name',
@@ -228,12 +226,11 @@ $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::orders.text_tab_general',
     'fields'     => [
         'location[location_name]' => [
-            'label'           => 'lang:admin::orders.text_restaurant',
-            'type'            => 'text',
-            'locationContext' => 'multiple',
-            'disabled'        => TRUE,
-            'span'            => 'left',
-            'placeholder'     => 'lang:admin::default.text_please_select',
+            'label'       => 'lang:admin::orders.text_restaurant',
+            'type'        => 'text',
+            'disabled'    => TRUE,
+            'span'        => 'left',
+            'placeholder' => 'lang:admin::default.text_please_select',
         ],
         'customer_name'           => [
             'label'    => 'lang:admin::orders.label_customer_name',
@@ -282,11 +279,6 @@ $config['form']['tabs'] = [
             'span'      => 'left',
             'valueFrom' => 'formatted_address',
             'disabled'  => TRUE,
-            'trigger'   => [
-                'action'    => 'show',
-                'field'     => 'order_type_name',
-                'condition' => 'value[Delivery]',
-            ],
         ],
         'total_items'             => [
             'label'    => 'lang:admin::orders.label_total_items',

@@ -17,7 +17,7 @@ return [
     'text_delivery'              => 'Delivery',
     'text_collection'            => 'Pick-up',
     'text_invoice'               => 'Invoice',
-    'text_restaurant'            => 'Restaurant',
+    'text_restaurant'            => 'Location',
     'text_customer'              => 'Customer',
     'text_payment'               => 'Payment',
     'text_invoice_no'            => 'Invoice #',

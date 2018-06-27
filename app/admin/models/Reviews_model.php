@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\Locationable;
 use Igniter\Flame\Auth\Models\User;
 use Model;
 use System\Models\Settings_model;
@@ -11,6 +12,8 @@ use System\Models\Settings_model;
  */
 class Reviews_model extends Model
 {
+    use Locationable;
+
     /**
      * @var string The database table name
      */

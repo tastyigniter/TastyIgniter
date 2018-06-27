@@ -237,7 +237,10 @@ class AdminController extends BaseController
 
     public function locationContext()
     {
-        return Admin::locationContext();
+        if ($this->getUser()->hasStrictLocationAccess())
+            return 'single';
+
+        return setting()->get('site_location_mode');
     }
 
     public function pageUrl($path = null, $parameters = [], $secure = null)

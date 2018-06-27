@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\Locationable;
 use DB;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\NestedTree;
@@ -17,8 +18,11 @@ class Categories_model extends Model
     use Sortable;
     use HasPermalink;
     use NestedTree;
+    use Locationable;
 
     const SORT_ORDER = 'priority';
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     /**
      * @var string The database table name
@@ -39,12 +43,14 @@ class Categories_model extends Model
         'belongsToMany' => [
             'menus' => ['Admin\Models\Menus_model', 'table' => 'menu_categories'],
         ],
+        'morphToMany'   => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+        ],
     ];
 
     public $permalinkable = [
         'permalink_slug' => [
             'source' => 'name',
-//            'controller' => 'menus',
         ],
     ];
 

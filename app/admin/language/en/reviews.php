@@ -13,7 +13,7 @@ return [
     'text_order'           => 'Order',
     'text_reservation'     => 'Reservation',
 
-    'column_location'   => 'Restaurant',
+    'column_location'   => 'Location',
     'column_author'     => 'Author',
     'column_sale_id'    => 'Sale ID',
     'column_sale_type'  => 'Sale Type',

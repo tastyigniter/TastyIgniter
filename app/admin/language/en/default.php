@@ -37,9 +37,12 @@ return [
     'text_help'               => 'Click for Help',
     'text_no_title'           => 'No Title',
 
-    'label_status' => 'Status',
+    'label_status'   => 'Status',
+    'label_location' => 'Location(s)',
 
-    'column_id' => 'ID',
+    'column_id'            => 'ID',
+    'column_location'      => 'Location(s)',
+    'text_filter_location' => 'View all locations',
 
     'button_new'         => '<i class="fa fa-plus"></i> New',
     'button_delete'      => '<i class="fa fa-trash-o"></i> Delete',
