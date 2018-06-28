@@ -6,6 +6,7 @@ use Admin\Classes\Navigation;
 use Admin\Classes\Widgets;
 use AdminAuth;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use System\Libraries\Assets;
 use System\Models\Mail_templates_model;
 
@@ -18,6 +19,8 @@ class ServiceProvider extends AppServiceProvider
     public function boot()
     {
         parent::boot('admin');
+
+        $this->defineEloquentMorphMaps();
 
         $this->replaceNavMenuItem();
     }
@@ -515,5 +518,43 @@ class ServiceProvider extends AppServiceProvider
                 'permission' => 'Admin.Locations',
             ], 'restaurant');
         });
+    }
+
+    protected function defineEloquentMorphMaps()
+    {
+        Relation::morphMap([
+            'addresses'               => 'Admin\Models\Addresses_model',
+            'categories'              => 'Admin\Models\Categories_model',
+            'coupons_history'         => 'Admin\Models\Coupons_history_model',
+            'coupons'                 => 'Admin\Models\Coupons_model',
+            'customer_groups'         => 'Admin\Models\Customer_groups_model',
+            'menus'                   => 'Admin\Models\Menus_model',
+            'orders'                  => 'Admin\Models\Orders_model',
+            'reservations'            => 'Admin\Models\Reservations_model',
+            'customers'               => 'Admin\Models\Customers_model',
+            'location_areas'          => 'Admin\Models\Location_areas_model',
+            'location_tables'         => 'Admin\Models\Location_tables_model',
+            'locations'               => 'Admin\Models\Locations_model',
+            'mealtimes'               => 'Admin\Models\Mealtimes_model',
+            'menu_categories'         => 'Admin\Models\Menu_categories_model',
+            'menu_item_option_values' => 'Admin\Models\Menu_item_option_values_model',
+            'menu_item_options'       => 'Admin\Models\Menu_item_options_model',
+            'menu_option_values'      => 'Admin\Models\Menu_option_values_model',
+            'menu_options'            => 'Admin\Models\Menu_options_model',
+            'menus'                   => 'Admin\Models\Menus_model',
+            'menus_specials'          => 'Admin\Models\Menus_specials_model',
+            'orders'                  => 'Admin\Models\Orders_model',
+            'payment_logs'            => 'Admin\Models\Payment_logs_model',
+            'payments'                => 'Admin\Models\Payments_model',
+            'reservations'            => 'Admin\Models\Reservations_model',
+            'reviews'                 => 'Admin\Models\Reviews_model',
+            'staff_groups'            => 'Admin\Models\Staff_groups_model',
+            'staffs'                  => 'Admin\Models\Staffs_model',
+            'status_history'          => 'Admin\Models\Status_history_model',
+            'statuses'                => 'Admin\Models\Statuses_model',
+            'tables'                  => 'Admin\Models\Tables_model',
+            'users'                   => 'Admin\Models\Users_model',
+            'working_hours'           => 'Admin\Models\Working_hours_model',
+        ]);
     }
 }

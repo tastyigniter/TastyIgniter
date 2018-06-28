@@ -39,7 +39,7 @@ class Status_history_model extends Model
     public static function alreadyExists($model, $statusId)
     {
         return self::where('object_id', $model->getKey())
-                   ->where('object_type', get_class($model))
+                   ->where('object_type', $model->getMorphClass())
                    ->where('status_id', $statusId)->first();
     }
 
@@ -71,7 +71,7 @@ class Status_history_model extends Model
         $model = new static;
         $model->status_id = $statusId;
         $model->object_id = $object->getKey();
-        $model->object_type = get_class($object);
+        $model->object_type = $object->getMorphClass();
         $model->status_for = $object instanceof Orders_model ? 'order' : 'reserve';
         $model->staff_id = array_get($options, 'staff_id');
         $model->assignee_id = array_get($options, 'assignee_id', $object->assignee_id);

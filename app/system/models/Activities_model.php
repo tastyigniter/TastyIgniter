@@ -34,7 +34,7 @@ class Activities_model extends Activity
         ], $options));
 
         if ($exceptUser) {
-            $query->where('causer_type', get_class($exceptUser))
+            $query->where('causer_type', $exceptUser->getMorphClass())
                   ->where('causer_id', '<>', $exceptUser->getKey());
         }
 

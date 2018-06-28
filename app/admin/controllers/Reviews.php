@@ -78,10 +78,9 @@ class Reviews extends \Admin\Classes\AdminController
     {
         $saleId = post('Review.sale_id');
         $saleType = post('Review.sale_type');
-        $saleModel = 'Admin\\Models\\'.ucwords($saleType.'s_model');
 
-        if (!$saleModel::find($saleId)) {
-            return lang(($saleType == 'order')
+        if (!$this->getFormModel()->findBy($saleType, $saleId)) {
+            return lang(($saleType == 'orders')
                 ? 'admin::reviews.error_not_found_in_order'
                 : 'admin::reviews.error_not_found_in_reservation'
             );

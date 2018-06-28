@@ -285,7 +285,7 @@ class Messages_model extends Model
     public function scopeWhereSender($query, $sender)
     {
         return $query->where('sender_id', $sender->getKey())
-                     ->where('sender_type', get_class($sender));
+                     ->where('sender_type', $sender->getMorphClass());
     }
 
     public function scopeSelectRecipientStatus($query)
@@ -394,7 +394,7 @@ class Messages_model extends Model
             return null;
 
         return $this->recipients->where('messagable_id', $messagable->getKey())
-                                ->where('messagable_type', get_class($messagable))->first();
+                                ->where('messagable_type', $messagable->getMorphClass())->first();
     }
 
     public function isMarkedAsRead($messagable)
@@ -433,7 +433,7 @@ class Messages_model extends Model
         $recipients->each(function ($model) {
             $this->recipients()->create([
                 'messagable_id'   => $model->getKey(),
-                'messagable_type' => get_class($model),
+                'messagable_type' => $model->getMorphClass(),
             ]);
         });
     }

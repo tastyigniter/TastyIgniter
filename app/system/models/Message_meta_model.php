@@ -43,6 +43,6 @@ class Message_meta_model extends Model
     public function scopeWhereMessagable($query, $messagable)
     {
         return $query->where('messagable_id', $messagable->getKey())
-                     ->where('messagable_type', get_class($messagable));
+                     ->where('messagable_type', $messagable->getMorphClass());
     }
 }

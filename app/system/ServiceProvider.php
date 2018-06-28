@@ -11,6 +11,7 @@ use Config;
 use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use Main\Classes\Customer;
@@ -62,6 +63,8 @@ class ServiceProvider extends AppServiceProvider
     {
         // Boot extensions
         parent::boot('system');
+
+        $this->defineEloquentMorphMaps();
 
         ExtensionManager::instance()->initializeExtensions();
 
@@ -244,5 +247,24 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerBundle('scss', '~/app/system/assets/ui/scss/flame.scss');
             $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss');
         });
+    }
+
+    protected function defineEloquentMorphMaps()
+    {
+        Relation::morphMap([
+            'activities'     => 'System\Models\Activities_model',
+            'countries'      => 'System\Models\Countries_model',
+            'currencies'     => 'System\Models\Currencies_model',
+            'extensions'     => 'System\Models\Extensions_model',
+            'languages'      => 'System\Models\Languages_model',
+            'mail_layouts'   => 'System\Models\Mail_layouts_model',
+            'mail_templates' => 'System\Models\Mail_templates_model',
+            'message_meta'   => 'System\Models\Message_meta_model',
+            'messages'       => 'System\Models\Messages_model',
+            'pages'          => 'System\Models\Pages_model',
+            'permissions'    => 'System\Models\Permissions_model',
+            'settings'       => 'System\Models\Settings_model',
+            'themes'         => 'System\Models\Themes_model',
+        ]);
     }
 }

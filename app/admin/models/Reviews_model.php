@@ -37,23 +37,30 @@ class Reviews_model extends Model
             'customer' => 'Admin\Models\Customers_model',
         ],
         'morphTo'   => [
-            'review' => [],
+            'reviewable' => [],
         ],
     ];
 
     public static $allowedSortingColumns = ['date_added asc', 'date_added desc'];
 
     public static $relatedSaleTypes = [
-        'order'       => 'Admin\Models\Orders_model',
-        'reservation' => 'Admin\Models\Reservations_model',
+        'orders'       => 'Admin\Models\Orders_model',
+        'reservations' => 'Admin\Models\Reservations_model',
     ];
 
     public static function getSaleTypeOptions()
     {
         return [
-            'order'       => 'lang:admin::reviews.text_order',
-            'reservation' => 'lang:admin::reviews.text_reservation',
+            'orders'       => 'lang:admin::reviews.text_order',
+            'reservations' => 'lang:admin::reviews.text_reservation',
         ];
+    }
+
+    public static function findBy($saleType, $saleId)
+    {
+        $saleTypeModel = (new static)->getSaleTypeModel($saleType);
+
+        return $saleTypeModel->find($saleId);
     }
 
     public function getRatingOptions()
@@ -113,26 +120,22 @@ class Reviews_model extends Model
 
     public function scopeHasBeenReviewed($query, $sale, $customerId)
     {
-        return $query->where('sale_type', get_class($sale))
+        return $query->where('sale_type', $sale->getMorphClass())
                      ->where('sale_id', $sale->getKey())
                      ->where('customer_id', $customerId);
     }
 
     //
-    // Accessors & Mutators
+    // Helpers
     //
 
-    public function getSaleTypeAttribute($value)
+    public function getSaleTypeModel($saleType)
     {
-        $types = array_flip(self::$relatedSaleTypes);
+        $model = self::$relatedSaleTypes[$saleType];
 
-        return (isset($types[$value]) AND $types[$value] != 'order')
-            ? $types[$value] : 'order';
-    }
+        // @todo: throw ex
 
-    public function setSaleTypeAttribute($value)
-    {
-        $this->attributes['sale_type'] = self::$relatedSaleTypes[$value];
+        return new $model();
     }
 
     /**
