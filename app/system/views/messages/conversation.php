@@ -6,7 +6,7 @@ $participants = $model->listRecipients();
 >
     <h4 class="panel-title message-title"><?= $model->subject; ?></h4>
     <div class="message-meta">
-        <h6><?= e(lang('system::messages.label_to')); ?> : <?= e(lang($model->recipient_label)); ?></h6>
+        <h6><?= e(lang('system::lang.messages.label_to')); ?> : <?= e(lang($model->recipient_label)); ?></h6>
         <div class="collapse">
             <?= $participants ? implode(', ', $participants->pluck('staff_name')->all()) : '--'; ?>
         </div>

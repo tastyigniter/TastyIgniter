@@ -8,9 +8,9 @@ $orderTotals = $model->getOrderTotals();
         <thead>
         <tr>
             <th></th>
-            <th width="65%"><?= lang('admin::orders.column_name_option'); ?></th>
-            <th class="text-left"><?= lang('admin::orders.column_price'); ?></th>
-            <th class="text-right"><?= lang('admin::orders.column_total'); ?></th>
+            <th width="65%"><?= lang('admin::lang.orders.column_name_option'); ?></th>
+            <th class="text-left"><?= lang('admin::lang.orders.column_price'); ?></th>
+            <th class="text-right"><?= lang('admin::lang.orders.column_total'); ?></th>
         </tr>
         </thead>
         <tbody>

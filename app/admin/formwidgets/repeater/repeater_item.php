@@ -18,7 +18,7 @@
                 <?php if (!$this->previewMode) { ?>
                     data-control="remove-item"
                     data-target="#<?= $this->getId('item-'.$indexValue) ?>"
-                    data-prompt="<?= lang('admin::default.alert_confirm') ?>"
+                    data-prompt="<?= lang('admin::lang.alert_confirm') ?>"
                 <?php } ?>
             >
                 <i class="fa fa-times-circle"></i>

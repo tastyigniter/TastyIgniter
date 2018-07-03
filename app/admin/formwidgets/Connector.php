@@ -55,7 +55,7 @@ class Connector extends BaseFormWidget
     /**
      * @var string Prompt text for adding new items.
      */
-    public $prompt = 'lang:admin::default.text_please_select';
+    public $prompt = 'lang:admin::lang.text_please_select';
 
     /**
      * @var bool Items can be sorted.
@@ -149,7 +149,7 @@ class Connector extends BaseFormWidget
             }
         });
 
-        flash()->success(sprintf(lang('admin::default.alert_success'), 'Item updated'))->now();
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Item updated'))->now();
 
         $this->prepareVars();
 
@@ -166,11 +166,11 @@ class Connector extends BaseFormWidget
 
         $model = $this->getRelationModel()->find($recordId);
         if (!$model)
-            throw new ApplicationException(sprintf(lang('admin::default.form.not_found'), $recordId));
+            throw new ApplicationException(sprintf(lang('admin::lang.form.not_found'), $recordId));
 
         $model->delete();
 
-        flash()->success(sprintf(lang('admin::default.alert_success'), lang($this->formName).' deleted'))->now();
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName).' deleted'))->now();
 
         $this->prepareVars();
 

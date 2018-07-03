@@ -26,7 +26,7 @@
                 type="button"
                 class="btn btn-light text-danger"
                 title="Remove"
-                data-confirm="<?= lang('admin::default.alert_warning_confirm'); ?>"
+                data-confirm="<?= lang('admin::lang.alert_warning_confirm'); ?>"
                 data-control="remove-area"
             ><i class="fa fa-trash-alt"></i></button>
         </div>

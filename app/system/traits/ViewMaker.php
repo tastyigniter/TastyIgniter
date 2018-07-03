@@ -109,7 +109,7 @@ trait ViewMaker
 
         if (!File::exists($layoutPath)) {
             if ($throwException)
-                throw new SystemException(Lang::get('system::default.not_found.layout', ['name' => $layoutPath]));
+                throw new SystemException(Lang::get('system::lang.not_found.layout', ['name' => $layoutPath]));
 
             return FALSE;
         }
@@ -158,7 +158,7 @@ trait ViewMaker
 
         if (!File::exists($partialPath)) {
             if ($throwException)
-                throw new SystemException(Lang::get('system::default.not_found.partial', ['name' => $partialPath]));
+                throw new SystemException(Lang::get('system::lang.not_found.partial', ['name' => $partialPath]));
 
             return FALSE;
         }

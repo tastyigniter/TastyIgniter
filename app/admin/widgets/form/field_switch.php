@@ -1,6 +1,6 @@
 <?php
-$on = $field->config['on'] ?? 'admin::default.text_enabled';
-$off = $field->config['off'] ?? 'admin::default.text_disabled';
+$on = $field->config['on'] ?? 'admin::lang.text_enabled';
+$off = $field->config['off'] ?? 'admin::lang.text_disabled';
 $onColor = $field->config['onColor'] ?? 'success';
 $offColor = $field->config['offColor'] ?? 'danger';
 $labelWith = $field->config['labelWith'] ?? '120';

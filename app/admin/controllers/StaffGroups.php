@@ -12,28 +12,28 @@ class StaffGroups extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'Admin\Models\Staff_groups_model',
-            'title'        => 'lang:admin::staff_groups.text_title',
-            'emptyMessage' => 'lang:admin::staff_groups.text_empty',
+            'title'        => 'lang:admin::lang.staff_groups.text_title',
+            'emptyMessage' => 'lang:admin::lang.staff_groups.text_empty',
             'defaultSort'  => ['staff_group_id', 'DESC'],
             'configFile'   => 'staff_groups_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::staff_groups.text_form_name',
+        'name'       => 'lang:admin::lang.staff_groups.text_form_name',
         'model'      => 'Admin\Models\Staff_groups_model',
         'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
+            'title'         => 'lang:admin::lang.form.create_title',
             'redirect'      => 'staff_groups/edit/{staff_group_id}',
             'redirectClose' => 'staff_groups',
         ],
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:admin::lang.form.edit_title',
             'redirect'      => 'staff_groups/edit/{staff_group_id}',
             'redirectClose' => 'staff_groups',
         ],
         'preview'    => [
-            'title'    => 'lang:admin::default.form.preview_title',
+            'title'    => 'lang:admin::lang.form.preview_title',
             'redirect' => 'staff_groups',
         ],
         'delete'     => [
@@ -54,9 +54,9 @@ class StaffGroups extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['staff_group_name', 'lang:admin::staff_groups.label_name', 'required|min:2|max:32'],
-            ['customer_account_access', 'lang:admin::staff_groups.label_customer_account_access', 'required|integer'],
-            ['location_access', 'lang:admin::staff_groups.label_location_access', 'required|integer'],
+            ['staff_group_name', 'lang:admin::lang.staff_groups.label_name', 'required|min:2|max:32'],
+            ['customer_account_access', 'lang:admin::lang.staff_groups.label_customer_account_access', 'required|integer'],
+            ['location_access', 'lang:admin::lang.staff_groups.label_location_access', 'required|integer'],
         ];
 
         $rules[] = ['permissions.*.*', 'Permission', 'string'];

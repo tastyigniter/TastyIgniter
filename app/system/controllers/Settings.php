@@ -43,10 +43,10 @@ class Settings extends \Admin\Classes\AdminController
 
         // For security reasons, delete setup files if still exists.
         if (File::isFile(base_path('setup.php')) OR File::isDirectory(base_path('setup'))) {
-            flash()->danger(lang('system::settings.alert_delete_setup_files'))->now();
+            flash()->danger(lang('system::lang.settings.alert_delete_setup_files'))->now();
         }
 
-        $pageTitle = lang('system::settings.text_title');
+        $pageTitle = lang('system::lang.settings.text_title');
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
         $this->vars['settings'] = $this->createModel()->listSettingItems();
@@ -59,10 +59,10 @@ class Settings extends \Admin\Classes\AdminController
             $this->settingCode = $settingCode;
             list($model, $definition) = $this->findSettingDefinitions($settingCode);
             if (!$definition) {
-                throw new Exception(lang('system::settings.alert_settings_not_found'));
+                throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
             }
 
-            $pageTitle = sprintf(lang('system::settings.text_edit_title'), lang($definition['label']));
+            $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition['label']));
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
@@ -81,7 +81,7 @@ class Settings extends \Admin\Classes\AdminController
     {
         list($model, $definition) = $this->findSettingDefinitions($settingCode);
         if (!$definition) {
-            throw new Exception(lang('system::settings.alert_settings_not_found'));
+            throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
 
         $this->initWidgets($model, $definition);
@@ -102,7 +102,7 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->validateSettingItems(TRUE);
 
-        flash()->success(sprintf(lang('admin::default.alert_success'), lang($definition['label']).' settings updated '));
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($definition['label']).' settings updated '));
 
         if (post('close')) {
             return $this->redirect('settings');
@@ -115,7 +115,7 @@ class Settings extends \Admin\Classes\AdminController
     {
         list($model, $definition) = $this->findSettingDefinitions('mail');
         if (!$definition) {
-            throw new Exception(lang('system::settings.alert_settings_not_found'));
+            throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
 
         $this->initWidgets($model, $definition);
@@ -134,7 +134,7 @@ class Settings extends \Admin\Classes\AdminController
                 $message->to($email, $name)->subject('This a test email');
             });
 
-            flash()->success(sprintf(lang('system::settings.alert_email_sent'), $email));
+            flash()->success(sprintf(lang('system::lang.settings.alert_email_sent'), $email));
         }
         catch (Exception $ex) {
             flash()->error($ex->getMessage());
@@ -168,7 +168,7 @@ class Settings extends \Admin\Classes\AdminController
     protected function findSettingDefinitions($code)
     {
         if (!strlen($code))
-            throw new Exception(lang('admin::default.form.missing_id'));
+            throw new Exception(lang('admin::lang.form.missing_id'));
 
         // Prep the list widget config
         $model = $this->createModel();
@@ -181,7 +181,7 @@ class Settings extends \Admin\Classes\AdminController
     protected function createModel()
     {
         if (!isset($this->modelClass) OR !strlen($this->modelClass)) {
-            throw new Exception(lang('system::settings.alert_settings_missing_model'));
+            throw new Exception(lang('system::lang.settings.alert_settings_missing_model'));
         }
 
         return new $this->modelClass();

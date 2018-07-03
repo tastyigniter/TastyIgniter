@@ -487,12 +487,12 @@ class ThemeManager
                 return FALSE;
 
             if (file_exists($themesFolder.'/'.$themeDir)) {
-                throw new SystemException(lang('system::themes.error_theme_exists'));
+                throw new SystemException(lang('system::lang.themes.error_theme_exists'));
             }
 
             $meta = @json_decode($zip->getFromName($themeDir.'theme.json'));
             if (!$meta OR !strlen($meta->code))
-                throw new SystemException(lang('system::themes.error_config_no_found'));
+                throw new SystemException(lang('system::lang.themes.error_config_no_found'));
 
             $themeCode = $meta->code;
             if (!$this->checkName($themeDir) OR !$this->checkName($themeCode))
@@ -600,7 +600,7 @@ class ThemeManager
 
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
-                    Lang::get('system::default.missing.config_key'),
+                    Lang::get('system::lang.missing.config_key'),
                     $item, $path
                 ));
             }

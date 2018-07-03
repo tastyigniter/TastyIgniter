@@ -107,7 +107,7 @@ class MediaItem
     {
         return $this->type == self::TYPE_FILE
             ? File::sizeToString($this->size)
-            : $this->size.' '.trans('main::media_manager.text_items');
+            : $this->size.' '.trans('main::lang.media_manager.text_items');
     }
 
     /**

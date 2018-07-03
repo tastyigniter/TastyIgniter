@@ -15,28 +15,28 @@ class Countries extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'System\Models\Countries_model',
-            'title'        => 'lang:system::countries.text_title',
-            'emptyMessage' => 'lang:system::countries.text_empty',
+            'title'        => 'lang:system::lang.countries.text_title',
+            'emptyMessage' => 'lang:system::lang.countries.text_empty',
             'defaultSort'  => ['country_name', 'ASC'],
             'configFile'   => 'countries_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::countries.text_form_name',
+        'name'       => 'lang:system::lang.countries.text_form_name',
         'model'      => 'System\Models\Countries_model',
         'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
+            'title'         => 'lang:admin::lang.form.create_title',
             'redirect'      => 'countries/edit/{country_id}',
             'redirectClose' => 'countries',
         ],
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:admin::lang.form.edit_title',
             'redirect'      => 'countries/edit/{country_id}',
             'redirectClose' => 'countries',
         ],
         'preview'    => [
-            'title'    => 'lang:admin::default.form.preview_title',
+            'title'    => 'lang:admin::lang.form.preview_title',
             'redirect' => 'countries',
         ],
         'delete'     => [
@@ -57,13 +57,13 @@ class Countries extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['country_name', 'lang:system::countries.label_name', 'required|min:2|max:128'],
-            ['priority', 'lang:system::countries.label_priority', 'required|integer'],
-            ['iso_code_2', 'lang:system::countries.label_iso_code2', 'required|string|size:2'],
-            ['iso_code_3', 'lang:system::countries.label_iso_code3', 'required|string|size:3'],
-            ['flag', 'lang:system::countries.label_flag', 'required'],
-            ['format', 'lang:system::countries.label_format', 'min:2'],
-            ['status', 'lang:admin::default.label_status', 'required|integer'],
+            ['country_name', 'lang:system::lang.countries.label_name', 'required|min:2|max:128'],
+            ['priority', 'lang:system::lang.countries.label_priority', 'required|integer'],
+            ['iso_code_2', 'lang:system::lang.countries.label_iso_code2', 'required|string|size:2'],
+            ['iso_code_3', 'lang:system::lang.countries.label_iso_code3', 'required|string|size:3'],
+            ['flag', 'lang:system::lang.countries.label_flag', 'required'],
+            ['format', 'lang:system::lang.countries.label_format', 'min:2'],
+            ['status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $rules);

@@ -118,7 +118,7 @@ class Customers_model extends AuthUserModel
 
     public function getMessageForEvent($eventName)
     {
-        return parse_values(['event' => $eventName], lang('admin::customers.activity_event_log'));
+        return parse_values(['event' => $eventName], lang('admin::lang.customers.activity_event_log'));
     }
 
     public function enabled()

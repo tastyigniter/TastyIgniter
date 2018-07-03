@@ -90,8 +90,8 @@ class Messages_model extends Model
     public static function getSendTypeOptions()
     {
         return [
-            'email'   => lang('system::messages.text_email'),
-            'account' => lang('system::messages.text_account'),
+            'email'   => lang('system::lang.messages.text_email'),
+            'account' => lang('system::lang.messages.text_account'),
         ];
     }
 
@@ -122,11 +122,11 @@ class Messages_model extends Model
     public static function listReceivers()
     {
         return [
-            'all_newsletters' => 'lang:system::messages.text_all_newsletters',
-            'customers'       => 'lang:system::messages.text_customers',
-            'customer_group'  => 'lang:system::messages.text_customer_group',
-            'staff'           => 'lang:system::messages.text_staff',
-            'staff_group'     => 'lang:system::messages.text_staff_group',
+            'all_newsletters' => 'lang:system::lang.messages.text_all_newsletters',
+            'customers'       => 'lang:system::lang.messages.text_customers',
+            'customer_group'  => 'lang:system::lang.messages.text_customer_group',
+            'staff'           => 'lang:system::lang.messages.text_staff',
+            'staff_group'     => 'lang:system::lang.messages.text_staff_group',
         ];
     }
 
@@ -134,22 +134,22 @@ class Messages_model extends Model
     {
         return [
             'inbox'   => [
-                'title' => 'lang:system::messages.text_inbox',
+                'title' => 'lang:system::lang.messages.text_inbox',
                 'icon'  => 'fa-inbox',
                 'url'   => 'messages',
             ],
             'draft'   => [
-                'title' => 'lang:system::messages.text_draft',
+                'title' => 'lang:system::lang.messages.text_draft',
                 'icon'  => 'fa-file-text-o',
                 'url'   => 'messages/draft',
             ],
             'sent'    => [
-                'title' => 'lang:system::messages.text_sent',
+                'title' => 'lang:system::lang.messages.text_sent',
                 'icon'  => 'fa-paper-plane-o',
                 'url'   => 'messages/sent',
             ],
             'archive' => [
-                'title' => 'lang:system::messages.text_archive',
+                'title' => 'lang:system::lang.messages.text_archive',
                 'icon'  => 'fa-archive',
                 'url'   => 'messages/archive',
             ],

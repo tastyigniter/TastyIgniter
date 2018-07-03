@@ -26,17 +26,17 @@ class Menu_item_option_values_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'option_value'      => ['Admin\Models\Menu_option_values_model'],
-            'menu_option'       => ['Admin\Models\Menu_item_options_model'],
+            'option_value' => ['Admin\Models\Menu_option_values_model'],
+            'menu_option'  => ['Admin\Models\Menu_item_options_model'],
         ],
     ];
 
     public $rules = [
-        ['menu_option_id', 'lang:admin::menus.label_option_value_id', 'required|integer'],
-        ['option_value_id', 'lang:admin::menus.label_option_value', 'required|integer'],
-        ['new_price', 'lang:admin::menus.label_option_price', 'numeric'],
-        ['quantity', 'lang:admin::menus.label_option_qty', 'numeric'],
-        ['subtract_stock', 'lang:admin::menus.label_option_subtract_stock', 'numeric'],
+        ['menu_option_id', 'lang:admin::lang.menus.label_option_value_id', 'required|integer'],
+        ['option_value_id', 'lang:admin::lang.menus.label_option_value', 'required|integer'],
+        ['new_price', 'lang:admin::lang.menus.label_option_price', 'numeric'],
+        ['quantity', 'lang:admin::lang.menus.label_option_qty', 'numeric'],
+        ['subtract_stock', 'lang:admin::lang.menus.label_option_subtract_stock', 'numeric'],
     ];
 
     public $appends = ['name', 'price'];

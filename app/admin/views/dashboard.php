@@ -15,8 +15,8 @@ $orders = null;
                                 <span class="bg-red"><i class="fa fa-line-chart fa-2x"></i></span>
                             </div>
                             <div class="col-xs-8 stat-content">
-                                <span class="stat-text text-red sales"><?= lang('admin::dashboard.text_dash_dash'); ?></span>
-                                <span class="stat-heading text-red"><?= lang('admin::dashboard.text_total_sale'); ?></span>
+                                <span class="stat-text text-red sales"><?= lang('admin::lang.dashboard.text_dash_dash'); ?></span>
+                                <span class="stat-heading text-red"><?= lang('admin::lang.dashboard.text_total_sale'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -30,8 +30,8 @@ $orders = null;
                                 <span class="bg-green"><i class="stat-icon fa fa-shopping-cart fa-2x"></i></span>
                             </div>
                             <div class="col-xs-8 stat-content">
-                                <span class="stat-text text-green orders"><?= lang('admin::dashboard.text_dash_dash'); ?></span>
-                                <span class="stat-heading text-green"><?= lang('admin::dashboard.text_total_order'); ?></span>
+                                <span class="stat-text text-green orders"><?= lang('admin::lang.dashboard.text_dash_dash'); ?></span>
+                                <span class="stat-heading text-green"><?= lang('admin::lang.dashboard.text_total_order'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -45,8 +45,8 @@ $orders = null;
                                 <span class="bg-blue"><i class="stat-icon fa fa-users fa-2x"></i></span>
                             </div>
                             <div class="col-xs-8 stat-content">
-                                <span class="stat-text text-blue customers"><?= lang('admin::dashboard.text_dash_dash'); ?></span>
-                                <span class="stat-heading text-blue"><?= lang('admin::dashboard.text_total_customer'); ?></span>
+                                <span class="stat-text text-blue customers"><?= lang('admin::lang.dashboard.text_dash_dash'); ?></span>
+                                <span class="stat-heading text-blue"><?= lang('admin::lang.dashboard.text_total_customer'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -60,8 +60,8 @@ $orders = null;
                                 <span class="bg-primary"><i class="stat-icon fa fa-calendar fa-2x"></i></span>
                             </div>
                             <div class="col-xs-8 stat-content">
-                                <span class="stat-text text-primary tables_reserved"><?= lang('admin::dashboard.text_dash_dash'); ?></span>
-                                <span class="stat-heading text-primary"><?= lang('admin::dashboard.text_total_reservation'); ?></span>
+                                <span class="stat-text text-primary tables_reserved"><?= lang('admin::lang.dashboard.text_dash_dash'); ?></span>
+                                <span class="stat-heading text-primary"><?= lang('admin::lang.dashboard.text_total_reservation'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -77,7 +77,7 @@ $orders = null;
                             <div class="row">
                                 <div class="col-md-4 pull-left">
                                     <h3 class="panel-title">
-                                        <i class="fa fa-line-chart"></i>&nbsp;&nbsp;<?= lang('admin::dashboard.text_reports_chart'); ?>
+                                        <i class="fa fa-line-chart"></i>&nbsp;&nbsp;<?= lang('admin::lang.dashboard.text_reports_chart'); ?>
                                     </h3>
                                 </div>
 
@@ -85,7 +85,7 @@ $orders = null;
                                     <div class="form-group">
                                         <div class="input-group">
                                             <button class="btn btn-default btn-sm daterange">
-                                                <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?= lang('admin::dashboard.text_select_range'); ?></span>&nbsp;&nbsp;<i
+                                                <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?= lang('admin::lang.dashboard.text_select_range'); ?></span>&nbsp;&nbsp;<i
                                                     class="fa fa-caret-down"></i>
                                             </button>
                                         </div>
@@ -110,7 +110,7 @@ $orders = null;
                             <div class="row">
                                 <div class="col-md-5 pull-left">
                                     <h3 class="panel-title">
-                                        <i class="fa fa-bar-chart-o fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::dashboard.text_statistic'); ?>
+                                        <i class="fa fa-bar-chart-o fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.dashboard.text_statistic'); ?>
                                     </h3>
                                 </div>
 
@@ -119,13 +119,17 @@ $orders = null;
                                         <button type="button"
                                                 class="btn btn-default btn-sm dropdown-toggle"
                                                 data-toggle="dropdown">
-                                            <?= lang('admin::dashboard.text_range'); ?>&nbsp;&nbsp;<span class="caret"></span>
+                                            <?= lang('admin::lang.dashboard.text_range'); ?>&nbsp;&nbsp;<span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-range pull-right" role="menu">
-                                            <li><a rel="today"><?= lang('admin::dashboard.text_today'); ?></a></li>
-                                            <li><a rel="week"><?= lang('admin::dashboard.text_week'); ?></a></li>
-                                            <li><a rel="month"><?= lang('admin::dashboard.text_month'); ?></a></li>
-                                            <li><a rel="year"><?= lang('admin::dashboard.text_year'); ?></a></li>
+                                            <li><a rel="today"><?= lang('admin::lang.dashboard.text_today'); ?></a>
+                                            </li>
+                                            <li><a rel="week"><?= lang('admin::lang.dashboard.text_week'); ?></a>
+                                            </li>
+                                            <li><a rel="month"><?= lang('admin::lang.dashboard.text_month'); ?></a>
+                                            </li>
+                                            <li><a rel="year"><?= lang('admin::lang.dashboard.text_year'); ?></a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -134,28 +138,32 @@ $orders = null;
                     </div>
                     <div id="statistics">
                         <ul class="list-group">
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_sale'); ?>
-                                <span class="text-primary sales"><?= lang('admin::dashboard.text_zero'); ?></span></li>
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_lost_sale'); ?>
-                                <span class="text-red lost_sales"><?= lang('admin::dashboard.text_zero'); ?></span></li>
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_cash_payment'); ?>
-                                <span class="text-yellow cash_payments"><?= lang('admin::dashboard.text_zero'); ?></span>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_sale'); ?>
+                                <span class="text-primary sales"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
                             </li>
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_customer'); ?>
-                                <span class="text-blue customers"><?= lang('admin::dashboard.text_zero'); ?></span></li>
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_order'); ?>
-                                <span class="text-green orders"><?= lang('admin::dashboard.text_zero'); ?></span></li>
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_delivery_order'); ?>
-                                <span class="text-success delivery_orders"><?= lang('admin::dashboard.text_zero'); ?></span>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_lost_sale'); ?>
+                                <span class="text-red lost_sales"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
                             </li>
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_collection_order'); ?>
-                                <span class="text-info collection_orders"><?= lang('admin::dashboard.text_zero'); ?></span>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_cash_payment'); ?>
+                                <span class="text-yellow cash_payments"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
                             </li>
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_completed_order'); ?>
-                                <span class="text-danger orders_completed"><?= lang('admin::dashboard.text_zero'); ?></span>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_customer'); ?>
+                                <span class="text-blue customers"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
                             </li>
-                            <li class="list-group-item"><?= lang('admin::dashboard.text_total_reserved_table'); ?>
-                                <span class="text-primary tables_reserved"><?= lang('admin::dashboard.text_zero'); ?></span>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_order'); ?>
+                                <span class="text-green orders"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
+                            </li>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_delivery_order'); ?>
+                                <span class="text-success delivery_orders"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
+                            </li>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_collection_order'); ?>
+                                <span class="text-info collection_orders"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
+                            </li>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_completed_order'); ?>
+                                <span class="text-danger orders_completed"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
+                            </li>
+                            <li class="list-group-item"><?= lang('admin::lang.dashboard.text_total_reserved_table'); ?>
+                                <span class="text-primary tables_reserved"><?= lang('admin::lang.dashboard.text_zero'); ?></span>
                             </li>
                         </ul>
                     </div>
@@ -169,23 +177,23 @@ $orders = null;
                 <div class="col-sm-12 col-md-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><?= lang('admin::dashboard.text_complete_setup'); ?></h3>
+                            <h3 class="panel-title"><?= lang('admin::lang.dashboard.text_complete_setup'); ?></h3>
                         </div>
                         <div class="panel-body">
-                            <h5><?= lang('admin::dashboard.text_progress_summary'); ?></h5>
+                            <h5><?= lang('admin::lang.dashboard.text_progress_summary'); ?></h5>
                         </div>
                         <div class="list-group check-list-group">
                             <a href="<?= admin_url('settings#location'); ?>" class="list-group-item">
-                                <span class=""><?= lang('admin::dashboard.text_settings_progress'); ?></span>
+                                <span class=""><?= lang('admin::lang.dashboard.text_settings_progress'); ?></span>
                             </a>
                             <a href="<?= admin_url('menus'); ?>" class="list-group-item">
-                                <span class=""><?= lang('admin::dashboard.text_menus_progress'); ?></span>
+                                <span class=""><?= lang('admin::lang.dashboard.text_menus_progress'); ?></span>
                             </a>
                             <a href="<?= admin_url('themes'); ?>" class="list-group-item">
-                                <span class=""><?= lang('admin::dashboard.text_design_progress'); ?></span>
+                                <span class=""><?= lang('admin::lang.dashboard.text_design_progress'); ?></span>
                             </a>
                             <a href="<?= admin_url('settings#mail'); ?>" class="list-group-item">
-                                <span class=""><?= lang('admin::dashboard.text_email_progress'); ?></span>
+                                <span class=""><?= lang('admin::lang.dashboard.text_email_progress'); ?></span>
                             </a>
                         </div>
                         <div class="panel-footer"></div>
@@ -193,7 +201,7 @@ $orders = null;
 
                     <div class="panel panel-default panel-activities">
                         <div class="panel-heading"><h3 class="panel-title">
-                                <i class="fa fa-clock-o"></i>&nbsp;&nbsp;<?= lang('admin::dashboard.text_recent_activity'); ?>
+                                <i class="fa fa-clock-o"></i>&nbsp;&nbsp;<?= lang('admin::lang.dashboard.text_recent_activity'); ?>
                             </h3>
                         </div>
                         <ul class="list-group">
@@ -213,11 +221,11 @@ $orders = null;
                                 <?php } ?>
                             <?php }
                             else { ?>
-                                <?= lang('admin::dashboard.text_no_activity'); ?>
+                                <?= lang('admin::lang.dashboard.text_no_activity'); ?>
                             <?php } ?>
                         </ul>
                         <div class="panel-footer text-right">
-                            <a href="<?= admin_url('activities'); ?>"><?= lang('admin::default.text_see_all_activity'); ?>&nbsp;<i
+                            <a href="<?= admin_url('activities'); ?>"><?= lang('admin::lang.text_see_all_activity'); ?>&nbsp;<i
                                     class="fa fa-arrow-right"></i></a>
                         </div>
                     </div>
@@ -227,7 +235,8 @@ $orders = null;
                     <?php if ($news_feed) { ?>
                         <div class="panel panel-default panel-news-feed">
                             <div class="panel-heading"><h3 class="panel-title">
-                                    <i class="fa fa-rss"></i>&nbsp;&nbsp;<?= lang('admin::dashboard.text_news'); ?></h3>
+                                    <i class="fa fa-rss"></i>&nbsp;&nbsp;<?= lang('admin::lang.dashboard.text_news'); ?>
+                                </h3>
                             </div>
                             <div class="list-group">
                                 <?php foreach ($news_feed as $feed) { ?>
@@ -244,15 +253,15 @@ $orders = null;
                     <?php if ($top_customers) { ?>
                         <div class="panel panel-default panel-top-customers">
                             <div class="panel-heading"><h3 class="panel-title">
-                                    <i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?= lang('admin::dashboard.text_top_customers'); ?>
+                                    <i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?= lang('admin::lang.dashboard.text_top_customers'); ?>
                                 </h3></div>
                             <div class="table-responsive">
                                 <table border="0" class="table table-striped table-no-spacing">
                                     <thead>
                                     <tr>
-                                        <th><?= lang('admin::dashboard.column_name'); ?></th>
-                                        <th class="text-center"><?= lang('admin::dashboard.column_total_orders'); ?></th>
-                                        <th class="text-center"><?= lang('admin::dashboard.column_total_sale'); ?></th>
+                                        <th><?= lang('admin::lang.dashboard.column_name'); ?></th>
+                                        <th class="text-center"><?= lang('admin::lang.dashboard.column_total_orders'); ?></th>
+                                        <th class="text-center"><?= lang('admin::lang.dashboard.column_total_sale'); ?></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -267,7 +276,7 @@ $orders = null;
                                 </table>
                             </div>
                             <div class="panel-footer text-right">
-                                <a href="<?= admin_url('customers'); ?>"><?= lang('admin::default.text_see_all_customers'); ?>&nbsp;<i
+                                <a href="<?= admin_url('customers'); ?>"><?= lang('admin::lang.text_see_all_customers'); ?>&nbsp;<i
                                         class="fa fa-arrow-right"></i></a>
                             </div>
                         </div>
@@ -279,27 +288,27 @@ $orders = null;
         <?php if ($orders) { ?>
             <div class="panel panel-default panel-orders">
                 <div class="panel-heading"><h3 class="panel-title">
-                        <i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?= lang('admin::dashboard.text_latest_order'); ?>
+                        <i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?= lang('admin::lang.dashboard.text_latest_order'); ?>
                     </h3></div>
                 <div class="table-responsive">
                     <table border="0" class="table table-striped table-no-spacing">
                         <thead>
                         <tr>
                             <th class="action action-one"></th>
-                            <th><?= lang('admin::default.column_id'); ?></th>
-                            <th><?= lang('admin::dashboard.column_location'); ?></th>
-                            <th><?= lang('admin::dashboard.column_name'); ?></th>
-                            <th class="text-center"><?= lang('admin::dashboard.column_status'); ?></th>
-                            <th class="text-center"><?= lang('admin::dashboard.column_type'); ?></th>
-                            <th class="text-center"><?= lang('admin::dashboard.column_ready_type'); ?></th>
-                            <th class="text-center"><?= lang('admin::dashboard.column_date_added'); ?></th>
+                            <th><?= lang('admin::lang.column_id'); ?></th>
+                            <th><?= lang('admin::lang.dashboard.column_location'); ?></th>
+                            <th><?= lang('admin::lang.dashboard.column_name'); ?></th>
+                            <th class="text-center"><?= lang('admin::lang.dashboard.column_status'); ?></th>
+                            <th class="text-center"><?= lang('admin::lang.dashboard.column_type'); ?></th>
+                            <th class="text-center"><?= lang('admin::lang.dashboard.column_ready_type'); ?></th>
+                            <th class="text-center"><?= lang('admin::lang.dashboard.column_date_added'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php foreach ($orders as $order) { ?>
                             <tr>
                                 <td class="action action-one"><a class="btn btn-edit"
-                                                                 title="<?= lang('admin::default.text_edit'); ?>"
+                                                                 title="<?= lang('admin::lang.text_edit'); ?>"
                                                                  href="<?= $order['edit']; ?>"><i class="fa fa-pencil"></i></a>
                                 </td>
                                 <td><?= $order['order_id']; ?></td>
@@ -317,7 +326,7 @@ $orders = null;
                     </table>
                 </div>
                 <div class="panel-footer text-right">
-                    <a href="<?= admin_url('orders'); ?>"><?= lang('admin::default.text_see_all_orders'); ?>&nbsp;<i
+                    <a href="<?= admin_url('orders'); ?>"><?= lang('admin::lang.text_see_all_orders'); ?>&nbsp;<i
                             class="fa fa-arrow-right"></i></a>
                 </div>
             </div>

@@ -145,7 +145,7 @@ trait CombinesAssets
     {
         $cacheData = $this->getCache($cacheKey);
         if (!$cacheData) {
-            throw new ApplicationException(sprintf(lang('system::default.not_found.combiner'), $cacheKey));
+            throw new ApplicationException(sprintf(lang('system::lang.not_found.combiner'), $cacheKey));
         }
 
         $lastModTime = gmdate("D, d M Y H:i:s \G\M\T", array_get($cacheData, 'lastMod'));

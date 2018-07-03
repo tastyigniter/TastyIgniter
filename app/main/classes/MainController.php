@@ -140,7 +140,7 @@ class MainController extends BaseController
     {
         $this->theme = $theme ?: ThemeManager::instance()->getActiveTheme();
         if (!$this->theme)
-            throw new ApplicationException(Lang::get('main::default.not_found.active_theme'));
+            throw new ApplicationException(Lang::get('main::lang.not_found.active_theme'));
 
         $this->assetPath = $this->theme->getPath().'/assets';
 
@@ -187,7 +187,7 @@ class MainController extends BaseController
 
             // Log the 404 request
             if (!App::runningUnitTests())
-                Log::error(sprintf(lang('main::default.not_found.page_message').': %s', $url));
+                Log::error(sprintf(lang('main::lang.not_found.page_message').': %s', $url));
 
             if (!$page = $this->router->findByUrl('/404'))
                 return Response::make(View::make('main::404'), $this->statusCode);
@@ -217,7 +217,7 @@ class MainController extends BaseController
         }
         elseif (($layout = LayoutTemplate::loadCached($this->theme, $page->layout)) === null) {
             throw new ApplicationException(sprintf(
-                Lang::get('main::default.not_found.layout_name'), $page->layout
+                Lang::get('main::lang.not_found.layout_name'), $page->layout
             ));
         }
 
@@ -338,7 +338,7 @@ class MainController extends BaseController
 
         // Process Components handler
         if (!$result = $this->runHandler($handler)) {
-            throw new ApplicationException(sprintf(Lang::get('main::default.not_found.ajax_handler'), $handler));
+            throw new ApplicationException(sprintf(Lang::get('main::lang.not_found.ajax_handler'), $handler));
         }
 
         if ($result instanceof RedirectResponse) {
@@ -592,7 +592,7 @@ class MainController extends BaseController
         // Load content from theme
         elseif (($content = Content::loadCached($this->theme, $name)) === null) {
             throw new ApplicationException(sprintf(
-                Lang::get('main::default.not_found.content'), $name
+                Lang::get('main::lang.not_found.content'), $name
             ));
         }
 
@@ -634,7 +634,7 @@ class MainController extends BaseController
         if (!$componentObj = $this->findComponentByAlias($name)) {
             if ($throwException) {
                 throw new ApplicationException(sprintf(
-                    lang('main::default.not_found.component'), $name
+                    lang('main::lang.not_found.component'), $name
                 ));
             }
         }
@@ -683,7 +683,7 @@ class MainController extends BaseController
         }
         catch (SystemException $ex) {
             throw new ApplicationException(sprintf(
-                    lang('main::default.not_found.component'), $name
+                    lang('main::lang.not_found.component'), $name
                 ).' => '.$ex->getMessage()
             );
         }
@@ -774,7 +774,7 @@ class MainController extends BaseController
             elseif (($componentObj = $this->findComponentByPartial($partialName)) === null) {
                 if ($throwException)
                     throw new ApplicationException(sprintf(
-                        Lang::get('main::default.not_found.partial'), $partialName
+                        Lang::get('main::lang.not_found.partial'), $partialName
                     ));
 
                 return FALSE;
@@ -784,7 +784,7 @@ class MainController extends BaseController
             if (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
                 if ($throwException)
                     throw new ApplicationException(sprintf(
-                        Lang::get('main::default.not_found.component'), $componentAlias
+                        Lang::get('main::lang.not_found.component'), $componentAlias
                     ));
 
                 return FALSE;
@@ -806,7 +806,7 @@ class MainController extends BaseController
 
         if ($partial === null) {
             if ($throwException)
-                throw new ApplicationException(sprintf(Lang::get('main::default.not_found.partial'), $name));
+                throw new ApplicationException(sprintf(Lang::get('main::lang.not_found.partial'), $name));
 
             return FALSE;
         }
@@ -819,7 +819,7 @@ class MainController extends BaseController
         if (($partial = Partial::loadCached($this->theme, $name)) === null) {
             if ($throwException)
                 throw new ApplicationException(sprintf(
-                    Lang::get('main::default.not_found.partial'), $name
+                    Lang::get('main::lang.not_found.partial'), $name
                 ));
 
             return FALSE;

@@ -35,14 +35,14 @@ class Statuses_model extends Model
      */
     public function getStatusForNameAttribute($value)
     {
-        return ($this->status_for == 'reserve') ? lang('admin::statuses.text_reservation') : lang('admin::statuses.text_order');
+        return ($this->status_for == 'reserve') ? lang('admin::lang.statuses.text_reservation') : lang('admin::lang.statuses.text_order');
     }
 
     public function getStatusForDropdownOptions()
     {
         return [
-            'order'   => lang('admin::statuses.text_order'),
-            'reserve' => lang('admin::statuses.text_reservation'),
+            'order'   => lang('admin::lang.statuses.text_order'),
+            'reserve' => lang('admin::lang.statuses.text_reservation'),
         ];
     }
 

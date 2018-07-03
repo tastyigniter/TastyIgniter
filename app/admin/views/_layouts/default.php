@@ -3,7 +3,7 @@
 <head>
     <?= get_metas(); ?>
     <?= get_favicon(); ?>
-    <title><?= sprintf(lang('admin::default.site_title'), Template::getTitle(), setting('site_name')); ?></title>
+    <title><?= sprintf(lang('admin::lang.site_title'), Template::getTitle(), setting('site_name')); ?></title>
     <?= get_style_tags(['ui', 'widget', 'custom', 'theme']); ?>
 </head>
 <body class="page <?= $this->bodyClass; ?>">
@@ -28,10 +28,10 @@
             <div class="wrap-vertical">
                 <div class="row">
                     <div class="col-9 text-copyright">
-                        <?= lang('system::default.tastyigniter.copyright'); ?>
+                        <?= lang('system::lang.copyright'); ?>
                     </div>
                     <div class="col text-version">
-                        <?= sprintf(lang('system::default.tastyigniter.version'), params('ti_version')); ?>
+                        <?= sprintf(lang('system::lang.version'), params('ti_version')); ?>
                     </div>
                 </div>
             </div>

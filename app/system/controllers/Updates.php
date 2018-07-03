@@ -34,21 +34,21 @@ class Updates extends \Admin\Classes\AdminController
         Themes_model::syncAll();
 
         if (!params()->has('carte_key')) {
-            Flash::warning(lang('system::default.missing.carte_key'))->now();
+            Flash::warning(lang('system::lang.missing.carte_key'))->now();
         }
 
-        $pageTitle = lang('system::updates.text_title');
+        $pageTitle = lang('system::lang.updates.text_title');
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
 
-        Template::setButton(sprintf(lang('system::updates.button_browse'), 'extensions'), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/extensions')]);
+        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), 'extensions'), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/extensions')]);
         if (input('check') == 'force') {
-            Template::setButton(lang('system::updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
+            Template::setButton(lang('system::lang.updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
         }
         else {
-            Template::setButton(lang('system::updates.button_check'), ['class' => 'btn btn-success', 'href' => admin_url($this->forceCheckUrl)]);
+            Template::setButton(lang('system::lang.updates.button_check'), ['class' => 'btn btn-success', 'href' => admin_url($this->forceCheckUrl)]);
         }
-        Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
+        Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
         $this->prepareAssets();
 
@@ -59,14 +59,14 @@ class Updates extends \Admin\Classes\AdminController
 
             $lastChecked = isset($updates['last_check'])
                 ? time_elapsed($updates['last_check'])
-                : lang('admin::default.text_never');
+                : lang('admin::lang.text_never');
 
-            Template::setButton(sprintf(lang('system::updates.text_last_checked'), $lastChecked), [
+            Template::setButton(sprintf(lang('system::lang.updates.text_last_checked'), $lastChecked), [
                 'class' => 'btn disabled text-muted pull-right', 'role' => 'button',
             ]);
 
             if (!empty($updates['items']) OR !empty($updates['ignoredItems'])) {
-                Template::setButton(lang('system::updates.button_update'), [
+                Template::setButton(lang('system::lang.updates.button_update'), [
                     'class' => 'btn btn-primary pull-left mr-2',
                     'id'    => 'apply-updates', 'role' => 'button',
                 ]);
@@ -80,23 +80,23 @@ class Updates extends \Admin\Classes\AdminController
     public function browse($context, $itemType = null)
     {
         if (!params()->has('carte_key')) {
-            Flash::warning(lang('system::default.missing.carte_key'))->now();
+            Flash::warning(lang('system::lang.missing.carte_key'))->now();
         }
 
         $updateManager = UpdateManager::instance();
 
-        $pageTitle = ($itemType == 'extensions') ? lang('system::updates.text_tab_title_extensions') : lang('system::updates.text_tab_title_themes');
-        Template::setTitle(sprintf(lang('system::updates.text_browse_title'), $pageTitle));
-        Template::setHeading(sprintf(lang('system::updates.text_browse_title'), $pageTitle));
+        $pageTitle = ($itemType == 'extensions') ? lang('system::lang.updates.text_tab_title_extensions') : lang('system::lang.updates.text_tab_title_themes');
+        Template::setTitle(sprintf(lang('system::lang.updates.text_browse_title'), $pageTitle));
+        Template::setHeading(sprintf(lang('system::lang.updates.text_browse_title'), $pageTitle));
 
         $buttonType = ($itemType == 'extensions') ? 'themes' : 'extensions';
         $buttonTitle = ($buttonType == 'extensions')
-            ? lang('system::updates.text_tab_title_extensions')
-            : lang('system::updates.text_tab_title_themes');
+            ? lang('system::lang.updates.text_tab_title_extensions')
+            : lang('system::lang.updates.text_tab_title_themes');
 
-        Template::setButton(sprintf(lang('system::updates.button_browse'), $buttonTitle), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
-        Template::setButton(lang('system::updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
-        Template::setButton(lang('system::updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
+        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), $buttonTitle), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
+        Template::setButton(lang('system::lang.updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
+        Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
         $this->prepareAssets();
 
@@ -252,8 +252,8 @@ class Updates extends \Admin\Classes\AdminController
                 $processSteps[$step][] = [
                     'items'   => $meta['data'],
                     'process' => $step,
-                    'label'   => lang("system::updates.progress_{$step}"),
-                    'success' => sprintf(lang('system::updates.progress_success'), rtrim($step, 'e').'ing', ''),
+                    'label'   => lang("system::lang.updates.progress_{$step}"),
+                    'success' => sprintf(lang('system::lang.updates.progress_success'), rtrim($step, 'e').'ing', ''),
                 ];
 
                 continue;
@@ -264,8 +264,8 @@ class Updates extends \Admin\Classes\AdminController
                     $applySteps['core'][] = array_merge([
                         'action'  => 'update',
                         'process' => "{$step}Core",
-                        'label'   => sprintf(lang("system::updates.progress_{$step}"), $item['name'].' update'),
-                        'success' => sprintf(lang('system::updates.progress_success'), $step.'ing', $item['name']),
+                        'label'   => sprintf(lang("system::lang.updates.progress_{$step}"), $item['name'].' update'),
+                        'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
                 }
                 else {
@@ -276,8 +276,8 @@ class Updates extends \Admin\Classes\AdminController
                     $applySteps[$pluralType][] = array_merge([
                         'action'  => $action,
                         'process' => $step.ucfirst($singularType),
-                        'label'   => sprintf(lang("system::updates.progress_{$step}"), "{$item['name']} {$singularType}"),
-                        'success' => sprintf(lang('system::updates.progress_success'), $step.'ing', $item['name']),
+                        'label'   => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
+                        'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
                 }
             }
@@ -373,10 +373,10 @@ class Updates extends \Admin\Classes\AdminController
     protected function validateItems()
     {
         $rules = [
-            ['items.*.name', 'lang:system::updates.label_meta_code', 'required'],
-            ['items.*.type', 'lang:system::updates.label_meta_type', 'required'],
-            ['items.*.ver', 'lang:system::updates.label_meta_version', 'required'],
-            ['items.*.action', 'lang:system::updates.label_meta_action', 'required|in:install,update'],
+            ['items.*.name', 'lang:system::lang.updates.label_meta_code', 'required'],
+            ['items.*.type', 'lang:system::lang.updates.label_meta_type', 'required'],
+            ['items.*.ver', 'lang:system::lang.updates.label_meta_version', 'required'],
+            ['items.*.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'],
         ];
 
         return $this->validatePasses(post(), $rules);
@@ -386,18 +386,18 @@ class Updates extends \Admin\Classes\AdminController
     {
         $rules = [];
         if (post('step') != 'complete') {
-            $rules[] = ['meta.code', 'lang:system::updates.label_meta_code', 'required'];
-            $rules[] = ['meta.type', 'lang:system::updates.label_meta_type', 'required'];
-            $rules[] = ['meta.version', 'lang:system::updates.label_meta_version', 'required'];
-            $rules[] = ['meta.hash', 'lang:system::updates.label_meta_hash', 'required'];
-            $rules[] = ['meta.description', 'lang:system::updates.label_meta_description', 'sometimes'];
-            $rules[] = ['meta.action', 'lang:system::updates.label_meta_action', 'required|in:install,update'];
+            $rules[] = ['meta.code', 'lang:system::lang.updates.label_meta_code', 'required'];
+            $rules[] = ['meta.type', 'lang:system::lang.updates.label_meta_type', 'required'];
+            $rules[] = ['meta.version', 'lang:system::lang.updates.label_meta_version', 'required'];
+            $rules[] = ['meta.hash', 'lang:system::lang.updates.label_meta_hash', 'required'];
+            $rules[] = ['meta.description', 'lang:system::lang.updates.label_meta_description', 'sometimes'];
+            $rules[] = ['meta.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'];
         }
         else {
-            $rules[] = ['meta.items', 'lang:system::updates.label_meta_items', 'required|array'];
+            $rules[] = ['meta.items', 'lang:system::lang.updates.label_meta_items', 'required|array'];
         }
 
-        $rules[] = ['step', 'lang:system::updates.label_meta_step', 'required|in:download,extract,complete'];
+        $rules[] = ['step', 'lang:system::lang.updates.label_meta_step', 'required|in:download,extract,complete'];
 
         return $this->validatePasses(post(), $rules);
     }

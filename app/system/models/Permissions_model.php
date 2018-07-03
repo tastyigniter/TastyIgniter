@@ -73,16 +73,16 @@ class Permissions_model extends Model
 
     public function getMessageForEvent($eventName)
     {
-        return parse_values(['event' => $eventName], lang('system::permissions.activity_event_log'));
+        return parse_values(['event' => $eventName], lang('system::lang.permissions.activity_event_log'));
     }
 
     public function getActionOptions()
     {
         return [
-            'access' => lang('system::permissions.text_access'),
-            'manage' => lang('system::permissions.text_manage'),
-            'add'    => lang('system::permissions.text_add'),
-            'delete' => lang('system::permissions.text_delete'),
+            'access' => lang('system::lang.permissions.text_access'),
+            'manage' => lang('system::lang.permissions.text_manage'),
+            'add'    => lang('system::lang.permissions.text_add'),
+            'delete' => lang('system::lang.permissions.text_delete'),
         ];
     }
 

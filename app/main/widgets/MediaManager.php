@@ -182,21 +182,21 @@ class MediaManager extends BaseWidget
 
         try {
             if (!$this->getSetting('new_folder'))
-                throw new ApplicationException(lang('main::media_manager.alert_new_folder_disabled'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_new_folder_disabled'));
 
             if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             $name = trim(post('name'));
             if (!strlen($name))
-                throw new ApplicationException(lang('main::media_manager.alert_file_name_required'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_file_name_required'));
 
             if (!$this->validateFileName($name))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_file_name'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
 
             $fullPath = $path.'/'.$name;
             if ($mediaLibrary->exists($fullPath))
-                throw new ApplicationException(lang('main::media_manager.alert_file_exists'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_file_exists'));
 
             $mediaLibrary->makeFolder($fullPath);
 
@@ -212,7 +212,8 @@ class MediaManager extends BaseWidget
                 '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
                 '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
             ];
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
@@ -223,21 +224,21 @@ class MediaManager extends BaseWidget
 
         try {
             if (!$this->getSetting('rename'))
-                throw new ApplicationException(lang('main::media_manager.alert_rename_disabled'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_rename_disabled'));
 
             if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             $name = trim(post('name'));
             if (!strlen($name))
-                throw new ApplicationException(lang('main::media_manager.alert_file_name_required'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_file_name_required'));
 
             if (!$this->validateFileName($name))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_file_name'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
 
             $newPath = File::dirname($path).'/'.$name;
             if ($mediaLibrary->exists($newPath))
-                throw new ApplicationException(lang('main::media_manager.alert_file_exists'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_file_exists'));
 
             $mediaLibrary->rename($path, $newPath);
 
@@ -252,7 +253,8 @@ class MediaManager extends BaseWidget
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
                 '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
             ];
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
@@ -263,28 +265,28 @@ class MediaManager extends BaseWidget
 
         try {
             if (!$this->getSetting('rename'))
-                throw new ApplicationException(lang('main::media_manager.alert_rename_disabled'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_rename_disabled'));
 
             if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             $oldName = trim(post('file'));
             if (!strlen($oldName))
-                throw new ApplicationException(lang('main::media_manager.alert_file_name_required'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_file_name_required'));
 
             $name = trim(post('name'));
             if (!strlen($name))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_new_file_name'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_new_file_name'));
 
             if (!$mediaLibrary->isAllowedExtension($name))
-                throw new ApplicationException(lang('main::media_manager.alert_extension_not_allowed'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
 
             if (!$this->validateFileName($name) OR !$this->validateFileName($oldName))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_file_name'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
 
             $newPath = $path.'/'.$name;
             if ($mediaLibrary->exists($newPath))
-                throw new ApplicationException(lang('main::media_manager.alert_file_exists'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_file_exists'));
 
             $mediaLibrary->rename($path.'/'.$oldName, $newPath);
 
@@ -298,7 +300,8 @@ class MediaManager extends BaseWidget
                 '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
                 '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
             ];
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
@@ -309,10 +312,10 @@ class MediaManager extends BaseWidget
 
         try {
             if (!$this->getSetting('delete'))
-                throw new ApplicationException(lang('main::media_manager.alert_delete_disabled'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_delete_disabled'));
 
             if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             $mediaLibrary->deleteFolder($path);
 
@@ -328,7 +331,8 @@ class MediaManager extends BaseWidget
                 '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
                 '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
             ];
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
@@ -339,15 +343,15 @@ class MediaManager extends BaseWidget
 
         try {
             if (!$this->getSetting('delete')) {
-                $json['alert'] = lang('main::media_manager.alert_delete_disabled');
+                $json['alert'] = lang('main::lang.media_manager.alert_delete_disabled');
             }
 
             if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             $files = post('files');
             if (empty($files) OR !is_array($files)) {
-                throw new ApplicationException(lang('main::media_manager.alert_select_delete_file'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_select_delete_file'));
             }
 
             $files = array_map(function ($value) use ($path) {
@@ -368,7 +372,8 @@ class MediaManager extends BaseWidget
                 '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
                 '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
             ];
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
@@ -379,17 +384,17 @@ class MediaManager extends BaseWidget
 
         try {
             if (!$this->getSetting('move'))
-                throw new ApplicationException(lang('main::media_manager.alert_move_disabled'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_move_disabled'));
 
             if (!$source = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             if (!$destination = $mediaLibrary->validatePath(post('destination')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             $files = post('files');
             if (empty($files) OR !is_array($files))
-                throw new ApplicationException(lang('main::media_manager.alert_select_move_file'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_select_move_file'));
 
             foreach ($files as $file) {
                 $name = $file['path'];
@@ -409,7 +414,8 @@ class MediaManager extends BaseWidget
                 '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
                 '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
             ];
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
@@ -420,17 +426,17 @@ class MediaManager extends BaseWidget
 
         try {
             if (!$this->getSetting('copy'))
-                throw new ApplicationException(lang('main::media_manager.alert_copy_disabled'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_copy_disabled'));
 
             if (!$source = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             if (!$destination = $mediaLibrary->validatePath(post('destination')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             $files = post('files');
             if (empty($files) OR !is_array($files))
-                throw new ApplicationException(lang('main::media_manager.alert_select_copy_file'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_select_copy_file'));
 
             foreach ($files as $file) {
                 $name = $file['path'];
@@ -450,7 +456,8 @@ class MediaManager extends BaseWidget
                 '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
                 '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
             ];
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
@@ -573,24 +580,24 @@ class MediaManager extends BaseWidget
 
         try {
             if (!Input::hasFile('file_data'))
-                throw new ApplicationException(lang('main::media_manager.alert_file_not_found'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_file_not_found'));
 
             $uploadedFile = Input::file('file_data');
 
             $fileName = $uploadedFile->getClientOriginalName();
 
             if (!$path = $mediaLibrary->validatePath(Input::get('path')))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_path'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
             $extension = strtolower($uploadedFile->getClientOriginalExtension());
             $fileName = File::name($fileName).'.'.$extension;
             $filePath = $path.'/'.$fileName;
 
             if (!$this->validateFileName($fileName))
-                throw new ApplicationException(lang('main::media_manager.alert_invalid_new_file_name'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_new_file_name'));
 
             if (!$mediaLibrary->isAllowedExtension($extension))
-                throw new ApplicationException(lang('main::media_manager.alert_extension_not_allowed'));
+                throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
 
             if (!$uploadedFile->isValid())
                 throw new ApplicationException($uploadedFile->getErrorMessage());
@@ -608,7 +615,8 @@ class MediaManager extends BaseWidget
                 'link'   => $mediaLibrary->getMediaUrl($filePath),
                 'result' => 'success',
             ])->send();
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             Response::json($ex->getMessage(), 400)->send();
         }
 

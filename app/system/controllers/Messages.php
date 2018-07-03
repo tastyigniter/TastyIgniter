@@ -14,8 +14,8 @@ class Messages extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'System\Models\Messages_model',
-            'title'        => 'lang:system::messages.text_title',
-            'emptyMessage' => 'lang:system::messages.text_empty',
+            'title'        => 'lang:system::lang.messages.text_title',
+            'emptyMessage' => 'lang:system::lang.messages.text_empty',
             'showSorting'  => FALSE,
             'defaultSort'  => ['date_updated', 'DESC'],
             'configFile'   => 'messages_model',
@@ -23,16 +23,16 @@ class Messages extends \Admin\Classes\AdminController
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::messages.text_form_name',
+        'name'       => 'lang:system::lang.messages.text_form_name',
         'model'      => 'System\Models\Messages_model',
         'create'     => [
-            'title'         => 'lang:system::messages.text_create_title',
+            'title'         => 'lang:system::lang.messages.text_create_title',
             'redirect'      => 'messages/draft/{message_id}',
             'redirectClose' => 'messages',
             'context'       => 'compose',
         ],
         'edit'       => [
-            'title'         => 'lang:system::messages.text_draft_title',
+            'title'         => 'lang:system::lang.messages.text_draft_title',
             'redirect'      => 'messages/draft/{message_id}',
             'redirectClose' => 'messages',
             'context'       => 'draft',
@@ -98,7 +98,7 @@ class Messages extends \Admin\Classes\AdminController
             $formController->edit(null, $recordId);
             $view = 'messages/compose';
             if ($formController->getFormModel()->isSent()) {
-                flash()->danger(lang('system::messages.alert_warning_draft'));
+                flash()->danger(lang('system::lang.messages.alert_warning_draft'));
 
                 return $this->redirect('messages/draft');
             }
@@ -111,7 +111,7 @@ class Messages extends \Admin\Classes\AdminController
     {
         $checkedIds = post('checked');
         if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds)) {
-            flash()->success(lang('admin::default.list.delete_empty'));
+            flash()->success(lang('admin::lang.list.delete_empty'));
 
             return $this->refreshList();
         }
@@ -130,8 +130,8 @@ class Messages extends \Admin\Classes\AdminController
         $count = count($records);
         $prefix = ($count > 1) ? ' records' : 'record';
         flash()->success(sprintf(
-            lang('admin::default.alert_success'),
-            '['.$count.']'.$prefix.' '.lang('system::messages.alert_mark_as_'.$markAction)
+            lang('admin::lang.alert_success'),
+            '['.$count.']'.$prefix.' '.lang('system::lang.messages.alert_mark_as_'.$markAction)
         ));
     }
 
@@ -231,15 +231,15 @@ class Messages extends \Admin\Classes\AdminController
 
     public function formValidate($model, $form)
     {
-        $rules[] = ['recipient', 'lang:system::messages.label_to', 'sometimes|min:2|max:128'];
-        $rules[] = ['subject', 'lang:system::messages.label_subject', 'sometimes|min:2|max:128'];
-        $rules[] = ['send_type', 'lang:system::messages.label_send_type', 'sometimes|alpha'];
-        $rules[] = ['customer_groups.*', 'lang:system::messages.label_customer_group', 'required_if:recipient,customer_group|integer'];
-        $rules[] = ['staff_groups.*', 'lang:system::messages.label_staff_group', 'required_if:recipient,staff_group|integer'];
-        $rules[] = ['customers.*', 'lang:system::messages.label_customers', 'required_if:recipient,customers|integer'];
-        $rules[] = ['staffs.*', 'lang:system::messages.label_staff', 'required_if:recipient,staffs|integer'];
-        $rules[] = ['body', 'lang:system::messages.label_body', 'sometimes|min:3'];
-        $rules[] = ['respond', 'lang:system::messages.label_respond', 'sometimes|min:3'];
+        $rules[] = ['recipient', 'lang:system::lang.messages.label_to', 'sometimes|min:2|max:128'];
+        $rules[] = ['subject', 'lang:system::lang.messages.label_subject', 'sometimes|min:2|max:128'];
+        $rules[] = ['send_type', 'lang:system::lang.messages.label_send_type', 'sometimes|alpha'];
+        $rules[] = ['customer_groups.*', 'lang:system::lang.messages.label_customer_group', 'required_if:recipient,customer_group|integer'];
+        $rules[] = ['staff_groups.*', 'lang:system::lang.messages.label_staff_group', 'required_if:recipient,staff_group|integer'];
+        $rules[] = ['customers.*', 'lang:system::lang.messages.label_customers', 'required_if:recipient,customers|integer'];
+        $rules[] = ['staffs.*', 'lang:system::lang.messages.label_staff', 'required_if:recipient,staffs|integer'];
+        $rules[] = ['body', 'lang:system::lang.messages.label_body', 'sometimes|min:3'];
+        $rules[] = ['respond', 'lang:system::lang.messages.label_respond', 'sometimes|min:3'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

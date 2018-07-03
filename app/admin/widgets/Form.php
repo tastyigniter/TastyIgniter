@@ -221,7 +221,7 @@ class Form extends BaseWidget
         if (is_string($field)) {
             if (!isset($this->allFields[$field])) {
                 throw new Exception(sprintf(
-                    lang('admin::default.form.missing_definition'),
+                    lang('admin::lang.form.missing_definition'),
                     $field
                 ));
             }
@@ -273,7 +273,9 @@ class Form extends BaseWidget
 
     /**
      * Sets or resets form field values.
+     *
      * @param array $data
+     *
      * @return array
      */
     public function setFormValues($data = null)
@@ -285,7 +287,7 @@ class Form extends BaseWidget
         $this->prepareModelsToSave($this->model, $data);
 
         if ($this->data !== $this->model) {
-            $this->data = (object) array_merge((array) $this->data, (array) $data);
+            $this->data = (object)array_merge((array)$this->data, (array)$data);
         }
 
         foreach ($this->allFields as $field) {
@@ -306,7 +308,7 @@ class Form extends BaseWidget
         $saveData = $this->getSaveData();
 
         // Extensibility
-        $dataHolder = (object) ['data' => $saveData];
+        $dataHolder = (object)['data' => $saveData];
         Event::fire('admin.form.extendFieldsBefore', [$dataHolder]);
         $this->fireEvent('form.extendFieldsBefore');
         $saveData = $dataHolder->data;
@@ -325,7 +327,7 @@ class Form extends BaseWidget
                 }
 
                 $fieldObject = $this->allFields[$field];
-                $result['#' . $fieldObject->getId('group')] = $this->makePartial('field', ['field' => $fieldObject]);
+                $result['#'.$fieldObject->getId('group')] = $this->makePartial('field', ['field' => $fieldObject]);
             }
         }
 
@@ -334,7 +336,7 @@ class Form extends BaseWidget
         }
 
         // Extensibility
-        $eventResults = $this->fireSystemEvent('admin.form.refresh', [$result], false);
+        $eventResults = $this->fireSystemEvent('admin.form.refresh', [$result], FALSE);
 
         foreach ($eventResults as $eventResult) {
             $result = $eventResult + $result;
@@ -462,7 +464,7 @@ class Form extends BaseWidget
             $fieldType = $config['type'] ?? null;
             if (!is_string($fieldType) AND !is_null($fieldType)) {
                 throw new Exception(sprintf(
-                    lang('admin::default.form.field_invalid_type'), gettype($fieldType)
+                    lang('admin::lang.form.field_invalid_type'), gettype($fieldType)
                 ));
             }
 
@@ -652,7 +654,7 @@ class Form extends BaseWidget
         if (is_string($field)) {
             if (!isset($this->allFields[$field])) {
                 throw new Exception(lang(
-                    'admin::default.form.missing_definition',
+                    'admin::lang.form.missing_definition',
                     compact('field')
                 ));
             }
@@ -812,7 +814,7 @@ class Form extends BaseWidget
     {
         if (!$this->model) {
             throw new Exception(sprintf(
-                lang('admin::default.form.missing_model'), get_class($this->controller)
+                lang('admin::lang.form.missing_model'), get_class($this->controller)
             ));
         }
 
@@ -982,7 +984,7 @@ class Form extends BaseWidget
                 !$this->objectMethodExists($model, $methodName) AND
                 !$this->objectMethodExists($model, 'getDropdownOptions')
             ) {
-                throw new Exception(sprintf(lang('admin::default.form.options_method_not_exists'),
+                throw new Exception(sprintf(lang('admin::lang.form.options_method_not_exists'),
                     get_class($model), $methodName, $field->fieldName
                 ));
             }
@@ -993,7 +995,7 @@ class Form extends BaseWidget
         } // Field options are an explicit method reference
         elseif (is_string($fieldOptions)) {
             if (!$this->objectMethodExists($this->model, $fieldOptions)) {
-                throw new Exception(sprintf(lang('admin::default.form.options_method_not_exists'),
+                throw new Exception(sprintf(lang('admin::lang.form.options_method_not_exists'),
                     get_class($this->model), $fieldOptions, $field->fieldName
                 ));
             }

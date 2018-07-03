@@ -128,7 +128,7 @@ class AdminController extends BaseController
         // Ensures that a user is logged in, if required
         if ($requireAuthentication) {
             if (!$this->checkUser()) {
-                flash()->error(lang('admin::default.alert_user_not_logged_in'))->important();
+                flash()->error(lang('admin::lang.alert_user_not_logged_in'))->important();
 
                 return $this->redirectGuest('login');
             }

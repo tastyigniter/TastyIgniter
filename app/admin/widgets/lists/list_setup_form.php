@@ -2,8 +2,8 @@
     <div class="modal-body">
         <div class="form-group">
             <label class="control-label">
-                <?= e(lang('admin::default.list.label_visible_columns')) ?>
-                <span class="help-block"><?= e(lang('admin::default.list.help_visible_columns')) ?></span>
+                <?= e(lang('admin::lang.list.label_visible_columns')) ?>
+                <span class="help-block"><?= e(lang('admin::lang.list.help_visible_columns')) ?></span>
             </label>
             <div class="list-group list-group-flush">
                 <?php foreach ($columns as $column) { ?>
@@ -44,8 +44,8 @@
         <?php if ($this->showPagination) { ?>
             <div class="form-group">
                 <label class="control-label">
-                    <?= e(lang('admin::default.list.label_page_limit')) ?>
-                    <span class="help-block"><?= e(lang('admin::default.list.help_page_limit')) ?></span>
+                    <?= e(lang('admin::lang.list.label_page_limit')) ?>
+                    <span class="help-block"><?= e(lang('admin::lang.list.help_page_limit')) ?></span>
                 </label>
                 <div
                     class="btn-group btn-group-toggle d-block"
@@ -74,7 +74,7 @@
     <div class="modal-footer">
         <button type="button"
                 class="btn btn-default"
-                data-dismiss="modal"><?= lang('admin::default.list.button_cancel_setup') ?></button>
-        <button type="sumbit" class="btn btn-primary"><?= lang('admin::default.list.button_apply_setup') ?></button>
+                data-dismiss="modal"><?= lang('admin::lang.list.button_cancel_setup') ?></button>
+        <button type="sumbit" class="btn btn-primary"><?= lang('admin::lang.list.button_apply_setup') ?></button>
     </div>
 </form>

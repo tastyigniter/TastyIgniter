@@ -20,6 +20,6 @@ $itemOptions = isset($itemOptions['items']) ? $itemOptions['items'] : $itemOptio
         <?php } ?>
     <?php }
     else { ?>
-        <li><a><?= lang('admin::default.text_empty_activity'); ?></a></li>
+        <li><a><?= lang('admin::lang.text_empty_activity'); ?></a></li>
     <?php } ?>
 </ul>

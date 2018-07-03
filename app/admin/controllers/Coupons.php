@@ -23,17 +23,17 @@ class Coupons extends \Admin\Classes\AdminController
         'name'       => 'lang:admin::coupons.text_form_name',
         'model'      => 'Admin\Models\Coupons_model',
         'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
+            'title'         => 'lang:admin::lang.form.create_title',
             'redirect'      => 'coupons/edit/{coupon_id}',
             'redirectClose' => 'coupons',
         ],
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:admin::lang.form.edit_title',
             'redirect'      => 'coupons/edit/{coupon_id}',
             'redirectClose' => 'coupons',
         ],
         'preview'    => [
-            'title'    => 'lang:admin::default.form.preview_title',
+            'title'    => 'lang:admin::lang.form.preview_title',
             'redirect' => 'coupons',
         ],
         'delete'     => [
@@ -81,7 +81,7 @@ class Coupons extends \Admin\Classes\AdminController
             ['recurring_from_time', 'lang:admin::coupons.label_recurring_from_time', 'required_if:validity,recurring|valid_time'],
             ['recurring_to_time', 'lang:admin::coupons.label_recurring_to_time', 'required_if:validity,recurring|valid_time'],
             ['order_restriction', 'lang:admin::coupons.label_order_restriction', 'integer'],
-            ['status', 'lang:admin::default.label_status', 'required|integer'],
+            ['status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $namedRules);

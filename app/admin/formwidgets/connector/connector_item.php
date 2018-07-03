@@ -35,7 +35,7 @@
                         data-control="delete-item"
                         data-item-id="<?= $item->getKey() ?>"
                         data-item-selector="#<?= $this->getId('item-'.$index) ?>"
-                        data-confirm-message="<?= lang('admin::default.alert_warning_confirm') ?>"
+                        data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
                     <?php } ?>
                 >
                     <span content="text-danger" aria-hidden="true">&times;</span>

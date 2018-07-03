@@ -16,9 +16,9 @@ class Ratings extends \Admin\Classes\AdminController
             return $this->redirectBack();
         }
 
-        Template::setTitle(lang('admin::ratings.text_title'));
-        Template::setHeading(lang('admin::ratings.text_heading'));
-        Template::setButton(lang('admin::default.button_save'), ['class' => 'btn btn-primary', 'role' => 'button', 'onclick' => '$(\'#edit-form\').submit();']);
+        Template::setTitle(lang('admin::lang.ratings.text_title'));
+        Template::setHeading(lang('admin::lang.ratings.text_heading'));
+        Template::setButton(lang('admin::lang.button_save'), ['class' => 'btn btn-primary', 'role' => 'button', 'onclick' => '$(\'#edit-form\').submit();']);
 
         $this->addJs('~/app/admin/formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
 
@@ -52,10 +52,10 @@ class Ratings extends \Admin\Classes\AdminController
             if ($ratings = Settings_model::where('sort', 'ratings')->first()) {
                 $ratings->value = serialize($update);
                 $ratings->save();
-                flash()->success(sprintf(lang('admin::default.alert_success'), 'Rating updated '));
+                flash()->success(sprintf(lang('admin::lang.alert_success'), 'Rating updated '));
             }
             else {
-                flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
+                flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), 'updated'));
             }
 
             return TRUE;
@@ -64,7 +64,7 @@ class Ratings extends \Admin\Classes\AdminController
 
     protected function validateForm()
     {
-        $rules[] = ['ratings.*', 'lang:admin::ratings.label_name', 'required|min:2|max:32'];
+        $rules[] = ['ratings.*', 'lang:admin::lang.ratings.label_name', 'required|min:2|max:32'];
 
         return $this->validatePasses(post(), $rules);
     }

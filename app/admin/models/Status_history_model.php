@@ -60,7 +60,7 @@ class Status_history_model extends Model
 
     public function getNotifiedAttribute()
     {
-        return $this->notify == 1 ? lang('admin::default.text_yes') : lang('admin::default.text_no');
+        return $this->notify == 1 ? lang('admin::lang.text_yes') : lang('admin::lang.text_no');
     }
 
     public static function addStatusHistory(Model $status, Model $object, $options = [])

@@ -26,7 +26,7 @@ class ListController extends ControllerAction
      *  $listConfig = [
      *      'list'  => [
      *          'title'         => 'lang:text_title',
-     *          'emptyMessage' => 'lang:admin::default.text_empty',
+     *          'emptyMessage' => 'lang:admin::lang.text_empty',
      *          'configFile'   => null,
      *          'showSetup'         => TRUE,
      *          'showSorting'       => TRUE,
@@ -107,7 +107,7 @@ class ListController extends ControllerAction
     {
         $checkedIds = post('checked');
         if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds)) {
-            flash()->success(lang('admin::default.list.delete_empty'));
+            flash()->success(lang('admin::lang.list.delete_empty'));
 
             return $this->controller->refreshList();
         }
@@ -134,10 +134,10 @@ class ListController extends ControllerAction
             }
 
             $prefix = ($count > 1) ? ' records' : 'record';
-            flash()->success(sprintf(lang('admin::default.alert_success'), '['.$count.']'.$prefix.' '.lang('admin::default.text_deleted')));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), '['.$count.']'.$prefix.' '.lang('admin::lang.text_deleted')));
         }
         else {
-            flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), lang('admin::default.text_deleted')));
+            flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), lang('admin::lang.text_deleted')));
         }
 
         return $this->controller->refreshList($alias);

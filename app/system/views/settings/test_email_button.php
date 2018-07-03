@@ -3,5 +3,5 @@
     class="btn btn-primary btn-block"
     data-request="onTestMail"
 >
-    <?= lang('system::settings.text_send_test_email'); ?>
+    <?= lang('system::lang.settings.text_send_test_email'); ?>
 </a>

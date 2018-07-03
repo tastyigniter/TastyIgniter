@@ -14,28 +14,28 @@ class MailTemplates extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'System\Models\Mail_templates_model',
-            'title'        => 'lang:system::mail_templates.text_template_title',
-            'emptyMessage' => 'lang:system::mail_templates.text_empty',
+            'title'        => 'lang:system::lang.mail_templates.text_template_title',
+            'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort'  => ['date_updated', 'DESC'],
             'configFile'   => 'mail_templates_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::mail_templates.text_form_name',
+        'name'       => 'lang:system::lang.mail_templates.text_form_name',
         'model'      => 'System\Models\Mail_templates_model',
         'create'     => [
-            'title'         => 'lang:system::mail_templates.text_new_template_title',
+            'title'         => 'lang:system::lang.mail_templates.text_new_template_title',
             'redirect'      => 'mail_templates/edit/{template_data_id}',
             'redirectClose' => 'mail_templates',
         ],
         'edit'       => [
-            'title'         => 'lang:system::mail_templates.text_edit_template_title',
+            'title'         => 'lang:system::lang.mail_templates.text_edit_template_title',
             'redirect'      => 'mail_templates/edit/{template_data_id}',
             'redirectClose' => 'mail_templates',
         ],
         'preview'    => [
-            'title'    => 'lang:system::mail_templates.text_preview_template_title',
+            'title'    => 'lang:system::lang.mail_templates.text_preview_template_title',
             'redirect' => 'mail_templates/preview/{template_data_id}',
         ],
         'delete'     => [
@@ -85,17 +85,17 @@ class MailTemplates extends \Admin\Classes\AdminController
             $message->to($adminUser->staff_email, $adminUser->staff_name);
         });
 
-        flash()->success(sprintf(lang('system::mail_templates.alert_test_message_sent'), $adminUser->staff_email));
+        flash()->success(sprintf(lang('system::lang.mail_templates.alert_test_message_sent'), $adminUser->staff_email));
     }
 
     public function formValidate($model, $form)
     {
-        $rules[] = ['template_id', 'lang:system::mail_templates.label_layout', 'required|integer'];
-        $rules[] = ['label', 'lang:system::mail_templates.label_description', 'required'];
-        $rules[] = ['subject', 'lang:system::mail_templates.label_code', 'required'];
+        $rules[] = ['template_id', 'lang:system::lang.mail_templates.label_layout', 'required|integer'];
+        $rules[] = ['label', 'lang:system::lang.mail_templates.label_description', 'required'];
+        $rules[] = ['subject', 'lang:system::lang.mail_templates.label_code', 'required'];
 
         if ($form->context == 'create') {
-            $rules[] = ['code', 'lang:system::mail_templates.label_code', 'required|min:2|max:32'];
+            $rules[] = ['code', 'lang:system::lang.mail_templates.label_code', 'required|min:2|max:32'];
         }
 
         return $this->validatePasses(post($form->arrayName), $rules);

@@ -12,28 +12,28 @@ class CustomerGroups extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'Admin\Models\Customer_groups_model',
-            'title'        => 'lang:admin::customer_groups.text_title',
-            'emptyMessage' => 'lang:admin::customer_groups.text_empty',
+            'title'        => 'lang:admin::lang.customer_groups.text_title',
+            'emptyMessage' => 'lang:admin::lang.customer_groups.text_empty',
             'defaultSort'  => ['country_name', 'ASC'],
             'configFile'   => 'customer_groups_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::customer_groups.text_form_name',
+        'name'       => 'lang:admin::lang.customer_groups.text_form_name',
         'model'      => 'Admin\Models\Customer_groups_model',
         'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
+            'title'         => 'lang:admin::lang.form.create_title',
             'redirect'      => 'customer_groups/edit/{customer_group_id}',
             'redirectClose' => 'customer_groups',
         ],
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:admin::lang.form.edit_title',
             'redirect'      => 'customer_groups/edit/{customer_group_id}',
             'redirectClose' => 'customer_groups',
         ],
         'preview'    => [
-            'title'    => 'lang:admin::default.form.preview_title',
+            'title'    => 'lang:admin::lang.form.preview_title',
             'redirect' => 'customer_groups',
         ],
         'delete'     => [
@@ -54,9 +54,9 @@ class CustomerGroups extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['group_name', 'lang:admin::customer_groups.label_name', 'required|min:2|max:32'],
-            ['approval', 'lang:admin::customer_groups.label_approval', 'required|integer'],
-            ['description', 'lang:admin::customer_groups.label_description', 'min:2|max:512'],
+            ['group_name', 'lang:admin::lang.customer_groups.label_name', 'required|min:2|max:32'],
+            ['approval', 'lang:admin::lang.customer_groups.label_approval', 'required|integer'],
+            ['description', 'lang:admin::lang.customer_groups.label_description', 'min:2|max:512'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $rules);

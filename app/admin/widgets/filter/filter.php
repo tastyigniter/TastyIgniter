@@ -27,7 +27,7 @@
                     type="button"
                     data-request="<?= $onClearHandler; ?>"
                 >
-                    <i class="fa fa-times"></i>&nbsp;&nbsp;<?= lang('admin::default.text_clear'); ?>
+                    <i class="fa fa-times"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_clear'); ?>
                 </button>
             </div>
         <?php } ?>

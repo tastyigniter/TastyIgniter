@@ -672,7 +672,7 @@ class ExtensionManager
 
             $meta = @json_decode($zip->getFromName($extensionDir.'extension.json'));
             if (!$meta OR !strlen($meta->code))
-                throw new SystemException(lang('system::extensions.error_config_no_found'));
+                throw new SystemException(lang('system::lang.extensions.error_config_no_found'));
 
             $extensionCode = $meta->code;
             $extractToPath = $extractTo.'/'.$this->getNamePath($meta->code);

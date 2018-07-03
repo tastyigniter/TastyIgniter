@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title><?= $model->invoice_id.' - '.lang('admin::orders.text_invoice'); ?> - <?= setting('site_name'); ?></title>
+    <title><?= $model->invoice_id.' - '.lang('admin::lang.orders.text_invoice'); ?> - <?= setting('site_name'); ?></title>
     <?= get_style_tags(); ?>
 
     <style>
@@ -17,8 +17,8 @@
         <div class="row">
             <div class="col">
                 <div class="invoice-title">
-                    <h3 class="pull-right"><?= lang('admin::orders.label_order_id'); ?><?= $model->order_id; ?></h3>
-                    <h2><?= lang('admin::orders.text_invoice'); ?></h2>
+                    <h3 class="pull-right"><?= lang('admin::lang.orders.label_order_id'); ?><?= $model->order_id; ?></h3>
+                    <h2><?= lang('admin::lang.orders.text_invoice'); ?></h2>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
 
         <div class="row">
             <div class="col-6">
-                <strong><?= lang('admin::orders.text_restaurant'); ?></strong><br>
+                <strong><?= lang('admin::lang.orders.text_restaurant'); ?></strong><br>
                 <span><?= $model->location->getName(); ?></span><br>
                 <address><?= format_address($model->location->getAddress(), TRUE); ?></address>
             </div>
@@ -49,32 +49,32 @@
         <div class="row">
             <div class="col-6">
                 <p>
-                    <strong><?= lang('admin::orders.text_customer'); ?></strong><br>
+                    <strong><?= lang('admin::lang.orders.text_customer'); ?></strong><br>
                     <?= $model->first_name; ?> <?= $model->last_name; ?><br>
                     <?= $model->email; ?>
                 </p>
                 <?php if ($model->isDeliveryType()) { ?>
-                    <span class="text-muted"><?= lang('admin::orders.text_deliver_to'); ?></span><br>
+                    <span class="text-muted"><?= lang('admin::lang.orders.text_deliver_to'); ?></span><br>
                     <address><?= $model->formatted_address; ?></address>
                 <?php } ?>
             </div>
             <div class="col-3 text-left">
                 <p>
-                    <strong><?= lang('admin::orders.text_invoice_no'); ?></strong><br>
+                    <strong><?= lang('admin::lang.orders.text_invoice_no'); ?></strong><br>
                     <?= $model->invoice_id; ?>
                 </p>
                 <p>
-                    <strong><?= lang('admin::orders.text_invoice_date'); ?></strong><br>
+                    <strong><?= lang('admin::lang.orders.text_invoice_date'); ?></strong><br>
                     <?= $model->invoice_date->format(setting('date_format')); ?><br><br>
                 </p>
             </div>
             <div class="col-3 text-right">
                 <p>
-                    <strong><?= lang('admin::orders.text_payment'); ?></strong><br>
+                    <strong><?= lang('admin::lang.orders.text_payment'); ?></strong><br>
                     <?= $model->payment_method->name; ?>
                 </p>
                 <p>
-                    <strong><?= lang('admin::orders.text_order_date'); ?></strong><br>
+                    <strong><?= lang('admin::lang.orders.text_order_date'); ?></strong><br>
                     <?= $model->order_date->format(setting('date_format')); ?>
                 </p>
             </div>
@@ -92,10 +92,10 @@
                         <thead>
                         <tr>
                             <th width="2%"></th>
-                            <th class="text-left" width="65%"><b><?= lang('admin::orders.column_name_option'); ?></b>
+                            <th class="text-left" width="65%"><b><?= lang('admin::lang.orders.column_name_option'); ?></b>
                             </th>
-                            <th class="text-left"><b><?= lang('admin::orders.column_price'); ?></b></th>
-                            <th class="text-right"><b><?= lang('admin::orders.column_total'); ?></b></th>
+                            <th class="text-left"><b><?= lang('admin::lang.orders.column_price'); ?></b></th>
+                            <th class="text-right"><b><?= lang('admin::lang.orders.column_total'); ?></b></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -147,7 +147,7 @@
 
         <div class="row">
             <div class="col">
-                <p class="text-center"><?= lang('admin::orders.text_invoice_thank_you'); ?></p>
+                <p class="text-center"><?= lang('admin::lang.orders.text_invoice_thank_you'); ?></p>
             </div>
         </div>
     </div>

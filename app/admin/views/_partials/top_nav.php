@@ -1,7 +1,7 @@
 <?php
 $isLogged = AdminAuth::isLogged();
 $systemLogo = image_url('tastyigniter-logo.png');
-$systemName = lang('system::default.tastyigniter.system_name');
+$systemName = lang('system::lang.system_name');
 ?>
 <?php if ($isLogged) { ?>
     <nav class="navbar navbar-top navbar-expand navbar-fixed-top" role="navigation">

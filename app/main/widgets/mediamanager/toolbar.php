@@ -19,7 +19,7 @@
                     type="button" class="btn btn-primary"
                     data-media-control="upload">
                     <i class="fa fa-upload"></i>&nbsp;&nbsp;
-                    <?= lang('main::media_manager.button_upload'); ?>
+                    <?= lang('main::lang.media_manager.button_upload'); ?>
                 </button>
             <?php } ?>
         </div>
@@ -27,21 +27,21 @@
         <div class="btn-group">
             <?php if ($this->getSetting('new_folder')) { ?>
                 <button
-                    class="btn btn-default" title="<?= lang('main::media_manager.text_new_folder'); ?>"
+                    class="btn btn-default" title="<?= lang('main::lang.media_manager.text_new_folder'); ?>"
                     data-media-control="new-folder">
                     <i class="fa fa-folder"></i>
                 </button>
             <?php } ?>
             <?php if ($this->getSetting('rename')) { ?>
                 <button
-                    class="btn btn-default" title="<?= lang('main::media_manager.text_rename_folder'); ?>"
+                    class="btn btn-default" title="<?= lang('main::lang.media_manager.text_rename_folder'); ?>"
                     data-media-control="rename-folder">
                     <i class="fa fa-pencil"></i>
                 </button>
             <?php } ?>
             <?php if ($this->getSetting('delete')) { ?>
                 <button
-                    class="btn btn-danger" title="<?= lang('main::media_manager.text_delete_folder'); ?>"
+                    class="btn btn-danger" title="<?= lang('main::lang.media_manager.text_delete_folder'); ?>"
                     data-media-control="delete-folder">
                     <i class="fa fa-trash"></i>
                 </button>

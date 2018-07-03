@@ -126,7 +126,7 @@ class Users_model extends AuthUserModel
             // Fail if action is available and not permitted.
             if (in_array($value, $availableActions) AND !in_array($value, $permittedActions)) {
                 if ($displayError) {
-                    flash()->warning(sprintf(lang('admin::default.alert_user_restricted'), $value, $permName));
+                    flash()->warning(sprintf(lang('admin::lang.alert_user_restricted'), $value, $permName));
                 }
 
                 return FALSE;
@@ -241,7 +241,7 @@ class Users_model extends AuthUserModel
 
         if ($this->staff_location_id != $location) {
             if ($displayError)
-                flash()->warning(lang('admin::default.alert_location_restricted'));
+                flash()->warning(lang('admin::lang.alert_location_restricted'));
 
             return FALSE;
         }

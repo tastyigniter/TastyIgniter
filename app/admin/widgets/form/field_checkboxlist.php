@@ -39,9 +39,9 @@ $isScrollable = count($fieldOptions) > 10;
     <div class="field-checkboxlist <?= $isScrollable ? 'is-scrollable' : '' ?>">
         <?php if ($isScrollable) { ?>
         <small>
-            <?= e(lang('admin::default.text_select')) ?>:
-            <a href="javascript:;" data-field-checkboxlist-all><?= e(lang('admin::default.text_select_all')) ?></a>,
-            <a href="javascript:;" data-field-checkboxlist-none><?= e(lang('admin::default.text_select_none')) ?></a>
+            <?= e(lang('admin::lang.text_select')) ?>:
+            <a href="javascript:;" data-field-checkboxlist-all><?= e(lang('admin::lang.text_select_all')) ?></a>,
+            <a href="javascript:;" data-field-checkboxlist-none><?= e(lang('admin::lang.text_select_none')) ?></a>
         </small>
 
         <div class="field-checkboxlist-scrollable">

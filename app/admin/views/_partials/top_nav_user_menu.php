@@ -20,21 +20,21 @@ $logoutLink = admin_url('logout');
             <?php } ?>
         </div>
         <a class="dropdown-item" href="<?= $staffEditLink; ?>">
-            <i class="fa fa-user fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::default.text_edit_details'); ?>
+            <i class="fa fa-user fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_edit_details'); ?>
         </a>
         <div role="separator" class="dropdown-divider"></div>
         <a class="dropdown-item text-danger" href="<?= $logoutLink; ?>">
-            <i class="fa fa-power-off fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::default.text_logout'); ?>
+            <i class="fa fa-power-off fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_logout'); ?>
         </a>
         <div role="separator" class="dropdown-divider"></div>
         <a class="dropdown-item" href="https://tastyigniter.com/about/" target="_blank">
-            <i class="fa fa-info-circle fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::default.text_about_tastyigniter'); ?>
+            <i class="fa fa-info-circle fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_about_tastyigniter'); ?>
         </a>
         <a class="dropdown-item" href="https://docs.tastyigniter.com" target="_blank">
-            <i class="fa fa-book fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::default.text_documentation'); ?>
+            <i class="fa fa-book fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_documentation'); ?>
         </a>
         <a class="dropdown-item" href="https://forum.tastyigniter.com" target="_blank">
-            <i class="fa fa-users fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::default.text_community_support'); ?>
+            <i class="fa fa-users fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_community_support'); ?>
         </a>
     </div>
 </li>

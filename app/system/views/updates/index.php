@@ -10,7 +10,7 @@
     else { ?>
         <div class="panel panel-light">
             <div class="panel-body">
-                <h5 class="text-w-400"><?= lang('system::updates.text_no_updates'); ?></h5>
+                <h5 class="text-w-400"><?= lang('system::lang.updates.text_no_updates'); ?></h5>
             </div>
         </div>
     <?php } ?>

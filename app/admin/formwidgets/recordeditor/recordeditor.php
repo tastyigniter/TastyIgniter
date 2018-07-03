@@ -58,7 +58,7 @@ $fieldPlaceholder = $field->placeholder ?: $this->emptyOption;
                 class="btn btn-outline-danger"
                 title="<?= e(lang($deleteLabel).' '.lang($this->formName)) ?>"
                 data-control="delete-record"
-                data-confirm-message="<?= lang('admin::default.alert_warning_confirm') ?>"
+                data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
                 <?= ($this->previewMode) ? 'disabled="disabled"' : '' ?>
             ><i class="fa fa-trash"></i></button>
         </div>

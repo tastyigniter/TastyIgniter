@@ -107,7 +107,7 @@ class Calendar extends BaseWidget
     public function renderPopoverPartial()
     {
         if (!strlen($this->popoverPartial)) {
-            throw new Exception(sprintf(lang('admin::default.calendar.missing_partial'), get_class($this->controller)));
+            throw new Exception(sprintf(lang('admin::lang.calendar.missing_partial'), get_class($this->controller)));
         }
 
         return $this->makePartial($this->popoverPartial);

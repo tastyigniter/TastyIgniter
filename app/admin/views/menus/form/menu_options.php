@@ -1,9 +1,9 @@
 <span class="card-title font-weight-bold mb-0"><?= $item->option_name ?></span>
 <p class="card-text mb-0 small text-muted">
-    <?= sprintf(lang('admin::menu_options.text_option_summary'),
+    <?= sprintf(lang('admin::lang.menu_options.text_option_summary'),
         sprintf('<b>%s</b>', $item->isRequired()
-            ? lang('admin::menu_options.is_required')
-            : lang('admin::menu_options.is_not_required')),
+            ? lang('admin::lang.menu_options.is_required')
+            : lang('admin::lang.menu_options.is_not_required')),
         sprintf('<b>%s</b>', $item->display_type)) ?>
 </p>
 <p class="card-text">

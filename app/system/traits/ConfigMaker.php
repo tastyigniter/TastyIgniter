@@ -64,7 +64,7 @@ trait ConfigMaker
 
             if (!File::isFile($configFile)) {
                 throw new SystemException(sprintf(
-                    Lang::get('system::default.not_found.config'),
+                    Lang::get('system::lang.not_found.config'),
                     $configFile, get_called_class()
                 ));
             }
@@ -76,7 +76,7 @@ trait ConfigMaker
         foreach ($requiredConfig as $property) {
             if (!is_array($config) OR !array_key_exists($property, $config)) {
                 throw new SystemException(sprintf(
-                    Lang::get('system::default.required.config'),
+                    Lang::get('system::lang.required.config'),
                     get_called_class(), $property
                 ));
             }

@@ -27,7 +27,7 @@
     </ul>
 <?php }
 else { ?>
-    <p><?= lang('system::activities.text_empty'); ?></p>
+    <p><?= lang('system::lang.activities.text_empty'); ?></p>
 <?php } ?>
 
 <?= $this->makePartial('lists/list_pagination') ?>

@@ -260,14 +260,15 @@ abstract class BaseComponent extends Extendable
     {
         try {
             return parent::__call($method, $parameters);
-        } catch (BadMethodCallException $ex) {
+        }
+        catch (BadMethodCallException $ex) {
         }
 
         if (method_exists($this->controller, $method)) {
             return call_user_func_array([$this->controller, $method], $parameters);
         }
 
-        throw new BadMethodCallException(Lang::get('main::default.not_found.method', [
+        throw new BadMethodCallException(Lang::get('main::lang.not_found.method', [
             'name'   => get_class($this),
             'method' => $method,
         ]));

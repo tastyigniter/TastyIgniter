@@ -214,7 +214,7 @@ class FormController extends ControllerAction
         try {
             $this->context = $context ? $context : $this->getConfig('create[context]', self::CONTEXT_CREATE);
 
-            $this->setFormTitle('create[title]', 'lang:admin::default.form.create_title');
+            $this->setFormTitle('create[title]', 'lang:admin::lang.form.create_title');
 
             $model = $this->controller->formCreateModelObject();
             $model = $this->controller->formExtendModel($model) ?: $model;
@@ -248,7 +248,7 @@ class FormController extends ControllerAction
         $this->controller->formAfterSave($model);
         $this->controller->formAfterCreate($model);
 
-        $title = sprintf(lang('admin::default.form.create_success'), lang($this->getConfig('name')));
+        $title = sprintf(lang('admin::lang.form.create_success'), lang($this->getConfig('name')));
         flash()->success(lang($this->getConfig('create[flashSave]', $title)));
 
         if ($redirect = $this->makeRedirect('create', $model)) {
@@ -261,7 +261,7 @@ class FormController extends ControllerAction
         try {
             $this->context = $context ? $context : $this->getConfig('edit[context]', self::CONTEXT_CREATE);
 
-            $this->setFormTitle('edit[title]', 'lang:admin::default.form.edit_title');
+            $this->setFormTitle('edit[title]', 'lang:admin::lang.form.edit_title');
 
             $model = $this->controller->formFindModelObject($recordId);
 
@@ -295,7 +295,7 @@ class FormController extends ControllerAction
         $this->controller->formAfterSave($model);
         $this->controller->formAfterUpdate($model);
 
-        $title = sprintf(lang('admin::default.form.edit_success'), lang($this->getConfig('name')));
+        $title = sprintf(lang('admin::lang.form.edit_success'), lang($this->getConfig('name')));
         flash()->success(lang($this->getConfig('edit[flashSave]', $title)));
 
         if ($redirect = $this->makeRedirect('edit', $model)) {
@@ -311,13 +311,13 @@ class FormController extends ControllerAction
         $this->initForm($model, $context);
 
         if (!$model->delete()) {
-            flash()->warning(lang('admin::default.form.delete_failed'));
+            flash()->warning(lang('admin::lang.form.delete_failed'));
         }
         else {
             $this->controller->formAfterDelete($model);
 
             $title = lang($this->getConfig('name'));
-            flash()->success(sprintf(lang($this->getConfig('edit[flashDelete]', 'admin::default.form.delete_success')), $title));
+            flash()->success(sprintf(lang($this->getConfig('edit[flashDelete]', 'admin::lang.form.delete_success')), $title));
         }
 
         if ($redirect = $this->makeRedirect('delete', $model)) {
@@ -330,7 +330,7 @@ class FormController extends ControllerAction
         try {
             $this->context = $context ? $context : $this->getConfig('preview[context]', self::CONTEXT_PREVIEW);
 
-            $this->setFormTitle('preview[title]', 'lang:admin::default.form.preview_title');
+            $this->setFormTitle('preview[title]', 'lang:admin::lang.form.preview_title');
 
             $model = $this->controller->formFindModelObject($recordId);
             $this->initForm($model, $context);
@@ -355,7 +355,7 @@ class FormController extends ControllerAction
     public function renderForm($options = [])
     {
         if (!$this->formWidget) {
-            throw new Exception(lang('admin::default.form.not_ready'));
+            throw new Exception(lang('admin::lang.form.not_ready'));
         }
 
         if (!is_null($this->toolbarWidget)) {

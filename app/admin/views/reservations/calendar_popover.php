@@ -9,19 +9,19 @@
     </h5>
 
     <p>
-        <b><?= lang('admin::reservations.label_guest') ?>:</b>
+        <b><?= lang('admin::lang.reservations.label_guest') ?>:</b>
         {{guest_num}}
     </p>
     <p>
-        <b><?= lang('admin::reservations.label_reservation_time') ?>:</b>
+        <b><?= lang('admin::lang.reservations.label_reservation_time') ?>:</b>
         {{reserve_time}} - {{reserve_end_time}}
     </p>
     <p>
-        <b><?= lang('admin::reservations.label_customer_name') ?>:</b>
+        <b><?= lang('admin::lang.reservations.label_customer_name') ?>:</b>
         {{first_name}} {{last_name}}
     </p>
     <p>
-        <b><?= lang('admin::reservations.label_customer_email') ?>:</b>
+        <b><?= lang('admin::lang.reservations.label_customer_email') ?>:</b>
         {{email}}
     </p>
 </div>

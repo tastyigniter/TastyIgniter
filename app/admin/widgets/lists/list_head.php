@@ -51,7 +51,7 @@
             <button
                 type="button"
                 class="btn btn-outline-default btn-sm"
-                title="<?= lang('admin::default.list.text_setup') ?>"
+                title="<?= lang('admin::lang.list.text_setup') ?>"
                 data-toggle="modal"
                 data-target="#<?= $listId ?>-setup-modal"
                 data-request="<?= $this->getEventHandler('onLoadSetup'); ?>"

@@ -136,7 +136,7 @@ class Menus_model extends Model
 
     public function getMessageForEvent($eventName)
     {
-        return parse_values(['event' => $eventName], lang('admin::menus.activity_event_log'));
+        return parse_values(['event' => $eventName], lang('admin::lang.menus.activity_event_log'));
     }
 
     public function getThumb($options = [])

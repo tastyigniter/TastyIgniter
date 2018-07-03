@@ -75,7 +75,7 @@ trait FormExtendable
     public function formFindModelObject($recordId)
     {
         if (!strlen($recordId)) {
-            throw new Exception(lang('admin::default.form.missing_id'));
+            throw new Exception(lang('admin::lang.form.missing_id'));
         }
 
         $model = $this->controller->formCreateModelObject();
@@ -86,7 +86,7 @@ trait FormExtendable
         $result = $query->find($recordId);
 
         if (!$result) {
-            throw new Exception(sprintf(lang('admin::default.form.not_found'), $recordId));
+            throw new Exception(sprintf(lang('admin::lang.form.not_found'), $recordId));
         }
 
         $result = $this->controller->formExtendModel($result) ?: $result;

@@ -6,7 +6,7 @@
 
     <div class="panel panel-light panel-items">
         <div class="panel-heading">
-            <h5 class="panel-title"><?= sprintf(lang('system::updates.text_popular_title'), ucwords(str_plural($itemType))) ?></h5>
+            <h5 class="panel-title"><?= sprintf(lang('system::lang.updates.text_popular_title'), ucwords(str_plural($itemType))) ?></h5>
         </div>
 
         <div

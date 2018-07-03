@@ -24,14 +24,14 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'coupons/create'],
+        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'coupons/create'],
         'delete' => [
-            'label'                => 'lang:admin::default.button_delete', 'class' => 'btn btn-danger',
+            'label'                => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger',
             'data-request-form'    => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm',
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
         'filter' => [
-            'label'       => 'lang:admin::default.button_icon_filter',
+            'label'       => 'lang:admin::lang.button_icon_filter',
             'class'       => 'btn btn-default btn-filter',
             'data-toggle' => 'list-filter',
             'data-target' => '.list-filter',
@@ -81,7 +81,7 @@ $config['list']['columns'] = [
         'type'  => 'switch',
     ],
     'coupon_id'          => [
-        'label'     => 'lang:admin::default.column_id',
+        'label'     => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
 
@@ -89,18 +89,18 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save'      => ['label' => 'lang:admin::default.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
+        'save'      => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
         'saveClose' => [
-            'label'             => 'lang:admin::default.button_save_close',
+            'label'             => 'lang:admin::lang.button_save_close',
             'class'             => 'btn btn-default',
             'data-request'      => 'onSave',
             'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
         'delete'    => [
-            'label'                => 'lang:admin::default.button_icon_delete', 'class' => 'btn btn-danger',
+            'label'                => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => ['edit'],
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => ['edit'],
         ],
     ],
 ];
@@ -161,7 +161,7 @@ $config['form']['tabs'] = [
             'type'    => 'radio',
             'comment' => 'lang:admin::coupons.help_order_restriction',
             'options' => [
-                'lang:admin::default.text_none',
+                'lang:admin::lang.text_none',
                 'lang:admin::coupons.text_delivery_only',
                 'lang:admin::coupons.text_collection_only',
             ],
@@ -271,7 +271,7 @@ $config['form']['tabs'] = [
             ],
         ],
         'status'               => [
-            'label'   => 'lang:admin::default.label_status',
+            'label'   => 'lang:admin::lang.label_status',
             'type'    => 'switch',
             'default' => 1,
         ],

@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?= lang('system::updates.text_title_carte'); ?></h4>
+                <h4 class="modal-title"><?= lang('system::lang.updates.text_title_carte'); ?></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body wrap-none">
@@ -40,7 +40,7 @@
                         <div
                             id="carte-help"
                             class="wrap-horizontal"
-                            style="display: <?= $carteInfo ? 'none' : 'block'; ?>;"><?= lang('system::updates.help_carte_key'); ?>
+                            style="display: <?= $carteInfo ? 'none' : 'block'; ?>;"><?= lang('system::lang.updates.help_carte_key'); ?>
                         </div>
                     </div>
                 </div>

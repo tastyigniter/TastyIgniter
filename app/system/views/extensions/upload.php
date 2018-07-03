@@ -15,15 +15,15 @@
 </div>
 
 <div class="form-fields">
-    <h4><?= lang('system::extensions.text_upload_title'); ?></h4>
+    <h4><?= lang('system::lang.extensions.text_upload_title'); ?></h4>
     <div class="form-group">
         <div class="input-group">
             <input type="text" class="form-control btn-file-input-value" disabled="disabled">
             <span class="input-group-btn">
             <div class="btn btn-default btn-file-input">
                 <i class="fa fa-fw fa-folder-open"></i>&nbsp;&nbsp;
-                <span class="btn-file-input-choose"><?= lang('system::extensions.button_choose'); ?></span>
-                <span class="btn-file-input-change hide"><?= lang('system::extensions.button_change'); ?></span>
+                <span class="btn-file-input-choose"><?= lang('system::lang.extensions.button_choose'); ?></span>
+                <span class="btn-file-input-change hide"><?= lang('system::lang.extensions.button_change'); ?></span>
                 <input
                     type="file"
                     name="extension_zip"
@@ -34,7 +34,7 @@
                     value="<?= set_value('extension_zip'); ?>"/>
             </div>
             <button type="submit" class="btn btn-primary">
-                <i class="fa fa-fw fa-upload">&nbsp;&nbsp;</i><?= lang('system::extensions.button_upload'); ?>
+                <i class="fa fa-fw fa-upload">&nbsp;&nbsp;</i><?= lang('system::lang.extensions.button_upload'); ?>
             </button>
         </span>
         </div>

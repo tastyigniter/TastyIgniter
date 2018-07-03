@@ -51,8 +51,8 @@ class Reviews_model extends Model
     public static function getSaleTypeOptions()
     {
         return [
-            'orders'       => 'lang:admin::reviews.text_order',
-            'reservations' => 'lang:admin::reviews.text_reservation',
+            'orders'       => 'lang:admin::lang.reviews.text_order',
+            'reservations' => 'lang:admin::lang.reviews.text_reservation',
         ];
     }
 

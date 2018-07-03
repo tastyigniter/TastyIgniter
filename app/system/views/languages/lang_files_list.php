@@ -5,7 +5,7 @@ $options = $field->options();
 <?php foreach ($options as $type => $files) { ?>
     <h4 class="text-capitalize">
         <?= $type; ?>&nbsp;&nbsp;&nbsp;&nbsp;
-        <span class="small text-lowercase"><small><?= count($files); ?> <?= lang('system::languages.text_files'); ?></small></span>
+        <span class="small text-lowercase"><small><?= count($files); ?> <?= lang('system::lang.languages.text_files'); ?></small></span>
     </h4>
 
     <div class="row">

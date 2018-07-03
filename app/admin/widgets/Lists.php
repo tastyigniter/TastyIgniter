@@ -29,7 +29,7 @@ class Lists extends BaseWidget
     /**
      * @var string Message to display when there are no records in the list.
      */
-    public $emptyMessage = 'lang:admin::default.text_empty';
+    public $emptyMessage = 'lang:admin::lang.text_empty';
 
     /**
      * @var int Maximum rows to display for each page.
@@ -210,7 +210,7 @@ class Lists extends BaseWidget
     protected function validateModel()
     {
         if (!$this->model OR !$this->model instanceof Model) {
-            throw new Exception(sprintf(lang('admin::default.list.missing_model'), get_class($this->controller)));
+            throw new Exception(sprintf(lang('admin::lang.list.missing_model'), get_class($this->controller)));
         }
 
         return $this->model;
@@ -429,7 +429,7 @@ class Lists extends BaseWidget
             $invalidColumns = array_diff($this->columnOverride, array_keys($definitions));
             if (!count($definitions)) {
                 throw new Exception(sprintf(
-                    lang('admin::default.list.missing_column'), implode(',', $invalidColumns)
+                    lang('admin::lang.list.missing_column'), implode(',', $invalidColumns)
                 ));
             }
 
@@ -757,7 +757,7 @@ class Lists extends BaseWidget
      */
     protected function evalSwitchTypeValue($record, $column, $value)
     {
-        return ($value) ? lang('admin::default.text_enabled') : lang('admin::default.text_disabled');
+        return ($value) ? lang('admin::lang.text_enabled') : lang('admin::lang.text_disabled');
     }
 
     /**

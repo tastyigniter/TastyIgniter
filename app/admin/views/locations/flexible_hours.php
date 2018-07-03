@@ -9,9 +9,9 @@ $weekdays = $formModel->getWeekDaysOptions();
                     <thead>
                     <tr>
                         <th></th>
-                        <th><?= lang('admin::locations.label_open_hour'); ?></th>
-                        <th><?= lang('admin::locations.label_close_hour'); ?></th>
-                        <th><?= lang('admin::locations.label_opening_status'); ?></th>
+                        <th><?= lang('admin::lang.locations.label_open_hour'); ?></th>
+                        <th><?= lang('admin::lang.locations.label_close_hour'); ?></th>
+                        <th><?= lang('admin::lang.locations.label_opening_status'); ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -83,10 +83,10 @@ $weekdays = $formModel->getWeekDaysOptions();
                                     >
                                 <span class="field-switch-container">
                                     <span class="field-switch-active">
-                                        <span class="field-switch-toggle bg-success"><?= e(lang('admin::locations.text_open')) ?></span>
+                                        <span class="field-switch-toggle bg-success"><?= e(lang('admin::lang.locations.text_open')) ?></span>
                                     </span>
                                     <span class="field-switch-inactive">
-                                        <span class="field-switch-toggle bg-danger"><?= e(lang('admin::locations.text_closed')) ?></span>
+                                        <span class="field-switch-toggle bg-danger"><?= e(lang('admin::lang.locations.text_closed')) ?></span>
                                     </span>
                                 </span>
                                     </label>

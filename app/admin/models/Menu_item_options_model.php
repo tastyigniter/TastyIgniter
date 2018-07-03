@@ -46,10 +46,10 @@ class Menu_item_options_model extends Model
     public $appends = ['option_name', 'display_type'];
 
     public $rules = [
-        ['menu_id', 'lang:admin::menus.label_option', 'required|integer'],
-        ['option_id', 'lang:admin::menus.label_option_id', 'required|integer'],
-        ['priority', 'lang:admin::menus.label_option', 'integer'],
-        ['required', 'lang:admin::menus.label_option_required', 'integer'],
+        ['menu_id', 'lang:admin::lang.menus.label_option', 'required|integer'],
+        ['option_id', 'lang:admin::lang.menus.label_option_id', 'required|integer'],
+        ['priority', 'lang:admin::lang.menus.label_option', 'integer'],
+        ['required', 'lang:admin::lang.menus.label_option_required', 'integer'],
     ];
 
     public $purgeable = ['menu_option_values'];

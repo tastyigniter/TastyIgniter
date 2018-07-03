@@ -10,8 +10,8 @@ return [
                 'type'       => 'radio',
                 'default'    => 'polygon',
                 'options'    => [
-                    'polygon' => 'lang:admin::locations.text_shape',
-                    'circle'  => 'lang:admin::locations.text_circle',
+                    'polygon' => 'lang:admin::lang.locations.text_shape',
+                    'circle'  => 'lang:admin::lang.locations.text_circle',
                 ],
                 'attributes' => [
                     'data-toggle' => 'map-shape',
@@ -19,36 +19,36 @@ return [
             ],
             'is_default'           => [
                 'type' => 'switch',
-                'on'   => 'lang:admin::default.text_default',
-                'off'  => 'lang:admin::default.text_default',
+                'on'   => 'lang:admin::lang.text_default',
+                'off'  => 'lang:admin::lang.text_default',
             ],
             'conditions'           => [
-                'label'        => 'lang:admin::locations.label_delivery_condition',
+                'label'        => 'lang:admin::lang.locations.label_delivery_condition',
                 'type'         => 'repeater',
                 'sortable'     => TRUE,
-                'commentAbove' => 'lang:admin::locations.help_delivery_condition',
+                'commentAbove' => 'lang:admin::lang.locations.help_delivery_condition',
                 'form'         => [
                     'fields' => [
                         'priority' => [
                             'type' => 'hidden',
                         ],
                         'amount'   => [
-                            'label'   => 'lang:admin::locations.label_area_charge',
+                            'label'   => 'lang:admin::lang.locations.label_area_charge',
                             'type'    => 'number',
                             'default' => 0,
                         ],
                         'type'     => [
-                            'label'   => 'lang:admin::locations.label_charge_condition',
+                            'label'   => 'lang:admin::lang.locations.label_charge_condition',
                             'type'    => 'radio',
                             'default' => 'above',
                             'options' => [
-                                'all'   => 'lang:admin::locations.text_all_orders',
-                                'below' => 'lang:admin::locations.text_below_order_total',
-                                'above' => 'lang:admin::locations.text_above_order_total',
+                                'all'   => 'lang:admin::lang.locations.text_all_orders',
+                                'below' => 'lang:admin::lang.locations.text_below_order_total',
+                                'above' => 'lang:admin::lang.locations.text_above_order_total',
                             ],
                         ],
                         'total'    => [
-                            'label'   => 'lang:admin::locations.label_area_min_amount',
+                            'label'   => 'lang:admin::lang.locations.label_area_min_amount',
                             'type'    => 'number',
                             'default' => 0,
                         ],

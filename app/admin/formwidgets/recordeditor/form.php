@@ -7,9 +7,9 @@
         <div id="modal-notification"></div>
         <?= form_open(
             [
-                'id'     => 'record-editor-form',
-                'role'   => 'form',
-                'method' => $formWidget->context == 'create' ? 'POST' : 'PATCH',
+                'id'           => 'record-editor-form',
+                'role'         => 'form',
+                'method'       => $formWidget->context == 'create' ? 'POST' : 'PATCH',
                 'data-request' => $this->alias.'::onSaveRecord',
             ]
         ); ?>
@@ -24,11 +24,11 @@
                 type="button"
                 class="btn btn-link"
                 data-dismiss="modal"
-            ><?= lang('admin::default.button_close') ?></button>
+            ><?= lang('admin::lang.button_close') ?></button>
             <button
                 type="submit"
                 class="btn btn-primary"
-            ><?= lang('admin::default.button_save') ?></button>
+            ><?= lang('admin::lang.button_save') ?></button>
             <?= form_close(); ?>
         </div>
     </div>

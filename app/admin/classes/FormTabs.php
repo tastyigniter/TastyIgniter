@@ -31,7 +31,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
     /**
      * @var string Default tab label to use when none is specified.
      */
-    public $defaultTab = 'admin::default.form.undefined_tab';
+    public $defaultTab = 'admin::lang.form.undefined_tab';
 
     /**
      * @var bool Should these tabs stretch to the bottom of the page layout.

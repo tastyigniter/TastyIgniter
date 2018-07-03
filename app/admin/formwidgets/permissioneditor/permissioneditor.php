@@ -28,11 +28,11 @@
                                         <a role="button"
                                            class="action<?= $class != 'default' ? ' text-white' : ''; ?>"
                                            data-action="<?= $action; ?>">
-                                            <b><?= lang('admin::staff_groups.column_'.$action); ?></b>
+                                            <b><?= lang('admin::lang.staff_groups.column_'.$action); ?></b>
                                         </a>
                                     <?php } else { ?>
                                         <span class="<?= $class != 'default' ? 'text-white' : ''; ?>">
-                                            <b><?= lang('admin::staff_groups.column_'.$action); ?></b>
+                                            <b><?= lang('admin::lang.staff_groups.column_'.$action); ?></b>
                                         </span>
                                     <?php } ?>
                                 </th>

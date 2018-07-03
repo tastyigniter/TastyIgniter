@@ -22,18 +22,18 @@ class Themes extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'System\Models\Themes_model',
-            'title'        => 'lang:system::themes.text_title',
-            'emptyMessage' => 'lang:system::themes.text_empty',
+            'title'        => 'lang:system::lang.themes.text_title',
+            'emptyMessage' => 'lang:system::lang.themes.text_empty',
             'defaultSort'  => ['date_added', 'DESC'],
             'configFile'   => 'themes_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::themes.text_form_name',
+        'name'       => 'lang:system::lang.themes.text_form_name',
         'model'      => 'System\Models\Themes_model',
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:admin::lang.form.edit_title',
             'redirect'      => 'themes/edit/{code}',
             'redirectClose' => 'themes',
         ],
@@ -65,11 +65,11 @@ class Themes extends \Admin\Classes\AdminController
     public function edit($context, $themeCode = null)
     {
         try {
-            $pageTitle = lang('system::themes.text_edit_title');
+            $pageTitle = lang('system::lang.themes.text_edit_title');
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
-            Template::setButton(lang('system::themes.button_source'), [
+            Template::setButton(lang('system::lang.themes.button_source'), [
                 'class' => 'btn btn-default',
                 'href'  => admin_url('themes/source/'.$themeCode),
             ]);
@@ -85,11 +85,11 @@ class Themes extends \Admin\Classes\AdminController
     public function source($context, $themeCode = null)
     {
         try {
-            $pageTitle = lang('system::themes.text_source_title');
+            $pageTitle = lang('system::lang.themes.text_source_title');
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
-            Template::setButton(lang('system::themes.button_customize'), [
+            Template::setButton(lang('system::lang.themes.button_customize'), [
                 'class' => 'btn btn-default',
                 'href'  => admin_url('themes/edit/'.$themeCode),
             ]);
@@ -104,17 +104,17 @@ class Themes extends \Admin\Classes\AdminController
 
     public function upload($context)
     {
-        $pageTitle = lang('system::themes.text_add_title');
+        $pageTitle = lang('system::lang.themes.text_add_title');
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
 
-        Template::setButton(lang('system::themes.button_browse'), ['class' => 'btn btn-default', 'href' => admin_url('updates/browse/themes')]);
+        Template::setButton(lang('system::lang.themes.button_browse'), ['class' => 'btn btn-default', 'href' => admin_url('updates/browse/themes')]);
     }
 
     public function delete($context, $themeCode = null)
     {
         try {
-            $pageTitle = lang('system::themes.text_delete_title');
+            $pageTitle = lang('system::lang.themes.text_delete_title');
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
@@ -126,8 +126,8 @@ class Themes extends \Admin\Classes\AdminController
             // Theme must be disabled before it can be deleted
             if ($model AND $model->code == $activeThemeCode) {
                 flash()->warning(sprintf(
-                    lang('admin::default.alert_error_nothing'),
-                    lang('admin::default.text_deleted').lang('system::themes.text_theme_is_active')
+                    lang('admin::lang.alert_error_nothing'),
+                    lang('admin::lang.text_deleted').lang('system::lang.themes.text_theme_is_active')
                 ));
 
                 return $this->redirectBack();
@@ -137,7 +137,7 @@ class Themes extends \Admin\Classes\AdminController
             // so delete from database
             if (!$themeClass) {
                 Themes_model::deleteTheme($themeCode, TRUE);
-                flash()->success(sprintf(lang('admin::default.alert_success'), "Theme deleted "));
+                flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
 
                 return $this->redirectBack();
             }
@@ -162,7 +162,7 @@ class Themes extends \Admin\Classes\AdminController
 
         $themeName = post('code');
         if ($theme = Themes_model::activateTheme($themeName)) {
-            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme ['.$theme->name.'] set as default '));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme ['.$theme->name.'] set as default '));
         }
 
         return $this->redirectBack();
@@ -180,10 +180,10 @@ class Themes extends \Admin\Classes\AdminController
         $model->setAttribute('data', $this->formWidget->getSaveData());
 
         if ($model->save()) {
-            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme settings updated '));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme settings updated '));
         }
         else {
-            flash()->warning(sprintf(lang('admin::default.alert_error_nothing'), 'updated'));
+            flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), 'updated'));
         }
 
         return $this->refresh();
@@ -202,7 +202,7 @@ class Themes extends \Admin\Classes\AdminController
                 isset($this->formWidget->data->fileSource) AND
                 $oldMTime != $this->formWidget->data->fileSource->mTime
             ) {
-                $validator->errors()->add('markup', lang('system::themes.alert_changes_confirm'));
+                $validator->errors()->add('markup', lang('system::lang.themes.alert_changes_confirm'));
             }
         });
 
@@ -212,7 +212,7 @@ class Themes extends \Admin\Classes\AdminController
         list($fileName, $attributes) = $this->getFileAttributes();
 
         if (ThemeManager::instance()->writeFile($fileName, $themeCode, $attributes)) {
-            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme file ['.$fileName.'] updated '));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme file ['.$fileName.'] updated '));
         }
 
         return $this->refresh();
@@ -274,10 +274,10 @@ class Themes extends \Admin\Classes\AdminController
 
         if (ThemeManager::instance()->deleteFile($fileName, $themeCode)) {
             session()->forget('Theme.customize');
-            flash()->success(sprintf(lang('admin::default.alert_success'), "Theme file [{$fileName}] deleted "));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme file [{$fileName}] deleted "));
         }
         else {
-            flash()->danger(lang('admin::default.alert_error_try_again'));
+            flash()->danger(lang('admin::lang.alert_error_try_again'));
         }
 
         return $this->redirectBack();
@@ -293,7 +293,7 @@ class Themes extends \Admin\Classes\AdminController
             $zipFile = Request::file('theme_zip');
             $themeManager->extractTheme($zipFile->path());
 
-            flash()->success(sprintf(lang('admin::default.alert_success'), 'Theme uploaded '));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme uploaded '));
 
             return $this->redirect('themes');
         }
@@ -312,10 +312,10 @@ class Themes extends \Admin\Classes\AdminController
         if (Themes_model::deleteTheme($themeCode, (post('delete_data') == 1))) {
             $name = isset($meta['name']) ? $meta['name'] : '';
 
-            flash()->success(sprintf(lang('admin::default.alert_success'), "Theme {$name} deleted "));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme {$name} deleted "));
         }
         else {
-            flash()->danger(lang('admin::default.alert_error_try_again'));
+            flash()->danger(lang('admin::lang.alert_error_try_again'));
         }
 
         return $this->redirect('themes');
@@ -331,7 +331,7 @@ class Themes extends \Admin\Classes\AdminController
         $column->iconCssClass = 'fa fa-star-o';
         if ($record->themeClass AND $record->themeClass->isActive()) {
             $column->iconCssClass = 'fa fa-star';
-            $attributes['title'] = 'lang:system::themes.text_is_default';
+            $attributes['title'] = 'lang:system::lang.themes.text_is_default';
             $attributes['data-request'] = null;
         }
 
@@ -396,7 +396,7 @@ class Themes extends \Admin\Classes\AdminController
     public function formFindModelObject($recordId)
     {
         if (!strlen($recordId)) {
-            throw new Exception(lang('admin::default.form.missing_id'));
+            throw new Exception(lang('admin::lang.form.missing_id'));
         }
 
         $model = $this->createModel();
@@ -406,7 +406,7 @@ class Themes extends \Admin\Classes\AdminController
         $result = $query->where('code', $recordId)->first();
 
         if (!$result) {
-            throw new Exception(sprintf(lang('admin::default.form.not_found'), $recordId));
+            throw new Exception(sprintf(lang('admin::lang.form.not_found'), $recordId));
         }
 
         return $result;
@@ -446,11 +446,11 @@ class Themes extends \Admin\Classes\AdminController
             }
         }
         else {
-            $form->removeTab('lang:system::themes.text_tab_meta');
+            $form->removeTab('lang:system::lang.themes.text_tab_meta');
         }
 
         if (!strlen($file)) {
-            $form->removeTab('lang:system::themes.text_tab_markup');
+            $form->removeTab('lang:system::lang.themes.text_tab_markup');
 
             return;
         }
@@ -477,7 +477,7 @@ class Themes extends \Admin\Classes\AdminController
         $class = $this->formConfig['model'];
 
         if (!isset($class) OR !strlen($class)) {
-            throw new Exception(lang('admin::default.form.missing_model'));
+            throw new Exception(lang('admin::lang.form.missing_model'));
         }
 
         $model = new $class;
@@ -495,17 +495,17 @@ class Themes extends \Admin\Classes\AdminController
         $theme = $zipFile->extension();
 
         if (preg_match('/\s/', $name))
-            throw new SystemException(lang('system::themes.error_upload_name'));
+            throw new SystemException(lang('system::lang.themes.error_upload_name'));
 
         if ($theme != 'zip')
-            throw new SystemException(lang('system::themes.error_upload_type'));
+            throw new SystemException(lang('system::lang.themes.error_upload_type'));
 
         if ($zipFile->getError())
-            throw new SystemException(lang('system::themes.error_php_upload').$zipFile->getErrorMessage());
+            throw new SystemException(lang('system::lang.themes.error_php_upload').$zipFile->getErrorMessage());
 
         $name = substr($name, -strlen($theme));
         if (ThemeManager::instance()->hasTheme($name))
-            throw new SystemException(lang('system::themes.error_theme_exists'));
+            throw new SystemException(lang('system::lang.themes.error_theme_exists'));
 
         return TRUE;
     }
@@ -525,13 +525,13 @@ class Themes extends \Admin\Classes\AdminController
         else {
             $rules = [
                 ['file', 'Source File', 'required'],
-                ['markup', 'lang:system::themes.text_tab_markup', 'sometimes'],
-                ['codeSection', 'lang:system::themes.text_tab_php_section', 'sometimes'],
-                ['settings.components.*.alias', 'lang:system::themes.label_component_alias', 'sometimes|required|alpha'],
-                ['settings.title', 'lang:system::themes.label_title', 'sometimes|required|max:160'],
-                ['settings.description', 'lang:system::themes.label_description', 'sometimes|max:255'],
-                ['settings.layout', 'lang:system::themes.label_layout', 'sometimes|string'],
-                ['settings.permalink', 'lang:system::themes.label_permalink', 'sometimes|required|string'],
+                ['markup', 'lang:system::lang.themes.text_tab_markup', 'sometimes'],
+                ['codeSection', 'lang:system::lang.themes.text_tab_php_section', 'sometimes'],
+                ['settings.components.*.alias', 'lang:system::lang.themes.label_component_alias', 'sometimes|required|alpha'],
+                ['settings.title', 'lang:system::lang.themes.label_title', 'sometimes|required|max:160'],
+                ['settings.description', 'lang:system::lang.themes.label_description', 'sometimes|max:255'],
+                ['settings.layout', 'lang:system::lang.themes.label_layout', 'sometimes|string'],
+                ['settings.permalink', 'lang:system::lang.themes.label_permalink', 'sometimes|required|string'],
             ];
         }
 

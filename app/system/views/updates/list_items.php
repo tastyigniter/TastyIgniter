@@ -8,7 +8,7 @@
                 <h5 class="<?= $ignored ? 'text-muted' : ''; ?>">
                     <?= str_limit($item['name'], 22) ?> <i class="fa fa-long-arrow-right"></i>
                     <span class="small">
-                                <?= sprintf(lang('system::updates.text_item_update_summary'), $item['installedVer'], $item['version']) ?>
+                                <?= sprintf(lang('system::lang.updates.text_item_update_summary'), $item['installedVer'], $item['version']) ?>
                             </span>
                 </h5>
                 <?php if (isset($item['tags']['data'])) foreach ($item['tags']['data'] as $tag) { ?>
@@ -29,7 +29,7 @@
                             data-item-version="<?= $item['version'] ?>"
                             data-item-action="remove"
                         >
-                            <span class="text-success"><?= lang('admin::default.text_remove') ?></span>
+                            <span class="text-success"><?= lang('admin::lang.text_remove') ?></span>
                         </button>
                     <?php }
                     else { ?>
@@ -42,7 +42,7 @@
                             data-item-version="<?= $item['version'] ?>"
                             data-item-action="ignore"
                         >
-                            <span class="text-danger"><?= lang('system::updates.text_ignore') ?></span>
+                            <span class="text-danger"><?= lang('system::lang.updates.text_ignore') ?></span>
                         </button>
                     <?php } ?>
                 </div>

@@ -38,7 +38,7 @@ trait LogsStatusHistory
 
     public function getMessageForEvent($eventName)
     {
-        return parse_values(['event' => $eventName], lang('admin::orders.activity_event_log'));
+        return parse_values(['event' => $eventName], lang('admin::lang.orders.activity_event_log'));
     }
 
     public function getRelatedStatusModel()

@@ -5,8 +5,8 @@ $options = $field->options;
     <table class="table table-striped table-border table-no-spacing">
         <thead>
         <tr>
-            <th class="text-right" width="20%"><?= lang('system::languages.column_variable'); ?></th>
-            <th width="80%"><?= lang('system::languages.column_language'); ?></th>
+            <th class="text-right" width="20%"><?= lang('system::lang.languages.column_variable'); ?></th>
+            <th width="80%"><?= lang('system::lang.languages.column_language'); ?></th>
         </tr>
         </thead>
         <tbody>

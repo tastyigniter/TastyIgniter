@@ -18,7 +18,7 @@ $itemOptions = isset($itemOptions['items']) ? $itemOptions['items'] : $itemOptio
         <?php } ?>
     <?php }
     else { ?>
-        <li><?= lang('admin::default.text_empty_message'); ?></li>
+        <li><?= lang('admin::lang.text_empty_message'); ?></li>
         <li class="divider"></li>
     <?php } ?>
 </ul>

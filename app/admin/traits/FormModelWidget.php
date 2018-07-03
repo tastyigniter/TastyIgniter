@@ -28,7 +28,7 @@ trait FormModelWidget
     public function findFormModel($recordId)
     {
         if (!strlen($recordId)) {
-            throw new ApplicationException(lang('admin::default.form.missing_id'));
+            throw new ApplicationException(lang('admin::lang.form.missing_id'));
         }
 
         $model = $this->createFormModel();
@@ -38,7 +38,7 @@ trait FormModelWidget
         $result = $query->find($recordId);
 
         if (!$result)
-            throw new ApplicationException(sprintf(lang('admin::default.form.not_found'), $recordId));
+            throw new ApplicationException(sprintf(lang('admin::lang.form.not_found'), $recordId));
 
         return $result;
     }

@@ -30,7 +30,7 @@
                  aria-expanded="false"
                  aria-controls="collapseErrors">
                 <i class="fa fa-angle-down"></i>
-                <b><?= lang('admin::default.alert_form_error_message') ?></b>
+                <b><?= lang('admin::lang.alert_form_error_message') ?></b>
             </div>
 
             <div class="collapse" id="collapseErrors">

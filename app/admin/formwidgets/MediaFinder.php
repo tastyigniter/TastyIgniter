@@ -27,7 +27,7 @@ class MediaFinder extends BaseFormWidget
     /**
      * @var string Prompt to display if no record is selected.
      */
-    public $prompt = 'lang:admin::default.text_empty';
+    public $prompt = 'lang:admin::lang.text_empty';
 
     /**
      * @var string Display mode for the selection. Values: picker, inline.

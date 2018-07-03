@@ -34,26 +34,26 @@ $fieldValue = $field->value;
                 class="btn btn-outline-default"
                 data-toggle="modal"
                 data-target="#<?= $field->getId('modal') ?>"
-                data-modal-title="<?= lang('system::themes.text_new_source_title') ?>"
+                data-modal-title="<?= lang('system::lang.themes.text_new_source_title') ?>"
                 data-modal-source-action="new"
                 data-modal-source-name=""
-            ><?= lang('system::themes.button_new_source') ?></button>
+            ><?= lang('system::lang.themes.button_new_source') ?></button>
             <?php if (!empty($field->value)) { ?>
                 <button
                     type="button"
                     class="btn btn-outline-default"
                     data-toggle="modal"
                     data-target="#<?= $field->getId('modal') ?>"
-                    data-modal-title="<?= lang('system::themes.text_rename_source_title') ?>"
+                    data-modal-title="<?= lang('system::lang.themes.text_rename_source_title') ?>"
                     data-modal-source-action="rename"
                     data-modal-source-name="<?= $fieldValue; ?>"
-                ><?= lang('system::themes.button_rename_source') ?></button>
+                ><?= lang('system::lang.themes.button_rename_source') ?></button>
                 <button
                     type="button"
                     class="btn btn-outline-danger"
                     data-request="onDelete"
                     data-request-form="#edit-form"
-                    data-request-confirm="<?= lang('admin::default.alert_warning_confirm') ?>"
+                    data-request-confirm="<?= lang('admin::lang.alert_warning_confirm') ?>"
                 ><i class="fa fa-trash"></i></button>
             <?php } ?>
         </div>
@@ -77,7 +77,7 @@ $fieldValue = $field->value;
                 <form method="POST" accept-charset="UTF-8">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label><?= e(lang('system::themes.label_file')) ?></label>
+                            <label><?= e(lang('system::lang.themes.label_file')) ?></label>
                             <input data-modal-input="source-name" type="text" class="form-control" name="name"/>
                             <input data-modal-input="source-action" type="hidden" name="action"/>
                         </div>
@@ -87,13 +87,13 @@ $fieldValue = $field->value;
                             type="button"
                             class="btn btn-secondary"
                             data-dismiss="modal"
-                        ><?= lang('admin::default.button_close') ?></button>
+                        ><?= lang('admin::lang.button_close') ?></button>
                         <button
                             type="button"
                             class="btn btn-primary"
                             data-request="onManageSource"
                             data-request-before-update="$(this).closest('.modal').modal('hide')"
-                        ><?= lang('admin::default.button_save') ?></button>
+                        ><?= lang('admin::lang.button_save') ?></button>
                     </div>
                 </form>
             </div>

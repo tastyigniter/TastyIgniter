@@ -10,9 +10,9 @@ $countries = System\Models\Countries_model::pluck('country_name');
             foreach ($addresses as $address) { ?>
                 <li class="nav-item<?= $index++ == 0 ? ' active' : '' ?>">
                     <a class="nav-link" href="#<?= $field->getId('address-'.$index); ?>" data-toggle="tab">
-                        <?= lang('admin::customers.text_tab_address').' '.$index; ?>&nbsp;&nbsp;
+                        <?= lang('admin::lang.customers.text_tab_address').' '.$index; ?>&nbsp;&nbsp;
                         <i class="fa fa-times-circle"
-                           data-confirm="<?= lang('admin::default.alert_warning_confirm'); ?>"
+                           data-confirm="<?= lang('admin::lang.alert_warning_confirm'); ?>"
                            data-remove-address></i>
                     </a>
                 </li>

@@ -1,6 +1,6 @@
 <div class="message-folders panel">
     <div class="panel-header">
-        <h5 class="panel-title"><?= lang('system::messages.text_folders'); ?></h5>
+        <h5 class="panel-title"><?= lang('system::lang.messages.text_folders'); ?></h5>
     </div>
     <div class="list-group list-group-flush">
         <?php foreach ($folders as $key => $folder) { ?>

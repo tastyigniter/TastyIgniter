@@ -1,12 +1,12 @@
 <?php
 $config['list']['filter'] = [
     'search' => [
-        'prompt' => 'lang:system::currencies.text_filter_search',
+        'prompt' => 'lang:system::lang.currencies.text_filter_search',
         'mode'   => 'all' // or any, exact
     ],
     'scopes' => [
         'status' => [
-            'label'      => 'lang:system::currencies.text_filter_status',
+            'label'      => 'lang:system::lang.currencies.text_filter_status',
             'type'       => 'switch',
             'conditions' => 'currency_status = :filtered',
         ],
@@ -15,9 +15,9 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::default.button_new', 'class' => 'btn btn-primary', 'href' => 'currencies/create'],
-        'delete' => ['label' => 'lang:admin::default.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::default.alert_warning_confirm'],
-        'filter' => ['label' => 'lang:admin::default.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
+        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'currencies/create'],
+        'delete' => ['label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm'],
+        'filter' => ['label' => 'lang:admin::lang.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
     ],
 ];
 
@@ -31,35 +31,35 @@ $config['list']['columns'] = [
         ],
     ],
     'currency_name'         => [
-        'label'      => 'lang:system::currencies.column_name',
+        'label'      => 'lang:system::lang.currencies.column_name',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
     'currency_code'         => [
-        'label'      => 'lang:system::currencies.column_code',
+        'label'      => 'lang:system::lang.currencies.column_code',
         'type'       => 'text',
         'searchable' => TRUE,
     ],
     'country_name'          => [
-        'label'      => 'lang:system::currencies.column_country',
+        'label'      => 'lang:system::lang.currencies.column_country',
         'relation'   => 'country',
         'select'     => 'country_name',
         'searchable' => TRUE,
     ],
     'currency_rate'         => [
-        'label' => 'lang:system::currencies.column_rate',
+        'label' => 'lang:system::lang.currencies.column_rate',
         'type'  => 'number',
     ],
     'currency_symbol'       => [
-        'label' => 'lang:system::currencies.column_symbol',
+        'label' => 'lang:system::lang.currencies.column_symbol',
         'type'  => 'text',
     ],
     'currency_status'       => [
-        'label' => 'lang:system::currencies.column_status',
+        'label' => 'lang:system::lang.currencies.column_status',
         'type'  => 'switch',
     ],
     'default_currency_code' => [
-        'label'     => 'lang:admin::default.column_id',
+        'label'     => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
 
@@ -67,77 +67,77 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save'      => ['label' => 'lang:admin::default.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
+        'save'      => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
         'saveClose' => [
-            'label'             => 'lang:admin::default.button_save_close',
+            'label'             => 'lang:admin::lang.button_save_close',
             'class'             => 'btn btn-default',
             'data-request'      => 'onSave',
             'data-request-form' => '#edit-form',
             'data-request-data' => 'close:1',
         ],
         'delete'    => [
-            'label'                => 'lang:admin::default.button_icon_delete', 'class' => 'btn btn-danger',
+            'label'                => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
             'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::default.alert_warning_confirm', 'context' => 'edit',
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => 'edit',
         ],
     ],
 ];
 
 $config['form']['fields'] = [
     'currency_name'    => [
-        'label' => 'lang:system::currencies.label_title',
+        'label' => 'lang:system::lang.currencies.label_title',
         'type'  => 'text',
     ],
     'country_id'       => [
-        'label'        => 'lang:system::currencies.label_country',
+        'label'        => 'lang:system::lang.currencies.label_country',
         'type'         => 'relation',
         'relationFrom' => 'country',
         'nameFrom'     => 'country_name',
         'span'         => 'left',
-        'placeholder'  => 'lang:admin::default.text_please_select',
+        'placeholder'  => 'lang:admin::lang.text_please_select',
     ],
     'currency_code'    => [
-        'label'   => 'lang:system::currencies.label_code',
+        'label'   => 'lang:system::lang.currencies.label_code',
         'type'    => 'text',
         'span'    => 'right',
-        'comment' => 'lang:system::currencies.help_iso',
+        'comment' => 'lang:system::lang.currencies.help_iso',
     ],
     'symbol_position'  => [
-        'label'   => 'lang:system::currencies.label_symbol_position',
+        'label'   => 'lang:system::lang.currencies.label_symbol_position',
         'type'    => 'radio',
         'span'    => 'left',
         'options' => [
-            'lang:system::currencies.text_left',
-            'lang:system::currencies.text_right',
+            'lang:system::lang.currencies.text_left',
+            'lang:system::lang.currencies.text_right',
         ],
     ],
     'currency_symbol'  => [
-        'label' => 'lang:system::currencies.label_symbol',
+        'label' => 'lang:system::lang.currencies.label_symbol',
         'type'  => 'text',
         'span'  => 'right',
     ],
     'currency_rate'    => [
-        'label' => 'lang:system::currencies.label_rate',
+        'label' => 'lang:system::lang.currencies.label_rate',
         'type'  => 'number',
         'span'  => 'left',
     ],
     'thousand_sign'    => [
-        'label' => 'lang:system::currencies.label_thousand_sign',
+        'label' => 'lang:system::lang.currencies.label_thousand_sign',
         'type'  => 'text',
         'span'  => 'right',
     ],
     'decimal_sign'     => [
-        'label' => 'lang:system::currencies.label_decimal_sign',
+        'label' => 'lang:system::lang.currencies.label_decimal_sign',
         'type'  => 'text',
         'span'  => 'left',
     ],
     'decimal_position' => [
-        'label' => 'lang:system::currencies.label_decimal_position',
+        'label' => 'lang:system::lang.currencies.label_decimal_position',
         'type'  => 'number',
         'span'  => 'right',
     ],
     'currency_status'  => [
-        'label'   => 'lang:admin::default.label_status',
+        'label'   => 'lang:admin::lang.label_status',
         'type'    => 'switch',
         'default' => TRUE,
     ],

@@ -112,7 +112,7 @@ class RecordEditor extends BaseFormWidget
             }
         });
 
-        flash()->success(sprintf(lang('admin::default.alert_success'),
+        flash()->success(sprintf(lang('admin::lang.alert_success'),
             lang($this->formName).' '.($form->context == 'create' ? 'created' : 'updated')))->now();
 
         return [
@@ -131,7 +131,7 @@ class RecordEditor extends BaseFormWidget
 
         $model->delete();
 
-        flash()->success(sprintf(lang('admin::default.alert_success'), lang($this->formName).' deleted'))->now();
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName).' deleted'))->now();
 
         return [
             '#notification'               => $this->makePartial('flash'),

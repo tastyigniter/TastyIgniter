@@ -16,7 +16,7 @@
             <tr>
                 <th class="list-action"></th>
                 <th class="list-action"></th>
-                <th><?= lang('admin::ratings.column_name'); ?></th>
+                <th><?= lang('admin::lang.ratings.column_name'); ?></th>
             </tr>
             </thead>
             <tbody>
@@ -28,7 +28,7 @@
                         <a
                             class="btn btn-outline-danger"
                             role="button"
-                            onclick="confirm('<?= lang('admin::default.alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false"><i
+                            onclick="confirm('<?= lang('admin::lang.alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false"><i
                                 class="fa fa-times-circle"
                             ></i></a>
                     </td>
@@ -62,7 +62,7 @@
         function addRating() {
             html = '<tr id="table-row' + table_row + '">'
             html += '	<td class="list-action text-center handle"><i class="fa fa-bars"></i></td>'
-            html += '	<td class="list-action handle"><a role="button" class="btn btn-outline-danger" onclick="confirm(\'<?= lang('admin::default.alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>'
+            html += '	<td class="list-action handle"><a role="button" class="btn btn-outline-danger" onclick="confirm(\'<?= lang('admin::lang.alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>'
             html += '	<td><input type="text" name="ratings[' + table_row + ']" class="form-control" value="<?= set_value("ratings[' + table_row + ']"); ?>" /></td>'
             html += '</tr>'
 

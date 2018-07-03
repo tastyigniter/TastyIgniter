@@ -12,28 +12,28 @@ class Languages extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'System\Models\Languages_model',
-            'title'        => 'lang:system::languages.text_title',
-            'emptyMessage' => 'lang:system::languages.text_empty',
+            'title'        => 'lang:system::lang.languages.text_title',
+            'emptyMessage' => 'lang:system::lang.languages.text_empty',
             'defaultSort'  => ['language_id', 'DESC'],
             'configFile'   => 'languages_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::languages.text_form_name',
+        'name'       => 'lang:system::lang.languages.text_form_name',
         'model'      => 'System\Models\Languages_model',
         'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
+            'title'         => 'lang:admin::lang.form.create_title',
             'redirect'      => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
         ],
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:admin::lang.form.edit_title',
             'redirect'      => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
         ],
         'preview'    => [
-            'title'    => 'lang:admin::default.form.preview_title',
+            'title'    => 'lang:admin::lang.form.preview_title',
             'redirect' => 'languages',
         ],
         'delete'     => [
@@ -65,7 +65,7 @@ class Languages extends \Admin\Classes\AdminController
             return;
         }
 
-        flash()->warning(lang('system::languages.alert_save_changes'));
+        flash()->warning(lang('system::lang.languages.alert_save_changes'));
 
         $field->label = $namespace;
         $field->options = $form->model->getTranslations($file, $namespace);
@@ -87,14 +87,14 @@ class Languages extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['name', 'lang:system::languages.label_name', 'required|min:2|max:32'],
-            ['code', 'lang:system::languages.label_code', 'required|min:2|max:32'],
-            ['image', 'lang:system::languages.label_image', 'min:2|max:32'],
-            ['idiom', 'lang:system::languages.label_idiom', 'required|min:2|max:32'.
+            ['name', 'lang:system::lang.languages.label_name', 'required|min:2|max:32'],
+            ['code', 'lang:system::lang.languages.label_code', 'required|min:2|max:32'],
+            ['image', 'lang:system::lang.languages.label_image', 'min:2|max:32'],
+            ['idiom', 'lang:system::lang.languages.label_idiom', 'required|min:2|max:32'.
                 ((!$model->exists) ? '|unique:languages,idiom' : '')],
-            ['can_delete', 'lang:system::languages.label_can_delete', 'required|integer'],
-            ['status', 'lang:admin::default.label_status', 'required|integer'],
-            ['file.*', 'lang:system::languages.text_tab_edit_file', 'sometimes|max:1000'],
+            ['can_delete', 'lang:system::lang.languages.label_can_delete', 'required|integer'],
+            ['status', 'lang:admin::lang.label_status', 'required|integer'],
+            ['file.*', 'lang:system::lang.languages.text_tab_edit_file', 'sometimes|max:1000'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $rules);

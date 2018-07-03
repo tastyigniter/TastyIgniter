@@ -15,14 +15,14 @@ class ErrorLogs extends \Admin\Classes\AdminController
     {
         AdminMenu::setContext('error_logs', 'system');
 
-        Template::setTitle(lang('system::error_logs.text_title'));
-        Template::setHeading(lang('system::error_logs.text_heading'));
-        Template::setButton(lang('system::error_logs.text_clear_logs'), [
+        Template::setTitle(lang('system::lang.error_logs.text_title'));
+        Template::setHeading(lang('system::lang.error_logs.text_heading'));
+        Template::setButton(lang('system::lang.error_logs.text_clear_logs'), [
             'class'             => 'btn btn-danger',
             'data-request-form' => '#list-form',
             'data-request'      => 'onClearLogs',
         ]);
-        Template::setButton(lang('admin::default.button_refresh'), [
+        Template::setButton(lang('admin::lang.button_refresh'), [
             'class' => 'btn btn-default',
             'href'  => 'error_logs',
         ]);
@@ -40,7 +40,7 @@ class ErrorLogs extends \Admin\Classes\AdminController
         if (File::isWritable(storage_path('logs/system.log'))) {
             File::put(storage_path('logs/system.log'), "");
 
-            flash()->success(sprintf(lang('admin::default.alert_success'), 'Logs Cleared '));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Logs Cleared '));
         }
 
         return $this->redirectBack();

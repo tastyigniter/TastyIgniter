@@ -29,11 +29,11 @@
                     </div>
                     <div class="row metas align-self-end">
                         <div class="pull-left wrap-vertical text-muted text-sm">
-                            <b><?= lang('system::themes.text_author'); ?>:</b><br/>
+                            <b><?= lang('system::lang.themes.text_author'); ?>:</b><br/>
                             <?= $theme->themeClass->author; ?>
                         </div>
                         <div class="pull-left wrap-vertical text-muted text-sm text-left">
-                            <b><?= lang('system::themes.text_version'); ?>:</b><br/>
+                            <b><?= lang('system::lang.themes.text_version'); ?>:</b><br/>
                             <?= $theme->version; ?>
                         </div>
                     </div>

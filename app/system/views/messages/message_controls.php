@@ -8,12 +8,12 @@
             data-request="onMark"
             data-request-form="#list-form"
             data-request-data="action: 'read'"
-        ><?= lang('system::messages.text_mark_as_read'); ?></a>
+        ><?= lang('system::lang.messages.text_mark_as_read'); ?></a>
         <a
             class="dropdown-item"
             data-request="onMark"
             data-request-form="#list-form"
             data-request-data="action: 'unread'"
-        ><?= lang('system::messages.text_mark_as_unread'); ?></a>
+        ><?= lang('system::lang.messages.text_mark_as_unread'); ?></a>
     </div>
 </div>

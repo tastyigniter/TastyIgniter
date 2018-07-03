@@ -19,8 +19,8 @@ class Dashboard extends \Admin\Classes\AdminController
         if (is_null(Request::segment(2)))
             return $this->redirect('dashboard');
 
-        Template::setTitle(lang('admin::dashboard.text_title'));
-        Template::setHeading(lang('admin::dashboard.text_heading'));
+        Template::setTitle(lang('admin::lang.dashboard.text_title'));
+        Template::setHeading(lang('admin::lang.dashboard.text_heading'));
 
 //        Assets::addCss(assets_url('js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css');
 //        Assets::addJs(assets_url('js/daterange/moment.min.js'), 'daterange-moment-js');
@@ -37,12 +37,12 @@ class Dashboard extends \Admin\Classes\AdminController
 //        if ($this->config->item('auto_update_currency_rates') == '1') {
 //            $this->load->model('Currencies_model');
 //            if ($this->Currencies_model->updateRates()) {
-//                flash()->success_now(lang('system::currencies.alert_rates_updated'));
+//                flash()->success_now(lang('system::lang.currencies.alert_rates_updated'));
 //            }
 //        }
 //
 //        if (!$this->updates_manager->isLastCheckDue()) {
-//            flash()->success_now(sprintf(lang('admin::dashboard.text_last_version_check'), admin_url('updates')));
+//            flash()->success_now(sprintf(lang('admin::lang.dashboard.text_last_version_check'), admin_url('updates')));
 //        }
 
         return $this->makeView('dashboard');
@@ -168,7 +168,7 @@ class Dashboard extends \Admin\Classes\AdminController
             $current_date = mdate('%d-%m-%Y', time());
             $date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));
 
-            $date_added = $current_date == $date_added ? lang('admin::dashboard.text_today') : mdate('%d %M %y', strtotime($date_added));
+            $date_added = $current_date == $date_added ? lang('admin::lang.dashboard.text_today') : mdate('%d %M %y', strtotime($date_added));
 
             $orders[] = [
                 'order_id'      => $result['order_id'],
@@ -178,7 +178,7 @@ class Dashboard extends \Admin\Classes\AdminController
                 'order_status'  => $result['status_name'],
                 'status_color'  => $result['status_color'],
                 'order_time'    => mdate('%H:%i', strtotime($result['order_time'])),
-                'order_type'    => ($result['order_type'] == '1') ? lang('admin::dashboard.text_delivery') : lang('admin::dashboard.text_collection'),
+                'order_type'    => ($result['order_type'] == '1') ? lang('admin::lang.dashboard.text_delivery') : lang('admin::lang.dashboard.text_collection'),
                 'date_added'    => $date_added,
                 'edit'          => $this->pageUrl('orders/edit?id='.$result['order_id']),
             ];

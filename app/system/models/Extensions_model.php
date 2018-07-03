@@ -90,14 +90,14 @@ class Extensions_model extends Model
     public function getMessageForEvent($eventName)
     {
         if ($eventName == 'updated' AND $this->status == 1)
-            $eventName = strtolower(lang('system::extensions.text_installed'));
+            $eventName = strtolower(lang('system::lang.extensions.text_installed'));
 
         if ($eventName == 'updated' AND $this->status != 1)
-            $eventName = strtolower(lang('system::extensions.text_uninstalled'));
+            $eventName = strtolower(lang('system::lang.extensions.text_uninstalled'));
 
         $replace['event'] = $eventName;
 
-        return parse_values($replace, lang('system::extensions.activity_event_log'));
+        return parse_values($replace, lang('system::lang.extensions.activity_event_log'));
     }
 
     /**

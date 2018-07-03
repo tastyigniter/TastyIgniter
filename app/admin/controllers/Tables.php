@@ -15,28 +15,28 @@ class Tables extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'Admin\Models\Tables_model',
-            'title'        => 'lang:admin::tables.text_title',
-            'emptyMessage' => 'lang:admin::tables.text_empty',
+            'title'        => 'lang:admin::lang.tables.text_title',
+            'emptyMessage' => 'lang:admin::lang.tables.text_empty',
             'defaultSort'  => ['table_id', 'ASC'],
             'configFile'   => 'tables_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::tables.text_form_name',
+        'name'       => 'lang:admin::lang.tables.text_form_name',
         'model'      => 'Admin\Models\Tables_model',
         'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
+            'title'         => 'lang:admin::lang.form.create_title',
             'redirect'      => 'tables/edit/{table_id}',
             'redirectClose' => 'tables',
         ],
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:admin::lang.form.edit_title',
             'redirect'      => 'tables/edit/{table_id}',
             'redirectClose' => 'tables',
         ],
         'preview'    => [
-            'title'    => 'lang:admin::default.form.preview_title',
+            'title'    => 'lang:admin::lang.form.preview_title',
             'redirect' => 'tables',
         ],
         'delete'     => [
@@ -57,10 +57,10 @@ class Tables extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['table_name', 'lang:admin::tables.label_name', 'required|min:2|max:255'],
-            ['min_capacity', 'lang:admin::tables.label_min_capacity', 'required|integer|min:1'],
-            ['max_capacity', 'lang:admin::tables.label_capacity', 'required|integer|min:1'],
-            ['table_status', 'lang:admin::default.label_status', 'required|integer'],
+            ['table_name', 'lang:admin::lang.tables.label_name', 'required|min:2|max:255'],
+            ['min_capacity', 'lang:admin::lang.tables.label_min_capacity', 'required|integer|min:1'],
+            ['max_capacity', 'lang:admin::lang.tables.label_capacity', 'required|integer|min:1'],
+            ['table_status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
 
         $this->validateAfter(function ($validator) {
@@ -75,7 +75,7 @@ class Tables extends \Admin\Classes\AdminController
     protected function capacityIsInvalid()
     {
         if (post('Table.max_capacity') < post('Table.min_capacity')) {
-            return lang('admin::tables.error_capacity');
+            return lang('admin::lang.tables.error_capacity');
         }
 
         return FALSE;

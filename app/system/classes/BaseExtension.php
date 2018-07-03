@@ -198,7 +198,7 @@ class BaseExtension extends ServiceProvider
                     if (!$throwException) return FALSE;
 
                     throw new SystemException(sprintf(
-                        Lang::get('system::default.missing.config_key'),
+                        Lang::get('system::lang.missing.config_key'),
                         $item, $configFile
                     ));
                 }

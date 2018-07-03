@@ -16,23 +16,23 @@ class Payments extends \Admin\Classes\AdminController
     public $listConfig = [
         'list' => [
             'model'        => 'Admin\Models\Payments_model',
-            'title'        => 'lang:admin::payments.text_title',
-            'emptyMessage' => 'lang:admin::payments.text_empty',
+            'title'        => 'lang:admin::lang.payments.text_title',
+            'emptyMessage' => 'lang:admin::lang.payments.text_empty',
             'defaultSort'  => ['date_updated', 'DESC'],
             'configFile'   => 'payments_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::payments.text_form_name',
+        'name'       => 'lang:admin::lang.payments.text_form_name',
         'model'      => 'Admin\Models\Payments_model',
         'create'     => [
-            'title'         => 'lang:admin::default.form.create_title',
+            'title'         => 'lang:admin::lang.form.create_title',
             'redirect'      => 'payments/edit/{code}',
             'redirectClose' => 'payments',
         ],
         'edit'       => [
-            'title'         => 'lang:admin::default.form.edit_title',
+            'title'         => 'lang:admin::lang.form.edit_title',
             'redirect'      => 'payments/edit/{code}',
             'redirectClose' => 'payments',
         ],
@@ -73,7 +73,7 @@ class Payments extends \Admin\Classes\AdminController
     public function formFindModelObject($paymentCode = null)
     {
         if (!strlen($paymentCode)) {
-            throw new Exception(lang('admin::payments.alert_setting_missing_id'));
+            throw new Exception(lang('admin::lang.payments.alert_setting_missing_id'));
         }
 
         $model = $this->formCreateModelObject();
@@ -84,7 +84,7 @@ class Payments extends \Admin\Classes\AdminController
         $result = $query->whereCode($paymentCode)->first();
 
         if (!$result)
-            throw new Exception(sprintf(lang('admin::default.form.not_found'), $paymentCode));
+            throw new Exception(sprintf(lang('admin::lang.form.not_found'), $paymentCode));
 
         $result = $this->formExtendModel($result) ?: $result;
 
@@ -148,13 +148,13 @@ class Payments extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['payment', 'lang:admin::payments.label_payments', 'sometimes|required|alpha_dash'],
-            ['name', 'lang:admin::payments.label_name', 'required|min:2|max:128'],
-            ['code', 'lang:admin::payments.label_code', 'sometimes|required|alpha_dash|unique:payments,code'],
-            ['priority', 'lang:admin::payments.label_priority', 'required|integer'],
-            ['description', 'lang:admin::payments.label_description', 'required|max:255'],
-            ['is_default', 'lang:admin::payments.label_default', 'required|integer'],
-            ['status', 'lang:admin::payments.label_status', 'required|integer'],
+            ['payment', 'lang:admin::lang.payments.label_payments', 'sometimes|required|alpha_dash'],
+            ['name', 'lang:admin::lang.payments.label_name', 'required|min:2|max:128'],
+            ['code', 'lang:admin::lang.payments.label_code', 'sometimes|required|alpha_dash|unique:payments,code'],
+            ['priority', 'lang:admin::lang.payments.label_priority', 'required|integer'],
+            ['description', 'lang:admin::lang.payments.label_description', 'required|max:255'],
+            ['is_default', 'lang:admin::lang.payments.label_default', 'required|integer'],
+            ['status', 'lang:admin::lang.payments.label_status', 'required|integer'],
         ];
 
         if (isset($form->config['rules']))

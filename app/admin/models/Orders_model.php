@@ -328,7 +328,7 @@ class Orders_model extends Model
 
         $data['order_payment'] = ($model->payment_method)
             ? $model->payment_method->name
-            : lang('admin::orders.text_no_payment');
+            : lang('admin::lang.orders.text_no_payment');
 
         $data['order_menus'] = [];
         $menus = $model->getOrderMenus();
@@ -339,7 +339,7 @@ class Orders_model extends Model
             if ($menuItemOptions = $menuOptions->get($menu->menu_id)) {
                 foreach ($menuItemOptions as $menuItemOption) {
                     $optionData[] = $menuItemOption->order_option_name
-                        .lang('admin::default.text_equals')
+                        .lang('admin::lang.text_equals')
                         .currency_format($menuItemOption->order_option_price);
                 }
             }
@@ -364,7 +364,7 @@ class Orders_model extends Model
             ];
         }
 
-        $data['order_address'] = lang('admin::orders.text_collection_order_type');
+        $data['order_address'] = lang('admin::lang.orders.text_collection_order_type');
         if ($model->address)
             $data['order_address'] = format_address($model->address->toArray());
 
