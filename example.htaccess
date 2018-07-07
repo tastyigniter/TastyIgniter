@@ -3,25 +3,47 @@
         Options -MultiViews -Indexes
     </IfModule>
 
-	# Turn on URL rewriting
+    ## You may need to uncomment the following line for some hosting environments,
+    ## to use URL Alias you need to be running apache with mod_rewrite enabled.
+    ##
+    # Options +FollowSymlinks
+
+	## Turn on URL rewriting
+    ##
 	RewriteEngine On
 
-	# !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading slashes.
-	# If your page resides at http://www.example.com/folder then use
-	# RewriteBase /folder
+	## !IMPORTANT! You may need to uncomment the following line for some hosting environments,
+	## If your installation resides in a subdirectory, enter the name here also
+    ##
+	# RewriteBase /subdirectory
 
-    # Redirect Trailing Slashes If Not A Folder...
+    ## Redirect index.php from url to prevent duplicate urls
+    ##
+    RewriteCond %{THE_REQUEST} /index\.php [NC]
+    RewriteRule ^(.*?)index\.php[^/] /$1? [L,R=301,NC,NE]
+
+    RewriteCond %{THE_REQUEST} /index\.php [NC]
+    RewriteRule ^(.*?)index\.php(?:/(.*))?$ /$1$2? [L,R=301,NC,NE]
+
+    ## Redirect Trailing Slashes If Not A Folder...
+    ##
 	RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Handle Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-	#RewriteRule ^(.*)$ index.php?/$1 [L]
-    RewriteRule ^ index.php [L]
+    ## Block all PHP files, except index
+    ##
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_FILENAME} \.php$
+    RewriteRule !^index.php index.php [L,NC]
 
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    ## Blacklisted folders
+    ##
+    RewriteRule ^assets/downloads/(.*) not_found [L]
+
+    # Handle Front Controller...
+    ##
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L,QSA]
 </IfModule>

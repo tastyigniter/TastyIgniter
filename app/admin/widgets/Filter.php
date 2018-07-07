@@ -96,7 +96,7 @@ class Filter extends BaseWidget
     }
 
     /**
-     * @return \Admin\Classes\BaseWidget
+     * @return \Admin\Widgets\SearchBox
      */
     public function getSearchWidget()
     {

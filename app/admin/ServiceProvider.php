@@ -70,29 +70,14 @@ class ServiceProvider extends AppServiceProvider
     protected function registerFormWidgets()
     {
         Widgets::instance()->registerFormWidgets(function (Widgets $manager) {
-            $manager->registerFormWidget('Admin\FormWidgets\StarRating', [
-                'label' => 'Star Rating',
-                'code'  => 'starrating',
+            $manager->registerFormWidget('Admin\FormWidgets\CodeEditor', [
+                'label' => 'Code editor',
+                'code'  => 'codeeditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\MapArea', [
-                'label' => 'Map Area',
-                'code'  => 'maparea',
-            ]);
-
-            $manager->registerFormWidget('Admin\FormWidgets\Connector', [
-                'label' => 'Connector',
-                'code'  => 'connector',
-            ]);
-
-            $manager->registerFormWidget('Admin\FormWidgets\RecordEditor', [
-                'label' => 'Record Editor',
-                'code'  => 'recordeditor',
-            ]);
-
-            $manager->registerFormWidget('Admin\FormWidgets\StatusEditor', [
-                'label' => 'Status Editor',
-                'code'  => 'statuseditor',
+            $manager->registerFormWidget('Admin\FormWidgets\ColorPicker', [
+                'label' => 'Color picker',
+                'code'  => 'colorpicker',
             ]);
 
             $manager->registerFormWidget('Admin\FormWidgets\Components', [
@@ -100,24 +85,9 @@ class ServiceProvider extends AppServiceProvider
                 'code'  => 'components',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\Relation', [
-                'label' => 'Relationship',
-                'code'  => 'relation',
-            ]);
-
-            $manager->registerFormWidget('Admin\FormWidgets\Repeater', [
-                'label' => 'Repeater',
-                'code'  => 'repeater',
-            ]);
-
-            $manager->registerFormWidget('Admin\FormWidgets\PermissionEditor', [
-                'label' => 'Permission Editor',
-                'code'  => 'permissioneditor',
-            ]);
-
-            $manager->registerFormWidget('Admin\FormWidgets\MediaFinder', [
-                'label' => 'Media finder',
-                'code'  => 'mediafinder',
+            $manager->registerFormWidget('Admin\FormWidgets\Connector', [
+                'label' => 'Connector',
+                'code'  => 'connector',
             ]);
 
             $manager->registerFormWidget('Admin\FormWidgets\DataTable', [
@@ -130,9 +100,34 @@ class ServiceProvider extends AppServiceProvider
                 'code'  => 'datepicker',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\ColorPicker', [
-                'label' => 'Color picker',
-                'code'  => 'colorpicker',
+            $manager->registerFormWidget('Admin\FormWidgets\MapArea', [
+                'label' => 'Map Area',
+                'code'  => 'maparea',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\MediaFinder', [
+                'label' => 'Media finder',
+                'code'  => 'mediafinder',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\PermissionEditor', [
+                'label' => 'Permission Editor',
+                'code'  => 'permissioneditor',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\RecordEditor', [
+                'label' => 'Record Editor',
+                'code'  => 'recordeditor',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\Relation', [
+                'label' => 'Relationship',
+                'code'  => 'relation',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\Repeater', [
+                'label' => 'Repeater',
+                'code'  => 'repeater',
             ]);
 
             $manager->registerFormWidget('Admin\FormWidgets\RichEditor', [
@@ -140,9 +135,14 @@ class ServiceProvider extends AppServiceProvider
                 'code'  => 'richeditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\CodeEditor', [
-                'label' => 'Code editor',
-                'code'  => 'codeeditor',
+            $manager->registerFormWidget('Admin\FormWidgets\StatusEditor', [
+                'label' => 'Status Editor',
+                'code'  => 'statuseditor',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\StarRating', [
+                'label' => 'Star Rating',
+                'code'  => 'starrating',
             ]);
         });
     }

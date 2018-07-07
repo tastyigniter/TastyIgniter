@@ -7,7 +7,7 @@
     <?php if (count($scopes)) { ?>
         <form
             id="filter-form"
-            class="form-inline mb-3"
+            class="form-inline"
             accept-charset="utf-8"
             method="POST"
             action="<?= current_url(); ?>"

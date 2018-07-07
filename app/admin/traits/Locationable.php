@@ -69,6 +69,7 @@ trait Locationable
      * Apply the Location scope query.
      *
      * @param \Igniter\Flame\Database\Builder $builder
+     * @param \Igniter\Flame\Auth\Models\User $userLocation
      */
     public function applyLocationScope($builder, $userLocation)
     {
@@ -102,7 +103,7 @@ trait Locationable
     {
         $relationType = $this->getRelationType($this->locationableRelationName());
 
-        return in_array($relationType, ['belongsTo']);
+        return in_array($relationType, ['hasOne', 'belongsTo']);
     }
 
     protected function locationableRelationName()

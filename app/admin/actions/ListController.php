@@ -148,7 +148,7 @@ class ListController extends ControllerAction
      *
      * @return array List of Admin\Classes\BaseWidget objects
      */
-    protected function makeLists()
+    public function makeLists()
     {
         $this->listWidgets = [];
 
@@ -166,12 +166,12 @@ class ListController extends ControllerAction
      *
      * @return \Admin\Classes\BaseWidget
      */
-    protected function makeList($alias)
+    public function makeList($alias)
     {
-        if (!isset($this->listConfig[$alias]))
+        if (!$alias OR !isset($this->listConfig[$alias]))
             $alias = $this->primaryAlias;
 
-        $listConfig = $this->makeConfig($this->listConfig[$alias], $this->requiredConfig);
+        $listConfig = $this->controller->getListConfig($alias);
 
         $modelClass = $listConfig['model'];
         $model = new $modelClass;
@@ -305,5 +305,25 @@ class ListController extends ControllerAction
         }
 
         return array_get($this->listWidgets, $alias);
+    }
+
+    /**
+     * Returns the configuration used by this behavior.
+     *
+     * @param null $alias
+     *
+     * @return \Admin\Classes\BaseWidget
+     */
+    public function getListConfig($alias = null)
+    {
+        if (!$alias) {
+            $alias = $this->primaryAlias;
+        }
+
+        if (!$listConfig = array_get($this->listConfig, $alias)) {
+            $listConfig = $this->listConfig[$alias] = $this->makeConfig($this->listConfig[$alias], $this->requiredConfig);
+        }
+
+        return $listConfig;
     }
 }

@@ -757,7 +757,10 @@ class Lists extends BaseWidget
      */
     protected function evalSwitchTypeValue($record, $column, $value)
     {
-        return ($value) ? lang('admin::lang.text_enabled') : lang('admin::lang.text_disabled');
+        $onText = lang($column->onText ?? 'admin::default.text_enabled');
+        $offText = lang($column->offText ?? 'admin::default.text_disabled');
+
+        return $value ? $onText : $offText;
     }
 
     /**
