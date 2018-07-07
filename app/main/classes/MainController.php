@@ -471,7 +471,7 @@ class MainController extends BaseController
 
         $useCache = TRUE;
         if ($useCache) {
-            $options['cache'] = new FileSystem(Config::get('system.templateCachePath', FALSE));
+            $options['cache'] = new FileSystem(storage_path().'/system/templates');
         }
 
         $this->template = new Environment($this->loader, $options);

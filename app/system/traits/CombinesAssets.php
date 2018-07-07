@@ -52,7 +52,7 @@ trait CombinesAssets
         $this->useMinify = config('system.enableAssetMinify', null);
         $this->cacheKeyPrefix = 'ti.combiner.';
 
-        $this->storagePath = storage_path('framework/combiner/data');
+        $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
 
         if ($this->useMinify === null) {
@@ -174,7 +174,7 @@ trait CombinesAssets
     protected function prepareAssets(array $assets)
     {
         $assets = array_map(function ($asset) {
-            return $this->getAssetPath($asset);
+            return public_path($this->getAssetPath($asset));
         }, $assets);
 
         return $assets;

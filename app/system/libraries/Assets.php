@@ -339,13 +339,13 @@ class Assets
     {
         if ($tag->type == 'js') {
             if ($tag->path AND !isset($tag->attributes['src']))
-                $tag->attributes['src'] = $tag->path;
+                $tag->attributes['src'] = asset($tag->path);
 
             $html = '<script'.Html::attributes($tag->attributes).'></script>'.PHP_EOL;
         }
         else {
             if ($tag->path AND !isset($tag->attributes['href']))
-                $tag->attributes['href'] = $tag->path;
+                $tag->attributes['href'] = asset($tag->path);
 
             $html = '<link'.Html::attributes($tag->attributes).'>'.PHP_EOL;
         }

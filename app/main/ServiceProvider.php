@@ -2,7 +2,6 @@
 
 namespace Main;
 
-use Config;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Pagic\Cache\FileSystem as FileCache;
 use Igniter\Flame\Pagic\Parsers\FileParser;
@@ -39,7 +38,7 @@ class ServiceProvider extends AppServiceProvider
             $this->registerSingletons();
             $this->registerAssets();
 
-            FileParser::setCache(new FileCache(Config::get('system.templateCachePath', FALSE)));
+            FileParser::setCache(new FileCache(storage_path().'/system/cache'));
         }
     }
 

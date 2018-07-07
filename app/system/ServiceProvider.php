@@ -144,6 +144,11 @@ class ServiceProvider extends AppServiceProvider
             }
         });
 
+        // Allow system based cache clearing
+        Event::listen('cache:cleared', function () {
+            \System\Helpers\CacheHelper::clearInternal();
+        });
+
         foreach (
             [
                 'igniter.util'      => Console\Commands\IgniterUtil::class,
