@@ -298,9 +298,7 @@
   color: #333;
 }
 
-.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice,
-.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__placeholder,
-.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-search--inline {
+.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice, .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__placeholder, .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-search--inline {
   float: right;
 }
 
@@ -328,14 +326,12 @@
   display: none;
 }
 
-.select2-container--default.select2-container--open.select2-container--above .select2-selection--single,
-.select2-container--default.select2-container--open.select2-container--above .select2-selection--multiple {
+.select2-container--default.select2-container--open.select2-container--above .select2-selection--single, .select2-container--default.select2-container--open.select2-container--above .select2-selection--multiple {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 
-.select2-container--default.select2-container--open.select2-container--below .select2-selection--single,
-.select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
+.select2-container--default.select2-container--open.select2-container--below .select2-selection--single, .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -650,7 +646,6 @@
 /**
  * We need a clone of bootstrap color-yiq mixin so we can get the same value for color
  */
-
 .select2-container--bootstrap {
   display: block;
   /*------------------------------------*\
@@ -853,8 +848,7 @@
   white-space: nowrap;
 }
 
-.select2-container--bootstrap.select2-container--focus .select2-selection,
-.select2-container--bootstrap.select2-container--open .select2-selection {
+.select2-container--bootstrap.select2-container--focus .select2-selection, .select2-container--bootstrap.select2-container--open .select2-selection {
   border-color: #a8c7dd;
   -webkit-box-shadow: 0 0 0 0.2rem rgba(76, 140, 186, 0.25);
           box-shadow: 0 0 0 0.2rem rgba(76, 140, 186, 0.25);
@@ -1234,7 +1228,6 @@
 /*------------------------------------*\
   #ADDITIONAL GOODIES
 \*------------------------------------*/
-
 /**
  * Address Bootstrap's validation states
  *
@@ -1245,7 +1238,6 @@
  *
  * @see https://getbootstrap.com/docs/4.0/components/forms/#validation
  */
-
 .is-valid .select2-dropdown,
 .is-valid .select2-selection {
   border-color: #2AB21C;
@@ -1295,7 +1287,6 @@
 }
 
 /* Validation classes on parent element. Preserved Bootstrap 3 validation classes */
-
 .has-warning .select2-dropdown,
 .has-warning .select2-selection {
   border-color: #D99B22;
@@ -1374,11 +1365,9 @@
  * @see https://getbootstrap.com/docs/4.0/components/input-group/
  * @see https://github.com/twbs/bootstrap/blob/v4.0.0-beta.2/scss/_input-group.scss
  */
-
 /**
  * Reset rounded corners
  */
-
 .input-group > .select2-hidden-accessible:first-child + .select2-container--bootstrap > .selection > .select2-selection,
 .input-group > .select2-hidden-accessible:first-child + .select2-container--bootstrap > .selection > .select2-selection.form-control {
   border-top-right-radius: 0;
@@ -1430,8 +1419,7 @@
   float: none;
 }
 
-.input-group > .select2-container--bootstrap.select2-container--open,
-.input-group > .select2-container--bootstrap.select2-container--focus {
+.input-group > .select2-container--bootstrap.select2-container--open, .input-group > .select2-container--bootstrap.select2-container--focus {
   z-index: 3;
 }
 
@@ -1452,7 +1440,6 @@
  * @see https://github.com/select2/select2/pull/3301
  * @see https://github.com/fk/select2/commit/31830c7b32cb3d8e1b12d5b434dee40a6e753ada
  */
-
 .form-control.select2-hidden-accessible {
   position: absolute !important;
   width: 1px !important;
@@ -1461,7 +1448,6 @@
 /**
  * Display override for inline forms
  */
-
 @media (min-width: 576px) {
   .form-inline .select2-container--bootstrap {
     display: inline-block;
@@ -1488,13 +1474,11 @@
   }
 }
 
-body.dragging,
-body.dragging {
+body.dragging, body.dragging {
   cursor: move !important;
 }
 
-body.dragging .dragged,
-body.dragging .dragged {
+body.dragging .dragged, body.dragging .dragged {
   position: absolute;
   top: 0;
   opacity: .5;
@@ -1566,13 +1550,11 @@ body.dragging .dragged {
   padding-left: 10px;
 }
 
-.form-group.span-left,
-.form-group.span-right {
+.form-group.span-left, .form-group.span-right {
   width: 50%;
 }
 
-.form-group.span-left.flex-width,
-.form-group.span-right.flex-width {
+.form-group.span-left.flex-width, .form-group.span-right.flex-width {
   width: 25%;
 }
 
@@ -1588,18 +1570,13 @@ body.dragging .dragged {
   .form-group.span-left {
     padding-right: 0;
   }
-
   .form-group.span-right {
     padding-left: 0;
   }
-
-  .form-group.span-left,
-  .form-group.span-right {
+  .form-group.span-left, .form-group.span-right {
     width: 100%;
   }
-
-  .form-group.span-left.flex-width,
-  .form-group.span-right.flex-width {
+  .form-group.span-left.flex-width, .form-group.span-right.flex-width {
     width: 100%;
   }
 }
@@ -1635,7 +1612,6 @@ body.dragging .dragged {
     overflow-x: auto;
     display: block;
   }
-
   .form-nav {
     display: -ms-flexbox;
     display: -webkit-box;
@@ -1645,7 +1621,6 @@ body.dragging .dragged {
     width: 100%;
     max-width: 100%;
   }
-
   .form-nav.nav-tabs .nav-link {
     white-space: nowrap;
   }
@@ -1861,20 +1836,16 @@ body.dragging .dragged {
   .navbar-brand {
     display: none;
   }
-
   .sidebar {
     width: 100%;
   }
-
   .sidebar:not(.show) {
     height: 0;
   }
-
   .nav-sidebar {
     display: none;
     position: relative;
   }
-
   .nav-sidebar.show {
     display: block;
   }
@@ -2061,7 +2032,6 @@ body.dragging .dragged {
   .navbar-top.navbar-expand {
     margin-left: 0;
   }
-
   .navbar-top.navbar-expand .navbar {
     border-bottom: 1px solid #12224C;
     background-color: #0f1c40;
@@ -2072,16 +2042,13 @@ body.dragging .dragged {
     z-index: 1030;
     padding: 0;
   }
-
   .navbar-top.navbar-expand .navbar-nav .nav-link,
   .navbar-top.navbar-expand .navbar-nav > li.nav-item.show > a .fa {
     color: #FFFFFF;
   }
-
   .navbar-top.navbar-expand .navbar-nav > li.dropdown.show > a::after {
     bottom: -1px;
   }
-
   .navbar-top.navbar-expand .navbar-nav > li.dropdown .dropdown-menu {
     left: 0;
     right: 0;
@@ -2091,7 +2058,6 @@ body.dragging .dragged {
     -webkit-box-shadow: none;
             box-shadow: none;
   }
-
   .navbar-top.navbar-expand .navbar-toggler {
     display: inline-block;
     color: #FFFFFF;
@@ -2188,8 +2154,7 @@ body.dragging .dragged {
   border-bottom-color: #3e78a1;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #4C8CBA;
 }
 
@@ -2197,8 +2162,7 @@ body.dragging .dragged {
   border-bottom-color: #586077;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #68728D;
 }
 
@@ -2206,8 +2170,7 @@ body.dragging .dragged {
   border-bottom-color: #229117;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #2AB21C;
 }
 
@@ -2215,8 +2178,7 @@ body.dragging .dragged {
   border-bottom-color: #3bb4d8;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #5BC0DE;
 }
 
@@ -2224,8 +2186,7 @@ body.dragging .dragged {
   border-bottom-color: #b8831d;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #D99B22;
 }
 
@@ -2233,8 +2194,7 @@ body.dragging .dragged {
   border-bottom-color: #b41d24;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #D5222B;
 }
 
@@ -2242,8 +2202,7 @@ body.dragging .dragged {
   border-bottom-color: #e5e5ea;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #FAFAFB;
 }
 
@@ -2251,8 +2210,7 @@ body.dragging .dragged {
   border-bottom-color: #0a1127;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #111F46;
 }
 
@@ -2260,8 +2218,7 @@ body.dragging .dragged {
   border-bottom-color: #586077;
 }
 
-.toolbar .toolbar-action:hover,
-.toolbar .toolbar-action:focus {
+.toolbar .toolbar-action:hover, .toolbar .toolbar-action:focus {
   border-bottom-color: #68728D;
 }
 
@@ -2443,13 +2400,13 @@ body.dragging .dragged {
 
 html {
   position: relative;
-  font-size: 85.5%;
+  font-size: 85%;
   min-height: 100%;
   height: 100%;
 }
 
 body {
-  font-size: 15px;
+  font-size: 14px;
   margin-bottom: 50px;
 }
 
@@ -2457,4 +2414,3 @@ body.page {
   height: 100%;
   overflow: hidden;
 }
-
