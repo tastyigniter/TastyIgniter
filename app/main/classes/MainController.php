@@ -14,6 +14,7 @@ use Igniter\Flame\Traits\EventEmitter;
 use Illuminate\Http\RedirectResponse;
 use Lang;
 use Log;
+use Main\Components\BlankComponent;
 use Main\Template\ComponentPartial;
 use Main\Template\Content;
 use Main\Template\Layout as LayoutTemplate;
@@ -652,10 +653,6 @@ class MainController extends BaseController
         return $result;
     }
 
-    public function hasPartialComponents($partialArea)
-    {
-    }
-
     //
     // Component helpers
     //
@@ -682,10 +679,9 @@ class MainController extends BaseController
             $componentObj = $manager->makeComponent($name, $codeObj, $properties);
         }
         catch (SystemException $ex) {
-            throw new ApplicationException(sprintf(
+            $componentObj = new BlankComponent($codeObj, [], sprintf(
                     lang('main::lang.not_found.component'), $name
-                ).' => '.$ex->getMessage()
-            );
+                ).' => '.$ex->getMessage());
         }
 
         $componentObj->alias = $alias;
@@ -695,6 +691,17 @@ class MainController extends BaseController
         $componentObj->initialize();
 
         return $componentObj;
+    }
+
+    public function hasComponent($alias)
+    {
+        if (!$componentObj = $this->findComponentByAlias($alias))
+            return FALSE;
+
+        if ($componentObj instanceof BlankComponent)
+            return FALSE;
+
+        return TRUE;
     }
 
     /**

@@ -368,38 +368,6 @@ class ComponentManager
         return $result;
     }
 
-    /**
-     * Returns a component name.
-     *
-     * @param mixed $component The component object
-     *
-     * @return string
-     */
-    public function getComponentName($component)
-    {
-        $details = $component->componentDetails();
-
-        return lang((isset($details['name']))
-            ? $details['name']
-            : 'text_component_unnamed');
-    }
-
-    /**
-     * Returns a component description.
-     *
-     * @param mixed $component The component object
-     *
-     * @return string
-     */
-    public function getComponentDescription($component)
-    {
-        $details = $component->componentDetails();
-
-        return lang((isset($details['description']))
-            ? $details['description']
-            : 'text_component_no_description');
-    }
-
     protected function checkComponentPropertyType($type)
     {
         return in_array($type, [

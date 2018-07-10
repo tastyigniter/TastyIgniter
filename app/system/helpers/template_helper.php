@@ -30,17 +30,17 @@ if (!function_exists('partial')) {
     }
 }
 
-if (!function_exists('has_components')) {
+if (!function_exists('has_component')) {
     /**
-     * Check if Partial Area has rendered components
+     * Check if a component is loaded
      *
-     * @param string $partialArea
+     * @param string $component
      *
      * @return string
      */
-    function has_components($partialArea = '')
+    function has_component($component = '')
     {
-        return controller()->hasPartialComponents($partialArea);
+        return controller()->hasComponent($component);
     }
 }
 

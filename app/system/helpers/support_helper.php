@@ -61,7 +61,7 @@ if (!function_exists('restaurant_url')) {
      */
     function restaurant_url($uri = null, array $params = [])
     {
-        if (!isset($params['location']) AND $current = Location::current())
+        if (App::bound('location') AND !isset($params['location']) AND $current = Location::current())
             $params['location'] = $current->permalink_slug;
 
         return page_url($uri, $params);
@@ -287,7 +287,8 @@ if (!function_exists('make_carbon')) {
         else {
             try {
                 $value = Carbon::parse($value);
-            } catch (Exception $ex) {
+            }
+            catch (Exception $ex) {
             }
         }
 
