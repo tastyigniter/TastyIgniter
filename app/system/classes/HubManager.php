@@ -108,26 +108,16 @@ class HubManager
         return $response;
     }
 
-    public function setSecurity($key, $info)
-    {
-        params()->set('carte_key', $key ? encrypt($key) : '');
-
-        if ($info AND is_array($info))
-            params()->set('carte_info', $info);
-
-        params()->save();
-    }
-
-    public function getSecurity()
-    {
-        return (!$carteKey = params('carte_key')) ? md5('NULL') : decrypt($carteKey);
-    }
-
     public function downloadFile($filePath, $fileHash, $params = [])
     {
         return $this->requestRemoteFile('core/download', [
             'item' => json_encode($params),
         ], $filePath, $fileHash);
+    }
+
+    protected function getSecurityKey()
+    {
+        return (!$carteKey = params('carte_key')) ? md5('NULL') : decrypt($carteKey);
     }
 
     protected function getCacheKey($fileName, $suffix)
@@ -148,14 +138,16 @@ class HubManager
                 throw new ApplicationException('Server error try again');
 
             curl_close($curl);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             throw new ApplicationException('Server responded with error: '.$ex->getMessage());
         }
 
         $response = null;
         try {
             $response = @json_decode($result, TRUE);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
         }
 
         if (isset($response['message']) AND !in_array($httpCode, [200, 201])) {
@@ -185,7 +177,8 @@ class HubManager
 
             curl_close($curl);
             fclose($fileStream);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             throw new ApplicationException('Server responded with error: '.$ex->getMessage());
         }
 
@@ -214,7 +207,7 @@ class HubManager
 
         $params['url'] = base64_encode(root_url());
 
-        if ($siteKey = $this->getSecurity()) {
+        if ($siteKey = $this->getSecurityKey()) {
             curl_setopt($curl, CURLOPT_HTTPHEADER, ["TI-Rest-Key: bearer {$siteKey}"]);
         }
 

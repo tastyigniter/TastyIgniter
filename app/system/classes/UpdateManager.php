@@ -1,9 +1,9 @@
 <?php namespace System\Classes;
 
 use App;
+use ApplicationException;
 use Carbon\Carbon;
 use Config;
-use ApplicationException;
 use Main\Classes\ThemeManager;
 use Schema;
 use ZipArchive;
@@ -144,10 +144,10 @@ class UpdateManager
         return $this;
     }
 
-    public function applyCoreVersion($sysVersion, $sysHash)
+    public function setCoreVersion($version, $hash = null)
     {
-        params()->set('ti_version', $sysVersion);
-        params()->set('sys_hash', $sysHash);
+        params()->set('ti_version', $version);
+        params()->set('sys_hash', $hash);
         params()->save();
     }
 
@@ -311,7 +311,7 @@ class UpdateManager
         if (isset($result['data']) AND is_array($result['data']))
             $info = $result['data'];
 
-        $this->getHubManager()->setSecurity($key, $info);
+        $this->setSecurityKey($key, $info);
 
         return $info;
     }
@@ -410,7 +410,7 @@ class UpdateManager
                 continue;
             }
 
-            $ignoredUpdates[$item['name']] = true;
+            $ignoredUpdates[$item['name']] = TRUE;
         }
 
         setting()->set('ignored_updates', $ignoredUpdates);
@@ -428,6 +428,16 @@ class UpdateManager
         $ignoredUpdates = $this->getIgnoredUpdates();
 
         return array_get($ignoredUpdates, $code, FALSE);
+    }
+
+    public function setSecurityKey($key, $info)
+    {
+        params()->set('carte_key', $key ? encrypt($key) : '');
+
+        if ($info AND is_array($info))
+            params()->set('carte_info', $info);
+
+        params()->save();
     }
 
     //

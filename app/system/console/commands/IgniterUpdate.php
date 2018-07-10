@@ -79,7 +79,7 @@ class IgniterUpdate extends Command
         if ($coreCode AND $coreHash) {
             $this->output->writeln('<info>Extracting application files</info>');
             $updateManager->extractCore($coreCode);
-            $updateManager->applyCoreVersion($coreVersion, $coreHash);
+            $updateManager->setCoreVersion($coreVersion, $coreHash);
         }
 
         $addonUpdates->each(function ($addon) use ($updateManager) {

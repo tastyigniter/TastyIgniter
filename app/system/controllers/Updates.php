@@ -351,7 +351,7 @@ class Updates extends \Admin\Classes\AdminController
             switch ($item['type']) {
                 case 'core':
                     $updateManager->update();
-                    $updateManager->applyCoreVersion($item['version'], $item['hash']);
+                    $updateManager->setCoreVersion($item['version'], $item['hash']);
                     break;
                 case 'extension':
                     Extensions_model::install($item['code']);
