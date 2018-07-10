@@ -11,7 +11,7 @@ sudo: false
 branches:
   only:
     - master
-    - dev/3.x
+    - develop
 
 before_script:
   - git reset --hard HEAD
