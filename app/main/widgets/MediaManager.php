@@ -71,9 +71,9 @@ class MediaManager extends BaseWidget
 
         $this->vars['currentFolder'] = $folder;
         $this->vars['isRootFolder'] = $folder == static::ROOT_FOLDER;
-        $this->vars['items'] = $this->listFolderItems($folder, $sortBy, $searchTerm);
+        $this->vars['items'] = $items = $this->listFolderItems($folder, $sortBy, $searchTerm);
         $this->vars['folderSize'] = $this->getCurrentFolderSize();
-        $this->vars['totalItems'] = count($this->vars['items']);
+        $this->vars['totalItems'] = count($items);
         $this->vars['folderList'] = $this->getFolderList();
         $this->vars['folderTree'] = $this->getFolderTreeNodes();
         $this->vars['sortBy'] = $sortBy;

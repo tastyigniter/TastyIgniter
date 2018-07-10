@@ -69,8 +69,13 @@ class Menus_model extends Model
             'pageLimit' => 20,
             'sort'      => 'menu_priority asc',
             'group'     => null,
+            'location'  => null,
             'category'  => null,
         ], $options));
+
+        if (strlen($location) AND is_numeric($location)) {
+            $query->whereHasOrDoesntHaveLocation($location);
+        }
 
         if (strlen($category)) {
             $query->whereHas('categories', function ($q) use ($category) {

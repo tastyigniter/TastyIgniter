@@ -60,9 +60,15 @@ trait Locationable
         $this->getLocationableRelationObject()->detach();
     }
 
-    public function scopeHasLocation($query, $locationId)
+    public function scopeWhereHasLocation($query, $locationId)
     {
         return $this->applyLocationScope($query, $locationId);
+    }
+
+    public function scopeWhereHasOrDoesntHaveLocation($query, $locationId)
+    {
+        return $query->whereHasLocation($locationId)
+                     ->orDoesntHave($this->locationableRelationName());
     }
 
     /**
