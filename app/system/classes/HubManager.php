@@ -205,6 +205,10 @@ class HubManager
         curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
 
+        // SKIP SSL Check for Wamp
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        
         $params['url'] = base64_encode(root_url());
 
         if ($siteKey = $this->getSecurityKey()) {
