@@ -1,7 +1,8 @@
-<?php
+<?php namespace Admin\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Schema;
 
 /**
  * Drop primary key order_id and add unique keys

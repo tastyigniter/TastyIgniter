@@ -1,4 +1,4 @@
-<?php
+<?php namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 
@@ -16,10 +16,10 @@ class RenameModelClassNamesToMorphMapCustomNames extends Migration
         $this->morphMap = array_flip($morphMap);
 
         $this->updateMorphClassName([
-            '\System\Models\Activities_model'    => ['subject_type', 'causer_type'],
-            '\System\Models\Message_meta_model'  => ['messageable_type'],
-            '\System\Models\Messages_model'      => ['sender_type'],
-            '\Admin\Models\Reviews_model'        => ['sale_type'],
+            '\System\Models\Activities_model' => ['subject_type', 'causer_type'],
+            '\System\Models\Message_meta_model' => ['messageable_type'],
+            '\System\Models\Messages_model' => ['sender_type'],
+            '\Admin\Models\Reviews_model' => ['sale_type'],
             '\Admin\Models\Status_history_model' => ['object_type'],
         ]);
     }

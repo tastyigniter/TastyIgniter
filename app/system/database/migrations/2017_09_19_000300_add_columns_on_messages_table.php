@@ -1,7 +1,8 @@
-<?php
+<?php namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Schema;
 
 /**
  * Add columns to morph messages and message_meta table

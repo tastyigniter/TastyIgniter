@@ -1,7 +1,8 @@
-<?php
+<?php namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Schema;
 
 /**
  * New column 'label' on mail_templates_data table
