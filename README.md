@@ -8,7 +8,7 @@ TastyIgniter :fire:
 [TastyIgniter](https://tastyigniter.com/) is a free open source restaurant ordering and management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
 ## Installation
-> **TastyIgniter v3 (uses [Laravel](https://laravel.com/) PHP framework) is currently in beta and should not be used in production.** Join the [Dev Team]() to follow along with our progress. See branch [2.1.x](https://github.com/tastyigniter/TastyIgniter/tree/2.1.x) for a stable version.
+> **TastyIgniter v3 (uses [Laravel](https://laravel.com/) PHP framework) is currently in beta and should not be used in production.** Join the [Dev Team](http://slack.tastyigniter.com/) to follow along with our progress. See branch [2.1.x](https://github.com/tastyigniter/TastyIgniter/tree/2.1.x) for a stable version.
 
 ### Wizard Installation
 1. Download and unzip the [setup archive file](https://tastyigniter.com/download) into an empty directory on your server.
@@ -35,6 +35,9 @@ Read the [Installation Guide](https://docs.tastyigniter.com/installation) for mo
 TastyIgniter is open-source and we would love your help building it! Please read the [Contributing Guidelines](CONTRIBUTING.md) to learn how you can help.
 
 ## Credits
+- Laravel - Open source full-stack framework.
+- october/rain - OctoberCMS foundation library
+- Bootstrap 4 - Open source front end framework.
 - [Samuel Adepoyigi](https://github.com/sampoyigi)
 - [All Contributors](https://github.com/tastyigniter/TastyIgniter/contributors)
 
