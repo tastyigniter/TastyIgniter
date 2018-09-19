@@ -30,10 +30,13 @@ class ExtensionInstall extends Command
 
         $response = $manager->requestApplyItems([[
             'name' => $extensionName,
-            'type' => 'extension',
+            'type' => 'extension'
         ]]);
 
         $extensionDetails = array_get($response, 'data.0');
+        if (!$extensionDetails)
+            return $this->output->writeln(sprintf('<info>Extension %s not found</info>', $extensionName));
+
         $code = array_get($extensionDetails, 'code');
         $hash = array_get($extensionDetails, 'hash');
         $version = array_get($extensionDetails, 'version');
@@ -42,7 +45,7 @@ class ExtensionInstall extends Command
         $manager->downloadFile($code, $hash, [
             'name' => $code,
             'type' => 'extension',
-            'ver'  => $version,
+            'ver' => $version,
         ]);
 
         $this->output->writeln(sprintf('<info>Extracting extension %s files</info>', $code));

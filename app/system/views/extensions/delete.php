@@ -1,7 +1,7 @@
 <?= form_open(current_url(),
     [
-        'id'     => 'edit-form',
-        'role'   => 'form',
+        'id' => 'edit-form',
+        'role' => 'form',
         'method' => 'DELETE',
     ]
 ); ?>
@@ -21,38 +21,38 @@
 </div>
 
 <div class="form-fields">
-    <?php $deleteAction = !empty($extensionData)
+    <?php $deleteAction = $extensionData
         ? lang('system::lang.extensions.text_files_data')
         : lang('system::lang.extensions.text_files'); ?>
-    <p><?= sprintf(lang('system::lang.extensions.alert_delete_warning'), $deleteAction, $extensionName); ?></p>
-    <p><?= sprintf(lang('system::lang.extensions.alert_delete_confirm'), $deleteAction); ?></p>
-    <div id="deletedFiles">
-                    <textarea
-                        class="form-control"
-                        rows="10"
-                        readonly><?= implode(PHP_EOL, $filesToDelete); ?></textarea>
-    </div>
+    <p>
+        <?= sprintf(lang('system::lang.extensions.alert_delete_warning'), $deleteAction, $extensionName); ?>
+        <br/>
+        <?= sprintf(lang('system::lang.extensions.alert_delete_confirm'), $deleteAction); ?>
+    </p>
     <?php if ($extensionData) { ?>
-        <div class="form-group wrap-top">
+        <div class="form-group span-full">
             <label for="input-delete-data"
-                   class="col-sm-2 control-label"><?= lang('system::lang.extensions.label_delete_data'); ?></label>
-            <div class="col-sm-5">
-                <div id="input-delete-data" class="btn-group btn-group-switch" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input
-                            type="radio"
-                            name="delete_data"
-                            value="0" <?= set_radio('delete_data', '0'); ?>
-                        ><?= lang('system::lang.extensions.admin::lang.text_no'); ?>
-                    </label>
-                    <label class="btn btn-default active">
-                        <input
-                            type="radio"
-                            name="delete_data"
-                            value="1" <?= set_radio('delete_data', '1', TRUE); ?>
-                        ><?= lang('system::lang.extensions.admin::lang.text_yes'); ?>
-                    </label>
-                </div>
+                   class="control-label"
+            ><?= lang('system::lang.extensions.label_delete_data'); ?></label>
+            <div
+                id="input-delete-data"
+                class="btn-group btn-group-toggle"
+                data-toggle="buttons"
+            >
+                <label class="btn btn-default active">
+                    <input
+                        type="radio"
+                        name="delete_data"
+                        value="0" <?= set_radio('delete_data', '0', TRUE); ?>
+                    ><?= lang('admin::lang.text_no'); ?>
+                </label>
+                <label class="btn btn-danger">
+                    <input
+                        type="radio"
+                        name="delete_data"
+                        value="1" <?= set_radio('delete_data', '1'); ?>
+                    ><?= lang('admin::lang.text_yes'); ?>
+                </label>
             </div>
         </div>
     <?php } ?>

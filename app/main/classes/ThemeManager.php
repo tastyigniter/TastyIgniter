@@ -41,14 +41,14 @@ class ThemeManager
 
     protected $config = [
         'allowedImageExt' => ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'],
-        'allowedFileExt'  => ['html', 'txt', 'xml', 'js', 'css', 'php', 'json'],
+        'allowedFileExt' => ['html', 'txt', 'xml', 'js', 'css', 'php', 'json'],
     ];
 
     protected static $allowedSourceModels = [
-        '_layouts'  => Layout::class,
-        '_pages'    => Page::class,
+        '_layouts' => Layout::class,
+        '_pages' => Page::class,
         '_partials' => Partial::class,
-        '_content'  => Content::class,
+        '_content' => Content::class,
     ];
 
     protected $loadedConfig;
@@ -376,12 +376,12 @@ class ThemeManager
             return FALSE;
 
         return [
-            'fileName'     => $source->getFileName(),
+            'fileName' => $source->getFileName(),
             'baseFileName' => $source->getBaseFileName(),
-            'settings'     => $source->settings,
-            'markup'       => $source->getMarkup(),
-            'codeSection'  => $source->getCode(),
-            'fileSource'   => $source,
+            'settings' => $source->settings,
+            'markup' => $source->getMarkup(),
+            'codeSection' => $source->getCode(),
+            'fileSource' => $source,
         ];
     }
 

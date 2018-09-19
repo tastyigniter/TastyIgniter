@@ -2,7 +2,6 @@
 
 namespace System\Classes;
 
-use Exception;
 use File;
 use Illuminate\Support\ServiceProvider;
 use Lang;
@@ -55,12 +54,7 @@ class BaseExtension extends ServiceProvider
      */
     public function extensionMeta()
     {
-        $_module = get_class($this);
-
-        $config = $this->getConfigFromFile(sprintf("The configuration file for extension <b>%s</b> does not exist. ".
-            "Create the file or override extensionMeta() method in the extension class.", $_module));
-
-        return $config;
+        return $this->getConfigFromFile();
     }
 
     /**
@@ -100,13 +94,6 @@ class BaseExtension extends ServiceProvider
      */
     public function registerPermissions()
     {
-        $config = $this->getConfigFromFile();
-        if (is_array($config) AND array_key_exists('extension_permission', $config)) {
-            return [
-                $config['extension_permission']['name'] => $config['extension_permission'],
-            ];
-        }
-
         return [];
     }
 

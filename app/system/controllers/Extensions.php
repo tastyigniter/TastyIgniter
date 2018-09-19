@@ -20,12 +20,12 @@ class Extensions extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'          => 'System\Models\Extensions_model',
-            'title'          => 'lang:system::lang.extensions.text_title',
-            'emptyMessage'   => 'lang:system::lang.extensions.text_empty',
-            'defaultSort'    => ['title', 'ASC'],
+            'model' => 'System\Models\Extensions_model',
+            'title' => 'lang:system::lang.extensions.text_title',
+            'emptyMessage' => 'lang:system::lang.extensions.text_empty',
+            'defaultSort' => ['title', 'ASC'],
             'showCheckboxes' => FALSE,
-            'configFile'     => 'extensions_model',
+            'configFile' => 'extensions_model',
         ],
     ];
 
@@ -125,8 +125,7 @@ class Extensions extends \Admin\Classes\AdminController
             $this->vars['extensionModel'] = $model;
             $this->vars['extensionMeta'] = $meta;
             $this->vars['extensionName'] = $meta['name'] ?? '';
-            $this->vars['extensionData'] = $model->data;
-            $this->vars['filesToDelete'] = $extensionManager->files($extensionCode);
+            $this->vars['extensionData'] = count($extensionManager->files($extensionCode, 'database/migrations')) > 0;
         }
         catch (Exception $ex) {
             $this->handleError($ex);
@@ -236,9 +235,8 @@ class Extensions extends \Admin\Classes\AdminController
         $extension = ExtensionManager::instance()->findExtension($extensionCode);
         $meta = $extension->extensionMeta();
 
-        if (Extensions_model::deleteExtension($extensionCode, (post('delete_data') == 1))) {
-            $name = isset($meta['name']) ? $meta['name'] : '';
-
+        if (Extensions_model::deleteExtension($extensionCode, post('delete_data') == 1)) {
+            $name = $meta['name'] ?? '';
             flash()->success(sprintf(lang('admin::lang.alert_success'), "Extension {$name} deleted "));
         }
         else {

@@ -128,6 +128,8 @@ class Extensions_model extends Model
     {
         $extensions = self::get();
 
+        $installedExtensions = [];
+
         $extensionManager = ExtensionManager::instance();
         foreach ($extensionManager->namespaces() as $namespace => $path) {
 
@@ -142,9 +144,9 @@ class Extensions_model extends Model
             if ($extension = $extensions->where('name', $code)->first()) continue;
 
             self::create([
-                'type'    => 'module',
-                'name'    => $code,
-                'title'   => $extensionMeta->name,
+                'type' => 'module',
+                'name' => $code,
+                'title' => $extensionMeta->name,
                 'version' => $extensionMeta->version,
             ]);
 
@@ -172,7 +174,7 @@ class Extensions_model extends Model
         if ($extensionModel AND $extensionModel->meta) {
             $extensionModel->status = TRUE;
             $extensionModel->fill([
-                'title'   => $extensionModel->meta['name'],
+                'title' => $extensionModel->meta['name'],
                 'version' => $extensionModel->meta['version'],
             ])->save();
         }
@@ -215,18 +217,19 @@ class Extensions_model extends Model
      * Delete a single extension by code
      *
      * @param string $code
-     * @param bool $deleteData whether to delete extension data
+     * @param bool $deleteData whether to purge extension data
+     * @param bool $keepFiles
      *
      * @return bool
+     * @throws \Exception
      */
     public static function deleteExtension($code = '', $deleteData = TRUE, $keepFiles = FALSE)
     {
-        $extensionModel = self::where('name', $code)->first();
-
-        if ($extensionModel AND $deleteData) {
+        if ($extensionModel = self::where('name', $code)->first())
             $extensionModel->delete();
+
+        if ($deleteData)
             UpdateManager::instance()->purgeExtension($code);
-        }
 
         $extensionManager = ExtensionManager::instance();
 

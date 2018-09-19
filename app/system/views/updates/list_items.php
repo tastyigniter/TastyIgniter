@@ -8,10 +8,10 @@
                 <h5 class="<?= $ignored ? 'text-muted' : ''; ?>">
                     <?= str_limit($item['name'], 22) ?> <i class="fa fa-long-arrow-right"></i>
                     <span class="small">
-                                <?= sprintf(lang('system::lang.updates.text_item_update_summary'), $item['installedVer'], $item['version']) ?>
-                            </span>
+                        <?= sprintf(lang('system::lang.updates.text_item_update_summary'), $item['installedVer'], $item['version']) ?>
+                    </span>
                 </h5>
-                <?php if (isset($item['tags']['data'])) foreach ($item['tags']['data'] as $tag) { ?>
+                <?php if (isset($item['tags']['data'][0]) AND $tag = $item['tags']['data'][0]) { ?>
                     <p class="<?= $ignored ? 'text-muted ' : ''; ?>small">
                         <strong><?= $tag['tag']; ?>:</strong> <?= $tag['description'] ?>
                     </p>

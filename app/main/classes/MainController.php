@@ -226,12 +226,12 @@ class MainController extends BaseController
 
         // The 'this' variable is reserved for default variables.
         $this->vars['this'] = [
-            'page'       => $this->page,
-            'layout'     => $this->layout,
-            'theme'      => $this->theme,
-            'param'      => $this->router->getParameters(),
+            'page' => $this->page,
+            'layout' => $this->layout,
+            'theme' => $this->theme,
+            'param' => $this->router->getParameters(),
             'controller' => $this,
-            'session'    => App::make('session'),
+            'session' => App::make('session'),
         ];
 
         // Initializes the custom layout and page objects.
@@ -464,10 +464,10 @@ class MainController extends BaseController
         $this->loader = new Loader;
 
         $options = [
-            'auto_reload'   => TRUE,
-            'cache'         => TRUE,
+            'auto_reload' => TRUE,
+            'cache' => TRUE,
             'templateClass' => 'Main\\Classes\\Template',
-            'debug'         => Config::get('app.debug', FALSE),
+            'debug' => Config::get('app.debug', FALSE),
         ];
 
         $useCache = TRUE;

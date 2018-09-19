@@ -151,9 +151,9 @@ return [
     'assets' => [
 
         'media' => [
-            'disk'   => 'media',
+            'disk' => 'media',
             'folder' => 'data',
-            'path'   => '/assets/images/data',
+            'path' => '/assets/images/data',
         ],
 
     ],
@@ -178,6 +178,6 @@ return [
     |
     */
 
-    'filePermissions'   => '777',
+    'filePermissions' => '777',
     'folderPermissions' => '777',
 ];

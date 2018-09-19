@@ -55,7 +55,7 @@ class HubManager
     public function applyItems($itemNames = [])
     {
         $response = $this->requestRemoteData('core/apply', [
-            'items'   => json_encode($itemNames),
+            'items' => json_encode($itemNames),
             'version' => params('ti_version'),
         ]);
 
@@ -68,10 +68,10 @@ class HubManager
 
         if (!$response = Cache::get($cacheKey)) {
             $response = $this->requestRemoteData('core/apply', [
-                'items'   => json_encode($itemNames),
+                'items' => json_encode($itemNames),
                 'include' => 'tags',
                 'version' => params('ti_version'),
-                'force'   => $force,
+                'force' => $force,
             ]);
 
             if ($cacheKey AND is_array($response)) {
@@ -185,9 +185,14 @@ class HubManager
         $fileSha = sha1_file($filePath);
 
         if ($fileHash != $fileSha) {
-            Log::info(file_get_contents($filePath));
+            $error = @json_decode(file_get_contents($filePath), TRUE);
             @unlink($filePath);
-            throw new ApplicationException("Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
+
+            Log::info($error);
+            if (!$errorMessage = array_get($error, 'message'))
+                $errorMessage = "Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)";
+
+            throw new ApplicationException($errorMessage);
         }
 
         return TRUE;
@@ -208,7 +213,7 @@ class HubManager
         // SKIP SSL Check for Wamp
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        
+
         $params['url'] = base64_encode(root_url());
 
         if ($siteKey = $this->getSecurityKey()) {

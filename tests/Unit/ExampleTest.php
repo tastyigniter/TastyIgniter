@@ -2,9 +2,6 @@
 
 namespace Tests\Unit;
 
-use App;
-use Carbon\Carbon;
-use SamPoyigi\Local\Classes\Location;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -16,6 +13,6 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(TRUE);
     }
 }

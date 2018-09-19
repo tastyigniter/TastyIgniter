@@ -34,6 +34,9 @@ class ThemeInstall extends Command
         ]]);
 
         $themeDetails = array_get($response, 'data.0');
+        if (!$themeDetails)
+            return $this->output->writeln(sprintf('<info>Theme %s not found</info>', $themeName));
+
         $code = array_get($themeDetails, 'code');
         $hash = array_get($themeDetails, 'hash');
         $version = array_get($themeDetails, 'version');
@@ -42,7 +45,7 @@ class ThemeInstall extends Command
         $manager->downloadFile($code, $hash, [
             'name' => $code,
             'type' => 'theme',
-            'ver'  => $version,
+            'ver' => $version,
         ]);
 
         $this->output->writeln(sprintf('<info>Extracting theme %s files</info>', $code));

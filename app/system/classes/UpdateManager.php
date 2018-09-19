@@ -274,7 +274,7 @@ class UpdateManager
 
         $items = $this->getHubManager()->listItems([
             'browse' => 'popular',
-            'type'   => $itemType,
+            'type' => $itemType,
         ]);
 
         $installedItems = array_column($installedItems, 'name');
@@ -290,7 +290,7 @@ class UpdateManager
         $installedItems = $this->getInstalledItems();
 
         $items = $this->getHubManager()->listItems([
-            'type'   => $itemType,
+            'type' => $itemType,
             'search' => $searchQuery,
         ]);
 
@@ -370,29 +370,26 @@ class UpdateManager
             if ($extensionObj AND $meta = $extensionObj->extensionMeta()) {
                 $installedItems['extensions'][] = [
                     'name' => $extensionCode,
-                    'ver'  => $meta['version'],
+                    'ver' => $meta['version'],
                     'type' => 'extension',
                 ];
             }
         }
 
-        $themeManager = $this->getThemeManager();
-        foreach ($themeManager->listThemes() as $themeCode) {
-            if ($theme = $themeManager->findTheme($themeCode)) {
+        foreach ($this->themeManager->listThemes() as $themeCode) {
+            if ($theme = $this->themeManager->findTheme($themeCode)) {
                 $installedItems['themes'][] = [
                     'name' => $theme->name,
-                    'ver'  => $theme->version ?? null,
+                    'ver' => $theme->version ?? null,
                     'type' => 'theme',
                 ];
             }
         }
 
-        $this->installedItems = array_collapse($installedItems);
-
         if (!is_null($type))
             return $installedItems[$type] ?? [];
 
-        return $this->installedItems;
+        return $this->installedItems = array_collapse($installedItems);
     }
 
     public function requestApplyItems($names)
@@ -503,13 +500,5 @@ class UpdateManager
     protected function getHubManager()
     {
         return $this->hubManager;
-    }
-
-    /**
-     * @return \Main\Classes\ThemeManager
-     */
-    protected function getThemeManager()
-    {
-        return $this->themeManager;
     }
 }
