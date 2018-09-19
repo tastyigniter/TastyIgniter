@@ -592,10 +592,10 @@ class ThemeManager
 
         foreach ([
                      'code',
+                     'name',
                      'description',
                      'version',
                      'author',
-                     'tags',
                  ] as $item) {
 
             if (!array_key_exists($item, $config)) {

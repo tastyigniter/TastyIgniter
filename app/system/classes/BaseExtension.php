@@ -161,55 +161,43 @@ class BaseExtension extends ServiceProvider
      *
      * @return array|bool
      */
-    protected function getConfigFromFile($throwException = FALSE)
+    protected function getConfigFromFile()
     {
         if (isset($this->config)) {
             return $this->config;
         }
 
-        list($extension,) = explode('\\', get_class($this));
-
-        $this->config = $this->loadConfig($extension, $throwException);
+        $this->config = $this->loadConfig();
 
         return $this->config;
     }
 
-    public function loadConfig($name, $throwException = FALSE)
+    protected function loadConfig()
     {
-        $config = null;
+        $className = get_class($this);
+        $configPath = realpath(dirname(File::fromClass($className)));
+        $configFile = $configPath.'/extension.json';
 
-        try {
-            $configPath = realpath(dirname(File::fromClass(get_called_class())));
+        if (!File::exists($configFile))
+            throw new SystemException("The configuration file for extension <b>{$className}</b> does not exist. ".
+                'Create the file or override extensionMeta() method in the extension class.');
 
-            $configFile = $configPath.'/extension.json';
-            $config = json_decode(File::get($configFile), TRUE);
+        $config = json_decode(File::get($configFile), TRUE);
+        foreach ([
+                     'code',
+                     'name',
+                     'description',
+                     'version',
+                     'author',
+                     'icon',
+                 ] as $item) {
 
-            foreach ([
-                         'code',
-                         'name',
-                         'description',
-                         'version',
-                         'author',
-                         'icon',
-                         'tags',
-                     ] as $item) {
-
-                if (!array_key_exists($item, $config)) {
-                    if (!$throwException) return FALSE;
-
-                    throw new SystemException(sprintf(
-                        Lang::get('system::lang.missing.config_key'),
-                        $item, $configFile
-                    ));
-                }
+            if (!array_key_exists($item, $config)) {
+                throw new SystemException(sprintf(
+                    Lang::get('system::lang.missing.config_key'),
+                    $item, File::localToPublic($configFile)
+                ));
             }
-        } catch (Exception $ex) {
-            if (!$throwException) return FALSE;
-
-            throw new SystemException(sprintf(
-                "The registration file for extension <b>%s</b> does not appear to contain a valid array."
-                , $name
-            ));
         }
 
         return $config;

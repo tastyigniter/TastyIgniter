@@ -51,7 +51,9 @@ class UpdateManager
     /**
      * @var \Igniter\Flame\Database\Migrations\DatabaseMigrationRepository
      */
-    public $repository;
+    protected $repository;
+
+    protected $disableCoreUpdates;
 
     public function initialize()
     {
@@ -61,6 +63,7 @@ class UpdateManager
 
         $this->tempDirectory = temp_path();
         $this->baseDirectory = base_path();
+        $this->disableCoreUpdates = config('system.disableCoreUpdates', FALSE);
 
         $this->bindContainerObjects();
     }
@@ -334,6 +337,10 @@ class UpdateManager
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
             $update['installedVer'] = array_get($installedItems, $update['code'].'.ver');
+
+            if (array_get($update, 'type') == 'core' AND $this->disableCoreUpdates) {
+                continue;
+            }
 
             if ($this->isMarkedAsIgnored($update['code'])) {
                 $ignoredItems[] = $update;
