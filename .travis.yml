@@ -22,6 +22,7 @@ branches:
 before_script:
   - git reset --hard HEAD
   - mysql -e 'create database homestead_test;'
+  - touch .env
   - composer self-update
   - travis_retry composer install --no-interaction --prefer-source
 
