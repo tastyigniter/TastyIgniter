@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => 'mysql',
 
     /*
     |--------------------------------------------------------------------------
@@ -35,32 +35,32 @@ return [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => database_path('database.sqlite'),
             'prefix' => '',
         ],
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'database'),
-            'username' => env('DB_USERNAME', 'username'),
-            'password' => env('DB_PASSWORD', 'password'),
-            'unix_socket' => env('DB_SOCKET', ''),
+            'host' => '127.0.0.1',
+            'port' => 3306,
+            'database' => 'database',
+            'username' => 'username',
+            'password' => 'password',
+            'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => env('DB_PREFIX', 'ti_'),
-            'strict' => false,
+            'prefix' => 'ti_',
+            'strict' => FALSE,
             'engine' => null,
         ],
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'database'),
-            'username' => env('DB_USERNAME', 'username'),
-            'password' => env('DB_PASSWORD', 'password'),
+            'host' => '127.0.0.1',
+            'port' => 5432,
+            'database' => 'database',
+            'username' => 'username',
+            'password' => 'password',
             'charset' => 'utf8',
             'prefix' => env('DB_PREFIX', ''),
             'schema' => 'public',
@@ -69,13 +69,13 @@ return [
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'database'),
-            'username' => env('DB_USERNAME', 'username'),
-            'password' => env('DB_PASSWORD', 'password'),
+            'host' => 'localhost',
+            'port' => 1433,
+            'database' => 'database',
+            'username' => 'username',
+            'password' => 'password',
             'charset' => 'utf8',
-            'prefix' => env('DB_PREFIX', ''),
+            'prefix' => '',
         ],
 
     ],
@@ -109,12 +109,10 @@ return [
         'client' => 'predis',
 
         'default' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'password' => env('REDIS_PASSWORD', null),
-            'port' => env('REDIS_PORT', 6379),
+            'host' => '127.0.0.1',
+            'password' => null,
+            'port' => 6379,
             'database' => 0,
         ],
-
     ],
-
 ];
