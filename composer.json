@@ -27,6 +27,7 @@
   "require": {
     "php": ">=7.0.0",
     "ext-mbstring": "*",
+    "ext-json": "*",
     "ext-openssl": "*",
     "composer/installers": "~1.0",
     "laravel/framework": "5.5.*",
@@ -42,6 +43,11 @@
     "psr-4": {
       "Tests\\": "tests"
     }
+  },
+  "scripts": {
+    "post-create-project-cmd": [
+      "php artisan key:generate"
+    ]
   },
   "extra": {
     "merge-plugin": {
