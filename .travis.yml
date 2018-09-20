@@ -25,5 +25,6 @@ before_script:
   - touch .env
   - composer self-update
   - travis_retry composer install --no-interaction --prefer-source
+  - php artisan key:generate
 
 script: vendor/bin/phpunit --verbose
