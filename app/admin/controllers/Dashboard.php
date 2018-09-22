@@ -119,12 +119,12 @@ class Dashboard extends \Admin\Classes\AdminController
         $results = $this->Activities_model->paginateWithFilter($this->getFilter());
         foreach ($results->list as $result) {
             $activities[] = [
-                'activity_id'  => $result['activity_id'],
-                'icon'         => 'fa fa-tasks',
-                'message'      => $result['message'],
-                'time'         => mdate('%h:%i %A', strtotime($result['date_added'])),
+                'activity_id' => $result['activity_id'],
+                'icon' => 'fa fa-tasks',
+                'message' => $result['message'],
+                'time' => mdate('%h:%i %A', strtotime($result['date_added'])),
                 'time_elapsed' => time_elapsed($result['date_added']),
-                'state'        => $result['status'] == '1' ? 'read' : 'unread',
+                'state' => $result['status'] == '1' ? 'read' : 'unread',
             ];
         }
 
@@ -138,10 +138,10 @@ class Dashboard extends \Admin\Classes\AdminController
         $results = $this->Dashboard_model->getTopCustomers($this->getFilter());
         foreach ($results as $result) {
             $top_customers[] = [
-                'first_name'   => $result['first_name'],
-                'last_name'    => $result['last_name'],
+                'first_name' => $result['first_name'],
+                'last_name' => $result['last_name'],
                 'total_orders' => $result['total_orders'],
-                'total_sale'   => $this->currency->format($result['total_sale']),
+                'total_sale' => $this->currency->format($result['total_sale']),
             ];
         }
 
@@ -171,16 +171,16 @@ class Dashboard extends \Admin\Classes\AdminController
             $date_added = $current_date == $date_added ? lang('admin::lang.dashboard.text_today') : mdate('%d %M %y', strtotime($date_added));
 
             $orders[] = [
-                'order_id'      => $result['order_id'],
+                'order_id' => $result['order_id'],
                 'location_name' => $result['location_name'],
-                'first_name'    => $result['first_name'],
-                'last_name'     => $result['last_name'],
-                'order_status'  => $result['status_name'],
-                'status_color'  => $result['status_color'],
-                'order_time'    => mdate('%H:%i', strtotime($result['order_time'])),
-                'order_type'    => ($result['order_type'] == '1') ? lang('admin::lang.dashboard.text_delivery') : lang('admin::lang.dashboard.text_collection'),
-                'date_added'    => $date_added,
-                'edit'          => $this->pageUrl('orders/edit?id='.$result['order_id']),
+                'first_name' => $result['first_name'],
+                'last_name' => $result['last_name'],
+                'order_status' => $result['status_name'],
+                'status_color' => $result['status_color'],
+                'order_time' => mdate('%H:%i', strtotime($result['order_time'])),
+                'order_type' => ($result['order_type'] == '1') ? lang('admin::lang.dashboard.text_delivery') : lang('admin::lang.dashboard.text_collection'),
+                'date_added' => $date_added,
+                'edit' => $this->controller->pageUrl('orders/edit?id='.$result['order_id']),
             ];
         }
 

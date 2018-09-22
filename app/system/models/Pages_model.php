@@ -1,6 +1,6 @@
 <?php
 
-namespace System\models;
+namespace System\Models;
 
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Model;

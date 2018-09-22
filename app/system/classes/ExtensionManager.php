@@ -44,9 +44,9 @@ class ExtensionManager
     protected $paths = [];
 
     /**
-     * @var array used Set whether extensions have been initialized.
+     * @var array used Set whether extensions have been booted.
      */
-    protected $initialized = FALSE;
+    protected $booted = FALSE;
 
     /**
      * @var array used Set whether extensions have been registered.
@@ -226,7 +226,7 @@ class ExtensionManager
                 $enable = !(!$extensionObj OR $extensionObj->disabled);
             }
 
-            $this->updateExtension($code, $enable);
+            $this->updateInstalledExtensions($code, $enable);
         }
     }
 
@@ -242,10 +242,16 @@ class ExtensionManager
         if (is_string($extension) AND (!$extension = $this->findExtension($extension)))
             return FALSE;
 
-        if (!isset($extension->require) OR !$extension->require)
+        if (!$require = array_get($extension->extensionMeta(), 'require'))
             return null;
 
-        return (array)$extension->require;
+        if (!is_array($require))
+            $require = [$require];
+
+        if (!isset($require[0]))
+            $require = array_keys($require);
+
+        return $require;
     }
 
     /**
@@ -268,8 +274,9 @@ class ExtensionManager
                 return isset($extensions[$dependCode]);
             });
 
+            $depends = array_diff($depends, $result);
             if (count($depends) > 0)
-                array_push($result, $code);
+                continue;
 
             $result[] = $code;
         }
@@ -370,30 +377,30 @@ class ExtensionManager
     }
 
     /**
-     * Runs the initialize() method on all extensions. Can only be called once.
+     * Runs the boot() method on all extensions. Can only be called once.
      * @return void
      */
-    public function initializeExtensions()
+    public function bootExtensions()
     {
-        if ($this->initialized) {
+        if ($this->booted) {
             return;
         }
 
         foreach ($this->extensions as $name => $extension) {
-            $this->initializeExtension($extension);
+            $this->bootExtension($extension);
         }
 
-        $this->initialized = TRUE;
+        $this->booted = TRUE;
     }
 
     /**
-     * Initialize a single extension.
+     * Boot a single extension.
      *
      * @param \System\Classes\BaseExtension $extension
      *
      * @return void
      */
-    public function initializeExtension($extension = null)
+    public function bootExtension($extension = null)
     {
         if (!$extension) {
             return;
@@ -403,7 +410,7 @@ class ExtensionManager
             return;
         }
 
-        $extension->initialize();
+        $extension->boot();
     }
 
     /**
@@ -503,24 +510,6 @@ class ExtensionManager
     }
 
     /**
-     * Returns a extension registration class based on its name.
-     *
-     * @param $name
-     *
-     * @return mixed|null
-     */
-    public function findRequiredExtensions($name)
-    {
-        if (!$extension = $this->findExtension($name)) {
-            return null;
-        }
-
-        $meta = $extension->extensionMeta();
-
-        return isset($meta['required']) ? $meta['required'] : null;
-    }
-
-    /**
      * Checks to see if an extension name is well formed.
      *
      * @param $name
@@ -597,21 +586,26 @@ class ExtensionManager
     public function loadInstalled()
     {
         if (($installedExtensions = setting('installed_extensions')) AND is_array($installedExtensions)) {
-            $this->installedExtensions = $installedExtensions;
+            $this->installedExtensions = array_dot($installedExtensions);
         }
     }
 
     /**
      * @param string $code
-     * @param bool $disable
-     *
+     * @param bool $enable
      * @return bool
      */
-    public function updateExtension($code, $enable = TRUE)
+    public function updateInstalledExtensions($code, $enable = TRUE)
     {
         $code = $this->getIdentifier($code);
 
-        $this->installedExtensions[$code] = $enable;
+        if (is_null($enable)) {
+            array_pull($this->installedExtensions, $code);
+        }
+        else {
+            $this->installedExtensions[$code] = $enable;
+        }
+
         $this->saveInstalled();
 
         if (!$enable AND $extension = $this->findExtension($code)) {

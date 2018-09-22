@@ -24,7 +24,6 @@ return [
     Igniter\Flame\Filesystem\FilesystemServiceProvider::class,
     Igniter\Flame\Flash\FlashServiceProvider::class,
     Igniter\Flame\Html\HtmlServiceProvider::class,
-    Igniter\Flame\Location\LocationServiceProvider::class,
     Igniter\Flame\Mail\MailServiceProvider::class,
     Igniter\Flame\Notifications\NotificationServiceProvider::class,
 //    Igniter\Flame\Html\UrlServiceProvider::class, // force https -- url policy

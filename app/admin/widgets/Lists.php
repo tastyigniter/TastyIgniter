@@ -559,7 +559,7 @@ class Lists extends BaseWidget
             $this->pageLimit,
             $this->currentPageNumber,
             [
-                'path'     => Paginator::resolveCurrentPath(),
+                'path' => Paginator::resolveCurrentPath(),
                 'pageName' => 'page',
             ]
         );
@@ -735,10 +735,10 @@ class Lists extends BaseWidget
         $response = $this->makePartial($column->path ?: $column->columnName, [
             'listColumn' => $column,
             'listRecord' => $record,
-            'listValue'  => $value,
-            'column'     => $column,
-            'record'     => $record,
-            'value'      => $value,
+            'listValue' => $value,
+            'column' => $column,
+            'record' => $record,
+            'value' => $value,
         ]);
 
         return $response;
@@ -757,8 +757,8 @@ class Lists extends BaseWidget
      */
     protected function evalSwitchTypeValue($record, $column, $value)
     {
-        $onText = lang($column->onText ?? 'admin::default.text_enabled');
-        $offText = lang($column->offText ?? 'admin::default.text_disabled');
+        $onText = lang($column->onText ?? 'admin::lang.text_enabled');
+        $offText = lang($column->offText ?? 'admin::lang.text_disabled');
 
         return $value ? $onText : $offText;
     }
@@ -889,7 +889,7 @@ class Lists extends BaseWidget
     public function setSearchOptions($options = [])
     {
         extract(array_merge([
-            'mode'  => null,
+            'mode' => null,
             'scope' => null,
         ], $options));
 

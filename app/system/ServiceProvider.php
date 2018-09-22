@@ -66,7 +66,7 @@ class ServiceProvider extends AppServiceProvider
 
         $this->defineEloquentMorphMaps();
 
-        ExtensionManager::instance()->initializeExtensions();
+        ExtensionManager::instance()->bootExtensions();
 
         $this->updateTimezone();
         $this->extendValidator();
@@ -151,16 +151,16 @@ class ServiceProvider extends AppServiceProvider
 
         foreach (
             [
-                'igniter.util'      => Console\Commands\IgniterUtil::class,
-                'igniter.up'        => Console\Commands\IgniterUp::class,
-                'igniter.down'      => Console\Commands\IgniterDown::class,
-                'igniter.install'   => Console\Commands\IgniterInstall::class,
-                'igniter.update'    => Console\Commands\IgniterUpdate::class,
+                'igniter.util' => Console\Commands\IgniterUtil::class,
+                'igniter.up' => Console\Commands\IgniterUp::class,
+                'igniter.down' => Console\Commands\IgniterDown::class,
+                'igniter.install' => Console\Commands\IgniterInstall::class,
+                'igniter.update' => Console\Commands\IgniterUpdate::class,
                 'extension.install' => Console\Commands\ExtensionInstall::class,
                 'extension.refresh' => Console\Commands\ExtensionRefresh::class,
-                'extension.remove'  => Console\Commands\ExtensionRemove::class,
-                'theme.install'     => Console\Commands\ThemeInstall::class,
-                'theme.remove'      => Console\Commands\ThemeRemove::class,
+                'extension.remove' => Console\Commands\ExtensionRemove::class,
+                'theme.install' => Console\Commands\ThemeInstall::class,
+                'theme.remove' => Console\Commands\ThemeRemove::class,
             ] as $command => $class
         ) {
             $this->registerConsoleCommand($command, $class);
@@ -257,19 +257,19 @@ class ServiceProvider extends AppServiceProvider
     protected function defineEloquentMorphMaps()
     {
         Relation::morphMap([
-            'activities'     => 'System\Models\Activities_model',
-            'countries'      => 'System\Models\Countries_model',
-            'currencies'     => 'System\Models\Currencies_model',
-            'extensions'     => 'System\Models\Extensions_model',
-            'languages'      => 'System\Models\Languages_model',
-            'mail_layouts'   => 'System\Models\Mail_layouts_model',
+            'activities' => 'System\Models\Activities_model',
+            'countries' => 'System\Models\Countries_model',
+            'currencies' => 'System\Models\Currencies_model',
+            'extensions' => 'System\Models\Extensions_model',
+            'languages' => 'System\Models\Languages_model',
+            'mail_layouts' => 'System\Models\Mail_layouts_model',
             'mail_templates' => 'System\Models\Mail_templates_model',
-            'message_meta'   => 'System\Models\Message_meta_model',
-            'messages'       => 'System\Models\Messages_model',
-            'pages'          => 'System\Models\Pages_model',
-            'permissions'    => 'System\Models\Permissions_model',
-            'settings'       => 'System\Models\Settings_model',
-            'themes'         => 'System\Models\Themes_model',
+            'message_meta' => 'System\Models\Message_meta_model',
+            'messages' => 'System\Models\Messages_model',
+            'pages' => 'System\Models\Pages_model',
+            'permissions' => 'System\Models\Permissions_model',
+            'settings' => 'System\Models\Settings_model',
+            'themes' => 'System\Models\Themes_model',
         ]);
     }
 }

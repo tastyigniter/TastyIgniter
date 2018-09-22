@@ -221,19 +221,19 @@ class ComponentManager
      */
     public function makeComponent($name, $page = null, $params = [])
     {
-        $class_path = $this->resolve($name);
-        if (!$class_path)
+        $className = $this->resolve($name);
+        if (!$className)
             throw new SystemException(sprintf(
-                'Class name is not registered for the component "%s". Check the component extension.', $name
+                'Component "%s" is not registered.', $name
             ));
 
-        if (!class_exists($class_path))
+        if (!class_exists($className))
             throw new SystemException(sprintf(
-                'Component class not found "%s". Check the component extension.', $class_path
+                'Component class "%s" not found.', $className
             ));
 
         // Create and register the new controller.
-        $component = new $class_path($page, $params);
+        $component = new $className($page, $params);
         $component->name = $name;
 
         return $component;
@@ -290,13 +290,13 @@ class ComponentManager
 
         if ($addAliasProperty) {
             $property = [
-                'property'          => 'alias',
-                'label'             => '',
-                'type'              => 'text',
-                'comment'           => '',
+                'property' => 'alias',
+                'label' => '',
+                'type' => 'text',
+                'comment' => '',
                 'validationPattern' => '^[a-zA-Z]+[0-9a-z\_]*$',
                 'validationMessage' => '',
-                'required'          => TRUE,
+                'required' => TRUE,
                 'showExternalParam' => FALSE,
             ];
             $result['alias'] = $property;
@@ -309,9 +309,9 @@ class ComponentManager
             if (!$this->checkComponentPropertyType($propertyType)) continue;
 
             $property = [
-                'property'          => $name,
-                'label'             => array_get($params, 'label', $name),
-                'type'              => $propertyType,
+                'property' => $name,
+                'label' => array_get($params, 'label', $name),
+                'type' => $propertyType,
                 'showExternalParam' => array_get($params, 'showExternalParam', FALSE),
             ];
 

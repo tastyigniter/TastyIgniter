@@ -28,7 +28,6 @@ use System\Classes\BaseController;
 use System\Classes\ComponentManager;
 use System\Helpers\ViewHelper;
 use System\Traits\AssetMaker;
-use SystemException;
 use URL;
 use View;
 
@@ -633,11 +632,8 @@ class MainController extends BaseController
     {
         $previousContext = $this->componentContext;
         if (!$componentObj = $this->findComponentByAlias($name)) {
-            if ($throwException) {
-                throw new ApplicationException(sprintf(
-                    lang('main::lang.not_found.component'), $name
-                ));
-            }
+            $this->handleException(sprintf(lang('main::lang.not_found.component'), $name), $throwException);
+            return FALSE;
         }
 
         $componentObj->id = uniqid($name);
@@ -674,15 +670,8 @@ class MainController extends BaseController
         $codeObj = $addToLayout ? $this->layoutObj : $this->pageObj;
         $templateObj = $addToLayout ? $this->layout : $this->page;
 
-        try {
-            $manager = ComponentManager::instance();
-            $componentObj = $manager->makeComponent($name, $codeObj, $properties);
-        }
-        catch (SystemException $ex) {
-            $componentObj = new BlankComponent($codeObj, [], sprintf(
-                    lang('main::lang.not_found.component'), $name
-                ).' => '.$ex->getMessage());
-        }
+        $manager = ComponentManager::instance();
+        $componentObj = $manager->makeComponent($name, $codeObj, $properties);
 
         $componentObj->alias = $alias;
         $this->vars[$alias] = $componentObj;
@@ -779,21 +768,13 @@ class MainController extends BaseController
                 $componentObj = $this->componentContext;
             }
             elseif (($componentObj = $this->findComponentByPartial($partialName)) === null) {
-                if ($throwException)
-                    throw new ApplicationException(sprintf(
-                        Lang::get('main::lang.not_found.partial'), $partialName
-                    ));
-
+                $this->handleException(sprintf(lang('main::lang.not_found.partial'), $partialName), $throwException);
                 return FALSE;
             }
         }
         else {
             if (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
-                if ($throwException)
-                    throw new ApplicationException(sprintf(
-                        Lang::get('main::lang.not_found.component'), $componentAlias
-                    ));
-
+                $this->handleException(sprintf(lang('main::lang.not_found.component'), $componentAlias), $throwException);
                 return FALSE;
             }
         }
@@ -812,9 +793,7 @@ class MainController extends BaseController
             $partial = ComponentPartial::loadCached($componentObj, $partialName);
 
         if ($partial === null) {
-            if ($throwException)
-                throw new ApplicationException(sprintf(Lang::get('main::lang.not_found.partial'), $name));
-
+            $this->handleException(sprintf(lang('main::lang.not_found.partial'), $name), $throwException);
             return FALSE;
         }
 
@@ -824,11 +803,7 @@ class MainController extends BaseController
     protected function loadPartial($name, $throwException = TRUE)
     {
         if (($partial = Partial::loadCached($this->theme, $name)) === null) {
-            if ($throwException)
-                throw new ApplicationException(sprintf(
-                    Lang::get('main::lang.not_found.partial'), $name
-                ));
-
+            $this->handleException(sprintf(lang('main::lang.not_found.partial'), $name), $throwException);
             return FALSE;
         }
 
@@ -864,7 +839,7 @@ class MainController extends BaseController
     {
         $params = array_merge($this->router->getParameters(), $params);
 
-        return $this->pageUrl($this->page->getFileName(), $params);
+        return $this->controller->pageUrl($this->page->getFileName(), $params);
     }
 
     public function themeUrl($url = null)
@@ -904,5 +879,13 @@ class MainController extends BaseController
     public function redirectBack()
     {
         return Redirect::back();
+    }
+
+    protected function handleException($message, $throwException)
+    {
+        if ($throwException)
+            throw new ApplicationException($message);
+
+        flash()->danger($message);
     }
 }

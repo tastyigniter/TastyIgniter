@@ -137,14 +137,12 @@ class Extensions extends \Admin\Classes\AdminController
         $extensionCode = post('code');
         $extension = ExtensionManager::instance()->findExtension($extensionCode);
 
-        if (Extensions_model::install($extensionCode, $extension)) {
-            $meta = $extension->extensionMeta();
-            $title = isset($meta['name']) ? $meta['name'] : '';
-
+        if ($feedback = $this->checkDependencies($extension)) {
+            flash()->warning($feedback);
+        }
+        else if (Extensions_model::install($extensionCode, $extension)) {
+            $title = array_get($extension->extensionMeta(), 'name');
             flash()->success(sprintf(lang('admin::lang.alert_success'), "Extension {$title} installed "));
-            if ($extension->registerComponents()) {
-                flash()->info(sprintf(lang('system::lang.extensions.alert_info_layouts'), admin_url('layouts')));
-            }
         }
         else {
             flash()->danger(lang('admin::lang.alert_error_try_again'));
@@ -159,11 +157,10 @@ class Extensions extends \Admin\Classes\AdminController
         $extension = ExtensionManager::instance()->findExtension($extensionCode);
 
         if (Extensions_model::uninstall($extensionCode, $extension) AND $extension) {
-            $meta = $extension->extensionMeta();
-            $extension_name = isset($meta['name']) ? $meta['name'] : '';
+            $title = array_get($extension->extensionMeta(), 'name');
 
             flash()->success(sprintf(
-                lang('admin::lang.alert_success'), "Extension {$extension_name} uninstalled "
+                lang('admin::lang.alert_success'), "Extension {$title} uninstalled "
             ));
         }
         else {
@@ -233,11 +230,10 @@ class Extensions extends \Admin\Classes\AdminController
     public function delete_onDelete($context = null, $extensionCode = null)
     {
         $extension = ExtensionManager::instance()->findExtension($extensionCode);
-        $meta = $extension->extensionMeta();
+        $title = array_get($extension->extensionMeta(), 'name');
 
         if (Extensions_model::deleteExtension($extensionCode, post('delete_data') == 1)) {
-            $name = $meta['name'] ?? '';
-            flash()->success(sprintf(lang('admin::lang.alert_success'), "Extension {$name} deleted "));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), "Extension {$title} deleted "));
         }
         else {
             flash()->danger(lang('admin::lang.alert_error_try_again'));
@@ -344,5 +340,23 @@ class Extensions extends \Admin\Classes\AdminController
             throw new SystemException(lang('system::lang.extensions.error_extension_exists'));
 
         return TRUE;
+    }
+
+    protected function checkDependencies($extension)
+    {
+        $feedback = null;
+        $extensionManager = ExtensionManager::instance();
+        $required = $extensionManager->getDependencies($extension) ?: [];
+        foreach ($required as $require) {
+            $requireExtension = $extensionManager->findExtension($require);
+            $title = array_get($requireExtension->extensionMeta(), 'name');
+            if (!$requireExtension)
+                $feedback .= "Required extension [{$title}] was not found.\n";
+
+            if ($extensionManager->isDisabled($require))
+                $feedback .= "Required extension [{$title}] must be enabled to proceed.\n";
+        }
+
+        return $feedback;
     }
 }

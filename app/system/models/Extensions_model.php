@@ -38,9 +38,12 @@ class Extensions_model extends Model
      */
     protected $extensions = [];
 
-    protected $meta = null;
+    protected $meta;
 
-    protected $class = null;
+    /**
+     * @var \System\Classes\BaseExtension
+     */
+    protected $class;
 
     protected static function boot()
     {
@@ -63,6 +66,11 @@ class Extensions_model extends Model
     public function getClassAttribute()
     {
         return $this->class;
+    }
+
+    public function getStatusAttribute($value)
+    {
+        return $value AND $this->class AND !$this->class->disabled;
     }
 
     //
@@ -150,7 +158,7 @@ class Extensions_model extends Model
                 'version' => $extensionMeta->version,
             ]);
 
-            $extensionManager->updateExtension($code, FALSE);
+            $extensionManager->updateInstalledExtensions($code, FALSE);
         }
 
         // Disable extensions not found in file system
@@ -171,6 +179,9 @@ class Extensions_model extends Model
         if (!$extensionModel->applyExtensionClass())
             return FALSE;
 
+        // set extension migration to the latest version
+        UpdateManager::instance()->migrateExtension($extensionModel->name);
+
         if ($extensionModel AND $extensionModel->meta) {
             $extensionModel->status = TRUE;
             $extensionModel->fill([
@@ -179,12 +190,7 @@ class Extensions_model extends Model
             ])->save();
         }
 
-        // set extension migration to the latest version
-        UpdateManager::instance()->migrateExtension($extensionModel->name);
-
-        ExtensionManager::instance()->updateExtension(
-            $extensionModel->name, $extensionModel->status
-        );
+        ExtensionManager::instance()->updateInstalledExtensions($code, TRUE);
 
         return TRUE;
     }
@@ -206,9 +212,7 @@ class Extensions_model extends Model
             $query = $extensionModel->save();
         }
 
-        ExtensionManager::instance()->updateExtension(
-            $extensionModel->name, $extensionModel->status
-        );
+        ExtensionManager::instance()->updateInstalledExtensions($code, FALSE);
 
         return $query;
     }
@@ -238,7 +242,7 @@ class Extensions_model extends Model
             $extensionManager->removeExtension($code);
 
         // disable extension
-        $extensionManager->updateExtension($code, FALSE);
+        $extensionManager->updateInstalledExtensions($code, null);
 
         return TRUE;
     }

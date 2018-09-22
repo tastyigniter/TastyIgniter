@@ -25,11 +25,6 @@ class BaseExtension extends ServiceProvider
     public $autoload = [];
 
     /**
-     * @var array Extension dependencies
-     */
-    public $require = [];
-
-    /**
      * @var boolean Determine if this extension should be loaded (false) or not (true).
      */
     public $disabled = FALSE;
@@ -42,9 +37,9 @@ class BaseExtension extends ServiceProvider
     }
 
     /**
-     * Initialize method, called right before the request route.
+     * Boot method, called right before the request route.
      */
-    public function initialize()
+    public function boot()
     {
     }
 
@@ -144,9 +139,8 @@ class BaseExtension extends ServiceProvider
     /**
      * Read configuration from Config file
      *
-     * @param bool|null $throwException
-     *
      * @return array|bool
+     * @throws SystemException
      */
     protected function getConfigFromFile()
     {
@@ -154,13 +148,6 @@ class BaseExtension extends ServiceProvider
             return $this->config;
         }
 
-        $this->config = $this->loadConfig();
-
-        return $this->config;
-    }
-
-    protected function loadConfig()
-    {
         $className = get_class($this);
         $configPath = realpath(dirname(File::fromClass($className)));
         $configFile = $configPath.'/extension.json';
@@ -187,6 +174,6 @@ class BaseExtension extends ServiceProvider
             }
         }
 
-        return $config;
+        return $this->config = $config;
     }
 }

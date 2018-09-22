@@ -71,30 +71,6 @@ class Components extends BaseFormWidget
         $this->vars['field'] = $this->formField;
     }
 
-    public function processExistingItems()
-    {
-        $itemIndexes = null;
-
-        if (!$loadValue = $this->getLoadValue())
-            return;
-
-        foreach ($loadValue as $component => $properties) {
-            list($name, $alias) = strpos($component, ' ')
-                ? explode(' ', $component)
-                : [$component, $component];
-
-            if (!$component = $this->manager->findComponent($name))
-                continue;
-
-            $component['alias'] = $alias;
-
-            if (!$component = $this->makeComponentFormWidget($component, $properties))
-                continue;
-
-            $this->components[$alias] = $component;
-        }
-    }
-
     public function onAddComponent()
     {
         $componentCode = post('code');
@@ -112,8 +88,33 @@ class Components extends BaseFormWidget
 
         return $this->makePartial('components/component', [
             'component' => $component,
-            'field'     => $this->formField,
+            'field' => $this->formField,
         ]);
+    }
+
+    protected function processExistingItems()
+    {
+        $itemIndexes = null;
+
+        if (!$loadValue = $this->getLoadValue())
+            return;
+
+        foreach ($loadValue as $component => $properties) {
+            list($name, $alias) = strpos($component, ' ')
+                ? explode(' ', $component)
+                : [$component, $component];
+
+            if (!$component = $this->manager->findComponent($name)) {
+                flash()->warning("Could not find component {$name}");
+                continue;
+            }
+
+            $component['alias'] = $alias;
+
+            $component = $this->makeComponentFormWidget($component, $properties);
+
+            $this->components[$alias] = $component;
+        }
     }
 
     protected function makeComponentFormWidget($component, $properties)
@@ -123,13 +124,10 @@ class Components extends BaseFormWidget
 
         try {
             $componentObj = $this->manager->makeComponent($code, $alias, $properties);
-            if ($componentObj->isHidden)
-                throw new Exception(sprintf('Component %s is hidden', $code));
-
-            $component['options'] = $this->manager->getComponentPropertyValues($componentObj);
-
             $componentPropertyConfig = $this->manager->getComponentPropertyConfig($componentObj);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
+            flash()->warning("Could not load component {$code}");
             return null;
         }
 
@@ -140,6 +138,7 @@ class Components extends BaseFormWidget
         $formConfig['alias'] = $this->alias.'Form'.'-'.$alias;
         $formConfig['arrayName'] = $this->formField->getName().'['.$alias.']';
 
+        $component['options'] = $this->manager->getComponentPropertyValues($componentObj);
         $component['component'] = $component;
         $component['widget'] = $widget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
         $widget->bindToController();
@@ -159,7 +158,8 @@ class Components extends BaseFormWidget
                 $componentObj = $manager->makeComponent($code, null, $component);
 
                 if ($componentObj->isHidden) continue;
-            } catch (Exception $ex) {
+            }
+            catch (Exception $ex) {
             }
 
             $components[$code] = (object)$component;

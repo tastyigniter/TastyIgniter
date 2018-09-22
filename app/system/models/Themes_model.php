@@ -36,12 +36,12 @@ class Themes_model extends Model
     /**
      * @var ThemeManager
      */
-    public $manager = null;
+    public $manager;
 
     /**
      * @var \Main\Classes\Theme
      */
-    public $themeClass = null;
+    public $themeClass;
 
     public static function getDataFromTheme(Theme $theme)
     {
@@ -159,9 +159,9 @@ class Themes_model extends Model
             ) continue;
 
             self::create([
-                'name'        => isset($themeMeta->label) ? $themeMeta->label : title_case($code),
-                'code'        => $name,
-                'version'     => isset($themeMeta->version) ? $themeMeta->version : '1.0.0',
+                'name' => isset($themeMeta->label) ? $themeMeta->label : title_case($code),
+                'code' => $name,
+                'version' => isset($themeMeta->version) ? $themeMeta->version : '1.0.0',
                 'description' => isset($themeMeta->description) ? $themeMeta->description : '',
             ]);
         }

@@ -62,7 +62,7 @@ return [
             'username' => 'username',
             'password' => 'password',
             'charset' => 'utf8',
-            'prefix' => env('DB_PREFIX', ''),
+            'prefix' => '',
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
