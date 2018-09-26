@@ -22,6 +22,8 @@ class ServiceProvider extends AppServiceProvider
 
         $this->defineEloquentMorphMaps();
 
+        $this->resolveFlashSessionKey();
+
         $this->replaceNavMenuItem();
     }
 
@@ -556,5 +558,12 @@ class ServiceProvider extends AppServiceProvider
             'users'                   => 'Admin\Models\Users_model',
             'working_hours'           => 'Admin\Models\Working_hours_model',
         ]);
+    }
+
+    protected function resolveFlashSessionKey()
+    {
+        $this->app->resolving('flash', function (\Igniter\Flame\Flash\FlashBag $flash) {
+            $flash->setSessionKey('flash_data_admin');
+        });
     }
 }

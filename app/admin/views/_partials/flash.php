@@ -1,10 +1,6 @@
 <?php foreach (Flash::all() as $message) { ?>
     <?php if ($message['overlay']) { ?>
-        <?= $this->makePartial('flash_modal', [
-            'modalClass' => 'flash-modal',
-            'title'      => $message['title'],
-            'body'       => $message['message'],
-        ]); ?>
+        <?= $this->makePartial('flash_modal', ['modalMessage' => $message]); ?>
     <?php }
     else { ?>
         <div class="alert alert-<?= $message['level']; ?> <?= $message['important'] ? 'alert-important' : ''; ?>"

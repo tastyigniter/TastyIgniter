@@ -1,13 +1,16 @@
-<div id="flash-overlay-modal" class="modal fade <?= $modalClass or '' ?>">
+<div
+    class="modal fade flash-modal"
+    data-control="flash-modal"
+>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?= $title ?></h4>
+                <h4 class="modal-title"><?= array_get($modalMessage, 'title') ?></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
 
             <div class="modal-body">
-                <p><?= $body ?></p>
+                <p><?= array_get($modalMessage, 'message') ?></p>
             </div>
 
             <div class="modal-footer">

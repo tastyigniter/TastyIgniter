@@ -23,6 +23,8 @@ class ServiceProvider extends AppServiceProvider
 
         View::share('site_name', Setting::get('site_name'));
         View::share('site_logo', Setting::get('site_logo'));
+
+        $this->resolveFlashSessionKey();
     }
 
     /**
@@ -53,6 +55,11 @@ class ServiceProvider extends AppServiceProvider
 
             $theme = ThemeManager::instance()->getActiveTheme();
             $manager->loadAssetsFromFile($theme->publicPath.'/_meta/assets.json', 'theme');
+
+    protected function resolveFlashSessionKey()
+    {
+        $this->app->resolving('flash', function (\Igniter\Flame\Flash\FlashBag $flash) {
+            $flash->setSessionKey('flash_data_main');
         });
     }
 }
