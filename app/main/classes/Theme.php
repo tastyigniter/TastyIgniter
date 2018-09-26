@@ -171,7 +171,27 @@ class Theme
 
     public function getCustomData()
     {
-        return Themes_model::getDataFromTheme($this);
+        return Themes_model::forTheme($this)->getThemeData();
+    }
+
+    /**
+     * Returns variables that should be passed to the asset combiner.
+     * @return array
+     */
+    public function getAssetVariables()
+    {
+        $result = [];
+
+        $formFields = Themes_model::forTheme($this)->getFieldsConfig();
+        foreach ($formFields as $attribute => $field) {
+            if (!$varName = array_get($field, 'assetVar')) {
+                continue;
+            }
+
+            $result[$varName] = $this->{$attribute};
+        }
+
+        return $result;
     }
 
     public function fillFromArray($config)

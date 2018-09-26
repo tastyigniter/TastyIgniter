@@ -64,6 +64,21 @@ class ThemeManager
         }
     }
 
+    public static function applyAssetVariablesOnCombinerFilters(array $filters)
+    {
+        $theme = self::instance()->getActiveTheme();
+
+        if (!$theme OR !$theme->hasCustomData())
+            return;
+
+        $assetVars = $theme->getAssetVariables();
+        foreach ($filters as $filter) {
+            if (method_exists($filter, 'setVariables')) {
+                $filter->setVariables($assetVars);
+            }
+        }
+    }
+
     //--------------------------------------------------------------------------
     // Theme TemplateLoader Methods
     //--------------------------------------------------------------------------

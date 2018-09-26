@@ -15,7 +15,7 @@ class Themes_model extends Model
     /**
      * @var array data cached array
      */
-    protected static $dataCache = [];
+    protected static $instances = [];
 
     /**
      * @var string The database table code
@@ -43,18 +43,16 @@ class Themes_model extends Model
      */
     public $themeClass;
 
-    public static function getDataFromTheme(Theme $theme)
+    public static function forTheme(Theme $theme)
     {
         $dirName = $theme->getDirName();
-        if (array_key_exists($dirName, self::$dataCache)) {
-            return array_get(self::$dataCache, $dirName);
+        if ($instance = array_get(self::$instances, $dirName)) {
+            return $instance;
         }
 
-        $model = self::whereCode($dirName)->first();
+        $instance = self::firstOrCreate(['code' => $dirName]);
 
-        $data = ($model AND is_array($model->data)) ? $model->data : [];
-
-        return self::$dataCache[$dirName] = $data;
+        return self::$instances[$dirName] = $instance;
     }
 
     //
@@ -129,9 +127,20 @@ class Themes_model extends Model
 
     public function getFieldValues()
     {
-        $customizeConfig = $this->themeClass->getConfigValue('form', []);
-
         return $this->data ?: [];
+    }
+
+    public function getThemeData()
+    {
+        $data = [];
+        $customizeConfig = $this->themeClass->getConfigValue('form', []);
+        foreach ($customizeConfig as $section => $item) {
+            foreach (array_get($item, 'fields', []) as $name => $field) {
+                $data[$name] = array_get($field, 'default');
+            }
+        }
+
+        return array_merge($data, $this->data);
     }
 
     //
@@ -149,7 +158,7 @@ class Themes_model extends Model
             if (!($themeClass = $themeManager->findTheme($code))) continue;
 
             $themeMeta = (object)$themeClass;
-            $installedThemes[] = $name = isset($themeMeta->name) ? $themeMeta->name : $code;
+            $installedThemes[] = $name = $themeMeta->name ?? $code;
 
             // Only add themes whose meta code match their directory name
             // or theme has no record
@@ -159,10 +168,10 @@ class Themes_model extends Model
             ) continue;
 
             self::create([
-                'name' => isset($themeMeta->label) ? $themeMeta->label : title_case($code),
+                'name' => $themeMeta->label ?? title_case($code),
                 'code' => $name,
-                'version' => isset($themeMeta->version) ? $themeMeta->version : '1.0.0',
-                'description' => isset($themeMeta->description) ? $themeMeta->description : '',
+                'version' => $themeMeta->version ?? '1.0.0',
+                'description' => $themeMeta->description ?? '',
             ]);
         }
 

@@ -2,6 +2,7 @@
 
 namespace Main;
 
+use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Pagic\Cache\FileSystem as FileCache;
 use Igniter\Flame\Pagic\Parsers\FileParser;
@@ -39,6 +40,7 @@ class ServiceProvider extends AppServiceProvider
         if (!$this->app->runningInAdmin()) {
             $this->registerSingletons();
             $this->registerAssets();
+            $this->registerCombinerEvent();
 
             FileParser::setCache(new FileCache(storage_path().'/system/cache'));
         }
@@ -55,6 +57,19 @@ class ServiceProvider extends AppServiceProvider
 
             $theme = ThemeManager::instance()->getActiveTheme();
             $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
+        });
+    }
+
+    protected function registerCombinerEvent()
+    {
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
+        Event::listen('assets.combiner.beforePrepare', function (Assets $combiner, $assets) {
+            ThemeManager::applyAssetVariablesOnCombinerFilters(
+                array_flatten($combiner->getFilters())
+            );
         });
     }
 
