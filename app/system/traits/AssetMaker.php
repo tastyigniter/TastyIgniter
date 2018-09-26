@@ -10,14 +10,9 @@ trait AssetMaker
      */
     public $assetPath;
 
-    /**
-     * @var string Specifies a path to the asset directory.
-     */
-    public $assetCollection;
-
     public function flushAssets()
     {
-        Assets::collection($this->assetCollection)->flush();
+        Assets::flush();
     }
 
     /**
@@ -58,17 +53,13 @@ trait AssetMaker
         Assets::addMeta($meta);
     }
 
-    public function addJs($href, $options = null)
+    public function addJs($href, $attributes = null)
     {
-        $jsPath = $this->getAssetPath($href);
-
-        Assets::collection($this->assetCollection)->addJs($jsPath, $options);
+        Assets::addJs($this->getAssetPath($href), $attributes);
     }
 
-    public function addCss($href, $options = null)
+    public function addCss($href, $attributes = null)
     {
-        $cssPath = $this->getAssetPath($href);
-
-        Assets::collection($this->assetCollection)->addCss($cssPath, $options);
+        Assets::addCss($this->getAssetPath($href), $attributes);
     }
 }

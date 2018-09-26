@@ -54,7 +54,9 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerSourcePath($this->app->themesPath());
 
             $theme = ThemeManager::instance()->getActiveTheme();
-            $manager->loadAssetsFromFile($theme->publicPath.'/_meta/assets.json', 'theme');
+            $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
+        });
+    }
 
     protected function resolveFlashSessionKey()
     {

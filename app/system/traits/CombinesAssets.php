@@ -10,6 +10,7 @@ use Assetic\Asset\FileAsset;
 use Assetic\Cache\FilesystemCache;
 use Cache;
 use Carbon\Carbon;
+use Event;
 use File;
 use Request;
 use Response;
@@ -46,27 +47,39 @@ trait CombinesAssets
      */
     public $useMinify = FALSE;
 
+    protected $assetsCombinerUri;
+
+    protected $combineAssets;
+
     protected function initCombiner()
     {
-        $this->useCache = config('system.enableAssetCache', FALSE);
+        $this->useCache = config('system.enableAssetCache', TRUE);
         $this->useMinify = config('system.enableAssetMinify', null);
         $this->cacheKeyPrefix = 'ti.combiner.';
 
         $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
 
-        if ($this->useMinify === null) {
+        if (app()->runningInAdmin())
+            $this->assetsCombinerUri = config('system.adminUri', '/admin').$this->assetsCombinerUri;
+
+        if ($this->useMinify === null)
             $this->useMinify = !config('app.debug', FALSE);
-        }
+
+        $this->combineAssets = config('system.enableAssetCombiner', null);
+        if (is_null($this->combineAssets))
+            $this->combineAssets = (app()->environment() === 'production');
 
         $this->registerFilter('css', new \Assetic\Filter\CssImportFilter);
-        $this->registerFilter(['css', 'scss', 'less'], new \Assetic\Filter\CssRewriteFilter);
-        $this->registerFilter('scss', new \Assetic\Filter\ScssphpFilter);
-        $this->registerFilter('less', new \Assetic\Filter\LessphpFilter);
+        $this->registerFilter(['css', 'scss'], new \Assetic\Filter\CssRewriteFilter);
+
+        $scssPhpFilter = new \Assetic\Filter\ScssphpFilter;
+        $scssPhpFilter->addImportPath(base_path());
+        $this->registerFilter('scss', $scssPhpFilter);
 
         if ($this->useMinify) {
             $this->registerFilter('js', new \Assetic\Filter\JSMinFilter);
-            $this->registerFilter(['css', 'scss', 'less'], new \Assetic\Filter\CssMinFilter);
+            $this->registerFilter(['css', 'scss'], new \Assetic\Filter\CssMinFilter);
         }
     }
 
@@ -100,11 +113,11 @@ trait CombinesAssets
             $lastMod = $combiner->getLastModified();
 
             $cacheData = [
-                'type'    => $type,
-                'uri'     => $cacheKey.'-'.$lastMod,
-                'eTag'    => $cacheKey,
+                'type' => $type,
+                'uri' => $cacheKey.'-'.$lastMod.'.'.$type,
+                'eTag' => $cacheKey,
                 'lastMod' => $lastMod,
-                'files'   => $assets,
+                'files' => $assets,
             ];
 
             $this->putCache($cacheKey, $cacheData);
@@ -131,7 +144,7 @@ trait CombinesAssets
      *
      * @return void
      */
-    public function combineToFile(array $assets = [], $destination)
+    public function combineToFile(array $assets, $destination)
     {
         $targetPath = File::localToPublic(dirname($destination));
         $combiner = $this->prepareCombiner($assets, $targetPath);
@@ -173,8 +186,8 @@ trait CombinesAssets
 
     protected function prepareAssets(array $assets)
     {
-        $assets = array_map(function ($asset) {
-            return public_path($this->getAssetPath($asset));
+        $assets = array_map(function ($path) {
+            return public_path($this->getAssetPath($path));
         }, $assets);
 
         return $assets;
@@ -182,6 +195,9 @@ trait CombinesAssets
 
     protected function prepareCombiner(array $assets, $targetPath = null)
     {
+        // Extensibility
+        Event::fire('assets.combiner.beforePrepare', [$this, $assets]);
+
         $files = [];
         foreach ($assets as $path) {
             $filters = $this->getFilters(File::extension($path)) ?: [];
@@ -303,7 +319,7 @@ trait CombinesAssets
                 $destination = $path.'/'.$file.'.css';
             }
             else {
-                $destination = $path.'/'.$file.'-min.'.$extension;
+                $destination = $path.'/'.$file.'.min.'.$extension;
             }
         }
 

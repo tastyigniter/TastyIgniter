@@ -62,7 +62,6 @@ class BaseWidget extends Extendable
         $this->partialPath[] = '~/app/'.$classPath;
 
         $this->assetPath = '~/app/'.$classPath.'/assets';
-        $this->assetCollection = 'widget';
 
         $this->configPath = $controller->configPath;
 
@@ -71,7 +70,7 @@ class BaseWidget extends Extendable
             $this->setConfig($config);
 
         if (is_null($this->alias))
-            $this->alias = isset($this->config['alias']) ? $this->config['alias'] : $this->defaultAlias;
+            $this->alias = $this->config['alias'] ?? $this->defaultAlias;
 
         $this->loadAssets();
 

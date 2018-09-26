@@ -21,8 +21,7 @@
   "style": [
     {
       "path": "/app/system/assets/ui/flame.css",
-      "name": "flame-css",
-      "collection": "ui"
+      "name": "flame-css"
     },
     {
       "path": "css/admin.css",
@@ -31,19 +30,8 @@
   ],
   "script": [
     {
-      "path": "/app/system/assets/ui/js/vendor/vendor.js",
-      "name": "vendor-js",
-      "collection": "app"
-    },
-    {
       "path": "/app/system/assets/ui/flame.js",
-      "name": "flame-js",
-      "collection": "app"
-    },
-    {
-      "path": "js/vendor/vendor.js",
-      "name": "admin-vendor-js",
-      "collection": "app"
+      "name": "flame-js"
     },
     {
       "path": "js/admin.js",

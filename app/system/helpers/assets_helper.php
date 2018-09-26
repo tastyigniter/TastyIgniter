@@ -57,9 +57,9 @@ if (!function_exists('get_style_tags')) {
      *
      * @return string
      */
-    function get_style_tags($sortBy = null)
+    function get_style_tags()
     {
-        return Assets::getCss($sortBy);
+        return Assets::getCss();
     }
 }
 
@@ -69,11 +69,10 @@ if (!function_exists('set_style_tag')) {
      *
      * @param string $href
      * @param string $name
-     * @param string $collection
      */
-    function set_style_tag($href = '', $name = '', $collection = null)
+    function set_style_tag($href = '', $name = '')
     {
-        Assets::collection($collection)->addCss($href, $name);
+        Assets::addCss($href);
     }
 }
 
@@ -82,11 +81,10 @@ if (!function_exists('set_style_tags')) {
      * Set multiple stylesheet html tags
      *
      * @param array $tags
-     * @param string $collection
      */
-    function set_style_tags(array $tags = [], $collection = null)
+    function set_style_tags(array $tags = [])
     {
-        Assets::collection($collection)->addTags(['css' => $tags]);
+        Assets::addTags(['css' => $tags]);
     }
 }
 
@@ -98,9 +96,9 @@ if (!function_exists('get_script_tags')) {
      *
      * @return string
      */
-    function get_script_tags($sortBy = null)
+    function get_script_tags()
     {
-        return Assets::getJs($sortBy);
+        return Assets::getJs();
     }
 }
 
@@ -110,11 +108,10 @@ if (!function_exists('set_script_tag')) {
      *
      * @param string $href
      * @param string $name
-     * @param string $collection
      */
-    function set_script_tag($href = '', $name = '', $collection = null)
+    function set_script_tag($href = '', $name = '')
     {
-        Assets::collection($collection)->addJs($href, $name);
+        Assets::addJs($href);
     }
 }
 
@@ -123,11 +120,10 @@ if (!function_exists('set_script_tags')) {
      * Set multiple scripts html tags
      *
      * @param array $tags
-     * @param string $collection
      */
-    function set_script_tags(array $tags = [], $collection = null)
+    function set_script_tags(array $tags = [])
     {
-        Assets::collection($collection)->addTags(['js' => $tags]);
+        Assets::addTags(['js' => $tags]);
     }
 }
 

@@ -1,0 +1,13 @@
+{
+    "private": true,
+    "devDependencies": {
+        "bootstrap": "4.1.0",
+        "jquery": "3.3.1",
+        "popper.js": "1.14.3",
+        "@fortawesome/fontawesome-free-webfonts": "^1.0.6",
+        "select2": "4.0.6-rc.1",
+        "select2-theme-bootstrap4": "0.2.0-beta.2",
+        "js-cookie": "2.2.0",
+        "metismenu": "2.7.7"
+    }
+}

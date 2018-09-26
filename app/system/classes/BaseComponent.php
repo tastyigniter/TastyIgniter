@@ -79,7 +79,6 @@ abstract class BaseComponent extends Extendable
 
         $this->dirName = strtolower(str_replace('\\', '/', get_called_class()));
         $this->assetPath = extension_path(dirname(dirname($this->dirName))).'/assets';
-        $this->assetCollection = 'component';
 
         parent::__construct();
     }
@@ -180,7 +179,7 @@ abstract class BaseComponent extends Extendable
         }
 
         throw new BadMethodCallException(Lang::get('main::lang.not_found.method', [
-            'name'   => get_class($this),
+            'name' => get_class($this),
             'method' => $method,
         ]));
     }

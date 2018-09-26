@@ -4,7 +4,7 @@
     <?= get_metas(); ?>
     <?= get_favicon(); ?>
     <title><?= sprintf(lang('admin::lang.site_title'), Template::getTitle(), setting('site_name')); ?></title>
-    <?= get_style_tags(['ui', 'widget', 'custom', 'theme']); ?>
+    <?= get_style_tags(); ?>
 </head>
 <body class="page <?= $this->bodyClass; ?>">
     <?php if (AdminAuth::isLogged()) { ?>
@@ -37,7 +37,6 @@
             </div>
         </div>
     <?php } ?>
-    <?= get_script_tags('app'); ?>
-    <?= get_script_tags(['widget', 'custom', 'theme']); ?>
+    <?= get_script_tags(); ?>
 </body>
 </html>
