@@ -136,7 +136,16 @@ class ComponentPartial extends Partial
         }
 
         $component = $this->component;
+        $componentPath = $component->getPath();
 
-        return $component->getPath().'/'.$fileName;
+        if (!File::isFile($path = $componentPath.'/'.$fileName)) {
+            // Check the shared "/partials" directory for the partial
+            $sharedPath = dirname($componentPath).'/partials'.'/'.$fileName;
+            if (File::isFile($sharedPath)) {
+                return $sharedPath;
+            }
+        }
+
+        return $path;
     }
 }
