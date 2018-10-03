@@ -31,13 +31,13 @@ class Coupons_model extends Model
     protected $timeFormat = 'H:i';
 
     public $casts = [
-        'period_start_date'   => 'date',
-        'period_end_date'     => 'date',
-        'fixed_date'          => 'date',
-        'fixed_from_time'     => 'time',
-        'fixed_to_time'       => 'time',
+        'period_start_date' => 'date',
+        'period_end_date' => 'date',
+        'fixed_date' => 'date',
+        'fixed_from_time' => 'time',
+        'fixed_to_time' => 'time',
         'recurring_from_time' => 'time',
-        'recurring_to_time'   => 'time',
+        'recurring_to_time' => 'time',
     ];
 
     public $relation = [
@@ -67,7 +67,7 @@ class Coupons_model extends Model
 
     public function getTypeNameAttribute($value)
     {
-        return ($this->type == 'P') ? lang('admin::coupons.text_percentage') : lang('admin::coupons.text_fixed_amount');
+        return ($this->type == 'P') ? lang('admin::lang.coupons.text_percentage') : lang('admin::lang.coupons.text_fixed_amount');
     }
 
     public function getFormattedDiscountAttribute($value)
@@ -90,7 +90,7 @@ class Coupons_model extends Model
 
     public function getMessageForEvent($eventName)
     {
-        return parse_values(['event' => $eventName], lang('admin::coupons.activity_event_log'));
+        return parse_values(['event' => $eventName], lang('admin::lang.coupons.activity_event_log'));
     }
 
     public function isFixed()
@@ -144,8 +144,11 @@ class Coupons_model extends Model
 
     public function customerHasMaxRedemption(User $user)
     {
-        return !$this->customer_redemptions
-            OR $this->customer_redemptions <= $this->countCustomerRedemptions($user->getKey());
+        if (!$this->customer_redemptions)
+            return FALSE;
+
+        $customerRedemptionCount = $this->countCustomerRedemptions($user->getKey());
+        return $this->customer_redemptions <= $customerRedemptionCount;
     }
 
     public function countRedemptions()

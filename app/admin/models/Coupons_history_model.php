@@ -24,9 +24,11 @@ class Coupons_history_model extends Model
     public $relation = [
         'belongsTo' => [
             'customer' => 'Admin\Models\Customers_model',
-            'order'    => 'Admin\Models\Orders_model',
+            'order' => 'Admin\Models\Orders_model',
         ],
     ];
+
+    protected $guarded = [];
 
     public $timestamps = TRUE;
 

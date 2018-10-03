@@ -1,6 +1,7 @@
 <?php namespace System\Classes;
 
 use App;
+use ApplicationException;
 use File;
 use Igniter\Flame\Traits\Singleton;
 use Lang;
@@ -268,17 +269,28 @@ class ExtensionManager
             $extensions = $this->getExtensions();
 
         $result = [];
-        foreach ($extensions as $code => $extension) {
-            $depends = $this->getDependencies($extension) ?: [];
-            $depends = array_filter($depends, function ($dependCode) use ($extensions) {
-                return isset($extensions[$dependCode]);
-            });
+        $checklist = $extensions;
 
-            $depends = array_diff($depends, $result);
-            if (count($depends) > 0)
-                continue;
+        $loopCount = 0;
+        while (count($checklist) > 0) {
 
-            $result[] = $code;
+            if (++$loopCount > 999) {
+                throw new ApplicationException('Too much recursion');
+            }
+
+            foreach ($checklist as $code => $extension) {
+                $depends = $this->getDependencies($extension) ?: [];
+                $depends = array_filter($depends, function ($dependCode) use ($extensions) {
+                    return isset($extensions[$dependCode]);
+                });
+
+                $depends = array_diff($depends, $result);
+                if (count($depends) > 0)
+                    continue;
+
+                $result[] = $code;
+                unset($checklist[$code]);
+            }
         }
 
         return $result;

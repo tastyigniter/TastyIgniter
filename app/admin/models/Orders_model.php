@@ -60,25 +60,25 @@ class Orders_model extends Model
     public $timestamps = TRUE;
 
     public $casts = [
-        'cart'         => 'serialize',
-        'order_date'   => 'date',
-        'order_time'   => 'time',
+        'cart' => 'serialize',
+        'order_date' => 'date',
+        'order_time' => 'time',
         'invoice_date' => 'dateTime',
     ];
 
     public $relation = [
         'belongsTo' => [
-            'customer'       => 'Admin\Models\Customers_model',
-            'location'       => 'Admin\Models\Locations_model',
-            'address'        => 'Admin\Models\Addresses_model',
-            'status'         => 'Admin\Models\Statuses_model',
-            'assignee'       => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
+            'customer' => 'Admin\Models\Customers_model',
+            'location' => 'Admin\Models\Locations_model',
+            'address' => 'Admin\Models\Addresses_model',
+            'status' => 'Admin\Models\Statuses_model',
+            'assignee' => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
-            'payment_logs'   => 'Admin\Models\Payment_logs_model',
+            'payment_logs' => 'Admin\Models\Payment_logs_model',
             'coupon_history' => 'Admin\Models\Coupons_history_model',
         ],
         'morphMany' => [
-            'review'         => ['Admin\Models\Reviews_model'],
+            'review' => ['Admin\Models\Reviews_model'],
             'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
         ],
     ];
@@ -117,11 +117,11 @@ class Orders_model extends Model
     public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
-            'page'      => 1,
+            'page' => 1,
             'pageLimit' => 20,
-            'customer'  => null,
-            'location'  => null,
-            'sort'      => 'address_id desc',
+            'customer' => null,
+            'location' => null,
+            'sort' => 'address_id desc',
         ], $options));
 
         $query->where('status_id', '>=', 1);
@@ -345,12 +345,12 @@ class Orders_model extends Model
             }
 
             $data['order_menus'][] = [
-                'menu_name'     => $menu->name,
+                'menu_name' => $menu->name,
                 'menu_quantity' => $menu->quantity,
-                'menu_price'    => currency_format($menu->price),
+                'menu_price' => currency_format($menu->price),
                 'menu_subtotal' => currency_format($menu->subtotal),
-                'menu_options'  => implode('<br /> ', $optionData),
-                'menu_comment'  => $menu->comment,
+                'menu_options' => implode('<br /> ', $optionData),
+                'menu_comment' => $menu->comment,
             ];
         }
 
@@ -360,7 +360,7 @@ class Orders_model extends Model
             $data['order_totals'][] = [
                 'order_total_title' => htmlspecialchars_decode($total->title),
                 'order_total_value' => currency_format($total->value),
-                'priority'          => $total->priority,
+                'priority' => $total->priority,
             ];
         }
 

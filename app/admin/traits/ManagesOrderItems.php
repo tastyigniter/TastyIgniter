@@ -120,13 +120,13 @@ trait ManagesOrderItems
             if ($rowId != $cartItem['rowId']) continue;
 
             $orderMenuId = $this->orderMenusQuery()->insertGetId([
-                'order_id'      => $orderId,
-                'menu_id'       => $cartItem['id'],
-                'name'          => $cartItem['name'],
-                'quantity'      => $cartItem['qty'],
-                'price'         => $cartItem['price'],
-                'subtotal'      => $cartItem['subtotal'],
-                'comment'       => $cartItem['comment'],
+                'order_id' => $orderId,
+                'menu_id' => $cartItem['id'],
+                'name' => $cartItem['name'],
+                'quantity' => $cartItem['qty'],
+                'price' => $cartItem['price'],
+                'subtotal' => $cartItem['subtotal'],
+                'comment' => $cartItem['comment'],
                 'option_values' => serialize($cartItem['options']),
             ]);
 
@@ -155,13 +155,13 @@ trait ManagesOrderItems
         foreach ($options as $option) {
             foreach ($option['values'] as $value) {
                 $this->orderMenuOptionsQuery()->insert([
-                    'order_menu_id'        => $orderMenuId,
-                    'order_id'             => $orderId,
-                    'menu_id'              => $menuId,
+                    'order_menu_id' => $orderMenuId,
+                    'order_id' => $orderId,
+                    'menu_id' => $menuId,
                     'order_menu_option_id' => $option['menu_option_id'],
                     'menu_option_value_id' => $value['menu_option_value_id'],
-                    'order_option_name'    => $value['name'],
-                    'order_option_price'   => $value['price'],
+                    'order_option_name' => $value['name'],
+                    'order_option_price' => $value['price'],
                 ]);
             }
         }
@@ -185,9 +185,9 @@ trait ManagesOrderItems
         foreach ($totals as $total) {
             $this->orderTotalsQuery()->insert([
                 'order_id' => $orderId,
-                'code'     => $total['code'],
-                'title'    => $total['title'],
-                'value'    => $total['value'],
+                'code' => $total['code'],
+                'title' => $total['title'],
+                'value' => $total['value'],
                 'priority' => $total['priority'],
             ]);
         }
@@ -211,11 +211,11 @@ trait ManagesOrderItems
 
         $couponHistory = $this->coupon_history()->create([
             'customer_id' => $customer ? $customer->getKey() : null,
-            'coupon_id'   => $coupon->coupon_id,
-            'code'        => $coupon->code,
-            'amount'      => '-'.$coupon->amount,
-            'min_total'   => $coupon->min_total,
-            'date_used'   => Carbon::now(),
+            'coupon_id' => $coupon->coupon_id,
+            'code' => $coupon->code,
+            'amount' => '-'.$coupon->amount,
+            'min_total' => $coupon->min_total,
+            'date_used' => Carbon::now(),
         ]);
 
         return $couponHistory;

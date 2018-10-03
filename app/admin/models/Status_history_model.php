@@ -21,11 +21,11 @@ class Status_history_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'staff'    => 'Admin\Models\Staffs_model',
+            'staff' => 'Admin\Models\Staffs_model',
             'assignee' => 'Admin\Models\Staffs_model',
-            'status'   => ['Admin\Models\Statuses_model', 'status_id'],
+            'status' => ['Admin\Models\Statuses_model', 'status_id'],
         ],
-        'morphTo'   => [
+        'morphTo' => [
             'object' => [],
         ],
     ];
@@ -71,7 +71,7 @@ class Status_history_model extends Model
         $model = new static;
         $model->status_id = $statusId;
         $model->object_id = $object->getKey();
-        $model->object_type = $object->getMorphClass();
+        $model->object_type = $object instanceof Orders_model ? 'orders' : 'reservations';
         $model->status_for = $object instanceof Orders_model ? 'order' : 'reserve';
         $model->staff_id = array_get($options, 'staff_id');
         $model->assignee_id = array_get($options, 'assignee_id', $object->assignee_id);

@@ -127,7 +127,7 @@ class PaymentGateways
             $this->gateways[$code] = array_merge($paymentGateway, [
                 'owner' => $owner,
                 'class' => $classPath,
-                'code'  => $code,
+                'code' => $code,
             ]);
         }
     }
@@ -195,6 +195,9 @@ class PaymentGateways
 
             $partialName = 'payregister/'.strtolower(class_basename($class));
             $partialPath = $theme->getPath().'/_partials/'.$partialName.'.php';
+
+            if (!File::isDirectory(dirname($partialPath)))
+                File::makeDirectory(dirname($partialPath), null, TRUE);
 
             if (!array_key_exists($partialName, $partials)) {
                 $filePath = dirname(File::fromClass($class)).'/'.strtolower(class_basename($class)).'/payment_form.php';
