@@ -22,9 +22,10 @@ class ServiceProvider extends AppServiceProvider
 
         $this->defineEloquentMorphMaps();
 
-        $this->resolveFlashSessionKey();
-
-        $this->replaceNavMenuItem();
+        if ($this->app->runningInAdmin()) {
+            $this->resolveFlashSessionKey();
+            $this->replaceNavMenuItem();
+        }
     }
 
     /**

@@ -25,7 +25,8 @@ class ServiceProvider extends AppServiceProvider
         View::share('site_name', Setting::get('site_name'));
         View::share('site_logo', Setting::get('site_logo'));
 
-        $this->resolveFlashSessionKey();
+        if (!$this->app->runningInAdmin())
+            $this->resolveFlashSessionKey();
     }
 
     /**

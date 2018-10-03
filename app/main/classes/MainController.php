@@ -111,11 +111,6 @@ class MainController extends BaseController
     public $suppressView = FALSE;
 
     /**
-     * @var bool Determines if controller should detect system maintenance setting
-     */
-//    protected static $showMaintenance = TRUE;
-
-    /**
      * @var array Default actions which cannot be called as actions.
      */
     public $hiddenActions = [
