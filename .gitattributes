@@ -10,5 +10,6 @@ text=auto
 CHANGELOG.md export-ignore
 CONTRIBUTING.md export-ignore
 ISSUE_TEMPLATE.md export-ignore
+package.json export-ignore
 phpunit.xml export-ignore
 server.php export-ignore
