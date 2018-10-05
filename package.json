@@ -1,7 +1,7 @@
 {
     "private": true,
     "devDependencies": {
-        "bootstrap": "4.1.0",
+        "bootstrap": "4.1.2",
         "jquery": "3.3.1",
         "popper.js": "1.14.3",
         "@fortawesome/fontawesome-free-webfonts": "^1.0.6",
