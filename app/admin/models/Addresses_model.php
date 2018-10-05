@@ -19,12 +19,12 @@ class Addresses_model extends Model
      */
     protected $primaryKey = 'address_id';
 
-    protected $fillable = ['address_1', 'address_2', 'city', 'state', 'postcode', 'country_id'];
+    protected $fillable = ['customer_id', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country_id'];
 
     public $relation = [
         'belongsTo' => [
             'customer' => 'Admin\Models\Customers_model',
-            'country'  => 'System\Models\Countries_model',
+            'country' => 'System\Models\Countries_model',
         ],
     ];
 
@@ -47,10 +47,10 @@ class Addresses_model extends Model
     public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
-            'page'      => 1,
+            'page' => 1,
             'pageLimit' => 20,
-            'customer'  => null,
-            'sort'      => 'address_id desc',
+            'customer' => null,
+            'sort' => 'address_id desc',
         ], $options));
 
         if ($customer instanceof Customers_model) {

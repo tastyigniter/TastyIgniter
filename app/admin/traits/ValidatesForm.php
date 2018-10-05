@@ -111,7 +111,7 @@ trait ValidatesForm
     protected function extractInputFromRules($request, array $rules)
     {
         return collect($request)->only(
-            collect($rules)->keys()->map(function ($rule) {
+            collect($this->parseRules($rules))->keys()->map(function ($rule) {
                 return Str::contains($rule, '.') ? explode('.', $rule)[0] : $rule;
             })->unique()->toArray()
         )->toArray();

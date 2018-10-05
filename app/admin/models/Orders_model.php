@@ -95,7 +95,7 @@ class Orders_model extends Model
         if (!$this->customer)
             return [];
 
-        return $this->customer->addresses();
+        return $this->customer->addresses()->get();
     }
 
     //
