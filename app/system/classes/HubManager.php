@@ -44,18 +44,18 @@ class HubManager
 
     public function getDetail($type, $itemName = [])
     {
-        return $this->requestRemoteData("{$type}/detail", ['item' => json_encode($itemName)]);
+        return $this->requestRemoteData("{$type}/detail", ['item' => $itemName]);
     }
 
     public function getDetails($type, $itemNames = [])
     {
-        return $this->requestRemoteData("{$type}/details", ['items' => json_encode($itemNames)]);
+        return $this->requestRemoteData("{$type}/details", ['items' => $itemNames]);
     }
 
     public function applyItems($itemNames = [])
     {
         $response = $this->requestRemoteData('core/apply', [
-            'items' => json_encode($itemNames),
+            'items' => $itemNames,
             'version' => params('ti_version'),
         ]);
 
@@ -68,10 +68,11 @@ class HubManager
 
         if (!$response = Cache::get($cacheKey)) {
             $response = $this->requestRemoteData('core/apply', [
-                'items' => json_encode($itemNames),
+                'items' => $itemNames,
                 'include' => 'tags',
                 'version' => params('ti_version'),
                 'force' => $force,
+                'edge' => Config::get('system.edgeUpdates', FALSE),
             ]);
 
             if ($cacheKey AND is_array($response)) {
@@ -111,7 +112,8 @@ class HubManager
     public function downloadFile($filePath, $fileHash, $params = [])
     {
         return $this->requestRemoteFile('core/download', [
-            'item' => json_encode($params),
+            'item' => $params,
+            'edge' => Config::get('system.edgeUpdates', FALSE),
         ], $filePath, $fileHash);
     }
 
