@@ -68,7 +68,7 @@ class Updates extends \Admin\Classes\AdminController
             if (!empty($updates['items']) OR !empty($updates['ignoredItems'])) {
                 Template::setButton(lang('system::lang.updates.button_update'), [
                     'class' => 'btn btn-primary pull-left mr-2',
-                    'id'    => 'apply-updates', 'role' => 'button',
+                    'id' => 'apply-updates', 'role' => 'button',
                 ]);
             }
         }
@@ -174,7 +174,7 @@ class Updates extends \Admin\Classes\AdminController
 
         return [
             '#list-items' => $this->makePartial('browse/list', [
-                'items'    => $items,
+                'items' => $items,
                 'itemType' => $itemType,
             ]),
         ];
@@ -242,17 +242,17 @@ class Updates extends \Admin\Classes\AdminController
 
             // Silly way to sort the process
             $applySteps = [
-                'core'         => [],
-                'extensions'   => [],
-                'themes'       => [],
+                'core' => [],
+                'extensions' => [],
+                'themes' => [],
                 'translations' => [],
             ];
 
             if ($step == 'complete') {
                 $processSteps[$step][] = [
-                    'items'   => $meta['data'],
+                    'items' => $meta['data'],
                     'process' => $step,
-                    'label'   => lang("system::lang.updates.progress_{$step}"),
+                    'label' => lang("system::lang.updates.progress_{$step}"),
                     'success' => sprintf(lang('system::lang.updates.progress_success'), rtrim($step, 'e').'ing', ''),
                 ];
 
@@ -262,9 +262,9 @@ class Updates extends \Admin\Classes\AdminController
             foreach (array_get($meta, 'data') as $item) {
                 if ($item['type'] == 'core') {
                     $applySteps['core'][] = array_merge([
-                        'action'  => 'update',
+                        'action' => 'update',
                         'process' => "{$step}Core",
-                        'label'   => sprintf(lang("system::lang.updates.progress_{$step}"), $item['name'].' update'),
+                        'label' => sprintf(lang("system::lang.updates.progress_{$step}"), $item['name'].' update'),
                         'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
                 }
@@ -274,9 +274,9 @@ class Updates extends \Admin\Classes\AdminController
 
                     $action = $this->getActionFromItems($item['code'], $params);
                     $applySteps[$pluralType][] = array_merge([
-                        'action'  => $action,
+                        'action' => $action,
                         'process' => $step.ucfirst($singularType),
-                        'label'   => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
+                        'label' => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
                         'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
                 }
@@ -299,9 +299,9 @@ class Updates extends \Admin\Classes\AdminController
         $params = [];
         if (post('step') != 'complete') {
             $params = !isset($meta['code']) ? [] : [
-                'name'   => $meta['code'],
-                'type'   => $meta['type'],
-                'ver'    => $meta['version'],
+                'name' => $meta['code'],
+                'type' => $meta['type'],
+                'ver' => $meta['version'],
                 'action' => $meta['action'],
             ];
         }

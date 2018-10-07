@@ -67,20 +67,20 @@
 
                     $.request('onProcess', {
                         data: {step: group, meta: step},
-                        beforeSend: self.setProgressBar(step.label, 'primary')
-                    }).done(function (json) {
-                        self.setProgressBar(step.success, 'primary')
-                        setTimeout(function () {
-                            if (!json.result)
+                        beforeSend: self.setProgressBar(step.label, 'primary'),
+                        success: function (json) {
+                            self.setProgressBar(step.success, 'primary')
+                            setTimeout(function () {
+                                deferred.resolve()
+                            }, timeout)
+                        },
+                        error: function (json) {
+                            setTimeout(function () {
                                 success = false
-                            deferred.resolve()
-                        }, timeout)
-                    }).fail(function (json) {
-                        setTimeout(function () {
-                            success = false
-                            failMessages.push(json.responseText)
-                            deferred.resolve()
-                        }, timeout)
+                                failMessages.push(json.responseText)
+                                deferred.reject(json.responseText)
+                            }, timeout)
+                        }
                     })
 
                     return deferred
@@ -90,12 +90,12 @@
 
         $.waterfall.apply(this, requestChain).always(function () {
         }).done(function (json) {
-            if (!success) {
-                self.setProgressBar(failMessages.join('<br> '), 'danger')
-            } else {
+            if (success) {
                 self.setProgressBar(null, 'success', 100)
                 self.completeStep()
             }
+        }).fail(function (message) {
+            self.setProgressBar(failMessages.join('<br> '), 'danger')
         })
     }
 
@@ -347,7 +347,7 @@
             method: 'POST',
             limit: 15,
             remote: {
-                url: searchAction+'?filter[type]=' + searchType + '&filter[search]=%QUERY',
+                url: searchAction + '?filter[type]=' + searchType + '&filter[search]=%QUERY',
                 wildcard: '%QUERY',
                 transform: function (response) {
                     return (response && response.hasOwnProperty('data')) ? response.data : []
