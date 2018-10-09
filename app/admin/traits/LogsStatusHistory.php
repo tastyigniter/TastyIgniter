@@ -4,13 +4,10 @@ namespace Admin\Traits;
 
 use Admin\Models\Status_history_model;
 use Exception;
-use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Model;
 
 trait LogsStatusHistory
 {
-    use LogsActivity;
-
     protected static $recordEvents = ['updated', 'deleted'];
 
     protected static $logAttributes = ['status_id', 'assignee_id'];
@@ -34,11 +31,6 @@ trait LogsStatusHistory
     public function getStatusColorAttribute()
     {
         return $this->getRelatedStatusModel()->status_color;
-    }
-
-    public function getMessageForEvent($eventName)
-    {
-        return parse_values(['event' => $eventName], lang('admin::lang.orders.activity_event_log'));
     }
 
     public function getRelatedStatusModel()
