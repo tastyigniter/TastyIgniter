@@ -14,32 +14,32 @@ class Countries extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'System\Models\Countries_model',
-            'title'        => 'lang:system::lang.countries.text_title',
+            'model' => 'System\Models\Countries_model',
+            'title' => 'lang:system::lang.countries.text_title',
             'emptyMessage' => 'lang:system::lang.countries.text_empty',
-            'defaultSort'  => ['country_name', 'ASC'],
-            'configFile'   => 'countries_model',
+            'defaultSort' => ['country_name', 'ASC'],
+            'configFile' => 'countries_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::lang.countries.text_form_name',
-        'model'      => 'System\Models\Countries_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'countries/edit/{country_id}',
+        'name' => 'lang:system::lang.countries.text_form_name',
+        'model' => 'System\Models\Countries_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'countries/edit/{country_id}',
             'redirectClose' => 'countries',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'countries/edit/{country_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'countries/edit/{country_id}',
             'redirectClose' => 'countries',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'countries',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'countries',
         ],
         'configFile' => 'countries_model',

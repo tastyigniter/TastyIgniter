@@ -137,6 +137,22 @@ class BaseExtension extends ServiceProvider
     }
 
     /**
+     * Registers a new console (artisan) command
+     *
+     * @param string $key The command name
+     * @param string $class The command class
+     * @return void
+     */
+    public function registerConsoleCommand($key, $class)
+    {
+        $key = 'command.'.$key;
+
+        $this->app->singleton($key, $class);
+
+        $this->commands($key);
+    }
+
+    /**
      * Read configuration from Config file
      *
      * @return array|bool

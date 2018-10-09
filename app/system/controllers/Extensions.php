@@ -125,7 +125,7 @@ class Extensions extends \Admin\Classes\AdminController
             $this->vars['extensionModel'] = $model;
             $this->vars['extensionMeta'] = $meta;
             $this->vars['extensionName'] = $meta['name'] ?? '';
-            $this->vars['extensionData'] = count($extensionManager->files($extensionCode, 'database/migrations')) > 0;
+            $this->vars['extensionData'] = $this->extensionHasMigrations($extensionCode);
         }
         catch (Exception $ex) {
             $this->handleError($ex);
@@ -358,5 +358,16 @@ class Extensions extends \Admin\Classes\AdminController
         }
 
         return $feedback;
+    }
+
+    protected function extensionHasMigrations($extension)
+    {
+        try {
+            $extensionManager = ExtensionManager::instance();
+            return count($extensionManager->files($extension, 'database/migrations')) > 0;
+        }
+        catch (Exception $ex) {
+            return FALSE;
+        }
     }
 }

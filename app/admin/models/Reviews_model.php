@@ -2,6 +2,8 @@
 
 use Admin\Traits\Locationable;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Model;
 use System\Models\Settings_model;
 
@@ -36,7 +38,7 @@ class Reviews_model extends Model
             'location' => ['Admin\Models\Locations_model', 'foreignKey' => 'location_id', 'scope' => 'isEnabled'],
             'customer' => 'Admin\Models\Customers_model',
         ],
-        'morphTo'   => [
+        'morphTo' => [
             'reviewable' => [],
         ],
     ];
@@ -44,14 +46,14 @@ class Reviews_model extends Model
     public static $allowedSortingColumns = ['date_added asc', 'date_added desc'];
 
     public static $relatedSaleTypes = [
-        'orders'       => 'Admin\Models\Orders_model',
+        'orders' => 'Admin\Models\Orders_model',
         'reservations' => 'Admin\Models\Reservations_model',
     ];
 
     public static function getSaleTypeOptions()
     {
         return [
-            'orders'       => 'lang:admin::lang.reviews.text_order',
+            'orders' => 'lang:admin::lang.reviews.text_order',
             'reservations' => 'lang:admin::lang.reviews.text_reservation',
         ];
     }
@@ -77,11 +79,11 @@ class Reviews_model extends Model
     public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
-            'page'      => 1,
+            'page' => 1,
             'pageLimit' => 20,
-            'sort'      => null,
-            'location'  => null,
-            'customer'  => null,
+            'sort' => null,
+            'location' => null,
+            'customer' => null,
         ], $options));
 
         if (is_numeric($location)) {
@@ -131,9 +133,9 @@ class Reviews_model extends Model
 
     public function getSaleTypeModel($saleType)
     {
-        $model = self::$relatedSaleTypes[$saleType];
-
-        // @todo: throw ex
+        $model = self::$relatedSaleTypes[$saleType] ?? null;
+        if (!$model OR !class_exists($model))
+            throw new ModelNotFoundException;
 
         return new $model();
     }
