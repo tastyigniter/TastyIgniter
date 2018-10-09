@@ -259,6 +259,7 @@ class ServiceProvider extends AppServiceProvider
                 '~/node_modules/popper.js/dist/umd/popper.min.js',
                 '~/node_modules/bootstrap/dist/js/bootstrap.min.js',
                 '~/app/system/assets/ui/js/vendor/waterfall.min.js',
+                '~/app/system/assets/ui/js/vendor/transition.js',
                 '~/app/system/assets/ui/js/app.js',
                 '~/app/system/assets/ui/js/flashmessage.js',
                 '~/app/system/assets/ui/js/toggler.js',

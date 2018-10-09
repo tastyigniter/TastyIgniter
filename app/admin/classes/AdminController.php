@@ -334,6 +334,6 @@ class AdminController extends BaseController
         $this->fatalError = $errorMessage;
         $this->vars['fatalError'] = $errorMessage;
 
-        flash()->error($errorMessage);
+        flash()->error($errorMessage)->important();
     }
 }

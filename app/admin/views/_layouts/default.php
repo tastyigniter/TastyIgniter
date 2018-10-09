@@ -16,12 +16,7 @@
     <?php } ?>
 
     <div class="page-wrapper">
-        <div id="notification">
-            <?= $this->makePartial('flash') ?>
-        </div>
-
         <?= Template::getBlock('body') ?>
-
     </div>
     <?php if (AdminAuth::isLogged()) { ?>
         <div class="footer navbar-footer">
@@ -37,6 +32,9 @@
             </div>
         </div>
     <?php } ?>
+    <div id="notification">
+        <?= $this->makePartial('flash') ?>
+    </div>
     <?= get_script_tags(); ?>
 </body>
 </html>

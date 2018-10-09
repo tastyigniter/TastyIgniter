@@ -13,26 +13,28 @@
 
         if ($element.length === 0) {
             $element = $('<div />', {
-                class: 'animated bounceIn alert alert-' + options.class
+                class: 'alert alert-' + options.class
             }).html(options.text)
         }
 
-        $element.addClass('flash-message fade')
-        $element.append('<button type="button" class="close" aria-hidden="true">&times;</button>')
+        $element.addClass('flash-message animated fadeInDown')
         $element.attr('data-control', null)
+
+        if (options.allowDismiss)
+            $element.append('<button type="button" class="close" aria-hidden="true">&times;</button>')
 
         $element.on('click', 'button', remove)
         if (options.interval > 0) $element.on('click', remove)
 
-        $(options.container).append($element)
+        $(options.container).prepend($element)
+
+        var timer = null
 
         setTimeout(function () {
             $element.addClass('show')
         }, 100)
 
-        var timer = null
-
-        if (options.interval > 0)
+        if (options.allowDismiss && options.interval > 0)
             timer = window.setTimeout(remove, options.interval * 1000)
 
         function removeElement() {
@@ -42,11 +44,11 @@
         function remove() {
             window.clearInterval(timer)
 
-            $element.removeClass('show')
-            $.support.transition && $element.hasClass('fade')
+            $element.addClass('fadeOutUp')
+            $.support.transition && $element.hasClass('fadeOutUp')
                 ? $element
-                .one($.support.transition.end, removeElement)
-                .emulateTransitionEnd(500)
+                    .one($.support.transition.end, removeElement)
+                    .emulateTransitionEnd(500)
                 : removeElement()
         }
     }
@@ -55,7 +57,8 @@
         container: '#notification',
         class: 'success',
         text: 'text',
-        interval: 5
+        interval: 5,
+        allowDismiss: true,
     }
 
     // FLASH MESSAGE PLUGIN DEFINITION
@@ -70,8 +73,19 @@
     // ===============
 
     $(document).ready(function () {
-        $('[data-control="flash-message"]').each(function () {
-            $.ti.flashMessage($(this).data(), this)
+        $('[data-control="flash-message"]').each(function (index, element) {
+            setTimeout(function () {
+                $.ti.flashMessage($(element).data(), element)
+            }, (index + 1) * 500)
+        })
+
+        $('[data-control="flash-overlay"]').each(function (index, element) {
+            var $this = $(element),
+                options = $.extend({}, $this.data(), $this.data('closeOnEsc') === true ? {
+                timer: (index + 1) * 3000
+            } : {})
+            console.log(options)
+            swal(options)
         })
     })
 
