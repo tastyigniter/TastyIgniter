@@ -57,6 +57,7 @@ class HubManager
         $response = $this->requestRemoteData('core/apply', [
             'items' => $itemNames,
             'version' => params('ti_version'),
+            'edge' => Config::get('system.edgeUpdates', FALSE),
         ]);
 
         return $response;
