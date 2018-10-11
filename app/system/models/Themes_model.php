@@ -140,7 +140,7 @@ class Themes_model extends Model
             }
         }
 
-        return array_merge($data, $this->data);
+        return array_merge($data, $this->data ?? []);
     }
 
     //

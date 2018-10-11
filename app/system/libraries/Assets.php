@@ -29,6 +29,8 @@ class Assets
 
     public function initialize()
     {
+        static::$registeredPaths[] = base_path();
+
         $this->initCombiner();
 
         foreach (self::$registeredCallback as $callback) {
@@ -204,7 +206,7 @@ class Assets
             return File::localToPublic(File::symbolizePath($name));
 
         foreach (static::$registeredPaths as $path) {
-            if (File::exists($path = $path.'/'.$name))
+            if (File::exists($path = realpath($path.'/'.$name)))
                 return File::localToPublic($path);
         }
 

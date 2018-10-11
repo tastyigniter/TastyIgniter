@@ -15,32 +15,32 @@ class Locations extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Locations_model',
-            'title'        => 'lang:admin::lang.locations.text_title',
+            'model' => 'Admin\Models\Locations_model',
+            'title' => 'lang:admin::lang.locations.text_title',
             'emptyMessage' => 'lang:admin::lang.locations.text_empty',
-            'defaultSort'  => ['location_id', 'DESC'],
-            'configFile'   => 'locations_model',
+            'defaultSort' => ['location_id', 'DESC'],
+            'configFile' => 'locations_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.locations.text_form_name',
-        'model'      => 'Admin\Models\Locations_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'locations/edit/{location_id}',
+        'name' => 'lang:admin::lang.locations.text_form_name',
+        'model' => 'Admin\Models\Locations_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'locations/edit/{location_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'locations',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'locations',
         ],
         'configFile' => 'locations_model',
@@ -69,7 +69,7 @@ class Locations extends \Admin\Classes\AdminController
         $formController->edit($context, $recordId);
 
         if (!count($formController->getFormModel()->listDeliveryAreas())) {
-            flash()->warning(lang('admin::lang.locations.alert_delivery_area'))->now();
+            flash()->warning(lang('admin::lang.locations.alert_delivery_area'))->important();
         }
     }
 
@@ -95,7 +95,8 @@ class Locations extends \Admin\Classes\AdminController
             $this->asExtension('FormController')->edit_onSave('edit', params('default_location_id'));
 
             return $this->refresh();
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -171,7 +172,7 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['options.hours.*.flexible.*.close', 'lang:admin::lang.locations.label_close_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::lang.locations.label_opening_status', $requiredIf.'|integer'];
 
-        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'required'];
+        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'sometimes|required'];
         $rules[] = ['delivery_areas.*.type', 'lang:admin::lang.locations.label_area_type', 'required'];
         $rules[] = ['delivery_areas.*.name', 'lang:admin::lang.locations.label_area_name', 'required'];
         $rules[] = ['delivery_areas.*.area_id', 'lang:admin::lang.locations.label_area_id', 'integer'];
@@ -200,11 +201,11 @@ class Locations extends \Admin\Classes\AdminController
     {
         if (post('Location.options.auto_lat_lng')) {
             $address = format_address([
-                'address_1'  => post('Location.location_address_1'),
-                'address_2'  => post('Location.location_address_2'),
-                'city'       => post('Location.location_city'),
-                'state'      => post('Location.location_state'),
-                'postcode'   => post('Location.location_postcode'),
+                'address_1' => post('Location.location_address_1'),
+                'address_2' => post('Location.location_address_2'),
+                'city' => post('Location.location_city'),
+                'state' => post('Location.location_state'),
+                'postcode' => post('Location.location_postcode'),
                 'country_id' => post('Location.location_country_id'),
             ], FALSE);
 

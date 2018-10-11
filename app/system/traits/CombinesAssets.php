@@ -7,6 +7,7 @@ use ApplicationException;
 use Assetic\Asset\AssetCache;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
+use Assetic\Asset\HttpAsset;
 use Assetic\Cache\FilesystemCache;
 use Cache;
 use Carbon\Carbon;
@@ -187,7 +188,7 @@ trait CombinesAssets
     protected function prepareAssets(array $assets)
     {
         $assets = array_map(function ($path) {
-            return public_path($this->getAssetPath($path));
+            return $this->getAssetPath($path);
         }, $assets);
 
         return $assets;
@@ -202,10 +203,17 @@ trait CombinesAssets
         foreach ($assets as $path) {
             $filters = $this->getFilters(File::extension($path)) ?: [];
 
+            if (file_exists($publicPath = public_path($path)))
+                $path = $publicPath;
+
             if (!file_exists($path))
                 $path = File::symbolizePath($path, null) ?? $path;
 
-            $files[] = new FileAsset($path, $filters, public_path());
+            $asset = starts_with($path, ['//', 'http://', 'https://'])
+                ? new HttpAsset($path, $filters)
+                : new FileAsset($path, $filters, public_path());
+
+            $files[] = $asset;
         }
 
         $files = $this->applyCacheOnFiles($files);
