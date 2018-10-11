@@ -337,10 +337,12 @@ class UpdateManager
         $updateCount = 0;
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
-            $update['installedVer'] = array_get($installedItems, $update['code'].'.ver');
+            $update['installedVer'] = array_get(array_get($installedItems, $update['code'], []), 'ver');
 
-            if (array_get($update, 'type') == 'core' AND $this->disableCoreUpdates) {
-                continue;
+            if (array_get($update, 'type') == 'core') {
+                $update['installedVer'] = params('ti_version');
+                if ($this->disableCoreUpdates)
+                    continue;
             }
 
             if ($this->isMarkedAsIgnored($update['code'])) {
@@ -398,7 +400,8 @@ class UpdateManager
         $applies = $this->getHubManager()->applyItems($names);
 
         if (isset($applies['data'])) foreach ($applies['data'] as $index => $item) {
-            if ($this->isMarkedAsIgnored($item['code']))
+            $filterCore = array_get($item, 'type') == 'core' AND $this->disableCoreUpdates;
+            if ($filterCore OR $this->isMarkedAsIgnored($item['code']))
                 unset($applies['data'][$index]);
         }
 
@@ -470,6 +473,7 @@ class UpdateManager
         $result = $this->extractFile($fileCode);
 
         File::copyDirectory($configBackup, $configDir);
+        File::deleteDirectory($configBackup);
 
         return $result;
     }

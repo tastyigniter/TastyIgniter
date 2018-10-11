@@ -1503,8 +1503,11 @@ body.dragging, body.dragging {
     background-color: #bec2ce;
     border-radius: 0; }
   .panel-items .panel-item .media-body {
-    min-height: 75px;
     margin: 0 15px; }
+
+.items-list {
+  padding-left: 0;
+  padding-right: 0; }
 
 .items-list .panel-item {
   background-color: #e9eaee;

@@ -191,11 +191,13 @@ class HubManager
             $error = @json_decode(file_get_contents($filePath), TRUE);
             @unlink($filePath);
 
-            Log::info($error);
-            if (!$errorMessage = array_get($error, 'message'))
-                $errorMessage = "Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)";
+            Log::info(
+                array_get($error, 'message')
+                    ? $error
+                    : "Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)"
+            );
 
-            throw new ApplicationException($errorMessage);
+            throw new ApplicationException(sprintf('Downloading %s failed, check error logs.', array_get($params, 'item.name')));
         }
 
         return TRUE;
