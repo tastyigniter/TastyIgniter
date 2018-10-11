@@ -73,6 +73,14 @@ class Extensions_model extends Model
         return $value AND $this->class AND !$this->class->disabled;
     }
 
+    public function getVersionAttribute($value)
+    {
+        if (strlen($value))
+            return $value;
+
+        return array_get($this->meta, 'version');
+    }
+
     //
     // Scopes
     //
@@ -171,9 +179,10 @@ class Extensions_model extends Model
      *
      * @param string $code
      *
+     * @param null $version
      * @return bool|null
      */
-    public static function install($code)
+    public static function install($code, $version = null)
     {
         $extensionModel = self::firstOrNew(['type' => 'module', 'name' => $code]);
         if (!$extensionModel->applyExtensionClass())
@@ -186,7 +195,7 @@ class Extensions_model extends Model
             $extensionModel->status = TRUE;
             $extensionModel->fill([
                 'title' => $extensionModel->meta['name'],
-                'version' => $extensionModel->meta['version'],
+                'version' => $version ?? $extensionModel->version,
             ])->save();
         }
 

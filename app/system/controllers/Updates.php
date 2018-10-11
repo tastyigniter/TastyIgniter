@@ -354,7 +354,7 @@ class Updates extends \Admin\Classes\AdminController
                     $updateManager->setCoreVersion($item['version'], $item['hash']);
                     break;
                 case 'extension':
-                    Extensions_model::install($item['code']);
+                    Extensions_model::install($item['code'], $item['version']);
                     break;
             }
         }

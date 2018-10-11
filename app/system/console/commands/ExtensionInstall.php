@@ -53,7 +53,7 @@ class ExtensionInstall extends Command
 
         $this->output->writeln(sprintf('<info>Installing %s extension</info>', $code));
         ExtensionManager::instance()->loadExtensions();
-        Extensions_model::install($code);
+        Extensions_model::install($code, $version);
 
         foreach ($manager->getLogs() as $note) {
             $this->output->writeln($note);

@@ -140,7 +140,7 @@ class Extensions extends \Admin\Classes\AdminController
         if ($feedback = $this->checkDependencies($extension)) {
             flash()->warning($feedback);
         }
-        else if (Extensions_model::install($extensionCode, $extension)) {
+        else if (Extensions_model::install($extensionCode)) {
             $title = array_get($extension->extensionMeta(), 'name');
             flash()->success(sprintf(lang('admin::lang.alert_success'), "Extension {$title} installed "));
         }
@@ -156,7 +156,7 @@ class Extensions extends \Admin\Classes\AdminController
         $extensionCode = post('code');
         $extension = ExtensionManager::instance()->findExtension($extensionCode);
 
-        if (Extensions_model::uninstall($extensionCode, $extension) AND $extension) {
+        if (Extensions_model::uninstall($extensionCode) AND $extension) {
             $title = array_get($extension->extensionMeta(), 'name');
 
             flash()->success(sprintf(
