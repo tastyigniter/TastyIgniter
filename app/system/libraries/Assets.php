@@ -58,6 +58,9 @@ class Assets
     public function addFromManifest($path)
     {
         $assetsConfigPath = base_path().$this->getAssetPath($path);
+        if (!File::exists($assetsConfigPath))
+            return FALSE;
+
         $content = json_decode(File::get($assetsConfigPath), TRUE);
         if ($bundles = array_get($content, 'bundles')) {
             foreach ($bundles as $bundle) {
