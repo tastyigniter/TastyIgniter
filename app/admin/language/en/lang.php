@@ -30,6 +30,8 @@ return [
     'text_now' => 'Now',
     'text_never' => 'Never',
     'text_remove' => 'Remove',
+    'text_reload' => 'Reload',
+    'text_save' => 'Save',
     'text_about_tastyigniter' => 'About TastyIgniter',
     'text_documentation' => 'Documentation',
     'text_community_support' => 'Community Support',
@@ -46,6 +48,7 @@ return [
 
     'button_new' => '<i class="fa fa-plus"></i> New',
     'button_delete' => '<i class="fa fa-trash-o"></i> Delete',
+    'button_add' => 'Add',
     'button_edit' => 'Edit',
     'button_save' => '<i class="fa fa-save"></i> Save',
     'button_save_close' => '<i class="fa fa-save"></i> Save & Close',
@@ -132,7 +135,6 @@ return [
         'missing_definitions' => 'List action used in %s does not have definitions.',
         'missing_column' => 'Missing columns in List definitions %s',
         'delete_empty' => 'Nothing selected to delete.',
-        'text_empty' => 'No records available.',
         'text_setup' => 'Setup',
         'setup_title' => 'List Setup - %s',
         'label_visible_columns' => 'Visible Columns',
@@ -321,6 +323,10 @@ return [
     'dashboard' => [
         'text_title' => 'Dashboard',
         'text_heading' => 'Dashboard',
+        'text_add_widget' => 'Add Widget',
+        'text_edit_widget' => 'Edit Widget',
+        'text_select_widget' => 'Select a widget',
+
         'text_zero' => '0',
         'text_dash_dash' => '--',
         'text_today' => 'Today',
@@ -354,11 +360,16 @@ return [
         'text_statistic' => 'Statistics',
         'text_range' => 'Range',
         'text_today' => 'Today',
-        'text_week' => 'Week',
-        'text_month' => 'Month',
-        'text_year' => 'Year',
+        'text_week' => 'Last 7 Days',
+        'text_month' => 'Last 30 Days',
+        'text_year' => 'This Year',
+        'text_context' => 'Context',
+        'text_cache_usage' => 'Cache Usage',
+        'text_total_cache' => 'Total cache size:',
         'text_news' => 'TastyIgniter News',
+        'text_news_count' => 'News Count',
         'text_recent_activity' => 'Recent Activity',
+        'text_activities_count' => 'Activities Count',
         'text_top_customers' => 'Top Customers',
         'text_latest_order' => '10 Latest Orders',
         'text_reports_chart' => 'Reports Chart',
@@ -374,6 +385,20 @@ return [
         'column_date_added' => 'Date Added',
         'column_total_orders' => '# Orders',
         'column_total_sale' => 'Total Sale',
+
+        'label_widget' => 'Widget',
+        'label_widget_title' => 'Widget Title',
+        'label_widget_columns' => 'Widget Grid Width',
+
+        'button_add_widget' => 'Add Widget',
+        'button_reset_widgets' => 'Reset Widgets',
+        'button_set_default' => 'Set As Default',
+
+        'help_widget_columns' => 'The widget width, a number between 1 and 12.',
+
+        'error_rss' => 'The URL address is incorrect or',
+
+        'alert_set_default_confirm' => 'Are you sure you want to set the current layout as default?',
     ],
 
     'locations' => [

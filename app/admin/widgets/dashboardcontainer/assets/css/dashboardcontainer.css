@@ -1,0 +1,12 @@
+.widget-item-action {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  display: none;
+}
+.widget-item:hover .widget-item-action {
+  display: block;
+}
+.widget-title {
+  padding-bottom: 10px;
+}

@@ -40,6 +40,7 @@ class ServiceProvider extends AppServiceProvider
 
         if ($this->app->runningInAdmin()) {
             $this->registerAssets();
+            $this->registerDashboardWidgets();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
@@ -64,6 +65,34 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerSourcePath(app_path('admin/assets'));
 
             $manager->addFromManifest('~/app/admin/views/_meta/assets.json');
+        });
+    }
+
+    /*
+     * Register dashboard widgets
+     */
+    protected function registerDashboardWidgets()
+    {
+        Widgets::instance()->registerDashboardWidgets(function (Widgets $manager) {
+            $manager->registerDashboardWidget(\System\DashboardWidgets\Activities::class, [
+                'label' => 'Recent activities',
+                'context' => 'dashboard',
+            ]);
+
+            $manager->registerDashboardWidget(\System\DashboardWidgets\Cache::class, [
+                'label' => 'Cache Usage',
+                'context' => 'dashboard',
+            ]);
+
+            $manager->registerDashboardWidget(\System\DashboardWidgets\News::class, [
+                'label' => 'Latest News',
+                'context' => 'dashboard',
+            ]);
+
+            $manager->registerDashboardWidget(\Admin\DashboardWidgets\Statistics::class, [
+                'label' => 'Statistics widget',
+                'context' => 'dashboard',
+            ]);
         });
     }
 

@@ -102,10 +102,10 @@ class BaseExtension extends ServiceProvider
     }
 
     /**
-     * Registers any report widgets provided by this extension.
+     * Registers any dashboard widgets provided by this extension.
      * @return array
      */
-    public function registerReportWidgets()
+    public function registerDashboardWidgets()
     {
         return [];
     }

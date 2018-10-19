@@ -17,29 +17,29 @@ class Widgets
     use Singleton;
 
     /**
-     * @var array An array of report widgets.
+     * @var array An array of form widgets.
      */
     protected $formWidgets;
 
     /**
-     * @var array Cache of report widget registration callbacks.
+     * @var array Cache of form widget registration callbacks.
      */
     protected $formWidgetCallbacks = [];
 
     /**
-     * @var array An array of report widgets.
+     * @var array An array of form widgets hints.
      */
     protected $formWidgetHints;
 
     /**
-     * @var array An array of report widgets.
+     * @var array An array of dashboard widgets.
      */
-    protected $reportWidgets;
+    protected $dashboardWidgets;
 
     /**
-     * @var array Cache of report widget registration callbacks.
+     * @var array Cache of dashboard widget registration callbacks.
      */
-    protected $reportWidgetCallbacks = [];
+    protected $dashboardWidgetCallbacks = [];
 
     /**
      * @var ExtensionManager
@@ -99,7 +99,7 @@ class Widgets
      */
     public function registerFormWidget($className, $widgetInfo = null)
     {
-        $widgetCode = isset($widgetInfo['code']) ? $widgetInfo['code'] : null;
+        $widgetCode = $widgetInfo['code'] ?? null;
 
         if (!$widgetCode) {
             $widgetCode = get_class_id($className);
@@ -157,20 +157,20 @@ class Widgets
     }
 
     //
-    // Report Widgets
+    // Dashboard Widgets
     //
 
     /**
-     * Returns a list of registered report widgets.
+     * Returns a list of registered dashboard widgets.
      * @return array Array keys are class names.
      */
-    public function listReportWidgets()
+    public function listDashboardWidgets()
     {
-        if ($this->reportWidgets === null) {
-            $this->reportWidgets = [];
+        if ($this->dashboardWidgets === null) {
+            $this->dashboardWidgets = [];
 
             // Load app widgets
-            foreach ($this->reportWidgetCallbacks as $callback) {
+            foreach ($this->dashboardWidgetCallbacks as $callback) {
                 $callback($this->instance());
             }
 
@@ -178,41 +178,43 @@ class Widgets
             $extensions = $this->extensionManager->getExtensions();
 
             foreach ($extensions as $extension) {
-                if (!is_array($widgets = $extension->registerReportWidgets())) {
+                if (!is_array($widgets = $extension->registerDashboardWidgets())) {
                     continue;
                 }
 
                 foreach ($widgets as $className => $widgetInfo) {
-                    $this->registerReportWidget($className, $widgetInfo);
+                    $this->registerDashboardWidget($className, $widgetInfo);
                 }
             }
         }
 
-        return $this->reportWidgets;
+        return $this->dashboardWidgets;
     }
 
     /*
-     * Registers a single report widget.
+     * Registers a single dashboard widget.
      */
-    public function registerReportWidget($className, $widgetInfo)
+    public function registerDashboardWidget($className, $widgetInfo)
     {
-        $this->reportWidgets[$className] = $widgetInfo;
+        $this->dashboardWidgets[$className] = $widgetInfo;
     }
 
     /**
-     * Manually registers report widget for consideration.
+     * Manually registers dashboard widget for consideration.
      * Usage:
      * <pre>
-     *   WidgetManager::registerReportWidgets(function($manager){
-     *       $manager->registerReportWidget('RainLab\GoogleAnalytics\ReportWidgets\TrafficOverview', [
+     *   Widgets::registerDashboardWidgets(function($manager){
+     *       $manager->registerDashboardWidget('IgniterLab\GoogleAnalytics\DashboardWidgets\TrafficOverview', [
      *           'name'=>'Google Analytics traffic overview',
      *           'context'=>'dashboard'
      *       ]);
      *   });
      * </pre>
+     *
+     * @param callable $definitions
      */
-    public function registerReportWidgets(callable $definitions)
+    public function registerDashboardWidgets(callable $definitions)
     {
-        $this->reportWidgetCallbacks[] = $definitions;
+        $this->dashboardWidgetCallbacks[] = $definitions;
     }
 }
