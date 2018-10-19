@@ -40,6 +40,11 @@ class ExtensionManager
     protected $installedExtensions = [];
 
     /**
+     * @var array Cache of registration method results.
+     */
+    protected $registrationMethodCache = [];
+
+    /**
      * @var array of extensions and their directory paths.
      */
     protected $paths = [];
@@ -590,6 +595,30 @@ class ExtensionManager
     public function isDisabled($name)
     {
         return !$this->checkName($name) OR !array_get($this->installedExtensions, $name, FALSE);
+    }
+
+    /**
+     * Spins over every extension object and collects the results of a method call.
+     * @param  string $methodName
+     * @return array
+     */
+    public function getRegistrationMethodValues($methodName)
+    {
+        if (isset($this->registrationMethodCache[$methodName])) {
+            return $this->registrationMethodCache[$methodName];
+        }
+
+        $results = [];
+        $extensions = $this->getExtensions();
+        foreach ($extensions as $id => $extension) {
+            if (!method_exists($extension, $methodName)) {
+                continue;
+            }
+
+            $results[$id] = $extension->{$methodName}();
+        }
+
+        return $this->registrationMethodCache[$methodName] = $results;
     }
 
     /**

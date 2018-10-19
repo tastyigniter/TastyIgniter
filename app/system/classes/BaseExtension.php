@@ -172,7 +172,7 @@ class BaseExtension extends ServiceProvider
             throw new SystemException("The configuration file for extension <b>{$className}</b> does not exist. ".
                 'Create the file or override extensionMeta() method in the extension class.');
 
-        $config = json_decode(File::get($configFile), TRUE);
+        $config = json_decode(File::get($configFile), TRUE) ?? [];
         foreach ([
                      'code',
                      'name',

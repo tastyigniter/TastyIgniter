@@ -57,7 +57,7 @@ class Controller extends IlluminateController
      */
     public static function extend(Closure $callback)
     {
-//        self::extendableExtendCallback($callback);
+        self::extendableExtendCallback($callback);
     }
 
     /**
@@ -136,7 +136,8 @@ class Controller extends IlluminateController
             $cacheKey = $parts[0];
 
             return Assets::combineGetContents($cacheKey);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $errorMessage = ErrorHandler::getDetailedMessage($ex);
 
             return '/* '.e($errorMessage).' */';

@@ -1,8 +1,8 @@
 <div class="row-fluid">
     <?= form_open(current_url(),
         [
-            'id'     => 'preview-form',
-            'role'   => 'form',
+            'id' => 'edit-form',
+            'role' => 'form',
             'method' => 'PATCH',
         ]
     ); ?>

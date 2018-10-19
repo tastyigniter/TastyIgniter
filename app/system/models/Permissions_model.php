@@ -27,9 +27,9 @@ class Permissions_model extends Model
     ];
 
     protected static $permissionDefaults = [
-        'name'        => null,
+        'name' => null,
         'description' => null,
-        'action'      => ['access', 'add', 'manage', 'delete'],
+        'action' => ['access', 'add', 'manage', 'delete'],
     ];
 
     /**
@@ -81,7 +81,7 @@ class Permissions_model extends Model
         return [
             'access' => lang('system::lang.permissions.text_access'),
             'manage' => lang('system::lang.permissions.text_manage'),
-            'add'    => lang('system::lang.permissions.text_add'),
+            'add' => lang('system::lang.permissions.text_add'),
             'delete' => lang('system::lang.permissions.text_delete'),
         ];
     }
@@ -117,6 +117,7 @@ class Permissions_model extends Model
             $permissionModel->description = $permission->description;
             $permissionModel->status = 1;
             $permissionModel->is_custom = 0;
+            $permissionModel->disableLogging();
             $permissionModel->save();
         }
     }
@@ -210,7 +211,7 @@ class Permissions_model extends Model
 
         foreach ($definitions as $name => $definition) {
             $permission = (object)array_merge(self::$permissionDefaults, array_merge($definition, [
-                'name'  => $name,
+                'name' => $name,
                 'group' => current(explode('.', $name)),
             ]));
 

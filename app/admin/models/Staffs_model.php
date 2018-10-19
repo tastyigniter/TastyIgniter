@@ -11,6 +11,8 @@ class Staffs_model extends Model
 {
     use Purgeable;
 
+    const UPDATED_AT = null;
+
     const CREATED_AT = 'date_added';
 
     /**
@@ -32,11 +34,11 @@ class Staffs_model extends Model
         'language_id', 'date_added', 'staff_status'];
 
     public $relation = [
-        'hasOne'    => [
+        'hasOne' => [
             'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id'],
         ],
         'belongsTo' => [
-            'group'    => ['Admin\Models\Staff_groups_model', 'foreignKey' => 'staff_group_id'],
+            'group' => ['Admin\Models\Staff_groups_model', 'foreignKey' => 'staff_group_id'],
             'location' => ['Admin\Models\Locations_model', 'foreignKey' => 'staff_location_id'],
             'language' => ['System\Models\Languages_model'],
         ],

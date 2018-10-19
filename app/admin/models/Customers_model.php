@@ -39,13 +39,13 @@ class Customers_model extends AuthUserModel
     public $timestamps = TRUE;
 
     public $relation = [
-        'hasMany'   => [
-            'addresses'    => ['Admin\Models\Addresses_model', 'delete' => TRUE],
-            'orders'       => ['Admin\Models\Orders_model', 'delete' => TRUE],
+        'hasMany' => [
+            'addresses' => ['Admin\Models\Addresses_model', 'delete' => TRUE],
+            'orders' => ['Admin\Models\Orders_model', 'delete' => TRUE],
             'reservations' => ['Admin\Models\Reservations_model', 'delete' => TRUE],
         ],
         'belongsTo' => [
-            'group'   => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
+            'group' => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
             'address' => 'Admin\Models\Addresses_model',
         ],
         'morphMany' => [

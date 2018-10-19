@@ -85,14 +85,6 @@ class Customer extends \Igniter\Flame\Auth\Manager
         return $this->user = $model;
     }
 
-    public function updateCart()
-    {
-//        $this->CI->db->set('cart', ($cart_contents = $this->CI->cart->contents()) ? serialize($cart_contents) : '');
-//        $this->CI->db->where('customer_id', $this->customer_id);
-//        $this->CI->db->where('email', $this->email);
-//        $this->CI->db->update('customers');
-    }
-
     //
     // Impersonation
     //

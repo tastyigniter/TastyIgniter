@@ -158,11 +158,11 @@ class Components extends BaseFormWidget
                 $componentObj = $manager->makeComponent($code, null, $component);
 
                 if ($componentObj->isHidden) continue;
+
+                $components[$code] = (object)$component;
             }
             catch (Exception $ex) {
             }
-
-            $components[$code] = (object)$component;
         }
 
         return $components;

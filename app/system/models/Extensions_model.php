@@ -156,15 +156,16 @@ class Extensions_model extends Model
             $extensionMeta = (object)$extensionClass->extensionMeta();
             $installedExtensions[] = $code;
 
-            // Only add  extensions with no existing record in extensions table
+            // Only add extensions with no existing record in extensions table
             if ($extension = $extensions->where('name', $code)->first()) continue;
 
-            self::create([
-                'type' => 'module',
-                'name' => $code,
-                'title' => $extensionMeta->name,
-                'version' => $extensionMeta->version,
-            ]);
+            $extensionModel = self::make();
+            $extensionModel->type = 'module';
+            $extensionModel->name = $code;
+            $extensionModel->title = $extensionMeta->name;
+            $extensionModel->version = $extensionMeta->version;
+            $extensionModel->disableLogging();
+            $extensionModel->save();
 
             $extensionManager->updateInstalledExtensions($code, FALSE);
         }

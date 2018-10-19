@@ -21,12 +21,12 @@ class Locations_model extends BaseLocationModel
         'collection_time', 'options', 'location_image'];
 
     public $relation = [
-        'hasMany'       => [
-            'working_hours'  => ['Admin\Models\Working_hours_model', 'delete' => TRUE],
+        'hasMany' => [
+            'working_hours' => ['Admin\Models\Working_hours_model', 'delete' => TRUE],
             'delivery_areas' => ['Admin\Models\Location_areas_model', 'delete' => TRUE],
-            'reviews'        => ['Admin\Models\Reviews_model', 'delete' => TRUE],
+            'reviews' => ['Admin\Models\Reviews_model', 'delete' => TRUE],
         ],
-        'belongsTo'     => [
+        'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
         'belongsToMany' => [
@@ -38,9 +38,11 @@ class Locations_model extends BaseLocationModel
 
     protected $appends = ['location_thumb'];
 
+    protected $hidden = ['options'];
+
     public $permalinkable = [
         'permalink_slug' => [
-            'source'     => 'location_name',
+            'source' => 'location_name',
             'controller' => 'local',
         ],
     ];
@@ -105,11 +107,11 @@ class Locations_model extends BaseLocationModel
     public function scopeListFrontEnd($query, array $options = [])
     {
         extract(array_merge([
-            'page'      => 1,
+            'page' => 1,
             'pageLimit' => 20,
-            'sort'      => null,
-            'search'    => null,
-            'latitude'  => null,
+            'sort' => null,
+            'search' => null,
+            'latitude' => null,
             'longitude' => null,
         ], $options));
 
@@ -349,12 +351,12 @@ class Locations_model extends BaseLocationModel
 
             foreach ($hoursArray as $hourValue) {
                 $created = $this->working_hours()->create([
-                    'location_id'  => $this->getKey(),
-                    'weekday'      => $hourValue['day'],
-                    'type'         => $type,
+                    'location_id' => $this->getKey(),
+                    'weekday' => $hourValue['day'],
+                    'type' => $type,
                     'opening_time' => mdate('%H:%i', strtotime($hourValue['open'])),
                     'closing_time' => mdate('%H:%i', strtotime($hourValue['close'])),
-                    'status'       => $hourValue['status'],
+                    'status' => $hourValue['status'],
                 ]);
             }
         }
@@ -425,10 +427,10 @@ class Locations_model extends BaseLocationModel
         for ($day = 0; $day <= 6; $day++) {
             $_hours = ($type == 'flexible' AND isset($data['flexible'][$day])) ? $data['flexible'][$day] : $hours;
             $workingHours[] = [
-                'day'    => $day,
-                'type'   => $type,
-                'open'   => $_hours['open'],
-                'close'  => $_hours['close'],
+                'day' => $day,
+                'type' => $type,
+                'open' => $_hours['open'],
+                'close' => $_hours['close'],
                 'status' => isset($_hours['status']) ? $_hours['status'] : (int)in_array($day, $days),
             ];
         }

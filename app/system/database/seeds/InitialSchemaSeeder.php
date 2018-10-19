@@ -31,8 +31,6 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedMealtimes();
 
-        $this->seedPages();
-
         $this->seedPermissions();
 
         $this->seedSettings();

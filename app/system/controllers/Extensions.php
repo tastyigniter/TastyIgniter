@@ -138,7 +138,7 @@ class Extensions extends \Admin\Classes\AdminController
         $extension = ExtensionManager::instance()->findExtension($extensionCode);
 
         if ($feedback = $this->checkDependencies($extension)) {
-            flash()->warning($feedback);
+            flash()->error($feedback)->important();
         }
         else if (Extensions_model::install($extensionCode)) {
             $title = array_get($extension->extensionMeta(), 'name');
@@ -349,12 +349,11 @@ class Extensions extends \Admin\Classes\AdminController
         $required = $extensionManager->getDependencies($extension) ?: [];
         foreach ($required as $require) {
             $requireExtension = $extensionManager->findExtension($require);
-            $title = array_get($requireExtension->extensionMeta(), 'name');
             if (!$requireExtension)
-                $feedback .= "Required extension [{$title}] was not found.\n";
+                $feedback .= "Required extension [{$require}] was not found.\n";
 
             if ($extensionManager->isDisabled($require))
-                $feedback .= "Required extension [{$title}] must be enabled to proceed.\n";
+                $feedback .= "Required extension [{$require}] must be enabled to proceed.\n";
         }
 
         return $feedback;

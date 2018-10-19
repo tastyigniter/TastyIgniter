@@ -125,6 +125,6 @@ class User_preferences_model extends Model
      */
     protected function getCacheKey($item, $user)
     {
-        return $user->id.'-'.$item;
+        return $user->user_id.'-'.$item;
     }
 }

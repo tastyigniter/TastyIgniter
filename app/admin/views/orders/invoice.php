@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title><?= $model->invoice_id.' - '.lang('admin::lang.orders.text_invoice'); ?> - <?= setting('site_name'); ?></title>
+    <title><?= $model->invoice_id.' - '.lang('admin::lang.orders.text_invoice'); ?>
+        - <?= setting('site_name'); ?></title>
     <?= get_style_tags(); ?>
-
     <style>
         body {
             background-color: #FFF;
@@ -75,7 +75,7 @@
                 </p>
                 <p>
                     <strong><?= lang('admin::lang.orders.text_order_date'); ?></strong><br>
-                    <?= $model->order_date->format(setting('date_format')); ?>
+                    <?= $model->order_date->setTimeFromTimeString($model->order_time)->format(setting('date_format').' - '.setting('time_format')); ?>
                 </p>
             </div>
         </div>
@@ -92,7 +92,8 @@
                         <thead>
                         <tr>
                             <th width="2%"></th>
-                            <th class="text-left" width="65%"><b><?= lang('admin::lang.orders.column_name_option'); ?></b>
+                            <th class="text-left" width="65%">
+                                <b><?= lang('admin::lang.orders.column_name_option'); ?></b>
                             </th>
                             <th class="text-left"><b><?= lang('admin::lang.orders.column_price'); ?></b></th>
                             <th class="text-right"><b><?= lang('admin::lang.orders.column_total'); ?></b></th>

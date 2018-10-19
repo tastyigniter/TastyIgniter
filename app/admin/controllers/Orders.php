@@ -1,6 +1,7 @@
 <?php namespace Admin\Controllers;
 
 use AdminMenu;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Orders extends \Admin\Classes\AdminController
 {
@@ -11,27 +12,27 @@ class Orders extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Orders_model',
-            'title'        => 'lang:admin::lang.orders.text_title',
+            'model' => 'Admin\Models\Orders_model',
+            'title' => 'lang:admin::lang.orders.text_title',
             'emptyMessage' => 'lang:admin::lang.orders.text_empty',
-            'defaultSort'  => ['order_date', 'DESC'],
-            'configFile'   => 'orders_model',
+            'defaultSort' => ['order_date', 'DESC'],
+            'configFile' => 'orders_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.orders.text_form_name',
-        'model'      => 'Admin\Models\Orders_model',
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'orders/edit/{order_id}',
+        'name' => 'lang:admin::lang.orders.text_form_name',
+        'model' => 'Admin\Models\Orders_model',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'orders/edit/{order_id}',
             'redirectClose' => 'orders',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'orders',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'orders',
         ],
         'configFile' => 'orders_model',
@@ -49,6 +50,9 @@ class Orders extends \Admin\Classes\AdminController
     public function invoice($context, $recordId = null)
     {
         $model = $this->formFindModelObject($recordId);
+
+        if (!$model->hasInvoice())
+            throw new ApplicationException('Invoice has not yet been generated');
 
         $this->vars['model'] = $model;
 

@@ -1,5 +1,8 @@
 <?php namespace System\Models;
 
+use Admin\Models\Customers_model;
+use Admin\Models\Users_model;
+use Igniter\Flame\ActivityLog\ActivityLogger;
 use Igniter\Flame\ActivityLog\Models\Activity;
 
 /**
@@ -20,6 +23,23 @@ class Activities_model extends Activity
         ];
     }
 
+    public function getCauserNameAttribute($value)
+    {
+        if (!$this->causer)
+            return 'System';
+
+        if ($this->causer instanceof Users_model)
+            return $this->causer->staff_name;
+
+        if ($this->causer instanceof Customers_model)
+            return $this->causer->getCustomerName();
+    }
+
+    public function getMessageAttribute($value)
+    {
+        return app(ActivityLogger::class)->replacePlaceholders($value, $this);
+    }
+
     //
     // Scopes
     //
@@ -27,9 +47,9 @@ class Activities_model extends Activity
     public function scopeListRecent($query, $options)
     {
         extract(array_merge([
-            'page'       => 1,
-            'pageLimit'  => 20,
-            'sort'       => 'date_added desc',
+            'page' => 1,
+            'pageLimit' => 20,
+            'sort' => 'date_added desc',
             'exceptUser' => null,
         ], $options));
 

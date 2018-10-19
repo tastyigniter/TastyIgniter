@@ -7,6 +7,11 @@ use System\Models\Pages_model;
 
 trait HasPageOptions
 {
+    public function findPage($id)
+    {
+        return Pages_model::find($id);
+    }
+
     public static function getPageOptions()
     {
         return Page::lists('baseFileName', 'baseFileName');

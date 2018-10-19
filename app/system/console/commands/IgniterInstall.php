@@ -28,6 +28,7 @@ class IgniterInstall extends Command
      */
     public function handle()
     {
+        $this->alert('Command is yet to be implemented, please set your configuration values manually within the config/app.php and config/database.php files.');
     }
 
     /**

@@ -104,11 +104,23 @@ class ComponentManager
             $this->codeMap = [];
         }
 
-        $code = isset($component['code']) ? $component['code'] : strtolower(basename($class_path));
+        if (is_string($component))
+            $component = ['code' => $component];
+
+        $component = array_merge([
+            'code' => null,
+            'name' => 'Component',
+            'description' => null,
+        ], $component);
+
+        $code = $component['code'] ?? strtolower(basename($class_path));
 
         $this->codeMap[$code] = $class_path;
         $this->classMap[$class_path] = $code;
-        $this->components[$code] = array_merge($component, ['path' => $class_path]);
+        $this->components[$code] = array_merge($component, [
+            'code' => $code,
+            'path' => $class_path
+        ]);
 
         if ($extension !== null) {
             $this->extensionMap[$class_path] = $extension;

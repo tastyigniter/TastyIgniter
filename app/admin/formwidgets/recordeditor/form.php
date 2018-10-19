@@ -7,17 +7,19 @@
         <div id="modal-notification"></div>
         <?= form_open(
             [
-                'id'           => 'record-editor-form',
-                'role'         => 'form',
-                'method'       => $formWidget->context == 'create' ? 'POST' : 'PATCH',
+                'id' => 'record-editor-form',
+                'role' => 'form',
+                'method' => $formWidget->context == 'create' ? 'POST' : 'PATCH',
                 'data-request' => $this->alias.'::onSaveRecord',
             ]
         ); ?>
         <input type="hidden" name="recordId" value="<?= $formRecordId ?>">
         <div class="modal-body">
-            <?php foreach ($formWidget->getFields() as $field): ?>
-                <?= $formWidget->renderField($field) ?>
-            <?php endforeach ?>
+            <div class="form-fields p-0">
+                <?php foreach ($formWidget->getFields() as $field): ?>
+                    <?= $formWidget->renderField($field) ?>
+                <?php endforeach ?>
+            </div>
         </div>
         <div class="modal-footer text-right">
             <button
@@ -29,7 +31,7 @@
                 type="submit"
                 class="btn btn-primary"
             ><?= lang('admin::lang.button_save') ?></button>
-            <?= form_close(); ?>
         </div>
+        <?= form_close(); ?>
     </div>
 </div>

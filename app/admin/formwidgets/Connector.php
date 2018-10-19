@@ -92,6 +92,10 @@ class Connector extends BaseFormWidget
     {
         $this->addJs('../../repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
         $this->addJs('../../repeater/assets/js/repeater.js', 'repeater-js');
+
+        $this->addJs('../../recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
+        $this->addJs('../../recordeditor/assets/js/recordeditor.js', 'recordeditor-js');
+
         $this->addJs('js/connector.js', 'connector-js');
     }
 
@@ -111,7 +115,7 @@ class Connector extends BaseFormWidget
     public function prepareVars()
     {
         $this->vars['formField'] = $this->formField;
-        $this->vars['fieldItems'] = $this->processLoadValue();
+        $this->vars['fieldItems'] = $this->processLoadValue() ?? [];
 
         $this->vars['prompt'] = $this->prompt;
         $this->vars['sortable'] = $this->sortable;
@@ -128,8 +132,8 @@ class Connector extends BaseFormWidget
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
-            'formTitle'    => 'Edit '.lang($this->formName),
-            'formWidget'   => $this->makeItemFormWidget($model, 'edit'),
+            'formTitle' => 'Edit '.lang($this->formName),
+            'formWidget' => $this->makeItemFormWidget($model, 'edit'),
         ]);
     }
 
@@ -154,7 +158,7 @@ class Connector extends BaseFormWidget
         $this->prepareVars();
 
         return [
-            '#notification'                     => $this->makePartial('flash'),
+            '#notification' => $this->makePartial('flash'),
             '#'.$this->getId('items-container') => $this->makePartial('connector/connector'),
         ];
     }

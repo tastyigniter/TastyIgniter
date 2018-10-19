@@ -57,7 +57,7 @@ class Locations extends \Admin\Classes\AdminController
 
     public function remap($action, $params)
     {
-        if ($action != 'settings' AND AdminAuth::isStrictLocation())
+        if ($action != 'settings' AND $this->getUser() AND AdminAuth::isStrictLocation())
             return $this->redirect('locations/settings');
 
         return parent::remap($action, $params);
