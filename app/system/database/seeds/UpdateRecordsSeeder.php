@@ -15,7 +15,6 @@ use System\Models\Mail_layouts_model;
 use System\Models\Mail_templates_model;
 use System\Models\Message_meta_model;
 use System\Models\Messages_model;
-use System\Models\Pages_model;
 use System\Models\Permissions_model;
 use System\Models\Themes_model;
 
@@ -58,7 +57,7 @@ class UpdateRecordsSeeder extends Seeder
             return;
 
         $morphs = [
-            'order'   => 'Admin\Models\Orders_model',
+            'order' => 'Admin\Models\Orders_model',
             'reserve' => 'Admin\Models\Reservations_model',
         ];
 
@@ -77,7 +76,7 @@ class UpdateRecordsSeeder extends Seeder
             return;
 
         $morphs = [
-            'order'       => 'Admin\Models\Orders_model',
+            'order' => 'Admin\Models\Orders_model',
             'reservation' => 'Admin\Models\Reservations_model',
         ];
 
@@ -93,10 +92,6 @@ class UpdateRecordsSeeder extends Seeder
     protected function fixPermalinkSlugColumns()
     {
         Categories_model::all()->each(function ($model) {
-            $model->save();
-        });
-
-        Pages_model::all()->each(function ($model) {
             $model->save();
         });
 
@@ -122,7 +117,7 @@ class UpdateRecordsSeeder extends Seeder
 
         $replace = [
             'customer_id' => 'Admin\Models\Customers_model',
-            'staff_id'    => 'Admin\Models\Users_model',
+            'staff_id' => 'Admin\Models\Users_model',
         ];
 
         Message_meta_model::all()->each(function ($model) use ($replace) {
@@ -143,11 +138,11 @@ class UpdateRecordsSeeder extends Seeder
         Extensions_model::getQuery()->where('type', 'theme')->get()->each(function ($model) {
 
             Themes_model::insert([
-                'name'       => $model->title,
-                'code'       => $model->name,
-                'version'    => $model->version,
-                'data'       => $model->data,
-                'status'     => $model->status,
+                'name' => $model->title,
+                'code' => $model->name,
+                'version' => $model->version,
+                'data' => $model->data,
+                'status' => $model->status,
                 'is_default' => FALSE,
             ]);
         });
@@ -162,13 +157,13 @@ class UpdateRecordsSeeder extends Seeder
 
             $code = str_replace(['-', '_'], '', $model->name);
             Payments_model::insert([
-                'name'         => $model->title,
-                'code'         => $code,
-                'class_name'   => 'SamPoyigi\\PayRegister\\Payments\\'.studly_case($model->name),
-                'data'         => $model->data,
-                'status'       => $model->status,
-                'is_default'   => FALSE,
-                'date_added'   => Carbon::now(),
+                'name' => $model->title,
+                'code' => $code,
+                'class_name' => 'SamPoyigi\\PayRegister\\Payments\\'.studly_case($model->name),
+                'data' => $model->data,
+                'status' => $model->status,
+                'is_default' => FALSE,
+                'date_added' => Carbon::now(),
                 'date_updated' => Carbon::now(),
             ]);
         });
@@ -193,10 +188,10 @@ class UpdateRecordsSeeder extends Seeder
 
                 Location_areas_model::insert([
                     'location_id' => $id,
-                    'name'        => $option['name'],
-                    'type'        => $option['type'] == 'shape' ? 'polygon' : $option['type'],
-                    'boundaries'  => serialize($boundaries),
-                    'conditions'  => serialize($option['conditions'] ?? $option['charge']),
+                    'name' => $option['name'],
+                    'type' => $option['type'] == 'shape' ? 'polygon' : $option['type'],
+                    'boundaries' => serialize($boundaries),
+                    'conditions' => serialize($option['conditions'] ?? $option['charge']),
                 ]);
             }
         });
@@ -212,11 +207,11 @@ class UpdateRecordsSeeder extends Seeder
         $path = __DIR__.'/mail/';
 
         Mail_layouts_model::create([
-            'name'         => 'Default Layout',
-            'code'         => 'default',
-            'layout'       => File::get($path.'layout.htm'),
+            'name' => 'Default Layout',
+            'code' => 'default',
+            'layout' => File::get($path.'layout.htm'),
             'plain_layout' => File::get($path.'plain_layout.txt'),
-            'layout_css'   => File::get($path.'style.css'),
+            'layout_css' => File::get($path.'style.css'),
         ]);
     }
 

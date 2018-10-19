@@ -8,7 +8,6 @@ use Illuminate\Database\Seeder;
 use System\Models\Countries_model;
 use System\Models\Currencies_model;
 use System\Models\Languages_model;
-use System\Models\Pages_model;
 use System\Models\Permissions_model;
 use System\Models\Settings_model;
 
@@ -74,7 +73,7 @@ class InitialSchemaSeeder extends Seeder
 
         Customer_groups_model::create([
             'group_name' => 'Default group',
-            'approval'   => FALSE,
+            'approval' => FALSE,
         ]);
     }
 
@@ -84,11 +83,11 @@ class InitialSchemaSeeder extends Seeder
             return;
 
         Languages_model::insert([
-            'code'       => 'en',
-            'name'       => 'English',
-            'image'      => 'data/flags/gb.png',
-            'idiom'      => 'english',
-            'status'     => TRUE,
+            'code' => 'en',
+            'name' => 'English',
+            'image' => 'data/flags/gb.png',
+            'idiom' => 'english',
+            'status' => TRUE,
             'can_delete' => FALSE,
         ]);
     }
@@ -100,60 +99,22 @@ class InitialSchemaSeeder extends Seeder
 
         Mealtimes_model::insert([
             [
-                "mealtime_name"   => "Breakfast",
-                "start_time"      => "07:00:00",
-                "end_time"        => "10:00:00",
+                "mealtime_name" => "Breakfast",
+                "start_time" => "07:00:00",
+                "end_time" => "10:00:00",
                 "mealtime_status" => TRUE,
             ],
             [
-                "mealtime_name"   => "Lunch",
-                "start_time"      => "12:00:00",
-                "end_time"        => "14:30:00",
+                "mealtime_name" => "Lunch",
+                "start_time" => "12:00:00",
+                "end_time" => "14:30:00",
                 "mealtime_status" => TRUE,
             ],
             [
-                "mealtime_name"   => "Dinner",
-                "start_time"      => "18:00:00",
-                "end_time"        => "20:00:00",
+                "mealtime_name" => "Dinner",
+                "start_time" => "18:00:00",
+                "end_time" => "20:00:00",
                 "mealtime_status" => TRUE,
-            ],
-        ]);
-    }
-
-    protected function seedPages()
-    {
-        if (Pages_model::count())
-            return;
-
-        $language = Languages_model::whereCode('en')->first();
-
-        Pages_model::insert([
-            [
-                "language_id"      => $language->language_id,
-                "name"             => "About Us",
-                "title"            => "About Us",
-                "heading"          => "About Us",
-                "content"          => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "meta_description" => "",
-                "meta_keywords"    => "",
-//                "layout_id"        => 17,
-                "navigation"       => "a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}",
-                "date_added"       => "2014-04-19 16:57:21",
-                "date_updated"     => "2015-05-07 12:39:52",
-                "status"           => 1,
-            ], [
-                "language_id"      => $language->language_id,
-                "name"             => "Policy",
-                "title"            => "Policy",
-                "heading"          => "Policy",
-                "content"          => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "meta_description" => "",
-                "meta_keywords"    => "",
-//                "layout_id"        => 17,
-                "navigation"       => "a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}",
-                "date_added"       => "2014-04-19 17:21:23",
-                "date_updated"     => "2015-05-16 09:18:39",
-                "status"           => 1,
             ],
         ]);
     }
@@ -188,10 +149,10 @@ class InitialSchemaSeeder extends Seeder
             return;
 
         Staff_groups_model::insert([
-            'staff_group_name'        => 'Administrator',
+            'staff_group_name' => 'Administrator',
             'customer_account_access' => TRUE,
-            'location_access'         => TRUE,
-            'permissions'             => '',
+            'location_access' => TRUE,
+            'permissions' => '',
         ]);
     }
 
