@@ -19,9 +19,19 @@ TastyIgniter :fire:
 5. Follow all onscreen instructions and make sure all installation requirements are checked.
 
 ### Manual Installation
+
 ```
 composer create-project tastyigniter/tastyigniter .
 ```
+
+After running the above command, run the install command
+
+```
+php artisan igniter:install
+```
+
+The install command will guide you through the process of setting up TastyIgniter for the first time. 
+It will ask for the database configuration, application URL and administrator details.
 
 Read the [Installation Guide](https://docs.tastyigniter.com/installation) for more information.
 
