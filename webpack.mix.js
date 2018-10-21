@@ -26,7 +26,7 @@ mix.copyDirectory(
 //
 //  Build UI SCSS
 //
-mix.sass('app/system/assets/ui/scss/flame.scss', 'app/system/assets/ui').sourceMaps()
+mix.sass('app/system/assets/ui/scss/flame.scss', 'app/system/assets/ui')
 
 //
 //  Combine UI JS
@@ -45,12 +45,12 @@ mix.scripts(
         'app/system/assets/ui/js/trigger.js',
     ],
     'app/system/assets/ui/flame.js'
-).sourceMaps()
+)
 
 //
 //  Build Admin SCSS
 //
-mix.sass('app/admin/assets/scss/admin.scss', 'app/admin/assets/css').sourceMaps()
+mix.sass('app/admin/assets/scss/admin.scss', 'app/admin/assets/css')
 
 //
 //  Combine Admin Vendor JS
@@ -63,4 +63,4 @@ mix.scripts(
         'app/admin/assets/js/src/app.js',
     ],
     'app/admin/assets/js/admin.js'
-).sourceMaps()
+)

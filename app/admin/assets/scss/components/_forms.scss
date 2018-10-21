@@ -140,3 +140,7 @@
 .control-label {
   font-weight: $font-weight-bold;
 }
+.custom-control-label:after,
+.custom-control-label:before {
+  top: -0.95rem;
+}

@@ -18,7 +18,7 @@
                 <div class="media-body">
                     <h4 class="media-heading"><?= $theme->name; ?></h4>
                     <p class="description text-muted"><?= $theme->description; ?></p>
-                    <div class="buttons action mb-5">
+                    <div class="buttons action my-4">
                         <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('source')]) ?>
 
                         <?= $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('edit')]) ?>

@@ -10,7 +10,7 @@
 
     .navbar-nav {
       .nav-link {
-        line-height: 60px;
+        line-height: $page-top-line-height;
         color: $body-color;
         padding: $mainmenu-padding-x $mainmenu-padding-y;
       }
@@ -243,6 +243,9 @@
   .small,
   small {
     color: $gray-600;
+  }
+  span {
+    vertical-align: text-top;
   }
 }
 @include media-breakpoint-down(sm) {
