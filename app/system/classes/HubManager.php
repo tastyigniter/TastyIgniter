@@ -85,6 +85,15 @@ class HubManager
         return $response;
     }
 
+    public function applyCoreVersion()
+    {
+        $result = $this->requestRemoteData('ping', [
+            'edge' => Config::get('system.edgeUpdates', FALSE)
+        ]);
+
+        return array_get($result, 'pong', 'v3.0.0');
+    }
+
     public function buildMetaArray($response)
     {
         if (isset($response['type']))

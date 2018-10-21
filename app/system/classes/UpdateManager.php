@@ -148,9 +148,9 @@ class UpdateManager
         return $this;
     }
 
-    public function setCoreVersion($version, $hash = null)
+    public function setCoreVersion($version = null, $hash = null)
     {
-        params()->set('ti_version', $version);
+        params()->set('ti_version', $version ?? $this->getHubManager()->applyCoreVersion());
         params()->set('sys_hash', $hash);
         params()->save();
     }
