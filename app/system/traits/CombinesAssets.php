@@ -67,9 +67,7 @@ trait CombinesAssets
         if ($this->useMinify === null)
             $this->useMinify = !config('app.debug', FALSE);
 
-        $this->combineAssets = config('system.enableAssetCombiner', null);
-        if (is_null($this->combineAssets))
-            $this->combineAssets = (app()->environment() === 'production');
+        $this->combineAssets = config('system.enableAssetCombiner', FALSE);
 
         $this->registerFilter('css', new \Assetic\Filter\CssImportFilter);
         $this->registerFilter(['css', 'scss'], new \Assetic\Filter\CssRewriteFilter);
