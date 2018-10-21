@@ -131,6 +131,9 @@ class Components extends BaseFormWidget
             return null;
         }
 
+        $component['options'] = $this->manager->getComponentPropertyValues($componentObj);
+        $component['component'] = $component;
+
         $formConfig = $this->mergeComponentFormConfig($this->form, $componentPropertyConfig);
         $formConfig['model'] = $this->model;
         $formConfig['data'] = $component;
@@ -138,8 +141,6 @@ class Components extends BaseFormWidget
         $formConfig['alias'] = $this->alias.'Form'.'-'.$alias;
         $formConfig['arrayName'] = $this->formField->getName().'['.$alias.']';
 
-        $component['options'] = $this->manager->getComponentPropertyValues($componentObj);
-        $component['component'] = $component;
         $component['widget'] = $widget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
         $widget->bindToController();
 
