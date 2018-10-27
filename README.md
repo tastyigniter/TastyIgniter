@@ -52,4 +52,5 @@ TastyIgniter is open-source and we would love your help building it! Please read
 - [All Contributors](https://github.com/tastyigniter/TastyIgniter/contributors)
 
 ## License
-TastyIgniter is licensed under the [The MIT License (MIT)](https://tastyigniter.com/licence/)
+Starting with version 3.0.0 TastyIgniter is licensed under the [The MIT License (MIT)](https://tastyigniter.com/licence/). Older versions were GPL-licensed.
+
