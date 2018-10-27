@@ -4,7 +4,7 @@ return [
     'system_name' => 'TastyIgniter',
     'system_powered' => '<a target="_blank" href="http://tastyigniter.com">Powered by TastyIgniter</a>',
     'copyright' => 'Thank you for using <a target="_blank" href="http://tastyigniter.com">TastyIgniter</a>',
-    'version' => 'Version %s',
+    'version' => '<b>Version:</b> %s',
 
     'no_database' => [
         'label' => 'Database Error Was Encountered',
@@ -588,7 +588,7 @@ return [
 
         'text_update_found' => '%s update(s) found',
         'text_update_ignored' => '%s update(s) ignored',
-        'text_item_update_summary' => 'Update from version <strong>%s</strong> to <strong>%s</strong>',
+        'text_item_update_summary' => 'Update from version %s to <b>%s</b>',
 
         'text_maintenance_mode' => 'While your site is being updated, maintenance mode will be enabled then disabled as soon as your updates are complete.',
 

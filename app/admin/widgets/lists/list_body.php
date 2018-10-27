@@ -17,7 +17,7 @@
                         class="custom-control-input"
                         value="<?= $record->getKey(); ?>" name="checked[]"
                     />
-                    <label class="custom-control-label" for="<?= 'checkbox-'.$record->getKey() ?>"></label>
+                    <label class="custom-control-label" for="<?= 'checkbox-'.$record->getKey() ?>">&nbsp;</label>
                 </div>
             </td>
         <?php } ?>

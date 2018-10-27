@@ -72,14 +72,16 @@
             $element = $(event.target),
             $template = self.$el.find('[data-repeater-template]'),
             $newTemplate = $template.clone(),
-            find = new RegExp($template.data('find'), "g"),
+            findString = $template.data('find'),
+            find = new RegExp(findString, "g"),
+            secFind = new RegExp(findString.replace(/_/g, '-'), "g"),
             replace = $template.data('replace')
 
         if (!$newTemplate.length) {
             throw new Error("No template element found with attribute [data-repeater-template]")
         }
 
-        this.$appendTo.append($newTemplate[0].innerHTML.replace(find, replace))
+        this.$appendTo.append($newTemplate[0].innerHTML.replace(find, replace).replace(secFind, replace))
         $template.data('replace', parseInt(replace) + 1)
 
         var $added = this.$appendTo.find('> :last-child')

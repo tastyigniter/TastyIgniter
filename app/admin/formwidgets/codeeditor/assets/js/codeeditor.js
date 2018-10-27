@@ -52,7 +52,6 @@
     }
 
     CodeEditor.prototype.registerHandlers = function () {
-        // this.$textarea.on("summernote.init", $.proxy(this.onInit, this))
         this.$form.on("submit", $.proxy(this.onSaveChanges, this))
     }
 
@@ -83,48 +82,6 @@
         var $element = $(this.options.changedSelector, this.$el)
 
         $element.val(this.editor.isClean() ? "0" : "1")
-    }
-
-    CodeEditor.prototype.replaceImageDialogButton = function () {
-        var $button = $("[data-event=\"showImageDialog\"]")
-
-        if (!$button.length) return
-
-        $button.attr("data-event", false)
-        $button.on("click", $.proxy(this.onShowImageDialog, this))
-    }
-
-    CodeEditor.prototype.onShowImageDialog = function (event) {
-        var self = this,
-            $button = $(event.target)
-
-        new $.ti.mediaManager.modal({
-            alias: "mediamanager",
-            selectMode: this.options.mediaSelectMode,
-            chooseButton: true,
-            // goToItem: $findValue.val(),
-            onInsert: function (items) {
-                if (!items.length) {
-                    alert("Please select image(s) to insert.")
-                    return
-                }
-
-                self.insertImageFromMediaPopup($button, items)
-
-                this.hide()
-            }
-        })
-    }
-
-    CodeEditor.prototype.insertImageFromMediaPopup = function ($element, items) {
-        var start = 0
-        for (var i = start, len = items.length; i < len; i++) {
-            var item = items[i].querySelector("[data-media-item]"),
-                filename = item.getAttribute('data-media-item-name'),
-                url = item.getAttribute('data-media-item-url')
-
-            this.$textarea.summernote('insertImage', url, filename)
-        }
     }
 
     // CodeEditor PLUGIN DEFINITION

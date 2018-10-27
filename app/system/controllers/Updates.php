@@ -50,6 +50,10 @@ class Updates extends \Admin\Classes\AdminController
         }
         Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
+        Template::setButton(sprintf(lang('system::lang.version'), params('ti_version')), [
+            'class' => 'btn disabled text-muted pull-right', 'role' => 'button',
+        ]);
+
         $this->prepareAssets();
 
         try {

@@ -30,7 +30,6 @@
 .multiselect-item {
 	display: block;
 	width: 100%;
-	padding: 0.25rem 1.5rem;
 	clear: both;
 	font-weight: 400;
 	text-align: inherit;
@@ -60,6 +59,11 @@
 .multiselect-item .checkbox label,
 .multiselect-item .radio label {
 	display: block;
-	padding: 8px 20px 8px 10px;
-	margin-bottom: 1px;
+	padding: 0.35rem 0;
+	margin-bottom: 0;
+}
+.multiselect-item input[type="checkbox"],
+.multiselect-item input[type="radio"] {
+	visibility: hidden;
+	position: absolute;
 }

@@ -9,7 +9,7 @@
                 <input
                     type="checkbox" id="<?= 'checkboxAll-'.$listId ?>"
                     class="custom-control-input" onclick="$('input[name*=\'checked\']').prop('checked', this.checked)"/>
-                <label class="custom-control-label" for="<?= 'checkboxAll-'.$listId ?>"></label>
+                <label class="custom-control-label" for="<?= 'checkboxAll-'.$listId ?>">&nbsp;</label>
             </div>
         </th>
     <?php } ?>
@@ -50,7 +50,7 @@
         <th class="list-setup">
             <button
                 type="button"
-                class="btn btn-outline-default btn-sm"
+                class="btn btn-outline-default btn-sm border-none"
                 title="<?= lang('admin::lang.list.text_setup') ?>"
                 data-toggle="modal"
                 data-target="#<?= $listId ?>-setup-modal"

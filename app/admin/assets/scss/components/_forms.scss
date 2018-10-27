@@ -132,15 +132,13 @@
 }
 // Field Section
 .field-section {
-  h4 {
+  .section-title {
     color: $text-muted;
+    margin-top: 15px;
+    margin-bottom: 0;
   }
 }
 // Control label
 .control-label {
-  font-weight: $font-weight-bold;
-}
-.custom-control-label:after,
-.custom-control-label:before {
-  top: -0.95rem;
+  color: $gray-800;
 }

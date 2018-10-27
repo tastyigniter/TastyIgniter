@@ -1,6 +1,6 @@
 <div class="field-section">
     <?php if ($field->label): ?>
-        <h4><?= e(lang($field->label)) ?></h4>
+        <h5 class="section-title"><?= e(lang($field->label)) ?></h5>
     <?php endif ?>
 
     <?php if ($field->comment): ?>

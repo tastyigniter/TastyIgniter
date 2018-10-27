@@ -21,94 +21,6 @@ jQuery(function ($) {
         $('.alert', document).alert();
     });
 
-    // Alert Collapsible
-    $(function () {
-        var alertMsgs = $('.alert-collapsible .alert-hide')
-        var dropdownButton = $('.btn-dropdown')
-        alertMsgs.hide()
-
-        //Click dropdown
-        dropdownButton.click(function () {
-            //current button
-            var currentButton = $(this)
-            alertMsgs.slideToggle(400, function () {
-                //Completed slidetoggle
-                if (alertMsgs.is(':visible')) {
-                    currentButton.html('<i class="fa fa-chevron-up text-muted"></i>')
-                } else {
-                    currentButton.html('<i class="fa fa-chevron-down text-muted"></i>')
-                }
-            })
-        })
-    })
-
-    // Checkbox button toggle
-    $(function () {
-        $('.button-checkbox').each(function () {
-            // Setting
-            var $widget = $(this),
-                $button = $widget.find('button'),
-                $checkbox = $widget.find('input:checkbox'),
-                color = $button.data('color'),
-                settings = {
-                    on: {
-                        icon: 'fa fa-check-square-o'
-                    },
-                    off: {
-                        icon: 'fa fa-square-o'
-                    }
-                }
-
-            // Event Handlers
-            $button.on('click', function () {
-                $checkbox.prop('checked', !$checkbox.is(':checked'))
-                $checkbox.triggerHandler('change')
-                updateDisplay()
-            })
-            $checkbox.on('change', function () {
-                updateDisplay()
-            })
-
-            // Actions
-            function updateDisplay() {
-                var isChecked = $checkbox.is(':checked')
-
-                // Set the button's state
-                $button.data('state', (isChecked) ? "on" : "off")
-
-                // Set the button's icon
-                $button.find('.state-icon')
-                    .removeClass()
-                    .addClass('state-icon ' + settings[$button.data('state')].icon)
-
-                // Update the button's color
-                if (isChecked) {
-                    $button
-                        .removeClass('btn-default')
-                        .addClass('btn-' + color + ' active')
-                }
-                else {
-                    $button
-                        .removeClass('btn-' + color + ' active')
-                        .addClass('btn-default')
-                }
-            }
-
-            // Initialization
-            function init() {
-
-                updateDisplay()
-
-                // Inject the icon if applicable
-                if ($button.find('.state-icon').length == 0) {
-                    $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>')
-                }
-            }
-
-            init()
-        })
-    })
-
     // Multiple Modal Fix
     $(document).on('show.bs.modal', '.modal', function () {
         var zIndex = 1040 + (10 * $('.modal:visible').length + 1)
@@ -140,5 +52,10 @@ jQuery(function ($) {
                 $modal.find('[data-modal-input="'+attrName+'"]').val(attrValue)
             }
         });
+    })
+
+    $(window).on('ajaxErrorMessage', function (event, message) {
+        event.preventDefault()
+        $.ti.flashMessage({class: 'danger', text: message, allowDismiss: false})
     })
 })

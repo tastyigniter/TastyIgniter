@@ -18,20 +18,7 @@
     <div class="page-wrapper">
         <?= Template::getBlock('body') ?>
     </div>
-    <?php if (AdminAuth::isLogged()) { ?>
-        <div class="footer navbar-footer">
-            <div class="wrap-vertical">
-                <div class="row">
-                    <div class="col-9 text-copyright">
-                        <?= lang('system::lang.copyright'); ?>
-                    </div>
-                    <div class="col text-version">
-                        <?= sprintf(lang('system::lang.version'), params('ti_version')); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php } ?>
+
     <div id="notification">
         <?= $this->makePartial('flash') ?>
     </div>

@@ -10,7 +10,7 @@
       visibility: hidden;
       position: absolute;
       right: 1px;
-      top: 7px;
+      top: 6px;
     }
 
     &:hover .fa,
@@ -52,7 +52,9 @@
   vertical-align: middle;
 }
 .table > thead > tr > th {
-  font-weight: $font-weight-bold;
+  font-weight: $font-weight-normal;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
   line-height: 2;
 }
 .table .list-action,

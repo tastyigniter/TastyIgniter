@@ -16,7 +16,8 @@ $checkedValues = (array)$field->value;
                 $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
                 if (is_string($option)) $option = [$option];
                 ?>
-                <label class="btn btn-light <?= in_array($value, $checkedValues) ? 'active' : ($this->previewMode ? 'disabled' : '') ?>">
+                <label
+                    class="btn btn-light <?= in_array($value, $checkedValues) ? 'active' : ($this->previewMode ? 'disabled' : '') ?>">
                     <input
                         type="checkbox"
                         id="<?= $checkboxId ?>"
@@ -71,7 +72,7 @@ $checkedValues = (array)$field->value;
                 <?= $field->value == 1 ? 'checked="checked"' : '' ?>
                 <?= $field->getAttributes() ?>>
             <label class="custom-control-label" for="<?= $field->getId() ?>">
-                <?= $field->placeholder ? e(lang($field->placeholder)) : '' ?>
+                <?= $field->placeholder ? e(lang($field->placeholder)) : '&nbsp;' ?>
             </label>
         </div>
     <?php } ?>

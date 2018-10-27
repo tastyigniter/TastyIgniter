@@ -4,9 +4,9 @@ $isLogged = AdminAuth::isLogged();
 <div class="sidebar" role="navigation">
     <div id="navSidebar" class="nav-sidebar">
         <?= $this->makePartial('side_nav_items', [
-            'navItems'      => $navItems,
+            'navItems' => $navItems,
             'navAttributes' => [
-                'id'    => 'side-nav-menu',
+                'id' => 'side-nav-menu',
                 'class' => 'nav',
             ],
         ]) ?>
