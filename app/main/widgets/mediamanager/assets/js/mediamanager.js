@@ -782,6 +782,7 @@
         alias: '',
         selectMode: 'multi',
         chooseButton: false,
+        chooseButtonText: 'Choose',
         uniqueId: null,
         maxUploadSize: 0,
         allowedExtensions: [],

@@ -58,7 +58,8 @@
             <p>{name}</p>
         </div>
         <div class="sidebar-preview-meta">
-            <p><span class="small text-muted"><?= lang('main::lang.media_manager.label_dimension'); ?> </span>{dimension}</p>
+            <p><span class="small text-muted"><?= lang('main::lang.media_manager.label_dimension'); ?> </span>{dimension}
+            </p>
             <p><span class="small text-muted"><?= lang('main::lang.media_manager.label_size'); ?> </span>{size}</p>
             <p><span class="small text-muted">URL </span><a href="{url}" target="_blank">Click here</a></p>
             <p><span class="small text-muted"><?= lang('main::lang.media_manager.label_modified_date'); ?> </span>{modified}
@@ -69,7 +70,7 @@
                 <button
                     class="btn btn-primary btn-block"
                     data-control="media-choose">
-                    <?= lang('main::lang.media_manager.text_choose'); ?>
+                    <?= lang($chooseButtonText); ?>
                 </button>
             </div>
         <?php } ?>
@@ -128,7 +129,7 @@
                 <button
                     class="btn btn-primary btn-block"
                     data-control="media-choose">
-                    <?= lang('main::lang.media_manager.text_choose'); ?>
+                    <?= lang($chooseButtonText); ?>
                 </button>
             </div>
         <?php } ?>

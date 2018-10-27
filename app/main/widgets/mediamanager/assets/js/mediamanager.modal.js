@@ -48,6 +48,7 @@
             selectMode: this.options.selectMode,
             goToItem: this.options.goToItem,
             chooseButton: this.options.chooseButton ? 1 : 0,
+            chooseButtonText: this.options.chooseButtonText,
         }
 
         $loadingIndicator.find('.spinner').html(spinner)

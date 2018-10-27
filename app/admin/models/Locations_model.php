@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Location\Models\Location as BaseLocationModel;
@@ -13,6 +14,7 @@ class Locations_model extends BaseLocationModel
 {
     use HasPermalink;
     use Purgeable;
+    use HasMedia;
 
     public $fillable = ['location_name', 'location_email', 'description', 'location_address_1',
         'location_address_2', 'location_city', 'location_state', 'location_postcode', 'location_country_id',
@@ -45,6 +47,11 @@ class Locations_model extends BaseLocationModel
             'source' => 'location_name',
             'controller' => 'local',
         ],
+    ];
+
+    public $mediable = [
+        'thumb',
+        'gallery' => ['multiple' => TRUE],
     ];
 
     protected static $allowedSortingColumns = [
@@ -183,6 +190,18 @@ class Locations_model extends BaseLocationModel
             $suffix = '/menus';
 
         $this->url = site_url($this->permalink_slug.$suffix);
+    }
+
+    public function hasGallery()
+    {
+        return $this->hasMedia('gallery');
+    }
+
+    public function getGallery()
+    {
+        $gallery = array_get($this->options, 'gallery');
+        $gallery['images'] = $this->getMedia('gallery');
+        return $gallery;
     }
 
     public function parseOptionsValue()

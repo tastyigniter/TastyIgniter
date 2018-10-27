@@ -3,32 +3,37 @@
         <?php if ($this->previewMode) { ?>
             <a>
                 <div class="img-cover">
-                    <img src="<?= $this->getMediaUrl($value ? $value : $blankImage) ?>" class="img-responsive">
+                    <img src="<?= $this->getMediaThumb($mediaItem) ?>" class="img-responsive">
                 </div>
             </a>
         <?php } else { ?>
-            <?php if (!$value) { ?>
+            <?php if (is_null($mediaItem)) { ?>
                 <a class="find-button blank-cover">
                     <i class="fa fa-plus"></i>
                 </a>
             <?php } else { ?>
                 <i class="find-remove-button fa fa-times-circle" title="<?= lang('admin::lang.text_remove'); ?>"></i>
                 <div class="icon-container">
-                    <span data-find-name><?= ltrim($value, '/') ?></span>
+                    <span data-find-name><?= $this->getMediaName($mediaItem) ?></span>
                 </div>
-                <a class="find-button">
+                <a class="<?= $useAttachment ? 'find-config-button' : '' ?>">
                     <div class="img-cover">
                         <img data-find-image
-                             src="<?= $this->getMediaUrl($value ? $value : $blankImage) ?>"
+                             src="<?= $this->getMediaThumb($mediaItem) ?>"
                              class="img-responsive">
                     </div>
                 </a>
             <?php } ?>
             <input
                 type="hidden"
-                name="<?= $value ? $fieldName : '' ?>"
-                value="<?= e($value) ?>"
+                <?= (!empty($mediaItem) AND !$useAttachment) ? 'name="'.$fieldName.'"' : '' ?>
+                value="<?= e($this->getMediaPath($mediaItem)) ?>"
                 data-find-value
+            />
+            <input
+                type="hidden"
+                value="<?= e($this->getMediaIdentifier($mediaItem)) ?>"
+                data-find-identifier
             />
         <?php } ?>
     </div>

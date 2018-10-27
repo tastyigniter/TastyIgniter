@@ -32,6 +32,8 @@ class MediaManager extends BaseWidget
 
     public $chooseButton = FALSE;
 
+    public $chooseButtonText = 'main::lang.media_manager.text_choose';
+
     public $selectMode = 'multi';
 
     public $selectItem;
@@ -84,6 +86,7 @@ class MediaManager extends BaseWidget
         $this->vars['maxUploadSize'] = round($this->getSetting('max_size', 380) / 1024, 2);
         $this->vars['allowedExtensions'] = $this->getMediaLibrary()->getAllowedExtensions();
         $this->vars['chooseButton'] = $this->chooseButton;
+        $this->vars['chooseButtonText'] = $this->chooseButtonText;
         $this->vars['breadcrumbs'] = $this->makeBreadcrumb();
     }
 
@@ -122,7 +125,7 @@ class MediaManager extends BaseWidget
 
         return [
             '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
-            '#'.$this->getId('toolbar')   => $this->makePartial('mediamanager/toolbar'),
+            '#'.$this->getId('toolbar') => $this->makePartial('mediamanager/toolbar'),
         ];
     }
 
@@ -154,10 +157,10 @@ class MediaManager extends BaseWidget
         $this->prepareVars();
 
         return [
-            '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
             '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-            '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-            '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+            '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+            '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
         ];
     }
 
@@ -166,6 +169,7 @@ class MediaManager extends BaseWidget
         $this->popupLoaded = TRUE;
         $this->selectMode = post('selectMode');
         $this->chooseButton = post('chooseButton');
+        $this->chooseButtonText = post('chooseButtonText', $this->chooseButtonText);
 
         $goToItem = post('goToItem');
         if ($goToPath = dirname($goToItem)) {
@@ -207,10 +211,10 @@ class MediaManager extends BaseWidget
             $this->prepareVars();
 
             return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
             ];
         }
         catch (Exception $ex) {
@@ -249,9 +253,9 @@ class MediaManager extends BaseWidget
             $this->prepareVars();
 
             return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
             ];
         }
         catch (Exception $ex) {
@@ -295,10 +299,10 @@ class MediaManager extends BaseWidget
             $this->prepareVars();
 
             return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
             ];
         }
         catch (Exception $ex) {
@@ -326,10 +330,10 @@ class MediaManager extends BaseWidget
             $this->prepareVars();
 
             return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
             ];
         }
         catch (Exception $ex) {
@@ -367,10 +371,10 @@ class MediaManager extends BaseWidget
             $this->prepareVars();
 
             return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
             ];
         }
         catch (Exception $ex) {
@@ -409,10 +413,10 @@ class MediaManager extends BaseWidget
             $this->prepareVars();
 
             return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
             ];
         }
         catch (Exception $ex) {
@@ -451,10 +455,10 @@ class MediaManager extends BaseWidget
             $this->prepareVars();
 
             return [
-                '#'.$this->getId('item-list')   => $this->makePartial('mediamanager/item_list'),
+                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
                 '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb')  => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar')   => $this->makePartial('mediamanager/statusbar'),
+                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
             ];
         }
         catch (Exception $ex) {
@@ -612,7 +616,7 @@ class MediaManager extends BaseWidget
             $this->fireSystemEvent('media.file.upload', [$filePath, $uploadedFile]);
 
             Response::json([
-                'link'   => $mediaLibrary->getMediaUrl($filePath),
+                'link' => $mediaLibrary->getMediaUrl($filePath),
                 'result' => 'success',
             ])->send();
         }

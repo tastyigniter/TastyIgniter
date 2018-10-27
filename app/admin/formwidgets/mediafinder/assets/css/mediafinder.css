@@ -25,7 +25,6 @@
 	position: relative;
 	overflow: hidden;
 	padding-top: 100%;
-	cursor: pointer;
 	display: block;
 }
 .media-finder .grid .blank-cover i {
@@ -41,6 +40,12 @@
 .grid .find-remove-button {
 	display: none;
 }
+.grid .find-button,
+.media-finder .grid .blank-cover,
+.grid .find-config-button,
+.grid:hover .find-remove-button {
+	cursor: pointer;
+}
 .grid:hover .find-remove-button {
 	float: right;
 	position: absolute;
@@ -48,7 +53,6 @@
 	right: 8px;
 	display: block;
 	z-index: 9;
-	cursor: pointer;
 }
 .grid:hover .icon-container {
 	display: block;
@@ -66,7 +70,6 @@
 .grid .find-button {
 	display: block;
 	height: 100%;
-	cursor: pointer;
 }
 .image-list {
 	margin-left: -15px;

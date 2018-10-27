@@ -2,10 +2,10 @@
 
 use Admin\Traits\Locationable;
 use DB;
+use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Sortable;
-use Main\Models\Image_tool_model;
 use Model;
 
 /**
@@ -19,6 +19,7 @@ class Categories_model extends Model
     use HasPermalink;
     use NestedTree;
     use Locationable;
+    use HasMedia;
 
     const SORT_ORDER = 'priority';
 
@@ -37,13 +38,13 @@ class Categories_model extends Model
     protected $fillable = ['name', 'description', 'parent_id', 'priority', 'image', 'status'];
 
     public $relation = [
-        'belongsTo'     => [
+        'belongsTo' => [
             'parent_cat' => ['Admin\Models\Categories_model', 'foreignKey' => 'parent_id', 'otherKey' => 'category_id'],
         ],
         'belongsToMany' => [
             'menus' => ['Admin\Models\Menus_model', 'table' => 'menu_categories'],
         ],
-        'morphToMany'   => [
+        'morphToMany' => [
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
@@ -53,6 +54,8 @@ class Categories_model extends Model
             'source' => 'name',
         ],
     ];
+
+    public $mediable = ['thumb'];
 
     public static function getDropdownOptions()
     {
@@ -88,19 +91,5 @@ class Categories_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('status', 1);
-    }
-
-    //
-    // Helpers
-    //
-
-    public function getThumb($options = [])
-    {
-        extract(array_merge([
-            'width'  => 800,
-            'height' => 65,
-        ], $options));
-
-        return Image_tool_model::resize($this->image, $width, $height);
     }
 }

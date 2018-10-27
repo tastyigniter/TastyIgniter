@@ -2,8 +2,8 @@
 
 use Admin\Traits\Locationable;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
+use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Main\Models\Image_tool_model;
 use Model;
 
 /**
@@ -16,6 +16,7 @@ class Menus_model extends Model
     use LogsActivity;
     use Purgeable;
     use Locationable;
+    use HasMedia;
 
     const LOCATIONABLE_RELATION = 'locations';
 
@@ -31,27 +32,29 @@ class Menus_model extends Model
      */
     protected $primaryKey = 'menu_id';
 
-    protected $fillable = ['menu_name', 'menu_description', 'menu_price', 'menu_photo', 'menu_category_id',
+    protected $fillable = ['menu_name', 'menu_description', 'menu_price', 'menu_category_id',
         'stock_qty', 'minimum_qty', 'subtract_stock', 'mealtime_id', 'menu_status', 'menu_priority'];
 
     public $purgeable = [
         'special', 'menu_options', 'categories', 'locations',
     ];
 
+    public $mediable = ['thumb'];
+
     public $relation = [
-        'hasMany'       => [
+        'hasMany' => [
             'menu_options' => ['Admin\Models\Menu_item_options_model', 'delete' => TRUE],
         ],
-        'hasOne'        => [
+        'hasOne' => [
             'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
         ],
-        'belongsTo'     => [
+        'belongsTo' => [
             'mealtime' => ['Admin\Models\Mealtimes_model'],
         ],
         'belongsToMany' => [
             'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
         ],
-        'morphToMany'   => [
+        'morphToMany' => [
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
@@ -65,12 +68,12 @@ class Menus_model extends Model
     public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
-            'page'      => 1,
+            'page' => 1,
             'pageLimit' => 20,
-            'sort'      => 'menu_priority asc',
-            'group'     => null,
-            'location'  => null,
-            'category'  => null,
+            'sort' => 'menu_priority asc',
+            'group' => null,
+            'location' => null,
+            'category' => null,
         ], $options));
 
         if (strlen($location) AND is_numeric($location)) {
@@ -142,14 +145,6 @@ class Menus_model extends Model
     public function getMessageForEvent($eventName)
     {
         return parse_values(['event' => $eventName], lang('admin::lang.menus.activity_event_log'));
-    }
-
-    public function getThumb($options = [])
-    {
-        return Image_tool_model::resize($this->menu_photo, array_merge([
-            'width'  => is_numeric(setting('menu_images_w')) ? setting('menu_images_w') : '50',
-            'height' => is_numeric(setting('menu_images_h')) ? setting('menu_images_h') : '50',
-        ], $options));
     }
 
     public function hasOptions()
