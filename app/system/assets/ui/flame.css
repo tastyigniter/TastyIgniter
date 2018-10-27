@@ -17258,7 +17258,8 @@ readers do not read off random characters that represent icons */
 }
 
 .btn-action {
-  padding: 5px 10px;
+  border: 0;
+  padding: 4px 8px;
 }
 
 .btn-light, .swal-button--cancel {

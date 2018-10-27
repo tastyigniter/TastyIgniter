@@ -1,21 +1,22 @@
 .btn-edit {
-    color: $primary;
-	background-color: transparent;
+  color: $primary;
+  background-color: transparent;
 }
 .btn-action {
-	padding: $btn-action-padding-y;
+  border: 0;
+  padding: $btn-action-padding;
 }
 .btn-light {
-    background-color: $light;
-	border-color: $gray-400;
-	
-	&:hover {
-		border-color: $gray-400;
-	}
-}
-.btn-light:not(:disabled):not(.disabled):active, 
-.btn-light:not(:disabled):not(.disabled).active, 
-.show > .btn-light.dropdown-toggle {
-    background-color: $gray-300;
+  background-color: $light;
+  border-color: $gray-400;
+
+  &:hover {
     border-color: $gray-400;
+  }
+}
+.btn-light:not(:disabled):not(.disabled):active,
+.btn-light:not(:disabled):not(.disabled).active,
+.show > .btn-light.dropdown-toggle {
+  background-color: $gray-300;
+  border-color: $gray-400;
 }
