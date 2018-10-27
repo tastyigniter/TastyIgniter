@@ -2,19 +2,19 @@
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.categories.text_filter_search',
-        'mode'   => 'all' // or any, exact
+        'mode' => 'all' // or any, exact
     ],
     'scopes' => [
         'location' => [
-            'label'      => 'lang:admin::lang.text_filter_location',
-            'type'       => 'select',
-            'scope'      => 'hasLocation',
+            'label' => 'lang:admin::lang.text_filter_location',
+            'type' => 'select',
+            'scope' => 'hasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
-            'nameFrom'   => 'location_name',
+            'nameFrom' => 'location_name',
         ],
-        'status'   => [
-            'label'      => 'lang:admin::lang.categories.text_filter_status',
-            'type'       => 'switch', // checkbox, switch, date, daterange
+        'status' => [
+            'label' => 'lang:admin::lang.categories.text_filter_status',
+            'type' => 'switch', // checkbox, switch, date, daterange
             'conditions' => 'status = :filtered',
         ],
     ],
@@ -29,44 +29,44 @@ $config['list']['toolbar'] = [
 ];
 
 $config['list']['columns'] = [
-    'edit'        => [
-        'type'         => 'button',
+    'edit' => [
+        'type' => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'   => [
+        'attributes' => [
             'class' => 'btn btn-edit',
-            'href'  => 'categories/edit/{category_id}',
+            'href' => 'categories/edit/{category_id}',
         ],
     ],
-    'name'        => [
-        'label'      => 'lang:admin::lang.categories.column_name',
-        'type'       => 'text',
+    'name' => [
+        'label' => 'lang:admin::lang.categories.column_name',
+        'type' => 'text',
         'searchable' => TRUE,
     ],
-    'parent_cat'  => [
-        'label'      => 'lang:admin::lang.categories.column_parent',
-        'type'       => 'text',
-        'relation'   => 'parent_cat',
-        'select'     => 'name',
+    'parent_cat' => [
+        'label' => 'lang:admin::lang.categories.column_parent',
+        'type' => 'text',
+        'relation' => 'parent_cat',
+        'select' => 'name',
         'searchable' => TRUE,
     ],
-    'locations'   => [
-        'label'     => 'lang:admin::lang.column_location',
-        'type'      => 'text',
-        'relation'  => 'locations',
-        'select'    => 'location_name',
+    'locations' => [
+        'label' => 'lang:admin::lang.column_location',
+        'type' => 'text',
+        'relation' => 'locations',
+        'select' => 'location_name',
         'invisible' => TRUE,
     ],
-    'priority'    => [
-        'label'      => 'lang:admin::lang.categories.column_priority',
-        'type'       => 'text',
+    'priority' => [
+        'label' => 'lang:admin::lang.categories.column_priority',
+        'type' => 'text',
         'searchable' => TRUE,
     ],
-    'status'      => [
+    'status' => [
         'label' => 'lang:admin::lang.categories.column_status',
-        'type'  => 'switch',
+        'type' => 'switch',
     ],
     'category_id' => [
-        'label'     => 'lang:admin::lang.column_id',
+        'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
 
@@ -74,78 +74,79 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save'      => [
-            'label'        => 'lang:admin::lang.button_save',
-            'context'      => ['create', 'edit'],
-            'class'        => 'btn btn-primary',
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'class' => 'btn btn-primary',
             'data-request' => 'onSave',
         ],
         'saveClose' => [
-            'label'             => 'lang:admin::lang.button_save_close',
-            'context'           => ['create', 'edit'],
-            'class'             => 'btn btn-default',
-            'data-request'      => 'onSave',
+            'label' => 'lang:admin::lang.button_save_close',
+            'context' => ['create', 'edit'],
+            'class' => 'btn btn-default',
+            'data-request' => 'onSave',
             'data-request-data' => 'close:1',
         ],
-        'delete'    => [
-            'label'                => 'lang:admin::lang.button_icon_delete',
-            'context'              => ['edit'],
-            'class'                => 'btn btn-danger',
-            'data-request'         => 'onDelete',
+        'delete' => [
+            'label' => 'lang:admin::lang.button_icon_delete',
+            'context' => ['edit'],
+            'class' => 'btn btn-danger',
+            'data-request' => 'onDelete',
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
     ],
 ];
 
 $config['form']['fields'] = [
-    'name'           => [
+    'name' => [
         'label' => 'lang:admin::lang.categories.label_name',
-        'type'  => 'text',
-        'span'  => 'left',
+        'type' => 'text',
+        'span' => 'left',
     ],
     'permalink_slug' => [
-        'label'   => 'lang:admin::lang.categories.label_permalink_slug',
-        'type'    => 'permalink',
+        'label' => 'lang:admin::lang.categories.label_permalink_slug',
+        'type' => 'permalink',
         'comment' => 'lang:admin::lang.categories.help_permalink',
-        'span'    => 'right',
+        'span' => 'right',
     ],
-    'parent_id'      => [
-        'label'        => 'lang:admin::lang.categories.label_parent',
-        'type'         => 'relation',
-        'span'         => 'left',
+    'parent_id' => [
+        'label' => 'lang:admin::lang.categories.label_parent',
+        'type' => 'relation',
+        'span' => 'left',
         'relationFrom' => 'parent_cat',
-        'placeholder'  => 'lang:admin::lang.text_please_select',
+        'placeholder' => 'lang:admin::lang.text_please_select',
     ],
-    'locations'      => [
-        'label'     => 'lang:admin::lang.label_location',
-        'type'      => 'relation',
-        'span'      => 'right',
+    'locations' => [
+        'label' => 'lang:admin::lang.label_location',
+        'type' => 'relation',
+        'span' => 'right',
         'valueFrom' => 'locations',
-        'nameFrom'  => 'location_name',
+        'nameFrom' => 'location_name',
     ],
-    'priority'       => [
+    'priority' => [
         'label' => 'lang:admin::lang.categories.label_priority',
-        'type'  => 'number',
-        'span'  => 'left',
+        'type' => 'number',
+        'span' => 'left',
     ],
-    'status'         => [
-        'label'   => 'lang:admin::lang.label_status',
-        'type'    => 'switch',
-        'span'    => 'right',
+    'status' => [
+        'label' => 'lang:admin::lang.label_status',
+        'type' => 'switch',
+        'span' => 'right',
         'default' => 1,
     ],
-    'description'    => [
-        'label'      => 'lang:admin::lang.categories.label_description',
-        'type'       => 'textarea',
-        'span'       => 'left',
+    'description' => [
+        'label' => 'lang:admin::lang.categories.label_description',
+        'type' => 'textarea',
+        'span' => 'left',
         'attributes' => [
             'rows' => 5,
         ],
     ],
-    'image'          => [
-        'label'   => 'lang:admin::lang.categories.label_image',
-        'type'    => 'mediafinder',
-        'span'    => 'right',
+    'thumb' => [
+        'label' => 'lang:admin::lang.categories.label_image',
+        'type' => 'mediafinder',
+        'useAttachment' => TRUE,
+        'span' => 'right',
         'comment' => 'lang:admin::lang.categories.help_photo',
     ],
 ];

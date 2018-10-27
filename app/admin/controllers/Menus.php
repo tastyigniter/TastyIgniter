@@ -13,32 +13,32 @@ class Menus extends AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Menus_model',
-            'title'        => 'lang:admin::lang.menus.text_title',
+            'model' => 'Admin\Models\Menus_model',
+            'title' => 'lang:admin::lang.menus.text_title',
             'emptyMessage' => 'lang:admin::lang.menus.text_empty',
-            'defaultSort'  => ['menu_id', 'DESC'],
-            'configFile'   => 'menus_model',
+            'defaultSort' => ['menu_id', 'DESC'],
+            'configFile' => 'menus_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.menus.text_form_name',
-        'model'      => 'Admin\Models\Menus_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'menus/edit/{menu_id}',
+        'name' => 'lang:admin::lang.menus.text_form_name',
+        'model' => 'Admin\Models\Menus_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'menus/edit/{menu_id}',
             'redirectClose' => 'menus',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'menus/edit/{menu_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'menus/edit/{menu_id}',
             'redirectClose' => 'menus',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'menus',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'menus',
         ],
         'configFile' => 'menus_model',
@@ -73,7 +73,7 @@ class Menus extends AdminController
         $formField = $this->widgets['form']->getField('menu_options');
 
         return [
-            '#notification'                => $this->makePartial('flash'),
+            '#notification' => $this->makePartial('flash'),
             '#'.$formField->getId('group') => $this->widgets['form']->renderField($formField, [
                 'useContainer' => FALSE,
             ]),
@@ -87,7 +87,6 @@ class Menus extends AdminController
             ['menu_description', 'lang:admin::lang.menus.label_description', 'min:2|max:1028'],
             ['menu_price', 'lang:admin::lang.menus.label_price', 'required|numeric'],
             ['categories.*', 'lang:admin::lang.menus.label_category', 'required|integer'],
-            ['menu_photo', 'lang:admin::lang.menus.label_image'],
             ['stock_qty', 'lang:admin::lang.menus.label_stock_qty', 'integer'],
             ['minimum_qty', 'lang:admin::lang.menus.label_minimum_qty', 'required|integer'],
             ['subtract_stock', 'lang:admin::lang.menus.label_subtract_stock', 'required|integer'],

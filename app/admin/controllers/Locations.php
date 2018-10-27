@@ -157,7 +157,6 @@ class Locations extends \Admin\Classes\AdminController
             ['reservation_stay_time', 'lang:admin::lang.locations.label_reservation_stay_time', 'integer'],
             ['location_status', 'lang:admin::lang.label_status', 'required|integer'],
             ['permalink_slug', 'lang:admin::lang.locations.label_permalink_slug', 'alpha_dash|max:255'],
-            ['location_image', 'lang:admin::lang.locations.label_image'],
         ];
 
         $requiredIf = 'required_if:options.hours.*.type,daily';
@@ -188,7 +187,6 @@ class Locations extends \Admin\Classes\AdminController
 
         $rules[] = ['gallery.title', 'lang:admin::lang.locations.label_gallery_title', 'max:128'];
         $rules[] = ['gallery.description', 'lang:admin::lang.locations.label_gallery_description', 'max:255'];
-        $rules[] = ['gallery.images.*', 'lang:admin::lang.locations.label_gallery_image_name', 'sometimes'];
 
         $this->validateAfter(function ($validator) use ($model) {
             $this->validateCoordinates($validator, $model);
