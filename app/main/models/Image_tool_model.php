@@ -20,7 +20,7 @@ class Image_tool_model extends Model
 
         // @todo implement image manipulator
 
-        $rootFolder = 'data/';
+        $rootFolder = config('system.assets.media.folder', 'data').'/';
         if (strpos($imgPath, $rootFolder) === 0)
             $imgPath = substr($imgPath, strlen($rootFolder));
 

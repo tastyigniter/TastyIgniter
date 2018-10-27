@@ -12,7 +12,7 @@ use AdminAuth;
 use AdminMenu;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use Main\widgets\MediaManager;
+use Main\Widgets\MediaManager;
 use Redirect;
 use Request;
 use Response;
