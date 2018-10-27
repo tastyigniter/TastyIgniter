@@ -7,7 +7,7 @@ use ApplicationException;
 use Exception;
 use File;
 use Input;
-use Main\Libraries\MediaManager as MediaLibrary;
+use Main\Classes\MediaLibrary;
 use Request;
 use Response;
 
