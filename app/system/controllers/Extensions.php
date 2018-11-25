@@ -45,7 +45,7 @@ class Extensions extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('extensions');
+        AdminMenu::setContext('extensions', 'system');
     }
 
     public function index()

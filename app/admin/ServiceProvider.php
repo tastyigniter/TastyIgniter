@@ -369,14 +369,6 @@ class ServiceProvider extends AppServiceProvider
                         ],
                     ],
                 ],
-                'extensions' => [
-                    'priority' => 50,
-                    'class' => 'extensions',
-                    'href' => admin_url('extensions'),
-                    'icon' => 'fa-puzzle-piece',
-                    'title' => lang('admin::lang.side_menu.extension'),
-                    'permission' => 'Admin.Extensions',
-                ],
                 'design' => [
                     'priority' => 200,
                     'class' => 'design',
@@ -506,22 +498,29 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.activities'),
                             'permission' => 'Admin.Activities',
                         ],
-                        'updates' => [
+                        'extensions' => [
                             'priority' => 20,
+                            'class' => 'extensions',
+                            'href' => admin_url('extensions'),
+                            'title' => lang('admin::lang.side_menu.extension'),
+                            'permission' => 'Admin.Extensions',
+                        ],
+                        'updates' => [
+                            'priority' => 30,
                             'class' => 'updates',
                             'href' => admin_url('updates'),
                             'title' => lang('admin::lang.side_menu.updates'),
                             'permission' => 'Site.Updates',
                         ],
                         'settings' => [
-                            'priority' => 30,
+                            'priority' => 40,
                             'class' => 'settings',
                             'href' => admin_url('settings'),
                             'title' => lang('admin::lang.side_menu.setting'),
                             'permission' => 'Site.Settings',
                         ],
                         'error_logs' => [
-                            'priority' => 40,
+                            'priority' => 50,
                             'class' => 'error_logs',
                             'href' => admin_url('error_logs'),
                             'title' => lang('admin::lang.side_menu.error_log'),
