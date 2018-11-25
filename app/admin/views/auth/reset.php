@@ -1,18 +1,12 @@
 <div class="container-fluid">
     <div class="login-container">
         <div class="card">
-            <div class="card-header">
-                <?php $logo = setting('site_logo', 'tastyigniter-logo.png'); ?>
-                <img alt="<?= setting('site_name'); ?>"
-                     src="<?= image_url($logo) ?>"
-                     height="64px" width="250px">
-            </div>
             <div class="card-body">
                 <h5><?= lang('admin::lang.login.text_reset_password_title'); ?></h5>
                 <?= form_open(current_url(),
                     [
-                        'id'     => 'edit-form',
-                        'role'   => 'form',
+                        'id' => 'edit-form',
+                        'role' => 'form',
                         'method' => 'POST',
                     ]
                 ); ?>

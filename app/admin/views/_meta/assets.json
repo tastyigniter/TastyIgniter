@@ -1,6 +1,6 @@
 {
   "doctype": "html5",
-  "favicon": "/assets/images/favicon.ico",
+  "favicon": "/app/admin/assets/images/favicon.ico",
   "meta": [
     {
       "name": "Content-type",
