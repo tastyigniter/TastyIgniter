@@ -63,8 +63,7 @@
 
     RecordEditorModal.prototype.onRecordLoaded = function (json) {
         this.$modalElement.html(json);
-        this.$modalElement.find('select.form-control').select2()
-        this.$modalElement.find('[data-control="repeater"]').repeater()
+        $(window).trigger('ajaxUpdateComplete')
 
         this.$modalElement.find('form').on('ajaxError', $.proxy(this.handleFormError, this))
         this.$modalElement.find('form').on('ajaxDone', $.proxy(this.onRecordSaved, this))

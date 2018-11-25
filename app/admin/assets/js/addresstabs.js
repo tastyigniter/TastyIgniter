@@ -1,7 +1,7 @@
 var AddressTab = {
 
     init: function () {
-        $(document).ready(function () {
+        $(document).render(function () {
             var $addressTabs = $('[data-control="address-tabs"]')
             $addressTabs.on('click', '[data-add-address]', function (event) {
                 AddressTab.add(event)
@@ -27,7 +27,6 @@ var AddressTab = {
         + lastCounter + '&nbsp;&nbsp;<i class="fa fa-times-circle" data-remove-address></i></a></li>');
 
         $container.attr('data-last-counter', lastCounter)
-        $appendTo.find('select.form-control').select2()
     },
 
     remove: function (event) {

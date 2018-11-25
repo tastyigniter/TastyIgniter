@@ -77,7 +77,7 @@
     // FIELD DatePicker DATA-API
     // ===============
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="datepicker"]').datePicker()
     });
 

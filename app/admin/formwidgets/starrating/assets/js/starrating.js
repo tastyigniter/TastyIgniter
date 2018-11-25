@@ -71,7 +71,7 @@
     // MEDIA MANAGER DATA-API
     // ===============
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="star-rating"]').starRating()
     })
 

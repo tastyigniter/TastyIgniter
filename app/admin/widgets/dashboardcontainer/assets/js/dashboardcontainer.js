@@ -103,7 +103,7 @@
     // DASHBOARDCONTAINER DATA-API
     // ===============
 
-    $(document).ready(function() {
+    $(document).render(function() {
         $('[data-control="dashboard-container"]').dashboardContainer()
     })
 }(window.jQuery);

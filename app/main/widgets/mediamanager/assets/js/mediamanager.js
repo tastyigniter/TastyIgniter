@@ -830,7 +830,7 @@
 
     Dropzone.autoDiscover = false;
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('div[data-control=media-manager]').mediaManager()
     })
 
@@ -855,7 +855,7 @@
         return that;
     }());
 
-    $(document).ready(function () {
+    $(document).render(function () {
         Notification.init({
             "selector": "#notification"
         });

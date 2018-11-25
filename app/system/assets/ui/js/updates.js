@@ -490,7 +490,7 @@
 
     $.fn.updates.Constructor = Updates
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('#list-items').updates()
     })
 

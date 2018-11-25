@@ -44,13 +44,9 @@
     }
 
     MapArea.prototype.addArea = function (lastCounter, shapeId) {
-        var $container = this.$el.find('[data-control="areas"]'),
-            $addedArea = $container.find('#'+shapeId)
-
         lastCounter++
 
         this.$el.get(0).setAttribute('data-last-counter', lastCounter)
-        $addedArea.find('[data-control="repeater"]').repeater()
 
         this.createShapeInput(shapeId)
     }
@@ -240,7 +236,7 @@
         return this
     }
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="map-area"]').mapArea();
 
         $('.tab-pane.active').find('[data-control="map-view"]').mapView('refresh');

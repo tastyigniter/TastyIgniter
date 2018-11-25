@@ -72,7 +72,7 @@
     // FLASH MESSAGE DATA-API
     // ===============
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="flash-message"]').each(function (index, element) {
             setTimeout(function () {
                 $.ti.flashMessage($(element).data(), element)

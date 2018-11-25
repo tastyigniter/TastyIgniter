@@ -99,7 +99,7 @@
 
     // RecordEditor DATA-API
     // ===============
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="record-editor"]').recordEditor()
     })
 }(window.jQuery);

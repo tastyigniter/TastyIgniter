@@ -115,7 +115,7 @@
 
     // CodeEditor DATA-API
     // ===============
-    $(document).ready(function () {
+    $(document).render(function () {
         $("[data-control=\"code-editor\"]").codeEditor()
     })
 

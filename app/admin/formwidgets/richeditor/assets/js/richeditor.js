@@ -159,7 +159,7 @@
 
     // RICHEDITOR DATA-API
     // ===============
-    $(document).ready(function () {
+    $(document).render(function () {
         $("[data-control=\"rich-editor\"]").richEditor()
     })
 

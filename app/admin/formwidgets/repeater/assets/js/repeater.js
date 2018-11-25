@@ -83,9 +83,6 @@
 
         this.$appendTo.append($newTemplate[0].innerHTML.replace(find, replace).replace(secFind, replace))
         $template.data('replace', parseInt(replace) + 1)
-
-        var $added = this.$appendTo.find('> :last-child')
-        $added.find('select.form-control').select2()
     }
 
     // FIELD REPEATER PLUGIN DEFINITION
@@ -120,7 +117,7 @@
     // FIELD REPEATER DATA-API
     // ===============
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="repeater"]', document).repeater()
     });
 

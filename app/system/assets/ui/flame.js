@@ -86,9 +86,40 @@
  * https://tastyigniter.com/docs/javascript
  * ======================================================================== */
 
-if (jQuery === undefined)
+if (window.jQuery === undefined)
     throw new Error('TastyIgniter Javascript requires jQuery.');
 
+if (window.jQuery.request !== undefined)
+    throw new Error('The TastyIgniter Javascript framework is already loaded.');
+
+/*
+ * Custom event that unifies document.ready with window.ajaxUpdateComplete
+ *
+ * $(document).render(function() { })
+ * $(document).on('render', function() { })
+ */
++function ($) {
+    "use strict";
+
+    $(document).ready(function() {
+        $(document).trigger('render')
+    })
+
+    $(window).on('ajaxUpdateComplete', function() {
+        $(document).trigger('render')
+    })
+
+    $.fn.render = function (callback) {
+        $(document).on('render', callback)
+    }
+}(window.jQuery);
+
+/*
+ * TastyIgniter AJAX plugin..
+ *
+ * $.request('handler', function() { })
+ * $(form).request('handler', function() { })
+ */
 +function ($) {
     "use strict";
 
@@ -107,7 +138,7 @@ if (jQuery === undefined)
             loading = options.loading !== undefined && options.loading.length ? $(options.loading) : null,
             isRedirect = options.redirect !== undefined && options.redirect.length
 
-        var _event = jQuery.Event('ti.before.request')
+        var _event = jQuery.Event('ajaxBeforeUpdate')
         $triggerEl.trigger(_event, context)
         if (_event.isDefaultPrevented()) return
 
@@ -409,7 +440,7 @@ if (jQuery === undefined)
             $appendToForm.append(input)
         })
     }
-}(jQuery);
+}(window.jQuery);
 
 /*
  * The loading indicator.
@@ -581,7 +612,7 @@ if (jQuery === undefined)
     // FLASH MESSAGE DATA-API
     // ===============
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="flash-message"]').each(function (index, element) {
             setTimeout(function () {
                 $.ti.flashMessage($(element).data(), element)
@@ -657,7 +688,7 @@ if (jQuery === undefined)
 
     // TOGGLE DATA-API
     // ===============
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-toggle="disabled"]').toggler()
     })
 
@@ -835,7 +866,7 @@ if (jQuery === undefined)
     // TRIGGERON DATA-API
     // ===============
 
-    $(document).ready(function() {
+    $(document).render(function() {
         $('[data-trigger]').triggerOn()
     })
 

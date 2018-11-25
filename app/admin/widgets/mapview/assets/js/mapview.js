@@ -341,7 +341,7 @@
 
     // MapView DATA-API
     // ===============
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="map-view"]').mapView()
     })
 

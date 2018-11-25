@@ -56,7 +56,7 @@
 
     // TOGGLE DATA-API
     // ===============
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-toggle="disabled"]').toggler()
     })
 

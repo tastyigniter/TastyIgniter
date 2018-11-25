@@ -105,7 +105,7 @@
     // FIELD CONNECTOR DATA-API
     // ===============
 
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="connector"]', document).connector()
     });
 

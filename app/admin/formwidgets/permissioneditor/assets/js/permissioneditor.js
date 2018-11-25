@@ -33,7 +33,7 @@
     // INITIALIZATION
     // ============================
 
-    $(document).ready(function () {
+    $(document).render(function () {
         new PermissionEditor()
     })
 

@@ -1,4 +1,6 @@
-jQuery(function ($) {
++function ($) {
+    "use strict";
+
     $("#side-nav-menu").metisMenu({
         toggle: true,
         collapseInClass: 'show'
@@ -10,14 +12,13 @@ jQuery(function ($) {
         $('.sidebar').removeClass('show')
     })
 
-    $(function () {
-        $('a, span, button').tooltip({placement: 'bottom'});
+    $(document).render(function () {
+        $('a, span, button', document).tooltip({placement: 'bottom'});
 
         $.fn.select2.defaults.set('width', null);
         $.fn.select2.defaults.set('theme', 'bootstrap');
         $.fn.select2.defaults.set('minimumResultsForSearch', 10);
         $('select.form-control', document).select2();
-
         $('.alert', document).alert();
     });
 
@@ -58,4 +59,4 @@ jQuery(function ($) {
         event.preventDefault()
         $.ti.flashMessage({class: 'danger', text: message, allowDismiss: false})
     })
-})
+}(window.jQuery);

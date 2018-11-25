@@ -47,8 +47,6 @@
             self.$modalRootElement.modal('hide')
         }).done(function (json) {
             self.$el.find('[data-control="toggle-components"]').parent().after(json)
-            self.$el.find('select.form-control').select2()
-            self.$el.find('[data-control="selectlist"]').selectList()
         })
     }
 
@@ -95,7 +93,7 @@
 
     // Components DATA-API
     // ===============
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="components"]').components()
     })
 }(window.jQuery);

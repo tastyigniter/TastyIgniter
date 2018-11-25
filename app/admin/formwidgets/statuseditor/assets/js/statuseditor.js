@@ -94,7 +94,7 @@
 
     // StatusEditor DATA-API
     // ===============
-    $(document).ready(function () {
+    $(document).render(function () {
         $('[data-control="status-editor"]').statusEditor()
     })
 }(window.jQuery);
