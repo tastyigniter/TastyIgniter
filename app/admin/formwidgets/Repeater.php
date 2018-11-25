@@ -37,6 +37,8 @@ class Repeater extends BaseFormWidget
 
     public $showRemoveButton = TRUE;
 
+    public $emptyMessage = 'lang:admin::lang.text_empty';
+
     //
     // Object properties
     //
@@ -62,6 +64,7 @@ class Repeater extends BaseFormWidget
         $this->fillFromConfig([
             'form',
             'prompt',
+            'emptyMessage',
             'sortable',
             'sortColumnName',
             'showAddButton',
@@ -120,6 +123,7 @@ class Repeater extends BaseFormWidget
         $this->vars['nextIndex'] = $this->indexCount;
         $this->vars['prompt'] = $this->prompt;
         $this->vars['sortable'] = $this->sortable;
+        $this->vars['emptyMessage'] = $this->emptyMessage;
         $this->vars['showAddButton'] = $this->showAddButton;
         $this->vars['showRemoveButton'] = $this->showRemoveButton;
         $this->vars['indexSearch'] = self::INDEX_SEARCH;

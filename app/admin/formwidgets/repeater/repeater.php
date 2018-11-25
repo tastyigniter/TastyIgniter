@@ -22,11 +22,17 @@
                 </tr>
                 </thead>
                 <tbody id="<?= $this->getId('append-to') ?>">
-                <?php foreach ($this->formWidgets as $index => $widget) { ?>
-                    <?= $this->makePartial('repeater/repeater_item', [
-                        'widget'     => $widget,
-                        'indexValue' => $index,
-                    ]) ?>
+                <?php if ($this->formWidgets) { ?>
+                    <?php foreach ($this->formWidgets as $index => $widget) { ?>
+                        <?= $this->makePartial('repeater/repeater_item', [
+                            'widget' => $widget,
+                            'indexValue' => $index,
+                        ]) ?>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr class="repeater-item-placeholder">
+                        <td colspan="99"><?= (sscanf($emptyMessage, 'lang:%s', $line) === 1) ? lang($line) : $emptyMessage ?></td>
+                    </tr>
                 <?php } ?>
                 </tbody>
                 <?php if ($showAddButton AND !$this->previewMode) { ?>

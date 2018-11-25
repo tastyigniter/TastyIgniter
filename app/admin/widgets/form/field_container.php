@@ -2,10 +2,9 @@
 $fieldError = form_error($field->fieldName);
 ?>
 <div
-    class="form-group <?=
-    $this->previewMode ? 'form-group-preview' : ''
-    ?> <?=
-    ($fieldError != '') ? 'is-invalid' : ''
+    class="form-group<?=
+    $this->previewMode ? ' form-group-preview' : ''
+    ?><?= ($fieldError != '') ? ' is-invalid' : ''
     ?> <?= $field->type ?>-field span-<?= $field->span ?> <?= $field->cssClass ?>"
     <?= $field->getAttributes('container') ?>
     id="<?= $field->getId('group') ?>"><?=

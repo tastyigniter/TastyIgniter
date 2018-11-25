@@ -135,6 +135,7 @@ return [
         'missing_definitions' => 'List action used in %s does not have definitions.',
         'missing_column' => 'Missing columns in List definitions %s',
         'delete_empty' => 'Nothing selected to delete.',
+        'text_empty' => 'Nothing found.',
         'text_setup' => 'Setup',
         'setup_title' => 'List Setup - %s',
         'label_visible_columns' => 'Visible Columns',

@@ -81,6 +81,8 @@
             throw new Error("No template element found with attribute [data-repeater-template]")
         }
 
+        this.$appendTo.find('.repeater-item-placeholder').remove()
+
         this.$appendTo.append($newTemplate[0].innerHTML.replace(find, replace).replace(secFind, replace))
         $template.data('replace', parseInt(replace) + 1)
     }

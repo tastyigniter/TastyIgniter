@@ -17234,6 +17234,7 @@ readers do not read off random characters that represent icons */
   background-color: #D3D6DE;
   border-radius: 3px;
   padding: 0.375rem 0.75rem;
+  overflow: auto;
 }
 
 .control-label {

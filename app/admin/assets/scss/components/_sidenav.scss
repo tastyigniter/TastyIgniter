@@ -17,6 +17,7 @@
   left: 0;
   right: 0;
   padding-top: 20px;
+  padding-bottom: 35px;
 
   > .nav {
     @include flex-direction(column);

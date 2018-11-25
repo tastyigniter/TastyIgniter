@@ -12,6 +12,7 @@
     border-radius: 0;
   }
   padding: $input-padding-y $input-padding-x;
+  overflow: auto;
 }
 .input-sm {
   @extend .form-control-sm;

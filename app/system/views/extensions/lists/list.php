@@ -1,12 +1,12 @@
 <?= form_open(current_url(),
     [
-        'id'     => 'list-form',
-        'role'   => 'form',
+        'id' => 'list-form',
+        'role' => 'form',
         'method' => 'POST',
     ]
 ); ?>
 
-<div class="table-responsive">
+<div class="list-table table-responsive">
     <table class="table table-striped">
         <tbody>
         <?php if (count($records)) { ?>

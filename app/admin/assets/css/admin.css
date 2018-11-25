@@ -1455,7 +1455,7 @@
 }
 
 .page-wrapper {
-  padding: 0 15px;
+  padding: 0 15px 15px;
   overflow-y: auto;
   position: absolute;
   top: 62px;
@@ -1739,6 +1739,7 @@ body.dragging .dragged, body.dragging .dragged {
   left: 0;
   right: 0;
   padding-top: 20px;
+  padding-bottom: 35px;
 }
 
 .nav-sidebar > .nav {
