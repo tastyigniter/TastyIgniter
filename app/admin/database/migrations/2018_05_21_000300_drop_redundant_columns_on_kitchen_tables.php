@@ -31,7 +31,7 @@ class DropRedundantColumnsOnKitchenTables extends Migration
 
         Schema::table('menu_options', function (Blueprint $table) {
             $table->integer('default_value_id')->unsigned();
-            $table->json('option_values');
+            $table->text('option_values');
         });
     }
 }

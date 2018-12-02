@@ -26,7 +26,7 @@ class CreateMediaAttachmentsTable extends Migration
             $table->string('tag')->index()->nullable();
             $table->nullableMorphs('attachment');
             $table->boolean('is_public')->default(1);
-            $table->json('custom_properties')->nullable();
+            $table->text('custom_properties')->nullable();
             $table->integer('priority')->unsigned()->nullable();
             $table->nullableTimestamps();
         });
