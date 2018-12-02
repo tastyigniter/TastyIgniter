@@ -85,6 +85,20 @@ if (!function_exists('admin_url')) {
     }
 }
 
+if (!function_exists('uploads_url')) {
+    /**
+     * Media Uploads URL
+     * Returns the full URL (including segments) of the assets media uploads directory
+     *
+     * @param null $path
+     * @return string
+     */
+    function uploads_url($path = null)
+    {
+        return \Main\Classes\MediaLibrary::instance()->getMediaUrl($path);
+    }
+}
+
 if (!function_exists('strip_class_basename')) {
     function strip_class_basename($class = '', $chop = null)
     {

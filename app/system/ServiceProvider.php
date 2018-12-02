@@ -127,6 +127,8 @@ class ServiceProvider extends AppServiceProvider
 
             return $country;
         });
+
+        App::instance('path.uploads', base_path(Config::get('system.assets.media.path', 'assets/media/uploads')));
     }
 
     /**
@@ -170,7 +172,6 @@ class ServiceProvider extends AppServiceProvider
     /*
      * Error handling for uncaught Exceptions
      */
-
     protected function registerErrorHandler()
     {
         Event::listen('exception.beforeRender', function ($exception, $httpCode, $request) {

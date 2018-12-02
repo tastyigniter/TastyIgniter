@@ -36,7 +36,7 @@
                 <address><?= format_address($model->location->getAddress(), TRUE); ?></address>
             </div>
             <div class="col-6 text-right">
-                <img class="img-responsive" src="<?= image_url(setting('site_logo')); ?>"/>
+                <img class="img-responsive" src="<?= uploads_url(setting('site_logo')); ?>"/>
             </div>
         </div>
 
