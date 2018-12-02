@@ -3,7 +3,6 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
-use Event;
 use Html;
 use Template;
 
@@ -88,8 +87,7 @@ class Toolbar extends BaseWidget
 
         $this->showToolbar = TRUE;
 
-        Event::fire('admin.toolbar.extendButtons', [$this]);
-        $this->fireEvent('toolbar.extendButtons', [$this]);
+        $this->fireSystemEvent('admin.toolbar.extendButtons');
 
         foreach ($this->buttons as $name => $attributes) {
             if (!is_array($attributes)) {

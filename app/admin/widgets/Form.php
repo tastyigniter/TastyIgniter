@@ -7,7 +7,6 @@ use Admin\Classes\FormField;
 use Admin\Classes\FormTabs;
 use Admin\Classes\Widgets;
 use Admin\Traits\FormModelWidget;
-use Event;
 use Exception;
 use Model;
 
@@ -309,16 +308,14 @@ class Form extends BaseWidget
 
         // Extensibility
         $dataHolder = (object)['data' => $saveData];
-        Event::fire('admin.form.extendFieldsBefore', [$dataHolder]);
-        $this->fireEvent('form.extendFieldsBefore');
+        $this->fireSystemEvent('admin.form.beforeRefresh', [$dataHolder]);
         $saveData = $dataHolder->data;
 
         $this->setFormValues($saveData);
         $this->prepareVars();
 
         // Extensibility
-        Event::fire('admin.form.refreshFields', [$this->allFields]);
-        $this->fireEvent('form.refreshFields');
+        $this->fireSystemEvent('admin.form.refreshFields', [$this->allFields]);
 
         if (($updateFields = post('fields')) && is_array($updateFields)) {
             foreach ($updateFields as $field) {
@@ -835,8 +832,7 @@ class Form extends BaseWidget
         }
 
         // Extensibility
-        Event::fire('admin.form.extendFieldsBefore', [$this]);
-        $this->fireEvent('form.extendFieldsBefore');
+        $this->fireSystemEvent('admin.form.extendFieldsBefore');
 
         // Outside fields
         if (!isset($this->fields) OR !is_array($this->fields)) {
@@ -855,8 +851,7 @@ class Form extends BaseWidget
         $this->addFields($this->tabs['fields'], FormTabs::SECTION_PRIMARY);
 
         // Extensibility
-        $this->fireEvent('form.extendFields', [$this->allFields]);
-        Event::fire('admin.form.extendFields', [$this, $this->allFields]);
+        $this->fireSystemEvent('admin.form.extendFields', [$this->allFields]);
 
         // Convert automatic spanned fields
         foreach ($this->allTabs->outside->getFields() as $fields) {

@@ -5,7 +5,6 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
 use DB;
-use Event;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
@@ -236,8 +235,7 @@ class Filter extends BaseWidget
         $query = $model->newQuery();
 
         // Extensibility
-        Event::fire('admin.filter.extendQuery', [$this, $query, $scope]);
-        $this->fireEvent('filter.extendQuery', [$query, $scope]);
+        $this->fireSystemEvent('admin.filter.extendQuery', [$query, $scope]);
 
         return $query->get();
     }

@@ -6,7 +6,6 @@ use AdminAuth;
 use App;
 use ApplicationException;
 use Config;
-use Event;
 use Igniter\Flame\Pagic\Cache\FileSystem;
 use Igniter\Flame\Pagic\Environment;
 use Igniter\Flame\Pagic\Parsers\FileParser;
@@ -500,8 +499,7 @@ class MainController extends BaseController
         }
 
         // Extensibility
-        $this->fireEvent('layout.initializeComponents', [$this->layoutObj]);
-        Event::fire('main.layout.initializeComponents', [$this, $this->layoutObj]);
+        $this->fireSystemEvent('main.layout.initializeComponents', [$this->layoutObj]);
     }
 
     //

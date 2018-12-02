@@ -6,7 +6,6 @@ use Admin\Classes\BaseWidget;
 use Admin\Classes\ListColumn;
 use Carbon\Carbon;
 use DB;
-use Event;
 use Exception;
 use Html;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -241,8 +240,7 @@ class Lists extends BaseWidget
         $withs = [];
 
         // Extensibility
-        Event::fire('admin.list.extendQueryBefore', [$this, $query]);
-        $this->fireEvent('list.extendQueryBefore', [$query]);
+        $this->fireEvent('admin.list.extendQueryBefore', [$query]);
 
         // Prepare searchable column names
         $primarySearchable = [];
@@ -361,10 +359,7 @@ class Lists extends BaseWidget
         $query->select($selects);
 
         // Extensibility
-        if (
-            ($event = $this->fireEvent('list.extendQuery', [$query], TRUE)) OR
-            ($event = Event::fire('admin.list.extendQuery', [$this, $query], TRUE))
-        ) {
+        if ($event = $this->fireSystemEvent('admin.list.extendQuery', [$query], TRUE)) {
             return $event;
         }
 
@@ -462,8 +457,7 @@ class Lists extends BaseWidget
         $this->addColumns($this->columns);
 
         // Extensibility
-        Event::fire('admin.list.extendColumns', [$this]);
-        $this->fireEvent('list.extendColumns');
+        $this->fireSystemEvent('admin.list.extendColumns');
 
         // Use a supplied column order
         if ($columnOrder = $this->getSession('order', null)) {
@@ -597,11 +591,7 @@ class Lists extends BaseWidget
         $value = lang($column->label);
 
         // Extensibility
-        if ($response = Event::fire('admin.list.overrideHeaderValue', [$this, $column, $value], TRUE)) {
-            $value = $response;
-        }
-
-        if ($response = $this->fireEvent('list.overrideHeaderValue', [$column, $value], TRUE)) {
+        if ($response = $this->fireSystemEvent('admin.list.overrideHeaderValue', [$column, $value], TRUE)) {
             $value = $response;
         }
 
@@ -632,11 +622,7 @@ class Lists extends BaseWidget
             $value = $column->defaults;
 
         // Extensibility
-        if (($response = Event::fire('admin.list.overrideColumnValue', [$this, $record, $column, $value], TRUE)) !== null) {
-            $value = $response;
-        }
-
-        if (($response = $this->fireEvent('list.overrideColumnValue', [$record, $column, $value], TRUE)) !== null) {
+        if ($response = $this->fireSystemEvent('admin.list.overrideColumnValue', [$record, $column, $value], TRUE)) {
             $value = $response;
         }
 
@@ -652,11 +638,7 @@ class Lists extends BaseWidget
         $result = $column->attributes;
 
         // Extensibility
-        if (($response = Event::fire('admin.list.overrideColumnValue', [$this, $record, $column, $result], TRUE)) !== null) {
-            $result = $response;
-        }
-
-        if (($response = $this->fireEvent('list.overrideColumnValue', [$record, $column, $result], TRUE)) !== null) {
+        if ($response = $this->fireSystemEvent('admin.list.overrideColumnValue', [$record, $column, $result], TRUE)) {
             $result = $response;
         }
 
