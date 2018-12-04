@@ -41,6 +41,7 @@ return [
     'Form' => Igniter\Flame\Html\FormFacade::class,
     'Html' => Igniter\Flame\Html\HtmlFacade::class,
     'Model' => Igniter\Flame\Database\Model::class,
+    'Parameter' => Igniter\Flame\Setting\Facades\Parameter::class,
     'Setting' => Igniter\Flame\Setting\Facades\Setting::class,
     'Str' => Igniter\Flame\Support\StrHelper::class,
 

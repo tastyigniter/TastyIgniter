@@ -16,20 +16,21 @@ trait SendsMailTemplate
         return [];
     }
 
-    public function mailSend($view, $recipientType)
+    public function mailSend($view, $recipientType = null)
     {
-        if (!$recipient = $this->mailGetRecipients($recipientType))
-            return FALSE;
-
         Mail::send(
             $view,
             $this->mailGetData(),
-            $this->mailBuildMessage($recipient)
+            is_callable($recipientType)
+                ? $recipientType
+                : $this->mailBuildMessage($recipientType)
         );
     }
 
-    protected function mailBuildMessage($recipients)
+    protected function mailBuildMessage($recipientType = null)
     {
+        $recipients = $this->mailGetRecipients($recipientType);
+
         return function ($message) use ($recipients) {
             foreach ($recipients as $recipient) {
                 list($email, $name) = $recipient;

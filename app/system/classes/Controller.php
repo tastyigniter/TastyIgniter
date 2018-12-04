@@ -92,8 +92,8 @@ class Controller extends IlluminateController
             return Response::make(View::make('system::no_database'), 200);
         }
 
-        // Look for a controller within app
-        $controller = isset($segments[0]) ? $segments[0] : 'dashboard';
+        // Look for a controller within app/admin & app/system
+        $controller = $segments[0] ?? 'dashboard';
         self::$action = $action = isset($segments[1]) ? $this->processAction($segments[1]) : 'index';
         self::$segments = $params = array_slice($segments, 2);
         if ($controllerObj = $this->locateController(

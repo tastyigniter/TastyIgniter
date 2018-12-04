@@ -23,6 +23,12 @@ class Staff_groups_model extends Model
         'permissions' => 'serialize',
     ];
 
+    public $relation = [
+        'hasMany' => [
+            'staffs' => ['Admin\Models\Staffs_model', 'foreignKey' => 'staff_group_id', 'otherKey' => 'staff_group_id']
+        ]
+    ];
+
     public static function getDropdownOptions()
     {
         return static::dropdown('staff_group_name');

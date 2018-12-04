@@ -130,6 +130,8 @@ return [
 
     'parsedTemplateCacheTTL' => 10,
 
+    'parsedTemplateCachePath' => storage_path('system/cache'),
+
     /*
     |--------------------------------------------------------------------------
     | Assets storage

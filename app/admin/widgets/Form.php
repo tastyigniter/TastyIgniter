@@ -82,8 +82,8 @@ class Form extends BaseWidget
      * @see \Admin\Classes\FormTabs
      */
     protected $allTabs = [
-        'outside'   => null,
-        'primary'   => null,
+        'outside' => null,
+        'primary' => null,
         'secondary' => null,
     ];
 
@@ -250,7 +250,7 @@ class Form extends BaseWidget
         return $this->makePartial(
             'form/field_'.$field->type,
             [
-                'field'     => $field,
+                'field' => $field,
                 'formModel' => $this->model,
             ]
         );

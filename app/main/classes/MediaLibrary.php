@@ -238,13 +238,16 @@ class MediaLibrary
 
     public function getMediaPath($path)
     {
+        if (starts_with($path, base_path()))
+            return $path;
+
         return $this->validatePath($this->storageFolder.$path, TRUE);
     }
 
     public function getMediaThumb($path, $options)
     {
         $options = array_merge([
-            'fit' => 'crop',
+            'fit' => 'contain',
             'width' => 0,
             'height' => 0,
             'quality' => 90,
@@ -254,7 +257,10 @@ class MediaLibrary
         ], $options);
 
         $path = $this->validatePath($path);
-        $filePath = $this->getStorageDisk()->path($this->getMediaPath($path));
+
+        $filePath = $this->getMediaPath($path);
+        if (!starts_with($path, base_path()))
+            $filePath = $this->getStorageDisk()->path($filePath);
 
         $thumbFile = $this->getMediaThumbFile($filePath, $options);
         $thumbPath = temp_path($this->validatePath($thumbFile, TRUE));
@@ -265,7 +271,7 @@ class MediaLibrary
 
         $this->ensureDirectoryExists($thumbPath);
 
-        if (!$this->exists($path))
+        if (!File::exists($filePath))
             $filePath = $this->getDefaultThumbPath($thumbPath, array_get($options, 'default'));
 
         Manipulator::make($filePath)

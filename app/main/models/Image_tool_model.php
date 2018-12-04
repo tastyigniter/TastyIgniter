@@ -9,19 +9,17 @@ use Model;
  */
 class Image_tool_model extends Model
 {
-    public static function resize($imgPath, $width = null, $height = null)
+    public static function resize($path, $width = 0, $height = 0)
     {
-        traceLog('Image_tool_model::resize() has been deprecated, use '.MediaLibrary::class.'::getMediaThumb($options) instead.');
-
         $options = array_merge([
-            'width' => is_array($width) ? null : $width,
+            'width' => is_array($width) ? 0 : $width,
             'height' => $height,
         ], is_array($width) ? $width : []);
 
         $rootFolder = config('system.assets.media.folder', 'data').'/';
-        if (strpos($imgPath, $rootFolder) === 0)
-            $imgPath = substr($imgPath, strlen($rootFolder));
+        if (starts_with($path, $rootFolder))
+            $path = substr($path, strlen($rootFolder));
 
-        return MediaLibrary::instance()->getMediaThumb($imgPath, $options);
+        return MediaLibrary::instance()->getMediaThumb($path, $options);
     }
 }

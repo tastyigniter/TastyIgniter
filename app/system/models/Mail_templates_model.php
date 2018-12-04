@@ -91,21 +91,21 @@ class Mail_templates_model extends Model
     public function getVariablesAttribute($value)
     {
         return [
-            'General' => [
+            'General'            => [
                 ['var' => '{site_name}', 'name' => 'Site name'],
                 ['var' => '{site_logo}', 'name' => 'Site logo'],
                 ['var' => '{site_url}', 'name' => 'Site URL'],
                 ['var' => '{signature}', 'name' => 'Signature'],
                 ['var' => '{location_name}', 'name' => 'Location name'],
             ],
-            'Customer' => [
+            'Customer'           => [
                 ['var' => '{full_name}', 'name' => 'Customer full name'],
                 ['var' => '{first_name}', 'name' => 'Customer first name'],
                 ['var' => '{last_name}', 'name' => 'Customer last name'],
                 ['var' => '{email}', 'name' => 'Customer email address'],
                 ['var' => '{telephone}', 'name' => 'Customer telephone address'],
             ],
-            'Staff' => [
+            'Staff'              => [
                 ['var' => '{staff_name}', 'name' => 'Staff name'],
                 ['var' => '{staff_username}', 'name' => 'Staff username'],
             ],
@@ -113,7 +113,7 @@ class Mail_templates_model extends Model
                 ['var' => '{account_login_link}', 'name' => 'Account login link'],
                 ['var' => '{reset_password}', 'name' => 'Created password on password reset'],
             ],
-            'Order' => [
+            'Order'              => [
                 ['var' => '{order_number}', 'name' => 'Order number'],
                 ['var' => '{order_view_url}', 'name' => 'Order view URL'],
                 ['var' => '{order_type}', 'name' => 'Order type ex. delivery/pick-up'],
@@ -135,7 +135,7 @@ class Mail_templates_model extends Model
                 ['var' => '{/order_totals}', 'name' => 'Order total pairs - END iteration'],
                 ['var' => '{order_comment}', 'name' => 'Order comment'],
             ],
-            'Reservation' => [
+            'Reservation'        => [
                 ['var' => '{reservation_number}', 'name' => 'Reservation number'],
                 ['var' => '{reservation_view_url}', 'name' => 'Reservation view URL'],
                 ['var' => '{reservation_date}', 'name' => 'Reservation date'],
@@ -143,11 +143,11 @@ class Mail_templates_model extends Model
                 ['var' => '{reservation_guest_no}', 'name' => 'No. of guest reserved'],
                 ['var' => '{reservation_comment}', 'name' => 'Reservation comment'],
             ],
-            'Status' => [
+            'Status'             => [
                 ['var' => '{status_name}', 'name' => 'Status name'],
                 ['var' => '{status_comment}', 'name' => 'Status comment'],
             ],
-            'Contact' => [
+            'Contact'            => [
                 ['var' => '{contact_topic}', 'name' => 'Contact topic'],
                 ['var' => '{contact_telephone}', 'name' => 'Contact telephone'],
                 ['var' => '{contact_message}', 'name' => 'Contact message body'],
@@ -238,7 +238,7 @@ class Mail_templates_model extends Model
         }
 
         if ($siteLogo = array_get($data, 'site_logo') AND !starts_with($siteLogo, ['//', 'http://', 'https://']))
-            $data['site_logo'] = Image_tool_model::resize($siteLogo);
+            $data['site_logo'] = Image_tool_model::resize($siteLogo, 200, 50);
 
         $stringParser = new StringParser;
 
@@ -249,15 +249,17 @@ class Mail_templates_model extends Model
         }
 
         // HTML contents
-        $html = $stringParser->parse($template->body, $data);
-        if ($template->layout AND strlen($template->layout->layout)) {
-            $html = $stringParser->parse($template->layout->layout, [
-                    'body' => $html,
-                    'layout_css' => $template->layout->layout_css,
-                ] + (array)$data);
-        }
+        if (strlen($template->body)) {
+            $html = $stringParser->parse($template->body, $data);
+            if ($template->layout AND strlen($template->layout->layout)) {
+                $html = $stringParser->parse($template->layout->layout, [
+                        'body' => $html,
+                        'layout_css' => $template->layout->layout_css,
+                    ] + (array)$data);
+            }
 
-        $message->setBody($html, 'text/html');
+            $message->setBody($html, 'text/html');
+        }
 
         // Text contents
         if (strlen($template->plain_body)) {

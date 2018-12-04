@@ -171,13 +171,13 @@ class UpdateManager
         $this->log("Migration table {$action}");
     }
 
-    public function migrateApp($app)
+    public function migrateApp($name)
     {
-        $path = $this->getMigrationPath($app);
+        $path = $this->getMigrationPath($name);
 
-        $this->migrator->run([$app => $path]);
+        $this->migrator->run([$name => $path]);
 
-        $this->log($app);
+        $this->log($name);
         foreach ($this->migrator->getNotes() as $note) {
             $this->log(' - '.$note);
         }
@@ -185,16 +185,16 @@ class UpdateManager
         return $this;
     }
 
-    public function seedApp($app)
+    public function seedApp($name)
     {
-        $className = '\\'.$app.'\Database\Seeds\DatabaseSeeder';
+        $className = '\\'.$name.'\Database\Seeds\DatabaseSeeder';
         if (!class_exists($className))
             return FALSE;
 
         $seeder = App::make($className);
         $seeder->run();
 
-        $this->log(sprintf('<info>Seeded %s</info> ', $app));
+        $this->log(sprintf('<info>Seeded %s</info> ', $name));
 
         return $this;
     }

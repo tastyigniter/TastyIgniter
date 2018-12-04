@@ -59,12 +59,15 @@ class ExtensionManager
      */
     protected $registered = FALSE;
 
+    /**
+     * @var string Path to the disarm file.
+     */
+    protected $metaFile;
+
     public function initialize()
     {
-        // This prevents reading settings from the database before its been created
-        if (App::hasDatabase())
-            $this->loadInstalled();
-
+        $this->metaFile = storage_path('system/installed.json');
+        $this->loadInstalled();
         $this->loadExtensions();
 
         if (App::runningInAdmin()) {
@@ -626,8 +629,14 @@ class ExtensionManager
      */
     public function loadInstalled()
     {
-        if (($installedExtensions = setting('installed_extensions')) AND is_array($installedExtensions)) {
-            $this->installedExtensions = array_dot($installedExtensions);
+        $path = $this->metaFile;
+
+        if (File::exists($path)) {
+            $this->installedExtensions = json_decode(File::get($path), TRUE) ?: [];
+        }
+        else {
+            $this->readInstalledExtensionsFromDb();
+            $this->saveInstalled();
         }
     }
 
@@ -718,9 +727,21 @@ class ExtensionManager
         return $extensionCode;
     }
 
+    /**
+     * Write the installed extensions to a meta file.
+     */
     protected function saveInstalled()
     {
-        setting()->set('installed_extensions', $this->installedExtensions);
-        setting()->save();
+        File::put($this->metaFile, json_encode($this->installedExtensions));
+    }
+
+    protected function readInstalledExtensionsFromDb()
+    {
+        if (!App::hasDatabase())
+            return;
+
+        if (($installedExtensions = setting('installed_extensions')) AND is_array($installedExtensions)) {
+            $this->installedExtensions = array_dot($installedExtensions);
+        }
     }
 }

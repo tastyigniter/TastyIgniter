@@ -9,7 +9,11 @@ use Admin\Helpers\Admin as AdminHelper;
 use App;
 use Config;
 use Event;
+use Igniter\Flame\ActivityLog\ActivityLogServiceProvider;
+use Igniter\Flame\Currency\CurrencyServiceProvider;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Igniter\Flame\Pagic\PagicServiceProvider;
+use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
@@ -35,6 +39,7 @@ class ServiceProvider extends AppServiceProvider
 
         parent::register('system');
 
+        $this->registerProviders();
         $this->registerSingletons();
 
         // Register all extensions
@@ -44,7 +49,6 @@ class ServiceProvider extends AppServiceProvider
         $this->registerErrorHandler();
         $this->registerMailer();
         $this->registerPaginator();
-        $this->registerCurrency();
         $this->registerAssets();
 
         // Register admin and main module providers
@@ -69,6 +73,7 @@ class ServiceProvider extends AppServiceProvider
         ExtensionManager::instance()->bootExtensions();
 
         $this->updateTimezone();
+        $this->setDefaultCurrency();
         $this->extendValidator();
 
         $this->addTranslationDriver();
@@ -240,7 +245,7 @@ class ServiceProvider extends AppServiceProvider
         }
     }
 
-    protected function registerCurrency()
+    protected function setDefaultCurrency()
     {
         $this->app['config']->set('currency.default', setting('default_currency_code'));
     }
@@ -296,5 +301,13 @@ class ServiceProvider extends AppServiceProvider
             'settings' => 'System\Models\Settings_model',
             'themes' => 'System\Models\Themes_model',
         ]);
+    }
+
+    protected function registerProviders()
+    {
+        $this->app->register(HelperServiceProvider::class);
+        $this->app->register(PagicServiceProvider::class);
+        $this->app->register(ActivityLogServiceProvider::class);
+        $this->app->register(CurrencyServiceProvider::class);
     }
 }

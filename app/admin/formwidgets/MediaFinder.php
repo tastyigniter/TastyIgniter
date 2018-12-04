@@ -46,7 +46,7 @@ class MediaFinder extends BaseFormWidget
      * @var array Options used for generating thumbnails.
      */
     public $thumbOptions = [
-        'fit' => 'crop',
+        'fit' => 'contain',
         'width' => 122,
         'height' => 122
     ];

@@ -45,14 +45,10 @@ class Messages_model extends Model
         'belongsTo' => [
             'layout' => ['System\Models\Mail_layouts_model'],
         ],
-        'hasMany'   => [
+        'hasMany' => [
             'recipients' => ['System\Models\Message_meta_model'],
-//            'customers'      => ['Admin\Models\Customers_model'],
-//            'customer_group' => ['Admin\Models\Customer_groups_model'],
-//            'staff'          => ['Admin\Models\Staffs_model'],
-//            'staff_group'    => ['Admin\Models\Staff_groups_model'],
         ],
-        'morphTo'   => [
+        'morphTo' => [
             'sender' => [],
         ],
     ];
@@ -90,7 +86,7 @@ class Messages_model extends Model
     public static function getSendTypeOptions()
     {
         return [
-            'email'   => lang('system::lang.messages.text_email'),
+            'email' => lang('system::lang.messages.text_email'),
             'account' => lang('system::lang.messages.text_account'),
         ];
     }
@@ -108,9 +104,9 @@ class Messages_model extends Model
     public static function listMenuMessages($menu, $item, $user)
     {
         $query = self::listMessages([
-            'context'   => 'inbox',
+            'context' => 'inbox',
             'recipient' => $user->staff,
-            'state'     => 'unread',
+            'state' => 'unread',
         ])->orderBy('date_updated', 'desc');
 
         return [
@@ -123,35 +119,35 @@ class Messages_model extends Model
     {
         return [
             'all_newsletters' => 'lang:system::lang.messages.text_all_newsletters',
-            'customers'       => 'lang:system::lang.messages.text_customers',
-            'customer_group'  => 'lang:system::lang.messages.text_customer_group',
-            'staff'           => 'lang:system::lang.messages.text_staff',
-            'staff_group'     => 'lang:system::lang.messages.text_staff_group',
+            'customers' => 'lang:system::lang.messages.text_customers',
+            'customer_group' => 'lang:system::lang.messages.text_customer_group',
+            'staff' => 'lang:system::lang.messages.text_staff',
+            'staff_group' => 'lang:system::lang.messages.text_staff_group',
         ];
     }
 
     public static function listFolders()
     {
         return [
-            'inbox'   => [
+            'inbox' => [
                 'title' => 'lang:system::lang.messages.text_inbox',
-                'icon'  => 'fa-inbox',
-                'url'   => 'messages',
+                'icon' => 'fa-inbox',
+                'url' => 'messages',
             ],
-            'draft'   => [
+            'draft' => [
                 'title' => 'lang:system::lang.messages.text_draft',
-                'icon'  => 'fa-file-text-o',
-                'url'   => 'messages/draft',
+                'icon' => 'fa-file-text-o',
+                'url' => 'messages/draft',
             ],
-            'sent'    => [
+            'sent' => [
                 'title' => 'lang:system::lang.messages.text_sent',
-                'icon'  => 'fa-paper-plane-o',
-                'url'   => 'messages/sent',
+                'icon' => 'fa-paper-plane-o',
+                'url' => 'messages/sent',
             ],
             'archive' => [
                 'title' => 'lang:system::lang.messages.text_archive',
-                'icon'  => 'fa-archive',
-                'url'   => 'messages/archive',
+                'icon' => 'fa-archive',
+                'url' => 'messages/archive',
             ],
         ];
     }
@@ -196,9 +192,9 @@ class Messages_model extends Model
     public function scopeListFrontEnd($query, array $options = [])
     {
         $options = array_merge([
-            'page'      => 1,
+            'page' => 1,
             'pageLimit' => 20,
-            'sort'      => null,
+            'sort' => null,
         ], $options);
 
         $options['context'] = 'inbox';
@@ -211,9 +207,9 @@ class Messages_model extends Model
     public function scopeListMessages($query, array $options = [])
     {
         extract(array_merge([
-            'sort'      => null,
-            'context'   => 'inbox',
-            'state'     => null,
+            'sort' => null,
+            'context' => 'inbox',
+            'state' => null,
             'recipient' => null,
         ], $options));
 
@@ -329,7 +325,7 @@ class Messages_model extends Model
             $recipients,
             [
                 'html' => $this->body,
-                'raw'  => TRUE,
+                'raw' => TRUE,
             ],
             $this->toArray(),
             function (Message $message) use ($subject) {
@@ -432,7 +428,7 @@ class Messages_model extends Model
 
         $recipients->each(function ($model) {
             $this->recipients()->create([
-                'messagable_id'   => $model->getKey(),
+                'messagable_id' => $model->getKey(),
                 'messagable_type' => $model->getMorphClass(),
             ]);
         });
@@ -443,7 +439,6 @@ class Messages_model extends Model
         $this->restorePurgedValues();
 
         if (!empty($this->attributes[$this->recipient]) AND is_array($this->attributes[$this->recipient])) {
-
             $recipientList = self::findRecipients($this->recipient, $this->attributes[$this->recipient]);
             unset($this->attributes[$this->recipient]);
 

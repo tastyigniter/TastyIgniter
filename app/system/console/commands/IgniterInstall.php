@@ -99,17 +99,18 @@ class IgniterInstall extends Command
     protected function writeDatabaseConfig()
     {
         $config = [];
-        $config['host'] = $this->ask('MySQL Host', Config::get('database.connections.mysql.host'));
-        $config['port'] = $this->ask('MySQL Port', Config::get('database.connections.mysql.port') ?: FALSE) ?: '';
-        $config['database'] = $this->ask('Database Name', Config::get('database.connections.mysql.database'));
-        $config['username'] = $this->ask('MySQL Login', Config::get('database.connections.mysql.username'));
-        $config['password'] = $this->ask('MySQL Password', Config::get('database.connections.mysql.password') ?: FALSE) ?: '';
-        $config['prefix'] = $this->ask('MySQL Table Prefix', Config::get('database.connections.mysql.prefix') ?: FALSE) ?: '';
+        $name = Config::get('database.default');
+        $config['host'] = $this->ask('MySQL Host', Config::get("database.connections.{$name}.host"));
+        $config['port'] = $this->ask('MySQL Port', Config::get("database.connections.{$name}.port") ?: FALSE) ?: '';
+        $config['database'] = $this->ask('Database Name', Config::get("database.connections.{$name}.database"));
+        $config['username'] = $this->ask('MySQL Login', Config::get("database.connections.{$name}.username"));
+        $config['password'] = $this->ask('MySQL Password', Config::get("database.connections.{$name}.password") ?: FALSE) ?: '';
+        $config['prefix'] = $this->ask('MySQL Table Prefix', Config::get("database.connections.{$name}.prefix") ?: FALSE) ?: '';
 
-        $this->writeToConfig('database', ['default' => 'mysql']);
+        $this->writeToConfig('database', ['default' => $name]);
 
         foreach ($config as $config => $value) {
-            $this->writeToConfig('database', ['connections.mysql.'.$config => $value]);
+            $this->writeToConfig('database', ['connections.'.$name.'.'.$config => $value]);
         }
     }
 

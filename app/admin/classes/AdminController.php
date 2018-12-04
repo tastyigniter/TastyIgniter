@@ -90,13 +90,16 @@ class AdminController extends BaseController
 
     protected function definePaths()
     {
+        $classPath = strtolower(str_replace('\\', '/', get_called_class()));
+        $relativePath = dirname($classPath, 2);
+        $className = basename($classPath);
+
         // Add paths from the extension / module context
-        $relativePath = dirname($classPath = strtolower(str_replace('\\', '/', get_called_class())), 2);
         $this->viewPath[] = '~/extensions/'.$relativePath.'/views';
-        $this->viewPath[] = '~/extensions/'.$relativePath.'/views/'.basename($classPath);
-        $this->viewPath[] = '~/app/'.$relativePath.'/views/'.basename($classPath);
+        $this->viewPath[] = '~/extensions/'.$relativePath.'/views/'.$className;
+        $this->viewPath[] = '~/app/'.$relativePath.'/views/'.$className;
         $this->viewPath[] = '~/app/'.$relativePath.'/views';
-        $this->viewPath[] = '~/app/admin/views/'.basename($classPath);
+        $this->viewPath[] = '~/app/admin/views/'.$className;
         $this->viewPath[] = '~/app/admin/views';
 
         // Add layout paths from the extension / module context
@@ -130,7 +133,7 @@ class AdminController extends BaseController
             if (!$this->checkUser()) {
                 flash()->error(lang('admin::lang.alert_user_not_logged_in'))->important();
 
-                return $this->redirectGuest('login');
+                return Admin::redirectGuest('login');
             }
 
             // Check that user has permission to view this page

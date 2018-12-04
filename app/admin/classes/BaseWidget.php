@@ -53,8 +53,7 @@ class BaseWidget extends Extendable
         $this->controller = $controller;
 
         // Add paths from the controller context
-        $this->partialPath = $controller->viewPath;
-        $this->partialPath[] = '~/app/admin/views/_partials';
+        $this->partialPath = $controller->partialPath;
 
         // Add paths from the extension / module context
         $classPath = strtolower(str_replace('\\', '/', get_called_class()));

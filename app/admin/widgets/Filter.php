@@ -188,7 +188,7 @@ class Filter extends BaseWidget
 
         return [
             'available' => $this->getAvailableOptions($scope),
-            'active'    => $activeKey,
+            'active' => $activeKey,
         ];
     }
 
@@ -393,9 +393,9 @@ class Filter extends BaseWidget
                 if ($scopeConditions = $scope->conditions) {
                     $query->whereRaw(strtr($scopeConditions, [
                         ':filtered' => mdate('%Y-%m-%d', strtotime($scope->value)),
-                        ':year'     => mdate('%Y', strtotime($scope->value)),
-                        ':month'    => mdate('%m', strtotime($scope->value)),
-                        ':day'      => mdate('%d', strtotime($scope->value)),
+                        ':year' => mdate('%Y', strtotime($scope->value)),
+                        ':month' => mdate('%m', strtotime($scope->value)),
+                        ':day' => mdate('%d', strtotime($scope->value)),
                     ]));
                 } // Scope
                 elseif ($scopeMethod = $scope->scope) {

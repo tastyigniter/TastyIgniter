@@ -55,12 +55,12 @@ class ListController extends ControllerAction
      */
     protected $filterWidgets = [];
 
-    public $requiredProperties = ['listConfig'];
+    protected $requiredProperties = ['listConfig'];
 
     /**
      * @var array Required controller configuration array keys
      */
-    public $requiredConfig = ['model', 'configFile'];
+    protected $requiredConfig = ['model', 'configFile'];
 
     /**
      * List_Controller constructor.
@@ -233,7 +233,7 @@ class ListController extends ControllerAction
                 });
 
                 $widget->setSearchOptions([
-                    'mode'  => $searchWidget->mode,
+                    'mode' => $searchWidget->mode,
                     'scope' => $searchWidget->scope,
                 ]);
 
@@ -280,7 +280,7 @@ class ListController extends ControllerAction
 
     public function refreshList($alias = null)
     {
-        if (!count($this->listWidgets)) {
+        if (!$this->listWidgets) {
             $this->makeLists();
         }
 

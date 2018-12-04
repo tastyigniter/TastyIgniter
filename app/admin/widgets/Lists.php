@@ -652,7 +652,7 @@ class Lists extends BaseWidget
 
         foreach ($result as $key => $value) {
             if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
-                $result[$key] = admin_url($value);
+                $result[$key] = $this->controller->pageUrl($value);
             }
             else if (is_string($value)) {
                 $result[$key] = lang($value);

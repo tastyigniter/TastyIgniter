@@ -25,7 +25,7 @@ trait ViewMaker
     /**
      * @var string Specifies a path to the layout directory.
      */
-    protected $layoutPath;
+    public $layoutPath;
 
     /**
      * @var string Specifies a path to the partials directory.
@@ -201,9 +201,11 @@ trait ViewMaker
         // an exception is thrown. This prevents any partial views from leaking.
         try {
             include $filePath;
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             $this->handleViewException($e, $obLevel);
-        } catch (Throwable $e) {
+        }
+        catch (Throwable $e) {
             $this->handleViewException(new FatalThrowableError($e), $obLevel);
         }
 

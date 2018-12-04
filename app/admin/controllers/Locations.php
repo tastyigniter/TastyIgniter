@@ -171,7 +171,7 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['options.hours.*.flexible.*.close', 'lang:admin::lang.locations.label_close_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::lang.locations.label_opening_status', $requiredIf.'|integer'];
 
-        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'sometimes|required'];
+        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'sometimes'];
         $rules[] = ['delivery_areas.*.type', 'lang:admin::lang.locations.label_area_type', 'required'];
         $rules[] = ['delivery_areas.*.name', 'lang:admin::lang.locations.label_area_name', 'required'];
         $rules[] = ['delivery_areas.*.area_id', 'lang:admin::lang.locations.label_area_id', 'integer'];
@@ -218,7 +218,7 @@ class Locations extends \Admin\Classes\AdminController
 
             $validator->errors()->add('options.auto_lat_lng', is_string($geoPosition)
                 ? $geoPosition
-                : 'Address geocoding failed'
+                : 'Address geocoding failed: '.$geoPosition->error
             );
 
             return FALSE;

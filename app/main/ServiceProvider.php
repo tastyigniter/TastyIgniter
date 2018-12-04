@@ -4,8 +4,6 @@ namespace Main;
 
 use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
-use Igniter\Flame\Pagic\Cache\FileSystem as FileCache;
-use Igniter\Flame\Pagic\Parsers\FileParser;
 use Illuminate\Support\Facades\View;
 use Main\Classes\ThemeManager;
 use Setting;
@@ -42,8 +40,6 @@ class ServiceProvider extends AppServiceProvider
             $this->registerSingletons();
             $this->registerAssets();
             $this->registerCombinerEvent();
-
-            FileParser::setCache(new FileCache(storage_path().'/system/cache'));
         }
     }
 

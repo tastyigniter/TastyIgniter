@@ -109,7 +109,7 @@ class Toolbar extends BaseWidget
             else {
                 foreach ($attributes as $key => $value) {
                     if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
-                        $attributes[$key] = admin_url($value);
+                        $attributes[$key] = $this->controller->pageUrl($value);
                     }
                     else if (is_string($value)) {
                         $attributes[$key] = lang($value);

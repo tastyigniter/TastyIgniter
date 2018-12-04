@@ -45,7 +45,7 @@ class CalendarController extends ControllerAction
     /**
      * @var array Required controller configuration array keys
      */
-    public $requiredConfig = ['configFile'];
+    protected $requiredConfig = ['configFile'];
 
     /**
      * List_Controller constructor.

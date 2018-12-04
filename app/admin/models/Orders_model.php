@@ -318,6 +318,7 @@ class Orders_model extends Model
         $data['order_number'] = $model->order_id;
         $data['first_name'] = $model->first_name;
         $data['last_name'] = $model->last_name;
+        $data['customer_name'] = $model->customer_name;
         $data['email'] = $model->email;
         $data['telephone'] = $model->telephone;
         $data['order_comment'] = $model->comment;
@@ -325,6 +326,9 @@ class Orders_model extends Model
         $data['order_type'] = ($model->order_type == '1') ? 'delivery' : 'collection';
         $data['order_time'] = $model->order_time.' '.$model->order_date->format('d M');
         $data['order_date'] = $model->date_added->format('d M y');
+
+        $data['invoice_id'] = $model->invoice_id;
+        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format('d M y') : null;
 
         $data['order_payment'] = ($model->payment_method)
             ? $model->payment_method->name

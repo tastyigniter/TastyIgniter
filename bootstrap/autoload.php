@@ -1,6 +1,6 @@
 <?php
 
-define('LARAVEL_START', microtime(true));
+define('LARAVEL_START', microtime(TRUE));
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +15,7 @@ define('LARAVEL_START', microtime(true));
 $helperPath = __DIR__.'/../vendor/tastyigniter/flame/src/Support/helpers.php';
 
 if (!file_exists($helperPath)) {
-    echo 'Setup required, try /setup.php.'.PHP_EOL;
+    echo 'Setup required, missing foundation files.'.PHP_EOL;
     exit(1);
 }
 
