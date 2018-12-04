@@ -111,7 +111,7 @@ class ServiceProvider extends AppServiceProvider
         });
 
         App::singleton('admin.menu', function ($app) {
-            return Navigation::instance();
+            return new Navigation('~/app/admin/views/_partials/');
         });
 
         App::singleton('admin.template', function ($app) {

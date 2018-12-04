@@ -1,32 +1,35 @@
 <?php namespace Admin\Classes;
 
 use AdminAuth;
-use Igniter\Flame\Traits\Singleton;
 use System\Classes\BaseExtension;
 use System\Classes\ExtensionManager;
 use System\Traits\ViewMaker;
 
 class Navigation
 {
-    use Singleton;
     use ViewMaker;
 
     protected $navItems = [];
 
-    protected static $mainItems;
+    protected $mainItems;
 
-    protected static $navItemsLoaded = FALSE;
+    protected $navItemsLoaded = FALSE;
 
-    protected static $navContextItemCode;
+    protected $navContextItemCode;
 
-    protected static $navContextParentCode;
+    protected $navContextParentCode;
 
-    protected static $callbacks = [];
+    protected $callbacks = [];
+
+    public function __construct($path = null)
+    {
+        $this->viewPath[] = $path;
+    }
 
     public function setContext($itemCode, $parentCode = null)
     {
-        self::$navContextItemCode = $itemCode;
-        self::$navContextParentCode = is_null($parentCode) ? $itemCode : $parentCode;
+        $this->navContextItemCode = $itemCode;
+        $this->navContextParentCode = is_null($parentCode) ? $itemCode : $parentCode;
     }
 
     public function getNavItems()
@@ -67,10 +70,10 @@ class Navigation
 
     public function isActiveNavItem($code)
     {
-        if ($code == self::$navContextParentCode)
+        if ($code == $this->navContextParentCode)
             return TRUE;
 
-        if ($code == self::$navContextItemCode)
+        if ($code == $this->navContextItemCode)
             return TRUE;
 
         return FALSE;
@@ -78,16 +81,14 @@ class Navigation
 
     public function getMainItems()
     {
-        if (!self::$mainItems)
+        if (!$this->mainItems)
             $this->loadItems();
 
-        return $this->filterPermittedNavItems(self::$mainItems);
+        return $this->filterPermittedNavItems($this->mainItems);
     }
 
     public function render($partial)
     {
-        $this->partialPath[] = '~/app/admin/views/_partials/';
-
         $navItems = $this->getVisibleNavItems();
 
         return $this->makePartial($partial, [
@@ -98,13 +99,13 @@ class Navigation
     public function addNavItem($itemCode, array $options = [], $parentCode = null)
     {
         $navItemDefaults = [
-            'code'       => $itemCode,
-            'class'      => null,
-            'href'       => null,
-            'icon'       => null,
-            'title'      => null,
-            'child'      => null,
-            'priority'   => 500,
+            'code' => $itemCode,
+            'class' => null,
+            'href' => null,
+            'icon' => null,
+            'title' => null,
+            'child' => null,
+            'priority' => 500,
             'permission' => null,
         ];
 
@@ -113,7 +114,7 @@ class Navigation
         if ($parentCode) {
             if (!isset($this->navItems[$parentCode]))
                 $this->navItems[$parentCode] = array_merge($navItemDefaults, [
-                    'code'  => $parentCode,
+                    'code' => $parentCode,
                     'class' => $parentCode,
                 ]);
 
@@ -136,14 +137,14 @@ class Navigation
 
     public function loadItems()
     {
-        if (self::$navItemsLoaded)
+        if ($this->navItemsLoaded)
             return;
 
         if (!AdminAuth::check())
             return;
 
         // Load app items
-        foreach (self::$callbacks as $callback) {
+        foreach ($this->callbacks as $callback) {
             $callback($this);
         }
 
@@ -160,7 +161,7 @@ class Navigation
             $this->registerNavItems($items);
         }
 
-        self::$navItemsLoaded = TRUE;
+        $this->navItemsLoaded = TRUE;
     }
 
     public function filterPermittedNavItems($items)
@@ -179,12 +180,12 @@ class Navigation
 
     public function registerMainItems($definitions = null)
     {
-        if (!static::$mainItems) {
-            static::$mainItems = [];
+        if (!$this->mainItems) {
+            $this->mainItems = [];
         }
 
         foreach ($definitions as $name => $definition) {
-            static::$mainItems[$name] = $definition;
+            $this->mainItems[$name] = $definition;
         }
     }
 
@@ -228,8 +229,8 @@ class Navigation
      *
      * @param callable $callback A callable function.
      */
-    public static function registerCallback(callable $callback)
+    public function registerCallback(callable $callback)
     {
-        static::$callbacks[] = $callback;
+        $this->callbacks[] = $callback;
     }
 }

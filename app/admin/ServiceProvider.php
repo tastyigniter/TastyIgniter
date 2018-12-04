@@ -5,6 +5,7 @@ namespace Admin;
 use Admin\Classes\Navigation;
 use Admin\Classes\Widgets;
 use AdminAuth;
+use AdminMenu;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use System\Libraries\Assets;
@@ -184,7 +185,7 @@ class ServiceProvider extends AppServiceProvider
      */
     protected function registerMainMenuItems()
     {
-        Navigation::registerCallback(function (Navigation $manager) {
+        AdminMenu::registerCallback(function (Navigation $manager) {
             $manager->registerMainItems([
                 'preview' => [
                     'icon' => 'fa-store',
@@ -243,7 +244,7 @@ class ServiceProvider extends AppServiceProvider
      */
     protected function registerNavMenuItems()
     {
-        Navigation::registerCallback(function (Navigation $manager) {
+        AdminMenu::registerCallback(function (Navigation $manager) {
             $manager->registerNavItems([
                 'dashboard' => [
                     'priority' => 0,
@@ -534,7 +535,7 @@ class ServiceProvider extends AppServiceProvider
 
     protected function replaceNavMenuItem()
     {
-        Navigation::registerCallback(function (Navigation $manager) {
+        AdminMenu::registerCallback(function (Navigation $manager) {
             // Change nav menu if single location mode is activated
             if (!(is_single_location() OR AdminAuth::user()->hasStrictLocationAccess()))
                 return;
