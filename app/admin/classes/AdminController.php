@@ -308,6 +308,13 @@ class AdminController extends BaseController
                 return $result ?: TRUE;
             }
 
+            // Process page global handler (onSomething)
+            if ($this->methodExists($handler)) {
+                $result = call_user_func_array([$this, $handler], $params);
+
+                return $result ?: TRUE;
+            }
+
             $this->suppressView = TRUE;
 
             $this->execPageAction($this->action, $this->params);
