@@ -4,6 +4,12 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    public static $siteName = 'TastyIgniter';
+
+    public static $siteEmail = 'admin@domain.tld';
+
+    public static $staffName = 'Chef Admin';
+
     /**
      * Run the database seeds.
      * @return void

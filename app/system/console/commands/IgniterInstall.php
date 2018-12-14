@@ -9,6 +9,7 @@ use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
+use System\Database\Seeds\DatabaseSeeder;
 
 /**
  * Console command to install TastyIgniter.
@@ -61,9 +62,9 @@ class IgniterInstall extends Command
 
         $this->rewriteConfigFiles();
 
-        $this->migrateDatabase();
+        $this->setSeederProperties();
 
-        $this->createDefaultLocation();
+        $this->migrateDatabase();
 
         $this->createSuperUser();
 
@@ -131,27 +132,26 @@ class IgniterInstall extends Command
         $this->line('Done. Migrating application and extensions...');
     }
 
-    protected function createDefaultLocation()
+    protected function setSeederProperties()
     {
-        $siteName = $this->ask('Site Name', 'TastyIgniter');
+        $siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
         $this->writeToConfig('app', ['name' => $siteName]);
 
         $url = $this->ask('Site URL', Config::get('app.url'));
         $this->writeToConfig('app', ['url' => $url]);
 
-        \Admin\Models\Locations_model::insert(['location_name' => $siteName]);
-        $this->line('Location '.$siteName.' created!');
+        DatabaseSeeder::$siteName = $siteName;
+        DatabaseSeeder::$siteEmail = $this->ask('Admin Email', DatabaseSeeder::$siteEmail);
+        DatabaseSeeder::$staffName = $this->ask('Admin Name', DatabaseSeeder::$staffName);
     }
 
     protected function createSuperUser()
     {
-        $name = $this->ask('Admin Name', 'Chef Sam');
-        $email = $this->ask('Admin Email', 'admin@domain.tld');
         $username = $this->ask('Admin Username', 'admin');
         $password = $this->ask('Admin Password', '123456');
 
-        $staff = \Admin\Models\Staffs_model::firstOrNew(['staff_email' => $email]);
-        $staff->staff_name = $name;
+        $staff = \Admin\Models\Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
+        $staff->staff_name = DatabaseSeeder::$staffName;
         $staff->staff_group_id = \Admin\Models\Staff_groups_model::first()->staff_group_id;
         $staff->staff_location_id = \Admin\Models\Locations_model::first()->location_id;
         $staff->language_id = \System\Models\Languages_model::first()->language_id;

@@ -1,0 +1,76 @@
+[
+  {
+    "option_name": "Toppings",
+    "display_type": "checkbox",
+    "option_values": [
+      {
+        "value": "Peperoni",
+        "price": 1.99,
+        "priority": 2
+      },
+      {
+        "value": "Jalapenos",
+        "price": 3.99,
+        "priority": 1
+      },
+      {
+        "value": "Sweetcorn",
+        "price": 1.99,
+        "priority": 3
+      }
+    ]
+  },
+  {
+    "option_name": "Sides",
+    "display_type": "checkbox",
+    "option_values":   [
+      {
+        "value": "Meat",
+        "price": 4.95,
+        "priority": 4
+      },
+      {
+        "value": "Fish",
+        "price": 4.95,
+        "priority": 2
+      },
+      {
+        "value": "Beef",
+        "price": 6.95,
+        "priority": 3
+      }
+    ]
+  },
+  {
+    "option_name": "Size",
+    "display_type": "radio",
+    "option_values": [
+      {
+        "value": "Small",
+        "price": 0,
+        "priority": 1
+      },
+      {
+        "value": "Large",
+        "price": 5,
+        "priority": 2
+      }
+    ]
+  },
+  {
+    "option_name": "Drinks",
+    "display_type": "checkbox",
+    "option_values":   [
+      {
+        "value": "Coke",
+        "price": 0,
+        "priority": 1
+      },
+      {
+        "value": "Diet Coke",
+        "price": 0,
+        "priority": 2
+      }
+    ]
+  }
+]

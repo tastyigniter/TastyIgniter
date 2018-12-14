@@ -83,7 +83,7 @@ class InitialSchemaSeeder extends Seeder
         Languages_model::insert([
             'code' => 'en',
             'name' => 'English',
-            'image' => 'data/flags/gb.png',
+            'image' => 'flags/gb.png',
             'idiom' => 'english',
             'status' => TRUE,
             'can_delete' => FALSE,

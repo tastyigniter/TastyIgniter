@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Half Sundays",
+    "code": "2222",
+    "type": "F",
+    "discount": 100,
+    "min_total": 500,
+    "status": 1,
+    "validity": "forever",
+    "order_restriction": 0
+  },
+  {
+    "name": "Half Tuesdays",
+    "code": "3333",
+    "type": "P",
+    "discount": 30,
+    "min_total": 1000,
+    "status": 1,
+    "validity": "forever",
+    "order_restriction": 0
+  },
+  {
+    "name": "Full Mondays",
+    "code": "MTo6TuTg",
+    "type": "P",
+    "discount": 50,
+    "min_total": 0,
+    "customer_redemptions": 1,
+    "status": 1,
+    "validity": "forever",
+    "order_restriction": 0
+  },
+  {
+    "name": "Full Tuesdays",
+    "code": "4444",
+    "type": "F",
+    "discount": 500,
+    "min_total": 5000,
+    "status": 1,
+    "order_restriction": 0
+  }
+]
