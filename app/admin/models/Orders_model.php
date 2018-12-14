@@ -6,7 +6,6 @@ use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
 use Event;
 use Igniter\Flame\Auth\Models\User;
-use Igniter\Flame\Location\Models\Location;
 use Main\Classes\MainController;
 use Model;
 use Request;
@@ -126,7 +125,7 @@ class Orders_model extends Model
 
         $query->where('status_id', '>=', 1);
 
-        if ($location instanceof Location) {
+        if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
         }
         else if (strlen($location)) {

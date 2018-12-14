@@ -4,7 +4,7 @@ use Admin\Models\Locations_model;
 use AdminAuth;
 use AdminMenu;
 use Exception;
-use Igniter\Flame\Location\GeoPosition;
+use Geocoder;
 
 class Locations extends \Admin\Classes\AdminController
 {
@@ -63,16 +63,6 @@ class Locations extends \Admin\Classes\AdminController
         return parent::remap($action, $params);
     }
 
-    public function edit($context = null, $recordId = null)
-    {
-        $formController = $this->asExtension('FormController');
-        $formController->edit($context, $recordId);
-
-        if (!count($formController->getFormModel()->listDeliveryAreas())) {
-            flash()->warning(lang('admin::lang.locations.alert_delivery_area'))->important();
-        }
-    }
-
     public function settings($context = null)
     {
         $this->asExtension('FormController')->edit('edit', params('default_location_id'));
@@ -117,6 +107,13 @@ class Locations extends \Admin\Classes\AdminController
         }
 
         return $attributes;
+    }
+
+    public function formExtendFields($form)
+    {
+        if (!count($form->model->listDeliveryAreas())) {
+            flash()->warning(lang('admin::lang.locations.alert_delivery_area'))->important();
+        }
     }
 
     public function formExtendQuery($query)
@@ -207,18 +204,18 @@ class Locations extends \Admin\Classes\AdminController
                 'country_id' => post('Location.location_country_id'),
             ], FALSE);
 
-            $geoPosition = app('geocoder')->geocode(['address' => $address]);
+            $result = Geocoder::geocode($address);
+            $geoLocation = $result->first();
 
-            if ($geoPosition instanceof GeoPosition AND $geoPosition->isValid()) {
-                $model->location_lat = $geoPosition->latitude;
-                $model->location_lng = $geoPosition->longitude;
+            if ($geoLocation AND $geoLocation->hasCoordinates()) {
+                $model->location_lat = $geoLocation->getCoordinates()->getLatitude();
+                $model->location_lng = $geoLocation->getCoordinates()->getLongitude();
 
-                return $geoPosition;
+                return $geoLocation;
             }
 
-            $validator->errors()->add('options.auto_lat_lng', is_string($geoPosition)
-                ? $geoPosition
-                : 'Address geocoding failed: '.$geoPosition->error
+            $validator->errors()->add('options.auto_lat_lng',
+                'Address geocoding failed: '.implode(PHP_EOL, Geocoder::getLogs())
             );
 
             return FALSE;

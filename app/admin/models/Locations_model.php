@@ -3,14 +3,14 @@
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Igniter\Flame\Location\Models\Location as BaseLocationModel;
+use Igniter\Flame\Location\Models\AbstractLocation;
 
 /**
  * Locations Model Class
  *
  * @package Admin
  */
-class Locations_model extends BaseLocationModel
+class Locations_model extends AbstractLocation
 {
     use HasPermalink;
     use Purgeable;

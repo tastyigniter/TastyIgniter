@@ -1,13 +1,13 @@
 <?php namespace Admin\Models;
 
-use Igniter\Flame\Location\Models\WorkingHour;
+use Igniter\Flame\Location\Models\AbstractWorkingHour;
 
 /**
  * Working hours Model Class
  *
  * @package Admin
  */
-class Working_hours_model extends WorkingHour
+class Working_hours_model extends AbstractWorkingHour
 {
     public $fillable = ['location_id', 'weekday', 'opening_time', 'closing_time', 'status', 'type'];
 
@@ -28,10 +28,10 @@ class Working_hours_model extends WorkingHour
         $type = !empty($row['type']) ? $row['type'] : 'opening';
         $collection = array_merge($row, [
             'location_id' => $row['location_id'],
-            'day'         => $row['day'],
-            'type'        => $type,
-            'open'        => strtotime("{$row['day']} {$row['opening_time']}"),
-            'close'       => strtotime("{$row['day']} {$row['closing_time']}"),
+            'day' => $row['day'],
+            'type' => $type,
+            'open' => strtotime("{$row['day']} {$row['opening_time']}"),
+            'close' => strtotime("{$row['day']} {$row['closing_time']}"),
             'is_24_hours' => $row['open_all_day'],
         ]);
 

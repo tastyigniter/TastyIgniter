@@ -12,6 +12,7 @@ use Event;
 use Igniter\Flame\ActivityLog\ActivityLogServiceProvider;
 use Igniter\Flame\Currency\CurrencyServiceProvider;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Igniter\Flame\Geolite\GeoliteServiceProvider;
 use Igniter\Flame\Pagic\PagicServiceProvider;
 use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
@@ -309,5 +310,6 @@ class ServiceProvider extends AppServiceProvider
         $this->app->register(PagicServiceProvider::class);
         $this->app->register(ActivityLogServiceProvider::class);
         $this->app->register(CurrencyServiceProvider::class);
+        $this->app->register(GeoliteServiceProvider::class);
     }
 }

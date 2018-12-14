@@ -3,7 +3,6 @@
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
-use Igniter\Flame\Location\Models\Location;
 use Main\Classes\MainController;
 use Model;
 use Request;
@@ -53,9 +52,9 @@ class Reservations_model extends Model
     public $relation = [
         'belongsTo' => [
             'related_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
-            'location'      => 'Admin\Models\Locations_model',
-            'status'        => ['Admin\Models\Statuses_model'],
-            'assignee'      => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
+            'location' => 'Admin\Models\Locations_model',
+            'status' => ['Admin\Models\Statuses_model'],
+            'assignee' => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
         ],
         'morphMany' => [
             'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
@@ -93,16 +92,16 @@ class Reservations_model extends Model
     public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
-            'page'      => 1,
+            'page' => 1,
             'pageLimit' => 20,
-            'sort'      => 'address_id desc',
-            'customer'  => null,
-            'location'  => null,
+            'sort' => 'address_id desc',
+            'customer' => null,
+            'location' => null,
         ], $options));
 
         $query->where('status_id', '>=', 1);
 
-        if ($location instanceof Location) {
+        if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
         }
         else if (strlen($location)) {
@@ -220,25 +219,25 @@ class Reservations_model extends Model
         $table = $this->related_table;
 
         return [
-            'id'               => $this->getKey(),
-            'title'            => $this->customer_name,
-            'start'            => $this->reservation_datetime->toIso8601String(),
-            'end'              => $this->reservation_end_datetime->toIso8601String(),
-            'allDay'           => $this->isReservedAllDay(),
-            'color'            => $status ? $status->status_color : null,
-            'location_name'    => ($location = $this->location) ? $location->location_name : null,
-            'first_name'       => $this->first_name,
-            'last_name'        => $this->last_name,
-            'email'            => $this->email,
-            'telephone'        => $this->telephone,
-            'last_name'        => $this->last_name,
-            'guest_num'        => $this->guest_num,
-            'reserve_date'     => $this->reserve_date->toDateString(),
-            'reserve_time'     => $this->reserve_time,
+            'id' => $this->getKey(),
+            'title' => $this->customer_name,
+            'start' => $this->reservation_datetime->toIso8601String(),
+            'end' => $this->reservation_end_datetime->toIso8601String(),
+            'allDay' => $this->isReservedAllDay(),
+            'color' => $status ? $status->status_color : null,
+            'location_name' => ($location = $this->location) ? $location->location_name : null,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'telephone' => $this->telephone,
+            'last_name' => $this->last_name,
+            'guest_num' => $this->guest_num,
+            'reserve_date' => $this->reserve_date->toDateString(),
+            'reserve_time' => $this->reserve_time,
             'reserve_end_time' => $this->reserve_end_time->toTimeString(),
-            'duration'         => $this->duration,
-            'status'           => $status ? $status->toArray() : [],
-            'table'            => $table ? $table->toArray() : [],
+            'duration' => $this->duration,
+            'status' => $status ? $status->toArray() : [],
+            'table' => $table ? $table->toArray() : [],
         ];
     }
 
