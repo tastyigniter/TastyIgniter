@@ -95,8 +95,8 @@ class Menu_options_model extends Model
         $idsToKeep = [];
         foreach ($optionValues as $value) {
             $optionValue = $this->option_values()->firstOrNew([
-                'option_value_id' => $value['option_value_id'],
-                'option_id'       => $optionId,
+                'option_value_id' => array_get($value, 'option_value_id'),
+                'option_id' => $optionId,
             ])->fill(array_except($value, ['option_value_id', 'option_id']));
 
             $optionValue->saveOrFail();

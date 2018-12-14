@@ -29,16 +29,16 @@ class Menu_item_options_model extends Model
     protected $fillable = ['option_id', 'menu_id', 'required', 'priority'];
 
     public $relation = [
-        'hasMany'   => [
-            'option_values'      => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
+        'hasMany' => [
+            'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
             'menu_option_values' => [
                 'Admin\Models\Menu_item_option_values_model',
                 'foreignKey' => 'menu_option_id',
-                'delete'     => TRUE,
+                'delete' => TRUE,
             ],
         ],
         'belongsTo' => [
-            'menu'   => ['Admin\Models\Menus_model'],
+            'menu' => ['Admin\Models\Menus_model'],
             'option' => ['Admin\Models\Menu_options_model'],
         ],
     ];
@@ -116,11 +116,9 @@ class Menu_item_options_model extends Model
 
         $idsToKeep = [];
         foreach ($optionValues as $value) {
-            $menuOptionValueId = $value['menu_option_value_id'];
-
             $menuOptionValue = $this->menu_option_values()->firstOrNew([
-                'menu_option_value_id' => $menuOptionValueId,
-                'menu_option_id'       => $menuOptionId,
+                'menu_option_value_id' => array_get($value, 'menu_option_value_id'),
+                'menu_option_id' => $menuOptionId,
             ])->fill(array_except($value, ['menu_option_value_id', 'menu_option_id']));
 
             $menuOptionValue->saveOrFail();

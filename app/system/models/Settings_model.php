@@ -75,17 +75,17 @@ class Settings_model extends Model
         return [
             'h:i A' => $now->format('h:i A'),
             'h:i a' => $now->format('h:i a'),
-            'H:i'   => $now->format('H:i'),
+            'H:i' => $now->format('H:i'),
         ];
     }
 
     public static function getPageLimitOptions()
     {
         return [
-            '10'  => '10',
-            '20'  => '20',
-            '50'  => '50',
-            '75'  => '75',
+            '10' => '10',
+            '20' => '20',
+            '50' => '50',
+            '75' => '75',
             '100' => '100',
         ];
     }
@@ -200,21 +200,21 @@ class Settings_model extends Model
         }
 
         $defaultDefinitions = [
-            'code'        => null,
-            'label'       => null,
+            'code' => null,
+            'label' => null,
             'description' => null,
-            'icon'        => null,
-            'url'         => null,
-            'priority'    => null,
+            'icon' => null,
+            'url' => null,
+            'priority' => null,
             'permissions' => [],
-            'context'     => 'settings',
-            'model'       => null,
-            'form'        => null,
+            'context' => 'settings',
+            'model' => null,
+            'form' => null,
         ];
 
         foreach ($definitions as $code => $definition) {
             $item = array_merge($defaultDefinitions, array_merge($definition, [
-                'code'  => $code,
+                'code' => $code,
                 'owner' => $owner,
             ]));
 
@@ -257,7 +257,7 @@ class Settings_model extends Model
             $current_timezone = new DateTimeZone($timezone_identifier);
 
             $temp_timezones[] = [
-                'offset'     => (int)$current_timezone->getOffset($utc_time),
+                'offset' => (int)$current_timezone->getOffset($utc_time),
                 'identifier' => $timezone_identifier,
             ];
         }

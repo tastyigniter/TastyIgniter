@@ -197,7 +197,7 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function validateSettingItems($skipSession = FALSE)
     {
-        $settingItemErrors = Session::get('settings.errors');
+        $settingItemErrors = Session::get('settings.errors', []);
 
         if ($skipSession OR !$settingItemErrors) {
             $model = $this->createModel();

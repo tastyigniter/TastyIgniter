@@ -75,6 +75,14 @@ class Extensions_model extends Model
     // Accessors & Mutators
     //
 
+    protected static function updateInstalledExtensions($code, $enabled = TRUE)
+    {
+        ExtensionManager::instance()->updateInstalledExtensions($code, $enabled);
+        $installedExtensions = setting('installed_extensions', []);
+        $installedExtensions[$code] = $enabled;
+        setting()->set('installed_extensions', $installedExtensions)->save();
+    }
+
     public function getMetaAttribute()
     {
         return $this->meta;
@@ -206,6 +214,16 @@ class Extensions_model extends Model
         if (!$extensionModel->applyExtensionClass())
             return FALSE;
 
+        $manager = ExtensionManager::instance();
+
+        // Register and boot the extension to make
+        // its services available before migrating
+        if ($extension = $manager->findExtension($extensionModel->name)) {
+            $extension->disabled = FALSE;
+            $manager->registerExtension($extensionModel->name, $extension);
+            $manager->bootExtension($extension);
+        }
+
         // set extension migration to the latest version
         UpdateManager::instance()->migrateExtension($extensionModel->name);
 
@@ -217,7 +235,7 @@ class Extensions_model extends Model
             ])->save();
         }
 
-        ExtensionManager::instance()->updateInstalledExtensions($code, TRUE);
+        self::updateInstalledExtensions($code, TRUE);
 
         return TRUE;
     }
@@ -239,7 +257,7 @@ class Extensions_model extends Model
             $query = $extensionModel->save();
         }
 
-        ExtensionManager::instance()->updateInstalledExtensions($code, FALSE);
+        self::updateInstalledExtensions($code, FALSE);
 
         return $query;
     }

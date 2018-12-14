@@ -210,7 +210,7 @@ class Menus_model extends Model
         foreach ($menuOptions as $option) {
             $option['menu_id'] = $menuId;
             $menuOption = $this->menu_options()->firstOrNew([
-                'menu_option_id' => $option['menu_option_id'],
+                'menu_option_id' => array_get($option, 'menu_option_id'),
             ])->fill(array_except($option, ['menu_option_id']));
 
             $menuOption->saveOrFail();

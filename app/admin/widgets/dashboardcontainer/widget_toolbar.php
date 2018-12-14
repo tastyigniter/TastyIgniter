@@ -5,28 +5,25 @@
         data-toggle="modal"
         data-target="#newWidgetModal"
         data-request="<?= $this->getEventHandler('onLoadAddPopup') ?>"
+        title="<?= e(lang('admin::lang.dashboard.button_add_widget')) ?>"
         tabindex="-1"
-    >
-        <i class="fa fa-plus"></i>&nbsp;&nbsp;<?= e(lang('admin::lang.dashboard.button_add_widget')) ?>
-    </button>
+    ><i class="fa fa-plus"></i></button>
     <button
         type="button"
         class="btn btn-outline-danger"
         data-request="<?= $this->getEventHandler('onResetWidgets') ?>"
         data-request-confirm="<?= e(trans('admin::lang.alert_warning_confirm')) ?>"
+        title="<?= e(lang('admin::lang.dashboard.button_reset_widgets')) ?>"
         tabindex="-1"
-    >
-        <i class="fa fa-refresh"></i>&nbsp;&nbsp;<?= e(trans('admin::lang.dashboard.button_reset_widgets')) ?>
-    </button>
+    ><i class="fa fa-refresh"></i></button>
     <button
         type="button"
         class="btn btn-outline-default"
         data-request="<?= $this->getEventHandler('onSetAsDefault') ?>"
         data-request-confirm="<?= e(trans('admin::lang.dashboard.alert_set_default_confirm')) ?>"
+        title="<?= e(trans('admin::lang.dashboard.button_set_default')) ?>"
         tabindex="-1"
-    >
-        <i class="fa fa-save"></i>&nbsp;&nbsp;<?= e(trans('admin::lang.dashboard.button_set_default')) ?>
-    </button>
+    ><i class="fa fa-save"></i></button>
 </div>
 <div class="modal slideInDown fade"
      id="newWidgetModal"

@@ -7,10 +7,10 @@
         if (@$newsRss->load($this->newsRss)) {
             foreach ($newsRss->getElementsByTagName('item') as $content) {
                 $item = [
-                    'title'       => $content->getElementsByTagName('title')->item(0)->nodeValue,
+                    'title' => $content->getElementsByTagName('title')->item(0)->nodeValue,
                     'description' => $content->getElementsByTagName('description')->item(0)->nodeValue,
-                    'link'        => $content->getElementsByTagName('link')->item(0)->nodeValue,
-                    'date'        => $content->getElementsByTagName('pubDate')->item(0)->nodeValue,
+                    'link' => $content->getElementsByTagName('link')->item(0)->nodeValue,
+                    'date' => $content->getElementsByTagName('pubDate')->item(0)->nodeValue,
                 ];
 
                 $newsFeed[] = $item;
@@ -22,8 +22,8 @@
             $newsFeed = array_slice($newsFeed, 0, $count);
             ?>
             <?php foreach ($newsFeed as $feed) { ?>
-                <a class="mb-3" target="_blank" href="<?= $feed['link']; ?>">
-                    <h5 class="text-primary text-truncate"><?= $feed['title']; ?></h5>
+                <a class="list-group-item px-0" target="_blank" href="<?= $feed['link']; ?>">
+                    <b class="text-truncate"><?= $feed['title']; ?></b>
                     <span class="text-muted d-block text-truncate"><?= strip_tags($feed['description']); ?></span>
                 </a>
             <?php } ?>

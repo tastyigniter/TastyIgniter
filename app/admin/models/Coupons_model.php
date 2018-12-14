@@ -14,6 +14,8 @@ class Coupons_model extends Model
 {
     use LogsActivity;
 
+    const UPDATED_AT = null;
+
     const CREATED_AT = 'date_added';
 
     /**
@@ -148,6 +150,7 @@ class Coupons_model extends Model
             return FALSE;
 
         $customerRedemptionCount = $this->countCustomerRedemptions($user->getKey());
+
         return $this->customer_redemptions <= $customerRedemptionCount;
     }
 

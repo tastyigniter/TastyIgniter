@@ -109,7 +109,7 @@ class Locations_model extends AbstractLocation
 
     public function beforeDelete()
     {
-        Location_tables_model::whereIn('location_id', $this->getKey())->delete();
+        Location_tables_model::where('location_id', $this->getKey())->delete();
     }
 
     //
@@ -216,6 +216,7 @@ class Locations_model extends AbstractLocation
     {
         $gallery = array_get($this->options, 'gallery');
         $gallery['images'] = $this->getMedia('gallery');
+
         return $gallery;
     }
 
