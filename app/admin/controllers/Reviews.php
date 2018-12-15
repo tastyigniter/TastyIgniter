@@ -11,32 +11,32 @@ class Reviews extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Reviews_model',
-            'title'        => 'lang:admin::lang.reviews.text_title',
+            'model' => 'Admin\Models\Reviews_model',
+            'title' => 'lang:admin::lang.reviews.text_title',
             'emptyMessage' => 'lang:admin::lang.reviews.text_empty',
-            'defaultSort'  => ['date_added', 'DESC'],
-            'configFile'   => 'reviews_model',
+            'defaultSort' => ['date_added', 'DESC'],
+            'configFile' => 'reviews_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.reviews.text_form_name',
-        'model'      => 'Admin\Models\Reviews_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'reviews/edit/{review_id}',
+        'name' => 'lang:admin::lang.reviews.text_form_name',
+        'model' => 'Admin\Models\Reviews_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'reviews/edit/{review_id}',
             'redirectClose' => 'reviews',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'reviews/edit/{review_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'reviews/edit/{review_id}',
             'redirectClose' => 'reviews',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'reviews',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'reviews',
         ],
         'configFile' => 'reviews_model',
@@ -79,7 +79,7 @@ class Reviews extends \Admin\Classes\AdminController
         $saleId = post('Review.sale_id');
         $saleType = post('Review.sale_type');
 
-        if (!$this->getFormModel()->findBy($saleType, $saleId)) {
+        if ($saleId AND $saleType AND !$this->getFormModel()->findBy($saleType, $saleId)) {
             return lang(($saleType == 'orders')
                 ? 'admin::lang.reviews.error_not_found_in_order'
                 : 'admin::lang.reviews.error_not_found_in_reservation'

@@ -2,7 +2,6 @@
 
 use Admin\Traits\Locationable;
 use Igniter\Flame\Auth\Models\User;
-use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Model;
 use System\Models\Settings_model;

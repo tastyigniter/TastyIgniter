@@ -2,15 +2,15 @@
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.statuses.text_filter_search',
-        'mode'   => 'all' // or any, exact
+        'mode' => 'all' // or any, exact
     ],
     'scopes' => [
         'type' => [
-            'label'      => 'lang:admin::lang.statuses.text_filter_status',
-            'type'       => 'select', // checkbox, switch, date, daterange
+            'label' => 'lang:admin::lang.statuses.text_filter_status',
+            'type' => 'select', // checkbox, switch, date, daterange
             'conditions' => 'status_for = :filtered',
-            'options'    => [
-                'order'   => 'lang:admin::lang.statuses.text_order',
+            'options' => [
+                'order' => 'lang:admin::lang.statuses.text_order',
                 'reserve' => 'lang:admin::lang.statuses.text_reservation',
             ],
         ],
@@ -26,34 +26,34 @@ $config['list']['toolbar'] = [
 ];
 
 $config['list']['columns'] = [
-    'edit'            => [
-        'type'         => 'button',
+    'edit' => [
+        'type' => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'   => [
+        'attributes' => [
             'class' => 'btn btn-edit',
-            'href'  => 'statuses/edit/{status_id}',
+            'href' => 'statuses/edit/{status_id}',
         ],
     ],
-    'status_name'     => [
-        'label'      => 'lang:admin::lang.statuses.column_name',
-        'type'       => 'text', // number, switch, date_time, time, date, timesince, select, relation, partial
+    'status_name' => [
+        'label' => 'lang:admin::lang.statuses.column_name',
+        'type' => 'text', // number, switch, date_time, time, date, timesince, select, relation, partial
         'searchable' => TRUE,
     ],
-    'status_comment'  => [
-        'label'      => 'lang:admin::lang.statuses.column_comment',
-        'type'       => 'text',
+    'status_comment' => [
+        'label' => 'lang:admin::lang.statuses.column_comment',
+        'type' => 'text',
         'searchable' => TRUE,
     ],
     'status_for_name' => [
         'label' => 'lang:admin::lang.statuses.column_type',
-        'type'  => 'text',
+        'type' => 'text',
     ],
     'notify_customer' => [
         'label' => 'lang:admin::lang.statuses.column_notify',
-        'type'  => 'switch',
+        'type' => 'switch',
     ],
-    'status_id'       => [
-        'label'     => 'lang:admin::lang.column_id',
+    'status_id' => [
+        'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
 
@@ -61,46 +61,46 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save'      => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
+        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
         'saveClose' => [
-            'label'             => 'lang:admin::lang.button_save_close',
-            'class'             => 'btn btn-default',
-            'data-request'      => 'onSave',
-            'data-request-form' => '#edit-form',
+            'label' => 'lang:admin::lang.button_save_close',
+            'class' => 'btn btn-default',
+            'data-request' => 'onSave',
+            'data-request-submit' => 'true',
             'data-request-data' => 'close:1',
         ],
-        'delete'    => [
-            'label'                => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
+        'delete' => [
+            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
+            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => ['edit'],
         ],
     ],
 ];
 
 $config['form']['fields'] = [
-    'status_name'     => [
+    'status_name' => [
         'label' => 'lang:admin::lang.statuses.label_name',
-        'type'  => 'text',
-        'span'  => 'left',
+        'type' => 'text',
+        'span' => 'left',
     ],
-    'status_for'      => [
-        'label'       => 'lang:admin::lang.statuses.label_for',
-        'type'        => 'select',
-        'span'        => 'right',
+    'status_for' => [
+        'label' => 'lang:admin::lang.statuses.label_for',
+        'type' => 'select',
+        'span' => 'right',
         'placeholder' => 'lang:admin::lang.text_please_select',
-        'options'     => 'getStatusForDropdownOptions',
+        'options' => 'getStatusForDropdownOptions',
     ],
-    'status_color'    => [
+    'status_color' => [
         'label' => 'lang:admin::lang.statuses.label_color',
-        'type'  => 'colorpicker',
+        'type' => 'colorpicker',
     ],
-    'status_comment'  => [
+    'status_comment' => [
         'label' => 'lang:admin::lang.statuses.label_comment',
-        'type'  => 'textarea',
+        'type' => 'textarea',
     ],
     'notify_customer' => [
-        'label'   => 'lang:admin::lang.statuses.label_notify',
-        'type'    => 'switch',
+        'label' => 'lang:admin::lang.statuses.label_notify',
+        'type' => 'switch',
         'comment' => 'lang:admin::lang.statuses.help_notify',
     ],
 ];

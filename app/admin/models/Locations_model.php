@@ -172,7 +172,7 @@ class Locations_model extends AbstractLocation
 
     public function getLocationThumbAttribute()
     {
-        return $this->getThumb();
+        return $this->hasMedia() ? $this->getThumb() : null;
     }
 
     public function getDeliveryTimeAttribute($value)

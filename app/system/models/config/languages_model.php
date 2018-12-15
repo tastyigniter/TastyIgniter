@@ -2,12 +2,12 @@
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:system::lang.languages.text_filter_search',
-        'mode'   => 'all' // or any, exact
+        'mode' => 'all' // or any, exact
     ],
     'scopes' => [
         'status' => [
-            'label'      => 'lang:system::lang.languages.text_filter_status',
-            'type'       => 'switch',
+            'label' => 'lang:system::lang.languages.text_filter_status',
+            'type' => 'switch',
             'conditions' => 'status = :filtered',
         ],
     ],
@@ -22,31 +22,31 @@ $config['list']['toolbar'] = [
 ];
 
 $config['list']['columns'] = [
-    'edit'        => [
-        'type'         => 'button',
+    'edit' => [
+        'type' => 'button',
         'iconCssClass' => 'fa fa-pencil',
-        'attributes'   => [
+        'attributes' => [
             'class' => 'btn btn-edit',
-            'href'  => 'languages/edit/{language_id}',
+            'href' => 'languages/edit/{language_id}',
         ],
     ],
-    'name'        => [
-        'label'      => 'lang:system::lang.languages.column_name',
-        'type'       => 'text',
+    'name' => [
+        'label' => 'lang:system::lang.languages.column_name',
+        'type' => 'text',
         'searchable' => TRUE,
     ],
-    'code'        => [
-        'label'      => 'lang:system::lang.languages.column_code',
-        'type'       => 'text',
+    'code' => [
+        'label' => 'lang:system::lang.languages.column_code',
+        'type' => 'text',
         'searchable' => TRUE,
     ],
-    'status'      => [
-        'label'      => 'lang:system::lang.languages.column_status',
-        'type'       => 'switch',
+    'status' => [
+        'label' => 'lang:system::lang.languages.column_status',
+        'type' => 'switch',
         'searchable' => TRUE,
     ],
     'language_id' => [
-        'label'     => 'lang:admin::lang.column_id',
+        'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
 
@@ -54,17 +54,17 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save'      => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-form' => '#edit-form', 'data-request' => 'onSave'],
+        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
         'saveClose' => [
-            'label'             => 'lang:admin::lang.button_save_close',
-            'class'             => 'btn btn-default',
-            'data-request'      => 'onSave',
-            'data-request-form' => '#edit-form',
+            'label' => 'lang:admin::lang.button_save_close',
+            'class' => 'btn btn-default',
+            'data-request' => 'onSave',
+            'data-request-submit' => 'true',
             'data-request-data' => 'close:1',
         ],
-        'delete'    => [
-            'label'                => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-form'    => '#edit-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
+        'delete' => [
+            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
+            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => 'edit',
         ],
     ],
@@ -72,50 +72,50 @@ $config['form']['toolbar'] = [
 
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:system::lang.languages.text_tab_general',
-    'fields'     => [
-        'name'       => [
+    'fields' => [
+        'name' => [
             'label' => 'lang:system::lang.languages.label_name',
-            'type'  => 'text',
+            'type' => 'text',
         ],
-        'code'       => [
-            'label'   => 'lang:system::lang.languages.label_code',
-            'type'    => 'text',
-            'span'    => 'left',
+        'code' => [
+            'label' => 'lang:system::lang.languages.label_code',
+            'type' => 'text',
+            'span' => 'left',
             'comment' => 'lang:system::lang.languages.help_language',
         ],
-        'idiom'      => [
-            'label'   => 'lang:system::lang.languages.label_idiom',
-            'type'    => 'text',
-            'span'    => 'right',
+        'idiom' => [
+            'label' => 'lang:system::lang.languages.label_idiom',
+            'type' => 'text',
+            'span' => 'right',
             'comment' => 'lang:system::lang.languages.help_idiom',
         ],
-        'image'      => [
-            'label'   => 'lang:system::lang.languages.label_image',
-            'type'    => 'mediafinder',
-            'mode'    => 'inline',
+        'image' => [
+            'label' => 'lang:system::lang.languages.label_image',
+            'type' => 'mediafinder',
+            'mode' => 'inline',
             'default' => 'flags/no_flag.png',
         ],
         'can_delete' => [
             'label' => 'lang:system::lang.languages.label_can_delete',
-            'type'  => 'switch',
+            'type' => 'switch',
         ],
-        'status'     => [
-            'label'   => 'lang:admin::lang.label_status',
+        'status' => [
+            'label' => 'lang:admin::lang.label_status',
             'default' => TRUE,
-            'type'    => 'switch',
+            'type' => 'switch',
         ],
-        'files'      => [
-            'type'    => 'partial',
-            'tab'     => 'lang:system::lang.languages.text_tab_files',
+        'files' => [
+            'type' => 'partial',
+            'tab' => 'lang:system::lang.languages.text_tab_files',
             'context' => 'edit',
-            'path'    => 'languages/lang_files_list',
+            'path' => 'languages/lang_files_list',
             'options' => 'listAllFiles',
         ],
-        'file'       => [
-            'tab'     => 'lang:system::lang.languages.text_tab_edit_file',
-            'type'    => 'partial',
+        'file' => [
+            'tab' => 'lang:system::lang.languages.text_tab_edit_file',
+            'type' => 'partial',
             'context' => 'edit',
-            'path'    => 'languages/lang_file',
+            'path' => 'languages/lang_file',
         ],
     ],
 ];

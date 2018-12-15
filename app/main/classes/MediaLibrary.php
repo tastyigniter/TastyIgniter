@@ -481,6 +481,7 @@ class MediaLibrary
             File::extension($filePath);
 
         $partition = implode('/', array_slice(str_split($itemSignature, 3), 0, 3)).'/';
+
         return $this->getThumbDirectory().$partition.$thumbFilename;
     }
 

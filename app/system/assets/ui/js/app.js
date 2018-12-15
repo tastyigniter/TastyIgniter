@@ -63,7 +63,7 @@ if (window.jQuery.request !== undefined)
 
         var requestData,
             inputName,
-            submitForm = !!$(options.form).length,
+            submitForm = !!options.submit,
             data = {}
 
         $.each($el.parents('[data-request-data]').toArray().reverse(), function extendRequest() {
@@ -291,7 +291,7 @@ if (window.jQuery.request !== undefined)
             confirm: $this.data('request-confirm'),
             redirect: $this.data('request-redirect'),
             loading: $this.data('request-loading'),
-            flash: $this.data('request-flash'),
+            submit: $this.data('request-submit'),
             form: $this.data('request-form'),
             update: stringToObj('data-request-update', $this.data('request-update')),
             data: stringToObj('data-request-data', $this.data('request-data'))

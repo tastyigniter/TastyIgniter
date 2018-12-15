@@ -21,23 +21,23 @@ class Themes extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'System\Models\Themes_model',
-            'title'        => 'lang:system::lang.themes.text_title',
+            'model' => 'System\Models\Themes_model',
+            'title' => 'lang:system::lang.themes.text_title',
             'emptyMessage' => 'lang:system::lang.themes.text_empty',
-            'defaultSort'  => ['date_added', 'DESC'],
-            'configFile'   => 'themes_model',
+            'defaultSort' => ['date_added', 'DESC'],
+            'configFile' => 'themes_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::lang.themes.text_form_name',
-        'model'      => 'System\Models\Themes_model',
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'themes/edit/{code}',
+        'name' => 'lang:system::lang.themes.text_form_name',
+        'model' => 'System\Models\Themes_model',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'themes/edit/{code}',
             'redirectClose' => 'themes',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'themes',
         ],
         'configFile' => 'themes_model',
@@ -57,9 +57,15 @@ class Themes extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        Themes_model::syncAll();
-
         AdminMenu::setContext('themes', 'design');
+    }
+
+    public function index()
+    {
+        if ($this->getUser()->hasPermission('Site.Themes.Manage'))
+            Themes_model::syncAll();
+
+        $this->asExtension('ListController')->index();
     }
 
     public function edit($context, $themeCode = null)
@@ -71,7 +77,7 @@ class Themes extends \Admin\Classes\AdminController
 
             Template::setButton(lang('system::lang.themes.button_source'), [
                 'class' => 'btn btn-default',
-                'href'  => admin_url('themes/source/'.$themeCode),
+                'href' => admin_url('themes/source/'.$themeCode),
             ]);
 
             $model = $this->formFindModelObject($themeCode);
@@ -91,7 +97,7 @@ class Themes extends \Admin\Classes\AdminController
 
             Template::setButton(lang('system::lang.themes.button_customize'), [
                 'class' => 'btn btn-default',
-                'href'  => admin_url('themes/edit/'.$themeCode),
+                'href' => admin_url('themes/edit/'.$themeCode),
             ]);
 
             $model = $this->formFindModelObject($themeCode);
@@ -567,9 +573,9 @@ class Themes extends \Admin\Classes\AdminController
         $code = trim($code, PHP_EOL);
 
         $attributes = [
-            'code'   => $code,
+            'code' => $code,
             'markup' => array_get($fileData, 'markup'),
-            'data'   => $this->parseComponents(array_get($fileData, 'settings')),
+            'data' => $this->parseComponents(array_get($fileData, 'settings')),
         ];
 
         return [$fileName, $attributes];
