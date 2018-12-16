@@ -377,6 +377,23 @@ return [
         'text_select_range' => 'Select date range',
         'text_last_version_check' => 'Your last <b>TastyIgniter core version check</b> was more than a week ago. <a href="%s"><b>Check for Updates</b></a>',
 
+        'text_onboarding' => 'Getting started',
+        'onboarding' => [
+            'label_settings' => 'Complete required system settings',
+            'label_locations' => 'Configure a default location',
+            'label_themes' => 'Customize your site',
+            'label_extensions' => 'Install recommended extensions',
+            'label_payments' => 'Configure your payment gateways',
+            'label_menus' => 'Add your Menu Items',
+
+            'help_settings' => 'Confirm all required system settings are specified.',
+            'help_locations' => 'Set your delivery area and customise your opening hours.',
+            'help_themes' => 'Activate and customize the front-end theme',
+            'help_extensions' => 'Some extensions are recommended for your site to function properly.',
+            'help_payments' => 'Some extensions are required for your site to function properly.',
+            'help_menus' => 'Make your menu items available for your customers to order.',
+        ],
+
         'column_id' => 'ID',
         'column_location' => 'Location',
         'column_name' => 'Customer Name',

@@ -3,6 +3,7 @@
 namespace Admin;
 
 use Admin\Classes\Navigation;
+use Admin\Classes\OnboardingSteps;
 use Admin\Classes\Widgets;
 use AdminAuth;
 use AdminMenu;
@@ -45,6 +46,7 @@ class ServiceProvider extends AppServiceProvider
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
+            $this->registerOnboardingSteps();
         }
     }
 
@@ -92,6 +94,11 @@ class ServiceProvider extends AppServiceProvider
 
             $manager->registerDashboardWidget(\Admin\DashboardWidgets\Statistics::class, [
                 'label' => 'Statistics widget',
+                'context' => 'dashboard',
+            ]);
+
+            $manager->registerDashboardWidget(\Admin\DashboardWidgets\Onboarding::class, [
+                'label' => 'Onboarding widget',
                 'context' => 'dashboard',
             ]);
         });
@@ -594,6 +601,55 @@ class ServiceProvider extends AppServiceProvider
     {
         $this->app->resolving('flash', function (\Igniter\Flame\Flash\FlashBag $flash) {
             $flash->setSessionKey('flash_data_admin');
+        });
+    }
+
+    protected function registerOnboardingSteps()
+    {
+        OnboardingSteps::registerCallback(function (OnboardingSteps $manager) {
+            $manager->registerSteps([
+                'admin::settings' => [
+                    'label' => 'admin::lang.dashboard.onboarding.label_settings',
+                    'description' => 'admin::lang.dashboard.onboarding.help_settings',
+                    'icon' => 'fa-gears',
+                    'url' => admin_url('settings'),
+                    'complete' => ['System\Models\Settings_model', 'onboardingIsComplete'],
+                ],
+                'admin::locations' => [
+                    'label' => 'admin::lang.dashboard.onboarding.label_locations',
+                    'description' => 'admin::lang.dashboard.onboarding.help_locations',
+                    'icon' => 'fa-store',
+                    'url' => admin_url('locations'),
+                    'complete' => ['Admin\Models\Locations_model', 'onboardingIsComplete'],
+                ],
+                'admin::themes' => [
+                    'label' => 'admin::lang.dashboard.onboarding.label_themes',
+                    'description' => 'admin::lang.dashboard.onboarding.help_themes',
+                    'icon' => 'fa-paint-brush',
+                    'url' => admin_url('themes'),
+                    'complete' => ['System\Models\Themes_model', 'onboardingIsComplete'],
+                ],
+                'admin::extensions' => [
+                    'label' => 'admin::lang.dashboard.onboarding.label_extensions',
+                    'description' => 'admin::lang.dashboard.onboarding.help_extensions',
+                    'icon' => 'fa-plug',
+                    'url' => admin_url('extensions'),
+                    'complete' => ['System\Models\Extensions_model', 'onboardingIsComplete'],
+                ],
+                'admin::payments' => [
+                    'label' => 'admin::lang.dashboard.onboarding.label_payments',
+                    'description' => 'admin::lang.dashboard.onboarding.help_payments',
+                    'icon' => 'fa-credit-card',
+                    'url' => admin_url('payments'),
+                    'complete' => ['Admin\Models\Payments_model', 'onboardingIsComplete'],
+                ],
+                'admin::menus' => [
+                    'label' => 'admin::lang.dashboard.onboarding.label_menus',
+                    'description' => 'admin::lang.dashboard.onboarding.help_menus',
+                    'icon' => 'fa-cutlery',
+                    'url' => admin_url('menus'),
+                ],
+            ]);
         });
     }
 }

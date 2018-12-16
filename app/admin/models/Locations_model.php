@@ -68,6 +68,21 @@ class Locations_model extends AbstractLocation
         return static::isEnabled()->dropdown('location_name');
     }
 
+    public static function onboardingIsComplete()
+    {
+        if (!$defaultId = params('default_location_id'))
+            return FALSE;
+
+        if (!$model = self::isEnabled()->find($defaultId))
+            return FALSE;
+
+        return isset($model->getAddress()['location_lat'])
+            AND isset($model->getAddress()['location_lng'])
+            AND ($model->hasDelivery() OR $model->hasCollection())
+            AND isset($model->options['hours'])
+            AND $model->delivery_areas->count();
+    }
+
     public function getWeekDaysOptions()
     {
         return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

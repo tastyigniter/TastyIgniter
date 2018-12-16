@@ -9,9 +9,17 @@ class Dashboard extends \Admin\Classes\AdminController
 {
     public $containerConfig = [
         'defaultWidgets' => [
+            'onboarding' => [
+                'class' => \Admin\DashboardWidgets\Onboarding::class,
+                'priority' => 1,
+                'config' => [
+                    'title' => 'admin::lang.dashboard.onboarding.title',
+                    'width' => '6',
+                ],
+            ],
             'news' => [
                 'class' => \System\DashboardWidgets\News::class,
-                'priority' => 1,
+                'priority' => 2,
                 'config' => [
                     'title' => 'admin::lang.dashboard.text_news',
                     'width' => '6',

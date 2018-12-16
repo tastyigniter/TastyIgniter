@@ -2,6 +2,7 @@
 
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Builder;
+use Main\Classes\ThemeManager;
 use Model;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
@@ -52,6 +53,22 @@ class Extensions_model extends Model
         static::addGlobalScope('type', function (Builder $builder) {
             $builder->where('type', 'module');
         });
+    }
+
+    public static function onboardingIsComplete()
+    {
+        $activeTheme = ThemeManager::instance()->getActiveTheme();
+        if (!$activeTheme)
+            return FALSE;
+
+        $requiredExtensions = (array)$activeTheme->requires;
+        foreach ($requiredExtensions as $name => $constraint) {
+            $extension = ExtensionManager::instance()->findExtension($name);
+            if (!$extension OR $extension->disabled)
+                return FALSE;
+        }
+
+        return TRUE;
     }
 
     //

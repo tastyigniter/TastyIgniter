@@ -55,6 +55,17 @@ class Themes_model extends Model
         return self::$instances[$dirName] = $instance;
     }
 
+    public static function onboardingIsComplete()
+    {
+        if (!$code = params('default_themes.main'))
+            return FALSE;
+
+        if (!$model = self::where('code', $code)->first())
+            return FALSE;
+
+        return !is_null($model->data);
+    }
+
     //
     // Events
     //

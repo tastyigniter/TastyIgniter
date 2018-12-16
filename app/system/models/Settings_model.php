@@ -5,6 +5,7 @@ use Config;
 use DateTime;
 use DateTimeZone;
 use Model;
+use Session;
 use Setting;
 use System\Classes\ExtensionManager;
 use System\Traits\ConfigMaker;
@@ -87,6 +88,14 @@ class Settings_model extends Model
             '75'  => '75',
             '100' => '100',
         ];
+    }
+
+    public static function onboardingIsComplete()
+    {
+        if (!Session::has('settings.errors'))
+            return FALSE;
+
+        return count(array_filter((array)Session::get('settings.errors'))) === 0;
     }
 
     public function getValueAttribute()

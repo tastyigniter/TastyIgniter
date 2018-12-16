@@ -57,6 +57,11 @@ class Payments_model extends Model
         return $collection;
     }
 
+    public static function onboardingIsComplete()
+    {
+        return self::isEnabled()->count() > 0;
+    }
+
     public function listGateways()
     {
         $result = [];
@@ -193,10 +198,10 @@ class Payments_model extends Model
             if (in_array($code, $payments)) continue;
 
             $model = self::make([
-                'code'        => $code,
-                'name'        => Lang::get($gateway['name']),
+                'code' => $code,
+                'name' => Lang::get($gateway['name']),
                 'description' => Lang::get($gateway['description']),
-                'class_name'  => $gateway['class'],
+                'class_name' => $gateway['class'],
             ]);
 
             $model->applyGatewayClass();
