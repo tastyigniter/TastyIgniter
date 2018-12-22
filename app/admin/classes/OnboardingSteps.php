@@ -79,7 +79,7 @@ class OnboardingSteps
     public function nextIncompleteStep()
     {
         return collect($this->steps)->first(function ($step) {
-            return !$this->stepIsComplete($step);
+            return !$this->stepIsCompleted($step);
         });
     }
 
@@ -157,7 +157,7 @@ class OnboardingSteps
      * Usage:
      * <pre>
      *   Onboarding::registerCallback(function($manager){
-     *       $manager->registerGateways([...]);
+     *       $manager->registerSteps([...]);
      *   });
      * </pre>
      *

@@ -385,6 +385,8 @@ class ComponentManager
         return in_array($type, [
             'text',
             'number',
+            'checkbox',
+            'radio',
             'select',
             'selectlist',
             'switch',

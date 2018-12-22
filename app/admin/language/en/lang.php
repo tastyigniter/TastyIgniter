@@ -360,7 +360,6 @@ return [
         'text_email_progress' => '<b>Send test email</b> - Ensure order confirmation emails are sent to customers successfully.',
         'text_statistic' => 'Statistics',
         'text_range' => 'Range',
-        'text_today' => 'Today',
         'text_week' => 'Last 7 Days',
         'text_month' => 'Last 30 Days',
         'text_year' => 'This Year',
@@ -385,6 +384,7 @@ return [
             'label_extensions' => 'Install recommended extensions',
             'label_payments' => 'Configure your payment gateways',
             'label_menus' => 'Add your Menu Items',
+            'label_mail' => 'Send test email',
 
             'help_settings' => 'Confirm all required system settings are specified.',
             'help_locations' => 'Set your delivery area and customise your opening hours.',
@@ -392,6 +392,7 @@ return [
             'help_extensions' => 'Some extensions are recommended for your site to function properly.',
             'help_payments' => 'Some extensions are required for your site to function properly.',
             'help_menus' => 'Make your menu items available for your customers to order.',
+            'help_mail' => 'Ensure order confirmation emails are sent to customers successfully.',
         ],
 
         'column_id' => 'ID',

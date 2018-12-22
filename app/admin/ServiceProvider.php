@@ -649,6 +649,12 @@ class ServiceProvider extends AppServiceProvider
                     'icon' => 'fa-cutlery',
                     'url' => admin_url('menus'),
                 ],
+                'admin::mail' => [
+                    'label' => 'admin::lang.dashboard.onboarding.label_mail',
+                    'description' => 'admin::lang.dashboard.onboarding.help_mail',
+                    'icon' => 'fa-envelope',
+                    'url' => admin_url('settings/edit/mail'),
+                ],
             ]);
         });
     }
