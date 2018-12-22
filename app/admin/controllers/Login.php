@@ -1,5 +1,6 @@
 <?php namespace Admin\Controllers;
 
+use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
 use Admin\Traits\ValidatesForm;
 use AdminAuth;
@@ -66,16 +67,17 @@ class Login extends \Admin\Classes\AdminController
     {
         if ($this->validateResetForm()) {
             if (!$code = input('code')) {
-                $user = Users_model::whereUsername(post('username'))->first();
+                $staff = Staffs_model::whereStaffEmail(post('email'))->first();
+                $user = $staff->user;
 
                 if ($user AND $user->resetPassword()) {
                     $data = [
-                        'staff_name' => $user->staff->staff_name,
+                        'staff_name' => $staff->staff_name,
                         'reset_link' => admin_url('login/reset?code='.$user->reset_code),
                     ];
 
-                    Mail::send('admin::_mail.password_reset_request', $data, function ($message) use ($user) {
-                        $message->to($user->staff->staff_email, $user->staff->staff_name);
+                    Mail::send('admin::_mail.password_reset_request', $data, function ($message) use ($staff) {
+                        $message->to($staff->staff_email, $staff->staff_name);
                     });
 
                     flash()->success(lang('admin::lang.login.alert_email_sent'));
@@ -135,7 +137,7 @@ class Login extends \Admin\Classes\AdminController
             ];
         }
         else {
-            $rules[] = ['username', 'lang:admin::lang.login.label_username', 'required|exists:users,username'];
+            $rules[] = ['email', 'lang:admin::lang.login.label_email', 'required|email|exists:staffs,staff_email'];
         }
 
         return $this->validatePasses($post, $rules);
