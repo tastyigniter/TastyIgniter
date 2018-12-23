@@ -15,12 +15,6 @@ class Statistics extends BaseDashboardWidget
      */
     protected $defaultAlias = 'statistics';
 
-    public function initialize()
-    {
-        $color = $this->getContextColor($this->property('context'));
-        $this->setProperty('cssClass', 'text-white bg-'.$color.' border-'.$color);
-    }
-
     /**
      * Renders the widget.
      */
@@ -59,48 +53,39 @@ class Statistics extends BaseDashboardWidget
         return [
             'sale' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_sale',
-                'icon' => 'fa fa-line-chart',
-                'color' => 'success',
+                'icon' => ' bg-success text-white fa fa-line-chart',
             ],
             'lost_sale' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_lost_sale',
-                'icon' => 'fa fa-line-chart fa-rotate-180',
-                'color' => 'danger',
+                'icon' => ' bg-danger text-white fa fa-line-chart fa-rotate-180',
             ],
             'cash_payment' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_cash_payment',
-                'icon' => 'fa fa-money-bill',
-                'color' => 'warning',
+                'icon' => ' bg-warning text-white fa fa-money-bill',
             ],
             'customer' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_customer',
-                'icon' => 'fa fa-users',
-                'color' => 'info',
+                'icon' => ' bg-info text-white fa fa-users',
             ],
             'order' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_order',
-                'icon' => 'fa fa-shopping-cart',
-                'color' => 'success',
+                'icon' => ' bg-success text-white fa fa-shopping-cart',
             ],
             'delivery_order' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_delivery_order',
-                'icon' => 'fa fa-truck',
-                'color' => 'primary',
+                'icon' => ' bg-primary text-white fa fa-truck',
             ],
             'collection_order' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_collection_order',
-                'icon' => 'fa fa-shopping-bag',
-                'color' => 'info',
+                'icon' => ' bg-info text-white fa fa-shopping-bag',
             ],
             'completed_order' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_completed_order',
-                'icon' => 'fa fa-receipt',
-                'color' => 'success',
+                'icon' => ' bg-success text-white fa fa-receipt',
             ],
             'reserved_table' => [
                 'label' => 'lang:admin::lang.dashboard.text_total_reserved_table',
-                'icon' => 'fa fa-table',
-                'color' => 'primary',
+                'icon' => ' bg-primary text-white fa fa-table',
             ],
         ];
     }

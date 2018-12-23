@@ -23,7 +23,7 @@
             ?>
             <?php foreach ($newsFeed as $feed) { ?>
                 <a class="list-group-item px-0" target="_blank" href="<?= $feed['link']; ?>">
-                    <b class="text-truncate"><?= $feed['title']; ?></b>
+                    <b class="d-block text-truncate"><?= $feed['title']; ?></b>
                     <span class="text-muted d-block text-truncate"><?= strip_tags($feed['description']); ?></span>
                 </a>
             <?php } ?>

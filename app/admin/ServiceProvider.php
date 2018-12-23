@@ -101,6 +101,11 @@ class ServiceProvider extends AppServiceProvider
                 'label' => 'Onboarding widget',
                 'context' => 'dashboard',
             ]);
+
+            $manager->registerDashboardWidget(\Admin\DashboardWidgets\Charts::class, [
+                'label' => 'Charts widget',
+                'context' => 'dashboard',
+            ]);
         });
     }
 

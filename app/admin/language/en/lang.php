@@ -376,8 +376,8 @@ return [
         'text_select_range' => 'Select date range',
         'text_last_version_check' => 'Your last <b>TastyIgniter core version check</b> was more than a week ago. <a href="%s"><b>Check for Updates</b></a>',
 
-        'text_onboarding' => 'Getting started',
         'onboarding' => [
+            'title' => 'Getting started',
             'label_settings' => 'Complete required system settings',
             'label_locations' => 'Configure a default location',
             'label_themes' => 'Customize your site',
@@ -393,6 +393,13 @@ return [
             'help_payments' => 'Some extensions are required for your site to function properly.',
             'help_menus' => 'Make your menu items available for your customers to order.',
             'help_mail' => 'Ensure order confirmation emails are sent to customers successfully.',
+        ],
+
+        'charts' => [
+            'text_orders' => 'Orders',
+            'text_reservations' => 'Reservations',
+            'text_customers' => 'Customers',
+            'text_reviews' => 'Reviews',
         ],
 
         'column_id' => 'ID',
@@ -418,6 +425,7 @@ return [
         'error_rss' => 'The URL address is incorrect or',
 
         'alert_set_default_confirm' => 'Are you sure you want to set the current layout as default?',
+        'alert_reset_layout_success' => 'Layout reset successfully',
     ],
 
     'locations' => [

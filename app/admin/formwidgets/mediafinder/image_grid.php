@@ -26,7 +26,7 @@
             <?php } ?>
             <input
                 type="hidden"
-                <?= (!empty($mediaItem) AND !$useAttachment) ? 'name="'.$fieldName.'"' : '' ?>
+                <?= (!is_null($mediaItem) AND !$useAttachment) ? 'name="'.$fieldName.'"' : '' ?>
                 value="<?= e($this->getMediaPath($mediaItem)) ?>"
                 data-find-value
             />

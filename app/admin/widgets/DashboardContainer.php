@@ -164,7 +164,7 @@ class DashboardContainer extends BaseWidget
 
         $this->vars['widgets'] = $this->dashboardWidgets;
 
-        flash()->success(lang('admin::lang.dashboard.reset_layout_success'));
+        flash()->success(lang('admin::lang.dashboard.alert_reset_layout_success'));
 
         return ['#'.$this->getId('container-list') => $this->makePartial('widget_list')];
     }
