@@ -3,8 +3,6 @@
 namespace Admin\Traits;
 
 use Admin\Models\Menus_model;
-use Admin\Models\Orders_model;
-use Admin\Models\Status_history_model;
 use Carbon\Carbon;
 use DB;
 use Event;
@@ -13,23 +11,13 @@ trait ManagesOrderItems
 {
     public static function bootManagesOrderItems()
     {
-        Event::listen('admin.statusHistory.beforeAddStatus', function ($model, $object, $statusId, $previousStatus) {
-            if (!$object instanceof Orders_model)
-                return;
-
-            $object->processOrderItemsOnAddStatus($statusId);
+        Event::listen('admin.order.paymentProcessed', function ($model) {
+            $model->handleOnPaymentProcessed();
         });
     }
 
-    protected function processOrderItemsOnAddStatus($statusId)
+    protected function handleOnPaymentProcessed()
     {
-        if (!in_array($statusId, setting('processing_order_status')))
-            return;
-
-        $alreadyExists = Status_history_model::alreadyExists($this, $statusId);
-        if ($alreadyExists)
-            return FALSE;
-
         $this->subtractStock();
 
         $this->redeemCoupon();
