@@ -74,7 +74,7 @@ class ServiceProvider extends AppServiceProvider
         ExtensionManager::instance()->bootExtensions();
 
         $this->updateTimezone();
-        $this->setDefaultCurrency();
+        $this->setConfiguration();
         $this->extendValidator();
 
         $this->addTranslationDriver();
@@ -246,9 +246,12 @@ class ServiceProvider extends AppServiceProvider
         }
     }
 
-    protected function setDefaultCurrency()
+    protected function setConfiguration()
     {
         $this->app['config']->set('currency.default', setting('default_currency_code'));
+
+        // Used by the Geocoder class
+        $this->app['config']->set('geocoder.providers.chain.google.apiKey', setting('maps_api_key'));
     }
 
     protected function registerAssets()

@@ -49,6 +49,8 @@
         this.$el.get(0).setAttribute('data-last-counter', lastCounter)
 
         this.createShapeInput(shapeId)
+
+        $('[data-control="repeater"]').repeater()
     }
 
     MapArea.prototype.removeArea = function (event) {
