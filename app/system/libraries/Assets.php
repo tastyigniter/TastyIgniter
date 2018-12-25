@@ -119,7 +119,8 @@ class Assets
                 $href = $href['href'];
             }
 
-            $attributes['href'] = asset($href);
+            $attributes['href'] = asset($this->prepUrl($href));
+
             return '<link'.Html::attributes($attributes).'>'.PHP_EOL;
         }, $this->assets['icon']);
 
@@ -194,6 +195,7 @@ class Assets
 
         if ($this->combineAssets) {
             $path = $this->combine($type, $this->getAssetPaths($assets));
+
             return $this->buildAssetUrl($type, $path);
         }
 
