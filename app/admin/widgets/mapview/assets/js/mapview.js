@@ -27,15 +27,13 @@
         mapHeight: 300,
         mapZoom: 14,
         mapCenter: null,
+        mapShapeSelector: '[data-map-shape]',
         mapEditableShape: false,
     }
 
     MapView.prototype.init = function () {
-        this.$mapView = this.$el.find('.map-view')
         this.$form = this.$el.closest('form')
-
-        // Map Div must have an height
-        this.$mapView.css('height', this.options.mapHeight)
+        this.$mapView = this.$el.find('.map-view')
 
         this.clearMapTimer()
 
@@ -85,9 +83,17 @@
 
     MapView.prototype.initMap = function () {
         if (!this.options.mapCenter.lat || !this.options.mapCenter.lng) {
-            alert('Map is missing center coordinates, please enter an address and click save.')
+            alert('Map is missing center coordinates, please enter an address then click save.')
             return;
         }
+
+        if (!(typeof google === "object" && typeof google.maps === "object")) {
+            alert('Missing Google Maps Javascript Library, please provide your maps api key on the general system settings page.')
+            return;
+        }
+
+        // Map Div must have an height
+        this.$mapView.css('height', this.options.mapHeight)
 
         var mapCenter = new google.maps.LatLng(
             parseFloat(this.options.mapCenter.lat),
@@ -121,10 +127,9 @@
     MapView.prototype.initShapes = function () {
         var self = this
 
-        this.$el.find('[data-map-shape]').each(function () {
+        $(this.options.mapShapeSelector).each(function () {
             var $this = $(this)
-            var shapeOptions = $this.data('mapShape')
-            self.createShape(shapeOptions)
+            self.createShape($this, $this.data())
         })
     }
 
@@ -171,11 +176,22 @@
         return data
     }
 
-    MapView.prototype.createShape = function (shapeOptions) {
-        shapeOptions.editable = this.options.mapEditableShape;
+    MapView.prototype.createShape = function ($el, shapeOptions) {
+        var $shapeBadge = $('<a class="badge text-white" ' +
+                'data-shape-id="'+shapeOptions.id+'" ' +
+                'style="background-color:'+shapeOptions.options.fillColor+'">' +
+                shapeOptions.name + '</a>')
+
+        this.$el.find('[data-map-labels]').append($shapeBadge)
+        $shapeBadge.on('click', $.proxy(this.onShapeToggleClicked, this))
+
         shapeOptions.options.map = this.map;
         shapeOptions.options.mapView = this.$mapView;
-        this.setShape(new $.ti.mapView.shape(shapeOptions))
+        shapeOptions.editable = !!this.options.mapEditableShape;
+
+        var shape = new $.ti.mapView.shape($el, shapeOptions)
+        $el.data('ti.mapView.shape', shape)
+        this.setShape(shape)
     }
 
     MapView.prototype.removeShape = function (shape) {
@@ -302,12 +318,14 @@
     // EVENT HANDLERS
     // ============================
 
-    MapView.prototype.onShapeChanged = function (event, mapObject, shape) {
-        if (!mapObject)
-            return
+    MapView.prototype.onShapeToggleClicked = function (event) {
+        var $button = $(event.target),
+            shape = this.getShape($button.data('shapeId'));
 
-        this.clearShapeTrackerTimer()
-        this.shapeTrackerTimer = window.setTimeout(this.resize(), 500)
+        if (shape.getMapObject(shape.options.default))
+            this.editShape($button.data('shapeId'));
+
+        window.setTimeout(this.resize(), 500)
     }
 
     // MapView PLUGIN DEFINITION

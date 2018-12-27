@@ -3,6 +3,7 @@
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Traits\FormModelWidget;
+use Html;
 
 /**
  * Map Area
@@ -20,6 +21,8 @@ class MapArea extends BaseFormWidget
     protected $defaultAlias = 'maparea';
 
     protected $prompt = 'lang:admin::lang.locations.text_add_new_area';
+
+    protected $mapPrompt = 'lang:admin::lang.locations.text_edit_area';
 
     protected $indexCount = 0;
 
@@ -47,9 +50,20 @@ class MapArea extends BaseFormWidget
     ];
 
     protected $availableSizes = [
-        'small'  => 360,
+        'small' => 360,
         'normal' => 640,
-        'large'  => 860,
+        'large' => 860,
+    ];
+
+    protected $shapeDefaultProperties = [
+        'id' => null,
+        'default' => 'address',
+        'options' => [],
+        'circle' => [],
+        'polygon' => [],
+        'vertices' => [],
+        'serialized' => FALSE,
+        'editable' => FALSE,
     ];
 
     protected static $onAddItemCalled = FALSE;
@@ -62,6 +76,7 @@ class MapArea extends BaseFormWidget
     {
         $this->fillFromConfig([
             'prompt',
+            'mapPrompt',
             'latFrom',
             'lngFrom',
             'zoom',
@@ -98,8 +113,8 @@ class MapArea extends BaseFormWidget
         $this->vars['indexCount'] = $this->indexCount;
 
         $this->vars['prompt'] = $this->prompt;
+        $this->vars['mapPrompt'] = $this->mapPrompt;
         $this->vars['zoom'] = $this->zoom;
-        $this->vars['areaColors'] = $this->areaColors;
     }
 
     public function getSaveValue($value)
@@ -158,22 +173,43 @@ class MapArea extends BaseFormWidget
         $lastCount++;
 
         $area = [
-            'name'  => 'Area '.$lastCount,
+            'name' => 'Area '.$lastCount,
             'color' => $this->getAreaColor($lastCount),
         ];
 
         $this->vars['index'] = $lastCount;
         $this->vars['areaForm'] = [
-            'data'   => $area,
+            'data' => $area,
             'widget' => $this->makeAreaFormWidget($lastCount, $area),
         ];
 
         $itemContainer = '@#'.$this->getId('areas');
 
         return [
-            'areaShapeId'  => $this->getId('area-'.$lastCount),
-            $itemContainer => $this->makePartial('area_form'),
+            'areaShapeId' => $this->getId('area-'.$lastCount),
+            $itemContainer => $this->makePartial('area'),
         ];
+    }
+
+    public function getMapShapeAttributes($index, $area)
+    {
+        $area = (object)$area;
+
+        $attributes = [
+            'data-id' => $this->getId('area-'.$index),
+            'data-name' => $area->name,
+            'data-default' => $area->type ?? 'address',
+            'data-polygon' => $area->boundaries['polygon'] ?? null,
+            'data-circle' => $area->boundaries['circle'] ?? null,
+            'data-vertices' => $area->boundaries['vertices'] ?? null,
+            'data-editable' => $this->previewMode ? 'false' : 'true',
+            'data-options' => json_encode([
+                'fillColor' => $area->color ?? $this->getAreaColor($index),
+                'strokeColor' => $area->color ?? $this->getAreaColor($index),
+            ]),
+        ];
+
+        return Html::attributes($attributes);
     }
 
     protected function processExistingAreas()
@@ -188,7 +224,7 @@ class MapArea extends BaseFormWidget
                 $area['color'] = $this->getAreaColor($this->indexCount);
 
             $result[$this->indexCount] = [
-                'data'   => !is_array($area) ? $area->toArray() : $area,
+                'data' => !is_array($area) ? $area->toArray() : $area,
                 'widget' => $this->makeAreaFormWidget($this->indexCount, $area),
             ];
         }
@@ -200,7 +236,7 @@ class MapArea extends BaseFormWidget
     {
         $config = $this->config;
 
-        $config['shapes'] = $this->getMapShapes();
+//        $config['shapes'] = $this->getMapShapes();
         $config['center'] = [
             'lat' => $this->model->{$this->latFrom},
             'lng' => $this->model->{$this->lngFrom},
@@ -236,14 +272,14 @@ class MapArea extends BaseFormWidget
             $area = (object)$area['data'];
 
             $result[] = [
-                'id'       => $this->getId('area-'.$key), //$area->area_id,
-                'type'     => $area->type ?? 'polygon',
-                'polygon'  => $area->boundaries['polygon'],
-                'circle'   => @json_decode($area->boundaries['circle']),
+                'id' => $this->getId('area-'.$key), //$area->area_id,
+                'type' => $area->type ?? 'polygon',
+                'polygon' => $area->boundaries['polygon'],
+                'circle' => @json_decode($area->boundaries['circle']),
                 'vertices' => @json_decode($area->boundaries['vertices']),
                 'editable' => !$this->previewMode,
-                'options'  => [
-                    'fillColor'   => $area->color,
+                'options' => [
+                    'fillColor' => $area->color,
                     'strokeColor' => $area->color,
                 ],
             ];

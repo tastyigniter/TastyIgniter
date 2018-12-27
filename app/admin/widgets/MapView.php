@@ -13,24 +13,13 @@ class MapView extends BaseWidget
 
     public $height = 500;
 
-    protected $zoom;
+    public $zoom;
 
-    protected $center;
+    public $center;
 
-    protected $shapes;
+    public $shapeSelector = '[data-map-shape]';
 
     protected $defaultAlias = 'mapview';
-
-    protected $shapeDefaultProperties = [
-        'id'         => null,
-        'default'    => 'polygon',
-        'options'    => [],
-        'circle'     => [],
-        'polygon'    => [],
-        'vertices'   => [],
-        'serialized' => FALSE,
-        'editable'   => FALSE,
-    ];
 
     protected $previewMode = FALSE;
 
@@ -45,18 +34,19 @@ class MapView extends BaseWidget
             'height',
             'zoom',
             'center',
-            'shapes',
+            'shapeSelector',
         ]);
     }
 
     public function loadAssets()
     {
-        $mapKey = setting('maps_api_key');
+        if (strlen($key = setting('maps_api_key'))) {
+            $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
+            $this->addJs(sprintf($url, $key),
+                ['name' => 'google-maps-js', 'async' => null, 'defer' => null]
+            );
+        }
 
-        $this->addJs(
-            'https://maps.googleapis.com/maps/api/js?key='.$mapKey.'&libraries=geometry',
-            'google-maps-js'
-        );
         $this->addJs('js/mapview.js', 'mapview-js');
         $this->addJs('js/mapview.shape.js', 'mapview-shape-js');
     }
@@ -70,22 +60,10 @@ class MapView extends BaseWidget
 
     public function prepareVars()
     {
-        $this->vars['mapKey'] = setting('maps_api_key');
         $this->vars['mapHeight'] = (int)$this->height;
         $this->vars['mapZoom'] = (int)$this->zoom;
         $this->vars['mapCenter'] = $this->center;
-        $this->vars['mapShapes'] = $this->prepareShapesArray();
+        $this->vars['shapeSelector'] = $this->shapeSelector;
         $this->vars['previewMode'] = $this->previewMode;
-    }
-
-    protected function prepareShapesArray()
-    {
-        $result = [];
-        foreach ($this->shapes as $key => $shape) {
-            $shape['default'] = $shape['type'];
-            $result[] = array_merge($this->shapeDefaultProperties, $shape);
-        }
-
-        return $result;
     }
 }

@@ -70,12 +70,6 @@ $config['form']['general'] = [
                     'tab' => 'lang:system::lang.settings.text_tab_restaurant',
                     'type' => 'section',
                 ],
-                'maps_api_key' => [
-                    'label' => 'lang:system::lang.settings.label_maps_api_key',
-                    'tab' => 'lang:system::lang.settings.text_tab_restaurant',
-                    'type' => 'text',
-                    'comment' => 'lang:system::lang.settings.help_maps_api_key',
-                ],
                 'distance_unit' => [
                     'label' => 'lang:system::lang.settings.label_distance_unit',
                     'tab' => 'lang:system::lang.settings.text_tab_restaurant',
@@ -85,6 +79,25 @@ $config['form']['general'] = [
                         'km' => 'lang:system::lang.settings.text_kilometers',
                     ],
                 ],
+                'default_geocoder' => [
+                    'label' => 'lang:system::lang.settings.label_default_geocoder',
+                    'tab' => 'lang:system::lang.settings.text_tab_restaurant',
+                    'type' => 'radio',
+                    'default' => 'chain',
+                    'comment' => 'lang:system::lang.settings.help_default_geocoder',
+                    'options' => [
+                        'nominatim' => 'lang:system::lang.settings.text_nominatim',
+                        'google' => 'lang:system::lang.settings.text_google_geocoder',
+                        'chain' => 'lang:system::lang.settings.text_chain_geocoder',
+                    ],
+                ],
+                'maps_api_key' => [
+                    'label' => 'lang:system::lang.settings.label_maps_api_key',
+                    'tab' => 'lang:system::lang.settings.text_tab_restaurant',
+                    'type' => 'text',
+                    'comment' => 'lang:system::lang.settings.help_maps_api_key',
+                ],
+
                 'language' => [
                     'label' => 'lang:system::lang.settings.text_tab_title_language',
                     'tab' => 'lang:system::lang.settings.text_tab_site',

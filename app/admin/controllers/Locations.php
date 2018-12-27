@@ -109,13 +109,6 @@ class Locations extends \Admin\Classes\AdminController
         return $attributes;
     }
 
-    public function formExtendFields($form)
-    {
-        if (!count($form->model->listDeliveryAreas())) {
-            flash()->warning(lang('admin::lang.locations.alert_delivery_area'))->important();
-        }
-    }
-
     public function formExtendQuery($query)
     {
         if (is_single_location())
@@ -130,7 +123,7 @@ class Locations extends \Admin\Classes\AdminController
             ['location_telephone', 'lang:admin::lang.locations.label_telephone', 'required|min:2|max:15'],
             ['location_address_1', 'lang:admin::lang.locations.label_address_1', 'required|min:2|max:128'],
             ['location_address_2', 'lang:admin::lang.locations.label_address_2', 'max:128'],
-            ['location_city', 'lang:admin::lang.locations.label_city', 'required|min:2|max:128'],
+            ['location_city', 'lang:admin::lang.locations.label_city', 'min:2|max:128'],
             ['location_state', 'lang:admin::lang.locations.label_state', 'max:128'],
             ['location_postcode', 'lang:admin::lang.locations.label_postcode', 'min:2|max:10'],
             ['location_country_id', 'lang:admin::lang.locations.label_country', 'required|integer'],
@@ -168,14 +161,17 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['options.hours.*.flexible.*.close', 'lang:admin::lang.locations.label_close_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::lang.locations.label_opening_status', $requiredIf.'|integer'];
 
-        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'sometimes'];
+        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'required'];
         $rules[] = ['delivery_areas.*.type', 'lang:admin::lang.locations.label_area_type', 'required'];
         $rules[] = ['delivery_areas.*.name', 'lang:admin::lang.locations.label_area_name', 'required'];
         $rules[] = ['delivery_areas.*.area_id', 'lang:admin::lang.locations.label_area_id', 'integer'];
 
-        $rules[] = ['delivery_areas.*.boundaries.polygon', 'lang:admin::lang.locations.label_area_shape', 'required'];
-        $rules[] = ['delivery_areas.*.boundaries.circle', 'lang:admin::lang.locations.label_area_circle', 'required'];
-        $rules[] = ['delivery_areas.*.boundaries.vertices', 'lang:admin::lang.locations.label_area_vertices', 'required'];
+        $rules[] = ['delivery_areas.*.boundaries.components.*.type', 'lang:admin::lang.locations.label_address_component_type', 'sometimes|required|string'];
+        $rules[] = ['delivery_areas.*.boundaries.components.*.value', 'lang:admin::lang.locations.label_address_component_value', 'sometimes|required|string'];
+
+        $rules[] = ['delivery_areas.*.boundaries.polygon', 'lang:admin::lang.locations.label_area_shape', 'sometimes'];
+        $rules[] = ['delivery_areas.*.boundaries.circle', 'lang:admin::lang.locations.label_area_circle', 'sometimes|json'];
+        $rules[] = ['delivery_areas.*.boundaries.vertices', 'lang:admin::lang.locations.label_area_vertices', 'sometimes|json'];
 
         $rules[] = ['delivery_areas.*.conditions', 'lang:admin::lang.locations.label_delivery_condition', 'required'];
         $rules[] = ['delivery_areas.*.conditions.*.amount', 'lang:admin::lang.locations.label_area_charge', 'required|numeric'];
@@ -185,40 +181,14 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['gallery.title', 'lang:admin::lang.locations.label_gallery_title', 'max:128'];
         $rules[] = ['gallery.description', 'lang:admin::lang.locations.label_gallery_description', 'max:255'];
 
-        $this->validateAfter(function ($validator) use ($model) {
-            $this->validateCoordinates($validator, $model);
-        });
-
         return $this->validatePasses($form->getSaveData(), $rules);
     }
 
-    public function validateCoordinates($validator, $model)
+    public function formAfterSave($model)
     {
         if (post('Location.options.auto_lat_lng')) {
-            $address = format_address([
-                'address_1' => post('Location.location_address_1'),
-                'address_2' => post('Location.location_address_2'),
-                'city' => post('Location.location_city'),
-                'state' => post('Location.location_state'),
-                'postcode' => post('Location.location_postcode'),
-                'country_id' => post('Location.location_country_id'),
-            ], FALSE);
-
-            $result = Geocoder::geocode($address);
-            $geoLocation = $result->first();
-
-            if ($geoLocation AND $geoLocation->hasCoordinates()) {
-                $model->location_lat = $geoLocation->getCoordinates()->getLatitude();
-                $model->location_lng = $geoLocation->getCoordinates()->getLongitude();
-
-                return $geoLocation;
-            }
-
-            $validator->errors()->add('options.auto_lat_lng',
-                'Address geocoding failed: '.implode(PHP_EOL, Geocoder::getLogs())
-            );
-
-            return FALSE;
+            if ($logs = Geocoder::getLogs())
+                flash()->error(implode(PHP_EOL, $logs))->important();
         }
     }
 }

@@ -248,10 +248,19 @@ class ServiceProvider extends AppServiceProvider
 
     protected function setConfiguration()
     {
-        $this->app['config']->set('currency.default', setting('default_currency_code'));
+        $this->app->resolving('currency', function ($currency, $app) {
+            $app['config']->set('currency.default', setting('default_currency_code'));
+        });
 
-        // Used by the Geocoder class
-        $this->app['config']->set('geocoder.providers.chain.google.apiKey', setting('maps_api_key'));
+        $this->app->resolving('geocoder', function ($geocoder, $app) {
+            $app['config']->set('geocoder.default', setting('default_geocoder'));
+
+            $region = $app['country']->getCountryCodeById(setting('country_id'));
+            $app['config']->set('geocoder.providers.google.region', $region);
+            $app['config']->set('geocoder.providers.nominatim.region', $region);
+
+            $app['config']->set('geocoder.providers.google.apiKey', setting('maps_api_key'));
+        });
     }
 
     protected function registerAssets()

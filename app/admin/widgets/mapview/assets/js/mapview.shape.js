@@ -1,7 +1,7 @@
 +function ($) {
     "use strict"
 
-    if (!google.maps.Polygon.prototype.getBounds) {
+    if (typeof google === "object" && typeof google.maps === "object" && !google.maps.Polygon.prototype.getBounds) {
         google.maps.Polygon.prototype.getBounds = function () {
             var bounds = new google.maps.LatLngBounds()
             var paths = this.getPaths()
@@ -19,7 +19,7 @@
     if ($.ti.mapView === undefined)
         $.ti.mapView = {}
 
-    var MapViewShape = function (options) {
+    var MapViewShape = function (el, options) {
         this.$mapView = $(options.options.mapView)
         this.mapObjects = {}
 
@@ -59,7 +59,7 @@
 
         drawOptions.center = new google.maps.LatLng(center.lat, center.lng)
         drawOptions.radius = center.radius
-        drawOptions.visible = shape.default == 'circle'
+        drawOptions.visible = shape.default === 'circle'
 
         var drawing = new google.maps.Circle(drawOptions)
 
@@ -77,15 +77,17 @@
     MapViewShape.prototype.makePolygon = function () {
         var self = this,
             shape = this.options,
-            drawOptions = this.drawOptions,
-            paths = this.getOrCreatePaths(shape)
+            drawOptions = this.drawOptions
+            // ,
+            // paths = this.getOrCreatePaths(shape)
 
         if (!paths)
             return
 
         drawOptions.paths = paths
-        drawOptions.visible = shape.default == 'polygon'
+        drawOptions.visible = shape.default === 'polygon'
 
+        console.log(drawOptions)
         var drawing = new google.maps.Polygon(drawOptions)
 
         google.maps.event.addListener(drawing.getPath(), 'insert_at', function () {
@@ -132,7 +134,7 @@
 
     MapViewShape.prototype.getSelectedMapObject = function () {
         var shapeObj = this.getMapObject(this.visibleType)
-        if (!shapeObj.editable) {
+        if (!shapeObj || !shapeObj.editable) {
             return null
         }
 
