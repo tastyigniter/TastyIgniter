@@ -11,7 +11,7 @@ TastyIgniter :fire:
 > **TastyIgniter v3 (uses [Laravel](https://laravel.com/) PHP framework) is currently in beta and should not be used in production.** Join the [Dev Team](http://slack.tastyigniter.com/) to follow along with our progress. See branch [2.1.x](https://github.com/tastyigniter/TastyIgniter/tree/2.1.x) for a stable version.
 
 ### Wizard Installation
-1. Download and unzip the [setup archive file](https://tastyigniter.com/download) into an empty directory on your server.
+1. Download and unzip the [setup archive file](https://github.com/tastyigniter/setup/archive/master.zip) into an empty directory on your server.
 2. Create a MySQL user database for TastyIgniter.
 3. Extract and upload the setup archive contents to your server. Normally the setup.php file will be at your root.
 4. Grant write permissions on the setup directory, its subdirectories and files.
