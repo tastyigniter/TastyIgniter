@@ -24,12 +24,12 @@
                     <?= $this->makePartial($this->partial, ['item' => $item]) ?>
                 <?php } else { ?>
                     <span class="card-title font-weight-bold mb-0"><?= $item->{$nameFrom} ?></span>
-                    <p class="card-subtitle small mb-0"><?= $item->{$descriptionFrom} ?></p>
+                    <p class="card-subtitle mb-0"><?= $item->{$descriptionFrom} ?></p>
                 <?php } ?>
             </div>
             <div class="align-self-center ml-auto">
                 <a
-                    class="close fa-2x text-danger"
+                    class="close text-danger"
                     aria-label="Remove"
                     <?php if (!$this->previewMode) { ?>
                         data-control="delete-item"
@@ -37,9 +37,7 @@
                         data-item-selector="#<?= $this->getId('item-'.$index) ?>"
                         data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
                     <?php } ?>
-                >
-                    <span content="text-danger" aria-hidden="true">&times;</span>
-                </a>
+                ><i class="fa fa-trash-alt"></i></a>
             </div>
         </div>
 

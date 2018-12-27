@@ -166,7 +166,7 @@ class Statistics extends BaseDashboardWidget
               ->where('status_id', '!=', setting('canceled_order_status'))
               ->whereRaw($this->getRangeQuery($range));
 
-        return currency_format($query->sum('order_total'));
+        return currency_format($query->sum('order_total') ?? 0);
     }
 
     /**
@@ -183,7 +183,7 @@ class Statistics extends BaseDashboardWidget
             $query->orWhere('status_id', setting('canceled_order_status'));
         })->whereRaw($this->getRangeQuery($range));
 
-        return currency_format($query->sum('order_total'));
+        return currency_format($query->sum('order_total') ?? 0);
     }
 
     /**
@@ -200,7 +200,7 @@ class Statistics extends BaseDashboardWidget
             $query->where('status_id', '!=', setting('canceled_order_status'));
         })->where('payment', 'cod')->whereRaw($this->getRangeQuery($range));
 
-        return currency_format($query->sum('order_total'));
+        return currency_format($query->sum('order_total') ?? 0);
     }
 
     /**
@@ -261,7 +261,7 @@ class Statistics extends BaseDashboardWidget
             $query->orWhere('order_type', 'delivery');
         })->whereRaw($this->getRangeQuery($range));
 
-        return currency_format($query->sum('order_total'));
+        return currency_format($query->sum('order_total') ?? 0);
     }
 
     /**
@@ -278,7 +278,7 @@ class Statistics extends BaseDashboardWidget
             $query->orWhere('order_type', 'collection');
         })->whereRaw($this->getRangeQuery($range));
 
-        return currency_format($query->sum('order_total'));
+        return currency_format($query->sum('order_total') ?? 0);
     }
 
     /**

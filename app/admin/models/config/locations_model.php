@@ -428,6 +428,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_order',
             'default' => 0,
             'type' => 'number',
+            'span' => 'left',
             'comment' => 'lang:admin::lang.locations.help_delivery_time',
         ],
         'collection_time' => [
@@ -435,6 +436,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_order',
             'default' => 0,
             'type' => 'number',
+            'span' => 'right',
             'comment' => 'lang:admin::lang.locations.help_collection_time',
         ],
         'last_order_time' => [
@@ -442,12 +444,14 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_order',
             'default' => 0,
             'type' => 'number',
+            'span' => 'left',
             'comment' => 'lang:admin::lang.locations.help_last_order_time',
         ],
         'options[future_orders]' => [
             'label' => 'lang:admin::lang.locations.label_future_order',
             'tab' => 'lang:admin::lang.locations.text_tab_order',
             'type' => 'switch',
+            'span' => 'right',
             'comment' => 'lang:admin::lang.locations.help_future_order',
         ],
         'options[future_order_days][delivery]' => [
@@ -488,6 +492,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 0,
             'type' => 'number',
+            'span' => 'left',
             'comment' => 'lang:admin::lang.locations.help_reservation_time_interval',
         ],
         'reservation_stay_time' => [
@@ -495,6 +500,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 0,
             'type' => 'number',
+            'span' => 'right',
             'comment' => 'lang:admin::lang.locations.help_reservation_stay_time',
         ],
         'tables' => [
@@ -518,7 +524,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_delivery',
             'label' => 'lang:admin::lang.locations.text_delivery_area',
             'type' => 'maparea',
-            'context' => ['edit'],
+//            'context' => ['edit'],
             'latFrom' => 'location_lat',
             'lngFrom' => 'location_lng',
             'zoom' => '14',

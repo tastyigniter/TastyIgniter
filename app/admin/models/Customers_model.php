@@ -16,6 +16,8 @@ class Customers_model extends AuthUserModel
     use LogsActivity;
     use Purgeable;
 
+    const UPDATED_AT = null;
+
     const CREATED_AT = 'date_added';
 
     protected static $logAttributes = ['name'];

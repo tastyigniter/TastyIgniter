@@ -1,5 +1,5 @@
 <span class="card-title font-weight-bold mb-0"><?= $item->option_name ?></span>
-<p class="card-text mb-0 small text-muted">
+<p class="card-text mb-0 text-muted">
     <?= sprintf(lang('admin::lang.menu_options.text_option_summary'),
         sprintf('<b>%s</b>', $item->isRequired()
             ? lang('admin::lang.menu_options.is_required')
