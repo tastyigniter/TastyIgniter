@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use DB;
+use Exception;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -97,6 +98,19 @@ class Customers_model extends AuthUserModel
     //
     // Events
     //
+
+    public function beforeLogin()
+    {
+        if (!$this->group OR !$this->group->requiresApproval())
+            return;
+
+        if ($this->is_activated OR $this->status)
+            return;
+
+        throw new Exception(sprintf(
+            'Cannot login user "%s" until activated.', $this->email
+        ));
+    }
 
     public function afterCreate()
     {
