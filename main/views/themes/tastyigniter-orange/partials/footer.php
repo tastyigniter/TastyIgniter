@@ -123,5 +123,52 @@
 </footer>
 <?php $custom_script = get_theme_options('custom_script'); ?>
 <?php if (!empty($custom_script['footer'])) { echo '<script type="text/javascript">'.$custom_script['footer'].'</script>'; }; ?>
+<script type="text/javascript">
+
+	 window.onscroll = function() {myFunction()};
+
+		var header = document.getElementById("searchText");
+		var contentLeft = document.getElementById("category-box-affix");
+		var pageContent = document.getElementById("page-content");
+		var menuContainer = document.getElementById("Container");
+		var sticky = pageContent.offsetTop;
+		
+		
+		
+	    function myFunction() {
+	    var selectedTab = $("ul#nav-tabs li.active");
+	    
+	    	
+		 if (window.pageYOffset > sticky) {
+
+			if (header)
+			   header.classList.add("sticky");
+
+			if (selectedTab && menuContainer && "Menu".localeCompare(selectedTab.text()) == 0) {
+				$("#searchText").css("width", menuContainer.offsetWidth - 35);
+			}
+			
+		    var windowHeight = window.innerHeight;
+    
+        	if (menuContainer && contentLeft && menuContainer.offsetHeight < contentLeft.offsetHeight) {
+        		$("#Container").height(contentLeft.offsetHeight + 60);
+            }
+		  } else {
+  			if (header)
+			  header.classList.remove("sticky");
+		  }
+        	    	
+	
+		}
+
+	    $(window).bind("load resize", function() {
+	    	var menuContainer = document.getElementById("Container");
+	    	
+	    	 var selectedTab = $("ul#nav-tabs li.active");
+	    	if (selectedTab && menuContainer && "Menu".localeCompare(selectedTab.text()) == 0) 
+	    	$("#searchText").css("width", menuContainer.offsetWidth - 35);
+		 });
+	
+</script>
 </body>
 </html>
