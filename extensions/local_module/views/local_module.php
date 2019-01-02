@@ -11,8 +11,9 @@
 								<?php if ($location_search_mode === 'multi') { ?>
 									<form id="location-form" method="POST" action="<?php echo $local_action; ?>" role="form">
 										<div class="input-group postcode-group">
-											<input type="text" id="search-query" class="form-control text-center postcode-control input-lg" name="search_query" placeholder="<?php echo lang('label_search_query'); ?>" value="<?php echo $search_query; ?>">
-											<a id="search" class="input-group-addon btn btn-primary" onclick="searchLocal()"><?php echo lang('text_find'); ?></a>
+											<input type="text" id="search-query" class="form-control text-center postcode-control input-lg" name="search_query" placeholder="<?php echo lang('label_search_query'); ?>" value="<?php echo $search_query; ?>" onFocus="geolocate()">
+											
+											<a id="search" class="input-group-addon btn btn-primary" onclick="searchLocal();"><?php echo lang('text_find'); ?></a>  
 										</div>
 									</form>
 								<?php } else { ?>
@@ -71,7 +72,7 @@
 							</div>
 						<?php } ?>
 
-						<div class="panel-body">
+						<div class="panel-body" id="panel-body">
 							<div class="row boxes">
 								<div class="box-one col-xs-12 col-sm-5 col-md-5">
 									<?php if (!empty($location_image)) { ?>
@@ -171,11 +172,6 @@
 		</div>
 	</div>
 <script type="text/javascript"><!--
-	$(document).ready(function() {
-		$('.review-toggle').on('click', function() {
-			$('a[href="#reviews"]').tab('show');
-		});
-	});
 
 	function toggleLocalSearch() {
 		if ($('.panel-local .panel-heading .local-search').is(":visible")) {
@@ -201,7 +197,24 @@
 		});
 	}
 
+
+	function getCurrentLocal() {
+		var search_query = $('input[name=\'search_query\']').val();
+
+		$.ajax({
+			url: js_site_url('local_module/local_module/search'),
+			type: 'POST',
+			data: 'search_query=' + search_query,
+			dataType: 'json',
+			success: function(json) {
+				console.log(json);
+				///updateLocalBox(json);
+			}
+		});
+	}
+
 	function updateLocalBox(json) {
+
 		var alert_close = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
 		var local_alert = $('#local-alert .local-alert');
 		var alert_message = '';
@@ -236,5 +249,106 @@
 			}
 		}
 	}
+
+
+
+	// This example displays an address form, using the autocomplete feature
+    // of the Google Places API to help users fill in the information.
+
+    // This example requires the Places library. Include the libraries=places
+    // parameter when you first load the API. For example:
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+    var placeSearch, autocomplete;
+    var componentForm = {
+      street_number: 'short_name',
+      route: 'long_name',
+      locality: 'long_name',
+      administrative_area_level_1: 'short_name',
+      country: 'long_name',
+      postal_code: 'short_name'
+    };
+
+    function initAutocomplete() {
+      // Create the autocomplete object, restricting the search to geographical
+      // location types.
+      autocomplete = new google.maps.places.Autocomplete(
+          /** @type {!HTMLInputElement} */(document.getElementById('search-query')),
+          {types: ['geocode']});
+
+      // When the user selects an address from the dropdown, populate the address
+      // fields in the form.
+	  autocomplete.setComponentRestrictions({'country': ['GB']});
+      autocomplete.addListener('place_changed', searchLocal);
+    }
+
+    function fillInAddress() {
+      // Get the place details from the autocomplete object.
+      var place = autocomplete.getPlace();
+
+      for (var component in componentForm) {
+        document.getElementById(component).value = '';
+        document.getElementById(component).disabled = false;
+      }
+
+      // Get each component of the address from the place details
+      // and fill the corresponding field on the form.
+      for (var i = 0; i < place.address_components.length; i++) {
+        var addressType = place.address_components[i].types[0];
+        if (componentForm[addressType]) {
+          var val = place.address_components[i][componentForm[addressType]];
+          document.getElementById(addressType).value = val;
+        }
+      }
+    }
+
+    // Bias the autocomplete object to the user's geographical location,
+    // as supplied by the browser's 'navigator.geolocation' object.
+    function geolocate() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var geolocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          var circle = new google.maps.Circle({
+            center: geolocation,
+            radius: position.coords.accuracy
+          });
+          autocomplete.setBounds(circle.getBounds());
+        });
+      }
+    }
+  
+    function scrollToBody() {
+    	var elemt;
+    	var sear = "<?php echo $search_query; ?>";
+    	
+    	if (sear) {
+    	    elemt = document.getElementById("panel-body");
+			if (elemt)
+    	    elemt.scrollIntoView(); // Top
+        }
+    }
+    
+	$(document).ready(function() {
+
+		scrollToBody();
+		
+		apicall = $('#google-maps-js').attr('src');
+		
+		apicall = apicall.replace("&ver=", "&callback=initAutocomplete&ver=");
+		$('#google-maps-js').attr('src' , apicall);
+
+		initAutocomplete();
+		
+		$('.review-toggle').on('click', function() {
+			$('a[href="#reviews"]').tab('show');
+		});
+
+	});
+
+	
+  
 //--></script>
 </div>
