@@ -1,4 +1,9 @@
 <?php if ($categories) {?>
+	<div id="searchText" class="form-group has-feedback has-search has-clear">
+                <input type="text" name="catsearch" id="catsearch" class="form-control text-center search" placeholder="Search" >
+                <span class="fa fa-search fa-2x form-control-feedback"></span>
+                <span class="form-control-feedback form-control-clear fa fa-times fa-2x hidden"  onClick="clearSearch();"></span>
+    </div>
 	<div id="Container" class="menu-list">
 		<?php $category_count = 1; ?>
 		<?php foreach ($categories as $category_id => $category) { ?>
@@ -85,3 +90,74 @@
 		<div class="info"><?php echo $pagination['info']; ?></div>
 	</div>
 <?php } ?>
+
+<script type="text/javascript"><!--
+
+	function clearSearch() {
+
+		$('#catsearch').val('').trigger('propertychange').focus();
+		resetFilter();
+	}
+        function resetFilter() {
+
+	var find =$("#catsearch").val();
+     var allSpan = $(".menu-name");
+
+     var menuCount = 0;
+     var oldCount; 
+     var count;
+     var parent;
+	 var prevParent;
+
+     allSpan.each(function( index ) {
+    	$( "p:contains('There are no menus in this category.')" ).parent().parent().parent().hide();
+     	$(this).closest('.menu-items').parent().parent().hide();
+     });
+
+     if (!find) {
+    		$( "p:contains('There are no menus in this category.')" ).parent().parent().parent().show();
+     }
+     
+     allSpan.each(function( index ) {
+
+		 var spantext = $(this).text().toLowerCase();
+		 var findtext = find.toLowerCase();   
+    	 
+         if(spantext.indexOf(findtext) != -1) {
+			$(this).closest('.menu-items').parent().parent().show();
+     		$(this).closest('.menu-item').show();
+         } else {
+         	$(this).closest('.menu-item').hide();
+         }
+     });
+}
+
+	$( document ).ready(function() {
+		var $myGroup = $('.menu-list');
+
+	    $myGroup.on('show.bs.collapse','.collapse', function() {
+	        $myGroup.find('.collapse.in').collapse('hide');
+
+	    });
+        
+        $myGroup.on('shown.bs.collapse', function () {
+            
+            $('html, body').animate({
+                scrollTop: $myGroup.find('.collapse.in').offset().top - 75
+            }, 1);
+	    });
+            
+             	$("#catsearch").keyup(function() {
+			resetFilter();
+	});
+    
+
+                  $('.has-clear input[type="text"]').on('input propertychange', function() {
+	    	  var $this = $(this);
+	    	  var visible = Boolean($this.val());
+	    	  $this.siblings('.form-control-clear').toggleClass('hidden', !visible);
+	    	  $this.siblings('.fa-search').toggleClass('hidden', visible);
+		 }).trigger('propertychange');
+	    
+	});   
+--></script>
