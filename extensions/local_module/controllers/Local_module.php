@@ -25,6 +25,12 @@ class Local_module extends Main_Controller {
 			return;
 		}
 
+		if ($this->config->item('maps_api_key')) {
+		    $data['map_key'] = '&key='. $this->config->item('maps_api_key');
+		} else {
+		    $data['map_key'] = '';
+		}
+
 		$this->template->setStyleTag(extension_url('local_module/views/stylesheet.css'), 'local-module-css', '100000');
 
 		$data['location_search_mode'] = 'multi';
