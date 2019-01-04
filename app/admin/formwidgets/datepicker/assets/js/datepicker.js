@@ -41,7 +41,15 @@
             });
         } else {
             this.picker = this.$el.datepicker(this.options);
+            this.parsePickerValue()
         }
+    }
+
+    DatePicker.prototype.parsePickerValue = function () {
+        var value = this.$el.val()
+
+        if (value === '30-11--0001')
+            this.$el.val('')
     }
 
     //
