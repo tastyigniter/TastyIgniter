@@ -8,14 +8,14 @@ $config['list']['filter'] = [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
-            'scope' => 'hasLocation',
+            'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
         ],
         'category' => [
             'label' => 'lang:admin::lang.menus.text_filter_category',
             'type' => 'select',
-            'conditions' => 'menu_category_id = :filtered',
+            'scope' => 'whereHasCategory',
             'modelClass' => 'Admin\Models\Categories_model',
             'nameFrom' => 'name',
         ],
@@ -53,7 +53,6 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.menus.column_category',
         'relation' => 'categories',
         'select' => 'name',
-        'searchable' => TRUE,
     ],
     'locations' => [
         'label' => 'lang:admin::lang.column_location',
@@ -70,12 +69,15 @@ $config['list']['columns'] = [
     'stock_qty' => [
         'label' => 'lang:admin::lang.menus.column_stock_qty',
         'type' => 'number',
+        'searchable' => TRUE,
     ],
     'special_status' => [
         'label' => 'lang:admin::lang.menus.label_special_status',
         'type' => 'switch',
         'relation' => 'special',
         'select' => 'special_status',
+        'onText' => 'lang:admin::lang.text_active',
+        'offText' => 'lang:admin::lang.text_dashes',
     ],
     'menu_status' => [
         'label' => 'lang:admin::lang.menus.column_status',
@@ -165,7 +167,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_minimum_qty',
             'type' => 'number',
             'span' => 'left',
-            'default' => 0,
+            'default' => 1,
             'comment' => 'lang:admin::lang.menus.help_minimum_qty',
         ],
         'stock_qty' => [
@@ -179,6 +181,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_subtract_stock',
             'type' => 'switch',
             'span' => 'left',
+            'comment' => 'lang:admin::lang.menus.help_subtract_stock',
         ],
         'menu_status' => [
             'label' => 'lang:admin::lang.label_status',
@@ -228,6 +231,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_special_status',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
             'type' => 'switch',
+            'comment' => 'lang:admin::lang.menus.help_specials',
         ],
         'special[special_price]' => [
             'label' => 'lang:admin::lang.menus.label_special_price',

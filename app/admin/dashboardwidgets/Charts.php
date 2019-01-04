@@ -6,6 +6,8 @@ use Admin\Models\Orders_model;
 use Admin\Models\Reservations_model;
 use Admin\Models\Reviews_model;
 use Carbon\Carbon;
+use DateInterval;
+use DatePeriod;
 use DB;
 use Illuminate\Support\Collection;
 
@@ -122,18 +124,38 @@ class Charts extends BaseDashboardWidget
     protected function queryDatasets($config, $start, $end)
     {
         $modelClass = $config['model'];
-        $dbColumn = $config['column'];
+        $dateColumnName = $config['column'];
 
-        $query = $modelClass::select(DB::raw($dbColumn.' as x'), DB::raw('count(*) as y'));
-        $query->whereBetween($dbColumn, [$start, $end])->groupBy('x');
+        $dateColumn = DB::raw('DATE_FORMAT('.$dateColumnName.', "%Y-%m-%d") as x');
+        $query = $modelClass::select($dateColumn, DB::raw('count(*) as y'));
+        $query->whereBetween($dateColumnName, [$start, $end])->groupBy('x');
 
-        return $this->getPointsArray($query->get());
+        $dateRanges = $this->getDatePeriod($start, $end);
+
+        return $this->getPointsArray($dateRanges, $query->get());
     }
 
-    protected function getPointsArray(Collection $result)
+    protected function getDatePeriod($start, $end)
     {
-        return $result->map(function ($model) {
-            return ['x' => $model->x, 'y' => $model->y];
-        })->toArray();
+        return new DatePeriod(
+            Carbon::parse($start),
+            new DateInterval('P1D'),
+            Carbon::parse($end)
+        );
+    }
+
+    protected function getPointsArray($dateRanges, Collection $result)
+    {
+        $points = [];
+        $keyedResult = $result->keyBy('x');
+        foreach ($dateRanges as $date) {
+            $x = $date->format('Y-m-d');
+            $points[] = [
+                'x' => $x,
+                'y' => $keyedResult->get($x) ?? 0,
+            ];
+        }
+
+        return $points;
     }
 }

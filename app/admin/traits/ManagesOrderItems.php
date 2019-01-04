@@ -3,15 +3,22 @@
 namespace Admin\Traits;
 
 use Admin\Models\Menus_model;
+use Auth;
 use Carbon\Carbon;
+use Cart;
 use DB;
 use Event;
+use Igniter\Flame\Cart\CartCondition;
 
 trait ManagesOrderItems
 {
     public static function bootManagesOrderItems()
     {
         Event::listen('admin.order.paymentProcessed', function ($model) {
+            // Lets log the coupon so we can redeem it later
+            $couponCondition = Cart::getCondition('coupon');
+            $model->logCouponHistory($couponCondition, Auth::customer());
+
             $model->handleOnPaymentProcessed();
         });
     }
@@ -45,11 +52,13 @@ trait ManagesOrderItems
      */
     public function redeemCoupon()
     {
-        $couponHistoryModel = $this->coupon_history()->where('status', '!=', '1')->get()->last();
-
+        $query = $this->coupon_history()->where('status', '!=', '1');
+        $couponHistoryModel = $query->get()->last();
         if ($couponHistoryModel) {
             return $couponHistoryModel->touchStatus();
         }
+
+        Event::fire('admin.order.couponRedeemed', [$couponHistoryModel]);
     }
 
     /**
@@ -184,24 +193,34 @@ trait ManagesOrderItems
     /**
      * Add cart coupon to order by order_id
      *
-     * @param \Admin\Models\Coupons_model $coupon
+     * @param \Admin\Models\Coupons_model $couponCondition
      * @param \Admin\Models\Customers_model $customer
      *
      * @return int|bool
      */
-    public function logCouponHistory($coupon, $customer)
+    public function logCouponHistory($couponCondition, $customer)
     {
+        if (!$couponCondition instanceof CartCondition) {
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid argument, expected %s, got %s',
+                CartCondition::class, get_class($couponCondition)
+            ));
+        }
+
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
+            return FALSE;
+
+        if (!$coupon = $couponCondition->getModel())
             return FALSE;
 
         $this->coupon_history()->delete();
 
         $couponHistory = $this->coupon_history()->create([
-            'customer_id' => $customer ? $customer->getKey() : null,
+            'customer_id' => $customer ? $customer->getKey() : 0,
             'coupon_id' => $coupon->coupon_id,
             'code' => $coupon->code,
-            'amount' => '-'.$coupon->amount,
+            'amount' => $couponCondition->getValue(),
             'min_total' => $coupon->min_total,
             'date_used' => Carbon::now(),
         ]);

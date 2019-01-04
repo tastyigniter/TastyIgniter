@@ -10,7 +10,7 @@ $widget = $areaForm['widget'];
     data-index-value="<?= $index ?>"
 >
     <div
-        class="map-area-header"
+        class="map-area-header p-3"
         role="tab"
         id="<?= $this->getId('area-header-'.$index) ?>"
     >
@@ -20,8 +20,7 @@ $widget = $areaForm['widget'];
                     class="map-area-handle <?= $this->getId('area-handle-'.$index) ?>"
                     role="button">
                     <i class="fa fa-bars text-black-50"></i>
-                </a>
-                &nbsp;&nbsp;&nbsp;
+                </a>&nbsp;&nbsp;
             <?php } ?>
             <span
                 class="badge border-circle"
@@ -48,7 +47,7 @@ $widget = $areaForm['widget'];
     </div>
     <div
         id="<?= $this->getId('area-body-'.$index) ?>"
-        class="map-area-body collapse<?= $index == 1 ? ' show' : '' ?>"
+        class="map-area-body p-3 collapse<?= $index == 1 ? ' show' : '' ?>"
         role="tabpanel"
         data-parent="#<?= $this->getId('areas') ?>"
         aria-labelledby="<?= $this->getId('area-header-'.$index) ?>"

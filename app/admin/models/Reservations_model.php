@@ -162,6 +162,9 @@ class Reservations_model extends Model
 
     public function getReserveEndTimeAttribute($value)
     {
+        if (!$this->reservation_datetime)
+            return null;
+
         if ($this->duration)
             return $this->reservation_datetime->copy()->addMinutes($this->duration);
 
@@ -170,6 +173,10 @@ class Reservations_model extends Model
 
     public function getReservationDatetimeAttribute($value)
     {
+        if (!isset($this->attributes['reserve_date'])
+            AND !isset($this->attributes['reserve_time'])
+        ) return null;
+
         return Carbon::createFromTimeString(
             "{$this->attributes['reserve_date']} {$this->attributes['reserve_time']}"
         );
@@ -187,7 +194,7 @@ class Reservations_model extends Model
     {
         $occasions = $this->getOccasionOptions();
 
-        return isset($occasions[$this->occasion_id]) ? $occasions[$this->occasion_id] : $occasions[0];
+        return $occasions[$this->occasion_id] ?? $occasions[0];
     }
 
     public function getTableNameAttribute()

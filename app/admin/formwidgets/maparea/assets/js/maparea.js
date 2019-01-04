@@ -14,7 +14,7 @@
     }
 
     MapArea.prototype.init = function () {
-        $(document).on('shown.bs.modal', this.$mapModal, $.proxy(this.refreshMap, this))
+        this.$mapModal.on('shown.bs.modal', $.proxy(this.onModalShown, this))
 
         this.$el.on('change', '[data-toggle="map-shape"]', $.proxy(this.onShapeTypeToggle, this))
         this.$el.on('change', '[data-toggle="area-default"]', $.proxy(this.onAreaDefaultToggle, this))
@@ -27,16 +27,21 @@
         this.$form.on('submit', $.proxy(this.onSubmitForm, this))
     }
 
-    MapArea.prototype.refreshMap = function (event) {
-        var $modal = $(event.target),
-            $mapView = $modal.find('[data-control="map-view"]')
+    MapArea.prototype.onModalShown = function (event) {
+        var $modal = $(event.target)
+
+        this.refreshMap();
+
+        if (!this.mapRefreshed)
+            $modal.modal('hide');
+    }
+
+    MapArea.prototype.refreshMap = function () {
+        var $mapView = $('[data-control="map-view"]')
 
         if (!this.mapRefreshed && $mapView.length) {
             $mapView.mapView('refresh');
             this.mapRefreshed = !!($mapView.find('.map-view').children().length);
-
-            if (!this.mapRefreshed)
-                $modal.modal('hide');
         }
     }
 
@@ -68,7 +73,7 @@
     }
 
     MapArea.prototype.createShape = function (shapeId) {
-        var $areaContainer = this.$el.find('#'+shapeId),
+        var $areaContainer = this.$el.find('#' + shapeId),
             $areaShape = $areaContainer.find('[data-map-shape]'),
             shapeOptions = $areaShape.data()
 
@@ -108,14 +113,19 @@
             shapeId = $container.attr('id'),
             type = $input.val()
 
+        $container.find('[data-map-shape]').get(0).setAttribute('data-default', type)
+
         if (!this.mapRefreshed && type !== 'address') {
-            alert('An API Key must be added to use the Shape or Circle area type.')
+            this.refreshMap()
             return
         }
 
-        $container.find('[data-map-shape]').get(0).setAttribute('data-default', type)
-        this.$mapView.mapView('hideShape', shapeId)
-            .mapView('showShape', shapeId, type)
+        var shape = this.$mapView.mapView('getShape', shapeId)
+        if (shape.options) {
+            shape.options.default = type
+            this.$mapView.mapView('hideShape', shapeId)
+                .mapView('showShape', shapeId, type)
+        }
     }
 
     MapArea.prototype.onAreaDefaultToggle = function (event) {

@@ -17,6 +17,9 @@ trait HasInvoice
             if (!(bool)setting('auto_invoicing'))
                 return;
 
+            if (!in_array($statusId, setting('completed_order_status')))
+                return;
+
             if (!method_exists($object, 'generateInvoice'))
                 return;
 
@@ -38,9 +41,6 @@ trait HasInvoice
     {
         if ($this->hasInvoice())
             return $this->invoice_id;
-
-        if (!in_array($this->status_id, setting('completed_order_status')))
-            return;
 
         $this->invoiceSetDate(Carbon::now());
 
@@ -67,7 +67,7 @@ trait HasInvoice
             'hour' => $now->hour,
             'minute' => $now->minute,
             'second' => $now->second,
-        ], setting('invoice_prefix', 'INV-{year}-00'));
+        ], setting('invoice_prefix') ?: 'INV-{year}-00');
     }
 
     protected function invoiceGetDate()

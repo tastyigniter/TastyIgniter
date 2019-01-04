@@ -32,6 +32,8 @@ class Reviews_model extends Model
 
     const CREATED_AT = 'date_added';
 
+    const UPDATED_AT = null;
+
     public $relation = [
         'belongsTo' => [
             'location' => ['Admin\Models\Locations_model', 'foreignKey' => 'location_id', 'scope' => 'isEnabled'],

@@ -118,14 +118,11 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'right',
         ],
-        'description' => [
-            'label' => 'lang:admin::lang.coupons.label_description',
-            'type' => 'textarea',
-        ],
         'type' => [
             'label' => 'lang:admin::lang.coupons.label_type',
             'type' => 'radio',
             'span' => 'left',
+            'cssClass' => 'flex-width',
             'default' => 'F',
             'options' => [
                 'F' => 'lang:admin::lang.coupons.text_fixed_amount',
@@ -135,31 +132,31 @@ $config['form']['tabs'] = [
         'discount' => [
             'label' => 'lang:admin::lang.coupons.label_discount',
             'type' => 'number',
+            'span' => 'left',
+            'cssClass' => 'flex-width',
+        ],
+        'min_total' => [
+            'label' => 'lang:admin::lang.coupons.label_min_total',
+            'type' => 'number',
             'span' => 'right',
         ],
         'redemptions' => [
             'label' => 'lang:admin::lang.coupons.label_redemption',
             'type' => 'number',
             'span' => 'left',
-            'default' => 0,
             'comment' => 'lang:admin::lang.coupons.help_redemption',
         ],
         'customer_redemptions' => [
             'label' => 'lang:admin::lang.coupons.label_customer_redemption',
             'type' => 'number',
             'span' => 'right',
-            'default' => 0,
             'comment' => 'lang:admin::lang.coupons.help_customer_redemption',
-        ],
-        'min_total' => [
-            'label' => 'lang:admin::lang.coupons.label_min_total',
-            'type' => 'number',
-            'span' => 'left',
         ],
         'order_restriction' => [
             'label' => 'lang:admin::lang.coupons.label_order_restriction',
             'type' => 'radio',
             'comment' => 'lang:admin::lang.coupons.help_order_restriction',
+            'span' => 'left',
             'options' => [
                 'lang:admin::lang.text_none',
                 'lang:admin::lang.coupons.text_delivery_only',
@@ -170,6 +167,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.coupons.label_validity',
             'type' => 'radio',
             'default' => 'forever',
+            'span' => 'right',
             'options' => [
                 'forever' => 'lang:admin::lang.coupons.text_forever',
                 'fixed' => 'lang:admin::lang.coupons.text_fixed',
@@ -269,6 +267,10 @@ $config['form']['tabs'] = [
                 'field' => 'validity',
                 'condition' => 'value[recurring]',
             ],
+        ],
+        'description' => [
+            'label' => 'lang:admin::lang.coupons.label_description',
+            'type' => 'textarea',
         ],
         'status' => [
             'label' => 'lang:admin::lang.label_status',

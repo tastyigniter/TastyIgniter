@@ -8,7 +8,7 @@ $config['list']['filter'] = [
         'location' => [
             'label' => 'lang:admin::lang.reviews.text_filter_location',
             'type' => 'select',
-            'scope' => 'hasLocation',
+            'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
         ],
@@ -76,10 +76,8 @@ $config['list']['columns'] = [
     'review_status' => [
         'label' => 'lang:admin::lang.reviews.column_status',
         'type' => 'switch',
-        'options' => [
-            'lang:admin::lang.reviews.text_pending_review',
-            'lang:admin::lang.reviews.text_approved',
-        ],
+        'onText' => 'lang:admin::lang.reviews.text_pending_review',
+        'offText' => 'lang:admin::lang.reviews.text_approved',
     ],
     'date_added' => [
         'label' => 'lang:admin::lang.reviews.column_date_added',

@@ -45,4 +45,17 @@ class Customer_groups_model extends Model
     {
         return $this->approval == 1;
     }
+
+    /**
+     * Update the default group
+     * @param $groupId
+     */
+    public static function updateDefault($groupId)
+    {
+        if ($model = self::find($groupId)) {
+            setting()->set('customer_group_id', $model->getKey());
+
+            return TRUE;
+        }
+    }
 }

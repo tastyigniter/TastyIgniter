@@ -583,6 +583,9 @@ class MediaManager extends BaseWidget
         $mediaLibrary = $this->getMediaLibrary();
 
         try {
+            if (!$this->controller->getUser()->hasPermission('Admin.MediaManager'))
+                throw new ApplicationException(sprintf(lang('main::lang.media_manager.alert_permission'), 'upload'));
+
             if (!Input::hasFile('file_data'))
                 throw new ApplicationException(lang('main::lang.media_manager.alert_file_not_found'));
 

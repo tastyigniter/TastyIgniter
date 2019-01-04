@@ -2,10 +2,12 @@
 
 namespace Admin\Traits;
 
+use App;
 use Closure;
 use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Validator;
 use Session;
 
 trait ValidatesForm
@@ -27,7 +29,7 @@ trait ValidatesForm
         $validator = $this->makeValidator($request, $rules, $messages, $customAttributes);
 
         if ($validator->fails()) {
-            Session::flash('errors', $validator->errors());
+            $this->flashErrors($validator);
 
             return FALSE;
         }
@@ -50,7 +52,7 @@ trait ValidatesForm
         $validator = $this->makeValidator($request, $rules, $messages, $customAttributes);
 
         if ($validator->fails()) {
-            Session::flash('errors', $validator->errors());
+            $this->flashErrors($validator);
             throw new ValidationException($validator);
         }
 
@@ -129,5 +131,15 @@ trait ValidatesForm
     public function validateAfter(Closure $callback)
     {
         $this->validateAfterCallback = $callback;
+    }
+
+    protected function flashErrors(Validator $validator)
+    {
+        $sessionKey = 'errors';
+
+        if (App::runningInAdmin())
+            $sessionKey = 'admin_errors';
+
+        return Session::flash($sessionKey, $validator->errors());
     }
 }

@@ -194,8 +194,8 @@ class Menu extends BaseWidget
      */
     public function onGetDropdownOptions()
     {
-        if (!$itemName = post('item'))
-            return;
+        if (!strlen($itemName = input('item')))
+            throw new SystemException('Invalid item specified');
 
         $this->defineMenuItems();
 

@@ -42,12 +42,12 @@ $config['list']['columns'] = [
     ],
     'location_name' => [
         'label' => 'lang:admin::lang.locations.column_name',
-        'type' => "text",
+        'type' => 'text',
         'searchable' => TRUE,
     ],
     'location_city' => [
         'label' => 'lang:admin::lang.locations.column_city',
-        'type' => "text",
+        'type' => 'text',
         'searchable' => TRUE,
     ],
     'location_state' => [
@@ -55,14 +55,13 @@ $config['list']['columns'] = [
         'type' => 'text',
         'invisible' => TRUE,
     ],
-    'location_postcode' => [
-        'label' => 'lang:admin::lang.locations.column_postcode',
-        'type' => 'text',
-        'searchable' => TRUE,
+    'offer_delivery' => [
+        'label' => 'lang:admin::lang.locations.label_offer_delivery',
+        'type' => 'switch',
     ],
-    'location_telephone' => [
-        'label' => 'lang:admin::lang.locations.column_telephone',
-        'type' => 'text',
+    'offer_collection' => [
+        'label' => 'lang:admin::lang.locations.label_offer_collection',
+        'type' => 'switch',
     ],
     'location_status' => [
         'label' => 'lang:admin::lang.locations.column_status',
@@ -101,15 +100,29 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'left',
         ],
+        'permalink_slug' => [
+            'label' => 'lang:admin::lang.locations.label_permalink_slug',
+            'type' => 'permalink',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.help_permalink',
+        ],
         'location_email' => [
             'label' => 'lang:admin::lang.locations.label_email',
             'type' => 'text',
-            'span' => 'right',
+            'span' => 'left',
         ],
         'location_telephone' => [
             'label' => 'lang:admin::lang.locations.label_telephone',
             'type' => 'text',
+            'span' => 'right',
+        ],
+        'thumb' => [
+            'label' => 'lang:admin::lang.locations.label_image',
+            'type' => 'mediafinder',
             'span' => 'left',
+            'mode' => 'inline',
+            'useAttachment' => TRUE,
+            'comment' => 'lang:admin::lang.locations.help_image',
         ],
         'location_status' => [
             'label' => 'lang:admin::lang.label_status',
@@ -185,24 +198,124 @@ $config['form']['tabs'] = [
             ],
         ],
 
-        'permalink_slug' => [
-            'label' => 'lang:admin::lang.locations.label_permalink_slug',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'permalink',
-            'comment' => 'lang:admin::lang.locations.help_permalink',
-        ],
-        'thumb' => [
-            'label' => 'lang:admin::lang.locations.label_image',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'mediafinder',
-            'useAttachment' => TRUE,
-            'comment' => 'lang:admin::lang.locations.help_image',
-        ],
         'description' => [
             'label' => 'lang:admin::lang.locations.label_description',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'type' => 'richeditor',
             'size' => 'small',
+        ],
+
+        'order' => [
+            'label' => 'lang:admin::lang.locations.text_tab_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'section',
+        ],
+        'offer_delivery' => [
+            'label' => 'lang:admin::lang.locations.label_offer_delivery',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'span' => 'left',
+            'default' => 1,
+            'type' => 'switch',
+        ],
+        'offer_collection' => [
+            'label' => 'lang:admin::lang.locations.label_offer_collection',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'span' => 'right',
+            'default' => 1,
+            'type' => 'switch',
+        ],
+        'delivery_time' => [
+            'label' => 'lang:admin::lang.locations.label_delivery_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'number',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_delivery_time',
+        ],
+        'collection_time' => [
+            'label' => 'lang:admin::lang.locations.label_collection_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'number',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_collection_time',
+        ],
+        'last_order_time' => [
+            'label' => 'lang:admin::lang.locations.label_last_order_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'number',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_last_order_time',
+        ],
+        'options[future_orders]' => [
+            'label' => 'lang:admin::lang.locations.label_future_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'switch',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_future_order',
+        ],
+        'options[future_order_days][delivery]' => [
+            'label' => 'lang:admin::lang.locations.label_future_delivery_days',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'text',
+            'default' => 5,
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_future_delivery_days',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'options[future_orders]',
+                'condition' => 'checked',
+            ],
+        ],
+        'options[future_order_days][collection]' => [
+            'label' => 'lang:admin::lang.locations.label_future_collection_days',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'text',
+            'default' => 5,
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_future_collection_days',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'options[future_orders]',
+                'condition' => 'checked',
+            ],
+        ],
+
+        'reservation' => [
+            'label' => 'lang:admin::lang.locations.text_tab_reservation',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'section',
+        ],
+        'options[offer_reservation]' => [
+            'label' => 'lang:admin::lang.locations.label_offer_reservation',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 1,
+            'type' => 'switch',
+        ],
+        'reservation_time_interval' => [
+            'label' => 'lang:admin::lang.locations.label_reservation_time_interval',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'number',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_reservation_time_interval',
+        ],
+        'reservation_stay_time' => [
+            'label' => 'lang:admin::lang.locations.label_reservation_stay_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'number',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_reservation_stay_time',
+        ],
+        'tables' => [
+            'label' => 'lang:admin::lang.locations.label_tables',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'relation',
+            'relationFrom' => 'tables',
+            'nameFrom' => 'table_name',
+            'comment' => 'lang:admin::lang.locations.help_tables',
         ],
 
         'opening_type' => [
@@ -211,7 +324,6 @@ $config['form']['tabs'] = [
             'type' => 'section',
         ],
         'options[hours][opening][type]' => [
-            'label' => 'lang:admin::lang.locations.label_opening_hour',
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
             'type' => 'radio',
             'default' => 'daily',
@@ -279,7 +391,6 @@ $config['form']['tabs'] = [
             'type' => 'section',
         ],
         'options[hours][delivery][type]' => [
-            'label' => 'lang:admin::lang.locations.label_opening_hour',
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
             'type' => 'radio',
             'default' => '24_7',
@@ -347,7 +458,6 @@ $config['form']['tabs'] = [
             'type' => 'section',
         ],
         'options[hours][collection][type]' => [
-            'label' => 'lang:admin::lang.locations.label_opening_hour',
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
             'type' => 'radio',
             'default' => '24_7',
@@ -409,108 +519,6 @@ $config['form']['tabs'] = [
             ],
         ],
 
-        'offer_delivery' => [
-            'label' => 'lang:admin::lang.locations.label_offer_delivery',
-            'tab' => 'lang:admin::lang.locations.text_tab_order',
-            'span' => 'left',
-            'default' => 1,
-            'type' => 'switch',
-        ],
-        'offer_collection' => [
-            'label' => 'lang:admin::lang.locations.label_offer_collection',
-            'tab' => 'lang:admin::lang.locations.text_tab_order',
-            'span' => 'right',
-            'default' => 1,
-            'type' => 'switch',
-        ],
-        'delivery_time' => [
-            'label' => 'lang:admin::lang.locations.label_delivery_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_order',
-            'default' => 0,
-            'type' => 'number',
-            'span' => 'left',
-            'comment' => 'lang:admin::lang.locations.help_delivery_time',
-        ],
-        'collection_time' => [
-            'label' => 'lang:admin::lang.locations.label_collection_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_order',
-            'default' => 0,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_collection_time',
-        ],
-        'last_order_time' => [
-            'label' => 'lang:admin::lang.locations.label_last_order_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_order',
-            'default' => 0,
-            'type' => 'number',
-            'span' => 'left',
-            'comment' => 'lang:admin::lang.locations.help_last_order_time',
-        ],
-        'options[future_orders]' => [
-            'label' => 'lang:admin::lang.locations.label_future_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_order',
-            'type' => 'switch',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_future_order',
-        ],
-        'options[future_order_days][delivery]' => [
-            'label' => 'lang:admin::lang.locations.label_future_delivery_days',
-            'tab' => 'lang:admin::lang.locations.text_tab_order',
-            'type' => 'text',
-            'default' => 5,
-            'span' => 'left',
-            'comment' => 'lang:admin::lang.locations.help_future_delivery_days',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[future_orders]',
-                'condition' => 'checked',
-            ],
-        ],
-        'options[future_order_days][collection]' => [
-            'label' => 'lang:admin::lang.locations.label_future_collection_days',
-            'tab' => 'lang:admin::lang.locations.text_tab_order',
-            'type' => 'text',
-            'default' => 5,
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_future_collection_days',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[future_orders]',
-                'condition' => 'checked',
-            ],
-        ],
-
-        'options[offer_reservation]' => [
-            'label' => 'lang:admin::lang.locations.label_offer_reservation',
-            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
-            'default' => 1,
-            'type' => 'switch',
-        ],
-        'reservation_time_interval' => [
-            'label' => 'lang:admin::lang.locations.label_reservation_time_interval',
-            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
-            'default' => 0,
-            'type' => 'number',
-            'span' => 'left',
-            'comment' => 'lang:admin::lang.locations.help_reservation_time_interval',
-        ],
-        'reservation_stay_time' => [
-            'label' => 'lang:admin::lang.locations.label_reservation_stay_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
-            'default' => 0,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_reservation_stay_time',
-        ],
-        'tables' => [
-            'label' => 'lang:admin::lang.locations.label_tables',
-            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
-            'type' => 'relation',
-            'relationFrom' => 'tables',
-            'nameFrom' => 'table_name',
-        ],
-
         'options[payments]' => [
             'label' => 'lang:admin::lang.locations.label_payments',
             'tab' => 'lang:admin::lang.locations.label_payments',
@@ -529,6 +537,7 @@ $config['form']['tabs'] = [
             'lngFrom' => 'location_lng',
             'zoom' => '14',
             'form' => 'location_areas_model',
+            'commentAbove' => 'lang:admin::lang.locations.help_delivery_areas',
         ],
 
         'options[gallery][title]' => [

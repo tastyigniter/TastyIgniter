@@ -1,5 +1,6 @@
 .datepicker-dropdown {
 	background-color: var(--gray-200);
+	z-index: 9999 !important;
 }
 .datepicker-dropdown.datepicker-orient-bottom:before {
 	bottom: -7px;

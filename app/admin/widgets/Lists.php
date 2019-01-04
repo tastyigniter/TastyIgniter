@@ -739,8 +739,8 @@ class Lists extends BaseWidget
      */
     protected function evalSwitchTypeValue($record, $column, $value)
     {
-        $onText = lang($column->onText ?? 'admin::lang.text_enabled');
-        $offText = lang($column->offText ?? 'admin::lang.text_disabled');
+        $onText = lang($column->config['onText'] ?? 'admin::lang.text_enabled');
+        $offText = lang($column->config['offText'] ?? 'admin::lang.text_disabled');
 
         return $value ? $onText : $offText;
     }
@@ -1055,6 +1055,16 @@ class Lists extends BaseWidget
         $this->pageLimit = $pageLimit ? $pageLimit : $this->pageLimit;
         $this->putSession('order', post('column_order'));
         $this->putSession('page_limit', $this->pageLimit);
+
+        return $this->onRefresh();
+    }
+
+    /**
+     * Event handler to reset the list set up.
+     */
+    public function onResetSetup()
+    {
+        $this->resetSession();
 
         return $this->onRefresh();
     }

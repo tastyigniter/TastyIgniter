@@ -25,11 +25,12 @@
         $sortableContainer.sortable({
             group: 'components',
             containerSelector: this.options.sortableContainer,
-            containerPath: '> div',
-            itemPath: '> div',
             itemSelector: '.components-item:not(:first-child)',
             placeholder: '<div class="placeholder sortable-placeholder"></div>',
             handle: '.handle',
+            nested: false,
+            vertical: false,
+            exclude: '.components-picker',
         })
     }
 

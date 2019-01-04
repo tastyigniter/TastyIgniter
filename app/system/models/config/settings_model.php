@@ -224,6 +224,7 @@ $config['form']['setup'] = [
                     'label' => 'lang:system::lang.settings.label_location_order',
                     'tab' => 'lang:system::lang.settings.text_tab_title_order',
                     'type' => 'switch',
+                    'default' => FALSE,
                     'on' => 'lang:admin::lang.text_yes',
                     'off' => 'lang:admin::lang.text_no',
                     'comment' => 'lang:system::lang.settings.help_location_order',
@@ -407,6 +408,12 @@ $config['form']['user'] = [
     'url' => admin_url('settings/edit/user'),
     'form' => [
         'fields' => [
+            'allow_registration' => [
+                'label' => 'lang:system::lang.settings.label_allow_registration',
+                'type' => 'switch',
+                'default' => TRUE,
+                'comment' => 'lang:system::lang.settings.help_allow_registration',
+            ],
             'registration_email' => [
                 'label' => 'lang:system::lang.settings.label_registration_email',
                 'type' => 'checkbox',
@@ -416,15 +423,10 @@ $config['form']['user'] = [
                 ],
                 'comment' => 'lang:system::lang.settings.help_registration_email',
             ],
-            'customer_group_id' => [
-                'label' => 'lang:system::lang.settings.label_customer_group',
-                'type' => 'select',
-                'options' => ['Admin\Models\Customer_groups_model', 'getDropdownOptions'],
-            ],
         ],
         'rules' => [
+            ['allow_registration', 'lang:system::lang.settings.label_allow_registration', 'required|integer'],
             ['registration_email.*', 'lang:system::lang.settings.label_registration_email', 'required|alpha'],
-            ['customer_group_id', 'lang:system::lang.settings.label_customer_group', 'required|integer'],
         ],
     ],
 ];

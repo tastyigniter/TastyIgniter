@@ -80,7 +80,7 @@ class Locations_model extends AbstractLocation
             AND isset($model->getAddress()['location_lng'])
             AND ($model->hasDelivery() OR $model->hasCollection())
             AND isset($model->options['hours'])
-            AND $model->delivery_areas->count();
+            AND $model->delivery_areas->where('is_default', 1)->count() > 0;
     }
 
     public function getWeekDaysOptions()

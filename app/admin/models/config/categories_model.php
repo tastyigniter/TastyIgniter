@@ -8,7 +8,7 @@ $config['list']['filter'] = [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
-            'scope' => 'hasLocation',
+            'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
         ],
@@ -109,7 +109,7 @@ $config['form']['fields'] = [
     'permalink_slug' => [
         'label' => 'lang:admin::lang.categories.label_permalink_slug',
         'type' => 'permalink',
-        'comment' => 'lang:admin::lang.categories.help_permalink',
+        'comment' => 'lang:admin::lang.help_permalink',
         'span' => 'right',
     ],
     'parent_id' => [

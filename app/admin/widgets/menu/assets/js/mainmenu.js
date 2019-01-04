@@ -28,6 +28,7 @@
             return
 
         $.request(this.options.alias + '::onGetDropdownOptions', {
+            type: 'GET',
             data: {item: itemName}
         }).always(function () {
             var $refreshButton = self.$refreshButton.clone()

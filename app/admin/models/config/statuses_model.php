@@ -85,7 +85,7 @@ $config['form']['fields'] = [
     ],
     'status_for' => [
         'label' => 'lang:admin::lang.statuses.label_for',
-        'type' => 'select',
+        'type' => 'radio',
         'span' => 'right',
         'placeholder' => 'lang:admin::lang.text_please_select',
         'options' => 'getStatusForDropdownOptions',
@@ -100,7 +100,12 @@ $config['form']['fields'] = [
     ],
     'notify_customer' => [
         'label' => 'lang:admin::lang.statuses.label_notify',
-        'type' => 'switch',
+        'type' => 'radio',
+        'default' => 1,
+        'options' => [
+            'lang:admin::lang.text_no',
+            'lang:admin::lang.text_yes',
+        ],
         'comment' => 'lang:admin::lang.statuses.help_notify',
     ],
 ];

@@ -10,6 +10,8 @@ use Model;
 class Coupons_history_model extends Model
 {
     const CREATED_AT = 'date_used';
+    
+    const UPDATED_AT = null;
 
     /**
      * @var string The database table name

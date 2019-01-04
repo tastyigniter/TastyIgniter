@@ -6,9 +6,11 @@
 	border-radius: 0;
 	border-width: 0 0 1px;
 }
+.map-area-header {
+	background-color: var(--gray-300);
+}
 .map-area-header .map-area-title {
 	margin-bottom: 0;
-	padding: 20px 15px;
 }
 .map-modal .area-labels {
 	overflow: auto;

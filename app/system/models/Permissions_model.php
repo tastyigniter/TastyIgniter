@@ -29,6 +29,7 @@ class Permissions_model extends Model
     protected static $permissionDefaults = [
         'name' => null,
         'description' => null,
+        'group' => null,
         'action' => ['access', 'add', 'manage', 'delete'],
     ];
 
@@ -189,14 +190,12 @@ class Permissions_model extends Model
             $callback($this);
         }
 
-        $extensions = ExtensionManager::instance()->getExtensions();
-        foreach ($extensions as $extensionId => $extensionObj) {
-            $permissions = $extensionObj->registerPermissions();
-            if (!is_array($permissions)) {
+        $permissionBundles = ExtensionManager::instance()->getRegistrationMethodValues('registerPermissions');
+        foreach ($permissionBundles as $permissionBundle) {
+            if (!is_array($permissionBundle))
                 continue;
-            }
 
-            $this->registerPermissions($permissions);
+            $this->registerPermissions($permissionBundle);
         }
     }
 
@@ -210,10 +209,11 @@ class Permissions_model extends Model
         }
 
         foreach ($definitions as $name => $definition) {
-            $permission = (object)array_merge(self::$permissionDefaults, array_merge($definition, [
-                'name' => $name,
-                'group' => current(explode('.', $name)),
-            ]));
+            $permission = (object)array_merge(self::$permissionDefaults, array_merge([
+                'group' => strtolower(current(explode('.', $name))),
+            ], $definition));
+
+            $permission->name = $name;
 
             static::$registeredPermissions[$permission->name] = $permission;
         }

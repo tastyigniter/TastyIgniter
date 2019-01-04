@@ -832,7 +832,7 @@ class MainController extends BaseController
     {
         $params = array_merge($this->router->getParameters(), $params);
 
-        return $this->controller->pageUrl($this->page->getFileName(), $params);
+        return $this->pageUrl($this->page->getFileName(), $params);
     }
 
     public function themeUrl($url = null)

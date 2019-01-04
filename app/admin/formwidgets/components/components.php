@@ -2,11 +2,11 @@
     data-control="components"
     data-alias="<?= $this->alias ?>"
     data-add-handler="<?= $onAddEventHandler ?>"
-    data-sortable-container=".components"
+    data-sortable-container=".components-container"
 >
 
     <div class="components">
-        <div class="d-flex align-content-stretch">
+        <div class="components-container d-flex align-content-stretch">
             <div class="components-item mr-2 components-picker">
                 <div
                     class="component btn btn-light"
@@ -22,7 +22,7 @@
                 <?php foreach ($components as $code => $component) { ?>
                     <?= $this->makePartial('component', [
                         'component' => $component,
-                        'field'     => $field,
+                        'field' => $field,
                     ]) ?>
                 <?php } ?>
             <?php } ?>

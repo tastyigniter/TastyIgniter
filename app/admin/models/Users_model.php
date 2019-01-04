@@ -168,7 +168,7 @@ class Users_model extends AuthUserModel
 
         // Specify the requested action if not present, based on the $_SERVER REQUEST_METHOD
         $requestMethod = Request::server('REQUEST_METHOD');
-        if (in_array(Controller::$action, ['create', 'edit', 'manage', 'settings']))
+        if ($requestMethod !== 'GET' AND in_array(Controller::$action, ['create', 'edit', 'manage', 'settings']))
             $requestMethod = Controller::$action;
 
         if (is_string(post('_method')))

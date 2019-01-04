@@ -20,7 +20,7 @@
 <?php } ?>
 
 <?php if (AdminAuth::isLogged()) { ?>
-    <?php if ($messages = session('errors', collect())->all()) { ?>
+    <?php if ($messages = session('admin_errors', collect())->all()) { ?>
         <div
             class="alert alert-danger"
             data-control="flash-message"
@@ -32,6 +32,6 @@
                 <p><?= $message; ?></p>
             <?php } ?>
         </div>
-        <?php session()->forget('errors'); ?>
+        <?php session()->forget('admin_errors'); ?>
     <?php } ?>
 <?php } ?>

@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Location\Models\AbstractLocation;
 use Model;
 
 /**
@@ -59,12 +60,13 @@ class Coupons_model extends Model
 
     public function getRecurringEveryAttribute($value)
     {
-        return (empty($value)) ? [0, 1, 2, 3, 4, 5, 6] : explode(', ', $value);
+        return empty($value) ? [0, 1, 2, 3, 4, 5, 6] : explode(', ', $value);
     }
 
     public function setRecurringEveryAttribute($value)
     {
-        return (empty($value)) ? [] : implode(', ', $value);
+        $this->attributes['recurring_every'] = empty($value)
+            ? null : implode(', ', $value);
     }
 
     public function getTypeNameAttribute($value)
@@ -118,14 +120,20 @@ class Coupons_model extends Model
             case 'forever':
                 return FALSE;
             case 'fixed':
-                return $this->fixed_date->eq($now) AND !$now->between($this->fixed_from_time, $this->fixed_to_time);
+                $start = $this->fixed_date->copy()->setTimeFromTimeString($this->fixed_from_time);
+                $end = $this->fixed_date->copy()->setTimeFromTimeString($this->fixed_to_time);
+
+                return !$now->between($start, $end);
             case 'period':
-                return $now->between($this->period_start_date, $this->period_end_date) ? FALSE : TRUE;
+                return !$now->between($this->period_start_date, $this->period_end_date);
             case 'recurring':
                 if (!in_array($now->format('l'), $this->recurring_every))
                     return TRUE;
 
-                return $now->between($this->recurring_from_time, $this->recurring_to_time) ? FALSE : TRUE;
+                $start = $now->copy()->setTimeFromTimeString($this->recurring_from_time);
+                $end = $now->copy()->setTimeFromTimeString($this->recurring_to_time);
+
+                return !$now->between($start, $end);
         }
 
         return FALSE;
@@ -133,10 +141,12 @@ class Coupons_model extends Model
 
     public function hasRestriction($orderType)
     {
-        if (is_null($this->order_restriction))
-            FALSE;
+        if (empty($this->order_restriction))
+            return FALSE;
 
-        return $orderType != $this->order_restriction;
+        $orderTypes = [AbstractLocation::DELIVERY => 1, AbstractLocation::COLLECTION => 2];
+
+        return array_get($orderTypes, $orderType) != $this->order_restriction;
     }
 
     public function hasReachedMaxRedemption()

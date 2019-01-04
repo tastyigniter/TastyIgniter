@@ -89,11 +89,13 @@
     TriggerOn.prototype.updateTargetAction = function(action, status) {
         if (action == 'show') {
             this.$el
+                .toggleClass('animated fadeIn', status)
                 .toggleClass('hide', !status)
                 .trigger('hide.ti.triggerapi', [!status])
         }
         else if (action == 'hide') {
             this.$el
+                .toggleClass('animated fadeIn', !status)
                 .toggleClass('hide', status)
                 .trigger('hide.ti.triggerapi', [status])
         }

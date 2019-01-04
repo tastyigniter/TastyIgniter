@@ -472,7 +472,7 @@ class MediaLibrary
 
     protected function getMediaThumbFile($filePath, $options)
     {
-        $itemSignature = md5($filePath.serialize($options)).'_'.File::lastModified($filePath);
+        $itemSignature = md5($filePath.serialize($options)).'_'.@File::lastModified($filePath);
         $thumbFilename = 'thumb_'.
             $itemSignature.'_'.
             array_get($options, 'width').'x'.

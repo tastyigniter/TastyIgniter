@@ -322,8 +322,12 @@
         var $button = $(event.target),
             shape = this.getShape($button.data('shapeId'));
 
-        if (shape.getMapObject(shape.options.default))
-            this.editShape($button.data('shapeId'));
+        if (!shape.getMapObject(shape.options.default)) {
+            alert('Please select shape or circle as the area type')
+            return;
+        }
+
+        this.editShape($button.data('shapeId'));
 
         window.setTimeout(this.resize(), 500)
     }

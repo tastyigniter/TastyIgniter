@@ -15,6 +15,15 @@ $config['list']['columns'] = [
             'href' => 'customer_groups/edit/{customer_group_id}',
         ],
     ],
+    'default' => [
+        'type' => 'button',
+        'iconCssClass' => 'fa fa-star-o',
+        'attributes' => [
+            'class' => 'btn btn-outline-warning',
+            'data-request' => 'onSetDefault',
+            'data-request-data' => 'default:{customer_group_id}',
+        ],
+    ],
     'group_name' => [
         'label' => 'lang:admin::lang.customer_groups.column_name',
         'type' => 'text',

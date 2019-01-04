@@ -78,6 +78,13 @@ class Staffs_model extends Model
         return $query->where('staff_status', 1);
     }
 
+    public function scopeWhereNotSuperUser($query)
+    {
+        $query->whereHas('user', function ($q) {
+            $q->where('super_user', '!=', 1);
+        });
+    }
+
     //
     // Events
     //

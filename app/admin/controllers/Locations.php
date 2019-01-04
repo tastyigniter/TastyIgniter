@@ -103,7 +103,6 @@ class Locations extends \Admin\Classes\AdminController
         $column->iconCssClass = 'fa fa-star-o';
         if ($record->getKey() == params('default_location_id')) {
             $column->iconCssClass = 'fa fa-star';
-            $attributes['class'] .= ' active';
         }
 
         return $attributes;

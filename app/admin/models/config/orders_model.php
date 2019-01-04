@@ -61,6 +61,9 @@ $config['list']['columns'] = [
             'href' => 'orders/edit/{order_id}',
         ],
     ],
+    'order_id' => [
+        'label' => 'lang:admin::lang.column_id',
+    ],
     'location' => [
         'label' => 'lang:admin::lang.orders.column_location',
         'relation' => 'location',
@@ -108,17 +111,13 @@ $config['list']['columns'] = [
     'order_date' => [
         'label' => 'lang:admin::lang.orders.column_date',
         'type' => 'date',
+        'searchable' => TRUE,
     ],
     'date_added' => [
         'label' => 'lang:admin::lang.orders.column_date_added',
         'type' => 'datesince',
         'invisible' => TRUE,
     ],
-    'order_id' => [
-        'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
-    ],
-
 ];
 
 $config['form']['toolbar'] = [

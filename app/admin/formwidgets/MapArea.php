@@ -123,7 +123,7 @@ class MapArea extends BaseFormWidget
             return FormField::NO_SAVE_DATA;
         }
 
-        if (is_string($value) && !strlen($value)) {
+        if (!is_array($value) && !strlen($value)) {
             return null;
         }
 

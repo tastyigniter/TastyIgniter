@@ -90,7 +90,7 @@ class User extends Manager
 
     public function canAccessCustomerAccount()
     {
-        return $this->fromModel('customer_account_access', 'group');
+        return $this->isSuperUser() OR $this->fromModel('customer_account_access', 'group');
     }
 
     public function isStrictLocation()

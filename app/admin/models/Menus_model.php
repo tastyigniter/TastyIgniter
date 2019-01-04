@@ -1,6 +1,7 @@
 <?php namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Event;
 use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -64,6 +65,13 @@ class Menus_model extends Model
     //
     // Scopes
     //
+
+    public function scopeWhereHasCategory($query, $categoryId)
+    {
+        $query->whereHas('categories', function ($q) use ($categoryId) {
+            $q->where('categories.category_id', $categoryId);
+        });
+    }
 
     public function scopeListFrontEnd($query, $options = [])
     {
@@ -166,13 +174,15 @@ class Menus_model extends Model
         $update = FALSE;
 
         if ($this->subtract_stock AND !empty($quantity)) {
-            $stock_qty = $this->stock_qty + $quantity;
+            $stockQty = $this->stock_qty + $quantity;
 
             if ($action == 'subtract') {
-                $stock_qty = $this->stock_qty - $quantity;
+                $stockQty = $this->stock_qty - $quantity;
             }
 
-            $update = $this->update(['stock_qty' => $stock_qty]);
+            $update = $this->update(['stock_qty' => $stockQty]);
+
+            Event::fire('admin.menu.stockUpdated', [$action, $this->stock_qty]);
         }
 
         return $update;

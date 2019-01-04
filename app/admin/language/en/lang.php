@@ -8,6 +8,8 @@ return [
     'text_search' => 'Search',
     'text_enabled' => 'Enabled',
     'text_disabled' => 'Disabled',
+    'text_active' => 'Active',
+    'text_inactive' => 'Inactive',
     'text_new' => 'New',
     'text_no' => 'NO',
     'text_yes' => 'YES',
@@ -15,6 +17,7 @@ return [
     'text_hide' => 'Hide',
     'text_show' => 'Show',
     'text_action' => 'Action',
+    'text_dashes' => ' -- ',
     'text_equals' => ' = ',
     'text_plus' => '+ ',
     'text_please_select' => ' - please select - ',
@@ -84,6 +87,8 @@ return [
     'text_edit_details' => 'Edit Details',
     'text_logout' => 'Logout',
 
+    'help_permalink' => 'Use ONLY alpha-numeric lowercase characters, _ or - and make sure it is unique GLOBALLY.',
+
     'side_menu' => [
         'updates' => 'Updates',
         'storefront' => 'Storefront',
@@ -140,6 +145,7 @@ return [
         'setup_title' => 'List Setup - %s',
         'label_visible_columns' => 'Visible Columns',
         'label_page_limit' => 'Items Per Page',
+        'button_reset_setup' => 'Reset',
         'button_cancel_setup' => 'Cancel',
         'button_apply_setup' => 'Apply changes',
         'help_visible_columns' => 'Set which columns are visible and in what order to display them',
@@ -181,7 +187,7 @@ return [
     'categories' => [
         'text_title' => 'Categories',
         'text_form_name' => 'Category',
-        'text_filter_search' => 'Search category name, description or status.',
+        'text_filter_search' => 'Search category name.',
         'text_filter_status' => 'View all status',
         'text_empty' => 'There are no categories available.',
 
@@ -193,13 +199,12 @@ return [
 
         'label_name' => 'Name',
         'label_description' => 'Description',
-        'label_permalink_slug' => 'Permalink Slug',
+        'label_permalink_slug' => 'Slug',
         'label_parent' => 'Parent',
         'label_image' => 'Image',
         'label_priority' => 'Priority',
 
         'help_photo' => 'Select a file to update category image, otherwise leave blank.',
-        'help_permalink' => 'Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.',
     ],
 
     'coupons' => [
@@ -256,8 +261,8 @@ return [
         'label_recurring_to_time' => 'Recurring to time',
 
         'help_type' => 'Whether to subtract a fixed amount or percentage from order total.',
-        'help_redemption' => 'The total number of times this coupon can be redeem. Enter 0 for unlimited redemptions.',
-        'help_customer_redemption' => 'The number of times a specific customer can redeem this coupon. Enter 0 for unlimited redemptions.',
+        'help_redemption' => 'The total number of times this coupon can be redeemed. Leave blank to allow any number of redemptions.',
+        'help_customer_redemption' => 'The number of times a specific customer can redeem this coupon. Leave blank to allow any number of redemptions.',
         'help_order_restriction' => 'Whether to restrict the coupon to a specific order type.',
 
         'activity_event_log' => '{event} coupon <b>:subject.name</b>',
@@ -275,6 +280,8 @@ return [
         'label_name' => 'Name',
         'label_approval' => 'Approval',
         'label_description' => 'Description',
+
+        'alert_set_default' => 'Location set as default',
 
         'help_approval' => 'New customers must be approved before they can login.',
     ],
@@ -317,7 +324,7 @@ return [
 
         'help_password' => 'Leave blank to leave password unchanged',
 
-        'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access customer account</b>, please contact system administrator.',
+        'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
         'activity_event_log' => '{event} customer <b>:subject.first_name :subject.last_name</b>',
     ],
 
@@ -387,7 +394,7 @@ return [
             'label_mail' => 'Send test email',
 
             'help_settings' => 'Confirm all required system settings are specified.',
-            'help_locations' => 'Set your delivery area and customise your opening hours.',
+            'help_locations' => 'Set your default delivery area and customise your opening hours.',
             'help_themes' => 'Activate and customize the front-end theme',
             'help_extensions' => 'Some extensions are recommended for your site to function properly.',
             'help_payments' => 'Some extensions are required for your site to function properly.',
@@ -432,10 +439,10 @@ return [
         'text_title' => 'Locations',
         'text_form_name' => 'Location',
         'text_tab_general' => 'Location',
-        'text_tab_data' => 'Data',
+        'text_tab_data' => 'Settings',
         'text_tab_opening_hours' => 'Opening Hours',
-        'text_tab_order' => 'Order',
-        'text_tab_reservation' => 'Reservation',
+        'text_tab_order' => 'Accepting Orders',
+        'text_tab_reservation' => 'Accepting Reservations',
         'text_tab_delivery' => 'Delivery',
         'text_tab_gallery' => 'Gallery',
         'text_tab_title_address' => 'Address',
@@ -484,7 +491,7 @@ return [
         'label_email' => 'Email',
         'label_telephone' => 'Telephone',
         'label_description' => 'Description',
-        'label_permalink_slug' => 'Menus Page Slug',
+        'label_permalink_slug' => 'Slug',
         'label_image' => 'Image',
         'label_offer_delivery' => 'Offer Delivery',
         'label_offer_collection' => 'Offer Pick-up',
@@ -533,20 +540,21 @@ return [
         'alert_delivery_area' => 'To make this location searchable by your customers, please add delivery area(s) under the \'Delivery\' tab.',
         'alert_set_default' => 'Location set as default',
 
-        'help_permalink' => 'Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.',
-        'help_permalink_disabled' => 'Permalink is disabled while single location mode is activated.',
-        'help_image' => 'Select an image to use as the location logo, this image is displayed in the restaurant list.',
-        'help_delivery_time' => 'Set number of minutes an order will be delivered after being placed, or set to 0 to use default',
-        'help_collection_time' => 'Set number of minutes an order will be ready for pick-up after being placed, or set to 0 to use default',
-        'help_last_order_time' => 'Set number of minutes before closing time for last order, or set to 0 to use closing hour.',
-        'help_future_order' => 'Allow customer to place order for a later time when restaurant is closed for delivery or pick-up during opening hours',
-        'help_future_delivery_days' => 'Set the number of days in advance to allow customer to place a delivery order for a later time.',
-        'help_future_collection_days' => 'Set the number of days in advance to allow customer to place a pick-up order for a later time.',
+        'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
+        'help_image' => 'Select a logo for this location.',
+        'help_delivery_time' => 'Set in minutes the average time it takes an order to be delivered after being placed',
+        'help_collection_time' => 'Set in minutes the average time it takes an order to be ready for pick-up after being placed',
+        'help_last_order_time' => 'Set in minutes when to take the last order before the closing time. Set to 0 to accept orders until the closing time.',
+        'help_future_order' => 'When the restaurant is closed for delivery or pick-up, allow a customer to place an order for a later working time',
+        'help_future_delivery_days' => 'Set the number of days in advance a customer can place a delivery order.',
+        'help_future_collection_days' => 'Set the number of days in advance a customer can place a pick-up order.',
         'help_payments' => 'Select the payment(s) available at this location. Leave blank to use all enabled payments',
         'help_no_payments' => 'No enabled payment was found.',
-        'help_reservation_time_interval' => 'Set the number of minutes between each reservation time, Leave as 0 to use system setting value',
-        'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table, Leave as 0 to use system setting value',
-        'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set delivery to 0 and to make delivery unavailable use -1. When \'all\' rule is selected, ONLY one condition can be added.',
+        'help_reservation_time_interval' => 'Set the number of minutes between each reservation time',
+        'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table',
+        'help_tables' => 'Select table(s) to attach to this location.',
+        'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least on delivery area.',
+        'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
         'help_delivery_components' => 'All rules must be VALID to apply this delivery area, each rule is matched against the user\'s address component. Values can contain Regular Expressions.',
     ],
 
@@ -669,11 +677,13 @@ return [
         'label_special_price' => 'Special Price',
 
         'help_image' => 'Select a file to update menu image, otherwise leave blank.',
-        'help_mealtime' => 'Set what mealtime of day your customers can order this menu. Mealtimes can be managed under Kitchen -> Mealtimes',
-        'help_stock_qty' => 'Set to 0 for unlimited stock quantity.',
-        'help_minimum_qty' => 'The minimum quantity that can be ordered. Default is 1, unless set otherwise.',
+        'help_mealtime' => 'Set what time of day your customers can order this menu. Mealtimes can be managed under Kitchen > Mealtimes',
+        'help_stock_qty' => 'Enter the amount of stock available. This amount can be set to zero to represent unlimited stock quantity.',
+        'help_minimum_qty' => 'Enter the minimum quantity that can be ordered by customers.',
+        'help_subtract_stock' => 'Select Yes for menu orders to be subtracted from original stock quantity.',
         'help_menu_option' => 'Choose from the dropdown to add option to this menu.',
-        'help_option_required' => 'Enable/Disable if customer must choose option.',
+        'help_option_required' => 'Select Enabled if a customer MUST choose this option. If this option is not required, select Disabled.',
+        'help_specials' => 'Select disable to deactivate Special. Select Enable to activate Special and enter the Start Date, End Date and price of your Special item.',
 
         'activity_event_log' => '{event} menu <b>:subject.menu_name</b>',
     ],
@@ -752,7 +762,7 @@ return [
         'label_payment_method' => 'Payment Method',
         'label_total_items' => 'Total Items',
 
-        'help_notify_customer' => 'Set whether to send an order update email to the customer',
+        'help_notify_customer' => 'Set whether to send a status update email to the customer',
 
         'activity_event_log' => '{event} <b>#:subject.order_id</b> order status to <b>:subject.status.status_name</b>',
         'activity_event_log_assigned' => 'assigned <b>#:subject.order_id</b> order to <b>:subject.assignee.staff_name</b>',
@@ -832,7 +842,7 @@ return [
         'label_occasion' => 'Occasion',
         'label_date_added' => 'Date Added',
         'label_date_modified' => 'Date Modified',
-        'label_send_confirmation' => 'Send order confirmation',
+        'label_send_confirmation' => 'Send reservation confirmation',
         'label_notify' => 'Notify Customer',
         'label_comment' => 'Comment',
         'label_user_agent' => 'User Agent',
@@ -849,7 +859,7 @@ return [
         'label_customer_email' => 'Email',
         'label_customer_telephone' => 'Telephone',
 
-        'help_notify_customer' => 'Set whether to send an order update email to the customer',
+        'help_notify_customer' => 'Set whether to send a status update email to the customer',
         'help_reservation_duration' => 'Stay time in minutes. Leave blank to use the default stay time',
     ],
 
@@ -857,7 +867,7 @@ return [
         'text_title' => 'Reviews',
         'text_form_name' => 'Review',
         'text_empty' => 'There are no reviews available.',
-        'text_filter_search' => 'Search author, restaurant, order id or rating.',
+        'text_filter_search' => 'Search author, restaurant or sale id.',
         'text_filter_location' => 'View all locations',
         'text_filter_status' => 'View all status',
         'text_filter_date' => 'View all dates',
@@ -910,7 +920,7 @@ return [
         'label_location_access' => 'Specific Location Access',
 
         'help_customer_account_access' => 'Enabling means staff in this group can login to any customer account using the staff password. The staff must be logged in as admin.',
-        'help_location' => 'Enabling means staff in this group can ONLY view orders, reservations and coupons in their location. Does not apply to super admins',
+        'help_location' => 'Enabling means staff in this group can ONLY view menus, categories, orders, reservations, reviews and coupons in their location. Does not apply to super admins',
     ],
 
     'staff' => [

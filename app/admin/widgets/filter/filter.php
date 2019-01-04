@@ -20,7 +20,7 @@
     <?php } ?>
 
     <div class="d-flex">
-        <?php if (count($scopes)) { ?>
+        <?php if (count($scopes) OR $search) { ?>
             <div class="mr-3">
                 <button
                     class="btn btn-outline-danger"

@@ -53,6 +53,8 @@ class Themes extends \Admin\Classes\AdminController
      */
     public $toolbarWidget;
 
+    protected $requiredPermissions = 'Site.Themes';
+
     public function __construct()
     {
         parent::__construct();

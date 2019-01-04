@@ -77,9 +77,8 @@
     MapViewShape.prototype.makePolygon = function () {
         var self = this,
             shape = this.options,
-            drawOptions = this.drawOptions
-            // ,
-            // paths = this.getOrCreatePaths(shape)
+            drawOptions = this.drawOptions,
+            paths = this.getOrCreatePaths(shape)
 
         if (!paths)
             return
@@ -87,7 +86,6 @@
         drawOptions.paths = paths
         drawOptions.visible = shape.default === 'polygon'
 
-        console.log(drawOptions)
         var drawing = new google.maps.Polygon(drawOptions)
 
         google.maps.event.addListener(drawing.getPath(), 'insert_at', function () {

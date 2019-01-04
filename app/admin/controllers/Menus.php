@@ -97,9 +97,9 @@ class Menus extends AdminController
             ['special.special_status', 'lang:admin::lang.menus.label_special_status', 'required|integer'],
         ];
 
-        $rules[] = ['special.start_date', 'lang:admin::lang.menus.label_start_date', 'valid_date'];
-        $rules[] = ['special.end_date', 'lang:admin::lang.menus.label_end_date', 'valid_date'];
-        $rules[] = ['special.special_price', 'lang:admin::lang.menus.label_special_price', 'numeric'];
+        $rules[] = ['special.start_date', 'lang:admin::lang.menus.label_start_date', 'required_if:special.special_status,1|valid_date'];
+        $rules[] = ['special.end_date', 'lang:admin::lang.menus.label_end_date', 'required_if:special.special_status,1|valid_date'];
+        $rules[] = ['special.special_price', 'lang:admin::lang.menus.label_special_price', 'required_if:special.special_status,1|numeric'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

@@ -414,9 +414,11 @@ class ThemeManager
         $theme = $this->findTheme($themeCode);
 
         list($dirName, $fileName) = $this->getFileNameParts($theme, $filePath);
+        if (!$dirName OR !$fileName)
+            return FALSE;
 
         if (!File::exists($fullFilePath = $theme->path.'/'.$dirName.'/'.$fileName)) {
-            File::makeDirectory(File::dirname($fullFilePath), 0777, TRUE);
+            File::makeDirectory(File::dirname($fullFilePath), 0777, TRUE, TRUE);
             File::put($fullFilePath, "\n");
         }
 
@@ -452,7 +454,9 @@ class ThemeManager
         if (!$source)
             return FALSE;
 
-        $source->fill(['fileName' => $newFileName])->save();
+        $oldFilePath = $theme->path.'/'.$dirName.'/'.$fileName;
+        $newFilePath = $theme->path.'/'.$newDirName.'/'.$newFileName;
+        File::move($oldFilePath, $newFilePath);
 
         return $source;
     }

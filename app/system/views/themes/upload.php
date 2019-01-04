@@ -1,9 +1,9 @@
 <?= form_open(current_url(),
     [
-        'id'      => 'upload-form',
-        'role'    => 'form',
+        'id' => 'upload-form',
+        'role' => 'form',
         'enctype' => 'multipart/form-data',
-        'method'  => 'PATCH',
+        'method' => 'PATCH',
     ]
 ); ?>
 <input type="hidden" name="_handler" value="onUpload">
@@ -15,9 +15,10 @@
 </div>
 
 <div class="form-fields">
-    <h4><?= lang('system::lang.themes.text_upload_title'); ?></h4>
-
-    <div class="form-group">
+    <div class="form-group field-section span-full">
+        <h5 class="section-title"><?= lang('system::lang.themes.text_upload_title'); ?></h5>
+    </div>
+    <div class="form-group span-left">
         <div class="input-group">
             <input type="text" class="form-control btn-file-input-value" disabled="disabled">
             <span class="input-group-btn">
@@ -28,6 +29,7 @@
                     <input type="file"
                            name="theme_zip"
                            value="<?= set_value('theme_zip'); ?>"
+                           accept="application/zip"
                            onchange="var file = this.files[0]
                             $('.btn-file-input-value').val(file.name)
                             $('.btn-file-input-change').removeClass('hide')

@@ -12,32 +12,32 @@ class Staffs extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Staffs_model',
-            'title'        => 'lang:admin::lang.staff.text_title',
+            'model' => 'Admin\Models\Staffs_model',
+            'title' => 'lang:admin::lang.staff.text_title',
             'emptyMessage' => 'lang:admin::lang.staff.text_empty',
-            'defaultSort'  => ['staff_id', 'DESC'],
-            'configFile'   => 'staffs_model',
+            'defaultSort' => ['staff_id', 'DESC'],
+            'configFile' => 'staffs_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.staff.text_form_name',
-        'model'      => 'Admin\Models\Staffs_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'staffs/edit/{staff_id}',
+        'name' => 'lang:admin::lang.staff.text_form_name',
+        'model' => 'Admin\Models\Staffs_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'staffs/edit/{staff_id}',
             'redirectClose' => 'staffs',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'staffs/edit/{staff_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'staffs/edit/{staff_id}',
             'redirectClose' => 'staffs',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'staffs',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'staffs',
         ],
         'configFile' => 'staffs_model',
@@ -55,14 +55,27 @@ class Staffs extends \Admin\Classes\AdminController
         AdminMenu::setContext('staffs', 'users');
     }
 
+    public function listExtendQuery($query)
+    {
+        if (!AdminAuth::isSuperUser()) {
+            $query->whereNotSuperUser();
+        }
+    }
+
     public function formExtendFields($form, $fields)
     {
         if (!AdminAuth::isSuperUser()) {
             $form->removeField('staff_group_id');
             $form->removeField('staff_location_id');
-            $form->removeField('user[username]');
             $form->removeField('user[super_user]');
             $form->removeField('staff_status');
+        }
+    }
+
+    public function formExtendQuery($query)
+    {
+        if (!AdminAuth::isSuperUser()) {
+            $query->whereNotSuperUser();
         }
     }
 

@@ -11,32 +11,32 @@ class Mealtimes extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Mealtimes_model',
-            'title'        => 'lang:admin::lang.mealtimes.text_title',
+            'model' => 'Admin\Models\Mealtimes_model',
+            'title' => 'lang:admin::lang.mealtimes.text_title',
             'emptyMessage' => 'lang:admin::lang.mealtimes.text_empty',
-            'defaultSort'  => ['order_id', 'DESC'],
-            'configFile'   => 'mealtimes_model',
+            'defaultSort' => ['order_id', 'DESC'],
+            'configFile' => 'mealtimes_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.mealtimes.text_form_name',
-        'model'      => 'Admin\Models\Mealtimes_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'mealtimes/edit/{mealtime_id}',
+        'name' => 'lang:admin::lang.mealtimes.text_form_name',
+        'model' => 'Admin\Models\Mealtimes_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'mealtimes/edit/{mealtime_id}',
             'redirectClose' => 'mealtimes',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'mealtimes/edit/{mealtime_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'mealtimes/edit/{mealtime_id}',
             'redirectClose' => 'mealtimes',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'mealtimes',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'mealtimes',
         ],
         'configFile' => 'mealtimes_model',
