@@ -16,7 +16,7 @@
   {
     "name": "Site.Countries",
     "description": "Ability to manage, add and delete site countries",
-    "action": "a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -30,7 +30,7 @@
   {
     "name": "Site.Currencies",
     "description": "Ability to access, manage, add and delete site currencies",
-    "action": "a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -51,7 +51,7 @@
   {
     "name": "Admin.CustomersOnline",
     "description": "Ability to access online customers",
-    "action": "a:1:{i:0;s:6:\"access\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -65,7 +65,7 @@
   {
     "name": "Admin.ErrorLogs",
     "description": "Ability to access and delete error logs file",
-    "action": "a:2:{i:0;s:6:\"access\";i:1;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -86,7 +86,7 @@
   {
     "name": "Site.Languages",
     "description": "Ability to manage, add and delete site languages",
-    "action": "a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -114,7 +114,7 @@
   {
     "name": "Admin.Messages",
     "description": "Ability to add and delete messages",
-    "action": "a:3:{i:0;s:6:\"access\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -128,14 +128,14 @@
   {
     "name": "Site.Pages",
     "description": "Ability to manage, add and delete site pages",
-    "action": "a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
   {
     "name": "Admin.Payments",
     "description": "Ability to access, add and delete extension payments",
-    "action": "a:3:{i:0;s:6:\"access\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -149,7 +149,7 @@
   {
     "name": "Admin.Ratings",
     "description": "Ability to add and delete review ratings",
-    "action": "a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -170,14 +170,14 @@
   {
     "name": "Admin.SecurityQuestions",
     "description": "Ability to add and delete customer registration security questions",
-    "action": "a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
   {
     "name": "Site.Settings",
     "description": "Ability to manage system settings",
-    "action": "a:1:{i:0;s:6:\"manage\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   },
@@ -233,7 +233,7 @@
   {
     "name": "Admin.Activities",
     "description": "Ability to access activities",
-    "action": "a:1:{i:0;s:6:\"access\";}",
+    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
     "status": 1,
     "is_custom": 0
   }
