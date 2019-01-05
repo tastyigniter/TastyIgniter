@@ -107,7 +107,7 @@ class Locations extends Admin_Controller {
 				'location_telephone'	=> $result['location_telephone'],
 				'location_lat'			=> $result['location_lat'],
 				'location_lng'			=> $result['location_lng'],
-				'location_status'		=> ($result['location_status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
+				'location_status'		=> isset($result['location_status']) ? $result['location_status'] : '1',
 				'default'				=> $default,
 				'edit' 					=> site_url('locations/edit?id=' . $result['location_id'])
 			);
