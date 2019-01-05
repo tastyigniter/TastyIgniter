@@ -2,10 +2,9 @@ language: php
 
 # list of PHP version to test against
 php:
-  - 7.0
   - 7.1
   - 7.2
-  - nightly
+  - 7.3
 
 matrix:
   allow_failures:
