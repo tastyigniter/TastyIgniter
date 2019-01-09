@@ -76,8 +76,7 @@ class Local extends Main_Controller {
 			$map_key = '';
 		}
 
-		//$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&region=GB&libraries=geometry', 'google-maps-js', '104330');
-		$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' .$map_key.'&libraries=geometry,places', 'google-maps-js', '104330');  
+		$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' .$map_key.'&libraries=geometry,places', 'google-maps-js', '104330');
 
 		$data['has_delivery']       = $this->location->hasDelivery();
 		$data['has_collection']     = $this->location->hasCollection();

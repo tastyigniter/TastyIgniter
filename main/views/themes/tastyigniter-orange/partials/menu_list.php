@@ -92,45 +92,42 @@
 <?php } ?>
 
 <script type="text/javascript"><!--
-
 	function clearSearch() {
-
 		$('#catsearch').val('').trigger('propertychange').focus();
 		resetFilter();
 	}
-        function resetFilter() {
 
-	var find =$("#catsearch").val();
-     var allSpan = $(".menu-name");
+    function resetFilter() {
+         var find =$("#catsearch").val();
+         var allSpan = $(".menu-name");
 
-     var menuCount = 0;
-     var oldCount; 
-     var count;
-     var parent;
-	 var prevParent;
+         var menuCount = 0;
+         var oldCount;
+         var count;
+         var parent;
+         var prevParent;
 
-     allSpan.each(function( index ) {
-    	$( "p:contains('There are no menus in this category.')" ).parent().parent().parent().hide();
-     	$(this).closest('.menu-items').parent().parent().hide();
-     });
+         allSpan.each(function( index ) {
+            $( "p:contains('There are no menus in this category.')" ).parent().parent().parent().hide();
+            $(this).closest('.menu-items').parent().parent().hide();
+         });
 
-     if (!find) {
-    		$( "p:contains('There are no menus in this category.')" ).parent().parent().parent().show();
-     }
-     
-     allSpan.each(function( index ) {
-
-		 var spantext = $(this).text().toLowerCase();
-		 var findtext = find.toLowerCase();   
-    	 
-         if(spantext.indexOf(findtext) != -1) {
-			$(this).closest('.menu-items').parent().parent().show();
-     		$(this).closest('.menu-item').show();
-         } else {
-         	$(this).closest('.menu-item').hide();
+         if (!find) {
+            $( "p:contains('There are no menus in this category.')" ).parent().parent().parent().show();
          }
-     });
-}
+
+         allSpan.each(function( index ) {
+             var spantext = $(this).text().toLowerCase();
+             var findtext = find.toLowerCase();
+
+             if(spantext.indexOf(findtext) != -1) {
+                $(this).closest('.menu-items').parent().parent().show();
+                $(this).closest('.menu-item').show();
+             } else {
+                $(this).closest('.menu-item').hide();
+             }
+         });
+    }
 
 	$( document ).ready(function() {
 		var $myGroup = $('.menu-list');
@@ -147,17 +144,15 @@
             }, 1);
 	    });
             
-             	$("#catsearch").keyup(function() {
+        $("#catsearch").keyup(function() {
 			resetFilter();
 	});
     
-
-                  $('.has-clear input[type="text"]').on('input propertychange', function() {
+        $('.has-clear input[type="text"]').on('input propertychange', function() {
 	    	  var $this = $(this);
 	    	  var visible = Boolean($this.val());
 	    	  $this.siblings('.form-control-clear').toggleClass('hidden', !visible);
 	    	  $this.siblings('.fa-search').toggleClass('hidden', visible);
 		 }).trigger('propertychange');
-	    
-	});   
+	});
 --></script>

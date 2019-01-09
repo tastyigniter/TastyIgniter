@@ -56,6 +56,16 @@ class TI_Cart extends CI_Cart {
 		log_message('info', "Cart Class Initialized");
 	}
 
+    public function replace_key($arr, $oldkey, $newkey) {
+	    if (array_key_exists($oldkey, $arr)) {
+            $keys = array_keys($arr);
+            $keys[array_search($oldkey, $keys, TRUE)] = $newkey;
+            return array_combine($keys, $arr);
+        }
+
+        return $arr;
+    }
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -244,9 +254,244 @@ class TI_Cart extends CI_Cart {
 		}
 	}
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
+    /**
+     * Insert
+     *
+     * @param	array
+     * @return	bool
+     */
+    protected function _insert($items = array())
+    {
+        // Was any cart data passed? No? Bah...
+        if ( ! is_array($items) OR count($items) === 0)
+        {
+            log_message('error', 'The insert method must be passed an array containing data.');
+            return FALSE;
+        }
+
+        // --------------------------------------------------------------------
+
+        // Does the $items array contain an id, quantity, price, and name?  These are required
+        if ( ! isset($items['id'], $items['qty'], $items['price'], $items['name']))
+        {
+            log_message('error', 'The cart array must contain a product ID, quantity, price, and name.');
+            return FALSE;
+        }
+
+        // --------------------------------------------------------------------
+
+        // Prep the quantity. It can only be a number.  Duh... also trim any leading zeros
+        $items['qty'] = (float) $items['qty'];
+
+        // If the quantity is zero or blank there's nothing for us to do
+        if ($items['qty'] == 0)
+        {
+            return FALSE;
+        }
+
+        // --------------------------------------------------------------------
+
+        // Validate the product ID. It can only be alpha-numeric, dashes, underscores or periods
+        // Not totally sure we should impose this rule, but it seems prudent to standardize IDs.
+        // Note: These can be user-specified by setting the $this->product_id_rules variable.
+        if ( ! preg_match('/^['.$this->product_id_rules.']+$/i', $items['id']))
+        {
+            log_message('error', 'Invalid product ID.  The product ID can only contain alpha-numeric characters, dashes, and underscores');
+            return FALSE;
+        }
+
+        // --------------------------------------------------------------------
+
+        // Validate the product name. It can only be alpha-numeric, dashes, underscores, colons or periods.
+        // Note: These can be user-specified by setting the $this->product_name_rules variable.
+        if ($this->product_name_safe && ! preg_match('/^['.$this->product_name_rules.']+$/i'.(UTF8_ENABLED ? 'u' : ''), $items['name']))
+        {
+            log_message('error', 'An invalid name was submitted as the product name: '.$items['name'].' The name can only contain alpha-numeric characters, dashes, underscores, colons, and spaces');
+            return FALSE;
+        }
+
+        // --------------------------------------------------------------------
+
+        // Prep the price. Remove leading zeros and anything that isn't a number or decimal point.
+        $items['price'] = (float) $items['price'];
+
+        // We now need to create a unique identifier for the item being inserted into the cart.
+        // Every time something is added to the cart it is stored in the master cart array.
+        // Each row in the cart array, however, must have a unique index that identifies not only
+        // a particular product, but makes it possible to store identical products with different options.
+        // For example, what if someone buys two identical t-shirts (same product ID), but in
+        // different sizes?  The product ID (and other attributes, like the name) will be identical for
+        // both sizes because it's the same shirt. The only difference will be the size.
+        // Internally, we need to treat identical submissions, but with different options, as a unique product.
+        // Our solution is to convert the options array to a string and MD5 it along with the product ID.
+        // This becomes the unique "row ID"
+        if (isset($items['options']) && count($items['options']) > 0)
+        {
+            if (!empty($items['comment'])) {
+                $rowid = md5($items['id'].serialize($items['options']. ' '.$items['comment']));
+            } else {
+                $rowid = md5($items['id'].serialize($items['options']));
+            }
+        }
+        else
+        {
+            // No options were submitted so we simply MD5 the product ID.
+            // Technically, we don't need to MD5 the ID in this case, but it makes
+            // sense to standardize the format of array indexes for both conditions
+            if (!empty($items['comment'])) {
+                $rowid = md5($items['id'].serialize($items['comment']));
+            } else {
+                $rowid = md5($items['id']);
+            }
+
+        }
+
+        // --------------------------------------------------------------------
+
+        // Now that we have our unique "row ID", we'll add our cart items to the master array
+        // grab quantity if it's already there and add it on
+        $old_quantity = isset($this->_cart_contents[$rowid]['qty']) ? (int) $this->_cart_contents[$rowid]['qty'] : 0;
+
+        // Re-create the entry, just to make sure our index contains only the data from this submission
+        $items['rowid'] = $rowid;
+        $items['qty'] += $old_quantity;
+        $this->_cart_contents[$rowid] = $items;
+
+        return $rowid;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Update the cart
+     *
+     * This function permits changing item properties.
+     * Typically it is called from the "view cart" page if a user makes
+     * changes to the quantity before checkout. That array must contain the
+     * rowid and quantity for each item.
+     *
+     * @param	array
+     * @return	bool
+     */
+    protected function _update($items = array())
+    {
+        // Without these array indexes there is nothing we can do
+        if ( ! isset($items['rowid'], $this->_cart_contents[$items['rowid']]))
+        {
+            return FALSE;
+        }
+
+        // Prep the quantity
+        if (isset($items['qty']))
+        {
+            $items['qty'] = (float) $items['qty'];
+            // Is the quantity zero?  If so we will remove the item from the cart.
+            // If the quantity is greater than zero we are updating
+            if ($items['qty'] == 0)
+            {
+                unset($this->_cart_contents[$items['rowid']]);
+                return TRUE;
+            }
+        }
+
+        if (empty($items['options']))
+        {
+            // No options were submitted so we simply MD5 the product ID.
+            // Technically, we don't need to MD5 the ID in this case, but it makes
+            // sense to standardize the format of array indexes for both conditions
+
+            $addComment = false;
+
+            if (!empty($items['comment'])) {
+
+                log_message('error', ' Serialize with rowId ');
+                $rowid = md5($items['id'].serialize($items['comment']));
+                $addComment = true;
+
+            } else {
+
+                $rowid = md5($items['id']);
+            }
+
+            if ($items['rowid']  != $rowid && array_key_exists( $rowid, $this->_cart_contents)) {
+
+                $value = $this->_cart_contents[$rowid];
+
+                $old_qty = $value['qty'];
+                $this->_cart_contents = $this->replace_key($this->_cart_contents, $items['rowid'], $rowid);
+                $items['rowid'] = $rowid;
+                $items['qty'] = (float) $items['qty'] + $old_qty;
+
+                if($addComment) {
+                    $rowid = md5($items['id'].serialize($items['comment']));
+                } else {
+                    $rowid = md5($items['id']);
+                }
+            }
+
+            $this->_cart_contents = $this->replace_key($this->_cart_contents, $items['rowid'], $rowid);
+            $items['rowid'] = $rowid;
+        } else {
+
+            if (isset($items['options']) && count($items['options']) > 0)
+            {
+                $addComment = false;
+
+                if (!empty($items['comment'])) {
+
+                    log_message('error',  ' comment set for mods ');
+
+                    $rowid = md5($items['id'].serialize($items['options']. ' '.$items['comment']));
+                    $addComment = true;
+                } else {
+                    $rowid = md5($items['id'].serialize($items['options']));
+                }
+
+
+                if ($items['rowid']  != $rowid && array_key_exists( $rowid, $this->_cart_contents)) {
+
+                    $value = $this->_cart_contents[$rowid];
+
+                    log_message('error', ' Key exists ');
+                    $old_qty = $value['qty'];
+                    $this->_cart_contents = $this->replace_key($this->_cart_contents, $items['rowid'], $rowid);
+                    $items['rowid'] = $rowid;
+                    $items['qty'] = (float) $items['qty'] + $old_qty;
+
+                    if ($addComment) {
+                        $rowid = md5($items['id'].serialize($items['options']. ' '.$items['comment']));
+                    } else {
+                        $rowid = md5($items['id'].serialize($items['options']));
+                    }
+                }
+
+                $this->_cart_contents = $this->replace_key($this->_cart_contents, $items['rowid'], $rowid);
+                $items['rowid'] = $rowid;
+            }
+        }
+
+        // find updatable keys
+        $keys = array_intersect(array_keys($this->_cart_contents[$items['rowid']]), array_keys($items));
+        // if a price was passed, make sure it contains valid data
+        if (isset($items['price']))
+        {
+            $items['price'] = (float) $items['price'];
+        }
+
+        // product id & name shouldn't be changed
+        foreach (array_diff($keys, array('id', 'name')) as $key)
+        {
+            $this->_cart_contents[$items['rowid']][$key] = $items[$key];
+        }
+
+        return TRUE;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
 	 * Save the cart array to the session DB
 	 *
 	 * @access	private

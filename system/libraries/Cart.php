@@ -247,23 +247,14 @@ class CI_Cart {
 		// This becomes the unique "row ID"
 		if (isset($items['options']) && count($items['options']) > 0)
 		{
-		    if (!empty($items['comment'])) {
-		        $rowid = md5($items['id'].serialize($items['options']. ' '.$items['comment']));
-		    } else {
 			$rowid = md5($items['id'].serialize($items['options']));
-		}
 		}
 		else
 		{
 			// No options were submitted so we simply MD5 the product ID.
 			// Technically, we don't need to MD5 the ID in this case, but it makes
 			// sense to standardize the format of array indexes for both conditions
-		    if (!empty($items['comment'])) {
-			    $rowid = md5($items['id'].serialize($items['comment']));
-			} else {
 			$rowid = md5($items['id']);
-		}
-
 		}
 
 		// --------------------------------------------------------------------
@@ -337,21 +328,6 @@ class CI_Cart {
 		return FALSE;
 	}
 
-	
-	function replace_key($arr, $oldkey, $newkey) {
-	    
-	    log_message('error', 'oldKey '. $oldkey . ' new Key '.$newkey );
-	    
-	    if(array_key_exists( $oldkey, $arr)) {
-	    
-	        $keys = array_keys($arr);
-	        $keys[array_search($oldkey, $keys)] = $newkey;
-	        return array_combine($keys, $arr);
-	    }
-	    
-	    return $arr;
-	}
-	
 	// --------------------------------------------------------------------
 
 	/**
@@ -384,82 +360,6 @@ class CI_Cart {
 				unset($this->_cart_contents[$items['rowid']]);
 				return TRUE;
 			}
-		}
-
-		if (empty($items['options']))
-		{
-		    // No options were submitted so we simply MD5 the product ID.
-		    // Technically, we don't need to MD5 the ID in this case, but it makes
-		    // sense to standardize the format of array indexes for both conditions
-		    
-		    $addComment = false;
-		    
-		    if (!empty($items['comment'])) {
-		        
-		        log_message('error', ' Serialize with rowId ');
-		        $rowid = md5($items['id'].serialize($items['comment']));
-		        $addComment = true;
-		          
-		    } else {
-
-		        $rowid = md5($items['id']);
-		    }
-		
-		    if ($items['rowid']  != $rowid && array_key_exists( $rowid, $this->_cart_contents)) {
-		        
-		        $value = $this->_cart_contents[$rowid];
-		        
-		        $old_qty = $value['qty'];
-		        $this->_cart_contents = $this->replace_key($this->_cart_contents, $items['rowid'], $rowid);
-		        $items['rowid'] = $rowid;
-		        $items['qty'] = (float) $items['qty'] + $old_qty;
-		        
-		        if($addComment) {
-		            $rowid = md5($items['id'].serialize($items['comment']));
-		        } else {
-		            $rowid = md5($items['id']);
-		        }
-		    }
-		    
-		    $this->_cart_contents = $this->replace_key($this->_cart_contents, $items['rowid'], $rowid);
-		    $items['rowid'] = $rowid;
-		} else {
-		    
-		    if (isset($items['options']) && count($items['options']) > 0)
-		    {
-		        $addComment = false;
-		        
-		        if (!empty($items['comment'])) {
-		            
-		            log_message('error',  ' comment set for mods ');
-		            
-		            $rowid = md5($items['id'].serialize($items['options']. ' '.$items['comment']));
-		            $addComment = true;
-		        } else {
-		            $rowid = md5($items['id'].serialize($items['options']));
-		        }
-		        
-		        
-		        if ($items['rowid']  != $rowid && array_key_exists( $rowid, $this->_cart_contents)) {
-		            
-		            $value = $this->_cart_contents[$rowid];
-		            
-		            log_message('error', ' Key exists ');
-		            $old_qty = $value['qty'];
-		            $this->_cart_contents = $this->replace_key($this->_cart_contents, $items['rowid'], $rowid);
-		            $items['rowid'] = $rowid;
-		            $items['qty'] = (float) $items['qty'] + $old_qty;
-		            
-		            if ($addComment) {
-        	            $rowid = md5($items['id'].serialize($items['options']. ' '.$items['comment']));
-		            } else {
-		                $rowid = md5($items['id'].serialize($items['options']));
-		            }
-		        }
-		        
-		        $this->_cart_contents = $this->replace_key($this->_cart_contents, $items['rowid'], $rowid);
-		        $items['rowid'] = $rowid;
-		    }
 		}
 
 		// find updatable keys
