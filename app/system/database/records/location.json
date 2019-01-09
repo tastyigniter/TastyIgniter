@@ -30,6 +30,7 @@
     {
       "name": "Area 1",
       "type": "circle",
+      "is_default": 1,
       "conditions": [
         {
           "priority": 1,
