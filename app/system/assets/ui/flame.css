@@ -13776,8 +13776,8 @@ readers do not read off random characters that represent icons */
   font-family: 'Font Awesome 5 Brands';
   font-style: normal;
   font-weight: normal;
-  src: url("/app/system/assets/ui/fonts/FontAwesome/fa-brands-400.eot");
-  src: url("/app/system/assets/ui/fonts/FontAwesome/fa-brands-400.eot?#iefix") format("embedded-opentype"), url("/app/system/assets/ui/fonts/FontAwesome/fa-brands-400.woff2") format("woff2"), url("/app/system/assets/ui/fonts/FontAwesome/fa-brands-400.woff") format("woff"), url("/app/system/assets/ui/fonts/FontAwesome/fa-brands-400.ttf") format("truetype"), url("/app/system/assets/ui/fonts/FontAwesome/fa-brands-400.svg#fontawesome") format("svg");
+  src: url("./fonts/FontAwesome/fa-brands-400.eot");
+  src: url("./fonts/FontAwesome/fa-brands-400.eot?#iefix") format("embedded-opentype"), url("./fonts/FontAwesome/fa-brands-400.woff2") format("woff2"), url("./fonts/FontAwesome/fa-brands-400.woff") format("woff"), url("./fonts/FontAwesome/fa-brands-400.ttf") format("truetype"), url("./fonts/FontAwesome/fa-brands-400.svg#fontawesome") format("svg");
 }
 
 .fab {
@@ -13788,8 +13788,8 @@ readers do not read off random characters that represent icons */
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: 900;
-  src: url("/app/system/assets/ui/fonts/FontAwesome/fa-solid-900.eot");
-  src: url("/app/system/assets/ui/fonts/FontAwesome/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("/app/system/assets/ui/fonts/FontAwesome/fa-solid-900.woff2") format("woff2"), url("/app/system/assets/ui/fonts/FontAwesome/fa-solid-900.woff") format("woff"), url("/app/system/assets/ui/fonts/FontAwesome/fa-solid-900.ttf") format("truetype"), url("/app/system/assets/ui/fonts/FontAwesome/fa-solid-900.svg#fontawesome") format("svg");
+  src: url("./fonts/FontAwesome/fa-solid-900.eot");
+  src: url("./fonts/FontAwesome/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("./fonts/FontAwesome/fa-solid-900.woff2") format("woff2"), url("./fonts/FontAwesome/fa-solid-900.woff") format("woff"), url("./fonts/FontAwesome/fa-solid-900.ttf") format("truetype"), url("./fonts/FontAwesome/fa-solid-900.svg#fontawesome") format("svg");
 }
 
 .fa,
@@ -13802,8 +13802,8 @@ readers do not read off random characters that represent icons */
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: 400;
-  src: url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.eot");
-  src: url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.woff2") format("woff2"), url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.woff") format("woff"), url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.ttf") format("truetype"), url("/app/system/assets/ui/fonts/FontAwesome/fa-regular-400.svg#fontawesome") format("svg");
+  src: url("./fonts/FontAwesome/fa-regular-400.eot");
+  src: url("./fonts/FontAwesome/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("./fonts/FontAwesome/fa-regular-400.woff2") format("woff2"), url("./fonts/FontAwesome/fa-regular-400.woff") format("woff"), url("./fonts/FontAwesome/fa-regular-400.ttf") format("truetype"), url("./fonts/FontAwesome/fa-regular-400.svg#fontawesome") format("svg");
 }
 
 
@@ -17110,8 +17110,8 @@ readers do not read off random characters that represent icons */
 
 @font-face {
   font-family: 'TastyIgniter Logos';
-  src: url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.eot");
-  src: url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.eot?#iefix") format("embedded-opentype"), url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.ttf") format("truetype"), url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.woff") format("woff"), url("/app/system/assets/ui/fonts/TastyIgniterLogos/ti-logos.svg?#TastyIgniter+Logos") format("svg");
+  src: url("./fonts/TastyIgniterLogos/ti-logos.eot");
+  src: url("./fonts/TastyIgniterLogos/ti-logos.eot?#iefix") format("embedded-opentype"), url("./fonts/TastyIgniterLogos/ti-logos.ttf") format("truetype"), url("./fonts/TastyIgniterLogos/ti-logos.woff") format("woff"), url("./fonts/TastyIgniterLogos/ti-logos.svg?#TastyIgniter+Logos") format("svg");
   font-weight: normal;
   font-style: normal;
 }
