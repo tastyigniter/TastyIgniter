@@ -58,10 +58,12 @@ $config['list']['columns'] = [
         'type' => 'text',
         'searchable' => TRUE,
     ],
-    'type_name' => [
-        'label' => 'lang:admin::lang.coupons.column_type',
+    'locations' => [
+        'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
-        'sortable' => FALSE,
+        'relation' => 'locations',
+        'select' => 'location_name',
+        'invisible' => TRUE,
     ],
     'formatted_discount' => [
         'label' => 'lang:admin::lang.coupons.column_discount',
@@ -267,6 +269,13 @@ $config['form']['tabs'] = [
                 'field' => 'validity',
                 'condition' => 'value[recurring]',
             ],
+        ],
+        'locations' => [
+            'label' => 'lang:admin::lang.label_location',
+            'type' => 'relation',
+            'valueFrom' => 'locations',
+            'nameFrom' => 'location_name',
+            'comment' => 'lang:admin::lang.coupons.help_locations',
         ],
         'description' => [
             'label' => 'lang:admin::lang.coupons.label_description',

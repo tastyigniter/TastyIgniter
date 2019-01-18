@@ -14,10 +14,13 @@ use Model;
 class Coupons_model extends Model
 {
     use LogsActivity;
+    use \Admin\Traits\Locationable;
 
     const UPDATED_AT = null;
 
     const CREATED_AT = 'date_added';
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     /**
      * @var string The database table name
@@ -46,6 +49,9 @@ class Coupons_model extends Model
     public $relation = [
         'hasMany' => [
             'history' => 'Admin\Models\Coupons_history_model',
+        ],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -147,6 +153,16 @@ class Coupons_model extends Model
         $orderTypes = [AbstractLocation::DELIVERY => 1, AbstractLocation::COLLECTION => 2];
 
         return array_get($orderTypes, $orderType) != $this->order_restriction;
+    }
+
+    public function hasLocationRestriction($locationId)
+    {
+        if (!$this->locations OR $this->locations->isEmpty())
+            return FALSE;
+
+        $locationKeyColumn = $this->locations()->getModel()->qualifyColumn('location_id');
+
+        return !$this->locations()->where($locationKeyColumn, $locationId)->exists();
     }
 
     public function hasReachedMaxRedemption()

@@ -264,6 +264,7 @@ return [
         'help_redemption' => 'The total number of times this coupon can be redeemed. Leave blank to allow any number of redemptions.',
         'help_customer_redemption' => 'The number of times a specific customer can redeem this coupon. Leave blank to allow any number of redemptions.',
         'help_order_restriction' => 'Whether to restrict the coupon to a specific order type.',
+        'help_locations' => 'Apply this coupon ONLY on orders made at the selected location(s). Leave blank to make coupon available across all locations',
 
         'activity_event_log' => '{event} coupon <b>:subject.name</b>',
     ],
