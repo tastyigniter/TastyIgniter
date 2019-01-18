@@ -13,7 +13,7 @@
             </i>
         </span>
         <span
-            class="form-control<?= $useAttachment ? ' find-config-button' : '' ?>"
+            class="form-control<?= (!is_null($mediaItem) AND $useAttachment) ? ' find-config-button' : '' ?>"
             data-find-name><?= e($this->getMediaName($mediaItem)) ?></span>
         <input
             id="<?= $field->getId() ?>"
