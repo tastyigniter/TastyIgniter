@@ -13,7 +13,7 @@ The best place to learn TastyIgniter is by reading the [documentation](https://d
 
 ## Installation
 
-Read the [Installation Guide](https://docs.tastyigniter.com/3.0/installation) for more information.
+Please read the [Installation Guide](https://docs.tastyigniter.com/3.0/installation) for more information.
 
 ## Community and Support
 - Please report bugs using the [GitHub issue tracker](https://github.com/tastyigniter/TastyIgniter/issues), or better yet, fork the repo and submit a pull request.
@@ -22,14 +22,19 @@ Read the [Installation Guide](https://docs.tastyigniter.com/3.0/installation) fo
 - [Join us on Slack](http://slack.tastyigniter.com/) to chat with us.
 
 ## Contributing
-TastyIgniter is open-source and we would love your help building it! Please read the [Contributing Guidelines](CONTRIBUTING.md) to learn how you can help.
+We would love your help building TastyIgniter! Please read the [Contributing Guidelines](CONTRIBUTING.md) to learn how you can help.
 
-## Credits
-- Laravel - Open source full-stack framework.
-- october/rain - OctoberCMS foundation library
-- Bootstrap 4 - Open source front end framework.
+## Built With
+- Laravel full-stack PHP framework
+- OctoberCMS foundation library
+- Bootstrap 4 front-end framework
+
+## Authors
 - [Samuel Adepoyigi](https://github.com/sampoyigi)
 - [All Contributors](https://github.com/tastyigniter/TastyIgniter/contributors)
+
+## Security Vulnerabilities
+If you discover a security vulnerability within TastyIgniter, please send an e-mail to support@tastyigniter.com.
 
 ## License
 Starting with version 3.0.0 TastyIgniter is licensed under the [The MIT License (MIT)](https://tastyigniter.com/licence/). Older versions were GPL-licensed.

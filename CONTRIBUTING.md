@@ -55,14 +55,14 @@ First, you will need to [create a GitHub account](https://github.com/signup/free
 1. Set up Git (Windows, Mac & Linux)
 2. Go to the TastyIgniter repo
 3. Fork it
-4. Clone your TastyIgniter repo: git@github.com:<your-name>/TastyIgniter.git
+4. Clone your TastyIgniter repo: `git@github.com:<your-name>/TastyIgniter.git`
 5. Checkout the "develop" branch At this point you are ready to start making changes. 
 6. Fix existing bugs on the Issue tracker after taking a look to see nobody else is working on them.
 7. Commit the files
 8. Push your develop branch to your fork
 9. Send a pull request [http://help.github.com/send-pull-requests/](http://help.github.com/send-pull-requests/)
 
-If your change fails to meet the guidelines it will be bounced, or feedback will be provided to help you improve it.
+If your change fails to meet the guidelines, feedback will be provided to help you improve it.
 
 If not it will be merged into develop and your patch will be part of the next release.
 

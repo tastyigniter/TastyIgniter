@@ -16,6 +16,7 @@ $helperPath = __DIR__.'/../vendor/tastyigniter/flame/src/Support/helpers.php';
 
 if (!file_exists($helperPath)) {
     echo 'Setup required, missing foundation files.'.PHP_EOL;
+    echo 'Please run composer install && php artisan igniter:install'.PHP_EOL;
     exit(1);
 }
 
