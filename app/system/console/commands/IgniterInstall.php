@@ -70,6 +70,9 @@ class IgniterInstall extends Command
 
         $this->addSystemValues();
 
+        $this->moveExampleFile('htaccess', null, 'backup');
+        $this->moveExampleFile('htaccess', 'example', null);
+
         $this->alert('INSTALLATION COMPLETE');
     }
 
@@ -205,5 +208,13 @@ class IgniterInstall extends Command
     protected function generateEncryptionKey()
     {
         return 'base64:'.base64_encode(random_bytes(32));
+    }
+
+    protected function moveExampleFile($name, $old, $new)
+    {
+        // /$old.$name => /$new.$name
+        if (file_exists(base_path().'/'.$old.'.'.$name)) {
+            rename(base_path().'/'.$old.'.'.$name, base_path().'/'.$new.'.'.$name);
+        }
     }
 }
