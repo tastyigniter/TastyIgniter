@@ -2,9 +2,6 @@
 
 namespace Admin\Classes;
 
-use Admin;
-use AdminAuth;
-use App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -21,14 +18,9 @@ class LocationScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if (!App::runningInAdmin())
+        if (!$model->locationableScopeEnabled())
             return;
 
-        if (!$model->locationScopeEnabled AND !AdminAuth::isStrictLocation())
-            return;
-
-        $userLocation = AdminAuth::location();
-
-        $model->applyLocationScope($builder, $userLocation);
+        $builder->whereHasLocation($model->getUserLocation());
     }
 }

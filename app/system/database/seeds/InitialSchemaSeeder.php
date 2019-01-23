@@ -149,7 +149,7 @@ class InitialSchemaSeeder extends Seeder
         Staff_groups_model::insert([
             'staff_group_name' => 'Administrator',
             'customer_account_access' => TRUE,
-            'location_access' => TRUE,
+            'location_access' => FALSE,
             'permissions' => '',
         ]);
     }

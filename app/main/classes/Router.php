@@ -159,9 +159,7 @@ class Router
             $fileName .= '.php';
         }
 
-        $router = $this->getRouterObject();
-
-        return $router->url($fileName, $parameters);
+        return $this->getRouterObject()->url($fileName, $parameters);
     }
 
     /**

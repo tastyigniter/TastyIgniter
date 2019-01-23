@@ -39,20 +39,37 @@
                 class="btn-group btn-group-toggle"
                 data-toggle="buttons"
             >
-                <label class="btn btn-default active">
+                <input
+                    type="hidden"
+                    name="delete_data"
+                    value="0"
+                >
+                <div
+                    class="field-switch"
+                    data-control="switch"
+                >
                     <input
-                        type="radio"
+                        type="checkbox"
                         name="delete_data"
-                        value="0" <?= set_radio('delete_data', '0', TRUE); ?>
-                    ><?= lang('admin::lang.text_no'); ?>
-                </label>
-                <label class="btn btn-danger">
-                    <input
-                        type="radio"
-                        name="delete_data"
-                        value="1" <?= set_radio('delete_data', '1'); ?>
-                    ><?= lang('admin::lang.text_yes'); ?>
-                </label>
+                        id="delete-data"
+                        class="field-switch-input"
+                        value="1"
+                    >
+                    <label
+                        class="field-switch-label"
+                        for="delete-data"
+                        style="width: 120px;"
+                    >
+                        <span class="field-switch-container">
+                            <span class="field-switch-active">
+                                <span class="field-switch-toggle bg-success"><?= lang('admin::lang.text_yes'); ?></span>
+                            </span>
+                            <span class="field-switch-inactive">
+                                <span class="field-switch-toggle bg-danger"><?= lang('admin::lang.text_no'); ?></span>
+                            </span>
+                        </span>
+                    </label>
+                </div>
             </div>
         </div>
     <?php } ?>

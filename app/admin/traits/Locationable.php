@@ -4,6 +4,8 @@ namespace Admin\Traits;
 
 use Admin;
 use Admin\Classes\LocationScope;
+use AdminAuth;
+use App;
 use Igniter\Flame\Database\Model;
 
 trait Locationable
@@ -17,7 +19,7 @@ trait Locationable
     /**
      * @var bool Flag for arbitrarily enabling location scope.
      */
-    public $locationScopeEnabled;
+    public $locationScopeEnabled = FALSE;
 
     protected $locationableAttributes;
 
@@ -43,6 +45,18 @@ trait Locationable
         static::addGlobalScope(new LocationScope);
     }
 
+    public function locationableScopeEnabled()
+    {
+        if ($this->locationScopeEnabled === TRUE)
+            return TRUE;
+
+        return App::runningInAdmin() AND AdminAuth::isStrictLocation();
+    }
+
+    //
+    //
+    //
+
     public function scopeWhereHasLocation($query, $locationId)
     {
         return $this->applyLocationScope($query, $locationId);
@@ -60,7 +74,7 @@ trait Locationable
      * @param \Igniter\Flame\Database\Builder $builder
      * @param \Igniter\Flame\Auth\Models\User $userLocation
      */
-    public function applyLocationScope($builder, $userLocation)
+    protected function applyLocationScope($builder, $userLocation)
     {
         $locationId = !is_numeric($userLocation)
             ? $userLocation->getKey() : $userLocation;
@@ -80,6 +94,10 @@ trait Locationable
             });
         }
     }
+
+    //
+    //
+    //
 
     protected function purgeLocationableAttributes()
     {
@@ -110,6 +128,10 @@ trait Locationable
 
         $this->getLocationableRelationObject()->detach();
     }
+
+    //
+    //
+    //
 
     protected function getLocationableRelationObject()
     {

@@ -1,7 +1,7 @@
 <?= form_open(current_url(),
     [
-        'id'     => 'edit-form',
-        'role'   => 'form',
+        'id' => 'edit-form',
+        'role' => 'form',
         'method' => 'DELETE',
     ]
 ); ?>
@@ -20,38 +20,57 @@
     </div>
 </div>
 
-<div class="form-fields">
+<div class="form-fields flex-column">
     <?php $deleteAction = !empty($themeData)
         ? lang('system::lang.themes.text_files_data')
         : lang('system::lang.themes.text_files'); ?>
     <p><?= sprintf(lang('system::lang.themes.alert_delete_warning'), $deleteAction, $themeName); ?></p>
     <p><?= sprintf(lang('system::lang.themes.alert_delete_confirm'), $deleteAction); ?></p>
-    <div id="deletedFiles">
-                    <textarea
-                        class="form-control"
-                        rows="10"
-                        readonly><?= implode(PHP_EOL, $filesToDelete); ?></textarea>
+    <div id="deletedFiles" class="form-group">
+        <textarea
+            class="form-control"
+            rows="10"
+            readonly
+        ><?= implode(PHP_EOL, $filesToDelete); ?></textarea>
     </div>
 
     <?php if ($themeData) { ?>
-        <div class="form-group wrap-top">
-            <label for="input-delete-data"
-                   class="col-sm-2 control-label"><?= lang('system::lang.themes.label_delete_data'); ?></label>
-            <div class="col-sm-5">
-                <div id="input-delete-data" class="btn-group btn-group-switch" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input
-                            type="radio"
-                            name="delete_data"
-                            value="0" <?= set_radio('delete_data', '0'); ?>
-                        ><?= lang('admin::lang.text_no'); ?>
-                    </label>
-                    <label class="btn btn-default active">
-                        <input
-                            type="radio"
-                            name="delete_data"
-                            value="1" <?= set_radio('delete_data', '1', TRUE); ?>
-                        ><?= lang('admin::lang.text_yes'); ?>
+        <div class="form-group span-full">
+            <label
+                for="input-delete-data"
+                class="control-label"
+            ><?= lang('system::lang.themes.label_delete_data'); ?></label>
+            <br>
+            <div id="input-delete-data">
+                <input
+                    type="hidden"
+                    name="delete_data"
+                    value="0"
+                >
+                <div
+                    class="field-switch"
+                    data-control="switch"
+                >
+                    <input
+                        type="checkbox"
+                        name="delete_data"
+                        id="delete-data"
+                        class="field-switch-input"
+                        value="1"
+                    >
+                    <label
+                        class="field-switch-label"
+                        for="delete-data"
+                        style="width: 120px;"
+                    >
+                        <span class="field-switch-container">
+                            <span class="field-switch-active">
+                                <span class="field-switch-toggle bg-success"><?= lang('admin::lang.text_yes'); ?></span>
+                            </span>
+                            <span class="field-switch-inactive">
+                                <span class="field-switch-toggle bg-danger"><?= lang('admin::lang.text_no'); ?></span>
+                            </span>
+                        </span>
                     </label>
                 </div>
             </div>

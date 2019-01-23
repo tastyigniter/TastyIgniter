@@ -317,8 +317,8 @@ class Themes extends \Admin\Classes\AdminController
         $theme = ThemeManager::instance()->findTheme($themeCode);
         $meta = $theme->config;
 
-        if (Themes_model::deleteTheme($themeCode, (post('delete_data') == 1))) {
-            $name = isset($meta['name']) ? $meta['name'] : '';
+        if (Themes_model::deleteTheme($themeCode, post('delete_data') == 1)) {
+            $name = $meta['name'] ?? '';
 
             flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme {$name} deleted "));
         }
