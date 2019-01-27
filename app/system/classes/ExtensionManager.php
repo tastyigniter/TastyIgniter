@@ -629,15 +629,10 @@ class ExtensionManager
      */
     public function loadInstalled()
     {
-        $path = $this->metaFile;
+        if (!File::exists($this->metaFile))
+            return;
 
-        if (File::exists($path)) {
-            $this->installedExtensions = json_decode(File::get($path), TRUE) ?: [];
-        }
-        else {
-            $this->readInstalledExtensionsFromDb();
-            $this->saveInstalled();
-        }
+        $this->installedExtensions = json_decode(File::get($this->metaFile), TRUE) ?: [];
     }
 
     /**
@@ -648,6 +643,9 @@ class ExtensionManager
     public function updateInstalledExtensions($code, $enable = TRUE)
     {
         $code = $this->getIdentifier($code);
+
+        if (!$this->installedExtensions)
+            $this->readInstalledExtensionsFromDb();
 
         if (is_null($enable)) {
             array_pull($this->installedExtensions, $code);
@@ -742,6 +740,7 @@ class ExtensionManager
 
         if (($installedExtensions = setting('installed_extensions')) AND is_array($installedExtensions)) {
             $this->installedExtensions = array_dot($installedExtensions);
+            setting()->forget('installed_extensions');
         }
     }
 }

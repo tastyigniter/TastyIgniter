@@ -25,7 +25,7 @@ class HubManager
     public function initialize()
     {
         $this->cachePrefix = 'hub_';
-        $this->cacheTtl = 5;
+        $this->cacheTtl = 0;
     }
 
     public function listItems($filter = [])
@@ -88,7 +88,7 @@ class HubManager
     public function applyCoreVersion()
     {
         $result = $this->requestRemoteData('ping', [
-            'edge' => Config::get('system.edgeUpdates', FALSE)
+            'edge' => Config::get('system.edgeUpdates', FALSE),
         ]);
 
         return array_get($result, 'pong', 'v3.0.0');
@@ -223,10 +223,6 @@ class HubManager
         curl_setopt($curl, CURLOPT_REFERER, url()->current());
         curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
-
-        // SKIP SSL Check for Wamp
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 
         $params['url'] = base64_encode(root_url());
 
