@@ -189,7 +189,7 @@ class Extensions extends \Admin\Classes\AdminController
         $this->initFormWidget($model, $action);
 
         if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return;
+            return ['#notification' => $this->makePartial('flash')];
 
         $model->set($this->formWidget->getSaveData());
         if ($model->save()) {
@@ -363,6 +363,7 @@ class Extensions extends \Admin\Classes\AdminController
     {
         try {
             $extensionManager = ExtensionManager::instance();
+
             return count($extensionManager->files($extension, 'database/migrations')) > 0;
         }
         catch (Exception $ex) {

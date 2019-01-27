@@ -237,7 +237,7 @@ class FormController extends ControllerAction
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return FALSE;
+            return ['#notification' => $this->makePartial('flash')];
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
@@ -284,7 +284,7 @@ class FormController extends ControllerAction
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return FALSE;
+            return ['#notification' => $this->makePartial('flash')];
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
