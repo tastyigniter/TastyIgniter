@@ -58,7 +58,7 @@ $config['list']['columns'] = [
         'label' => 'lang:system::lang.currencies.column_status',
         'type' => 'switch',
     ],
-    'default_currency_code' => [
+    'currency_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],

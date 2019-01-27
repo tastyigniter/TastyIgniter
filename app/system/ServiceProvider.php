@@ -248,8 +248,8 @@ class ServiceProvider extends AppServiceProvider
 
     protected function setConfiguration()
     {
-        $this->app->resolving('currency', function ($currency, $app) {
-            $app['config']->set('currency.default', setting('default_currency_code'));
+        Event::listen('currency.beforeRegister', function () {
+            app('config')->set('currency.default', setting('default_currency_code'));
         });
 
         $this->app->resolving('geocoder', function ($geocoder, $app) {
