@@ -24,5 +24,4 @@ before_script:
   - composer self-update
   - travis_retry composer install --no-interaction --prefer-source
 
-script: php artisan help
-#script: vendor/bin/phpunit --verbose
+script: vendor/bin/phpunit --verbose
