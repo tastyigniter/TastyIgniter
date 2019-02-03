@@ -4,6 +4,8 @@ TastyIgniter :fire:
 [![Packagist](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Packagist&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
 [![Build Status](https://img.shields.io/travis/tastyigniter/TastyIgniter.svg?label=TravisCI&style=flat-square)](https://travis-ci.org/tastyigniter/TastyIgniter)
 [![License](https://img.shields.io/packagist/l/tastyigniter/TastyIgniter.svg?label=License&style=flat-square)](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE)
+[![Backers on Open Collective](https://opencollective.com/TastyIgniter/backers/badge.svg)](#backers) 
+[![Sponsors on Open Collective](https://opencollective.com/TastyIgniter/sponsors/badge.svg)](#sponsors) 
 
 [TastyIgniter](https://tastyigniter.com/) is a food ordering and restaurant management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
@@ -57,6 +59,36 @@ TastyIgniter was created by [Samuel Adepoyigi](https://github.com/sampoyigi).
 
 ## Security Vulnerabilities
 If you discover a security vulnerability within TastyIgniter, please send an e-mail to support@tastyigniter.com.
+
+## Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/tastyigniter/TastyIgniter/graphs/contributors"><img src="https://opencollective.com/TastyIgniter/contributors.svg?width=890&button=false" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/TastyIgniter#backer)]
+
+<a href="https://opencollective.com/TastyIgniter#backers" target="_blank"><img src="https://opencollective.com/TastyIgniter/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/TastyIgniter#sponsor)]
+
+<a href="https://opencollective.com/TastyIgniter/sponsor/0/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/1/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/2/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/3/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/4/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/5/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/6/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/7/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/8/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/TastyIgniter/sponsor/9/website" target="_blank"><img src="https://opencollective.com/TastyIgniter/sponsor/9/avatar.svg"></a>
+
+
 
 ## License
 Starting with version 3.0.0 TastyIgniter is licensed under the [The MIT License (MIT)](https://tastyigniter.com/licence/). Older versions were GPL-licensed.
