@@ -3,7 +3,8 @@
     "scripts": {
         "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "prod": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "postinstall": "opencollective-postinstall"
     },
     "devDependencies": {
         "cross-env": "^5.0.1",
@@ -18,5 +19,13 @@
         "animate.css": "^3.6.1",
         "sweetalert": "^2.1.0",
         "metismenu": "2.7.7"
+    },
+    "dependencies": {
+        "opencollective-postinstall": "^2.0.1",
+        "opencollective": "^1.0.3"
+    },
+    "collective": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/TastyIgniter"
     }
 }
