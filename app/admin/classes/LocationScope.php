@@ -21,6 +21,6 @@ class LocationScope implements Scope
         if (!$model->locationableScopeEnabled())
             return;
 
-        $builder->whereHasLocation($model->getUserLocation());
+        $builder->whereHasLocation($model->locationableGetUserLocation());
     }
 }

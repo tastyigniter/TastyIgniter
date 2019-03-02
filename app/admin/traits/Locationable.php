@@ -53,6 +53,11 @@ trait Locationable
         return App::runningInAdmin() AND AdminAuth::isStrictLocation();
     }
 
+    public function locationableGetUserLocation()
+    {
+        return AdminAuth::getLocationId();
+    }
+
     //
     //
     //
