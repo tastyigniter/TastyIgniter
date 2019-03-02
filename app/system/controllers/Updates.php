@@ -33,10 +33,6 @@ class Updates extends \Admin\Classes\AdminController
 
         Themes_model::syncAll();
 
-        if (!params()->has('carte_key')) {
-            Flash::warning(lang('system::lang.missing.carte_key'))->now();
-        }
-
         $pageTitle = lang('system::lang.updates.text_title');
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
@@ -83,10 +79,6 @@ class Updates extends \Admin\Classes\AdminController
 
     public function browse($context, $itemType = null)
     {
-        if (!params()->has('carte_key')) {
-            Flash::warning(lang('system::lang.missing.carte_key'))->now();
-        }
-
         $updateManager = UpdateManager::instance();
 
         $pageTitle = ($itemType == 'extensions') ? lang('system::lang.updates.text_tab_title_extensions') : lang('system::lang.updates.text_tab_title_themes');
@@ -217,6 +209,9 @@ class Updates extends \Admin\Classes\AdminController
         $error = null;
 
         $items = input('items');
+
+        if (!params()->has('carte_key'))
+            throw new ApplicationException(lang('system::lang.missing.carte_key'));
 
         if (!count($items))
             throw new ApplicationException('No item(s) specified.');
