@@ -1,6 +1,7 @@
 .input-group-btn, .input-group-addon {
   @extend .input-group-append;
 }
+
 .form-control-static {
   @extend .form-control-plaintext;
   background-color: $input-disabled-bg;
@@ -14,22 +15,20 @@
   padding: $input-padding-y $input-padding-x;
   overflow: auto;
 }
+
 .input-sm {
   @extend .form-control-sm;
 }
-select.input-sm {
-  @extend select.form-control-sm;
-}
+
 .input-lg {
   @extend .form-control-lg;
 }
-select.input-lg {
-  @extend select.form-control-lg;
-}
+
 //
 .control-label {
   color: $gray-800;
 }
+
 // Custom input file type
 .btn-file-input input[type=file] {
   position: absolute;
@@ -42,6 +41,7 @@ select.input-lg {
   opacity: 0;
   filter: alpha(opacity=0);
 }
+
 // Input group
 //
 .input-group-icon {

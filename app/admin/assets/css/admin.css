@@ -715,7 +715,7 @@
   outline: 0;
 }
 
-@media screen and (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
   .select2-container--bootstrap .select2-selection {
     -webkit-transition: none;
     transition: none;
@@ -738,7 +738,7 @@
   font-size: 1rem;
 }
 
-@media screen and (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
   .select2-container--bootstrap .select2-search--dropdown .select2-search__field {
     -webkit-transition: none;
     transition: none;
@@ -1662,24 +1662,24 @@ body.dragging .dragged, body.dragging .dragged {
 }
 
 .select2-container--bootstrap .select2-selection--single {
-  height: calc(2.45rem + 2px);
+  height: calc(1.7em + 0.75rem + 2px);
   padding: 0.375rem 0.75rem;
 }
 
 .input-sm + .select2-container--bootstrap .select2-selection--single {
-  height: calc(1.8125rem + 2px);
+  height: calc(1.5em + 0.5rem + 2px);
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
 }
 
 .input-lg + .select2-container--bootstrap .select2-selection--single {
-  height: calc(2.875rem + 2px);
+  height: calc(1.5em + 1rem + 2px);
   padding: 0.5rem 1rem;
   font-size: 1.25rem;
 }
 
 .select2-container--bootstrap .select2-selection--multiple {
-  height: calc(2.45rem + 2px);
+  height: calc(1.7em + 0.75rem + 2px);
 }
 
 .select2-container--bootstrap .select2-selection,
