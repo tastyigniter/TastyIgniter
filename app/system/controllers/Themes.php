@@ -183,7 +183,7 @@ class Themes extends \Admin\Classes\AdminController
         $this->initFormWidget($model, $context);
 
         if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return ['#notification' => $this->makePartial('flash')];
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         $model->setAttribute('data', $this->formWidget->getSaveData());
 
@@ -215,7 +215,7 @@ class Themes extends \Admin\Classes\AdminController
         });
 
         if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return ['#notification' => $this->makePartial('flash')];
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         list($fileName, $attributes) = $this->getFileAttributes();
 

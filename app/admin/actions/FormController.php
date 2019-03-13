@@ -8,6 +8,7 @@ use DB;
 use Exception;
 use Model;
 use Redirect;
+use Request;
 use System\Classes\ControllerAction;
 use Template;
 
@@ -237,7 +238,7 @@ class FormController extends ControllerAction
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return ['#notification' => $this->makePartial('flash')];
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
@@ -284,7 +285,7 @@ class FormController extends ControllerAction
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return ['#notification' => $this->makePartial('flash')];
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {

@@ -189,7 +189,7 @@ class Extensions extends \Admin\Classes\AdminController
         $this->initFormWidget($model, $action);
 
         if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return ['#notification' => $this->makePartial('flash')];
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         $model->set($this->formWidget->getSaveData());
         if ($model->save()) {

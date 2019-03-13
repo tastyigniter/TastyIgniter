@@ -8,6 +8,7 @@ use Exception;
 use File;
 use Illuminate\Mail\Message;
 use Mail;
+use Request;
 use Session;
 use System\Models\Currencies_model;
 use Template;
@@ -87,7 +88,7 @@ class Settings extends \Admin\Classes\AdminController
         $this->initWidgets($model, $definition);
 
         if ($this->formValidate($this->formWidget) === FALSE)
-            return ['#notification' => $this->makePartial('flash')];
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         if (is_numeric($locationId = post('default_location_id'))) {
             Locations_model::updateDefault(['location_id' => $locationId]);
@@ -121,7 +122,7 @@ class Settings extends \Admin\Classes\AdminController
         $this->initWidgets($model, $definition);
 
         if ($this->formValidate($this->formWidget) === FALSE)
-            return ['#notification' => $this->makePartial('flash')];
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         setting()->set($this->formWidget->getSaveData());
 
