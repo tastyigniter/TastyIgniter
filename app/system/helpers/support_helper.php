@@ -9,7 +9,7 @@ if (!function_exists('controller')) {
      */
     function controller()
     {
-        return \Main\Classes\MainController::getController();
+        return \Main\Classes\MainController::getController() ?? new \Main\Classes\MainController;
     }
 }
 
