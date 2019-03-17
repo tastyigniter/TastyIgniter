@@ -210,8 +210,9 @@ class Updates extends \Admin\Classes\AdminController
 
         $items = input('items');
 
-        if (!params()->has('carte_key'))
-            throw new ApplicationException(lang('system::lang.missing.carte_key'));
+// Uncomment this block to require carte key
+//        if (!params()->has('carte_key'))
+//            throw new ApplicationException(lang('system::lang.missing.carte_key'));
 
         if (!count($items))
             throw new ApplicationException('No item(s) specified.');

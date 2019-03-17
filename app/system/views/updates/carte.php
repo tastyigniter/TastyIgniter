@@ -13,8 +13,8 @@
                     <div class="panel-footer">
                         <?= form_open(current_url(),
                             [
-                                'id'     => 'carte-form',
-                                'role'   => 'form',
+                                'id' => 'carte-form',
+                                'role' => 'form',
                                 'method' => 'POST',
                             ]
                         ); ?>
@@ -40,7 +40,7 @@
                         <div
                             id="carte-help"
                             class="wrap-horizontal"
-                            style="display: <?= $carteInfo ? 'none' : 'block'; ?>;"><?= lang('system::lang.updates.help_carte_key'); ?>
+                            style="display: <?= $carteInfo ? 'none' : 'block'; ?>;"><?= sprintf(lang('system::lang.updates.help_carte_key'), 'https://tastyigniter.com/signin'); ?>
                         </div>
                     </div>
                 </div>

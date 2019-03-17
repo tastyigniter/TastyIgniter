@@ -623,6 +623,6 @@ return [
         'button_updates' => '<i class="fa fa-refresh"></i> Updates',
         'button_update' => '<i class="fa fa-check"></i> Update Available',
 
-        'help_carte_key' => 'Site key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a carte from your TastyIgniter Account, if you haven\'t already.',
+        'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
     ],
 ];
