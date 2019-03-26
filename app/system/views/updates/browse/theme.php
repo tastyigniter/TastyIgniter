@@ -6,7 +6,7 @@
         style="height: 200px"
     >
     <div class="panel-body">
-        <h5><?= str_limit($item['name'], 22) ?></h5>
+        <b><?= str_limit($item['name'], 22) ?></b>
         <p class="text-muted mb-0"><?= str_limit($item['description'], 72); ?></p>
     </div>
     <div class="d-flex p-3">

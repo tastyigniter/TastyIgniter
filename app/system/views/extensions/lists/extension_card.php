@@ -1,11 +1,11 @@
 <div class="my-2">
-    <h5 class="extension-name<?= (!$record->class) ? ' text-muted' : ''; ?>">
+    <b class="extension-name<?= (!$record->class) ? ' text-muted' : ''; ?>">
         <?php if ($record->class) { ?>
             <?= $record->title; ?>
         <?php }
         else { ?>
             <s><?= $record->title; ?></s>&nbsp;&nbsp;
         <?php } ?>
-    </h5>
-    <span class="extension-desc text-muted"><?= $record->meta['description']; ?></span>
+    </b>
+    <p class="extension-desc mb-0 text-muted"><?= $record->meta['description']; ?></p>
 </div>

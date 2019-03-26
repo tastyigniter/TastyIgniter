@@ -1,5 +1,5 @@
 <div
-    class="components-item mr-2"
+    class="components-item"
 >
     <div class="components-item-action">
         <a
@@ -19,10 +19,8 @@
         data-toggle="modal"
         data-target="#<?= $this->getId('components-item-modal-'.$component->alias) ?>"
     >
-        <h5>
-            <?= e(lang($component->name)) ?>
-        </h5>
-        <h6 class="text-muted"><?= $component->description ? e(lang($component->description)) : '' ?></h6>
+        <b><?= e(lang($component->name)) ?></b>
+        <p class="text-muted mb-0"><?= $component->description ? e(lang($component->description)) : '' ?></p>
     </div>
     <input
         type="hidden"

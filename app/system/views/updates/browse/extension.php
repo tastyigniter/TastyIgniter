@@ -12,7 +12,7 @@
             <?php } ?>
         </div>
         <div class="flex-grow-1 px-0 ml-auto">
-            <h5><?= str_limit($item['name'], 22) ?></h5>
+            <b><?= str_limit($item['name'], 22) ?></b>
             <p class="mb-0 text-muted"><?= str_limit($item['description'], 128); ?></p>
         </div>
     </div>

@@ -137,7 +137,7 @@ class Statistics extends BaseDashboardWidget
 
     protected function getRangeQuery($range)
     {
-        if ($range === 'today')
+        if ($range === 'day')
             return 'DATE(date_added) = '.date('Y-m-d');
 
         if ($range === 'week')

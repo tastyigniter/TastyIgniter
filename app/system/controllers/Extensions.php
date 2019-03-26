@@ -253,7 +253,7 @@ class Extensions extends \Admin\Classes\AdminController
             $attributes['class'] = $attributes['class'].' disabled';
 
         if ($column->columnName != 'delete' AND !$record->class)
-            $attributes['class'] = 'btn btn-default disabled';
+            $attributes['class'] = 'btn btn-outline-default disabled';
 
         return $attributes;
     }
