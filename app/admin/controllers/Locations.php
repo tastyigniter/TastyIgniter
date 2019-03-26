@@ -160,7 +160,7 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['options.hours.*.flexible.*.close', 'lang:admin::lang.locations.label_close_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::lang.locations.label_opening_status', $requiredIf.'|integer'];
 
-        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'required'];
+        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'required_if:offer_delivery,1'];
         $rules[] = ['delivery_areas.*.type', 'lang:admin::lang.locations.label_area_type', 'required'];
         $rules[] = ['delivery_areas.*.name', 'lang:admin::lang.locations.label_area_name', 'required'];
         $rules[] = ['delivery_areas.*.area_id', 'lang:admin::lang.locations.label_area_id', 'integer'];
