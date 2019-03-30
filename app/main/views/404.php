@@ -2,12 +2,26 @@
 <html lang="<?= App::getLocale(); ?>">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= Lang::get('main::lang.not_found.page_label') ?></title>
+    <link rel="shortcut icon" href="<?= asset('app/admin/assets/images/favicon.ico'); ?>" type="image/ico">
+    <style>
+        body { text-align: center; padding: 50px; }
+        @media (min-width: 768px) {
+            body { padding-top: 150px; }
+        }
+        h1 { font-size: 50px; }
+        body { font: 20px -apple-system, BlinkMacSystemFont, Helvetica, sans-serif; color: #333; }
+        article { display: block; width: 650px; margin: 0 auto; }
+        a { color: #ED561A; text-decoration: none; }
+        a:hover { color: #333; text-decoration: none; }
+    </style>
 </head>
 <body>
-    <div id="container">
-        <h1><?= Lang::get('main::lang.not_found.page_label') ?></h1>
-        <p class="lead"><?= Lang::get('main::lang.not_found.page_message') ?></p>
-    </div>
+<article>
+    <h1><?= Lang::get('main::lang.not_found.page_label') ?></h1>
+    <p class="lead"><?= Lang::get('main::lang.not_found.page_message') ?></p>
+</article>
 </body>
 </html>

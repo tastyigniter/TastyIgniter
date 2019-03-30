@@ -169,7 +169,7 @@ class MainController extends BaseController
         // Show maintenance message if maintenance is enabled
         if (setting('maintenance_mode') == 1 AND !AdminAuth::isLogged())
             return Response::make(
-                View::make('main::maintenance', setting('maintenance_message')),
+                View::make('main::maintenance', ['message' => setting('maintenance_message')]),
                 $this->statusCode
             );
 
@@ -626,6 +626,7 @@ class MainController extends BaseController
         $previousContext = $this->componentContext;
         if (!$componentObj = $this->findComponentByAlias($name)) {
             $this->handleException(sprintf(lang('main::lang.not_found.component'), $name), $throwException);
+
             return FALSE;
         }
 
@@ -762,12 +763,14 @@ class MainController extends BaseController
             }
             elseif (($componentObj = $this->findComponentByPartial($partialName)) === null) {
                 $this->handleException(sprintf(lang('main::lang.not_found.partial'), $partialName), $throwException);
+
                 return FALSE;
             }
         }
         else {
             if (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
                 $this->handleException(sprintf(lang('main::lang.not_found.component'), $componentAlias), $throwException);
+
                 return FALSE;
             }
         }
@@ -787,6 +790,7 @@ class MainController extends BaseController
 
         if ($partial === null) {
             $this->handleException(sprintf(lang('main::lang.not_found.partial'), $name), $throwException);
+
             return FALSE;
         }
 
@@ -797,6 +801,7 @@ class MainController extends BaseController
     {
         if (($partial = Partial::loadCached($this->theme, $name)) === null) {
             $this->handleException(sprintf(lang('main::lang.not_found.partial'), $name), $throwException);
+
             return FALSE;
         }
 
