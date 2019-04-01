@@ -62,14 +62,14 @@ class Coupons extends \Admin\Classes\AdminController
     {
         $namedRules = [
             ['name', 'lang:admin::lang.coupons.label_name', 'required|min:2|max:128'],
-            ['code', 'lang:admin::lang.coupons.label_code', 'required|min:2|max:15'
+            ['code', 'lang:admin::lang.coupons.label_code', 'required|min:2'
                 .(($form->context == 'create') ? '|unique:coupons,code' : '')],
             ['type', 'lang:admin::lang.coupons.label_type', 'required|string|size:1'],
             ['discount', 'lang:admin::lang.coupons.label_discount', 'required|numeric'
                 .(($model->type == 'P') ? '|max:100' : '')],
             ['min_total', 'lang:admin::lang.coupons.label_min_total', 'numeric'],
-            ['redemptions', 'lang:admin::lang.coupons.label_redemption', 'integer'],
-            ['customer_redemptions', 'lang:admin::lang.coupons.label_customer_redemption', 'integer'],
+            ['redemptions', 'lang:admin::lang.coupons.label_redemption', 'required|integer'],
+            ['customer_redemptions', 'lang:admin::lang.coupons.label_customer_redemption', 'required|integer'],
             ['description', 'lang:admin::lang.coupons.label_description', 'min:2|max:1028'],
             ['validity', 'lang:admin::lang.coupons.label_validity', 'required'],
             ['fixed_date', 'lang:admin::lang.coupons.label_fixed_date', 'required_if:validity,fixed|date'],

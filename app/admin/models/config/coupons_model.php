@@ -146,12 +146,14 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.coupons.label_redemption',
             'type' => 'number',
             'span' => 'left',
+            'default' => 0,
             'comment' => 'lang:admin::lang.coupons.help_redemption',
         ],
         'customer_redemptions' => [
             'label' => 'lang:admin::lang.coupons.label_customer_redemption',
             'type' => 'number',
             'span' => 'right',
+            'default' => 0,
             'comment' => 'lang:admin::lang.coupons.help_customer_redemption',
         ],
         'order_restriction' => [
