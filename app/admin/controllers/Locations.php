@@ -160,11 +160,12 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['options.hours.*.flexible.*.close', 'lang:admin::lang.locations.label_close_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::lang.locations.label_opening_status', $requiredIf.'|integer'];
 
-        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'required_if:offer_delivery,1'];
+        $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'sometimes'];
         $rules[] = ['delivery_areas.*.type', 'lang:admin::lang.locations.label_area_type', 'required'];
         $rules[] = ['delivery_areas.*.name', 'lang:admin::lang.locations.label_area_name', 'required'];
         $rules[] = ['delivery_areas.*.area_id', 'lang:admin::lang.locations.label_area_id', 'integer'];
 
+        $rules[] = ['delivery_areas.*.boundaries.components', 'lang:admin::lang.locations.label_address_component', 'required_if:delivery_areas.*.type,address'];
         $rules[] = ['delivery_areas.*.boundaries.components.*.type', 'lang:admin::lang.locations.label_address_component_type', 'sometimes|required|string'];
         $rules[] = ['delivery_areas.*.boundaries.components.*.value', 'lang:admin::lang.locations.label_address_component_value', 'sometimes|required|string'];
 

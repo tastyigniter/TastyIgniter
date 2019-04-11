@@ -524,6 +524,7 @@ return [
         'label_area_id' => 'Area ID',
         'label_area_name' => 'Area Name',
         'label_area_charge' => 'Charge',
+        'label_address_component' => 'Address Component',
         'label_address_component_type' => 'Address Component Type',
         'label_address_component_value' => 'Address Component Value',
         'label_charge_condition' => 'Rule',

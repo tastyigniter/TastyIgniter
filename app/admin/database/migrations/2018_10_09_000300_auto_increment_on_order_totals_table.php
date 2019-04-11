@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Schema;
 
 /**
- * Drop primary key order_id and add unique keys
+ * Set order_total_id to auto increment PRIMARY key
  */
 class autoIncrementOnOrderTotalsTable extends Migration
 {
