@@ -2,6 +2,7 @@
 
 use AdminAuth;
 use AdminMenu;
+use Request;
 
 class Staffs extends \Admin\Classes\AdminController
 {
@@ -49,7 +50,7 @@ class Staffs extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        if ($this->action == 'edit' AND AdminAuth::getStaffId() == current($this->params))
+        if ($this->action == 'edit' AND Request::method() != 'DELETE' AND AdminAuth::getStaffId() == current($this->params))
             $this->requiredPermissions = null;
 
         AdminMenu::setContext('staffs', 'users');
