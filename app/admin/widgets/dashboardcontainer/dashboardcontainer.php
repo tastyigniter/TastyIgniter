@@ -8,10 +8,8 @@
         </div>
     </div>
 
-    <?php if ($this->canAddAndDelete) { ?>
-        <div id="<?= $this->getId('container-toolbar') ?>" class="toolbar dashboard-toolbar btn-toolbar"
-             data-container-toolbar>
-            <?= $this->makePartial('widget_toolbar') ?>
-        </div>
-    <?php } ?>
+    <div id="<?= $this->getId('container-toolbar') ?>" class="toolbar dashboard-toolbar btn-toolbar"
+         data-container-toolbar>
+        <?= $this->makePartial('widget_toolbar') ?>
+    </div>
 </div>

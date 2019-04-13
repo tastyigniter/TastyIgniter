@@ -24,6 +24,11 @@ class DashboardContainer extends BaseWidget
     public $canAddAndDelete = TRUE;
 
     /**
+     * @var string Determines whether widgets could be set as default.
+     */
+    public $canSetDefault = FALSE;
+
+    /**
      * @var array A list of default widgets to load.
      * This structure could be defined in the controller containerConfig property
      * Example structure:
@@ -171,6 +176,10 @@ class DashboardContainer extends BaseWidget
 
     public function onSetAsDefault()
     {
+        if (!$this->canSetDefault) {
+            throw new ApplicationException('Access denied.');
+        }
+
         $widgets = $this->getWidgetsFromUserPreferences();
 
         params()->set($this->getSystemParametersKey(), $widgets);
@@ -444,7 +453,7 @@ class DashboardContainer extends BaseWidget
         return $result;
     }
 
-    public function getWidgetPropertyWidthOptions()
+    protected function getWidgetPropertyWidthOptions()
     {
         $sizes = [];
         for ($i = 1; $i <= 12; $i++) {
