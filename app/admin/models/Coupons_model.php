@@ -115,7 +115,7 @@ class Coupons_model extends Model
 
     public function minimumOrderTotal()
     {
-        return $this->min_total;
+        return $this->min_total ?: 0;
     }
 
     public function isExpired()

@@ -141,6 +141,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.coupons.label_min_total',
             'type' => 'number',
             'span' => 'right',
+            'default' => 0,
         ],
         'redemptions' => [
             'label' => 'lang:admin::lang.coupons.label_redemption',
