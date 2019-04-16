@@ -2,8 +2,10 @@ TastyIgniter :fire:
 ============
 
 [![Packagist](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Packagist&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
+[![Packagist](https://img.shields.io/packagist/php-v/tastyigniter/TastyIgniter.svg?label=PHP&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
 [![Build Status](https://img.shields.io/travis/tastyigniter/TastyIgniter.svg?label=TravisCI&style=flat-square)](https://travis-ci.org/tastyigniter/TastyIgniter)
-[![License](https://img.shields.io/packagist/l/tastyigniter/TastyIgniter.svg?label=License&style=flat-square)](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/tastyigniter/TastyIgniter.svg?label=License&style=flat-square)](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt)
+[![Twitter](https://img.shields.io/twitter/follow/TastyIgniter.svg?label=Follow)](https://twitter.com/TastyIgniter)
 
 [TastyIgniter](https://tastyigniter.com/) is a food ordering and restaurant management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
