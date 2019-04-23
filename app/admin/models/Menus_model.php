@@ -78,6 +78,7 @@ class Menus_model extends Model
         extract(array_merge([
             'page' => 1,
             'pageLimit' => 20,
+            'enabled' => TRUE,
             'sort' => 'menu_priority asc',
             'group' => null,
             'location' => null,
@@ -115,7 +116,16 @@ class Menus_model extends Model
             });
         }
 
+        if ($enabled) {
+            $query->isEnabled();
+        }
+
         return $query->paginate($pageLimit, $page);
+    }
+
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('menu_status', 1);
     }
 
     //
