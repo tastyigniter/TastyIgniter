@@ -6,17 +6,19 @@
         "prod": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "cross-env": "^5.0.1",
-        "laravel-mix": "^2.1.14",
-        "bootstrap": "4.3.1",
-        "jquery": "3.3.1",
-        "popper.js": "1.14.3",
         "@fortawesome/fontawesome-free-webfonts": "^1.0.6",
+        "animate.css": "^3.6.1",
+        "bootstrap": "4.3.1",
+        "cross-env": "^5.0.1",
+        "jquery": "3.4.0",
+        "js-cookie": "2.2.0",
+        "laravel-mix": "^4.0.15",
+        "metismenu": "2.7.7",
+        "popper.js": "1.14.3",
+        "sass": "^1.20.1",
+        "sass-loader": "^7.1.0",
         "select2": "4.0.6-rc.1",
         "select2-theme-bootstrap4": "0.2.0-beta.2",
-        "js-cookie": "2.2.0",
-        "animate.css": "^3.6.1",
-        "sweetalert": "^2.1.0",
-        "metismenu": "2.7.7"
+        "sweetalert": "^2.1.0"
     }
 }
