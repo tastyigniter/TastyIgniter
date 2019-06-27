@@ -3,10 +3,8 @@
   "description": "TastyIgniter is a free open source online ordering and restaurant management system",
   "type": "project",
   "keywords": [
-    "tastyigniter", "igniter",
-    "restaurant",
-    "ordering", "ecommerce",
-    "opensource"
+    "tastyigniter", "igniter", "restaurant",
+    "ordering", "ecommerce", "opensource"
   ],
   "authors": [
     {

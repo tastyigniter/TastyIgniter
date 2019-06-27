@@ -1,6 +1,6 @@
 <div class="panel panel-item item-extension h-100 shadow-sm">
     <div class="d-flex h-75 p-3">
-        <div class="pr-4">
+        <div class="pr-4 align-self-center">
             <?php if (!empty($item['thumb'])) { ?>
                 <img src="<?= $item['thumb'] ?>"
                      class="img-rounded"

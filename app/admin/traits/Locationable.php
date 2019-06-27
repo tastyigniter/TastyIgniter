@@ -109,7 +109,7 @@ trait Locationable
         $attributes = $this->getAttributes();
         $relationName = $this->locationableRelationName();
         $cleanAttributes = array_except($attributes, [$relationName]);
-        $this->locationableAttributes = array_get($attributes, $relationName, []);
+        $this->locationableAttributes = array_get($attributes, $relationName) ?? [];
 
         return $this->attributes = $cleanAttributes;
     }
