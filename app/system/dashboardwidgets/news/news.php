@@ -4,7 +4,7 @@
         <?php
         $newsFeed = [];
 
-        if (@$newsRss->load($this->newsRss)) {
+        if ($newsRss AND @$newsRss->load($this->newsRss)) {
             foreach ($newsRss->getElementsByTagName('item') as $content) {
                 $item = [
                     'title' => $content->getElementsByTagName('title')->item(0)->nodeValue,

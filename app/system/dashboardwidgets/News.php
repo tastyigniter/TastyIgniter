@@ -45,6 +45,6 @@ class News extends BaseDashboardWidget
 
     public function createRssDocument()
     {
-        return new DOMDocument();
+        return class_exists('DOMDocument', FALSE) ? new DOMDocument() : null;
     }
 }
