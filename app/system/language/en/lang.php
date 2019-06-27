@@ -398,7 +398,6 @@ return [
         'label_accepted_currency' => 'Accepted Currency',
         'label_detect_language' => 'Detect Browser Language',
         'label_site_language' => 'Default Language',
-        'label_supported_languages' => 'Supported Languages',
         'label_customer_group' => 'Customer Group',
         'label_meta_description' => 'Meta Description',
         'label_meta_keyword' => 'Meta Keywords',

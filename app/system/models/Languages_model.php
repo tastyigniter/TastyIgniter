@@ -13,6 +13,11 @@ class Languages_model extends Language
 
     public $purgeable = ['file'];
 
+    public static function applySupportedLanguages()
+    {
+        setting()->set('supported_languages', self::getDropdownOptions()->keys()->toArray());
+    }
+
     public static function getDropdownOptions()
     {
         return self::isEnabled()->dropdown('name', 'code');

@@ -1,6 +1,7 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
+use System\Models\Languages_model;
 
 class Languages extends \Admin\Classes\AdminController
 {
@@ -11,32 +12,32 @@ class Languages extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'System\Models\Languages_model',
-            'title'        => 'lang:system::lang.languages.text_title',
+            'model' => 'System\Models\Languages_model',
+            'title' => 'lang:system::lang.languages.text_title',
             'emptyMessage' => 'lang:system::lang.languages.text_empty',
-            'defaultSort'  => ['language_id', 'DESC'],
-            'configFile'   => 'languages_model',
+            'defaultSort' => ['language_id', 'DESC'],
+            'configFile' => 'languages_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::lang.languages.text_form_name',
-        'model'      => 'System\Models\Languages_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'languages/edit/{language_id}',
+        'name' => 'lang:system::lang.languages.text_form_name',
+        'model' => 'System\Models\Languages_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'languages/edit/{language_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'languages',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'languages',
         ],
         'configFile' => 'languages_model',
@@ -49,6 +50,14 @@ class Languages extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('languages', 'localisation');
+    }
+
+    public function index()
+    {
+        if ($this->getUser()->hasPermission('Site.Languages.Manage'))
+            Languages_model::applySupportedLanguages();
+
+        $this->asExtension('ListController')->index();
     }
 
     public function formExtendFields($form, $fields)
