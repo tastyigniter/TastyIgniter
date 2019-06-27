@@ -10,7 +10,6 @@ use Illuminate\Mail\Message;
 use Mail;
 use Request;
 use Session;
-use System\Models\Currencies_model;
 use Template;
 
 class Settings extends \Admin\Classes\AdminController
@@ -92,10 +91,6 @@ class Settings extends \Admin\Classes\AdminController
 
         if (is_numeric($locationId = post('default_location_id'))) {
             Locations_model::updateDefault(['location_id' => $locationId]);
-        }
-
-        if (is_array($acceptedCurrencies = post('accepted_currencies'))) {
-            Currencies_model::updateAcceptedCurrencies($acceptedCurrencies);
         }
 
         setting()->set($this->formWidget->getSaveData());
