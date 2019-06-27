@@ -201,16 +201,6 @@
   },
   {
     "sort": "config",
-    "item": "customer_online_time_out",
-    "value": "120"
-  },
-  {
-    "sort": "config",
-    "item": "customer_online_archive_time_out",
-    "value": "0"
-  },
-  {
-    "sort": "config",
     "item": "permalink",
     "value": "1"
   },
