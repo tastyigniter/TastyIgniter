@@ -82,7 +82,7 @@ trait ManagesOrderItems
      */
     public function getOrderMenuOptions()
     {
-        return $this->orderMenuOptionsQuery()->where('order_id', $this->getKey())->get()->groupBy('menu_id');
+        return $this->orderMenuOptionsQuery()->where('order_id', $this->getKey())->get()->groupBy('order_menu_id');
     }
 
     /**

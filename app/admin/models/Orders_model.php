@@ -339,7 +339,7 @@ class Orders_model extends Model
         foreach ($menus as $menu) {
 
             $optionData = [];
-            if ($menuItemOptions = $menuOptions->get($menu->menu_id)) {
+            if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
                 foreach ($menuItemOptions as $menuItemOption) {
                     $optionData[] = $menuItemOption->order_option_name
                         .lang('admin::lang.text_equals')

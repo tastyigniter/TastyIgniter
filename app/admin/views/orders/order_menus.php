@@ -18,7 +18,7 @@ $orderTotals = $model->getOrderTotals();
             <tr>
                 <td><?= $menuItem->quantity; ?>x</td>
                 <td><?= $menuItem->name; ?><br/>
-                    <?php if ($menuItemOptions = $menuItemsOptions->get($menuItem->menu_id)) { ?>
+                    <?php if ($menuItemOptions = $menuItemsOptions->get($menuItem->order_menu_id)) { ?>
                         <div>
                             <?php foreach ($menuItemOptions as $menuItemOption) { ?>
                                 <small>
