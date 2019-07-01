@@ -21,46 +21,49 @@ mix.setPublicPath('./').options({
 mix.copyDirectory(
     'node_modules/@fortawesome/fontawesome-free-webfonts/webfonts',
     'ui/fonts/FontAwesome'
+).copy(
+    'node_modules/animate.css/animate.css',
+    'ui/scss/vendor/animate.scss'
 );
 
 //
 //  Build UI SCSS
 //
-mix.sass('ui/scss/flame.scss', 'ui')
+// mix.sass('ui/scss/flame.scss', 'ui')
 
 //
 //  Combine UI JS
 //
-mix.scripts(
-    [
-        'node_modules/jquery/dist/jquery.min.js',
-        'node_modules/popper.js/dist/umd/popper.min.js',
-        'node_modules/bootstrap/dist/js/bootstrap.min.js',
-        'node_modules/sweetalert/dist/sweetalert.min.js',
-        'ui/js/vendor/waterfall.min.js',
-        'ui/js/vendor/transition.js',
-        'ui/js/app.js',
-        'ui/js/flashmessage.js',
-        'ui/js/toggler.js',
-        'ui/js/trigger.js',
-    ],
-    'ui/flame.js'
-)
+// mix.scripts(
+//     [
+//         'node_modules/jquery/dist/jquery.min.js',
+//         'node_modules/popper.js/dist/umd/popper.min.js',
+//         'node_modules/bootstrap/dist/js/bootstrap.min.js',
+//         'node_modules/sweetalert/dist/sweetalert.min.js',
+//         'ui/js/vendor/waterfall.min.js',
+//         'ui/js/vendor/transition.js',
+//         'ui/js/app.js',
+//         'ui/js/flashmessage.js',
+//         'ui/js/toggler.js',
+//         'ui/js/trigger.js',
+//     ],
+//     'ui/flame.js'
+// )
 
 //
 //  Build Admin SCSS
 //
-mix.sass('../../admin/assets/scss/admin.scss', '../../../admin/assets/css')
+// mix.sass('../../admin/assets/scss/admin.scss', '../../../admin/assets/css')
 
 //
 //  Combine Admin Vendor JS
 //
-mix.scripts(
-    [
-        'node_modules/js-cookie/src/js.cookie.js',
-        'node_modules/select2/dist/js/select2.min.js',
-        'node_modules/metismenu/dist/metisMenu.min.js',
-        '../../admin/assets/js/src/app.js',
-    ],
-    '../../admin/assets/js/admin.js'
-)
+// mix.scripts(
+//     [
+//         'node_modules/js-cookie/src/js.cookie.js',
+//         'node_modules/select2/dist/js/select2.min.js',
+//         'node_modules/metismenu/dist/metisMenu.min.js',
+//         '../../admin/assets/js/src/app.js',
+//     ],
+//     '../../admin/assets/js/admin.js'
+// )

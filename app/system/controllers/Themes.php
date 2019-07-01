@@ -2,9 +2,11 @@
 
 use Admin\Traits\WidgetMaker;
 use AdminMenu;
+use Event;
 use Exception;
 use Main\Classes\ThemeManager;
 use Request;
+use System\Libraries\Assets;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
 use SystemException;
@@ -80,6 +82,13 @@ class Themes extends \Admin\Classes\AdminController
             Template::setButton(lang('system::lang.themes.button_source'), [
                 'class' => 'btn btn-default',
                 'href' => admin_url('themes/source/'.$themeCode),
+            ]);
+
+            Template::setButton(lang('system::lang.themes.button_build'), [
+                'class' => 'btn btn-default pull-right',
+                'data-request' => 'onSave',
+                'data-request-submit' => 'true',
+                'data-request-data' => 'build:1',
             ]);
 
             $model = $this->formFindModelObject($themeCode);
@@ -193,6 +202,8 @@ class Themes extends \Admin\Classes\AdminController
         else {
             flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), 'updated'));
         }
+
+        $this->formAfterSave($model);
 
         return $this->refresh();
     }
@@ -480,6 +491,29 @@ class Themes extends \Admin\Classes\AdminController
             $form->data->fileSource->mTime : null);
     }
 
+    public function formAfterSave($model)
+    {
+        if (post('build') != '1')
+            return;
+
+        if (!$model->getFieldsConfig())
+            return;
+
+        $theme = ThemeManager::instance()->findTheme($model->code);
+        \Assets::addFromManifest($theme->publicPath.'/_meta/assets.json');
+
+        Event::listen('assets.combiner.beforePrepare', function (Assets $combiner, $assets) {
+            ThemeManager::applyAssetVariablesOnCombinerFilters(
+                array_flatten($combiner->getFilters())
+            );
+        });
+
+        \Artisan::call('igniter:util', ['name' => 'compile scss']);
+        \Artisan::call('igniter:util', ['name' => 'compile js']);
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme assets bundle built '));
+    }
+
     protected function createModel()
     {
         $class = $this->formConfig['model'];
@@ -543,7 +577,7 @@ class Themes extends \Admin\Classes\AdminController
             ];
         }
 
-        return $this->validatePasses(post($form->arrayName), $rules);
+        return $this->validatePasses(array_undot(post($form->arrayName)), $rules);
     }
 
     protected function prepareFilesList($themeCode, $currentFile = null)

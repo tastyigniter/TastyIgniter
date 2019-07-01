@@ -67,7 +67,7 @@ class IgniterUtil extends Command
     {
         $this->comment('Compiling registered asset bundles...');
 
-        config('system.enableAssetMinify', FALSE);
+        config()->set('system.enableAssetMinify', TRUE);
         $bundles = Assets::getBundles($type);
 
         if (!$bundles) {

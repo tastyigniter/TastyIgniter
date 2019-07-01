@@ -49,6 +49,10 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerAssets()
     {
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
         Assets::registerCallback(function (Assets $manager) {
             $manager->registerSourcePath($this->app->themesPath());
 

@@ -54,10 +54,10 @@ trait CombinesAssets
 
     protected function initCombiner()
     {
+        $this->cacheKeyPrefix = 'ti.combiner.';
         $this->useCache = config('system.enableAssetCache', TRUE);
         $this->useMinify = config('system.enableAssetMinify', null);
-        $this->cacheKeyPrefix = 'ti.combiner.';
-
+        $this->combineAssets = config('system.enableAssetCombiner', FALSE);
         $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
 
@@ -66,9 +66,6 @@ trait CombinesAssets
 
         if ($this->useMinify === null)
             $this->useMinify = !config('app.debug', FALSE);
-
-        if (!$this->combineAssets = config('system.enableAssetCombiner', FALSE))
-            return;
 
         $this->registerFilter('css', new \Assetic\Filter\CssImportFilter);
         $this->registerFilter(['css', 'scss'], new \Assetic\Filter\CssRewriteFilter);
@@ -146,6 +143,9 @@ trait CombinesAssets
      */
     public function combineToFile(array $assets, $destination)
     {
+        // Disable cache always
+        $this->storagePath = null;
+
         $targetPath = File::localToPublic(dirname($destination));
         $combiner = $this->prepareCombiner($assets, $targetPath);
 
@@ -247,6 +247,10 @@ trait CombinesAssets
 
     protected function applyCacheOnFiles($files)
     {
+        if ($this->storagePath === null) {
+            return $files;
+        }
+
         if (!File::isDirectory($this->storagePath)) {
             @File::makeDirectory($this->storagePath);
         }

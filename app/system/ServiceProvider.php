@@ -267,16 +267,21 @@ class ServiceProvider extends AppServiceProvider
     {
         Assets::registerCallback(function (Assets $manager) {
             $manager->registerSourcePath(app_path('system/assets'));
+        });
 
+        if (!$this->app->runningInConsole())
+            return;
+
+        Assets::registerCallback(function (Assets $manager) {
             // System asset bundles
             $manager->registerBundle('scss',
                 '~/app/system/assets/ui/scss/flame.scss',
                 '~/app/system/assets/ui/flame.css'
             );
             $manager->registerBundle('js', [
-                '~/node_modules/jquery/dist/jquery.min.js',
-                '~/node_modules/popper.js/dist/umd/popper.min.js',
-                '~/node_modules/bootstrap/dist/js/bootstrap.min.js',
+                '~/app/system/assets/node_modules/jquery/dist/jquery.min.js',
+                '~/app/system/assets/node_modules/popper.js/dist/umd/popper.min.js',
+                '~/app/system/assets/node_modules/bootstrap/dist/js/bootstrap.min.js',
                 '~/app/system/assets/ui/js/vendor/waterfall.min.js',
                 '~/app/system/assets/ui/js/vendor/transition.js',
                 '~/app/system/assets/ui/js/app.js',
@@ -288,12 +293,11 @@ class ServiceProvider extends AppServiceProvider
             // Admin asset bundles
             $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss');
             $manager->registerBundle('js', [
-                '~/node_modules/js-cookie/src/js.cookie.js',
-                '~/node_modules/select2/dist/js/select2.min.js',
-                '~/node_modules/metismenu/dist/metisMenu.min.js',
+                '~/app/system/assets/node_modules/js-cookie/src/js.cookie.js',
+                '~/app/system/assets/node_modules/select2/dist/js/select2.min.js',
+                '~/app/system/assets/node_modules/metismenu/dist/metisMenu.min.js',
                 '~/app/admin/assets/js/src/app.js',
             ], '~/app/admin/assets/js/admin.js');
-
         });
     }
 

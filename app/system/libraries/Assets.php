@@ -59,7 +59,7 @@ class Assets
     {
         $assetsConfigPath = base_path().$this->getAssetPath($path);
         if (!File::exists($assetsConfigPath))
-            return FALSE;
+            return;
 
         $content = json_decode(File::get($assetsConfigPath), TRUE);
         if ($bundles = array_get($content, 'bundles')) {
@@ -289,14 +289,14 @@ class Assets
             $html = '<script'.Html::attributes(array_merge([
                     'charset' => strtolower(setting('charset', 'UTF-8')),
                     'type' => 'text/javascript',
-                    'src' => asset($file)
+                    'src' => asset($file),
                 ], $attributes)).'></script>'.PHP_EOL;
         }
         else {
             $html = '<link'.Html::attributes(array_merge([
                     'rel' => 'stylesheet',
                     'type' => 'text/css',
-                    'href' => asset($file)
+                    'href' => asset($file),
                 ], $attributes)).'>'.PHP_EOL;
         }
 
