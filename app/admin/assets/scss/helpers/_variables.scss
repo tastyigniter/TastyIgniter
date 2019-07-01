@@ -1,39 +1,39 @@
-$admin-page-bg: #12224C;
+$admin-page-bg: #12224C !default;
 
-$page-padding-x: 0;
-$page-padding-y: 15px;
-$page-top: 62px;
-$page-top-line-height: 48px;
-$page-bottom: 0;
-$page-margin-left: 230px;
+$page-padding-x: 0 !default;
+$page-padding-y: 15px !default;
+$page-top: 62px !default;
+$page-top-line-height: 48px !default;
+$page-bottom: 0 !default;
+$page-margin-left: 230px !default;
 
-$login-page-bg: $admin-page-bg;
+$login-page-bg: $admin-page-bg !default;
 
-$form-fields-padding-y: 15px;
-$form-fields-padding-x: 20px;
+$form-fields-padding-y: 15px !default;
+$form-fields-padding-x: 20px !default;
 
-$form-nav-link-padding-y: .7rem;
-$form-nav-link-padding-x: 1.2rem;
+$form-nav-link-padding-y: .7rem !default;
+$form-nav-link-padding-x: 1.2rem !default;
 
-$logo-font-size: 3rem;
-$logo-font-color: $admin-page-bg;
-$logo-line-height: 32px;
+$logo-font-size: 3rem !default;
+$logo-font-color: $admin-page-bg !default;
+$logo-line-height: 32px !default;
 
-$mainmenu-font-size: 24px;
-$mainmenu-icon-size: 16px;
-$mainmenu-dropdown-width: 300px;
-$mainmenu-menu-max-height: 225px;
-$mainmenu-padding-x: 0.5rem;
-$mainmenu-padding-y: 1rem;
+$mainmenu-font-size: 24px !default;
+$mainmenu-icon-size: 16px !default;
+$mainmenu-dropdown-width: 300px !default;
+$mainmenu-menu-max-height: 225px !default;
+$mainmenu-padding-x: 0.5rem !default;
+$mainmenu-padding-y: 1rem !default;
 
-$sidenav-bg: $admin-page-bg;
-$sidenav-bg-light: lighten($sidenav-bg, 2%);
-$sidenav-bg-dark: darken($sidenav-bg, 3%);
+$sidenav-bg: $admin-page-bg !default;
+$sidenav-bg-light: lighten($sidenav-bg, 2%) !default;
+$sidenav-bg-dark: darken($sidenav-bg, 3%) !default;
 
-$sidenav-font-size-sm: 1.066rem;
-$sidenav-font-size: 1.1rem;
+$sidenav-font-size-sm: 1.066rem !default;
+$sidenav-font-size: 1.1rem !default;
 
-$sidenav-line-height: 48px;
-$sidenav-line-height-sm: 38px;
-$sidenav-padding-x: 0;
-$sidenav-padding-y: 1rem;
+$sidenav-line-height: 48px !default;
+$sidenav-line-height-sm: 38px !default;
+$sidenav-padding-x: 0 !default;
+$sidenav-padding-y: 1rem !default;
