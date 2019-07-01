@@ -147,11 +147,11 @@ class Themes_model extends Model
         $customizeConfig = $this->themeClass->getConfigValue('form', []);
         foreach ($customizeConfig as $section => $item) {
             foreach (array_get($item, 'fields', []) as $name => $field) {
-                $data[$name] = array_get($field, 'default');
+                $data[$name] = array_get($this->data, $name, array_get($field, 'default'));
             }
         }
 
-        return array_merge($data, $this->data ?? []);
+        return $data;
     }
 
     //

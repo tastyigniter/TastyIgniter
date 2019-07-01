@@ -99,7 +99,6 @@ class Mail_templates_model extends Model
                 ['var' => '{location_name}', 'name' => 'Location name'],
             ],
             'Customer' => [
-                ['var' => '{full_name}', 'name' => 'Customer full name'],
                 ['var' => '{first_name}', 'name' => 'Customer first name'],
                 ['var' => '{last_name}', 'name' => 'Customer last name'],
                 ['var' => '{email}', 'name' => 'Customer email address'],
@@ -114,6 +113,7 @@ class Mail_templates_model extends Model
                 ['var' => '{reset_password}', 'name' => 'Created password on password reset'],
             ],
             'Order' => [
+                ['var' => '{customer_name}', 'name' => 'Customer full name'],
                 ['var' => '{order_number}', 'name' => 'Order number'],
                 ['var' => '{order_view_url}', 'name' => 'Order view URL'],
                 ['var' => '{order_type}', 'name' => 'Order type ex. delivery/pick-up'],
@@ -148,6 +148,7 @@ class Mail_templates_model extends Model
                 ['var' => '{status_comment}', 'name' => 'Status comment'],
             ],
             'Contact' => [
+                ['var' => '{full_name}', 'name' => 'Customer full name'],
                 ['var' => '{contact_topic}', 'name' => 'Contact topic'],
                 ['var' => '{contact_telephone}', 'name' => 'Contact telephone'],
                 ['var' => '{contact_message}', 'name' => 'Contact message body'],

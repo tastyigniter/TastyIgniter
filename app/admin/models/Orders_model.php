@@ -374,6 +374,7 @@ class Orders_model extends Model
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
+            $data['location_address'] = format_address($model->location->getAddress());
         }
 
         $status = $model->status()->first();

@@ -311,6 +311,9 @@ class UpdateManager
     public function applySiteDetail($key)
     {
         $info = [];
+
+        $this->setSecurityKey($key, $info);
+
         $result = $this->getHubManager()->getDetail('site');
         if (isset($result['data']) AND is_array($result['data']))
             $info = $result['data'];

@@ -24,13 +24,13 @@
         align: 'left',
         sliders: {
             saturation: {
-                maxLeft: 200, maxTop: 200
+                maxLeft: 120, maxTop: 120
             },
             hue: {
-                maxTop: 200
+                maxTop: 120
             },
             alpha: {
-                maxTop: 200
+                maxTop: 120
             }
         }
     }
