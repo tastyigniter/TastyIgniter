@@ -81,16 +81,6 @@ trait LogsStatusHistory
         if ($previousStatusId != $newStatusId)
             return FALSE;
 
-        $alreadyExists = Status_history_model::alreadyExists($this, $newStatusId);
-        if (!$alreadyExists)
-            return FALSE;
-
-        if ($alreadyExists->comment != $statusData['comment'])
-            return FALSE;
-
-        if ($alreadyExists->notify != $statusData['notify'])
-            return FALSE;
-
-        return TRUE;
+        return Status_history_model::alreadyExists($this, $newStatusId);
     }
 }

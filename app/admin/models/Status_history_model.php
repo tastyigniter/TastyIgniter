@@ -42,7 +42,7 @@ class Status_history_model extends Model
     {
         return self::where('object_id', $model->getKey())
                    ->where('object_type', $model->getMorphClass())
-                   ->where('status_id', $statusId)->first();
+                   ->where('status_id', $statusId)->exists();
     }
 
     public function getStaffNameAttribute($value)
@@ -73,7 +73,7 @@ class Status_history_model extends Model
         $model = new static;
         $model->status_id = $statusId;
         $model->object_id = $object->getKey();
-        $model->object_type = $object instanceof Orders_model ? 'orders' : 'reservations';
+        $model->object_type = $object->getMorphClass();
         $model->status_for = $object instanceof Orders_model ? 'order' : 'reserve';
         $model->staff_id = array_get($options, 'staff_id');
         $model->assignee_id = array_get($options, 'assignee_id', $object->assignee_id);
