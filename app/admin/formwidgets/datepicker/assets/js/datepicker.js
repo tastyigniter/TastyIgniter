@@ -14,6 +14,7 @@
         this.options = options
         this.$el = $(element)
         this.picker = null
+        this.$dataLocker = null
 
         this.bindPicker()
     }
@@ -30,8 +31,12 @@
     }
 
     DatePicker.prototype.bindPicker = function () {
+
+        this.$dataLocker = this.$el.parent('div').find('[data-datepicker-value]')
+
         if (this.options.mode === 'datetime') {
             this.picker = this.$el.datetimepicker({
+                format: this.options.format,
                 icons: {
                     time: "fa fa-clock-o",
                     date: "fa fa-calendar",
@@ -39,9 +44,12 @@
                     down: "fa fa-arrow-down"
                 }
             });
+
+            this.$el.on('dp.change', $.proxy(this.onSelectDateTimePicker, this))
         } else {
             this.picker = this.$el.datepicker(this.options);
             this.parsePickerValue()
+            this.$el.on('changeDate', $.proxy(this.onSelectDatePicker, this))
         }
     }
 
@@ -50,6 +58,19 @@
 
         if (value === '30-11--0001')
             this.$el.val('')
+    }
+
+    DatePicker.prototype.onSelectDatePicker = function(event) {
+        var pickerDate = moment(event.date.toDateString())
+        var lockerValue = pickerDate.format('YYYY-MM-DD')
+
+        this.$dataLocker.val(lockerValue)
+    }
+
+    DatePicker.prototype.onSelectDateTimePicker = function(event) {
+        var lockerValue = event.date.format('YYYY-MM-DD HH:mm:ss')
+
+        this.$dataLocker.val(lockerValue)
     }
 
     //

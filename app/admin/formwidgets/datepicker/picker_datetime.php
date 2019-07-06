@@ -1,11 +1,11 @@
+<?php $lockerValue = $value ? $value->format($dateTimeFormat) : null ?>
 <div class="input-group">
     <input
         type="text"
-        name="<?= $field->getName() ?>"
         id="<?= $this->getId('datetime') ?>"
         class="form-control"
         autocomplete="off"
-        value="<?= $value ? $value->format($dateTimeFormat) : null ?>"
+        value="<?= $lockerValue ?>"
         <?= $field->getAttributes() ?>
         <?= $this->previewMode ? 'readonly="readonly"' : '' ?>
         data-control="datepicker"
@@ -18,4 +18,10 @@
     <span class="input-group-prepend">
         <span class="input-group-icon"><i class="fa fa-calendar-o"></i></span>
     </span>
+    <input
+        type="hidden"
+        name="<?= $field->getName() ?>"
+        value="<?= $value ? $value->format('Y-m-d H:i:s') : null ?>"
+        data-datepicker-value
+    />
 </div>

@@ -79,6 +79,7 @@ class DatePicker extends BaseFormWidget
         }
 
         if ($mode == 'date') {
+            $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
             $this->addCss('vendor/datepicker/bootstrap-datepicker.min.css', 'bootstrap-datepicker-css');
             $this->addJs('vendor/datepicker/bootstrap-datepicker.min.js', 'bootstrap-datepicker-js');
             $this->addCss('css/datepicker.css', 'datepicker-css');
@@ -123,16 +124,15 @@ class DatePicker extends BaseFormWidget
             $formatAlias = setting('date_format').' '.setting('time_format');
         }
 
-        $find = ['d', 'D', 'm', 'M', 'y', 'Y', 'H', 'i'];
-        $replace = ['dd', 'DD', 'mm', 'MM', 'yy', 'yyyy', 'HH', 'i'];
+        $find = ['d' => 'dd', 'D' => 'DD', 'm' => 'mm', 'M' => 'MM', 'y' => 'yy', 'Y' => 'yyyy', 'H' => 'HH', 'i' => 'i'];
 
         $this->vars['timeFormat'] = $this->timeFormat;
         $this->vars['dateFormat'] = $this->dateFormat;
         $this->vars['dateTimeFormat'] = $this->dateFormat.' '.$this->timeFormat;
 
         $this->vars['datePickerFormat'] = ($this->mode == 'datetime')
-            ? str_replace($find, $replace, $formatAlias)
-            : str_replace($find, $replace, $this->dateFormat);
+            ? convert_php_to_moment_js_format($formatAlias)
+            : strtr($this->dateFormat, $find);
 
         $this->vars['formatAlias'] = $formatAlias;
         $this->vars['value'] = $value;

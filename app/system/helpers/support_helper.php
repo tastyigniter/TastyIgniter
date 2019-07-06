@@ -158,6 +158,64 @@ if (!function_exists('mdate')) {
     }
 }
 
+if (!function_exists('mdate_to_moment_js_format')) {
+    /**
+     * Convert PHP Date formats to Moment JS Date Formats
+     *
+     * @param string $format
+     *
+     * @return int
+     */
+    function convert_php_to_moment_js_format($format)
+    {
+        $replacements = [
+            'd' => 'DD',
+            'D' => 'ddd',
+            'j' => 'D',
+            'l' => 'dddd',
+            'N' => 'E',
+            'S' => 'o',
+            'w' => 'e',
+            'z' => 'DDD',
+            'W' => 'W',
+            'F' => 'MMMM',
+            'm' => 'MM',
+            'M' => 'MMM',
+            'n' => 'M',
+            't' => '',
+            'L' => '',
+            'o' => 'YYYY',
+            'Y' => 'YYYY',
+            'y' => 'YY',
+            'a' => 'a',
+            'A' => 'A',
+            'B' => '',
+            'g' => 'h',
+            'G' => 'H',
+            'h' => 'hh',
+            'H' => 'HH',
+            'i' => 'mm',
+            's' => 'ss',
+            'u' => 'SSS',
+            'e' => 'zz',
+            'I' => '',
+            'O' => '',
+            'P' => '',
+            'T' => '',
+            'Z' => '',
+            'c' => '',
+            'r' => '',
+            'U' => 'X',
+        ];
+
+        foreach ($replacements as $from => $to) {
+            $replacements['\\'.$from] = '['.$from.']';
+        }
+
+        return strtr($format, $replacements);
+    }
+}
+
 if (!function_exists('time_elapsed')) {
     /**
      * Get time elapsed
