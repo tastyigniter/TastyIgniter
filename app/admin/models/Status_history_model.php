@@ -11,7 +11,7 @@ use Model;
 class Status_history_model extends Model
 {
     const UPDATED_AT = null;
-    
+
     const CREATED_AT = 'date_added';
 
     /**

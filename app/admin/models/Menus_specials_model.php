@@ -50,7 +50,7 @@ class Menus_specials_model extends Model
         if ($this->isRecurring() OR !$this->end_date->greaterThan(Carbon::now()))
             return 0;
 
-        return $this->end_date->diffInDays(Carbon::now());
+        return $this->end_date->diffForHumans();
     }
 
     public function isRecurring()

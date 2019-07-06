@@ -55,7 +55,7 @@ class Coupons_model extends Model
 
     public function getRecurringEveryOptions()
     {
-        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     }
 
     //
@@ -126,7 +126,7 @@ class Coupons_model extends Model
             case 'period':
                 return !$now->between($this->period_start_date, $this->period_end_date);
             case 'recurring':
-                if (!in_array($now->format('l'), $this->recurring_every))
+                if (!in_array($now->format('w'), $this->recurring_every))
                     return TRUE;
 
                 $start = $now->copy()->setTimeFromTimeString($this->recurring_from_time);

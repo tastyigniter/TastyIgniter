@@ -14,41 +14,41 @@ class Reservations extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Reservations_model',
-            'title'        => 'lang:admin::lang.reservations.text_title',
+            'model' => 'Admin\Models\Reservations_model',
+            'title' => 'lang:admin::lang.reservations.text_title',
             'emptyMessage' => 'lang:admin::lang.reservations.text_empty',
-            'defaultSort'  => ['reserve_date', 'DESC'],
-            'configFile'   => 'reservations_model',
+            'defaultSort' => ['reserve_date', 'DESC'],
+            'configFile' => 'reservations_model',
         ],
     ];
 
     public $calendarConfig = [
         'calender' => [
-            'title'          => 'lang:admin::lang.reservations.text_title',
-            'emptyMessage'   => 'lang:admin::lang.reservations.text_no_booking',
+            'title' => 'lang:admin::lang.reservations.text_title',
+            'emptyMessage' => 'lang:admin::lang.reservations.text_no_booking',
             'popoverPartial' => 'reservations/calendar_popover',
-            'configFile'     => 'reservations_model',
+            'configFile' => 'reservations_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.reservations.text_form_name',
-        'model'      => 'Admin\Models\Reservations_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'reservations/edit/{reservation_id}',
+        'name' => 'lang:admin::lang.reservations.text_form_name',
+        'model' => 'Admin\Models\Reservations_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'reservations/edit/{reservation_id}',
             'redirectClose' => 'reservations',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'reservations/edit/{reservation_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'reservations/edit/{reservation_id}',
             'redirectClose' => 'reservations',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'reservations',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'reservations',
         ],
         'configFile' => 'reservations_model',
@@ -81,6 +81,18 @@ class Reservations extends \Admin\Classes\AdminController
         $reservation->reserve_time = $startAt->toTimeString();
 
         $reservation->save();
+    }
+
+    public function formExtendQuery($query)
+    {
+        $query->with([
+            'status_history' => function ($q) {
+                $q->orderBy('date_added', 'desc');
+            },
+            'status_history.staff',
+            'status_history.status',
+            'status_history.assignee',
+        ]);
     }
 
     public function formValidate($model, $form)

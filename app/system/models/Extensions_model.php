@@ -26,6 +26,7 @@ class Extensions_model extends Model
 
     public $casts = [
         'data' => 'serialize',
+        'status' => 'boolean',
     ];
 
     /**

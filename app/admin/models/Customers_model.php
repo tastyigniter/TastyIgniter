@@ -52,6 +52,8 @@ class Customers_model extends AuthUserModel
 
     public $purgeable = ['addresses'];
 
+    public $appends = ['full_name'];
+
     public $casts = [
         'reset_time' => 'datetime',
     ];
