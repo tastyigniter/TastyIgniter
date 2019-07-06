@@ -97,9 +97,13 @@ class Menus extends AdminController
             ['special.special_status', 'lang:admin::lang.menus.label_special_status', 'required|integer'],
         ];
 
-        $rules[] = ['special.start_date', 'lang:admin::lang.menus.label_start_date', 'required_if:special.special_status,1|valid_date'];
-        $rules[] = ['special.end_date', 'lang:admin::lang.menus.label_end_date', 'required_if:special.special_status,1|valid_date'];
         $rules[] = ['special.special_price', 'lang:admin::lang.menus.label_special_price', 'required_if:special.special_status,1|numeric'];
+        $rules[] = ['special.validity', 'lang:admin::lang.coupons.label_validity', 'required'];
+        $rules[] = ['special.start_date', 'lang:admin::lang.menus.label_start_date', 'required_if:special.validity,period'];
+        $rules[] = ['special.end_date', 'lang:admin::lang.menus.label_end_date', 'required_if:special.validity,period'];
+        $rules[] = ['special.recurring_every', 'lang:admin::lang.coupons.label_recurring_every', 'required_if:validity,recurring'];
+        $rules[] = ['special.recurring_from', 'lang:admin::lang.coupons.label_recurring_from_time', 'required_if:validity,recurring|valid_time'];
+        $rules[] = ['special.recurring_to', 'lang:admin::lang.coupons.label_recurring_to_time', 'required_if:validity,recurring|valid_time'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }
