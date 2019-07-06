@@ -2,7 +2,6 @@
 
 use Admin\Traits\Locationable;
 use Event;
-use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
@@ -14,14 +13,11 @@ use Model;
  */
 class Menus_model extends Model
 {
-    use LogsActivity;
     use Purgeable;
     use Locationable;
     use HasMedia;
 
     const LOCATIONABLE_RELATION = 'locations';
-
-    protected static $recordEvents = ['created', 'deleted'];
 
     /**
      * @var string The database table name
@@ -159,11 +155,6 @@ class Menus_model extends Model
     //
     // Helpers
     //
-
-    public function getMessageForEvent($eventName)
-    {
-        return parse_values(['event' => $eventName], lang('admin::lang.menus.activity_event_log'));
-    }
 
     public function hasOptions()
     {

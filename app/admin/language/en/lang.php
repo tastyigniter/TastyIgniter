@@ -265,8 +265,6 @@ return [
         'help_customer_redemption' => 'The number of times a specific customer can redeem this coupon. Set to 0 to allow any number of redemptions.',
         'help_order_restriction' => 'Whether to restrict the coupon to a specific order type.',
         'help_locations' => 'Apply this coupon ONLY on orders made at the selected location(s). Leave blank to make coupon available across all locations',
-
-        'activity_event_log' => '{event} coupon <b>:subject.name</b>',
     ],
 
     'customer_groups' => [
@@ -326,7 +324,6 @@ return [
         'help_password' => 'Leave blank to leave password unchanged',
 
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
-        'activity_event_log' => '{event} customer <b>:subject.first_name :subject.last_name</b>',
     ],
 
     'dashboard' => [
@@ -686,8 +683,6 @@ return [
         'help_menu_option' => 'Choose from the dropdown to add option to this menu.',
         'help_option_required' => 'Select Enabled if a customer MUST choose this option. If this option is not required, select Disabled.',
         'help_specials' => 'Select disable to deactivate Special. Select Enable to activate Special and enter the Start Date, End Date and price of your Special item.',
-
-        'activity_event_log' => '{event} menu <b>:subject.menu_name</b>',
     ],
 
     'orders' => [

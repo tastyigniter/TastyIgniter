@@ -1,6 +1,5 @@
 <?php namespace System\Models;
 
-use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Model;
 use System\Classes\ExtensionManager;
 
@@ -10,8 +9,6 @@ use System\Classes\ExtensionManager;
  */
 class Permissions_model extends Model
 {
-    use LogsActivity;
-
     /**
      * @var string The database table name
      */
@@ -72,11 +69,6 @@ class Permissions_model extends Model
     // Helpers
     //
 
-    public function getMessageForEvent($eventName)
-    {
-        return parse_values(['event' => $eventName], lang('system::lang.permissions.activity_event_log'));
-    }
-
     public function getActionOptions()
     {
         return [
@@ -118,7 +110,6 @@ class Permissions_model extends Model
             $permissionModel->description = $permission->description;
             $permissionModel->status = 1;
             $permissionModel->is_custom = 0;
-            $permissionModel->disableLogging();
             $permissionModel->save();
         }
     }

@@ -8,10 +8,6 @@ use Igniter\Flame\Database\Model;
 
 trait LogsStatusHistory
 {
-    protected static $recordEvents = ['updated', 'deleted'];
-
-    protected static $logAttributes = ['status_id', 'assignee_id'];
-
     public static function bootLogsStatusHistory()
     {
         self::extend(function (Model $model) {

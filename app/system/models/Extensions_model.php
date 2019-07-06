@@ -1,6 +1,5 @@
 <?php namespace System\Models;
 
-use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Database\Builder;
 use Main\Classes\ThemeManager;
 use Model;
@@ -13,11 +12,6 @@ use System\Classes\UpdateManager;
  */
 class Extensions_model extends Model
 {
-    use LogsActivity;
-
-    //only the `updated` & `deleted` event will get logged automatically
-    protected static $recordEvents = ['updated', 'deleted'];
-
     /**
      * @var string The database table name
      */
@@ -128,19 +122,6 @@ class Extensions_model extends Model
     // Helpers
     //
 
-    public function getMessageForEvent($eventName)
-    {
-        if ($eventName == 'updated' AND $this->status == 1)
-            $eventName = strtolower(lang('system::lang.extensions.text_installed'));
-
-        if ($eventName == 'updated' AND $this->status != 1)
-            $eventName = strtolower(lang('system::lang.extensions.text_uninstalled'));
-
-        $replace['event'] = $eventName;
-
-        return parse_values($replace, lang('system::lang.extensions.activity_event_log'));
-    }
-
     /**
      * Sets the extension class as a property of this class
      * @return boolean
@@ -189,7 +170,6 @@ class Extensions_model extends Model
             $extensionModel->name = $code;
             $extensionModel->title = $extensionMeta->name;
             $extensionModel->version = $extensionMeta->version;
-            $extensionModel->disableLogging();
             $extensionModel->save();
 
             $extensionManager->updateInstalledExtensions($code, FALSE);

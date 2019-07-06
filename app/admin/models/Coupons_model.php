@@ -1,7 +1,6 @@
 <?php namespace Admin\Models;
 
 use Carbon\Carbon;
-use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Location\Models\AbstractLocation;
 use Model;
@@ -13,7 +12,6 @@ use Model;
  */
 class Coupons_model extends Model
 {
-    use LogsActivity;
     use \Admin\Traits\Locationable;
 
     const UPDATED_AT = null;
@@ -97,11 +95,6 @@ class Coupons_model extends Model
     //
     // Helpers
     //
-
-    public function getMessageForEvent($eventName)
-    {
-        return parse_values(['event' => $eventName], lang('admin::lang.coupons.activity_event_log'));
-    }
 
     public function isFixed()
     {

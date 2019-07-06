@@ -145,8 +145,6 @@ return [
         'alert_setting_not_found' => 'Extension settings was not found.',
         'alert_setting_model_missing' => 'Missing settings model.',
         'alert_setting_model_not_found' => 'Extension settings model [%s] was not found.',
-
-        'activity_event_log' => '{event} extension <b>:subject.title</b>',
     ],
 
     'languages' => [
@@ -327,8 +325,6 @@ return [
         'help_action' => 'The permitted action (Access, Manage, Add, Delete)',
 
         'error_invalid_name' => 'Invalid permission name, must match Domain.Context',
-
-        'activity_event_log' => '{event} permission <b>:subject.name</b>',
     ],
 
     'settings' => [

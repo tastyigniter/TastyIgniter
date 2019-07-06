@@ -3,7 +3,6 @@
 use Carbon\Carbon;
 use DB;
 use Exception;
-use Igniter\Flame\ActivityLog\Traits\LogsActivity;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
 
@@ -14,16 +13,11 @@ use Igniter\Flame\Database\Traits\Purgeable;
  */
 class Customers_model extends AuthUserModel
 {
-    use LogsActivity;
     use Purgeable;
 
     const UPDATED_AT = null;
 
     const CREATED_AT = 'date_added';
-
-    protected static $logAttributes = ['name'];
-
-    protected static $recordEvents = ['created', 'deleted'];
 
     /**
      * @var string The database table name
@@ -131,11 +125,6 @@ class Customers_model extends AuthUserModel
     //
     // Helpers
     //
-
-    public function getMessageForEvent($eventName)
-    {
-        return parse_values(['event' => $eventName], lang('admin::lang.customers.activity_event_log'));
-    }
 
     public function enabled()
     {
