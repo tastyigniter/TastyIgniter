@@ -7,6 +7,8 @@ use Admin\Classes\OnboardingSteps;
 use Admin\Classes\Widgets;
 use AdminAuth;
 use AdminMenu;
+use Event;
+use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use System\Libraries\Assets;
@@ -27,6 +29,8 @@ class ServiceProvider extends AppServiceProvider
         if ($this->app->runningInAdmin()) {
             $this->resolveFlashSessionKey();
             $this->replaceNavMenuItem();
+
+            $this->bindActivityEvents();
         }
     }
 
@@ -47,6 +51,7 @@ class ServiceProvider extends AppServiceProvider
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
             $this->registerOnboardingSteps();
+            $this->registerActivityTypes();
         }
     }
 
@@ -661,6 +666,37 @@ class ServiceProvider extends AppServiceProvider
                     'url' => admin_url('settings/edit/mail'),
                 ],
             ]);
+        });
+    }
+
+    protected function registerActivityTypes()
+    {
+        Activity::registerCallback(function (Activity $manager) {
+            $manager->registerActivityTypes([
+                Notifications\OrderAssigned::class => ['alert'],
+                Notifications\OrderStatusUpdated::class => ['alert'],
+                Notifications\ReservationAssigned::class => ['alert'],
+                Notifications\ReservationStatusUpdated::class => ['alert'],
+            ]);
+        });
+    }
+
+    protected function bindActivityEvents()
+    {
+        Models\Orders_model::updated(function ($model) {
+            Notifications\OrderAssigned::pushActivityLog($model);
+        });
+
+        Models\Reservations_model::updated(function ($model) {
+            Notifications\ReservationAssigned::pushActivityLog($model);
+        });
+
+        Event::listen('admin.statusHistory.beforeAddStatus', function ($model, $object, $statusId, $previousStatus) {
+            if ($object instanceof Models\Orders_model)
+                Notifications\OrderStatusUpdated::pushActivityLog($model, $object);
+
+            if ($object instanceof Models\Reservations_model)
+                Notifications\ReservationStatusUpdated::pushActivityLog($model, $object);
         });
     }
 }
