@@ -16,17 +16,14 @@
                         <span><?= time_elapsed($activity->date_added); ?></span>
                     </time>
                     <div class="timeline-icon"></div>
-                    <div class="timeline-body">
-                        <b><?= $activity->causer_name; ?></b>
-                        <?= $activity->message; ?>
-                    </div>
+                    <div class="timeline-body"><a href="<?= $activity->url; ?>"><?= $activity->message; ?></a></div>
                 </li>
             <?php } ?>
         <?php } ?>
     </ul>
 <?php }
 else { ?>
-    <p><?= lang('system::lang.activities.text_empty'); ?></p>
+    <p class="p-4 text-center"><?= lang('system::lang.activities.text_empty'); ?></p>
 <?php } ?>
 
 <?= $this->makePartial('lists/list_pagination') ?>

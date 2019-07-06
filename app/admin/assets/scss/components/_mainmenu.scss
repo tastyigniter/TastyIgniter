@@ -41,7 +41,7 @@
       border-bottom: 8px solid $gray-200;
       border-left: 8px solid transparent;
       border-right: 8px solid transparent;
-      bottom: -13px;
+      bottom: -12px;
       display: inline-block;
       left: 50%;
       margin-left: -8px;
@@ -78,8 +78,9 @@
     padding: 0;
     margin-top: 12px;
     line-height: $line-height-base;
-    width: $mainmenu-dropdown-width;
+    min-width: $mainmenu-dropdown-width;
     box-shadow: $box-shadow;
+    border: 0 none;
 
     .dropdown-header {
       font-size: $font-size-base;
@@ -109,6 +110,10 @@
       max-height: $mainmenu-menu-max-height;
       overflow-x: hidden;
       padding: 0;
+
+      &.menu-lg {
+        min-width: $mainmenu-dropdown-width + 130px;
+      }
 
       .menu-item {
         border-bottom: $border-width solid $dropdown-border-color;
@@ -222,6 +227,7 @@
     }
   }
 }
+
 .navbar-brand {
   display: block;
   padding: 0;
@@ -235,6 +241,7 @@
     color: $logo-font-color;
   }
 }
+
 .page-title {
   margin: 0px;
   padding-left: 15px;
@@ -244,10 +251,12 @@
   small {
     color: $gray-600;
   }
+
   span {
     vertical-align: text-top;
   }
 }
+
 @include media-breakpoint-down(sm) {
   .page-title {
     display: none;

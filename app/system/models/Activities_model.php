@@ -1,8 +1,5 @@
 <?php namespace System\Models;
 
-use Admin\Models\Customers_model;
-use Admin\Models\Users_model;
-use Igniter\Flame\ActivityLog\ActivityLogger;
 use Igniter\Flame\ActivityLog\Models\Activity;
 
 /**
@@ -14,30 +11,13 @@ class Activities_model extends Activity
     public static function listMenuActivities($menu, $item, $user)
     {
         $query = self::listRecent([
-            'exceptUser' => $user,
+            'onlyUser' => $user,
         ]);
 
         return [
             'total' => $query->toBase()->getCountForPagination(),
             'items' => $query->get(),
         ];
-    }
-
-    public function getCauserNameAttribute($value)
-    {
-        if (!$this->causer)
-            return 'System';
-
-        if ($this->causer instanceof Users_model)
-            return $this->causer->staff_name;
-
-        if ($this->causer instanceof Customers_model)
-            return $this->causer->getCustomerName();
-    }
-
-    public function getMessageAttribute($value)
-    {
-        return app(ActivityLogger::class)->replacePlaceholders($value, $this);
     }
 
     //
@@ -50,13 +30,26 @@ class Activities_model extends Activity
             'page' => 1,
             'pageLimit' => 20,
             'sort' => 'date_added desc',
+            'onlyUser' => null,
             'exceptUser' => null,
         ], $options));
 
-        if ($exceptUser) {
-            $query->where('causer_type', $exceptUser->getMorphClass())
-                  ->where('causer_id', '<>', $exceptUser->getKey());
+        $query->with(['subject', 'causer']);
+
+        if ($onlyUser) {
+            $query->where('user_id', $onlyUser->getKey())
+                  ->where('user_type', $onlyUser->getMorphClass());
         }
+
+        if ($exceptUser) {
+            $query->where('causer_type', '!=', $exceptUser->getMorphClass());
+            $query->orWhere(function ($q) use ($exceptUser) {
+                $q->where('causer_type', $exceptUser->getMorphClass())
+                  ->where('causer_id', '<>', $exceptUser->getKey());
+            });
+        }
+
+        $query->whereNotNull('subject_id');
 
         if (!is_array($sort)) {
             $sort = [$sort];
