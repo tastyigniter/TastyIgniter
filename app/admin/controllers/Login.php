@@ -34,9 +34,6 @@ class Login extends \Admin\Classes\AdminController
                 return $this->redirectBack();
             }
 
-            activity()->causedBy(AdminAuth::getUser())
-                      ->log(lang('system::lang.activities.activity_logged_in'));
-
             if ($redirectUrl = input('redirect'))
                 return $this->redirect($redirectUrl);
 

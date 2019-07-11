@@ -33,16 +33,16 @@ class ModelAction
      *
      * @throws \SystemException
      */
-    public function __construct($model = null)
+    public function __construct($model)
     {
         $this->model = $model;
 
         foreach ($this->requiredProperties as $property) {
             if (!isset($model->{$property})) {
-                throw new SystemException(
-                    "Class %s must define property %s used by %s",
+                throw new SystemException(sprintf(
+                    'Class %s must define property %s used by %s',
                     get_class($model), $property, get_called_class()
-                );
+                ));
             }
         }
     }
