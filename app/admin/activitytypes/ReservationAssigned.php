@@ -77,7 +77,11 @@ class ReservationAssigned implements ActivityInterface
 
     public static function getUrl(Activity $activity)
     {
-        return admin_url('reservations/edit/'.$activity->subject->reservation_id);
+        $url = 'reservations';
+        if ($activity->subject)
+            $url .= '/edit/'.$activity->subject->reservation_id;
+
+        return admin_url($url);
     }
 
     public static function getMessage(Activity $activity)

@@ -77,7 +77,11 @@ class OrderAssigned implements ActivityInterface
 
     public static function getUrl(Activity $activity)
     {
-        return admin_url('orders/edit/'.$activity->subject->order_id);
+        $url = 'orders';
+        if ($activity->subject)
+            $url .= '/edit/'.$activity->subject->order_id;
+
+        return admin_url($url);
     }
 
     public static function getMessage(Activity $activity)

@@ -1,6 +1,7 @@
 <?php namespace System\Models;
 
 use Igniter\Flame\ActivityLog\Models\Activity;
+use System\Classes\ExtensionManager;
 
 /**
  * Activities Model Class
@@ -68,5 +69,19 @@ class Activities_model extends Activity
         }
 
         return $query->take($pageLimit);
+    }
+
+    //
+    // Registration
+    //
+
+    public function loadActivityTypes()
+    {
+        parent::loadActivityTypes();
+
+        $activityTypes = ExtensionManager::instance()->getRegistrationMethodValues('registerActivityTypes');
+        foreach ($activityTypes as $bundles) {
+            $this->registerActivityTypes($bundles);
+        }
     }
 }

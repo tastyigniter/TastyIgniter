@@ -673,10 +673,10 @@ class ServiceProvider extends AppServiceProvider
     {
         Activity::registerCallback(function (Activity $manager) {
             $manager->registerActivityTypes([
-                ActivityTypes\OrderAssigned::class => ['alert'],
-                ActivityTypes\OrderStatusUpdated::class => ['alert'],
-                ActivityTypes\ReservationAssigned::class => ['alert'],
-                ActivityTypes\ReservationStatusUpdated::class => ['alert'],
+                ActivityTypes\OrderAssigned::class,
+                ActivityTypes\OrderStatusUpdated::class,
+                ActivityTypes\ReservationAssigned::class,
+                ActivityTypes\ReservationStatusUpdated::class,
             ]);
         });
     }
