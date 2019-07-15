@@ -673,10 +673,10 @@ class ServiceProvider extends AppServiceProvider
     {
         Activity::registerCallback(function (Activity $manager) {
             $manager->registerActivityTypes([
-                Notifications\OrderAssigned::class => ['alert'],
-                Notifications\OrderStatusUpdated::class => ['alert'],
-                Notifications\ReservationAssigned::class => ['alert'],
-                Notifications\ReservationStatusUpdated::class => ['alert'],
+                ActivityTypes\OrderAssigned::class => ['alert'],
+                ActivityTypes\OrderStatusUpdated::class => ['alert'],
+                ActivityTypes\ReservationAssigned::class => ['alert'],
+                ActivityTypes\ReservationStatusUpdated::class => ['alert'],
             ]);
         });
     }
@@ -684,19 +684,19 @@ class ServiceProvider extends AppServiceProvider
     protected function bindActivityEvents()
     {
         Models\Orders_model::updated(function ($model) {
-            Notifications\OrderAssigned::pushActivityLog($model);
+            ActivityTypes\OrderAssigned::pushActivityLog($model);
         });
 
         Models\Reservations_model::updated(function ($model) {
-            Notifications\ReservationAssigned::pushActivityLog($model);
+            ActivityTypes\ReservationAssigned::pushActivityLog($model);
         });
 
         Event::listen('admin.statusHistory.beforeAddStatus', function ($model, $object, $statusId, $previousStatus) {
             if ($object instanceof Models\Orders_model)
-                Notifications\OrderStatusUpdated::pushActivityLog($model, $object);
+                ActivityTypes\OrderStatusUpdated::pushActivityLog($model, $object);
 
             if ($object instanceof Models\Reservations_model)
-                Notifications\ReservationStatusUpdated::pushActivityLog($model, $object);
+                ActivityTypes\ReservationStatusUpdated::pushActivityLog($model, $object);
         });
     }
 }

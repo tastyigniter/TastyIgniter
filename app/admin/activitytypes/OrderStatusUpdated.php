@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Notifications;
+namespace Admin\ActivityTypes;
 
 use Admin\Models\Orders_model;
 use Admin\Models\Status_history_model;

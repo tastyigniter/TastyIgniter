@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Notifications;
+namespace Admin\ActivityTypes;
 
 use Admin\Models\Reservations_model;
 use AdminAuth;
