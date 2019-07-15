@@ -22,6 +22,7 @@
     <div id="notification">
         <?= $this->makePartial('flash') ?>
     </div>
+    <?= Assets::getJsVars(); ?>
     <?= get_script_tags(); ?>
 </body>
 </html>

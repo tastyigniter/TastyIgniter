@@ -2,6 +2,8 @@
 
 use File;
 use Html;
+use JsonSerializable;
+use stdClass;
 use System\Traits\CombinesAssets;
 
 /**
@@ -20,7 +22,9 @@ class Assets
 
     protected static $registeredCallback = [];
 
-    protected $assets = ['icon' => [], 'meta' => [], 'js' => [], 'css' => []];
+    protected $assets = ['icon' => [], 'meta' => [], 'js' => [], 'css' => [], 'jsVars' => []];
+
+    protected $jsVarNamespace = 'app';
 
     public function __construct()
     {
@@ -149,6 +153,23 @@ class Assets
         return $this->getAsset('js');
     }
 
+    public function getJsVars()
+    {
+        if (!$this->assets['jsVars'])
+            return '';
+
+        $output = "window.{$this->jsVarNamespace} = window.{$this->jsVarNamespace} || {};";
+
+        $output .= collect($this->assets['jsVars'])->map(function ($value, $name) {
+            $value = is_object($value)
+                ? $this->transformJsObjectVar($value) : $this->transformJsVar($value);
+
+            return "{$this->jsVarNamespace}.{$name} = {$value};";
+        })->implode('');
+
+        return "<script>{$output}</script>";
+    }
+
     public function addFavIcon($icon)
     {
         $this->assets['icon'][] = $icon;
@@ -177,9 +198,14 @@ class Assets
         return $this;
     }
 
+    public function putJsVars(array $variables)
+    {
+        $this->assets['jsVars'] = array_merge($this->assets['jsVars'], $variables);
+    }
+
     public function flush()
     {
-        $this->assets = ['meta' => [], 'js' => [], 'css' => []];
+        $this->assets = ['icon' => [], 'meta' => [], 'js' => [], 'css' => [], 'jsVars' => []];
     }
 
     protected function putAsset($type, $path, $attributes)
@@ -301,5 +327,26 @@ class Assets
         }
 
         return $html;
+    }
+
+    protected function transformJsVar($value)
+    {
+        return json_encode($value);
+    }
+
+    protected function transformJsObjectVar($value)
+    {
+        if ($value instanceof JsonSerializable OR $value instanceof StdClass)
+            return json_encode($value);
+
+        // If a toJson() method exists, the object can cast itself automatically.
+        if (method_exists($value, 'toJson'))
+            return $value;
+
+        // Otherwise, if the object doesn't even have a __toString() method, we can't proceed.
+        if (!method_exists($value, '__toString'))
+            throw new \Exception('Cannot transform this object to JavaScript.');
+
+        return "'{$value}'";
     }
 }
