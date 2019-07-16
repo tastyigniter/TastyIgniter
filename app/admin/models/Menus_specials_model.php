@@ -24,7 +24,7 @@ class Menus_specials_model extends Model
         'recurring_every' => 'array',
     ];
 
-    public function getRecurringEveryOptions()
+    public static function getRecurringEveryOptions()
     {
         return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     }
@@ -74,5 +74,18 @@ class Menus_specials_model extends Model
 
                 return !$now->between($start, $end);
         }
+    }
+
+    public function isFixed()
+    {
+        return $this->type !== 'P';
+    }
+
+    public function getMenuPrice($price)
+    {
+        if ($this->isFixed())
+            return $this->special_price;
+
+        return $price - (($price / 100) * round($this->special_price));
     }
 }

@@ -674,6 +674,7 @@ return [
         'label_start_date' => 'Start Date',
         'label_end_date' => 'End Date',
         'label_special_price' => 'Special Price',
+        'label_special_type' => 'Special Type',
 
         'help_image' => 'Select a file to update menu image, otherwise leave blank.',
         'help_mealtime' => 'Set what time of day your customers can order this menu. Mealtimes can be managed under Kitchen > Mealtimes',

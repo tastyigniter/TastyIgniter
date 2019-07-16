@@ -12,6 +12,7 @@ class addColumnsOnMenuSpecialsTable extends Migration
     public function up()
     {
         Schema::table('menus_specials', function (Blueprint $table) {
+            $table->string('type');
             $table->string('validity');
             $table->dateTime('start_date')->change();
             $table->dateTime('end_date')->change();

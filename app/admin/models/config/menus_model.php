@@ -232,11 +232,24 @@ $config['form']['tabs'] = [
             'type' => 'switch',
             'comment' => 'lang:admin::lang.menus.help_specials',
         ],
+        'special[type]' => [
+            'label' => 'lang:admin::lang.menus.label_special_type',
+            'tab' => 'lang:admin::lang.menus.text_tab_special',
+            'type' => 'radio',
+            'span' => 'left',
+            'cssClass' => 'flex-width',
+            'default' => 'F',
+            'options' => [
+                'F' => 'lang:admin::lang.coupons.text_fixed_amount',
+                'P' => 'lang:admin::lang.coupons.text_percentage',
+            ],
+        ],
         'special[special_price]' => [
             'label' => 'lang:admin::lang.menus.label_special_price',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
             'type' => 'money',
             'span' => 'left',
+            'cssClass' => 'flex-width',
         ],
         'special[validity]' => [
             'label' => 'lang:admin::lang.coupons.label_validity',
@@ -278,6 +291,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.coupons.label_recurring_every',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
             'type' => 'checkbox',
+            'options' => [\Admin\Models\Menus_specials_model::class, 'getRecurringEveryOptions'],
             'trigger' => [
                 'action' => 'show',
                 'field' => 'special[validity]',
