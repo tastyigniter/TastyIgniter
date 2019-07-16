@@ -65,7 +65,8 @@ class Locations extends \Admin\Classes\AdminController
 
     public function settings($context = null)
     {
-        $this->asExtension('FormController')->edit('edit', params('default_location_id'));
+        $recordId = !is_single_location() ? AdminAuth::getLocationId() : params('default_location_id');
+        $this->asExtension('FormController')->edit('edit', $recordId);
     }
 
     public function index_onSetDefault($context = null)
@@ -110,8 +111,10 @@ class Locations extends \Admin\Classes\AdminController
 
     public function formExtendQuery($query)
     {
-        if (is_single_location())
-            $query->where('location_id', params('default_location_id'));
+        if (AdminAuth::isStrictLocation())
+            $query->where('location_id',
+                $recordId = !is_single_location() ? AdminAuth::getLocationId() : params('default_location_id')
+            );
     }
 
     public function formValidate($model, $form)

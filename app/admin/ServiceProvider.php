@@ -554,7 +554,7 @@ class ServiceProvider extends AppServiceProvider
     {
         AdminMenu::registerCallback(function (Navigation $manager) {
             // Change nav menu if single location mode is activated
-            if (!(is_single_location() OR AdminAuth::user()->hasStrictLocationAccess()))
+            if (!AdminAuth::isStrictLocation())
                 return;
 
             $manager->removeNavItem('locations', 'restaurant');
@@ -577,9 +577,6 @@ class ServiceProvider extends AppServiceProvider
             'coupons_history' => 'Admin\Models\Coupons_history_model',
             'coupons' => 'Admin\Models\Coupons_model',
             'customer_groups' => 'Admin\Models\Customer_groups_model',
-            'menus' => 'Admin\Models\Menus_model',
-            'orders' => 'Admin\Models\Orders_model',
-            'reservations' => 'Admin\Models\Reservations_model',
             'customers' => 'Admin\Models\Customers_model',
             'location_areas' => 'Admin\Models\Location_areas_model',
             'location_tables' => 'Admin\Models\Location_tables_model',

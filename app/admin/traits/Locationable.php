@@ -85,7 +85,6 @@ trait Locationable
             ? $userLocation->getKey() : $userLocation;
 
         $relationName = $this->locationableRelationName();
-
         $relationObject = $this->getLocationableRelationObject();
         $locationModel = $relationObject->getRelated();
 
