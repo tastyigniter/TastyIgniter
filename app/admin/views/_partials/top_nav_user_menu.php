@@ -22,6 +22,11 @@ $logoutLink = admin_url('logout');
         <a class="dropdown-item" href="<?= $staffEditLink; ?>">
             <i class="fa fa-user fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_edit_details'); ?>
         </a>
+        <?php if (class_exists(\Network\Classes\Environment::class)) { ?>
+        <a class="dropdown-item" href="<?= NetworkHelper::url('dashboard'); ?>">
+            <i class="fa fa-boxes fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_network_admin'); ?>
+        </a>
+        <?php } ?>
         <div role="separator" class="dropdown-divider"></div>
         <a class="dropdown-item text-danger" href="<?= $logoutLink; ?>">
             <i class="fa fa-power-off fa-fw"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_logout'); ?>

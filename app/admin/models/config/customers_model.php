@@ -193,9 +193,6 @@ $config['form']['tabs'] = [
                 'table_name' => [
                     'title' => 'lang:admin::lang.reservations.column_table',
                 ],
-                'table_name' => [
-                    'title' => 'lang:admin::lang.reservations.column_table',
-                ],
                 'reserve_time' => [
                     'title' => 'lang:admin::lang.reservations.column_time',
                 ],

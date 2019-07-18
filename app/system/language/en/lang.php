@@ -545,6 +545,7 @@ return [
         'button_browse' => '<i class="fa fa-globe"></i>  Browse more Themes',
         'button_build' => '<i class="fa fa-gears"></i>  Build Assets Bundle',
         'button_source' => '<i class="fa fa-pencil"></i>  Edit Source',
+        'button_check' => '<i class="fa fa-refresh"></i>  Updates',
         'button_customize' => '<i class="fa fa-paint-brush"></i>  Customize',
         'button_new_source' => 'New Source',
         'button_rename_source' => 'Rename Source',

@@ -196,7 +196,7 @@ class Menus_model extends Model
      *
      * @return bool
      */
-    protected function addMenuCategories(array $categoryIds = [])
+    public function addMenuCategories(array $categoryIds = [])
     {
         if (!$this->exists)
             return FALSE;
@@ -241,7 +241,7 @@ class Menus_model extends Model
      *
      * @return bool
      */
-    protected function addMenuSpecial(array $menuSpecial = [])
+    public function addMenuSpecial(array $menuSpecial = [])
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId) OR !isset($menuSpecial['special_id']))

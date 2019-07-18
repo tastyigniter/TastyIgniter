@@ -85,6 +85,8 @@ return [
     'text_staff_group' => 'Staff Group',
     'text_location' => 'Location',
     'text_edit_details' => 'Edit Details',
+    'text_network_admin' => 'Network Admin',
+    'text_administration' => 'Administration',
     'text_logout' => 'Logout',
 
     'help_permalink' => 'Use ONLY alpha-numeric lowercase characters, _ or - and make sure it is unique GLOBALLY.',

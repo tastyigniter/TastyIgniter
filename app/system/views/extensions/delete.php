@@ -36,8 +36,6 @@
             ><?= lang('system::lang.extensions.label_delete_data'); ?></label>
             <div
                 id="input-delete-data"
-                class="btn-group btn-group-toggle"
-                data-toggle="buttons"
             >
                 <input
                     type="hidden"
