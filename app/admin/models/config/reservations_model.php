@@ -71,7 +71,7 @@ $config['list']['columns'] = [
     'table_name' => [
         'label' => 'lang:admin::lang.reservations.column_table',
         'type' => 'text',
-        'relation' => 'related_table',
+        'relation' => 'tables',
         'select' => 'table_name',
         'searchable' => TRUE,
     ],
@@ -251,10 +251,10 @@ $config['form']['tabs'] = [
             'span' => 'left',
             'cssClass' => 'flex-width',
         ],
-        'table_id' => [
+        'tables' => [
             'label' => 'lang:admin::lang.reservations.label_table_name',
             'type' => 'relation',
-            'relationFrom' => 'related_table',
+            'relationFrom' => 'tables',
             'nameFrom' => 'table_name',
             'span' => 'left',
             'cssClass' => 'flex-width',
