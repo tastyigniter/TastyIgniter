@@ -348,6 +348,8 @@ return [
         'text_total_collection_order' => 'Total Pick-up Orders',
         'text_total_completed_order' => 'Total Orders Completed',
         'text_total_reservation' => 'Total Reservations',
+        'text_total_reserved_guest' => 'Total Guests',
+        'text_total_completed_reservation' => 'Total Reservations Completed',
         'text_total_reserved_table' => 'Total Table(s) Reserved',
         'text_complete_setup' => 'Complete Restaurant Setup',
         'text_progress' => 'Complete',

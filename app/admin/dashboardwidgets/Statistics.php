@@ -87,6 +87,18 @@ class Statistics extends BaseDashboardWidget
                 'label' => 'lang:admin::lang.dashboard.text_total_reserved_table',
                 'icon' => ' bg-primary text-white fa fa-table',
             ],
+            'reserved_guest' => [
+                'label' => 'lang:admin::lang.dashboard.text_total_reserved_guest',
+                'icon' => ' bg-primary text-white fa fa-table',
+            ],
+            'reservation' => [
+                'label' => 'lang:admin::lang.dashboard.text_total_reservation',
+                'icon' => ' bg-success text-white fa fa-table',
+            ],
+            'completed_reservation' => [
+                'label' => 'lang:admin::lang.dashboard.text_total_completed_reservation',
+                'icon' => ' bg-success text-white fa fa-table',
+            ],
         ];
     }
 
@@ -282,15 +294,63 @@ class Statistics extends BaseDashboardWidget
     }
 
     /**
-     * Return the total number of table reservations
+     * Return the total number of reserved tables
      *
      * @param $range
      * @return int
      */
     protected function getTotalReservedTableSum($range)
     {
+        $query = Reservations_model::with('tables');
+        $query->where('status_id', setting('confirmed_reservation_status'))
+              ->whereRaw($this->getRangeQuery($range));
+        $result = $query->get();
+
+        $result->pluck('tables')->flatten();
+
+        return $result->count();
+    }
+
+    /**
+     * Return the total number of reserved table guests
+     *
+     * @param $range
+     * @return int
+     */
+    protected function getTotalReservedGuestSum($range)
+    {
         $query = Reservations_model::query();
-        $query->where('status_id', '>', '0')
+        $query->where('status_id', setting('confirmed_reservation_status'))
+              ->whereRaw($this->getRangeQuery($range));
+
+        return $query->sum('guest_num') ?? 0;
+    }
+
+    /**
+     * Return the total number of reservations
+     *
+     * @param $range
+     * @return int
+     */
+    protected function getTotalReservationSum($range)
+    {
+        $query = Reservations_model::query();
+        $query->where('status_id', '!=', setting('canceled_reservation_status'))
+              ->whereRaw($this->getRangeQuery($range));
+
+        return $query->count();
+    }
+
+    /**
+     * Return the total number of completed reservations
+     *
+     * @param $range
+     * @return int
+     */
+    protected function getTotalCompletedReservationSum($range)
+    {
+        $query = Reservations_model::query();
+        $query->where('status_id', setting('confirmed_reservation_status'))
               ->whereRaw($this->getRangeQuery($range));
 
         return $query->count();
