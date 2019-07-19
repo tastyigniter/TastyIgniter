@@ -30,17 +30,19 @@ class Reviews_model extends Model
      */
     public $timestamps = TRUE;
 
+    protected $guarded = [];
+
     const CREATED_AT = 'date_added';
 
     const UPDATED_AT = null;
 
     public $relation = [
         'belongsTo' => [
-            'location' => ['Admin\Models\Locations_model', 'foreignKey' => 'location_id', 'scope' => 'isEnabled'],
+            'location' => ['Admin\Models\Locations_model', 'scope' => 'isEnabled'],
             'customer' => 'Admin\Models\Customers_model',
         ],
         'morphTo' => [
-            'reviewable' => [],
+            'reviewable' => ['name' => 'sale'],
         ],
     ];
 
@@ -128,6 +130,13 @@ class Reviews_model extends Model
                      ->where('customer_id', $customerId);
     }
 
+    public function scopeWhereReviewable($query, $causer)
+    {
+        return $query
+            ->where('sale_type', $causer->getMorphClass())
+            ->where('sale_id', $causer->getKey());
+    }
+
     //
     // Helpers
     //
@@ -149,5 +158,13 @@ class Reviews_model extends Model
     public function getReviewDates()
     {
         return $this->pluckDates('date_added');
+    }
+
+    public static function checkReviewed(Model $object, Model $customer)
+    {
+        $query = self::whereReviewable($object)
+                     ->where('customer_id', $customer->getKey());
+
+        return $query->exists();
     }
 }

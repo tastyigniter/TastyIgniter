@@ -23,7 +23,7 @@
                             <?php } else if ($category->icon) { ?>
                                 <i class="text-muted <?= $category->icon ?> fa-fw"></i>&nbsp;&nbsp;
                             <?php } ?>
-                            <?= e(strtoupper(lang($category->label))) ?>
+                            <b><?= e(strtoupper(lang($category->label))) ?></b>
                         </h5>
                         <p class="no-margin"><?= $category->description ? e(lang($category->description)) : '' ?></p>
                     </a>

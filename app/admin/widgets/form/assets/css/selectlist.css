@@ -1,6 +1,6 @@
 .multiselect.dropdown-toggle {
 	text-align: left;
-	border: 1px solid var(--gray-400);
+	border: 1px solid var(--gray-300);
 	background-color: var(--gray-100);
 }
 .multiselect.dropdown-toggle:focus {

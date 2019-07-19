@@ -10,7 +10,7 @@ use Model;
 class Coupons_history_model extends Model
 {
     const CREATED_AT = 'date_used';
-    
+
     const UPDATED_AT = null;
 
     /**
@@ -27,6 +27,7 @@ class Coupons_history_model extends Model
         'belongsTo' => [
             'customer' => 'Admin\Models\Customers_model',
             'order' => 'Admin\Models\Orders_model',
+            'coupon' => 'Admin\Models\Coupons_model',
         ],
     ];
 

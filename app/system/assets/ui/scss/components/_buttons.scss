@@ -2,21 +2,24 @@
   color: $primary;
   background-color: transparent;
 }
+
 .btn-action {
   border: 0;
   padding: $btn-action-padding;
 }
+
 .btn-light {
   background-color: $light;
-  border-color: $gray-400;
+  border-color: $gray-300;
 
   &:hover {
     border-color: $gray-400;
   }
 }
+
 .btn-light:not(:disabled):not(.disabled):active,
 .btn-light:not(:disabled):not(.disabled).active,
 .show > .btn-light.dropdown-toggle {
-  background-color: $gray-300;
+  background-color: $gray-400;
   border-color: $gray-400;
 }

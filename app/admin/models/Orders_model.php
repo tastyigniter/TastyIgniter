@@ -73,6 +73,8 @@ class Orders_model extends Model
             'status' => 'Admin\Models\Statuses_model',
             'assignee' => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
+        ],
+        'hasMany' => [
             'payment_logs' => 'Admin\Models\Payment_logs_model',
             'coupon_history' => 'Admin\Models\Coupons_history_model',
         ],

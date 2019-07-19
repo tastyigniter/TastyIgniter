@@ -100,7 +100,7 @@ return [
         'setting' => 'Settings',
         'dashboard' => 'Dashboard',
         'kitchen' => 'Kitchen',
-        'menu' => 'Menus',
+        'menu' => 'Menu Items',
         'option' => 'Options',
         'category' => 'Categories',
         'table' => 'Tables',

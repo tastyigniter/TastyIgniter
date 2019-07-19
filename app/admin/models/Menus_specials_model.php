@@ -16,7 +16,8 @@ class Menus_specials_model extends Model
 
     protected $primaryKey = 'special_id';
 
-    protected $fillable = ['menu_id', 'start_date', 'end_date', 'special_price', 'special_status'];
+    protected $fillable = ['menu_id', 'start_date', 'end_date', 'special_price', 'special_status', 'type',
+        'validity', 'recurring_every', 'recurring_from', 'recurring_to'];
 
     public $dates = ['start_date', 'end_date'];
 
@@ -63,6 +64,8 @@ class Menus_specials_model extends Model
         $now = Carbon::now();
 
         switch ($this->validity) {
+            case 'forever':
+                return FALSE;
             case 'period':
                 return !$now->between($this->start_date, $this->end_date);
             case 'recurring':

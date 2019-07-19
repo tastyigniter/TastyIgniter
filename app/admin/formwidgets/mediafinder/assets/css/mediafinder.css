@@ -1,7 +1,7 @@
 .media-finder .grid {
 	background-color: var(--gray-100);
 	border-radius: 3px;
-	border: 1px solid var(--gray-400);
+	border: 1px solid var(--gray-300);
 	width: 124px;
 	height: 124px;
 	position: relative;

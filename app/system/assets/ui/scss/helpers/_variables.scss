@@ -44,6 +44,8 @@ $theme-colors: map-merge($theme-colors, (
   "info": $info,
   "warning": $warning,
   "danger": $danger,
+  "light": $light,
+  "dark": $dark
 ));
 
 // Options
@@ -93,7 +95,7 @@ $input-bg: $white !default;
 $input-disabled-bg: $gray-300 !default;
 
 $input-color: $dark !default;
-$input-border-color: $gray-400 !default;
+$input-border-color: $gray-300 !default;
 
 $input-border-radius: 3px !default;
 
@@ -105,7 +107,7 @@ $custom-control-indicator-size: 1.2rem !default;
 $dropdown-padding-x: .5rem !default;
 
 // Cards
-$card-border-color: $gray-400 !default;
+$card-border-color: $gray-300 !default;
 $card-cap-bg: $gray-300 !default;
 $card-bg: $gray-200 !default;
 

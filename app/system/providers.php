@@ -26,7 +26,7 @@ return [
     Igniter\Flame\Html\HtmlServiceProvider::class,
     Igniter\Flame\Mail\MailServiceProvider::class,
     Igniter\Flame\Notifications\NotificationServiceProvider::class,
-//    Igniter\Flame\Html\UrlServiceProvider::class, // force https -- url policy
+    Igniter\Flame\Html\UrlServiceProvider::class, // force https -- url policy
     Igniter\Flame\Scaffold\ScaffoldServiceProvider::class,
     Igniter\Flame\Setting\SettingServiceProvider::class,
 ];

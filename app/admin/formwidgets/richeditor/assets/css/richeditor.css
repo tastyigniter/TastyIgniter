@@ -1,7 +1,7 @@
 .note-editor.note-frame {
-	border-color: var(--gray-400);
+	border-color: var(--gray-300);
 }
 .note-editor.note-frame .note-statusbar {
 	background-color: var(--gray-300);
-	border-top: 1px solid var(--gray-400);
+	border-top: 1px solid var(--gray-300);
 }

@@ -226,12 +226,6 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.menus.text_tab_special',
             'type' => 'hidden',
         ],
-        'special[special_status]' => [
-            'label' => 'lang:admin::lang.menus.label_special_status',
-            'tab' => 'lang:admin::lang.menus.text_tab_special',
-            'type' => 'switch',
-            'comment' => 'lang:admin::lang.menus.help_specials',
-        ],
         'special[type]' => [
             'label' => 'lang:admin::lang.menus.label_special_type',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
@@ -255,8 +249,9 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.coupons.label_validity',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
             'type' => 'radio',
-            'default' => 'period',
+            'default' => 'forever',
             'options' => [
+                'forever' => 'lang:admin::lang.coupons.text_forever',
                 'period' => 'lang:admin::lang.coupons.text_period',
                 'recurring' => 'lang:admin::lang.coupons.text_recurring',
             ],
@@ -323,6 +318,12 @@ $config['form']['tabs'] = [
                 'field' => 'special[validity]',
                 'condition' => 'value[recurring]',
             ],
+        ],
+        'special[special_status]' => [
+            'label' => 'lang:admin::lang.menus.label_special_status',
+            'tab' => 'lang:admin::lang.menus.text_tab_special',
+            'type' => 'switch',
+            'comment' => 'lang:admin::lang.menus.help_specials',
         ],
     ],
 ];

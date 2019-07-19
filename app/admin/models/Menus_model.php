@@ -172,19 +172,17 @@ class Menus_model extends Model
      */
     public function updateStock($quantity = 0, $action = 'subtract')
     {
-        $update = FALSE;
+        if ($this->subtract_stock AND !empty($quantity))
+            return FALSE;
 
-        if ($this->subtract_stock AND !empty($quantity)) {
-            $stockQty = $this->stock_qty + $quantity;
-
-            if ($action == 'subtract') {
-                $stockQty = $this->stock_qty - $quantity;
-            }
-
-            $update = $this->update(['stock_qty' => $stockQty]);
-
-            Event::fire('admin.menu.stockUpdated', [$action, $this->stock_qty]);
+        $stockQty = $this->stock_qty + $quantity;
+        if ($action == 'subtract') {
+            $stockQty = $this->stock_qty - $quantity;
         }
+
+        $update = $this->update(['stock_qty' => $stockQty]);
+
+        Event::fire('admin.menu.stockUpdated', [$this, $quantity, $action]);
 
         return $update;
     }
