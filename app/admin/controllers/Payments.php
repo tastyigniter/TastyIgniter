@@ -15,28 +15,28 @@ class Payments extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Payments_model',
-            'title'        => 'lang:admin::lang.payments.text_title',
+            'model' => 'Admin\Models\Payments_model',
+            'title' => 'lang:admin::lang.payments.text_title',
             'emptyMessage' => 'lang:admin::lang.payments.text_empty',
-            'defaultSort'  => ['date_updated', 'DESC'],
-            'configFile'   => 'payments_model',
+            'defaultSort' => ['date_updated', 'DESC'],
+            'configFile' => 'payments_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.payments.text_form_name',
-        'model'      => 'Admin\Models\Payments_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'payments/edit/{code}',
+        'name' => 'lang:admin::lang.payments.text_form_name',
+        'model' => 'Admin\Models\Payments_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'payments/edit/{code}',
             'redirectClose' => 'payments',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'payments/edit/{code}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'payments/edit/{code}',
             'redirectClose' => 'payments',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'payments',
         ],
         'configFile' => 'payments_model',
@@ -124,18 +124,6 @@ class Payments extends \Admin\Classes\AdminController
             $field = $form->getField('code');
             $field->disabled = TRUE;
         }
-
-        // Add the set up help partial
-//        $setupPartial = $model->getPartialPath().'/setup_help.php';
-//        if (file_exists($setupPartial)) {
-//            $formWidget->addFields([
-//                'setup_help' => [
-//                    'type' => 'partial',
-//                    'tab'  => 'Help',
-//                    'path' => $setupPartial,
-//                ]
-//            ], 'primary');
-//        }
     }
 
     public function formBeforeCreate($model)

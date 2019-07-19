@@ -72,45 +72,45 @@ $config['form']['toolbar'] = [
     ],
 ];
 
-$config['form']['tabs'] = [
-    'defaultTab' => 'lang:admin::lang.payments.text_tab_config',
-    'fields' => [
-        'payment' => [
-            'label' => 'lang:admin::lang.payments.label_payments',
-            'type' => 'select',
-            'options' => 'listGateways',
-            'context' => ['create'],
-            'placeholder' => 'lang:admin::lang.text_please_select',
-        ],
-        'name' => [
-            'label' => 'lang:admin::lang.payments.label_name',
-            'type' => 'text',
-            'span' => 'left',
-        ],
-        'code' => [
-            'label' => 'lang:admin::lang.payments.label_code',
-            'type' => 'text',
-            'span' => 'right',
-        ],
-        'priority' => [
-            'label' => 'lang:admin::lang.payments.label_priority',
-            'type' => 'number',
-            'default' => 999,
-        ],
-        'description' => [
-            'label' => 'lang:admin::lang.payments.label_description',
-            'type' => 'textarea',
-        ],
-        'is_default' => [
-            'label' => 'lang:admin::lang.payments.label_default',
-            'type' => 'switch',
-            'span' => 'left',
-        ],
-        'status' => [
-            'label' => 'lang:admin::lang.label_status',
-            'type' => 'switch',
-            'span' => 'right',
-        ],
+$config['form']['fields'] = [
+    'payment' => [
+        'label' => 'lang:admin::lang.payments.label_payments',
+        'type' => 'select',
+        'options' => 'listGateways',
+        'context' => ['create'],
+        'placeholder' => 'lang:admin::lang.text_please_select',
+    ],
+    'name' => [
+        'label' => 'lang:admin::lang.payments.label_name',
+        'type' => 'text',
+        'span' => 'left',
+    ],
+    'priority' => [
+        'label' => 'lang:admin::lang.payments.label_priority',
+        'type' => 'number',
+        'span' => 'right',
+        'cssClass' => 'flex-width',
+        'default' => 999,
+    ],
+    'code' => [
+        'label' => 'lang:admin::lang.payments.label_code',
+        'type' => 'text',
+        'span' => 'right',
+        'cssClass' => 'flex-width',
+    ],
+    'description' => [
+        'label' => 'lang:admin::lang.payments.label_description',
+        'type' => 'textarea',
+    ],
+    'is_default' => [
+        'label' => 'lang:admin::lang.payments.label_default',
+        'type' => 'switch',
+        'span' => 'left',
+    ],
+    'status' => [
+        'label' => 'lang:admin::lang.label_status',
+        'type' => 'switch',
+        'span' => 'right',
     ],
 ];
 

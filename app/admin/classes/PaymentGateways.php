@@ -160,7 +160,7 @@ class PaymentGateways
     {
         $params = explode('/', $uri);
 
-        $gateways = self::instance()->listGatewayObjects();
+        $gateways = Payments_model::listPayments();
         foreach ($gateways as $gateway) {
             $points = $gateway->registerEntryPoints();
 
@@ -185,7 +185,7 @@ class PaymentGateways
         $themeManager = ThemeManager::instance();
         $theme = $themeManager->getActiveTheme();
         $partials = $theme->listPartials()->pluck('baseFileName', 'baseFileName')->all();
-        $paymentMethods = Payments_model::all();
+        $paymentMethods = Payments_model::isEnabled()->get();
 
         foreach ($paymentMethods as $paymentMethod) {
             $class = $paymentMethod->getGatewayClass();

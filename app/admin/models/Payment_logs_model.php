@@ -9,6 +9,10 @@ use Model;
  */
 class Payment_logs_model extends Model
 {
+    const UPDATED_AT = 'date_updated';
+
+    const CREATED_AT = 'date_added';
+
     /**
      * @var string The database table name
      */
@@ -20,7 +24,7 @@ class Payment_logs_model extends Model
     protected $primaryKey = 'payment_log_id';
 
     public $casts = [
-        'request'  => 'array',
+        'request' => 'array',
         'response' => 'array',
     ];
 }
