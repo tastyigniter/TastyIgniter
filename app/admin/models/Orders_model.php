@@ -111,6 +111,14 @@ class Orders_model extends Model
         $this->user_agent = Request::userAgent();
     }
 
+    public function afterSave()
+    {
+        if (!$this->isDirty('assignee_id'))
+            return;
+
+        Event::fire('admin.order.assigned', [$this]);
+    }
+
     //
     // Scopes
     //

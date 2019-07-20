@@ -680,11 +680,11 @@ class ServiceProvider extends AppServiceProvider
 
     protected function bindActivityEvents()
     {
-        Models\Orders_model::updated(function ($model) {
+        Event::listen('admin.order.assigned', function ($model) {
             ActivityTypes\OrderAssigned::pushActivityLog($model);
         });
 
-        Models\Reservations_model::updated(function ($model) {
+        Event::listen('admin.reservation.assigned', function ($model) {
             ActivityTypes\ReservationAssigned::pushActivityLog($model);
         });
 
