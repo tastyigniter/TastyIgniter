@@ -47,8 +47,8 @@ trait Locationable
 
     public function locationableScopeEnabled()
     {
-        if ($this->locationScopeEnabled === TRUE)
-            return TRUE;
+        if (!$this->locationScopeEnabled)
+            return FALSE;
 
         return App::runningInAdmin() AND AdminAuth::isStrictLocation();
     }
