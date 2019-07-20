@@ -3,9 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Models\Menus_model;
-use Auth;
 use Carbon\Carbon;
-use Cart;
 use DB;
 use Event;
 use Igniter\Flame\Cart\CartCondition;
@@ -15,10 +13,6 @@ trait ManagesOrderItems
     public static function bootManagesOrderItems()
     {
         Event::listen('admin.order.paymentProcessed', function ($model) {
-            // Lets log the coupon so we can redeem it later
-            $couponCondition = Cart::getCondition('coupon');
-            $model->logCouponHistory($couponCondition, Auth::customer());
-
             $model->handleOnPaymentProcessed();
         });
     }
@@ -53,10 +47,10 @@ trait ManagesOrderItems
     public function redeemCoupon()
     {
         $query = $this->coupon_history()->where('status', '!=', '1');
-        $couponHistoryModel = $query->get()->last();
-        if ($couponHistoryModel) {
-            return $couponHistoryModel->touchStatus();
-        }
+        if (!$couponHistoryModel = $query->get()->last())
+            return FALSE;
+
+        $couponHistoryModel->touchStatus();
 
         Event::fire('admin.order.couponRedeemed', [$couponHistoryModel]);
     }
@@ -193,7 +187,7 @@ trait ManagesOrderItems
     /**
      * Add cart coupon to order by order_id
      *
-     * @param \Admin\Models\Coupons_model $couponCondition
+     * @param \Igniter\Flame\Cart\CartCondition $couponCondition
      * @param \Admin\Models\Customers_model $customer
      *
      * @return int|bool
