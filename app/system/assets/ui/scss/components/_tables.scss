@@ -3,7 +3,7 @@
     cursor: pointer;
     display: block;
     position: relative;
-    color: $body-color;
+    color: $table-head-color;
     text-decoration: none;
 
     .fa {
@@ -11,6 +11,11 @@
       position: absolute;
       right: 1px;
       top: 6px;
+    }
+
+    &:hover,
+    .active {
+      color: $body-color;
     }
 
     &:hover .fa,
@@ -30,6 +35,7 @@
     }
   }
 }
+
 .table-striped {
   thead th {
     background-color: $table-head-bg;
@@ -39,10 +45,12 @@
     background-color: $table-head-bg;
   }
 }
+
 .table-muted .text-muted {
   filter: alpha(opacity=80);
   opacity: 0.8;
 }
+
 .table > tbody > tr > td,
 .table > tbody > tr > th,
 .table > tfoot > tr > td,
@@ -51,12 +59,15 @@
 .table > thead > tr > th {
   vertical-align: middle;
 }
+
 .table > thead > tr > th {
   font-weight: $font-weight-normal;
   font-size: $font-size-sm;
   text-transform: uppercase;
   line-height: 2;
+  color: $table-head-color;
 }
+
 .table .list-action,
 .table .list-setup {
   width: 1px;

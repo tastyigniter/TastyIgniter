@@ -89,6 +89,7 @@ $table-cell-padding: .45rem !default;
 $table-cell-padding-sm: .1rem !default;
 $table-head-bg: $gray-200 !default;
 $table-accent-bg: $light !default;
+$table-border-color: $gray-200 !default;
 
 // Forms
 $input-bg: $white !default;
@@ -100,6 +101,7 @@ $input-border-color: $gray-300 !default;
 $input-border-radius: 3px !default;
 
 $custom-control-indicator-size: 1.2rem !default;
+$custom-control-indicator-border-color: $gray-300 !default;
 
 // Dropdowns
 //
@@ -138,4 +140,5 @@ $alert-border-level: -8 !default;
 $list-group-bg: $gray-200 !default;
 $list-group-hover-bg: $gray-300 !default;
 $list-group-action-color: $body-color !default;
+$list-group-border-color: $input-border-color !default;
 

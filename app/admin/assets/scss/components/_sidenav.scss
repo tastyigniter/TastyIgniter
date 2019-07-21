@@ -54,7 +54,6 @@
 
     .nav {
       background-color: $sidenav-bg-light;
-      padding: 10px 0;
 
       &.show {
         display: block;
@@ -69,7 +68,7 @@
 
       li > a:hover,
       li > a:focus {
-        background-color: darken($sidenav-bg-light, 2.5%);
+        background-color: transparent;
       }
     }
 
@@ -110,6 +109,7 @@
     transform: rotate(-135deg) translate(0, -50%);
   }
 }
+
 @include media-breakpoint-down(sm) {
   .navbar-brand {
     display: none;
