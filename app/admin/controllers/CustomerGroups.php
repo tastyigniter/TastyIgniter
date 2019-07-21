@@ -49,7 +49,7 @@ class CustomerGroups extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('customer_groups', 'users');
+        AdminMenu::setContext('customers', 'users');
     }
 
     public function index_onSetDefault()

@@ -5,6 +5,7 @@
   width: $page-margin-left;
   z-index: 1030;
 }
+
 .nav-sidebar {
   background-color: $sidenav-bg;
   overflow-x: hidden;
@@ -18,6 +19,10 @@
   right: 0;
   padding-top: 20px;
   padding-bottom: 35px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   > .nav {
     @include flex-direction(column);

@@ -422,33 +422,12 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.customer'),
                             'permission' => 'Admin.Customers',
                         ],
-                        'customer_groups' => [
-                            'priority' => 20,
-                            'class' => 'customer_groups',
-                            'href' => admin_url('customer_groups'),
-                            'title' => lang('admin::lang.side_menu.customer_group'),
-                            'permission' => 'Admin.CustomerGroups',
-                        ],
                         'staffs' => [
-                            'priority' => 40,
+                            'priority' => 20,
                             'class' => 'staffs',
                             'href' => admin_url('staffs'),
                             'title' => lang('admin::lang.side_menu.staff'),
                             'permission' => 'Admin.Staffs',
-                        ],
-                        'staff_groups' => [
-                            'priority' => 50,
-                            'class' => 'staff_groups',
-                            'href' => admin_url('staff_groups'),
-                            'title' => lang('admin::lang.side_menu.staff_group'),
-                            'permission' => 'Admin.StaffGroups',
-                        ],
-                        'permissions' => [
-                            'priority' => 60,
-                            'class' => 'permissions',
-                            'href' => admin_url('permissions'),
-                            'title' => lang('admin::lang.side_menu.permission'),
-                            'permission' => 'Admin.Permissions',
                         ],
                     ],
                 ],
@@ -502,12 +481,12 @@ class ServiceProvider extends AppServiceProvider
                     'icon' => 'fa-cogs',
                     'title' => lang('admin::lang.side_menu.system'),
                     'child' => [
-                        'activities' => [
-                            'priority' => 10,
-                            'class' => 'activities',
-                            'href' => admin_url('activities'),
-                            'title' => lang('admin::lang.side_menu.activities'),
-                            'permission' => 'Admin.Activities',
+                        'settings' => [
+                            'priority' => 0,
+                            'class' => 'settings',
+                            'href' => admin_url('settings'),
+                            'title' => lang('admin::lang.side_menu.setting'),
+                            'permission' => 'Site.Settings',
                         ],
                         'extensions' => [
                             'priority' => 20,
@@ -522,13 +501,6 @@ class ServiceProvider extends AppServiceProvider
                             'href' => admin_url('updates'),
                             'title' => lang('admin::lang.side_menu.updates'),
                             'permission' => 'Site.Updates',
-                        ],
-                        'settings' => [
-                            'priority' => 40,
-                            'class' => 'settings',
-                            'href' => admin_url('settings'),
-                            'title' => lang('admin::lang.side_menu.setting'),
-                            'permission' => 'Site.Settings',
                         ],
                         'error_logs' => [
                             'priority' => 50,
