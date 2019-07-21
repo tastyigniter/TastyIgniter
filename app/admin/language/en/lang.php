@@ -796,13 +796,15 @@ return [
     ],
 
     'ratings' => [
-        'text_title' => 'Ratings',
-        'text_heading' => 'Ratings',
+        'text_title' => 'Rating Hints',
+        'text_heading' => 'Rating Hints',
         'text_empty' => 'There are no rating, please add.',
 
         'column_name' => 'Name',
 
         'label_name' => 'Name',
+        
+        'help_hints' => 'Used when adding reviews.',
     ],
 
     'reservations' => [

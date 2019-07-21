@@ -147,13 +147,6 @@
     "is_custom": 0
   },
   {
-    "name": "Admin.Ratings",
-    "description": "Ability to add and delete review ratings",
-    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
-    "status": 1,
-    "is_custom": 0
-  },
-  {
     "name": "Admin.Reservations",
     "description": "Ability to access, manage, add and delete reservations",
     "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",

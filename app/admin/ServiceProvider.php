@@ -479,13 +479,6 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.country'),
                             'permission' => 'Site.Countries',
                         ],
-                        'ratings' => [
-                            'priority' => 40,
-                            'class' => 'ratings',
-                            'href' => admin_url('ratings'),
-                            'title' => lang('admin::lang.side_menu.rating'),
-                            'permission' => 'Admin.Ratings',
-                        ],
                     ],
                 ],
                 'tools' => [

@@ -318,6 +318,13 @@ $config['form']['setup'] = [
                         'condition' => 'checked',
                     ],
                 ],
+                'ratings[ratings]' => [
+                    'label' => 'lang:admin::lang.ratings.text_title',
+                    'tab' => 'lang:system::lang.settings.text_tab_title_reviews',
+                    'type' => 'partial',
+                    'path' => 'settings/ratings',
+                    'commentAbove' => 'lang:admin::lang.ratings.help_hints',
+                ],
 
                 'tax_mode' => [
                     'label' => 'lang:system::lang.settings.label_tax_mode',
@@ -362,7 +369,7 @@ $config['form']['setup'] = [
             ['tax_delivery_charge', 'lang:system::lang.settings.label_tax_delivery_charge', 'numeric'],
             ['allow_reviews', 'lang:system::lang.settings.label_allow_reviews', 'required|integer'],
             ['approve_reviews', 'lang:system::lang.settings.label_approve_reviews', 'required|integer'],
-            ['default_order_status', 'lang:system::lang.settings.label_default_order_status', 'required|integer'],
+            ['ratings.*', 'lang:admin::lang.ratings.label_name', 'required|min:2|max:32'], ['default_order_status', 'lang:system::lang.settings.label_default_order_status', 'required|integer'],
             ['processing_order_status', 'lang:system::lang.settings.label_processing_order_status', 'required'],
             ['completed_order_status', 'lang:system::lang.settings.label_completed_order_status', 'required'],
             ['canceled_order_status', 'lang:system::lang.settings.label_canceled_order_status', 'required|integer'],

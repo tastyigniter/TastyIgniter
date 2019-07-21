@@ -1,6 +1,6 @@
 <?php namespace System\Controllers;
 
-use Admin\Models\Locations_model;
+use Admin\Traits\FormExtendable;
 use Admin\Traits\WidgetMaker;
 use AdminAuth;
 use AdminMenu;
@@ -15,6 +15,7 @@ use Template;
 class Settings extends \Admin\Classes\AdminController
 {
     use WidgetMaker;
+    use FormExtendable;
 
     protected $requiredPermissions = 'Site.Settings';
 
@@ -22,8 +23,14 @@ class Settings extends \Admin\Classes\AdminController
 
     protected $modelConfig;
 
+    /**
+     * @var \Admin\Widgets\Form
+     */
     public $formWidget;
 
+    /**
+     * @var \Admin\Widgets\Toolbar
+     */
     public $toolbarWidget;
 
     public $settingCode;
@@ -71,6 +78,10 @@ class Settings extends \Admin\Classes\AdminController
             $this->validateSettingItems();
             if ($errors = array_get($this->settingItemErrors, $settingCode))
                 Session::flash('errors', $errors);
+
+            if ($settingCode == 'setup')
+                $this->addJs('~/app/admin/formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
+            $this->addJs('~/app/admin/assets/js/ratings.js', 'ratings-js');
         }
         catch (Exception $ex) {
             $this->handleError($ex);
@@ -89,14 +100,12 @@ class Settings extends \Admin\Classes\AdminController
         if ($this->formValidate($this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
-        if (is_numeric($locationId = post('default_location_id'))) {
-            Locations_model::updateDefault(['location_id' => $locationId]);
-        }
+        $this->formBeforeSave($model);
 
         setting()->set($this->formWidget->getSaveData());
         setting()->save();
 
-        $this->validateSettingItems(TRUE);
+        $this->formAfterSave($model);
 
         flash()->success(sprintf(lang('admin::lang.alert_success'), lang($definition['label']).' settings updated '));
 
@@ -181,6 +190,11 @@ class Settings extends \Admin\Classes\AdminController
         }
 
         return new $this->modelClass();
+    }
+
+    protected function formAfterSave($model)
+    {
+        $this->validateSettingItems(TRUE);
     }
 
     protected function formValidate($form)
