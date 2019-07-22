@@ -23,8 +23,23 @@ class Payment_logs_model extends Model
      */
     protected $primaryKey = 'payment_log_id';
 
+    public $timestamps = TRUE;
+
     public $casts = [
         'request' => 'array',
         'response' => 'array',
     ];
+
+    public static function logAttempt($order, $message, $status, $request = [], $response = [])
+    {
+        $record = new static;
+        $record->message = $message;
+        $record->order_id = $order->order_id;
+        $record->payment_name = $order->payment_method->code;
+        $record->status = $status;
+        $record->request = $request;
+        $record->response = $response;
+
+        $record->save();
+    }
 }

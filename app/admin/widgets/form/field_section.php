@@ -4,6 +4,6 @@
     <?php endif ?>
 
     <?php if ($field->comment): ?>
-        <p class="help-block"><?= e(lang($field->comment)) ?></p>
+        <p class="help-block"><?= lang($field->comment) ?></p>
     <?php endif ?>
 </div>

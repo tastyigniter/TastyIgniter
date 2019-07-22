@@ -233,7 +233,7 @@ class Orders_model extends Model
     public function markAsPaymentProcessed()
     {
         if ($this->processed)
-            return TRUE;
+            return FALSE;
 
         $this->processed = 1;
         $this->save();
@@ -245,16 +245,7 @@ class Orders_model extends Model
 
     public function logPaymentAttempt($message, $status, $request = [], $response = [])
     {
-        $record = new Payment_logs_model;
-        $record->message = $message;
-        $record->order_id = $this->order_id;
-        $record->payment_name = $this->payment_method->code;
-        $record->status = $status;
-
-        $record->request = $request;
-        $record->response = $response;
-
-        $record->save();
+        Payment_logs_model::logAttempt($this, $message, $status, $request, $response);
     }
 
     public function updateOrderStatus($id, $options = [])
