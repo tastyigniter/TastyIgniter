@@ -38,6 +38,16 @@ class Menus_specials_model extends Model
         return mdate(setting('date_format'), $this->end_date->getTimestamp());
     }
 
+    public function getTypeAttribute($value)
+    {
+        return empty($value) ? 'F' : $value;
+    }
+
+    public function getValidityAttribute($value)
+    {
+        return empty($value) ? 'forever' : $value;
+    }
+
     public function active()
     {
         if (!$this->special_status)
@@ -48,7 +58,7 @@ class Menus_specials_model extends Model
 
     public function daysRemaining()
     {
-        if ($this->isRecurring() OR !$this->end_date->greaterThan(Carbon::now()))
+        if ($this->validity != 'period' OR !$this->end_date->greaterThan(Carbon::now()))
             return 0;
 
         return $this->end_date->diffForHumans();

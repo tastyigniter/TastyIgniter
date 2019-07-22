@@ -14,32 +14,32 @@ class Customers extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Customers_model',
-            'title'        => 'lang:admin::lang.customers.text_title',
+            'model' => 'Admin\Models\Customers_model',
+            'title' => 'lang:admin::lang.customers.text_title',
             'emptyMessage' => 'lang:admin::lang.customers.text_empty',
-            'defaultSort'  => ['country_name', 'ASC'],
-            'configFile'   => 'customers_model',
+            'defaultSort' => ['country_name', 'ASC'],
+            'configFile' => 'customers_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.customers.text_form_name',
-        'model'      => 'Admin\Models\Customers_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'customers/edit/{customer_id}',
+        'name' => 'lang:admin::lang.customers.text_form_name',
+        'model' => 'Admin\Models\Customers_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'customers/edit/{customer_id}',
             'redirectClose' => 'customers',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'customers/edit/{customer_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'customers/edit/{customer_id}',
             'redirectClose' => 'customers',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'customers',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'customers',
         ],
         'configFile' => 'customers_model',
@@ -70,11 +70,6 @@ class Customers extends \Admin\Classes\AdminController
             Auth::stopImpersonate();
 
             Auth::impersonate($customerModel);
-
-            activity()
-                ->performedOn($customerModel)
-                ->causedBy(AdminAuth::getUser())
-                ->log(lang('system::lang.activities.activity_master_logged_in'));
 
             return Redirect::to(root_url());
         }
