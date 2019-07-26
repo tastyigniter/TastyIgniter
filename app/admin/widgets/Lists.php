@@ -259,7 +259,7 @@ class Lists extends BaseWidget
                 } // Primary
                 else {
                     $columnName = isset($column->sqlSelect)
-                        ? DB::raw($this->parseTableName($column->sqlSelect, $table))
+                        ? DB::raw($this->parseTableName($column->sqlSelect, $primaryTable))
                         : DB::getTablePrefix().$primaryTable.'.'.$column->columnName;
 
                     $primarySearchable[] = $columnName;
@@ -331,7 +331,7 @@ class Lists extends BaseWidget
                     ? Db::raw("group_concat(".$sqlSelect." separator ', ')")
                     : Db::raw($sqlSelect);
 
-                $joinSql = $countQuery->select($joinSql)->toSql();
+                $joinSql = $countQuery->select($joinSql)->toRawSql();
 
                 $selects[] = Db::raw("(".$joinSql.") as ".$alias);
             } // Primary column

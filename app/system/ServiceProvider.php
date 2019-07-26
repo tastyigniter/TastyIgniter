@@ -76,8 +76,8 @@ class ServiceProvider extends AppServiceProvider
         $this->updateTimezone();
         $this->setConfiguration();
         $this->extendValidator();
-
         $this->addTranslationDriver();
+        $this->defineQueryMacro();
     }
 
     /*
@@ -325,5 +325,18 @@ class ServiceProvider extends AppServiceProvider
         $this->app->register(ActivityLogServiceProvider::class);
         $this->app->register(CurrencyServiceProvider::class);
         $this->app->register(GeoliteServiceProvider::class);
+    }
+
+    protected function defineQueryMacro()
+    {
+        \Illuminate\Database\Query\Builder::macro('toRawSql', function () {
+            return array_reduce($this->getBindings(), function ($sql, $binding) {
+                return preg_replace('/\?/', is_numeric($binding) ? $binding : "'".$binding."'", $sql, 1);
+            }, $this->toSql());
+        });
+
+        \Illuminate\Database\Eloquent\Builder::macro('toRawSql', function () {
+            return $this->getQuery()->toRawSql();
+        });
     }
 }
