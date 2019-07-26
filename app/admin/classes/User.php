@@ -95,10 +95,12 @@ class User extends Manager
 
     public function isStrictLocation()
     {
-        if ($this->isSuperUser())
-            return FALSE;
+        return !$this->isSuperUser() AND $this->user()->hasStrictLocationAccess();
+    }
 
-        return (is_single_location() OR $this->user()->hasStrictLocationAccess());
+    public function isSingleLocationContext()
+    {
+        return is_single_location() OR $this->isStrictLocation();
     }
 
     protected function fromModel($key, $related = null, $default = null)
