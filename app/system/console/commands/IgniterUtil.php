@@ -4,6 +4,7 @@ use Assets;
 use File;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class IgniterUtil extends Command
 {
@@ -48,6 +49,16 @@ class IgniterUtil extends Command
         ];
     }
 
+    /**
+     * Get the console command options.
+     */
+    protected function getOptions()
+    {
+        return [
+            ['admin', null, InputOption::VALUE_NONE, 'Compile admin registered bundles.'],
+        ];
+    }
+
     protected function utilCompileJs()
     {
         $this->utilCompileAssets('js');
@@ -68,7 +79,8 @@ class IgniterUtil extends Command
         $this->comment('Compiling registered asset bundles...');
 
         config()->set('system.enableAssetMinify', TRUE);
-        $bundles = Assets::getBundles($type);
+        $appContext = $this->option('admin') ? 'admin' : 'main';
+        $bundles = Assets::getBundles($type, $appContext);
 
         if (!$bundles) {
             $this->comment('Nothing to compile!');

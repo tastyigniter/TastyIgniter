@@ -306,10 +306,11 @@ trait CombinesAssets
      * @param $extension
      * @param $files
      * @param null $destination
+     * @param string $appContext
      *
      * @return void
      */
-    public function registerBundle($extension, $files, $destination = null)
+    public function registerBundle($extension, $files, $destination = null, $appContext = 'main')
     {
         if (!is_array($files))
             $files = [$files];
@@ -334,7 +335,7 @@ trait CombinesAssets
             }
         }
 
-        $this->bundles[$extension][$destination] = $files;
+        $this->bundles[$appContext][$extension][$destination] = $files;
     }
 
     /**
@@ -342,15 +343,16 @@ trait CombinesAssets
      *
      * @param string $extension
      *
+     * @param string $appContext
      * @return array
      */
-    public function getBundles($extension = null)
+    public function getBundles($extension = null, $appContext = 'main')
     {
         if (is_null($extension))
-            return $this->bundles;
+            return $this->bundles[$appContext] ?? [];
 
-        if (isset($this->bundles[$extension]))
-            return $this->bundles[$extension];
+        if (isset($this->bundles[$appContext][$extension]))
+            return $this->bundles[$appContext][$extension];
 
         return null;
     }

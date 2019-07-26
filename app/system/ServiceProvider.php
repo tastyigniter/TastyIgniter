@@ -269,14 +269,12 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerSourcePath(app_path('system/assets'));
         });
 
-        if (!$this->app->runningInConsole())
-            return;
-
         Assets::registerCallback(function (Assets $manager) {
             // System asset bundles
             $manager->registerBundle('scss',
                 '~/app/system/assets/ui/scss/flame.scss',
-                '~/app/system/assets/ui/flame.css'
+                '~/app/system/assets/ui/flame.css',
+                'admin'
             );
             $manager->registerBundle('js', [
                 '~/app/system/assets/node_modules/jquery/dist/jquery.min.js',
@@ -288,16 +286,16 @@ class ServiceProvider extends AppServiceProvider
                 '~/app/system/assets/ui/js/flashmessage.js',
                 '~/app/system/assets/ui/js/toggler.js',
                 '~/app/system/assets/ui/js/trigger.js',
-            ], '~/app/system/assets/ui/flame.js');
+            ], '~/app/system/assets/ui/flame.js', 'admin');
 
             // Admin asset bundles
-            $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss');
+            $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss', null, 'admin');
             $manager->registerBundle('js', [
                 '~/app/system/assets/node_modules/js-cookie/src/js.cookie.js',
                 '~/app/system/assets/node_modules/select2/dist/js/select2.min.js',
                 '~/app/system/assets/node_modules/metismenu/dist/metisMenu.min.js',
                 '~/app/admin/assets/js/src/app.js',
-            ], '~/app/admin/assets/js/admin.js');
+            ], '~/app/admin/assets/js/admin.js', 'admin');
         });
     }
 
