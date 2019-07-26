@@ -22,6 +22,7 @@ $enableFilter = (count($fieldOptions) > 20);
         <?php foreach ($fieldOptions as $value => $option) { ?>
             <?php
             if (!is_array($option)) $option = [$option];
+            if ($field->disabled AND !in_array($value, $checkedValues)) continue;
             ?>
             <option
                 <?= in_array($value, $checkedValues) ? 'selected="selected"' : '' ?>

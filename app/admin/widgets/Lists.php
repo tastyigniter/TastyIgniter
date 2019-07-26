@@ -240,7 +240,7 @@ class Lists extends BaseWidget
         $withs = [];
 
         // Extensibility
-        $this->fireEvent('admin.list.extendQueryBefore', [$query]);
+        $this->fireSystemEvent('admin.list.extendQueryBefore', [$query]);
 
         // Prepare searchable column names
         $primarySearchable = [];

@@ -245,6 +245,14 @@ class ListController extends ControllerAction
                 return $widget->onRefresh();
             });
 
+            $filterWidget->bindEvent('filter.extendScopesBefore', function () use ($filterWidget) {
+                $this->controller->listFilterExtendScopesBefore($filterWidget);
+            });
+
+            $filterWidget->bindEvent('filter.extendScopes', function ($scopes) use ($filterWidget) {
+                $this->controller->listFilterExtendScopes($filterWidget, $scopes);
+            });
+
             $filterWidget->bindEvent('filter.extendQuery', function ($query, $scope) {
                 $this->controller->listFilterExtendQuery($query, $scope);
             });

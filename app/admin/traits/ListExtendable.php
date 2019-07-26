@@ -63,6 +63,29 @@ trait ListExtendable
     }
 
     /**
+     * Called before the filter scopes are defined.
+     *
+     * @param \Admin\Widgets\Filter $host The hosting filter widget
+     *
+     * @return void
+     */
+    public function listFilterExtendScopesBefore($host)
+    {
+    }
+
+    /**
+     * Called after the filter scopes are defined.
+     *
+     * @param \Admin\Widgets\Filter $host The hosting filter widget
+     *
+     * @param $scopes
+     * @return void
+     */
+    public function listFilterExtendScopes($host, $scopes)
+    {
+    }
+
+    /**
      * Replace a table column value (<td>...</td>)
      *
      * @param  Model $record The populated model used for the column

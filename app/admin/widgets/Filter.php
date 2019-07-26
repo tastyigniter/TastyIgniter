@@ -279,11 +279,15 @@ class Filter extends BaseWidget
         if ($this->scopesDefined)
             return;
 
+        $this->fireSystemEvent('admin.filter.extendScopesBefore');
+
         if (!isset($this->scopes) OR !is_array($this->scopes)) {
             $this->scopes = [];
         }
 
         $this->addScopes($this->scopes);
+
+        $this->fireSystemEvent('admin.filter.extendScopes', [$this->scopes]);
 
         $this->scopesDefined = TRUE;
     }
