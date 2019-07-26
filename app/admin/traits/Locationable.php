@@ -3,9 +3,7 @@
 namespace Admin\Traits;
 
 use Admin;
-use Admin\Classes\LocationScope;
 use AdminAuth;
-use App;
 use Igniter\Flame\Database\Model;
 
 trait Locationable
@@ -34,6 +32,10 @@ trait Locationable
             $model->purgeLocationableAttributes();
         });
 
+        static::saving(function (Model $model) {
+            $model->setLocationableAttributes();
+        });
+
         static::saved(function (Model $model) {
             $model->syncLocationsOnSave();
         });
@@ -41,16 +43,14 @@ trait Locationable
         static::deleting(function (Model $model) {
             $model->detachLocationsOnDelete();
         });
-
-        static::addGlobalScope(new LocationScope);
     }
 
     public function locationableScopeEnabled()
     {
-        if (!$this->locationScopeEnabled)
-            return FALSE;
+        if ($this->locationScopeEnabled)
+            return TRUE;
 
-        return App::runningInAdmin() AND AdminAuth::isStrictLocation();
+        return AdminAuth::isSingleLocationContext();
     }
 
     public function locationableGetUserLocation()
@@ -113,6 +113,29 @@ trait Locationable
         return $this->attributes = $cleanAttributes;
     }
 
+    protected function setLocationableAttributes()
+    {
+        if (!$this->locationableScopeEnabled())
+            return;
+
+        $locationsToSync = $this->locationableAttributes;
+        if (count($locationsToSync))
+            return;
+
+        $this->locationableAttributes = null;
+        if ($this->locationableRelationExists())
+            return;
+
+        if ($this->locationableIsSingleRelationType()) {
+            $relationObj = $this->getLocationableRelationObject();
+            $attributeName = $relationObj->getForeignKey();
+            $this->{$attributeName} = $this->locationableGetUserLocation();
+        }
+        else {
+            $this->locationableAttributes = [$this->locationableGetUserLocation()];
+        }
+    }
+
     protected function syncLocationsOnSave()
     {
         if ($this->locationableIsSingleRelationType())
@@ -154,5 +177,16 @@ trait Locationable
     protected function locationableRelationName()
     {
         return defined('static::LOCATIONABLE_RELATION') ? static::LOCATIONABLE_RELATION : 'location';
+    }
+
+    protected function locationableRelationExists()
+    {
+        $relationName = $this->locationableRelationName();
+
+        if ($this->locationableIsSingleRelationType()) {
+            return !is_null($this->{$relationName});
+        }
+
+        return count($this->{$relationName});
     }
 }

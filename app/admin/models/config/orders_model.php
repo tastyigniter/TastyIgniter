@@ -11,6 +11,7 @@ $config['list']['filter'] = [
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
+            'locationContext' => 'multiple',
         ],
         'status' => [
             'label' => 'lang:admin::lang.orders.text_filter_status',
@@ -69,6 +70,7 @@ $config['list']['columns'] = [
         'relation' => 'location',
         'select' => 'location_name',
         'searchable' => TRUE,
+        'locationContext' => 'multiple',
     ],
     'full_name' => [
         'label' => 'lang:admin::lang.orders.column_customer_name',

@@ -171,6 +171,7 @@ class ListController extends ControllerAction
         if (!$alias OR !isset($this->listConfig[$alias]))
             $alias = $this->primaryAlias;
 
+        $locationContext = $this->controller->locationContext();
         $listConfig = $this->controller->getListConfig($alias);
 
         $modelClass = $listConfig['model'];
@@ -186,6 +187,7 @@ class ListController extends ControllerAction
         $columnConfig['columns'] = $modelConfig['columns'];
         $columnConfig['model'] = $model;
         $columnConfig['alias'] = $alias;
+        $columnConfig['locationContext'] = $locationContext;
 
         $widget = $this->makeWidget('Admin\Widgets\Lists', array_merge($columnConfig, $listConfig));
 
@@ -198,6 +200,7 @@ class ListController extends ControllerAction
         });
 
         $widget->bindEvent('list.extendQuery', function ($query) use ($alias) {
+            $this->applyLocationScope($query, $alias);
             $this->controller->listExtendQuery($query, $alias);
         });
 
@@ -222,6 +225,7 @@ class ListController extends ControllerAction
         if (isset($modelConfig['filter'])) {
             $filterConfig = $modelConfig['filter'];
             $filterConfig['alias'] = "{$widget->alias}_filter";
+            $filterConfig['locationContext'] = $locationContext;
             $filterWidget = $this->makeWidget('Admin\Widgets\Filter', $filterConfig);
             $filterWidget->bindToController();
 
@@ -333,5 +337,16 @@ class ListController extends ControllerAction
         }
 
         return $listConfig;
+    }
+
+    protected function applyLocationScope($query, $alias)
+    {
+        if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
+            return;
+
+        if (!$this->controller->isSingleLocationContext())
+            return;
+
+        $query->whereHasLocation($this->controller->getLocationId());
     }
 }

@@ -11,6 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
+            'locationContext' => 'multiple',
         ],
         'status' => [
             'label' => 'lang:admin::lang.categories.text_filter_status',
@@ -54,6 +55,7 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
+        'locationContext' => 'multiple',
         'invisible' => TRUE,
     ],
     'priority' => [
@@ -125,6 +127,7 @@ $config['form']['fields'] = [
         'span' => 'right',
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
+        'locationContext' => 'multiple',
     ],
     'priority' => [
         'label' => 'lang:admin::lang.categories.label_priority',

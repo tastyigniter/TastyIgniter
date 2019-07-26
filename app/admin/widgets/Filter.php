@@ -36,6 +36,12 @@ class Filter extends BaseWidget
      */
     public $context;
 
+    /**
+     * @var string The location context of this filter, scopes that do not belong
+     * to this context will not be shown.
+     */
+    public $locationContext;
+
     protected $defaultAlias = 'filter';
 
     /**
@@ -64,6 +70,7 @@ class Filter extends BaseWidget
             'search',
             'scopes',
             'context',
+            'locationContext',
         ]);
 
         if (isset($this->search)) {
@@ -300,13 +307,20 @@ class Filter extends BaseWidget
     public function addScopes(array $scopes)
     {
         foreach ($scopes as $name => $config) {
-
             $scopeObj = $this->makeFilterScope($name, $config);
 
             // Check that the filter scope matches the active context
             if ($scopeObj->context !== null) {
                 $context = (array)$scopeObj->context;
                 if (!in_array($this->getContext(), $context)) {
+                    continue;
+                }
+            }
+
+            // Check that the filter scope matches the active location context
+            if ($scopeObj->locationContext !== null) {
+                $locationContext = (array)$scopeObj->locationContext;
+                if (!in_array($this->getLocationContext(), $locationContext)) {
                     continue;
                 }
             }
@@ -538,6 +552,15 @@ class Filter extends BaseWidget
     public function getContext()
     {
         return $this->context;
+    }
+
+    /**
+     * Returns the active location context for displaying the filter.
+     * @return string
+     */
+    public function getLocationContext()
+    {
+        return $this->locationContext;
     }
 
     public function isActiveState()

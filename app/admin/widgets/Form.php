@@ -55,6 +55,12 @@ class Form extends BaseWidget
     public $context;
 
     /**
+     * @var string The location context of this form, fields that do not belong
+     * to this context will not be shown.
+     */
+    public $locationContext;
+
+    /**
      * @var string If the field element names should be contained in an array.
      * Eg: <input name="nameArray[fieldName]" />
      */
@@ -117,6 +123,7 @@ class Form extends BaseWidget
             'data',
             'arrayName',
             'context',
+            'locationContext',
         ]);
 
         $this->widgetManager = Widgets::instance();
@@ -353,7 +360,6 @@ class Form extends BaseWidget
     public function addFields(array $fields, $addToArea = null)
     {
         foreach ($fields as $name => $config) {
-
             // Check that the form field matches the active context
             if (array_key_exists('context', $config)) {
                 $context = (array)$config['context'];
@@ -803,6 +809,15 @@ class Form extends BaseWidget
     }
 
     /**
+     * Returns the active location context for displaying the form field.
+     * @return string
+     */
+    public function getLocationContext()
+    {
+        return $this->locationContext;
+    }
+
+    /**
      * Validate the supplied form model.
      * @return mixed
      * @throws \Exception
@@ -852,6 +867,9 @@ class Form extends BaseWidget
 
         // Extensibility
         $this->fireSystemEvent('admin.form.extendFields', [$this->allFields]);
+
+        // Check that the form field matches the active location context
+        $this->processLocationContext($this->allFields);
 
         // Convert automatic spanned fields
         foreach ($this->allTabs->outside->getFields() as $fields) {
@@ -1088,5 +1106,19 @@ class Form extends BaseWidget
         return $this->arrayName
             ? post($this->arrayName)
             : post();
+    }
+
+    protected function processLocationContext($fields)
+    {
+        foreach ($fields as $field) {
+            if (!array_key_exists('locationContext', $field->config))
+                continue;
+
+            $locationContext = (array)$field->config['locationContext'];
+            if (!$this->getLocationContext() OR in_array($this->getLocationContext(), $locationContext))
+                continue;
+
+            $field->disabled = TRUE;
+        }
     }
 }

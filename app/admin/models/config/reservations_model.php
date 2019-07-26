@@ -11,6 +11,7 @@ $config['list']['filter'] = [
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
+            'locationContext' => 'multiple',
         ],
         'status' => [
             'label' => 'lang:admin::lang.reservations.text_filter_status',
@@ -57,6 +58,7 @@ $config['list']['columns'] = [
         'relation' => 'location',
         'select' => 'location_name',
         'searchable' => TRUE,
+        'locationContext' => 'multiple',
     ],
     'full_name' => [
         'label' => 'lang:admin::lang.reservations.column_customer_name',
@@ -244,6 +246,7 @@ $config['form']['tabs'] = [
             'nameFrom' => 'location_name',
             'span' => 'right',
             'placeholder' => 'lang:admin::lang.text_please_select',
+            'locationContext' => 'multiple',
         ],
         'guest_num' => [
             'label' => 'lang:admin::lang.reservations.label_guest',

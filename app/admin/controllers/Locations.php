@@ -57,7 +57,7 @@ class Locations extends \Admin\Classes\AdminController
 
     public function remap($action, $params)
     {
-        if ($action != 'settings' AND $this->getUser() AND AdminAuth::isStrictLocation())
+        if ($action != 'settings' AND $this->getUser() AND $this->isSingleLocationContext())
             return $this->redirect('locations/settings');
 
         return parent::remap($action, $params);
@@ -111,10 +111,8 @@ class Locations extends \Admin\Classes\AdminController
 
     public function formExtendQuery($query)
     {
-        if (AdminAuth::isStrictLocation())
-            $query->where('location_id',
-                $recordId = !is_single_location() ? AdminAuth::getLocationId() : params('default_location_id')
-            );
+        if ($this->isSingleLocationContext())
+            $query->where('location_id', $this->getLocationId());
     }
 
     public function formValidate($model, $form)

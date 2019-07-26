@@ -16,6 +16,10 @@ class Locations_model extends AbstractLocation
     use Purgeable;
     use HasMedia;
 
+    const LOCATION_CONTEXT_SINGLE = 'single';
+
+    const LOCATION_CONTEXT_MULTIPLE = 'multiple';
+
     public $fillable = ['location_name', 'location_email', 'description', 'location_address_1',
         'location_address_2', 'location_city', 'location_state', 'location_postcode', 'location_country_id',
         'location_telephone', 'location_lat', 'location_lng', 'offer_delivery', 'offer_collection',
@@ -253,11 +257,6 @@ class Locations_model extends AbstractLocation
     {
         $this->restorePurgedValues();
 
-        if (is_single_location()) {
-            $this->where('location_id', '!=', $this->getKey())
-                 ->update(['location_status' => '0']);
-        }
-
         if (array_key_exists('hours', $this->options)) {
             $this->addOpeningHours($this->options['hours']);
         }
@@ -292,11 +291,6 @@ class Locations_model extends AbstractLocation
             $saved = $locationModel->fill($update)->save();
 
             params()->set('default_location_id', $locationModel->getKey());
-
-            if (is_single_location()) {
-                self::where('location_id', '!=', $locationModel->getKey())
-                    ->update(['location_status' => '0']);
-            }
         }
 
         return $saved ? $locationModel->getKey() : $saved;

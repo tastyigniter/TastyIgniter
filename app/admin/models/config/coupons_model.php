@@ -5,6 +5,14 @@ $config['list']['filter'] = [
         'mode' => 'all',
     ],
     'scopes' => [
+        'location' => [
+            'label' => 'lang:admin::lang.reviews.text_filter_location',
+            'type' => 'select',
+            'scope' => 'whereHasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom' => 'location_name',
+            'locationContext' => 'multiple',
+        ],
         'type' => [
             'label' => 'lang:admin::lang.coupons.text_filter_type',
             'type' => 'select',
@@ -63,6 +71,7 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
+        'locationContext' => 'multiple',
         'invisible' => TRUE,
     ],
     'formatted_discount' => [
@@ -278,6 +287,7 @@ $config['form']['tabs'] = [
             'type' => 'relation',
             'valueFrom' => 'locations',
             'nameFrom' => 'location_name',
+            'locationContext' => 'multiple',
             'comment' => 'lang:admin::lang.coupons.help_locations',
         ],
         'description' => [
