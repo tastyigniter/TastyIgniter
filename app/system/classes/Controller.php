@@ -119,7 +119,7 @@ class Controller extends IlluminateController
             }
         }
 
-        return App::make('Main\Classes\MainController')->remap($url);
+        return Response::make(View::make('main::404'), 404);
     }
 
     /**
