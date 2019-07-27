@@ -284,7 +284,7 @@ class MediaLibrary
     public function getDefaultThumbPath($thumbPath, $default = null)
     {
         if ($default)
-            return $this->getStorageDisk()->path($this->getMediaRelativePath($default));
+            return $this->getStorageDisk()->path($this->getMediaPath($default));
 
         File::put($thumbPath, Manipulator::decodedBlankImage());
 

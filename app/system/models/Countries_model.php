@@ -43,7 +43,7 @@ class Countries_model extends Model
 
     public function getFlagUrlAttribute($value)
     {
-        return Image_tool_model::resize($this->flag, ['default' => 'flags/no_flag.png']);
+        return Image_tool_model::resize($this->flag, ['default' => '/flags/no_flag.png']);
     }
 
     //
