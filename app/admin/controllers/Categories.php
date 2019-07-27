@@ -61,6 +61,7 @@ class Categories extends AdminController
             ['parent_id', 'lang:admin::lang.categories.label_parent', 'integer'],
             ['priority', 'lang:admin::lang.categories.label_priority', 'integer'],
             ['status', 'lang:admin::lang.label_status', 'required|integer'],
+            ['locations.*', 'lang:admin::lang.column_location', 'integer'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $namedRules);

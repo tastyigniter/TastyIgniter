@@ -82,6 +82,7 @@ class Coupons extends \Admin\Classes\AdminController
             ['recurring_to_time', 'lang:admin::lang.coupons.label_recurring_to_time', 'required_if:validity,recurring|valid_time'],
             ['order_restriction', 'lang:admin::lang.coupons.label_order_restriction', 'integer'],
             ['status', 'lang:admin::lang.label_status', 'required|integer'],
+            ['locations.*', 'lang:admin::lang.column_location', 'integer'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $namedRules);
