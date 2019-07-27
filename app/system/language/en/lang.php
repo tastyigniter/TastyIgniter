@@ -457,7 +457,7 @@ return [
         'help_timezone' => 'The default timezone. Choose a city in the same timezone as your restaurant.',
         'help_site_location_mode' => 'Set whether to enable support for single or multiple restaurant locations.',
         'help_detect_language' => 'Enable or disable user browser language detection. If enabled your site will be translated to the browser language.',
-        'help_maps_api_key' => 'An API Key is required to use Google Maps and/or Geocoding. <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key">Where can I find my Google Maps API Key?</a>',
+        'help_maps_api_key' => 'An API Key is required to use Google Maps and/or Geocoding. <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key">Where can I find my Google Maps API Key?</a> Enable Google Maps Geocoding API and Google Maps JavaScript API in your Google Developer account',
         'help_default_geocoder' => 'Tell the system which geocoder service to use when geocoding addresses. \'Chain\' is a special geocoder that runs both google and open street maps geocoder and stops once it gets a valid response.',
         'help_accepted_currency' => 'Select all currencies that you accept as payment as well as your default currency',
         'help_special_category' => 'Select which category to use automatically for special menus',

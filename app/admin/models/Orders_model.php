@@ -186,7 +186,7 @@ class Orders_model extends Model
 
     public function getOrderTypeNameAttribute()
     {
-        return ucwords($this->order_type);
+        return lang('admin::lang.orders.text_'.$this->order_type);
     }
 
     public function getFormattedAddressAttribute($value)
@@ -316,6 +316,7 @@ class Orders_model extends Model
 
         $model = $this->fresh();
         $data['order_number'] = $model->order_id;
+        $data['order_id'] = $model->order_id;
         $data['first_name'] = $model->first_name;
         $data['last_name'] = $model->last_name;
         $data['customer_name'] = $model->customer_name;

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'site_title' => '%s - %s - Administrator Panel',
+    'site_title' => '%s - Administrator Panel - %s',
     'text_edit' => 'Edit',
     'text_filter' => 'Filter',
     'text_clear' => 'Clear',
@@ -803,7 +803,7 @@ return [
         'column_name' => 'Name',
 
         'label_name' => 'Name',
-        
+
         'help_hints' => 'Used when adding reviews.',
     ],
 

@@ -233,6 +233,14 @@ class Reservations_model extends Model
         return $this->tables ? implode(', ', $this->tables->pluck('table_name')->all()) : null;
     }
 
+    public function setDurationAttribute($value)
+    {
+        if (empty($value))
+            $value = ($location = $this->location) ? $location->reservation_stay_time : $value;
+
+        $this->attributes['duration'] = $value;
+    }
+
     //
     // Helpers
     //
@@ -392,6 +400,7 @@ class Reservations_model extends Model
 
         $model = $this->fresh();
         $data['reservation_number'] = $model->reservation_id;
+        $data['reservation_id'] = $model->reservation_id;
         $data['reservation_time'] = $model->reserve_time;
         $data['reservation_date'] = $model->reserve_date->format('l, F j, Y');
         $data['reservation_guest_no'] = $model->guest_num;

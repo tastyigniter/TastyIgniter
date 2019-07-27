@@ -19,6 +19,6 @@ trait HasPageOptions
 
     public static function getPagesOptions()
     {
-        return Pages_model::dropdown('name');
+        return Pages_model::getDropdownOptions();
     }
 }

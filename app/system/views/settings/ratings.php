@@ -9,7 +9,7 @@
         </thead>
         <tbody>
         <?php $table_row = 1; ?>
-        <?php foreach ($formValue as $key => $value) { ?>
+        <?php foreach ((array)$formValue as $key => $value) { ?>
             <tr id="table-row<?= $table_row; ?>">
                 <td class="list-action text-center handle"><i class="fa fa-bars"></i></td>
                 <td class="list-action handle">
