@@ -15,7 +15,7 @@ class Permissions extends \Admin\Classes\AdminController
             'model' => 'System\Models\Permissions_model',
             'title' => 'lang:system::lang.permissions.text_title',
             'emptyMessage' => 'lang:system::lang.permissions.text_empty',
-            'defaultSort' => ['country_name', 'ASC'],
+            'defaultSort' => ['permission_id', 'DESC'],
             'configFile' => 'permissions_model',
         ],
     ];
@@ -49,7 +49,7 @@ class Permissions extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('permissions', 'users');
+        AdminMenu::setContext('staffs', 'users');
     }
 
     public function index()

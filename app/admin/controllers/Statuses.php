@@ -11,32 +11,32 @@ class Statuses extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Statuses_model',
-            'title'        => 'lang:admin::lang.statuses.text_title',
+            'model' => 'Admin\Models\Statuses_model',
+            'title' => 'lang:admin::lang.statuses.text_title',
             'emptyMessage' => 'lang:admin::lang.statuses.text_empty',
-            'defaultSort'  => ['status_for', 'ASC'],
-            'configFile'   => 'statuses_model',
+            'defaultSort' => ['status_id', 'DESC'],
+            'configFile' => 'statuses_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.statuses.text_form_name',
-        'model'      => 'Admin\Models\Statuses_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'statuses/edit/{status_id}',
+        'name' => 'lang:admin::lang.statuses.text_form_name',
+        'model' => 'Admin\Models\Statuses_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'statuses/edit/{status_id}',
             'redirectClose' => 'statuses',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'statuses/edit/{status_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'statuses/edit/{status_id}',
             'redirectClose' => 'statuses',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'statuses',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'statuses',
         ],
         'configFile' => 'statuses_model',

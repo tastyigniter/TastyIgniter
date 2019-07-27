@@ -15,7 +15,7 @@ class Orders extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Orders_model',
             'title' => 'lang:admin::lang.orders.text_title',
             'emptyMessage' => 'lang:admin::lang.orders.text_empty',
-            'defaultSort' => ['order_date', 'DESC'],
+            'defaultSort' => ['order_id', 'DESC'],
             'configFile' => 'orders_model',
         ],
     ];

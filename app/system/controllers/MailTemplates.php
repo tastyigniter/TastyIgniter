@@ -16,7 +16,7 @@ class MailTemplates extends \Admin\Classes\AdminController
             'model' => 'System\Models\Mail_templates_model',
             'title' => 'lang:system::lang.mail_templates.text_template_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
-            'defaultSort' => ['date_updated', 'DESC'],
+            'defaultSort' => ['template_data_id', 'DESC'],
             'configFile' => 'mail_templates_model',
         ],
     ];

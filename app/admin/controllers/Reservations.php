@@ -17,7 +17,7 @@ class Reservations extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Reservations_model',
             'title' => 'lang:admin::lang.reservations.text_title',
             'emptyMessage' => 'lang:admin::lang.reservations.text_empty',
-            'defaultSort' => ['reserve_date', 'DESC'],
+            'defaultSort' => ['reservation_id', 'DESC'],
             'configFile' => 'reservations_model',
         ],
     ];

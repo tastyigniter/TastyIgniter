@@ -14,7 +14,7 @@ class Mealtimes extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Mealtimes_model',
             'title' => 'lang:admin::lang.mealtimes.text_title',
             'emptyMessage' => 'lang:admin::lang.mealtimes.text_empty',
-            'defaultSort' => ['order_id', 'DESC'],
+            'defaultSort' => ['mealtime_id', 'DESC'],
             'configFile' => 'mealtimes_model',
         ],
     ];

@@ -15,7 +15,7 @@ class Categories extends AdminController
             'model' => 'Admin\Models\Categories_model',
             'title' => 'lang:admin::lang.categories.text_title',
             'emptyMessage' => 'lang:admin::lang.categories.text_empty',
-            'defaultSort' => ['order_id', 'DESC'],
+            'defaultSort' => ['category_id', 'DESC'],
             'configFile' => 'categories_model',
         ],
     ];

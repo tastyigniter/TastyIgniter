@@ -49,6 +49,10 @@ $config['list']['columns'] = [
         'type' => 'datesince',
         'searchable' => TRUE,
     ],
+    'template_data_id' => [
+        'label' => 'lang:admin::lang.column_id',
+        'invisible' => TRUE,
+    ],
 ];
 
 $config['form']['toolbar'] = [

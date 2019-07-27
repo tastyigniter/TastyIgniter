@@ -14,7 +14,7 @@ class Coupons extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Coupons_model',
             'title' => 'lang:admin::lang.coupons.text_title',
             'emptyMessage' => 'lang:admin::lang.coupons.text_empty',
-            'defaultSort' => ['date_added', 'DESC'],
+            'defaultSort' => ['coupon_id', 'DESC'],
             'configFile' => 'coupons_model',
         ],
     ];

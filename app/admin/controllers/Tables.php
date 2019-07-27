@@ -14,32 +14,32 @@ class Tables extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'Admin\Models\Tables_model',
-            'title'        => 'lang:admin::lang.tables.text_title',
+            'model' => 'Admin\Models\Tables_model',
+            'title' => 'lang:admin::lang.tables.text_title',
             'emptyMessage' => 'lang:admin::lang.tables.text_empty',
-            'defaultSort'  => ['table_id', 'ASC'],
-            'configFile'   => 'tables_model',
+            'defaultSort' => ['table_id', 'DESC'],
+            'configFile' => 'tables_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:admin::lang.tables.text_form_name',
-        'model'      => 'Admin\Models\Tables_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'tables/edit/{table_id}',
+        'name' => 'lang:admin::lang.tables.text_form_name',
+        'model' => 'Admin\Models\Tables_model',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'tables/edit/{table_id}',
             'redirectClose' => 'tables',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'tables/edit/{table_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'tables/edit/{table_id}',
             'redirectClose' => 'tables',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'tables',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'tables',
         ],
         'configFile' => 'tables_model',

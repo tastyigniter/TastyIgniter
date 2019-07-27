@@ -17,7 +17,7 @@ class Customers extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Customers_model',
             'title' => 'lang:admin::lang.customers.text_title',
             'emptyMessage' => 'lang:admin::lang.customers.text_empty',
-            'defaultSort' => ['country_name', 'ASC'],
+            'defaultSort' => ['customer_id', 'DESC'],
             'configFile' => 'customers_model',
         ],
     ];

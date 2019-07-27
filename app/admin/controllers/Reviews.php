@@ -14,7 +14,7 @@ class Reviews extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Reviews_model',
             'title' => 'lang:admin::lang.reviews.text_title',
             'emptyMessage' => 'lang:admin::lang.reviews.text_empty',
-            'defaultSort' => ['date_added', 'DESC'],
+            'defaultSort' => ['review_id', 'DESC'],
             'configFile' => 'reviews_model',
         ],
     ];

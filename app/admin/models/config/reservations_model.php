@@ -53,6 +53,9 @@ $config['list']['columns'] = [
             'href' => 'reservations/edit/{reservation_id}',
         ],
     ],
+    'reservation_id' => [
+        'label' => 'lang:admin::lang.column_id',
+    ],
     'location' => [
         'label' => 'lang:admin::lang.reservations.column_location',
         'relation' => 'location',
@@ -99,11 +102,6 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.reservations.column_date',
         'type' => 'date',
     ],
-    'reservation_id' => [
-        'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
-    ],
-
 ];
 
 $config['calendar']['toolbar'] = [

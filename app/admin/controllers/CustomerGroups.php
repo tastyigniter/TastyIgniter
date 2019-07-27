@@ -15,7 +15,7 @@ class CustomerGroups extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Customer_groups_model',
             'title' => 'lang:admin::lang.customer_groups.text_title',
             'emptyMessage' => 'lang:admin::lang.customer_groups.text_empty',
-            'defaultSort' => ['country_name', 'ASC'],
+            'defaultSort' => ['customer_group_id', 'DESC'],
             'configFile' => 'customer_groups_model',
         ],
     ];
