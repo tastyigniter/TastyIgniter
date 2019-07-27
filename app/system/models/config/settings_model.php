@@ -151,7 +151,7 @@ $config['form']['general'] = [
                     'tab' => 'lang:system::lang.settings.text_tab_site',
                     'span' => 'left',
                     'type' => 'select',
-                    'default' => 'd/m/Y',
+                    'default' => 'd M Y',
                 ],
                 'time_format' => [
                     'label' => 'lang:system::lang.settings.label_time_format',

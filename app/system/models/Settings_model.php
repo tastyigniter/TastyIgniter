@@ -56,6 +56,8 @@ class Settings_model extends Model
         $now = Carbon::now();
 
         return [
+            'd M Y' => $now->format('d M Y'),
+            'M d Y' => $now->format('M d Y'),
             'd m Y' => $now->format('d m Y'),
             'm d Y' => $now->format('m d Y'),
             'Y m d' => $now->format('Y m d'),
