@@ -509,15 +509,4 @@ class FormController extends ControllerAction
             }
         }
     }
-
-    protected function applyLocationScope($query)
-    {
-        if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
-            return;
-
-        if (!$this->controller->isSingleLocationContext())
-            return;
-
-        $query->whereHasLocation($this->controller->getLocationId());
-    }
 }

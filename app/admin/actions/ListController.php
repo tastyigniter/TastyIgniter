@@ -200,7 +200,7 @@ class ListController extends ControllerAction
         });
 
         $widget->bindEvent('list.extendQuery', function ($query) use ($alias) {
-            $this->applyLocationScope($query, $alias);
+            $this->controller->applyLocationScope($query);
             $this->controller->listExtendQuery($query, $alias);
         });
 
@@ -337,16 +337,5 @@ class ListController extends ControllerAction
         }
 
         return $listConfig;
-    }
-
-    protected function applyLocationScope($query, $alias)
-    {
-        if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
-            return;
-
-        if (!$this->controller->isSingleLocationContext())
-            return;
-
-        $query->whereHasLocation($this->controller->getLocationId());
     }
 }

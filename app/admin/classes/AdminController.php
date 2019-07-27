@@ -264,6 +264,17 @@ class AdminController extends BaseController
         return AdminAuth::isSingleLocationContext();
     }
 
+    public function applyLocationScope($query)
+    {
+        if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
+            return;
+
+        if (!$this->isSingleLocationContext())
+            return;
+
+        $query->whereHasLocation($this->getLocationId());
+    }
+
     //
     // Helper Methods
     //
