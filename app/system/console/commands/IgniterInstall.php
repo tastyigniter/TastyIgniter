@@ -180,7 +180,9 @@ class IgniterInstall extends Command
             'default_location_id' => \Admin\Models\Locations_model::first()->location_id,
         ]);
 
-        // These parameter are no longer in use
+        setting()->set('customer_group_id', \Admin\Models\Customer_groups_model::first()->customer_group_id);
+
+        // These parameters are no longer in use
         params()->forget('main_address');
 
         UpdateManager::instance()->setCoreVersion();
