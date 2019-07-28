@@ -39,7 +39,7 @@ class CreateMediaAttachmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('media_files');
+        Schema::dropIfExists('media_attachments');
     }
 
     protected function seedAttachmentsFromExistingModels()

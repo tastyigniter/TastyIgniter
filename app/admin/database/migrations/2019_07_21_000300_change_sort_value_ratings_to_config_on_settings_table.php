@@ -16,8 +16,5 @@ class changeSortValueRatingsToConfigOnSettingsTable extends Migration
 
     public function down()
     {
-        \DB::table('settings')
-           ->where('sort', 'config')
-           ->update(['sort' => 'ratings']);
     }
 }

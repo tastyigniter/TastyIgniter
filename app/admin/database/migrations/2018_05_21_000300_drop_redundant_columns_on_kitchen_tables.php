@@ -24,14 +24,5 @@ class DropRedundantColumnsOnKitchenTables extends Migration
 
     public function down()
     {
-        Schema::table('menu_option_values', function (Blueprint $table) {
-            $table->integer('menu_id')->unsigned();
-            $table->integer('option_id')->unsigned();
-        });
-
-        Schema::table('menu_options', function (Blueprint $table) {
-            $table->integer('default_value_id')->unsigned();
-            $table->text('option_values');
-        });
     }
 }

@@ -19,9 +19,5 @@ class AddColumnsOnLocationAreasTable extends Migration
 
     public function down()
     {
-        Schema::table('location_areas', function (Blueprint $table) {
-            $table->dropColumn('color');
-            $table->dropColumn('is_default');
-        });
     }
 }

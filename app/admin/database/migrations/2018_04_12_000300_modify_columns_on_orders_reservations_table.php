@@ -25,8 +25,5 @@ class ModifyColumnsOnOrdersReservationsTable extends Migration
 
     public function down()
     {
-        Schema::table('reservations', function (Blueprint $table) {
-            $table->renameColumn('status_id', 'status');
-        });
     }
 }
