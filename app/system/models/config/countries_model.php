@@ -35,6 +35,7 @@ $config['list']['columns'] = [
         'type' => 'partial',
         'path' => 'countries/flag_column',
         'cssClass' => 'text-center',
+        'sortable' => FALSE,
     ],
     'country_name' => [
         'label' => 'lang:system::lang.countries.column_name',

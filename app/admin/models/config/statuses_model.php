@@ -1,9 +1,5 @@
 <?php
 $config['list']['filter'] = [
-    'search' => [
-        'prompt' => 'lang:admin::lang.statuses.text_filter_search',
-        'mode' => 'all' // or any, exact
-    ],
     'scopes' => [
         'type' => [
             'label' => 'lang:admin::lang.statuses.text_filter_status',
@@ -47,16 +43,18 @@ $config['list']['columns'] = [
     'status_for_name' => [
         'label' => 'lang:admin::lang.statuses.column_type',
         'type' => 'text',
+        'sortable' => FALSE,
     ],
     'notify_customer' => [
         'label' => 'lang:admin::lang.statuses.column_notify',
         'type' => 'switch',
+        'offText' => 'lang:admin::lang.text_no',
+        'onText' => 'lang:admin::lang.text_yes',
     ],
     'status_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
 ];
 
 $config['form']['toolbar'] = [

@@ -25,6 +25,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.staff_groups.column_users',
         'type' => 'number',
         'searchable' => TRUE,
+        'sortable' => FALSE,
     ],
     'staff_group_id' => [
         'label' => 'lang:admin::lang.column_id',

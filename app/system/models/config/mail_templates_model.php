@@ -28,6 +28,7 @@ $config['list']['columns'] = [
         'label' => 'lang:system::lang.mail_templates.column_title',
         'type' => 'text',
         'searchable' => TRUE,
+        'sortable' => FALSE,
     ],
     'code' => [
         'label' => 'lang:system::lang.mail_templates.column_code',
@@ -38,6 +39,7 @@ $config['list']['columns'] = [
         'label' => 'lang:system::lang.mail_templates.column_layout',
         'relation' => 'layout',
         'valueFrom' => 'name',
+        'sortable' => FALSE,
     ],
     'date_updated' => [
         'label' => 'lang:system::lang.mail_templates.column_date_updated',

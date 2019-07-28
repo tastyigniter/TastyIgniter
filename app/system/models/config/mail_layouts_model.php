@@ -34,10 +34,6 @@ $config['list']['columns'] = [
         'type' => 'text',
         'searchable' => TRUE,
     ],
-    'status' => [
-        'label' => 'lang:system::lang.mail_templates.column_status',
-        'type' => 'switch',
-    ],
     'date_updated' => [
         'label' => 'lang:system::lang.mail_templates.column_date_updated',
         'type' => 'datesince',
@@ -97,12 +93,6 @@ $config['form']['fields'] = [
         'type' => 'relation',
         'relationFrom' => 'language',
         'placeholder' => 'lang:admin::lang.text_please_select',
-    ],
-    'status' => [
-        'label' => 'lang:admin::lang.label_status',
-        'type' => 'switch',
-        'span' => 'right',
-        'default' => TRUE,
     ],
 ];
 

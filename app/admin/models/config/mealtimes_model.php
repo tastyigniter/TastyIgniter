@@ -1,9 +1,5 @@
 <?php
 $config['list']['filter'] = [
-    'search' => [
-        'prompt' => 'lang:admin::lang.mealtimes.text_filter_search',
-        'mode' => 'all' // or any, exact
-    ],
     'scopes' => [
         'status' => [
             'label' => 'lang:admin::lang.mealtimes.text_filter_status',
@@ -33,7 +29,6 @@ $config['list']['columns'] = [
     'mealtime_name' => [
         'label' => 'lang:admin::lang.mealtimes.column_mealtime_name',
         'type' => 'text',
-        'searchable' => TRUE,
     ],
     'start_time' => [
         'label' => 'lang:admin::lang.mealtimes.column_start_time',

@@ -1,9 +1,5 @@
 <?php
 $config['list']['filter'] = [
-    'search' => [
-        'prompt' => 'lang:admin::lang.categories.text_filter_search',
-        'mode' => 'all' // or any, exact
-    ],
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
@@ -41,14 +37,12 @@ $config['list']['columns'] = [
     'name' => [
         'label' => 'lang:admin::lang.categories.column_name',
         'type' => 'text',
-        'searchable' => TRUE,
     ],
     'parent_cat' => [
         'label' => 'lang:admin::lang.categories.column_parent',
         'type' => 'text',
         'relation' => 'parent_cat',
         'select' => 'name',
-        'searchable' => TRUE,
     ],
     'locations' => [
         'label' => 'lang:admin::lang.column_location',
@@ -61,7 +55,6 @@ $config['list']['columns'] = [
     'priority' => [
         'label' => 'lang:admin::lang.categories.column_priority',
         'type' => 'text',
-        'searchable' => TRUE,
     ],
     'status' => [
         'label' => 'lang:admin::lang.categories.column_status',

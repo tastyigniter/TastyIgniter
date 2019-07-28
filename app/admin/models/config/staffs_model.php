@@ -71,6 +71,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.staff.column_location',
         'relation' => 'location',
         'select' => 'location_name',
+        'searchable' => TRUE,
     ],
     'date_added' => [
         'label' => 'lang:admin::lang.staff.column_date_added',

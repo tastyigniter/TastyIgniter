@@ -64,6 +64,7 @@ $config['list']['columns'] = [
     ],
     'order_id' => [
         'label' => 'lang:admin::lang.column_id',
+        'searchable' => TRUE,
     ],
     'location' => [
         'label' => 'lang:admin::lang.orders.column_location',
@@ -101,6 +102,7 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'assignee',
         'select' => 'staff_name',
+        'searchable' => TRUE,
     ],
     'order_total' => [
         'label' => 'lang:admin::lang.orders.column_total',
