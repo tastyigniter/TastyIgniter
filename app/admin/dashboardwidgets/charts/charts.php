@@ -4,10 +4,16 @@
         class="chart-container"
         data-control="chart"
         data-alias="<?= $this->alias; ?>"
+        data-range-selector="#<?= $this->alias; ?>-daterange"
+        data-range-parent-selector="#<?= $this->alias; ?>-daterange-parent"
         data-range-format="<?= $this->property('rangeFormat'); ?>"
     >
-        <div class="chart-toolbar d-flex justify-content-end pb-3">
+        <div
+            id="<?= $this->alias; ?>-daterange-parent"
+            class="chart-toolbar d-flex justify-content-end pb-3"
+        >
             <button
+                id="<?= $this->alias; ?>-daterange"
                 class="btn btn-light btn-sm"
                 data-control="daterange"
             >

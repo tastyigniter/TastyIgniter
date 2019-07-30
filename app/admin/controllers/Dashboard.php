@@ -34,6 +34,7 @@ class Dashboard extends \Admin\Classes\AdminController
     {
         $this->containerConfig['canSetDefault'] = AdminAuth::isSuperUser();
         $this->containerConfig['defaultWidgets'] = $this->getDefaultWidgets();
+        $this->containerConfig['canAddAndDelete'] = $this->canAddAndDeleteWidgets();
 
         new DashboardContainer($this, $this->containerConfig);
     }
@@ -90,5 +91,11 @@ class Dashboard extends \Admin\Classes\AdminController
                 ],
             ],
         ];
+    }
+
+    protected function canAddAndDeleteWidgets()
+    {
+        return $this->getUser()->hasPermission('Admin.Dashboard.Add')
+            AND $this->getUser()->hasPermission('Admin.Dashboard.Delete');
     }
 }

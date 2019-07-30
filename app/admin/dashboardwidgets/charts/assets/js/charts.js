@@ -13,7 +13,7 @@
     var ChartControl = function (element, options) {
         this.options = options
         this.$el = $(element)
-        this.$rangeEl = this.$el.find('[data-control="daterange"]')
+        this.$rangeEl = $(options.rangeSelector)
         this.chartJs = null
         this.rangePicker = null
 
@@ -25,6 +25,8 @@
     ChartControl.DEFAULTS = {
         alias: undefined,
         rangeFormat: 'MMMM D, YYYY',
+        rangeSelector: '[data-control="daterange"]',
+        rangeParentSelector: '.chart-toolbar',
         responsive: true,
         type: 'line',
         options: {
@@ -75,7 +77,9 @@
     }
 
     ChartControl.prototype.initDateRange = function () {
-        this.$rangeEl.daterangepicker(ChartControl.DATE_RANGE_DEFAULTS, $.proxy(this.onRangeSelected, this))
+        var options = ChartControl.DATE_RANGE_DEFAULTS
+        options.parentEl = this.options.rangeParentSelector
+        this.$rangeEl.daterangepicker(options, $.proxy(this.onRangeSelected, this))
         this.rangePicker = this.$rangeEl.data('daterangepicker');
 
         this.onRangeSelected(ChartControl.DATE_RANGE_DEFAULTS.startDate, ChartControl.DATE_RANGE_DEFAULTS.endDate)

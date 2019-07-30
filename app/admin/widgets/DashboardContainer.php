@@ -193,11 +193,13 @@ class DashboardContainer extends BaseWidget
 
         $widget = $this->findWidgetByAlias($alias);
 
-        $widget->setProperties(post('fields'));
+        $widget->setProperties(post($alias.'_fields'));
 
         $this->saveWidgetProperties($alias, $widget->getProperties());
 
         $widget->initialize();
+
+        $this->widgetsDefined = FALSE;
 
         return $this->onRenderWidgets();
     }
@@ -358,7 +360,7 @@ class DashboardContainer extends BaseWidget
         $formConfig['data'] = $this->getWidgetPropertyValues($widget);
         $formConfig['previewMode'] = $this->previewMode;
         $formConfig['alias'] = $this->alias.'Form'.'-'.$alias;
-        $formConfig['arrayName'] = 'fields';
+        $formConfig['arrayName'] = $alias.'_fields';
 
         $formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
         $formWidget->bindToController();
