@@ -28,14 +28,6 @@ class Languages_model extends Language
         return self::isEnabled()->whereNull('original_id')->dropdown('name', 'idiom');
     }
 
-    public function getImageAttribute($value)
-    {
-        if (starts_with($value, 'data/flags/'))
-            $value = substr($value, strlen('data/'));
-
-        return $value;
-    }
-
     //
     // Scopes
     //

@@ -48,6 +48,8 @@ class InitialSchemaSeeder extends Seeder
         $countries = $this->getSeedRecords('countries');
 
         foreach ($countries as $country) {
+            $country['format'] = '{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}';
+            $country['status'] = 1;
             Countries_model::insert($country);
         }
     }
@@ -60,6 +62,8 @@ class InitialSchemaSeeder extends Seeder
         $currencies = $this->getSeedRecords('currencies');
 
         foreach ($currencies as $currency) {
+            $country = Countries_model::where('iso_alpha2', $currency['iso_alpha2'])->first();
+            $currency['country_id'] = $country->country_id;
             Currencies_model::insert($currency);
         }
     }
@@ -83,7 +87,6 @@ class InitialSchemaSeeder extends Seeder
         Languages_model::insert([
             'code' => 'en',
             'name' => 'English',
-            'image' => 'flags/gb.png',
             'idiom' => 'english',
             'status' => TRUE,
             'can_delete' => FALSE,
@@ -113,6 +116,44 @@ class InitialSchemaSeeder extends Seeder
                 "start_time" => "18:00:00",
                 "end_time" => "20:00:00",
                 "mealtime_status" => TRUE,
+            ],
+        ]);
+    }
+
+    protected function seedPages()
+    {
+        if (Pages_model::count())
+            return;
+
+        $language = Languages_model::whereCode('en')->first();
+
+        Pages_model::insert([
+            [
+                "language_id" => $language->language_id,
+                "name" => "About Us",
+                "title" => "About Us",
+                "heading" => "About Us",
+                "content" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "meta_description" => "",
+                "meta_keywords" => "",
+//                "layout_id"        => 17,
+                "navigation" => "a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}",
+                "date_added" => "2014-04-19 16:57:21",
+                "date_updated" => "2015-05-07 12:39:52",
+                "status" => 1,
+            ], [
+                "language_id" => $language->language_id,
+                "name" => "Policy",
+                "title" => "Policy",
+                "heading" => "Policy",
+                "content" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "meta_description" => "",
+                "meta_keywords" => "",
+//                "layout_id"        => 17,
+                "navigation" => "a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}",
+                "date_added" => "2014-04-19 17:21:23",
+                "date_updated" => "2015-05-16 09:18:39",
+                "status" => 1,
             ],
         ]);
     }
@@ -149,7 +190,7 @@ class InitialSchemaSeeder extends Seeder
         Staff_groups_model::insert([
             'staff_group_name' => 'Administrator',
             'customer_account_access' => TRUE,
-            'location_access' => FALSE,
+            'location_access' => TRUE,
             'permissions' => '',
         ]);
     }

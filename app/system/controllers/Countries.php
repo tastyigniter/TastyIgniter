@@ -61,7 +61,6 @@ class Countries extends \Admin\Classes\AdminController
             ['priority', 'lang:system::lang.countries.label_priority', 'required|integer'],
             ['iso_code_2', 'lang:system::lang.countries.label_iso_code2', 'required|string|size:2'],
             ['iso_code_3', 'lang:system::lang.countries.label_iso_code3', 'required|string|size:3'],
-            ['flag', 'lang:system::lang.countries.label_flag', 'required'],
             ['format', 'lang:system::lang.countries.label_format', 'min:2'],
             ['status', 'lang:admin::lang.label_status', 'required|integer'],
         ];

@@ -30,13 +30,6 @@ $config['list']['columns'] = [
             'href' => 'countries/edit/{country_id}',
         ],
     ],
-    'flag_url' => [
-        'label' => 'lang:system::lang.countries.column_flag',
-        'type' => 'partial',
-        'path' => 'countries/flag_column',
-        'cssClass' => 'text-center',
-        'sortable' => FALSE,
-    ],
     'country_name' => [
         'label' => 'lang:system::lang.countries.column_name',
         'type' => 'text',
@@ -104,11 +97,6 @@ $config['form']['fields'] = [
         'label' => 'lang:system::lang.countries.label_iso_code3',
         'type' => 'text',
         'span' => 'right',
-    ],
-    'flag' => [
-        'label' => 'lang:system::lang.countries.label_flag',
-        'type' => 'mediafinder',
-        'mode' => 'inline',
     ],
     'format' => [
         'label' => 'lang:system::lang.countries.label_format',

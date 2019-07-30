@@ -44,14 +44,12 @@ return [
         'text_empty' => 'There are no countries available.',
 
         'column_name' => 'Name',
-        'column_flag' => 'Flag',
         'column_iso_code2' => 'ISO Code 2',
         'column_iso_code3' => 'ISO Code 3',
         'column_status' => 'Status',
 
         'label_name' => 'Country',
         'label_priority' => 'Priority',
-        'label_flag' => 'Flag',
         'label_format' => 'Format',
         'label_iso_code2' => 'ISO Code 2',
         'label_iso_code3' => 'ISO Code 3',

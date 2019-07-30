@@ -24,7 +24,7 @@ class Countries_model extends Model
      */
     protected $primaryKey = 'country_id';
 
-    protected $fillable = ['country_id', 'country_name', 'iso_code_2', 'iso_code_3', 'format', 'status', 'flag'];
+    protected $fillable = ['country_id', 'country_name', 'iso_code_2', 'iso_code_3', 'format', 'status'];
 
     public $relation = [
         'hasOne' => [
@@ -35,15 +35,6 @@ class Countries_model extends Model
     public static function getDropdownOptions()
     {
         return static::isEnabled()->dropdown('country_name');
-    }
-
-    //
-    // Accessors & Mutators
-    //
-
-    public function getFlagUrlAttribute($value)
-    {
-        return Image_tool_model::resize($this->flag, ['default' => '/flags/no_flag.png']);
     }
 
     //

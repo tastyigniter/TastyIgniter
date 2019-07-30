@@ -89,12 +89,6 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'comment' => 'lang:system::lang.languages.help_idiom',
         ],
-        'image' => [
-            'label' => 'lang:system::lang.languages.label_image',
-            'type' => 'mediafinder',
-            'mode' => 'inline',
-            'default' => 'flags/no_flag.png',
-        ],
         'can_delete' => [
             'label' => 'lang:system::lang.languages.label_can_delete',
             'type' => 'switch',
