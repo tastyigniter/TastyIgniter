@@ -133,6 +133,13 @@ class Menu extends BaseWidget
         $item = new MenuItem($name, $label);
         $item->displayAs($itemType, $config);
 
+        // Defer the execution of badge unread count
+        $item->unreadCount(function () use ($item, $config) {
+            $itemBadgeCount = $config['badgeCount'] ?? null;
+
+            return $this->getUnreadCountFromModel($item, $itemBadgeCount);
+        });
+
         // Get menu item options from model
         $optionModelTypes = ['dropdown', 'partial'];
         if (in_array($item->type, $optionModelTypes, FALSE)) {
@@ -238,5 +245,15 @@ class Menu extends BaseWidget
         }
 
         return $itemOptions;
+    }
+
+    protected function getUnreadCountFromModel($item, $itemBadgeCount)
+    {
+        if (is_array($itemBadgeCount) AND is_callable($itemBadgeCount)) {
+            $user = $this->getLoggedUser();
+            $itemBadgeCount = $itemBadgeCount($this, $item, $user);
+        }
+
+        return $itemBadgeCount;
     }
 }

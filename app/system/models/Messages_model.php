@@ -101,6 +101,11 @@ class Messages_model extends Model
         })->whereIsSent()->count();
     }
 
+    public static function unreadCount($menu, $item, $user)
+    {
+        return self::countUnread($user);
+    }
+
     public static function listMenuMessages($menu, $item, $user)
     {
         $query = self::listMessages([

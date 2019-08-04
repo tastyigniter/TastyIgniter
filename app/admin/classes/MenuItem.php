@@ -60,6 +60,8 @@ class MenuItem
      */
     public $badge;
 
+    public $badgeCount;
+
     /**
      * @var array Contains a list of attributes specified in the item configuration.
      */
@@ -168,6 +170,9 @@ class MenuItem
         if (isset($config['badge']))
             $this->badge = $config['badge'];
 
+        if (isset($config['badgeCount']))
+            $this->badgeCount = $config['badgeCount'];
+
         if (isset($config['viewMoreUrl']))
             $this->viewMoreUrl = $config['viewMoreUrl'];
 
@@ -237,5 +242,22 @@ class MenuItem
         }
 
         return name_to_id($id);
+    }
+
+    public function unreadCount($value = null)
+    {
+        if (is_null($value)) {
+            if (is_callable($this->badgeCount)) {
+                $callable = $this->badgeCount;
+
+                return $callable();
+            }
+
+            return null;
+        }
+
+        $this->badgeCount = $value;
+
+        return $this;
     }
 }

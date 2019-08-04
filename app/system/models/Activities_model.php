@@ -9,6 +9,16 @@ use System\Classes\ExtensionManager;
  */
 class Activities_model extends Activity
 {
+    public static function unreadCount($menu, $item, $user)
+    {
+        $query = self::query();
+        $query->where('user_id', $user->getKey());
+        $query->where('user_type', $user->getMorphClass());
+        $query->whereNull('read_at');
+
+        return $query->count();
+    }
+
     public static function listMenuActivities($menu, $item, $user)
     {
         $query = self::listRecent([

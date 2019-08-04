@@ -33,6 +33,15 @@
       vertical-align: middle;
     }
 
+    .nav-link > .badge {
+      padding: 0.2rem;
+      font-size: 10px;
+      border-radius: 3px;
+      position: absolute;
+      top: 15px;
+      right: 6px;
+    }
+
     > li.nav-item.show > a .fa {
       color: $primary;
     }
@@ -86,8 +95,7 @@
     .dropdown-header {
       font-size: $font-size-base;
       color: $gray-600;
-      text-align: center;
-      padding: 10px 0 8px;
+      padding: 10px 20px 8px;
       border-bottom: $border-width solid $border-color;
     }
 
@@ -120,8 +128,8 @@
         border-bottom: $border-width solid $dropdown-border-color;
       }
 
-      .menu-item:hover {
-        background-color: $dropdown-divider-bg;
+      .menu-item:hover, .menu-item.active {
+        background-color: $dropdown-link-hover-bg;
       }
 
       .menu-link {

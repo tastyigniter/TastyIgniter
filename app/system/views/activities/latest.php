@@ -1,10 +1,10 @@
 <?php
-$itemOptions = isset($itemOptions['items']) ? $itemOptions['items'] : $itemOptions;
+$itemOptions = $itemOptions['items'] ?? $itemOptions;
 ?>
 <ul class="menu menu-lg">
     <?php if (count($itemOptions)) { ?>
         <?php foreach ($itemOptions as $activity) { ?>
-            <li class="menu-item">
+            <li class="menu-item<?= $activity->isUnread() ? ' active' : ''; ?>">
                 <a href="<?= $activity['url']; ?>" class="menu-link">
                     <div class="menu-item-meta"><?= $activity['message']; ?></div>
                     <span class="small menu-item-meta text-muted">

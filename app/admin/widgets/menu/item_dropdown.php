@@ -1,5 +1,6 @@
 <?php
 $hasPartial = strlen($item->partial);
+$itemUnreadCount = $item->unreadCount();
 $itemOptions = $hasPartial ? [] : $item->options();
 is_array($itemOptions) OR $itemOptions = [];
 ?>
@@ -8,8 +9,8 @@ is_array($itemOptions) OR $itemOptions = [];
     class="nav-item dropdown">
     <a <?= $item->getAttributes(); ?>>
         <i class="fa <?= e($item->icon); ?>" role="button"></i>
-        <?php if ($item->badge) { ?>
-            <span class="label <?= e($item->badge); ?>"></span>
+        <?php if ($itemUnreadCount) { ?>
+            <span class="badge <?= e($item->badge); ?>"><?= e($itemUnreadCount); ?></span>
         <?php } ?>
     </a>
 
