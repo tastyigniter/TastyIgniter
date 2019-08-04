@@ -102,6 +102,16 @@ class BaseExtension extends ServiceProvider
     }
 
     /**
+     * Registers scheduled tasks that are executed on a regular basis.
+     *
+     * @param string $schedule
+     * @return void
+     */
+    public function registerSchedule($schedule)
+    {
+    }
+
+    /**
      * Registers any dashboard widgets provided by this extension.
      * @return array
      */
