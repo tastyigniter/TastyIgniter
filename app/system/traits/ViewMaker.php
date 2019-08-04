@@ -18,17 +18,17 @@ trait ViewMaker
     public $vars = [];
 
     /**
-     * @var string|array Specifies a path to the views directory.
+     * @var array Specifies a path to the views directory.
      */
     public $viewPath;
 
     /**
-     * @var string Specifies a path to the layout directory.
+     * @var array Specifies a path to the layout directory.
      */
     public $layoutPath;
 
     /**
-     * @var string Specifies a path to the partials directory.
+     * @var array Specifies a path to the partials directory.
      */
     public $partialPath;
 

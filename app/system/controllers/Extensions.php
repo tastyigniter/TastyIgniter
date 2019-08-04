@@ -58,6 +58,8 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function edit($action, $vendor = null, $extension = null, $context = null)
     {
+        AdminMenu::setContext('settings', 'system');
+
         try {
             if (!strlen($vendor) OR !strlen($extension)) {
                 throw new SystemException(lang('system::lang.extensions.alert_setting_missing_id'));

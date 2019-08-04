@@ -36,6 +36,7 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => ['label' => 'lang:admin::lang.button_icon_back', 'class' => 'btn btn-default', 'href' => 'staff_groups'],
         'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
         'saveClose' => [
             'label' => 'lang:admin::lang.button_save_close',

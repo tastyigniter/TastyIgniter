@@ -42,6 +42,7 @@ class ServiceProvider extends AppServiceProvider
     {
         parent::register('admin');
 
+        $this->registerActivityTypes();
         $this->registerMailTemplates();
 
         if ($this->app->runningInAdmin()) {
@@ -51,7 +52,6 @@ class ServiceProvider extends AppServiceProvider
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
             $this->registerOnboardingSteps();
-            $this->registerActivityTypes();
         }
     }
 
