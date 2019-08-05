@@ -507,12 +507,12 @@ return [
         'text_tab_title_themes' => 'Themes',
         'text_ignore' => 'Ignore',
         'text_search' => 'Search the marketplace for %s to install',
-        'text_popular_title' => 'Popular %s',
+        'text_popular_title' => 'Recommended %s',
         'text_last_checked' => '<b>Last checked:</b> %s',
 
         'text_no_updates' => 'No updates available.',
 
-        'text_update_found' => '%s update(s) found',
+        'text_update_found' => '%s update(s) available',
         'text_update_ignored' => '%s update(s) ignored',
         'text_item_update_summary' => 'Update from version %s to <b>%s</b>',
 
@@ -538,9 +538,9 @@ return [
 
         'button_browse' => '<i class="fa fa-globe"></i> Browse %s',
         'button_carte' => '<i class="fa fa-key"></i> Carté',
-        'button_check' => '<i class="fa fa-refresh"></i> Force Updates',
+        'button_check' => '<i class="fa fa-refresh"></i> Check Again',
         'button_updates' => '<i class="fa fa-refresh"></i> Updates',
-        'button_update' => '<i class="fa fa-check"></i> Update Available',
+        'button_update' => '<i class="fa fa-check"></i> Update',
 
         'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
     ],

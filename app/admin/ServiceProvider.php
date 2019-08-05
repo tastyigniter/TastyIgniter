@@ -219,6 +219,7 @@ class ServiceProvider extends AppServiceProvider
                     'badge' => 'badge-danger',
                     'type' => 'dropdown',
                     'badgeCount' => ['System\Models\Activities_model', 'unreadCount'],
+                    'markAsRead' => ['System\Models\Activities_model', 'markAllAsRead'],
                     'options' => ['System\Models\Activities_model', 'listMenuActivities'],
                     'partial' => '~/app/system/views/activities/latest',
                     'viewMoreUrl' => admin_url('activities'),

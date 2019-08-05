@@ -211,9 +211,6 @@ class Menu extends BaseWidget
 
         $itemOptions = $item->options();
 
-//        if (array_key_exists('total', $options))
-//            $this->setBadgeCount($item, $options['total']);
-
         // Return a partial if item has a path defined
         if (strlen($item->partial)) {
             return [
@@ -226,6 +223,24 @@ class Menu extends BaseWidget
         return [
             'options' => $itemOptions,
         ];
+    }
+
+    /**
+     * Mark menu items as read.
+     * @return array
+     * @throws \Exception
+     */
+    public function onMarkOptionsAsRead()
+    {
+        if (!strlen($itemName = input('item')))
+            throw new SystemException('Invalid item specified');
+
+        $this->defineMenuItems();
+
+        if (!$item = $this->getItem($itemName))
+            throw new SystemException("No main menu item found matching {$itemName}");
+
+        $this->resolveMarkAsReadFromModel($item);
     }
 
     /**
@@ -255,5 +270,14 @@ class Menu extends BaseWidget
         }
 
         return $itemBadgeCount;
+    }
+
+    protected function resolveMarkAsReadFromModel($item)
+    {
+        $callback = array_get($item->config, 'markAsRead');
+        if (is_array($callback) AND is_callable($callback)) {
+            $user = $this->getLoggedUser();
+            $callback($this, $item, $user);
+        }
     }
 }

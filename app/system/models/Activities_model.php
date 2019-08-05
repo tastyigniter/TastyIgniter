@@ -1,6 +1,7 @@
 <?php namespace System\Models;
 
 use Igniter\Flame\ActivityLog\Models\Activity;
+use Model;
 use System\Classes\ExtensionManager;
 
 /**
@@ -9,17 +10,21 @@ use System\Classes\ExtensionManager;
  */
 class Activities_model extends Activity
 {
-    public static function unreadCount($menu, $item, $user)
+    public static function unreadCount($menu, $item, Model $user)
     {
-        $query = self::query();
-        $query->where('user_id', $user->getKey());
-        $query->where('user_type', $user->getMorphClass());
-        $query->whereNull('read_at');
-
-        return $query->count();
+        return self::query()->user($user)->whereIsUnread()->count();
     }
 
-    public static function listMenuActivities($menu, $item, $user)
+    public static function markAllAsRead($menu, $item, Model $user)
+    {
+        $query = self::listRecent(['onlyUser' => $user, 'pageLimit' => null])->whereIsUnread();
+
+        $query->get()->each(function ($model) {
+            $model->markAsRead()->save();
+        });
+    }
+
+    public static function listMenuActivities($menu, $item, Model $user)
     {
         $query = self::listRecent([
             'onlyUser' => $user,
@@ -78,7 +83,10 @@ class Activities_model extends Activity
             }
         }
 
-        return $query->take($pageLimit);
+        if ($pageLimit)
+            return $query->take($pageLimit);
+
+        return $query;
     }
 
     //
