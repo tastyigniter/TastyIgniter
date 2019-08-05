@@ -46,6 +46,7 @@ class ServiceProvider extends AppServiceProvider
         // Register all extensions
         ExtensionManager::instance()->registerExtensions();
 
+        $this->registerSchedule();
         $this->registerConsole();
         $this->registerErrorHandler();
         $this->registerMailer();
@@ -335,6 +336,16 @@ class ServiceProvider extends AppServiceProvider
 
         \Illuminate\Database\Eloquent\Builder::macro('toRawSql', function () {
             return $this->getQuery()->toRawSql();
+        });
+    }
+
+    protected function registerSchedule()
+    {
+        Event::listen('console.schedule', function ($schedule) {
+            // Check for system updates every 12 hours
+            $schedule->call(function () {
+                Classes\UpdateManager::instance()->requestUpdateList(TRUE);
+            })->cron('0 */12 * * *')->evenInMaintenanceMode();
         });
     }
 }

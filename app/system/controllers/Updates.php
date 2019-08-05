@@ -13,8 +13,6 @@ class Updates extends \Admin\Classes\AdminController
 {
     public $checkUrl = 'updates';
 
-    public $forceCheckUrl = 'updates?check=force';
-
     public $browseUrl = 'updates/browse';
 
     protected $requiredPermissions = 'Site.Updates';
@@ -28,22 +26,17 @@ class Updates extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($this->getUser()->hasPermission('Admin.Extensions.Manage'))
+        if ($this->getUser()->hasPermission('Admin.Extensions.Manage')) {
             Extensions_model::syncAll();
-
-        Themes_model::syncAll();
+            Themes_model::syncAll();
+        }
 
         $pageTitle = lang('system::lang.updates.text_title');
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
 
         Template::setButton(sprintf(lang('system::lang.updates.button_browse'), 'extensions'), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/extensions')]);
-        if (input('check') == 'force') {
-            Template::setButton(lang('system::lang.updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
-        }
-        else {
-            Template::setButton(lang('system::lang.updates.button_check'), ['class' => 'btn btn-success', 'href' => admin_url($this->forceCheckUrl)]);
-        }
+        Template::setButton(lang('system::lang.updates.button_check'), ['class' => 'btn btn-success', 'data-request' => 'onCheckUpdates']);
         Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
         Template::setButton(sprintf(lang('system::lang.version'), params('ti_version')), [
@@ -55,7 +48,7 @@ class Updates extends \Admin\Classes\AdminController
         try {
             $updateManager = UpdateManager::instance();
             $this->vars['carteInfo'] = $updateManager->getSiteDetail();
-            $this->vars['updates'] = $updates = $updateManager->requestUpdateList(input('check') == 'force');
+            $this->vars['updates'] = $updates = $updateManager->requestUpdateList();
 
             $lastChecked = isset($updates['last_check'])
                 ? time_elapsed($updates['last_check'])
@@ -129,6 +122,14 @@ class Updates extends \Admin\Classes\AdminController
         $this->addJs('ui/js/vendor/mustache.js', 'mustache-js');
         $this->addJs('ui/js/vendor/typeahead.js', 'typeahead-js');
         $this->addJs('ui/js/updates.js', 'updates-js');
+    }
+
+    public function index_onCheckUpdates()
+    {
+        $updateManager = UpdateManager::instance();
+        $updateManager->requestUpdateList(TRUE);
+
+        return $this->redirect($this->checkUrl);
     }
 
     public function index_onApplyCarte()
@@ -208,7 +209,7 @@ class Updates extends \Admin\Classes\AdminController
     {
         $error = null;
 
-        $items = input('items');
+        $items = input('items') ?? [];
 
 // Uncomment this block to require carte key
 //        if (!params()->has('carte_key'))

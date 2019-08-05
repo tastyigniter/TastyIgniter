@@ -232,6 +232,7 @@ class ServiceProvider extends AppServiceProvider
                 'settings' => [
                     'type' => 'partial',
                     'path' => 'top_settings_menu',
+                    'badgeCount' => ['System\Models\Settings_model', 'updatesCount'],
                     'options' => ['System\Models\Settings_model', 'listMenuSettingItems'],
                     'permission' => 'Site.Settings',
                 ],

@@ -8,6 +8,7 @@ use Model;
 use Session;
 use Setting;
 use System\Classes\ExtensionManager;
+use System\Classes\UpdateManager;
 use System\Traits\ConfigMaker;
 
 /**
@@ -98,6 +99,13 @@ class Settings_model extends Model
             return FALSE;
 
         return count(array_filter((array)Session::get('settings.errors'))) === 0;
+    }
+
+    public static function updatesCount()
+    {
+        $updates = UpdateManager::instance()->requestUpdateList();
+
+        return count(array_get($updates, 'items', []));
     }
 
     public function getValueAttribute()
