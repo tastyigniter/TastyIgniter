@@ -273,14 +273,6 @@ class OptimizeTablesColumns extends Migration
         };
     }
 
-    protected function _optimize_messages()
-    {
-        return function (Blueprint $table) {
-            $table->string('send_type')->change();
-            $table->string('recipient')->change();
-        };
-    }
-
     protected function _optimize_orders()
     {
         return function (Blueprint $table) {

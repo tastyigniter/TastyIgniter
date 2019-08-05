@@ -45,9 +45,6 @@ class Customers_model extends AuthUserModel
             'group' => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
             'address' => 'Admin\Models\Addresses_model',
         ],
-        'morphMany' => [
-            'messages' => ['System\Models\Message_meta_model', 'name' => 'messagable'],
-        ],
     ];
 
     public $purgeable = ['addresses'];

@@ -309,8 +309,6 @@ class ServiceProvider extends AppServiceProvider
             'languages' => 'System\Models\Languages_model',
             'mail_layouts' => 'System\Models\Mail_layouts_model',
             'mail_templates' => 'System\Models\Mail_templates_model',
-            'message_meta' => 'System\Models\Message_meta_model',
-            'messages' => 'System\Models\Messages_model',
             'pages' => 'System\Models\Pages_model',
             'permissions' => 'System\Models\Permissions_model',
             'settings' => 'System\Models\Settings_model',

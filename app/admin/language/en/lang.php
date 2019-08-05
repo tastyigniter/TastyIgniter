@@ -118,7 +118,6 @@ return [
         'restaurant' => 'Restaurant',
         'location' => 'Locations',
         'marketing' => 'Marketing',
-        'messages' => 'Messages',
         'localisation' => 'Localisation',
         'language' => 'Languages',
         'currency' => 'Currencies',

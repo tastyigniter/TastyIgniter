@@ -10,7 +10,7 @@ use Schema;
  *  currencies, customers, customers_activity, customer_groups, extensions,
  *  languages, layouts, layout_modules, layout_routes, locations, location_tables,
  *  mail_templates, mail_templates_data, menus, menus_specials,
- *  menu_options, options, options_values, menu_options, messages, message_recipients, orders,
+ *  menu_options, options, options_values, menu_options, orders,
  *  orders, order_menus, order_options, order_totals, pages, permalinks,
  *  pp_payments, permissions, reservations, reviews, security_questions, settings,
  *  staffs, staff_groups, statuses, status_history, tables, uri_routes,
@@ -461,35 +461,6 @@ class CreateTables extends Migration
             $table->decimal('special_price', 15, 4)->nullable();
             $table->boolean('special_status');
             $table->unique(['special_id', 'menu_id']);
-        };
-    }
-
-    protected function _create_messages()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->integer('message_id', TRUE);
-            $table->integer('sender_id');
-            $table->dateTime('date_added');
-            $table->string('send_type', 32);
-            $table->string('recipient', 32);
-            $table->text('subject');
-            $table->text('body');
-            $table->boolean('status');
-        };
-    }
-
-    protected function _create_message_meta()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->integer('message_meta_id', TRUE);
-            $table->integer('message_id');
-            $table->boolean('state');
-            $table->boolean('status');
-            $table->boolean('deleted');
-            $table->string('item', 32);
-            $table->text('value');
         };
     }
 

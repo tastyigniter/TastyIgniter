@@ -12,8 +12,6 @@ use File;
 use Illuminate\Database\Seeder;
 use System\Models\Extensions_model;
 use System\Models\Mail_layouts_model;
-use System\Models\Message_meta_model;
-use System\Models\Messages_model;
 use System\Models\Permissions_model;
 use System\Models\Themes_model;
 
@@ -34,10 +32,6 @@ class UpdateRecordsSeeder extends Seeder
         $this->updateMorphsOnReviews();
 
         $this->fixPermalinkSlugColumns();
-
-        $this->updateMorphsOnMessages();
-
-        $this->updateMorphsOnMessagesMeta();
 
         $this->copyRecordsFromExtensionsToThemes();
 
@@ -95,36 +89,6 @@ class UpdateRecordsSeeder extends Seeder
         });
 
         Locations_model::all()->each(function ($model) {
-            $model->save();
-        });
-    }
-
-    protected function updateMorphsOnMessages()
-    {
-        if (Messages_model::where('sender_type', 'Admin\Models\Users_model')->count())
-            return;
-
-        Messages_model::whereNotNull('sender_id')->update([
-            'sender_type' => 'Admin\Models\Users_model',
-        ]);
-    }
-
-    protected function updateMorphsOnMessagesMeta()
-    {
-        if (Message_meta_model::where('messagable_type', 'System\Models\Customers_model')->count())
-            return;
-
-        $replace = [
-            'customer_id' => 'Admin\Models\Customers_model',
-            'staff_id' => 'Admin\Models\Users_model',
-        ];
-
-        Message_meta_model::all()->each(function ($model) use ($replace) {
-            if (!array_key_exists($model->item, $replace))
-                return FALSE;
-
-            $model->messagable_id = $model->value;
-            $model->messagable_type = $replace[$model->item];
             $model->save();
         });
     }
