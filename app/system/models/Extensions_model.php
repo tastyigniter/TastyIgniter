@@ -1,8 +1,10 @@
 <?php namespace System\Models;
 
+use File;
 use Igniter\Flame\Database\Builder;
 use Main\Classes\ThemeManager;
 use Model;
+use October\Rain\Parse\Markdown;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 
@@ -99,6 +101,16 @@ class Extensions_model extends Model
             return $value;
 
         return array_get($this->meta, 'version');
+    }
+
+    public function getReadmeAttribute($value)
+    {
+        $extensionPath = ExtensionManager::instance()->path($this->name);
+        $readmePath = $extensionPath.'readme.md';
+        if (!File::existsInsensitive($readmePath))
+            return null;
+
+        return (new Markdown)->parse(File::get($readmePath));
     }
 
     //

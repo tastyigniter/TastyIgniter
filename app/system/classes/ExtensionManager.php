@@ -87,7 +87,7 @@ class ExtensionManager
     {
         foreach ($this->folders() as $extensionFolder) {
 
-            $extension = $this->checkName($extension);
+            $extension = $this->getNamePath($this->checkName($extension));
 
             // Check each folder for the extension's folder.
             if (File::isDirectory("{$extensionFolder}/{$extension}")) {

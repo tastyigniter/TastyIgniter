@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Config;
 use File;
 use Main\Classes\ThemeManager;
+use October\Rain\Parse\Markdown;
 use Schema;
 use ZipArchive;
 
@@ -61,6 +62,7 @@ class UpdateManager
         $this->hubManager = HubManager::instance();
         $this->extensionManager = ExtensionManager::instance();
         $this->themeManager = ThemeManager::instance();
+        $this->markdown = new Markdown;
 
         $this->tempDirectory = temp_path();
         $this->baseDirectory = base_path();
@@ -274,7 +276,8 @@ class UpdateManager
         $installedItems = $this->getInstalledItems();
 
         $items = $this->getHubManager()->listItems([
-            'browse' => 'popular',
+            'browse' => 'recommended',
+            'limit' => 9,
             'type' => $itemType,
         ]);
 
@@ -341,6 +344,8 @@ class UpdateManager
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
             $update['installedVer'] = array_get(array_get($installedItems, $update['code'], []), 'ver');
+
+            $update = $this->parseTagDescription($update);
 
             if (array_get($update, 'type') == 'core') {
                 $update['installedVer'] = params('ti_version');
@@ -516,5 +521,17 @@ class UpdateManager
     protected function getHubManager()
     {
         return $this->hubManager;
+    }
+
+    protected function parseTagDescription($update)
+    {
+        $tags = array_get($update, 'tags.data', []);
+        foreach ($tags as &$tag) {
+            $tag['description'] = $this->markdown->parse($tag['description']);
+        }
+
+        array_set($update, 'tags.data', $tags);
+
+        return $update;
     }
 }
