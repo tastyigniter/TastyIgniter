@@ -49,6 +49,7 @@
                 var attrName = attribute.name.substr(11),
                     attrValue = attribute.value
 
+                $modal.find('[data-modal-html="'+attrName+'"]').html(attrValue)
                 $modal.find('[data-modal-text="'+attrName+'"]').text(attrValue)
                 $modal.find('[data-modal-input="'+attrName+'"]').val(attrValue)
             }

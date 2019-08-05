@@ -32,6 +32,7 @@ $(document).on('show.bs.modal','.modal',function(event){var $modal=$(this),$butt
 if(!$button.length)
 return
 $.each($button.get(0).attributes,function(index,attribute){if(/^data-modal-/.test(attribute.name)){var attrName=attribute.name.substr(11),attrValue=attribute.value
+$modal.find('[data-modal-html="'+attrName+'"]').html(attrValue)
 $modal.find('[data-modal-text="'+attrName+'"]').text(attrValue)
 $modal.find('[data-modal-input="'+attrName+'"]').val(attrValue)}});})
 $(window).on('ajaxErrorMessage',function(event,message){event.preventDefault()
