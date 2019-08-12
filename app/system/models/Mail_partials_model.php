@@ -1,0 +1,112 @@
+<?php namespace System\Models;
+
+use ApplicationException;
+use Exception;
+use File;
+use Model;
+use October\Rain\Mail\MailParser;
+use System\Classes\MailManager;
+use View;
+
+/**
+ * MailPartials Model Class
+ * @package System
+ */
+class Mail_partials_model extends Model
+{
+    protected static $codeCache;
+
+    /**
+     * @var string The database table name
+     */
+    protected $table = 'mail_partials';
+
+    /**
+     * @var string The database table primary key
+     */
+    protected $primaryKey = 'partial_id';
+
+    protected $fillable = ['name', 'code', 'html', 'plain'];
+
+    /**
+     * @var array The model table column to convert to dates on insert/update
+     */
+    public $timestamps = TRUE;
+
+    //
+    // Events
+    //
+    public function afterFetch()
+    {
+        if (!$this->is_custom) {
+            $this->fillFromCode();
+        }
+    }
+
+    //
+    // Helpers
+    //
+
+    public function fillFromCode($code = null)
+    {
+        if (is_null($code))
+            $code = $this->code;
+
+        $definitions = MailManager::instance()->listRegisteredPartials();
+        if (!$definition = array_get($definitions, $code))
+            throw new ApplicationException('Unable to find a registered partial with code: '.$code);
+
+        $this->fillFromView($definition);
+    }
+
+    public function fillFromView($path)
+    {
+        $sections = self::getTemplateSections($path);
+        $this->name = array_get($sections, 'settings.name', '???');
+        $this->html = array_get($sections, 'html');
+        $this->text = array_get($sections, 'text');
+    }
+
+    public static function findOrMakePartial($code)
+    {
+        try {
+            if (!$template = self::whereCode($code)->first()) {
+                $template = new self;
+                $template->code = $code;
+                $template->fillFromCode();
+            }
+
+            return $template;
+        }
+        catch (Exception $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Loops over each mail layout and ensures the system has a layout,
+     * if the layout does not exist, it will create one.
+     * @return void
+     */
+    public static function createPartials()
+    {
+        $dbPartials = self::lists('code', 'code')->all();
+        $definitions = MailManager::instance()->listRegisteredPartials();
+        foreach ($definitions as $code => $path) {
+            if (array_key_exists($code, $dbPartials)) {
+                continue;
+            }
+
+            $partial = new static;
+            $partial->code = $code;
+            $partial->is_custom = 0;
+            $partial->fillFromView($path);
+            $partial->save();
+        }
+    }
+
+    protected static function getTemplateSections($code)
+    {
+        return MailParser::parse(File::get(View::make($code)->getPath()));
+    }
+}
