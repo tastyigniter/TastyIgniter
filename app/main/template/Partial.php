@@ -3,10 +3,10 @@
 namespace Main\Template;
 
 use File;
+use Igniter\Flame\Pagic\Contracts\TemplateSource;
 use Igniter\Flame\Support\Extendable;
 use Illuminate\Support\Collection;
 use Main\Classes\Theme;
-use Main\Contracts\TemplateSource;
 use October\Rain\Halcyon\Exception\MissingFileNameException;
 use Symfony\Component\Finder\Finder;
 

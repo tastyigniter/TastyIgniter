@@ -3,9 +3,9 @@
 namespace Main\Template;
 
 use Config;
+use Igniter\Flame\Pagic\Contracts\TemplateSource;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
-use Main\Contracts\TemplateSource;
 
 /**
  * @property \Main\Classes\Theme theme The theme this model belongs to
