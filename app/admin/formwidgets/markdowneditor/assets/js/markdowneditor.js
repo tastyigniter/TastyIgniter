@@ -4,7 +4,7 @@
     var MarkdownEditor = function (element, options) {
         this.$el = $(element)
         this.options = options || {}
-        this.$textarea = $('textarea:first', this.$el)
+        this.$textarea = $('textarea:first', this.$el)[0]
         this.editor = null
         this.$form = null
 
@@ -45,12 +45,10 @@
 
     MarkdownEditor.prototype.initEditor = function () {
 
-        this.editor = editormd({
-            id: this.$el.attr('id'),
-            // width   : "90%",
-            height: 640,
-            path: "/app/admin/formwidgets/markdowneditor/assets/vendor/editormd/lib/"
-        });
+        this.options.element = this.$textarea
+        this.editor = new EasyMDE(this.options)
+
+        this.editor.codemirror.setSize(null, this.options.height)
     }
 
     //
@@ -118,8 +116,15 @@
     MarkdownEditor.DEFAULTS = {
         vendorPath: '/',
         refreshHandler: null,
-        buttons: ['formatting', 'bold', 'italic', 'unorderedlist', 'orderedlist', 'link', 'horizontalrule'],
-        viewMode: 'tab'
+        viewMode: 'tab',
+        element: null,
+        forceSync: true,
+        autoDownloadFontAwesome: false,
+        height: 400,
+        toolbar: ['bold', 'italic', 'heading',
+            '|', 'quote', 'unordered-list', 'ordered-list',
+            '|', 'link', 'image', 'table', 'horizontal-rule',
+            '|', 'preview', 'side-by-side', 'fullscreen']
     }
 
     // PLUGIN DEFINITION

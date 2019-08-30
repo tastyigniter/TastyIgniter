@@ -1,0 +1,17 @@
+.editor-toolbar {
+  border-color: var(--gray-300);
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.editor-toolbar button.active,
+.editor-toolbar button:hover {
+  border-color: var(--gray-300);
+}
+.field-markdowneditor .CodeMirror {
+  border: 1px solid var(--gray-300);
+}
+.editor-toolbar.fullscreen,
+.field-markdowneditor .CodeMirror-fullscreen,
+.editor-preview-side {
+  z-index: 1040;
+}

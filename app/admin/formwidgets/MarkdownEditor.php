@@ -56,9 +56,9 @@ class MarkdownEditor extends BaseFormWidget
 
     public function loadAssets()
     {
-        $this->addCss('vendor/editormd/css/editormd.css', 'editormd-css');
+        $this->addCss('vendor/easymde/easymde.min.css', 'easymde-css');
         $this->addCss('css/markdowneditor.css', 'markdowneditor-css');
-        $this->addJs('vendor/editormd/editormd.min.js', 'editormd-js');
+        $this->addJs('vendor/easymde/easymde.min.js', 'easymde-js');
         $this->addJs('js/markdowneditor.js', 'markdowneditor-js');
     }
 
