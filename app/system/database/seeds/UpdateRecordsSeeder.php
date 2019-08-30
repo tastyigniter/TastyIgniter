@@ -8,10 +8,8 @@ use Admin\Models\Reviews_model;
 use Admin\Models\Status_history_model;
 use Carbon\Carbon;
 use DB;
-use File;
 use Illuminate\Database\Seeder;
 use System\Models\Extensions_model;
-use System\Models\Mail_layouts_model;
 use System\Models\Permissions_model;
 use System\Models\Themes_model;
 
@@ -163,16 +161,6 @@ class UpdateRecordsSeeder extends Seeder
     protected function fillColumnsOnMailTemplatesData()
     {
         DB::table('mail_templates_data')->update(['is_custom' => 1]);
-
-        $path = __DIR__.'/mail/';
-
-        Mail_layouts_model::create([
-            'name' => 'New Default Layout',
-            'code' => 'default',
-            'layout' => File::get($path.'layout.htm'),
-            'plain_layout' => File::get($path.'plain_layout.txt'),
-            'layout_css' => File::get($path.'style.css'),
-        ]);
     }
 
     protected function fillIsCustomOnPermissions()

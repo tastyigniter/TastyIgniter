@@ -24,6 +24,7 @@ use Request;
 use Setting;
 use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
+use System\Classes\MailManager;
 use System\Libraries\Assets;
 use System\Models\Mail_templates_model;
 use System\Models\Settings_model;
@@ -210,6 +211,22 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerMailer()
     {
+        MailManager::instance()->registerCallback(function (MailManager $manager) {
+            $manager->registerMailLayouts([
+                'default' => 'system::_mail.layouts.default',
+            ]);
+
+            $manager->registerMailPartials([
+                'header' => 'system::_mail.partials.header',
+                'footer' => 'system::_mail.partials.footer',
+                'button' => 'system::_mail.partials.button',
+                'panel' => 'system::_mail.partials.panel',
+                'table' => 'system::_mail.partials.table',
+                'subcopy' => 'system::_mail.partials.subcopy',
+                'promotion' => 'system::_mail.partials.promotion',
+            ]);
+        });
+
         Event::listen('mailer.beforeRegister', function () {
             Settings_model::applyMailerConfigValues();
         });
