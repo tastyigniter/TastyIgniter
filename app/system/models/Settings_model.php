@@ -174,7 +174,7 @@ class Settings_model extends Model
         $settingsConfig = array_except($fieldConfig, 'toolbar');
         $this->registerSettingItems('core', $settingsConfig);
 
-        // Load plugin items
+        // Load extension items
         $extensions = ExtensionManager::instance()->getExtensions();
 
         foreach ($extensions as $code => $extension) {

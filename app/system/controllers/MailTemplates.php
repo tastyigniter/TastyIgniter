@@ -1,6 +1,7 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
+use ApplicationException;
 use Mail;
 use System\Models\Mail_templates_model;
 
@@ -74,10 +75,13 @@ class MailTemplates extends \Admin\Classes\AdminController
         $model->is_custom = TRUE;
     }
 
-    public function formAfterSave($model)
+    public function onTestTemplate($context, $recordId)
     {
-        if (post('test') != 1)
-            return;
+        if (!strlen($recordId))
+            throw new ApplicationException('Template id not found');
+
+        if (!$model = $this->formFindModelObject($recordId))
+            throw new ApplicationException('Template not found');
 
         $adminUser = $this->getUser()->staff;
 
@@ -86,6 +90,10 @@ class MailTemplates extends \Admin\Classes\AdminController
         });
 
         flash()->success(sprintf(lang('system::lang.mail_templates.alert_test_message_sent'), $adminUser->staff_email));
+
+        return [
+            '#notification' => $this->makePartial('flash'),
+        ];
     }
 
     public function formValidate($model, $form)

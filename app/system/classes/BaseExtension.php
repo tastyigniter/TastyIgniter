@@ -121,7 +121,7 @@ class BaseExtension extends ServiceProvider
     }
 
     /**
-     * Registers any form widgets implemented in this plugin.
+     * Registers any form widgets implemented in this extension.
      * The widgets must be returned in the following format:
      * ['className1' => 'alias'],
      * ['className2' => 'anotherAlias']

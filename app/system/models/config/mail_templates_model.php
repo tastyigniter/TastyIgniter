@@ -80,9 +80,7 @@ $config['form']['toolbar'] = [
         'test_message' => [
             'label' => 'lang:system::lang.mail_templates.button_test_message',
             'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-submit' => 'true',
-            'data-request-data' => 'test:1',
+            'data-request' => 'onTestTemplate',
             'context' => 'edit',
         ],
     ],
