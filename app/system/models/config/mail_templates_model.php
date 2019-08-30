@@ -118,7 +118,7 @@ $config['form']['tabs'] = [
     'fields' => [
         'body' => [
             'tab' => 'lang:system::lang.mail_templates.label_body',
-            'type' => 'codeeditor',
+            'type' => 'markdowneditor',
         ],
         'plain_body' => [
             'tab' => 'lang:system::lang.mail_templates.label_plain',

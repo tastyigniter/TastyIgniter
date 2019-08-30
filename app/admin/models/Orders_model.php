@@ -371,7 +371,7 @@ class Orders_model extends Model
 
         $data['order_address'] = lang('admin::lang.orders.text_collection_order_type');
         if ($model->address)
-            $data['order_address'] = format_address($model->address->toArray());
+            $data['order_address'] = format_address($model->address->toArray(), FALSE);
 
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;
