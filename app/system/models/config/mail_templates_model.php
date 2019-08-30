@@ -12,6 +12,11 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-default',
             'href' => 'mail_layouts',
         ],
+        'partials' => [
+            'label' => 'lang:system::lang.mail_templates.text_partials',
+            'class' => 'btn btn-default',
+            'href' => 'mail_partials',
+        ],
     ],
 ];
 
@@ -116,7 +121,7 @@ $config['form']['tabs'] = [
             'type' => 'codeeditor',
         ],
         'plain_body' => [
-            'tab' => 'lang:system::lang.mail_templates.label_plain_body',
+            'tab' => 'lang:system::lang.mail_templates.label_plain',
             'type' => 'textarea',
             'attributes' => [
                 'rows' => 10,

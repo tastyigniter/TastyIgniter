@@ -12,6 +12,11 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-default',
             'href' => 'mail_templates',
         ],
+        'partials' => [
+            'label' => 'lang:system::lang.mail_templates.text_partials',
+            'class' => 'btn btn-default',
+            'href' => 'mail_partials',
+        ],
     ],
 ];
 
@@ -53,6 +58,7 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => ['label' => 'lang:admin::lang.button_icon_back', 'class' => 'btn btn-default', 'href' => 'mail_layouts'],
         'save' => [
             'label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave',
         ],
@@ -68,11 +74,6 @@ $config['form']['toolbar'] = [
             'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => 'edit',
         ],
-        'templates' => [
-            'label' => 'lang:system::lang.mail_templates.text_templates',
-            'class' => 'btn btn-default',
-            'href' => 'mail_templates',
-        ],
     ],
 ];
 
@@ -87,13 +88,6 @@ $config['form']['fields'] = [
         'span' => 'right',
         'type' => 'text',
     ],
-    'language_id' => [
-        'label' => 'lang:system::lang.mail_templates.label_language',
-        'span' => 'left',
-        'type' => 'relation',
-        'relationFrom' => 'language',
-        'placeholder' => 'lang:admin::lang.text_please_select',
-    ],
 ];
 
 $config['form']['tabs'] = [
@@ -107,7 +101,7 @@ $config['form']['tabs'] = [
             'type' => 'codeeditor',
         ],
         'plain_layout' => [
-            'tab' => 'lang:system::lang.mail_templates.label_plain_layout',
+            'tab' => 'lang:system::lang.mail_templates.label_plain',
             'type' => 'textarea',
             'attributes' => [
                 'rows' => 10,

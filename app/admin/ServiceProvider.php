@@ -11,8 +11,8 @@ use Event;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use System\Classes\MailManager;
 use System\Libraries\Assets;
-use System\Models\Mail_templates_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -57,8 +57,8 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerMailTemplates()
     {
-        Mail_templates_model::registerCallback(function (Mail_templates_model $template) {
-            $template->registerTemplates([
+        MailManager::instance()->registerCallback(function (MailManager $manager) {
+            $manager->registerMailTemplates([
                 'admin::_mail.order_update' => 'lang:system::lang.mail_templates.text_order_update',
                 'admin::_mail.reservation_update' => 'lang:system::lang.mail_templates.text_reservation_update',
                 'admin::_mail.password_reset' => 'lang:system::lang.mail_templates.text_password_reset_alert',

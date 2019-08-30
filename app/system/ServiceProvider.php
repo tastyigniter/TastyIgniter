@@ -26,7 +26,6 @@ use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
-use System\Models\Mail_templates_model;
 use System\Models\Settings_model;
 
 class ServiceProvider extends AppServiceProvider
@@ -231,10 +230,12 @@ class ServiceProvider extends AppServiceProvider
             Settings_model::applyMailerConfigValues();
         });
 
-        Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data) {
-            Mail_templates_model::addContentToMailer($message, $view, $data);
+        Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data, $raw, $plain) {
+            // When "plain-text only" email is sent, $view is null, this sets the flag appropriately
+            $plainOnly = is_null($view);
+            $method = is_null($raw) ? 'addContentToMailer' : 'addRawContentToMailer';
 
-            return FALSE;
+            return !MailManager::instance()->$method($message, $raw ?: $view ?: $plain, $data, $plainOnly);
         });
     }
 
