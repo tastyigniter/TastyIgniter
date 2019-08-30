@@ -4,6 +4,7 @@ namespace Main;
 
 use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Main\Classes\ThemeManager;
 use Setting;
@@ -23,8 +24,10 @@ class ServiceProvider extends AppServiceProvider
         View::share('site_name', Setting::get('site_name'));
         View::share('site_logo', Setting::get('site_logo'));
 
-        if (!$this->app->runningInAdmin())
+        if (!$this->app->runningInAdmin()) {
+            $this->registerBladeDirectives();
             $this->resolveFlashSessionKey();
+        }
     }
 
     /**
@@ -74,6 +77,29 @@ class ServiceProvider extends AppServiceProvider
     {
         $this->app->resolving('flash', function (\Igniter\Flame\Flash\FlashBag $flash) {
             $flash->setSessionKey('flash_data_main');
+        });
+    }
+
+    protected function registerBladeDirectives()
+    {
+        Blade::directive('component', function ($expression) {
+            return "<?php echo component({$expression}); ?>";
+        });
+
+        Blade::directive('endcomponent', function ($expression) {
+            return '';
+        });
+
+        Blade::directive('has_component', function ($expression) {
+            return "<?php echo has_component({$expression}); ?>";
+        });
+
+        Blade::directive('partial', function ($expression) {
+            return "<?php echo partial({$expression}); ?>";
+        });
+
+        Blade::directive('content', function ($expression) {
+            return "<?php echo controller()->renderContent({$expression}); ?>";
         });
     }
 }
