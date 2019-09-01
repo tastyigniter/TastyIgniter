@@ -62,9 +62,11 @@ class InitialSchemaSeeder extends Seeder
         $currencies = $this->getSeedRecords('currencies');
 
         foreach ($currencies as $currency) {
-            $country = Countries_model::where('iso_alpha2', $currency['iso_alpha2'])->first();
-            $currency['country_id'] = $country->country_id;
-            Currencies_model::insert($currency);
+            $query = Countries_model::where('iso_code_3', $currency['iso_alpha3']);
+            if ($country = $query->first()) {
+                $currency['country_id'] = $country->country_id;
+                Currencies_model::insert($currency);
+            }
         }
     }
 
