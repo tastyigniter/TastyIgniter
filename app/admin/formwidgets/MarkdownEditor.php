@@ -3,7 +3,7 @@
 namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
-use October\Rain\Parse\Markdown;
+use Igniter\Flame\Mail\Markdown;
 
 /**
  * Code Editor

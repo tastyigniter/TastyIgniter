@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Config;
 use DateTime;
 use DateTimeZone;
+use Exception;
 use Model;
 use Session;
 use Setting;
@@ -103,9 +104,13 @@ class Settings_model extends Model
 
     public static function updatesCount()
     {
-        $updates = UpdateManager::instance()->requestUpdateList();
+        try {
+            $updates = UpdateManager::instance()->requestUpdateList();
 
-        return count(array_get($updates, 'items', []));
+            return count(array_get($updates, 'items', []));
+        }
+        catch (Exception $ex) {
+        }
     }
 
     public function getValueAttribute()

@@ -2,8 +2,8 @@
 
 use ApplicationException;
 use File;
+use Igniter\Flame\Mail\MailParser;
 use Model;
-use October\Rain\Mail\MailParser;
 use System\Classes\MailManager;
 use View;
 

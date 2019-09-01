@@ -5,8 +5,8 @@ use ApplicationException;
 use Carbon\Carbon;
 use Config;
 use File;
+use Igniter\Flame\Mail\Markdown;
 use Main\Classes\ThemeManager;
-use October\Rain\Parse\Markdown;
 use Schema;
 use ZipArchive;
 

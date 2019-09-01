@@ -4,10 +4,10 @@ namespace Main\Template;
 
 use File;
 use Igniter\Flame\Pagic\Contracts\TemplateSource;
+use Igniter\Flame\Pagic\Exception\MissingFileNameException;
 use Igniter\Flame\Support\Extendable;
 use Illuminate\Support\Collection;
 use Main\Classes\Theme;
-use October\Rain\Halcyon\Exception\MissingFileNameException;
 use Symfony\Component\Finder\Finder;
 
 class Partial extends Extendable implements TemplateSource

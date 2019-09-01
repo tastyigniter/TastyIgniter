@@ -2,9 +2,9 @@
 
 use File;
 use Igniter\Flame\Database\Builder;
+use Igniter\Flame\Mail\Markdown;
 use Main\Classes\ThemeManager;
 use Model;
-use October\Rain\Parse\Markdown;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 
@@ -106,8 +106,7 @@ class Extensions_model extends Model
     public function getReadmeAttribute($value)
     {
         $extensionPath = ExtensionManager::instance()->path($this->name);
-        $readmePath = $extensionPath.'readme.md';
-        if (!File::existsInsensitive($readmePath))
+        if (!$readmePath = File::existsInsensitive($extensionPath.'readme.md'))
             return null;
 
         return (new Markdown)->parse(File::get($readmePath));

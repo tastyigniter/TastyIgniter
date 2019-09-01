@@ -4,15 +4,15 @@ namespace System\Traits;
 
 use App;
 use ApplicationException;
-use Assetic\Asset\AssetCache;
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
-use Assetic\Asset\HttpAsset;
-use Assetic\Cache\FilesystemCache;
 use Cache;
 use Carbon\Carbon;
 use Event;
 use File;
+use Igniter\Flame\Assetic\Asset\AssetCache;
+use Igniter\Flame\Assetic\Asset\AssetCollection;
+use Igniter\Flame\Assetic\Asset\FileAsset;
+use Igniter\Flame\Assetic\Asset\HttpAsset;
+use Igniter\Flame\Assetic\Cache\FilesystemCache;
 use Request;
 use Response;
 
@@ -67,16 +67,16 @@ trait CombinesAssets
         if ($this->useMinify === null)
             $this->useMinify = !config('app.debug', FALSE);
 
-        $this->registerFilter('css', new \Assetic\Filter\CssImportFilter);
-        $this->registerFilter(['css', 'scss'], new \Assetic\Filter\CssRewriteFilter);
+        $this->registerFilter('css', new \Igniter\Flame\Assetic\Filter\CssImportFilter);
+        $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssRewriteFilter);
 
-        $scssPhpFilter = new \Assetic\Filter\ScssphpFilter;
+        $scssPhpFilter = new \Igniter\Flame\Assetic\Filter\ScssphpFilter;
         $scssPhpFilter->addImportPath(base_path());
         $this->registerFilter('scss', $scssPhpFilter);
 
         if ($this->useMinify) {
-            $this->registerFilter('js', new \Assetic\Filter\JSMinFilter);
-            $this->registerFilter(['css', 'scss'], new \Assetic\Filter\CssMinFilter);
+            $this->registerFilter('js', new \Igniter\Flame\Assetic\Filter\JSMinFilter);
+            $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssMinFilter);
         }
     }
 
