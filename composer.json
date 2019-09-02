@@ -37,6 +37,9 @@
     "phpunit/phpunit": "~5.7",
     "phpunit/phpunit-selenium": "~1.2"
   },
+  "replace": {
+    "kriswallsmith/assetic": "*"
+  },
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests"
