@@ -278,11 +278,7 @@ class Partial extends Extendable implements TemplateSource
      */
     public function getMarkup()
     {
-//        $content = "<!-- Partial: {$this->getBaseFileName()} -->".PHP_EOL;
-        $content = $this->content.PHP_EOL;
-
-//        $content .= "<!-- Partial: {$this->getBaseFileName()} -->";
-        return $content;
+        return $this->content.PHP_EOL;
     }
 
     /**

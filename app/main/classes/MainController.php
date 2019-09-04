@@ -16,6 +16,7 @@ use Log;
 use Main\Components\BlankComponent;
 use Main\Template\ComponentPartial;
 use Main\Template\Content;
+use Main\Template\Extension\BladeExtension as MainBladeExtension;
 use Main\Template\Layout as LayoutTemplate;
 use Main\Template\Loader;
 use Main\Template\Partial;
@@ -26,6 +27,7 @@ use System\Classes\BaseComponent;
 use System\Classes\BaseController;
 use System\Classes\ComponentManager;
 use System\Helpers\ViewHelper;
+use System\Template\Extension\BladeExtension as SystemBladeExtension;
 use System\Traits\AssetMaker;
 use URL;
 use View;
@@ -469,6 +471,8 @@ class MainController extends BaseController
         }
 
         $this->template = new Environment($this->loader, $options);
+        $this->template->addExtension(new MainBladeExtension);
+        $this->template->addExtension(new SystemBladeExtension);
     }
 
     public function initTemplateObjects()
@@ -589,7 +593,7 @@ class MainController extends BaseController
             ));
         }
 
-        $fileContent = $content->parsedMarkup;
+        $fileContent = $content->getMarkup();
 
         // Inject global view variables
         $globalVars = ViewHelper::getGlobalVars();
