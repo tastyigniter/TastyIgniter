@@ -656,7 +656,7 @@ class ExtensionManager
 
         $this->saveInstalled();
 
-        if (!$enable AND $extension = $this->findExtension($code)) {
+        if ($enable === FALSE AND $extension = $this->findExtension($code)) {
             $extension->disabled = TRUE;
         }
 

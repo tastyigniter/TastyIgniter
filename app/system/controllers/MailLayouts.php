@@ -71,9 +71,6 @@ class MailLayouts extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules[] = ['name', 'lang:system::lang.mail_templates.label_name', 'required|min:2|max:32'];
-        $rules[] = ['language_id', 'lang:system::lang.mail_templates.label_language', 'required|integer'];
-
-        $rules[] = ['status', 'lang:admin::lang.label_status', 'required|integer'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

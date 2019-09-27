@@ -10,8 +10,6 @@ use Admin\Classes\BaseFormWidget;
  */
 class CodeEditor extends BaseFormWidget
 {
-    const CHANGED_PREFIX = '___changed_';
-
     //
     // Configurable properties
     //
@@ -84,15 +82,5 @@ class CodeEditor extends BaseFormWidget
         $this->vars['theme'] = $this->theme;
         $this->vars['name'] = $this->formField->getName();
         $this->vars['value'] = $this->getLoadValue();
-        $this->vars['changedName'] = self::CHANGED_PREFIX.strtolower($this->alias);
-    }
-
-    public function getSaveValue($value)
-    {
-        $name = self::CHANGED_PREFIX.strtolower($this->alias);
-        if (post($name) < 1)
-            return -1;
-
-        return $value;
     }
 }

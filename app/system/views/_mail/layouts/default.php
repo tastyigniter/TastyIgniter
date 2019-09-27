@@ -20,12 +20,12 @@ name = "Default layout"
             <td align="center">
                 <table class="content" width="100%" cellpadding="0" cellspacing="0">
                     @partial('header')
-                        @if(is_array($site_logo))
+                        @isset($site_logo)
                         <img
-                            src="{{ Image_tool_model::resize($site_logo, ['height' => 90]) }}"
+                            src="{{ \Main\Models\Image_tool_model::resize($site_logo, ['height' => 90]) }}"
                             alt="{{ $site_name }}"
                         >
-                        @endif
+                        @endisset
                     @endpartial
                     <tr>
                         <td class="body" width="100%" cellpadding="0" cellspacing="0">

@@ -52,7 +52,7 @@
     }
 
     CodeEditor.prototype.registerHandlers = function () {
-        this.$form.on("submit", $.proxy(this.onSaveChanges, this))
+        this.$el.closest('[data-control="form-tabs"]').find('.nav-tabs').on('shown.bs.tab', $.proxy(this.refreshEditor, this))
     }
 
     CodeEditor.prototype.unregisterHandlers = function () {
@@ -78,10 +78,10 @@
         this.editor.setSize(null, this.options.height)
     }
 
-    CodeEditor.prototype.onSaveChanges = function () {
-        var $element = $(this.options.changedSelector, this.$el)
-
-        $element.val(this.editor.isClean() ? "0" : "1")
+    CodeEditor.prototype.refreshEditor = function () {
+        if (this.$el.closest('.tab-pane').is(':visible')) {
+            this.editor.refresh()
+        }
     }
 
     // CodeEditor PLUGIN DEFINITION

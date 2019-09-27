@@ -65,18 +65,17 @@ class HubManager
 
     public function applyItemsToUpdate($itemNames, $force = FALSE)
     {
-        $cacheKey = $force ? null : $this->getCacheKey('updates', $itemNames);
+        $cacheKey = $this->getCacheKey('updates', $itemNames);
 
-        if (!$response = Cache::get($cacheKey)) {
+        if ($force OR !$response = Cache::get($cacheKey)) {
             $response = $this->requestRemoteData('core/apply', [
                 'items' => $itemNames,
                 'include' => 'tags',
                 'version' => params('ti_version'),
-                'force' => $force,
                 'edge' => Config::get('system.edgeUpdates', FALSE),
             ]);
 
-            if ($cacheKey AND is_array($response)) {
+            if (is_array($response)) {
                 $response['check_time'] = Carbon::now()->toDateTimeString();
                 Cache::put($cacheKey, $response, $this->cacheTtl);
             }
