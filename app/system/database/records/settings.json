@@ -66,16 +66,6 @@
   },
   {
     "sort": "config",
-    "item": "meta_description",
-    "value": ""
-  },
-  {
-    "sort": "config",
-    "item": "meta_keywords",
-    "value": ""
-  },
-  {
-    "sort": "config",
     "item": "registration_email",
     "value": "a:1:{i:0;s:8:\"customer\";}"
   },

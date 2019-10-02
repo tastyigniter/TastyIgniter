@@ -323,8 +323,6 @@ return [
         'label_detect_language' => 'Detect Browser Language',
         'label_site_language' => 'Default Language',
         'label_customer_group' => 'Customer Group',
-        'label_meta_description' => 'Meta Description',
-        'label_meta_keyword' => 'Meta Keywords',
         'label_site_location_mode' => 'Location Mode',
         'label_country' => 'Country',
         'label_maps_api_key' => 'Google Maps API Key',

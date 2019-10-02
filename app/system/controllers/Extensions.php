@@ -193,8 +193,8 @@ class Extensions extends \Admin\Classes\AdminController
         if ($this->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
-        $model->set($this->formWidget->getSaveData());
-        if ($model->save()) {
+        $saved = $model->set($this->formWidget->getSaveData());
+        if ($saved) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang($settingItem->label).' settings updated '));
         }
         else {
