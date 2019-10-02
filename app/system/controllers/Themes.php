@@ -4,6 +4,8 @@ use Admin\Traits\WidgetMaker;
 use AdminMenu;
 use Event;
 use Exception;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Main\Classes\ThemeManager;
 use Request;
 use System\Libraries\Assets;
@@ -82,13 +84,6 @@ class Themes extends \Admin\Classes\AdminController
             Template::setButton(lang('system::lang.themes.button_source'), [
                 'class' => 'btn btn-default',
                 'href' => admin_url('themes/source/'.$themeCode),
-            ]);
-
-            Template::setButton(lang('system::lang.themes.button_build'), [
-                'class' => 'btn btn-default pull-right',
-                'data-request' => 'onSave',
-                'data-request-submit' => 'true',
-                'data-request-data' => 'build:1',
             ]);
 
             $model = $this->formFindModelObject($themeCode);
@@ -493,25 +488,38 @@ class Themes extends \Admin\Classes\AdminController
 
     public function formAfterSave($model)
     {
-        if (post('build') != '1')
-            return;
-
         if (!$model->getFieldsConfig())
             return;
 
-        $theme = ThemeManager::instance()->findTheme($model->code);
-        \Assets::addFromManifest($theme->publicPath.'/_meta/assets.json');
+        $this->buildAssetsBundle($model);
+    }
 
-        Event::listen('assets.combiner.beforePrepare', function (Assets $combiner, $assets) {
-            ThemeManager::applyAssetVariablesOnCombinerFilters(
-                array_flatten($combiner->getFilters())
-            );
-        });
+    public function formValidate($model, $form)
+    {
+        $rules = [];
+        if ($form->context != 'source') {
+            foreach ($model->getFieldsConfig() as $name => $field) {
+                if (!array_key_exists('rules', $field))
+                    continue;
 
-        \Artisan::call('igniter:util', ['name' => 'compile scss']);
-        \Artisan::call('igniter:util', ['name' => 'compile js']);
+                $dottedName = implode('.', name_to_array($name));
+                $rules[] = [$dottedName, $field['label'], $field['rules']];
+            }
+        }
+        else {
+            $rules = [
+                ['file', 'Source File', 'required'],
+                ['markup', 'lang:system::lang.themes.text_tab_markup', 'sometimes'],
+                ['codeSection', 'lang:system::lang.themes.text_tab_php_section', 'sometimes'],
+                ['settings.components.*.alias', 'lang:system::lang.themes.label_component_alias', 'sometimes|required|alpha'],
+                ['settings.title', 'lang:system::lang.themes.label_title', 'sometimes|required|max:160'],
+                ['settings.description', 'lang:system::lang.themes.label_description', 'sometimes|max:255'],
+                ['settings.layout', 'lang:system::lang.themes.label_layout', 'sometimes|string'],
+                ['settings.permalink', 'lang:system::lang.themes.label_permalink', 'sometimes|required|string'],
+            ];
+        }
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme assets bundle built '));
+        return $this->validatePasses(array_undot(post($form->arrayName)), $rules);
     }
 
     protected function createModel()
@@ -550,34 +558,6 @@ class Themes extends \Admin\Classes\AdminController
             throw new SystemException(lang('system::lang.themes.error_theme_exists'));
 
         return TRUE;
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [];
-        if ($form->context != 'source') {
-            foreach ($model->getFieldsConfig() as $name => $field) {
-                if (!array_key_exists('rules', $field))
-                    continue;
-
-                $dottedName = implode('.', name_to_array($name));
-                $rules[] = [$dottedName, $field['label'], $field['rules']];
-            }
-        }
-        else {
-            $rules = [
-                ['file', 'Source File', 'required'],
-                ['markup', 'lang:system::lang.themes.text_tab_markup', 'sometimes'],
-                ['codeSection', 'lang:system::lang.themes.text_tab_php_section', 'sometimes'],
-                ['settings.components.*.alias', 'lang:system::lang.themes.label_component_alias', 'sometimes|required|alpha'],
-                ['settings.title', 'lang:system::lang.themes.label_title', 'sometimes|required|max:160'],
-                ['settings.description', 'lang:system::lang.themes.label_description', 'sometimes|max:255'],
-                ['settings.layout', 'lang:system::lang.themes.label_layout', 'sometimes|string'],
-                ['settings.permalink', 'lang:system::lang.themes.label_permalink', 'sometimes|required|string'],
-            ];
-        }
-
-        return $this->validatePasses(array_undot(post($form->arrayName)), $rules);
     }
 
     protected function prepareFilesList($themeCode, $currentFile = null)
@@ -635,7 +615,7 @@ class Themes extends \Admin\Classes\AdminController
         return $settings;
     }
 
-    private function parseComponentPropertyValues($properties)
+    protected function parseComponentPropertyValues($properties)
     {
         $properties = array_map(function (&$propertyValue) {
             if (is_numeric($propertyValue))
@@ -645,5 +625,27 @@ class Themes extends \Admin\Classes\AdminController
         }, $properties);
 
         return $properties;
+    }
+
+    protected function buildAssetsBundle($model)
+    {
+        \Assets::addFromManifest($model->themeClass->publicPath.'/_meta/assets.json');
+
+        Event::listen('assets.combiner.beforePrepare', function (Assets $combiner, $assets) {
+            ThemeManager::applyAssetVariablesOnCombinerFilters(
+                array_flatten($combiner->getFilters())
+            );
+        });
+
+        try {
+            Artisan::call('igniter:util', ['name' => 'compile scss']);
+            Artisan::call('igniter:util', ['name' => 'compile js']);
+
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme assets bundle built '));
+        }
+        catch (Exception $ex) {
+            Log::error($ex);
+            flash()->success('Building assets bundle error: '.$ex->getMessage());
+        }
     }
 }
