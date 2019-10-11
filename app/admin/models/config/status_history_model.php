@@ -1,28 +1,28 @@
 <?php
 $config['list']['columns'] = [
-    'date_added'    => [
+    'date_added' => [
         'label' => 'lang:admin::lang.statuses.column_time_date',
-        'type'  => 'datesince',
+        'type' => 'datesince',
     ],
-    'staff_name'    => [
-        'label'    => 'lang:admin::lang.statuses.column_staff',
+    'staff_name' => [
+        'label' => 'lang:admin::lang.statuses.column_staff',
         'relation' => 'staff',
-        'select'   => 'staff_name',
+        'select' => 'staff_name',
     ],
     'assignee_name' => [
-        'label'    => 'lang:admin::lang.statuses.column_assignee',
+        'label' => 'lang:admin::lang.statuses.column_assignee',
         'relation' => 'assignee',
-        'select'   => 'staff_name',
+        'select' => 'staff_name',
     ],
-    'status'        => [
-        'label'    => 'lang:admin::lang.statuses.column_status',
+    'status' => [
+        'label' => 'lang:admin::lang.label_status',
         'relation' => 'status',
-        'select'   => 'status_name',
+        'select' => 'status_name',
     ],
-    'comment'       => [
+    'comment' => [
         'label' => 'lang:admin::lang.statuses.column_comment',
     ],
-    'notified'      => [
+    'notified' => [
         'label' => 'lang:admin::lang.statuses.column_notify',
     ],
 ];

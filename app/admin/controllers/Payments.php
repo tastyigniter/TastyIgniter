@@ -137,12 +137,12 @@ class Payments extends \Admin\Classes\AdminController
     {
         $rules = [
             ['payment', 'lang:admin::lang.payments.label_payments', 'sometimes|required|alpha_dash'],
-            ['name', 'lang:admin::lang.payments.label_name', 'required|min:2|max:128'],
+            ['name', 'lang:admin::lang.label_name', 'required|min:2|max:128'],
             ['code', 'lang:admin::lang.payments.label_code', 'sometimes|required|alpha_dash|unique:payments,code'],
             ['priority', 'lang:admin::lang.payments.label_priority', 'required|integer'],
-            ['description', 'lang:admin::lang.payments.label_description', 'required|max:255'],
+            ['description', 'lang:admin::lang.label_description', 'required|max:255'],
             ['is_default', 'lang:admin::lang.payments.label_default', 'required|integer'],
-            ['status', 'lang:admin::lang.payments.label_status', 'required|integer'],
+            ['status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
 
         if (isset($form->config['rules']))

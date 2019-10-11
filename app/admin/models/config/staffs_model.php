@@ -13,21 +13,21 @@ $config['list']['filter'] = [
             'nameFrom' => 'staff_group_name',
         ],
         'location' => [
-            'label' => 'lang:admin::lang.staff.text_filter_location',
+            'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'conditions' => 'staff_location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
         ],
         'date' => [
-            'label' => 'lang:admin::lang.staff.text_filter_date',
+            'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
             'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
             'modelClass' => 'Admin\Models\Staffs_model',
             'options' => 'getStaffDates',
         ],
         'status' => [
-            'label' => 'lang:admin::lang.staff.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
         ],
     ],
@@ -53,12 +53,12 @@ $config['list']['columns'] = [
         ],
     ],
     'staff_name' => [
-        'label' => 'lang:admin::lang.staff.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
     'staff_email' => [
-        'label' => 'lang:admin::lang.staff.column_email',
+        'label' => 'lang:admin::lang.label_email',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -78,7 +78,7 @@ $config['list']['columns'] = [
         'type' => 'datesince',
     ],
     'staff_status' => [
-        'label' => 'lang:admin::lang.staff.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'staff_id' => [
@@ -108,12 +108,12 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'staff_name' => [
-        'label' => 'lang:admin::lang.staff.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'left',
     ],
     'staff_email' => [
-        'label' => 'lang:admin::lang.staff.label_email',
+        'label' => 'lang:admin::lang.label_email',
         'type' => 'text',
         'span' => 'right',
     ],

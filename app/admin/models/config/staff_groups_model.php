@@ -17,7 +17,7 @@ $config['list']['columns'] = [
         ],
     ],
     'staff_group_name' => [
-        'label' => 'lang:admin::lang.staff_groups.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -55,7 +55,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'staff_group_name' => [
-        'label' => 'lang:admin::lang.staff_groups.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
     'customer_account_access' => [

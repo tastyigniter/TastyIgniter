@@ -6,14 +6,14 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'date' => [
-            'label' => 'lang:admin::lang.customers.text_filter_date',
+            'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
             'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
             'modelClass' => 'Admin\Models\Customers_model',
             'options' => 'getCustomerDates',
         ],
         'status' => [
-            'label' => 'lang:admin::lang.customers.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
         ],
     ],
@@ -66,7 +66,7 @@ $config['list']['columns'] = [
         'type' => 'datesince',
     ],
     'status' => [
-        'label' => 'lang:admin::lang.customers.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'customer_id' => [
@@ -108,7 +108,7 @@ $config['form']['tabs'] = [
             'span' => 'right',
         ],
         'email' => [
-            'label' => 'lang:admin::lang.customers.label_email',
+            'label' => 'lang:admin::lang.label_email',
             'type' => 'text',
             'span' => 'left',
         ],
@@ -162,7 +162,7 @@ $config['form']['tabs'] = [
                     'title' => 'lang:admin::lang.orders.column_customer_name',
                 ],
                 'status_name' => [
-                    'title' => 'lang:admin::lang.orders.column_status',
+                    'title' => 'lang:admin::lang.label_status',
                 ],
                 'order_type_name' => [
                     'title' => 'lang:admin::lang.orders.column_type',
@@ -186,10 +186,10 @@ $config['form']['tabs'] = [
                     'title' => 'lang:admin::lang.column_id',
                 ],
                 'customer_name' => [
-                    'title' => 'lang:admin::lang.reservations.column_customer_name',
+                    'title' => 'lang:admin::lang.label_name',
                 ],
                 'status_name' => [
-                    'title' => 'lang:admin::lang.reservations.column_status',
+                    'title' => 'lang:admin::lang.label_status',
                 ],
                 'table_name' => [
                     'title' => 'lang:admin::lang.reservations.column_table',

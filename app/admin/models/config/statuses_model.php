@@ -31,7 +31,7 @@ $config['list']['columns'] = [
         ],
     ],
     'status_name' => [
-        'label' => 'lang:admin::lang.statuses.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text', // number, switch, date_time, time, date, timesince, select, relation, partial
         'searchable' => TRUE,
     ],
@@ -77,7 +77,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'status_name' => [
-        'label' => 'lang:admin::lang.statuses.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'left',
     ],

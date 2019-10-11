@@ -369,7 +369,7 @@ $config['form']['setup'] = [
             ['tax_delivery_charge', 'lang:system::lang.settings.label_tax_delivery_charge', 'numeric'],
             ['allow_reviews', 'lang:system::lang.settings.label_allow_reviews', 'required|integer'],
             ['approve_reviews', 'lang:system::lang.settings.label_approve_reviews', 'required|integer'],
-            ['ratings.*', 'lang:admin::lang.ratings.label_name', 'required|min:2|max:32'], ['default_order_status', 'lang:system::lang.settings.label_default_order_status', 'required|integer'],
+            ['ratings.*', 'lang:admin::lang.label_name', 'required|min:2|max:32'], ['default_order_status', 'lang:system::lang.settings.label_default_order_status', 'required|integer'],
             ['processing_order_status', 'lang:system::lang.settings.label_processing_order_status', 'required'],
             ['completed_order_status', 'lang:system::lang.settings.label_completed_order_status', 'required'],
             ['canceled_order_status', 'lang:system::lang.settings.label_canceled_order_status', 'required|integer'],

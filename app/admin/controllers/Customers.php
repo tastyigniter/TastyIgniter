@@ -82,7 +82,7 @@ class Customers extends \Admin\Classes\AdminController
         $rules = [
             ['first_name', 'lang:admin::lang.customers.label_first_name', 'required|min:2|max:32'],
             ['last_name', 'lang:admin::lang.customers.label_last_name', 'required|min:2|max:32'],
-            ['email', 'lang:admin::lang.customers.label_email', 'required|email|max:96'
+            ['email', 'lang:admin::lang.label_email', 'required|email|max:96'
                 .(!$model->exists ? '|unique:customers,email' : null)],
             ['telephone', 'lang:admin::lang.customers.label_telephone', 'sometimes'],
             ['newsletter', 'lang:admin::lang.customers.label_newsletter', 'required|integer'],

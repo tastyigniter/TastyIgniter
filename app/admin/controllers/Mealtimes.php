@@ -57,7 +57,7 @@ class Mealtimes extends \Admin\Classes\AdminController
             ['mealtime_name', 'lang:admin::lang.mealtimes.label_mealtime_name', 'required|min:2|max:128'],
             ['start_time', 'lang:admin::lang.mealtimes.label_start_time', 'required|valid_time'],
             ['end_time', 'lang:admin::lang.mealtimes.label_end_time', 'required|valid_time'],
-            ['mealtime_status', 'lang:admin::lang.mealtimes.label_mealtime_status', 'required|integer'],
+            ['mealtime_status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $rules);

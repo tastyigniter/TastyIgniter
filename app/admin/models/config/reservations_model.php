@@ -6,7 +6,7 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'location' => [
-            'label' => 'lang:admin::lang.reservations.text_filter_location',
+            'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
@@ -14,14 +14,14 @@ $config['list']['filter'] = [
             'locationContext' => 'multiple',
         ],
         'status' => [
-            'label' => 'lang:admin::lang.reservations.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'select',
             'conditions' => 'status_id = :filtered',
             'modelClass' => 'Admin\Models\Statuses_model',
             'options' => 'getDropdownOptionsForReservation',
         ],
         'date' => [
-            'label' => 'lang:admin::lang.reservations.text_filter_date',
+            'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
             'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
             'modelClass' => 'Admin\Models\Reservations_model',
@@ -64,7 +64,7 @@ $config['list']['columns'] = [
         'locationContext' => 'multiple',
     ],
     'full_name' => [
-        'label' => 'lang:admin::lang.reservations.column_customer_name',
+        'label' => 'lang:admin::lang.label_name',
         'select' => "concat(first_name, ' ', last_name)",
         'searchable' => TRUE,
     ],
@@ -81,7 +81,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'status_name' => [
-        'label' => 'lang:admin::lang.reservations.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'relation' => 'status',
         'select' => 'status_name',
         'type' => 'partial',
@@ -214,7 +214,7 @@ $config['form']['tabs'] = [
             'span' => 'right',
         ],
         'email' => [
-            'label' => 'lang:admin::lang.reservations.label_customer_email',
+            'label' => 'lang:admin::lang.label_email',
             'type' => 'text',
             'span' => 'left',
         ],
@@ -320,7 +320,7 @@ $config['form']['tabs'] = [
                     'title' => 'lang:admin::lang.reservations.column_assignee',
                 ],
                 'status_name' => [
-                    'title' => 'lang:admin::lang.reservations.column_status',
+                    'title' => 'lang:admin::lang.label_status',
                 ],
                 'comment' => [
                     'title' => 'lang:admin::lang.reservations.column_comment',

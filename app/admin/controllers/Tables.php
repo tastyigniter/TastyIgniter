@@ -57,7 +57,7 @@ class Tables extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['table_name', 'lang:admin::lang.tables.label_name', 'required|min:2|max:255'],
+            ['table_name', 'lang:admin::lang.label_name', 'required|min:2|max:255'],
             ['min_capacity', 'lang:admin::lang.tables.label_min_capacity', 'required|integer|min:1'],
             ['max_capacity', 'lang:admin::lang.tables.label_capacity', 'required|integer|min:1'],
             ['table_status', 'lang:admin::lang.label_status', 'required|integer'],

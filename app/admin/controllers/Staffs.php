@@ -83,8 +83,8 @@ class Staffs extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['staff_name', 'lang:admin::lang.staff.label_name', 'required|min:2|max:128'],
-            ['staff_email', 'lang:admin::lang.staff.label_email', 'required|max:96|email'
+            ['staff_name', 'lang:admin::lang.label_name', 'required|min:2|max:128'],
+            ['staff_email', 'lang:admin::lang.label_email', 'required|max:96|email'
                 .($form->context == 'create' ? '|unique:staffs,staff_email' : '')],
         ];
 

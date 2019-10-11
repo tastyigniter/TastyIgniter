@@ -106,7 +106,7 @@ class Reservations extends \Admin\Classes\AdminController
             ['assignee_id', 'lang:admin::lang.reservations.label_assign_staff', 'required|integer'],
             ['first_name', 'lang:admin::lang.reservations.label_first_name', 'required|min:2|max:32'],
             ['last_name', 'lang:admin::lang.reservations.label_last_name', 'required|min:2|max:32'],
-            ['email', 'lang:admin::lang.reservations.label_customer_email', 'required|email|max:96'],
+            ['email', 'lang:admin::lang.label_email', 'required|email|max:96'],
             ['telephone', 'lang:admin::lang.reservations.label_customer_telephone', 'sometimes'],
             ['reserve_date', 'lang:admin::lang.reservations.label_reservation_date', 'required|valid_date'],
             ['reserve_time', 'lang:admin::lang.reservations.label_reservation_time', 'required|valid_time'],

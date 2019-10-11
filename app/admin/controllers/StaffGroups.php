@@ -54,7 +54,7 @@ class StaffGroups extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['staff_group_name', 'lang:admin::lang.staff_groups.label_name', 'required|min:2|max:32'],
+            ['staff_group_name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
             ['customer_account_access', 'lang:admin::lang.staff_groups.label_customer_account_access', 'required|integer'],
             ['location_access', 'lang:admin::lang.staff_groups.label_location_access', 'required|integer'],
         ];

@@ -6,7 +6,7 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'location' => [
-            'label' => 'lang:admin::lang.reviews.text_filter_location',
+            'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
@@ -14,7 +14,7 @@ $config['list']['filter'] = [
             'locationContext' => 'multiple',
         ],
         'status' => [
-            'label' => 'lang:admin::lang.reviews.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'select',
             'conditions' => 'review_status = :filtered',
             'options' => [
@@ -23,7 +23,7 @@ $config['list']['filter'] = [
             ],
         ],
         'date' => [
-            'label' => 'lang:admin::lang.reviews.text_filter_date',
+            'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
             'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
             'modelClass' => 'Admin\Models\Reviews_model',
@@ -76,7 +76,7 @@ $config['list']['columns'] = [
         },
     ],
     'review_status' => [
-        'label' => 'lang:admin::lang.reviews.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
         'onText' => 'lang:admin::lang.reviews.text_pending_review',
         'offText' => 'lang:admin::lang.reviews.text_approved',

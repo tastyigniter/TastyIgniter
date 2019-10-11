@@ -7,7 +7,7 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'status' => [
-            'label' => 'lang:admin::lang.locations.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
             'conditions' => 'location_status = :filtered',
         ],
@@ -41,7 +41,7 @@ $config['list']['columns'] = [
         ],
     ],
     'location_name' => [
-        'label' => 'lang:admin::lang.locations.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -64,7 +64,7 @@ $config['list']['columns'] = [
         'type' => 'switch',
     ],
     'location_status' => [
-        'label' => 'lang:admin::lang.locations.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'location_id' => [
@@ -95,7 +95,7 @@ $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::lang.locations.text_tab_general',
     'fields' => [
         'location_name' => [
-            'label' => 'lang:admin::lang.locations.label_name',
+            'label' => 'lang:admin::lang.label_name',
             'type' => 'text',
             'span' => 'left',
         ],
@@ -106,7 +106,7 @@ $config['form']['tabs'] = [
             'comment' => 'lang:admin::lang.help_permalink',
         ],
         'location_email' => [
-            'label' => 'lang:admin::lang.locations.label_email',
+            'label' => 'lang:admin::lang.label_email',
             'type' => 'text',
             'span' => 'left',
         ],
@@ -198,7 +198,7 @@ $config['form']['tabs'] = [
         ],
 
         'description' => [
-            'label' => 'lang:admin::lang.locations.label_description',
+            'label' => 'lang:admin::lang.label_description',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'type' => 'richeditor',
             'size' => 'small',
@@ -545,7 +545,7 @@ $config['form']['tabs'] = [
             'type' => 'text',
         ],
         'options[gallery][description]' => [
-            'label' => 'lang:admin::lang.locations.label_gallery_description',
+            'label' => 'lang:admin::lang.label_description',
             'tab' => 'lang:admin::lang.locations.text_tab_gallery',
             'type' => 'textarea',
         ],

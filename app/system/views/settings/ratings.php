@@ -4,7 +4,7 @@
         <tr>
             <th class="list-action"></th>
             <th class="list-action"></th>
-            <th><?= lang('admin::lang.ratings.column_name'); ?></th>
+            <th><?= lang('admin::lang.label_name'); ?></th>
         </tr>
         </thead>
         <tbody>

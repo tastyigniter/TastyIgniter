@@ -2,7 +2,7 @@
 $config['list']['filter'] = [
     'scopes' => [
         'status' => [
-            'label' => 'lang:admin::lang.mealtimes.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
             'conditions' => 'mealtime_status = :filtered',
         ],
@@ -27,7 +27,7 @@ $config['list']['columns'] = [
         ],
     ],
     'mealtime_name' => [
-        'label' => 'lang:admin::lang.mealtimes.column_mealtime_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
     'start_time' => [
@@ -39,11 +39,11 @@ $config['list']['columns'] = [
         'type' => 'time',
     ],
     'mealtime_status' => [
-        'label' => 'lang:admin::lang.mealtimes.column_mealtime_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'mealtime_id' => [
-        'label' => 'lang:admin::lang.mealtimes.column_mealtime_id',
+        'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
 
@@ -74,7 +74,7 @@ $config['form']['fields'] = [
         'span' => 'left',
     ],
     'mealtime_status' => [
-        'label' => 'lang:admin::lang.mealtimes.label_mealtime_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
         'default' => TRUE,
         'span' => 'right',

@@ -6,7 +6,7 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'status' => [
-            'label' => 'lang:admin::lang.tables.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
             'conditions' => 'table_status = :filtered',
         ],
@@ -31,7 +31,7 @@ $config['list']['columns'] = [
         ],
     ],
     'table_name' => [
-        'label' => 'lang:admin::lang.tables.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -45,7 +45,7 @@ $config['list']['columns'] = [
         'type' => 'number',
     ],
     'table_status' => [
-        'label' => 'lang:admin::lang.tables.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'table_id' => [
@@ -75,7 +75,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'table_name' => [
-        'label' => 'lang:admin::lang.tables.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
     'min_capacity' => [

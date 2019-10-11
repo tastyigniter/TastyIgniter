@@ -57,7 +57,7 @@ $config['list']['columns'] = [
         'type' => 'text',
     ],
     'status' => [
-        'label' => 'lang:admin::lang.categories.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'category_id' => [
@@ -97,7 +97,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'name' => [
-        'label' => 'lang:admin::lang.categories.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'left',
     ],

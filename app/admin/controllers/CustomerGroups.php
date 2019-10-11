@@ -81,9 +81,9 @@ class CustomerGroups extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['group_name', 'lang:admin::lang.customer_groups.label_name', 'required|min:2|max:32'],
+            ['group_name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
             ['approval', 'lang:admin::lang.customer_groups.label_approval', 'required|integer'],
-            ['description', 'lang:admin::lang.customer_groups.label_description', 'min:2|max:512'],
+            ['description', 'lang:admin::lang.label_description', 'min:2|max:512'],
         ];
 
         return $this->validatePasses(post($form->arrayName), $rules);

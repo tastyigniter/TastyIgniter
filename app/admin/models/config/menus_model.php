@@ -21,7 +21,7 @@ $config['list']['filter'] = [
             'nameFrom' => 'name',
         ],
         'menu_status' => [
-            'label' => 'lang:admin::lang.menus.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
             'conditions' => 'menu_status = :filtered',
         ],
@@ -46,7 +46,7 @@ $config['list']['columns'] = [
         ],
     ],
     'menu_name' => [
-        'label' => 'lang:admin::lang.menus.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -82,7 +82,7 @@ $config['list']['columns'] = [
         'offText' => 'lang:admin::lang.text_dashes',
     ],
     'menu_status' => [
-        'label' => 'lang:admin::lang.menus.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'menu_id' => [
@@ -113,7 +113,7 @@ $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::lang.menus.text_tab_general',
     'fields' => [
         'menu_name' => [
-            'label' => 'lang:admin::lang.menus.label_name',
+            'label' => 'lang:admin::lang.label_name',
             'type' => 'text',
             'span' => 'left',
         ],
@@ -151,7 +151,7 @@ $config['form']['tabs'] = [
             'locationContext' => 'multiple',
         ],
         'menu_description' => [
-            'label' => 'lang:admin::lang.menus.label_description',
+            'label' => 'lang:admin::lang.label_description',
             'type' => 'textarea',
             'span' => 'left',
             'attributes' => [
@@ -208,7 +208,6 @@ $config['form']['tabs'] = [
                     'class' => 'btn btn-default',
                     'data-control' => 'choose-record',
                     'data-request' => 'onChooseMenuOption',
-                    'data-request-success' => '$(\'[data-control="connector"]\').connector();',
                 ],
             ],
         ],

@@ -11,7 +11,7 @@ $weekdays = $formModel->getWeekDaysOptions();
                         <th></th>
                         <th><?= lang('admin::lang.locations.label_open_hour'); ?></th>
                         <th><?= lang('admin::lang.locations.label_close_hour'); ?></th>
-                        <th><?= lang('admin::lang.locations.label_opening_status'); ?></th>
+                        <th><?= lang('admin::lang.label_status'); ?></th>
                     </tr>
                     </thead>
                     <tbody>

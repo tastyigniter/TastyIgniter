@@ -83,8 +83,8 @@ class Menus extends AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['menu_name', 'lang:admin::lang.menus.label_name', 'required|min:2|max:255'],
-            ['menu_description', 'lang:admin::lang.menus.label_description', 'min:2|max:1028'],
+            ['menu_name', 'lang:admin::lang.label_name', 'required|min:2|max:255'],
+            ['menu_description', 'lang:admin::lang.label_description', 'min:2|max:1028'],
             ['menu_price', 'lang:admin::lang.menus.label_price', 'required|numeric'],
             ['categories.*', 'lang:admin::lang.menus.label_category', 'required|integer'],
             ['locations.*', 'lang:admin::lang.column_location', 'integer'],

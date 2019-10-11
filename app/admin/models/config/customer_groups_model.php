@@ -26,7 +26,7 @@ $config['list']['columns'] = [
         ],
     ],
     'group_name' => [
-        'label' => 'lang:admin::lang.customer_groups.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -66,7 +66,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'group_name' => [
-        'label' => 'lang:admin::lang.customer_groups.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
     'approval' => [
@@ -75,7 +75,7 @@ $config['form']['fields'] = [
         'comment' => 'lang:admin::lang.customer_groups.help_approval',
     ],
     'description' => [
-        'label' => 'lang:admin::lang.customer_groups.label_description',
+        'label' => 'lang:admin::lang.label_description',
         'type' => 'textarea',
     ],
 ];

@@ -14,7 +14,7 @@
                 <?php if (empty($resetCode)) { ?>
                     <div class="form-group">
                         <label for="input-user"
-                               class="control-label"><?= lang('admin::lang.login.label_email'); ?></label>
+                               class="control-label"><?= lang('admin::lang.label_email'); ?></label>
                         <div class="">
                             <input name="email" type="text" id="input-user" class="form-control"/>
                             <?= form_error('email', '<span class="text-danger">', '</span>'); ?>

@@ -118,8 +118,8 @@ class Locations extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['location_name', 'lang:admin::lang.locations.label_name', 'required|min:2|max:32'],
-            ['location_email', 'lang:admin::lang.locations.label_email', 'required|email'],
+            ['location_name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
+            ['location_email', 'lang:admin::lang.label_email', 'required|email'],
             ['location_telephone', 'lang:admin::lang.locations.label_telephone', 'required|min:2|max:15'],
             ['location_address_1', 'lang:admin::lang.locations.label_address_1', 'required|min:2|max:128'],
             ['location_address_2', 'lang:admin::lang.locations.label_address_2', 'max:128'],
@@ -131,7 +131,7 @@ class Locations extends \Admin\Classes\AdminController
             ['location_lat', 'lang:admin::lang.locations.label_latitude', 'numeric'],
             ['location_lng', 'lang:admin::lang.locations.label_longitude', 'numeric'],
 
-            ['description', 'lang:admin::lang.locations.label_description', 'min:2|max:3028'],
+            ['description', 'lang:admin::lang.label_description', 'min:2|max:3028'],
             ['offer_delivery', 'lang:admin::lang.locations.label_offer_delivery', 'required|integer'],
             ['offer_collection', 'lang:admin::lang.locations.label_offer_collection', 'required|integer'],
             ['options.offer_reservation', 'lang:admin::lang.locations.label_offer_collection', 'required|integer'],
@@ -159,7 +159,7 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['options.hours.*.flexible.*.day', 'lang:admin::lang.locations.label_opening_days', $requiredIf.'|numeric'];
         $rules[] = ['options.hours.*.flexible.*.open', 'lang:admin::lang.locations.label_open_hour', $requiredIf.'|valid_time'];
         $rules[] = ['options.hours.*.flexible.*.close', 'lang:admin::lang.locations.label_close_hour', $requiredIf.'|valid_time'];
-        $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::lang.locations.label_opening_status', $requiredIf.'|integer'];
+        $rules[] = ['options.hours.*.flexible.*.status', 'lang:admin::lang.label_status', $requiredIf.'|integer'];
 
         $rules[] = ['delivery_areas', 'lang:admin::lang.locations.text_delivery_area', 'sometimes'];
         $rules[] = ['delivery_areas.*.type', 'lang:admin::lang.locations.label_area_type', 'required'];
@@ -180,7 +180,7 @@ class Locations extends \Admin\Classes\AdminController
         $rules[] = ['delivery_areas.*.conditions.*.total', 'lang:admin::lang.locations.label_area_min_amount', 'required|numeric'];
 
         $rules[] = ['gallery.title', 'lang:admin::lang.locations.label_gallery_title', 'max:128'];
-        $rules[] = ['gallery.description', 'lang:admin::lang.locations.label_gallery_description', 'max:255'];
+        $rules[] = ['gallery.description', 'lang:admin::lang.label_description', 'max:255'];
 
         return $this->validatePasses($form->getSaveData(), $rules);
     }

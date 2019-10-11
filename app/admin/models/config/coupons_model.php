@@ -6,7 +6,7 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'location' => [
-            'label' => 'lang:admin::lang.reviews.text_filter_location',
+            'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
@@ -23,7 +23,7 @@ $config['list']['filter'] = [
             ],
         ],
         'status' => [
-            'label' => 'lang:admin::lang.coupons.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
             'conditions' => 'status = :filtered',
         ],
@@ -57,7 +57,7 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:admin::lang.coupons.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -88,7 +88,7 @@ $config['list']['columns'] = [
         },
     ],
     'status' => [
-        'label' => 'lang:admin::lang.coupons.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'coupon_id' => [
@@ -130,7 +130,7 @@ $config['form']['tabs'] = [
             'span' => 'right',
         ],
         'type' => [
-            'label' => 'lang:admin::lang.coupons.label_type',
+            'label' => 'lang:admin::lang.label_type',
             'type' => 'radio',
             'span' => 'left',
             'cssClass' => 'flex-width',
@@ -291,7 +291,7 @@ $config['form']['tabs'] = [
             'comment' => 'lang:admin::lang.coupons.help_locations',
         ],
         'description' => [
-            'label' => 'lang:admin::lang.coupons.label_description',
+            'label' => 'lang:admin::lang.label_description',
             'type' => 'textarea',
         ],
         'status' => [

@@ -6,7 +6,7 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'status' => [
-            'label' => 'lang:admin::lang.payments.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
             'conditions' => 'status = :filtered',
         ],
@@ -31,16 +31,16 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:admin::lang.payments.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
     'description' => [
-        'label' => 'lang:admin::lang.payments.column_description',
+        'label' => 'lang:admin::lang.label_description',
         'searchable' => TRUE,
     ],
     'status' => [
-        'label' => 'lang:admin::lang.payments.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
     'date_updated' => [
@@ -81,7 +81,7 @@ $config['form']['fields'] = [
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
     'name' => [
-        'label' => 'lang:admin::lang.payments.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'left',
     ],
@@ -99,7 +99,7 @@ $config['form']['fields'] = [
         'cssClass' => 'flex-width',
     ],
     'description' => [
-        'label' => 'lang:admin::lang.payments.label_description',
+        'label' => 'lang:admin::lang.label_description',
         'type' => 'textarea',
     ],
     'is_default' => [

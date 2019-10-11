@@ -6,7 +6,7 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'location' => [
-            'label' => 'lang:admin::lang.orders.text_filter_location',
+            'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
@@ -14,7 +14,7 @@ $config['list']['filter'] = [
             'locationContext' => 'multiple',
         ],
         'status' => [
-            'label' => 'lang:admin::lang.orders.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'select',
             'conditions' => 'status_id = :filtered',
             'modelClass' => 'Admin\Models\Statuses_model',
@@ -37,7 +37,7 @@ $config['list']['filter'] = [
             'options' => 'getDropdownOptions',
         ],
         'date' => [
-            'label' => 'lang:admin::lang.orders.text_filter_date',
+            'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
             'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
             'modelClass' => 'Admin\Models\Orders_model',
@@ -79,14 +79,14 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'status_name' => [
-        'label' => 'lang:admin::lang.orders.column_status',
+        'label' => 'lang:admin::lang.label_status',
         'relation' => 'status',
         'select' => 'status_name',
         'type' => 'partial',
         'path' => 'orders/status_column',
     ],
     'order_type_name' => [
-        'label' => 'lang:admin::lang.orders.column_type',
+        'label' => 'lang:admin::lang.label_type',
         'type' => 'text',
         'sortable' => FALSE,
     ],
@@ -248,7 +248,7 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
         ],
         'email' => [
-            'label' => 'lang:admin::lang.orders.label_email',
+            'label' => 'lang:admin::lang.label_email',
             'type' => 'text',
             'disabled' => TRUE,
             'span' => 'right',
@@ -357,7 +357,7 @@ $config['form']['tabs'] = [
                     'title' => 'lang:admin::lang.orders.column_assignee',
                 ],
                 'status_name' => [
-                    'title' => 'lang:admin::lang.orders.column_status',
+                    'title' => 'lang:admin::lang.label_status',
                 ],
                 'comment' => [
                     'title' => 'lang:admin::lang.orders.column_comment',

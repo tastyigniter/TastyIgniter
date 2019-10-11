@@ -24,7 +24,7 @@
         {{first_name}} {{last_name}}
     </p>
     <p>
-        <b><?= lang('admin::lang.reservations.label_customer_email') ?>:</b>
+        <b><?= lang('admin::lang.label_email') ?>:</b>
         {{email}}
     </p>
 </div>
