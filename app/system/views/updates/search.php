@@ -4,7 +4,7 @@
             <input
                 type="text"
                 class="form-control search input-lg"
-                placeholder="<?= sprintf(lang('system::lang.updates.text_search'), $itemType); ?>"
+                placeholder="<?= sprintf(lang('system::lang.updates.text_search'), str_plural($itemType)); ?>"
                 data-search-type="<?= $itemType; ?>"
                 data-search-action="<?= $searchActionUrl; ?>"
                 data-search-ready="false"

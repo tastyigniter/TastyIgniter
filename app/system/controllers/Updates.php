@@ -74,14 +74,12 @@ class Updates extends \Admin\Classes\AdminController
     {
         $updateManager = UpdateManager::instance();
 
-        $pageTitle = ($itemType == 'extensions') ? lang('system::lang.updates.text_tab_title_extensions') : lang('system::lang.updates.text_tab_title_themes');
+        $pageTitle = lang('system::lang.updates.text_tab_title_'.$itemType);
         Template::setTitle(sprintf(lang('system::lang.updates.text_browse_title'), $pageTitle));
         Template::setHeading(sprintf(lang('system::lang.updates.text_browse_title'), $pageTitle));
 
         $buttonType = ($itemType == 'extensions') ? 'themes' : 'extensions';
-        $buttonTitle = ($buttonType == 'extensions')
-            ? lang('system::lang.updates.text_tab_title_extensions')
-            : lang('system::lang.updates.text_tab_title_themes');
+        $buttonTitle = lang('system::lang.updates.text_tab_title_'.$buttonType);
 
         Template::setButton(sprintf(lang('system::lang.updates.button_browse'), $buttonTitle), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
         Template::setButton(lang('system::lang.updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
@@ -375,7 +373,7 @@ class Updates extends \Admin\Classes\AdminController
     {
         $rules = [
             ['items.*.name', 'lang:system::lang.updates.label_meta_code', 'required'],
-            ['items.*.type', 'lang:system::lang.updates.label_meta_type', 'required'],
+            ['items.*.type', 'lang:system::lang.updates.label_meta_type', 'required|in:extension,theme,language'],
             ['items.*.ver', 'lang:system::lang.updates.label_meta_version', 'required'],
             ['items.*.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'],
         ];

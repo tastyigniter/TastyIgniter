@@ -67,7 +67,7 @@ trait ValidatesForm
         $rules = $this->parseRules($rules);
 
         $validator = $this->getValidationFactory()->make(
-            $request, $rules, $messages, $customAttributes
+            $request ?? [], $rules, $messages, $customAttributes
         );
 
         if ($this->validateAfterCallback instanceof Closure)
