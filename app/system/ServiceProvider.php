@@ -271,6 +271,12 @@ class ServiceProvider extends AppServiceProvider
             app('config')->set('currency.default', setting('default_currency_code'));
         });
 
+        $this->app->resolving('translator.localization', function ($localization, $app) {
+            $app['config']->set('localization.locale', setting('default_language', $app['config']['app.locale']));
+            $app['config']->set('localization.supportedLocales', setting('supported_languages', []));
+            $app['config']->set('localization.detectBrowserLocale', (bool)setting('detect_language', FALSE));
+        });
+
         $this->app->resolving('geocoder', function ($geocoder, $app) {
             $app['config']->set('geocoder.default', setting('default_geocoder'));
 
