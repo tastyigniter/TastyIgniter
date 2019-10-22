@@ -31,7 +31,7 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:system::lang.languages.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -72,7 +72,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'name' => [
-        'label' => 'lang:system::lang.languages.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'none',
         'cssClass' => 'pull-left flex-fill mr-3',

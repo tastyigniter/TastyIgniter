@@ -70,7 +70,7 @@ class MailLayouts extends \Admin\Classes\AdminController
 
     public function formValidate($model, $form)
     {
-        $rules[] = ['name', 'lang:system::lang.mail_templates.label_name', 'required|min:2|max:32'];
+        $rules[] = ['name', 'lang:admin::lang.label_name', 'required|min:2|max:32'];
 
         return $this->validatePasses(post($form->arrayName), $rules);
     }

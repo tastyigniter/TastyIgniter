@@ -43,12 +43,10 @@ return [
         'text_filter_status' => 'View all status',
         'text_empty' => 'There are no countries available.',
 
-        'column_name' => 'Name',
         'column_iso_code2' => 'ISO Code 2',
         'column_iso_code3' => 'ISO Code 3',
         'column_status' => 'Status',
 
-        'label_name' => 'Country',
         'label_priority' => 'Priority',
         'label_format' => 'Format',
         'label_iso_code2' => 'ISO Code 2',
@@ -67,7 +65,6 @@ return [
         'text_right' => 'Right',
         'text_left' => 'Left',
 
-        'column_name' => 'Name',
         'column_code' => 'Code',
         'column_country' => 'Country',
         'column_symbol' => 'Symbol',
@@ -120,7 +117,6 @@ return [
         'button_yes_delete' => 'Yes, delete',
         'button_return_to_list' => 'No, return to list',
 
-        'column_name' => 'Name',
         'column_icon' => 'Icon',
         'column_version' => 'Version',
 
@@ -158,13 +154,11 @@ return [
         'text_files' => 'files',
         'text_locale_strings' => 'Locale Strings (%s%% translated, %s strings)',
 
-        'column_name' => 'Name',
         'column_code' => 'Code',
         'column_status' => 'Status',
         'column_variable' => 'Source text (English)',
         'column_language' => 'Translation text (%s)',
 
-        'label_name' => 'Name',
         'label_code' => 'Locale Code',
         'label_image' => 'Icon',
         'label_idiom' => 'Idiom',
@@ -218,7 +212,6 @@ return [
 
         'button_test_message' => 'Send test message',
 
-        'column_name' => 'Name',
         'column_code' => 'Code',
         'column_title' => 'Title',
         'column_layout' => 'Layout',
@@ -226,7 +219,6 @@ return [
         'column_date_updated' => 'Date Updated',
         'column_status' => 'Status',
 
-        'label_name' => 'Name',
         'label_description' => 'Description',
         'label_language' => 'Language',
         'label_code' => 'Code',
@@ -250,13 +242,11 @@ return [
         'text_add' => 'Add',
         'text_delete' => 'Delete',
 
-        'column_name' => 'Name',
         'column_actions' => 'Available Actions',
         'column_description' => 'Description',
         'column_status' => 'Status',
         'column_id' => 'ID',
 
-        'label_name' => 'Name',
         'label_description' => 'Description',
         'label_action' => 'Action',
 
@@ -464,9 +454,6 @@ return [
         'text_files' => 'files',
         'text_files_data' => 'files and data',
 
-        'column_name' => 'Name',
-
-        'label_name' => 'Name',
         'label_code' => 'Code',
         'label_file' => 'Source',
         'label_title' => 'Title',

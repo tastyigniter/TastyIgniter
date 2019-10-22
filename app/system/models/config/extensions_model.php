@@ -61,7 +61,7 @@ $config['list']['columns'] = [
         'sortable' => FALSE,
     ],
     'title' => [
-        'label' => 'lang:system::lang.extensions.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'partial',
         'path' => 'lists/extension_card',
         'searchable' => TRUE,

@@ -35,7 +35,7 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:admin::lang.categories.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
     'parent_cat' => [

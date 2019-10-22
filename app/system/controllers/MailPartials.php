@@ -66,7 +66,7 @@ class MailPartials extends \Admin\Classes\AdminController
 
     public function formValidate($model, $form)
     {
-        $rules[] = ['name', 'lang:system::lang.mail_templates.label_name', 'required'];
+        $rules[] = ['name', 'lang:admin::lang.label_name', 'required'];
         $rules[] = ['code', 'lang:system::lang.mail_templates.label_language', 'required|unique:system_mail_partials'];
         $rules[] = ['html', 'lang:system::lang.mail_templates.label_html', 'required'];
 

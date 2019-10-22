@@ -32,7 +32,7 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:system::lang.permissions.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -77,7 +77,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'name' => [
-        'label' => 'lang:system::lang.permissions.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'comment' => 'lang:system::lang.permissions.help_name',
     ],

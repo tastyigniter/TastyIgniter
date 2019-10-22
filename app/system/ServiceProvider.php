@@ -170,6 +170,7 @@ class ServiceProvider extends AppServiceProvider
                 'extension.remove' => Console\Commands\ExtensionRemove::class,
                 'theme.install' => Console\Commands\ThemeInstall::class,
                 'theme.remove' => Console\Commands\ThemeRemove::class,
+                'translations.find' => Console\Commands\TranslationsFind::class,
             ] as $command => $class
         ) {
             $this->registerConsoleCommand($command, $class);

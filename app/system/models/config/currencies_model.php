@@ -31,7 +31,7 @@ $config['list']['columns'] = [
         ],
     ],
     'currency_name' => [
-        'label' => 'lang:system::lang.currencies.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],

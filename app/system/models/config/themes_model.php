@@ -44,7 +44,7 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:system::lang.themes.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -69,7 +69,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'name' => [
-        'label' => 'lang:system::lang.themes.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'left',
         'disabled' => TRUE,

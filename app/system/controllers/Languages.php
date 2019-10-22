@@ -126,10 +126,8 @@ class Languages extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['name', 'lang:system::lang.languages.label_name', 'required|min:2|max:32'],
+            ['name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
             ['code', 'lang:system::lang.languages.label_code', 'required|regex:/^[a-zA-Z_]+$/'],
-//            ['idiom', 'lang:system::lang.languages.label_idiom', 'required|min:2|max:32'.
-//                ((!$model->exists) ? '|unique:languages,idiom' : '')],
             ['status', 'lang:admin::lang.label_status', 'required|integer'],
             ['translations.*.source', 'lang:system::lang.column_source', 'string|max:2500'],
             ['translations.*.translation', 'lang:system::lang.column_translation', 'string|max:2500'],

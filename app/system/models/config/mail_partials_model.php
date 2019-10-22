@@ -30,7 +30,7 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:system::lang.mail_templates.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -66,7 +66,7 @@ $config['form']['toolbar'] = [
 
 $config['form']['fields'] = [
     'name' => [
-        'label' => 'lang:system::lang.mail_templates.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'span' => 'left',
         'type' => 'text',
     ],
