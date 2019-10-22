@@ -151,27 +151,38 @@ return [
         'text_tab_edit_file' => 'Edit Translations',
         'text_filter_search' => 'Search by name.',
         'text_filter_status' => 'View all status',
+        'text_filter_file' => 'View all translations',
+        'text_filter_translations' => 'Filter translations.',
         'text_empty' => 'There are no languages available.',
+        'text_empty_translations' => 'There are no translations available.',
         'text_files' => 'files',
+        'text_locale_strings' => 'Locale Strings (%s%% translated, %s strings)',
 
         'column_name' => 'Name',
         'column_code' => 'Code',
         'column_status' => 'Status',
-        'column_variable' => 'Variable',
-        'column_language' => 'Translation',
+        'column_variable' => 'Source text (English)',
+        'column_language' => 'Translation text (%s)',
 
         'label_name' => 'Name',
-        'label_code' => 'Language Code',
+        'label_code' => 'Locale Code',
         'label_image' => 'Icon',
         'label_idiom' => 'Idiom',
         'label_can_delete' => 'Can Delete',
 
         'button_new' => 'New Group',
 
-        'help_idiom' => 'Language idiom, must be same as the language directory name.',
-        'help_language' => 'Language url prefix',
+        'help_language' => 'Use a full locale code (e.g. “fr_FR”) instead of just a generic language code (e.g. “fr”), must be same as the locale directory.',
 
         'alert_save_changes' => 'Your changes will be lost if you don\'t save them before editing another language file.',
+
+        'translations' => [
+
+            'label_file' => 'Locale File',
+            'label_search' => 'Search',
+
+            'help_no_files' => 'No matching translations found for this language. You must install a language pack.',
+        ],
     ],
 
     'mail_templates' => [

@@ -70,46 +70,80 @@ $config['form']['toolbar'] = [
     ],
 ];
 
+$config['form']['fields'] = [
+    'name' => [
+        'label' => 'lang:system::lang.languages.label_name',
+        'type' => 'text',
+        'span' => 'none',
+        'cssClass' => 'pull-left flex-fill mr-3',
+    ],
+    'code' => [
+        'label' => 'lang:system::lang.languages.label_code',
+        'type' => 'text',
+        'span' => 'none',
+        'cssClass' => 'pull-left flex-fill mr-3',
+    ],
+    'status' => [
+        'label' => 'lang:admin::lang.label_status',
+        'type' => 'switch',
+        'span' => 'none',
+        'cssClass' => 'pull-left flex-fill',
+        'default' => TRUE,
+    ],
+    'section' => [
+        'type' => 'section',
+        'comment' => 'lang:system::lang.languages.help_language',
+    ],
+];
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:system::lang.languages.text_tab_general',
     'fields' => [
-        'name' => [
-            'label' => 'lang:system::lang.languages.label_name',
-            'type' => 'text',
-        ],
-        'code' => [
-            'label' => 'lang:system::lang.languages.label_code',
-            'type' => 'text',
-            'span' => 'left',
-            'comment' => 'lang:system::lang.languages.help_language',
-        ],
-        'idiom' => [
-            'label' => 'lang:system::lang.languages.label_idiom',
-            'type' => 'text',
-            'span' => 'right',
-            'comment' => 'lang:system::lang.languages.help_idiom',
-        ],
-        'can_delete' => [
-            'label' => 'lang:system::lang.languages.label_can_delete',
-            'type' => 'switch',
-        ],
-        'status' => [
-            'label' => 'lang:admin::lang.label_status',
-            'default' => TRUE,
-            'type' => 'switch',
-        ],
-        'files' => [
-            'type' => 'partial',
+        '_file' => [
             'tab' => 'lang:system::lang.languages.text_tab_files',
+            'type' => 'select',
             'context' => 'edit',
-            'path' => 'languages/lang_files_list',
-            'options' => 'listAllFiles',
+            'options' => [],
+            'span' => 'none',
+            'placeholder' => 'system::lang.languages.text_filter_file',
+            'cssClass' => 'pull-left flex-fill mr-3',
+            'attributes' => [
+                'data-request' => 'onSubmitFilter',
+            ],
         ],
-        'file' => [
-            'tab' => 'lang:system::lang.languages.text_tab_edit_file',
-            'type' => 'partial',
+        '_search' => [
+            'tab' => 'lang:system::lang.languages.text_tab_files',
+            'type' => 'text',
             'context' => 'edit',
-            'path' => 'languages/lang_file',
+            'span' => 'none',
+            'cssClass' => 'pull-left flex-fill mr-3',
+            'placeholder' => lang('system::lang.languages.text_filter_translations'),
+            'attributes' => [
+                'data-control' => 'search-translations',
+                'data-request' => 'onSubmitFilter',
+            ],
+        ],
+        '_string_filter' => [
+            'tab' => 'lang:system::lang.languages.text_tab_files',
+            'type' => 'radio',
+            'context' => 'edit',
+            'span' => 'none',
+            'cssClass' => 'pull-left mr-3',
+            'default' => 'all',
+            'options' => [
+                'all' => 'All',
+                'unchanged' => 'Unchanged',
+                'changed' => 'Changed',
+            ],
+            'attributes' => [
+                'data-control' => 'string-filter',
+                'data-request' => 'onSubmitFilter',
+            ],
+        ],
+        'translations' => [
+            'tab' => 'lang:system::lang.languages.text_tab_files',
+            'type' => 'partial',
+            'path' => 'translationseditor',
+            'context' => 'edit',
         ],
     ],
 ];
