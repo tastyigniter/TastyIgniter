@@ -46,6 +46,11 @@ class UpdateManager
     protected $extensionManager;
 
     /**
+     * @var \System\Classes\LanguageManager
+     */
+    protected $languageManager;
+
+    /**
      * @var \Igniter\Flame\Database\Migrations\Migrator
      */
     protected $migrator;
@@ -60,8 +65,10 @@ class UpdateManager
     public function initialize()
     {
         $this->hubManager = HubManager::instance();
-        $this->extensionManager = ExtensionManager::instance();
         $this->themeManager = ThemeManager::instance();
+        $this->extensionManager = ExtensionManager::instance();
+        $this->languageManager = LanguageManager::instance();
+
         $this->markdown = new Markdown;
 
         $this->tempDirectory = temp_path();
@@ -277,8 +284,8 @@ class UpdateManager
 
         $items = $this->getHubManager()->listItems([
             'browse' => 'recommended',
-            'limit' => 9,
             'type' => $itemType,
+            'limit' => 12,
         ]);
 
         $installedItems = array_column($installedItems, 'name');
@@ -397,6 +404,16 @@ class UpdateManager
             }
         }
 
+        foreach ($this->languageManager->listLanguages() as $languageCode) {
+            if ($language = $this->languageManager->findLanguage($languageCode)) {
+                $installedItems['languages'][] = [
+                    'name' => $language->code,
+                    'ver' => $language->version ?? null,
+                    'type' => 'language',
+                ];
+            }
+        }
+
         if (!is_null($type))
             return $installedItems[$type] ?? [];
 
@@ -494,7 +511,7 @@ class UpdateManager
             $extractTo .= '/'.$directory.str_replace('.', '/', $fileCode);
 
         if (!file_exists($extractTo))
-            mkdir($extractTo, 0777, TRUE);
+            mkdir($extractTo, 0755, TRUE);
 
         $zip = new ZipArchive();
         if ($zip->open($filePath) === TRUE) {

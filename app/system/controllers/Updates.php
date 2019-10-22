@@ -312,6 +312,7 @@ class Updates extends \Admin\Classes\AdminController
             case 'downloadCore':
             case 'downloadExtension':
             case 'downloadTheme':
+            case 'downloadLanguage':
                 $result = $updateManager->downloadFile($meta['code'], $meta['hash'], $params);
                 if ($result) $json['result'] = 'success';
                 break;
@@ -327,6 +328,10 @@ class Updates extends \Admin\Classes\AdminController
                 break;
             case 'extractTheme':
                 $response = $updateManager->extractFile($meta['code'], 'themes/');
+                if ($response) $json['result'] = 'success';
+                break;
+            case 'extractLanguage':
+                $response = $updateManager->extractFile($meta['code'], 'languages/');
                 if ($response) $json['result'] = 'success';
                 break;
 

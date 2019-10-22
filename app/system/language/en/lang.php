@@ -170,7 +170,7 @@ return [
         'label_idiom' => 'Idiom',
         'label_can_delete' => 'Can Delete',
 
-        'button_new' => 'New Group',
+        'button_browse' => '<i class="fa fa-globe"></i>  Browse Languages',
 
         'help_language' => 'Use a full locale code (e.g. “fr_FR”) instead of just a generic language code (e.g. “fr”), must be same as the locale directory.',
 
@@ -517,6 +517,7 @@ return [
 
         'text_tab_title_extensions' => 'Extensions',
         'text_tab_title_themes' => 'Themes',
+        'text_tab_title_languages' => 'Languages',
         'text_ignore' => 'Ignore',
         'text_search' => 'Search the marketplace for %s to install',
         'text_popular_title' => 'Recommended %s',
