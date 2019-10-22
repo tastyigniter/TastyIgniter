@@ -126,7 +126,7 @@ class Languages_model extends Language
 
     public function updateTranslation($group, $namespace, $key, $text)
     {
-        $oldText = Lang::get("{$namespace}::{$group}.{$key}", [], $this->code, FALSE);
+        $oldText = Lang::get("{$namespace}::{$group}.{$key}", [], $this->code);
 
         if (strcmp($text, $oldText) === 0)
             return FALSE;
