@@ -76,7 +76,7 @@ class Permissions extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules[] = ['name', 'lang:admin::lang.label_name', 'sometimes|required|min:2|max:128'];
-        $rules[] = ['description', 'lang:system::lang.permissions.label_description', 'required|max:255'];
+        $rules[] = ['description', 'lang:admin::lang.label_description', 'required|max:255'];
         $rules[] = ['action.*', 'lang:system::lang.permissions.label_action', 'required|alpha'];
         $rules[] = ['status', 'lang:admin::lang.label_status', 'required|integer'];
 

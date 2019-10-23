@@ -93,7 +93,7 @@ $config['form']['fields'] = [
         'type' => 'text',
     ],
     'label' => [
-        'label' => 'lang:system::lang.mail_templates.label_description',
+        'label' => 'lang:admin::lang.label_description',
         'span' => 'right',
         'valueFrom' => 'title',
         'type' => 'text',

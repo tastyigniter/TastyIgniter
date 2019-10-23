@@ -87,7 +87,7 @@ $config['form']['fields'] = [
         'comment' => 'lang:system::lang.permissions.help_action',
     ],
     'description' => [
-        'label' => 'lang:system::lang.permissions.label_description',
+        'label' => 'lang:admin::lang.label_description',
         'type' => 'textarea',
     ],
     'status' => [

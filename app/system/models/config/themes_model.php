@@ -140,7 +140,7 @@ $config['form']['tabs'] = [
         ],
         'settings[description]' => [
             'tab' => 'lang:system::lang.themes.text_tab_meta',
-            'label' => 'lang:system::lang.themes.label_description',
+            'label' => 'lang:admin::lang.label_description',
             'type' => 'textarea',
         ],
         'settings[layout]' => [

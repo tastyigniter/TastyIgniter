@@ -53,7 +53,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'email' => [
-        'label' => 'lang:admin::lang.customers.column_email',
+        'label' => 'lang:admin::lang.label_email',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -165,7 +165,7 @@ $config['form']['tabs'] = [
                     'title' => 'lang:admin::lang.label_status',
                 ],
                 'order_type_name' => [
-                    'title' => 'lang:admin::lang.orders.column_type',
+                    'title' => 'lang:admin::lang.label_type',
                 ],
                 'order_total' => [
                     'title' => 'lang:admin::lang.orders.column_total',

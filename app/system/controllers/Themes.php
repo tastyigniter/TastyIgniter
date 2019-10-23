@@ -513,7 +513,7 @@ class Themes extends \Admin\Classes\AdminController
                 ['codeSection', 'lang:system::lang.themes.text_tab_php_section', 'sometimes'],
                 ['settings.components.*.alias', 'lang:system::lang.themes.label_component_alias', 'sometimes|required|alpha'],
                 ['settings.title', 'lang:system::lang.themes.label_title', 'sometimes|required|max:160'],
-                ['settings.description', 'lang:system::lang.themes.label_description', 'sometimes|max:255'],
+                ['settings.description', 'lang:admin::lang.label_description', 'sometimes|max:255'],
                 ['settings.layout', 'lang:system::lang.themes.label_layout', 'sometimes|string'],
                 ['settings.permalink', 'lang:system::lang.themes.label_permalink', 'sometimes|required|string'],
             ];

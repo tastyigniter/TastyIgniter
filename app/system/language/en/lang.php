@@ -219,7 +219,6 @@ return [
         'column_date_updated' => 'Date Updated',
         'column_status' => 'Status',
 
-        'label_description' => 'Description',
         'label_language' => 'Language',
         'label_code' => 'Code',
         'label_subject' => 'Subject',
@@ -247,7 +246,6 @@ return [
         'column_status' => 'Status',
         'column_id' => 'ID',
 
-        'label_description' => 'Description',
         'label_action' => 'Action',
 
         'help_name' => 'Permissions name are made up of (Domain.Context):<br />Domain  - Typically the application domain name (e.g. Admin, Site, Extension, Module, Payment).<br />Context - The controller class name (e.g. Menus, Orders, Locations, or Settings).',
@@ -457,7 +455,6 @@ return [
         'label_code' => 'Code',
         'label_file' => 'Source',
         'label_title' => 'Title',
-        'label_description' => 'Description',
         'label_layout' => 'Layout',
         'label_permalink' => 'Permalink',
         'label_component_alias' => 'Component Alias',

@@ -99,7 +99,7 @@ class MailTemplates extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules[] = ['template_id', 'lang:system::lang.mail_templates.label_layout', 'integer'];
-        $rules[] = ['label', 'lang:system::lang.mail_templates.label_description', 'required'];
+        $rules[] = ['label', 'lang:admin::lang.label_description', 'required'];
         $rules[] = ['subject', 'lang:system::lang.mail_templates.label_code', 'required'];
 
         if ($form->context == 'create') {

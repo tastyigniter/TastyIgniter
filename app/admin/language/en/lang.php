@@ -580,7 +580,7 @@ return [
         'is_required' => 'is required',
         'is_not_required' => 'is not required',
         'text_option' => 'Option',
-        'text_option_summary' => 'Option %s and will be displayed as a %s HTML tag',
+        'text_option_summary' => 'Option %s and will be displayed as a %s HTML input tag',
 
         'column_display_type' => 'Display Type',
 
@@ -885,7 +885,6 @@ return [
         'text_reservation' => 'Reservation',
 
         'column_comment' => 'Status Comment',
-        'column_type' => 'Status Type',
         'column_notify' => 'Notify',
         'column_time_date' => 'Date Time',
         'column_staff' => 'Staff',

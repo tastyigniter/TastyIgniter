@@ -134,7 +134,7 @@ $config['form']['fields'] = [
         'default' => 1,
     ],
     'description' => [
-        'label' => 'lang:admin::lang.categories.label_description',
+        'label' => 'lang:admin::lang.label_description',
         'type' => 'textarea',
         'span' => 'left',
         'attributes' => [

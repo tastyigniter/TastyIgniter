@@ -41,7 +41,7 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'status_for_name' => [
-        'label' => 'lang:admin::lang.statuses.column_type',
+        'label' => 'lang:admin::lang.label_type',
         'type' => 'text',
         'sortable' => FALSE,
     ],
