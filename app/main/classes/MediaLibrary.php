@@ -74,7 +74,7 @@ class MediaLibrary
             Cache::put(
                 self::$cacheKey,
                 base64_encode(serialize($cached)),
-                Config::get('system.assets.media.ttl', 10)
+                Config::get('system.assets.media.ttl', now()->addMinutes(10))
             );
         }
 

@@ -76,6 +76,8 @@ return [
             'password' => 'password',
             'charset' => 'utf8',
             'prefix' => '',
+            'odbc' => TRUE,
+            'odbc_datasource_name' => 'your-odbc-dsn',
         ],
 
     ],

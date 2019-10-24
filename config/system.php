@@ -111,24 +111,24 @@ return [
     |
     | The URL map used in the Main page routing process. By default
     | the map is updated every time when a page is saved in the admin or when the
-    | interval, in minutes, specified with the urlMapCacheTTL parameter expires.
+    | interval, in seconds, specified with the urlMapCacheTTL parameter expires.
     |
     */
 
-    'urlMapCacheTtl' => 10,
+    'urlMapCacheTtl' => 600,
 
     /*
     |--------------------------------------------------------------------------
     | Time to live for parsed Template Pages.
     |--------------------------------------------------------------------------
     |
-    | Specifies the number of minutes the Template object cache lives. After the interval
+    | Specifies the number of seconds the Template object cache lives. After the interval
     | is expired item are re-cached. Note that items are re-cached automatically when
     | the corresponding template file is modified.
     |
     */
 
-    'parsedTemplateCacheTTL' => 10,
+    'parsedTemplateCacheTTL' => 600,
 
     'parsedTemplateCachePath' => storage_path('system/cache'),
 

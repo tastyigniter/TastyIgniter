@@ -25,7 +25,7 @@ class HubManager
     public function initialize()
     {
         $this->cachePrefix = 'hub_';
-        $this->cacheTtl = 1440;
+        $this->cacheTtl = now()->addDay();
     }
 
     public function listItems($filter = [])

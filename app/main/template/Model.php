@@ -79,7 +79,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     public static function loadCached($theme, $fileName)
     {
         return static::on($theme->getDirName())
-                     ->remember(Config::get('system.parsedTemplateCacheTTL', 1440))
+                     ->remember(Config::get('system.parsedTemplateCacheTTL', now()->addDay()))
                      ->find($fileName);
     }
 

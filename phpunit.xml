@@ -9,16 +9,11 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="TastyIgniter Feature Test Suite">
-            <directory>./tests/Feature</directory>
-        </testsuite>
-
         <testsuite name="TastyIgniter Unit Test Suite">
             <directory>./tests/Unit</directory>
         </testsuite>
-
-        <testsuite name="TastyIgniter Flame Test Suite">
-            <directory>./vendor/tastyigniter/flame/tests</directory>
+        <testsuite name="TastyIgniter Feature Test Suite">
+            <directory>./tests/Feature</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -30,6 +25,6 @@
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
     </php>
 </phpunit>

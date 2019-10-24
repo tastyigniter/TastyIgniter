@@ -28,8 +28,8 @@
     "ext-json": "*",
     "ext-openssl": "*",
     "composer/installers": "~1.0",
-    "laravel/framework": "5.5.*",
     "tastyigniter/flame": "~1.0",
+    "laravel/framework": "5.8.*",
     "wikimedia/composer-merge-plugin": "^1.4"
   },
   "require-dev": {

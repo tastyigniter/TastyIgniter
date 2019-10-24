@@ -118,7 +118,7 @@ class Router
                         Cache::put(
                             $this->getUrlListCacheKey(),
                             base64_encode(serialize($urlList)),
-                            Config::get('system.urlMapCacheTtl', 1)
+                            Config::get('system.urlMapCacheTtl', now()->addMinute())
                         );
                     }
                 }
@@ -225,7 +225,7 @@ class Router
                 Cache::put(
                     $this->getUrlMapCacheKey(),
                     base64_encode(serialize($map)),
-                    Config::get('system.urlMapCacheTtl', 1)
+                    Config::get('system.urlMapCacheTtl', now()->addMinute())
                 );
             }
 
