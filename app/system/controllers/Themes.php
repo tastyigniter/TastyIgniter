@@ -645,7 +645,7 @@ class Themes extends \Admin\Classes\AdminController
         }
         catch (Exception $ex) {
             Log::error($ex);
-            flash()->success('Building assets bundle error: '.$ex->getMessage());
+            flash()->error('Building assets bundle error: '.$ex->getMessage())->important();
         }
     }
 }

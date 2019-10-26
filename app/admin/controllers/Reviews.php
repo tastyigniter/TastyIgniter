@@ -48,7 +48,7 @@ class Reviews extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('reviews', 'sales');
+        AdminMenu::setContext('reviews', 'marketing');
     }
 
     public function formValidate($model, $form)

@@ -22,7 +22,7 @@ mix.copyDirectory(
     'node_modules/@fortawesome/fontawesome-free-webfonts/webfonts',
     'ui/fonts/FontAwesome'
 ).copy(
-    'node_modules/animate.css/animate.css',
+    'node_modules/animate.css/animate.min.css',
     'ui/scss/vendor/animate.scss'
 );
 

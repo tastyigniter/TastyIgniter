@@ -735,7 +735,7 @@ class ExtensionManager
 
     protected function readInstalledExtensionsFromDb()
     {
-        if (!App::hasDatabase())
+        if (!App::hasDatabase() OR !App::bound('system.setting'))
             return;
 
         if (($installedExtensions = setting('installed_extensions')) AND is_array($installedExtensions)) {

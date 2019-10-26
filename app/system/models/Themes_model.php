@@ -198,7 +198,7 @@ class Themes_model extends Model
      */
     public static function updateInstalledThemes()
     {
-        $installedThemes = self::select('status', 'name')->lists('status', 'code')->all();
+        $installedThemes = self::select('status', 'code')->lists('status', 'code')->all();
 
         if (!is_array($installedThemes))
             $installedThemes = [];
