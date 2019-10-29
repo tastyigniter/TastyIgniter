@@ -77,14 +77,6 @@ class IgniterInstall extends Command
     }
 
     /**
-     * Get the console command arguments.
-     */
-    protected function getArguments()
-    {
-        return [];
-    }
-
-    /**
      * Get the console command options.
      */
     protected function getOptions()
@@ -124,13 +116,9 @@ class IgniterInstall extends Command
 
         DB::purge();
 
-        $manager = UpdateManager::instance()->resetLogs();
+        $manager = UpdateManager::instance()->setLogsOutput($this->output);
 
         $manager->update();
-
-        foreach ($manager->getLogs() as $note) {
-            $this->output->writeln($note);
-        }
 
         $this->line('Done. Migrating application and extensions...');
     }
@@ -140,10 +128,11 @@ class IgniterInstall extends Command
         $siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
         $this->writeToConfig('app', ['name' => $siteName]);
 
-        $url = $this->ask('Site URL', Config::get('app.url'));
-        $this->writeToConfig('app', ['url' => $url]);
+        $siteUrl = $this->ask('Site URL', Config::get('app.url'));
+        $this->writeToConfig('app', ['url' => $siteUrl]);
 
         DatabaseSeeder::$siteName = $siteName;
+        DatabaseSeeder::$siteUrl = $siteUrl;
         DatabaseSeeder::$siteEmail = $this->ask('Admin Email', DatabaseSeeder::$siteEmail);
         DatabaseSeeder::$staffName = $this->ask('Admin Name', DatabaseSeeder::$staffName);
     }
@@ -175,12 +164,22 @@ class IgniterInstall extends Command
 
     protected function addSystemValues()
     {
+        params()->flushCache();
+
         params()->set([
             'ti_setup' => 'installed',
             'default_location_id' => \Admin\Models\Locations_model::first()->location_id,
         ]);
 
+        params()->save();
+
+        setting()->flushCache();
+        setting()->set('site_name', DatabaseSeeder::$siteName);
+        setting()->set('site_email', DatabaseSeeder::$siteEmail);
+        setting()->set('sender_name', DatabaseSeeder::$siteName);
+        setting()->set('sender_email', DatabaseSeeder::$siteEmail);
         setting()->set('customer_group_id', \Admin\Models\Customer_groups_model::first()->customer_group_id);
+        setting()->save();
 
         // These parameters are no longer in use
         params()->forget('main_address');

@@ -20,6 +20,13 @@ class UpdateManager
 
     protected $logs = [];
 
+    /**
+     * The output interface implementation.
+     *
+     * @var \Illuminate\Console\OutputStyle
+     */
+    protected $logsOutput;
+
     protected $baseDirectory;
 
     protected $tempDirectory;
@@ -77,8 +84,25 @@ class UpdateManager
         $this->repository = App::make('migration.repository');
     }
 
+    /**
+     * Set the output implementation that should be used by the console.
+     *
+     * @param  \Illuminate\Console\OutputStyle $output
+     * @return $this
+     */
+    public function setLogsOutput($output)
+    {
+        $this->logsOutput = $output;
+        $this->migrator->setOutput($output);
+
+        return $this;
+    }
+
     public function log($message)
     {
+        if (!is_null($this->logsOutput))
+            $this->logsOutput->writeln($message);
+
         $this->logs[] = $message;
 
         return $this;
@@ -99,6 +123,10 @@ class UpdateManager
         return $this->logs;
     }
 
+    //
+    //
+    //
+
     public function down()
     {
         // Rollback extensions
@@ -112,11 +140,7 @@ class UpdateManager
         foreach ($modules as $module) {
             $path = $this->getMigrationPath($module);
             $this->migrator->rollbackAll([$module => $path]);
-
-            $this->log($module);
-            foreach ($this->migrator->getNotes() as $note) {
-                $this->log(' - '.$note);
-            }
+            $this->log("<info>Rolled back app $module</info>");
         }
 
         $this->repository->deleteRepository();
@@ -153,7 +177,10 @@ class UpdateManager
     public function setCoreVersion($version = null, $hash = null)
     {
         params()->set('ti_version', $version ?? $this->getHubManager()->applyCoreVersion());
-        params()->set('sys_hash', $hash);
+
+        if (strlen($hash))
+            params()->set('sys_hash', $hash);
+
         params()->save();
     }
 
@@ -162,7 +189,7 @@ class UpdateManager
         $migrationTable = Config::get('database.migrations', 'migrations');
 
         if ($hasColumn = Schema::hasColumns($migrationTable, ['group', 'batch'])) {
-            $this->log('Migration table already created');
+            $this->log('Migration table already exists');
 
             return TRUE;
         }
@@ -179,10 +206,7 @@ class UpdateManager
 
         $this->migrator->run([$name => $path]);
 
-        $this->log($name);
-        foreach ($this->migrator->getNotes() as $note) {
-            $this->log(' - '.$note);
-        }
+        $this->log("<info>Migrated app $name</info>");
 
         return $this;
     }
@@ -203,27 +227,23 @@ class UpdateManager
 
     public function migrateExtension($name)
     {
-        if (!($extension = $this->extensionManager->findExtension($name))) {
+        if (!$this->extensionManager->findExtension($name)) {
             $this->log('<error>Unable to find:</error> '.$name);
 
             return FALSE;
         }
 
-        $extensionName = array_get($extension->extensionMeta(), 'name');
-        $this->log($extensionName);
         $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
         $this->migrator->run([$name => $path]);
 
-        foreach ($this->migrator->getNotes() as $note) {
-            $this->log(' - '.$note);
-        }
+        $this->log("<info>Migrated extension $name</info>");
 
         return $this;
     }
 
     public function purgeExtension($name)
     {
-        if (!($extension = $this->extensionManager->findExtension($name))) {
+        if (!$this->extensionManager->findExtension($name)) {
             $this->log('<error>Unable to find:</error> '.$name);
 
             return FALSE;
@@ -232,11 +252,7 @@ class UpdateManager
         $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
         $this->migrator->rollbackAll([$name => $path]);
 
-        $extensionName = array_get($extension->extensionMeta(), 'name');
-        $this->log($extensionName);
-        foreach ($this->migrator->getNotes() as $note) {
-            $this->log(' - '.$note);
-        }
+        $this->log("<info>Purged extension $name</info>");
 
         return $this;
     }
@@ -262,7 +278,7 @@ class UpdateManager
 
     public function isLastCheckDue()
     {
-        $response = $this->requestUpdateList(FALSE);
+        $response = $this->requestUpdateList();
 
         if (isset($response['last_check'])) {
             return (strtotime('-7 day') < strtotime($response['last_check']));

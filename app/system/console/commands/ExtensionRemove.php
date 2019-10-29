@@ -47,12 +47,11 @@ class ExtensionRemove extends Command
             return;
         }
 
+        $manager = UpdateManager::instance();
+        $manager->setLogsOutput($this->output);
+
         Extensions_model::deleteExtension($extensionName);
         $this->output->writeln(sprintf('<info>Deleted extension: %s</info>', $extensionName));
-
-        foreach (UpdateManager::instance()->getLogs() as $note) {
-            $this->output->writeln($note);
-        }
     }
 
     /**

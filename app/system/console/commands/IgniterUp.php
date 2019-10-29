@@ -23,12 +23,10 @@ class IgniterUp extends Command
      */
     public function handle()
     {
-        $manager = UpdateManager::instance()->resetLogs()->update();
-
         $this->output->writeln('<info>Migrating application and extensions...</info>');
 
-        foreach ($manager->getLogs() as $note) {
-            $this->output->writeln($note);
-        }
+        $manager = UpdateManager::instance();
+        $manager->setLogsOutput($this->output);
+        $manager->update();
     }
 }

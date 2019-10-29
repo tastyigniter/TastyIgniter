@@ -30,7 +30,7 @@ class IgniterUpdate extends Command
         $forceUpdate = $this->option('force');
 
         // update system
-        $updateManager = UpdateManager::instance()->resetLogs();
+        $updateManager = UpdateManager::instance()->setLogsOutput($this->output);
         $this->output->writeln('<info>Updating TastyIgniter...</info>');
 
         $updates = $updateManager->requestUpdateList($forceUpdate);
@@ -56,7 +56,7 @@ class IgniterUpdate extends Command
             $updateManager->downloadFile($coreCode, $coreHash, [
                 'name' => $coreCode,
                 'type' => 'core',
-                'ver'  => $coreVersion,
+                'ver' => $coreVersion,
             ]);
         }
 
@@ -72,7 +72,7 @@ class IgniterUpdate extends Command
             $updateManager->downloadFile($addonCode, $addonHash, [
                 'name' => $addonCode,
                 'type' => $addonType,
-                'ver'  => $addonVersion,
+                'ver' => $addonVersion,
             ]);
         });
 
@@ -94,14 +94,6 @@ class IgniterUpdate extends Command
 
         // Run migrations
         $this->call('igniter:up');
-    }
-
-    /**
-     * Get the console command arguments.
-     */
-    protected function getArguments()
-    {
-        return [];
     }
 
     /**

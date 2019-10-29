@@ -33,7 +33,7 @@ class ThemeInstall extends Command
             'type' => 'theme',
         ]]);
 
-        $themeDetails = array_get($response, 'data.0');
+        $themeDetails = array_first(array_get($response, 'data'));
         if (!$themeDetails)
             return $this->output->writeln(sprintf('<info>Theme %s not found</info>', $themeName));
 

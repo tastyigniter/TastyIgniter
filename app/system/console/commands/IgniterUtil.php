@@ -3,8 +3,10 @@
 use Assets;
 use File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use System\Classes\UpdateManager;
 
 class IgniterUtil extends Command
 {
@@ -57,6 +59,31 @@ class IgniterUtil extends Command
         return [
             ['admin', null, InputOption::VALUE_NONE, 'Compile admin registered bundles.'],
         ];
+    }
+
+    protected function utilSetVersion()
+    {
+        $this->comment('Setting TastyIgniter version number...');
+
+        if (!App::hasDatabase()) {
+            $this->comment('Skipping - No database detected.');
+
+            return;
+        }
+
+        UpdateManager::instance()->setCoreVersion();
+
+        $this->comment('*** TastyIgniter sets latest version: '.params('ti_version'));
+
+        $this->comment('-');
+        sleep(1);
+        $this->comment('Ping? Pong!');
+        sleep(1);
+        $this->comment('Ping? Pong!');
+        sleep(1);
+        $this->comment('Ping? Pong!');
+        sleep(1);
+        $this->comment('-');
     }
 
     protected function utilCompileJs()

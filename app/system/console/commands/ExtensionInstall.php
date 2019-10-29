@@ -27,13 +27,14 @@ class ExtensionInstall extends Command
     {
         $extensionName = $this->argument('name');
         $manager = UpdateManager::instance();
+        $manager->setLogsOutput($this->output);
 
         $response = $manager->requestApplyItems([[
             'name' => $extensionName,
-            'type' => 'extension'
+            'type' => 'extension',
         ]]);
 
-        $extensionDetails = array_get($response, 'data.0');
+        $extensionDetails = array_first(array_get($response, 'data'));
         if (!$extensionDetails)
             return $this->output->writeln(sprintf('<info>Extension %s not found</info>', $extensionName));
 
@@ -54,10 +55,6 @@ class ExtensionInstall extends Command
         $this->output->writeln(sprintf('<info>Installing %s extension</info>', $code));
         ExtensionManager::instance()->loadExtensions();
         Extensions_model::install($code, $version);
-
-        foreach ($manager->getLogs() as $note) {
-            $this->output->writeln($note);
-        }
     }
 
     /**

@@ -36,16 +36,16 @@ class ExtensionRefresh extends Command
             throw new \InvalidArgumentException(sprintf('Extension "%s" not found.', $extensionName));
         }
 
+        $manager = UpdateManager::instance();
+        $manager->setLogsOutput($this->output);
+
         $this->output->writeln(sprintf('<info>Removing extension %s...</info>', $extensionName));
         Extensions_model::deleteExtension($extensionName, TRUE, TRUE);
 
         $this->output->writeln(sprintf('<info>Reinstalling extension %s...</info>', $extensionName));
+
         ExtensionManager::instance()->loadExtensions();
         Extensions_model::install($extensionName);
-
-        foreach (UpdateManager::instance()->getLogs() as $note) {
-            $this->output->writeln($note);
-        }
     }
 
     /**
