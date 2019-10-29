@@ -4,6 +4,8 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    public static $siteUrl = 'http://localhost/';
+
     public static $siteName = 'TastyIgniter';
 
     public static $siteEmail = 'admin@domain.tld';

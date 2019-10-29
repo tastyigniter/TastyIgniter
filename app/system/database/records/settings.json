@@ -1,28 +1,13 @@
 [
   {
-    "sort": "prefs",
-    "item": "mail_template_id",
-    "value": "11"
+    "sort": "config",
+    "item": "site_location_mode",
+    "value": "multiple"
   },
   {
     "sort": "config",
     "item": "ratings",
     "value": "a:1:{s:7:\"ratings\";a:5:{i:1;s:3:\"Bad\";i:2;s:5:\"Worse\";i:3;s:4:\"Good\";i:4;s:7:\"Average\";i:5;s:9:\"Excellent\";}}"
-  },
-  {
-    "sort": "config",
-    "item": "site_desc",
-    "value": ""
-  },
-  {
-    "sort": "config",
-    "item": "search_radius",
-    "value": "20"
-  },
-  {
-    "sort": "config",
-    "item": "ready_time",
-    "value": "45"
   },
   {
     "sort": "prefs",
@@ -46,8 +31,18 @@
   },
   {
     "sort": "config",
-    "item": "currency_id",
-    "value": "226"
+    "item": "date_format",
+    "value": "d M Y"
+  },
+  {
+    "sort": "config",
+    "item": "time_format",
+    "value": "h:i a"
+  },
+  {
+    "sort": "config",
+    "item": "default_currency_code",
+    "value": "GBP"
   },
   {
     "sort": "config",
@@ -56,8 +51,18 @@
   },
   {
     "sort": "config",
+    "item": "detect_language",
+    "value": "0"
+  },
+  {
+    "sort": "config",
     "item": "supported_languages",
     "value": "a:1:{i:0;s:2:\"en\";}"
+  },
+  {
+    "sort": "config",
+    "item": "allow_registration",
+    "value": "1"
   },
   {
     "sort": "config",
@@ -111,13 +116,18 @@
   },
   {
     "sort": "config",
-    "item": "new_order_status",
-    "value": "11"
+    "item": "default_order_status",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "processing_order_status",
+    "value": "a:3:{i:0;s:1:\"2\";i:1;s:1:\"3\";i:2;s:1:\"4\";}"
   },
   {
     "sort": "config",
     "item": "completed_order_status",
-    "value": "15"
+    "value": "a:1:{i:0;s:1:\"5\";}"
   },
   {
     "sort": "config",
@@ -136,28 +146,48 @@
   },
   {
     "sort": "config",
-    "item": "new_reservation_status",
-    "value": "18"
+    "item": "default_reservation_status",
+    "value": "8"
   },
   {
     "sort": "config",
     "item": "confirmed_reservation_status",
-    "value": "16"
+    "value": "6"
   },
   {
     "sort": "config",
     "item": "canceled_order_status",
-    "value": "19"
+    "value": "9"
   },
   {
     "sort": "config",
     "item": "canceled_reservation_status",
-    "value": "17"
+    "value": "7"
   },
   {
     "sort": "config",
     "item": "image_manager",
     "value": "a:11:{s:8:\"max_size\";s:3:\"300\";s:11:\"thumb_width\";s:3:\"320\";s:12:\"thumb_height\";s:3:\"220\";s:7:\"uploads\";s:1:\"1\";s:10:\"new_folder\";s:1:\"1\";s:4:\"copy\";s:1:\"1\";s:4:\"move\";s:1:\"1\";s:6:\"rename\";s:1:\"1\";s:6:\"delete\";s:1:\"1\";s:15:\"transliteration\";s:1:\"0\";s:13:\"remember_days\";s:1:\"7\";}"
+  },
+  {
+    "sort": "config",
+    "item": "tax_mode",
+    "value": "0"
+  },
+  {
+    "sort": "config",
+    "item": "allow_reviews",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "auto_invoicing",
+    "value": "1"
+  },
+  {
+    "sort": "config",
+    "item": "invoice_prefix",
+    "value": "INV-{year}-00"
   },
   {
     "sort": "config",
