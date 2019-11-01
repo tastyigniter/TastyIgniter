@@ -172,7 +172,7 @@ class Menus_model extends Model
      */
     public function updateStock($quantity = 0, $action = 'subtract')
     {
-        if ($this->subtract_stock AND !empty($quantity))
+        if (!$this->subtract_stock)
             return FALSE;
 
         $stockQty = $this->stock_qty + $quantity;
