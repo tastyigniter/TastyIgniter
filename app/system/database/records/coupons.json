@@ -5,6 +5,7 @@
     "type": "F",
     "discount": 100,
     "min_total": 500,
+    "customer_redemptions": 0,
     "status": 1,
     "validity": "forever",
     "order_restriction": 0
@@ -15,6 +16,7 @@
     "type": "P",
     "discount": 30,
     "min_total": 1000,
+    "customer_redemptions": 0,
     "status": 1,
     "validity": "forever",
     "order_restriction": 0
@@ -36,7 +38,9 @@
     "type": "F",
     "discount": 500,
     "min_total": 5000,
+    "customer_redemptions": 0,
     "status": 1,
+    "validity": "forever",
     "order_restriction": 0
   }
 ]

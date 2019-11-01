@@ -1,8 +1,8 @@
 <?php namespace Admin\Database\Migrations;
 
-use Admin\Models\Reservations_model;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Schema;
 
 /**
@@ -18,8 +18,8 @@ class createReservationTablesTable extends Migration
             $table->unique(['reservation_id', 'table_id']);
         });
 
-        Reservations_model::get()->each(function ($model) {
-            \DB::table('reservation_tables')->insert([
+        DB::table('reservations')->get()->each(function ($model) {
+            DB::table('reservation_tables')->insert([
                 'reservation_id' => $model->reservation_id,
                 'table_id' => $model->table_id,
             ]);

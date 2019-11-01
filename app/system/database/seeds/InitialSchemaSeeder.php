@@ -1,15 +1,7 @@
 <?php namespace System\Database\Seeds;
 
-use Admin\Models\Customer_groups_model;
-use Admin\Models\Mealtimes_model;
-use Admin\Models\Staff_groups_model;
-use Admin\Models\Statuses_model;
 use Illuminate\Database\Seeder;
-use System\Models\Countries_model;
-use System\Models\Currencies_model;
-use System\Models\Languages_model;
-use System\Models\Permissions_model;
-use System\Models\Settings_model;
+use Illuminate\Support\Facades\DB;
 
 class InitialSchemaSeeder extends Seeder
 {
@@ -42,40 +34,39 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedCountries()
     {
-        if (Countries_model::count())
+        if (DB::table('countries')->count())
             return;
 
-        $countries = $this->getSeedRecords('countries');
+        DB::table('countries')->insert($this->getSeedRecords('countries'));
 
-        foreach ($countries as $country) {
-            $country['format'] = '{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}';
-            $country['status'] = 1;
-            Countries_model::insert($country);
-        }
+        DB::table('countries')->update([
+            'format' => '{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}',
+            'status' => 1,
+        ]);
     }
 
     protected function seedCurrencies()
     {
-        if (Currencies_model::count())
+        if (DB::table('currencies')->count())
             return;
 
         $currencies = $this->getSeedRecords('currencies');
 
         foreach ($currencies as $currency) {
-            $query = Countries_model::where('iso_code_3', $currency['iso_alpha3']);
+            $query = DB::table('countries')->where('iso_code_3', $currency['iso_alpha3']);
             if ($country = $query->first()) {
                 $currency['country_id'] = $country->country_id;
-                Currencies_model::insert($currency);
+                DB::table('currencies')->insert($currency);
             }
         }
     }
 
     protected function seedCustomerGroups()
     {
-        if (Customer_groups_model::count())
+        if (DB::table('customer_groups')->count())
             return;
 
-        Customer_groups_model::create([
+        DB::table('customer_groups')->insert([
             'group_name' => 'Default group',
             'approval' => FALSE,
         ]);
@@ -83,10 +74,10 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedLanguages()
     {
-        if (Languages_model::count())
+        if (DB::table('languages')->count())
             return;
 
-        Languages_model::insert([
+        DB::table('languages')->insert([
             'code' => 'en',
             'name' => 'English',
             'idiom' => 'english',
@@ -97,99 +88,89 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedMealtimes()
     {
-        if (Mealtimes_model::count())
+        if (DB::table('mealtimes')->count())
             return;
 
-        Mealtimes_model::insert([
+        DB::table('mealtimes')->insert([
             [
-                "mealtime_name" => "Breakfast",
-                "start_time" => "07:00:00",
-                "end_time" => "10:00:00",
-                "mealtime_status" => TRUE,
+                'mealtime_name' => 'Breakfast',
+                'start_time' => '07:00:00',
+                'end_time' => '10:00:00',
+                'mealtime_status' => TRUE,
             ],
             [
-                "mealtime_name" => "Lunch",
-                "start_time" => "12:00:00",
-                "end_time" => "14:30:00",
-                "mealtime_status" => TRUE,
+                'mealtime_name' => 'Lunch',
+                'start_time' => '12:00:00',
+                'end_time' => '14:30:00',
+                'mealtime_status' => TRUE,
             ],
             [
-                "mealtime_name" => "Dinner",
-                "start_time" => "18:00:00",
-                "end_time" => "20:00:00",
-                "mealtime_status" => TRUE,
+                'mealtime_name' => 'Dinner',
+                'start_time' => '18:00:00',
+                'end_time' => '20:00:00',
+                'mealtime_status' => TRUE,
             ],
         ]);
     }
 
     protected function seedPages()
     {
-        if (Pages_model::count())
+        if (DB::table('pages')->count())
             return;
 
-        $language = Languages_model::whereCode('en')->first();
+        $language = DB::table('languages')->where('code', 'en')->first();
 
-        Pages_model::insert([
+        DB::table('pages')->insert([
             [
-                "language_id" => $language->language_id,
-                "name" => "About Us",
-                "title" => "About Us",
-                "heading" => "About Us",
-                "content" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "meta_description" => "",
-                "meta_keywords" => "",
-//                "layout_id"        => 17,
-                "navigation" => "a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}",
-                "date_added" => "2014-04-19 16:57:21",
-                "date_updated" => "2015-05-07 12:39:52",
-                "status" => 1,
+                'language_id' => $language->language_id,
+                'name' => 'About Us',
+                'title' => 'About Us',
+                'heading' => 'About Us',
+                'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                'meta_description' => '',
+                'meta_keywords' => '',
+                'navigation' => 'a:2:{i:0;s:8:\'side_bar\';i:1;s:6:\'footer\';}',
+                'date_added' => '2014-04-19 16:57:21',
+                'date_updated' => '2015-05-07 12:39:52',
+                'status' => 1,
             ], [
-                "language_id" => $language->language_id,
-                "name" => "Policy",
-                "title" => "Policy",
-                "heading" => "Policy",
-                "content" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "meta_description" => "",
-                "meta_keywords" => "",
-//                "layout_id"        => 17,
-                "navigation" => "a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}",
-                "date_added" => "2014-04-19 17:21:23",
-                "date_updated" => "2015-05-16 09:18:39",
-                "status" => 1,
+                'language_id' => $language->language_id,
+                'name' => 'Policy',
+                'title' => 'Policy',
+                'heading' => 'Policy',
+                'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                'meta_description' => '',
+                'meta_keywords' => '',
+                'navigation' => 'a:2:{i:0;s:8:\'side_bar\';i:1;s:6:\'footer\';}',
+                'date_added' => '2014-04-19 17:21:23',
+                'date_updated' => '2015-05-16 09:18:39',
+                'status' => 1,
             ],
         ]);
     }
 
     protected function seedPermissions()
     {
-        if (Permissions_model::count())
+        if (DB::table('permissions')->count())
             return;
 
-        $permissions = $this->getSeedRecords('permissions');
-
-        foreach ($permissions as $permission) {
-            Permissions_model::insert($permission);
-        }
+        DB::table('permissions')->insert($this->getSeedRecords('permissions'));
     }
 
     protected function seedSettings()
     {
-        if (Settings_model::count())
+        if (DB::table('settings')->count())
             return;
 
-        $settings = $this->getSeedRecords('settings');
-
-        foreach ($settings as $setting) {
-            Settings_model::insert($setting);
-        }
+        DB::table('settings')->insert($this->getSeedRecords('settings'));
     }
 
     protected function seedStaffGroups()
     {
-        if (Staff_groups_model::count())
+        if (DB::table('staff_groups')->count())
             return;
 
-        Staff_groups_model::insert([
+        DB::table('staff_groups')->insert([
             'staff_group_name' => 'Administrator',
             'customer_account_access' => TRUE,
             'location_access' => TRUE,
@@ -199,14 +180,10 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedStatuses()
     {
-        if (Statuses_model::count())
+        if (DB::table('statuses')->count())
             return;
 
-        $statuses = $this->getSeedRecords('statuses');
-
-        foreach ($statuses as $status) {
-            Statuses_model::insert($status);
-        }
+        DB::table('statuses')->insert($this->getSeedRecords('statuses'));
     }
 
     protected function getSeedRecords($name)
