@@ -14,8 +14,6 @@ class Toolbar extends BaseWidget
 
     protected $previewMode = FALSE;
 
-    public $showToolbar = FALSE;
-
     /**
      * @var array List of CSS classes to apply to the toolbar container element
      */
@@ -26,8 +24,16 @@ class Toolbar extends BaseWidget
     public function initialize()
     {
         $this->fillFromConfig([
+            'buttons',
             'context',
+            'cssClasses',
         ]);
+    }
+
+    public function reInitialize(array $config)
+    {
+        $this->setConfig($config);
+        $this->initialize();
     }
 
     public function render()
@@ -84,8 +90,6 @@ class Toolbar extends BaseWidget
         if (!is_array($this->buttons)) {
             return $buttons;
         }
-
-        $this->showToolbar = TRUE;
 
         $this->fireSystemEvent('admin.toolbar.extendButtons');
 

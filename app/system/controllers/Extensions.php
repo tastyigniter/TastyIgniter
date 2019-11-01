@@ -276,7 +276,7 @@ class Extensions extends \Admin\Classes\AdminController
         // Prep the optional toolbar widget
         if (isset($config['toolbar']) AND isset($this->widgets['toolbar'])) {
             $this->toolbarWidget = $this->widgets['toolbar'];
-            $this->toolbarWidget->addButtons(array_get($config['toolbar'], 'buttons', []));
+            $this->toolbarWidget->reInitialize($config['toolbar']);
         }
     }
 

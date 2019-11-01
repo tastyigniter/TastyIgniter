@@ -1,6 +1,6 @@
 <div
     id="<?= $toolbarId ?>"
-    class="toolbar btn-toolbar <?= $cssClasses ?><?= (!$this->showToolbar) ? ' hide' : '' ?>"
+    class="toolbar btn-toolbar <?= $cssClasses ?>"
 >
     <div class="toolbar-action">
         <?= $buttonsHtml; ?>

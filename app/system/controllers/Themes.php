@@ -403,7 +403,7 @@ class Themes extends \Admin\Classes\AdminController
         // Prep the optional toolbar widget
         if (isset($modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
             $this->toolbarWidget = $this->widgets['toolbar'];
-            $this->toolbarWidget->addButtons(array_get($modelConfig['toolbar'], 'buttons', []));
+            $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
         }
     }
 

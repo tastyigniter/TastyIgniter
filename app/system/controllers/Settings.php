@@ -166,7 +166,7 @@ class Settings extends \Admin\Classes\AdminController
         // Prep the optional toolbar widget
         if (isset($this->modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
             $this->toolbarWidget = $this->widgets['toolbar'];
-            $this->toolbarWidget->addButtons(array_get($this->modelConfig['toolbar'], 'buttons', []));
+            $this->toolbarWidget->reInitialize($this->modelConfig['toolbar']);
         }
     }
 
