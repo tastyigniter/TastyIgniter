@@ -5,7 +5,8 @@ $multiOption = $field->getConfig('multiOption', FALSE);
 $fieldValue = !is_array($field->value) ? [$field->value] : $field->value;
 ?>
 <?php if ($this->previewMode) { ?>
-    <div class="form-control-static"><?= (isset($fieldOptions[$field->value])) ? e(lang($fieldOptions[$field->value])) : '' ?></div>
+    <div
+        class="form-control-static"><?= (isset($fieldOptions[$field->value])) ? e(lang($fieldOptions[$field->value])) : '' ?></div>
 <?php } else { ?>
     <select
         id="<?= $field->getId() ?>"
@@ -25,7 +26,7 @@ $fieldValue = !is_array($field->value) ? [$field->value] : $field->value;
                 <?= in_array($value, $fieldValue) ? 'selected="selected"' : '' ?>
                 <?php if (isset($option[1])): ?>data-<?= strpos($option[1], '.') ? 'image' : 'icon' ?>="<?= $option[1] ?>"<?php endif ?>
                 value="<?= $value ?>">
-                <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
+                <?= e(is_lang_key($option[0]) ? lang($option[0]) : $option[0]) ?>
             </option>
         <?php } ?>
     </select>

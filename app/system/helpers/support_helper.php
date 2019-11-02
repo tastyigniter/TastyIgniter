@@ -538,3 +538,30 @@ if (!function_exists('contains_substring')) {
     }
 }
 
+if (!function_exists('is_lang_key')) {
+    /**
+     * Determine if a given string matches a language key.
+     * @access    public
+     *
+     * @param  string $line
+     *
+     * @return bool
+     */
+    function is_lang_key($line)
+    {
+        if (!is_string($line)) {
+            return FALSE;
+        }
+
+        if (strpos($line, '::') !== FALSE) {
+            return TRUE;
+        }
+
+        if (starts_with($line, 'lang:')) {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+}
+

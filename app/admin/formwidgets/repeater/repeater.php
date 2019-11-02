@@ -31,7 +31,7 @@
                     <?php } ?>
                 <?php } else { ?>
                     <tr class="repeater-item-placeholder">
-                        <td colspan="99"><?= (sscanf($emptyMessage, 'lang:%s', $line) === 1) ? lang($line) : $emptyMessage ?></td>
+                        <td colspan="99"><?= is_lang_key($emptyMessage) ? lang($emptyMessage) : $emptyMessage ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>

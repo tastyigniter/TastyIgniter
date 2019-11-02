@@ -25,7 +25,7 @@ $checkedValues = (array)$field->value;
                         value="<?= $value ?>"
                         <?= in_array($value, $checkedValues) ? 'checked="checked"' : '' ?>
                         disabled="disabled">
-                    <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
+                    <?= e(is_lang_key($option[0]) ? lang($option[0]) : $option[0]) ?>
                 </label>
             <?php } ?>
         </div>
@@ -49,7 +49,7 @@ $checkedValues = (array)$field->value;
                         value="<?= $value ?>"
                         <?= $field->getAttributes() ?>
                         <?= in_array($value, $checkedValues) ? 'checked="checked"' : '' ?>>
-                    <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
+                    <?= e(is_lang_key($option[0]) ? lang($option[0]) : $option[0]) ?>
                 </label>
             <?php } ?>
         </div>

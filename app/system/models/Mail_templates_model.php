@@ -53,7 +53,7 @@ class Mail_templates_model extends Model
     {
         $langLabel = !empty($this->attributes['label']) ? $this->attributes['label'] : '';
 
-        return (sscanf($langLabel, 'lang:%s', $lang) === 1) ? lang($langLabel) : $langLabel;
+        return is_lang_key($langLabel) ? lang($langLabel) : $langLabel;
     }
 
     public function getVariablesAttribute($value)

@@ -12,7 +12,8 @@ $fieldOptions = $field->options();
                 <?php
                 $index++;
                 ?>
-                <label class="btn btn-light <?= $field->value == $key ? 'active' : ''; ?><?= $this->previewMode ? 'disabled' : ''; ?>">
+                <label
+                    class="btn btn-light <?= $field->value == $key ? 'active' : ''; ?><?= $this->previewMode ? 'disabled' : ''; ?>">
                     <input
                         type="radio"
                         id="<?= $field->getId($index) ?>"
@@ -21,7 +22,7 @@ $fieldOptions = $field->options();
                         <?= $field->value == $key ? 'checked="checked"' : '' ?>
                         <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                         <?= $field->getAttributes() ?>>
-                    <?= e((sscanf($value, 'lang:%s', $line) === 1) ? lang($line) : $value) ?>
+                    <?= e(is_lang_key($value) ? lang($value) : $value) ?>
                 </label>
             <?php } ?>
         </div>

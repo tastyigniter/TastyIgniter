@@ -25,9 +25,9 @@ $isScrollable = count($fieldOptions) > 10;
                     checked="checked"
                 >
                 <label class="custom-control-label" for="<?= $checkboxId ?>">
-                    <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
+                    <?= e(is_lang_key($option[0]) ? lang($option[0]) : $option[0]) ?>
                     <?php if (isset($option[1])) { ?>
-                        <p class="help-block font-weight-normal"><?= e((sscanf($option[1], 'lang:%s', $line) === 1) ? lang($line) : $option[1]) ?></p>
+                        <p class="help-block font-weight-normal"><?= e(is_lang_key($option[1]) ? lang($option[1]) : $option[1]) ?></p>
                     <?php } ?>
                 </label>
             </div>
