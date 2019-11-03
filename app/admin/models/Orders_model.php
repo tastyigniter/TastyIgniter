@@ -103,7 +103,7 @@ class Orders_model extends Model
     // Events
     //
 
-    public function beforeCreate()
+    protected function beforeCreate()
     {
         $this->generateHash();
 
@@ -111,7 +111,7 @@ class Orders_model extends Model
         $this->user_agent = Request::userAgent();
     }
 
-    public function afterSave()
+    protected function afterSave()
     {
         if (!$this->isDirty('assignee_id'))
             return;

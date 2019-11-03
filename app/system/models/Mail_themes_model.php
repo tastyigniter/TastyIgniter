@@ -55,7 +55,7 @@ class Mail_themes_model extends Model
         }
     }
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->resetCache();
     }

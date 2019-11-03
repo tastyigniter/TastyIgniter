@@ -38,7 +38,7 @@ class Mail_templates_model extends Model
      */
     public $timestamps = TRUE;
 
-    public function afterFetch()
+    protected function afterFetch()
     {
         if (!$this->is_custom) {
             $this->fillFromView();

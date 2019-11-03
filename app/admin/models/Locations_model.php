@@ -96,22 +96,22 @@ class Locations_model extends AbstractLocation
     // Events
     //
 
-    public function afterFetch()
+    protected function afterFetch()
     {
         $this->parseOptionsValue();
     }
 
-    public function beforeSave()
+    protected function beforeSave()
     {
         $this->parseOptionsValue();
     }
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->performAfterSave();
     }
 
-    public function beforeDelete()
+    protected function beforeDelete()
     {
         Location_tables_model::where('location_id', $this->getKey())->delete();
     }

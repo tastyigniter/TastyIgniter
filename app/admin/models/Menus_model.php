@@ -128,7 +128,7 @@ class Menus_model extends Model
     // Events
     //
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->restorePurgedValues();
 
@@ -146,7 +146,7 @@ class Menus_model extends Model
             $this->addMenuOption((array)$this->attributes['menu_options']);
     }
 
-    public function beforeDelete()
+    protected function beforeDelete()
     {
         $this->addMenuCategories([]);
         $this->locations()->detach();

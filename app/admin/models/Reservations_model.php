@@ -85,7 +85,7 @@ class Reservations_model extends Model
     // Events
     //
 
-    public function beforeCreate()
+    protected function beforeCreate()
     {
         $this->generateHash();
 
@@ -93,7 +93,7 @@ class Reservations_model extends Model
         $this->user_agent = Request::userAgent();
     }
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->restorePurgedValues();
 

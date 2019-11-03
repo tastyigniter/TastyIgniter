@@ -50,7 +50,7 @@ class Mail_layouts_model extends Model
         return self::dropdown('name');
     }
 
-    public function beforeDelete()
+    protected function beforeDelete()
     {
         if ($this->is_locked) {
             throw new ApplicationException('Cannot delete this template because it is locked');
