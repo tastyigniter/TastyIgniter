@@ -24,6 +24,7 @@ class Staffs extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.staff.text_form_name',
         'model' => 'Admin\Models\Staffs_model',
+        'request' => 'Admin\Requests\Staff',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'staffs/edit/{staff_id}',
@@ -78,29 +79,5 @@ class Staffs extends \Admin\Classes\AdminController
         if (!AdminAuth::isSuperUser()) {
             $query->whereNotSuperUser();
         }
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-            ['staff_name', 'lang:admin::lang.label_name', 'required|min:2|max:128'],
-            ['staff_email', 'lang:admin::lang.label_email', 'required|max:96|email'
-                .($form->context == 'create' ? '|unique:staffs,staff_email' : '')],
-        ];
-
-        $rules[] = ['user.password', 'lang:admin::lang.staff.label_password',
-            ($form->context == 'create' ? 'required' : 'sometimes')
-            .'|min:6|max:32|same:user.password_confirm'];
-        $rules[] = ['user.password_confirm', 'lang:admin::lang.staff.label_confirm_password'];
-
-        if (AdminAuth::isSuperUser()) {
-            $rules[] = ['user.username', 'lang:admin::lang.staff.label_username', 'required|min:2|max:32'
-                .($form->context == 'create' ? '|unique:users,username' : '')];
-            $rules[] = ['staff_status', 'lang:admin::lang.label_status', 'integer'];
-            $rules[] = ['staff_group_id', 'lang:admin::lang.staff.label_group', 'required|integer'];
-            $rules[] = ['staff_location_id', 'lang:admin::lang.staff.label_location', 'integer'];
-        }
-
-        return $this->validatePasses($form->getSaveData(), $rules);
     }
 }

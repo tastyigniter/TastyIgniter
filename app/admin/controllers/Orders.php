@@ -23,6 +23,7 @@ class Orders extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.orders.text_form_name',
         'model' => 'Admin\Models\Orders_model',
+        'request' => 'Admin\Requests\Order',
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'orders/edit/{order_id}',
@@ -99,18 +100,5 @@ class Orders extends \Admin\Classes\AdminController
                 $q->orderBy('date_added', 'desc');
             },
         ]);
-    }
-
-    public function formValidate($model, $form)
-    {
-        $namedRules = [
-            ['status_id', 'lang:admin::lang.label_status', 'required|integer|exists:statuses'],
-            ['statusData.status_id', 'lang:admin::lang.orders.label_status', 'required|same:status_id'],
-            ['statusData.comment', 'lang:admin::lang.orders.label_comment', 'max:1500'],
-            ['statusData.notify', 'lang:admin::lang.orders.label_notify', 'required|integer'],
-            ['assignee_id', 'lang:admin::lang.orders.label_assign_staff', 'required|integer'],
-        ];
-
-        return $this->validatePasses(post($form->arrayName), $namedRules);
     }
 }

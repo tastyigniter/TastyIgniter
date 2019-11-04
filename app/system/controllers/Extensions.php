@@ -313,9 +313,6 @@ class Extensions extends \Admin\Classes\AdminController
         if (isset($form->config['rules']))
             $rules = $form->config['rules'];
 
-        if ($modelRules = $model->validateRules($form))
-            $rules = $modelRules;
-
         return $this->validatePasses($form->getSaveData(), $rules);
     }
 

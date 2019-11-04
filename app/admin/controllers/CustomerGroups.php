@@ -23,6 +23,7 @@ class CustomerGroups extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.customer_groups.text_form_name',
         'model' => 'Admin\Models\Customer_groups_model',
+        'request' => 'Admin\Requests\CustomerGroup',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'customer_groups/edit/{customer_group_id}',
@@ -76,16 +77,5 @@ class CustomerGroups extends \Admin\Classes\AdminController
         }
 
         return $attributes;
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-            ['group_name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
-            ['approval', 'lang:admin::lang.customer_groups.label_approval', 'required|integer'],
-            ['description', 'lang:admin::lang.label_description', 'min:2|max:512'],
-        ];
-
-        return $this->validatePasses(post($form->arrayName), $rules);
     }
 }

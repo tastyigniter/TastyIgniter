@@ -23,6 +23,7 @@ class MailLayouts extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_form_name',
         'model' => 'System\Models\Mail_layouts_model',
+        'request' => 'System\Requests\MailLayout',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'mail_layouts/edit/{template_id}',
@@ -66,12 +67,5 @@ class MailLayouts extends \Admin\Classes\AdminController
             $field = $form->getField('code');
             $field->disabled = TRUE;
         }
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules[] = ['name', 'lang:admin::lang.label_name', 'required|min:2|max:32'];
-
-        return $this->validatePasses(post($form->arrayName), $rules);
     }
 }

@@ -25,6 +25,7 @@ class Customers extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.customers.text_form_name',
         'model' => 'Admin\Models\Customers_model',
+        'request' => 'Admin\Requests\Customer',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'customers/edit/{customer_id}',
@@ -75,32 +76,5 @@ class Customers extends \Admin\Classes\AdminController
         }
 
         return $this->redirectBack();
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-            ['first_name', 'lang:admin::lang.customers.label_first_name', 'required|min:2|max:32'],
-            ['last_name', 'lang:admin::lang.customers.label_last_name', 'required|min:2|max:32'],
-            ['email', 'lang:admin::lang.label_email', 'required|email|max:96'
-                .(!$model->exists ? '|unique:customers,email' : null)],
-            ['telephone', 'lang:admin::lang.customers.label_telephone', 'sometimes'],
-            ['newsletter', 'lang:admin::lang.customers.label_newsletter', 'required|integer'],
-            ['customer_group_id', 'lang:admin::lang.customers.label_customer_group', 'required|integer'],
-            ['status', 'lang:admin::lang.label_status', 'required|integer'],
-        ];
-
-        if (!$model->exists OR post($form->arrayName.'.password')) {
-            $rules[] = ['password', 'lang:admin::lang.customers.label_password', 'required|min:8|max:40|same:_confirm_password'];
-            $rules[] = ['_confirm_password', 'lang:admin::lang.customers.label_confirm_password'];
-        }
-
-        $rules[] = ['addresses.*.address_1', 'lang:admin::lang.customers.label_address_1', 'required|min:3|max:128'];
-        $rules[] = ['addresses.*.city', 'lang:admin::lang.customers.label_city', 'required|min:2|max:128'];
-        $rules[] = ['addresses.*.state', 'lang:admin::lang.customers.label_state', 'max:128'];
-        $rules[] = ['addresses.*.postcode', 'lang:admin::lang.customers.label_postcode'];
-        $rules[] = ['addresses.*.country_id', 'lang:admin::lang.customers.label_country', 'required|integer'];
-
-        return $this->validatePasses(post($form->arrayName), $rules);
     }
 }

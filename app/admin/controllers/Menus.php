@@ -24,6 +24,7 @@ class Menus extends AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.menus.text_form_name',
         'model' => 'Admin\Models\Menus_model',
+        'request' => 'Admin\Requests\Menu',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'menus/edit/{menu_id}',
@@ -78,34 +79,5 @@ class Menus extends AdminController
                 'useContainer' => FALSE,
             ]),
         ];
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-            ['menu_name', 'lang:admin::lang.label_name', 'required|min:2|max:255'],
-            ['menu_description', 'lang:admin::lang.label_description', 'min:2|max:1028'],
-            ['menu_price', 'lang:admin::lang.menus.label_price', 'required|numeric'],
-            ['categories.*', 'lang:admin::lang.menus.label_category', 'required|integer'],
-            ['locations.*', 'lang:admin::lang.column_location', 'integer'],
-            ['stock_qty', 'lang:admin::lang.menus.label_stock_qty', 'integer'],
-            ['minimum_qty', 'lang:admin::lang.menus.label_minimum_qty', 'required|integer'],
-            ['subtract_stock', 'lang:admin::lang.menus.label_subtract_stock', 'required|integer'],
-            ['menu_status', 'lang:admin::lang.label_status', 'required|integer'],
-            ['mealtime_id', 'lang:admin::lang.menus.label_mealtime', 'integer'],
-            ['menu_priority', 'lang:admin::lang.menus.label_menu_priority', 'integer'],
-            ['special.special_id', 'lang:admin::lang.menus.label_special_status', 'integer'],
-            ['special.special_status', 'lang:admin::lang.menus.label_special_status', 'required|integer'],
-        ];
-
-        $rules[] = ['special.special_price', 'lang:admin::lang.menus.label_special_price', 'required_if:special.special_status,1|numeric'];
-        $rules[] = ['special.validity', 'lang:admin::lang.coupons.label_validity', 'required'];
-        $rules[] = ['special.start_date', 'lang:admin::lang.menus.label_start_date', 'required_if:special.validity,period'];
-        $rules[] = ['special.end_date', 'lang:admin::lang.menus.label_end_date', 'required_if:special.validity,period'];
-        $rules[] = ['special.recurring_every', 'lang:admin::lang.coupons.label_recurring_every', 'required_if:validity,recurring'];
-        $rules[] = ['special.recurring_from', 'lang:admin::lang.coupons.label_recurring_from_time', 'required_if:validity,recurring|valid_time'];
-        $rules[] = ['special.recurring_to', 'lang:admin::lang.coupons.label_recurring_to_time', 'required_if:validity,recurring|valid_time'];
-
-        return $this->validatePasses(post($form->arrayName), $rules);
     }
 }

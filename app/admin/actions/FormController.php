@@ -6,10 +6,14 @@ use Admin\Traits\FormExtendable;
 use Admin\Widgets\Toolbar;
 use DB;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Foundation\Application;
+use Illuminate\Routing\Redirector;
 use Model;
 use Redirect;
 use Request;
 use System\Classes\ControllerAction;
+use System\Classes\FormRequest;
 use Template;
 
 /**
@@ -74,6 +78,11 @@ class FormController extends ControllerAction
      * @var Model The initialized model used by the form.
      */
     protected $model;
+
+    /**
+     * @var Model The initialized request used by the form.
+     */
+    protected $request;
 
     /**
      * @var array List of prepared models that require saving.
@@ -237,6 +246,8 @@ class FormController extends ControllerAction
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeCreate($model);
 
+        $this->validateFormRequest($model);
+
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
@@ -285,6 +296,9 @@ class FormController extends ControllerAction
         $this->controller->formBeforeUpdate($model);
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
+
+        $this->validateFormRequest($model);
+
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
@@ -508,5 +522,33 @@ class FormController extends ControllerAction
                     $model->{$attribute} = $value;
             }
         }
+    }
+
+    protected function validateFormRequest($model)
+    {
+        $requestClass = $this->getConfig('request', FALSE);
+
+        if ($requestClass === FALSE)
+            return;
+
+        if (!class_exists($requestClass))
+            throw new ApplicationException("Form Request class ($requestClass) not found");
+
+        $request = $this->makeFormRequest($requestClass, app());
+
+        $request->validateResolved();
+    }
+
+    protected function makeFormRequest($class, Application $app)
+    {
+        $request = new $class();
+
+        $request = FormRequest::createFrom($app->make('request'), $request);
+
+        $request->setContainer($app)->setRedirector($app->make(Redirector::class));
+
+        $request->setController($this->controller);
+
+        return $request;
     }
 }

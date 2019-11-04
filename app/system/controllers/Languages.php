@@ -29,6 +29,7 @@ class Languages extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:system::lang.languages.text_form_name',
         'model' => 'System\Models\Languages_model',
+        'request' => 'System\Requests\Language',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'languages/edit/{language_id}',
@@ -121,19 +122,6 @@ class Languages extends \Admin\Classes\AdminController
         $this->vars['totalStrings'] = $this->totalStrings;
         $this->vars['totalTranslated'] = $this->totalTranslated;
         $this->vars['translatedProgress'] = $this->totalStrings ? round(($this->totalTranslated * 100) / $this->totalStrings) : 0;
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-            ['name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
-            ['code', 'lang:system::lang.languages.label_code', 'required|regex:/^[a-zA-Z_]+$/'],
-            ['status', 'lang:admin::lang.label_status', 'required|integer'],
-            ['translations.*.source', 'lang:system::lang.column_source', 'string|max:2500'],
-            ['translations.*.translation', 'lang:system::lang.column_translation', 'string|max:2500'],
-        ];
-
-        return $this->validatePasses(post($form->arrayName), $rules);
     }
 
     protected function getFilterValue($key, $default = null)

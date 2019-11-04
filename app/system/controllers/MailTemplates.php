@@ -25,6 +25,7 @@ class MailTemplates extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_form_name',
         'model' => 'System\Models\Mail_templates_model',
+        'request' => 'System\Requests\MailTemplate',
         'create' => [
             'title' => 'lang:system::lang.mail_templates.text_new_template_title',
             'redirect' => 'mail_templates/edit/{template_data_id}',
@@ -94,18 +95,5 @@ class MailTemplates extends \Admin\Classes\AdminController
         return [
             '#notification' => $this->makePartial('flash'),
         ];
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules[] = ['template_id', 'lang:system::lang.mail_templates.label_layout', 'integer'];
-        $rules[] = ['label', 'lang:admin::lang.label_description', 'required'];
-        $rules[] = ['subject', 'lang:system::lang.mail_templates.label_code', 'required'];
-
-        if ($form->context == 'create') {
-            $rules[] = ['code', 'lang:system::lang.mail_templates.label_code', 'required|min:2|max:32'];
-        }
-
-        return $this->validatePasses(post($form->arrayName), $rules);
     }
 }
