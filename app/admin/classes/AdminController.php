@@ -12,6 +12,12 @@ use Admin\Widgets\Toolbar;
 use AdminAuth;
 use AdminMenu;
 use Exception;
+use Igniter\Flame\Exception\AjaxException;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Exception\ValidationException;
+use Igniter\Flame\Flash\Facades\Flash;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Http\RedirectResponse;
 use Main\Widgets\MediaManager;
 use Redirect;
@@ -70,6 +76,7 @@ class AdminController extends BaseController
     {
         // Define layout and view paths
         $this->layout = $this->layout ?: 'default';
+        $this->configPath = [];
 
         $this->definePaths();
 
@@ -83,8 +90,10 @@ class AdminController extends BaseController
         $toolbar->bindToController();
 
         // Media Manager widget is available on all admin pages
-        $manager = new MediaManager($this, ['alias' => 'mediamanager']);
-        $manager->bindToController();
+        if ($this->currentUser AND $this->currentUser->hasPermission('Admin.MediaManager')) {
+            $manager = new MediaManager($this, ['alias' => 'mediamanager']);
+            $manager->bindToController();
+        }
 
         $this->fireEvent('controller.afterConstructor', [$this]);
     }
@@ -176,35 +185,13 @@ class AdminController extends BaseController
         $this->execPageAction($this->action, $this->params);
     }
 
-    protected function processHandlers()
-    {
-        if (!$handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
-            $handler = post('_handler');
-
-        if (!$handler)
-            return FALSE;
-
-        $params = $this->params;
-        array_unshift($params, $this->action);
-
-        $result = $this->runHandler($handler, $params);
-
-        $response = [];
-        if ($result instanceof RedirectResponse AND Request::ajax()) {
-            $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
-            $result = null;
-        }
-
-        return $result ?: $response;
-    }
-
     protected function execPageAction($action, $params)
     {
         $result = null;
 
         if (!$this->checkAction($action)) {
             throw new Exception(sprintf(
-                "Method [%s] is not found in the controller [%s]",
+                'Method [%s] is not found in the controller [%s]',
                 $action, get_class($this)
             ));
         }
@@ -233,6 +220,104 @@ class AdminController extends BaseController
         $config['context'] = $this->getClass();
         $mainMenuWidget = new Menu($this, $config);
         $mainMenuWidget->bindToController();
+    }
+
+    //
+    //
+    //
+
+    /**
+     * Returns the AJAX handler for the current request, if available.
+     * @return string
+     */
+    public function getHandler()
+    {
+        if ($handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+            return trim($handler);
+
+        if ($handler = input('_handler'))
+            return trim($handler);
+
+        return null;
+    }
+
+    protected function processHandlers()
+    {
+        if (!$handler = $this->getHandler())
+            return FALSE;
+
+        try {
+            $this->validateHandler($handler);
+
+            $partials = $this->validateHandlerPartials();
+
+            $response = [];
+
+            $params = $this->params;
+            array_unshift($params, $this->action);
+            $result = $this->runHandler($handler, $params);
+
+            foreach ($partials as $partial) {
+                $response[$partial] = $this->makePartial($partial);
+            }
+
+            if ($result instanceof RedirectResponse AND Request::ajax()) {
+                $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
+                $result = null;
+            }
+            elseif (Flash::messages()->isNotEmpty()) {
+                $response['#notification'] = $this->makePartial('flash');
+            }
+
+            if (is_array($result)) {
+                $response = array_merge($response, $result);
+            }
+            else if (is_string($result)) {
+                $response['result'] = $result;
+            }
+            else if (is_object($result)) {
+                return $result;
+            }
+
+            return $result ?: $response;
+        }
+        catch (ValidationException $ex) {
+            $this->flashValidationErrors($ex->getErrors());
+
+            if (Request::ajax())
+                return ['#notification' => $this->makePartial('flash')];
+
+            throw new AjaxException($ex->getMessage());
+        }
+        catch (MassAssignmentException $ex) {
+            throw new ApplicationException(lang('admin::lang.form.mass_assignment_failed', ['attribute' => $ex->getMessage()]));
+        }
+        catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    protected function validateHandler($handler)
+    {
+        if (!preg_match('/^(?:\w+\:{2})?on[A-Z]{1}[\w+]*$/', $handler)) {
+            throw new SystemException("Invalid ajax handler name: {$handler}");
+        }
+    }
+
+    protected function validateHandlerPartials()
+    {
+        if (!$partials = trim(Request::header('X-IGNITER-REQUEST-PARTIALS')))
+            return [];
+
+        $partials = explode('&', $partials);
+
+        foreach ($partials as $partial) {
+            if (!preg_match('/^(?:\w+\:{2}|@)?[a-z0-9\_\-\.\/]+$/i', $partial)) {
+                throw new SystemException("Invalid partial name: $partial");
+            }
+        }
+
+        return $partials;
     }
 
     //
@@ -301,7 +386,7 @@ class AdminController extends BaseController
 
     public function redirectBack($status = 302, $headers = [], $fallback = FALSE)
     {
-        return Redirect::back($status, $headers, Admin::url($fallback ? $fallback : 'dashboard'));
+        return Redirect::back($status, $headers, Admin::url($fallback ?: 'dashboard'));
     }
 
     public function refresh()
@@ -313,7 +398,7 @@ class AdminController extends BaseController
     {
         // Process Widget handler
         if (strpos($handler, '::')) {
-            list($widgetName, $handlerName) = explode('::', $handler);
+            [$widgetName, $handlerName] = explode('::', $handler);
 
             // Execute the page action so widgets are initialized
             $this->pageAction();

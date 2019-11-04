@@ -6,6 +6,11 @@ use AdminAuth;
 use App;
 use ApplicationException;
 use Config;
+use Exception;
+use Igniter\Flame\Exception\AjaxException;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Exception\ValidationException;
+use Igniter\Flame\Flash\Facades\Flash;
 use Igniter\Flame\Pagic\Cache\FileSystem;
 use Igniter\Flame\Pagic\Environment;
 use Igniter\Flame\Pagic\Parsers\FileParser;
@@ -84,7 +89,7 @@ class MainController extends BaseController
     /**
      * @var self Cache of this controller
      */
-    protected static $controller = null;
+    protected static $controller;
 
     /**
      * @var string Contains the rendered page contents string.
@@ -104,7 +109,7 @@ class MainController extends BaseController
     /**
      * @var \System\Classes\BaseComponent Object of the active component, used internally.
      */
-    protected $componentContext = null;
+    protected $componentContext;
 
     /**
      * @var bool Prevents the automatic view display.
@@ -322,46 +327,80 @@ class MainController extends BaseController
         return $response;
     }
 
-    protected function processHandlers()
+    //
+    //
+    //
+
+    /**
+     * Returns the AJAX handler for the current request, if available.
+     * @return string
+     */
+    public function getHandler()
     {
-        if (!$handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
-            $handler = input('_handler');
+        if ($handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+            return trim($handler);
 
-        if (!$handler)
-            return FALSE;
+        if ($handler = input('_handler'))
+            return trim($handler);
 
-        $response = [];
-
-        // Process Components handler
-        if (!$result = $this->runHandler($handler)) {
-            throw new ApplicationException(sprintf(Lang::get('main::lang.not_found.ajax_handler'), $handler));
-        }
-
-        if ($result instanceof RedirectResponse) {
-            $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
-            $result = null;
-        }
-
-        if (is_array($result)) {
-            $response = array_merge($response, $result);
-        }
-        else if (is_string($result)) {
-            $response['result'] = $result;
-        }
-        else if (is_object($result)) {
-            return $result;
-        }
-
-        return $response;
+        return null;
     }
 
-    public function runHandler($handler)
+    protected function processHandlers()
+    {
+        if (!$handler = $this->getHandler())
+            return FALSE;
+
+        try {
+            $this->validateHandler($handler);
+
+            $partials = $this->validateHandlerPartials();
+
+            $response = [];
+
+            // Process Components handler
+            if (!$result = $this->runHandler($handler)) {
+                throw new ApplicationException(sprintf(Lang::get('main::lang.not_found.ajax_handler'), $handler));
+            }
+
+            foreach ($partials as $partial) {
+                $response[$partial] = $this->renderPartial($partial);
+            }
+
+            if ($result instanceof RedirectResponse) {
+                $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
+                $result = null;
+            }
+            elseif (Request::header('X-IGNITER-REQUEST-FLASH') AND Flash::messages()->isNotEmpty()) {
+                $response['X_IGNITER_FLASH_MESSAGES'] = Flash::all();
+            }
+
+            if (is_array($result)) {
+                $response = array_merge($response, $result);
+            }
+            else if (is_string($result)) {
+                $response['result'] = $result;
+            }
+            else if (is_object($result)) {
+                return $result;
+            }
+
+            return Response::make($response, $this->statusCode);
+        }
+        catch (ValidationException $ex) {
+            $response['X_IGNITER_ERROR_FIELDS'] = $ex->getFields();
+            $response['X_IGNITER_ERROR_MESSAGE'] = $ex->getMessage();
+            throw new AjaxException($response);
+        }
+        catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    protected function runHandler($handler)
     {
         if (strpos($handler, '::')) {
-            list($componentName, $handlerName) = explode('::', $handler);
-
-            if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handlerName))
-                throw new ApplicationException("Ajax handler {$handler} must start with 'on', example. onSubmit");
+            [$componentName, $handlerName] = explode('::', $handler);
 
             $componentObj = $this->findComponentByAlias($componentName);
 
@@ -373,9 +412,6 @@ class MainController extends BaseController
             }
         } // Process page specific handler (index_onSomething)
         else {
-            if (!preg_match('/^on[A-Z]{1}[\w+]*$/', $handler))
-                throw new ApplicationException("Ajax handler {$handler} must start with 'on', example. onSubmit");
-
             $pageHandler = $this->action.'_'.$handler;
             if ($this->methodExists($pageHandler)) {
                 $result = call_user_func_array([$this, $pageHandler], $this->params);
@@ -392,6 +428,29 @@ class MainController extends BaseController
         }
 
         return FALSE;
+    }
+
+    protected function validateHandler($handler)
+    {
+        if (!preg_match('/^(?:\w+\:{2})?on[A-Z]{1}[\w+]*$/', $handler)) {
+            throw new SystemException("Invalid ajax handler name: {$handler}");
+        }
+    }
+
+    protected function validateHandlerPartials()
+    {
+        if (!$partials = trim(Request::header('X-IGNITER-REQUEST-PARTIALS')))
+            return [];
+
+        $partials = explode('&', $partials);
+
+        foreach ($partials as $partial) {
+            if (!preg_match('/^(?:\w+\:{2}|@)?[a-z0-9\_\-\.\/]+$/i', $partial)) {
+                throw new SystemException("Invalid partial name: $partial");
+            }
+        }
+
+        return $partials;
     }
 
     //
@@ -487,7 +546,7 @@ class MainController extends BaseController
     protected function initializeComponents()
     {
         foreach ($this->layout->settings['components'] as $component => $properties) {
-            list($name, $alias) = strpos($component, ' ')
+            [$name, $alias] = strpos($component, ' ')
                 ? explode(' ', $component)
                 : [$component, $component];
 
@@ -495,7 +554,7 @@ class MainController extends BaseController
         }
 
         foreach ($this->page->settings['components'] as $component => $properties) {
-            list($name, $alias) = strpos($component, ' ')
+            [$name, $alias] = strpos($component, ' ')
                 ? explode(' ', $component)
                 : [$component, $component];
 
@@ -532,7 +591,7 @@ class MainController extends BaseController
         $this->vars = array_merge($this->vars, $params);
 
         // Alias @ symbol for ::
-        if (substr($name, 0, 1) == '@') {
+        if (strpos($name, '@') === 0) {
             $name = '::'.substr($name, 1);
         }
 
@@ -549,10 +608,9 @@ class MainController extends BaseController
             // Set context for self access
             $this->vars['__SELF__'] = $this->componentContext;
         }
-        else {
-            // Process theme partial
-            if (($partial = $this->loadPartial($name, $throwException)) === FALSE)
-                return FALSE;
+        // Process theme partial
+        else if (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
+            return FALSE;
         }
 
         // Render the partial
@@ -598,7 +656,7 @@ class MainController extends BaseController
         // Inject global view variables
         $globalVars = ViewHelper::getGlobalVars();
         if (!empty($globalVars)) {
-            $params = $params + $globalVars;
+            $params += $globalVars;
         }
 
         // Parse basic template variables
@@ -660,7 +718,6 @@ class MainController extends BaseController
      * @param bool $addToLayout
      *
      * @return \System\Classes\BaseComponent Component object
-     * @throws \ApplicationException
      * @throws \Exception
      */
     public function addComponent($name, $alias, $properties = [], $addToLayout = FALSE)
@@ -758,7 +815,7 @@ class MainController extends BaseController
 
     protected function loadComponentPartial($name, $throwException = TRUE)
     {
-        list($componentAlias, $partialName) = explode('::', $name);
+        [$componentAlias, $partialName] = explode('::', $name);
 
         // Component alias not supplied
         if (!strlen($componentAlias)) {
@@ -771,12 +828,10 @@ class MainController extends BaseController
                 return FALSE;
             }
         }
-        else {
-            if (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
-                $this->handleException(sprintf(lang('main::lang.not_found.component'), $componentAlias), $throwException);
+        elseif (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
+            $this->handleException(sprintf(lang('main::lang.not_found.component'), $componentAlias), $throwException);
 
-                return FALSE;
-            }
+            return FALSE;
         }
 
         $partial = null;
