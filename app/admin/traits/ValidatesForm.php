@@ -6,9 +6,10 @@ use App;
 use Closure;
 use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Factory;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Validator;
 use Session;
+use System\Helpers\ValidationHelper;
 
 trait ValidatesForm
 {
@@ -29,7 +30,7 @@ trait ValidatesForm
         $validator = $this->makeValidator($request, $rules, $messages, $customAttributes);
 
         if ($validator->fails()) {
-            $this->flashErrors($validator);
+            $this->flashValidationErrors($validator->errors());
 
             return FALSE;
         }
@@ -52,7 +53,7 @@ trait ValidatesForm
         $validator = $this->makeValidator($request, $rules, $messages, $customAttributes);
 
         if ($validator->fails()) {
-            $this->flashErrors($validator);
+            $this->flashValidationErrors($validator->errors());
             throw new ValidationException($validator);
         }
 
@@ -61,10 +62,9 @@ trait ValidatesForm
 
     public function makeValidator($request, array $rules, array $messages = [], array $customAttributes = [])
     {
-        if (!$customAttributes)
-            $customAttributes = $this->parseAttributes($rules);
-
-        $rules = $this->parseRules($rules);
+        $parsed = ValidationHelper::prepareRules($rules);
+        $rules = Arr::get($parsed, 'rules', $rules);
+        $customAttributes = Arr::get($parsed, 'attributes', $customAttributes);
 
         $validator = $this->getValidationFactory()->make(
             $request ?? [], $rules, $messages, $customAttributes
@@ -133,13 +133,13 @@ trait ValidatesForm
         $this->validateAfterCallback = $callback;
     }
 
-    protected function flashErrors(Validator $validator)
+    protected function flashValidationErrors($errors)
     {
         $sessionKey = 'errors';
 
         if (App::runningInAdmin())
             $sessionKey = 'admin_errors';
 
-        return Session::flash($sessionKey, $validator->errors());
+        return Session::flash($sessionKey, $errors);
     }
 }

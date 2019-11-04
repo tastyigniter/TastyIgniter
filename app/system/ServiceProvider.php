@@ -18,6 +18,7 @@ use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Main\Classes\Customer;
 use Request;
@@ -25,6 +26,7 @@ use Setting;
 use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
+use System\Helpers\ValidationHelper;
 use System\Libraries\Assets;
 use System\Models\Settings_model;
 
@@ -205,6 +207,12 @@ class ServiceProvider extends AppServiceProvider
         Validator::extend('valid_time', function ($attribute, $value, $parameters, $validator) {
             return !(!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
                 AND !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value));
+        });
+
+        Event::listen('validator.beforeMake', function ($args) {
+            $rules = ValidationHelper::prepareRules($args->rules);
+            $args->rules = Arr::get($rules, 'rules', $args->rules);
+            $args->customAttributes = Arr::get($rules, 'attributes', $args->customAttributes);
         });
     }
 
