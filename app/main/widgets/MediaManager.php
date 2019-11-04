@@ -184,42 +184,37 @@ class MediaManager extends BaseWidget
     {
         $mediaLibrary = $this->getMediaLibrary();
 
-        try {
-            if (!$this->getSetting('new_folder'))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_new_folder_disabled'));
+        if (!$this->getSetting('new_folder'))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_new_folder_disabled'));
 
-            if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
+        if (!$path = $mediaLibrary->validatePath(post('path')))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
-            $name = trim(post('name'));
-            if (!strlen($name))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_file_name_required'));
+        $name = trim(post('name'));
+        if (!strlen($name))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_file_name_required'));
 
-            if (!$this->validateFileName($name))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
+        if (!$this->validateFileName($name))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
 
-            $fullPath = $path.'/'.$name;
-            if ($mediaLibrary->exists($fullPath))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_file_exists'));
+        $fullPath = $path.'/'.$name;
+        if ($mediaLibrary->exists($fullPath))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_file_exists'));
 
-            $mediaLibrary->makeFolder($fullPath);
+        $mediaLibrary->makeFolder($fullPath);
 
-            $mediaLibrary->resetCache();
+        $mediaLibrary->resetCache();
 
-            $this->setCurrentFolder($fullPath);
+        $this->setCurrentFolder($fullPath);
 
-            $this->prepareVars();
+        $this->prepareVars();
 
-            return [
-                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
-                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
-            ];
-        }
-        catch (Exception $ex) {
-            return $ex->getMessage();
-        }
+        return [
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
+            '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+            '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
+        ];
     }
 
     public function onRenameFolder()
@@ -267,203 +262,178 @@ class MediaManager extends BaseWidget
     {
         $mediaLibrary = $this->getMediaLibrary();
 
-        try {
-            if (!$this->getSetting('rename'))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_rename_disabled'));
+        if (!$this->getSetting('rename'))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_rename_disabled'));
 
-            if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
+        if (!$path = $mediaLibrary->validatePath(post('path')))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
-            $oldName = trim(post('file'));
-            if (!strlen($oldName))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_file_name_required'));
+        $oldName = trim(post('file'));
+        if (!strlen($oldName))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_file_name_required'));
 
-            $name = trim(post('name'));
-            if (!strlen($name))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_new_file_name'));
+        $name = trim(post('name'));
+        if (!strlen($name))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_new_file_name'));
 
-            if (!$mediaLibrary->isAllowedExtension($name))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
+        if (!$mediaLibrary->isAllowedExtension($name))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
 
-            if (!$this->validateFileName($name) OR !$this->validateFileName($oldName))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
+        if (!$this->validateFileName($name) OR !$this->validateFileName($oldName))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
 
-            $newPath = $path.'/'.$name;
-            if ($mediaLibrary->exists($newPath))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_file_exists'));
+        $newPath = $path.'/'.$name;
+        if ($mediaLibrary->exists($newPath))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_file_exists'));
 
-            $mediaLibrary->rename($path.'/'.$oldName, $newPath);
+        $mediaLibrary->rename($path.'/'.$oldName, $newPath);
 
-            $mediaLibrary->resetCache();
+        $mediaLibrary->resetCache();
 
-            $this->prepareVars();
+        $this->prepareVars();
 
-            return [
-                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
-                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
-            ];
-        }
-        catch (Exception $ex) {
-            return $ex->getMessage();
-        }
+        return [
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
+            '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+            '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
+        ];
     }
 
     public function onDeleteFolder()
     {
         $mediaLibrary = $this->getMediaLibrary();
 
-        try {
-            if (!$this->getSetting('delete'))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_delete_disabled'));
+        if (!$this->getSetting('delete'))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_delete_disabled'));
 
-            if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
+        if (!$path = $mediaLibrary->validatePath(post('path')))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
-            $mediaLibrary->deleteFolder($path);
+        $mediaLibrary->deleteFolder($path);
 
-            $mediaLibrary->resetCache();
+        $mediaLibrary->resetCache();
 
-            $this->setCurrentFolder(dirname($path));
+        $this->setCurrentFolder(dirname($path));
 
-            $this->prepareVars();
+        $this->prepareVars();
 
-            return [
-                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
-                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
-            ];
-        }
-        catch (Exception $ex) {
-            return $ex->getMessage();
-        }
+        return [
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
+            '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+            '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
+        ];
     }
 
     public function onDeleteFiles()
     {
         $mediaLibrary = $this->getMediaLibrary();
 
-        try {
-            if (!$this->getSetting('delete')) {
-                $json['alert'] = lang('main::lang.media_manager.alert_delete_disabled');
-            }
-
-            if (!$path = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
-
-            $files = post('files');
-            if (empty($files) OR !is_array($files)) {
-                throw new ApplicationException(lang('main::lang.media_manager.alert_select_delete_file'));
-            }
-
-            $files = array_map(function ($value) use ($path) {
-                return $this->validateFileName($value['path'])
-                    ? $path.'/'.$value['path']
-                    : FALSE;
-            }, $files);
-
-            $mediaLibrary->deleteFiles($files);
-
-            $mediaLibrary->resetCache();
-
-            $this->prepareVars();
-
-            return [
-                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
-                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
-            ];
+        if (!$this->getSetting('delete')) {
+            $json['alert'] = lang('main::lang.media_manager.alert_delete_disabled');
         }
-        catch (Exception $ex) {
-            return $ex->getMessage();
+
+        if (!$path = $mediaLibrary->validatePath(post('path')))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
+
+        $files = post('files');
+        if (empty($files) OR !is_array($files)) {
+            throw new ApplicationException(lang('main::lang.media_manager.alert_select_delete_file'));
         }
+
+        $files = array_map(function ($value) use ($path) {
+            return $this->validateFileName($value['path'])
+                ? $path.'/'.$value['path']
+                : FALSE;
+        }, $files);
+
+        $mediaLibrary->deleteFiles($files);
+
+        $mediaLibrary->resetCache();
+
+        $this->prepareVars();
+
+        return [
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
+            '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+            '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
+        ];
     }
 
     public function onMoveFiles()
     {
         $mediaLibrary = $this->getMediaLibrary();
 
-        try {
-            if (!$this->getSetting('move'))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_move_disabled'));
+        if (!$this->getSetting('move'))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_move_disabled'));
 
-            if (!$source = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
+        if (!$source = $mediaLibrary->validatePath(post('path')))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
-            if (!$destination = $mediaLibrary->validatePath(post('destination')))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
+        if (!$destination = $mediaLibrary->validatePath(post('destination')))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
-            $files = post('files');
-            if (empty($files) OR !is_array($files))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_select_move_file'));
+        $files = post('files');
+        if (empty($files) OR !is_array($files))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_select_move_file'));
 
-            foreach ($files as $file) {
-                $name = $file['path'];
-                if ($this->validateFileName($name))
-                    $mediaLibrary->moveFile($source.'/'.$name, $destination.'/'.$name);
-            }
-
-            $mediaLibrary->resetCache();
-
-            $this->setCurrentFolder($destination);
-
-            $this->prepareVars();
-
-            return [
-                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
-                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
-            ];
+        foreach ($files as $file) {
+            $name = $file['path'];
+            if ($this->validateFileName($name))
+                $mediaLibrary->moveFile($source.'/'.$name, $destination.'/'.$name);
         }
-        catch (Exception $ex) {
-            return $ex->getMessage();
-        }
+
+        $mediaLibrary->resetCache();
+
+        $this->setCurrentFolder($destination);
+
+        $this->prepareVars();
+
+        return [
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
+            '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+            '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
+        ];
     }
 
     public function onCopyFiles()
     {
         $mediaLibrary = $this->getMediaLibrary();
 
-        try {
-            if (!$this->getSetting('copy'))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_copy_disabled'));
+        if (!$this->getSetting('copy'))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_copy_disabled'));
 
-            if (!$source = $mediaLibrary->validatePath(post('path')))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
+        if (!$source = $mediaLibrary->validatePath(post('path')))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
-            if (!$destination = $mediaLibrary->validatePath(post('destination')))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
+        if (!$destination = $mediaLibrary->validatePath(post('destination')))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
-            $files = post('files');
-            if (empty($files) OR !is_array($files))
-                throw new ApplicationException(lang('main::lang.media_manager.alert_select_copy_file'));
+        $files = post('files');
+        if (empty($files) OR !is_array($files))
+            throw new ApplicationException(lang('main::lang.media_manager.alert_select_copy_file'));
 
-            foreach ($files as $file) {
-                $name = $file['path'];
-                if ($this->validateFileName($name))
-                    $mediaLibrary->copyFile($source.'/'.$name, $destination.'/'.$name);
-            }
-
-            $mediaLibrary->resetCache();
-
-            $this->setCurrentFolder($destination);
-
-            $this->prepareVars();
-
-            return [
-                '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
-                '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
-                '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
-                '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
-            ];
+        foreach ($files as $file) {
+            $name = $file['path'];
+            if ($this->validateFileName($name))
+                $mediaLibrary->copyFile($source.'/'.$name, $destination.'/'.$name);
         }
-        catch (Exception $ex) {
-            return $ex->getMessage();
-        }
+
+        $mediaLibrary->resetCache();
+
+        $this->setCurrentFolder($destination);
+
+        $this->prepareVars();
+
+        return [
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('folder-tree') => $this->makePartial('mediamanager/folder_tree'),
+            '#'.$this->getId('breadcrumb') => $this->makePartial('mediamanager/breadcrumb'),
+            '#'.$this->getId('statusbar') => $this->makePartial('mediamanager/statusbar'),
+        ];
     }
 
     //

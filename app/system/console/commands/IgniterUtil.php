@@ -58,6 +58,7 @@ class IgniterUtil extends Command
     {
         return [
             ['admin', null, InputOption::VALUE_NONE, 'Compile admin registered bundles.'],
+            ['minify', null, InputOption::VALUE_REQUIRED, 'Whether to minify the assets or not, default is 1.'],
         ];
     }
 
@@ -105,7 +106,7 @@ class IgniterUtil extends Command
     {
         $this->comment('Compiling registered asset bundles...');
 
-        config()->set('system.enableAssetMinify', TRUE);
+        config()->set('system.enableAssetMinify', (bool)$this->option('minify', TRUE));
         $appContext = $this->option('admin') ? 'admin' : 'main';
         $bundles = Assets::getBundles($type, $appContext);
 

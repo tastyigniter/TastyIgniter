@@ -10,6 +10,9 @@ trait HasComponents
         'components' => [],
     ];
 
+    /**
+     * @var \System\Classes\BaseComponent[]
+     */
     public $components = [];
 
     /**

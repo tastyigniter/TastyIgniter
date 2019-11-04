@@ -4,7 +4,7 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\MenuItem;
-use SystemException;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Menu extends BaseWidget
 {
@@ -176,7 +176,7 @@ class Menu extends BaseWidget
     public function getItem($item)
     {
         if (!isset($this->allItems[$item])) {
-            throw new SystemException('No definition for item '.$item);
+            throw new ApplicationException('No definition for item '.$item);
         }
 
         return $this->allItems[$item];
@@ -202,12 +202,12 @@ class Menu extends BaseWidget
     public function onGetDropdownOptions()
     {
         if (!strlen($itemName = input('item')))
-            throw new SystemException('Invalid item specified');
+            throw new ApplicationException('Invalid item specified');
 
         $this->defineMenuItems();
 
         if (!$item = $this->getItem($itemName))
-            throw new SystemException("No main menu item found matching {$itemName}");
+            throw new ApplicationException("No main menu item found matching {$itemName}");
 
         $itemOptions = $item->options();
 
@@ -233,12 +233,12 @@ class Menu extends BaseWidget
     public function onMarkOptionsAsRead()
     {
         if (!strlen($itemName = input('item')))
-            throw new SystemException('Invalid item specified');
+            throw new ApplicationException('Invalid item specified');
 
         $this->defineMenuItems();
 
         if (!$item = $this->getItem($itemName))
-            throw new SystemException("No main menu item found matching {$itemName}");
+            throw new ApplicationException("No main menu item found matching {$itemName}");
 
         $this->resolveMarkAsReadFromModel($item);
     }

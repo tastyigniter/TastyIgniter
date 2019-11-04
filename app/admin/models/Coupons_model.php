@@ -30,9 +30,9 @@ class Coupons_model extends Model
      */
     protected $primaryKey = 'coupon_id';
 
-    public $timestamps = TRUE;
-
     protected $timeFormat = 'H:i';
+
+    public $timestamps = TRUE;
 
     public $casts = [
         'period_start_date' => 'date',
@@ -42,6 +42,10 @@ class Coupons_model extends Model
         'fixed_to_time' => 'time',
         'recurring_from_time' => 'time',
         'recurring_to_time' => 'time',
+        'redemptions' => 'integer',
+        'customer_redemptions' => 'integer',
+        'status' => 'boolean',
+        'order_restriction' => 'boolean',
     ];
 
     public $relation = [

@@ -11,33 +11,33 @@ class Currencies extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model'        => 'System\Models\Currencies_model',
-            'title'        => 'lang:system::lang.currencies.text_title',
+            'model' => 'System\Models\Currencies_model',
+            'title' => 'lang:system::lang.currencies.text_title',
             'emptyMessage' => 'lang:system::lang.currencies.text_empty',
-            'defaultSort'  => ['country_name', 'ASC'],
-            'configFile'   => 'currencies_model',
+            'defaultSort' => ['country_name', 'ASC'],
+            'configFile' => 'currencies_model',
         ],
     ];
 
     public $formConfig = [
-        'name'       => 'lang:system::lang.currencies.text_form_name',
-        'model'      => 'System\Models\Currencies_model',
-        'create'     => [
-            'title'         => 'lang:admin::lang.form.create_title',
-            'redirect'      => 'currencies/edit/{currency_id}',
+        'name' => 'lang:system::lang.currencies.text_form_name',
+        'model' => 'System\Models\Currencies_model',
         'request' => 'System\Requests\Currency',
+        'create' => [
+            'title' => 'lang:admin::lang.form.create_title',
+            'redirect' => 'currencies/edit/{currency_id}',
             'redirectClose' => 'currencies',
         ],
-        'edit'       => [
-            'title'         => 'lang:admin::lang.form.edit_title',
-            'redirect'      => 'currencies/edit/{currency_id}',
+        'edit' => [
+            'title' => 'lang:admin::lang.form.edit_title',
+            'redirect' => 'currencies/edit/{currency_id}',
             'redirectClose' => 'currencies',
         ],
-        'preview'    => [
-            'title'    => 'lang:admin::lang.form.preview_title',
+        'preview' => [
+            'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'currencies',
         ],
-        'delete'     => [
+        'delete' => [
             'redirect' => 'currencies',
         ],
         'configFile' => 'currencies_model',

@@ -80,7 +80,7 @@ class Languages_model extends Language
 
     public function listAllFiles()
     {
-        trace_log('Languages_model::listAllFiles() is deprecated. Use Translator loader instead.');
+        traceLog('Method Languages_model::listAllFiles() has been deprecated. Use Translator loader instead.');
     }
 
     public function getLines($locale, $group, $namespace = null)

@@ -32,6 +32,14 @@ class Menus_model extends Model
     protected $fillable = ['menu_name', 'menu_description', 'menu_price', 'menu_category_id',
         'stock_qty', 'minimum_qty', 'subtract_stock', 'mealtime_id', 'menu_status', 'menu_priority'];
 
+    public $casts = [
+        'stock_qty' => 'integer',
+        'minimum_qty' => 'integer',
+        'subtract_stock' => 'boolean',
+        'menu_status' => 'boolean',
+        'menu_priority' => 'boolean',
+    ];
+
     public $purgeable = [
         'special', 'menu_options', 'categories', 'locations',
     ];

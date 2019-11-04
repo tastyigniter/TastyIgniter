@@ -5,6 +5,7 @@ use Admin\Models\Payments_model;
 use AdminMenu;
 use Exception;
 use Igniter\Flame\Database\Model;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Payments extends \Admin\Classes\AdminController
 {
@@ -128,7 +129,10 @@ class Payments extends \Admin\Classes\AdminController
 
     public function formBeforeCreate($model)
     {
-        $paymentGateway = PaymentGateways::instance()->findGateway(post('Payment.payment'));
+        if (!strlen($code = post('Payment.payment')))
+            throw new ApplicationException('Invalid payment gateway code selected');
+
+        $paymentGateway = PaymentGateways::instance()->findGateway($code);
 
         $model->class_name = $paymentGateway['class'];
     }

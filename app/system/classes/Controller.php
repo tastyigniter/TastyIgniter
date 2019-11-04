@@ -8,6 +8,7 @@ use File;
 use Igniter\Flame\Support\RouterHelper;
 use Igniter\Flame\Traits\ExtendableTrait;
 use Illuminate\Routing\Controller as IlluminateController;
+use Illuminate\Support\Facades\Config;
 use Response;
 use View;
 
@@ -45,9 +46,16 @@ class Controller extends IlluminateController
      */
     public static $segments;
 
+    /**
+     * Stores the requested controller so that the constructor is only run once
+     *
+     * @var \Admin\Classes\AdminController
+     */
+    protected $requestedController;
+
     public function __construct()
     {
-//        $this->extendableConstruct();
+        $this->extendableConstruct();
     }
 
     /**
@@ -70,7 +78,7 @@ class Controller extends IlluminateController
     public function run($url = '/')
     {
         if (!App::hasDatabase()) {
-            return Response::make(View::make('system::no_database'), 200);
+            return Response::make(View::make('system::no_database'));
         }
 
         return App::make('Main\Classes\MainController')->remap($url);
@@ -89,34 +97,17 @@ class Controller extends IlluminateController
         $segments = RouterHelper::segmentizeUrl($url);
 
         if (!App::hasDatabase()) {
-            return Response::make(View::make('system::no_database'), 200);
+            return Response::make(View::make('system::no_database'));
         }
 
-        // Look for a controller within app/admin & app/system
-        $controller = $segments[0] ?? 'dashboard';
-        self::$action = $action = isset($segments[1]) ? $this->processAction($segments[1]) : 'index';
-        self::$segments = $params = array_slice($segments, 2);
-        if ($controllerObj = $this->locateController(
-            $controller,
-            ['admin' => 'Admin', 'system' => 'System'],
-            app_path()
-        )) {
-            return $controllerObj->remap($action, $params);
+        // Look for a controller within the /app directory
+        if ($controllerObj = $this->locateControllerInApp($segments)) {
+            return $controllerObj->remap(self::$action, self::$segments);
         }
 
-        // Look for a controller within extensions
-        if (count($segments) >= 3) {
-            list($author, $extension, $controller) = $segments;
-            self::$action = $action = isset($segments[3]) ? $this->processAction($segments[3]) : 'index';
-            self::$segments = $params = array_slice($segments, 4);
-
-            if ($controllerObj = $this->locateController(
-                $controller,
-                ["{$author}/{$extension}" => "{$author}\\{$extension}"],
-                extension_path()
-            )) {
-                return $controllerObj->remap($action, $params);
-            }
+        // Look for a controller within the /extensions directory
+        if ($controllerObj = $this->locateControllerInExtensions($segments)) {
+            return $controllerObj->remap(self::$action, self::$segments);
         }
 
         return Response::make(View::make('main::404'), 404);
@@ -157,26 +148,27 @@ class Controller extends IlluminateController
      */
     protected function locateController($controller, $modules, $inPath)
     {
+        if (isset($this->requestedController))
+            return $this->requestedController;
+
         is_array($modules) OR $modules = [$modules];
 
         $controllerClass = null;
         $matchPath = $inPath.'/%s/controllers/%s.php';
         foreach ($modules as $module => $namespace) {
             $controller = strtolower(str_replace(['\\', '_'], ['/', ''], $controller));
-            if ($controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller))) {
-                if (!class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller))
-                    include_once $controllerFile;
-            }
+            $controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller));
+            if ($controllerFile AND !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller))
+                include_once $controllerFile;
         }
 
         if (!$controllerClass OR !class_exists($controllerClass))
-            return FALSE;
+            return $this->requestedController = null;
 
         $controllerObj = App::make($controllerClass);
 
-        $action = self::$action;
-        if ($controllerObj->checkAction($action)) {
-            return $controllerObj;
+        if ($controllerObj->checkAction(self::$action)) {
+            return $this->requestedController = $controllerObj;
         }
 
         return FALSE;
@@ -196,5 +188,41 @@ class Controller extends IlluminateController
         }
 
         return $actionName;
+    }
+
+    protected function locateControllerInApp(array $segments)
+    {
+        $modules = [];
+        foreach (Config::get('system.modules') as $module) {
+            $modules[strtolower($module)] = $module;
+        }
+
+        $controller = $segments[0] ?? 'dashboard';
+        self::$action = isset($segments[1]) ? $this->processAction($segments[1]) : 'index';
+        self::$segments = array_slice($segments, 2);
+        if ($controllerObj = $this->locateController($controller, $modules, app_path())) {
+            return $controllerObj;
+        }
+    }
+
+    protected function locateControllerInExtensions($segments)
+    {
+        if (count($segments) >= 3) {
+            [$author, $extension, $controller] = $segments;
+            self::$action = isset($segments[3]) ? $this->processAction($segments[3]) : 'index';
+            self::$segments = array_slice($segments, 4);
+
+            $extensionCode = sprintf('%s.%s', $author, $extension);
+            if (ExtensionManager::instance()->isDisabled($extensionCode))
+                return;
+
+            if ($controllerObj = $this->locateController(
+                $controller,
+                ["{$author}/{$extension}" => "{$author}\\{$extension}"],
+                extension_path()
+            )) {
+                return $controllerObj;
+            }
+        }
     }
 }

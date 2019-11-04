@@ -140,6 +140,7 @@ class FormController extends ControllerAction
      *
      * @param \Model $model
      *
+     * @param null $context
      * @return void
      * @throws \Exception
      */
@@ -212,6 +213,7 @@ class FormController extends ControllerAction
 
     /**
      * Prepares common form data
+     * @param $model
      */
     protected function prepareVars($model)
     {
@@ -223,7 +225,7 @@ class FormController extends ControllerAction
     public function create($context = null)
     {
         try {
-            $this->context = $context ? $context : $this->getConfig('create[context]', self::CONTEXT_CREATE);
+            $this->context = $context ?: $this->getConfig('create[context]', self::CONTEXT_CREATE);
 
             $this->setFormTitle('create[title]', 'lang:admin::lang.form.create_title');
 
@@ -238,7 +240,7 @@ class FormController extends ControllerAction
 
     public function create_onSave($context = null)
     {
-        $this->context = $context ? $context : $this->getConfig('create[context]', self::CONTEXT_CREATE);
+        $this->context = $context ?: $this->getConfig('create[context]', self::CONTEXT_CREATE);
         $model = $this->controller->formCreateModelObject();
         $model = $this->controller->formExtendModel($model) ?: $model;
         $this->initForm($model, $context);
@@ -272,7 +274,7 @@ class FormController extends ControllerAction
     public function edit($context = null, $recordId = null)
     {
         try {
-            $this->context = $context ? $context : $this->getConfig('edit[context]', self::CONTEXT_CREATE);
+            $this->context = $context ?: $this->getConfig('edit[context]', self::CONTEXT_CREATE);
 
             $this->setFormTitle('edit[title]', 'lang:admin::lang.form.edit_title');
 
@@ -287,7 +289,7 @@ class FormController extends ControllerAction
 
     public function edit_onSave($context = null, $recordId = null)
     {
-        $this->context = $context ? $context : $this->getConfig('edit[context]', self::CONTEXT_EDIT);
+        $this->context = $context ?: $this->getConfig('edit[context]', self::CONTEXT_EDIT);
 
         $model = $this->controller->formFindModelObject($recordId);
         $this->initForm($model, $context);
@@ -321,7 +323,7 @@ class FormController extends ControllerAction
 
     public function edit_onDelete($context = null, $recordId = null)
     {
-        $this->context = $context ? $context : $this->getConfig('edit[context]', self::CONTEXT_EDIT);
+        $this->context = $context ?: $this->getConfig('edit[context]', self::CONTEXT_EDIT);
 
         $model = $this->controller->formFindModelObject($recordId);
         $this->initForm($model, $context);
@@ -344,7 +346,7 @@ class FormController extends ControllerAction
     public function preview($context = null, $recordId = null)
     {
         try {
-            $this->context = $context ? $context : $this->getConfig('preview[context]', self::CONTEXT_PREVIEW);
+            $this->context = $context ?: $this->getConfig('preview[context]', self::CONTEXT_PREVIEW);
 
             $this->setFormTitle('preview[title]', 'lang:admin::lang.form.preview_title');
 
