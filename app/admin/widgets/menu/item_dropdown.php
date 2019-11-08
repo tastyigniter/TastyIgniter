@@ -28,7 +28,7 @@ is_array($itemOptions) OR $itemOptions = [];
             <li
                 id="<?= $item->getId($item->itemName.'-options'); ?>"
                 class="dropdown-body">
-                <p class="wrap-all text-muted text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></p>
+                <p class="wrap-all text-muted text-center"><span class="ti-loading fa-3x fa-fw"></span></p>
             </li>
         <?php } ?>
         <li class="dropdown-footer">

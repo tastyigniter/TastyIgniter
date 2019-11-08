@@ -8,8 +8,9 @@
     <div class="modal-dialog" role="document">
         <div id="<?= $this->getId('new-widget-modal-content') ?>" class="modal-content">
             <div class="modal-body">
-                <div class="loading">
-                    <span class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
+                <div class="progress-indicator">
+                    <span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>
+                    <?= e(lang('admin::lang.text_loading')) ?>
                 </div>
             </div>
         </div>
@@ -31,6 +32,7 @@
             class="btn btn-outline-danger"
             data-request="<?= $this->getEventHandler('onResetWidgets') ?>"
             data-request-confirm="<?= e(trans('admin::lang.alert_warning_confirm')) ?>"
+            data-attach-loading
             title="<?= e(lang('admin::lang.dashboard.button_reset_widgets')) ?>"
             tabindex="-1"
         ><i class="fa fa-refresh"></i></button>
@@ -41,6 +43,7 @@
             class="btn btn-outline-default"
             data-request="<?= $this->getEventHandler('onSetAsDefault') ?>"
             data-request-confirm="<?= e(trans('admin::lang.dashboard.alert_set_default_confirm')) ?>"
+            data-attach-loading
             title="<?= e(trans('admin::lang.dashboard.button_set_default')) ?>"
             tabindex="-1"
         ><i class="fa fa-save"></i></button>

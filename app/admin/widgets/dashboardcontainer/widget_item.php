@@ -38,10 +38,6 @@
                 id="<?= $widgetAlias ?>-modal-content"
                 class="modal-content"
             >
-                <div class="loading hide">
-                    <span class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
-                </div>
-
                 <?= $this->makePartial('dashboardcontainer/widget_form', [
                     'widgetAlias' => $widgetAlias,
                     'widget' => $widget,

@@ -26,6 +26,7 @@
                 class="btn btn-outline-danger"
                 type="button"
                 data-request="<?= $onClearHandler; ?>"
+                data-attach-loading
             >
                 <i class="fa fa-times"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_clear'); ?>
             </button>

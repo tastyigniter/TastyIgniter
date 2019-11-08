@@ -32,9 +32,9 @@
 
     RecordEditorModal.prototype.show = function () {
         this.$modalRootElement.html(
-            '<div class="modal-dialog"><div class="modal-content"><div class="modal-body">'
-            +'<span class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>'
-            +'</div></div></div>'
+            '<div class="modal-dialog"><div class="modal-content"><div class="modal-body"><div class="progress-indicator">'
+            +'<span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>Loading...'
+            +'</div></div></div></div>'
         );
 
         this.$modalRootElement.modal({backdrop: 'static', keyboard: false})

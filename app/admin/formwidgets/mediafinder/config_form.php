@@ -1,6 +1,6 @@
 <div class="modal-content">
     <div class="modal-header">
-        <span class="modal-title"><?= lang('main::lang.media_manager.help_attachment_config'); ?></span>
+        <h4 class="modal-title"><?= lang('main::lang.media_manager.help_attachment_config'); ?></h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     </div>
     <?= form_open([

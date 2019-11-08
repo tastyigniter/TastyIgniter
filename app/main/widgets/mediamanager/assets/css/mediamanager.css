@@ -176,7 +176,5 @@ Uploader
 Folder Tree
 */
 .folder-tree {
-	position: absolute;
-	min-width: 20%;
-	z-index: 99;
+	min-width: 250px;
 }

@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card components-list">
     <div class="list-group list-group-flush">
         <?php foreach ($availableComponents as $component) { ?>
             <a

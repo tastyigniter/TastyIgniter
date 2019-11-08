@@ -39,10 +39,7 @@
 
     MediaManagerModal.prototype.show = function () {
         var self = this,
-            handler = this.options.alias + '::onLoadPopup',
-            spinner = '<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>',
-            $loadingIndicator = $('<div/>').addClass('loading-fixed')
-                .append($('<span />').addClass('spinner'))
+            handler = this.options.alias + '::onLoadPopup'
 
         var data = {
             selectMode: this.options.selectMode,
@@ -51,17 +48,15 @@
             chooseButtonText: this.options.chooseButtonText,
         }
 
-        $loadingIndicator.find('.spinner').html(spinner)
-        $(document.body).append($loadingIndicator);
-
-        $.request(handler, {
-            data: data,
-            success: function (json) {
+        $.ti.loadingIndicator.show()
+        $.request(handler, {data: data})
+            .done(function (json) {
                 self.$modalRootElement.html(json);
                 self.$modalRootElement.modal()
-                $loadingIndicator.remove()
-            },
-        })
+            })
+            .always(function () {
+                $.ti.loadingIndicator.hide()
+            })
     }
 
     MediaManagerModal.prototype.hide = function () {

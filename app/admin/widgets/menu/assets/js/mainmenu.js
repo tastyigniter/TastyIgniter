@@ -7,7 +7,7 @@
     var MainMenu = function (element, options) {
         this.options = options
         this.$el = $(element)
-        this.loadingHtml = '<p class="wrap-all text-muted text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></p>'
+        this.loadingHtml = '<p class="spinner text-muted text-center"><span class="ti-loading fa-3x fa-fw"></span></p>'
         this.$markAsReadButton = $('<a href="#" class="pull-right mark-as-read"><i class="fa fa-check"></i></a>')
 
         // Init

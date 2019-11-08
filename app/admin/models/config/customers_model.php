@@ -1,5 +1,6 @@
 <?php
-$config['list']['filter'] = [
+$config['list']['filter']
+    = [
     'search' => [
         'prompt' => 'lang:admin::lang.customers.text_filter_search',
         'mode' => 'all' // or any, exact
@@ -21,10 +22,31 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'customers/create'],
-        'delete' => ['label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm'],
-        'filter' => ['label' => 'lang:admin::lang.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
-        'groups' => ['label' => 'lang:admin::lang.side_menu.customer_group', 'class' => 'btn btn-default', 'href' => 'customer_groups'],
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'customers/create',
+        ],
+        'delete' => [
+            'label' => 'lang:admin::lang.button_delete',
+            'class' => 'btn btn-danger',
+            'data-attach-loading' => '',
+            'data-request' => 'onDelete',
+            'data-request-form' => '#list-form',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+        ],
+        'filter' => [
+            'label' => 'lang:admin::lang.button_icon_filter',
+            'class' => 'btn btn-default btn-filter',
+            'data-toggle' => 'list-filter',
+            'data-target' => '.list-filter',
+        ],
+        'groups' => [
+            'label' => 'lang:admin::lang.side_menu.customer_group',
+            'class' => 'btn btn-default',
+            'href' => 'customer_groups',
+        ],
     ],
 ];
 
@@ -78,18 +100,27 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'class' => 'btn btn-primary',
+            'data-request' => 'onSave',
+            'data-progress-indicator' => 'admin::lang.text_saving',
+        ],
         'saveClose' => [
             'label' => 'lang:admin::lang.button_save_close',
             'class' => 'btn btn-default',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
             'data-request-data' => 'close:1',
+            'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
-            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => ['edit'],
+            'label' => 'lang:admin::lang.button_icon_delete',
+            'class' => 'btn btn-danger',
+            'data-request' => 'onDelete',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
+            'context' => ['edit'],
         ],
     ],
 ];
@@ -131,6 +162,7 @@ $config['form']['tabs'] = [
         'customer_group_id' => [
             'label' => 'lang:admin::lang.customers.label_customer_group',
             'type' => 'relation',
+            'span' => 'left',
             'relationFrom' => 'group',
             'nameFrom' => 'group_name',
             'placeholder' => 'lang:admin::lang.text_please_select',
@@ -140,10 +172,14 @@ $config['form']['tabs'] = [
             'type' => 'switch',
             'on' => 'lang:admin::lang.customers.text_subscribe',
             'off' => 'lang:admin::lang.customers.text_un_subscribe',
+            'span' => 'left',
+            'cssClass' => 'flex-width',
         ],
         'status' => [
             'label' => 'lang:admin::lang.label_status',
             'type' => 'switch',
+            'span' => 'left',
+            'cssClass' => 'flex-width',
         ],
         'addresses' => [
             'tab' => 'lang:admin::lang.customers.text_tab_address',

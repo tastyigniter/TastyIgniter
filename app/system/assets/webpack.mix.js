@@ -29,7 +29,7 @@ mix.copyDirectory(
 //
 //  Build UI SCSS
 //
-// mix.sass('ui/scss/flame.scss', 'ui')
+mix.sass('ui/scss/flame.scss', 'ui')
 
 //
 //  Combine UI JS
@@ -43,6 +43,8 @@ mix.copyDirectory(
 //         'ui/js/vendor/waterfall.min.js',
 //         'ui/js/vendor/transition.js',
 //         'ui/js/app.js',
+//         'ui/js/loader.bar.js',
+//         'ui/js/loader.progress.js',
 //         'ui/js/flashmessage.js',
 //         'ui/js/toggler.js',
 //         'ui/js/trigger.js',

@@ -1,4 +1,4 @@
-<form data-request="<?= $this->getEventHandler('onApplySetup'); ?>">
+<form>
     <div class="modal-body">
         <div class="form-group">
             <label class="control-label">
@@ -71,17 +71,23 @@
             </div>
         <?php } ?>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer progress-indicator-container">
         <button
             type="button"
             class="btn btn-link text-danger mr-sm-auto"
             data-request="<?= $this->getEventHandler('onResetSetup'); ?>"
+            data-progress-indicator="<?= e(lang('admin::lang.text_resetting')) ?>"
         ><?= lang('admin::lang.list.button_reset_setup') ?></button>
         <button
             type="button"
             class="btn btn-default"
             data-dismiss="modal"
         ><?= lang('admin::lang.list.button_cancel_setup') ?></button>
-        <button type="sumbit" class="btn btn-primary"><?= lang('admin::lang.list.button_apply_setup') ?></button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            data-request="<?= $this->getEventHandler('onApplySetup'); ?>"
+            data-progress-indicator="<?= e(lang('admin::lang.text_saving')) ?>"
+        ><?= lang('admin::lang.list.button_apply_setup') ?></button>
     </div>
 </form>

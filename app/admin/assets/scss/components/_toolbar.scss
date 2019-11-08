@@ -4,59 +4,68 @@
   .toolbar-action {
     clear: both;
     width: 100%;
+  }
+}
 
-    .btn {
-      border-bottom-width: 4px;
-      outline: 0 none;
-      margin-left: 5px;
-      margin-right: 5px;
+.toolbar-action {
+  .btn-group:not(:last-child) {
+    margin-right: 8px;
+  }
 
-      &:first-child {
-        margin-left: 0;
-      }
+  > .btn {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 
-      &:last-child {
-        margin-right: 0;
-      }
+  .btn {
+    border-bottom-width: 4px;
+    outline: 0 none;
 
-      .fa {
-        padding-right: 3px;
-      }
+    &:first-child {
+      margin-left: 0;
     }
 
-    .btn:hover,
-    .btn:focus {
-      margin-top: 1px;
-      border-bottom-width: 3px;
-    }
-
-    .btn.active,
-    .btn:active {
-      box-shadow: none;
-      border-bottom-width: 2px;
-      margin-top: 2px;
+    &:last-child {
+      margin-right: 0;
     }
 
     .fa {
-      padding: 0;
+      padding-right: 3px;
+    }
+  }
+
+  .btn:hover,
+  .btn:focus {
+    margin-top: 1px;
+    border-bottom-width: 3px;
+  }
+
+  .btn.active,
+  .btn:active {
+    box-shadow: none;
+    border-bottom-width: 2px;
+    margin-top: 2px;
+  }
+
+  .fa {
+    padding: 0;
+  }
+
+  .btn-default {
+    border-width: 1px 1px 4px 1px;
+  }
+
+  .btn-filter {
+    float: right;
+  }
+
+  @each $color, $value in $theme-colors {
+    .btn-#{$color} {
+      border-bottom-color: darken($value, 7.5%);
     }
 
-    .btn-default {
-      border-width: 1px 1px 4px 1px;
-    }
-
-    .btn-filter {
-      float: right;
-    }
-
-    @each $color, $value in $theme-colors {
-      .btn-#{$color} {
-        border-bottom-color: darken($value, 7.5%);
-      }
-
-      @include hover-focus {
-        border-bottom-color: $value;
-      }
+    @include hover-focus {
+      border-bottom-color: $value;
     }
   }
 }

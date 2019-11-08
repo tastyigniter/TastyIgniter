@@ -7,7 +7,7 @@
             </div>
             <div id="<?= $listId ?>-setup-modal-content">
                 <div class="modal-body text-center">
-                    <span class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
+                    <span class="spinner text-muted"><span class="ti-loading fa-3x fa-fw"></span></span>
                 </div>
             </div>
         </div>

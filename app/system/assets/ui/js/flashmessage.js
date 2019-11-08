@@ -88,4 +88,55 @@
         })
     })
 
+    $(document).on('ajaxValidation', '[data-request][data-request-validate]', function (event, context, errorMsg, fields) {
+        var $this = $(this).closest('form'),
+            $container = $('[data-validate-error]', $this),
+            messages = [],
+            $field
+
+        $.each(fields, function (fieldName, fieldMessages) {
+            $field = $('[data-validate-for="' + fieldName + '"]', $this)
+            messages = $.merge(messages, fieldMessages)
+            if (!!$field.length) {
+                if (!$field.text().length || $field.data('emptyMode') == true) {
+                    $field
+                        .data('emptyMode', true)
+                        .text(fieldMessages.join(', '))
+                }
+                $field.addClass('visible')
+            }
+        })
+
+        if (!!$container.length) {
+            $container = $('[data-validate-error]', $this)
+        }
+
+        if (!!$container.length) {
+            var $oldMessages = $('[data-message]', $container)
+            $container.addClass('visible')
+
+            if (!!$oldMessages.length) {
+                var $clone = $oldMessages.first()
+
+                $.each(messages, function (key, message) {
+                    $clone.clone().text(message).insertAfter($clone)
+                })
+
+                $oldMessages.remove()
+            } else {
+                $container.text(errorMsg)
+            }
+        }
+
+        $this.one('ajaxError', function (event) {
+            event.preventDefault()
+        })
+    })
+
+    $(document).on('ajaxPromise', '[data-request][data-request-validate]', function () {
+        var $this = $(this).closest('form')
+        $('[data-validate-for]', $this).removeClass('visible')
+        $('[data-validate-error]', $this).removeClass('visible')
+    })
+
 }(window.jQuery)

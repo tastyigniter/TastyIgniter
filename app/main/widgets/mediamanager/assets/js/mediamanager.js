@@ -226,8 +226,7 @@
         if (this.navigationAjax !== null) {
             try {
                 this.navigationAjax.abort()
-            }
-            catch (e) {
+            } catch (e) {
             }
             this.releaseNavigationAjax()
         }
@@ -353,7 +352,7 @@
     }
 
     MediaManager.prototype.uploadError = function (file, message, xhr) {
-        Notification.show(message);
+        $.ti.flashMessage({text: message});
     }
 
     MediaManager.prototype.uploadQueueComplete = function () {
@@ -380,7 +379,10 @@
 
     MediaManager.prototype.initFolderTree = function () {
         this.$folderTreeElement = this.$el.find('[data-control="folder-tree"]')
-        var $folderTree = this.$folderTreeElement.find('.folder-tree')
+        var $folderTreeDropdown = this.$el.find('[data-control="folder-tree-dropdown"]'),
+            $folderTree = this.$folderTreeElement.find('.folder-tree')
+
+        $folderTreeDropdown.find('[data-toggle="dropdown"]').dropdown('hide')
 
         var treeOptions = {
             data: $folderTree[0].getAttribute('data-tree-data'),
@@ -392,14 +394,9 @@
 
         $folderTree.treeview(treeOptions)
         $folderTree.on('nodeSelected', $.proxy(this.onTreeNodeSelected, this))
-    }
 
-    MediaManager.prototype.showFolderTree = function () {
-        this.$folderTreeElement.find('.folder-tree').removeClass('hide')
-    }
-
-    MediaManager.prototype.hideFolderTree = function () {
-        this.$folderTreeElement.find('.folder-tree').addClass('hide')
+        $folderTreeDropdown.on('show.bs.dropdown', $.proxy(this.onShowFolderTree, this));
+        $folderTreeDropdown.on('hide.bs.dropdown', $.proxy(this.onHideFolderTree, this));
     }
 
     //
@@ -415,8 +412,8 @@
     }
 
     MediaManager.prototype.renameFolder = function () {
-        if (this.$el.find('[data-media-type="current-folder"]').val() == '/') {
-            Notification.show(this.options.renameDisabled)
+        if (this.$el.find('[data-media-type="current-folder"]').val() === '/') {
+            $.ti.flashMessage({text: this.options.renameDisabled, class: 'warning'});
             return;
         }
 
@@ -429,8 +426,8 @@
     }
 
     MediaManager.prototype.deleteFolder = function () {
-        if (this.$el.find('[data-media-type="current-folder"]').val() == '/') {
-            Notification.show(this.options.deleteDisabled)
+        if (this.$el.find('[data-media-type="current-folder"]').val() === '/') {
+            $.ti.flashMessage({text: this.options.deleteDisabled, class: 'warning'});
             return;
         }
 
@@ -444,7 +441,7 @@
     MediaManager.prototype.renameItem = function () {
         var items = this.getSelectedItems()
         if (items.length > 1) {
-            Notification.show(this.options.selectSingleImage)
+            $.ti.flashMessage({text: this.options.selectSingleImage, class: 'danger'});
             return
         }
 
@@ -459,7 +456,7 @@
     MediaManager.prototype.moveItems = function () {
         var items = this.getSelectedItems()
         if (!items.length) {
-            Notification.show(this.options.moveEmpty)
+            $.ti.flashMessage({text: this.options.moveEmpty, class: 'danger'});
             return
         }
 
@@ -474,7 +471,7 @@
     MediaManager.prototype.copyItems = function () {
         var items = this.getSelectedItems()
         if (!items.length) {
-            Notification.show(this.options.copyEmpty)
+            $.ti.flashMessage({text: this.options.copyEmpty, class: 'danger'});
             return
         }
 
@@ -489,7 +486,7 @@
     MediaManager.prototype.deleteItems = function () {
         var items = this.getSelectedItems()
         if (!items.length) {
-            Notification.show(this.options.deleteEmpty)
+            $.ti.flashMessage({text: this.options.deleteEmpty, class: 'danger'});
             return
         }
 
@@ -515,6 +512,20 @@
         $(this).find('form').trigger('submit.dialog')
     }
 
+    MediaManager.prototype.onShowFolderTree = function (event) {
+        var $el = $(event.currentTarget);
+        $el.find('.list-group').addClass('list-group-flush')
+    }
+
+    MediaManager.prototype.onHideFolderTree = function (event) {
+        if (event.clickEvent !== undefined) {
+            var $el = $(event.clickEvent.target);
+            if ($el.hasClass("list-group-item") || $el.parents(".list-group-item").length) {
+                return false;
+            }
+        }
+    }
+
     MediaManager.prototype.onTreeNodeSelected = function (event, data) {
         if (data.path)
             this.goToFolder(data.path);
@@ -528,9 +539,6 @@
         var control = $(event.currentTarget).data('media-control')
 
         switch (control) {
-            case 'folder-tree':
-                this.showFolderTree()
-                break;
             case 'refresh':
                 this.refresh()
                 break;
@@ -562,8 +570,6 @@
                 this.deleteItems()
                 break;
         }
-
-        return false
     }
 
     MediaManager.prototype.onSortingChanged = function (event) {
@@ -833,31 +839,4 @@
     $(document).render(function () {
         $('div[data-control=media-manager]').mediaManager()
     })
-
-    var Notification = (function () {
-        "use strict";
-
-        var elem,
-            hideHandler,
-            that = {};
-
-        that.init = function (options) {
-            elem = $(options.selector);
-        };
-
-        that.show = function (text) {
-            clearTimeout(hideHandler);
-
-            elem.find("span").html(text);
-            elem.delay(200).fadeIn().delay(4000).fadeOut();
-        };
-
-        return that;
-    }());
-
-    $(document).render(function () {
-        Notification.init({
-            "selector": "#notification"
-        });
-    });
 }(window.jQuery);

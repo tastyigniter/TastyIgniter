@@ -52,7 +52,11 @@
     }
 
     Components.prototype.onRemoveClicked = function (event) {
-        var $element = $(event.currentTarget)
+        var $element = $(event.currentTarget),
+            prompt = $element.data('prompt')
+
+        if (prompt.length && !confirm(prompt))
+            return false;
 
         $element.closest('.components-item').remove()
     }

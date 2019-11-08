@@ -35,6 +35,10 @@ return [
     'text_remove' => 'Remove',
     'text_reload' => 'Reload',
     'text_save' => 'Save',
+    'text_saving' => 'Saving...',
+    'text_resetting' => 'Resetting...',
+    'text_loading' => 'Loading...',
+    'text_deleting' => 'Deleting...',
     'text_about_tastyigniter' => 'About TastyIgniter',
     'text_documentation' => 'Documentation',
     'text_community_support' => 'Community Support',
@@ -189,6 +193,7 @@ return [
         'field_invalid_type' => 'Invalid field type used %s.',
         'missing_id' => 'Form record ID has not been specified.',
         'not_found' => 'Form record with ID [%s] could not be found.',
+        'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
     ],
 
     'categories' => [

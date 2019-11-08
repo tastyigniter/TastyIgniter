@@ -129,7 +129,7 @@
         border-bottom: $border-width solid $dropdown-border-color;
       }
 
-      .menu-item:hover, .menu-item.active {
+      .menu-item:hover {
         background-color: $dropdown-link-hover-bg;
       }
 
@@ -137,6 +137,10 @@
         padding: 10px 20px;
         display: block;
         text-decoration: none;
+        color: $text-muted;
+      }
+
+      .menu-item.active .menu-link {
         color: $body-color;
       }
 

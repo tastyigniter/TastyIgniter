@@ -39,13 +39,16 @@
             if (!confirm('Are you sure you want to do this?'))
                 return false;
 
-                self.$form.request(self.options.alias + '::onRemoveWidget', {
+            $.ti.loadingIndicator.show()
+            self.$form.request(self.options.alias + '::onRemoveWidget', {
                     data: {
                         'alias': $('[data-widget-alias]', $btn.closest('div.widget-item')).val()
                     }
                 }).done(function () {
                     $btn.closest('div.col').remove()
                     self.setSortOrders()
+                }).always(function () {
+                    $.ti.loadingIndicator.hide()
                 })
         })
     }

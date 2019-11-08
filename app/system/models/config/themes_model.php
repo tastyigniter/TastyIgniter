@@ -1,9 +1,21 @@
 <?php
 $config['list']['toolbar'] = [
     'buttons' => [
-        'upload' => ['label' => 'lang:system::lang.themes.button_new', 'class' => 'btn btn-primary', 'href' => 'themes/upload'],
-        'browse' => ['label' => 'lang:system::lang.themes.button_browse', 'class' => 'btn btn-default', 'href' => 'updates/browse/themes'],
-        'check' => ['label' => 'lang:system::lang.themes.button_check', 'class' => 'btn btn-success', 'href' => 'updates'],
+        'upload' => [
+            'label' => 'lang:system::lang.themes.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'themes/upload',
+        ],
+        'browse' => [
+            'label' => 'lang:system::lang.themes.button_browse',
+            'class' => 'btn btn-default',
+            'href' => 'updates/browse/themes',
+        ],
+        'check' => [
+            'label' => 'lang:system::lang.themes.button_check',
+            'class' => 'btn btn-success',
+            'href' => 'updates',
+        ],
     ],
 ];
 
@@ -56,7 +68,12 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'class' => 'btn btn-primary',
+            'data-request-submit' => 'true',
+            'data-request' => 'onSave',
+        ],
         'saveClose' => [
             'label' => 'lang:admin::lang.button_save_close',
             'class' => 'btn btn-default',

@@ -3,6 +3,8 @@
     class="toolbar btn-toolbar <?= $cssClasses ?>"
 >
     <div class="toolbar-action">
-        <?= $buttonsHtml; ?>
+        <div class="progress-indicator-container">
+            <?= $buttonsHtml; ?>
+        </div>
     </div>
 </div>
