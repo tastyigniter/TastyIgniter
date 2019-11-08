@@ -22,7 +22,7 @@ Please be very clear on your commit messages and pull request, empty pull reques
 
 ### Reporting security issues
 
-If you wish to contact us privately about any security exploits in TastyIgniter you may find, you can find our email on the [TastyIgniter website](https://tastyigniter.com).
+If you wish to contact us about any security vulnerability in TastyIgniter you may find, please send an e-mail to Samuel Adepoyigi at sam@sampoyigi.com
 
 ## Branching
 
