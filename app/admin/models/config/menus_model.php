@@ -146,7 +146,7 @@ $config['form']['tabs'] = [
         ],
         'menu_price' => [
             'label' => 'lang:admin::lang.menus.label_price',
-            'type' => 'number',
+            'type' => 'money',
             'span' => 'right',
         ],
         'categories' => [

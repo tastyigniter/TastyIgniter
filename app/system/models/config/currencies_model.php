@@ -143,7 +143,7 @@ $config['form']['fields'] = [
     ],
     'currency_rate' => [
         'label' => 'lang:system::lang.currencies.label_rate',
-        'type' => 'number',
+        'type' => 'money',
         'span' => 'left',
     ],
     'thousand_sign' => [

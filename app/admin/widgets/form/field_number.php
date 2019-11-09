@@ -9,7 +9,6 @@
         placeholder="<?= e($field->placeholder) ?>"
         class="form-control"
         autocomplete="off"
-        step="any"
         <?= $field->hasAttribute('pattern') ? '' : 'pattern="-?\d+(\.\d+)?"' ?>
         <?= $field->hasAttribute('maxlength') ? '' : 'maxlength="255"' ?>
         <?= $field->getAttributes() ?>

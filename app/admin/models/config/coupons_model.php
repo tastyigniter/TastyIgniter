@@ -86,6 +86,9 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.coupons.column_discount',
         'type' => 'text',
         'sortable' => FALSE,
+        'formatter' => function ($record, $column, $value) {
+            return $record->isFixed() ? currency_format($value) : $value;
+        },
     ],
     'validity' => [
         'label' => 'lang:admin::lang.coupons.column_validity',
@@ -159,13 +162,13 @@ $config['form']['tabs'] = [
         ],
         'discount' => [
             'label' => 'lang:admin::lang.coupons.label_discount',
-            'type' => 'number',
+            'type' => 'money',
             'span' => 'left',
             'cssClass' => 'flex-width',
         ],
         'min_total' => [
             'label' => 'lang:admin::lang.coupons.label_min_total',
-            'type' => 'number',
+            'type' => 'money',
             'span' => 'right',
             'default' => 0,
         ],
