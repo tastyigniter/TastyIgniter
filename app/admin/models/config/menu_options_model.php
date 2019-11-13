@@ -32,7 +32,7 @@ $config['form']['fields'] = [
                 ],
                 'price'           => [
                     'label' => 'lang:admin::lang.menu_options.label_option_price',
-                    'type'  => 'number',
+                    'type' => 'money',
                 ],
                 'priority'        => [
                     'label' => 'lang:admin::lang.menu_options.label_priority',

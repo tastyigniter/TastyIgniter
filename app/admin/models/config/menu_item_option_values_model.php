@@ -18,7 +18,7 @@ $config['form']['fields'] = [
     ],
     'new_price'            => [
         'label' => 'lang:admin::lang.menus.label_option_price',
-        'type'  => 'number',
+        'type' => 'money',
     ],
     'quantity'             => [
         'label' => 'lang:admin::lang.menus.label_option_qty',

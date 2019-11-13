@@ -10,7 +10,7 @@
                 type="number"
                 name="<?= $field->getName() ?>"
                 id="<?= $field->getId() ?>"
-                value="<?= e($field->value) ?>"
+                value="<?= number_format($field->value, 2) ?>"
                 placeholder="<?= e($field->placeholder) ?>"
                 class="form-control"
                 autocomplete="off"
