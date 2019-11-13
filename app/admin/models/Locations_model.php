@@ -57,7 +57,7 @@ class Locations_model extends AbstractLocation
         ],
     ];
 
-    public $purgeable = ['tables', 'delivery_areas'];
+    protected $purgeable = ['tables', 'delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [

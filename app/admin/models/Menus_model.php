@@ -61,7 +61,7 @@ class Menus_model extends Model
         ],
     ];
 
-    public $purgeable = ['special', 'menu_options', 'categories', 'locations'];
+    protected $purgeable = ['special', 'menu_options', 'categories', 'locations'];
 
     public $mediable = ['thumb'];
 

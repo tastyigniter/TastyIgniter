@@ -12,7 +12,7 @@ class Languages_model extends Language
 {
     use Purgeable;
 
-    public $purgeable = ['translations'];
+    protected $purgeable = ['translations'];
 
     public $casts = [
         'original_id' => 'integer',

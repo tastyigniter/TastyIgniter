@@ -64,7 +64,7 @@ class Menu_item_options_model extends Model
         ['max_selected', 'admin::lang.menus.label_max_selected', 'integer|gte:min_selected'],
     ];
 
-    public $purgeable = ['menu_option_values'];
+    protected $purgeable = ['menu_option_values'];
 
     public $with = ['option'];
 

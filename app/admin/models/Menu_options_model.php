@@ -43,7 +43,7 @@ class Menu_options_model extends Model
         ['display_type', 'lang:admin::lang.menu_options.label_display_type', 'required|alpha'],
     ];
 
-    public $purgeable = ['option_values'];
+    protected $purgeable = ['option_values'];
 
     public static function getRecordEditorOptions()
     {

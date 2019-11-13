@@ -83,7 +83,7 @@ class Reservations_model extends Model
         ],
     ];
 
-    public $purgeable = ['tables'];
+    protected $purgeable = ['tables'];
 
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',

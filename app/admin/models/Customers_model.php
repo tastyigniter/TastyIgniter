@@ -47,7 +47,7 @@ class Customers_model extends AuthUserModel
         ],
     ];
 
-    public $purgeable = ['addresses'];
+    protected $purgeable = ['addresses'];
 
     public $appends = ['full_name'];
 
