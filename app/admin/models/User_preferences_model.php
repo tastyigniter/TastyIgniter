@@ -14,6 +14,7 @@ class User_preferences_model extends Model
     public $timestamps = FALSE;
 
     public $casts = [
+        'user_id' => 'integer',
         'value' => 'json',
     ];
 

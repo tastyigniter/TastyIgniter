@@ -35,6 +35,11 @@ class Coupons_model extends Model
     public $timestamps = TRUE;
 
     public $casts = [
+        'discount' => 'float',
+        'min_total' => 'float',
+        'redemptions' => 'integer',
+        'customer_redemptions' => 'integer',
+        'status' => 'boolean',
         'period_start_date' => 'date',
         'period_end_date' => 'date',
         'fixed_date' => 'date',
@@ -42,10 +47,7 @@ class Coupons_model extends Model
         'fixed_to_time' => 'time',
         'recurring_from_time' => 'time',
         'recurring_to_time' => 'time',
-        'redemptions' => 'integer',
-        'customer_redemptions' => 'integer',
-        'status' => 'boolean',
-        'order_restriction' => 'boolean',
+        'order_restriction' => 'integer',
     ];
 
     public $relation = [

@@ -8,6 +8,8 @@ use Model;
  */
 class Currencies_model extends Model
 {
+    const CREATED_AT = null;
+
     const UPDATED_AT = 'date_modified';
 
     /**
@@ -24,6 +26,13 @@ class Currencies_model extends Model
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
+
+    public $casts = [
+        'country_id' => 'integer',
+        'currency_rate' => 'float',
+        'symbol_position' => 'boolean',
+        'currency_status' => 'boolean',
+    ];
 
     public $relation = [
         'belongsTo' => [

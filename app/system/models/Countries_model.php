@@ -24,7 +24,12 @@ class Countries_model extends Model
      */
     protected $primaryKey = 'country_id';
 
-    protected $fillable = ['country_id', 'country_name', 'iso_code_2', 'iso_code_3', 'format', 'status'];
+    protected $guarded = [];
+
+    public $casts = [
+        'status' => 'boolean',
+        'priority' => 'integer',
+    ];
 
     public $relation = [
         'hasOne' => [

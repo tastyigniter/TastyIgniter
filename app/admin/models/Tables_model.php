@@ -19,17 +19,21 @@ class Tables_model extends Model
      */
     protected $primaryKey = 'table_id';
 
-    public $fillable = ['table_name', 'min_capacity', 'max_capacity', 'max_capacity'];
+    public $casts = [
+        'min_capacity' => 'integer',
+        'max_capacity' => 'integer',
+        'table_status' => 'boolean',
+    ];
 
     public $relation = [
         'hasManyThrough' => [
             'reservations' => [
                 'Admin\Models\Reservations_model',
                 'throughKey' => 'table_id',
-                'through'    => 'Admin\Models\Location_tables_model',
+                'through' => 'Admin\Models\Location_tables_model',
             ],
         ],
-        'belongsToMany'  => [
+        'belongsToMany' => [
             'locations' => ['Admin\Models\Locations_model', 'table' => 'location_tables'],
         ],
     ];

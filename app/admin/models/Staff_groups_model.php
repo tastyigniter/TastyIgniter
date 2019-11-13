@@ -20,13 +20,15 @@ class Staff_groups_model extends Model
     protected $primaryKey = 'staff_group_id';
 
     public $casts = [
+        'customer_account_access' => 'boolean',
+        'location_access' => 'boolean',
         'permissions' => 'serialize',
     ];
 
     public $relation = [
         'hasMany' => [
-            'staffs' => ['Admin\Models\Staffs_model', 'foreignKey' => 'staff_group_id', 'otherKey' => 'staff_group_id']
-        ]
+            'staffs' => ['Admin\Models\Staffs_model', 'foreignKey' => 'staff_group_id', 'otherKey' => 'staff_group_id'],
+        ],
     ];
 
     public static function getDropdownOptions()

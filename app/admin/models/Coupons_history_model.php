@@ -23,6 +23,20 @@ class Coupons_history_model extends Model
      */
     protected $primaryKey = 'coupon_history_id';
 
+    protected $guarded = [];
+
+    protected $appends = ['customer_name'];
+
+    public $casts = [
+        'coupon_history_id' => 'integer',
+        'coupon_id' => 'integer',
+        'order_id' => 'integer',
+        'customer_id' => 'integer',
+        'min_total' => 'float',
+        'amount' => 'float',
+        'status' => 'boolean',
+    ];
+
     public $relation = [
         'belongsTo' => [
             'customer' => 'Admin\Models\Customers_model',
@@ -31,11 +45,7 @@ class Coupons_history_model extends Model
         ],
     ];
 
-    protected $guarded = [];
-
     public $timestamps = TRUE;
-
-    protected $appends = ['customer_name'];
 
     public function getCustomerNameAttribute($value)
     {

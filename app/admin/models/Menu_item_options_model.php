@@ -28,6 +28,16 @@ class Menu_item_options_model extends Model
 
     protected $fillable = ['option_id', 'menu_id', 'required', 'priority', 'min_selected', 'max_selected'];
 
+    public $casts = [
+        'menu_option_id' => 'integer',
+        'option_id' => 'integer',
+        'menu_id' => 'integer',
+        'required' => 'boolean',
+        'priority' => 'integer',
+        'min_selected' => 'integer',
+        'max_selected' => 'integer',
+    ];
+
     public $relation = [
         'hasMany' => [
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],

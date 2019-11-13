@@ -35,7 +35,15 @@ class Categories_model extends Model
      */
     protected $primaryKey = 'category_id';
 
-    protected $fillable = ['name', 'description', 'parent_id', 'priority', 'image', 'status'];
+    protected $guarded = [];
+
+    public $casts = [
+        'parent_id' => 'integer',
+        'priority' => 'integer',
+        'status' => 'boolean',
+        'nest_left' => 'integer',
+        'nest_right' => 'integer',
+    ];
 
     public $relation = [
         'belongsTo' => [

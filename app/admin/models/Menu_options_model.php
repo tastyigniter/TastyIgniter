@@ -24,9 +24,12 @@ class Menu_options_model extends Model
      */
     protected $primaryKey = 'option_id';
 
-    protected $guarded = [];
-
     protected $fillable = ['option_id', 'option_name', 'display_type'];
+
+    public $casts = [
+        'option_id' => 'integer',
+        'priority' => 'integer',
+    ];
 
     public $relation = [
         'hasMany' => [

@@ -30,8 +30,14 @@ class Staffs_model extends Model
      */
     public $timestamps = TRUE;
 
-    protected $fillable = ['staff_name', 'staff_email', 'staff_group_id', 'staff_location_id', 'timezone',
-        'language_id', 'date_added', 'staff_status'];
+    protected $guarded = [];
+
+    public $casts = [
+        'staff_group_id' => 'integer',
+        'staff_location_id' => 'integer',
+        'language_id' => 'integer',
+        'staff_status' => 'boolean',
+    ];
 
     public $relation = [
         'hasOne' => [

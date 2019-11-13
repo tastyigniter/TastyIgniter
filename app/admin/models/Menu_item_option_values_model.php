@@ -23,7 +23,19 @@ class Menu_item_option_values_model extends Model
      */
     protected $primaryKey = 'menu_option_value_id';
 
-    protected $fillable = ['menu_option_id', 'menu_id', 'option_id', 'option_value_id', 'new_price', 'priority', 'is_default', 'quantity', 'subtract_stock'];
+    protected $fillable = ['menu_option_id', 'menu_id', 'option_id', 'option_value_id', 'new_price', 'priority', 'is_default', 'quantity'];
+
+    public $appends = ['name', 'price'];
+
+    public $casts = [
+        'menu_option_value_id' => 'integer',
+        'menu_option_id' => 'integer',
+        'option_value_id' => 'integer',
+        'new_price' => 'float',
+        'quantity' => 'integer',
+        'priority' => 'integer',
+        'is_default' => 'boolean',
+    ];
 
     public $relation = [
         'belongsTo' => [
@@ -38,8 +50,6 @@ class Menu_item_option_values_model extends Model
         ['new_price', 'admin::lang.menus.label_option_price', 'numeric'],
         ['quantity', 'admin::lang.menus.label_option_qty', 'numeric'],
     ];
-
-    public $appends = ['name', 'price'];
 
     public function getNameAttribute()
     {

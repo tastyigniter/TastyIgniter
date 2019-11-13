@@ -3,8 +3,8 @@
 use Admin\Traits\Locationable;
 use Event;
 use Igniter\Flame\Database\Attach\HasMedia;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Model;
 
 /**
  * Menus Model Class
@@ -29,22 +29,19 @@ class Menus_model extends Model
      */
     protected $primaryKey = 'menu_id';
 
-    protected $fillable = ['menu_name', 'menu_description', 'menu_price', 'menu_category_id',
-        'stock_qty', 'minimum_qty', 'subtract_stock', 'mealtime_id', 'menu_status', 'menu_priority'];
+    protected $guarded = [];
 
     public $casts = [
+        'menu_price' => 'float',
+        'menu_category_id' => 'integer',
+        'mealtime_id' => 'integer',
         'stock_qty' => 'integer',
         'minimum_qty' => 'integer',
         'subtract_stock' => 'boolean',
+        'order_restriction' => 'integer',
         'menu_status' => 'boolean',
-        'menu_priority' => 'boolean',
+        'menu_priority' => 'integer',
     ];
-
-    public $purgeable = [
-        'special', 'menu_options', 'categories', 'locations',
-    ];
-
-    public $mediable = ['thumb'];
 
     public $relation = [
         'hasMany' => [
@@ -63,6 +60,10 @@ class Menus_model extends Model
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
+
+    public $purgeable = ['special', 'menu_options', 'categories', 'locations'];
+
+    public $mediable = ['thumb'];
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
 

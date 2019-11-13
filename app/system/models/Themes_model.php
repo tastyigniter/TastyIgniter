@@ -31,6 +31,8 @@ class Themes_model extends Model
 
     public $casts = [
         'data' => 'serialize',
+        'status' => 'boolean',
+        'is_default' => 'boolean',
     ];
 
     /**

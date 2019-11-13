@@ -44,25 +44,32 @@ class Orders_model extends Model
      */
     protected $primaryKey = 'order_id';
 
-    protected $guarded = ['*'];
-
-    protected $fillable = ['customer_id', 'first_name', 'last_name', 'email', 'telephone', 'location_id', 'address_id',
-        'cart', 'total_items', 'comment', 'payment', 'order_type', 'order_time', 'order_date', 'order_total',
-        'status_id', 'ip_address', 'user_agent', 'notify', 'assignee_id',
-    ];
-
     protected $timeFormat = 'H:i';
+
+    public $guarded = ['ip_address', 'user_agent', 'hash'];
 
     /**
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
 
+    public $appends = ['customer_name', 'order_type_name'];
+
     public $casts = [
+        'customer_id' => 'integer',
+        'location_id' => 'integer',
+        'address_id' => 'integer',
+        'status_id' => 'integer',
+        'assignee_id' => 'integer',
+        'invoice_no' => 'integer',
+        'total_items' => 'integer',
         'cart' => 'serialize',
         'order_date' => 'date',
         'order_time' => 'time',
+        'order_total' => 'float',
         'invoice_date' => 'dateTime',
+        'notify' => 'boolean',
+        'processed' => 'boolean',
     ];
 
     public $relation = [
@@ -83,8 +90,6 @@ class Orders_model extends Model
             'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
         ],
     ];
-
-    public $appends = ['customer_name', 'order_type_name'];
 
     public static $allowedSortingColumns = [
         'order_id asc', 'order_id desc',

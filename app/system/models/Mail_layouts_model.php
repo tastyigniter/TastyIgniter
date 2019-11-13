@@ -29,12 +29,18 @@ class Mail_layouts_model extends Model
      */
     protected $primaryKey = 'template_id';
 
-    protected $fillable = ['name', 'code', 'language_id', 'layout', 'layout_css', 'plain_layout', 'status'];
+    protected $guarded = [];
 
     /**
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
+
+    public $casts = [
+        'language_id' => 'integer',
+        'status' => 'boolean',
+        'is_locked' => 'boolean',
+    ];
 
     public $relation = [
         'hasMany' => [

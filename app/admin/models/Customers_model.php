@@ -52,6 +52,14 @@ class Customers_model extends AuthUserModel
     public $appends = ['full_name'];
 
     public $casts = [
+        'customer_id' => 'integer',
+        'address_id' => 'integer',
+        'customer_group_id' => 'integer',
+        'newsletter' => 'boolean',
+        'status' => 'boolean',
+        'is_activated' => 'boolean',
+        'last_login' => 'datetime',
+        'date_activated' => 'datetime',
         'reset_time' => 'datetime',
     ];
 

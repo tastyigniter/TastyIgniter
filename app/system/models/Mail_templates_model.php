@@ -23,7 +23,11 @@ class Mail_templates_model extends Model
 
     protected $primaryKey = 'template_data_id';
 
-    protected $fillable = ['template_id', 'code', 'label', 'subject', 'body', 'plain_body'];
+    protected $guarded = [];
+
+    public $casts = [
+        'template_id' => 'integer',
+    ];
 
     public $relation = [
         'belongsTo' => [

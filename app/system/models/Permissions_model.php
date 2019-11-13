@@ -21,6 +21,8 @@ class Permissions_model extends Model
 
     public $casts = [
         'action' => 'serialize',
+        'status' => 'boolean',
+        'is_custom' => 'boolean',
     ];
 
     protected static $permissionDefaults = [

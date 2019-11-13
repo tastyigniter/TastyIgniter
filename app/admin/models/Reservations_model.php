@@ -48,11 +48,25 @@ class Reservations_model extends Model
      */
     protected $dateFormat = 'Y-m-d';
 
-    public $timeFormat = 'H:i';
+    protected $timeFormat = 'H:i';
 
     public $guarded = ['ip_address', 'user_agent', 'hash'];
 
-    public $purgeable = ['tables'];
+    public $appends = ['customer_name', 'duration', 'reservation_datetime', 'table_name'];
+
+    public $casts = [
+        'location_id' => 'integer',
+        'table_id' => 'integer',
+        'guest_num' => 'integer',
+        'occasion_id' => 'integer',
+        'assignee_id' => 'integer',
+        'reserve_time' => 'time',
+        'reserve_date' => 'date',
+        'notify' => 'boolean',
+        'status_id' => 'integer',
+        'duration' => 'integer',
+        'processed' => 'boolean',
+    ];
 
     public $relation = [
         'belongsTo' => [
@@ -69,12 +83,7 @@ class Reservations_model extends Model
         ],
     ];
 
-    public $casts = [
-        'reserve_time' => 'time',
-        'reserve_date' => 'date',
-    ];
-
-    public $appends = ['customer_name', 'duration', 'reservation_datetime', 'table_name'];
+    public $purgeable = ['tables'];
 
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',

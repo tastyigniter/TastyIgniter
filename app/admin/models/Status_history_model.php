@@ -21,6 +21,20 @@ class Status_history_model extends Model
 
     protected $primaryKey = 'status_history_id';
 
+    protected $guarded = [];
+
+    protected $appends = ['staff_name', 'assignee_name', 'status_name', 'notified'];
+
+    public $timestamps = TRUE;
+
+    public $casts = [
+        'object_id' => 'integer',
+        'staff_id' => 'integer',
+        'assignee_id' => 'integer',
+        'status_id' => 'integer',
+        'notify' => 'boolean',
+    ];
+
     public $relation = [
         'belongsTo' => [
             'staff' => 'Admin\Models\Staffs_model',
@@ -31,12 +45,6 @@ class Status_history_model extends Model
             'object' => [],
         ],
     ];
-
-    protected $fillable = ['status_id', 'staff_id', 'assignee_id', 'notify', 'status_for', 'comment'];
-
-    protected $appends = ['staff_name', 'assignee_name', 'status_name', 'notified'];
-
-    public $timestamps = TRUE;
 
     public static function alreadyExists($model, $statusId)
     {

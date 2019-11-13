@@ -23,9 +23,19 @@ class Users_model extends AuthUserModel
 
     protected $primaryKey = 'user_id';
 
-    protected $dates = [
-        'reset_time',
-        'date_activated',
+    protected $fillable = ['username', 'super_user'];
+
+    protected $appends = ['staff_name'];
+
+    protected $hidden = ['password'];
+
+    public $casts = [
+        'staff_id' => 'integer',
+        'super_user' => 'boolean',
+        'is_activated' => 'boolean',
+        'reset_time' => 'datetime',
+        'date_activated' => 'datetime',
+        'last_login' => 'datetime',
     ];
 
     public $relation = [
@@ -35,12 +45,6 @@ class Users_model extends AuthUserModel
     ];
 
     protected $with = ['staff'];
-
-    protected $fillable = ['username', 'super_user'];
-
-    protected $appends = ['staff_name'];
-
-    protected $hidden = ['password'];
 
     protected $purgeable = ['password_confirm'];
 

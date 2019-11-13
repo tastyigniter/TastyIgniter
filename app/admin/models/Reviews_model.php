@@ -14,6 +14,10 @@ class Reviews_model extends Model
 {
     use Locationable;
 
+    const CREATED_AT = 'date_added';
+
+    const UPDATED_AT = null;
+
     /**
      * @var string The database table name
      */
@@ -31,9 +35,15 @@ class Reviews_model extends Model
 
     protected $guarded = [];
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = null;
+    public $casts = [
+        'customer_id' => 'integer',
+        'sale_id' => 'integer',
+        'location_id' => 'integer',
+        'quality' => 'integer',
+        'service' => 'integer',
+        'delivery' => 'integer',
+        'review_status' => 'boolean',
+    ];
 
     public $relation = [
         'belongsTo' => [

@@ -26,8 +26,10 @@ class Payment_logs_model extends Model
     public $timestamps = TRUE;
 
     public $casts = [
+        'order_id' => 'integer',
         'request' => 'array',
         'response' => 'array',
+        'status' => 'boolean',
     ];
 
     public static function logAttempt($order, $message, $status, $request = [], $response = [])

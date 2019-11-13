@@ -19,7 +19,9 @@ class Customer_groups_model extends Model
      */
     protected $primaryKey = 'customer_group_id';
 
-    protected $fillable = ['group_name', 'approval'];
+    public $casts = [
+        'approval' => 'boolean',
+    ];
 
     public $relation = [
         'hasMany' => [
