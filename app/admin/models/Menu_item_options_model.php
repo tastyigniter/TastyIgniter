@@ -26,7 +26,7 @@ class Menu_item_options_model extends Model
      */
     protected $primaryKey = 'menu_option_id';
 
-    protected $fillable = ['option_id', 'menu_id', 'required', 'priority'];
+    protected $fillable = ['option_id', 'menu_id', 'required', 'priority', 'min_selected', 'max_selected'];
 
     public $relation = [
         'hasMany' => [
@@ -46,10 +46,12 @@ class Menu_item_options_model extends Model
     public $appends = ['option_name', 'display_type'];
 
     public $rules = [
-        ['menu_id', 'lang:admin::lang.menus.label_option', 'required|integer'],
-        ['option_id', 'lang:admin::lang.menus.label_option_id', 'required|integer'],
-        ['priority', 'lang:admin::lang.menus.label_option', 'integer'],
-        ['required', 'lang:admin::lang.menus.label_option_required', 'integer'],
+        ['menu_id', 'admin::lang.menus.label_option', 'required|integer'],
+        ['option_id', 'admin::lang.menus.label_option_id', 'required|integer'],
+        ['priority', 'admin::lang.menus.label_option', 'integer'],
+        ['required', 'admin::lang.menus.label_option_required', 'integer'],
+        ['min_selected', 'admin::lang.menus.label_min_selected', 'integer|lte:max_selected'],
+        ['max_selected', 'admin::lang.menus.label_max_selected', 'integer|gte:min_selected'],
     ];
 
     public $purgeable = ['menu_option_values'];
