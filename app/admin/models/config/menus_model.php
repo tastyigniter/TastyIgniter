@@ -177,6 +177,37 @@ $config['form']['tabs'] = [
             'nameFrom' => 'location_name',
             'locationContext' => 'multiple',
         ],
+        'minimum_qty' => [
+            'label' => 'lang:admin::lang.menus.label_minimum_qty',
+            'type' => 'number',
+            'span' => 'left',
+            'default' => 1,
+            'comment' => 'lang:admin::lang.menus.help_minimum_qty',
+        ],
+        'stock_qty' => [
+            'label' => 'lang:admin::lang.menus.label_stock_qty',
+            'type' => 'number',
+            'span' => 'right',
+            'default' => 0,
+            'comment' => 'lang:admin::lang.menus.help_stock_qty',
+        ],
+        'order_restriction' => [
+            'label' => 'lang:admin::lang.menus.label_order_restriction',
+            'type' => 'radio',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.menus.help_order_restriction',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.coupons.text_delivery_only',
+                'lang:admin::lang.coupons.text_collection_only',
+            ],
+        ],
+        'subtract_stock' => [
+            'label' => 'lang:admin::lang.menus.label_subtract_stock',
+            'type' => 'switch',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.menus.help_subtract_stock',
+        ],
         'menu_description' => [
             'label' => 'lang:admin::lang.label_description',
             'type' => 'textarea',
@@ -192,31 +223,11 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'useAttachment' => TRUE,
         ],
-        'minimum_qty' => [
-            'label' => 'lang:admin::lang.menus.label_minimum_qty',
-            'type' => 'number',
-            'span' => 'left',
-            'default' => 1,
-            'comment' => 'lang:admin::lang.menus.help_minimum_qty',
-        ],
-        'stock_qty' => [
-            'label' => 'lang:admin::lang.menus.label_stock_qty',
-            'type' => 'number',
-            'span' => 'right',
-            'default' => 0,
-            'comment' => 'lang:admin::lang.menus.help_stock_qty',
-        ],
-        'subtract_stock' => [
-            'label' => 'lang:admin::lang.menus.label_subtract_stock',
-            'type' => 'switch',
-            'span' => 'left',
-            'comment' => 'lang:admin::lang.menus.help_subtract_stock',
-        ],
         'menu_status' => [
             'label' => 'lang:admin::lang.label_status',
             'type' => 'switch',
             'default' => 1,
-            'span' => 'right',
+            'span' => 'left',
         ],
 
         '_options' => [

@@ -14,12 +14,13 @@ class Menu extends FormRequest
             ['menu_price', 'admin::lang.menus.label_price', 'required|numeric'],
             ['categories.*', 'admin::lang.menus.label_category', 'sometimes|required|integer'],
             ['locations.*', 'admin::lang.column_location', 'sometimes|integer'],
-            ['stock_qty', 'admin::lang.menus.label_stock_qty', 'integer'],
+            ['stock_qty', 'admin::lang.menus.label_stock_qty', 'nullable|integer'],
             ['minimum_qty', 'admin::lang.menus.label_minimum_qty', 'sometimes|required|integer'],
             ['subtract_stock', 'admin::lang.menus.label_subtract_stock', 'sometimes|required|integer'],
+            ['order_restriction', 'admin::lang.menus.label_order_restriction', 'nullable|integer'],
             ['menu_status', 'admin::lang.label_status', 'integer'],
             ['mealtime_id', 'admin::lang.menus.label_mealtime', 'nullable|integer'],
-            ['menu_priority', 'admin::lang.menus.label_menu_priority', 'integer'],
+            ['menu_priority', 'admin::lang.menus.label_menu_priority', 'nullable|integer'],
         ];
     }
 }
