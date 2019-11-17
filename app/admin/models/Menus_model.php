@@ -144,9 +144,8 @@ class Menus_model extends Model
         if (array_key_exists('special', $this->attributes))
             $this->addMenuSpecial((array)$this->attributes['special']);
 
-        if (array_key_exists('categories', $this->attributes)) {
+        if (array_key_exists('categories', $this->attributes))
             $this->addMenuCategories((array)$this->attributes['categories']);
-        }
 
         if (array_key_exists('locations', $this->attributes))
             $this->locations()->sync($this->attributes['locations']);

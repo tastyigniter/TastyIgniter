@@ -70,12 +70,14 @@ class Menu_item_options_model extends Model
 
     public function getOptionNameAttribute()
     {
-        return $this->option ? $this->option->option_name : null;
+        return $this->option instanceof \Igniter\Flame\Database\Model
+            ? $this->option->option_name : null;
     }
 
     public function getDisplayTypeAttribute()
     {
-        return $this->option ? $this->option->display_type : null;
+        return $this->option instanceof \Igniter\Flame\Database\Model
+            ? $this->option->display_type : null;
     }
 
     public function getOptionValueIdOptions()
@@ -109,6 +111,11 @@ class Menu_item_options_model extends Model
     public function isRequired()
     {
         return $this->required == 1;
+    }
+
+    public function isSelectDisplayType()
+    {
+        return $this->display_type === 'select';
     }
 
     /**

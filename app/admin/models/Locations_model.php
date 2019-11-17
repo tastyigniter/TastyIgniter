@@ -252,13 +252,13 @@ class Locations_model extends AbstractLocation
 
     public function listAvailablePayments()
     {
-        $paymentGateways = Payments_model::listPayments();
-        if (!$payments = array_get($this->options, 'payments', []))
-            return $paymentGateways;
-
         $result = [];
+
+        $payments = array_get($this->options, 'payments', []);
+        $paymentGateways = Payments_model::listPayments();
+
         foreach ($paymentGateways as $payment) {
-            if (!in_array($payment->code, $payments)) continue;
+            if ($payments AND !in_array($payment->code, $payments)) continue;
 
             $result[$payment->code] = $payment;
         }

@@ -63,7 +63,6 @@
 
     RecordEditorModal.prototype.onRecordLoaded = function (json) {
         this.$modalElement.html(json);
-        $(window).trigger('ajaxUpdateComplete')
 
         this.$modalElement.find('form').on('ajaxError', $.proxy(this.handleFormError, this))
         this.$modalElement.find('form').on('ajaxDone', $.proxy(this.onRecordSaved, this))
@@ -83,10 +82,9 @@
         this.$modalElement = $(event.target)
 
         $.request(handler, {
-            data: {
-                recordId: this.options.recordId,
-            },
-            success: $.proxy(this.onRecordLoaded, this),
+            data: {recordId: this.options.recordId},
+        }).done($.proxy(this.onRecordLoaded, this)).fail(function () {
+            self.$modalElement.modal('hide')
         })
     }
 

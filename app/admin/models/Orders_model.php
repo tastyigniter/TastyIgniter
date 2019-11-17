@@ -264,11 +264,9 @@ class Orders_model extends Model
 
     public function updateOrderStatus($id, $options = [])
     {
-        if (!$status = Statuses_model::find($id)) {
-            return;
-        }
-
-        return $this->addStatusHistory($status, $options);
+        return $this->addStatusHistory(
+            Statuses_model::find($id), $options
+        );
     }
 
     /**
@@ -353,7 +351,6 @@ class Orders_model extends Model
         $menus = $model->getOrderMenus();
         $menuOptions = $model->getOrderMenuOptions();
         foreach ($menus as $menu) {
-
             $optionData = [];
             if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
                 foreach ($menuItemOptions as $menuItemOption) {
@@ -398,8 +395,8 @@ class Orders_model extends Model
         $data['status_comment'] = $status ? $status->status_comment : null;
 
         $controller = MainController::getController() ?: new MainController;
-        $data['order_view_url'] = $controller->pageUrl('account/orders', [
-            'orderId' => $model->order_id,
+        $data['order_view_url'] = $controller->pageUrl('account/order', [
+            'hash' => $model->hash,
         ]);
 
         return $data;

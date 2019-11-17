@@ -162,7 +162,6 @@ return [
         'label_code' => 'Locale Code',
         'label_image' => 'Icon',
         'label_idiom' => 'Idiom',
-        'label_can_delete' => 'Can Delete',
 
         'button_new' => 'New Group',
 

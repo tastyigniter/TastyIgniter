@@ -130,6 +130,9 @@ class Connector extends BaseFormWidget
         $recordId = post('recordId');
         $model = $this->getRelationModel()->find($recordId);
 
+        if (!$model)
+            throw new ApplicationException('Record not found');
+
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
             'formTitle' => 'Edit '.lang($this->formName),
@@ -159,7 +162,7 @@ class Connector extends BaseFormWidget
 
         return [
             '#notification' => $this->makePartial('flash'),
-            '#'.$this->getId('items-container') => $this->makePartial('connector/connector'),
+            '#'.$this->getId('items') => $this->makePartial('connector/connector_items'),
         ];
     }
 

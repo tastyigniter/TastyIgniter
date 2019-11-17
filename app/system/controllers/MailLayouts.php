@@ -1,7 +1,6 @@
 <?php namespace System\Controllers;
 
 use AdminMenu;
-use System\Models\Mail_templates_model;
 
 class MailLayouts extends \Admin\Classes\AdminController
 {
@@ -51,14 +50,6 @@ class MailLayouts extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('mail_templates', 'design');
-    }
-
-    public function index()
-    {
-        if ($this->getUser()->hasPermission('Admin.MailTemplates.Manage'))
-            Mail_templates_model::syncAll();
-
-        $this->asExtension('ListController')->index();
     }
 
     public function formExtendFields($form)

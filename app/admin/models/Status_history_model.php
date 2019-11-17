@@ -95,9 +95,10 @@ class Status_history_model extends Model
 
         $model->save();
 
-        $object->newQuery()
-               ->where($object->getKeyName(), $object->getKey())
-               ->update(['status_id' => $statusId]);
+        $object::withoutEvents(function () use ($object, $statusId) {
+            $object->status_id = $statusId;
+            $object->save();
+        });
 
         if (array_get($options, 'notify', $status->notify_customer)) {
             $statusFor = $model->status_for == 'reserve' ? 'reservation' : $model->status_for;

@@ -134,30 +134,64 @@
             var $target = $(this)
 
             if ($target.data('attach-loading') !== undefined) {
-                $target
-                    .addClass(LOADER_CLASS)
-                    .prop('disabled', true)
+                attachLoadingToggleClass($target, true)
             }
 
             if ($target.is('form')) {
-                $('[data-attach-loading]', $target)
-                    .addClass(LOADER_CLASS)
-                    .prop('disabled', true)
+                attachLoadingToggleClass($('[data-attach-loading]', $target), true)
+                replaceLoadingToggleClass($('[data-replace-loading]', $target), true)
+            }
+
+            if ($target.data('replace-loading') !== undefined) {
+                replaceLoadingToggleClass($target, true)
             }
         })
         .on('ajaxFail ajaxDone', '[data-request]', function () {
             var $target = $(this)
 
             if ($target.data('attach-loading') !== undefined) {
-                $target
-                    .removeClass(LOADER_CLASS)
-                    .prop('disabled', false)
+                attachLoadingToggleClass($target, false)
             }
 
             if ($target.is('form')) {
-                $('[data-attach-loading]', $target)
-                    .removeClass(LOADER_CLASS)
-                    .prop('disabled', false)
+                attachLoadingToggleClass($('[data-attach-loading]', $target), false)
+                replaceLoadingToggleClass($('[data-replace-loading]', $target), false)
+            }
+
+            if ($target.data('replace-loading') !== undefined) {
+                replaceLoadingToggleClass($target, false)
             }
         })
+
+    function attachLoadingToggleClass($el, show) {
+        if (!$el || !$el.length)
+            return;
+
+        var loaderClass = $el.data('attach-loading').length ? $el.data('attach-loading') : LOADER_CLASS
+
+        if (show === true) {
+            $el.addClass(loaderClass)
+                .prop('disabled', true)
+        } else {
+            $el.removeClass(loaderClass)
+                .prop('disabled', false)
+        }
+    }
+
+    function replaceLoadingToggleClass($el, show) {
+        if (!$el || !$el.length)
+            return;
+
+        var loaderClass = $el.data('replace-loading').length ? $el.data('replace-loading') : LOADER_CLASS
+
+        if (show === true) {
+            $el.children().wrapAll('<div class="replace-loading-bk d-none"></div>')
+            $el.find('.replace-loading-bk').before('<i class="replace-loading '+loaderClass+'"></i>')
+            $el.prop('disabled', true)
+        } else {
+            $el.find('.replace-loading').remove()
+            $el.find('.replace-loading-bk').children().unwrap()
+            $el.prop('disabled', false)
+        }
+    }
 }(window.jQuery);

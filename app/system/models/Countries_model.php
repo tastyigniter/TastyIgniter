@@ -1,7 +1,6 @@
 <?php namespace System\Models;
 
 use Igniter\Flame\Database\Traits\Sortable;
-use Main\Models\Image_tool_model;
 use Model;
 
 /**

@@ -187,8 +187,8 @@ class Customers_model extends AuthUserModel
         $idsToKeep = [];
         foreach ($addresses as $address) {
             $customerAddress = $this->addresses()->updateOrCreate(
-                array_only($address, ['customer_id', 'address_id']),
-                $address
+                array_only($address, ['address_id']),
+                array_except($address, ['address_id', 'customer_id'])
             );
 
             $idsToKeep[] = $customerAddress->getKey();

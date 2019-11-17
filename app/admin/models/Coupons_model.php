@@ -151,7 +151,7 @@ class Coupons_model extends Model
 
         $orderTypes = [AbstractLocation::DELIVERY => 1, AbstractLocation::COLLECTION => 2];
 
-        return array_get($orderTypes, $orderType) != $this->order_restriction;
+        return array_get($orderTypes, $orderType, $orderType) != $this->order_restriction;
     }
 
     public function hasLocationRestriction($locationId)
