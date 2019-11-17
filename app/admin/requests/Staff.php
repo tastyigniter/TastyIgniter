@@ -20,7 +20,7 @@ class Staff extends FormRequest
         if (AdminAuth::isSuperUser()) {
             $rules = array_merge($rules, [
                 ['user.username', 'admin::lang.staff.label_username', 'required|between:2,32|unique:users,username'],
-                ['staff_status', 'admin::lang.label_status', 'integer'],
+                ['staff_status', 'admin::lang.label_status', 'boolean'],
                 ['staff_group_id', 'admin::lang.staff.label_group', 'required|integer'],
                 ['staff_location_id', 'admin::lang.staff.label_location', 'integer'],
             ]);

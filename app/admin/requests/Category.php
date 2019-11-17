@@ -27,7 +27,7 @@ class Category extends FormRequest
             'permalink_slug' => 'alpha_dash|max:255',
             'parent_id' => 'nullable|integer',
             'priority' => 'nullable|integer',
-            'status' => 'integer',
+            'status' => 'boolean',
             'locations.*' => 'integer',
         ];
     }

@@ -10,14 +10,14 @@ class Review extends FormRequest
     {
         return [
             ['sale_type', 'admin::lang.reviews.label_sale_type', 'required'],
-            ['sale_id', 'admin::lang.reviews.label_sale_id', 'required|integer'],
+            ['sale_id', 'admin::lang.reviews.label_sale_id', 'required|integer|saleIdExists'],
             ['location_id', 'admin::lang.reviews.label_location', 'required|integer'],
             ['customer_id', 'admin::lang.reviews.label_customer', 'required|integer'],
             ['quality', 'admin::lang.reviews.label_quality', 'required|integer|min:1'],
             ['delivery', 'admin::lang.reviews.label_delivery', 'required|integer|min:1'],
             ['service', 'admin::lang.reviews.label_service', 'required|integer|min:1'],
             ['review_text', 'admin::lang.reviews.label_text', 'required|between:2,1028'],
-            ['review_status', 'admin::lang.label_status', 'required|integer'],
+            ['review_status', 'admin::lang.label_status', 'required|boolean'],
         ];
     }
 

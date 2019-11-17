@@ -14,7 +14,7 @@ class Country extends FormRequest
             ['iso_code_2', 'system::lang.countries.label_iso_code2', 'required|string|size:2'],
             ['iso_code_3', 'system::lang.countries.label_iso_code3', 'required|string|size:3'],
             ['format', 'system::lang.countries.label_format', 'min:2'],
-            ['status', 'admin::lang.label_status', 'required|integer'],
+            ['status', 'admin::lang.label_status', 'required|boolean'],
         ];
     }
 }

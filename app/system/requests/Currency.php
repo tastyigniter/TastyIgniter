@@ -17,8 +17,8 @@ class Currency extends FormRequest
             ['currency_rate', 'system::lang.currencies.label_rate', 'required|numeric'],
             ['thousand_sign', 'system::lang.currencies.label_thousand_sign', 'required|string|size:1'],
             ['decimal_sign', 'system::lang.currencies.label_decimal_sign', 'required|size:1'],
-            ['decimal_position', 'system::lang.currencies.label_decimal_position', 'required|string|size:1'],
-            ['currency_status', 'admin::lang.label_status', 'required|integer'],
+            ['decimal_position', 'system::lang.currencies.label_decimal_position', 'required|integer'],
+            ['currency_status', 'admin::lang.label_status', 'required|boolean'],
         ];
     }
 }

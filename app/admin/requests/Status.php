@@ -13,7 +13,7 @@ class Status extends FormRequest
             ['status_for', 'admin::lang.statuses.label_for', 'required|alpha'],
             ['status_color', 'admin::lang.statuses.label_color', 'max:7'],
             ['status_comment', 'admin::lang.statuses.label_comment', 'max:1028'],
-            ['notify_customer', 'admin::lang.statuses.label_notify', 'required|integer'],
+            ['notify_customer', 'admin::lang.statuses.label_notify', 'required|boolean'],
         ];
     }
 }
