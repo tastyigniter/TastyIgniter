@@ -254,6 +254,13 @@ class Reservations_model extends Model
     // Helpers
     //
 
+    public function isCompleted()
+    {
+        return $this->status_history()->where(
+            'status_id', setting('confirmed_reservation_status')
+        )->exists();
+    }
+
     public static function findReservedTables($location, $dateTime)
     {
         $query = self::with('tables');

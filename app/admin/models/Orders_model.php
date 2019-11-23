@@ -203,6 +203,16 @@ class Orders_model extends Model
     // Helpers
     //
 
+    public function isCompleted()
+    {
+        if (!$this->isPaymentProcessed())
+            return FALSE;
+
+        return $this->status_history()->where(
+            'status_id', setting('completed_order_status')
+        )->exists();
+    }
+
     /**
      * Check if an order was successfully placed
      *
