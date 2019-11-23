@@ -247,8 +247,7 @@ class Orders_model extends Model
 
     public function markAsPaymentProcessed()
     {
-        if ($this->processed)
-            return FALSE;
+        Event::fire('admin.order.beforePaymentProcessed', [$this]);
 
         $this->processed = 1;
         $this->save();

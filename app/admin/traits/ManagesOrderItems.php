@@ -8,17 +8,18 @@ use Carbon\Carbon;
 use DB;
 use Event;
 use Igniter\Flame\Cart\CartCondition;
+use Igniter\Flame\Cart\CartContent;
 
 trait ManagesOrderItems
 {
     public static function bootManagesOrderItems()
     {
-        Event::listen('admin.order.paymentProcessed', function ($model) {
-            $model->handleOnPaymentProcessed();
+        Event::listen('admin.order.beforePaymentProcessed', function ($model) {
+            $model->handleOnBeforePaymentProcessed();
         });
     }
 
-    protected function handleOnPaymentProcessed()
+    protected function handleOnBeforePaymentProcessed()
     {
         $this->subtractStock();
 
@@ -42,7 +43,7 @@ trait ManagesOrderItems
             if (!$menu->subtract_stock)
                 return TRUE;
 
-            $orderMenuOptions->get($orderMenu->order_menu_id)->each(function ($orderMenuOption) {
+            $orderMenuOptions->where('order_menu_id', $orderMenu->order_menu_id)->each(function ($orderMenuOption) {
                 if (!$menuOptionValue = Menu_item_option_values_model::find($orderMenuOption->menu_option_value_id))
                     return TRUE;
 
@@ -108,11 +109,11 @@ trait ManagesOrderItems
     /**
      * Add cart menu items to order by order_id
      *
-     * @param array $cartContent
+     * @param \Igniter\Flame\Cart\CartContent $content
      *
      * @return bool
      */
-    public function addOrderMenus(array $cartContent = [])
+    public function addOrderMenus(CartContent $content)
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
@@ -121,22 +122,22 @@ trait ManagesOrderItems
         $this->orderMenusQuery()->where('order_id', $orderId)->delete();
         $this->orderMenuOptionsQuery()->where('order_id', $orderId)->delete();
 
-        foreach ($cartContent as $rowId => $cartItem) {
-            if ($rowId != $cartItem['rowId']) continue;
+        foreach ($content as $rowId => $cartItem) {
+            if ($rowId != $cartItem->rowId) continue;
 
             $orderMenuId = $this->orderMenusQuery()->insertGetId([
                 'order_id' => $orderId,
-                'menu_id' => $cartItem['id'],
-                'name' => $cartItem['name'],
-                'quantity' => $cartItem['qty'],
-                'price' => $cartItem['price'],
-                'subtotal' => $cartItem['subtotal'],
-                'comment' => $cartItem['comment'],
-                'option_values' => serialize($cartItem['options']),
+                'menu_id' => $cartItem->id,
+                'name' => $cartItem->name,
+                'quantity' => $cartItem->qty,
+                'price' => $cartItem->price,
+                'subtotal' => $cartItem->subtotal,
+                'comment' => $cartItem->comment,
+                'option_values' => serialize($cartItem->options),
             ]);
 
-            if ($orderMenuId AND count($cartItem['options'])) {
-                $this->addOrderMenuOptions($orderMenuId, $cartItem['id'], $cartItem['options']);
+            if ($orderMenuId AND count($cartItem->options)) {
+                $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
             }
         }
     }
@@ -158,15 +159,15 @@ trait ManagesOrderItems
             return FALSE;
 
         foreach ($options as $option) {
-            foreach ($option['values'] as $value) {
+            foreach ($option->values as $value) {
                 $this->orderMenuOptionsQuery()->insert([
                     'order_menu_id' => $orderMenuId,
                     'order_id' => $orderId,
                     'menu_id' => $menuId,
-                    'order_menu_option_id' => $option['menu_option_id'],
-                    'menu_option_value_id' => $value['menu_option_value_id'],
-                    'order_option_name' => $value['name'],
-                    'order_option_price' => $value['price'],
+                    'order_menu_option_id' => $option->id,
+                    'menu_option_value_id' => $value->id,
+                    'order_option_name' => $value->name,
+                    'order_option_price' => $value->price,
                 ]);
             }
         }
