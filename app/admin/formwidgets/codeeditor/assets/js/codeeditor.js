@@ -76,12 +76,18 @@
     CodeEditor.prototype.initCodeMirror = function () {
         this.editor = CodeMirror.fromTextArea(this.$textarea[0], this.options)
         this.editor.setSize(null, this.options.height)
+
+        this.$form.on('ajaxBeforeUpdate', $.proxy(this.onAjaxBeforeUpdate, this))
     }
 
     CodeEditor.prototype.refreshEditor = function () {
         if (this.$el.closest('.tab-pane').is(':visible')) {
             this.editor.refresh()
         }
+    }
+
+    CodeEditor.prototype.onAjaxBeforeUpdate = function () {
+        this.editor.save();
     }
 
     // CodeEditor PLUGIN DEFINITION
