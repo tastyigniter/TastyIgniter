@@ -222,7 +222,7 @@ class Orders_model extends Model
      */
     public function isPaymentProcessed()
     {
-        return $this->processed;
+        return $this->processed AND !empty($this->status_id);
     }
 
     public function isDeliveryType()
