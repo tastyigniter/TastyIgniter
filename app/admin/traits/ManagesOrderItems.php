@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Models\Menu_item_option_values_model;
 use Admin\Models\Menus_model;
 use Carbon\Carbon;
 use DB;
@@ -33,9 +34,22 @@ trait ManagesOrderItems
      */
     public function subtractStock()
     {
-        $this->getOrderMenus()->each(function ($orderMenu) {
-            if ($menu = Menus_model::find($orderMenu->menu_id))
-                $menu->updateStock($orderMenu->quantity, 'subtract');
+        $orderMenuOptions = $this->getOrderMenuOptions();
+        $this->getOrderMenus()->each(function ($orderMenu) use ($orderMenuOptions) {
+            if (!$menu = Menus_model::find($orderMenu->menu_id))
+                return TRUE;
+
+            if (!$menu->subtract_stock)
+                return TRUE;
+
+            $orderMenuOptions->get($orderMenu->order_menu_id)->each(function ($orderMenuOption) {
+                if (!$menuOptionValue = Menu_item_option_values_model::find($orderMenuOption->menu_option_value_id))
+                    return TRUE;
+
+                $menuOptionValue->updateStock(1);
+            });
+
+            $menu->updateStock($orderMenu->quantity);
         });
     }
 

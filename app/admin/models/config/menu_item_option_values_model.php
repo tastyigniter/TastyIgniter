@@ -22,13 +22,7 @@ $config['form']['fields'] = [
     ],
     'quantity' => [
         'label' => 'lang:admin::lang.menus.label_option_qty',
-        'type'  => 'number',
-    ],
-    'subtract_stock'       => [
-        'label' => 'lang:admin::lang.menus.label_option_subtract_stock',
-        'type'  => 'switch',
-        'on'    => 'lang:admin::lang.text_yes',
-        'off'   => 'lang:admin::lang.text_no',
+        'type' => 'number',
     ],
 ];
 

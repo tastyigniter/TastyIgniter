@@ -1,6 +1,7 @@
 <?php namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Validation;
+use Illuminate\Support\Facades\Event;
 use Model;
 
 /**
@@ -56,5 +57,30 @@ class Menu_item_option_values_model extends Model
     public function isDefault()
     {
         return $this->is_default == 1;
+    }
+
+    /**
+     * Subtract or add to menu option item stock quantity
+     *
+     * @param int $quantity
+     * @param bool $subtract
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function updateStock($quantity = 0, $subtract = TRUE)
+    {
+        if ($this->quantity == 0)
+            return FALSE;
+
+        $stockQty = ($subtract === TRUE)
+            ? $this->quantity - $quantity
+            : $this->quantity + $quantity;
+
+        $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
+
+        $update = $this->update(['quantity' => $stockQty]);
+
+        Event::fire('admin.menuOption.stockUpdated', [$this, $quantity, $subtract]);
+
+        return $update;
     }
 }
