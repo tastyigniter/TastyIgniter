@@ -232,10 +232,10 @@ class AdminController extends BaseController
      */
     public function getHandler()
     {
-        if ($handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
             return trim($handler);
 
-        if ($handler = input('_handler'))
+        if ($handler = post('_handler'))
             return trim($handler);
 
         return null;
