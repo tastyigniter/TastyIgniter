@@ -4,56 +4,54 @@ $widget = $areaForm['widget'];
 ?>
 <div
     id="<?= $this->getId('area-'.$index) ?>"
-    class="card map-area"
+    class="map-area card bg-light border-none mb-2"
     data-control="area"
     data-area-color="<?= $area['color'] ?>"
     data-index-value="<?= $index ?>"
 >
     <div
-        class="map-area-header p-3"
+        class="card-body"
         role="tab"
         id="<?= $this->getId('area-header-'.$index) ?>"
     >
-        <h5 class="map-area-title">
+        <div class="d-flex w-100 justify-content-between">
             <?php if (!$this->previewMode AND $this->sortable) { ?>
-                <a
-                    class="map-area-handle <?= $this->getId('area-handle-'.$index) ?>"
-                    role="button">
-                    <i class="fa fa-bars text-black-50"></i>
-                </a>&nbsp;&nbsp;
+                <div class="align-self-center mr-3">
+                    <a
+                        class="map-area-handle <?= $this->getId('area-handle-'.$index) ?>"
+                        role="button">
+                        <i class="fa fa-bars text-black-50"></i>
+                    </a>&nbsp;&nbsp;
+                </div>
             <?php } ?>
-            <span
-                class="badge border-circle"
-                style="background-color:<?= $area['color']; ?>"
-            >&nbsp;</span>
-            &nbsp;&nbsp;&nbsp;
-            <a
-                data-toggle="collapse"
-                href="#<?= $this->getId('area-body-'.$index) ?>"
+            <div class="align-self-center mr-3">
+                 <span
+                     class="badge border-circle"
+                     style="background-color:<?= $area['color']; ?>"
+                 >&nbsp;</span>
+            </div>
+            <div
+                class="flex-fill"
+                data-toggle="modal"
+                data-target="#<?= $this->getId('area-modal-'.$index) ?>"
                 aria-expanded="true"
-                aria-controls="<?= $this->getId('area-body-'.$index) ?>"
                 role="button"
-            ><?= $area['name']; ?></a>
-            <a
-                class="close text-danger"
-                aria-label="Remove"
-                <?php if (!$this->previewMode) { ?>
-                    data-control="remove-area"
-                    data-area-selector="#<?= $this->getId('area-'.$index) ?>"
-                    data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
-                <?php } ?>
-            ><i class="fa fa-times"></i></a>
-        </h5>
+            ><b><?= $area['name']; ?></b></div>
+            <div class="align-self-center ml-auto">
+                <a
+                    class="close text-danger"
+                    aria-label="Remove"
+                    <?php if (!$this->previewMode) { ?>
+                        data-control="remove-area"
+                        data-area-selector="#<?= $this->getId('area-'.$index) ?>"
+                        data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
+                    <?php } ?>
+                ><i class="fa fa-times"></i></a>
+            </div>
+        </div>
     </div>
-    <div
-        id="<?= $this->getId('area-body-'.$index) ?>"
-        class="map-area-body p-3 collapse<?= $index == 1 ? ' show' : '' ?>"
-        role="tabpanel"
-        data-parent="#<?= $this->getId('areas') ?>"
-        aria-labelledby="<?= $this->getId('area-header-'.$index) ?>"
-    >
-        <?= $this->makePartial('maparea/area_form', ['widget' => $widget]) ?>
-    </div>
+
+    <?= $this->makePartial('maparea/area_modal', ['index' => $index, 'area' => $area, 'widget' => $widget]) ?>
 
     <input type="hidden" data-map-shape <?= $this->getMapShapeAttributes($index, $area); ?>>
 </div>
