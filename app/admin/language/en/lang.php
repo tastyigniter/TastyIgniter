@@ -439,7 +439,7 @@ return [
         'text_open' => 'Open',
         'text_closed' => 'Closed',
         'text_circle' => 'Circle',
-        'text_shape' => 'Shape',
+        'text_shape' => 'Shape (polygon)',
         'text_custom' => 'Address',
         'text_address_component_street' => 'Match by Street name',
         'text_address_component_city' => 'Match by city or locality',

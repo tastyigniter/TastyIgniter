@@ -20,11 +20,6 @@ class Connector extends BaseFormWidget
 
     const SORT_PREFIX = '___dragged_';
 
-    /**
-     * @var bool Stops nested repeaters populating from previous sibling.
-     */
-    protected static $onAddItemCalled = FALSE;
-
     //
     // Object properties
     //

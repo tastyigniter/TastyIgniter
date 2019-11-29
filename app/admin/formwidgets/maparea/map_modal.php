@@ -6,8 +6,12 @@
                 id="<?= $this->getId('map-modal-title') ?>"
             >
                 <?= $mapPrompt ? e(lang($mapPrompt)) : '' ?>
-                <i class="fa fa-exclamation-circle"
-                   title="Select either polygon or circle as area type in order to mark out your delivery area."></i>
+                <i
+                    class="fa fa-exclamation-circle"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Select either polygon or circle as area type in order to mark out your delivery area."
+                ></i>
             </h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
