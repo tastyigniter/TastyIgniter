@@ -216,4 +216,54 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     {
         return $this->getFilePath();
     }
+
+    //
+    // Magic
+    //
+
+    /**
+     * Implements getter functionality for visible properties defined in
+     * the settings section or view bag array.
+     * @param $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (is_array($this->settings) AND array_key_exists($name, $this->settings)) {
+            return $this->settings[$name];
+        }
+
+        return parent::__get($name);
+    }
+
+    /**
+     * Dynamically set attributes on the model.
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        parent::__set($key, $value);
+
+        if (array_key_exists($key, $this->settings)) {
+            $this->settings[$key] = $this->attributes[$key];
+        }
+    }
+
+    /**
+     * Determine if an attribute exists on the object.
+     *
+     * @param  string $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        if (parent::__isset($key) === TRUE) {
+            return TRUE;
+        }
+
+        return isset($this->settings[$key]);
+    }
 }
