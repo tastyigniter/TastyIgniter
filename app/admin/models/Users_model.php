@@ -182,21 +182,19 @@ class Users_model extends AuthUserModel
             case 'get':
                 $result = ['access'];
                 break;
-            case 'post':
-                $result = ['access', 'add'];
-                break;
             case 'delete':
                 $result = ['delete'];
                 break;
+            case 'put':
+            case 'create':
+                $result = ['add'];
+                break;
+            case 'post':
+            case 'patch':
             case 'edit':
             case 'manage':
             case 'settings':
-            case 'patch':
                 $result = ['access', 'manage'];
-                break;
-            case 'create':
-            case 'put':
-                $result = ['add'];
                 break;
         }
 
