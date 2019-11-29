@@ -263,10 +263,15 @@ class MainController extends BaseController
             return $pageResponse;
         }
 
-        // Render the page
-        $this->loader->setSource($this->page);
-        $template = $this->template->load($this->page->getFilePath());
-        $this->pageContents = $template->render($this->vars);
+        if ($event = $this->fireSystemEvent('main.page.beforeRenderPage', [$page])) {
+            $this->pageContents = $event;
+        }
+        else {
+            // Render the page
+            $this->loader->setSource($this->page);
+            $template = $this->template->load($this->page->getFilePath());
+            $this->pageContents = $template->render($this->vars);
+        }
 
         // Render the layout
         $this->loader->setSource($this->layout);
