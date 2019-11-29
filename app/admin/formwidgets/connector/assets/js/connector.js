@@ -1,7 +1,7 @@
 +function ($) {
     "use strict";
 
-    // FIELD MENUOPTIONEDITOR CLASS DEFINITION
+    // FIELD CONNECTOR CLASS DEFINITION
     // ============================
 
     var Connector = function (element, options) {
@@ -16,7 +16,9 @@
     Connector.DEFAULTS = {
         alias: undefined,
         sortableHandle: '.connector-item-handle',
-        sortableContainer: '.field-connector-items'
+        sortableContainer: '.field-connector-items',
+        sortableItemSelector: '.card',
+        sortablePlaceholder: '<div class="placeholder sortable-placeholder"></div>'
     }
 
     Connector.prototype.init = function () {
@@ -29,9 +31,18 @@
     Connector.prototype.bindSorting = function () {
         var sortableOptions = {
             handle: this.options.sortableHandle,
-            itemSelector: '.card',
-            placeholder: '<div class="placeholder sortable-placeholder"></div>'
+            itemSelector: this.options.sortableItemSelector,
+            placeholder: this.options.sortablePlaceholder
         }
+
+        this.$el.each(function () {
+            $.each(this.attributes, function () {
+                if(this.specified && this.name.match("^data-sortable-")) {
+                    var name = this.name.replace('data-sortable-', '')
+                    sortableOptions[name] = this.value
+                }
+            })
+        })
 
         this.$sortable.sortable(sortableOptions)
     }
