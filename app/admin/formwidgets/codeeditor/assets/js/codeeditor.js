@@ -77,7 +77,7 @@
         this.editor = CodeMirror.fromTextArea(this.$textarea[0], this.options)
         this.editor.setSize(null, this.options.height)
 
-        this.$form.on('ajaxBeforeUpdate', $.proxy(this.onAjaxBeforeUpdate, this))
+        this.$form.on('ajaxSetup', $.proxy(this.onAjaxSetup, this))
     }
 
     CodeEditor.prototype.refreshEditor = function () {
@@ -86,7 +86,7 @@
         }
     }
 
-    CodeEditor.prototype.onAjaxBeforeUpdate = function () {
+    CodeEditor.prototype.onAjaxSetup = function () {
         this.editor.save();
     }
 

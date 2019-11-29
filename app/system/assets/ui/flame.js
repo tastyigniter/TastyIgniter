@@ -138,9 +138,9 @@ if (window.jQuery.request !== undefined)
             loading = options.loading !== undefined && options.loading.length ? $(options.loading) : null,
             isRedirect = options.redirect !== undefined && options.redirect.length
 
-        var _event = jQuery.Event('ajaxBeforeUpdate')
-        $triggerEl.trigger(_event, context)
-        if (_event.isDefaultPrevented()) return
+            var _event = jQuery.Event('ajaxSetup')
+            $triggerEl.trigger(_event, context)
+            if (_event.isDefaultPrevented()) return
 
         if ($.type(loading) == 'string') loading = $(loading)
 
@@ -182,8 +182,8 @@ if (window.jQuery.request !== undefined)
                 if (options.fireBeforeUpdate && eval('(function($el, context, data, textStatus, jqXHR) {' +
                     options.fireBeforeUpdate + '}.call($el.get(0), $el, context, data, textStatus, jqXHR))') === false) return
 
-                // Trigger 'ti.before.update' on the form, stop if event.preventDefault() is called
-                var _event = jQuery.Event('ti.before.update')
+                // Trigger 'ajaxBeforeUpdate' on the form, stop if event.preventDefault() is called
+                var _event = jQuery.Event('ajaxBeforeUpdate')
                 $triggerEl.trigger(_event, [context, data, textStatus, jqXHR])
                 if (_event.isDefaultPrevented()) return
 

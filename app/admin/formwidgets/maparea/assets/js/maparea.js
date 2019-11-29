@@ -24,7 +24,7 @@
 
         this.$mapView.on('click.shape.ti.mapview', $.proxy(this.onShapeClicked, this))
 
-        this.$form.on('submit', $.proxy(this.onSubmitForm, this))
+        this.$form.on('ajaxSetup', $.proxy(this.onSubmitForm, this))
     }
 
     MapArea.prototype.onModalShown = function (event) {
