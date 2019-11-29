@@ -179,6 +179,7 @@ return [
 
     'pages' => [
         'title' => 'Pages',
+        'text_theme_page' => 'Theme Page',
     ],
 
     'account' => [
