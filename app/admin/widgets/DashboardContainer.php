@@ -21,7 +21,7 @@ class DashboardContainer extends BaseWidget
     /**
      * @var string Determines whether widgets could be added and deleted.
      */
-    public $canAddAndDelete = TRUE;
+    public $canManage = TRUE;
 
     /**
      * @var string Determines whether widgets could be set as default.
@@ -165,6 +165,10 @@ class DashboardContainer extends BaseWidget
 
     public function onResetWidgets()
     {
+        if (!$this->canManage) {
+            throw new ApplicationException('Access denied.');
+        }
+
         $this->resetWidgets();
 
         $this->vars['widgets'] = $this->dashboardWidgets;
@@ -189,6 +193,10 @@ class DashboardContainer extends BaseWidget
 
     public function onUpdateWidget()
     {
+        if (!$this->canManage) {
+            throw new ApplicationException('Access denied.');
+        }
+
         $alias = post('alias');
 
         $widget = $this->findWidgetByAlias($alias);
@@ -220,7 +228,7 @@ class DashboardContainer extends BaseWidget
      */
     public function addWidget($widget, $size)
     {
-        if (!$this->canAddAndDelete) {
+        if (!$this->canManage) {
             throw new ApplicationException('Access denied.');
         }
 
@@ -339,7 +347,7 @@ class DashboardContainer extends BaseWidget
 
     protected function removeWidget($alias)
     {
-        if (!$this->canAddAndDelete) {
+        if (!$this->canManage) {
             throw new ApplicationException('Access denied.');
         }
 
