@@ -894,6 +894,9 @@ class MainController extends BaseController
         if (!is_array($params))
             $params = [];
 
+        if ($path == setting('menus_page'))
+            $params = $this->bindLocationRouteParameter($params);
+
         return $this->url($path, $params);
     }
 
@@ -949,5 +952,21 @@ class MainController extends BaseController
             throw new ApplicationException($message);
 
         flash()->danger($message);
+    }
+
+    protected function bindLocationRouteParameter($params)
+    {
+        if (!App::bound('location'))
+            return $params;
+
+        if (isset($params['location']))
+            return $params;
+
+        if (!$location = App::make('location')->current())
+            $location = App::make('location')->getDefault();
+
+        $params['location'] = $location ? $location->permalink_slug : null;
+
+        return $params;
     }
 }

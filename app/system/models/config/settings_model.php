@@ -194,6 +194,13 @@ $config['form']['setup'] = [
     'form' => [
         'tabs' => [
             'fields' => [
+                'menus_page' => [
+                    'label' => 'lang:system::lang.settings.label_menus_page',
+                    'tab' => 'lang:system::lang.settings.text_tab_title_order',
+                    'type' => 'select',
+                    'default' => 'local/menus',
+                    'comment' => 'lang:system::lang.settings.help_menus_page',
+                ],
                 'guest_order' => [
                     'label' => 'lang:system::lang.settings.label_guest_order',
                     'tab' => 'lang:system::lang.settings.text_tab_title_order',
@@ -381,6 +388,7 @@ $config['form']['setup'] = [
             ['default_reservation_status', 'lang:system::lang.settings.label_default_reservation_status', 'required|integer'],
             ['confirmed_reservation_status', 'lang:system::lang.settings.label_confirmed_reservation_status', 'required|integer'],
             ['canceled_reservation_status', 'lang:system::lang.settings.label_canceled_reservation_status', 'required|integer'],
+            ['menus_page', 'lang:system::lang.settings.label_menus_page', 'required|string'],
             ['guest_order', 'lang:system::lang.settings.label_guest_order', 'required|integer'],
             ['location_order', 'lang:system::lang.settings.label_location_order', 'required|integer'],
             ['auto_invoicing', 'lang:system::lang.settings.label_auto_invoicing', 'required|integer'],

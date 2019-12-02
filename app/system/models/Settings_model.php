@@ -5,6 +5,8 @@ use Config;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use Main\Classes\ThemeManager;
+use Main\Template\Page;
 use Model;
 use Session;
 use Setting;
@@ -92,6 +94,19 @@ class Settings_model extends Model
             '75' => '75',
             '100' => '100',
         ];
+    }
+
+    public static function getMenusPageOptions()
+    {
+        $result = [];
+        $theme = ThemeManager::instance()->getActiveTheme();
+        $pages = Page::listInTheme($theme, TRUE);
+        foreach ($pages as $page) {
+            $fileName = $page->getBaseFileName();
+            $result[$fileName] = lang($page->title).' ['.$fileName.']';
+        }
+
+        return $result;
     }
 
     public static function onboardingIsComplete()

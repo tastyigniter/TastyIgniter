@@ -60,11 +60,6 @@ if (!function_exists('restaurant_url')) {
      */
     function restaurant_url($uri = null, array $params = [])
     {
-        if (App::bound('location')
-            AND !isset($params['location'])
-            AND $current = App::make('location')->current()
-        ) $params['location'] = $current->permalink_slug;
-
         return page_url($uri, $params);
     }
 }
