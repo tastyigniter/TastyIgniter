@@ -114,8 +114,14 @@ trait HasComponents
     public function runComponents()
     {
         foreach ($this->components as $component) {
+            if ($event = $component->fireEvent('component.beforeRun', [], TRUE))
+                return $event;
+
             if ($result = $component->onRun())
                 return $result;
+
+            if ($event = $component->fireEvent('component.run', [], TRUE))
+                return $event;
         }
     }
 }
