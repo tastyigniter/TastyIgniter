@@ -37,7 +37,7 @@ class Pages_model extends Model
 
     public $casts = [
         'language_id' => 'integer',
-        'navigation' => 'serialize',
+        'metadata' => 'json',
         'status' => 'boolean',
     ];
 
@@ -55,7 +55,7 @@ class Pages_model extends Model
 
     public static function getDropdownOptions()
     {
-        return static::isEnabled()->dropdown('name');
+        return static::isEnabled()->dropdown('title');
     }
 
     //

@@ -42,10 +42,9 @@ class Page extends Model
         if ($type !== 'theme-page')
             return;
 
+        $references = [];
         $theme = ThemeManager::instance()->getActiveTheme();
         $pages = self::listInTheme($theme, TRUE);
-        $references = [];
-
         foreach ($pages as $page) {
             $fileName = $page->getBaseFileName();
             $references[$fileName] = lang($page->title).' ['.$fileName.']';
@@ -65,20 +64,15 @@ class Page extends Model
      */
     public static function resolveMenuItem($item, string $url, Theme $theme)
     {
-        if ($item->type !== 'theme-page')
-            return;
-
         if (!$item->reference)
             return;
 
-        $page = self::loadCached($theme, $item->reference);
         $controller = MainController::getController() ?: new MainController;
         $pageUrl = $controller->pageUrl($item->reference, [], FALSE);
 
         return [
             'url' => $pageUrl,
             'isActive' => $pageUrl == $url,
-            'mTime' => $page ? $page->mTime : null,
         ];
     }
 

@@ -104,7 +104,7 @@ return [
     'side_menu' => [
         'updates' => 'Updates',
         'storefront' => 'Storefront',
-        'page' => 'Pages',
+        'page' => 'Static Pages',
         'banner' => 'Banners',
         'error_log' => 'Error Logs',
         'setting' => 'Settings',

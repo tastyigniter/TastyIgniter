@@ -96,8 +96,9 @@ class ServiceProvider extends AppServiceProvider
             return Page::getMenuTypeInfo($type);
         });
 
-        Event::listen('pages.menuitem.resolveItem', function ($type, $item, $url, $theme) {
-            return Page::resolveMenuItem($item, $url, $theme);
+        Event::listen('pages.menuitem.resolveItem', function ($item, $url, $theme) {
+            if ($item->type == 'theme-page')
+                return Page::resolveMenuItem($item, $url, $theme);
         });
     }
 }
