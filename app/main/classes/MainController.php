@@ -555,7 +555,7 @@ class MainController extends BaseController
                 ? explode(' ', $component)
                 : [$component, $component];
 
-            $this->addComponent($name, $alias, $properties);
+            $this->addComponent($name, $alias, $properties, TRUE);
         }
 
         foreach ($this->page->settings['components'] as $component => $properties) {
@@ -762,11 +762,11 @@ class MainController extends BaseController
      */
     public function findComponentByAlias($alias)
     {
-        if ($this->layout->hasComponent($alias))
-            return $this->layout->getComponent($alias);
+        if (isset($this->page->components[$alias]))
+            return $this->page->components[$alias];
 
-        if ($this->page->hasComponent($alias))
-            return $this->page->getComponent($alias);
+        if (isset($this->layout->components[$alias]))
+            return $this->layout->components[$alias];
 
         return null;
     }

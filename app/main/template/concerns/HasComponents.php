@@ -69,11 +69,14 @@ trait HasComponents
      */
     public function getComponent($componentName)
     {
-        if (!isset($this->components[$componentName])) {
+        if (!($name = $this->hasComponent($componentName)))
             return null;
-        }
 
-        return $this->components[$componentName];
+        return ComponentManager::instance()->makeComponent(
+            $componentName,
+            null,
+            $this->settings['components'][$name]
+        );
     }
 
     /**
@@ -88,7 +91,7 @@ trait HasComponents
         $componentManager = ComponentManager::instance();
         $componentName = $componentManager->resolve($componentName);
 
-        foreach ($this->components as $name => $component) {
+        foreach ($this->settings['components'] as $name => $values) {
             $result = $name;
             if ($name == $componentName)
                 return $result;
