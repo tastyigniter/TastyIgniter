@@ -49,20 +49,6 @@
     "is_custom": 0
   },
   {
-    "name": "Admin.CustomersOnline",
-    "description": "Ability to access online customers",
-    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
-    "status": 1,
-    "is_custom": 0
-  },
-  {
-    "name": "Admin.Maintenance",
-    "description": "Ability to access, backup, restore and migrate database",
-    "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
-    "status": 1,
-    "is_custom": 0
-  },
-  {
     "name": "Admin.ErrorLogs",
     "description": "Ability to access and delete error logs file",
     "action": "a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}",
