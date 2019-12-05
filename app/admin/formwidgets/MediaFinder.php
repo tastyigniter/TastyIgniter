@@ -48,7 +48,7 @@ class MediaFinder extends BaseFormWidget
     public $thumbOptions = [
         'fit' => 'contain',
         'width' => 122,
-        'height' => 122
+        'height' => 122,
     ];
 
     /**
@@ -158,7 +158,7 @@ class MediaFinder extends BaseFormWidget
             '#'.$this->getId('config-modal-content') => $this->makePartial('mediafinder/config_form', [
                 'formMediaId' => $mediaId,
                 'formWidget' => $this->makeAttachmentConfigFormWidget($media),
-            ])
+            ]),
         ];
     }
 
@@ -170,17 +170,13 @@ class MediaFinder extends BaseFormWidget
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
             return;
 
-        $configData = post('Menu.configData', []);
-        $postProperties = post('Menu.configData.properties', []);
+        $configData = post('media.custom_properties', []);
 
         $media = $this->model->findMedia($mediaId);
 
         $media->setCustomProperty('title', array_get($configData, 'title'));
         $media->setCustomProperty('description', array_get($configData, 'description'));
-
-        foreach ($postProperties as $property) {
-            $media->setCustomProperty($property['key'], $property['value']);
-        }
+        $media->setCustomProperty('extras', array_get($configData, 'extras', []));
 
         $media->save();
 
@@ -262,7 +258,7 @@ class MediaFinder extends BaseFormWidget
         $widgetConfig = $this->getAttachmentFieldsConfig();
         $widgetConfig['model'] = $model;
         $widgetConfig['alias'] = $this->alias.'attachment-config';
-        $widgetConfig['arrayName'] = $this->formField->arrayName.'[configData]';
+        $widgetConfig['arrayName'] = 'media';
         $widget = $this->makeWidget(Form::class, $widgetConfig);
 
         $widget->bindToController();
@@ -274,15 +270,15 @@ class MediaFinder extends BaseFormWidget
     {
         return [
             'fields' => [
-                'title' => [
+                'custom_properties[title]' => [
                     'label' => 'lang:main::lang.media_manager.label_attachment_title',
                     'type' => 'text',
                 ],
-                'description' => [
+                'custom_properties[description]' => [
                     'label' => 'lang:main::lang.media_manager.label_attachment_description',
                     'type' => 'textarea',
                 ],
-                'properties' => [
+                'custom_properties[extras]' => [
                     'label' => 'lang:main::lang.media_manager.label_attachment_properties',
                     'type' => 'repeater',
                     'sortable' => FALSE,
@@ -295,11 +291,11 @@ class MediaFinder extends BaseFormWidget
                             'value' => [
                                 'label' => 'lang:main::lang.media_manager.label_attachment_property_value',
                                 'type' => 'text',
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ],
-            ]
+            ],
         ];
     }
 }
