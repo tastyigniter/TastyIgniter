@@ -207,7 +207,7 @@ class Connector extends BaseFormWidget
         foreach ($items as $index => $item) {
             $value[$index] = [
                 $item->getKeyName() => $item->getKey(),
-                $this->sortColumnName => $sortedIndexes[$index],
+                $this->sortColumnName => $sortedIndexes[$item->getKey()],
             ];
         }
 

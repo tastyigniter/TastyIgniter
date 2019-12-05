@@ -6,7 +6,7 @@
     <div class="card-body p-3">
         <div class="d-flex w-100 justify-content-between">
             <?php if (!$this->previewMode AND $sortable) { ?>
-                <input type="hidden" name="<?= $sortableInputName ?>[]" value="<?= $index; ?>">
+                <input type="hidden" name="<?= $sortableInputName ?>[]" value="<?= $item->getKey(); ?>">
                 <div class="align-self-center mr-3">
                     <a
                         class="handle <?= $this->getId('items') ?>-handle"
