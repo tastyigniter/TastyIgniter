@@ -11,7 +11,7 @@ name = "Button"
                         <table border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td>
-                                    <a href="{{ $url }}" class="button button-{{ $type or 'primary' }}" target="_blank">{{ $slot }}</a>
+                                    <a href="{{ $url }}" class="button button-{{ $type ?? 'primary' }}" target="_blank">{{ $slot }}</a>
                                 </td>
                             </tr>
                         </table>

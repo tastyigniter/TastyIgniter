@@ -23,6 +23,6 @@ class Review extends FormRequest
 
     protected function prepareSaleIdExistsRule($parameters, $field)
     {
-        return sprintf('exists:%s,%s_id', $this->inputWith('sale_type'), str_singular($this->inputWith('sale_type')));
+        return sprintf('exists:%s,%s_id', $this->inputWith('sale_type', ''), str_singular($this->inputWith('sale_type', '')));
     }
 }

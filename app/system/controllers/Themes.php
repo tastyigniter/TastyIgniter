@@ -640,8 +640,6 @@ class Themes extends \Admin\Classes\AdminController
         try {
             Artisan::call('igniter:util', ['name' => 'compile scss']);
             Artisan::call('igniter:util', ['name' => 'compile js']);
-
-            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme assets bundle built '));
         }
         catch (Exception $ex) {
             Log::error($ex);

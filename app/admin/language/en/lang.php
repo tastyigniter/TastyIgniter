@@ -529,7 +529,7 @@ return [
         'help_reservation_time_interval' => 'Set the number of minutes between each reservation time',
         'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table',
         'help_tables' => 'Select table(s) to attach to this location.',
-        'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least on delivery area.',
+        'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least one delivery area to accept delivery orders.',
         'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
         'help_delivery_components' => 'All rules must be VALID to apply this delivery area, each rule is matched against the user\'s address component. Values can contain Regular Expressions.',
     ],

@@ -10,7 +10,7 @@ return [
     'text_min' => 'min',
     'text_my_account' => 'My Account',
     'text_information' => 'Information',
-    'text_follow_us' => 'Follow us on:',
+    'text_follow_us' => 'Follow us on',
 
     'text_maintenance_enabled' => 'Maintenance Enabled',
 

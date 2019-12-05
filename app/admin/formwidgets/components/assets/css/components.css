@@ -8,8 +8,8 @@
 .components .components-container::-webkit-scrollbar {
   display: none;
 }
-.components .components-list {
-  height: 85vh;
+.components-list {
+  max-height: 85vh;
   overflow-y: auto;
 }
 .components .components-item {
@@ -18,7 +18,7 @@
   min-width: 300px;
 }
 .components .components-item .components-item-form {
-  height: 75vh;
+  max-height: 75vh;
   overflow-y: auto;
 }
 .components .components-picker {
