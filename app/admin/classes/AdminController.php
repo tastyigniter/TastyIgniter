@@ -261,12 +261,14 @@ class AdminController extends BaseController
                 $response[$partial] = $this->makePartial($partial);
             }
 
-            if ($result instanceof RedirectResponse AND Request::ajax()) {
-                $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
-                $result = null;
-            }
-            elseif (Flash::messages()->isNotEmpty()) {
-                $response['#notification'] = $this->makePartial('flash');
+            if (Request::ajax()) {
+                if ($result instanceof RedirectResponse) {
+                    $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
+                    $result = null;
+                }
+                elseif (Flash::messages()->isNotEmpty()) {
+                    $response['#notification'] = $this->makePartial('flash');
+                }
             }
 
             if (is_array($result)) {
