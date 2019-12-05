@@ -184,11 +184,14 @@ class Theme
 
         $formFields = Themes_model::forTheme($this)->getFieldsConfig();
         foreach ($formFields as $attribute => $field) {
-            if (!$varName = array_get($field, 'assetVar')) {
-                continue;
-            }
+            if (!$varNames = array_get($field, 'assetVar')) continue;
 
-            $result[$varName] = $this->{$attribute};
+            if (!is_array($varNames))
+                $varNames = [$varNames];
+
+            foreach ($varNames as $varName) {
+                $result[$varName] = $this->{$attribute};
+            }
         }
 
         return $result;
