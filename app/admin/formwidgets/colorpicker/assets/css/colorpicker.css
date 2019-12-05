@@ -1,26 +1,39 @@
+.control-colorpicker .input-group-icon {
+  padding: 4px;
+}
+.control-colorpicker .input-group-icon .fa {
+  color: transparent;
+  font-size: 2rem;
+}
 .colorpicker.dropdown-menu {
-	padding: 10px;
+  padding: 10px;
+}
+.colorpicker.colorpicker-2x {
+  width: 272px;
 }
 .colorpicker-2x .colorpicker-saturation {
-	width: 120px;
-	height: 120px;
+  width: 200px;
+  height: 200px;
 }
 .colorpicker-2x .colorpicker-hue,
 .colorpicker-2x .colorpicker-alpha {
-	width: 15px;
-	height: 120px;
+  width: 30px;
+  height: 200px;
 }
-.colorpicker-2x .colorpicker-color,
-.colorpicker-2x .colorpicker-color div,
+.colorpicker-2x .colorpicker-alpha,
+.colorpicker-2x .colorpicker-preview {
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
 .colorpicker-2x .colorpicker-preview,
 .colorpicker-2x .colorpicker-preview div {
-	font-size: 16px;
-	line-height: 160%;
+  height: 30px;
+  font-size: 16px;
+  line-height: 160%;
 }
-
-.colorpicker-saturation .colorpicker-guide,
-.colorpicker-saturation .colorpicker-guide i {
-	height: 10px;
-	width: 10px;
-	border-radius: 10px;
+.colorpicker-saturation .colorpicker-guide {
+  height: 10px;
+  width: 10px;
+  border-radius: 10px;
+  margin: -5px 0 0 -5px;
 }

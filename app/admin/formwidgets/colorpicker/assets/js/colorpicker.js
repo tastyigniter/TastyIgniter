@@ -21,28 +21,39 @@
 
     ColorPicker.DEFAULTS = {
         customClass: 'colorpicker-2x',
-        align: 'left',
+        addon: '.input-group-icon',
+        swatchesColors: undefined,
+        useAlpha: false,
         sliders: {
             saturation: {
-                maxLeft: 120, maxTop: 120
+                maxLeft: 200, maxTop: 200
             },
             hue: {
-                maxTop: 120
+                maxTop: 200
             },
             alpha: {
-                maxTop: 120
+                maxTop: 200
             }
-        }
+        },
+        extensions: [
+            {
+                name: 'swatches',
+                options: {
+                    colors: {}
+                }
+            }
+        ]
     }
 
     ColorPicker.prototype.init = function () {
         this.$el.find('input').on('focus', $.proxy(this.onInputFocused, this))
 
-        this.options.component = this.$el.find('.component')
+        this.options.extensions[0].options.colors = this.options.swatchesColors
+
         this.picker = this.$el.colorpicker(this.options)
 
-        this.picker.on('create', $.proxy(this.watchComponent, this))
-        this.picker.on('changeColor', $.proxy(this.watchComponent, this))
+        // this.picker.on('create', $.proxy(this.watchComponent, this))
+        // this.picker.on('changeColor', $.proxy(this.watchComponent, this))
     }
 
     ColorPicker.prototype.unbind = function () {

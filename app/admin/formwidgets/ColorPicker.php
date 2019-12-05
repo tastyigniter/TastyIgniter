@@ -54,9 +54,8 @@ class ColorPicker extends BaseFormWidget
     public function prepareVars()
     {
         $this->vars['name'] = $this->formField->getName();
-        $this->vars['value'] = $value = $this->getLoadValue();
-        $this->vars['availableColors'] = $this->availableColors;
-        $this->vars['isCustomColor'] = !in_array($value, $this->availableColors);
+        $this->vars['value'] = $this->getLoadValue();
+        $this->vars['availableColors'] = $this->availableColors();
     }
 
     public function loadAssets()
@@ -70,5 +69,15 @@ class ColorPicker extends BaseFormWidget
     public function getSaveValue($value)
     {
         return strlen($value) ? $value : null;
+    }
+
+    protected function availableColors()
+    {
+        $colors = [];
+        foreach ($this->availableColors as $availableColor) {
+            $colors[$availableColor] = $availableColor;
+        }
+        
+        return $colors;
     }
 }
