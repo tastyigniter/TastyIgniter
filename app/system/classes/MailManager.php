@@ -321,13 +321,6 @@ class MailManager
             $this->registeredTemplates = [];
         }
 
-        // Prior syntax where (key) code => (value) description
-        if (!isset($definitions[0])) {
-            $definitions = array_keys($definitions);
-        }
-
-        $definitions = array_combine($definitions, $definitions);
-
         $this->registeredTemplates = $definitions + $this->registeredTemplates;
     }
 
