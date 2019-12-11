@@ -1,6 +1,4 @@
-<div
-    class="components-item"
->
+<div class="components-item">
     <div class="components-item-action">
         <a
             data-control="drag-component"
@@ -20,15 +18,9 @@
         data-toggle="modal"
         data-target="#<?= $this->getId('components-item-modal-'.$component->alias) ?>"
     >
-        <b><?= e(lang($component->name)) ?></b>
-        <p class="text-muted mb-0"><?= $component->description ? e(lang($component->description)) : '' ?></p>
+        <b><?= e(lang($component->meta->name)) ?></b>
+        <p class="text-muted mb-0"><?= $component->meta->description ? e(lang($component->meta->description)) : '' ?></p>
     </div>
-    <input
-        type="hidden"
-        name="<?= $field->getName() ?>[<?= $component->alias ?>]"
-        value="<?= $component->code ?>"
-    >
-
     <div
         id="<?= $this->getId('components-item-modal-'.$component->alias) ?>"
         class="modal show"
@@ -40,12 +32,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"><?= e(lang($component->name)) ?></h4>
+                    <h4 class="modal-title"><?= e(lang($component->meta->name)) ?></h4>
                 </div>
                 <div class="modal-body">
                     <div class="components-item-form">
-                        <?php foreach ($component->widget->getFields() as $componentField) { ?>
-                            <?= $component->widget->renderField($componentField) ?>
+                        <?php foreach ($component->widget->getFields() as $widgetField) { ?>
+                            <?= $component->widget->renderField($widgetField) ?>
                         <?php } ?>
                     </div>
                 </div>

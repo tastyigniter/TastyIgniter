@@ -4,7 +4,6 @@
     data-add-handler="<?= $onAddEventHandler ?>"
     data-sortable-container=".components-container"
 >
-
     <div class="components">
         <div class="components-container">
             <div class="components-item components-picker">
@@ -19,7 +18,7 @@
                 </div>
             </div>
             <?php if (count($components)) { ?>
-                <?php foreach ($components as $code => $component) { ?>
+                <?php foreach ($components as $component) { ?>
                     <?= $this->makePartial('component', [
                         'component' => $component,
                         'field' => $field,

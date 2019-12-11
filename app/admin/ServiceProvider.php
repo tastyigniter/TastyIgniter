@@ -130,11 +130,6 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'colorpicker',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\Components', [
-                'label' => 'Components',
-                'code' => 'components',
-            ]);
-
             $manager->registerFormWidget('Admin\FormWidgets\Connector', [
                 'label' => 'Connector',
                 'code' => 'connector',

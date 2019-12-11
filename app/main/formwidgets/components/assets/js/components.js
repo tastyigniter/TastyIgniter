@@ -42,9 +42,11 @@
             $element = $(event.currentTarget),
             componentCode = $element.data('componentCode')
 
+        $.ti.loadingIndicator.show()
         $element.request(this.options.addHandler, {
             data: {code: componentCode}
         }).always(function () {
+            $.ti.loadingIndicator.hide()
             self.$modalRootElement.modal('hide')
         }).done(function (json) {
             self.$el.find('[data-control="toggle-components"]').parent().after(json)

@@ -45,6 +45,9 @@ class ServiceProvider extends AppServiceProvider
             $this->registerAssets();
             $this->registerCombinerEvent();
         }
+        else {
+            $this->registerFormWidgets();
+        }
     }
 
     protected function registerSingletons()
@@ -99,6 +102,16 @@ class ServiceProvider extends AppServiceProvider
         Event::listen('pages.menuitem.resolveItem', function ($item, $url, $theme) {
             if ($item->type == 'theme-page')
                 return Page::resolveMenuItem($item, $url, $theme);
+        });
+    }
+
+    protected function registerFormWidgets()
+    {
+        Widgets::instance()->registerFormWidgets(function (Widgets $manager) {
+            $manager->registerFormWidget('Main\FormWidgets\Components', [
+                'label' => 'Components',
+                'code' => 'components',
+            ]);
         });
     }
 }
