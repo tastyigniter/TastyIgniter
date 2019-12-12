@@ -51,7 +51,7 @@
         $.ti.loadingIndicator.show()
         $.request(handler, {data: data})
             .done(function (json) {
-                self.$modalRootElement.html(json);
+                self.$modalRootElement.html(json.result);
                 self.$modalRootElement.modal()
             })
             .always(function () {

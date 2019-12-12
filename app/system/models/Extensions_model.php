@@ -74,7 +74,7 @@ class Extensions_model extends Model
 
     public function getMetaAttribute()
     {
-        return $this->meta;
+        return $this->class->extensionMeta();
     }
 
     public function getClassAttribute()
@@ -139,7 +139,6 @@ class Extensions_model extends Model
         }
 
         $this->class = $extensionClass;
-        $this->meta = $extensionClass->extensionMeta();
 
         return TRUE;
     }

@@ -229,7 +229,7 @@ class FormController extends ControllerAction
         try {
             $this->context = $context ?: $this->getConfig('create[context]', self::CONTEXT_CREATE);
 
-            $this->setFormTitle('create[title]', 'lang:admin::lang.form.create_title');
+            $this->setFormTitle('lang:admin::lang.form.create_title');
 
             $model = $this->controller->formCreateModelObject();
             $model = $this->controller->formExtendModel($model) ?: $model;
@@ -268,7 +268,7 @@ class FormController extends ControllerAction
         $title = sprintf(lang('admin::lang.form.create_success'), lang($this->getConfig('name')));
         flash()->success(lang($this->getConfig('create[flashSave]', $title)));
 
-        if ($redirect = $this->makeRedirect('create', $model)) {
+        if ($redirect = $this->makeRedirect($context, $model)) {
             return $redirect;
         }
     }
@@ -278,7 +278,7 @@ class FormController extends ControllerAction
         try {
             $this->context = $context ?: $this->getConfig('edit[context]', self::CONTEXT_CREATE);
 
-            $this->setFormTitle('edit[title]', 'lang:admin::lang.form.edit_title');
+            $this->setFormTitle('lang:admin::lang.form.edit_title');
 
             $model = $this->controller->formFindModelObject($recordId);
 
@@ -318,7 +318,7 @@ class FormController extends ControllerAction
         $title = sprintf(lang('admin::lang.form.edit_success'), lang($this->getConfig('name')));
         flash()->success(lang($this->getConfig('edit[flashSave]', $title)));
 
-        if ($redirect = $this->makeRedirect('edit', $model)) {
+        if ($redirect = $this->makeRedirect($context, $model)) {
             return $redirect;
         }
     }
@@ -350,7 +350,7 @@ class FormController extends ControllerAction
         try {
             $this->context = $context ?: $this->getConfig('preview[context]', self::CONTEXT_PREVIEW);
 
-            $this->setFormTitle('preview[title]', 'lang:admin::lang.form.preview_title');
+            $this->setFormTitle('lang:admin::lang.form.preview_title');
 
             $model = $this->controller->formFindModelObject($recordId);
             $this->initForm($model, $context);
@@ -408,10 +408,10 @@ class FormController extends ControllerAction
         return $this->context;
     }
 
-    protected function setFormTitle($lang, $default)
+    protected function setFormTitle($default)
     {
         $title = lang($this->getConfig('name'));
-        $lang = lang($this->getConfig($lang, $default));
+        $lang = lang($this->getConfig($this->context.'[title]', $default));
 
         $pageTitle = (strpos($lang, ':name') !== FALSE)
             ? str_replace(':name', $title, $lang) : $lang;
@@ -469,21 +469,13 @@ class FormController extends ControllerAction
      */
     protected function getRedirectUrl($context = null)
     {
-        $redirects = [
-            'default' => $this->getConfig('defaultRedirect', ''),
-            'create' => $this->getConfig('create[redirect]', ''),
-            'create-close' => $this->getConfig('create[redirectClose]', ''),
-            'edit' => $this->getConfig('edit[redirect]', ''),
-            'edit-close' => $this->getConfig('edit[redirectClose]', ''),
-            'delete' => $this->getConfig('delete[redirect]', ''),
-            'preview' => $this->getConfig('preview[redirect]', ''),
-        ];
+        $redirectContext = explode('-', $context, 2)[0];
+        $redirectSource = ends_with($context, '-close') ? 'redirectClose' : 'redirect';
 
-        if (!isset($redirects[$context])) {
-            return $redirects['default'];
-        }
+        $redirects = [$context => $this->getConfig("{$redirectContext}[{$redirectSource}]", '')];
+        $redirects['default'] = $this->getConfig('defaultRedirect', '');
 
-        return $redirects[$context];
+        return $redirects[$context] ?? $redirects['default'];
     }
 
     protected function prepareModelsToSave($model, $saveData)

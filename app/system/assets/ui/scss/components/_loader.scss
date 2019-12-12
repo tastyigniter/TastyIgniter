@@ -40,10 +40,16 @@
       margin-right: 10px;
     }
   }
-}
 
-.toolbar .in-progress .btn:focus {
-  box-shadow: none;
+  &.in-progress {
+    .select2-container--focus .select2-selection {
+      box-shadow: none;
+    }
+
+    .btn:focus {
+      box-shadow: none;
+    }
+  }
 }
 
 html.cssanimations {

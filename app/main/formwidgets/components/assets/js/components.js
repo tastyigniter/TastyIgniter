@@ -49,7 +49,7 @@
             $.ti.loadingIndicator.hide()
             self.$modalRootElement.modal('hide')
         }).done(function (json) {
-            self.$el.find('[data-control="toggle-components"]').parent().after(json)
+            self.$el.find('[data-control="toggle-components"]').parent().after(json.result)
         })
     }
 

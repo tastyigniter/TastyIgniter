@@ -442,18 +442,6 @@ $config['form']['media'] = [
                 'default' => 300,
                 'comment' => 'lang:system::lang.settings.help_media_max_size',
             ],
-            'image_manager[thumb_width]' => [
-                'label' => 'lang:system::lang.settings.label_media_thumb_width',
-                'type' => 'number',
-                'default' => 320,
-                'span' => 'left',
-            ],
-            'image_manager[thumb_height]' => [
-                'label' => 'lang:system::lang.settings.label_media_thumb_height',
-                'type' => 'number',
-                'default' => 220,
-                'span' => 'right',
-            ],
             'image_manager[uploads]' => [
                 'label' => 'lang:system::lang.settings.label_media_uploads',
                 'type' => 'switch',

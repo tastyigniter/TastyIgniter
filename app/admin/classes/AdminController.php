@@ -281,7 +281,7 @@ class AdminController extends BaseController
                 return $result;
             }
 
-            return $result ?: $response;
+            return $response;
         }
         catch (ValidationException $ex) {
             $this->flashValidationErrors($ex->getErrors());
