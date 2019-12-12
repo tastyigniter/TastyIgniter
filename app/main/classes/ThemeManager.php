@@ -1,14 +1,11 @@
 <?php namespace Main\Classes;
 
 use App;
-use Exception;
 use File;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Traits\Singleton;
 use Lang;
-use Main\Template\Content;
-use Main\Template\Layout;
-use Main\Template\Page;
-use Main\Template\Partial;
+use System\Libraries\Assets;
 use SystemException;
 use ZipArchive;
 
@@ -44,16 +41,11 @@ class ThemeManager
         'allowedFileExt' => ['html', 'txt', 'xml', 'js', 'css', 'php', 'json'],
     ];
 
-    protected static $allowedSourceModels = [
-        '_layouts' => Layout::class,
-        '_pages' => Page::class,
-        '_partials' => Partial::class,
-        '_content' => Content::class,
-    ];
-
     protected $loadedConfig;
 
     protected $loadedCustomizerConfig;
+
+    protected $booted = FALSE;
 
     public function initialize()
     {
@@ -61,6 +53,18 @@ class ThemeManager
         if (App::hasDatabase()) {
             $this->loadInstalled();
             $this->loadThemes();
+        }
+    }
+
+    public static function addAssetsFromActiveThemeManifest(Assets $manager)
+    {
+        $instance = self::instance();
+        $theme = $instance->getActiveTheme();
+        $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
+
+        if ($theme->hasParent()) {
+            $parentTheme = $instance->findTheme($theme->getParentName());
+            $manager->addFromManifest($parentTheme->publicPath.'/_meta/assets.json');
         }
     }
 
@@ -79,9 +83,9 @@ class ThemeManager
         }
     }
 
-    //--------------------------------------------------------------------------
-    // Theme TemplateLoader Methods
-    //--------------------------------------------------------------------------
+    //
+    // Registration Methods
+    //
 
     /**
      * Returns a list of all themes in the system.
@@ -139,7 +143,7 @@ class ThemeManager
         }
 
         $config = $this->getMetaFromFile($themeCode);
-        $themeObject = Theme::load($path, $config);
+        $themeObject = new Theme($path, $config);
 
         $themeObject->active = $this->isActive($themeCode);
 
@@ -149,68 +153,31 @@ class ThemeManager
         return $themeObject;
     }
 
-    /**
-     * Creates a new instance of the theme model
-     */
-    public function createThemeModel()
+    public function bootThemes()
     {
-        $class = '\\'.ltrim($this->themeModel, '\\');
+        if ($this->booted)
+            return;
 
-        return new $class();
+        foreach ($this->themes as $theme) {
+            $theme->boot();
+        }
+
+        $this->booted = TRUE;
     }
 
-    //--------------------------------------------------------------------------
-    // Theme Management Methods
-    //--------------------------------------------------------------------------
+    //
+    // Management Methods
+    //
 
     public function getActiveTheme()
     {
-        if (!$activeTheme = $this->findTheme($this->getActiveThemeCode()))
-            return null;
-
-        return $activeTheme;
+        return ($activeTheme = $this->findTheme($this->getActiveThemeCode()))
+            ? $activeTheme : null;
     }
 
     public function getActiveThemeCode()
     {
-        $code = params('default_themes.main', config('system.defaultTheme'));
-
-        return trim($code, '/');
-    }
-
-    /**
-     * Find a file.
-     * Scans for files located within themes directories. Also scans each theme
-     * directories for layouts, partials, and content. Generates fatal error if file
-     * not found.
-     *
-     * @param string $filename The file.
-     * @param string $theme The theme.
-     * @param string $base The folder within the theme eg. layouts, partials, content
-     *
-     * @return string|bool
-     */
-    public function findFile($filename, $theme, $base = null)
-    {
-        $path = $this->findPath($theme);
-
-        $themePath = rtrim($path, '/');
-        $file = pathinfo($filename, PATHINFO_EXTENSION) ? $filename : $filename.'.php';
-
-        if (is_null($base)) {
-            $base = ['/'];
-        }
-        else if (!is_array($base)) {
-            $base = [$base];
-        }
-
-        foreach ($base as $folder) {
-            if (File::isFile($path = $themePath.$folder.$file)) {
-                return $path;
-            }
-        }
-
-        return FALSE;
+        return trim(params('default_themes.main', config('system.defaultTheme')), '/');
     }
 
     /**
@@ -242,34 +209,6 @@ class ThemeManager
     }
 
     /**
-     * Returns a theme path based on its name.
-     *
-     * @param $themeCode
-     *
-     * @return string|null
-     */
-    public function findPath($themeCode)
-    {
-        $themesPath = $this->paths();
-
-        return isset($themesPath[$themeCode]) ? $themesPath[$themeCode] : null;
-    }
-
-    /**
-     * Returns the theme domain by looking in its path.
-     *
-     * @param $themeCode
-     *
-     * @return string
-     */
-    public function findDomain($themeCode)
-    {
-        $theme = $this->findTheme($themeCode);
-
-        return $theme ? $theme->getDomain() : null;
-    }
-
-    /**
      * Returns the theme domain by looking in its path.
      *
      * @param $themeCode
@@ -280,7 +219,21 @@ class ThemeManager
     {
         $theme = $this->findTheme($themeCode);
 
-        return $theme ? $theme->parent : null;
+        return $theme ? $this->findTheme($theme->getParentName()) : null;
+    }
+
+    /**
+     * Returns the parent theme code.
+     *
+     * @param $themeCode
+     *
+     * @return string
+     */
+    public function findParentCode($themeCode)
+    {
+        $theme = $this->findTheme($themeCode);
+
+        return $theme ? $theme->getParentName() : null;
     }
 
     /**
@@ -323,6 +276,8 @@ class ThemeManager
      */
     public function isDisabled($name)
     {
+        traceLog('Deprecated. Use $instance::isActive($themeCode) instead');
+
         return !$this->checkName($name) OR !array_get($this->installedThemes, $name, FALSE);
     }
 
@@ -351,6 +306,7 @@ class ThemeManager
      */
     public function listFiles($themeCode, $subFolder = null)
     {
+        traceLog('Deprecated. Use Template::listInTheme($theme) instead');
         $result = [];
         $themePath = $this->findPath($themeCode);
         $files = File::allFiles($themePath);
@@ -366,9 +322,73 @@ class ThemeManager
         return $subFolder ? array_only($result, $subFolder) : $result;
     }
 
-    //--------------------------------------------------------------------------
+    public function isLocked($themeCode)
+    {
+        $theme = $this->findTheme($themeCode);
+
+        return (bool)$theme->locked;
+    }
+
+    public function checkParent($themeCode)
+    {
+        foreach ($this->themes as $code => $theme) {
+            if ($theme->hasParent() AND $theme->getParentName() == $themeCode)
+                return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    //
     // Theme Helper Methods
-    //--------------------------------------------------------------------------
+    //
+
+    /**
+     * Returns a theme path based on its name.
+     *
+     * @param $themeCode
+     *
+     * @return string|null
+     */
+    public function findPath($themeCode)
+    {
+        return $this->paths()[$themeCode] ?? null;
+    }
+
+    /**
+     * Find a file.
+     * Scans for files located within themes directories. Also scans each theme
+     * directories for layouts, partials, and content. Generates fatal error if file
+     * not found.
+     *
+     * @param string $filename The file.
+     * @param string $themeCode The theme code.
+     * @param string $base The folder within the theme eg. layouts, partials, content
+     *
+     * @return string|bool
+     */
+    public function findFile($filename, $themeCode, $base = null)
+    {
+        $path = $this->findPath($themeCode);
+
+        $themePath = rtrim($path, '/');
+        $file = pathinfo($filename, PATHINFO_EXTENSION) ? $filename : $filename.'.php';
+
+        if (is_null($base)) {
+            $base = ['/'];
+        }
+        else if (!is_array($base)) {
+            $base = [$base];
+        }
+
+        foreach ($base as $folder) {
+            if (File::isFile($path = $themePath.$folder.$file)) {
+                return $path;
+            }
+        }
+
+        return FALSE;
+    }
 
     /**
      * Load a single theme generic file into an array. The file will be
@@ -377,88 +397,82 @@ class ThemeManager
      * @param string $filePath The name of the file to locate.
      * @param string $themeCode The theme to check.
      *
-     * @return array|bool
+     * @return \Igniter\Flame\Pagic\Contracts\TemplateSource
      */
     public function readFile($filePath, $themeCode)
     {
         $theme = $this->findTheme($themeCode);
 
-        list($dirName, $fileName) = $this->getFileNameParts($theme, $filePath);
+        [$dirName, $fileName] = $this->getFileNameParts($filePath, $theme);
 
-        $source = $this->getSourceModel($dirName, $theme, $fileName);
+        if (!$template = $theme->onTemplate($dirName)->find($fileName))
+            throw new ApplicationException("Theme template file not found: $filePath");
 
-        if (!$source)
-            return FALSE;
+        return $template;
+    }
 
-        return [
-            'fileName' => $source->getFileName(),
-            'baseFileName' => $source->getBaseFileName(),
-            'settings' => $source->settings,
-            'markup' => $source->getMarkup(),
-            'codeSection' => $source->getCode(),
-            'fileSource' => $source,
-        ];
+    public function newFile($filePath, $themeCode)
+    {
+        $theme = $this->findTheme($themeCode);
+        [$dirName, $fileName] = $this->getFileNameParts($filePath, $theme);
+        $path = $theme->getPath().'/'.$dirName.'/'.$fileName;
+
+        if (File::isFile($path))
+            throw new ApplicationException("Theme template file already exists: $filePath");
+
+        if (!File::exists($path))
+            File::makeDirectory(File::dirname($path), 0777, TRUE, TRUE);
+
+        File::put($path, "\n");
     }
 
     /**
-     * Write a theme layout, page, partial or content file.
+     * Write an existing theme layout, page, partial or content file.
      *
      * @param string $filePath The name of the file to locate.
-     * @param string $themeCode The theme to check.
      * @param array $attributes
+     * @param string $themeCode The theme to check.
      *
      * @return bool
      */
-    public function writeFile($filePath, $themeCode, array $attributes = [])
+    public function writeFile($filePath, array $attributes, $themeCode)
     {
         $theme = $this->findTheme($themeCode);
 
-        list($dirName, $fileName) = $this->getFileNameParts($theme, $filePath);
-        if (!$dirName OR !$fileName)
-            return FALSE;
+        [$dirName, $fileName] = $this->getFileNameParts($filePath, $theme);
 
-        if (!File::exists($fullFilePath = $theme->path.'/'.$dirName.'/'.$fileName)) {
-            File::makeDirectory(File::dirname($fullFilePath), 0777, TRUE, TRUE);
-            File::put($fullFilePath, "\n");
-        }
+        if (!$template = $theme->onTemplate($dirName)->find($fileName))
+            throw new ApplicationException("Theme template file not found: $filePath");
 
-        $source = $this->getSourceModel($dirName, $theme, $fileName);
-        if (!$source)
-            return FALSE;
-
-        $source->update($attributes);
-
-        return $source;
+        return $template->update($attributes);
     }
 
     /**
      * Rename a theme layout, page, partial or content in the file system.
      *
      * @param string $filePath The name of the file to locate.
-     * @param string $themeCode The theme to check.
      * @param string $newFilePath
+     * @param string $themeCode The theme to check.
      *
      * @return bool
      */
-    public function renameFile($filePath, $themeCode, $newFilePath)
+    public function renameFile($filePath, $newFilePath, $themeCode)
     {
         $theme = $this->findTheme($themeCode);
 
-        list($dirName, $fileName) = $this->getFileNameParts($theme, $filePath);
-        list($newDirName, $newFileName) = $this->getFileNameParts($theme, $newFilePath);
+        [$dirName, $fileName] = $this->getFileNameParts($filePath, $theme);
+        [$newDirName, $newFileName] = $this->getFileNameParts($newFilePath, $theme);
 
-        if ($dirName != $newDirName)
-            return FALSE;
-
-        $source = $this->getSourceModel($dirName, $theme, $fileName);
-        if (!$source)
-            return FALSE;
+        if (!$source = $theme->onTemplate($dirName)->find($fileName))
+            throw new ApplicationException("Theme template file not found: $filePath");
 
         $oldFilePath = $theme->path.'/'.$dirName.'/'.$fileName;
         $newFilePath = $theme->path.'/'.$newDirName.'/'.$newFileName;
-        File::move($oldFilePath, $newFilePath);
 
-        return $source;
+        if ($oldFilePath == $newFilePath)
+            throw new ApplicationException("Theme template file already exists: $filePath");
+
+        return $source->update(['fileName' => $newFileName]);
     }
 
     /**
@@ -473,15 +487,12 @@ class ThemeManager
     {
         $theme = $this->findTheme($themeCode);
 
-        list($dirName, $fileName) = $this->getFileNameParts($theme, $filePath);
+        [$dirName, $fileName] = $this->getFileNameParts($filePath, $theme);
 
-        $source = $this->getSourceModel($dirName, $theme, $fileName);
-        if (!$source)
-            return FALSE;
+        if (!$source = $theme->onTemplate($dirName)->find($fileName))
+            throw new ApplicationException("Theme template file not found: $filePath");
 
-        $source->delete();
-
-        return $source;
+        return $source->delete();
     }
 
     /**
@@ -545,6 +556,34 @@ class ThemeManager
         return TRUE;
     }
 
+    public function createChildTheme($themeCode)
+    {
+        if ($this->checkParent($themeCode))
+            throw new ApplicationException('Child theme already exists.');
+
+        $theme = $this->findTheme($themeCode);
+        if ($theme->hasParent())
+            throw new ApplicationException('Can not create a child theme from another child theme');
+
+        $config = $theme->config;
+        $config['code'] = $theme->name.'-child';
+        $config['name'] = $theme->label.' [child]';
+        $config['parent'] = $theme->name;
+        $config['version'] = '1.0.0';
+        unset($config['locked'], $config['require']);
+
+        $childThemePath = $theme->getPath().'-child';
+        if (File::isDirectory($childThemePath))
+            throw new ApplicationException('Child theme path already exists.');
+
+        File::makeDirectory($childThemePath, 0777, FALSE, TRUE);
+
+        $manifestFile = $childThemePath.'/theme.json';
+        File::put($manifestFile, json_encode($config, JSON_PRETTY_PRINT));
+
+        return $theme->name.'-child';
+    }
+
     /**
      * Read configuration from Config/Meta file
      *
@@ -568,27 +607,13 @@ class ThemeManager
         return $config;
     }
 
-    public function getFileNameParts($theme, $fileName)
+    public function getFileNameParts($path, Theme $theme)
     {
-        $parts = explode('/', $fileName);
+        $parts = explode('/', $path);
         $dirName = $parts[0];
         $fileName = implode('/', array_splice($parts, 1));
 
-        $fileNameParts = [];
-        switch ($dirName) {
-            case '_layouts':
-                $fileNameParts = (new Layout)->getFileNameParts($fileName);
-                break;
-            case '_pages':
-                $fileNameParts = (new Page)->getFileNameParts($fileName);
-                break;
-            case '_partials':
-                $fileNameParts = (new Partial($theme))->getFileNameParts($fileName);
-                break;
-            case '_content':
-                $fileNameParts = (new Content($theme))->getFileNameParts($fileName);
-                break;
-        }
+        $fileNameParts = $theme->newTemplate($dirName)->getFileNameParts($fileName);
 
         return [$dirName, implode('.', $fileNameParts)];
     }
@@ -616,7 +641,6 @@ class ThemeManager
                      'version',
                      'author',
                  ] as $item) {
-
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.missing.config_key'),
@@ -626,22 +650,5 @@ class ThemeManager
         }
 
         return $config;
-    }
-
-    protected function getSourceModelClass($dirName)
-    {
-        if (!isset(self::$allowedSourceModels[$dirName]))
-            throw new Exception(sprintf('Source Model not found for [%s] in %s.',
-                $dirName, self::class
-            ));
-
-        return self::$allowedSourceModels[$dirName];
-    }
-
-    protected function getSourceModel($dirName, $theme, $fileName)
-    {
-        $modelClass = $this->getSourceModelClass($dirName);
-
-        return $modelClass::load($theme, $fileName);
     }
 }

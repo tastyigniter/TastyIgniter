@@ -24,6 +24,8 @@ class ServiceProvider extends AppServiceProvider
         View::share('site_name', Setting::get('site_name'));
         View::share('site_logo', Setting::get('site_logo'));
 
+        ThemeManager::instance()->bootThemes();
+
         $this->bootMenuItemEvents();
 
         if (!$this->app->runningInAdmin()) {
@@ -59,8 +61,7 @@ class ServiceProvider extends AppServiceProvider
         Assets::registerCallback(function (Assets $manager) {
             $manager->registerSourcePath($this->app->themesPath());
 
-            $theme = ThemeManager::instance()->getActiveTheme();
-            $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
+            ThemeManager::addAssetsFromActiveThemeManifest($manager);
         });
     }
 

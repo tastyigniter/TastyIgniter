@@ -3,10 +3,14 @@
 namespace Main\Classes;
 
 use App;
+use Exception;
 use File;
 use Igniter\Flame\Pagic\Source\FileSource;
+use Illuminate\Support\Facades\Event;
+use Main\Template\Content as ContentTemplate;
+use Main\Template\Layout as LayoutTemplate;
 use Main\Template\Page as PageTemplate;
-use Main\Template\Partial;
+use Main\Template\Partial as PartialTemplate;
 use System\Models\Themes_model;
 
 class Theme
@@ -37,9 +41,9 @@ class Theme
     public $author;
 
     /**
-     * @var string The theme domain
+     * @var string The parent theme code
      */
-    public $domain;
+    public $parentName;
 
     /**
      * @var string List of extension code and version required by this theme
@@ -57,42 +61,52 @@ class Theme
     public $publicPath;
 
     /**
-     * @var boolean Determine if this theme should be loaded (false) or not (true).
-     */
-    public $disabled;
-
-    /**
      * @var boolean Determine if this theme is active (false) or not (true).
      */
     public $active;
+
+    /**
+     * @var string The theme author
+     */
+    public $locked;
 
     /**
      * @var string Path to the screenshot image, relative to this theme folder.
      */
     public $screenshot;
 
+    public $config = [];
+
     /**
      * @var array Cached theme configuration.
      */
-    public $configCache;
+    protected $configCache;
+
+    protected static $allowedTemplateModels = [
+        '_layouts' => LayoutTemplate::class,
+        '_pages' => PageTemplate::class,
+        '_partials' => PartialTemplate::class,
+        '_content' => ContentTemplate::class,
+    ];
+
+    public function __construct($path, array $config = [])
+    {
+        $this->path = realpath($path);
+        $this->publicPath = File::localToPublic($this->path);
+        $this->config = $config;
+    }
 
     /**
-     * Loads the theme.
-     *
-     * @param $path
-     * @param array $config
+     * Boots the theme.
      *
      * @return self
      */
-    public static function load($path, array $config = [])
+    public function boot()
     {
-        $theme = new static;
-        $theme->path = realpath($path);
-        $theme->publicPath = File::localToPublic($theme->path);
-        $theme->fillFromArray($config);
-        $theme->registerAsSource();
+        $this->fillFromConfig();
+        $this->registerAsSource();
 
-        return $theme;
+        return $this;
     }
 
     /**
@@ -119,9 +133,24 @@ class Theme
         return basename($this->path);
     }
 
-    public function getDomain()
+    public function getParentPath()
     {
-        return $this->domain;
+        return dirname($this->path).'/'.$this->parentName;
+    }
+
+    public function getParentName()
+    {
+        return $this->parentName;
+    }
+
+    public function getParent()
+    {
+        return ThemeManager::instance()->findTheme($this->getParentName());
+    }
+
+    public function hasParent()
+    {
+        return !is_null($this->parentName);
     }
 
     public function requires($require)
@@ -129,7 +158,23 @@ class Theme
         if (!is_array($require))
             $require = [$require];
 
-        return $require;
+        $this->requires = $require;
+
+        return $this;
+    }
+
+    public function screenshot($name)
+    {
+        foreach ($this->getFindInPaths() as $findInPath => $publicPath) {
+            foreach (['.svg', '.png', '.jpg'] as $extension) {
+                if (File::isFile($findInPath.'/'.$name.$extension)) {
+                    $this->screenshot = $publicPath.'/'.$name.$extension;
+                    break 2;
+                }
+            }
+        }
+
+        return $this;
     }
 
     public function isActive()
@@ -137,26 +182,45 @@ class Theme
         return $this->active;
     }
 
-    public function listPages()
-    {
-        return PageTemplate::listInTheme($this);
-    }
-
-    public function listPartials()
-    {
-        return Partial::listInTheme($this);
-    }
+    //
+    //
+    //
 
     public function getConfig()
     {
         if (!is_null($this->configCache))
             return $this->configCache;
 
-        $config = [];
-        if (File::exists($configPath = $this->getPath().'/_meta/fields.php'))
-            $config = File::getRequire($configPath);
+        $configCache = [];
+        $findInPaths = array_reverse(array_keys($this->getFindInPaths()));
+        foreach ($findInPaths as $findInPath) {
+            $config = File::exists($path = $findInPath.'/_meta/fields.php')
+                ? File::getRequire($path) : [];
 
-        return $this->configCache = $config;
+            foreach (array_get($config, 'form', []) as $key => $definitions) {
+                foreach ($definitions as $index => $definition) {
+                    if (!is_array($definition)) {
+                        $configCache['form'][$key][$index] = $definition;
+                    }
+                    else {
+                        foreach ($definition as $fieldIndex => $field) {
+                            $configCache['form'][$key][$index][$fieldIndex] = $field;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->configCache = $configCache;
+    }
+
+    public function getFormConfig()
+    {
+        $config = $this->getConfigValue('form', []);
+
+        Event::fire('main.theme.extendFormConfig', [$this->getDirName(), &$config]);
+
+        return $config;
     }
 
     public function getConfigValue($name, $default = null)
@@ -197,38 +261,62 @@ class Theme
         return $result;
     }
 
-    public function fillFromArray($config)
+    public function fillFromConfig()
     {
-        if (isset($config['code']))
-            $this->name = $config['code'];
+        if (isset($this->config['code']))
+            $this->name = $this->config['code'];
 
-        if (isset($config['name']))
-            $this->label = $config['name'];
+        if (isset($this->config['name']))
+            $this->label = $this->config['name'];
 
-        if (isset($config['domain']))
-            $this->domain = $config['domain'];
+        if (isset($this->config['parent']))
+            $this->parentName = $this->config['parent'];
 
-        if (isset($config['description']))
-            $this->description = $config['description'];
+        if (isset($this->config['description']))
+            $this->description = $this->config['description'];
 
-        if (isset($config['version']))
-            $this->version = $config['version'];
+        if (isset($this->config['version']))
+            $this->version = $this->config['version'];
 
-        if (isset($config['author']))
-            $this->author = $config['author'];
+        if (isset($this->config['author']))
+            $this->author = $this->config['author'];
 
-        if (isset($config['screenshot']))
-            $this->screenshot = $config['screenshot'];
+        if (isset($this->config['require']))
+            $this->requires($this->config['require']);
 
-        if (!$this->screenshot)
-            $this->screenshot = $this->publicPath.'/screenshot.png';
+        $this->screenshot('screenshot');
 
-        if (isset($config['require']))
-            $this->requires = $this->requires($config['require']);
-
-        if (array_key_exists('disabled', $config))
-            $this->disabled = $config['disabled'];
+        if (array_key_exists('locked', $this->config))
+            $this->locked = (bool)$this->config['locked'];
     }
+
+    //
+    //
+    //
+
+    public function listPages()
+    {
+        return PageTemplate::listInTheme($this);
+    }
+
+    public function listPartials()
+    {
+        return PartialTemplate::listInTheme($this);
+    }
+
+    public function listLayouts()
+    {
+        return LayoutTemplate::listInTheme($this);
+    }
+
+    public function getPagesOptions()
+    {
+
+    }
+
+    //
+    //
+    //
 
     /**
      * Ensures this theme is registered as a Pagic source.
@@ -237,11 +325,56 @@ class Theme
     public function registerAsSource()
     {
         $resolver = App::make('pagic');
-
         if (!$resolver->hasSource($this->getDirName())) {
-            $source = new FileSource($this->getPath(), App::make('files'));
+            $files = App::make('files');
+
+            if ($this->hasParent()) {
+                $source = new ChainFileSource([
+                    new FileSource($this->getPath(), $files),
+                    new FileSource($this->getParentPath(), $files),
+                ]);
+            }
+            else {
+                $source = new FileSource($this->getPath(), $files);
+            }
+
             $resolver->addSource($this->getDirName(), $source);
         }
+    }
+
+    /**
+     * @param $dirName
+     * @return \Main\Template\Model|\Igniter\Flame\Pagic\Finder
+     */
+    public function onTemplate($dirName)
+    {
+        $modelClass = $this->getTemplateClass($dirName);
+
+        return $modelClass::on($this->getDirName());
+    }
+
+    /**
+     * @param $dirName
+     * @return \Main\Template\Model
+     */
+    public function newTemplate($dirName)
+    {
+        $class = $this->getTemplateClass($dirName);
+
+        return new $class;
+    }
+
+    /**
+     * @param $dirName
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getTemplateClass($dirName)
+    {
+        if (!isset(self::$allowedTemplateModels[$dirName]))
+            throw new Exception(sprintf('Source Model not found for [%s].', $dirName));
+
+        return self::$allowedTemplateModels[$dirName];
     }
 
     /**
@@ -274,5 +407,16 @@ class Theme
         }
 
         return FALSE;
+    }
+
+    protected function getFindInPaths()
+    {
+        $findInPaths = [];
+        $findInPaths[$this->path] = $this->publicPath;
+        if ($parent = $this->getParent()) {
+            $findInPaths[$parent->path] = $parent->publicPath;
+        }
+
+        return $findInPaths;
     }
 }

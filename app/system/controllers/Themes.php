@@ -278,23 +278,19 @@ class Themes extends \Admin\Classes\AdminController
         ];
     }
 
-    public function source_onDelete($context = null, $themeCode = null)
+    public function source_onCreateChild($context, $themeCode = null)
     {
-        $model = $this->formFindModelObject($themeCode);
+        $this->formFindModelObject($themeCode);
 
-        $this->initFormWidget($model, $context);
+        $childThemeCode = ThemeManager::instance()->createChildTheme($themeCode);
 
-        $fileName = post($this->formWidget->arrayName.'[file]');
+        ThemeManager::instance()->loadThemes();
+        Themes_model::syncAll();
+        Themes_model::activateTheme($childThemeCode);
 
-        if (ThemeManager::instance()->deleteFile($fileName, $themeCode)) {
-            session()->forget('Theme.customize');
-            flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme file [{$fileName}] deleted "));
-        }
-        else {
-            flash()->danger(lang('admin::lang.alert_error_try_again'));
-        }
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Child theme ['.$childThemeCode.'] created '));
 
-        return $this->redirectBack();
+        return $this->redirect('themes/source/'.$childThemeCode);
     }
 
     public function upload_onUpload($context = null)
