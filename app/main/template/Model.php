@@ -18,12 +18,19 @@ use Main\Classes\ThemeManager;
  */
 class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 {
+    use Concerns\HasComponents;
+    use Concerns\HasViewBag;
+
     /**
      * @var \Main\Classes\Theme The theme object.
      */
     protected $themeCache;
 
     protected $fillable = [];
+
+    public $settings = [
+        'components' => [],
+    ];
 
     /**
      * The "booting" method of the model.
@@ -46,10 +53,9 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
             return;
         }
 
-        $manager = ThemeManager::instance();
-        $defaultTheme = $manager->getActiveThemeCode();
+        $activeTheme = ThemeManager::instance()->getActiveThemeCode();
 
-        $resolver->setDefaultSourceName($defaultTheme);
+        $resolver->setDefaultSourceName($activeTheme);
     }
 
     /**
@@ -110,14 +116,29 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
         return $instance->newCollection($result);
     }
 
-    public static function inTheme($theme)
+    public static function inTheme(Theme $theme)
     {
-        if (is_string($theme)) {
-            $theme = Theme::load($theme);
-        }
-
         return static::on($theme->getDirName());
     }
+
+    public static function getDropdownOptions(Theme $theme = null, $skipCache = FALSE)
+    {
+        $result = [];
+
+        $pages = is_null($theme) ? self::get() : self::listInTheme($theme, $skipCache);
+        foreach ($pages as $page) {
+            $fileName = $page->getBaseFileName();
+            $description = $page instanceof Page ? $page->title : $page->description;
+            $description = strlen($description) ? lang($description) : $fileName;
+            $result[$fileName] = $description.' ['.$fileName.']';
+        }
+
+        return collect($result)->sort()->all();
+    }
+
+    //
+    //
+    //
 
     /**
      * Returns the unique id of this object.

@@ -21,7 +21,7 @@ trait HasPageOptions
 
     public static function getPageOptions()
     {
-        return Page::lists('baseFileName', 'baseFileName');
+        return Page::getDropdownOptions();
     }
 
     public static function getPagesOptions()

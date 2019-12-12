@@ -11,9 +11,6 @@ use Main\Classes\ThemeManager;
  */
 class Page extends Model
 {
-    use Concerns\HasComponents;
-    use Concerns\HasViewBag;
-
     /**
      * @var string The directory name associated with the model, eg: _pages.
      */
@@ -42,13 +39,8 @@ class Page extends Model
         if ($type !== 'theme-page')
             return;
 
-        $references = [];
         $theme = ThemeManager::instance()->getActiveTheme();
-        $pages = self::listInTheme($theme, TRUE);
-        foreach ($pages as $page) {
-            $fileName = $page->getBaseFileName();
-            $references[$fileName] = lang($page->title).' ['.$fileName.']';
-        }
+        $references = self::getDropdownOptions($theme, TRUE);
 
         return [
             'references' => $references,

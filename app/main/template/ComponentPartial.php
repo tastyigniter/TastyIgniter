@@ -3,9 +3,11 @@
 namespace Main\Template;
 
 use File;
+use Igniter\Flame\Pagic\Contracts\TemplateSource;
+use Igniter\Flame\Support\Extendable;
 use System\Classes\BaseComponent;
 
-class ComponentPartial extends Partial
+class ComponentPartial extends Extendable implements TemplateSource
 {
     /**
      * @var \System\Classes\BaseComponent The component object.
@@ -28,6 +30,16 @@ class ComponentPartial extends Partial
     public $content;
 
     /**
+     * @var array Allowable file extensions.
+     */
+    protected $allowedExtensions = ['php'];
+
+    /**
+     * @var string Default file extension.
+     */
+    protected $defaultExtension = 'php';
+
+    /**
      * @var int The maximum allowed path nesting level. The default value is 2,
      * meaning that files can only exist in the root directory, or in a
      * subdirectory. Set to null if any level is allowed.
@@ -46,14 +58,41 @@ class ComponentPartial extends Partial
         $this->extendableConstruct();
     }
 
+    /**
+     * @param \System\Classes\BaseComponent $component
+     * @param string $fileName
+     * @return \Main\Template\ComponentPartial|mixed
+     */
     public static function load($component, $fileName)
     {
         return (new static($component))->find($fileName);
     }
 
+    /**
+     * @param \System\Classes\BaseComponent $component
+     * @param string $fileName
+     * @return \Main\Template\ComponentPartial|mixed
+     */
     public static function loadCached($component, $fileName)
     {
         return static::load($component, $fileName);
+    }
+
+    /**
+     * @param \Main\Classes\Theme $theme
+     * @param \System\Classes\BaseComponent $component
+     * @param string $fileName
+     * @return mixed
+     */
+    public static function loadOverrideCached($theme, $component, $fileName)
+    {
+        $partial = Partial::loadCached($theme, strtolower($component->alias).'/'.$fileName);
+
+        if ($partial === null) {
+            $partial = Partial::loadCached($theme, $component->alias.'/'.$fileName);
+        }
+
+        return $partial;
     }
 
     /**
@@ -140,12 +179,61 @@ class ComponentPartial extends Partial
 
         if (!File::isFile($path = $componentPath.'/'.$fileName)) {
             // Check the shared "/partials" directory for the partial
-            $sharedPath = dirname($componentPath).'/partials'.'/'.$fileName;
+            $sharedPath = dirname($componentPath).'/partials/'.$fileName;
             if (File::isFile($sharedPath)) {
                 return $sharedPath;
             }
         }
 
         return $path;
+    }
+
+    /**
+     * Returns the file name.
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * Returns the file name without the extension.
+     * @return string
+     */
+    public function getBaseFileName()
+    {
+        $pos = strrpos($this->fileName, '.');
+        if ($pos === FALSE) {
+            return $this->fileName;
+        }
+
+        return substr($this->fileName, 0, $pos);
+    }
+
+    /**
+     * Returns the file content.
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Gets the markup section of a template
+     * @return string The template source code
+     */
+    public function getMarkup()
+    {
+        return $this->content.PHP_EOL;
+    }
+
+    /**
+     * Gets the code section of a template
+     * @return string The template source code
+     */
+    public function getCode()
+    {
     }
 }

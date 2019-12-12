@@ -98,15 +98,9 @@ class Settings_model extends Model
 
     public static function getMenusPageOptions()
     {
-        $result = [];
         $theme = ThemeManager::instance()->getActiveTheme();
-        $pages = Page::listInTheme($theme, TRUE);
-        foreach ($pages as $page) {
-            $fileName = $page->getBaseFileName();
-            $result[$fileName] = lang($page->title).' ['.$fileName.']';
-        }
 
-        return $result;
+        return Page::getDropdownOptions($theme, TRUE);
     }
 
     public static function onboardingIsComplete()

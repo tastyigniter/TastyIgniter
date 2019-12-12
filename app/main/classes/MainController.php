@@ -637,7 +637,6 @@ class MainController extends BaseController
 
     /**
      * Renders a requested content file.
-     * @internal
      *
      * @param string $name The content view to load.
      * @param array $params Parameter variables to pass to the view.
@@ -846,8 +845,7 @@ class MainController extends BaseController
 
         // Check if the theme has an override
         if (strpos($partialName, '/') === FALSE) {
-            $overrideName = $componentObj->alias.'/'.$partialName;
-            $partial = Partial::loadCached($this->theme, $overrideName);
+            $partial = ComponentPartial::loadOverrideCached($this->theme, $componentObj, $partialName);
         }
 
         // Check the component partial
