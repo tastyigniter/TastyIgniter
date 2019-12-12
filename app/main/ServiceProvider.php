@@ -2,6 +2,7 @@
 
 namespace Main;
 
+use Admin\Classes\Widgets;
 use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Support\Facades\View;
@@ -112,6 +113,11 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerFormWidget('Main\FormWidgets\Components', [
                 'label' => 'Components',
                 'code' => 'components',
+            ]);
+
+            $manager->registerFormWidget('Main\FormWidgets\TemplateEditor', [
+                'label' => 'Template editor',
+                'code' => 'templateeditor',
             ]);
         });
     }

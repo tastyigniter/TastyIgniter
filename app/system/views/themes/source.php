@@ -7,8 +7,7 @@
         ]
     ); ?>
 
-    <?= $this->toolbarWidget->render(); ?>
-    <?= $this->formWidget->render(); ?>
+    <?= $this->renderForm(); ?>
 
     <?= form_close(); ?>
 </div>

@@ -24,15 +24,8 @@
     <?php $deleteAction = !empty($themeData)
         ? lang('system::lang.themes.text_files_data')
         : lang('system::lang.themes.text_files'); ?>
-    <p><?= sprintf(lang('system::lang.themes.alert_delete_warning'), $deleteAction, $themeName); ?></p>
+    <p><?= sprintf(lang('system::lang.themes.alert_delete_warning'), $deleteAction, $themeObj->label); ?></p>
     <p><?= sprintf(lang('system::lang.themes.alert_delete_confirm'), $deleteAction); ?></p>
-    <div id="deletedFiles" class="form-group">
-        <textarea
-            class="form-control"
-            rows="10"
-            readonly
-        ><?= implode(PHP_EOL, $filesToDelete); ?></textarea>
-    </div>
 
     <?php if ($themeData) { ?>
         <div class="form-group span-full">

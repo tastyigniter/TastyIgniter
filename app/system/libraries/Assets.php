@@ -220,7 +220,7 @@ class Assets
             return null;
 
         if ($this->combineAssets) {
-            $path = $this->combine($type, $this->getAssetPaths($assets));
+            $path = $this->combine($type, $this->getPathsFromAssets($assets));
 
             return $this->buildAssetUrl($type, $path);
         }
@@ -244,7 +244,7 @@ class Assets
         return $name;
     }
 
-    protected function getAssetPaths($assets)
+    protected function getPathsFromAssets($assets)
     {
         $result = [];
         foreach ($assets as $asset) {

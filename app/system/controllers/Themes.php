@@ -4,6 +4,8 @@ use Admin\Traits\WidgetMaker;
 use AdminMenu;
 use Event;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Main\Classes\ThemeManager;
@@ -11,6 +13,7 @@ use Request;
 use System\Libraries\Assets;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
+use System\Traits\SessionMaker;
 use SystemException;
 use Template;
 
@@ -18,9 +21,11 @@ class Themes extends \Admin\Classes\AdminController
 {
     use WidgetMaker;
     use ConfigMaker;
+    use SessionMaker;
 
     public $implement = [
         'Admin\Actions\ListController',
+        'Admin\Actions\FormController',
     ];
 
     public $listConfig = [
@@ -28,7 +33,7 @@ class Themes extends \Admin\Classes\AdminController
             'model' => 'System\Models\Themes_model',
             'title' => 'lang:system::lang.themes.text_title',
             'emptyMessage' => 'lang:system::lang.themes.text_empty',
-            'defaultSort' => ['date_added', 'DESC'],
+            'defaultSort' => ['theme_id', 'DESC'],
             'configFile' => 'themes_model',
         ],
     ];
@@ -36,9 +41,15 @@ class Themes extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:system::lang.themes.text_form_name',
         'model' => 'System\Models\Themes_model',
+        'request' => 'System\Requests\Theme',
         'edit' => [
-            'title' => 'lang:admin::lang.form.edit_title',
+            'title' => 'system::lang.themes.text_edit_title',
             'redirect' => 'themes/edit/{code}',
+            'redirectClose' => 'themes',
+        ],
+        'source' => [
+            'title' => 'system::lang.themes.text_source_title',
+            'redirect' => 'themes/source/{code}',
             'redirectClose' => 'themes',
         ],
         'delete' => [
@@ -47,15 +58,12 @@ class Themes extends \Admin\Classes\AdminController
         'configFile' => 'themes_model',
     ];
 
-    /**
-     * @var \Admin\Widgets\Form
-     */
-    public $formWidget;
-
-    /**
-     * @var \Admin\Widgets\Toolbar
-     */
-    public $toolbarWidget;
+    protected $templateConfig = [
+        '_pages' => '~/app/main/template/config/page',
+        '_partials' => '~/app/main/template/config/partial',
+        '_layouts' => '~/app/main/template/config/layout',
+        '_content' => '~/app/main/template/config/content',
+    ];
 
     protected $requiredPermissions = 'Site.Themes';
 
@@ -76,45 +84,32 @@ class Themes extends \Admin\Classes\AdminController
 
     public function edit($context, $themeCode = null)
     {
-        try {
-            $pageTitle = lang('system::lang.themes.text_edit_title');
-            Template::setTitle($pageTitle);
-            Template::setHeading($pageTitle);
+        Template::setButton(lang('system::lang.themes.button_source'), [
+            'class' => 'btn btn-default',
+            'href' => admin_url('themes/source/'.$themeCode),
+        ]);
 
-            Template::setButton(lang('system::lang.themes.button_source'), [
-                'class' => 'btn btn-default',
-                'href' => admin_url('themes/source/'.$themeCode),
-            ]);
-
-            $model = $this->formFindModelObject($themeCode);
-            $this->initFormWidget($model, $context);
-        }
-        catch (Exception $ex) {
-            $this->handleError($ex);
-        }
+        $this->asExtension('FormController')->edit($context, $themeCode);
     }
 
     public function source($context, $themeCode = null)
     {
-        try {
-            $pageTitle = lang('system::lang.themes.text_source_title');
-            Template::setTitle($pageTitle);
-            Template::setHeading($pageTitle);
+        Template::setButton(lang('system::lang.themes.button_customize'), [
+            'class' => 'btn btn-default',
+            'href' => admin_url('themes/edit/'.$themeCode),
+        ]);
 
-            Template::setButton(lang('system::lang.themes.button_customize'), [
-                'class' => 'btn btn-default',
-                'href' => admin_url('themes/edit/'.$themeCode),
+        if (!ThemeManager::instance()->findParent($themeCode)) {
+            Template::setButton(lang('system::lang.themes.button_child'), [
+                'class' => 'btn btn-default pull-right',
+                'data-request' => 'onCreateChild',
             ]);
+        }
 
-            $model = $this->formFindModelObject($themeCode);
-            $this->initFormWidget($model, $context);
-        }
-        catch (Exception $ex) {
-            $this->handleError($ex);
-        }
+        $this->asExtension('FormController')->edit($context, $themeCode);
     }
 
-    public function upload($context)
+    public function upload()
     {
         $pageTitle = lang('system::lang.themes.text_add_title');
         Template::setTitle($pageTitle);
@@ -131,7 +126,7 @@ class Themes extends \Admin\Classes\AdminController
             Template::setHeading($pageTitle);
 
             $themeManager = ThemeManager::instance();
-            $themeClass = $themeManager->findTheme($themeCode);
+            $theme = $themeManager->findTheme($themeCode);
             $model = Themes_model::whereCode($themeCode)->first();
             $activeThemeCode = params()->get('default_themes.main');
 
@@ -147,7 +142,7 @@ class Themes extends \Admin\Classes\AdminController
 
             // Theme not found in filesystem
             // so delete from database
-            if (!$themeClass) {
+            if (!$theme) {
                 Themes_model::deleteTheme($themeCode, TRUE);
                 flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
 
@@ -157,10 +152,8 @@ class Themes extends \Admin\Classes\AdminController
             // Lets display a delete confirmation screen
             // with list of files to be deleted
             $this->vars['themeModel'] = $model;
-            $this->vars['themeClass'] = $themeClass;
-            $this->vars['themeName'] = $themeClass->name;
+            $this->vars['themeObj'] = $theme;
             $this->vars['themeData'] = $model->data;
-            $this->vars['filesToDelete'] = array_collapse($themeManager->listFiles($themeCode));
         }
         catch (Exception $ex) {
             $this->handleError($ex);
@@ -180,65 +173,30 @@ class Themes extends \Admin\Classes\AdminController
         return $this->redirectBack();
     }
 
-    public function edit_onSave($context, $themeCode = null)
-    {
-        $model = $this->formFindModelObject($themeCode);
-
-        $this->initFormWidget($model, $context);
-
-        if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
-
-        $model->setAttribute('data', $this->formWidget->getSaveData());
-
-        if ($model->save()) {
-            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme settings updated '));
-        }
-        else {
-            flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), 'updated'));
-        }
-
-        $this->formAfterSave($model);
-
-        return $this->refresh();
-    }
-
     public function source_onSave($context, $themeCode = null)
     {
-        $oldMTime = session('Theme.customize.mTime');
+        if (ThemeManager::instance()->isLocked($themeCode)) {
+            flash()->danger('You can not edit a template file that belongs to a locked theme, create a child theme to make changes.')->important();
 
-        $model = $this->formFindModelObject($themeCode);
-
-        $this->initFormWidget($model, $context);
-
-        $this->validateAfter(function ($validator) use ($oldMTime) {
-            if (
-                isset($this->formWidget->data->fileSource) AND
-                $oldMTime != $this->formWidget->data->fileSource->mTime
-            ) {
-                $validator->errors()->add('markup', lang('system::lang.themes.alert_changes_confirm'));
-            }
-        });
-
-        if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
-
-        list($fileName, $attributes) = $this->getFileAttributes();
-
-        if (ThemeManager::instance()->writeFile($fileName, $themeCode, $attributes)) {
-            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme file ['.$fileName.'] updated '));
+            return;
         }
 
-        return $this->refresh();
+        return $this->asExtension('FormController')->edit_onSave($context, $themeCode);
     }
 
     public function source_onChooseFile($context, $themeCode = null)
     {
         $model = $this->formFindModelObject($themeCode);
 
-        $this->initFormWidget($model, $context);
+        $this->asExtension('FormController')->initForm($model, $context);
 
-        session()->put('Theme.customize.file', post('Theme.customize.file'));
+        $this->validate(post('Theme.source.template'), [
+            ['type', 'Source Type', 'required|in:_pages,_partials,_layouts,_content'],
+            ['file', 'Source File', 'sometimes|present|string'],
+        ]);
+
+        $this->setTemplateValue('type', post('Theme.source.template.type'));
+        $this->setTemplateValue('file', post('Theme.source.template.file'));
 
         return $this->refresh();
     }
@@ -247,35 +205,37 @@ class Themes extends \Admin\Classes\AdminController
     {
         $model = $this->formFindModelObject($themeCode);
 
-        $this->initFormWidget($model, $context);
+        $this->asExtension('FormController')->initForm($model, $context);
 
-        $fileAction = post('action');
-        $newFileName = post('name');
-
-        $passed = $this->validatePasses(post(), [
-            ['action', 'Source Action', 'required|in:rename,new'],
-            ['name', 'Source Name', 'required|string'],
+        $this->validate(post(), [
+            ['action', 'Source Action', 'required|in:delete,rename,new'],
+            ['name', 'Source Name', 'present|regex:/^[a-zA-Z-_\/]+$/'],
+            ['Theme.source.template.type', 'Source Type', 'required|in:_pages,_partials,_layouts,_content'],
+            ['Theme.source.template.file', 'Source File', 'required_unless:action,new|regex:/^[a-zA-Z-_\/]+$/'],
         ]);
 
-        if ($passed === FALSE)
-            return;
+        $fileAction = post('action');
+        $newFileName = sprintf('%s/%s', post('Theme.source.template.type'), post('name'));
+        $fileName = implode('/', post('Theme.source.template'));
+        $manager = ThemeManager::instance();
 
-        $sourceField = $this->formWidget->getField('file');
-
-        if ($fileAction == 'new') {
-            ThemeManager::instance()->writeFile($newFileName, $themeCode);
+        if ($fileAction == 'rename') {
+            $manager->renameFile($fileName, $newFileName, $themeCode);
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Template file renamed '));
+        }
+        elseif ($fileAction == 'delete') {
+            $manager->deleteFile($fileName, $themeCode);
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Template file deleted '));
         }
         else {
-            $fileName = post($this->formWidget->arrayName.'[file]');
-            ThemeManager::instance()->renameFile($fileName, $themeCode, $newFileName);
-            $sourceField->value = $newFileName;
+            $manager->newFile($newFileName, $themeCode);
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Template file created '));
         }
 
-        return [
-            '#'.$sourceField->getId('group') => $this->formWidget->renderField($sourceField, [
-                'useContainer' => FALSE,
-            ]),
-        ];
+        $this->setTemplateValue('type', post('Theme.source.template.type'));
+        $this->setTemplateValue('file', post('name'));
+
+        return $this->refresh();
     }
 
     public function source_onCreateChild($context, $themeCode = null)
@@ -316,13 +276,8 @@ class Themes extends \Admin\Classes\AdminController
 
     public function delete_onDelete($context = null, $themeCode = null)
     {
-        $theme = ThemeManager::instance()->findTheme($themeCode);
-        $meta = $theme->config;
-
-        if (Themes_model::deleteTheme($themeCode, post('delete_data') == 1)) {
-            $name = $meta['name'] ?? '';
-
-            flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme {$name} deleted "));
+        if (Themes_model::deleteTheme($themeCode, post('delete_data', 1) == 1)) {
+            flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
         }
         else {
             flash()->danger(lang('admin::lang.alert_error_try_again'));
@@ -339,7 +294,7 @@ class Themes extends \Admin\Classes\AdminController
         $attributes = $column->attributes;
 
         $column->iconCssClass = 'fa fa-star-o';
-        if ($record->themeClass AND $record->themeClass->isActive()) {
+        if ($record->getTheme() AND $record->getTheme()->isActive()) {
             $column->iconCssClass = 'fa fa-star';
             $attributes['title'] = 'lang:system::lang.themes.text_is_default';
             $attributes['data-request'] = null;
@@ -348,59 +303,30 @@ class Themes extends \Admin\Classes\AdminController
         return $attributes;
     }
 
-    public function initFormWidget($model, $context = null)
+    public function formExtendConfig(&$formConfig)
     {
-        $configFile = $this->formConfig['configFile'];
-        $config = $this->makeConfig($configFile, ['form']);
-        $modelConfig = $config['form'] ?? [];
+        $formConfig['data'] = $formConfig['model']->toArray();
 
-        $forgetSessionFile = TRUE;
-        if ($context != 'source') {
-            $modelConfig['tabs']['fields'] = $model->getFieldsConfig();
+        if ($formConfig['context'] != 'source') {
+            $formConfig['tabs']['fields'] = $formConfig['model']->getFieldsConfig();
+            $formConfig['data'] = array_merge($formConfig['model']->getFieldValues(), $formConfig['data']);
+            $formConfig['arrayName'] .= '[data]';
+
+            return;
         }
 
-        $arrayName = str_singular(strip_class_basename($model, '_model')).'[customize]';
-        $modelConfig['model'] = $model;
+        $formConfig['arrayName'] .= '[source]';
+        $formConfig['tabs']['cssClass'] = 'theme-source-editor';
 
-        if ($context == 'source') {
-            $file = session('Theme.customize.file');
-            if ($file AND $mergeData = ThemeManager::instance()->readFile($file, $model->code)) {
-                $forgetSessionFile = FALSE;
-                $mergeData['file'] = $file;
-            }
-            else {
-                $mergeData = [];
-            }
-        }
-        else {
-            $mergeData = $model->getFieldValues();
-        }
+        $type = $this->getTemplateValue('type');
+        $file = $this->getTemplateValue('file');
+        $formConfig['fields']['template']['default']['type'] = $type;
 
-        if ($forgetSessionFile)
-            session()->forget('Theme.customize');
+        if (!empty($file))
+            $this->mergeTemplateConfigIntoFormConfig($formConfig, $type, $file);
 
-        $modelConfig['data'] = array_merge($mergeData, $model->toArray());
-        $modelConfig['arrayName'] = $arrayName;
-        $modelConfig['context'] = $context;
-
-        // Form Widget with extensibility
-        $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $modelConfig);
-
-        $this->formWidget->bindEvent('form.extendFieldsBefore', function () {
-            $this->formExtendFieldsBefore($this->formWidget);
-        });
-
-        $this->formWidget->bindEvent('form.extendFields', function ($fields) {
-            $this->formExtendFields($this->formWidget, $fields);
-        });
-
-        $this->formWidget->bindToController();
-
-        // Prep the optional toolbar widget
-        if (isset($modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
-            $this->toolbarWidget = $this->widgets['toolbar'];
-            $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
-        }
+        if (Request::method() === 'GET')
+            $this->setTemplateValue('mTime', optional($formConfig['data']['fileSource'] ?? [])->mTime);
     }
 
     public function formFindModelObject($recordId)
@@ -409,7 +335,7 @@ class Themes extends \Admin\Classes\AdminController
             throw new Exception(lang('admin::lang.form.missing_id'));
         }
 
-        $model = $this->createModel();
+        $model = $this->formCreateModelObject();
 
         // Prepare query and find model record
         $query = $model->newQuery();
@@ -422,120 +348,28 @@ class Themes extends \Admin\Classes\AdminController
         return $result;
     }
 
-    public function formExtendFieldsBefore($form)
-    {
-        $file = session('Theme.customize.file');
-        $parts = explode('/', $file);
-        $dirName = $parts[0];
-
-        if (strlen($file) AND in_array($dirName, ['_layouts', '_pages'])) {
-            $form->fields['settings[components]']['context'] = ['source'];
-            $form->tabs['fields']['codeSection']['context'] = ['source'];
-        }
-    }
-
-    public function formExtendFields($form, $fields)
-    {
-        $markupField = $form->getField('markup');
-        $fileField = $form->getField('file');
-        if (!$markupField OR !$fileField)
-            return;
-
-        $file = $fileField->value;
-        $themeCode = $form->model->code;
-        $fileField->options = $this->prepareFilesList($themeCode, $file);
-
-        $parts = explode('/', $file);
-        $dirName = $parts[0];
-
-        if (in_array($dirName, ['_layouts', '_pages'])) {
-            if ($dirName == '_layouts') {
-                $form->removeField('settings[title]');
-                $form->removeField('settings[permalink]');
-                $form->removeField('settings[layout]');
-            }
-        }
-        else {
-            $form->removeTab('lang:system::lang.themes.text_tab_meta');
-        }
-
-        if (!strlen($file)) {
-            $form->removeTab('lang:system::lang.themes.text_tab_markup');
-
-            return;
-        }
-
-        switch (pathinfo($file, PATHINFO_EXTENSION)) {
-            case 'js':
-                $markupField->config['mode'] = 'javascript';
-                break;
-            case 'css':
-                $markupField->config['mode'] = 'css';
-                break;
-            case 'php':
-            default:
-                $markupField->config['mode'] = 'application/x-httpd-php';
-                break;
-        }
-
-        session()->put('Theme.customize.mTime', isset($form->data->fileSource) ?
-            $form->data->fileSource->mTime : null);
-    }
-
     public function formAfterSave($model)
     {
-        if (!$model->getFieldsConfig())
+        if ($this->widgets['form']->context == 'source') {
+            [$fileName, $attributes] = $this->getTemplateAttributes();
+            ThemeManager::instance()->writeFile($fileName, $attributes, $model->code);
+
             return;
+        }
 
         $this->buildAssetsBundle($model);
     }
 
-    public function formValidate($model, $form)
+    public function wasTemplateModified()
     {
-        $rules = [];
-        if ($form->context != 'source') {
-            foreach ($model->getFieldsConfig() as $name => $field) {
-                if (!array_key_exists('rules', $field))
-                    continue;
-
-                $dottedName = implode('.', name_to_array($name));
-                $rules[] = [$dottedName, $field['label'], $field['rules']];
-            }
-        }
-        else {
-            $rules = [
-                ['file', 'Source File', 'required'],
-                ['markup', 'lang:system::lang.themes.text_tab_markup', 'sometimes'],
-                ['codeSection', 'lang:system::lang.themes.text_tab_php_section', 'sometimes'],
-                ['settings.components.*.alias', 'lang:system::lang.themes.label_component_alias', 'sometimes|required|alpha'],
-                ['settings.title', 'lang:system::lang.themes.label_title', 'sometimes|required|max:160'],
-                ['settings.description', 'lang:admin::lang.label_description', 'sometimes|max:255'],
-                ['settings.layout', 'lang:system::lang.themes.label_layout', 'sometimes|string'],
-                ['settings.permalink', 'lang:system::lang.themes.label_permalink', 'sometimes|required|string'],
-            ];
-        }
-
-        return $this->validatePasses(array_undot(post($form->arrayName)), $rules);
-    }
-
-    protected function createModel()
-    {
-        $class = $this->formConfig['model'];
-
-        if (!isset($class) OR !strlen($class)) {
-            throw new Exception(lang('admin::lang.form.missing_model'));
-        }
-
-        $model = new $class;
-
-        return $model;
+        return $this->getTemplateValue('mTime') != optional($this->widgets['form']->data->fileSource)->mTime;
     }
 
     protected function validateUpload()
     {
         $zipFile = Request::file('theme_zip');
         if (!Request::hasFile('theme_zip') OR !$zipFile->isValid())
-            throw new SystemException("Please upload a zip file");
+            throw new SystemException('Please upload a zip file');
 
         $name = $zipFile->getClientOriginalName();
         $theme = $zipFile->extension();
@@ -556,76 +390,47 @@ class Themes extends \Admin\Classes\AdminController
         return TRUE;
     }
 
-    protected function prepareFilesList($themeCode, $currentFile = null)
+    protected function getTemplateAttributes()
     {
-        return function () use ($themeCode, $currentFile) {
-            $result = [];
+        $formData = $this->widgets['form']->getSaveData();
+        $fileName = implode('/', array_get($formData, 'template', []));
 
-            $themeManager = ThemeManager::instance();
-            $list = $themeManager->listFiles($themeCode, ['_layouts', '_pages', '_partials']);
-            foreach (array_sort($list) as $directory => $files) {
-                foreach ($files as $file) {
-                    $group = pathinfo($file, PATHINFO_DIRNAME);
-                    $result[$file] = $group.'/'.pathinfo($file, PATHINFO_FILENAME);
-                }
-            }
-
-            return $result;
-        };
-    }
-
-    protected function getFileAttributes()
-    {
-        $fileData = post($this->formWidget->arrayName);
-        $fileName = array_get($fileData, 'file');
-        $code = array_get($fileData, 'codeSection');
-
+        $code = array_get($formData, 'codeSection');
         $code = preg_replace('/^\<\?php/', '', $code);
         $code = preg_replace('/^\<\?/', '', preg_replace('/\?>$/', '', $code));
-        $code = trim($code, PHP_EOL);
 
-        $attributes = [
-            'code' => $code,
-            'markup' => array_get($fileData, 'markup'),
-            'data' => $this->parseComponents(array_get($fileData, 'settings')),
-        ];
+        $result['code'] = trim($code, PHP_EOL);
+        $result['markup'] = array_get($formData, 'markup');
+        $result['settings'] = $this->parseSettings(array_get($formData, 'settings', []));
 
-        return [$fileName, $attributes];
+        return [$fileName, $result];
     }
 
-    protected function parseComponents($settings)
+    protected function parseSettings($settings)
     {
-        $components = [];
+        $result = array_except($settings, 'components');
+        foreach (array_get($settings, 'components') ?? [] as $alias => $component) {
+            $alias = sprintf('[%s]', array_get($component, 'alias') ?: $alias);
+            $result[$alias] = array_map(function ($propertyValue) {
+                if (is_numeric($propertyValue))
+                    $propertyValue += 0; // Convert to int or float
 
-        foreach (array_get($settings, 'components', []) as $component) {
-            $alias = $component['alias'];
-            if ($component['code'] != $component['alias'])
-                $alias = $component['code'].' '.$component['alias'];
-
-            $alias = sprintf('[%s]', $alias);
-            $components[$alias] = $this->parseComponentPropertyValues(array_get($component, 'options', []));
+                return $propertyValue;
+            }, array_except($component, 'alias'));
         }
 
-        $settings['components'] = $components;
-
-        return $settings;
-    }
-
-    protected function parseComponentPropertyValues($properties)
-    {
-        $properties = array_map(function (&$propertyValue) {
-            if (is_numeric($propertyValue))
-                $propertyValue += 0; // Convert to int or float
-
-            return $propertyValue;
-        }, $properties);
-
-        return $properties;
+        return $result;
     }
 
     protected function buildAssetsBundle($model)
     {
-        \Assets::addFromManifest($model->themeClass->publicPath.'/_meta/assets.json');
+        if (!$model->getFieldsConfig())
+            return;
+
+        if (!File::exists($path = $model->getTheme()->publicPath.'/_meta/assets.json'))
+            return;
+
+        \Assets::addFromManifest($path);
 
         Event::listen('assets.combiner.beforePrepare', function (Assets $combiner, $assets) {
             ThemeManager::applyAssetVariablesOnCombinerFilters(
@@ -640,6 +445,50 @@ class Themes extends \Admin\Classes\AdminController
         catch (Exception $ex) {
             Log::error($ex);
             flash()->error('Building assets bundle error: '.$ex->getMessage())->important();
+        }
+    }
+
+    protected function getTemplateValue($name, $default = null)
+    {
+        $themeCode = $this->params[0] ?? 'default';
+        $cacheKey = $themeCode.'-selected-'.$name;
+
+        return $this->getSession($cacheKey, $default);
+    }
+
+    protected function setTemplateValue($name, $value)
+    {
+        $themeCode = $this->params[0] ?? 'default';
+        $cacheKey = $themeCode.'-selected-'.$name;
+        $this->putSession($cacheKey, $value);
+    }
+
+    /**
+     * @param $formConfig
+     * @param $type
+     * @param $file
+     */
+    protected function mergeTemplateConfigIntoFormConfig(&$formConfig, $type, $file)
+    {
+        try {
+            $configFile = $this->templateConfig[$type];
+            $templateConfig = $this->loadConfig($configFile, ['form'], 'form');
+            $formConfig['fields'] = array_merge($formConfig['fields'], $templateConfig['fields'] ?? []);
+            $formConfig['tabs']['fields'] = array_merge($formConfig['tabs']['fields'], $templateConfig['tabs']['fields'] ?? []);
+            $formConfig['fields']['template']['default']['file'] = $file;
+
+            $template = ThemeManager::instance()->readFile($type.'/'.$file, $formConfig['model']->code);
+
+            $formConfig['data'] = array_merge([
+                'fileName' => $template->getFileName(),
+                'baseFileName' => $template->getBaseFileName(),
+                'settings' => $template->settings,
+                'markup' => $template->getMarkup(),
+                'codeSection' => $template->getCode(),
+                'fileSource' => $template,
+            ], $formConfig['data']);
+        }
+        catch (ApplicationException $e) {
         }
     }
 }
