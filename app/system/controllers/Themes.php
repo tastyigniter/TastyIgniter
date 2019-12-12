@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Main\Classes\ThemeManager;
 use Request;
-use System\Libraries\Assets;
+use System\Facades\Assets;
+use System\Libraries\Assets as AssetsManager;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
 use System\Traits\SessionMaker;
@@ -176,7 +177,7 @@ class Themes extends \Admin\Classes\AdminController
     public function source_onSave($context, $themeCode = null)
     {
         if (ThemeManager::instance()->isLocked($themeCode)) {
-            flash()->danger('You can not edit a template file that belongs to a locked theme, create a child theme to make changes.')->important();
+            flash()->danger(lang('system::lang.themes.alert_theme_locked'))->important();
 
             return;
         }
@@ -203,6 +204,12 @@ class Themes extends \Admin\Classes\AdminController
 
     public function source_onManageSource($context, $themeCode = null)
     {
+        if (ThemeManager::instance()->isLocked($themeCode)) {
+            flash()->danger(lang('system::lang.themes.alert_theme_locked'))->important();
+
+            return;
+        }
+
         $model = $this->formFindModelObject($themeCode);
 
         $this->asExtension('FormController')->initForm($model, $context);
@@ -240,11 +247,19 @@ class Themes extends \Admin\Classes\AdminController
 
     public function source_onCreateChild($context, $themeCode = null)
     {
-        $this->formFindModelObject($themeCode);
+        $model = $this->formFindModelObject($themeCode);
 
         $childThemeCode = ThemeManager::instance()->createChildTheme($themeCode);
 
         ThemeManager::instance()->loadThemes();
+        Themes_model::create([
+            'name' => $model->name.' [child]',
+            'code' => $childThemeCode,
+            'version' => '1.0.0',
+            'description' => $model->description,
+            'data' => $model->data,
+        ]);
+
         Themes_model::syncAll();
         Themes_model::activateTheme($childThemeCode);
 
@@ -427,20 +442,38 @@ class Themes extends \Admin\Classes\AdminController
         if (!$model->getFieldsConfig())
             return;
 
-        if (!File::exists($path = $model->getTheme()->publicPath.'/_meta/assets.json'))
+        $loaded = FALSE;
+        $theme = $model->getTheme();
+        $file = '/_meta/assets.json';
+
+        if (File::exists($path = $theme->path.$file)) {
+            Assets::addFromManifest($theme->publicPath.$file);
+            $loaded = TRUE;
+        }
+
+        if ($theme->hasParent() AND File::exists($path = $theme->getParent()->path.$file)) {
+            Assets::addFromManifest($theme->getParent()->publicPath.$file);
+            $loaded = TRUE;
+        }
+
+        if (!$loaded)
             return;
 
-        \Assets::addFromManifest($path);
-
-        Event::listen('assets.combiner.beforePrepare', function (Assets $combiner, $assets) {
+        Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) {
             ThemeManager::applyAssetVariablesOnCombinerFilters(
                 array_flatten($combiner->getFilters())
             );
         });
 
         try {
+            $output = '';
             Artisan::call('igniter:util', ['name' => 'compile scss']);
+            $output .= Artisan::output();
+
             Artisan::call('igniter:util', ['name' => 'compile js']);
+            $output .= Artisan::output();
+
+            Log::info($output);
         }
         catch (Exception $ex) {
             Log::error($ex);

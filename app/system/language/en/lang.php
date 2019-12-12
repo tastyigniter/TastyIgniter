@@ -430,7 +430,7 @@ return [
     'themes' => [
         'text_title' => 'Themes',
         'text_edit_title' => 'Theme: Customize',
-        'text_source_title' => 'Theme: Source',
+        'text_source_title' => 'Theme: Edit Template',
         'text_add_title' => 'Theme: Upload',
         'text_delete_title' => 'Theme: Delete',
         'text_form_name' => 'Theme',
@@ -442,7 +442,7 @@ return [
         'text_filter_status' => 'View all status',
         'text_upload_title' => 'Upload the theme .zip file.',
         'text_empty' => 'There are no themes available.',
-        'text_select_file' => 'Select a [%s] file to edit',
+        'text_select_file' => 'Select a [%s] template to edit',
         'text_is_default' => 'Activated',
         'text_set_default' => 'Activate',
         'text_author' => 'Author',
@@ -494,9 +494,8 @@ return [
 
         'alert_delete_warning' => 'You are about to delete the %s of theme <b>%s</b>',
         'alert_delete_confirm' => 'Are you sure you wish to delete the associated %s? This cannot be undone!',
-        'alert_copy_warning' => 'You are about to create a copy of the following %s from theme <b>%s</b>',
-        'alert_copy_confirm' => 'Are you sure you wish to copy these %s?',
-        'alert_changes_confirm' => 'Conflicting versions, source file has changed. Reload the page to continue.',
+        'alert_theme_locked' => 'This is a locked theme, changes are restricted, create a child theme to make changes.',
+        'alert_changes_confirm' => 'Conflicting versions, template file has changed. Reload the page to continue.',
     ],
 
     'updates' => [
