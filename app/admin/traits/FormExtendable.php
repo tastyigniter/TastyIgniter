@@ -187,6 +187,11 @@ trait FormExtendable
     {
     }
 
+    public function formExtendConfig(&$formConfig, &$modelConfig)
+    {
+
+    }
+
     /**
      * Static helper for extending form fields.
      *
