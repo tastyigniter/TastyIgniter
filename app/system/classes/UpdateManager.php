@@ -464,7 +464,7 @@ class UpdateManager
 
     public function setSecurityKey($key, $info)
     {
-        params()->set('carte_key', $key ? encrypt($key) : '');
+        params()->set('carte_key', $key ?: '');
 
         if ($info AND is_array($info))
             params()->set('carte_info', $info);
