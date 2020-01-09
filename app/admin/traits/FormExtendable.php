@@ -187,7 +187,7 @@ trait FormExtendable
     {
     }
 
-    public function formExtendConfig(&$formConfig, &$modelConfig)
+    public function formExtendConfig($formConfig)
     {
 
     }

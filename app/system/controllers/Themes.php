@@ -504,13 +504,13 @@ class Themes extends \Admin\Classes\AdminController
     protected function mergeTemplateConfigIntoFormConfig(&$formConfig, $type, $file)
     {
         try {
+            $template = ThemeManager::instance()->readFile($type.'/'.$file, $formConfig['model']->code);
+
             $configFile = $this->templateConfig[$type];
             $templateConfig = $this->loadConfig($configFile, ['form'], 'form');
             $formConfig['fields'] = array_merge($formConfig['fields'], $templateConfig['fields'] ?? []);
             $formConfig['tabs']['fields'] = array_merge($formConfig['tabs']['fields'], $templateConfig['tabs']['fields'] ?? []);
             $formConfig['fields']['template']['default']['file'] = $file;
-
-            $template = ThemeManager::instance()->readFile($type.'/'.$file, $formConfig['model']->code);
 
             $formConfig['data'] = array_merge([
                 'fileName' => $template->getFileName(),
