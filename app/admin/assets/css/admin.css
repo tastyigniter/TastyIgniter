@@ -1573,8 +1573,6 @@ body.dragging {
     width: 70px;
     text-align: center;
     float: left; }
-    .search-group .item-details .item-thumb .fa {
-      padding: 10px 15px; }
   .search-group .item-details .item-name {
     font-weight: 500; }
   .search-group .item-details .item-description p {
@@ -1595,6 +1593,21 @@ body.dragging {
   font-size: 95%; }
   .update-item .description h1, .update-item .description h2, .update-item .description h3, .update-item .description h4, .update-item .description h5 {
     font-size: 95%; }
+
+.extension-icon {
+  background-color: #e9eaee;
+  color: #68728d;
+  line-height: 40px;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  display: inline-block;
+  font-size: 20px; }
+  .extension-icon.icon-lg {
+    height: 60px;
+    width: 60px;
+    line-height: 60px;
+    font-size: 32px; }
 
 .navbar-footer {
   font-size: 12px;

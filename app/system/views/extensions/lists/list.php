@@ -6,19 +6,15 @@
     ]
 ); ?>
 
-<div class="list-table table-responsive">
-    <table class="table table-striped">
-        <tbody>
+<div class="list-extensions">
         <?php if (count($records)) { ?>
             <?= $this->makePartial('lists/list_body') ?>
         <?php }
         else { ?>
-            <tr>
-                <td colspan="<?= $columnTotal ?>"><?= $emptyMessage; ?></td>
-            </tr>
+            <div class="card bg-light border-none">
+                <div class="card-body p-3"><?= $emptyMessage; ?></div>
+            </div>
         <?php } ?>
-        </tbody>
-    </table>
 </div>
 
 <?= form_close(); ?>

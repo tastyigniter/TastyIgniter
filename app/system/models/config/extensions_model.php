@@ -54,7 +54,7 @@ $config['list']['columns'] = [
         'type' => 'button',
         'iconCssClass' => 'fa fa-play',
         'attributes' => [
-            'class' => 'btn btn-outline-success',
+            'class' => 'btn btn-outline-success mr-3',
             'data-request' => 'onInstall',
             'data-request-form' => '#list-form',
             'data-request-data' => 'code:\'{name}\'',
@@ -64,7 +64,7 @@ $config['list']['columns'] = [
         'type' => 'button',
         'iconCssClass' => 'fa fa-stop',
         'attributes' => [
-            'class' => 'btn btn-outline-default',
+            'class' => 'btn btn-outline-default mr-3',
             'data-request' => 'onUninstall',
             'data-request-form' => '#list-form',
             'data-request-data' => 'code:\'{name}\'',
@@ -78,22 +78,10 @@ $config['list']['columns'] = [
             'href' => 'extensions/delete/{name}',
         ],
     ],
-    'icon' => [
-        'label' => 'lang:system::lang.extensions.column_icon',
-        'cssClass' => 'list-action text-center',
-        'type' => 'partial',
-        'path' => 'lists/extension_icon',
-        'sortable' => FALSE,
-    ],
     'title' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'partial',
         'path' => 'lists/extension_card',
-        'searchable' => TRUE,
-    ],
-    'version' => [
-        'label' => 'lang:system::lang.extensions.column_version',
-        'cssClass' => 'text-right',
         'searchable' => TRUE,
     ],
 ];

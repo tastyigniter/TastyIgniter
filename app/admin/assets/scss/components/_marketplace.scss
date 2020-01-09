@@ -83,10 +83,6 @@
       width: 70px;
       text-align: center;
       float: left;
-
-      .fa {
-        padding: 10px 15px;
-      }
     }
 
     .item-name {
@@ -119,5 +115,23 @@
 
   h1, h2, h3, h4, h5 {
     font-size: 95%;
+  }
+}
+
+.extension-icon {
+  background-color: $gray-200;
+  color: $gray-700;
+  line-height: 40px;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  display: inline-block;
+  font-size: 20px;
+
+  &.icon-lg {
+    height: 60px;
+    width: 60px;
+    line-height: 60px;
+    font-size: 32px;
   }
 }

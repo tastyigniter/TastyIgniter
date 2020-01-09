@@ -19,7 +19,7 @@ mix.setPublicPath('./').options({
 // Copy fonts from node_modules
 //
 mix.copyDirectory(
-    'node_modules/@fortawesome/fontawesome-free-webfonts/webfonts',
+    'node_modules/@fortawesome/fontawesome-free/webfonts',
     'ui/fonts/FontAwesome'
 ).copy(
     'node_modules/animate.css/animate.min.css',

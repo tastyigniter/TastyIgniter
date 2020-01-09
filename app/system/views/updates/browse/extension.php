@@ -1,4 +1,4 @@
-<div class="panel panel-item item-extension h-100 shadow-sm">
+<div class="card bg-light item-extension h-100 shadow-sm">
     <div class="d-flex h-75 p-3">
         <div class="pr-4 align-self-center">
             <?php if (!empty($item['thumb'])) { ?>
@@ -8,7 +8,10 @@
                      style="width: 64px; height: 64px;">
             <?php }
             else { ?>
-                <i class="fa <?= $item['icon'] ?> fa-3x text-muted"></i>
+                <span
+                    class="extension-icon icon-lg rounded"
+                    style="<?= $item['icon']['styles'] ?? ''; ?>"
+                ><i class="<?= $item['icon']['class'] ?? ''; ?>"></i></span>
             <?php } ?>
         </div>
         <div class="flex-grow-1 px-0 ml-auto">

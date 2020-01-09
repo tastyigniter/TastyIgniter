@@ -2,11 +2,10 @@
     <?php foreach ($items as $item) { ?>
         <div class="update-item row pt-3 pb-3 border-top <?= $ignored ? 'text-muted' : ''; ?>">
             <div class="col-sm-1 pt-2 text-center text-muted">
-                <?php if ($item['type'] === 'core') { ?>
-                    <i class="logo-icon icon-ti-logo fa-4x"></i>
-                <?php } else { ?>
-                    <i class="fa <?= $item['icon'] ?> fa-2x"></i>
-                <?php } ?>
+                <span
+                    class="extension-icon rounded"
+                    style="<?= $item['icon']['styles'] ?? ''; ?>"
+                ><i class="<?= $item['icon']['class'] ?? ''; ?>"></i></span>
             </div>
             <div class="col-sm-2 pl-0 text-truncate">
                 <b><?= $item['name'] ?></b>
