@@ -560,3 +560,33 @@ if (!function_exists('is_lang_key')) {
     }
 }
 
+if (!function_exists('generate_extension_icon')) {
+    function generate_extension_icon($icon)
+    {
+        if (is_string($icon))
+            $icon = ['class' => 'fa '.$icon];
+
+        $icon = array_merge([
+            'class' => 'fa fa-plug',
+            'color' => '',
+            'image' => null,
+            'backgroundColor' => null,
+            'backgroundImage' => null,
+        ], $icon);
+
+        $styles = [];
+        if (strlen($color = array_get($icon, 'color')))
+            $styles[] = "color:$color;";
+
+        if (strlen($backgroundColor = array_get($icon, 'backgroundColor')))
+            $styles[] = "background-color:$backgroundColor;";
+
+        if (is_array($backgroundImage = array_get($icon, 'backgroundImage')))
+            $styles[] = "background-image:url('data:$backgroundImage[0];base64,$backgroundImage[1]');";
+
+        $icon['styles'] = implode(' ', $styles);
+
+        return $icon;
+    }
+}
+
