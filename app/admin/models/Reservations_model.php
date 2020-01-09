@@ -266,7 +266,7 @@ class Reservations_model extends Model
         $query = self::with('tables');
         $query->whereLocationId($location->getKey());
         $query->whereBetweenDate($dateTime->toDateTimeString());
-        $query->where('status_id', setting('confirmed_reservation_status'));
+        $query->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);
         $result = $query->get();
 
         return $result->pluck('tables')->flatten()->keyBy('table_id');
