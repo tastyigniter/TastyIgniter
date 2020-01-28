@@ -86,7 +86,7 @@ class MailTemplates extends \Admin\Classes\AdminController
 
         $adminUser = $this->getUser()->staff;
 
-        Mail::send($model->code, [], function ($message) use ($adminUser) {
+        Mail::queue($model->code, [], function ($message) use ($adminUser) {
             $message->to($adminUser->staff_email, $adminUser->staff_name);
         });
 
