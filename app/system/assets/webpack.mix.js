@@ -30,6 +30,9 @@ mix.copyDirectory(
 ).copy(
     'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
     '../../admin/formwidgets/colorpicker/assets/vendor/colorpicker/js/bootstrap-colorpicker.min.js'
+).copy(
+    'node_modules/metismenu/dist/metisMenu.min.js.map',
+    '../../admin/assets/js/metisMenu.min.js.map'
 );
 
 //
