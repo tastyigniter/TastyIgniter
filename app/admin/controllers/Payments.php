@@ -56,8 +56,7 @@ class Payments extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($this->getUser()->hasPermission('Admin.Payments.Manage'))
-            Payments_model::syncAll();
+        Payments_model::syncAll();
 
         $this->asExtension('ListController')->index();
     }

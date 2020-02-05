@@ -77,8 +77,7 @@ class Themes extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($this->getUser()->hasPermission('Site.Themes.Manage'))
-            Themes_model::syncAll();
+        Themes_model::syncAll();
 
         $this->asExtension('ListController')->index();
     }
@@ -163,9 +162,6 @@ class Themes extends \Admin\Classes\AdminController
 
     public function index_onSetDefault()
     {
-        if (!$this->getUser()->hasPermission('Site.Themes.Manage', TRUE))
-            return $this->redirectBack();
-
         $themeName = post('code');
         if ($theme = Themes_model::activateTheme($themeName)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme ['.$theme->name.'] set as default '));

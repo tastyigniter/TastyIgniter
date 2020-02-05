@@ -228,29 +228,17 @@ return [
 
         'alert_test_message_sent' => 'Test message successfully sent to %s',
     ],
-
     'permissions' => [
-        'text_title' => 'Permissions',
-        'text_form_name' => 'Permission',
-        'text_empty' => 'There are no permissions available.',
-        'text_filter_search' => 'Search by name.',
-        'text_filter_status' => 'View all status',
-        'text_access' => 'Access',
-        'text_manage' => 'Manage',
-        'text_add' => 'Add',
-        'text_delete' => 'Delete',
-
-        'column_actions' => 'Available Actions',
-        'column_description' => 'Description',
-        'column_status' => 'Status',
-        'column_id' => 'ID',
-
-        'label_action' => 'Action',
-
-        'help_name' => 'Permissions name are made up of (Domain.Context):<br />Domain  - Typically the application domain name (e.g. Admin, Site, Extension, Module, Payment).<br />Context - The controller class name (e.g. Menus, Orders, Locations, or Settings).',
-        'help_action' => 'The permitted action (Access, Manage, Add, Delete)',
-
-        'error_invalid_name' => 'Invalid permission name, must match Domain.Context',
+        'name' => 'System',
+        'activities' => 'Access activities',
+        'countries' => 'Create, edit and delete countries',
+        'currencies' => 'Create, edit and delete currencies',
+        'error_logs' => 'View system logs',
+        'extensions' => 'Install, uninstall and delete extension',
+        'mail_templates' => 'Create, edit and delete mail templates',
+        'languages' => 'Create, edit and delete site languages',
+        'settings' => 'Manage system settings',
+        'updates' => 'Ability to apply updates when a new version of TastyIgniter is available',
     ],
 
     'settings' => [

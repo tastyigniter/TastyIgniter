@@ -4,6 +4,7 @@ namespace Admin;
 
 use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
+use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
 use AdminAuth;
 use AdminMenu;
@@ -47,6 +48,7 @@ class ServiceProvider extends AppServiceProvider
 
         if ($this->app->runningInAdmin()) {
             $this->registerAssets();
+            $this->registerPermissions();
             $this->registerDashboardWidgets();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
@@ -641,6 +643,62 @@ class ServiceProvider extends AppServiceProvider
 
             if ($object instanceof Models\Reservations_model)
                 ActivityTypes\ReservationStatusUpdated::pushActivityLog($model, $object);
+        });
+    }
+
+    protected function registerPermissions()
+    {
+        PermissionManager::instance()->registerCallback(function ($manager) {
+            $manager->registerPermissions('Admin', [
+                'Admin.Dashboard' => [
+                    'label' => 'admin::lang.permissions.dashboard', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Categories' => [
+                    'label' => 'admin::lang.permissions.categories', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Menus' => [
+                    'label' => 'admin::lang.permissions.menus', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Mealtimes' => [
+                    'label' => 'admin::lang.permissions.mealtimes', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Coupons' => [
+                    'label' => 'admin::lang.permissions.coupons', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Locations' => [
+                    'label' => 'admin::lang.permissions.locations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Tables' => [
+                    'label' => 'admin::lang.permissions.tables', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Orders' => [
+                    'label' => 'admin::lang.permissions.orders', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Reservations' => [
+                    'label' => 'admin::lang.permissions.reservations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Payments' => [
+                    'label' => 'admin::lang.permissions.payments', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Reviews' => [
+                    'label' => 'admin::lang.permissions.reviews', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.CustomerGroups' => [
+                    'label' => 'admin::lang.permissions.customer_groups', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Customers' => [
+                    'label' => 'admin::lang.permissions.customers', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.StaffGroups' => [
+                    'label' => 'admin::lang.permissions.staff_groups', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Staffs' => [
+                    'label' => 'admin::lang.permissions.staffs', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Statuses' => [
+                    'label' => 'admin::lang.permissions.statuses', 'group' => 'admin::lang.permissions.name',
+                ],
+            ]);
         });
     }
 }

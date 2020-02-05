@@ -58,6 +58,8 @@ return [
     'text_filter_location' => 'View all locations',
     'text_filter_status' => 'View all status',
     'text_filter_date' => 'View all dates',
+    'text_back_link' => 'Go back to the previous page',
+    'text_admin_link' => 'Return to the admin panel',
 
     'button_new' => '<i class="fa fa-plus"></i> New',
     'button_delete' => '<i class="fa fa-trash-o"></i> Delete',
@@ -78,10 +80,14 @@ return [
     'alert_warning_confirm' => 'This cannot be undone! Are you sure you want to do this?',
     'alert_confirm' => 'Are you sure you want to do this?',
     'alert_user_not_logged_in' => 'You must be logged in to access that page.',
-    'alert_user_restricted' => 'Warning: You do not have the right permission to <b>%s</b> [%s] context, please contact the system administrator.',
+    'alert_user_restricted' => 'Warning: You do not have the right permission to view this page, please contact the system administrator.',
     'alert_location_restricted' => 'Warning: You do not have the right permission to access context outside your location, please contact the system administrator.',
     'alert_form_error_message' => 'Sorry but form validation has failed, please check for errors.',
-
+    'access_denied' => [
+        'label' => 'Access denied',
+        'help' => "You don't have the required permissions to view this page.",
+        'cms_link' => 'Return to the back-end',
+    ],
     'text_settings_title' => 'Settings',
     'text_message_title' => 'Your messages',
     'text_activity_title' => 'Recent activities',
@@ -106,7 +112,7 @@ return [
         'storefront' => 'Storefront',
         'page' => 'Static Pages',
         'banner' => 'Banners',
-        'error_log' => 'Error Logs',
+        'error_log' => 'System Logs',
         'setting' => 'Settings',
         'dashboard' => 'Dashboard',
         'kitchen' => 'Kitchen',
@@ -143,7 +149,6 @@ return [
         'tool' => 'Tools',
         'media_manager' => 'Media Manager',
         'system' => 'System',
-        'permission' => 'Permissions',
     ],
 
     'list' => [
@@ -745,6 +750,26 @@ return [
         'alert_setting_missing_id' => 'Extension setting code has not been specified.',
     ],
 
+    'permissions' => [
+        'name' => 'Administration',
+        'dashboard' => 'Manage dashboard widgets',
+        'categories' => 'Create, edit and delete menu categories',
+        'coupons' => 'Create, edit and delete coupons',
+        'customer_groups' => 'Manage customer groups',
+        'customers' => 'Create, edit and delete customers',
+        'locations' => 'Create, edit and delete locations',
+        'menus' => 'Create, edit and delete menu items',
+        'orders' => 'Manage orders',
+        'payments' => 'Manage payment gateways',
+        'reservations' => 'Manage reservations',
+        'reviews' => 'Manage user reviews',
+        'staff_groups' => 'Manage staff groups',
+        'staffs' => 'Create, edit and delete staffs',
+        'statuses' => 'Manage orders and reservations statuses',
+        'tables' => 'Create, edit and delete reservations tables',
+        'mealtimes' => 'Create, edit and delete mealtimes',
+    ],
+
     'ratings' => [
         'text_title' => 'Rating Hints',
         'text_heading' => 'Rating Hints',
@@ -845,10 +870,7 @@ return [
         'text_form_name' => 'Staff Group',
         'text_tab_permission' => 'Permissions',
         'text_empty' => 'There are no staff groups available.',
-        'text_site' => 'Site',
-        'text_module' => 'Extensions',
-        'text_payment' => 'Payments',
-        'text_admin' => 'Admin',
+        'text_allow' => 'Allow',
 
         'column_users' => '# Users',
         'column_access' => 'Access',

@@ -2,6 +2,7 @@
 
 namespace Main;
 
+use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
 use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
@@ -50,6 +51,7 @@ class ServiceProvider extends AppServiceProvider
         }
         else {
             $this->registerFormWidgets();
+            $this->registerPermissions();
         }
     }
 
@@ -118,6 +120,20 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerFormWidget('Main\FormWidgets\TemplateEditor', [
                 'label' => 'Template editor',
                 'code' => 'templateeditor',
+            ]);
+        });
+    }
+
+    protected function registerPermissions()
+    {
+        PermissionManager::instance()->registerCallback(function ($manager) {
+            $manager->registerPermissions('System', [
+                'Admin.MediaManager' => [
+                    'label' => 'main::lang.permissions.media_manager', 'group' => 'main::lang.permissions.name',
+                ],
+                'Site.Themes' => [
+                    'label' => 'main::lang.permissions.themes', 'group' => 'main::lang.permissions.name',
+                ],
             ]);
         });
     }

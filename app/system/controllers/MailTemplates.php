@@ -57,8 +57,7 @@ class MailTemplates extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($this->getUser()->hasPermission('Admin.MailTemplates.Manage'))
-            Mail_templates_model::syncAll();
+        Mail_templates_model::syncAll();
 
         $this->asExtension('ListController')->index();
     }

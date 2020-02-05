@@ -95,8 +95,6 @@ class Dashboard extends \Admin\Classes\AdminController
 
     protected function canManageWidgets()
     {
-        return $this->getUser()->hasPermission('Admin.Dashboard.Add')
-            AND $this->getUser()->hasPermission('Admin.Dashboard.Manage')
-            AND $this->getUser()->hasPermission('Admin.Dashboard.Delete');
+        return $this->getUser()->hasPermission('Admin.Dashboard');
     }
 }

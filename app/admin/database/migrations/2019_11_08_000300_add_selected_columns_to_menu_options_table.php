@@ -23,13 +23,5 @@ class addSelectedColumnsToMenuOptionsTable extends Migration
 
     public function down()
     {
-        Schema::table('menus', function (Blueprint $table) {
-            $table->dropColumn('order_restriction');
-        });
-
-        Schema::table('menu_options', function (Blueprint $table) {
-            $table->dropColumn('min_selected');
-            $table->dropColumn('max_selected');
-        });
     }
 }

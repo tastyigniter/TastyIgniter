@@ -23,8 +23,6 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedMealtimes();
 
-        $this->seedPermissions();
-
         $this->seedSettings();
 
         $this->seedStaffGroups();
@@ -166,14 +164,6 @@ class InitialSchemaSeeder extends Seeder
         ]);
     }
 
-    protected function seedPermissions()
-    {
-        if (DB::table('permissions')->count())
-            return;
-
-        DB::table('permissions')->insert($this->getSeedRecords('permissions'));
-    }
-
     protected function seedSettings()
     {
         if (DB::table('settings')->count())
@@ -188,8 +178,29 @@ class InitialSchemaSeeder extends Seeder
             return;
 
         DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Administrator',
+            'staff_group_name' => 'Owner',
             'customer_account_access' => TRUE,
+            'location_access' => FALSE,
+            'permissions' => '',
+        ]);
+
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Manager',
+            'customer_account_access' => TRUE,
+            'location_access' => TRUE,
+            'permissions' => '',
+        ]);
+
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Waiter',
+            'customer_account_access' => FALSE,
+            'location_access' => TRUE,
+            'permissions' => '',
+        ]);
+
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Delivery Man',
+            'customer_account_access' => FALSE,
             'location_access' => TRUE,
             'permissions' => '',
         ]);

@@ -60,11 +60,6 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-default',
             'href' => 'staff_groups',
         ],
-        'permissions' => [
-            'label' => 'lang:admin::lang.side_menu.permission',
-            'class' => 'btn btn-default',
-            'href' => 'permissions',
-        ],
     ],
 ];
 

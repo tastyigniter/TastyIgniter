@@ -12,6 +12,9 @@ class MediaManager extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('media_manager', 'tools');
+
+        $manager = new \Main\Widgets\MediaManager($this, ['alias' => 'manager']);
+        $manager->bindToController();
     }
 
     public function index()

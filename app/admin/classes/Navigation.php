@@ -170,15 +170,6 @@ class Navigation
             if (!$permission = array_get($item, 'permission'))
                 return TRUE;
 
-            if (!is_array($permission))
-                $permission = [$permission];
-
-            $permission = array_map(function ($value) {
-                $permArray = explode('.', $value);
-                $name = array_slice($permArray, 0, 2);
-                return implode('.', $name).'.Access';
-            }, $permission);
-
             return AdminAuth::user()->hasPermission($permission);
         })->toArray();
     }

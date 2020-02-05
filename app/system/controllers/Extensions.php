@@ -50,8 +50,7 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($this->getUser()->hasPermission('Admin.Extensions.Manage'))
-            Extensions_model::syncAll();
+        Extensions_model::syncAll();
 
         $this->asExtension('ListController')->index();
     }
@@ -70,8 +69,8 @@ class Extensions extends \Admin\Classes\AdminController
                 throw new SystemException(lang('system::lang.extensions.alert_setting_not_found'));
             }
 
-            if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions, TRUE))
-                return $this->redirectBack();
+            if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions))
+                throw new SystemException(lang('admin::lang.alert_user_restricted'));
 
             $pageTitle = lang($settingItem->label ?: 'text_edit_title');
             Template::setTitle($pageTitle);
@@ -183,8 +182,8 @@ class Extensions extends \Admin\Classes\AdminController
             throw new SystemException(lang('system::lang.extensions.alert_setting_not_found'));
         }
 
-        if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions, TRUE))
-            return $this->redirectBack();
+        if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions))
+            throw new SystemException(lang('admin::lang.alert_user_restricted'));
 
         $model = $this->formFindModelObject($settingItem);
 

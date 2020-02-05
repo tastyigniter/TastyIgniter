@@ -67,8 +67,7 @@ class Languages extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($this->getUser()->hasPermission('Site.Languages.Manage'))
-            Languages_model::applySupportedLanguages();
+        Languages_model::applySupportedLanguages();
 
         $this->asExtension('ListController')->index();
     }

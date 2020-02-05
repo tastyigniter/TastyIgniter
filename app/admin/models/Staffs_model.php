@@ -41,7 +41,7 @@ class Staffs_model extends Model
 
     public $relation = [
         'hasOne' => [
-            'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id'],
+            'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id', 'delete' => TRUE],
         ],
         'belongsTo' => [
             'group' => ['Admin\Models\Staff_groups_model', 'foreignKey' => 'staff_group_id'],

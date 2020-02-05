@@ -18,13 +18,13 @@ class ErrorLogs extends \Admin\Classes\AdminController
         Template::setTitle(lang('system::lang.error_logs.text_title'));
         Template::setHeading(lang('system::lang.error_logs.text_heading'));
         Template::setButton(lang('system::lang.error_logs.text_clear_logs'), [
-            'class'             => 'btn btn-danger',
+            'class' => 'btn btn-danger',
             'data-request-form' => '#list-form',
-            'data-request'      => 'onClearLogs',
+            'data-request' => 'onClearLogs',
         ]);
         Template::setButton(lang('admin::lang.button_refresh'), [
             'class' => 'btn btn-default',
-            'href'  => 'error_logs',
+            'href' => 'error_logs',
         ]);
 
         LogViewer::setFile(storage_path('logs/system.log'));
@@ -34,9 +34,6 @@ class ErrorLogs extends \Admin\Classes\AdminController
 
     public function index_onClearLogs()
     {
-        if (!$this->getUser()->hasPermission('Admin.ErrorLogs.Delete', TRUE))
-            return $this->redirectBack();
-
         if (File::isWritable(storage_path('logs/system.log'))) {
             File::put(storage_path('logs/system.log'), "");
 

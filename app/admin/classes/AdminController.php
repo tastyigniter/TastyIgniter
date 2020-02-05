@@ -19,6 +19,7 @@ use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Flash\Facades\Flash;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\View;
 use Main\Widgets\MediaManager;
 use Redirect;
 use Request;
@@ -55,7 +56,7 @@ class AdminController extends BaseController
 
     /**
      * @var string Permission required to view this page.
-     * ex. Admin.Banners or Admin.Banners.Access
+     * ex. Admin.Banners.Access
      */
     protected $requiredPermissions;
 
@@ -141,14 +142,17 @@ class AdminController extends BaseController
         // Ensures that a user is logged in, if required
         if ($requireAuthentication) {
             if (!$this->checkUser()) {
-                flash()->error(lang('admin::lang.alert_user_not_logged_in'))->important();
-
-                return Admin::redirectGuest('login');
+                return Request::ajax()
+                    ? Response::make(lang('admin::lang.alert_user_not_logged_in'), 403)
+                    : Admin::redirectGuest('login');
             }
 
             // Check that user has permission to view this page
-            if ($this->requiredPermissions AND !$this->getUser()->hasPermission($this->requiredPermissions, TRUE)) {
-                return $this->redirectBack(302, [], 'dashboard');
+            if ($this->requiredPermissions AND !$this->getUser()->hasAnyPermission($this->requiredPermissions)) {
+                return Response::make(Request::ajax()
+                    ? lang('admin::lang.alert_user_restricted')
+                    : View::make('admin::access_denied'), 403
+                );
             }
         }
 

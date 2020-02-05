@@ -3,6 +3,7 @@
 namespace System;
 
 use Admin\Classes\Navigation;
+use Admin\Classes\PermissionManager;
 use Admin\Classes\Template;
 use Admin\Classes\User;
 use Admin\Helpers\Admin as AdminHelper;
@@ -61,6 +62,10 @@ class ServiceProvider extends AppServiceProvider
                 $this->app->register('\\'.$module.'\ServiceProvider');
             }
         });
+
+        if (App::runningInAdmin()) {
+            $this->registerPermissions();
+        }
     }
 
     /**
@@ -381,6 +386,41 @@ class ServiceProvider extends AppServiceProvider
             $schedule->call(function () {
                 Classes\UpdateManager::instance()->requestUpdateList(TRUE);
             })->cron('0 */12 * * *')->evenInMaintenanceMode();
+        });
+    }
+
+    protected function registerPermissions()
+    {
+        PermissionManager::instance()->registerCallback(function ($manager) {
+            $manager->registerPermissions('System', [
+                'Admin.Activities' => [
+                    'label' => 'system::lang.permissions.activities', 'group' => 'system::lang.permissions.name',
+                ],
+                'Admin.Extensions' => [
+                    'label' => 'system::lang.permissions.extensions', 'group' => 'system::lang.permissions.name',
+                ],
+                'Admin.MailTemplates' => [
+                    'label' => 'system::lang.permissions.mail_templates', 'group' => 'system::lang.permissions.name',
+                ],
+                'Site.Countries' => [
+                    'label' => 'system::lang.permissions.countries', 'group' => 'system::lang.permissions.name',
+                ],
+                'Site.Currencies' => [
+                    'label' => 'system::lang.permissions.currencies', 'group' => 'system::lang.permissions.name',
+                ],
+                'Site.Languages' => [
+                    'label' => 'system::lang.permissions.languages', 'group' => 'system::lang.permissions.name',
+                ],
+                'Site.Settings' => [
+                    'label' => 'system::lang.permissions.settings', 'group' => 'system::lang.permissions.name',
+                ],
+                'Site.Updates' => [
+                    'label' => 'system::lang.permissions.updates', 'group' => 'system::lang.permissions.name',
+                ],
+                'Admin.ErrorLogs' => [
+                    'label' => 'system::lang.permissions.error_logs', 'group' => 'system::lang.permissions.name',
+                ],
+            ]);
         });
     }
 }

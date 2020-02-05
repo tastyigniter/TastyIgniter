@@ -304,7 +304,7 @@
             addRemoveLinks: true,
             maxFilesize: this.options.maxUploadSize, // MB
             clickable: this.$el.find('[data-media-control="upload"]').get(0),
-            dictInvalidFileType: 'File extension is not allowed.',
+            dictInvalidFileType: this.options.extensionNotAllowed,
             dictFileTooBig: 'The uploaded file exceeds the max size allowed.',
             accept: $.proxy(this.checkUploadAllowedType, this),
         }
@@ -332,7 +332,7 @@
     MediaManager.prototype.checkUploadAllowedType = function (file, done) {
         var fileExt = file.name.split('.').pop().toLowerCase();
 
-        done($.inArray(fileExt, this.options.allowedExtensions) == -1 ? 'File extension is not allowed.' : null);
+        done($.inArray(fileExt, this.options.allowedExtensions) == -1 ? this.options.extensionNotAllowed : null);
     }
 
     MediaManager.prototype.destroyUploader = function () {
@@ -352,11 +352,18 @@
     }
 
     MediaManager.prototype.uploadError = function (file, message, xhr) {
-        $.ti.flashMessage({text: message});
+        $.ti.flashMessage({class: 'danger', text: message});
     }
 
     MediaManager.prototype.uploadQueueComplete = function () {
-        this.refresh()
+        var status = false;
+
+        $.each(this.dropzone.getAcceptedFiles(), function() {
+            if (this.status === 'success')
+                status = true
+        })
+
+        if (status) this.refresh()
     }
 
     //
@@ -801,6 +808,7 @@
         deleteEmpty: 'Please select files to delete.',
         selectSingleImage: 'Please select a single image.',
         selectionNotImage: 'The selected item is not an image.',
+        extensionNotAllowed: 'File extension is not allowed.',
     }
 
     var old = $.fn.mediaManager
