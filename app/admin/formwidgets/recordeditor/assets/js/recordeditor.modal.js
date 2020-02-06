@@ -70,7 +70,7 @@
     }
 
     RecordEditorModal.prototype.onRecordLoaded = function (data) {
-        this.$modalElement.html(data);
+        this.$modalElement.html(data.result);
 
         var _event = jQuery.Event('recordEditorModalShown')
         $(window).trigger(_event, [this.$modalElement])
