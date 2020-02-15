@@ -39,13 +39,13 @@
             $findId = $('[data-find-identifier]', $button.closest('.media-finder'))
 
         if (this.options.useAttachment) {
-            $.ti.loadingIndicator().show()
+            $.ti.loadingIndicator.show()
             $.request(this.options.alias+'::onRemoveAttachment', {
                 data: {media_id: $findId.val()}
             }).done(function () {
                 self.removeMediaItem($button)
             }).always(function () {
-                $.ti.loadingIndicator().hide()
+                $.ti.loadingIndicator.hide()
             })
         } else {
             self.removeMediaItem($button)

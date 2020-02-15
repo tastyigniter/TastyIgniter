@@ -10,7 +10,7 @@
                 type="checkbox"
                 class="custom-control-input"
                 id="checkbox-<?= str_replace('.', '-', $permission->code); ?>"
-                value="1"
+                value="<?= $checkedValue; ?>"
                 name="<?= $field->getName() ?>[<?= $permission->code; ?>]"
                 data-permission-group="<?= str_slug($permission->group) ?>"
                 <?= ($checkedValue == 1) ? 'checked="checked"' : ''; ?>

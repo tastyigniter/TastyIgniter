@@ -215,7 +215,7 @@ class HubManager
                     : "Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)"
             );
 
-            throw new ApplicationException(sprintf('Downloading %s failed, check error logs.', array_get($params, 'item.name')));
+            throw new ApplicationException(sprintf('Downloading %s failed, check system logs.', array_get($params, 'item.name')));
         }
 
         return TRUE;

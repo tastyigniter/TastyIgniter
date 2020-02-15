@@ -260,7 +260,6 @@ class ServiceProvider extends AppServiceProvider
                     'href' => admin_url('dashboard'),
                     'icon' => 'fa-tachometer-alt',
                     'title' => lang('admin::lang.side_menu.dashboard'),
-                    'permission' => 'Admin.Dashboard',
                 ],
                 'restaurant' => [
                     'priority' => 10,

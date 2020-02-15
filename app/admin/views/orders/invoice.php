@@ -50,12 +50,13 @@
         <div class="col-6">
             <p>
                 <strong><?= lang('admin::lang.orders.text_customer'); ?></strong><br>
-                <?= $model->first_name; ?> <?= $model->last_name; ?><br>
-                <?= $model->email; ?>
+                <?= $model->first_name; ?> <?= $model->last_name; ?> (<?= $model->email; ?>)
             </p>
             <?php if ($model->isDeliveryType()) { ?>
-                <span class="text-muted"><?= lang('admin::lang.orders.text_deliver_to'); ?></span><br>
-                <address><?= $model->formatted_address; ?></address>
+                <div>
+                    <strong><?= lang('admin::lang.orders.text_deliver_to'); ?></strong><br>
+                    <address><?= $model->formatted_address; ?></address>
+                </div>
             <?php } ?>
         </div>
         <div class="col-3 text-left">

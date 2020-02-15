@@ -85,8 +85,7 @@ return [
     ],
 
     'error_logs' => [
-        'text_title' => 'Error Logs',
-        'text_heading' => 'Error Logs',
+        'text_title' => 'System Logs',
         'text_clear_logs' => 'Clear Logs',
     ],
 

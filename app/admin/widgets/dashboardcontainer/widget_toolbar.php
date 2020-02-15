@@ -17,7 +17,7 @@
     </div>
 </div>
 <div class="toolbar-action">
-    <?php if ($this->canAddAndDelete) { ?>
+    <?php if ($this->canManage) { ?>
         <button
             type="button"
             class="btn btn-outline-primary"

@@ -27,7 +27,7 @@
 
                         <?= $this->makePartial('permissioneditor/permission', [
                             'permission' => $permission,
-                            'checkedValue' => $checkedValue,
+                            'checkedValue' => (int)$checkedValue,
                         ]) ?>
 
                     <?php } ?>

@@ -16,7 +16,7 @@ class ErrorLogs extends \Admin\Classes\AdminController
         AdminMenu::setContext('error_logs', 'system');
 
         Template::setTitle(lang('system::lang.error_logs.text_title'));
-        Template::setHeading(lang('system::lang.error_logs.text_heading'));
+        Template::setHeading(lang('system::lang.error_logs.text_title'));
         Template::setButton(lang('system::lang.error_logs.text_clear_logs'), [
             'class' => 'btn btn-danger',
             'data-request-form' => '#list-form',

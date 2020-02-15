@@ -70,6 +70,9 @@ class Updates extends \Admin\Classes\AdminController
 
     public function browse($context, $itemType = null)
     {
+        if (!in_array($itemType, ['themes', 'extensions']))
+            return $this->redirectBack();
+
         $updateManager = UpdateManager::instance();
 
         $pageTitle = lang('system::lang.updates.text_tab_title_'.$itemType);
