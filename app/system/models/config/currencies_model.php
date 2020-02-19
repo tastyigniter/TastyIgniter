@@ -57,19 +57,15 @@ $config['list']['columns'] = [
         'type' => 'text',
         'searchable' => TRUE,
     ],
+    'currency_symbol' => [
+        'label' => 'lang:system::lang.currencies.column_symbol',
+        'type' => 'text',
+    ],
     'country_name' => [
         'label' => 'lang:system::lang.currencies.column_country',
         'relation' => 'country',
         'select' => 'country_name',
         'searchable' => TRUE,
-    ],
-    'currency_rate' => [
-        'label' => 'lang:system::lang.currencies.column_rate',
-        'type' => 'number',
-    ],
-    'currency_symbol' => [
-        'label' => 'lang:system::lang.currencies.column_symbol',
-        'type' => 'text',
     ],
     'currency_status' => [
         'label' => 'lang:system::lang.currencies.column_status',
@@ -112,6 +108,13 @@ $config['form']['fields'] = [
     'currency_name' => [
         'label' => 'lang:system::lang.currencies.label_title',
         'type' => 'text',
+        'span' => 'left',
+    ],
+    'currency_code' => [
+        'label' => 'lang:system::lang.currencies.label_code',
+        'type' => 'text',
+        'span' => 'right',
+        'comment' => 'lang:system::lang.currencies.help_iso',
     ],
     'country_id' => [
         'label' => 'lang:system::lang.currencies.label_country',
@@ -121,11 +124,10 @@ $config['form']['fields'] = [
         'span' => 'left',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
-    'currency_code' => [
-        'label' => 'lang:system::lang.currencies.label_code',
-        'type' => 'text',
+    'currency_rate' => [
+        'label' => 'lang:system::lang.currencies.label_rate',
+        'type' => 'money',
         'span' => 'right',
-        'comment' => 'lang:system::lang.currencies.help_iso',
     ],
     'symbol_position' => [
         'label' => 'lang:system::lang.currencies.label_symbol_position',
@@ -141,29 +143,25 @@ $config['form']['fields'] = [
         'type' => 'text',
         'span' => 'right',
     ],
-    'currency_rate' => [
-        'label' => 'lang:system::lang.currencies.label_rate',
-        'type' => 'money',
-        'span' => 'left',
-    ],
     'thousand_sign' => [
         'label' => 'lang:system::lang.currencies.label_thousand_sign',
         'type' => 'text',
-        'span' => 'right',
+        'span' => 'left',
     ],
     'decimal_sign' => [
         'label' => 'lang:system::lang.currencies.label_decimal_sign',
         'type' => 'text',
-        'span' => 'left',
+        'span' => 'right',
     ],
     'decimal_position' => [
         'label' => 'lang:system::lang.currencies.label_decimal_position',
         'type' => 'number',
-        'span' => 'right',
+        'span' => 'left',
     ],
     'currency_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
+        'span' => 'right',
         'default' => TRUE,
     ],
 ];

@@ -86,6 +86,8 @@ class ServiceProvider extends AppServiceProvider
         $this->extendValidator();
         $this->addTranslationDriver();
         $this->defineQueryMacro();
+
+        $this->app['router']->pushMiddlewareToGroup('web', 'currency');
     }
 
     /*
@@ -282,6 +284,11 @@ class ServiceProvider extends AppServiceProvider
     {
         Event::listen('currency.beforeRegister', function () {
             app('config')->set('currency.default', setting('default_currency_code'));
+            app('config')->set('currency.converter', setting('currency_converter.api', 'openexchangerates'));
+            app('config')->set('currency.converters.openexchangerates.apiKey', setting('currency_converter.oer.apiKey'));
+            app('config')->set('currency.converters.fixerio.apiKey', setting('currency_converter.fixerio.apiKey'));
+            app('config')->set('currency.ratesCacheDuration', setting('currency_converter.refreshInterval'));
+            app('config')->set('currency.model', \System\Models\Currencies_model::class);
         });
 
         $this->app->resolving('translator.localization', function ($localization, $app) {

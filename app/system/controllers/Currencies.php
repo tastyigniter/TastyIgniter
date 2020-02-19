@@ -14,7 +14,7 @@ class Currencies extends \Admin\Classes\AdminController
             'model' => 'System\Models\Currencies_model',
             'title' => 'lang:system::lang.currencies.text_title',
             'emptyMessage' => 'lang:system::lang.currencies.text_empty',
-            'defaultSort' => ['country_name', 'ASC'],
+            'defaultSort' => ['currency_status', 'DESC'],
             'configFile' => 'currencies_model',
         ],
     ];
@@ -50,5 +50,12 @@ class Currencies extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('currencies', 'localisation');
+    }
+
+    public function index()
+    {
+        app('currency')->updateRates();
+
+        $this->asExtension('ListController')->index();
     }
 }

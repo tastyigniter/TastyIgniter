@@ -95,7 +95,7 @@ class Router
             if ($cacheable) {
                 $fileName = $this->getCachedUrlFileName($url, $urlList);
                 if (is_array($fileName)) {
-                    list($fileName, $this->parameters) = $fileName;
+                    [$fileName, $this->parameters] = $fileName;
                 }
             }
 
@@ -118,7 +118,7 @@ class Router
                         Cache::put(
                             $this->getUrlListCacheKey(),
                             base64_encode(serialize($urlList)),
-                            Config::get('system.urlMapCacheTtl', now()->addMinute())
+                            Config::get('system.urlMapCacheTtl', now()->addDay())
                         );
                     }
                 }
@@ -225,7 +225,7 @@ class Router
                 Cache::put(
                     $this->getUrlMapCacheKey(),
                     base64_encode(serialize($map)),
-                    Config::get('system.urlMapCacheTtl', now()->addMinute())
+                    Config::get('system.urlMapCacheTtl', now()->addDay())
                 );
             }
 
@@ -249,7 +249,7 @@ class Router
     /**
      * Sets the current routing parameters.
      *
-     * @param  array $parameters
+     * @param array $parameters
      *
      * @return void
      */
