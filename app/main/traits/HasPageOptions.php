@@ -16,7 +16,7 @@ trait HasPageOptions
     {
         $page = $this->findPage($pageId);
 
-        return $page ? $page->permalink_slug : null;
+        return $page ? $page->permalink_slug : '';
     }
 
     public static function getPageOptions()

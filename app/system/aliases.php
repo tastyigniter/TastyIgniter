@@ -31,7 +31,6 @@ return [
     'URL' => Illuminate\Support\Facades\URL::class,
     'Validator' => Illuminate\Support\Facades\Validator::class,
     'View' => Illuminate\Support\Facades\View::class,
-    'Notification' => Illuminate\Support\Facades\Notification::class,
 
     // TastyIgniter aliases
     'Assets' => System\Facades\Assets::class,
@@ -53,7 +52,6 @@ return [
 
     'SystemException' => Igniter\Flame\Exception\SystemException::class,
     'ApplicationException' => Igniter\Flame\Exception\ApplicationException::class,
-    'ApplicationException' => \Igniter\Flame\Exception\ApplicationException::class,
     'AjaxException' => Igniter\Flame\Exception\AjaxException::class,
     'ValidationException' => Igniter\Flame\Exception\ValidationException::class,
 ];
