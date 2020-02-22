@@ -106,26 +106,26 @@ class AdminController extends BaseController
         $className = basename($classPath);
 
         // Add paths from the extension / module context
-        $this->viewPath[] = '~/extensions/'.$relativePath.'/views';
-        $this->viewPath[] = '~/extensions/'.$relativePath.'/views/'.$className;
+        $this->viewPath[] = '$/'.$relativePath.'/views';
+        $this->viewPath[] = '$/'.$relativePath.'/views/'.$className;
         $this->viewPath[] = '~/app/'.$relativePath.'/views/'.$className;
         $this->viewPath[] = '~/app/'.$relativePath.'/views';
         $this->viewPath[] = '~/app/admin/views/'.$className;
         $this->viewPath[] = '~/app/admin/views';
 
         // Add layout paths from the extension / module context
-        $this->layoutPath[] = '~/extensions/'.$relativePath.'/views/_layouts';
+        $this->layoutPath[] = '$/'.$relativePath.'/views/_layouts';
         $this->layoutPath[] = '~/app/'.$relativePath.'/views/_layouts';
         $this->layoutPath[] = '~/app/admin/views/_layouts';
 
         // Add partial paths from the extension / module context
         // We will also make sure the admin module context is always present
-        $this->partialPath[] = '~/extensions/'.$relativePath.'/views/_partials';
+        $this->partialPath[] = '$/'.$relativePath.'/views/_partials';
         $this->partialPath[] = '~/app/'.$relativePath.'/views/_partials';
         $this->partialPath[] = '~/app/admin/views/_partials';
         $this->partialPath = array_merge($this->partialPath, $this->viewPath);
 
-        $this->configPath[] = '~/extensions/'.$relativePath.'/models/config';
+        $this->configPath[] = '$/'.$relativePath.'/models/config';
         $this->configPath[] = '~/app/'.$relativePath.'/models/config';
 
         $this->assetPath = '~/app/'.$relativePath.'/assets';
