@@ -1,8 +1,7 @@
-TastyIgniter :fire:
-============
+<img src="https://tastyigniter.com/assets/ui/images/logos/tastyigniter-horizontal-logo.png">
 
-[![Packagist](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Packagist&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
-[![Packagist](https://img.shields.io/packagist/php-v/tastyigniter/TastyIgniter.svg?label=PHP&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
+[![Stable](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Stable&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
+[![Total Downloads](https://poser.pugx.org/tastyigniter/flame/downloads)](https://packagist.org/packages/tastyigniter/flame)
 [![Build Status](https://img.shields.io/travis/tastyigniter/TastyIgniter.svg?label=TravisCI&style=flat-square)](https://travis-ci.org/tastyigniter/TastyIgniter)
 [![License](https://img.shields.io/github/license/tastyigniter/TastyIgniter.svg?label=License&style=flat-square)](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt)
 [![Crowdin](https://badges.crowdin.net/tastyigniter/localized.svg)](https://crowdin.com/project/tastyigniter)
@@ -10,7 +9,7 @@ TastyIgniter :fire:
 
 [TastyIgniter](https://tastyigniter.com/) is a food ordering and restaurant management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
-> **TastyIgniter v3 (uses [Laravel](https://laravel.com/) PHP framework) is currently in beta and should not be used in production.** Join the [Dev Team](http://slack.tastyigniter.com/) to follow along with our progress. See branch [2.1.x](https://github.com/tastyigniter/TastyIgniter/tree/2.1.x) for a stable version.
+![screenshot](https://tastyigniter.com/assets/ui/images/mockups/Menus.png)
 
 ### Documentation
 The best place to learn TastyIgniter is by reading the [documentation](https://docs.tastyigniter.com)
