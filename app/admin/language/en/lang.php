@@ -65,6 +65,7 @@ return [
     'button_delete' => '<i class="fa fa-trash-o"></i> Delete',
     'button_add' => 'Add',
     'button_edit' => 'Edit',
+    'button_continue' => 'Continue',
     'button_save' => '<i class="fa fa-save"></i> Save',
     'button_save_close' => '<i class="fa fa-save"></i> Save & Close',
     'button_icon_back' => '<i class="fa fa-angle-double-left"></i>',
