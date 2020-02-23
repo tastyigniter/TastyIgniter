@@ -93,16 +93,6 @@ class User extends Manager
         return $this->isSuperUser() OR $this->fromModel('customer_account_access', 'group');
     }
 
-    public function isStrictLocation()
-    {
-        return $this->user() AND !$this->isSuperUser() AND $this->user()->hasStrictLocationAccess();
-    }
-
-    public function isSingleLocationContext()
-    {
-        return is_single_location() OR $this->isStrictLocation();
-    }
-
     protected function fromModel($key, $related = null, $default = null)
     {
         $user = $this->user();

@@ -6,7 +6,7 @@ use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
 use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
-use AdminAuth;
+use AdminLocation;
 use AdminMenu;
 use Event;
 use Igniter\Flame\ActivityLog\Models\Activity;
@@ -502,7 +502,7 @@ class ServiceProvider extends AppServiceProvider
     {
         AdminMenu::registerCallback(function (Navigation $manager) {
             // Change nav menu if single location mode is activated
-            if (!AdminAuth::isSingleLocationContext())
+            if (!AdminLocation::check())
                 return;
 
             $manager->removeNavItem('locations', 'restaurant');

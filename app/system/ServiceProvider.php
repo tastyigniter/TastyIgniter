@@ -2,6 +2,7 @@
 
 namespace System;
 
+use Admin\Classes\Location;
 use Admin\Classes\Navigation;
 use Admin\Classes\PermissionManager;
 use Admin\Classes\Template;
@@ -132,6 +133,10 @@ class ServiceProvider extends AppServiceProvider
 
         App::singleton('admin.template', function ($app) {
             return new Template;
+        });
+
+        App::singleton('admin.location', function ($app) {
+            return new Location;
         });
 
         App::singleton('country', function ($app) {

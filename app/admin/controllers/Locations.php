@@ -1,7 +1,7 @@
 <?php namespace Admin\Controllers;
 
+use Admin\Facades\AdminLocation;
 use Admin\Models\Locations_model;
-use AdminAuth;
 use AdminMenu;
 use Exception;
 use Geocoder;
@@ -58,7 +58,7 @@ class Locations extends \Admin\Classes\AdminController
 
     public function remap($action, $params)
     {
-        if ($action != 'settings' AND $this->getUser() AND $this->isSingleLocationContext())
+        if ($action != 'settings' AND $this->getUser() AND AdminLocation::check())
             return $this->redirect('locations/settings');
 
         return parent::remap($action, $params);
@@ -66,8 +66,10 @@ class Locations extends \Admin\Classes\AdminController
 
     public function settings($context = null)
     {
-        $recordId = !is_single_location() ? AdminAuth::getLocationId() : params('default_location_id');
-        $this->asExtension('FormController')->edit('edit', $recordId);
+        if (!AdminLocation::check())
+            return $this->redirect('locations');
+
+        $this->asExtension('FormController')->edit('edit', $this->getLocationId());
     }
 
     public function index_onSetDefault($context = null)
@@ -112,8 +114,8 @@ class Locations extends \Admin\Classes\AdminController
 
     public function formExtendQuery($query)
     {
-        if ($this->isSingleLocationContext())
-            $query->where('location_id', $this->getLocationId());
+        if ($locationId = $this->getLocationId())
+            $query->where('location_id', $locationId);
     }
 
     public function formAfterSave($model)

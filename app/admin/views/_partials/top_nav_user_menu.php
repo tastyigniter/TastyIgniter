@@ -1,9 +1,10 @@
 <?php
 $staffName = AdminAuth::getStaffName();
 $staffEmail = AdminAuth::getStaffEmail();
+$staffLocationId = AdminLocation::getId();
 $staffAvatar = md5(strtolower(trim($staffEmail)));
 $staffGroupName = AdminAuth::staffGroupName();
-$staffLocation = AdminAuth::getLocationName();
+$staffEditLink = admin_url('staffs/edit/'.AdminAuth::staff()->getKey());
 $staffEditLink = admin_url('staffs/edit/'.AdminAuth::getStaffId());
 $logoutLink = admin_url('logout');
 ?>

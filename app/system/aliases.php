@@ -45,8 +45,9 @@ return [
     'Str' => Igniter\Flame\Support\StrHelper::class,
 
     'Admin' => Admin\Facades\Admin::class,
-    'AdminMenu' => Admin\Facades\AdminMenu::class,
     'AdminAuth' => Admin\Facades\AdminAuth::class,
+    'AdminLocation' => Admin\Facades\AdminLocation::class,
+    'AdminMenu' => Admin\Facades\AdminMenu::class,
     'Auth' => Main\Facades\Auth::class,
     'Template' => Admin\Facades\Template::class,
 

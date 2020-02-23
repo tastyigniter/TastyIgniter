@@ -3,13 +3,13 @@
 namespace Admin\Classes;
 
 use Admin;
-use Admin\Models\Locations_model;
 use Admin\Traits\HasAuthentication;
 use Admin\Traits\ValidatesForm;
 use Admin\Traits\WidgetMaker;
 use Admin\Widgets\Menu;
 use Admin\Widgets\Toolbar;
 use AdminAuth;
+use AdminLocation;
 use AdminMenu;
 use Exception;
 use Igniter\Flame\Exception\AjaxException;
@@ -330,38 +330,22 @@ class AdminController extends BaseController
     // Locationable
     //
 
+    public function getUserLocation()
+    {
+        return AdminLocation::getLocation();
+    }
+
     public function getLocationId()
     {
-        if ($this->isSingleLocation())
-            return params('default_location_id');
-
-        return AdminAuth::getLocationId();
+        return AdminLocation::getId();
     }
 
-    public function locationContext()
+    public function applyLocationableScope($query)
     {
-        return $this->isSingleLocationContext()
-            ? Locations_model::LOCATION_CONTEXT_SINGLE
-            : Locations_model::LOCATION_CONTEXT_MULTIPLE;
-    }
-
-    public function isSingleLocation()
-    {
-        return setting()->get('site_location_mode') === Locations_model::LOCATION_CONTEXT_SINGLE;
-    }
-
-    public function isSingleLocationContext()
-    {
-        return AdminAuth::isSingleLocationContext();
-    }
-
-    public function applyLocationScope($query)
-    {
-        if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
-            return;
-
-        if (!$this->isSingleLocationContext())
-            return;
+        if (
+            !AdminLocation::check()
+            OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
+        ) return;
 
         $query->whereHasLocation($this->getLocationId());
     }
