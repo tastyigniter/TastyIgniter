@@ -29,6 +29,7 @@ return [
     'text_select_all' => 'Select All',
     'text_select_none' => 'Select None',
     'text_select' => 'Select',
+    'text_select_location' => 'Select Location',
     'text_selected' => 'Selected',
     'text_now' => 'Now',
     'text_never' => 'Never',

@@ -4,6 +4,8 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\MenuItem;
+use Admin\Models\Locations_model;
+use AdminLocation;
 use Igniter\Flame\Exception\ApplicationException;
 
 class Menu extends BaseWidget
@@ -168,7 +170,7 @@ class Menu extends BaseWidget
     /**
      * Get a specified item object
      *
-     * @param  string $item
+     * @param string $item
      *
      * @return mixed
      * @throws \Exception
@@ -232,7 +234,7 @@ class Menu extends BaseWidget
      */
     public function onMarkOptionsAsRead()
     {
-        if (!strlen($itemName = input('item')))
+        if (!strlen($itemName = post('item')))
             throw new ApplicationException('Invalid item specified');
 
         $this->defineMenuItems();
@@ -241,6 +243,22 @@ class Menu extends BaseWidget
             throw new ApplicationException("No main menu item found matching {$itemName}");
 
         $this->resolveMarkAsReadFromModel($item);
+    }
+
+    public function onChooseLocation()
+    {
+        $location = null;
+        if (is_numeric($locationId = post('location')))
+            $location = Locations_model::find($locationId);
+
+        if ($location AND AdminLocation::hasAccess($location)) {
+            AdminLocation::setCurrent($location);
+        }
+        else {
+            AdminLocation::clearCurrent();
+        }
+
+        return $this->controller->redirectBack();
     }
 
     /**

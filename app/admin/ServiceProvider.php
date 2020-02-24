@@ -242,6 +242,7 @@ class ServiceProvider extends AppServiceProvider
                 'user' => [
                     'type' => 'partial',
                     'path' => 'top_nav_user_menu',
+                    'markAsRead' => ['Admin\Classes\Location', 'setStaffCurrent'],
                 ],
             ]);
         });
