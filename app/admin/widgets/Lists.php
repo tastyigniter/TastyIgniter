@@ -65,12 +65,6 @@ class Lists extends BaseWidget
      */
     public $defaultSort;
 
-    /**
-     * @var string The location context of this widget, columns that do not belong
-     * to this context will not be shown.
-     */
-    protected $locationContext;
-
     protected $defaultAlias = 'list';
 
     /**
@@ -150,7 +144,6 @@ class Lists extends BaseWidget
             'showCheckboxes',
             'showSorting',
             'defaultSort',
-            'locationContext',
         ]);
 
         $this->pageLimit = $this->getSession('page_limit',
@@ -225,8 +218,8 @@ class Lists extends BaseWidget
     /**
      * Replaces the @ symbol with a table name in a model
      *
-     * @param  string $sql
-     * @param  string $table
+     * @param string $sql
+     * @param string $table
      *
      * @return string
      */
@@ -406,7 +399,7 @@ class Lists extends BaseWidget
     /**
      * Get a specified column object
      *
-     * @param  string $column
+     * @param string $column
      *
      * @return mixed
      */
@@ -502,10 +495,7 @@ class Lists extends BaseWidget
     {
         foreach ($columns as $columnName => $config) {
             // Check that the filter scope matches the active location context
-            if (array_key_exists('locationContext', $config)) {
-                $locationContext = (array)$config['locationContext'];
-                if (!in_array($this->locationContext, $locationContext)) continue;
-            }
+            if ($this->isLocationAware($config)) continue;
 
             $this->allColumns[$columnName] = $this->makeListColumn($columnName, $config);
         }
@@ -1115,8 +1105,8 @@ class Lists extends BaseWidget
     /**
      * Check if column refers to a relation of the model
      *
-     * @param  ListColumn $column List column object
-     * @param  boolean $multi If set, returns true only if the relation is a "multiple relation type"
+     * @param ListColumn $column List column object
+     * @param boolean $multi If set, returns true only if the relation is a "multiple relation type"
      *
      * @return bool
      * @throws \Exception
@@ -1151,7 +1141,7 @@ class Lists extends BaseWidget
     /**
      * Checks if a column refers to a pivot model specifically.
      *
-     * @param  ListColumn $column List column object
+     * @param ListColumn $column List column object
      *
      * @return boolean
      */

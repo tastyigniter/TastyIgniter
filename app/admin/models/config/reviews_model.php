@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationContext' => 'multiple',
+            'locationAware' => 'hide',
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -71,7 +71,7 @@ $config['list']['columns'] = [
         'relation' => 'location',
         'select' => 'location_name',
         'searchable' => TRUE,
-        'locationContext' => 'multiple',
+        'locationAware' => 'hide',
     ],
     'author' => [
         'label' => 'lang:admin::lang.reviews.column_author',
@@ -143,7 +143,7 @@ $config['form']['fields'] = [
         'relationFrom' => 'location',
         'nameFrom' => 'location_name',
         'span' => 'left',
-        'locationContext' => 'multiple',
+        'locationAware' => 'hide',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
     'customer_id' => [

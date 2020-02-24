@@ -36,12 +36,6 @@ class Filter extends BaseWidget
      */
     public $context;
 
-    /**
-     * @var string The location context of this filter, scopes that do not belong
-     * to this context will not be shown.
-     */
-    public $locationContext;
-
     protected $defaultAlias = 'filter';
 
     /**
@@ -70,7 +64,6 @@ class Filter extends BaseWidget
             'search',
             'scopes',
             'context',
-            'locationContext',
         ]);
 
         if (isset($this->search)) {
@@ -164,7 +157,7 @@ class Filter extends BaseWidget
         $params = func_get_args();
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
-            list($redirect) = $result;
+            [$redirect] = $result;
 
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
@@ -180,7 +173,7 @@ class Filter extends BaseWidget
         $params = func_get_args();
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
-            list($redirect) = $result;
+            [$redirect] = $result;
 
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
@@ -208,8 +201,8 @@ class Filter extends BaseWidget
      * model relation or from a supplied array. Optionally apply a search
      * constraint to the options.
      *
-     * @param  string $scope
-     * @param  string $searchQuery
+     * @param string $scope
+     * @param string $searchQuery
      *
      * @return array
      */
@@ -318,12 +311,7 @@ class Filter extends BaseWidget
             }
 
             // Check that the filter scope matches the active location context
-            if ($scopeObj->locationContext !== null) {
-                $locationContext = (array)$scopeObj->locationContext;
-                if (!in_array($this->getLocationContext(), $locationContext)) {
-                    continue;
-                }
-            }
+            if ($this->isLocationAware($config)) continue;
 
             // Validate scope model
             if (isset($config['modelClass'])) {
@@ -371,7 +359,7 @@ class Filter extends BaseWidget
     /**
      * Applies all scopes to a DB query.
      *
-     * @param  \Igniter\Flame\Database\Builder $query
+     * @param \Igniter\Flame\Database\Builder $query
      *
      * @return \Igniter\Flame\Database\Builder
      */
@@ -389,8 +377,8 @@ class Filter extends BaseWidget
     /**
      * Applies a filter scope constraints to a DB query.
      *
-     * @param  string $scope
-     * @param  \Igniter\Flame\Database\Builder $query
+     * @param string $scope
+     * @param \Igniter\Flame\Database\Builder $query
      *
      * @return \Igniter\Flame\Database\Builder
      */
@@ -430,7 +418,7 @@ class Filter extends BaseWidget
                     // Switch scope: multiple conditions, value either 1 or 2
                     if (is_array($scopeConditions)) {
                         $conditionNum = is_array($value) ? 0 : $value - 1;
-                        list($scopeConditions) = array_slice($scopeConditions, $conditionNum);
+                        [$scopeConditions] = array_slice($scopeConditions, $conditionNum);
                     }
 
                     if (is_array($value)) {
@@ -516,7 +504,7 @@ class Filter extends BaseWidget
     /**
      * Get a specified scope object
      *
-     * @param  string $scope
+     * @param string $scope
      *
      * @return mixed
      */
@@ -532,7 +520,7 @@ class Filter extends BaseWidget
     /**
      * Returns the display name column for a scope.
      *
-     * @param  string $scope
+     * @param string $scope
      *
      * @return string
      */
@@ -552,15 +540,6 @@ class Filter extends BaseWidget
     public function getContext()
     {
         return $this->context;
-    }
-
-    /**
-     * Returns the active location context for displaying the filter.
-     * @return string
-     */
-    public function getLocationContext()
-    {
-        return $this->locationContext;
     }
 
     public function isActiveState()

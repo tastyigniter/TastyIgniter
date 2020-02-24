@@ -58,11 +58,6 @@ class FilterScope
     public $context;
 
     /**
-     * @var string Specifies location contextual visibility of this form scope.
-     */
-    public $locationContext;
-
-    /**
      * @var bool Specify if the scope is disabled or not.
      */
     public $disabled = FALSE;
@@ -130,9 +125,6 @@ class FilterScope
 
         if (isset($config['context']))
             $this->context = $config['context'];
-
-        if (isset($config['locationContext']))
-            $this->locationContext = $config['locationContext'];
 
         if (isset($config['default']))
             $this->defaults = $config['default'];

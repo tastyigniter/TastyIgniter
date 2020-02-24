@@ -1,5 +1,6 @@
 <?php namespace Admin\Classes;
 
+use Admin\Traits\LocationAwareWidget;
 use Admin\Traits\WidgetMaker;
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
@@ -21,6 +22,7 @@ class BaseWidget extends Extendable
     use AssetMaker;
     use ConfigMaker;
     use EventEmitter;
+    use LocationAwareWidget;
 
     /**
      * @var \Admin\Classes\AdminController Admin controller object.

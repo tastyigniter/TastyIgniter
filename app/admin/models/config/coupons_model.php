@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationContext' => 'multiple',
+            'locationAware' => 'hide',
         ],
         'type' => [
             'label' => 'lang:admin::lang.coupons.text_filter_type',
@@ -79,7 +79,7 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
-        'locationContext' => 'multiple',
+        'locationAware' => 'hide',
         'invisible' => TRUE,
     ],
     'formatted_discount' => [
@@ -307,7 +307,7 @@ $config['form']['tabs'] = [
             'type' => 'relation',
             'valueFrom' => 'locations',
             'nameFrom' => 'location_name',
-            'locationContext' => 'multiple',
+            'locationAware' => 'hide',
             'comment' => 'lang:admin::lang.coupons.help_locations',
         ],
         'description' => [
