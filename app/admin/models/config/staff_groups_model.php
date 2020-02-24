@@ -92,11 +92,6 @@ $config['form']['fields'] = [
         'type' => 'switch',
         'comment' => 'lang:admin::lang.staff_groups.help_customer_account_access',
     ],
-    'location_access' => [
-        'label' => 'lang:admin::lang.staff_groups.label_location_access',
-        'type' => 'switch',
-        'comment' => 'lang:admin::lang.staff_groups.help_location',
-    ],
     'permission' => [
         'label' => 'lang:admin::lang.staff_groups.text_tab_permission',
         'type' => 'section',

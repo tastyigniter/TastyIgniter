@@ -180,28 +180,24 @@ class InitialSchemaSeeder extends Seeder
         DB::table('staff_groups')->insert([
             'staff_group_name' => 'Owner',
             'customer_account_access' => TRUE,
-            'location_access' => FALSE,
             'permissions' => '',
         ]);
 
         DB::table('staff_groups')->insert([
             'staff_group_name' => 'Manager',
             'customer_account_access' => TRUE,
-            'location_access' => TRUE,
             'permissions' => '',
         ]);
 
         DB::table('staff_groups')->insert([
             'staff_group_name' => 'Waiter',
             'customer_account_access' => FALSE,
-            'location_access' => TRUE,
             'permissions' => '',
         ]);
 
         DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Delivery Man',
+            'staff_group_name' => 'Delivery',
             'customer_account_access' => FALSE,
-            'location_access' => TRUE,
             'permissions' => '',
         ]);
     }

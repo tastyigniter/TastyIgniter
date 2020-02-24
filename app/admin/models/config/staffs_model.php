@@ -178,13 +178,12 @@ $config['form']['fields'] = [
         'comment' => 'lang:admin::lang.staff.help_groups',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
-    'staff_location_id' => [
+    'locations' => [
         'label' => 'lang:admin::lang.staff.label_location',
         'type' => 'relation',
-        'relationFrom' => 'location',
         'nameFrom' => 'location_name',
         'span' => 'right',
-        'placeholder' => 'lang:admin::lang.text_please_select',
+        'comment' => 'lang:admin::lang.staff.help_location',
     ],
     'user[super_user]' => [
         'label' => 'lang:admin::lang.staff.label_super_staff',

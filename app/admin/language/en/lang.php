@@ -882,7 +882,6 @@ return [
         'label_customer_account_access' => 'Impersonate Customer',
 
         'help_customer_account_access' => 'Enabling means staff in this group can login to any customer account. The staff must be logged in as admin.',
-        'help_location' => 'Enabling means staff in this group can ONLY view menus, categories, orders, reservations, reviews and coupons in their location. Does not apply to super admins',
     ],
 
     'staff' => [
@@ -906,6 +905,7 @@ return [
 
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
         'help_groups' => 'Specify which groups the staff should belong to. Groups define staff permissions, which can be overridden under Staff Groups, on the Permissions tab.',
+        'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, reservations, reviews and coupons attached to the selected location(s). Does not apply to super admins',
     ],
 
     'statuses' => [

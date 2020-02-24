@@ -22,7 +22,6 @@ class Staff_groups_model extends Model
 
     public $casts = [
         'customer_account_access' => 'boolean',
-        'location_access' => 'boolean',
         'permissions' => 'serialize',
     ];
 

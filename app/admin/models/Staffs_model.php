@@ -45,16 +45,16 @@ class Staffs_model extends Model
         ],
         'belongsTo' => [
             'group' => ['Admin\Models\Staff_groups_model', 'foreignKey' => 'staff_group_id'],
-            'location' => ['Admin\Models\Locations_model', 'foreignKey' => 'staff_location_id'],
             'language' => ['System\Models\Languages_model'],
+        ],
+        'belongsToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'table' => 'staffs_locations'],
         ],
     ];
 
     protected $hidden = ['password'];
 
-    protected $purgeable = ['user'];
-
-    protected $with = ['group'];
+    protected $purgeable = ['user', 'locations'];
 
     public function getFullNameAttribute($value)
     {
@@ -101,6 +101,9 @@ class Staffs_model extends Model
 
         if (array_key_exists('user', $this->attributes))
             $this->addStaffUser($this->attributes['user']);
+
+        if (array_key_exists('locations', $this->attributes))
+            $this->addStaffLocations($this->attributes['locations']);
     }
 
     //
@@ -135,6 +138,18 @@ class Staffs_model extends Model
         }
 
         $userModel->save();
+    }
+
+    /**
+     * Create a new or update existing staff locations
+     *
+     * @param array $locations
+     *
+     * @return bool
+     */
+    public function addStaffLocations($locations = [])
+    {
+        return $this->locations()->sync($locations);
     }
 
     /**
