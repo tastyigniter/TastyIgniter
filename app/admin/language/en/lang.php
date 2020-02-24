@@ -879,10 +879,9 @@ return [
         'column_add' => 'Add',
         'column_delete' => 'Delete',
 
-        'label_customer_account_access' => 'Customer Account Access',
-        'label_location_access' => 'Specific Location Access',
+        'label_customer_account_access' => 'Impersonate Customer',
 
-        'help_customer_account_access' => 'Enabling means staff in this group can login to any customer account using the staff password. The staff must be logged in as admin.',
+        'help_customer_account_access' => 'Enabling means staff in this group can login to any customer account. The staff must be logged in as admin.',
         'help_location' => 'Enabling means staff in this group can ONLY view menus, categories, orders, reservations, reviews and coupons in their location. Does not apply to super admins',
     ],
 

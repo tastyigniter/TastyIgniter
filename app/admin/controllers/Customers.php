@@ -59,7 +59,7 @@ class Customers extends \Admin\Classes\AdminController
 
     public function impersonate($context = null, $id = null)
     {
-        if (!AdminAuth::canAccessCustomerAccount()) {
+        if (!AdminAuth::canImpersonateCustomer()) {
             flash()->warning(lang('admin::lang.customers.alert_login_restricted'));
 
             return $this->redirectBack();
