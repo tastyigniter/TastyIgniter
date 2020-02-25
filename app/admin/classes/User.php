@@ -28,84 +28,80 @@ class User extends Manager
         return $this->user()->isSuperUser();
     }
 
-    public function getId()
+    public function canImpersonateCustomer()
     {
-        return $this->fromModel('user_id', 'user');
+        return $this->isSuperUser() OR $this->staffGroup()->customer_account_access;
     }
 
-    public function getUserName()
-    {
-        return $this->fromModel('username', 'user');
-    }
-
-    public function getStaffId()
-    {
-        return $this->fromModel('staff_id', 'user');
-    }
-
-    public function getStaffName()
-    {
-        return $this->fromModel('staff_name', 'staff');
-    }
-
-    public function getStaffEmail()
-    {
-        return $this->fromModel('staff_email', 'staff');
-    }
-
-    public function getLocationId()
-    {
-        return $this->fromModel('staff_location_id', 'staff', params('default_location_id'));
-    }
-
-    public function getLocationName()
-    {
-        return $this->fromModel('location_name', 'location');
-    }
-
-    public function staffGroupName()
-    {
-        return $this->fromModel('staff_group_name', 'group');
-    }
-
-    public function location()
-    {
-        return $this->staff()->location;
-    }
-
-    public function staffGroup()
-    {
-        return $this->user()->staff->group;
-    }
-
+    /**
+     * @return \Admin\Models\Staffs_model
+     */
     public function staff()
     {
         return $this->user()->staff;
     }
 
+    /**
+     * @return \Admin\Models\Staff_groups_model
+     */
+    public function staffGroup()
+    {
+        return $this->staff()->group;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function locations()
+    {
+        return $this->user()->staff->locations;
+    }
+
+    //
+    //
+    //
+
+    public function extendUserQuery($query)
+    {
+        $query->with(['staff', 'staff.group', 'staff.locations']);
+    }
+
+    //
+    //
+    //
+
+    public function getId()
+    {
+        return $this->user()->user_id;
+    }
+
+    public function getUserName()
+    {
+        return $this->user()->username;
+    }
+
+    public function getStaffId()
+    {
+        return $this->staff()->staff_id;
+    }
+
+    public function getStaffName()
+    {
+        return $this->staff()->staff_name;
+    }
+
+    public function getStaffEmail()
+    {
+        return $this->staff()->staff_email;
+    }
+
     public function getStaffGroupId()
     {
-        return $this->fromModel('staff_group_id', 'staff');
+        return $this->staffGroup()->staff_group_id;
     }
 
-    public function canAccessCustomerAccount()
+    public function getStaffGroupName()
     {
-        return $this->isSuperUser() OR $this->fromModel('customer_account_access', 'group');
-    }
-
-    protected function fromModel($key, $related = null, $default = null)
-    {
-        $user = $this->user();
-
-        switch ($related) {
-            case 'staff':
-                return $user->staff[$key] ?? $default;
-            case 'group':
-                return $user->staff->group[$key] ?? $default;
-            case 'location':
-                return $user->staff->location[$key] ?? $default;
-            default:
-                return $user[$key] ?? $default;
-        }
+        return $this->staffGroup()->staff_group_name;
     }
 }

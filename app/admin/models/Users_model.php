@@ -3,7 +3,6 @@
 use Admin\Classes\PermissionManager;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
-use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
@@ -126,26 +125,10 @@ class Users_model extends AuthUserModel
     // Location
     //
 
-    public function hasStrictLocationAccess()
+    public function hasLocationAccess($location)
     {
-        return (bool)$this->staff->group->location_access;
-    }
-
-    public function hasLocationAccess($location, $displayError = FALSE)
-    {
-        if ($location instanceof Model)
-            $location = $location->getKey();
-
-        if (!$this->hasStrictLocationAccess())
-            return TRUE;
-
-        if ($this->staff_location_id != $location) {
-            if ($displayError)
-                flash()->warning(lang('admin::lang.alert_location_restricted'));
-
-            return FALSE;
-        }
-
-        return TRUE;
+        return $this->staff->locations->contains(function ($model) use ($location) {
+            return $model->location_id === $location->location_id;
+        });
     }
 }

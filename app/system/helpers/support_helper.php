@@ -70,8 +70,8 @@ if (!function_exists('admin_url')) {
      * Create a local URL based on your admin path.
      * Segments can be passed in as a string.
      *
-     * @param    string $uri
-     * @param    array $params
+     * @param string $uri
+     * @param array $params
      *
      * @return    string
      */
@@ -296,10 +296,10 @@ if (!function_exists('time_range')) {
      * Date range
      * Returns a list of time within a specified period.
      *
-     * @param    int $unix_start UNIX timestamp of period start time
-     * @param    int $unix_end UNIX timestamp of period end time
-     * @param    int $interval Specifies the second interval
-     * @param    string $time_format Output time format, same as in date()
+     * @param int $unix_start UNIX timestamp of period start time
+     * @param int $unix_end UNIX timestamp of period end time
+     * @param int $interval Specifies the second interval
+     * @param string $time_format Output time format, same as in date()
      *
      * @return    array
      */
@@ -376,7 +376,7 @@ if (!function_exists('is_single_location')) {
      */
     function is_single_location()
     {
-        return (setting('site_location_mode') === 'single');
+        return (setting('site_location_mode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE);
     }
 }
 
@@ -386,8 +386,8 @@ if (!function_exists('log_message')) {
      * We use this as a simple mechanism to access the logging
      * class and send messages to be logged.
      *
-     * @param    string $level the error level: 'error', 'debug' or 'info'
-     * @param    string $message the error message
+     * @param string $level the error level: 'error', 'debug' or 'info'
+     * @param string $message the error message
      *
      * @return    void
      */
@@ -516,8 +516,8 @@ if (!function_exists('contains_substring')) {
      * Determine if a given string contains a given substring.
      * @access    public
      *
-     * @param  string $haystack
-     * @param  string|array $needles
+     * @param string $haystack
+     * @param string|array $needles
      *
      * @return bool
      */
@@ -538,7 +538,7 @@ if (!function_exists('is_lang_key')) {
      * Determine if a given string matches a language key.
      * @access    public
      *
-     * @param  string $line
+     * @param string $line
      *
      * @return bool
      */
