@@ -345,14 +345,6 @@ $config['form']['setup'] = [
                     'type' => 'text',
                     'comment' => 'lang:system::lang.settings.help_invoice_prefix',
                 ],
-                'auto_invoicing' => [
-                    'label' => 'lang:system::lang.settings.label_auto_invoicing',
-                    'tab' => 'lang:system::lang.settings.text_tab_title_invoice',
-                    'type' => 'switch',
-                    'on' => 'lang:system::lang.settings.text_auto',
-                    'off' => 'lang:system::lang.settings.text_manual',
-                    'comment' => 'lang:system::lang.settings.help_auto_invoicing',
-                ],
 
                 'allow_reviews' => [
                     'label' => 'lang:system::lang.settings.label_allow_reviews',
@@ -437,7 +429,6 @@ $config['form']['setup'] = [
             ['menus_page', 'lang:system::lang.settings.label_menus_page', 'required|string'],
             ['guest_order', 'lang:system::lang.settings.label_guest_order', 'required|integer'],
             ['location_order', 'lang:system::lang.settings.label_location_order', 'required|integer'],
-            ['auto_invoicing', 'lang:system::lang.settings.label_auto_invoicing', 'required|integer'],
             ['invoice_prefix', 'lang:system::lang.settings.label_invoice_prefix'],
         ],
     ],

@@ -2,81 +2,68 @@
 
 namespace Admin\Traits;
 
-use Admin\Models\Orders_model;
 use Carbon\Carbon;
-use Event;
 
 trait HasInvoice
 {
     public static function bootHasInvoice()
     {
-        Event::listen('admin.statusHistory.beforeAddStatus', function ($model, $object, $statusId, $previousStatus) {
-            if (!$object instanceof Orders_model)
-                return;
-
-            if (!(bool)setting('auto_invoicing'))
-                return;
-
-            if (!in_array($statusId, setting('completed_order_status')))
-                return;
-
-            if (!method_exists($object, 'generateInvoice'))
-                return;
-
-            $object->generateInvoice();
+        static::saved(function (self $model) {
+            if ($model->isPaymentProcessed() AND !$model->hasInvoice())
+                $model->generateInvoice();
         });
     }
 
     public function getInvoiceIdAttribute()
     {
-        return $this->invoice_prefix.$this->invoice_no;
+        return $this->getInvoiceNoAttribute();
+    }
+
+    public function getInvoiceNoAttribute()
+    {
+        if (!strlen($this->invoice_prefix))
+            return null;
+
+        return $this->invoice_prefix.$this->order_id;
     }
 
     public function hasInvoice()
     {
-        return $this->invoice_no > 0 AND is_numeric($this->invoice_no);
+        return !empty($this->invoice_date) AND strlen($this->invoice_prefix);
     }
 
     public function generateInvoice()
     {
         if ($this->hasInvoice())
-            return $this->invoice_id;
+            return $this->invoice_no;
 
-        $this->invoiceSetDate(Carbon::now());
+        $invoiceDate = Carbon::now();
+        if (is_null($this->invoice_date))
+            $this->invoice_date = $invoiceDate;
 
-        $this->invoice_no = $this->invoiceGetNextNum();
-        $this->invoice_prefix = $this->invoiceGetPrefix();
-        $this->save();
+        if (is_null($this->invoice_prefix))
+            $this->invoice_prefix = $this->invoiceGeneratePrefix($invoiceDate);
 
-        return $this->invoice_id;
+        self::withoutEvents(function () {
+            $this->timestamps = FALSE;
+            $this->save();
+            $this->timestamps = TRUE;
+        });
+
+        return $this->invoice_no;
     }
 
-    protected function invoiceGetNextNum()
+    public function invoiceGeneratePrefix($invoiceDate = null)
     {
-        return static::on()->max('invoice_no') + 1;
-    }
-
-    protected function invoiceGetPrefix()
-    {
-        $now = $this->invoiceGetDate();
+        $invoiceDate = $invoiceDate ?? $this->invoice_date;
 
         return parse_values([
-            'year' => $now->year,
-            'month' => $now->month,
-            'day' => $now->day,
-            'hour' => $now->hour,
-            'minute' => $now->minute,
-            'second' => $now->second,
+            'year' => $invoiceDate->year,
+            'month' => $invoiceDate->month,
+            'day' => $invoiceDate->day,
+            'hour' => $invoiceDate->hour,
+            'minute' => $invoiceDate->minute,
+            'second' => $invoiceDate->second,
         ], setting('invoice_prefix') ?: 'INV-{year}-00');
-    }
-
-    protected function invoiceGetDate()
-    {
-        return $this->invoice_date;
-    }
-
-    protected function invoiceSetDate($date)
-    {
-        return $this->invoice_date = $date;
     }
 }

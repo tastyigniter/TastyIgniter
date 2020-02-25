@@ -186,11 +186,6 @@
   },
   {
     "sort": "config",
-    "item": "auto_invoicing",
-    "value": "1"
-  },
-  {
-    "sort": "config",
     "item": "invoice_prefix",
     "value": "INV-{year}-00"
   },
