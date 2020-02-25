@@ -16,12 +16,9 @@
         padding: $mainmenu-padding-x $mainmenu-padding-y;
         position: relative;
 
-        .icon-cover {
-          padding: 8px 10px;
-
-          .fa {
-            font-size: 16px;
-          }
+        .icon-border {
+          border-width: 3px;
+          border-style: solid;
         }
       }
     }

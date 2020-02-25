@@ -1240,10 +1240,9 @@ body.dragging {
     color: #27365c;
     padding: 0.5rem 1rem;
     position: relative; }
-    .navbar-top.navbar-expand .navbar-nav .nav-link .icon-cover {
-      padding: 8px 10px; }
-      .navbar-top.navbar-expand .navbar-nav .nav-link .icon-cover .fa {
-        font-size: 16px; }
+    .navbar-top.navbar-expand .navbar-nav .nav-link .icon-border {
+      border-width: 3px;
+      border-style: solid; }
   .navbar-top .navbar-nav > li.dropdown > a {
     position: relative; }
   .navbar-top .navbar-nav li.nav-item > a img {

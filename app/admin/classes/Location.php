@@ -21,7 +21,7 @@ class Location extends Manager
             return $this->model;
 
         $model = null;
-        if (is_single_location()) {
+        if ($this->isSingleMode()) {
             $model = $this->getById(params('default_location_id'));
         }
         else {
@@ -57,6 +57,11 @@ class Location extends Manager
             return FALSE;
 
         return $this->getAuth()->locations()->isNotEmpty();
+    }
+
+    public function isSingleMode()
+    {
+        return is_single_location();
     }
 
     public function getId()
