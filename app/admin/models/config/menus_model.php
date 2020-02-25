@@ -82,7 +82,7 @@ $config['list']['columns'] = [
     ],
     'menu_price' => [
         'label' => 'lang:admin::lang.menus.column_price',
-        'type' => 'money',
+        'type' => 'currency',
         'searchable' => TRUE,
     ],
     'stock_qty' => [
@@ -146,7 +146,7 @@ $config['form']['tabs'] = [
         ],
         'menu_price' => [
             'label' => 'lang:admin::lang.menus.label_price',
-            'type' => 'money',
+            'type' => 'currency',
             'span' => 'right',
         ],
         'categories' => [
@@ -281,7 +281,7 @@ $config['form']['tabs'] = [
         'special[special_price]' => [
             'label' => 'lang:admin::lang.menus.label_special_price',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
-            'type' => 'money',
+            'type' => 'currency',
             'span' => 'left',
             'cssClass' => 'flex-width',
         ],

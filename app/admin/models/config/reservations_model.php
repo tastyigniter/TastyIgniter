@@ -105,7 +105,7 @@ $config['list']['columns'] = [
         'path' => 'reservations/status_column',
         'searchable' => TRUE,
     ],
-    'assignee_id' => [
+    'assignee_name' => [
         'label' => 'lang:admin::lang.reservations.column_staff',
         'type' => 'text',
         'relation' => 'assignee',

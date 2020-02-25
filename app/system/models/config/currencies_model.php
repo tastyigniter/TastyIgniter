@@ -67,6 +67,11 @@ $config['list']['columns'] = [
         'select' => 'country_name',
         'searchable' => TRUE,
     ],
+    'currency_rate' => [
+        'label' => 'lang:system::lang.currencies.column_rate',
+        'type' => 'number',
+        'invisible' => TRUE,
+    ],
     'currency_status' => [
         'label' => 'lang:system::lang.currencies.column_status',
         'type' => 'switch',
@@ -126,7 +131,7 @@ $config['form']['fields'] = [
     ],
     'currency_rate' => [
         'label' => 'lang:system::lang.currencies.label_rate',
-        'type' => 'money',
+        'type' => 'number',
         'span' => 'right',
     ],
     'symbol_position' => [

@@ -79,7 +79,7 @@ return [
                         ],
                         'amount' => [
                             'label' => 'lang:admin::lang.locations.label_area_charge',
-                            'type' => 'money',
+                            'type' => 'currency',
                             'default' => 0,
                         ],
                         'type' => [
@@ -94,7 +94,7 @@ return [
                         ],
                         'total' => [
                             'label' => 'lang:admin::lang.locations.label_area_min_amount',
-                            'type' => 'money',
+                            'type' => 'currency',
                             'default' => 0,
                         ],
                     ],

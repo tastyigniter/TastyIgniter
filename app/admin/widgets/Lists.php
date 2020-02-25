@@ -734,7 +734,7 @@ class Lists extends BaseWidget
      */
     protected function evalMoneyTypeValue($record, $column, $value)
     {
-        return currency_format($value);
+        return number_format($value, 2);
     }
 
     /**
@@ -826,6 +826,14 @@ class Lists extends BaseWidget
         $value = mdate('%d-%m-%Y %H:%i:%s', $timestamp);
 
         return day_elapsed($value);
+    }
+
+    /**
+     * Process as partial reference
+     */
+    protected function evalCurrencyTypeValue($record, $column, $value)
+    {
+        return currency_format($value);
     }
 
     /**

@@ -40,6 +40,28 @@ class Currencies_model extends Currency
         ],
     ];
 
+    /**
+     * @var self Default currency cache.
+     */
+    protected static $defaultCurrency;
+
+    /**
+     * Returns the default currency defined.
+     * @return self
+     */
+    public static function getDefault()
+    {
+        if (self::$defaultCurrency !== null) {
+            return self::$defaultCurrency;
+        }
+
+        $model = self::where('currency_id', setting('default_currency_code'))
+                     ->orWhere('currency_code', setting('default_currency_code'))
+                     ->first();
+
+        return self::$defaultCurrency = $model;
+    }
+
     public static function getDropdownOptions()
     {
         return static::select(['currency_id', 'currencies.country_id', 'priority'])

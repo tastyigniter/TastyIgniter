@@ -394,7 +394,7 @@ $config['form']['setup'] = [
                 'tax_percentage' => [
                     'label' => 'lang:system::lang.settings.label_tax_percentage',
                     'tab' => 'lang:system::lang.settings.text_tab_title_taxation',
-                    'type' => 'money',
+                    'type' => 'number',
                     'default' => 0,
                     'comment' => 'lang:system::lang.settings.help_tax_percentage',
                 ],

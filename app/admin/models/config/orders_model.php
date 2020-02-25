@@ -110,7 +110,7 @@ $config['list']['columns'] = [
         'relation' => 'payment_method',
         'select' => 'name',
     ],
-    'assignee_id' => [
+    'assignee_name' => [
         'label' => 'lang:admin::lang.orders.column_staff',
         'type' => 'text',
         'relation' => 'assignee',
@@ -119,7 +119,7 @@ $config['list']['columns'] = [
     ],
     'order_total' => [
         'label' => 'lang:admin::lang.orders.column_total',
-        'type' => 'money',
+        'type' => 'currency',
     ],
     'order_time' => [
         'label' => 'lang:admin::lang.orders.column_time',
@@ -167,35 +167,34 @@ $config['form']['toolbar'] = [
 $config['form']['fields'] = [
     'order_id' => [
         'label' => 'lang:admin::lang.orders.label_order_id',
-        'type' => 'text',
-        'disabled' => TRUE,
-        'span' => 'left',
-        'cssClass' => 'flex-width',
-        'context' => ['edit', 'preview'],
-    ],
-    'invoice_id' => [
-        'label' => 'lang:admin::lang.orders.label_invoice',
         'type' => 'addon',
         'disabled' => TRUE,
         'span' => 'left',
         'cssClass' => 'flex-width',
         'context' => ['edit', 'preview'],
-        'addonCssClass' => ['input-addon-btn'],
-        'addonRight' => [
-            'tag' => 'button',
-            'label' => 'admin::lang.orders.button_create_invoice',
-            'attributes' => [
-                'type' => 'button',
-                'class' => 'btn btn-outline-default',
-                'data-request' => 'onGenerateInvoice',
-            ],
-        ],
+    ],
+    'order_type_name' => [
+        'label' => 'lang:admin::lang.orders.label_order_type',
+        'type' => 'text',
+        'span' => 'left',
+        'cssClass' => 'flex-width',
+        'disabled' => TRUE,
+        'context' => ['edit', 'preview'],
     ],
     'order_total' => [
         'label' => 'lang:admin::lang.orders.label_order_total',
-        'type' => 'money',
+        'type' => 'currency',
         'disabled' => TRUE,
         'span' => 'right',
+        'cssClass' => 'flex-width',
+        'context' => ['edit', 'preview'],
+    ],
+    'total_items' => [
+        'label' => 'lang:admin::lang.orders.label_total_items',
+        'type' => 'number',
+        'span' => 'right',
+        'cssClass' => 'flex-width',
+        'disabled' => TRUE,
         'context' => ['edit', 'preview'],
     ],
     'status_id' => [
@@ -263,19 +262,6 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
             'span' => 'right',
         ],
-        'order_type_name' => [
-            'label' => 'lang:admin::lang.orders.label_order_type',
-            'type' => 'text',
-            'span' => 'left',
-            'disabled' => TRUE,
-        ],
-        'email' => [
-            'label' => 'lang:admin::lang.label_email',
-            'type' => 'text',
-            'disabled' => TRUE,
-            'span' => 'right',
-            'context' => ['edit', 'preview'],
-        ],
         'order_date' => [
             'label' => 'lang:admin::lang.orders.label_order_date',
             'type' => 'datepicker',
@@ -292,8 +278,8 @@ $config['form']['tabs'] = [
             'span' => 'left',
             'cssClass' => 'flex-width',
         ],
-        'telephone' => [
-            'label' => 'lang:admin::lang.orders.label_telephone',
+        'email' => [
+            'label' => 'lang:admin::lang.label_email',
             'type' => 'text',
             'disabled' => TRUE,
             'span' => 'right',
@@ -305,11 +291,11 @@ $config['form']['tabs'] = [
             'valueFrom' => 'formatted_address',
             'disabled' => TRUE,
         ],
-        'total_items' => [
-            'label' => 'lang:admin::lang.orders.label_total_items',
-            'type' => 'number',
-            'span' => 'right',
+        'telephone' => [
+            'label' => 'lang:admin::lang.orders.label_telephone',
+            'type' => 'text',
             'disabled' => TRUE,
+            'span' => 'right',
             'context' => ['edit', 'preview'],
         ],
         'payment_method[name]' => [
@@ -318,12 +304,21 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'disabled' => TRUE,
         ],
-        'invoice' => [
+        'invoice_no' => [
             'label' => 'lang:admin::lang.orders.label_invoice',
-            'type' => 'text',
+            'type' => 'addon',
             'disabled' => TRUE,
             'span' => 'right',
             'context' => ['edit', 'preview'],
+            'addonCssClass' => ['input-addon-btn'],
+            'addonRight' => [
+                'tag' => 'a',
+                'label' => 'admin::lang.orders.button_view_invoice',
+                'attributes' => [
+                    'class' => 'btn btn-outline-default',
+                    'target' => '_blank',
+                ],
+            ],
         ],
         'comment' => [
             'label' => 'lang:admin::lang.orders.label_comment',

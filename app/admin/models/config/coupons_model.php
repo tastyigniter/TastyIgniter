@@ -168,7 +168,7 @@ $config['form']['tabs'] = [
         ],
         'min_total' => [
             'label' => 'lang:admin::lang.coupons.label_min_total',
-            'type' => 'money',
+            'type' => 'currency',
             'span' => 'right',
             'default' => 0,
         ],
