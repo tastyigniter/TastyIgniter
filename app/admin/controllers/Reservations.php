@@ -10,6 +10,7 @@ class Reservations extends \Admin\Classes\AdminController
         'Admin\Actions\ListController',
         'Admin\Actions\CalendarController',
         'Admin\Actions\FormController',
+        'Admin\Actions\LocationAwareController',
     ];
 
     public $listConfig = [

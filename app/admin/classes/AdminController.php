@@ -340,16 +340,6 @@ class AdminController extends BaseController
         return AdminLocation::getId();
     }
 
-    public function applyLocationableScope($query)
-    {
-        if (
-            !AdminLocation::check()
-            OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
-        ) return;
-
-        $query->whereHasLocation($this->getLocationId());
-    }
-
     //
     // Helper Methods
     //

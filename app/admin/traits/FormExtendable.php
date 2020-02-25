@@ -82,8 +82,9 @@ trait FormExtendable
 
         // Prepare query and find model record
         $query = $model->newQuery();
-        $this->controller->applyLocationableScope($query);
+        $this->controller->fireEvent('controller.form.extendQuery', [$query]);
         $this->controller->formExtendQuery($query);
+
         $result = $query->find($recordId);
 
         if (!$result) {

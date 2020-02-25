@@ -9,6 +9,7 @@ class Menus extends AdminController
     public $implement = [
         'Admin\Actions\ListController',
         'Admin\Actions\FormController',
+        'Admin\Actions\LocationAwareController',
     ];
 
     public $listConfig = [

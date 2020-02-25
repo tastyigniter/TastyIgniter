@@ -7,6 +7,7 @@ class Coupons extends \Admin\Classes\AdminController
     public $implement = [
         'Admin\Actions\ListController',
         'Admin\Actions\FormController',
+        'Admin\Actions\LocationAwareController',
     ];
 
     public $listConfig = [

@@ -198,7 +198,6 @@ class ListController extends ControllerAction
         });
 
         $widget->bindEvent('list.extendQuery', function ($query) use ($alias) {
-            $this->controller->applyLocationableScope($query);
             $this->controller->listExtendQuery($query, $alias);
         });
 
