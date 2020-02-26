@@ -103,13 +103,13 @@ class Users_model extends AuthUserModel
         if ($this->isSuperUser())
             return TRUE;
 
-        $groupPermissions = $this->getPermissions();
+        $staffPermissions = $this->getPermissions();
 
         if (!is_array($permissions))
             $permissions = [$permissions];
 
-        if (PermissionManager::instance()->checkGroupPermission(
-            $groupPermissions, $permissions, $checkAll)
+        if (PermissionManager::instance()->checkPermission(
+            $staffPermissions, $permissions, $checkAll)
         ) return TRUE;
 
         return FALSE;

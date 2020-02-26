@@ -80,13 +80,13 @@ class PermissionManager
         return $grouped;
     }
 
-    public function checkGroupPermission($groupPermissions, $permissions, $checkAll)
+    public function checkPermission($permissions, $checkPermissions, $checkAll)
     {
         $matched = FALSE;
-        foreach ($permissions as $permission) {
-            if ($this->checkGroupPermissionStartsWith($groupPermissions, $permission)
-                OR $this->checkGroupPermissionEndsWith($groupPermissions, $permission)
-                OR $this->checkGroupPermissionMatches($groupPermissions, $permission)
+        foreach ($checkPermissions as $permission) {
+            if ($this->checkPermissionStartsWith($permission, $permissions)
+                OR $this->checkPermissionEndsWith($permission, $permissions)
+                OR $this->checkPermissionMatches($permission, $permissions)
             ) $matched = TRUE;
 
             if ($checkAll === FALSE AND $matched === TRUE)
@@ -99,12 +99,12 @@ class PermissionManager
         return !($checkAll === FALSE);
     }
 
-    protected function checkGroupPermissionStartsWith($groupPermissions, $permission)
+    protected function checkPermissionStartsWith($permission, $permissions)
     {
         if (strlen($permission) > 1 AND ends_with($permission, '*')) {
             $checkPermission = substr($permission, 0, -1);
 
-            foreach ($groupPermissions as $groupPermission => $permitted) {
+            foreach ($permissions as $groupPermission => $permitted) {
                 // Let's make sure the available permission starts with our permission
                 if ($checkPermission != $groupPermission
                     AND starts_with($groupPermission, $checkPermission)
@@ -114,12 +114,12 @@ class PermissionManager
         }
     }
 
-    protected function checkGroupPermissionEndsWith($groupPermissions, $permission)
+    protected function checkPermissionEndsWith($permission, $permissions)
     {
         if (strlen($permission) > 1 AND starts_with($permission, '*')) {
             $checkPermission = substr($permission, 1);
 
-            foreach ($groupPermissions as $groupPermission => $permitted) {
+            foreach ($permissions as $groupPermission => $permitted) {
                 // Let's make sure the available permission ends with our permission
                 if ($checkPermission != $groupPermission
                     AND ends_with($groupPermission, $checkPermission)
@@ -129,9 +129,9 @@ class PermissionManager
         }
     }
 
-    protected function checkGroupPermissionMatches($groupPermissions, $permission)
+    protected function checkPermissionMatches($permission, $permissions)
     {
-        foreach ($groupPermissions as $groupPermission => $permitted) {
+        foreach ($permissions as $groupPermission => $permitted) {
             if ((strlen($groupPermission) > 1) AND ends_with($groupPermission, '*')) {
                 $checkMergedPermission = substr($groupPermission, 0, -1);
 
