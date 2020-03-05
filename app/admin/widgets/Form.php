@@ -482,7 +482,7 @@ class Form extends BaseWidget
 //        }
 
         // Get field options from model
-        $optionModelTypes = ['select', 'selectlist', 'radio', 'checkbox', 'checkboxlist', 'partial'];
+        $optionModelTypes = ['select', 'selectlist', 'radio', 'checkbox', 'checkboxlist', 'radiolist', 'partial'];
         if (in_array($field->type, $optionModelTypes, FALSE)) {
 
             // Defer the execution of option data collection

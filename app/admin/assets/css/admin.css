@@ -1067,11 +1067,6 @@ body.dragging {
       .form-nav.nav-tabs .nav-link {
         white-space: nowrap; } }
 
-.field-checkboxlist .custom-control-label::before, .field-checkboxlist .custom-control-label::after {
-  top: 0.7rem; }
-  .field-checkboxlist label {
-    padding-left: 10px; }
-
 .field-section .section-title {
   color: #68728d;
   margin-top: 15px;

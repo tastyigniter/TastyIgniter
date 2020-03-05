@@ -5,6 +5,7 @@
     margin-top: 25px;
   }
 }
+
 .form-fields {
   background-color: $gray-200;
   display: -ms-flexbox;
@@ -13,9 +14,11 @@
   flex-wrap: wrap;
   padding: $form-fields-padding-y $form-fields-padding-x;
 }
+
 .hidden-field {
   margin: 0;
 }
+
 // Form groups
 //
 .form-group {
@@ -51,6 +54,7 @@
     width: 100%;
   }
 }
+
 @include media-breakpoint-down(sm) {
   .form-group {
     &.span-left {
@@ -71,6 +75,7 @@
     }
   }
 }
+
 // Tabs
 //
 .form-nav {
@@ -97,6 +102,7 @@
     }
   }
 }
+
 @include media-breakpoint-down(sm) {
   .form-widget .tab-heading {
     width: 100%;
@@ -119,17 +125,7 @@
     }
   }
 }
-// Checkbox list
-.field-checkboxlist {
-  .custom-control-label::before,
-  .custom-control-label::after {
-    top: .7rem;
-  }
 
-  label {
-    padding-left: 10px;
-  }
-}
 // Field Section
 .field-section {
   .section-title {
@@ -138,6 +134,7 @@
     margin-bottom: 0;
   }
 }
+
 // Control label
 .control-label {
   color: $gray-800;
