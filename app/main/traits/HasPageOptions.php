@@ -2,30 +2,40 @@
 
 namespace Main\Traits;
 
-use Main\Template\Page;
-use System\Models\Pages_model;
-
+/**
+ * Trait HasPageOptions
+ * @package Main\Traits
+ * @todo remove in v3.1
+ */
 trait HasPageOptions
 {
+    use UsesPage;
+
     public function findPage($id)
     {
-        return Pages_model::find($id);
+        traceLog('Trait method HasPageOptions::findPage($id) is deprecated. Use trait method UsesPage::findStaticPage($id) instead.');
+
+        return $this->findStaticPage($id);
     }
 
-    public function getPageSlug($pageId)
+    public function getPageSlug($id)
     {
-        $page = $this->findPage($pageId);
+        traceLog('Trait method HasPageOptions::getPageSlug($id) is deprecated. Use trait method UsesPage::getStaticPagePermalink($id) instead.');
 
-        return $page ? $page->permalink_slug : '';
+        return $this->getStaticPagePermalink($id);
     }
 
     public static function getPageOptions()
     {
-        return Page::getDropdownOptions();
+        traceLog('Trait method HasPageOptions::getPageOptions() is deprecated. Use trait method UsesPage::getThemePageOptions() instead.');
+
+        return self::getThemePageOptions();
     }
 
     public static function getPagesOptions()
     {
-        return Pages_model::getDropdownOptions();
+        traceLog('Trait method HasPageOptions::getPagesOptions() is deprecated. Use trait method UsesPage::getStaticPageOptions() instead.');
+
+        return self::getStaticPageOptions();
     }
 }
