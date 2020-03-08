@@ -2,6 +2,7 @@
 
 namespace Admin\ActivityTypes;
 
+use Admin\Helpers\ActivityMessage;
 use Admin\Models\Reservations_model;
 use AdminAuth;
 use Igniter\Flame\ActivityLog\Contracts\ActivityInterface;
@@ -14,21 +15,27 @@ class ReservationAssigned implements ActivityInterface
 
     public $user;
 
-    public function __construct(Reservations_model $reservation, User $user)
+    public function __construct(Reservations_model $reservation, User $user = null)
     {
         $this->reservation = $reservation;
         $this->user = $user;
     }
 
-    public static function pushActivityLog(Reservations_model $model)
+    /**
+     * @param \Admin\Models\Reservations_model|mixed $reservation
+     */
+    public static function log($reservation)
     {
-        if (!$model->isDirty('assignee_id') OR !$model->assignee_id)
-            return;
+        $staffId = AdminAuth::staff()->getKey();
+        $assignees = $reservation->listStaffGroupAssignees();
 
-        $model->load('assignee');
-        $user = AdminAuth::user();
-        if ($user->getKey() != $model->assignee_id AND $sendTo = $model->assignee)
-            activity()->pushLog(new self($model, $user), [$sendTo->user]);
+        $recipients = [];
+        foreach ($reservation->listGroupAssignees() as $assignee) {
+            if ($assignee->getKey() === optional(AdminAuth::staff())->getKey()) continue;
+            $recipients[] = $assignee->user;
+        }
+
+        activity()->logActivity(new self($reservation, AdminAuth::user()), $recipients);
     }
 
     /**
@@ -86,6 +93,8 @@ class ReservationAssigned implements ActivityInterface
 
     public static function getMessage(Activity $activity)
     {
-        return lang('admin::lang.reservations.activity_event_log_assigned');
+        return ActivityMessage::attachAssignedPlaceholders(
+            'admin::lang.reservations.activity_event_log_assigned', $activity
+        );
     }
 }

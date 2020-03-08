@@ -744,10 +744,8 @@ return [
         'label_payment_method' => 'Payment Method',
         'label_total_items' => 'Total Items',
 
-        'help_notify_customer' => 'Set whether to send a status update email to the customer',
-
-        'activity_event_log' => '<b>:causer.staff_name</b> updated order (#:properties.order_id) status to <b>:properties.status_name</b>',
-        'activity_event_log_assigned' => '<b>:causer.staff_name</b> assigned order (#:properties.order_id) to <b>:properties.assignee_name</b>',
+        'activity_event_log' => ' updated order (#:properties.order_id) status to <b>:properties.status_name</b>',
+        'activity_event_log_assigned' => ' assigned order (#:properties.order_id) to ',
     ],
 
     'payments' => [
@@ -849,7 +847,7 @@ return [
         'help_notify_customer' => 'Set whether to send a status update email to the customer',
         'help_reservation_duration' => 'Stay time in minutes. Leave blank to use the default stay time',
 
-        'activity_event_log' => '<b>:causer.staff_name</b> updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
+        'activity_event_log' => 'updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
         'activity_event_log_assigned' => '<b>:causer.staff_name</b> assigned reservation (#:properties.reservation_id) to <b>:properties.assignee_name</b>',
     ],
 

@@ -2,8 +2,8 @@
 
 namespace Admin\ActivityTypes;
 
+use Admin\Helpers\ActivityMessage;
 use Admin\Models\Reservations_model;
-use Admin\Models\Status_history_model;
 use AdminAuth;
 use Igniter\Flame\ActivityLog\Contracts\ActivityInterface;
 use Igniter\Flame\ActivityLog\Models\Activity;
@@ -20,21 +20,26 @@ class ReservationStatusUpdated implements ActivityInterface
      * @param \Admin\Models\Reservations_model
      * @param \Igniter\Flame\Auth\Models\User $user
      */
-    public function __construct(Reservations_model $reservation, User $user)
+    public function __construct(Reservations_model $reservation, User $user = null)
     {
         $this->reservation = $reservation;
         $this->user = $user;
     }
 
-    public static function pushActivityLog(Status_history_model $model, Reservations_model $object)
+    /**
+     * @param \Admin\Models\Reservations_model|mixed $reservation
+     */
+    public static function log($reservation)
     {
-        if (!$object->isDirty('status_id') OR !$object->status_id)
-            return;
+        $recipients = [];
+        if ($reservation->assignee AND $reservation->assignee->getKey() != AdminAuth::user()->getKey())
+            $recipients[] = $reservation->assignee->user;
 
-        $user = AdminAuth::user();
-        if ($user->getKey() != $model->assignee_id AND $sendTo = $model->assignee)
-            activity()->pushLog(new self($object, $user), [$sendTo->user]);
+        $statusHistory = $reservation->getLatestStatusHistory();
+        if ($reservation->customer AND $statusHistory AND $statusHistory->notify)
+            $recipients[] = $reservation->customer;
 
+        activity()->logActivity(new self($reservation, AdminAuth::user()), $recipients);
     }
 
     /**
@@ -92,6 +97,8 @@ class ReservationStatusUpdated implements ActivityInterface
 
     public static function getMessage(Activity $activity)
     {
-        return lang('admin::lang.reservations.activity_event_log');
+        return ActivityMessage::attachCauserPlaceholders(
+            'admin::lang.reservations.activity_event_log', $activity
+        );
     }
 }

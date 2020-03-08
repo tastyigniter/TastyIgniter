@@ -2,6 +2,7 @@
 
 namespace Admin\ActivityTypes;
 
+use Admin\Helpers\ActivityMessage;
 use Admin\Models\Orders_model;
 use AdminAuth;
 use Igniter\Flame\ActivityLog\Contracts\ActivityInterface;
@@ -14,21 +15,27 @@ class OrderAssigned implements ActivityInterface
 
     public $user;
 
-    public function __construct(Orders_model $order, User $user)
+    public function __construct(Orders_model $order, User $user = null)
     {
         $this->order = $order;
         $this->user = $user;
     }
 
-    public static function pushActivityLog(Orders_model $model)
+    /**
+     * @param \Admin\Models\Orders_model|mixed $order
+     */
+    public static function log(Orders_model $order)
     {
-        if (!$model->isDirty('assignee_id') OR !$model->assignee_id)
-            return;
+        $staffId = AdminAuth::staff()->getKey();
+        $assignees = $order->listAssignableGroupStaff();
 
-        $model->load('assignee');
-        $user = AdminAuth::user();
-        if ($user->getKey() != $model->assignee_id AND $sendTo = $model->assignee)
-            activity()->pushLog(new self($model, $user), [$sendTo->user]);
+        $recipients = [];
+        foreach ($order->listGroupAssignees() as $assignee) {
+            if ($assignee->getKey() === optional(AdminAuth::staff())->getKey()) continue;
+            $recipients[] = $assignee->user;
+        }
+
+        activity()->logActivity(new self($order, AdminAuth::user()), $recipients);
     }
 
     /**
@@ -55,7 +62,9 @@ class OrderAssigned implements ActivityInterface
         return [
             'order_id' => $this->order->order_id,
             'assignee_id' => $this->order->assignee_id,
-            'assignee_name' => $this->order->assignee->staff_name,
+            'assignee_name' => optional($this->order->assignee)->staff_name,
+            'assignee_group_id' => $this->order->assignee_group_id,
+            'assignee_group_name' => optional($this->order->assignee_group)->staff_group_name,
         ];
     }
 
@@ -86,6 +95,8 @@ class OrderAssigned implements ActivityInterface
 
     public static function getMessage(Activity $activity)
     {
-        return lang('admin::lang.orders.activity_event_log_assigned');
+        return ActivityMessage::attachAssignedPlaceholders(
+            'admin::lang.orders.activity_event_log_assigned', $activity
+        );
     }
 }

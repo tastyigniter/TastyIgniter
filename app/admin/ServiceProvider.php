@@ -9,7 +9,6 @@ use Admin\Classes\Widgets;
 use Admin\Middleware\LogUserLastSeen;
 use AdminLocation;
 use AdminMenu;
-use Event;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -31,8 +30,6 @@ class ServiceProvider extends AppServiceProvider
         if ($this->app->runningInAdmin()) {
             $this->resolveFlashSessionKey();
             $this->replaceNavMenuItem();
-
-            $this->bindActivityEvents();
 
             $this->app['router']->pushMiddlewareToGroup('web', LogUserLastSeen::class);
         }
@@ -627,25 +624,6 @@ class ServiceProvider extends AppServiceProvider
                 ActivityTypes\ReservationAssigned::class,
                 ActivityTypes\ReservationStatusUpdated::class,
             ]);
-        });
-    }
-
-    protected function bindActivityEvents()
-    {
-        Event::listen('admin.order.assigned', function ($model) {
-            ActivityTypes\OrderAssigned::pushActivityLog($model);
-        });
-
-        Event::listen('admin.reservation.assigned', function ($model) {
-            ActivityTypes\ReservationAssigned::pushActivityLog($model);
-        });
-
-        Event::listen('admin.statusHistory.beforeAddStatus', function ($model, $object, $statusId, $previousStatus) {
-            if ($object instanceof Models\Orders_model)
-                ActivityTypes\OrderStatusUpdated::pushActivityLog($model, $object);
-
-            if ($object instanceof Models\Reservations_model)
-                ActivityTypes\ReservationStatusUpdated::pushActivityLog($model, $object);
         });
     }
 
