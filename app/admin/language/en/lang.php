@@ -102,12 +102,26 @@ return [
     'text_user' => 'User',
     'text_staff_group' => 'Staff Group',
     'text_location' => 'Location',
+    'text_set_status' => 'Set Status',
     'text_edit_details' => 'Edit Details',
     'text_network_admin' => 'Network Admin',
     'text_administration' => 'Administration',
     'text_logout' => 'Logout',
 
     'help_permalink' => 'Use ONLY alpha-numeric lowercase characters, _ or - and make sure it is unique GLOBALLY.',
+
+    'staff_status' => [
+        'text_set_status' => 'Set a status',
+        'text_online' => 'Online',
+        'text_back_soon' => 'Back Soon',
+        'text_away' => 'Away',
+        'text_lunch_break' => 'On my lunch break...',
+        'text_custom_status' => 'Set a custom away status',
+        'text_clear_tomorrow' => 'Clear tomorrow',
+        'text_clear_hours' => 'Clear in 4 hours',
+        'text_clear_minutes' => 'Clear in 30 minutes',
+        'text_dont_clear' => 'Don\'t Clear',
+    ],
 
     'side_menu' => [
         'updates' => 'Updates',

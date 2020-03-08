@@ -4,8 +4,10 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\MenuItem;
+use Admin\Classes\UserState;
 use Admin\Models\Locations_model;
 use AdminLocation;
+use Carbon\Carbon;
 use Igniter\Flame\Exception\ApplicationException;
 
 class Menu extends BaseWidget
@@ -259,6 +261,24 @@ class Menu extends BaseWidget
         }
 
         return $this->controller->redirectBack();
+    }
+
+    public function onSetUserStatus()
+    {
+        $status = (int)post('status');
+        $message = (string)post('message');
+        $clearAfterMinutes = (int)post('clear_after');
+
+        if ($status < 1 AND !strlen($message))
+            throw new ApplicationException('Status message is required');
+
+        $stateData['status'] = $status;
+        $stateData['isAway'] = $status !== 1;
+        $stateData['updatedAt'] = Carbon::now();
+        $stateData['awayMessage'] = e($message);
+        $stateData['clearAfterMinutes'] = $clearAfterMinutes;
+
+        UserState::forUser($this->controller->getUser())->updateState($stateData);
     }
 
     /**

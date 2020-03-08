@@ -8,6 +8,7 @@ $staffLocations = AdminLocation::listLocations()->all();
 $staffGroupNames = implode(', ', AdminAuth::staff()->groups->pluck('staff_group_name')->all());
 $staffEditLink = admin_url('staffs/account');
 $logoutLink = admin_url('logout');
+$staffState = \Admin\Classes\UserState::forUser();
 ?>
 <li class="nav-item dropdown">
     <a href="#" class="nav-link" data-toggle="dropdown">
@@ -52,6 +53,15 @@ $logoutLink = admin_url('logout');
                 </form>
             </div>
         <?php } ?>
+        <a
+            class="dropdown-item"
+            data-toggle="modal"
+            data-target="#editStaffStatusModal"
+            role="button"
+        >
+            <i class="fa fa-circle fa-fw text-<?= $staffState->getStatusColorName(); ?>"></i>
+            <?= lang('admin::lang.text_set_status'); ?>
+        </a>
         <a class="dropdown-item" href="<?= $staffEditLink; ?>">
             <i class="fa fa-user fa-fw"></i><?= lang('admin::lang.text_edit_details'); ?>
         </a>
