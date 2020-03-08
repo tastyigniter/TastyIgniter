@@ -63,7 +63,6 @@ class Reservations_model extends Model
         'reserve_time' => 'time',
         'reserve_date' => 'date',
         'notify' => 'boolean',
-        'status_id' => 'integer',
         'duration' => 'integer',
         'processed' => 'boolean',
     ];
@@ -72,14 +71,9 @@ class Reservations_model extends Model
         'belongsTo' => [
             'related_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
             'location' => 'Admin\Models\Locations_model',
-            'status' => ['Admin\Models\Statuses_model'],
-            'assignee' => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
         ],
         'belongsToMany' => [
             'tables' => ['Admin\Models\Tables_model', 'table' => 'reservation_tables'],
-        ],
-        'morphMany' => [
-            'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
         ],
     ];
 

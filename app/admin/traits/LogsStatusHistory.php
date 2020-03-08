@@ -3,84 +3,75 @@
 namespace Admin\Traits;
 
 use Admin\Models\Status_history_model;
-use Exception;
-use Igniter\Flame\Database\Model;
 
 trait LogsStatusHistory
 {
+    public $formWidgetStatusData = [];
+
     public static function bootLogsStatusHistory()
     {
-        self::extend(function (Model $model) {
-            $model->append(['status_name', 'status_color']);
-        });
+        self::extend(function (self $model) {
+            $model->relation['belongsTo']['status'] = ['Admin\Models\Statuses_model'];
+            $model->relation['morphMany']['status_history'] = [
+                'Admin\Models\Status_history_model', 'name' => 'object',
+            ];
 
-        static::saving(function (Model $model) {
-            $model->addStatusHistoryFromAttributes();
+            $model->casts = array_merge($model->casts, [
+                'status_id' => 'integer',
+                'status_updated_at' => 'dateTime',
+            ]);
+
+            $model->append(['status_name', 'status_color']);
         });
     }
 
     public function getStatusNameAttribute()
     {
-        return $this->getRelatedStatusModel()->status_name;
+        return $this->status ? $this->status->status_name : null;
     }
 
     public function getStatusColorAttribute()
     {
-        return $this->getRelatedStatusModel()->status_color;
+        return $this->status ? $this->status->status_color : null;
     }
 
-    public function getRelatedStatusModel()
+    public function getLatestStatusHistory()
     {
-        if (!$this->hasRelation('status')) {
-            throw new Exception(sprintf(
-                "Model '%s' does not contain a relation definition for 'status'.", $this
-            ));
-        }
-
-        if (!$this->status)
-            return $this->makeRelation('status');
-
-        return $this->status;
+        return $this->status_history->first();
     }
 
     public function addStatusHistory($status, array $statusData = [])
     {
         if (!$this->exists OR !$status)
-            return;
-
-        return Status_history_model::addStatusHistory($status, $this, $statusData);
-    }
-
-    /**
-     * Add order status to status history
-     *
-     * @param array $statusData
-     *
-     * @return mixed
-     */
-    protected function addStatusHistoryFromAttributes()
-    {
-        $status = $this->status;
-        $statusData = $this->statusData;
-        unset($this->statusData);
-
-        if (!$statusData OR !is_array($statusData))
-            return;
-
-        if ($this->statusHistoryAlreadyExists($statusData))
-            return;
-
-        return $this->addStatusHistory($status, $statusData);
-    }
-
-    protected function statusHistoryAlreadyExists($statusData)
-    {
-        $newStatusId = $statusData['status_id'];
-        $previousStatusId = $this->getOriginal('status_id');
-
-        if ($previousStatusId != $newStatusId)
             return FALSE;
 
-        return Status_history_model::alreadyExists($this, $newStatusId);
+        $this->status()->associate($status);
+
+        if (!$history = Status_history_model::createHistory($status, $this, $statusData))
+            return FALSE;
+
+        $this->save();
+
+        return $history;
+    }
+
+    public function hasStatus($statusId = null)
+    {
+        if (is_null($statusId))
+            return $this->status_history->isNotEmpty();
+
+        return $this->status_history()->where('status_id', $statusId)->exists();
+    }
+
+    public function scopeWhereStatus($query, $statusId)
+    {
+        return $query->where('status_id', $statusId);
+    }
+
+    public function scopeWhereHasStatusInHistory($query, $statusId)
+    {
+        return $query->whereHas('status_history', function ($q) use ($statusId) {
+            return $q->where('status_id', $statusId);
+        });
     }
 }
