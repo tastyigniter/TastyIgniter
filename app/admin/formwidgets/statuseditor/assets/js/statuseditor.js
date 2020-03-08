@@ -11,23 +11,43 @@
 
     StatusEditor.prototype.constructor = StatusEditor
 
+    StatusEditor.prototype.dispose = function () {
+        this.editorModal.remove()
+        this.editorModal = null
+    }
+
     StatusEditor.prototype.init = function () {
-        this.$el.on('shown.bs.modal', '[data-status-editor]', $.proxy(this.onModalShown, this))
-        this.$el.on('hidden.bs.modal', '[data-status-editor]', $.proxy(this.onModalHidden, this))
+        this.$el.on('click', '[data-editor-control]', $.proxy(this.onControlClick, this))
+        $(document).on('change', '[data-status-value]', $.proxy(this.onStatusChanged, this))
+        $(document).on('change', '[data-assign-group]', $.proxy(this.onAssignGroupChanged, this))
     }
 
-    StatusEditor.prototype.updateStatusField = function (status) {
-        this.$el.find('[data-status-color]').css('color', status.status_color)
-        this.$el.find('[data-status-name]').text(status.status_name)
-        this.$el.find('[data-status-value]').val(status.status_id)
+    StatusEditor.prototype.loadRecordForm = function (event) {
+        var $button = $(event.currentTarget)
+
+        this.editorModal = new $.ti.recordEditor.modal({
+            alias: this.options.alias,
+            recordId: $button.data('editor-control'),
+            onSave: function () {
+                this.hide()
+            }
+        })
     }
 
-    StatusEditor.prototype.updateModalValues = function (status) {
-        if (!this.editorModal)
+    StatusEditor.prototype.propFormFields = function ($form, status) {
+        if (!$form.length)
             return
 
-        this.editorModal.find('[data-status-comment]').html(status.status_comment)
-        this.editorModal.find('[data-status-notify]').each(function () {
+        $form.find('[data-status-value], [data-status-comment], [data-status-notify]').prop('disabled', status)
+        $form.find('[data-assign-group], [data-assign-staff]').prop('disabled', status)
+    }
+
+    StatusEditor.prototype.updateFormFields = function ($form, status) {
+        if (!$form.length)
+            return
+
+        $form.find('[data-status-comment]').html(status.status_comment)
+        $form.find('[data-status-notify]').each(function () {
             if (this.value == status.notify_customer)
                 $(this).trigger('click')
         })
@@ -36,31 +56,51 @@
     // EVENT HANDLERS
     // ============================
 
+    StatusEditor.prototype.onControlClick = function (event) {
+        var control = $(event.currentTarget).data('editor-control')
+
+        switch (control) {
+            case 'load-status':
+            case 'load-assignee':
+                this.loadRecordForm(event)
+                break;
+            case 'load-assigndee':
+                this.loadAssigneeForm(event)
+                break;
+        }
+    }
+
     StatusEditor.prototype.onStatusChanged = function (event) {
-        var value = $(event.target).val()
+        var self = this,
+            $el = $(event.currentTarget),
+            $form = $el.closest('form')
 
-        if (!this.options.data[value])
-            return
-
-        var status = this.options.data[value]
-
-        this.updateStatusField(status)
-        this.updateModalValues(status)
+        self.propFormFields($form, true)
+        $.request(this.options.alias + '::onLoadStatus', {
+            data: {statusId: $el.val()}
+        }).always(function () {
+            self.propFormFields($form, false)
+        }).done(function (json) {
+            self.updateFormFields($form, json)
+        })
     }
 
-    StatusEditor.prototype.onModalShown = function (event) {
-        this.editorModal = $(event.target)
-        this.editorModal.on('change', '[data-status-value]', $.proxy(this.onStatusChanged, this))
-        this.editorModal.find('[data-status-value]').trigger('change')
-    }
+    StatusEditor.prototype.onAssignGroupChanged = function (event) {
+        var self = this,
+            $el = $(event.currentTarget),
+            $form = $el.closest('form')
 
-    StatusEditor.prototype.onModalHidden = function (event) {
-        this.editorModal = $(event.target)
-        this.editorModal.off('change', '[data-status-value]', $.proxy(this.onStatusChanged, this))
+        self.propFormFields($form, true)
+        $.request(this.options.alias + '::onLoadAssigneeList', {
+            data: {groupId: $el.val()}
+        }).always(function () {
+            self.propFormFields($form, false)
+        })
     }
 
     StatusEditor.DEFAULTS = {
         data: {},
+        alias: undefined
     }
 
     // FormTable PLUGIN DEFINITION

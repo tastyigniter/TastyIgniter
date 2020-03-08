@@ -14,12 +14,7 @@ class Reservation extends FormRequest
     public function rules()
     {
         return [
-            ['status_id', 'admin::lang.label_status', 'required|integer|exists:statuses,status_id'],
             ['location_id', 'admin::lang.reservations.text_restaurant', 'sometimes|required|integer'],
-            ['statusData.status_id', 'admin::lang.reservations.label_status', 'required|same:status_id'],
-            ['statusData.comment', 'admin::lang.reservations.label_comment', 'max:1500'],
-            ['statusData.notify', 'admin::lang.reservations.label_notify', 'required|boolean'],
-            ['assignee_id', 'admin::lang.reservations.label_assign_staff', 'required|integer'],
             ['first_name', 'admin::lang.reservations.label_first_name', 'required|between:2,32'],
             ['last_name', 'admin::lang.reservations.label_last_name', 'required|between:2,32'],
             ['email', 'admin::lang.label_email', 'required|email|max:96'],

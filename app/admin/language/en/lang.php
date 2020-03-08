@@ -739,10 +739,8 @@ return [
         'label_order_total' => 'Order Total',
         'label_comment' => 'Order Comment',
         'label_date_modified' => 'Date Modified',
-        'label_notify' => 'Notify Customer',
         'label_user_agent' => 'User Agent',
         'label_ip_address' => 'IP Address',
-        'label_status' => 'Order Status',
         'label_invoice' => 'Invoice',
         'label_assign_staff' => 'Assignee',
         'label_restaurant_name' => 'Name',
@@ -839,11 +837,8 @@ return [
         'label_date_added' => 'Date Added',
         'label_date_modified' => 'Date Modified',
         'label_send_confirmation' => 'Send reservation confirmation',
-        'label_notify' => 'Notify Customer',
-        'label_comment' => 'Comment',
         'label_user_agent' => 'User Agent',
         'label_ip_address' => 'IP Address',
-        'label_status' => 'Reservation Status',
         'label_assign_staff' => 'Assign Staff',
         'label_restaurant_name' => 'Restaurant Name',
         'label_restaurant_address' => 'Restaurant Address',
@@ -854,7 +849,6 @@ return [
         'label_last_name' => 'Last Name',
         'label_customer_telephone' => 'Telephone',
 
-        'help_notify_customer' => 'Set whether to send a status update email to the customer',
         'help_reservation_duration' => 'Stay time in minutes. Leave blank to use the default stay time',
 
         'activity_event_log' => 'updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
@@ -947,11 +941,15 @@ return [
 
     'statuses' => [
         'text_title' => 'Statuses',
+        'text_editor_title' => 'Add %s',
         'text_form_name' => 'Status',
         'text_filter_status' => 'View all status types',
         'text_empty' => 'There are no statuses available.',
         'text_order' => 'Order',
         'text_reservation' => 'Reservation',
+        'text_unassigned' => 'Yet to be Assigned',
+        'text_assigned_to_self' => 'Assigned To Me',
+        'text_assigned_to_others' => 'Assigned To Other Staff',
 
         'column_comment' => 'Status Comment',
         'column_notify' => 'Notify',
@@ -961,10 +959,19 @@ return [
 
         'label_for' => 'Status For',
         'label_color' => 'Color',
-        'label_comment' => 'Comment',
         'label_notify' => 'Email Notification',
+        'label_notify_customer' => 'Notify Customer',
+        'label_comment' => 'Comment',
+
+        'label_assignee_group' => 'Assign To Group',
+        'label_assignee' => 'Assign To Staff',
 
         'help_notify' => 'Set whether an email is sent to the customer after this status is set to the order. This option can be overridden from the order edit page.',
+        'help_notify_customer' => 'Set whether to send a status update email to the customer',
+
+        'help_assignee_group' => 'A notification is sent out to all the staff in the selected group',
+
+        'alert_already_added' => 'The selected %s must be different from the current %s',
     ],
 
     'tables' => [

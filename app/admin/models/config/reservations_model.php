@@ -190,53 +190,10 @@ $config['form']['fields'] = [
         'context' => ['edit', 'preview'],
     ],
     'status_id' => [
-        'label' => 'lang:admin::lang.label_status',
         'type' => 'statuseditor',
-        'span' => 'left',
-        'relationFrom' => 'status',
-        'options' => ['Admin\Models\Statuses_model', 'listStatuses'],
-        'list' => 'status_history_model',
-        'form' => [
-            'fields' => [
-                'status_id' => [
-                    'label' => 'lang:admin::lang.label_status',
-                    'type' => 'select',
-                    'options' => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
-                    'placeholder' => 'lang:admin::lang.text_please_select',
-                    'attributes' => [
-                        'data-status-value' => '',
-                    ],
-                ],
-                'comment' => [
-                    'label' => 'lang:admin::lang.reservations.label_comment',
-                    'type' => 'textarea',
-                    'attributes' => [
-                        'data-status-comment' => '',
-                    ],
-                ],
-                'notify' => [
-                    'label' => 'lang:admin::lang.reservations.label_notify',
-                    'type' => 'radio',
-                    'default' => 1,
-                    'options' => [
-                        'lang:admin::lang.text_no',
-                        'lang:admin::lang.text_yes',
-                    ],
-                    'comment' => 'lang:admin::lang.reservations.help_notify_customer',
-                    'attributes' => [
-                        'data-status-notify' => '',
-                    ],
-                ],
-            ],
-        ],
-    ],
-    'assignee_id' => [
-        'label' => 'lang:admin::lang.reservations.label_assign_staff',
-        'type' => 'relation',
-        'relationFrom' => 'assignee',
-        'nameFrom' => 'staff_name',
         'span' => 'right',
-        'placeholder' => 'lang:admin::lang.text_please_select',
+        'context' => ['edit', 'preview'],
+        'form' => 'reservation_status_model',
     ],
 ];
 

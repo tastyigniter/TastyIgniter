@@ -97,7 +97,6 @@ class Reservations extends \Admin\Classes\AdminController
             },
             'status_history.staff',
             'status_history.status',
-            'status_history.assignee',
         ]);
     }
 }

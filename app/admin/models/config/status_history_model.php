@@ -9,11 +9,6 @@ $config['list']['columns'] = [
         'relation' => 'staff',
         'select' => 'staff_name',
     ],
-    'assignee_name' => [
-        'label' => 'lang:admin::lang.statuses.column_assignee',
-        'relation' => 'assignee',
-        'select' => 'staff_name',
-    ],
     'status' => [
         'label' => 'lang:admin::lang.label_status',
         'relation' => 'status',
