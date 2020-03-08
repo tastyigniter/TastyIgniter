@@ -20,14 +20,9 @@ class Staff_groups_model extends Model
      */
     protected $primaryKey = 'staff_group_id';
 
-    public $casts = [
-        'customer_account_access' => 'boolean',
-        'permissions' => 'serialize',
-    ];
-
     public $relation = [
-        'hasMany' => [
-            'staffs' => ['Admin\Models\Staffs_model', 'foreignKey' => 'staff_group_id', 'otherKey' => 'staff_group_id'],
+        'belongsToMany' => [
+            'staffs' => ['Admin\Models\Staffs_model', 'table' => 'staffs_groups'],
         ],
     ];
 
@@ -38,7 +33,7 @@ class Staff_groups_model extends Model
 
     public function getStaffCountAttribute($value)
     {
-        return Staffs_model::where('staff_group_id', $this->staff_group_id)->count();
+        return $this->staffs->count();
     }
 
     public function getPermissionsAttribute($value)

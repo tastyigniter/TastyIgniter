@@ -1,6 +1,6 @@
 <?php namespace Admin\Controllers;
 
-use AdminAuth;
+use Admin\Facades\AdminAuth;
 use AdminMenu;
 use Auth;
 use Redirect;
@@ -59,7 +59,7 @@ class Customers extends \Admin\Classes\AdminController
 
     public function impersonate($context = null, $id = null)
     {
-        if (!AdminAuth::canImpersonateCustomer()) {
+        if (!AdminAuth::user()->hasPermission('Admin.ImpersonateCustomers')) {
             flash()->warning(lang('admin::lang.customers.alert_login_restricted'));
 
             return $this->redirectBack();

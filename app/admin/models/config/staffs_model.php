@@ -78,10 +78,11 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_email',
         'type' => 'text',
         'searchable' => TRUE,
+        'invisible' => TRUE,
     ],
     'staff_group_name' => [
         'label' => 'lang:admin::lang.staff.column_group',
-        'relation' => 'group',
+        'relation' => 'groups',
         'select' => 'staff_group_name',
     ],
     'staff_role_name' => [
@@ -91,7 +92,7 @@ $config['list']['columns'] = [
     ],
     'location_name' => [
         'label' => 'lang:admin::lang.staff.column_location',
-        'relation' => 'location',
+        'relation' => 'locations',
         'select' => 'location_name',
         'searchable' => TRUE,
     ],
@@ -189,7 +190,6 @@ $config['form']['fields'] = [
         'relationFrom' => 'groups',
         'nameFrom' => 'staff_group_name',
         'comment' => 'lang:admin::lang.staff.help_groups',
-        'placeholder' => 'lang:admin::lang.text_please_select',
     ],
     'user[super_user]' => [
         'label' => 'lang:admin::lang.staff.label_super_staff',

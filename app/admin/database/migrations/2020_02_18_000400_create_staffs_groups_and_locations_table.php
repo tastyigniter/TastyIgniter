@@ -12,6 +12,13 @@ class createStaffsGroupsAndLocationsTable extends Migration
 {
     public function up()
     {
+        Schema::create('staffs_groups', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->integer('staff_id')->unsigned();
+            $table->integer('staff_group_id')->unsigned();
+            $table->primary(['staff_id', 'staff_group_id'], 'staff_group');
+        });
+
         Schema::create('staffs_locations', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('staff_id')->unsigned();
@@ -20,6 +27,13 @@ class createStaffsGroupsAndLocationsTable extends Migration
         });
 
         DB::table('staffs')->get()->each(function ($model) {
+            if (!empty($model->staff_group_id)) {
+                DB::table('staffs_groups')->insert([
+                    'staff_id' => $model->staff_id,
+                    'staff_group_id' => $model->staff_group_id,
+                ]);
+            }
+
             if (!empty($model->staff_location_id)) {
                 DB::table('staffs_locations')->insert([
                     'staff_id' => $model->staff_id,
@@ -31,5 +45,7 @@ class createStaffsGroupsAndLocationsTable extends Migration
 
     public function down()
     {
+        Schema::dropIfExists('staffs_groups');
+        Schema::dropIfExists('staffs_locations');
     }
 }

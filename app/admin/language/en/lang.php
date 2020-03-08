@@ -130,8 +130,9 @@ return [
         'user' => 'Users',
         'customer' => 'Customers',
         'staff' => 'Staff',
-        'customer_group' => 'Customer Groups',
-        'staff_group' => 'Staff Groups',
+        'customer_group' => 'Groups',
+        'staff_group' => 'Groups',
+        'staff_role' => 'Roles',
         'activities' => 'Activities',
         'restaurant' => 'Restaurant',
         'location' => 'Locations',
@@ -759,6 +760,7 @@ return [
         'coupons' => 'Create, edit and delete coupons',
         'customer_groups' => 'Manage customer groups',
         'customers' => 'Create, edit and delete customers',
+        'impersonate_customers' => 'Ability to impersonate customers',
         'locations' => 'Create, edit and delete locations',
         'menus' => 'Create, edit and delete menu items',
         'orders' => 'Manage orders',
@@ -870,19 +872,9 @@ return [
     'staff_groups' => [
         'text_title' => 'Staff Groups',
         'text_form_name' => 'Staff Group',
-        'text_tab_permission' => 'Permissions',
         'text_empty' => 'There are no staff groups available.',
-        'text_allow' => 'Allow',
 
         'column_users' => '# Users',
-        'column_access' => 'Access',
-        'column_manage' => 'Manage',
-        'column_add' => 'Add',
-        'column_delete' => 'Delete',
-
-        'label_customer_account_access' => 'Impersonate Customer',
-
-        'help_customer_account_access' => 'Enabling means staff in this group can login to any customer account. The staff must be logged in as admin.',
     ],
 
     'staff_roles' => [
@@ -915,7 +907,7 @@ return [
         'label_role' => 'Role',
         'label_group' => 'Groups',
         'label_language' => 'Language',
-        'label_location' => 'Location',
+        'label_location' => 'Locations',
 
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
         'help_role' => 'Roles define staff permissions, which can be overridden on the user level, on the Permissions tab.',

@@ -1,11 +1,11 @@
 <?php
 $staffName = AdminAuth::getStaffName();
 $staffEmail = AdminAuth::getStaffEmail();
-$staffGroupName = AdminAuth::getStaffGroupName();
 $staffLocationId = AdminLocation::getId();
 $isSingleMode = AdminLocation::isSingleMode();
 $staffAvatar = md5(strtolower(trim($staffEmail)));
 $staffLocations = AdminLocation::listLocations()->all();
+$staffGroupNames = implode(', ', AdminAuth::staff()->groups->pluck('staff_group_name')->all());
 $staffEditLink = admin_url('staffs/edit/'.AdminAuth::staff()->getKey());
 $logoutLink = admin_url('logout');
 ?>
@@ -23,7 +23,7 @@ $logoutLink = admin_url('logout');
             </div>
             <div class="pb-3 text-center">
                 <div class="text-uppercase"><?= $staffName; ?></div>
-                <div class="text-muted"><?= $staffGroupName; ?></div>
+                <div class="text-muted"><?= $staffGroupNames; ?></div>
             </div>
         </div>
         <?php if (!$isSingleMode) { ?>

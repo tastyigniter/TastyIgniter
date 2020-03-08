@@ -150,6 +150,9 @@ class IgniterInstall extends Command
         $staff->staff_status = TRUE;
         $staff->save();
 
+        $staff->groups()->attach(\Admin\Models\Staff_groups_model::first()->staff_group_id);
+        $staff->locations()->attach(\Admin\Models\Locations_model::first()->location_id);
+
         $user = \Admin\Models\Users_model::firstOrNew(['username' => $username]);
         $user->staff_id = $staff->staff_id;
         $user->password = $password;

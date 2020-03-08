@@ -37,10 +37,14 @@ $config['list']['columns'] = [
         'type' => 'text',
         'searchable' => TRUE,
     ],
+    'description' => [
+        'label' => 'lang:admin::lang.label_description',
+        'type' => 'text',
+        'searchable' => TRUE,
+    ],
     'staff_count' => [
         'label' => 'lang:admin::lang.staff_groups.column_users',
-        'type' => 'number',
-        'searchable' => TRUE,
+        'type' => 'text',
         'sortable' => FALSE,
     ],
     'staff_group_id' => [
@@ -87,17 +91,9 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
-    'customer_account_access' => [
-        'label' => 'lang:admin::lang.staff_groups.label_customer_account_access',
-        'type' => 'switch',
-        'comment' => 'lang:admin::lang.staff_groups.help_customer_account_access',
-    ],
-    'permission' => [
-        'label' => 'lang:admin::lang.staff_groups.text_tab_permission',
-        'type' => 'section',
-    ],
-    'permissions' => [
-        'type' => 'permissioneditor',
+    'description' => [
+        'label' => 'lang:admin::lang.label_description',
+        'type' => 'textarea',
     ],
 ];
 

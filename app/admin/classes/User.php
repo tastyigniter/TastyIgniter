@@ -12,8 +12,6 @@ class User extends Manager
 
     protected $model = 'Admin\Models\Users_model';
 
-    protected $groupModel = 'Admin\Models\Staff_groups_model';
-
     protected $identifier = 'username';
 
     protected $isSuperUser = FALSE;
@@ -28,25 +26,12 @@ class User extends Manager
         return $this->user()->isSuperUser();
     }
 
-    public function canImpersonateCustomer()
-    {
-        return $this->isSuperUser() OR $this->staffGroup()->customer_account_access;
-    }
-
     /**
      * @return \Admin\Models\Staffs_model
      */
     public function staff()
     {
         return $this->user()->staff;
-    }
-
-    /**
-     * @return \Admin\Models\Staff_groups_model
-     */
-    public function staffGroup()
-    {
-        return $this->staff()->group;
     }
 
     /**
@@ -63,7 +48,7 @@ class User extends Manager
 
     public function extendUserQuery($query)
     {
-        $query->with(['staff', 'staff.group', 'staff.locations']);
+        $query->with(['staff', 'staff.role', 'staff.groups', 'staff.locations']);
     }
 
     //
@@ -93,15 +78,5 @@ class User extends Manager
     public function getStaffEmail()
     {
         return $this->staff()->staff_email;
-    }
-
-    public function getStaffGroupId()
-    {
-        return $this->staffGroup()->staff_group_id;
-    }
-
-    public function getStaffGroupName()
-    {
-        return $this->staffGroup()->staff_group_name;
     }
 }
