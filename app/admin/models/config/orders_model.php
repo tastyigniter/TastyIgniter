@@ -91,17 +91,26 @@ $config['list']['columns'] = [
         'select' => "concat(first_name, ' ', last_name)",
         'searchable' => TRUE,
     ],
+    'order_type_name' => [
+        'label' => 'lang:admin::lang.label_type',
+        'type' => 'text',
+        'sortable' => FALSE,
+    ],
+    'order_time' => [
+        'label' => 'lang:admin::lang.orders.column_time',
+        'type' => 'time',
+    ],
+    'order_date' => [
+        'label' => 'lang:admin::lang.orders.column_date',
+        'type' => 'date',
+        'searchable' => TRUE,
+    ],
     'status_name' => [
         'label' => 'lang:admin::lang.label_status',
         'relation' => 'status',
         'select' => 'status_name',
         'type' => 'partial',
         'path' => 'orders/status_column',
-    ],
-    'order_type_name' => [
-        'label' => 'lang:admin::lang.label_type',
-        'type' => 'text',
-        'sortable' => FALSE,
     ],
     'payment' => [
         'label' => 'lang:admin::lang.orders.column_payment',
@@ -121,15 +130,6 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.orders.column_total',
         'type' => 'currency',
     ],
-    'order_time' => [
-        'label' => 'lang:admin::lang.orders.column_time',
-        'type' => 'time',
-    ],
-    'order_date' => [
-        'label' => 'lang:admin::lang.orders.column_date',
-        'type' => 'date',
-        'searchable' => TRUE,
-    ],
     'date_added' => [
         'label' => 'lang:admin::lang.orders.column_date_added',
         'type' => 'datesince',
@@ -144,6 +144,7 @@ $config['form']['toolbar'] = [
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
+            'context' => ['create'],
         ],
         'saveClose' => [
             'label' => 'lang:admin::lang.button_save_close',
@@ -151,6 +152,7 @@ $config['form']['toolbar'] = [
             'data-request' => 'onSave',
             'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
+            'context' => ['create'],
         ],
         'delete' => [
             'label' => 'lang:admin::lang.button_icon_delete',
@@ -165,36 +167,11 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'order_id' => [
-        'label' => 'lang:admin::lang.orders.label_order_id',
-        'type' => 'addon',
+    '_info' => [
+        'type' => 'partial',
         'disabled' => TRUE,
+        'path' => 'orders/form/info',
         'span' => 'left',
-        'cssClass' => 'flex-width',
-        'context' => ['edit', 'preview'],
-    ],
-    'order_type_name' => [
-        'label' => 'lang:admin::lang.orders.label_order_type',
-        'type' => 'text',
-        'span' => 'left',
-        'cssClass' => 'flex-width',
-        'disabled' => TRUE,
-        'context' => ['edit', 'preview'],
-    ],
-    'order_total' => [
-        'label' => 'lang:admin::lang.orders.label_order_total',
-        'type' => 'currency',
-        'disabled' => TRUE,
-        'span' => 'right',
-        'cssClass' => 'flex-width',
-        'context' => ['edit', 'preview'],
-    ],
-    'total_items' => [
-        'label' => 'lang:admin::lang.orders.label_total_items',
-        'type' => 'number',
-        'span' => 'right',
-        'cssClass' => 'flex-width',
-        'disabled' => TRUE,
         'context' => ['edit', 'preview'],
     ],
     'status_id' => [
@@ -249,18 +226,19 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::lang.orders.text_tab_general',
     'fields' => [
+        'order_type_name' => [
+            'label' => 'lang:admin::lang.orders.label_order_type',
+            'type' => 'text',
+            'span' => 'left',
+            'disabled' => TRUE,
+            'context' => ['edit', 'preview'],
+        ],
         'location[location_name]' => [
             'label' => 'lang:admin::lang.orders.text_restaurant',
             'type' => 'text',
             'disabled' => TRUE,
-            'span' => 'left',
-            'placeholder' => 'lang:admin::lang.text_please_select',
-        ],
-        'customer_name' => [
-            'label' => 'lang:admin::lang.orders.label_customer_name',
-            'type' => 'text',
-            'disabled' => TRUE,
             'span' => 'right',
+            'placeholder' => 'lang:admin::lang.text_please_select',
         ],
         'order_date' => [
             'label' => 'lang:admin::lang.orders.label_order_date',
@@ -278,12 +256,11 @@ $config['form']['tabs'] = [
             'span' => 'left',
             'cssClass' => 'flex-width',
         ],
-        'email' => [
-            'label' => 'lang:admin::lang.label_email',
+        'customer_name' => [
+            'label' => 'lang:admin::lang.orders.label_customer_name',
             'type' => 'text',
             'disabled' => TRUE,
             'span' => 'right',
-            'context' => ['edit', 'preview'],
         ],
         'delivery_address' => [
             'label' => 'lang:admin::lang.orders.label_delivery_address',
@@ -358,20 +335,14 @@ $config['form']['tabs'] = [
         'order_menus' => [
             'tab' => 'lang:admin::lang.orders.text_tab_menu',
             'type' => 'partial',
-            'path' => 'orders/order_menus',
+            'path' => 'orders/form/order_menus',
         ],
         'status_history' => [
             'tab' => 'lang:admin::lang.orders.text_status_history',
             'type' => 'datatable',
             'columns' => [
-                'date_added' => [
+                'date_added_since' => [
                     'title' => 'lang:admin::lang.orders.column_time_date',
-                ],
-                'staff_name' => [
-                    'title' => 'lang:admin::lang.orders.column_staff',
-                ],
-                'assignee_name' => [
-                    'title' => 'lang:admin::lang.orders.column_assignee',
                 ],
                 'status_name' => [
                     'title' => 'lang:admin::lang.label_status',
@@ -381,6 +352,9 @@ $config['form']['tabs'] = [
                 ],
                 'notified' => [
                     'title' => 'lang:admin::lang.orders.column_notify',
+                ],
+                'staff_name' => [
+                    'title' => 'lang:admin::lang.orders.column_staff',
                 ],
             ],
         ],

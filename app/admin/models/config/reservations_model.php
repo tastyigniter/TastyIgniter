@@ -165,18 +165,11 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'reservation_id' => [
-        'label' => 'lang:admin::lang.reservations.label_reservation_id',
-        'type' => 'text',
+    '_info' => [
+        'type' => 'partial',
+        'disabled' => TRUE,
+        'path' => 'reservations/form/info',
         'span' => 'left',
-        'disabled' => TRUE,
-        'context' => ['edit', 'preview'],
-    ],
-    'table_name' => [
-        'label' => 'lang:admin::lang.reservations.label_table_name',
-        'type' => 'text',
-        'span' => 'right',
-        'disabled' => TRUE,
         'context' => ['edit', 'preview'],
     ],
     'status_id' => [
@@ -339,15 +332,10 @@ $config['form']['tabs'] = [
         'status_history' => [
             'tab' => 'lang:admin::lang.reservations.text_status_history',
             'type' => 'datatable',
+            'context' => ['edit', 'preview'],
             'columns' => [
-                'date_added' => [
+                'date_added_since' => [
                     'title' => 'lang:admin::lang.reservations.column_date_time',
-                ],
-                'staff_name' => [
-                    'title' => 'lang:admin::lang.reservations.column_staff',
-                ],
-                'assignee_name' => [
-                    'title' => 'lang:admin::lang.reservations.column_assignee',
                 ],
                 'status_name' => [
                     'title' => 'lang:admin::lang.label_status',
@@ -357,6 +345,9 @@ $config['form']['tabs'] = [
                 ],
                 'notified' => [
                     'title' => 'lang:admin::lang.reservations.column_notify',
+                ],
+                'staff_name' => [
+                    'title' => 'lang:admin::lang.reservations.column_staff',
                 ],
             ],
         ],
