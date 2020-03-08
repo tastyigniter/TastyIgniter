@@ -62,7 +62,7 @@ $config['list']['columns'] = [
     ],
     'date_updated' => [
         'label' => 'lang:admin::lang.payments.column_date_updated',
-        'type' => 'datesince',
+        'type' => 'timetense',
     ],
     'payment_id' => [
         'label' => 'lang:admin::lang.column_id',

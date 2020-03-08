@@ -1,6 +1,5 @@
 <?php
-$config['list']['filter']
-    = [
+$config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.customers.text_filter_search',
         'mode' => 'all' // or any, exact
@@ -85,7 +84,7 @@ $config['list']['columns'] = [
     ],
     'date_added' => [
         'label' => 'lang:admin::lang.customers.column_date_added',
-        'type' => 'datesince',
+        'type' => 'timetense',
     ],
     'status' => [
         'label' => 'lang:admin::lang.label_status',

@@ -49,13 +49,11 @@ $config['list']['columns'] = [
     ],
     'date_updated' => [
         'label' => 'lang:system::lang.mail_templates.column_date_updated',
-        'type' => 'datesince',
-        'searchable' => TRUE,
+        'type' => 'timetense',
     ],
     'date_added' => [
         'label' => 'lang:system::lang.mail_templates.column_date_added',
-        'type' => 'datesince',
-        'searchable' => TRUE,
+        'type' => 'timetense',
     ],
     'template_id' => [
         'label' => 'lang:admin::lang.column_id',

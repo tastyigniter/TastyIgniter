@@ -222,43 +222,9 @@ if (!function_exists('time_elapsed')) {
      *
      * @return string
      */
-    function time_elapsed($datetime, $full = null)
+    function time_elapsed($datetime)
     {
-        $now = new DateTime;
-        $ago = new DateTime($datetime);
-        $diff = $now->diff($ago);
-
-        $diff->w = floor($diff->d / 7);
-        $diff->d -= $diff->w * 7;
-
-        $string = [
-            'y' => 'year',
-            'm' => 'month',
-            'w' => 'week',
-            'd' => 'day',
-            'h' => 'hour',
-            'i' => 'minute',
-            's' => 'second',
-        ];
-
-        foreach ($string as $key => &$value) {
-            if ($diff->$key) {
-                $value = $diff->$key.' '.$value.($diff->$key > 1 ? 's' : '');
-            }
-            else {
-                unset($string[$key]);
-            }
-        }
-
-        if (!empty($full)) {
-            $intersect = array_intersect_key($string, array_flip($full));
-            $string = (empty($intersect)) ? $string : $intersect;
-        }
-        else {
-            $string = array_slice($string, 0, 1);
-        }
-
-        return $string ? implode(', ', $string).' ago' : 'just now';
+        return make_carbon($datetime)->diffForHumans();
     }
 }
 
@@ -272,22 +238,23 @@ if (!function_exists('day_elapsed')) {
      *
      * @return string
      */
-    function day_elapsed($datetime)
+    function day_elapsed($datetime, $full = TRUE)
     {
-        $datetime = strtotime($datetime);
+        $datetime = make_carbon($datetime);
+        $time = $datetime->format('H:i');
+        $date = $datetime->format('j M Y');
 
-        if (mdate('%d %M', $datetime) === mdate('%d %M', time())) {
-            return 'Today';
+        if ($datetime->isToday()) {
+            $date = 'Today';
         }
-        else if (mdate('%d %M', $datetime) === mdate('%d %M', strtotime('yesterday'))) {
-            return 'Yesterday';
+        elseif ($datetime->isYesterday()) {
+            $date = 'Yesterday';
+        }
+        elseif ($datetime->isTomorrow()) {
+            $date = 'Tomorrow';
         }
 
-        if (mdate('%Y', $datetime) === mdate('%Y', time())) {
-            return mdate('%d %M %y', $datetime);
-        }
-
-        return mdate('%d %M %y', $datetime);
+        return $full ? $date.' at '.$time : $date;
     }
 }
 
@@ -326,6 +293,26 @@ if (!function_exists('time_range')) {
         $times[] = mdate($time_format, $start_time);
 
         return $times;
+    }
+}
+
+if (!function_exists('parse_date_format')) {
+    /**
+     * @param string $format The time format
+     *
+     * @return string $format The date format
+     */
+    function parse_date_format($format)
+    {
+        if (str_contains($format, '%')) {
+            $format = str_replace(
+                '%\\',
+                '',
+                preg_replace('/([a-z]+?){1}/i', '\\\\\\1', $format)
+            );
+        }
+
+        return $format;
     }
 }
 

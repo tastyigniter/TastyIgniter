@@ -57,12 +57,12 @@ $config['list']['columns'] = [
     ],
     'date_updated' => [
         'label' => 'lang:system::lang.mail_templates.column_date_updated',
-        'type' => 'datesince',
+        'type' => 'timetense',
         'searchable' => TRUE,
     ],
     'date_added' => [
         'label' => 'lang:system::lang.mail_templates.column_date_added',
-        'type' => 'datesince',
+        'type' => 'timetense',
         'searchable' => TRUE,
     ],
     'template_data_id' => [

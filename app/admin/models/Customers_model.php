@@ -82,11 +82,6 @@ class Customers_model extends AuthUserModel
         return strtolower($value);
     }
 
-    public function getDateAddedAttribute($value)
-    {
-        return day_elapsed($value);
-    }
-
     //
     // Scopes
     //

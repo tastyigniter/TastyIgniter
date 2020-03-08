@@ -100,7 +100,7 @@ $config['list']['columns'] = [
     ],
     'date_added' => [
         'label' => 'lang:admin::lang.reviews.column_date_added',
-        'type' => 'datesince',
+        'type' => 'timetense',
     ],
     'review_id' => [
         'label' => 'lang:admin::lang.column_id',

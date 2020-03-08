@@ -158,7 +158,7 @@ $config['list']['columns'] = [
     ],
     'date_added' => [
         'label' => 'lang:admin::lang.orders.column_date_added',
-        'type' => 'datesince',
+        'type' => 'timesince',
         'invisible' => TRUE,
     ],
 ];

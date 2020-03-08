@@ -1,7 +1,7 @@
 <?php if (count($records)) {
 
     $groupedRecords = $records->groupBy(function ($item) {
-        return day_elapsed($item->date_added);
+        return day_elapsed($item->date_added, false);
     });
     ?>
     <ul class="timeline">

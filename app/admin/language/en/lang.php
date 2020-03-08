@@ -175,6 +175,7 @@ return [
         'missing_model' => 'List action used in %s does not have a model defined.',
         'missing_definitions' => 'List action used in %s does not have definitions.',
         'missing_column' => 'Missing columns in List definitions %s',
+        'invalid_column_datetime' => 'Column value \'%s\' is not a DateTime object, are you missing a $dates reference in the Model?',
         'delete_empty' => 'Nothing selected to delete.',
         'text_empty' => 'Nothing found.',
         'text_setup' => 'Setup',

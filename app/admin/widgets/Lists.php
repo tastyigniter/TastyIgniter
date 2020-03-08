@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use Html;
+use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -757,11 +758,12 @@ class Lists extends BaseWidget
             return null;
         }
 
-        $timestamp = $this->validateDateTimeValue($value, $column);
+        $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format !== null ? $column->format : setting('date_format').' '.setting('time_format');
+        $format = $column->format ?? setting('date_format').' '.setting('time_format');
+        $format = parse_date_format($format);
 
-        return mdate($format, $timestamp);
+        return $dateTime->format($format);
     }
 
     /**
@@ -773,11 +775,12 @@ class Lists extends BaseWidget
             return null;
         }
 
-        $timestamp = $this->validateDateTimeValue($value, $column);
+        $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format !== null ? $column->format : setting('time_format');
+        $format = $column->format ?? setting('time_format');
+        $format = parse_date_format($format);
 
-        return mdate($format, $timestamp);
+        return $dateTime->format($format);
     }
 
     /**
@@ -789,11 +792,14 @@ class Lists extends BaseWidget
             return null;
         }
 
-        $timestamp = $this->validateDateTimeValue($value, $column);
+        $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format !== null ? $column->format : setting('date_format');
+        $format = $column->format ?? setting('date_format');
+        $format = parse_date_format($format);
 
-        return mdate($format, $timestamp);
+        return $format
+            ? $dateTime->format($format)
+            : $dateTime->toDayDateTimeString($format);
     }
 
     /**
@@ -805,11 +811,9 @@ class Lists extends BaseWidget
             return null;
         }
 
-        $timestamp = $this->validateDateTimeValue($value, $column);
+        $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $value = mdate('%d-%m-%Y %H:%i:%s', $timestamp);
-
-        return time_elapsed($value);
+        return $dateTime->diffForHumans();
     }
 
     /**
@@ -821,11 +825,22 @@ class Lists extends BaseWidget
             return null;
         }
 
-        $timestamp = $this->validateDateTimeValue($value, $column);
+        $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $value = mdate('%d-%m-%Y %H:%i:%s', $timestamp);
+        return day_elapsed($dateTime, FALSE);
+    }
 
-        return day_elapsed($value);
+    /**
+     * Process as time as current tense (Today at 0:00)
+     */
+    protected function evalTimetenseTypeValue($record, $column, $value)
+    {
+        if ($value === null) {
+            return null;
+        }
+        $dateTime = $this->validateDateTimeValue($value, $column);
+
+        return day_elapsed($dateTime);
     }
 
     /**
@@ -841,11 +856,13 @@ class Lists extends BaseWidget
      */
     protected function validateDateTimeValue($value, $column)
     {
-        if (!is_numeric($value))
-            return strtotime($value);
+        $value = make_carbon($value);
 
-        if ($value instanceof Carbon)
-            $value = $value->getTimestamp();
+        if (!$value instanceof Carbon) {
+            throw new ApplicationException(sprintf(
+                lang('admin::lang.list.invalid_column_datetime'), $column->columnName
+            ));
+        }
 
         return $value;
     }
