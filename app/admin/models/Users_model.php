@@ -47,8 +47,9 @@ class Users_model extends AuthUserModel
 
     public function beforeLogin()
     {
-        if ($language = $this->staff->language)
-            app('translator.localization')->setSessionLocale($language->code);
+        app('translator.localization')->setSessionLocale(
+            optional($this->staff->language)->code ?? setting('default_language')
+        );
     }
 
     public function afterLogin()
