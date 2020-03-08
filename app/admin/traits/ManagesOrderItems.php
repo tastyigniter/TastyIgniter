@@ -14,7 +14,7 @@ trait ManagesOrderItems
 {
     public static function bootManagesOrderItems()
     {
-        Event::listen('admin.order.beforePaymentProcessed', function ($model) {
+        Event::listen('admin.order.beforePaymentProcessed', function (self $model) {
             $model->handleOnBeforePaymentProcessed();
         });
     }

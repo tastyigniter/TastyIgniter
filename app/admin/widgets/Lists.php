@@ -677,7 +677,7 @@ class Lists extends BaseWidget
                 $value = null;
             }
             elseif ($this->isColumnRelated($column, TRUE)) {
-                $value = implode(', ', $record->{$columnName}->lists($column->valueFrom));
+                $value = implode(', ', $record->{$columnName}->pluck($column->valueFrom)->all());
             }
             elseif ($this->isColumnRelated($column) OR $this->isColumnPivot($column)) {
                 $value = $record->{$columnName} ? $record->{$columnName}->{$column->valueFrom} : null;

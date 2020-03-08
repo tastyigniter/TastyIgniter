@@ -137,6 +137,48 @@ $config['form']['fields'] = [
             'condition' => 'checked',
         ],
     ],
+    'auto_assign' => [
+        'label' => 'lang:admin::lang.staff_groups.label_auto_assign',
+        'type' => 'switch',
+        'comment' => 'lang:admin::lang.staff_groups.help_auto_assign',
+    ],
+    'auto_assign_mode' => [
+        'label' => 'lang:admin::lang.staff_groups.label_assignment_mode',
+        'type' => 'radiolist',
+        'span' => 'left',
+        'default' => 1,
+        'options' => [
+            1 => ['admin::lang.staff_groups.text_round_robin', 'admin::lang.staff_groups.help_round_robin'],
+            2 => ['admin::lang.staff_groups.text_load_balanced', 'admin::lang.staff_groups.help_load_balanced'],
+        ],
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'auto_assign',
+            'condition' => 'checked',
+        ],
+    ],
+    'auto_assign_limit' => [
+        'label' => 'lang:admin::lang.staff_groups.label_load_balanced_limit',
+        'type' => 'number',
+        'default' => 20,
+        'comment' => 'lang:admin::lang.staff_groups.help_load_balanced_limit',
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'auto_assign',
+            'condition' => 'checked',
+        ],
+    ],
+    'auto_assign_availability' => [
+        'label' => 'lang:admin::lang.staff_groups.label_assignment_availability',
+        'type' => 'switch',
+        'default' => TRUE,
+        'comment' => 'lang:admin::lang.staff_groups.help_assignment_availability',
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'auto_assign',
+            'condition' => 'checked',
+        ],
+    ],
 ];
 
 return $config;

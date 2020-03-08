@@ -46,7 +46,9 @@ return [
     'text_empty' => 'Empty',
     'text_help' => 'Click for Help',
     'text_no_title' => 'No Title',
+    'text_allow' => 'Allow',
 
+    'label_code' => 'Code',
     'label_name' => 'Name',
     'label_type' => 'Type',
     'label_email' => 'Email',
@@ -372,7 +374,7 @@ return [
         'text_progress_email' => 'Send test email',
         'text_progress_count' => '60%',
         'text_progress_summary' => 'Follow these steps to get your restaurant up &amp; running. ',
-        'text_initial_progress' => '<b>Initial Setup</b> - Set your prefered general settings, such as restuarant name and email.',
+        'text_initial_progress' => '<b>Initial Setup</b> - Set your preferred general settings, such as restaurant name and email.',
         'text_settings_progress' => '<b>Your restaurant settings</b> - Let your customers know your restaurant opening times, delivery hours, preparation time and where its located.',
         'text_menus_progress' => '<b>Add Menus</b> - Add your menu using our simple editor. Display multiple menus like delivery &amp; eat-in, includes sizes and meal options',
         'text_design_progress' => '<b>Design your website background</b> - Upload your own or choose a background image for your website from our gallery.',
@@ -892,7 +894,6 @@ return [
         'text_title' => 'Staff Groups',
         'text_form_name' => 'Staff Group',
         'text_empty' => 'There are no staff groups available.',
-        'text_allow' => 'Allow',
         'text_round_robin' => 'Round Robin',
         'text_load_balanced' => 'Load Balanced',
 
@@ -908,6 +909,15 @@ return [
         'help_load_balanced' => 'Limit the number of orders a staff can handle simultaneously.',
         'help_load_balanced_limit' => 'Maximum number of orders per staff.',
         'help_assignment_availability' => 'Allow staff to control their availability for automatic order assignment',
+    ],
+
+    'staff_roles' => [
+        'text_title' => 'Staff Roles',
+        'text_form_name' => 'Staff Roles',
+        'text_tab_permission' => 'Permissions',
+        'text_empty' => 'There are no staff roles available.',
+
+        'label_permissions' => 'Permissions',
     ],
 
     'staff' => [

@@ -20,6 +20,9 @@ class Location extends Manager
         if (!is_null($this->model))
             return $this->model;
 
+        if (!$this->getAuth()->isLogged())
+            return null;
+
         $model = null;
         if ($this->isSingleMode()) {
             $model = $this->getById(params('default_location_id'));

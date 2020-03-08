@@ -952,7 +952,7 @@
       display: inline-block; } }
 
 .page-wrapper {
-  padding: 0 15px 15px;
+  padding: 15px 15px;
   overflow-y: auto;
   position: absolute;
   top: 62px;
@@ -1404,11 +1404,10 @@ body.dragging {
   .page-title {
     display: none; } }
 
-.toolbar {
-  padding: 20px 0; }
-  .toolbar .toolbar-action {
-    clear: both;
-    width: 100%; }
+.toolbar .toolbar-action {
+  clear: both;
+  width: 100%;
+  padding-bottom: 20px; }
 
 .toolbar-action .btn-group:not(:last-child) {
   margin-right: 8px; }

@@ -62,9 +62,14 @@ class Settings extends \Admin\Classes\AdminController
 
     public function edit($context, $settingCode = null)
     {
+        if ($settingCode == 'setup') {
+            $this->addJs('~/app/admin/formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
+            $this->addJs('~/app/admin/assets/js/ratings.js', 'ratings-js');
+        }
+
         try {
             $this->settingCode = $settingCode;
-            list($model, $definition) = $this->findSettingDefinitions($settingCode);
+            [$model, $definition] = $this->findSettingDefinitions($settingCode);
             if (!$definition) {
                 throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
             }
@@ -78,10 +83,6 @@ class Settings extends \Admin\Classes\AdminController
             $this->validateSettingItems();
             if ($errors = array_get($this->settingItemErrors, $settingCode))
                 Session::flash('errors', $errors);
-
-            if ($settingCode == 'setup')
-                $this->addJs('~/app/admin/formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
-            $this->addJs('~/app/admin/assets/js/ratings.js', 'ratings-js');
         }
         catch (Exception $ex) {
             $this->handleError($ex);
@@ -90,7 +91,7 @@ class Settings extends \Admin\Classes\AdminController
 
     public function edit_onSave($context, $settingCode = null)
     {
-        list($model, $definition) = $this->findSettingDefinitions($settingCode);
+        [$model, $definition] = $this->findSettingDefinitions($settingCode);
         if (!$definition) {
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
@@ -118,7 +119,7 @@ class Settings extends \Admin\Classes\AdminController
 
     public function edit_onTestMail()
     {
-        list($model, $definition) = $this->findSettingDefinitions('mail');
+        [$model, $definition] = $this->findSettingDefinitions('mail');
         if (!$definition) {
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
@@ -211,17 +212,17 @@ class Settings extends \Admin\Classes\AdminController
 
         if ($skipSession OR !$settingItemErrors) {
             $model = $this->createModel();
-            $settingGroup = $model->listSettingItems();
+            $settingItems = array_get($model->listSettingItems(), 'core');
             $settingValues = array_undot($model->getFieldValues());
 
-            foreach (array_get($settingGroup, 'core') as $listSettingItem) {
-                if (!isset($listSettingItem->form['rules']))
+            foreach ($settingItems as $settingItem) {
+                if (!isset($settingItem->form['rules']))
                     continue;
 
-                $validator = $this->makeValidator($settingValues, $listSettingItem->form['rules']);
+                $validator = $this->makeValidator($settingValues, $settingItem->form['rules']);
                 $errors = $validator->fails() ? $validator->errors() : [];
 
-                $settingItemErrors[$listSettingItem->code] = $errors;
+                $settingItemErrors[$settingItem->code] = $errors;
             }
 
             Session::put('settings.errors', $settingItemErrors);

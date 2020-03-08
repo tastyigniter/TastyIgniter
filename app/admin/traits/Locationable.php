@@ -30,9 +30,6 @@ trait Locationable
     {
         static::saving(function (Model $model) {
             $model->purgeLocationableAttributes();
-        });
-
-        static::saving(function (Model $model) {
             $model->setLocationableAttributes();
         });
 

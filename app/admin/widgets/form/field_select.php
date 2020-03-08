@@ -2,7 +2,8 @@
 $fieldOptions = $field->options();
 $useSearch = $field->getConfig('showSearch', FALSE);
 $multiOption = $field->getConfig('multiOption', FALSE);
-$fieldValue = !is_array($field->value) ? [$field->value] : $field->value;
+$fieldValue = is_null($field->value) ? [] : $field->value;
+$fieldValue = !is_array($fieldValue) ? [$fieldValue] : $fieldValue;
 ?>
 <?php if ($this->previewMode) { ?>
     <div
