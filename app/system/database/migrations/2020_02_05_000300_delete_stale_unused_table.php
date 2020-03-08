@@ -10,7 +10,7 @@ class deleteStaleUnusedTable extends Migration
         Schema::dropIfExists('layout_modules');
         Schema::dropIfExists('layout_routes');
         Schema::dropIfExists('layouts');
-        Schema::dropIfExists('permalink');
+        Schema::dropIfExists('permalinks');
         Schema::dropIfExists('permissions');
         Schema::dropIfExists('pp_payments');
         Schema::dropIfExists('security_questions');
