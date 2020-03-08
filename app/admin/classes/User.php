@@ -8,11 +8,9 @@ use Igniter\Flame\Auth\Manager;
  */
 class User extends Manager
 {
-    protected $sessionKey = 'admin_info';
+    protected $sessionKey = 'admin_auth';
 
     protected $model = 'Admin\Models\Users_model';
-
-    protected $identifier = 'username';
 
     protected $isSuperUser = FALSE;
 

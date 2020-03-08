@@ -1,7 +1,5 @@
 <?php namespace Main\Classes;
 
-use Session;
-
 /**
  * Customer Class
  *
@@ -9,11 +7,9 @@ use Session;
  */
 class Customer extends \Igniter\Flame\Auth\Manager
 {
-    protected $sessionKey = 'customer_info';
+    protected $sessionKey = 'customer_auth';
 
     protected $model = 'Admin\Models\Customers_model';
-
-    protected $identifier = 'email';
 
     public function customer()
     {
@@ -88,51 +84,5 @@ class Customer extends \Igniter\Flame\Auth\Manager
         $model->password = null;
 
         return $this->user = $model;
-    }
-
-    //
-    // Impersonation
-    //
-
-    /**
-     * Impersonates the given user and sets properties
-     * in the session but not the cookie.
-     *
-     * @param $userModel
-     *
-     * @throws \Exception
-     */
-    public function impersonate($userModel)
-    {
-        $oldSession = Session::get(static::AUTH_KEY_NAME);
-
-        $this->login($userModel, FALSE);
-
-        Session::put(static::AUTH_KEY_NAME.'_impersonate', $oldSession);
-    }
-
-    public function stopImpersonate()
-    {
-        $oldSession = Session::get(static::AUTH_KEY_NAME.'_impersonate');
-
-        Session::put(static::AUTH_KEY_NAME, $oldSession);
-    }
-
-    public function isImpersonator()
-    {
-        return Session::has(static::AUTH_KEY_NAME.'_impersonate');
-    }
-
-    public function getImpersonator()
-    {
-        $impersonateArray = Session::get(static::AUTH_KEY_NAME.'_impersonate');
-
-        // Check supplied session/cookie is an array (user id, persist code)
-        if (!is_array($impersonateArray) OR count($impersonateArray) !== 2)
-            return FALSE;
-
-        $id = reset($impersonateArray);
-
-        return $this->createModel()->find($id);
     }
 }
