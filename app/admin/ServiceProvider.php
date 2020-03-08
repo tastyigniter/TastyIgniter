@@ -6,6 +6,7 @@ use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
 use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
+use Admin\Facades\AdminAuth;
 use Admin\Middleware\LogUserLastSeen;
 use AdminLocation;
 use AdminMenu;
@@ -503,18 +504,22 @@ class ServiceProvider extends AppServiceProvider
     {
         AdminMenu::registerCallback(function (Navigation $manager) {
             // Change nav menu if single location mode is activated
-            if (!AdminLocation::check())
-                return;
+            if (AdminLocation::check()) {
+                $manager->mergeNavItem('locations', [
+                    'href' => admin_url('locations/settings'),
+                    'title' => lang('admin::lang.side_menu.setting'),
+                ], 'restaurant');
+            }
 
-            $manager->removeNavItem('locations', 'restaurant');
+            if (AdminAuth::staff() AND !AdminAuth::staff()->hasGlobalAssignableScope()) {
+                $manager->mergeNavItem('orders', [
+                    'href' => admin_url('orders/assigned'),
+                ], 'sales');
 
-            $manager->addNavItem('locations', [
-                'priority' => '1',
-                'class' => 'locations',
-                'href' => admin_url('locations/settings'),
-                'title' => lang('admin::lang.side_menu.setting'),
-                'permission' => 'Admin.Locations',
-            ], 'restaurant');
+                $manager->mergeNavItem('reservations', [
+                    'href' => admin_url('reservations/assigned'),
+                ], 'sales');
+            }
         });
     }
 
