@@ -885,27 +885,41 @@ return [
         'help_customer_account_access' => 'Enabling means staff in this group can login to any customer account. The staff must be logged in as admin.',
     ],
 
+    'staff_roles' => [
+        'text_title' => 'Staff Roles',
+        'text_form_name' => 'Staff Roles',
+        'text_tab_permission' => 'Permissions',
+        'text_empty' => 'There are no staff roles available.',
+
+        'label_permissions' => 'Permissions',
+    ],
+
     'staff' => [
         'text_title' => 'Staff',
         'text_form_name' => 'Staff',
         'text_filter_search' => 'Search by location, name or email.',
+        'text_filter_role' => 'View all roles',
         'text_filter_group' => 'View all groups',
         'text_empty' => 'There are no staffs available.',
 
-        'column_group' => 'Staff Group',
-        'column_location' => 'Location',
+        'column_group' => 'Staff Groups',
+        'column_role' => 'Staff Roles',
+        'column_location' => 'Locations',
+        'column_last_login' => 'Last Login',
         'column_date_added' => 'Date Added',
 
         'label_super_staff' => 'Super Admin',
         'label_username' => 'Username',
         'label_password' => 'Password',
         'label_confirm_password' => 'Password Confirm',
-        'label_group' => 'Department',
+        'label_role' => 'Role',
+        'label_group' => 'Groups',
         'label_language' => 'Language',
         'label_location' => 'Location',
 
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
-        'help_groups' => 'Specify which groups the staff should belong to. Groups define staff permissions, which can be overridden under Staff Groups, on the Permissions tab.',
+        'help_role' => 'Roles define staff permissions, which can be overridden on the user level, on the Permissions tab.',
+        'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
         'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, reservations, reviews and coupons attached to the selected location(s). Does not apply to super admins',
     ],
 

@@ -51,6 +51,12 @@ class Users_model extends AuthUserModel
             app('translator.localization')->setSessionLocale($language->code);
     }
 
+    public function afterLogin()
+    {
+        $this->last_login = Carbon::now();
+        $this->save();
+    }
+
     public function getStaffNameAttribute()
     {
         if (!$staff = $this->staff)
@@ -111,11 +117,11 @@ class Users_model extends AuthUserModel
 
     public function getPermissions()
     {
-        $group = $this->staff->group;
+        $role = $this->staff->role;
 
         $permissions = [];
-        if ($group AND is_array($group->permissions)) {
-            $permissions = $group->permissions;
+        if ($role AND is_array($role->permissions)) {
+            $permissions = $role->permissions;
         }
 
         return $permissions;

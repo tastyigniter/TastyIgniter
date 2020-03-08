@@ -66,8 +66,9 @@ class Staffs extends \Admin\Classes\AdminController
     public function formExtendFields($form, $fields)
     {
         if (!AdminAuth::isSuperUser()) {
-            $form->removeField('staff_group_id');
-            $form->removeField('staff_location_id');
+            $form->removeField('staff_role_id');
+            $form->removeField('groups');
+            $form->removeField('locations');
             $form->removeField('user[super_user]');
             $form->removeField('staff_status');
         }

@@ -27,6 +27,8 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedStaffGroups();
 
+        $this->seedStaffRoles();
+
         $this->seedStatuses();
     }
 
@@ -179,26 +181,36 @@ class InitialSchemaSeeder extends Seeder
 
         DB::table('staff_groups')->insert([
             'staff_group_name' => 'Owner',
-            'customer_account_access' => TRUE,
-            'permissions' => '',
+            'description' => 'Default group for owners',
         ]);
 
         DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Manager',
-            'customer_account_access' => TRUE,
-            'permissions' => '',
+            'staff_group_name' => 'Administrator',
+            'description' => 'Default group for administrators',
+        ]);
+    }
+
+    protected function seedStaffRoles()
+    {
+        if (DB::table('staff_roles')->count())
+            return;
+
+        DB::table('staff_roles')->insert([
+            'name' => 'Manager',
+            'code' => 'manager',
+            'description' => 'Default role for restaurant owners.',
         ]);
 
-        DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Waiter',
-            'customer_account_access' => FALSE,
-            'permissions' => '',
+        DB::table('staff_roles')->insert([
+            'name' => 'Waiter',
+            'code' => 'waiter',
+            'description' => 'Default role for restaurant waiters.',
         ]);
 
-        DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Delivery',
-            'customer_account_access' => FALSE,
-            'permissions' => '',
+        DB::table('staff_roles')->insert([
+            'name' => 'Delivery',
+            'code' => 'delivery',
+            'description' => 'Default role for restaurant delivery.',
         ]);
     }
 

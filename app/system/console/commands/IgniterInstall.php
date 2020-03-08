@@ -144,8 +144,7 @@ class IgniterInstall extends Command
 
         $staff = \Admin\Models\Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
         $staff->staff_name = DatabaseSeeder::$staffName;
-        $staff->staff_group_id = \Admin\Models\Staff_groups_model::first()->staff_group_id;
-        $staff->staff_location_id = \Admin\Models\Locations_model::first()->location_id;
+        $staff->staff_role_id = \Admin\Models\Staff_roles_model::first()->staff_role_id;
         $staff->language_id = \System\Models\Languages_model::first()->language_id;
         $staff->timezone = FALSE;
         $staff->staff_status = TRUE;

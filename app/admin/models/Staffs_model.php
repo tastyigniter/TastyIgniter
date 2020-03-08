@@ -33,7 +33,7 @@ class Staffs_model extends Model
     protected $guarded = [];
 
     public $casts = [
-        'staff_group_id' => 'integer',
+        'staff_role_id' => 'integer',
         'staff_location_id' => 'integer',
         'language_id' => 'integer',
         'staff_status' => 'boolean',
@@ -44,17 +44,18 @@ class Staffs_model extends Model
             'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id', 'delete' => TRUE],
         ],
         'belongsTo' => [
-            'group' => ['Admin\Models\Staff_groups_model', 'foreignKey' => 'staff_group_id'],
+            'role' => ['Admin\Models\Staff_roles_model', 'foreignKey' => 'staff_role_id'],
             'language' => ['System\Models\Languages_model'],
         ],
         'belongsToMany' => [
+            'groups' => ['Admin\Models\Staff_groups_model', 'table' => 'staffs_groups'],
             'locations' => ['Admin\Models\Locations_model', 'table' => 'staffs_locations'],
         ],
     ];
 
     protected $hidden = ['password'];
 
-    protected $purgeable = ['user', 'locations'];
+    protected $purgeable = ['user', 'groups', 'locations'];
 
     public function getFullNameAttribute($value)
     {
@@ -101,6 +102,9 @@ class Staffs_model extends Model
 
         if (array_key_exists('user', $this->attributes))
             $this->addStaffUser($this->attributes['user']);
+
+        if (array_key_exists('groups', $this->attributes))
+            $this->addStaffGroups($this->attributes['groups']);
 
         if (array_key_exists('locations', $this->attributes))
             $this->addStaffLocations($this->attributes['locations']);
@@ -150,6 +154,18 @@ class Staffs_model extends Model
     public function addStaffLocations($locations = [])
     {
         return $this->locations()->sync($locations);
+    }
+
+    /**
+     * Create a new or update existing staff groups
+     *
+     * @param array $groups
+     *
+     * @return bool
+     */
+    public function addStaffGroups($groups = [])
+    {
+        return $this->groups()->sync($groups);
     }
 
     /**

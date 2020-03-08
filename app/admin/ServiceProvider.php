@@ -6,6 +6,7 @@ use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
 use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
+use Admin\Middleware\LogUserLastSeen;
 use AdminLocation;
 use AdminMenu;
 use Event;
@@ -32,6 +33,8 @@ class ServiceProvider extends AppServiceProvider
             $this->replaceNavMenuItem();
 
             $this->bindActivityEvents();
+
+            $this->app['router']->pushMiddlewareToGroup('web', LogUserLastSeen::class);
         }
     }
 
@@ -688,6 +691,9 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.Customers' => [
                     'label' => 'admin::lang.permissions.customers', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.ImpersonateCustomers' => [
+                    'label' => 'admin::lang.permissions.impersonate_customers', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.StaffGroups' => [
                     'label' => 'admin::lang.permissions.staff_groups', 'group' => 'admin::lang.permissions.name',

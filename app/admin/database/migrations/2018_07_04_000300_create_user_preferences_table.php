@@ -10,7 +10,7 @@ class CreateUserPreferencesTable extends Migration
     {
         Schema::create('user_preferences', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('id');
+            $table->integer('id', TRUE);
             $table->integer('user_id');
             $table->string('item');
             $table->text('value');
