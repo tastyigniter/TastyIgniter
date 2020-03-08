@@ -179,6 +179,7 @@ $config['form']['fields'] = [
     'locations' => [
         'label' => 'lang:admin::lang.staff.label_location',
         'type' => 'relation',
+        'context' => ['create', 'edit'],
         'span' => 'left',
         'nameFrom' => 'location_name',
         'comment' => 'lang:admin::lang.staff.help_location',
@@ -186,6 +187,7 @@ $config['form']['fields'] = [
     'groups' => [
         'label' => 'lang:admin::lang.staff.label_group',
         'type' => 'relation',
+        'context' => ['create', 'edit'],
         'span' => 'right',
         'relationFrom' => 'groups',
         'nameFrom' => 'staff_group_name',
@@ -194,18 +196,32 @@ $config['form']['fields'] = [
     'user[super_user]' => [
         'label' => 'lang:admin::lang.staff.label_super_staff',
         'type' => 'switch',
+        'context' => ['create', 'edit'],
         'span' => 'left',
         'comment' => 'lang:admin::lang.staff.help_super_staff',
     ],
     'staff_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
+        'context' => ['create', 'edit'],
         'span' => 'right',
         'default' => 1,
+    ],
+    'sale_permission' => [
+        'label' => 'lang:admin::lang.staff.label_sale_permission',
+        'type' => 'radiolist',
+        'context' => ['create', 'edit'],
+        'default' => 1,
+        'options' => [
+            1 => ['lang:admin::lang.staff.text_sale_permission_global_access', 'lang:admin::lang.staff.help_sale_permission_global_access'],
+            2 => ['lang:admin::lang.staff.text_sale_permission_groups', 'lang:admin::lang.staff.help_sale_permission_groups'],
+            3 => ['lang:admin::lang.staff.text_sale_permission_restricted', 'lang:admin::lang.staff.help_sale_permission_restricted'],
+        ],
     ],
     'staff_role_id' => [
         'label' => 'lang:admin::lang.staff.label_role',
         'type' => 'radiolist',
+        'context' => ['create', 'edit'],
         'options' => ['Admin\Models\Staff_roles_model', 'listDropdownOptions'],
         'commentAbove' => 'lang:admin::lang.staff.help_role',
     ],

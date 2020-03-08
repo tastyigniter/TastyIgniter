@@ -6,7 +6,7 @@ $isSingleMode = AdminLocation::isSingleMode();
 $staffAvatar = md5(strtolower(trim($staffEmail)));
 $staffLocations = AdminLocation::listLocations()->all();
 $staffGroupNames = implode(', ', AdminAuth::staff()->groups->pluck('staff_group_name')->all());
-$staffEditLink = admin_url('staffs/edit/'.AdminAuth::staff()->getKey());
+$staffEditLink = admin_url('staffs/account');
 $logoutLink = admin_url('logout');
 ?>
 <li class="nav-item dropdown">

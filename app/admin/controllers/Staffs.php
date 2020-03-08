@@ -50,27 +50,35 @@ class Staffs extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        if ($this->action == 'edit' AND $this->getHandler() != 'onDelete' AND AdminAuth::getStaffId() == current($this->params))
+        if ($this->action == 'account') {
             $this->requiredPermissions = null;
+        }
 
         AdminMenu::setContext('staffs', 'users');
+    }
+
+    public function account()
+    {
+        return $this->asExtension('FormController')->edit('account', $this->getUser()->getKey());
+    }
+
+    public function account_onSave()
+    {
+        $result = $this->asExtension('FormController')->edit_onSave('account', $this->currentUser->user_id);
+
+        $usernameChanged = $this->currentUser->username != post('Staff[user][username]');
+        $passwordChanged = strlen(post('Staff[user][password]'));
+        if ($usernameChanged OR $passwordChanged) {
+            AdminAuth::login($this->currentUser->reload(), TRUE);
+        }
+
+        return $result;
     }
 
     public function listExtendQuery($query)
     {
         if (!AdminAuth::isSuperUser()) {
             $query->whereNotSuperUser();
-        }
-    }
-
-    public function formExtendFields($form, $fields)
-    {
-        if (!AdminAuth::isSuperUser()) {
-            $form->removeField('staff_role_id');
-            $form->removeField('groups');
-            $form->removeField('locations');
-            $form->removeField('user[super_user]');
-            $form->removeField('staff_status');
         }
     }
 
