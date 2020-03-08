@@ -5,6 +5,16 @@ $config['list']['filter'] = [
         'mode' => 'all',
     ],
     'scopes' => [
+        'assignee' => [
+            'label' => 'lang:admin::lang.orders.text_filter_assignee',
+            'type' => 'select',
+            'scope' => 'filterAssignedTo',
+            'options' => [
+                1 => 'lang:admin::lang.statuses.text_unassigned',
+                2 => 'lang:admin::lang.statuses.text_assigned_to_self',
+                3 => 'lang:admin::lang.statuses.text_assigned_to_others',
+            ],
+        ],
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
@@ -51,11 +61,18 @@ $config['list']['toolbar'] = [
         'delete' => [
             'label' => 'lang:admin::lang.button_delete',
             'class' => 'btn btn-danger',
+            'context' => 'index',
             'data-attach-loading' => '',
             'data-request' => 'onDelete',
             'data-request-form' => '#list-form',
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+        ],
+        'assigned' => [
+            'label' => 'lang:admin::lang.text_switch_to_assigned',
+            'class' => 'btn btn-default',
+            'href' => 'orders/assigned',
+            'context' => 'index',
         ],
         'filter' => [
             'label' => 'lang:admin::lang.button_icon_filter',
@@ -120,11 +137,20 @@ $config['list']['columns'] = [
         'select' => 'name',
     ],
     'assignee_name' => [
-        'label' => 'lang:admin::lang.orders.column_staff',
+        'label' => 'lang:admin::lang.orders.column_assignee',
         'type' => 'text',
         'relation' => 'assignee',
         'select' => 'staff_name',
         'searchable' => TRUE,
+        'invisible' => TRUE,
+    ],
+    'assignee_group_name' => [
+        'label' => 'lang:admin::lang.orders.column_assignee_group',
+        'type' => 'text',
+        'relation' => 'assignee_group',
+        'select' => 'staff_group_name',
+        'searchable' => TRUE,
+        'invisible' => TRUE,
     ],
     'order_total' => [
         'label' => 'lang:admin::lang.orders.column_total',
@@ -281,7 +307,6 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'disabled' => TRUE,
         ],
-        'invoice_no' => [
         'invoice_number' => [
             'label' => 'lang:admin::lang.orders.label_invoice',
             'type' => 'addon',

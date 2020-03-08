@@ -35,6 +35,7 @@ class Staffs_model extends Model
     public $casts = [
         'staff_role_id' => 'integer',
         'staff_location_id' => 'integer',
+        'sale_permission' => 'integer',
         'language_id' => 'integer',
         'staff_status' => 'boolean',
     ];
@@ -180,5 +181,24 @@ class Staffs_model extends Model
     public function sendMail($email, $template, $data = [])
     {
         return Users_model::sendMail($email, $template, $data);
+    }
+
+    //
+    //
+    //
+
+    public function hasGlobalAssignableScope()
+    {
+        return $this->sale_permission === 1;
+    }
+
+    public function hasGroupAssignableScope()
+    {
+        return $this->sale_permission === 2;
+    }
+
+    public function hasRestrictedAssignableScope()
+    {
+        return $this->sale_permission === 3;
     }
 }

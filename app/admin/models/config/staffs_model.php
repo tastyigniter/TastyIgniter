@@ -221,7 +221,6 @@ $config['form']['fields'] = [
     'staff_role_id' => [
         'label' => 'lang:admin::lang.staff.label_role',
         'type' => 'radiolist',
-        'context' => ['create', 'edit'],
         'options' => ['Admin\Models\Staff_roles_model', 'listDropdownOptions'],
         'commentAbove' => 'lang:admin::lang.staff.help_role',
     ],

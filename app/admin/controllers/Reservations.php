@@ -10,6 +10,7 @@ class Reservations extends \Admin\Classes\AdminController
         'Admin\Actions\ListController',
         'Admin\Actions\CalendarController',
         'Admin\Actions\FormController',
+        'Admin\Actions\AssigneeController',
         'Admin\Actions\LocationAwareController',
     ];
 
@@ -56,11 +57,14 @@ class Reservations extends \Admin\Classes\AdminController
         'configFile' => 'reservations_model',
     ];
 
-    protected $requiredPermissions = 'Admin.Reservations';
+    protected $requiredPermissions = ['Admin.Reservations', 'Admin.AssignReservations'];
 
     public function __construct()
     {
         parent::__construct();
+
+        if ($this->action === 'assigned')
+            $this->requiredPermissions = null;
 
         AdminMenu::setContext('reservations', 'sales');
     }

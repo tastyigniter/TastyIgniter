@@ -514,10 +514,12 @@ class ServiceProvider extends AppServiceProvider
             if (AdminAuth::staff() AND !AdminAuth::staff()->hasGlobalAssignableScope()) {
                 $manager->mergeNavItem('orders', [
                     'href' => admin_url('orders/assigned'),
+                    'permission' => '',
                 ], 'sales');
 
                 $manager->mergeNavItem('reservations', [
                     'href' => admin_url('reservations/assigned'),
+                    'permission' => '',
                 ], 'sales');
             }
         });

@@ -107,6 +107,7 @@ return [
     'text_network_admin' => 'Network Admin',
     'text_administration' => 'Administration',
     'text_logout' => 'Logout',
+    'text_switch_to_assigned' => 'Switch to assigned view',
 
     'help_permalink' => 'Use ONLY alpha-numeric lowercase characters, _ or - and make sure it is unique GLOBALLY.',
 
@@ -686,6 +687,7 @@ return [
         'text_tab_menu' => 'Menu Items',
         'text_empty' => 'There are no orders available.',
         'text_filter_search' => 'Search by id, location, status, staff or customer name.',
+        'text_filter_assignee' => 'View all assignees',
         'text_filter_order_type' => 'View all order types',
         'text_filter_payment' => 'View all payments',
         'text_delivery' => 'Delivery',
@@ -701,6 +703,9 @@ return [
         'text_invoice_thank_you' => 'Thank you for your order',
         'text_collection_order_type' => 'This is a pick-up order',
         'text_no_payment' => 'No payment method selected',
+        'text_unassigned' => 'Yet to be Assigned',
+        'text_assigned_to_self' => 'Assigned To Me',
+        'text_assigned_to_others' => 'Assigned To Other Staff',
 
         'button_create_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;Generate Invoice',
         'button_view_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;View Invoice',
@@ -718,11 +723,12 @@ return [
         'column_staff' => 'Staff',
         'column_comment' => 'Comment',
         'column_assignee' => 'Assigned To',
+        'column_assignee_group' => 'Assigned To Group',
         'column_notify' => 'Customer Notified',
         'column_name_option' => 'Name/Options',
         'column_price' => 'Price',
 
-        'label_order_id' => 'Order #',
+        'label_order_id' => 'Order ID',
         'label_customer_name' => 'Customer Name',
         'label_telephone' => 'Telephone',
         'label_delivery_address' => 'Delivery Address',
@@ -801,11 +807,15 @@ return [
         'text_tab_restaurant' => 'Restaurant',
         'text_status_history' => 'Status History',
         'text_empty' => 'There are no reservations available.',
+        'text_filter_assignee' => 'View all assignees',
         'text_filter_search' => 'Search by id, location, guest number, status, customer or table name.',
         'text_switch_to_list' => 'Switch to list view',
         'text_switch_to_calendar' => 'Switch to calender view',
         'text_no_booking' => 'No Bookings',
         'text_restaurant' => 'Location',
+        'text_unassigned' => 'Yet to be Assigned',
+        'text_assigned_to_self' => 'Assigned To Me',
+        'text_assigned_to_others' => 'Assigned To Other Staff',
 
         'column_location' => 'Location',
         'column_customer_name' => 'Name',
@@ -905,6 +915,10 @@ return [
         'text_filter_role' => 'View all roles',
         'text_filter_group' => 'View all groups',
         'text_empty' => 'There are no staffs available.',
+        'text_roles_scope_groups' => 'Scope, Roles and Groups',
+        'text_sale_permission_global_access' => 'Global Access',
+        'text_sale_permission_groups' => 'Groups',
+        'text_sale_permission_restricted' => 'Restricted Access',
 
         'column_group' => 'Staff Groups',
         'column_role' => 'Staff Roles',
@@ -920,11 +934,15 @@ return [
         'label_group' => 'Groups',
         'label_language' => 'Language',
         'label_location' => 'Locations',
+        'label_sale_permission' => 'Order and Reservation Scope',
 
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
         'help_role' => 'Roles define staff permissions, which can be overridden on the user level, on the Permissions tab.',
         'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
         'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, reservations, reviews and coupons attached to the selected location(s). Does not apply to super admins',
+        'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
+        'help_sale_permission_groups' => 'Can view Orders and Reservations in their Group(s) and Orders and Reservations assigned to them',
+        'help_sale_permission_restricted' => 'Can only view Orders and Reservations assigned to them',
     ],
 
     'statuses' => [

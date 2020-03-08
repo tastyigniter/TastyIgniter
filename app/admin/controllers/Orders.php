@@ -9,6 +9,7 @@ class Orders extends \Admin\Classes\AdminController
         'Admin\Actions\ListController',
         'Admin\Actions\FormController',
         'Admin\Actions\LocationAwareController',
+        'Admin\Actions\AssigneeController',
     ];
 
     public $listConfig = [
@@ -40,11 +41,14 @@ class Orders extends \Admin\Classes\AdminController
         'configFile' => 'orders_model',
     ];
 
-    protected $requiredPermissions = 'Admin.Orders';
+    protected $requiredPermissions = ['Admin.Orders', 'Admin.AssignOrders'];
 
     public function __construct()
     {
         parent::__construct();
+
+        if ($this->action === 'assigned')
+            $this->requiredPermissions = null;
 
         AdminMenu::setContext('orders', 'sales');
     }

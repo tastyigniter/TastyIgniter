@@ -5,6 +5,16 @@ $config['list']['filter'] = [
         'mode' => 'all',
     ],
     'scopes' => [
+        'assignee' => [
+            'label' => 'lang:admin::lang.reservations.text_filter_assignee',
+            'type' => 'select',
+            'scope' => 'filterAssignedTo',
+            'options' => [
+                1 => 'lang:admin::lang.statuses.text_unassigned',
+                2 => 'lang:admin::lang.statuses.text_assigned_to_self',
+                3 => 'lang:admin::lang.statuses.text_assigned_to_others',
+            ],
+        ],
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
@@ -40,6 +50,7 @@ $config['list']['toolbar'] = [
         'delete' => [
             'label' => 'lang:admin::lang.button_delete',
             'class' => 'btn btn-danger',
+            'context' => 'index',
             'data-attach-loading' => '',
             'data-request' => 'onDelete',
             'data-request-form' => '#list-form',
@@ -50,6 +61,12 @@ $config['list']['toolbar'] = [
             'label' => 'lang:admin::lang.reservations.text_switch_to_calendar',
             'class' => 'btn btn-default',
             'href' => 'reservations/calendar',
+            'context' => 'index',
+        ],
+        'assigned' => [
+            'label' => 'lang:admin::lang.text_switch_to_assigned',
+            'class' => 'btn btn-default',
+            'href' => 'reservations/assigned',
             'context' => 'index',
         ],
         'filter' => [
