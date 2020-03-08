@@ -67,7 +67,6 @@ class Orders_model extends Model
         'order_date' => 'date',
         'order_time' => 'time',
         'order_total' => 'float',
-        'invoice_date' => 'dateTime',
         'notify' => 'boolean',
         'processed' => 'boolean',
     ];
@@ -340,7 +339,8 @@ class Orders_model extends Model
         $data['order_time'] = $model->order_time.' '.$model->order_date->format('d M');
         $data['order_date'] = $model->date_added->format('d M y');
 
-        $data['invoice_id'] = $model->invoice_id;
+        $data['invoice_id'] = $model->invoice_number;
+        $data['invoice_number'] = $model->invoice_number;
         $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format('d M y') : null;
 
         $data['order_payment'] = ($model->payment_method)

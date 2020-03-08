@@ -8,15 +8,24 @@ trait HasInvoice
 {
     public static function bootHasInvoice()
     {
+        self::extend(function (self $model) {
+            $model->casts = array_merge($model->casts, ['invoice_date' => 'dateTime']);
+
+            $model->append(['invoice_number']);
+        });
+
         static::saved(function (self $model) {
             if ($model->isPaymentProcessed() AND !$model->hasInvoice())
                 $model->generateInvoice();
         });
     }
 
-    public function getInvoiceIdAttribute()
+    public function getInvoiceNumberAttribute()
     {
-        return $this->getInvoiceNoAttribute();
+        if (!strlen($this->invoice_prefix))
+            return null;
+
+        return $this->invoice_prefix.$this->order_id;
     }
 
     public function getInvoiceNoAttribute()
@@ -29,31 +38,30 @@ trait HasInvoice
 
     public function hasInvoice()
     {
-        return !empty($this->invoice_date) AND strlen($this->invoice_prefix);
+        return !empty($this->invoice_date);
     }
 
     public function generateInvoice()
     {
         if ($this->hasInvoice())
-            return $this->invoice_no;
+            return $this->invoice_number;
 
-        $invoiceDate = Carbon::now();
-        if (is_null($this->invoice_date))
-            $this->invoice_date = $invoiceDate;
+        $invoiceDate = is_null($this->invoice_date)
+            ? Carbon::now() : $this->invoice_date;
 
-        if (is_null($this->invoice_prefix))
-            $this->invoice_prefix = $this->invoiceGeneratePrefix($invoiceDate);
+        $invoicePrefix = is_null($this->invoice_prefix)
+            ? $this->generateInvoicePrefix($invoiceDate)
+            : $this->invoice_prefix;
 
-        self::withoutEvents(function () {
-            $this->timestamps = FALSE;
-            $this->save();
-            $this->timestamps = TRUE;
-        });
+        $this->newQuery()->where($this->getKeyName(), $this->getKey())->update([
+            'invoice_date' => $invoiceDate,
+            'invoice_prefix' => $invoicePrefix,
+        ]);
 
-        return $this->invoice_no;
+        return $this->invoice_number;
     }
 
-    public function invoiceGeneratePrefix($invoiceDate = null)
+    public function generateInvoicePrefix($invoiceDate = null)
     {
         $invoiceDate = $invoiceDate ?? $this->invoice_date;
 

@@ -282,6 +282,7 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
         ],
         'invoice_no' => [
+        'invoice_number' => [
             'label' => 'lang:admin::lang.orders.label_invoice',
             'type' => 'addon',
             'disabled' => TRUE,

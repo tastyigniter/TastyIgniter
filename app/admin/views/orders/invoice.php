@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title><?= $model->invoice_id.' - '.lang('admin::lang.orders.text_invoice'); ?>
+    <title><?= $model->invoice_number.' - '.lang('admin::lang.orders.text_invoice'); ?>
         - <?= setting('site_name'); ?></title>
     <?= get_style_tags(); ?>
     <style>
@@ -62,7 +62,7 @@
         <div class="col-3 text-left">
             <p>
                 <strong><?= lang('admin::lang.orders.text_invoice_no'); ?></strong><br>
-                <?= $model->invoice_id; ?>
+                <?= $model->invoice_number; ?>
             </p>
             <p>
                 <strong><?= lang('admin::lang.orders.text_invoice_date'); ?></strong><br>
