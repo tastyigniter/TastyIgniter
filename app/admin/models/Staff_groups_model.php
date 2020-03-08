@@ -1,6 +1,6 @@
 <?php namespace Admin\Models;
 
-use InvalidArgumentException;
+use Illuminate\Support\Facades\DB;
 use Model;
 
 /**
@@ -10,6 +10,10 @@ use Model;
  */
 class Staff_groups_model extends Model
 {
+    public const AUTO_ASSIGN_ROUND_ROBIN = 1;
+
+    public const AUTO_ASSIGN_LOAD_BALANCED = 2;
+
     /**
      * @var string The database table name
      */
@@ -26,9 +30,26 @@ class Staff_groups_model extends Model
         ],
     ];
 
+    public $casts = [
+        'auto_assign' => 'boolean',
+        'auto_assign_mode' => 'integer',
+        'auto_assign_limit' => 'integer',
+        'auto_assign_availability' => 'boolean',
+    ];
+
     public static function getDropdownOptions()
     {
         return static::dropdown('staff_group_name');
+    }
+
+    public static function listDropdownOptions()
+    {
+        return self::select('staff_group_id', 'staff_group_name', 'description')
+                   ->get()
+                   ->keyBy('staff_group_id')
+                   ->map(function ($model) {
+                       return [$model->staff_group_name, $model->description];
+                   });
     }
 
     public function getStaffCountAttribute($value)
@@ -36,34 +57,60 @@ class Staff_groups_model extends Model
         return $this->staffs->count();
     }
 
-    public function getPermissionsAttribute($value)
+    //
+    // Assignment
+    //
+
+    public function getAutoAssignLimitAttribute($value)
     {
-        $value = !empty($value) ? @unserialize($value) : [];
-
-        // Backward compatibility to convert permission values
-        // to 1 or 0 from array of [access, add, manage]
-        foreach ($value as $permission => &$permissionValue) {
-            if (is_array($permissionValue))
-                $permissionValue = count($permissionValue) ? 1 : 0;
-        }
-
-        return $value;
+        return $this->attributes['auto_assign_limit'] ?? 20;
     }
 
-    public function setPermissionsAttribute($permissions)
+    /**
+     * @return bool
+     */
+    public function autoAssignEnabled()
     {
-        foreach ($permissions as $permission => $value) {
-            if (!in_array($value = (int)$value, [-1, 0, 1])) {
-                throw new InvalidArgumentException(sprintf(
-                    'Invalid value "%s" for permission "%s" given.', $value, $permission
-                ));
-            }
+        return $this->auto_assign;
+    }
 
-            if ($value === 0) {
-                unset($permissions[$permission]);
-            }
-        }
+    public function listAssignees()
+    {
+        return $this->staffs->filter(function (Staffs_model $staff) {
+            return $staff->isEnabled() AND $staff->canAssignTo();
+        })->values();
+    }
 
-        $this->attributes['permissions'] = !empty($permissions) ? serialize($permissions) : '';
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function newRoundRobinAssignModeQuery()
+    {
+        $query = $this->staffs()->newQuery();
+
+        return $query
+            ->select('staffs.*')
+            ->selectRaw('MAX(created_at) as assign_value')
+            ->leftJoin('assignable_logs', 'assignable_logs.assignee_id', '=', 'staffs.staff_id')
+            ->groupBy('assignable_logs.assignee_id')
+            ->orderBy('assign_value', 'asc');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function newLoadBalancedAssignModeQuery()
+    {
+        $query = $this->staffs()->newQuery();
+        $limit = DB::getPdo()->quote($this->auto_assign_limit);
+
+        return $query
+            ->select('staffs.*')
+            ->selectRaw('COUNT(assignee_id)/'.$limit.' as assign_value')
+            ->leftJoin('assignable_logs', 'assignable_logs.assignee_id', '=', 'staffs.staff_id')
+            ->whereIn('status_id', setting('processing_order_status', []))
+            ->groupBy('assignable_logs.assignee_id')
+            ->orderBy('assign_value', 'desc')
+            ->havingRaw('assign_value < 1');
     }
 }

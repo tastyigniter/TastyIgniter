@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
@@ -23,6 +24,7 @@ class Orders_model extends Model
     use LogsStatusHistory;
     use SendsMailTemplate;
     use Locationable;
+    use Assignable;
 
     const CREATED_AT = 'date_added';
 
@@ -59,9 +61,6 @@ class Orders_model extends Model
         'customer_id' => 'integer',
         'location_id' => 'integer',
         'address_id' => 'integer',
-        'status_id' => 'integer',
-        'assignee_id' => 'integer',
-        'invoice_no' => 'integer',
         'total_items' => 'integer',
         'cart' => 'serialize',
         'order_date' => 'date',
@@ -76,8 +75,6 @@ class Orders_model extends Model
             'customer' => 'Admin\Models\Customers_model',
             'location' => 'Admin\Models\Locations_model',
             'address' => 'Admin\Models\Addresses_model',
-            'status' => 'Admin\Models\Statuses_model',
-            'assignee' => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
         ],
         'hasMany' => [
@@ -86,7 +83,6 @@ class Orders_model extends Model
         ],
         'morphMany' => [
             'review' => ['Admin\Models\Reviews_model'],
-            'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
         ],
     ];
 
@@ -113,14 +109,6 @@ class Orders_model extends Model
 
         $this->ip_address = Request::getClientIp();
         $this->user_agent = Request::userAgent();
-    }
-
-    protected function afterSave()
-    {
-        if (!$this->isDirty('assignee_id'))
-            return;
-
-        Event::fire('admin.order.assigned', [$this]);
     }
 
     //

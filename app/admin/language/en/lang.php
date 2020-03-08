@@ -748,7 +748,7 @@ return [
         'label_payment_method' => 'Payment Method',
         'label_total_items' => 'Total Items',
 
-        'activity_event_log' => ' updated order (#:properties.order_id) status to <b>:properties.status_name</b>',
+        'activity_event_log' => ' updated order (#:properties.order_id) status to ',
         'activity_event_log_assigned' => ' assigned order (#:properties.order_id) to ',
     ],
 
@@ -780,6 +780,8 @@ return [
         'locations' => 'Create, edit and delete locations',
         'menus' => 'Create, edit and delete menu items',
         'orders' => 'Manage orders',
+        'assign_orders' => 'Assign orders',
+        'assign_reservations' => 'Assign reservations',
         'payments' => 'Manage payment gateways',
         'reservations' => 'Manage reservations',
         'reviews' => 'Manage user reviews',
@@ -821,6 +823,7 @@ return [
         'column_table' => 'Table',
         'column_staff' => 'Staff',
         'column_assignee' => 'Assigned To',
+        'column_assignee_group' => 'Assigned To Group',
         'column_notify' => 'Customer Notified',
         'column_comment' => 'Comment',
         'column_date_time' => 'Date - Time',
@@ -889,17 +892,22 @@ return [
         'text_title' => 'Staff Groups',
         'text_form_name' => 'Staff Group',
         'text_empty' => 'There are no staff groups available.',
+        'text_allow' => 'Allow',
+        'text_round_robin' => 'Round Robin',
+        'text_load_balanced' => 'Load Balanced',
+
+        'label_auto_assign' => 'Automatic Order Assignment',
+        'label_assignment_mode' => 'Assignment Mode',
+        'label_assignment_availability' => 'Assignment Availability',
+        'label_load_balanced_limit' => 'Load Balanced Limit',
 
         'column_users' => '# Users',
-    ],
 
-    'staff_roles' => [
-        'text_title' => 'Staff Roles',
-        'text_form_name' => 'Staff Roles',
-        'text_tab_permission' => 'Permissions',
-        'text_empty' => 'There are no staff roles available.',
-
-        'label_permissions' => 'Permissions',
+        'help_auto_assign' => 'Allocate and control the number of orders assigned to staff in this group.',
+        'help_round_robin' => 'Assign orders to the staff who are online in a circular fashion.',
+        'help_load_balanced' => 'Limit the number of orders a staff can handle simultaneously.',
+        'help_load_balanced_limit' => 'Maximum number of orders per staff.',
+        'help_assignment_availability' => 'Allow staff to control their availability for automatic order assignment',
     ],
 
     'staff' => [

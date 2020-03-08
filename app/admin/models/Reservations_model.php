@@ -1,9 +1,9 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
-use Event;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Main\Classes\MainController;
 use Model;
@@ -21,6 +21,7 @@ class Reservations_model extends Model
     use LogsStatusHistory;
     use SendsMailTemplate;
     use Locationable;
+    use Assignable;
 
     const CREATED_AT = 'date_added';
 
@@ -103,9 +104,6 @@ class Reservations_model extends Model
         if (array_key_exists('tables', $this->attributes)) {
             $this->addReservationTables((array)$this->attributes['tables']);
         }
-
-        if ($this->isDirty('assignee_id'))
-            Event::fire('admin.reservation.assigned', [$this]);
     }
 
     //

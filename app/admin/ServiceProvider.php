@@ -13,6 +13,7 @@ use AdminMenu;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Event;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
 
@@ -46,6 +47,7 @@ class ServiceProvider extends AppServiceProvider
 
         $this->registerActivityTypes();
         $this->registerMailTemplates();
+        $this->registerAllocatorSchedule();
 
         if ($this->app->runningInAdmin()) {
             $this->registerAssets();
@@ -662,8 +664,14 @@ class ServiceProvider extends AppServiceProvider
                 'Admin.Orders' => [
                     'label' => 'admin::lang.permissions.orders', 'group' => 'admin::lang.permissions.name',
                 ],
+                'Admin.AssignOrders' => [
+                    'label' => 'admin::lang.permissions.assign_orders', 'group' => 'admin::lang.permissions.name',
+                ],
                 'Admin.Reservations' => [
                     'label' => 'admin::lang.permissions.reservations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.AssignReservations' => [
+                    'label' => 'admin::lang.permissions.assign_reservations', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.Payments' => [
                     'label' => 'admin::lang.permissions.payments', 'group' => 'admin::lang.permissions.name',
@@ -690,6 +698,16 @@ class ServiceProvider extends AppServiceProvider
                     'label' => 'admin::lang.permissions.statuses', 'group' => 'admin::lang.permissions.name',
                 ],
             ]);
+        });
+    }
+
+    protected function registerAllocatorSchedule()
+    {
+        Event::listen('console.schedule', function ($schedule) {
+            // Check for assignables to assign every minute
+            $schedule->call(function () {
+                Classes\Allocator::instance()->allocate();
+            })->everyMinute();
         });
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Classes\UserState;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
 
@@ -43,6 +44,9 @@ class Staffs_model extends Model
     public $relation = [
         'hasOne' => [
             'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id', 'delete' => TRUE],
+        ],
+        'hasMany' => [
+            'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_id'],
         ],
         'belongsTo' => [
             'role' => ['Admin\Models\Staff_roles_model', 'foreignKey' => 'staff_role_id'],
@@ -186,6 +190,11 @@ class Staffs_model extends Model
     //
     //
     //
+
+    public function canAssignTo()
+    {
+        return !UserState::forUser($this->user)->isAway();
+    }
 
     public function hasGlobalAssignableScope()
     {
