@@ -1,6 +1,6 @@
 <?php namespace Admin\Models;
 
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Model;
 
 /**
@@ -25,6 +25,9 @@ class Staff_groups_model extends Model
     protected $primaryKey = 'staff_group_id';
 
     public $relation = [
+        'hasMany' => [
+            'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_group_id'],
+        ],
         'belongsToMany' => [
             'staffs' => ['Admin\Models\Staffs_model', 'table' => 'staffs_groups'],
         ],
@@ -74,6 +77,9 @@ class Staff_groups_model extends Model
         return $this->auto_assign;
     }
 
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     public function listAssignees()
     {
         return $this->staffs->filter(function (Staffs_model $staff) {
@@ -82,35 +88,29 @@ class Staff_groups_model extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Admin\Models\Staffs_model|object
      */
-    public function newRoundRobinAssignModeQuery()
+    public function findAvailableAssignee()
     {
-        $query = $this->staffs()->newQuery();
+        $query = $this->assignable_logs()->newQuery();
 
-        return $query
-            ->select('staffs.*')
-            ->selectRaw('MAX(created_at) as assign_value')
-            ->leftJoin('assignable_logs', 'assignable_logs.assignee_id', '=', 'staffs.staff_id')
-            ->groupBy('assignable_logs.assignee_id')
-            ->orderBy('assign_value', 'asc');
-    }
+        $useLoadBalance = ($this->auto_assign_mode == self::AUTO_ASSIGN_LOAD_BALANCED);
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function newLoadBalancedAssignModeQuery()
-    {
-        $query = $this->staffs()->newQuery();
-        $limit = DB::getPdo()->quote($this->auto_assign_limit);
+        $useLoadBalance
+            ? $query->applyLoadBalancedScope($this->auto_assign_limit)
+            : $query->applyRoundRobinScope();
 
-        return $query
-            ->select('staffs.*')
-            ->selectRaw('COUNT(assignee_id)/'.$limit.' as assign_value')
-            ->leftJoin('assignable_logs', 'assignable_logs.assignee_id', '=', 'staffs.staff_id')
-            ->whereIn('status_id', setting('processing_order_status', []))
-            ->groupBy('assignable_logs.assignee_id')
-            ->orderBy('assign_value', 'desc')
-            ->havingRaw('assign_value < 1');
+        $logs = $query->pluck('assign_value', 'assignee_id');
+
+        $assignees = $this->listAssignees()->map(function (Staffs_model $model) use ($useLoadBalance, $logs) {
+            $assignValue = $useLoadBalance ?
+                0 : Carbon::now()->addYear()->toDateTimeString();
+
+            $model->assign_value = $logs[$model->getKey()] ?? $assignValue;
+
+            return $model;
+        });
+
+        return $assignees->sortBy('assign_value')->first();
     }
 }

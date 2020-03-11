@@ -4,7 +4,6 @@ use Admin\ActivityTypes\OrderAssigned;
 use Admin\ActivityTypes\ReservationAssigned;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -76,17 +75,6 @@ class Assignable_logs_model extends Model
         return $model;
     }
 
-    public static function getUnAssignedQueue()
-    {
-        $query = self::make()->newQuery();
-
-        return $query
-            ->whereUnAssigned()
-            ->whereHasAutoAssignGroup()
-            ->orderBy('updated_at', 'asc')
-            ->get();
-    }
-
     //
     //
     //
@@ -115,28 +103,6 @@ class Assignable_logs_model extends Model
         return $query
             ->where('assignable_type', $assignable->getMorphClass())
             ->where('assignable_id', $assignable->getKey());
-    }
-
-    /**
-     * @param \Igniter\Flame\Database\Query\Builder $query
-     * @return mixed
-     */
-    public function scopeWhereUnAssigned($query)
-    {
-        return $query
-            ->whereNotNull('assignee_group_id')
-            ->whereNull('assignee_id');
-    }
-
-    /**
-     * @param \Igniter\Flame\Database\Query\Builder $query
-     * @return mixed
-     */
-    public function scopeWhereHasAutoAssignGroup($query)
-    {
-        return $query->whereHas('assignee_group', function (Builder $query) {
-            $query->where('auto_assign', 1);
-        });
     }
 
     /**

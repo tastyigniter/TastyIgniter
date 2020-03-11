@@ -6,13 +6,14 @@ use Admin\Classes\UserState;
 use Admin\Facades\AdminAuth;
 use Carbon\Carbon;
 use Closure;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 
 class LogUserLastSeen
 {
     public function handle($request, Closure $next)
     {
-        if (AdminAuth::check()) {
+        if (App::hasDatabase() AND AdminAuth::check()) {
             $cacheKey = 'is-online-user-'.AdminAuth::getId();
             $expireAt = Carbon::now()->addMinutes(2);
             Cache::remember($cacheKey, $expireAt, function () {

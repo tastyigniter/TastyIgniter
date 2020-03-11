@@ -2,107 +2,65 @@
 
 namespace Admin\Classes;
 
-use Admin\Models\Assignable_logs_model;
-use Admin\Models\Staff_groups_model as GroupModel;
-use Admin\Models\Staffs_model;
-use Carbon\Carbon;
+use Admin\Models\Orders_model;
+use Admin\Models\Reservations_model;
+use Admin\Models\Staff_groups_model;
 use Igniter\Flame\Traits\Singleton;
 
 class Allocator
 {
     use Singleton;
 
+    protected static $running = FALSE;
+
     public function allocate()
     {
-        $unassignedQueue = Assignable_logs_model::getUnAssignedQueue();
+        if (self::$running)
+            return;
 
-        $unassignedQueue->each(function (Assignable_logs_model $assignableLog) {
-            if (!$assigneeGroup = $assignableLog->assignee_group)
+        self::$running = TRUE;
+
+        $this->getUnAssignedQueue()->each(function ($assignable) {
+            $assigneeGroup = $assignable->assignee_group;
+            if (!$assigneeGroup instanceof Staff_groups_model)
                 return TRUE;
 
-            if ($assignee = $this->findNextAvailableAssignee($assigneeGroup)) {
-                $this->allocateToAssignee($assignableLog, $assignee);
+            if ($assignee = $assigneeGroup->findAvailableAssignee()) {
+                $this->allocateToAssignee($assignable, $assignee);
             }
         });
+
+        self::$running = FALSE;
     }
 
     /**
-     * @param \Admin\Models\Staff_groups_model $assigneeGroup
-     * @return \Admin\Models\Staffs_model|object
-     */
-    protected function findNextAvailableAssignee($assigneeGroup)
-    {
-        $assignees = $this->listAvailableStaff($assigneeGroup);
-
-        $query = $this->createAssignableLogQuery();
-        $query->where('assignee_group_id', $assigneeGroup->getKey());
-        $query->whereIn('assignee_id', $assignees->pluck('staff_id')->all());
-        $query->orderBy('created_at', 'desc');
-
-        $useDate = TRUE;
-        if ($assigneeGroup->auto_assign_mode == GroupModel::AUTO_ASSIGN_LOAD_BALANCED) {
-            $useDate = FALSE;
-            $query->applyLoadBalancedScope($assigneeGroup->auto_assign_limit);
-        }
-        else {
-            $query->applyRoundRobinScope();
-        }
-
-        $response = $query->pluck('assign_value', 'assignee_id');
-
-        return $this->getAssigneeFromResponse($assignees, $response, $useDate);
-    }
-
-    /**
-     * @param \Admin\Models\Assignable_logs_model $assignableLog
+     * @param \Illuminate\Database\Eloquent\Model $assignable
      * @param \Admin\Models\Staffs_model $assignee
      * @return bool
      */
-    protected function allocateToAssignee($assignableLog, $assignee)
+    protected function allocateToAssignee($assignable, $assignee)
     {
-        $assignableLog->reload();
-        $assignableLog->reloadRelations();
+        $assignable->reload();
+        $assignable->reloadRelations();
 
-        if ($assignableLog->assignee)
+        if ($assignable->assignee)
             return FALSE;
 
-        $assigneeGroup = $assignableLog->assignee_group;
-        $assignableLog->assignable->assignTo($assigneeGroup, $assignee);
+        $assigneeGroup = $assignable->assignee_group;
+        if (!method_exists($assignable, 'assignTo'))
+            throw new \BadMethodCallException('Method assignTo() not found in '.get_class($assignable));
+
+        $assignable->assignTo($assigneeGroup, $assignee);
     }
 
     /**
-     * @param \Admin\Models\Staff_groups_model $assigneeGroup
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
-    protected function listAvailableStaff($assigneeGroup)
+    protected function getUnAssignedQueue()
     {
-        return $assigneeGroup
-            ->listAssignees()
-            ->sortByDesc(function (Staffs_model $staff) {
-                return $staff->user->last_seen;
-            })->values();
-    }
-
-    protected function createAssignableLogQuery()
-    {
-        return Assignable_logs_model::make()->newQuery();
-    }
-
-    protected function getAssigneeFromResponse($assignees, $response, $useDate = FALSE)
-    {
-        $result = [];
-        foreach ($assignees as $assignee) {
-            $id = $assignee->getKey();
-            $value = $useDate
-                ? Carbon::now()->addYear()->toDateTimeString() : 0;
-
-            $result[$id] = $response[$id] ?? $value;
-        }
-
-        asort($result);
-
-        $id = array_key_first($result);
-
-        return $assignees->keyBy('staff_id')->get($id);
+        return collect()->merge(
+            Orders_model::getUnAssignedQueue(),
+            Reservations_model::getUnAssignedQueue()
+        );
     }
 }
