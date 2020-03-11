@@ -2,6 +2,7 @@
 $fieldOptions = $field->options();
 $checkedValues = (array)$field->value;
 $isScrollable = count($fieldOptions) > 10;
+$inlineMode = (bool)$field->getConfig('inlineMode');
 ?>
 <?php if ($this->previewMode && $field->value) { ?>
 
@@ -14,7 +15,7 @@ $isScrollable = count($fieldOptions) > 10;
             if (!in_array($value, $checkedValues)) continue;
             if (!is_array($option)) $option = [$option];
             ?>
-            <div class="custom-control custom-checkbox mb-2">
+            <div class="custom-control custom-checkbox<?= $inlineMode ? ' custom-control-inline' : '' ?> mb-2">
                 <input
                     type="checkbox"
                     id="<?= $checkboxId ?>"
@@ -60,7 +61,7 @@ $isScrollable = count($fieldOptions) > 10;
                     $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
                     if (is_string($option)) $option = [$option];
                     ?>
-                    <div class="custom-control custom-checkbox mb-2">
+                    <div class="custom-control custom-checkbox<?= $inlineMode ? ' custom-control-inline' : '' ?> mb-2">
                         <input
                             type="checkbox"
                             id="<?= $checkboxId ?>"
