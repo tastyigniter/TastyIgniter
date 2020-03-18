@@ -60,7 +60,7 @@ class BasePaymentGateway extends ModelAction
     /**
      * Initializes configuration data when the payment method is first created.
      *
-     * @param  Model $host
+     * @param Model $host
      */
     public function initConfigData($host)
     {
@@ -160,7 +160,7 @@ class BasePaymentGateway extends ModelAction
     /**
      * Utility function, creates a link to a registered entry point.
      *
-     * @param  string $code Key used to define the entry point
+     * @param string $code Key used to define the entry point
      *
      * @return string
      */
@@ -172,14 +172,42 @@ class BasePaymentGateway extends ModelAction
     /**
      * Returns true if the payment type is applicable for a specified order amount
      *
-     * @param float $amount Specifies an order amount
+     * @param float $total Specifies an order amount
      * @param $host Model object to add fields to
      *
-     * @return true
+     * @return bool
      */
-    public function isApplicable($amount, $host)
+    public function isApplicable($total, $host)
     {
-        return TRUE;
+        return $host->order_total <= $total;
+    }
+
+    /**
+     * Returns true if the payment type has additional fee
+     *
+     * @param $host Model object to add fields to
+     * @return bool
+     */
+    public function hasApplicableFee($host = null)
+    {
+        $host = is_null($host) ? $this->model : $host;
+
+        return ($host->order_fee ?? 0) > 0;
+    }
+
+    /**
+     * Returns the payment type additional fee
+     *
+     * @param $host Model object to add fields to
+     * @return string
+     */
+    public function getFormattedApplicableFee($host = null)
+    {
+        $host = is_null($host) ? $this->model : $host;
+
+        return ((int)$host->order_fee_type === 2)
+            ? $host->order_fee.'%'
+            : currency_format($host->order_fee);
     }
 
     /**

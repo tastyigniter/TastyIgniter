@@ -60,6 +60,12 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
+    'is_default' => [
+        'label' => 'lang:admin::lang.payments.label_default',
+        'type' => 'switch',
+        'onText' => 'admin::lang.text_yes',
+        'offText' => 'admin::lang.text_no',
+    ],
     'date_updated' => [
         'label' => 'lang:admin::lang.payments.column_date_updated',
         'type' => 'timetense',
@@ -127,16 +133,19 @@ $config['form']['fields'] = [
     'description' => [
         'label' => 'lang:admin::lang.label_description',
         'type' => 'textarea',
+        'span' => 'left',
     ],
     'is_default' => [
         'label' => 'lang:admin::lang.payments.label_default',
         'type' => 'switch',
-        'span' => 'left',
+        'span' => 'right',
+        'cssClass' => 'flex-width',
     ],
     'status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
         'span' => 'right',
+        'cssClass' => 'flex-width',
     ],
 ];
 
