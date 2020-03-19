@@ -1,6 +1,7 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
+use Admin\Models\Menu_options_model;
 use AdminMenu;
 use ApplicationException;
 
@@ -58,14 +59,20 @@ class Menus extends AdminController
     public function edit_onChooseMenuOption($context, $recordId)
     {
         $menuOptionId = post('Menu._options');
-        if (!$menuOptionId)
+        if (!$menuOption = Menu_options_model::find($menuOptionId))
             throw new ApplicationException('Please select a menu option to attach');
 
         $model = $this->asExtension('FormController')->formFindModelObject($recordId);
 
-        $model->menu_options()->create([
-            'option_id' => $menuOptionId,
-        ]);
+        $menuItemOption = $model->menu_options()->create(['option_id' => $menuOptionId]);
+
+        $menuOption->option_values()->get()->each(function ($model) use ($menuItemOption) {
+            $menuItemOption->menu_option_values()->create([
+                'menu_option_id' => $menuItemOption->menu_option_id,
+                'option_value_id' => $model->option_value_id,
+                'new_price' => $model->price,
+            ]);
+        });
 
         $model->reload();
         $this->asExtension('FormController')->initForm($model, $context);

@@ -12,6 +12,18 @@ $config['form']['fields'] = [
     'menu_option_id' => [
         'type' => 'hidden',
     ],
+    'option[option_name]' => [
+        'label' => 'lang:admin::lang.menus.label_option_name',
+        'type' => 'text',
+        'span' => 'left',
+        'disabled' => TRUE,
+    ],
+    'option[display_type]' => [
+        'label' => 'lang:admin::lang.menus.label_option_display_type',
+        'type' => 'text',
+        'span' => 'right',
+        'disabled' => TRUE,
+    ],
     'required' => [
         'label' => 'lang:admin::lang.menus.label_option_required',
         'type' => 'switch',

@@ -51,6 +51,15 @@ class Menu_options_model extends Model
                    ->dropdown('display_name');
     }
 
+    public function getDisplayTypeOptions()
+    {
+        return [
+            'radio' => 'lang:admin::lang.menu_options.text_radio',
+            'checkbox' => 'lang:admin::lang.menu_options.text_checkbox',
+            'select' => 'lang:admin::lang.menu_options.text_select',
+        ];
+    }
+
     //
     // Events
     //

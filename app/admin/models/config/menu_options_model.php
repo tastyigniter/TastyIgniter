@@ -8,11 +8,6 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.menu_options.label_display_type',
         'type' => 'radio',
         'default' => 'radio',
-        'options' => [
-            'radio' => 'lang:admin::lang.menu_options.text_radio',
-            'checkbox' => 'lang:admin::lang.menu_options.text_checkbox',
-            'select' => 'lang:admin::lang.menu_options.text_select',
-        ],
     ],
     'option_values' => [
         'label' => 'lang:admin::lang.menu_options.text_tab_values',
