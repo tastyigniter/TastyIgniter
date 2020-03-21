@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Models\Coupons_history_model;
 use Admin\Models\Menu_item_option_values_model;
 use Admin\Models\Menus_model;
 use Carbon\Carbon;
@@ -55,18 +56,20 @@ trait ManagesOrderItems
 
     /**
      * Redeem coupon by order_id
-     *
-     * @return bool TRUE on success, or FALSE on failure
      */
     public function redeemCoupon()
     {
-        $query = $this->coupon_history()->where('status', '!=', '1');
-        if (!$couponHistoryModel = $query->get()->last())
-            return FALSE;
+        $this
+            ->coupon_history()
+            ->where('status', '!=', '1')
+            ->get()
+            ->each(function (Coupons_history_model $model) {
+                $model->status = 1;
+                $model->date_used = Carbon::now();
+                $model->save();
 
-        $couponHistoryModel->touchStatus();
-
-        Event::fire('admin.order.couponRedeemed', [$couponHistoryModel]);
+                Event::fire('admin.order.couponRedeemed', [$model]);
+            });
     }
 
     /**
@@ -210,25 +213,10 @@ trait ManagesOrderItems
             ));
         }
 
-        $orderId = $this->getKey();
-        if (!is_numeric($orderId))
+        if (!$this->exists)
             return FALSE;
 
-        if (!$coupon = $couponCondition->getModel())
-            return FALSE;
-
-        $this->coupon_history()->delete();
-
-        $couponHistory = $this->coupon_history()->create([
-            'customer_id' => $customer ? $customer->getKey() : 0,
-            'coupon_id' => $coupon->coupon_id,
-            'code' => $coupon->code,
-            'amount' => $couponCondition->getValue(),
-            'min_total' => $coupon->min_total,
-            'date_used' => Carbon::now(),
-        ]);
-
-        return $couponHistory;
+        return Coupons_history_model::createHistory($couponCondition, $customer);
     }
 
     public function orderMenusQuery()

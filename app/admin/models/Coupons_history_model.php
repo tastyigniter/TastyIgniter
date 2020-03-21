@@ -63,4 +63,29 @@ class Coupons_history_model extends Model
 
         return $this->save();
     }
+
+    /**
+     * @param \Igniter\Flame\Cart\CartCondition $couponCondition
+     * @param \Admin\Models\Customers_model $customer
+     * @return \Admin\Models\Coupons_history_model|bool
+     */
+    public static function createHistory($couponCondition, $customer)
+    {
+        if (!$coupon = $couponCondition->getModel())
+            return FALSE;
+
+        $model = new static;
+        $model->customer_id = $customer ? $customer->getKey() : 0;
+        $model->coupon_id = $coupon->coupon_id;
+        $model->code = $coupon->code;
+        $model->amount = $couponCondition->getValue();
+        $model->min_total = $coupon->min_total;
+
+        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$model, $couponCondition, $customer, $coupon], TRUE) === FALSE)
+            return FALSE;
+
+        $model->save();
+
+        return $model;
+    }
 }
