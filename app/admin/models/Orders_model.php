@@ -251,6 +251,8 @@ class Orders_model extends Model
 
     public function updateOrderStatus($id, $options = [])
     {
+        $id = $id ?? $this->status_id ?? setting('default_order_status');
+
         return $this->addStatusHistory(
             Statuses_model::find($id), $options
         );

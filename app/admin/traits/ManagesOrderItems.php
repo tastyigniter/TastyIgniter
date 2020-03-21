@@ -29,9 +29,7 @@ trait ManagesOrderItems
     /**
      * Subtract cart item quantity from menu stock quantity
      *
-     * @param int $order_id
-     *
-     * @return bool
+     * @return void
      */
     public function subtractStock()
     {
@@ -40,17 +38,18 @@ trait ManagesOrderItems
             if (!$menu = Menus_model::find($orderMenu->menu_id))
                 return TRUE;
 
-            if (!$menu->subtract_stock)
-                return TRUE;
+            if ($menu->subtract_stock)
+                $menu->updateStock($orderMenu->quantity);
 
-            $orderMenuOptions->where('order_menu_id', $orderMenu->order_menu_id)->each(function ($orderMenuOption) {
-                if (!$menuOptionValue = Menu_item_option_values_model::find($orderMenuOption->menu_option_value_id))
-                    return TRUE;
+            $orderMenuOptions
+                ->where('order_menu_id', $orderMenu->order_menu_id)
+                ->each(function ($orderMenuOption) {
+                    if (!$menuOptionValue = Menu_item_option_values_model::find(
+                        $orderMenuOption->menu_option_value_id
+                    )) return TRUE;
 
-                $menuOptionValue->updateStock(1);
-            });
-
-            $menu->updateStock($orderMenu->quantity);
+                    $menuOptionValue->updateStock($orderMenuOption->quantity);
+                });
         });
     }
 
@@ -73,9 +72,7 @@ trait ManagesOrderItems
     /**
      * Return all order menu by order_id
      *
-     * @param int $order_id
-     *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderMenus()
     {
@@ -85,9 +82,7 @@ trait ManagesOrderItems
     /**
      * Return all order menu options by order_id
      *
-     * @param int $order_id
-     *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderMenuOptions()
     {
@@ -97,9 +92,7 @@ trait ManagesOrderItems
     /**
      * Return all order totals by order_id
      *
-     * @param int $order_id
-     *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderTotals()
     {
@@ -168,6 +161,7 @@ trait ManagesOrderItems
                     'menu_option_value_id' => $value->id,
                     'order_option_name' => $value->name,
                     'order_option_price' => $value->price,
+                    'quantity' => $value->qty,
                 ]);
             }
         }
