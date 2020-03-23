@@ -113,59 +113,6 @@ class InitialSchemaSeeder extends Seeder
         ]);
     }
 
-    protected function seedPages()
-    {
-        if (DB::table('pages')->count())
-            return;
-
-        $language = DB::table('languages')->where('code', 'en')->first();
-
-        DB::table('pages')->insert([
-            [
-                'language_id' => $language->language_id,
-                'name' => 'About Us',
-                'title' => 'About Us',
-                'heading' => 'About Us',
-                'permalink_slug' => 'about-us',
-                'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                'meta_description' => '',
-                'meta_keywords' => '',
-                'navigation' => 'a:2:{i:0;s:8:\'side_bar\';i:1;s:6:\'footer\';}',
-                'date_added' => '2014-04-19 16:57:21',
-                'date_updated' => '2015-05-07 12:39:52',
-                'status' => 1,
-            ],
-            [
-                'language_id' => $language->language_id,
-                'name' => 'Policy',
-                'title' => 'Policy',
-                'heading' => 'Policy',
-                'permalink_slug' => 'policy',
-                'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                'meta_description' => '',
-                'meta_keywords' => '',
-                'navigation' => 'a:2:{i:0;s:8:\'side_bar\';i:1;s:6:\'footer\';}',
-                'date_added' => '2014-04-19 17:21:23',
-                'date_updated' => '2015-05-16 09:18:39',
-                'status' => 1,
-            ],
-            [
-                'language_id' => $language->language_id,
-                'name' => 'Terms and Conditions',
-                'title' => 'Terms and Conditions',
-                'heading' => 'Terms and Conditions',
-                'permalink_slug' => 'terms-and-conditions',
-                'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                'meta_description' => '',
-                'meta_keywords' => '',
-                'navigation' => 'a:2:{i:0;s:8:\'side_bar\';i:1;s:6:\'footer\';}',
-                'date_added' => '2014-04-19 17:21:23',
-                'date_updated' => '2015-05-16 09:18:39',
-                'status' => 1,
-            ],
-        ]);
-    }
-
     protected function seedSettings()
     {
         if (DB::table('settings')->count())
@@ -180,13 +127,23 @@ class InitialSchemaSeeder extends Seeder
             return;
 
         DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Owner',
+            'staff_group_name' => 'Owners',
             'description' => 'Default group for owners',
         ]);
 
         DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Administrator',
-            'description' => 'Default group for administrators',
+            'staff_group_name' => 'Managers',
+            'description' => 'Default group for managers',
+        ]);
+
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Waiters',
+            'description' => 'Default group for waiters.',
+        ]);
+
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Delivery',
+            'description' => 'Default group for delivery drivers.',
         ]);
     }
 
@@ -196,21 +153,30 @@ class InitialSchemaSeeder extends Seeder
             return;
 
         DB::table('staff_roles')->insert([
+            'name' => 'Owner',
+            'code' => 'owner',
+            'description' => 'Default role for restaurant owners',
+        ]);
+
+        DB::table('staff_roles')->insert([
             'name' => 'Manager',
             'code' => 'manager',
-            'description' => 'Default role for restaurant owners.',
+            'description' => 'Default role for restaurant managers.',
+            'permissions' => 'a:18:{s:15:"Admin.Dashboard";s:1:"1";s:16:"Admin.Categories";s:1:"1";s:14:"Admin.Statuses";s:1:"1";s:12:"Admin.Staffs";s:1:"1";s:17:"Admin.StaffGroups";s:1:"1";s:15:"Admin.Customers";s:1:"1";s:20:"Admin.CustomerGroups";s:1:"1";s:13:"Admin.Reviews";s:1:"1";s:14:"Admin.Payments";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";s:12:"Admin.Tables";s:1:"1";s:15:"Admin.Locations";s:1:"1";s:13:"Admin.Coupons";s:1:"1";s:15:"Admin.Mealtimes";s:1:"1";s:11:"Admin.Menus";s:1:"1";s:11:"Site.Themes";s:1:"1";s:18:"Admin.MediaManager";s:1:"1";}',
         ]);
 
         DB::table('staff_roles')->insert([
             'name' => 'Waiter',
             'code' => 'waiter',
             'description' => 'Default role for restaurant waiters.',
+            'permissions' => 'a:4:{s:16:"Admin.Categories";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";s:11:"Admin.Menus";s:1:"1";}',
         ]);
 
         DB::table('staff_roles')->insert([
             'name' => 'Delivery',
             'code' => 'delivery',
             'description' => 'Default role for restaurant delivery.',
+            'permissions' => 'a:3:{s:14:"Admin.Statuses";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";}',
         ]);
     }
 

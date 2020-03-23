@@ -54,7 +54,7 @@ class Staff_roles_model extends Model
 
     public function setPermissionsAttribute($permissions)
     {
-        foreach ($permissions as $permission => $value) {
+        foreach ($permissions ?? [] as $permission => $value) {
             if (!in_array($value = (int)$value, [-1, 0, 1])) {
                 throw new InvalidArgumentException(sprintf(
                     'Invalid value "%s" for permission "%s" given.', $value, $permission
