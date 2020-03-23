@@ -106,6 +106,8 @@ class Status_history_model extends Model
             'status_updated_at' => Carbon::now(),
         ]);
 
+        self::logStatusUpdated($object);
+
         return $model;
     }
 
@@ -113,19 +115,19 @@ class Status_history_model extends Model
     //
     //
 
-    protected function beforeCreate()
+    protected static function logStatusUpdated($object)
     {
-        if ($this->object instanceof Orders_model) {
-            OrderStatusUpdated::log($this->object);
+        if ($object instanceof Orders_model) {
+            OrderStatusUpdated::log($object);
 
-            if (optional($this->object->status_history->first())->notify)
-                $this->object->mailSend('admin::_mail.order_update', 'customer');
+            if (optional($object->status_history->first())->notify)
+                $object->mailSend('admin::_mail.order_update', 'customer');
         }
-        elseif ($this->object instanceof Reservations_model) {
-            ReservationStatusUpdated::log($this->object);
+        elseif ($object instanceof Reservations_model) {
+            ReservationStatusUpdated::log($object);
 
-            if (optional($this->object->status_history->first())->notify)
-                $this->object->mailSend('admin::_mail.reservation_update', 'customer');
+            if (optional($object->status_history->first())->notify)
+                $object->mailSend('admin::_mail.reservation_update', 'customer');
         }
     }
 

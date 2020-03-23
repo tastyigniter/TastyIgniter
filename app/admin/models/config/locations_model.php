@@ -156,11 +156,6 @@ $config['form']['tabs'] = [
             'default' => 1,
             'span' => 'right',
         ],
-
-        'address' => [
-            'label' => 'lang:admin::lang.locations.text_tab_title_address',
-            'type' => 'section',
-        ],
         'location_address_1' => [
             'label' => 'lang:admin::lang.locations.label_address_1',
             'type' => 'text',
@@ -230,7 +225,6 @@ $config['form']['tabs'] = [
             'type' => 'richeditor',
             'size' => 'small',
         ],
-
         'order' => [
             'label' => 'lang:admin::lang.locations.text_tab_order',
             'tab' => 'lang:admin::lang.locations.text_tab_data',

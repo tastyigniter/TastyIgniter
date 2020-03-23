@@ -22,6 +22,7 @@
     ColorPicker.DEFAULTS = {
         customClass: 'colorpicker-2x',
         addon: '.input-group-icon',
+        format: 'hex',
         swatchesColors: undefined,
         useAlpha: false,
         sliders: {

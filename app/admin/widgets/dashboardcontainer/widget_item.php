@@ -4,7 +4,7 @@
     <div class="widget-item card<?= ' '.$widget->property('cssClass'); ?> p-3 shadow-sm">
         <div class="widget-item-action">
             <a class="btn handle pull-left"><i class="fa fa-bars"></i></a>
-            <?php if ($this->canAddAndDelete) { ?>
+            <?php if ($this->canManage) { ?>
                 <a
                     class="btn pull-right"
                     data-control="remove-widget"

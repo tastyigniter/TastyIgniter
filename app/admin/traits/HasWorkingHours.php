@@ -138,25 +138,12 @@ trait HasWorkingHours
 
         $this->working_hours()->delete();
 
-        if (!$data)
+        if (!$data OR !isset($data['opening']))
             return FALSE;
 
         foreach ($data as $type => $hours) {
-            $hoursArray = [];
-
             $hourType = $hours['type'] ?? '24_7';
-
-            switch ($hourType) {
-                case '24_7':
-                    $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
-                    break;
-                case 'daily':
-                    $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
-                    break;
-                case 'flexible':
-                    $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
-                    break;
-            }
+            $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
 
             foreach ($hoursArray as $hourValue) {
                 $created = $this->working_hours()->create([
@@ -187,10 +174,9 @@ trait HasWorkingHours
         if ($type != '24_7')
             $hours = ['open' => $data['open'], 'close' => $data['close']];
 
-        $days = isset($data['days']) ? $data['days'] : [];
+        $days = $data['days'] ?? [];
 
         $workingHours = [];
-
         for ($day = 0; $day <= 6; $day++) {
             $_hours = ($type == 'flexible' AND isset($data['flexible'][$day])) ? $data['flexible'][$day] : $hours;
             $workingHours[] = [
@@ -198,7 +184,7 @@ trait HasWorkingHours
                 'type' => $type,
                 'open' => $_hours['open'],
                 'close' => $_hours['close'],
-                'status' => isset($_hours['status']) ? $_hours['status'] : (int)in_array($day, $days),
+                'status' => $_hours['status'] ?? (int)in_array($day, $days),
             ];
         }
 

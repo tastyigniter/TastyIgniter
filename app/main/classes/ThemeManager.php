@@ -311,7 +311,7 @@ class ThemeManager
         $themePath = $this->findPath($themeCode);
         $files = File::allFiles($themePath);
         foreach ($files as $file) {
-            list($folder,) = explode('/', $file->getRelativePath());
+            [$folder,] = explode('/', $file->getRelativePath());
             $path = $file->getRelativePathname();
             $result[$folder ?: '/'][] = $path;
         }

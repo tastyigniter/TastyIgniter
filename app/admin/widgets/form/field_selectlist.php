@@ -1,6 +1,7 @@
 <?php
 $fieldOptions = $field->options();
-$selectMultiple = (isset($field->config['mode']) AND $field->config['mode'] == 'checkbox');
+$isCheckboxMode = $field->config['mode'] ?? 'checkbox';
+$selectMultiple = $isCheckboxMode == 'checkbox';
 $checkedValues = (array)$field->value;
 $enableFilter = (count($fieldOptions) > 20);
 ?>

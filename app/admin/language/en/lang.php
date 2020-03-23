@@ -464,6 +464,7 @@ return [
         'text_24_7' => '24/7',
         'text_daily' => 'Daily',
         'text_flexible' => 'Flexible',
+        'text_same' => 'Same as opening hours',
         'text_open' => 'Open',
         'text_closed' => 'Closed',
         'text_circle' => 'Circle',
