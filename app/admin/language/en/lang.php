@@ -339,6 +339,8 @@ return [
         'help_password' => 'Leave blank to leave password unchanged',
 
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
+        'alert_impersonate_confirm' => 'Are you sure you want to impersonate this customer? You can revert to your original state by logging out.',
+        'alert_impersonate_success' => 'You are now impersonating this customer',
     ],
 
     'dashboard' => [

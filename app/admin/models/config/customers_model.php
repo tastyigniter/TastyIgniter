@@ -58,13 +58,14 @@ $config['list']['columns'] = [
             'href' => 'customers/edit/{customer_id}',
         ],
     ],
-    'info' => [
+    'impersonate' => [
         'type' => 'button',
         'iconCssClass' => 'fa fa-user',
         'attributes' => [
-            'class' => 'btn btn-outline-info',
-            'target' => '_blank',
-            'href' => 'customers/impersonate/{customer_id}',
+            'class' => 'btn btn-outline-secondary',
+            'data-request' => 'onImpersonate',
+            'data-request-data' => 'recordId: \'{customer_id}\'',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
         ],
     ],
     'full_name' => [
