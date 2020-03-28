@@ -1,47 +1,34 @@
-<div class="components-item">
+<div
+    class="components-item"
+    data-control="component"
+    data-component-alias="<?= $component->alias ?>"
+>
     <div class="components-item-action">
         <a
-            data-control="drag-component"
+            data-component-control="drag"
             class="handle btn btn-light btn-sm"
             role="button"
         ><i class="fa fa-bars"></i></a>
         <a
-            data-control="remove-component"
+            data-component-control="remove"
             class="remove btn btn-light btn-sm pull-right"
             role="button"
             data-prompt="<?= lang('admin::lang.alert_confirm') ?>"
-        ><i class="fa fa-times text-danger"></i></a>
+        ><i class="fa fa-trash text-danger"></i></a>
     </div>
     <div
-        class="component btn btn-light text-left"
-        data-control="component"
-        data-toggle="modal"
-        data-target="#<?= $this->getId('components-item-modal-'.$component->alias) ?>"
+        class="component btn btn-light text-left<?= $component->fatalError ? ' border-danger' : '' ?>"
+        data-component-control="load"
     >
-        <b><?= e(lang($component->meta->name)) ?></b>
-        <p class="text-muted mb-0"><?= $component->meta->description ? e(lang($component->meta->description)) : '' ?></p>
+        <b><?= e(lang($component->name)) ?></b>
+        <p class="text-muted mb-0"><?= $component->description ? e(lang($component->description)) : '' ?></p>
+        <?php if ($component->fatalError) { ?>
+            <p class="text-danger mb-0"><?= $component->fatalError ?></p>
+        <?php } ?>
     </div>
-    <div
-        id="<?= $this->getId('components-item-modal-'.$component->alias) ?>"
-        class="modal show"
-        role="dialog"
-        tabindex="-1"
-        aria-label="#<?= $this->getId('components-item-modal-'.$component->alias) ?>"
-        aria-hidden="true"
+    <input
+        type="hidden"
+        name="<?= $this->formField->getName() ?>[]"
+        value="<?= $component->alias ?>"
     >
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title"><?= e(lang($component->meta->name)) ?></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="components-item-form">
-                        <?php foreach ($component->widget->getFields() as $widgetField) { ?>
-                            <?= $component->widget->renderField($widgetField) ?>
-                        <?php } ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

@@ -10,12 +10,16 @@ return [
                 'comment' => 'lang:system::lang.themes.help_components',
                 'form' => [
                     'fields' => [
+                        'component' => [
+                            'label' => 'lang:system::lang.themes.label_component',
+                            'type' => 'select',
+                            'context' => 'create',
+                        ],
                         'alias' => [
                             'label' => 'lang:system::lang.themes.label_component_alias',
                             'type' => 'text',
-                            'attributes' => [
-                                'data-toggle' => 'disabled',
-                            ],
+                            'context' => 'edit',
+                            'disabled' => TRUE,
                         ],
                     ],
                 ],

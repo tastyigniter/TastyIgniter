@@ -1,10 +1,12 @@
 <?php namespace System\Models;
 
+use Exception;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 use Main\Template\Layout;
 use Model;
+use System\Classes\ComponentManager;
 
 /**
  * Themes Model Class
@@ -79,6 +81,25 @@ class Themes_model extends Model
     public function getLayoutOptions()
     {
         return Layout::getDropdownOptions($this->getTheme(), TRUE);
+    }
+
+    public static function getComponentOptions()
+    {
+        $components = [];
+        $manager = ComponentManager::instance();
+        foreach ($manager->listComponents() as $code => $definition) {
+            try {
+                $componentObj = $manager->makeComponent($code, null, $definition);
+
+                if ($componentObj->isHidden) continue;
+
+                $components[$code] = [$definition['name'], $definition['description']];
+            }
+            catch (Exception $ex) {
+            }
+        }
+
+        return $components;
     }
 
     //

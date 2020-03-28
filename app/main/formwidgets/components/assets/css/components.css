@@ -15,7 +15,8 @@
 .components .components-item {
   position: relative;
   margin-right: 1rem;
-  min-width: 300px;
+  min-width: 250px;
+  max-width: 300px;
 }
 .components .components-item .components-item-form {
   max-height: 75vh;

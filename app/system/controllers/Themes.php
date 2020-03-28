@@ -412,25 +412,9 @@ class Themes extends \Admin\Classes\AdminController
 
         $result['code'] = trim($code, PHP_EOL);
         $result['markup'] = array_get($formData, 'markup');
-        $result['settings'] = $this->parseSettings(array_get($formData, 'settings', []));
+        $result['settings'] = array_except(array_get($formData, 'settings', []), 'components');
 
         return [$fileName, $result];
-    }
-
-    protected function parseSettings($settings)
-    {
-        $result = array_except($settings, 'components');
-        foreach (array_get($settings, 'components') ?? [] as $alias => $component) {
-            $alias = sprintf('[%s]', array_get($component, 'alias') ?: $alias);
-            $result[$alias] = array_map(function ($propertyValue) {
-                if (is_numeric($propertyValue))
-                    $propertyValue += 0; // Convert to int or float
-
-                return $propertyValue;
-            }, array_except($component, 'alias'));
-        }
-
-        return $result;
     }
 
     protected function buildAssetsBundle($model)
@@ -477,7 +461,7 @@ class Themes extends \Admin\Classes\AdminController
         }
     }
 
-    protected function getTemplateValue($name, $default = null)
+    public function getTemplateValue($name, $default = null)
     {
         $themeCode = $this->params[0] ?? 'default';
         $cacheKey = $themeCode.'-selected-'.$name;
@@ -485,7 +469,7 @@ class Themes extends \Admin\Classes\AdminController
         return $this->getSession($cacheKey, $default);
     }
 
-    protected function setTemplateValue($name, $value)
+    public function setTemplateValue($name, $value)
     {
         $themeCode = $this->params[0] ?? 'default';
         $cacheKey = $themeCode.'-selected-'.$name;

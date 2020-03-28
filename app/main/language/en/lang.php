@@ -40,6 +40,11 @@ return [
     'alert_no_search_query' => 'Please type in a postcode/address to check if we can deliver to you.',
     'alert_info_outdated_browser' => 'You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.',
 
+    'components' => [
+        'button_new' => 'Add Component',
+        'button_edit' => 'Edit Component',
+    ],
+
     'media_manager' => [
         'text_title' => 'Media Manager',
         'text_heading' => 'Media Manager',

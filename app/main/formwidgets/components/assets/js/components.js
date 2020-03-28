@@ -4,7 +4,6 @@
     var Components = function (element, options) {
         this.$el = $(element)
         this.options = options
-        this.$modalRootElement = null
 
         this.init()
         this.initSortable()
@@ -13,10 +12,7 @@
     Components.prototype.constructor = Components
 
     Components.prototype.init = function () {
-        this.$modalRootElement = this.$el.find('[data-control="components-modal"]')
-
-        this.$el.on('click', '[data-control="add-component"]', $.proxy(this.onAddClicked, this))
-        this.$el.on('click', '[data-control="remove-component"]', $.proxy(this.onRemoveClicked, this))
+        this.$el.on('click', '[data-component-control]', $.proxy(this.onControlClick, this))
     }
 
     Components.prototype.initSortable = function () {
@@ -25,7 +21,7 @@
         $sortableContainer.sortable({
             group: 'components',
             containerSelector: this.options.sortableContainer,
-            itemSelector: '.components-item:not(:first-child)',
+            itemSelector: '.components-item',
             placeholder: '<div class="placeholder sortable-placeholder"></div>',
             handle: '.handle',
             nested: false,
@@ -34,38 +30,64 @@
         })
     }
 
-    // EVENT HANDLERS
-    // ============================
+    Components.prototype.loadComponentForm = function ($button) {
+        var $container = this.$el.find('.components-container'),
+            $component = $button.closest('[data-control="component"]'),
+            componentAlias = $component.data('componentAlias')
 
-    Components.prototype.onAddClicked = function (event) {
-        var self = this,
-            $element = $(event.currentTarget),
-            componentCode = $element.data('componentCode')
-
-        $.ti.loadingIndicator.show()
-        $element.request(this.options.addHandler, {
-            data: {code: componentCode}
-        }).always(function () {
-            $.ti.loadingIndicator.hide()
-            self.$modalRootElement.modal('hide')
-        }).done(function (json) {
-            self.$el.find('[data-control="toggle-components"]').parent().after(json.result)
+        new $.ti.recordEditor.modal({
+            alias: this.options.alias,
+            recordId: componentAlias,
+            onSave: function () {
+                this.hide()
+                $container.animate({
+                    scrollLeft: $container.find('.components-item:last-child').position().left
+                }, 500)
+            }
         })
     }
 
-    Components.prototype.onRemoveClicked = function (event) {
-        var $element = $(event.currentTarget),
-            prompt = $element.data('prompt')
+    Components.prototype.removeComponent = function ($button) {
+        var prompt = $button.data('prompt'),
+            $component = $button.closest('[data-control="component"]'),
+            componentAlias = $component.data('componentAlias')
 
         if (prompt.length && !confirm(prompt))
             return false;
 
-        $element.closest('.components-item').remove()
+        $.ti.loadingIndicator.show()
+        $.request(this.options.removeHandler, {
+            data: {code: componentAlias},
+        }).done(function () {
+            $component.remove()
+        }).always(function () {
+            $.ti.loadingIndicator.hide()
+        });
+    }
+
+    // EVENT HANDLERS
+    // ============================
+
+    Components.prototype.onControlClick = function (event) {
+        var $el = $(event.currentTarget),
+            control = $el.data('component-control')
+
+        switch (control) {
+            case 'load':
+                this.loadComponentForm($el)
+                break;
+            case 'drag':
+                this.loadComponentForm($el)
+                break;
+            case 'remove':
+                this.removeComponent($el)
+                break;
+        }
     }
 
     Components.DEFAULTS = {
         alias: undefined,
-        addHandler: undefined,
+        removeHandler: undefined,
         sortableContainer: '.is-sortable',
     }
 

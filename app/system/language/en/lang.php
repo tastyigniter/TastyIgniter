@@ -453,6 +453,7 @@ return [
         'label_title' => 'Title',
         'label_layout' => 'Layout',
         'label_permalink' => 'Permalink',
+        'label_component' => 'Component',
         'label_component_alias' => 'Component Alias',
         'label_component_status' => 'Component Status',
         'label_delete_data' => 'Delete Data',

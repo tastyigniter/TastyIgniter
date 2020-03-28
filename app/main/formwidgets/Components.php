@@ -1,7 +1,10 @@
 <?php namespace Main\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
+use Carbon\Carbon;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
+use Main\Classes\ThemeManager;
 use System\Classes\ComponentManager as ComponentsManager;
 
 /**
@@ -29,7 +32,9 @@ class Components extends BaseFormWidget
 
     public $prompt;
 
-    protected $indexCount = 0;
+    public $addTitle = 'main::lang.components.button_new';
+
+    public $editTitle = 'main::lang.components.button_edit';
 
     protected $components = [];
 
@@ -42,7 +47,6 @@ class Components extends BaseFormWidget
         ]);
 
         $this->manager = ComponentsManager::instance();
-        $this->processExistingItems();
     }
 
     public function render()
@@ -54,6 +58,8 @@ class Components extends BaseFormWidget
 
     public function loadAssets()
     {
+        $this->addJs('~/app/admin/formwidgets/recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
+
         $this->addJs('~/app/admin/formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
 
         $this->addCss('css/components.css', 'components-css');
@@ -65,106 +71,145 @@ class Components extends BaseFormWidget
      */
     public function prepareVars()
     {
-        $this->vars['components'] = $this->components;
-        $this->vars['availableComponents'] = $this->getAvailableComponents();
-        $this->vars['onAddEventHandler'] = $this->getEventHandler('onAddComponent');
         $this->vars['field'] = $this->formField;
+        $this->vars['components'] = $this->getComponents();
     }
 
-    public function onAddComponent()
+    public function getSaveValue($value)
     {
-        $componentCode = post('code');
-        if (!strlen($componentCode))
-            return FALSE;
+        $result = [];
+        $components = array_get($this->data->settings, 'components');
+        foreach ((array)$value as $index => $alias) {
+            $result[sprintf('[%s]', $alias)] = $components[$alias];
+        }
 
-        $componentAlias = $this->getUniqueAlias($componentCode);
-        $properties = $this->manager->findComponent($componentCode);
-        $properties['alias'] = $componentAlias;
+        return $result;
+    }
 
-        $componentField = $this->makeComponentField($componentAlias, $properties);
-        if (!$componentField)
-            return FALSE;
+    public function onLoadRecord()
+    {
+        $codeAlias = post('recordId');
+        $componentObj = $this->makeComponentBy($codeAlias);
+        $context = !is_null($codeAlias) ? 'edit' : 'create';
 
-        return $this->makePartial('components/component', [
-            'component' => $componentField,
-            'field' => $this->formField,
+        return $this->makePartial('~/app/admin/formwidgets/recordeditor/form', [
+            'formRecordId' => $codeAlias,
+            'formTitle' => lang($context == 'create' ? $this->addTitle : $this->editTitle),
+            'formWidget' => $this->makeComponentFormWidget($context, $componentObj),
         ]);
     }
 
-    protected function processExistingItems()
+    public function onSaveRecord()
     {
-        $itemIndexes = null;
+        $isCreateContext = !strlen(post('recordId'));
+        $codeAlias = $isCreateContext
+            ? post($this->formField->arrayName.'[componentData][component]')
+            : post('recordId');
 
-        if (!$loadValue = (array)$this->getLoadValue())
-            return;
+        if (!strlen($codeAlias))
+            throw new ApplicationException('Invalid component selected');
 
-        foreach ($loadValue as $alias => $properties) {
-            $this->components[$alias] = $this->makeComponentField($alias, $properties);
-        }
+        if (!$template = $this->getTemplate())
+            throw new ApplicationException('Template file not found');
+
+        $componentDefinition = $this->getComponentProperties($codeAlias, $isCreateContext);
+        $template->update(['settings' => $componentDefinition]);
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'),
+            'Component '.($isCreateContext ? 'added' : 'updated')))->now();
+
+        $template = $this->getTemplate();
+        $this->formField->value = array_get($template->settings, 'components');
+        $this->controller->setTemplateValue('mTime', $template->mTime);
+
+        return [
+            '#notification' => $this->makePartial('flash'),
+            '#'.$this->getId('container') => $this->makePartial('container', [
+                'components' => $this->getComponents(),
+            ]),
+        ];
     }
 
-    /**
-     * @return array
-     */
-    protected function getAvailableComponents()
+    public function onRemoveComponent()
+    {
+        $codeAlias = post('code');
+        if (!strlen($codeAlias))
+            throw new ApplicationException('Invalid component selected');
+
+        $template = $this->getTemplate();
+
+        $attributes = $template->attributes;
+        unset($attributes[sprintf('[%s]', $codeAlias)]);
+        $template->attributes = $attributes;
+
+        $template->mTime = Carbon::now()->timestamp;
+        $template->save();
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Component removed'))->now();
+
+        $this->controller->setTemplateValue('mTime', $template->mTime);
+
+        return ['#notification' => $this->makePartial('flash')];
+    }
+
+    protected function getComponents()
     {
         $components = [];
-        $manager = ComponentsManager::instance();
-        foreach ($manager->listComponents() as $code => $component) {
+        if (!$loadValue = (array)$this->getLoadValue())
+            return $components;
+
+        foreach ($loadValue as $codeAlias => $properties) {
+            [$code, $alias] = $this->getCodeAlias($codeAlias);
+
+            $definition = array_merge([
+                'alias' => $codeAlias,
+                'name' => $codeAlias,
+                'description' => null,
+                'fatalError' => null,
+            ], $this->manager->findComponent($code) ?? []);
+
             try {
-                $componentObj = $manager->makeComponent($code, null, $component);
-
-                if ($componentObj->isHidden) continue;
-
-                $components[$code] = (object)$component;
+                $this->manager->makeComponent($code, $alias, $properties);
+                $definition['alias'] = $codeAlias;
             }
             catch (Exception $ex) {
+                $definition['fatalError'] = $ex->getMessage();
             }
+
+            $components[$codeAlias] = (object)$definition;
         }
 
         return $components;
     }
 
-    protected function makeComponentField($name, $properties)
+    protected function makeComponentBy($codeAlias)
     {
-        [$code, $alias] = strpos($name, ' ')
-            ? explode(' ', $name)
-            : [$name, $name];
-
-        $componentConfig = $this->manager->findComponent($code);
-
-        try {
-            $componentObj = $this->manager->makeComponent($code, $alias, $properties);
-        }
-        catch (Exception $ex) {
-            flash()->warning("Could not load component {$code}");
-
-            return null;
+        $componentObj = null;
+        if (strlen($codeAlias)) {
+            [$code, $alias] = $this->getCodeAlias($codeAlias);
+            $propertyValues = array_get((array)$this->getLoadValue(), $codeAlias, []);
+            $componentObj = $this->manager->makeComponent($code, $alias, $propertyValues);
+            $componentObj->alias = $alias;
         }
 
-        $componentObj->alias = $name;
-        $componentConfig['alias'] = $name;
-
-        $propertyConfig = $this->manager->getComponentPropertyConfig($componentObj);
-        $propertyValues = $this->manager->getComponentPropertyValues($componentObj);
-        $formWidget = $this->makeComponentFormWidget($name, $propertyConfig, $propertyValues);
-
-        return (object)[
-            'alias' => $alias,
-            'meta' => (object)$componentConfig,
-            'object' => $componentObj,
-            'widget' => $formWidget,
-        ];
+        return $componentObj;
     }
 
-    protected function makeComponentFormWidget($alias, $propertyConfig, $propertyValues)
+    protected function makeComponentFormWidget($context, $componentObj = null)
     {
+        $propertyConfig = $propertyValues = [];
+        if ($componentObj) {
+            $propertyConfig = $this->manager->getComponentPropertyConfig($componentObj);
+            $propertyValues = $this->manager->getComponentPropertyValues($componentObj);
+        }
+
         $formConfig = $this->mergeComponentFormConfig($this->form, $propertyConfig);
         $formConfig['model'] = $this->model;
         $formConfig['data'] = $propertyValues;
+        $formConfig['alias'] = $this->alias.'ComponentForm';
+        $formConfig['arrayName'] = $this->formField->arrayName.'[componentData]';
         $formConfig['previewMode'] = $this->previewMode;
-        $formConfig['alias'] = $this->alias.'Form'.'-'.str_slug($alias);
-        $formConfig['arrayName'] = $this->formField->getName().'['.$alias.']';
+        $formConfig['context'] = $context;
 
         $widget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
         $widget->bindToController();
@@ -190,12 +235,52 @@ class Components extends BaseFormWidget
 
     protected function getUniqueAlias($alias)
     {
-        if (!isset($this->components[$alias]))
-            return $alias;
+        $existingComponents = (array)$this->getLoadValue();
+        while (isset($existingComponents[$alias])) {
+            if (strpos($alias, ' ') === FALSE)
+                $alias .= ' '.$alias;
 
-        $alias .= ' '.$alias;
-        $alias .= 'Copy';
+            $alias .= 'Copy';
+        }
 
         return $alias;
+    }
+
+    protected function getCodeAlias($name)
+    {
+        return strpos($name, ' ') ? explode(' ', $name) : [$name, $name];
+    }
+
+    protected function getTemplate()
+    {
+        $fileName = sprintf('%s/%s',
+            $this->controller->getTemplateValue('type'),
+            $this->controller->getTemplateValue('file')
+        );
+
+        return ThemeManager::instance()->readFile($fileName, $this->model->code);
+    }
+
+    protected function getComponentProperties($codeAlias, $isCreateContext)
+    {
+        $componentObj = $this->makeComponentBy($codeAlias);
+        $form = $this->makeComponentFormWidget('edit', $componentObj);
+        $properties = $isCreateContext
+            ? $this->manager->getComponentPropertyValues($componentObj)
+            : $form->getSaveData();
+
+        $properties['alias'] = $isCreateContext
+            ? $this->getUniqueAlias($properties['alias'])
+            : $codeAlias;
+
+        $alias = sprintf('[%s]', array_get($properties, 'alias'));
+        $result[$alias] = array_map(function ($propertyValue) {
+            if (is_numeric($propertyValue))
+                $propertyValue += 0; // Convert to int or float
+
+            return $propertyValue;
+        }, array_except($properties, 'alias'));
+
+        return $result;
     }
 }
