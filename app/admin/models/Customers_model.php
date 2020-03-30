@@ -220,8 +220,14 @@ class Customers_model extends AuthUserModel
 
                     // @todo: move to paypal extension
                     if (!empty($row['payment'])) {
-                        DB::table('pp_payments')->where('order_id', $row['order_id'])
-                          ->update(['customer_id' => $customer_id]);
+                        switch ($row['payment']) { 
+                            case 'paypalexpress':
+                                DB::table('pp_payments')->where('order_id', $row['order_id'])
+                                  ->update(['customer_id' => $customer_id]);
+                                break;
+                            default:
+                                // Do any other payment methods need any actions done here?
+                        }
                     }
                 }
             }
