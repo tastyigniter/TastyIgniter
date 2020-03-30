@@ -17,6 +17,8 @@ class Pages_model extends Model
     const CREATED_AT = 'date_added';
 
     const UPDATED_AT = 'date_updated';
+    
+    const SORT_ORDER = null;
 
     /**
      * @var string The database table name
