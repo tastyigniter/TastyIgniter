@@ -217,18 +217,6 @@ class Customers_model extends AuthUserModel
                     if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
                         Addresses_model::where('address_id', $row['address_id'])->update($update);
                     }
-
-                    // @todo: move to paypal extension
-                    if (!empty($row['payment'])) {
-                        switch ($row['payment']) { 
-                            case 'paypalexpress':
-                                DB::table('pp_payments')->where('order_id', $row['order_id'])
-                                  ->update(['customer_id' => $customer_id]);
-                                break;
-                            default:
-                                // Do any other payment methods need any actions done here?
-                        }
-                    }
                 }
             }
 
