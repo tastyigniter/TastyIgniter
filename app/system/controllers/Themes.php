@@ -178,7 +178,20 @@ class Themes extends \Admin\Classes\AdminController
             return;
         }
 
-        return $this->asExtension('FormController')->edit_onSave($context, $themeCode);
+        $formController = $this->asExtension('FormController');
+        $model = $this->formFindModelObject($themeCode);
+        $formController->initForm($model, $context);
+
+        [$fileName, $attributes] = $this->getTemplateAttributes();
+        ThemeManager::instance()->writeFile($fileName, $attributes, $model->code);
+
+        flash()->success(
+            sprintf(lang('admin::lang.form.edit_success'), lang('lang:system::lang.themes.text_form_name'))
+        );
+
+        if ($redirect = $formController->makeRedirect($context, $model)) {
+            return $redirect;
+        }
     }
 
     public function source_onChooseFile($context, $themeCode = null)
@@ -361,14 +374,9 @@ class Themes extends \Admin\Classes\AdminController
 
     public function formAfterSave($model)
     {
-        if ($this->widgets['form']->context == 'source') {
-            [$fileName, $attributes] = $this->getTemplateAttributes();
-            ThemeManager::instance()->writeFile($fileName, $attributes, $model->code);
-
-            return;
+        if ($this->widgets['form']->context != 'source') {
+            $this->buildAssetsBundle($model);
         }
-
-        $this->buildAssetsBundle($model);
     }
 
     public function wasTemplateModified()
