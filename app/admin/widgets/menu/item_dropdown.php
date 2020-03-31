@@ -10,7 +10,7 @@ is_array($itemOptions) OR $itemOptions = [];
     <a <?= $item->getAttributes(); ?>>
         <i class="fa <?= e($item->icon); ?>" role="button"></i>
         <?php if ($itemUnreadCount) { ?>
-            <span class="badge <?= e($item->badge); ?>"><?= e($itemUnreadCount); ?></span>
+            <span class="badge <?= e($item->badge); ?>">&nbsp;</span>
         <?php } ?>
     </a>
 

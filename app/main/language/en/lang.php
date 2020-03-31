@@ -125,7 +125,7 @@ return [
     ],
 
     'home' => [
-        'title' => 'Welcome To TastyIgniter!',
+        'title' => 'Online Order!',
         'text_step_one' => 'Search',
         'text_step_two' => 'Choose',
         'text_step_three' => 'Pay by cash or card',
