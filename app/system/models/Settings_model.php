@@ -1,7 +1,6 @@
 <?php namespace System\Models;
 
 use Carbon\Carbon;
-use Config;
 use DateTime;
 use DateTimeZone;
 use Exception;
@@ -9,7 +8,6 @@ use Main\Classes\ThemeManager;
 use Main\Template\Page;
 use Model;
 use Session;
-use Setting;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 use System\Traits\ConfigMaker;
@@ -250,21 +248,6 @@ class Settings_model extends Model
 
             $this->items[] = (object)$item;
         }
-    }
-
-    //
-    // Mailer Config
-    //
-
-    public static function applyMailerConfigValues()
-    {
-        Config::set('mail.driver', Setting::get('protocol', Config::get('mail.driver')));
-        Config::set('mail.host', Setting::get('smtp_host', Config::get('mail.host')));
-        Config::set('mail.port', Setting::get('smtp_port', Config::get('mail.port')));
-        Config::set('mail.from.address', Setting::get('sender_email', Config::get('mail.from.address')));
-        Config::set('mail.from.name', Setting::get('sender_name', Config::get('mail.from.name')));
-        Config::set('mail.username', Setting::get('smtp_user', Config::get('mail.username')));
-        Config::set('mail.password', Setting::get('smtp_pass', Config::get('mail.password')));
     }
 
     //

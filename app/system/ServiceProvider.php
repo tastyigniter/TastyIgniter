@@ -30,7 +30,6 @@ use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
 use System\Helpers\ValidationHelper;
 use System\Libraries\Assets;
-use System\Models\Settings_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -247,7 +246,7 @@ class ServiceProvider extends AppServiceProvider
         });
 
         Event::listen('mailer.beforeRegister', function () {
-            Settings_model::applyMailerConfigValues();
+            MailManager::instance()->applyMailerConfigValues();
         });
 
         Event::listen('mailer.beforeAddContent', function ($mailer, $message, $view, $data, $raw, $plain) {

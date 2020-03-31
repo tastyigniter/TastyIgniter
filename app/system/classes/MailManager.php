@@ -2,11 +2,13 @@
 
 namespace System\Classes;
 
+use Igniter\Flame\Setting\Facades\Setting;
 use Igniter\Flame\Support\PagicHelper;
 use Igniter\Flame\Support\StringParser;
 use Igniter\Flame\Traits\Singleton;
 use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
 use System\Helpers\ViewHelper;
 use System\Models\Mail_partials_model;
@@ -85,6 +87,17 @@ class MailManager
         return $this->addContentToMailerInternal($message, $template, $data);
     }
 
+    public function applyMailerConfigValues()
+    {
+        Config::set('mail.driver', Setting::get('protocol', Config::get('mail.driver')));
+        Config::set('mail.host', Setting::get('smtp_host', Config::get('mail.host')));
+        Config::set('mail.port', Setting::get('smtp_port', Config::get('mail.port')));
+        Config::set('mail.from.address', Setting::get('sender_email', Config::get('mail.from.address')));
+        Config::set('mail.from.name', Setting::get('sender_name', Config::get('mail.from.name')));
+        Config::set('mail.username', Setting::get('smtp_user', Config::get('mail.username')));
+        Config::set('mail.password', Setting::get('smtp_pass', Config::get('mail.password')));
+    }
+
     /**
      * @param \Illuminate\Mail\Message $message
      * @param $template
@@ -127,8 +140,8 @@ class MailManager
     /**
      * Render the Markdown template into HTML.
      *
-     * @param  string $content
-     * @param  array $data
+     * @param string $content
+     * @param array $data
      * @return string
      */
     public function render($content, $data = [])
