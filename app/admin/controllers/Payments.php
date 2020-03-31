@@ -19,7 +19,7 @@ class Payments extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Payments_model',
             'title' => 'lang:admin::lang.payments.text_title',
             'emptyMessage' => 'lang:admin::lang.payments.text_empty',
-            'defaultSort' => ['payment_id', 'DESC'],
+            'defaultSort' => ['date_updated', 'DESC'],
             'configFile' => 'payments_model',
         ],
     ];

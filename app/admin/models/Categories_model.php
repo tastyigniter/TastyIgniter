@@ -79,6 +79,11 @@ class Categories_model extends Model
         return strip_tags(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
     }
 
+    public function getCountMenusAttribute($value)
+    {
+        return $this->menus()->count();
+    }
+
     //
     // Scopes
     //

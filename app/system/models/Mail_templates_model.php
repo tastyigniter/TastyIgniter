@@ -129,15 +129,6 @@ class Mail_templates_model extends Model
     }
 
     //
-    // Scopes
-    //
-
-    public function scopeIsDefault($query)
-    {
-        return $query->where('template_id', Mail_layouts_model::$defaultTemplateId);
-    }
-
-    //
     // Helpers
     //
 
@@ -228,9 +219,9 @@ class Mail_templates_model extends Model
     //
 
     /**
+     * @param callable $callback A callable function.
      * @deprecated see System\Classes\MailManager::registerCallback
      *
-     * @param callable $callback A callable function.
      */
     public static function registerCallback(callable $callback)
     {

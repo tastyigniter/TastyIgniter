@@ -80,6 +80,8 @@ class Locations_model extends AbstractLocation
 
     public $url;
 
+    protected static $defaultLocation;
+
     public static function getDropdownOptions()
     {
         return static::isEnabled()->dropdown('location_name');
@@ -309,6 +311,24 @@ class Locations_model extends AbstractLocation
         }
 
         return $saved ? $locationModel->getKey() : $saved;
+    }
+
+    public static function getDefault()
+    {
+        if (self::$defaultLocation !== null) {
+            return self::$defaultLocation;
+        }
+
+        $defaultLocation = self::isEnabled()->where('location_id', params('default_location_id'))->first();
+        if (!$defaultLocation) {
+            $defaultLocation = self::isEnabled()->first();
+            if ($defaultLocation) {
+                params('default_location_id', $defaultLocation->getKey());
+                params()->save();
+            }
+        }
+
+        return self::$defaultLocation = $defaultLocation;
     }
 
     /**

@@ -55,11 +55,19 @@ class Currencies_model extends Currency
             return self::$defaultCurrency;
         }
 
-        $model = self::where('currency_id', setting('default_currency_code'))
-                     ->orWhere('currency_code', setting('default_currency_code'))
-                     ->first();
+        $defaultCurrency = self::whereIsEnabled()->where('currency_id', setting('default_currency_code'))
+                               ->orWhere('currency_code', setting('default_currency_code'))
+                               ->first();
 
-        return self::$defaultCurrency = $model;
+        if (!$defaultCurrency) {
+            $defaultCurrency = self::whereIsEnabled()->first();
+            if ($defaultCurrency) {
+                setting('default_currency_code', $defaultCurrency->getKey());
+                setting()->save();
+            }
+        }
+
+        return self::$defaultCurrency = $defaultCurrency;
     }
 
     public static function getDropdownOptions()
