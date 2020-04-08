@@ -32,7 +32,7 @@ We would love your help building TastyIgniter! Please read the [Contributing Gui
 
 Thank you to all the people who already contributed to TastyIgniter!
 
-<a href="https://github.com/tastyigniter/TastyIgniter/graphs/contributors"><img src="https://opencollective.com/tastyigniter/contributors.svg?width=890" /></a>
+<a href="https://github.com/tastyigniter/TastyIgniter/graphs/contributors"><img src="https://opencollective.com/tastyigniter/contributors.svg?width=890&button=false" /></a>
 
 ## Supporting TastyIgniter
 TastyIgniter is an MIT-licensed community-driven project with its continuous development made possible by the support of these awesome [backers](#contributing). If you'd like to help support the future of the project, please consider:
@@ -44,7 +44,9 @@ TastyIgniter is an MIT-licensed community-driven project with its continuous dev
 Become a sponsor and get your logo on our README on Github with a link to your site. 
 
 ### via Open Collective
-<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/tiers/bronze-sponsor.svg"></a>
+<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/sponsors.svg"></a>
+
+<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/backers.svg"></a>
 
 ### via Patreon
 [[Become a Patreon sponsor](https://www.patreon.com/sampoyigi)]
