@@ -55,7 +55,7 @@ class User extends Manager
 
     public function getId()
     {
-        return $this->user()->user_id;
+        return $this->user()->user_id ?? NULL;
     }
 
     public function getUserName()
