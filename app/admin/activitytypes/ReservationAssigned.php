@@ -26,16 +26,15 @@ class ReservationAssigned implements ActivityInterface
      */
     public static function log($reservation)
     {
-        $staffId = AdminAuth::staff()->getKey();
-        $assignees = $reservation->listStaffGroupAssignees();
+        $user = AdminAuth::user();
 
         $recipients = [];
         foreach ($reservation->listGroupAssignees() as $assignee) {
-            if ($assignee->getKey() === optional(AdminAuth::staff())->getKey()) continue;
+            if ($assignee->getKey() === $user->staff->getKey()) continue;
             $recipients[] = $assignee->user;
         }
 
-        activity()->logActivity(new self($reservation, AdminAuth::user()), $recipients);
+        activity()->logActivity(new self($reservation, $user), $recipients);
     }
 
     /**

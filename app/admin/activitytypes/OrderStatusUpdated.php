@@ -20,7 +20,7 @@ class OrderStatusUpdated implements ActivityInterface
      * @param \Admin\Models\Orders_model
      * @param \Igniter\Flame\Auth\Models\User $user
      */
-    public function __construct(Orders_model $order, User $user)
+    public function __construct(Orders_model $order, User $user = null)
     {
         $this->order = $order;
         $this->user = $user;
@@ -31,15 +31,17 @@ class OrderStatusUpdated implements ActivityInterface
      */
     public static function log($order)
     {
+        $user = AdminAuth::user();
+
         $recipients = [];
-        if ($order->assignee AND $order->assignee->getKey() !== AdminAuth::staff()->getKey())
+        if ($order->assignee AND $order->assignee->getKey() !== $user->staff->getKey())
             $recipients[] = $order->assignee->user;
 
         $statusHistory = $order->getLatestStatusHistory();
         if ($order->customer AND $statusHistory AND $statusHistory->notify)
             $recipients[] = $order->customer;
 
-        activity()->logActivity(new self($order, AdminAuth::user()), $recipients);
+        activity()->logActivity(new self($order, $user), $recipients);
     }
 
     /**

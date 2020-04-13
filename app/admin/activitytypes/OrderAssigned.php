@@ -26,16 +26,15 @@ class OrderAssigned implements ActivityInterface
      */
     public static function log(Orders_model $order)
     {
-        $staffId = AdminAuth::staff()->getKey();
-        $assignees = $order->listAssignableGroupStaff();
+        $user = AdminAuth::user();
 
         $recipients = [];
         foreach ($order->listGroupAssignees() as $assignee) {
-            if ($assignee->getKey() === optional(AdminAuth::staff())->getKey()) continue;
+            if ($assignee->getKey() === $user->staff->getKey()) continue;
             $recipients[] = $assignee->user;
         }
 
-        activity()->logActivity(new self($order, AdminAuth::user()), $recipients);
+        activity()->logActivity(new self($order, $user), $recipients);
     }
 
     /**

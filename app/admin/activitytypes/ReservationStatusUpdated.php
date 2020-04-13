@@ -31,15 +31,17 @@ class ReservationStatusUpdated implements ActivityInterface
      */
     public static function log($reservation)
     {
+        $user = AdminAuth::user();
+
         $recipients = [];
-        if ($reservation->assignee AND $reservation->assignee->getKey() != AdminAuth::user()->getKey())
+        if ($reservation->assignee AND $reservation->assignee->getKey() != $user->getKey())
             $recipients[] = $reservation->assignee->user;
 
         $statusHistory = $reservation->getLatestStatusHistory();
         if ($reservation->customer AND $statusHistory AND $statusHistory->notify)
             $recipients[] = $reservation->customer;
 
-        activity()->logActivity(new self($reservation, AdminAuth::user()), $recipients);
+        activity()->logActivity(new self($reservation, $user), $recipients);
     }
 
     /**
