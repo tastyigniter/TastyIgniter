@@ -62,7 +62,7 @@ class Currencies_model extends Currency
         if (!$defaultCurrency) {
             $defaultCurrency = self::whereIsEnabled()->first();
             if ($defaultCurrency) {
-                setting('default_currency_code', $defaultCurrency->getKey());
+                setting('default_currency_code', $defaultCurrency->currency_code);
                 setting()->save();
             }
         }
