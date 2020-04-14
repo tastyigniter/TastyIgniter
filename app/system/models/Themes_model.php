@@ -278,6 +278,7 @@ class Themes_model extends Model
         // Disable themes not found in file system
         // This allows admin to remove an enabled theme from admin UI after deleting files
         self::whereNotIn('code', $installedThemes)->update(['status' => FALSE]);
+        self::whereIn('code', $installedThemes)->update(['status' => TRUE]);
 
         self::updateInstalledThemes();
     }
