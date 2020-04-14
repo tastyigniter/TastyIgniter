@@ -3,6 +3,7 @@
 use Admin\Classes\PaymentGateways;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
+use Igniter\Flame\Exception\ApplicationException;
 use Lang;
 use Model;
 
@@ -139,7 +140,7 @@ class Payments_model extends Model
     /**
      * Extends this class with the gateway class
      *
-     * @param  string $class Class name
+     * @param string $class Class name
      *
      * @return boolean
      */
@@ -174,6 +175,15 @@ class Payments_model extends Model
     public function getGatewayClass()
     {
         return $this->class_name;
+    }
+
+    public function getGatewayObject($class = null)
+    {
+        if (!$class) {
+            $class = $this->class_name;
+        }
+
+        return $this->asExtension($class);
     }
 
     //
@@ -212,5 +222,61 @@ class Payments_model extends Model
         }
 
         PaymentGateways::createPartials();
+    }
+
+    //
+    // Payment Profiles
+    //
+
+    /**
+     * Finds and returns a customer payment profile for this payment method.
+     * @param \Admin\Models\Customers_model $customer Specifies customer to find a profile for.
+     * @return \Admin\Models\Payment_profiles_model|object Returns the payment profile object or NULL if the payment profile doesn't exist.
+     */
+    public function findPaymentProfile($customer)
+    {
+        if (!$customer)
+            return null;
+
+        $query = Payment_profiles_model::query();
+
+        return $query->where('customer_id', $customer->customer_id)
+                     ->where('payment_id', $this->payment_id)
+                     ->first();
+    }
+
+    /**
+     * Initializes a new empty customer payment profile.
+     * This method should be used by payment methods internally.
+     * @param \Admin\Models\Customers_model $customer Specifies customer to initialize a profile for.
+     * @return \Admin\Models\Payment_profiles_model Returns the payment profile object or NULL if the payment profile doesn't exist.
+     */
+    public function initPaymentProfile($customer)
+    {
+        $profile = new Payment_profiles_model();
+        $profile->customer_id = $customer->customer_id;
+        $profile->payment_id = $this->payment_id;
+
+        return $profile;
+    }
+
+    public function paymentProfileExists($customer)
+    {
+        return (bool)$this->findPaymentProfile($customer);
+    }
+
+    public function deletePaymentProfile($customer)
+    {
+        $gatewayObj = $this->getGatewayObject();
+
+        $profile = $this->findPaymentProfile($customer);
+
+        if (!$profile) {
+            throw new ApplicationException('Customer payment profile not found!');
+        }
+
+        $gatewayObj->deletePaymentProfile($customer, $profile);
+
+        $profile->delete();
     }
 }
