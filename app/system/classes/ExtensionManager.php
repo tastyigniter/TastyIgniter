@@ -203,7 +203,7 @@ class ExtensionManager
      */
     public function findMissingDependencies()
     {
-        $missing = [];
+        $result = $missing = [];
         foreach ($this->extensions as $code => $extension) {
             if (!$required = $this->getDependencies($extension))
                 continue;
@@ -212,16 +212,19 @@ class ExtensionManager
                 if ($this->hasExtension($require))
                     continue;
 
-                $missing[] = $require;
+                if (!in_array($require, $missing)) {
+                    $missing[] = $require;
+                    $result[$code][] = $require;
+                }
             }
         }
 
-        return $missing;
+        return $result;
     }
 
     /**
      * Checks all extensions and their dependencies, if not met extensions
-     * are disabled and vice versa.
+     * are disabled.
      * @return void
      */
     protected function loadDependencies()
@@ -230,13 +233,16 @@ class ExtensionManager
             if (!$required = $this->getDependencies($extension))
                 continue;
 
-            $enable = FALSE;
+            $disable = FALSE;
             foreach ($required as $require) {
                 $extensionObj = $this->findExtension($require);
-                $enable = !(!$extensionObj OR $extensionObj->disabled);
+                if (!$extensionObj OR $extensionObj->disabled)
+                    $disable = TRUE;
             }
 
-            $this->updateInstalledExtensions($code, $enable);
+            // Only disable extension with missing dependencies.
+            if ($disable AND !$extension->disabled)
+                $this->updateInstalledExtensions($code, FALSE);
         }
     }
 
