@@ -325,7 +325,7 @@ class Orders_model extends Model
         $data['telephone'] = $model->telephone;
         $data['order_comment'] = $model->comment;
 
-        $data['order_type'] = $model->order_type;
+        $data['order_type'] = $model->order_type_name;
         $data['order_time'] = $model->order_time.' '.$model->order_date->format('d M');
         $data['order_date'] = $model->date_added->format('d M y');
 
