@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
-use System\Models\Extensions_model;
 
 class ExtensionRefresh extends Command
 {
@@ -40,12 +39,10 @@ class ExtensionRefresh extends Command
         $manager->setLogsOutput($this->output);
 
         $this->output->writeln(sprintf('<info>Removing extension %s...</info>', $extensionName));
-        Extensions_model::deleteExtension($extensionName, TRUE, TRUE);
+        $extensionManager->uninstallExtension($extensionName, true);
 
         $this->output->writeln(sprintf('<info>Reinstalling extension %s...</info>', $extensionName));
-
-        ExtensionManager::instance()->loadExtensions();
-        Extensions_model::install($extensionName);
+        $extensionManager->installExtension($extensionName);
     }
 
     /**

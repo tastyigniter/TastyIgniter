@@ -7,6 +7,7 @@ use Main\Classes\ThemeManager;
 use Main\Template\Layout;
 use Model;
 use System\Classes\ComponentManager;
+use System\Classes\ExtensionManager;
 
 /**
  * Themes Model Class
@@ -317,7 +318,7 @@ class Themes_model extends Model
         params()->save();
 
         foreach ($theme->getTheme()->requires as $require => $version) {
-            Extensions_model::install($require);
+            ExtensionManager::instance()->installExtension($require);
         }
 
         return $theme;

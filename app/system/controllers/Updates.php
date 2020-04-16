@@ -4,6 +4,7 @@ use AdminMenu;
 use ApplicationException;
 use Exception;
 use Flash;
+use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 use System\Models\Extensions_model;
 use System\Models\Themes_model;
@@ -354,7 +355,7 @@ class Updates extends \Admin\Classes\AdminController
                     $updateManager->setCoreVersion($item['version'], $item['hash']);
                     break;
                 case 'extension':
-                    Extensions_model::install($item['code'], $item['version']);
+                    ExtensionManager::instance()->installExtension($item['code'], $item['version']);
                     break;
             }
         }
