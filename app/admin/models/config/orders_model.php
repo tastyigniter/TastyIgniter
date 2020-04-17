@@ -342,6 +342,21 @@ $config['form']['tabs'] = [
                 ],
             ],
         ],
+        'payment_logs' => [
+            'tab' => 'lang:admin::lang.orders.text_payment_logs',
+            'type' => 'datatable',
+            'columns' => [
+                'date_added_since' => [
+                    'title' => 'lang:admin::lang.orders.column_time_date',
+                ],
+                'payment_name' => [
+                    'title' => 'lang:admin::lang.orders.label_payment_method',
+                ],
+                'message' => [
+                    'title' => 'lang:admin::lang.orders.column_comment',
+                ],
+            ],
+        ],
     ],
 ];
 

@@ -23,6 +23,8 @@ class Payment_logs_model extends Model
      */
     protected $primaryKey = 'payment_log_id';
 
+    protected $appends = ['date_added_since'];
+
     public $timestamps = TRUE;
 
     public $casts = [
@@ -37,11 +39,16 @@ class Payment_logs_model extends Model
         $record = new static;
         $record->message = $message;
         $record->order_id = $order->order_id;
-        $record->payment_name = $order->payment_method->code;
+        $record->payment_name = $order->payment_method->name;
         $record->status = $status;
         $record->request = $request;
         $record->response = $response;
 
         $record->save();
+    }
+
+    public function getDateAddedSinceAttribute($value)
+    {
+        return $this->date_added ? time_elapsed($this->date_added) : null;
     }
 }

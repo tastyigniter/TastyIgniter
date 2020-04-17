@@ -690,6 +690,7 @@ return [
         'text_invoice_heading' => 'Order Invoice: %s',
         'text_tab_general' => 'Order',
         'text_status_history' => 'Status History',
+        'text_payment_logs' => 'Payment Attempts',
         'text_tab_menu' => 'Menu Items',
         'text_empty' => 'There are no orders available.',
         'text_filter_search' => 'Search by id, location, status, staff or customer name.',
