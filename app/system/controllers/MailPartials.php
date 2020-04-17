@@ -20,7 +20,7 @@ class MailPartials extends \Admin\Classes\AdminController
     ];
 
     public $formConfig = [
-        'name' => 'lang:system::lang.mail_templates.text_form_name',
+        'name' => 'lang:system::lang.mail_templates.text_partial_form_name',
         'model' => 'System\Models\Mail_partials_model',
         'request' => 'System\Requests\MailPartial',
         'create' => [

@@ -254,7 +254,7 @@ return [
         'text_period' => 'Period',
         'text_recurring' => 'Recurring',
         'text_delivery_only' => 'Delivery Only',
-        'text_collection_only' => 'Collection Only',
+        'text_collection_only' => 'Pick-up Only',
         'text_redeemed' => 'Redeemed',
         'text_not_redeemed' => 'Not Yet Redeemed',
 

@@ -1,9 +1,6 @@
 .dashboard-toolbar {
   padding: 0 0 30px;
 }
-.dashboard-widgets {
-  padding: 20px 0;
-}
 .widget-item-action {
   position: absolute;
   right: 5px;

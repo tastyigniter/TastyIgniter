@@ -185,6 +185,7 @@ return [
         'text_edit_template_title' => 'Mail Template: Update',
         'text_preview_template_title' => 'Mail Template: Preview',
         'text_partial_title' => 'Mail Partials',
+        'text_partial_form_name' => 'Mail Partial',
         'text_new_partial_title' => 'Mail Partial: New',
         'text_edit_partial_title' => 'Mail Partial: Update',
         'text_preview_partial_title' => 'Mail Partial: Preview',

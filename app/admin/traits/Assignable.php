@@ -68,8 +68,6 @@ trait Assignable
         $saved = $this->updateAssignTo($group, $assignee);
 
         if ($this->wasChanged(['assignee_id', 'assignee_group_id'])) {
-            $this->updateAssigneeRecord($assignee, $oldAssignee);
-
             $this->fireSystemEvent('admin.assignable.assigned');
         }
 

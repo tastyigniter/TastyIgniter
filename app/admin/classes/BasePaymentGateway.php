@@ -120,7 +120,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function isApplicable($total, $host)
     {
-        return $host->order_total <= $total;
+        return TRUE;
     }
 
     /**
