@@ -67,14 +67,14 @@ class Orders extends \Admin\Classes\AdminController
 
     public function formExtendFieldsBefore($form)
     {
-        if (!array_key_exists('invoice_no', $form->tabs['fields']))
+        if (!array_key_exists('invoice_number', $form->tabs['fields']))
             return;
 
         if (!$form->model->hasInvoice()) {
-            array_pull($form->tabs['fields']['invoice_no'], 'addonRight');
+            array_pull($form->tabs['fields']['invoice_number'], 'addonRight');
         }
         else {
-            $form->tabs['fields']['invoice_no']['addonRight']['attributes']['href'] = admin_url('orders/invoice/'.$form->model->getKey());
+            $form->tabs['fields']['invoice_number']['addonRight']['attributes']['href'] = admin_url('orders/invoice/'.$form->model->getKey());
         }
     }
 

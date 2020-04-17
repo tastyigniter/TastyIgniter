@@ -713,10 +713,7 @@ return [
         'text_assigned_to_self' => 'Assigned To Me',
         'text_assigned_to_others' => 'Assigned To Other Staff',
 
-        'button_create_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;Generate Invoice',
-        'button_view_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;View Invoice',
-        'button_print_invoice' => 'Print Invoice',
-        'button_download_invoice' => 'Download Invoice',
+        'button_print_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;View Invoice',
 
         'column_location' => 'Location',
         'column_customer_name' => 'Customer Name',
