@@ -50,14 +50,14 @@ class DemoSchemaSeeder extends Seeder
 
     protected function seedMenuOptions()
     {
-        if (DB::table('options')->count())
+        if (DB::table('menu_options')->count())
             return;
 
         foreach ($this->getSeedRecords('menu_options') as $menuOption) {
-            $optionId = DB::table('options')->insertGetId(array_except($menuOption, 'option_values'));
+            $optionId = DB::table('menu_options')->insertGetId(array_except($menuOption, 'option_values'));
 
             foreach (array_get($menuOption, 'option_values') as $optionValue) {
-                DB::table('option_values')->insert(array_merge($optionValue, [
+                DB::table('menu_option_values')->insert(array_merge($optionValue, [
                     'option_id' => $optionId,
                 ]));
             }
@@ -73,17 +73,17 @@ class DemoSchemaSeeder extends Seeder
             $menuId = DB::table('menus')->insertGetId(array_except($menu, 'menu_options'));
 
             foreach (array_get($menu, 'menu_options', []) as $name) {
-                $option = DB::table('options')->where('option_name', $name)->first();
+                $option = DB::table('menu_options')->where('option_name', $name)->first();
 
-                $menuOptionId = DB::table('menu_options')->insertGetId([
+                $menuOptionId = DB::table('menu_item_options')->insertGetId([
                     'option_id' => $option->option_id,
                     'menu_id' => $menuId,
                 ]);
 
-                $optionValues = DB::table('option_values')->where('option_id', $option->option_id)->get();
+                $optionValues = DB::table('menu_option_values')->where('option_id', $option->option_id)->get();
 
                 foreach ($optionValues as $optionValue) {
-                    DB::table('menu_option_values')->insertGetId([
+                    DB::table('menu_item_option_values')->insertGetId([
                         'menu_option_id' => $menuOptionId,
                         'option_value_id' => $optionValue->option_value_id,
                         'new_price' => $optionValue->price,

@@ -35,7 +35,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'mail_templates/edit/{template_data_id}',
+            'href' => 'mail_templates/edit/{template_id}',
         ],
     ],
     'title' => [
@@ -49,7 +49,7 @@ $config['list']['columns'] = [
         'type' => 'text',
         'searchable' => TRUE,
     ],
-    'template_id' => [
+    'layout_id' => [
         'label' => 'lang:system::lang.mail_templates.column_layout',
         'relation' => 'layout',
         'valueFrom' => 'name',
@@ -65,7 +65,7 @@ $config['list']['columns'] = [
         'type' => 'timetense',
         'searchable' => TRUE,
     ],
-    'template_data_id' => [
+    'template_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
@@ -121,7 +121,7 @@ $config['form']['fields'] = [
         'span' => 'left',
         'type' => 'text',
     ],
-    'template_id' => [
+    'layout_id' => [
         'label' => 'lang:system::lang.mail_templates.label_layout',
         'span' => 'right',
         'type' => 'relation',

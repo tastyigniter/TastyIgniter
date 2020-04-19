@@ -34,13 +34,13 @@ class Payment_logs_model extends Model
         'status' => 'boolean',
     ];
 
-    public static function logAttempt($order, $message, $status, $request = [], $response = [])
+    public static function logAttempt($order, $message, $isSuccess, $request = [], $response = [])
     {
         $record = new static;
         $record->message = $message;
         $record->order_id = $order->order_id;
         $record->payment_name = $order->payment_method->name;
-        $record->status = $status;
+        $record->is_success = $isSuccess;
         $record->request = $request;
         $record->response = $response;
 

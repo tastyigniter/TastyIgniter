@@ -78,7 +78,7 @@ $config['list']['columns'] = [
             'href' => 'extensions/delete/{name}',
         ],
     ],
-    'title' => [
+    'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'partial',
         'path' => 'lists/extension_card',

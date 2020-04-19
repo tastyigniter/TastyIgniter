@@ -17,7 +17,7 @@ class Menu_option_values_model extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'option_values';
+    protected $table = 'menu_option_values';
 
     /**
      * @var string The database table primary key

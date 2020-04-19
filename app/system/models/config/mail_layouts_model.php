@@ -34,7 +34,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'mail_layouts/edit/{template_id}',
+            'href' => 'mail_layouts/edit/{layout_id}',
         ],
     ],
     'code' => [
@@ -55,7 +55,7 @@ $config['list']['columns'] = [
         'label' => 'lang:system::lang.mail_templates.column_date_added',
         'type' => 'timetense',
     ],
-    'template_id' => [
+    'layout_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],

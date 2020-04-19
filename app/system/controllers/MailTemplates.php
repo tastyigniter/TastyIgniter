@@ -17,7 +17,7 @@ class MailTemplates extends \Admin\Classes\AdminController
             'model' => 'System\Models\Mail_templates_model',
             'title' => 'lang:system::lang.mail_templates.text_template_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
-            'defaultSort' => ['template_data_id', 'DESC'],
+            'defaultSort' => ['template_id', 'DESC'],
             'configFile' => 'mail_templates_model',
         ],
     ];
@@ -28,17 +28,17 @@ class MailTemplates extends \Admin\Classes\AdminController
         'request' => 'System\Requests\MailTemplate',
         'create' => [
             'title' => 'lang:system::lang.mail_templates.text_new_template_title',
-            'redirect' => 'mail_templates/edit/{template_data_id}',
+            'redirect' => 'mail_templates/edit/{template_id}',
             'redirectClose' => 'mail_templates',
         ],
         'edit' => [
             'title' => 'lang:system::lang.mail_templates.text_edit_template_title',
-            'redirect' => 'mail_templates/edit/{template_data_id}',
+            'redirect' => 'mail_templates/edit/{template_id}',
             'redirectClose' => 'mail_templates',
         ],
         'preview' => [
             'title' => 'lang:system::lang.mail_templates.text_preview_template_title',
-            'redirect' => 'mail_templates/preview/{template_data_id}',
+            'redirect' => 'mail_templates/preview/{template_id}',
         ],
         'delete' => [
             'redirect' => 'mail_templates',

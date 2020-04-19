@@ -19,19 +19,19 @@ class Mail_templates_model extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'mail_templates_data';
+    protected $table = 'mail_templates';
 
-    protected $primaryKey = 'template_data_id';
+    protected $primaryKey = 'template_id';
 
     protected $guarded = [];
 
     public $casts = [
-        'template_id' => 'integer',
+        'layout_id' => 'integer',
     ];
 
     public $relation = [
         'belongsTo' => [
-            'layout' => ['System\Models\Mail_layouts_model', 'foreignKey' => 'template_id'],
+            'layout' => ['System\Models\Mail_layouts_model', 'foreignKey' => 'layout_id'],
         ],
     ];
 
@@ -149,7 +149,7 @@ class Mail_templates_model extends Model
         $this->plain_body = array_get($sections, 'text');
 
         $layoutCode = array_get($sections, 'settings.layout', 'default');
-        $this->template_id = Mail_layouts_model::getIdFromCode($layoutCode);
+        $this->layout_id = Mail_layouts_model::getIdFromCode($layoutCode);
     }
 
     /**
@@ -183,7 +183,7 @@ class Mail_templates_model extends Model
             $templateModel->code = $name;
             $templateModel->label = $label;
             $templateModel->is_custom = 0;
-            $templateModel->template_id = Mail_layouts_model::getIdFromCode($layoutCode);
+            $templateModel->layout_id = Mail_layouts_model::getIdFromCode($layoutCode);
             $templateModel->save();
         }
     }

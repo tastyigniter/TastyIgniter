@@ -24,7 +24,7 @@ class Extensions extends \Admin\Classes\AdminController
             'model' => 'System\Models\Extensions_model',
             'title' => 'lang:system::lang.extensions.text_title',
             'emptyMessage' => 'lang:system::lang.extensions.text_empty',
-            'defaultSort' => ['title', 'ASC'],
+            'defaultSort' => ['name', 'ASC'],
             'showCheckboxes' => FALSE,
             'configFile' => 'extensions_model',
         ],
