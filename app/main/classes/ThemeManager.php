@@ -4,6 +4,7 @@ use App;
 use File;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Traits\Singleton;
+use Illuminate\Support\Facades\Event;
 use Lang;
 use System\Libraries\Assets;
 use SystemException;
@@ -177,7 +178,12 @@ class ThemeManager
 
     public function getActiveThemeCode()
     {
-        return trim(params('default_themes.main', config('system.defaultTheme')), '/');
+        $activeTheme = trim(params('default_themes.main', config('system.defaultTheme')), '/');
+
+        if (!is_null($apiResult = Event::fire('theme.getActiveTheme', [], TRUE)))
+            $activeTheme = $apiResult;
+
+        return $activeTheme;
     }
 
     /**
