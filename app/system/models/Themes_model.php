@@ -109,22 +109,22 @@ class Themes_model extends Model
 
     public function getNameAttribute($value)
     {
-        return $this->getTheme()->label;
+        return optional($this->getTheme())->label ?? $value;
     }
 
-    public function getDescriptionAttribute()
+    public function getDescriptionAttribute($value)
     {
-        return $this->getTheme()->description;
+        return optional($this->getTheme())->description ?? $value;
     }
 
-    public function getVersionAttribute()
+    public function getVersionAttribute($value)
     {
-        return $this->getTheme()->version;
+        return optional($this->getTheme())->version ?? $value;
     }
 
-    public function getAuthorAttribute()
+    public function getAuthorAttribute($value)
     {
-        return $this->getTheme()->author;
+        return optional($this->getTheme())->author ?? $value;
     }
 
     public function getLockedAttribute()
@@ -151,7 +151,7 @@ class Themes_model extends Model
     // Events
     //
 
-    public function beforeSave()
+    protected function beforeSave()
     {
         if ($this->fieldValues) {
             $this->data = $this->fieldValues;
@@ -251,8 +251,6 @@ class Themes_model extends Model
 
     public static function syncAll()
     {
-        $themes = self::get();
-
         $installedThemes = [];
         $themeManager = ThemeManager::instance();
         foreach ($themeManager->paths() as $code => $path) {
@@ -262,18 +260,14 @@ class Themes_model extends Model
             $installedThemes[] = $name = $themeObj->name ?? $code;
 
             // Only add themes whose meta code match their directory name
-            // or theme has no record
-            if (
-                $code != $name OR
-                $extension = $themes->where('code', $name)->first()
-            ) continue;
+            if ($code != $name) continue;
 
-            self::create([
-                'name' => $themeObj->label ?? title_case($code),
-                'code' => $name,
-                'version' => $themeObj->version ?? '1.0.0',
-                'description' => $themeObj->description ?? '',
-            ]);
+            $theme = self::firstOrNew(['code' => $name]);
+            $theme->name = $themeObj->label ?? title_case($code);
+            $theme->code = $name;
+            $theme->version = $themeObj->version ?? '1.0.0';
+            $theme->description = $themeObj->description ?? '';
+            $theme->save();
         }
 
         // Disable themes not found in file system
@@ -343,5 +337,27 @@ class Themes_model extends Model
         $filesDeleted = ThemeManager::instance()->removeTheme($themeCode);
 
         return $filesDeleted;
+    }
+
+    public static function generateUniqueCode($code, $suffix = null)
+    {
+        do {
+            $uniqueCode = $code.($suffix ? '-'.$suffix : '');
+            $suffix = strtolower(str_random('3'));
+        } // Already in the DB? Fail. Try again
+        while (self::themeCodeExists($uniqueCode));
+
+        return $uniqueCode;
+    }
+
+    /**
+     * Checks whether a code exists in the database or not
+     *
+     * @param $uniqueCode
+     * @return bool
+     */
+    protected static function themeCodeExists($uniqueCode)
+    {
+        return (self::where('code', '=', $uniqueCode)->limit(1)->count() > 0);
     }
 }

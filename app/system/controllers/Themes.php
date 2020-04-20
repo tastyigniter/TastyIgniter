@@ -256,25 +256,19 @@ class Themes extends \Admin\Classes\AdminController
 
     public function source_onCreateChild($context, $themeCode = null)
     {
+        $manager = ThemeManager::instance();
+
         $model = $this->formFindModelObject($themeCode);
 
-        $childThemeCode = ThemeManager::instance()->createChildTheme($themeCode);
+        $childTheme = $manager->createChildTheme($model);
 
-        ThemeManager::instance()->loadThemes();
-        Themes_model::create([
-            'name' => $model->name.' [child]',
-            'code' => $childThemeCode,
-            'version' => '1.0.0',
-            'description' => $model->description,
-            'data' => $model->data,
-        ]);
-
+        $manager->loadThemes();
         Themes_model::syncAll();
-        Themes_model::activateTheme($childThemeCode);
+        Themes_model::activateTheme($childTheme->code);
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Child theme ['.$childThemeCode.'] created '));
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Child theme ['.$childTheme->name.'] created '));
 
-        return $this->redirect('themes/source/'.$childThemeCode);
+        return $this->redirect('themes/source/'.$childTheme->code);
     }
 
     public function upload_onUpload($context = null)
