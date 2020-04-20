@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-class removeAddColumnsOnStaffStaffGroupsTable extends Migration
+class RemoveAddColumnsOnStaffStaffGroupsTable extends Migration
 {
     public function up()
     {

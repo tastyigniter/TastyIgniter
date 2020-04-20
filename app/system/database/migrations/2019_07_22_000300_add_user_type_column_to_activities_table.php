@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-class addUserTypeColumnToActivitiesTable extends Migration
+class AddUserTypeColumnToActivitiesTable extends Migration
 {
     public function up()
     {

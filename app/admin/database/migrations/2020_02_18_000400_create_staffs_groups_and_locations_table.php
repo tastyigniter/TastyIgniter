@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-class createStaffsGroupsAndLocationsTable extends Migration
+class CreateStaffsGroupsAndLocationsTable extends Migration
 {
     public function up()
     {

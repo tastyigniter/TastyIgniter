@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-class addSelectedColumnsToMenuOptionsTable extends Migration
+class AddSelectedColumnsToMenuOptionsTable extends Migration
 {
     public function up()
     {

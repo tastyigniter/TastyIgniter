@@ -7,7 +7,7 @@ use Schema;
 /**
  * Set order_total_id to auto increment PRIMARY key
  */
-class autoIncrementOnOrderTotalsTable extends Migration
+class AutoIncrementOnOrderTotalsTable extends Migration
 {
     public function up()
     {
