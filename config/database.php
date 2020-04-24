@@ -108,13 +108,25 @@ return [
 
     'redis' => [
 
-        'client' => 'predis',
+        'client' => 'phpredis',
+
+        'options' => [
+            'cluster' => env('REDIS_CLUSTER', 'redis'),
+            'prefix' => env('REDIS_PREFIX', 'tastyigniter_database_'),
+        ],
 
         'default' => [
             'host' => '127.0.0.1',
             'password' => null,
             'port' => 6379,
             'database' => 0,
+        ],
+
+        'cache' => [
+            'host' => '127.0.0.1',
+            'password' => null,
+            'port' => 6379,
+            'database' => 1,
         ],
     ],
 ];
