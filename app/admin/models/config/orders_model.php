@@ -219,7 +219,7 @@ $config['form']['tabs'] = [
         ],
         'location[location_name]' => [
             'label' => 'lang:admin::lang.orders.text_restaurant',
-            'type' => 'text',
+            'type' => 'location',
             'disabled' => TRUE,
             'span' => 'right',
             'placeholder' => 'lang:admin::lang.text_please_select',
@@ -240,9 +240,9 @@ $config['form']['tabs'] = [
             'span' => 'left',
             'cssClass' => 'flex-width',
         ],
-        'customer_name' => [
-            'label' => 'lang:admin::lang.orders.label_customer_name',
-            'type' => 'text',
+        'customer[full_name]' => [
+            'label' => 'lang:admin::lang.orders.text_customer',
+            'type' => 'customer',
             'disabled' => TRUE,
             'span' => 'right',
         ],
