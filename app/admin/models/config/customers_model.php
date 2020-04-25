@@ -183,9 +183,8 @@ $config['form']['tabs'] = [
         ],
         'addresses' => [
             'tab' => 'lang:admin::lang.customers.text_tab_address',
-            'type' => 'partial',
-            'path' => 'customers/address_tabs',
-            'options' => 'listAddresses',
+            'type' => 'repeater',
+            'form' => 'addresses_model',
         ],
         'orders' => [
             'tab' => 'lang:admin::lang.customers.text_tab_orders',
