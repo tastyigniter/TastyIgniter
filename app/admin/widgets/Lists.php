@@ -4,6 +4,7 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ListColumn;
+use Admin\Facades\AdminAuth;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -495,6 +496,12 @@ class Lists extends BaseWidget
     public function addColumns(array $columns)
     {
         foreach ($columns as $columnName => $config) {
+            // Check if admin has permissions to show this column
+            $permissions = array_get($config, 'permissions');
+            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+                continue;
+            }
+
             // Check that the filter scope matches the active location context
             if ($this->isLocationAware($config)) continue;
 

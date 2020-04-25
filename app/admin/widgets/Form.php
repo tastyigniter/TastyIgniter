@@ -6,6 +6,7 @@ use Admin\Classes\BaseWidget;
 use Admin\Classes\FormField;
 use Admin\Classes\FormTabs;
 use Admin\Classes\Widgets;
+use Admin\Facades\AdminAuth;
 use Admin\Traits\FormModelWidget;
 use Exception;
 use Model;
@@ -353,16 +354,22 @@ class Form extends BaseWidget
     public function addFields(array $fields, $addToArea = null)
     {
         foreach ($fields as $name => $config) {
-            // Check that the form field matches the active context
-            if (array_key_exists('context', $config)) {
-                $context = (array)$config['context'];
-                if (!in_array($this->getContext(), $context)) {
-                    continue;
-                }
+            // Check if admin has permissions to show this field
+            $permissions = array_get($config, 'permissions');
+            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+                continue;
             }
 
             $fieldObj = $this->makeFormField($name, $config);
             $fieldTab = is_array($config) ? array_get($config, 'tab') : null;
+
+            // Check that the form field matches the active context
+            if ($fieldObj->context !== null) {
+                $context = is_array($fieldObj->context) ? $fieldObj->context : [$fieldObj->context];
+                if (!in_array($this->getContext(), $context)) {
+                    continue;
+                }
+            }
 
             $this->allFields[$name] = $fieldObj;
 

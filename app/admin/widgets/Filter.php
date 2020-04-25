@@ -4,6 +4,7 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
+use Admin\Facades\AdminAuth;
 use DB;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -301,6 +302,12 @@ class Filter extends BaseWidget
     {
         foreach ($scopes as $name => $config) {
             $scopeObj = $this->makeFilterScope($name, $config);
+
+            // Check if admin has permissions to show this column
+            $permissions = array_get($config, 'permissions');
+            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+                continue;
+            }
 
             // Check that the filter scope matches the active context
             if ($scopeObj->context !== null) {
