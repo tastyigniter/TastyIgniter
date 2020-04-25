@@ -90,7 +90,7 @@
 
     RecordEditorModal.prototype.onModalShown = function (event) {
         var self = this,
-            handler = this.options.alias + '::onLoadRecord'
+            handler = this.options.handler ? this.options.handler : this.options.alias + '::onLoadRecord'
 
         this.$modalElement = $(event.target)
 
@@ -103,6 +103,7 @@
 
     RecordEditorModal.DEFAULTS = {
         alias: undefined,
+        handler: undefined,
         recordId: undefined,
         onLoad: undefined,
         onSubmit: undefined,

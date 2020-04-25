@@ -11,10 +11,12 @@ $enableFilter = (count($fieldOptions) > 20);
         id="<?= $field->getId() ?>"
         name="<?= $field->getName() ?><?= $selectMultiple ? '[]' : '' ?>"
         <?php if ($field->placeholder) { ?>data-non-selected-text="<?= e(lang($field->placeholder)) ?>"<?php } ?>
+        <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
         <?= $selectMultiple ? 'multiple="multiple"' : '' ?>
         data-enable-filtering="<?= $enableFilter; ?>"
         data-enable-case-insensitive-filtering="<?= $enableFilter; ?>"
-        <?= $field->getAttributes() ?>>
+        <?= $field->getAttributes() ?>
+    >
 
         <?php if ($field->placeholder) { ?>
             <option value=""><?= e(lang($field->placeholder)) ?></option>

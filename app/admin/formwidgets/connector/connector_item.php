@@ -28,18 +28,18 @@
                     <p class="card-subtitle mb-0"><?= $item->{$descriptionFrom} ?></p>
                 <?php } ?>
             </div>
-            <div class="align-self-center ml-auto">
-                <a
-                    class="close text-danger"
-                    aria-label="Remove"
-                    <?php if (!$this->previewMode) { ?>
+            <?php if (!$this->previewMode) { ?>
+                <div class="align-self-center ml-auto">
+                    <a
+                        class="close text-danger"
+                        aria-label="Remove"
                         data-control="delete-item"
                         data-item-id="<?= $item->getKey() ?>"
                         data-item-selector="#<?= $this->getId('item-'.$index) ?>"
                         data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
-                    <?php } ?>
-                ><i class="fa fa-trash-alt"></i></a>
-            </div>
+                    ><i class="fa fa-trash-alt"></i></a>
+                </div>
+            <?php } ?>
         </div>
     </div>
 </div>

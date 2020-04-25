@@ -13,7 +13,7 @@
                     <?php if (!$this->previewMode AND $sortable) { ?>
                         <th class="list-action"></th>
                     <?php } ?>
-                    <?php if ($showRemoveButton) { ?>
+                    <?php if (!$this->previewMode AND $showRemoveButton) { ?>
                         <th class="list-action"></th>
                     <?php } ?>
                     <?php foreach ($this->getVisibleColumns() as $name => $label) { ?>

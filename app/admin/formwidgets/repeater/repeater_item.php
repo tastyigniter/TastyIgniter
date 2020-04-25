@@ -10,19 +10,15 @@
         </td>
     <?php } ?>
 
-    <?php if ($showRemoveButton) { ?>
+    <?php if (!$this->previewMode AND $showRemoveButton) { ?>
         <td class="list-action repeater-item-remove">
             <a
                 class="btn btn-outline-danger"
                 role="button"
-                <?php if (!$this->previewMode) { ?>
-                    data-control="remove-item"
-                    data-target="#<?= $this->getId('item-'.$indexValue) ?>"
-                    data-prompt="<?= lang('admin::lang.alert_confirm') ?>"
-                <?php } ?>
-            >
-                <i class="fa fa-times-circle"></i>
-            </a>
+                data-control="remove-item"
+                data-target="#<?= $this->getId('item-'.$indexValue) ?>"
+                data-prompt="<?= lang('admin::lang.alert_confirm') ?>"
+            ><i class="fa fa-times-circle"></i></a>
         </td>
     <?php } ?>
 
