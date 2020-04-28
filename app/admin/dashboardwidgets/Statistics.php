@@ -150,17 +150,17 @@ class Statistics extends BaseDashboardWidget
     protected function getRangeQuery($range)
     {
         if ($range === 'day')
-            return 'DATE(date_added) = '.date('Y-m-d');
+            return 'date_added BETWEEN "'.date("Y-m-d H:m:s",time()-(3600*24)).'" and "'.date("Y-m-d H:m:s").'"';
 
         if ($range === 'week')
-            return 'WEEK(date_added) = '.date('W');
+            return 'date_added BETWEEN "'.date("Y-m-d H:m:s",time()-(3600*24*7)).'" and "'.date("Y-m-d H:m:s").'"';
 
         if ($range === 'month')
-            return 'MONTH(date_added) = '.date('m');
+            return 'date_added BETWEEN "'.date("Y-m-d H:m:s",time()-(3600*24*31)).'" and "'.date("Y-m-d H:m:s").'"';
 
         if ($range === 'year')
-            return 'YEAR(date_added) = '.date('Y');
-
+            return 'date_added BETWEEN "'.date("Y-m-d H:m:s",time()-(3600*24*356)).'" and "'.date("Y-m-d H:m:s").'"';
+    
         return $range;
     }
 
