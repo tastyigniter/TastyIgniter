@@ -150,16 +150,16 @@ class Statistics extends BaseDashboardWidget
     protected function getRangeQuery($range)
     {
        if ($range === 'day')
-            return 'date_added BETWEEN "'.date("Y-m-d H:m:s",time()-(3600*24)).'" and "'.date("Y-m-d H:m:s").'"';
+            return 'date_added BETWEEN "'.date("Y-m-d H:i:s",time()-(3600*24)).'" and "'.date("Y-m-d H:i:s").'"';
 
         if ($range === 'week')
-            return 'date_added BETWEEN "'.date("Y-m-d H:m:s",time()-(3600*24*7)).'" and "'.date("Y-m-d H:m:s").'"';
+            return 'date_added BETWEEN "'.date("Y-m-d H:i:s",time()-(3600*24*7)).'" and "'.date("Y-m-d H:i:s").'"';
 
         if ($range === 'month')
-            return 'date_added BETWEEN "'.date("Y-m-d H:m:s",time()-(3600*24*31)).'" and "'.date("Y-m-d H:m:s").'"';
+            return 'date_added BETWEEN "'.date("Y-m-d H:i:s",time()-(3600*24*31)).'" and "'.date("Y-m-d H:i:s").'"';
 
         if ($range === 'year')
-            return 'date_added BETWEEN "'.date("Y-m-d H:m:s",time()-(3600*24*356)).'" and "'.date("Y-m-d H:m:s").'"';
+            return 'date_added BETWEEN "'.date("Y-m-d H:i:s",time()-(3600*24*356)).'" and "'.date("Y-m-d H:i:s").'"';
     
         return $range;
     }
