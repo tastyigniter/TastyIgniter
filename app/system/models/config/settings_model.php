@@ -582,10 +582,21 @@ $config['form']['mail'] = [
                     'condition' => 'value[smtp]',
                 ],
             ],
+            'mail_encryption' => [
+                'label' => 'lang:system::lang.settings.label_mail_encryption',
+                'type' => 'text',
+                'default' => 'tls',
+                'span' => 'right',
+                'trigger' => [
+                    'action' => 'show',
+                    'field' => 'protocol',
+                    'condition' => 'value[smtp]',
+                ],
+            ],
             'smtp_user' => [
                 'label' => 'lang:system::lang.settings.label_smtp_user',
                 'type' => 'text',
-                'span' => 'right',
+                'span' => 'left',
                 'trigger' => [
                     'action' => 'show',
                     'field' => 'protocol',
@@ -595,7 +606,7 @@ $config['form']['mail'] = [
             'smtp_pass' => [
                 'label' => 'lang:system::lang.settings.label_smtp_pass',
                 'type' => 'text',
-                'span' => 'left',
+                'span' => 'right',
                 'trigger' => [
                     'action' => 'show',
                     'field' => 'protocol',
@@ -606,7 +617,7 @@ $config['form']['mail'] = [
                 'label' => 'lang:system::lang.settings.label_test_email',
                 'type' => 'partial',
                 'path' => 'settings/test_email_button',
-                'span' => 'right',
+                'span' => 'left',
             ],
         ],
         'rules' => [
@@ -615,6 +626,7 @@ $config['form']['mail'] = [
             ['protocol', 'lang:system::lang.settings.label_protocol', 'required'],
             ['smtp_host', 'lang:system::lang.settings.label_smtp_host', 'string'],
             ['smtp_port', 'lang:system::lang.settings.label_smtp_port', 'string'],
+            ['mail_encryption', 'lang:system::lang.settings.label_mail_encryption', 'required_if:protocol,smtp|string'],
             ['smtp_user', 'lang:system::lang.settings.label_smtp_user', 'string'],
             ['smtp_pass', 'lang:system::lang.settings.label_smtp_pass', 'string'],
         ],

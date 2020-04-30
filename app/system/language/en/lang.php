@@ -363,6 +363,7 @@ return [
         'label_smtp_port' => 'SMTP Port',
         'label_smtp_user' => 'SMTP Username',
         'label_smtp_pass' => 'SMTP Password',
+        'label_mail_encryption' => 'Encryption Protocol',
         'label_test_email' => 'Test Email',
         'label_permalink' => 'Permalink',
         'label_maintenance_mode' => 'Maintenance Mode',

@@ -92,6 +92,7 @@ class MailManager
         Config::set('mail.driver', Setting::get('protocol', Config::get('mail.driver')));
         Config::set('mail.host', Setting::get('smtp_host', Config::get('mail.host')));
         Config::set('mail.port', Setting::get('smtp_port', Config::get('mail.port')));
+        Config::set('mail.encryption', Setting::get('mail_encryption', Config::get('mail.encryption')));
         Config::set('mail.from.address', Setting::get('sender_email', Config::get('mail.from.address')));
         Config::set('mail.from.name', Setting::get('sender_name', Config::get('mail.from.name')));
         Config::set('mail.username', Setting::get('smtp_user', Config::get('mail.username')));
