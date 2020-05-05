@@ -1081,6 +1081,9 @@ body.dragging {
 .control-label {
   color: #27365C; }
 
+.help-block.before-field {
+  margin-bottom: 10px; }
+
 .form-group .select2-container {
   width: 100% !important; }
 

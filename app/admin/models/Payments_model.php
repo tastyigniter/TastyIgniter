@@ -159,7 +159,7 @@ class Payments_model extends Model
 
         $this->class_name = $class;
 
-        return TRUE;
+        return !is_null($class);
     }
 
     public function renderPaymentForm($controller)

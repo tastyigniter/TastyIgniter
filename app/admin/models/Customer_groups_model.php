@@ -29,6 +29,8 @@ class Customer_groups_model extends Model
         ],
     ];
 
+    protected static $defaultGroup;
+
     public static function getDropdownOptions()
     {
         return static::dropdown('group_name');
@@ -59,5 +61,21 @@ class Customer_groups_model extends Model
 
             return TRUE;
         }
+    }
+
+    public static function getDefault()
+    {
+        if (self::$defaultGroup !== null) {
+            return self::$defaultGroup;
+        }
+
+        $defaultGroup = self::where('customer_group_id', setting('customer_group_id'))->first();
+        if (!$defaultGroup) {
+            if ($defaultGroup = self::first()) {
+                setting('customer_group_id', $defaultGroup->getKey());
+            }
+        }
+
+        return self::$defaultGroup = $defaultGroup;
     }
 }

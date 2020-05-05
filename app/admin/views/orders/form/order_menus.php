@@ -4,7 +4,7 @@ $menuItemsOptions = $model->getOrderMenuOptions();
 $orderTotals = $model->getOrderTotals();
 ?>
 <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table">
         <thead>
         <tr>
             <th></th>
@@ -17,22 +17,20 @@ $orderTotals = $model->getOrderTotals();
         <?php foreach ($menuItems as $menuItem) { ?>
             <tr>
                 <td><?= $menuItem->quantity; ?>x</td>
-                <td><?= $menuItem->name; ?><br/>
+                <td><b><?= $menuItem->name; ?></b>
                     <?php if ($menuItemOptions = $menuItemsOptions->get($menuItem->order_menu_id)) { ?>
-                        <div>
+                        <ul class="list-unstyled">
                             <?php foreach ($menuItemOptions as $menuItemOption) { ?>
-                                <small>
-                                    <?= $menuItemOption->order_option_name; ?>
-                                    =
-                                    <?= currency_format($menuItemOption->order_option_price); ?>
-                                </small><br>
+                                <li><?= $menuItemOption->order_option_name; ?>&nbsp;
+                                    <?php if ($menuItemOption->order_option_price > 0) { ?>
+                                        (<?= currency_format($menuItemOption->order_option_price); ?>)
+                                    <?php } ?>
+                                </li>
                             <?php } ?>
-                        </div>
+                        </ul>
                     <?php } ?>
                     <?php if (!empty($menuItem->comment)) { ?>
-                        <div>
-                            <small><b><?= $menuItem->comment; ?></b></small>
-                        </div>
+                        <p class="font-weight-bold"><?= $menuItem->comment; ?></p>
                     <?php } ?>
                 </td>
                 <td class="text-left"><?= currency_format($menuItem->price); ?></td>
@@ -40,14 +38,25 @@ $orderTotals = $model->getOrderTotals();
             </tr>
         <?php } ?>
         <?php $totalCount = 1; ?>
+        <tr>
+            <td class="border-top p-0" colspan="99999"></td>
+        </tr>
         <?php foreach ($orderTotals as $total) { ?>
             <?php if ($model->isCollectionType() AND $total->code == 'delivery') continue; ?>
             <?php $thickLine = ($total->code == 'order_total' OR $total->code == 'total'); ?>
             <tr>
-                <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line" width="1"></td>
-                <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line"></td>
-                <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line text-left"><?= $total->title; ?></td>
-                <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line text-right"><?= currency_format($total->value); ?></td>
+                <td
+                    class="<?= ($totalCount === 1 OR $thickLine) ? 'lead font-weight-bold' : 'text-muted'; ?>" width="1"
+                ></td>
+                <td
+                    class="<?= ($totalCount === 1 OR $thickLine) ? 'lead font-weight-bold' : 'text-muted'; ?>"
+                ></td>
+                <td
+                    class="<?= ($totalCount === 1 OR $thickLine) ? 'lead font-weight-bold' : 'text-muted'; ?> text-left"
+                ><?= $total->title; ?></td>
+                <td
+                    class="<?= ($totalCount === 1 OR $thickLine) ? 'lead font-weight-bold' : ''; ?> text-right"
+                ><?= currency_format($total->value); ?></td>
             </tr>
             <?php $totalCount++; ?>
         <?php } ?>

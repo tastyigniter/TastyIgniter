@@ -50,6 +50,8 @@ class Orders_model extends Model
 
     public $guarded = ['ip_address', 'user_agent', 'hash'];
 
+    protected $hidden = ['cart'];
+
     /**
      * @var array The model table column to convert to dates on insert/update
      */

@@ -139,3 +139,9 @@
 .control-label {
   color: $gray-800;
 }
+
+.help-block {
+  &.before-field {
+    margin-bottom: 10px;
+  }
+}

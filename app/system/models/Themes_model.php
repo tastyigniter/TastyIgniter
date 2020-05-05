@@ -94,7 +94,7 @@ class Themes_model extends Model
 
                 if ($componentObj->isHidden) continue;
 
-                $components[$code] = [$definition['name'], $definition['description']];
+                $components[$code] = [$definition['name'], lang($definition['description'])];
             }
             catch (Exception $ex) {
             }

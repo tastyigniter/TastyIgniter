@@ -319,6 +319,7 @@ return [
         'text_subscribe' => 'Subscribe',
         'text_un_subscribe' => 'Un-subscribe',
         'text_title_edit_address' => 'Edit Address',
+        'text_impersonate' => 'Impersonate Customer',
 
         'column_full_name' => 'Full Name',
         'column_telephone' => 'Telephone',

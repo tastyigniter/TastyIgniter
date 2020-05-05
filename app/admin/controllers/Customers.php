@@ -3,6 +3,7 @@
 use Admin\Facades\AdminAuth;
 use AdminMenu;
 use Auth;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Customers extends \Admin\Classes\AdminController
 {
@@ -56,21 +57,17 @@ class Customers extends \Admin\Classes\AdminController
         AdminMenu::setContext('customers', 'users');
     }
 
-    public function onImpersonate()
+    public function onImpersonate($context, $recordId = null)
     {
         if (!AdminAuth::user()->hasPermission('Admin.ImpersonateCustomers')) {
-            flash()->warning(lang('admin::lang.customers.alert_login_restricted'));
-
-            return $this->redirectBack();
+            throw new ApplicationException(lang('admin::lang.customers.alert_login_restricted'));
         }
 
-        $id = post('recordId');
+        $id = post('recordId', $recordId);
         if ($customer = $this->formFindModelObject((int)$id)) {
             Auth::stopImpersonate();
             Auth::impersonate($customer);
             flash()->success(lang('admin::lang.customers.alert_impersonate_success'));
         }
-
-        return $this->redirectBack();
     }
 }

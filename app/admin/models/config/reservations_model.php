@@ -270,7 +270,7 @@ $config['form']['tabs'] = [
             'default' => 1,
         ],
         'comment' => [
-            'label' => 'lang:admin::lang.reservations.label_comment',
+            'label' => 'lang:admin::lang.statuses.label_comment',
             'type' => 'textarea',
         ],
         'date_added' => [
