@@ -163,9 +163,13 @@ class AdminController extends BaseController
         if ($handlerResponse = $this->processHandlers() AND $handlerResponse !== TRUE) {
             return $handlerResponse;
         }
-
+        
+        $this->fireSystemEvent('admin.page.beforeResponse', [$this]);
+        
         // Loads the requested controller action
         $response = $this->execPageAction($action, $params);
+        
+        $this->fireSystemEvent('admin.page.response', [$this, $response]);
 
         if (!is_string($response))
             return $response;
@@ -173,11 +177,7 @@ class AdminController extends BaseController
         if ($event = $this->fireEvent('controller.beforeResponse', [$this, $response])) {
             return $event;
         }
-        
-        if ($event = $this->fireSystemEvent('admin.page.beforeResponse', [$this, $response])) {
-            return $event;
-        }
-        
+                
         // Return response
         return is_string($response)
             ? Response::make($response, $this->statusCode) : $response;
