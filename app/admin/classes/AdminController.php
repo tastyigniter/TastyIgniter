@@ -173,7 +173,11 @@ class AdminController extends BaseController
         if ($event = $this->fireEvent('controller.beforeResponse', [$this, $response])) {
             return $event;
         }
-
+        
+        if ($event = $this->fireSystemEvent('admin.page.beforeResponse', [$this, $response])) {
+            return $event;
+        }
+        
         // Return response
         return is_string($response)
             ? Response::make($response, $this->statusCode) : $response;
