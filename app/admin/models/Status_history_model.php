@@ -106,7 +106,7 @@ class Status_history_model extends Model
             'status_updated_at' => Carbon::now(),
         ]);
 
-        self::logStatusUpdated($object);
+        self::logStatusUpdated($object, $model);
 
         return $model;
     }
@@ -115,18 +115,18 @@ class Status_history_model extends Model
     //
     //
 
-    protected static function logStatusUpdated($object)
+    protected static function logStatusUpdated($object, $status)
     {
         if ($object instanceof Orders_model) {
             OrderStatusUpdated::log($object);
 
-            if (optional($object->status_history->first())->notify)
+            if ($status->notify)
                 $object->mailSend('admin::_mail.order_update', 'customer');
         }
-        elseif ($object instanceof Reservations_model) {
+        else if ($object instanceof Reservations_model) {
             ReservationStatusUpdated::log($object);
 
-            if (optional($object->status_history->first())->notify)
+            if ($status->notify)
                 $object->mailSend('admin::_mail.reservation_update', 'customer');
         }
     }
@@ -139,5 +139,10 @@ class Status_history_model extends Model
     {
         return $query->where('object_type', $model->getMorphClass())
                      ->where('object_id', $model->getKey());
+    }
+
+    public function scopeWhereStatusIsLatest($query, $statusId)
+    {
+        return $query->where('status_id', $statusId)->orderBy('date_added');
     }
 }

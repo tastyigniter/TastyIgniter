@@ -423,9 +423,9 @@ class Reservations_model extends Model
             $data['location_email'] = $model->location->location_email;
         }
 
-        $status = $model->status()->first();
-        $data['status_name'] = $status ? $status->status_name : null;
-        $data['status_comment'] = $status ? $status->status_comment : null;
+        $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();
+        $data['status_name'] = $statusHistory ? optional($statusHistory->status)->status_name : null;
+        $data['status_comment'] = $statusHistory ? $statusHistory->comment : null;
 
         $controller = MainController::getController() ?: new MainController;
         $data['reservation_view_url'] = $controller->pageUrl('account/reservations', [
