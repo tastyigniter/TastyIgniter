@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
+use System\Models\Settings_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -51,6 +52,7 @@ class ServiceProvider extends AppServiceProvider
 
         if ($this->app->runningInAdmin()) {
             $this->registerAssets();
+            $this->registerSettings();
             $this->registerPermissions();
             $this->registerDashboardWidgets();
             $this->registerFormWidgets();
@@ -708,6 +710,32 @@ class ServiceProvider extends AppServiceProvider
             $schedule->call(function () {
                 Classes\Allocator::instance()->allocate();
             })->everyMinute();
+        });
+    }
+
+    protected function registerSettings()
+    {
+        Settings_model::registerCallback(function (Settings_model $manager) {
+            $manager->registerSettingItems('core', [
+                'setup' => [
+                    'label' => 'lang:admin::lang.settings.text_tab_setup',
+                    'description' => 'lang:admin::lang.settings.text_tab_desc_setup',
+                    'icon' => 'fa fa-toggle-on',
+                    'priority' => 1,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/setup'),
+                    'form' => '~/app/admin/models/config/setup_settings',
+                ],
+                'user' => [
+                    'label' => 'lang:admin::lang.settings.text_tab_user',
+                    'description' => 'lang:admin::lang.settings.text_tab_desc_user',
+                    'icon' => 'fa fa-user',
+                    'priority' => 3,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/user'),
+                    'form' => '~/app/admin/models/config/user_settings',
+                ],
+            ]);
         });
     }
 }

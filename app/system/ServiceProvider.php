@@ -30,6 +30,7 @@ use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
 use System\Helpers\ValidationHelper;
 use System\Libraries\Assets;
+use System\Models\Settings_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -65,6 +66,7 @@ class ServiceProvider extends AppServiceProvider
 
         if (App::runningInAdmin()) {
             $this->registerPermissions();
+            $this->registerSettings();
         }
     }
 
@@ -430,6 +432,41 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.ErrorLogs' => [
                     'label' => 'system::lang.permissions.error_logs', 'group' => 'system::lang.permissions.name',
+                ],
+            ]);
+        });
+    }
+
+    protected function registerSettings()
+    {
+        Settings_model::registerCallback(function (Settings_model $manager) {
+            $manager->registerSettingItems('core', [
+                'general' => [
+                    'label' => 'system::lang.settings.text_tab_general',
+                    'description' => 'system::lang.settings.text_tab_desc_general',
+                    'icon' => 'fa fa-sliders',
+                    'priority' => 0,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/general'),
+                    'form' => '~/app/system/models/config/general_settings',
+                ],
+                'mail' => [
+                    'label' => 'lang:system::lang.settings.text_tab_mail',
+                    'description' => 'lang:system::lang.settings.text_tab_desc_mail',
+                    'icon' => 'fa fa-envelope',
+                    'priority' => 5,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/mail'),
+                    'form' => '~/app/system/models/config/mail_settings',
+                ],
+                'advanced' => [
+                    'label' => 'lang:system::lang.settings.text_tab_server',
+                    'description' => 'lang:system::lang.settings.text_tab_desc_server',
+                    'icon' => 'fa fa-cog',
+                    'priority' => 6,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/advanced'),
+                    'form' => '~/app/system/models/config/advanced_settings',
                 ],
             ]);
         });

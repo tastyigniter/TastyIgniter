@@ -257,4 +257,9 @@ return [
         'method' => 'The method [:method] is not found in [:name].',
         'ajax_handler' => 'Ajax handler [%s] is not found.',
     ],
+
+    'settings' => [
+        'text_tab_media_manager' => 'Media',
+        'text_tab_desc_media_manager' => 'Configure media uploads, copy, rename settings.',
+    ],
 ];

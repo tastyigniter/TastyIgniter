@@ -21,8 +21,6 @@ class Settings extends \Admin\Classes\AdminController
 
     protected $modelClass = 'System\Models\Settings_model';
 
-    protected $modelConfig;
-
     /**
      * @var \Admin\Widgets\Form
      */
@@ -74,7 +72,7 @@ class Settings extends \Admin\Classes\AdminController
                 throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
             }
 
-            $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition['label']));
+            $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition->label));
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
@@ -108,7 +106,7 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->formAfterSave($model);
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($definition['label']).' settings updated '));
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($definition->label).' settings updated '));
 
         if (post('close')) {
             return $this->redirect('settings');
@@ -151,9 +149,9 @@ class Settings extends \Admin\Classes\AdminController
 
     public function initWidgets($model, $definition)
     {
-        $this->modelConfig = $model->getFieldConfig();
+        $modelConfig = $model->getFieldConfig($definition->code);
 
-        $formConfig = array_get($definition, 'form', []);
+        $formConfig = array_except($modelConfig, 'toolbar');
         $formConfig['model'] = $model;
         $formConfig['data'] = array_undot($model->getFieldValues());
         $formConfig['alias'] = 'form-'.$this->settingCode;
@@ -165,9 +163,9 @@ class Settings extends \Admin\Classes\AdminController
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget
-        if (isset($this->modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
+        if (isset($modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
             $this->toolbarWidget = $this->widgets['toolbar'];
-            $this->toolbarWidget->reInitialize($this->modelConfig['toolbar']);
+            $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
         }
     }
 

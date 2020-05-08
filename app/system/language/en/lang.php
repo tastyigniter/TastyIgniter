@@ -245,17 +245,11 @@ return [
         'text_title' => 'Settings',
         'text_edit_title' => 'Settings: %s',
         'text_tab_general' => 'General',
-        'text_tab_user' => 'User',
         'text_tab_restaurant' => 'Restaurant',
-        'text_tab_setup' => 'Setup',
-        'text_tab_media_manager' => 'Media',
         'text_tab_mail' => 'Mail',
         'text_tab_server' => 'Advanced',
 
         'text_tab_desc_general' => 'Change your restaurant name, email and url, default language, currency and date time formats, ...',
-        'text_tab_desc_setup' => 'Configure order and reservation related settings',
-        'text_tab_desc_user' => 'Configure registration email confirmation, default customer group, ...',
-        'text_tab_desc_media_manager' => 'Configure media uploads, copy, rename settings.',
         'text_tab_desc_mail' => 'Settings for sending out emails',
         'text_tab_desc_server' => 'Manage advanced system settings such as enabling/disabling maintenance.',
 

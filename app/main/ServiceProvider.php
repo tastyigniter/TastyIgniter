@@ -11,6 +11,7 @@ use Main\Classes\ThemeManager;
 use Main\Template\Page;
 use Setting;
 use System\Libraries\Assets;
+use System\Models\Settings_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -52,6 +53,7 @@ class ServiceProvider extends AppServiceProvider
         else {
             $this->registerFormWidgets();
             $this->registerPermissions();
+            $this->registerSettings();
         }
     }
 
@@ -133,6 +135,23 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Site.Themes' => [
                     'label' => 'main::lang.permissions.themes', 'group' => 'main::lang.permissions.name',
+                ],
+            ]);
+        });
+    }
+
+    protected function registerSettings()
+    {
+        Settings_model::registerCallback(function (Settings_model $manager) {
+            $manager->registerSettingItems('core', [
+                'media' => [
+                    'label' => 'main::lang.settings.text_tab_media_manager',
+                    'description' => 'main::lang.settings.text_tab_desc_media_manager',
+                    'icon' => 'fa fa-image',
+                    'priority' => 4,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/media'),
+                    'form' => '~/app/main/models/config/media_settings',
                 ],
             ]);
         });

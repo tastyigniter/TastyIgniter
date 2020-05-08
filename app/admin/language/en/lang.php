@@ -895,6 +895,14 @@ return [
         'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
     ],
 
+    'settings' => [
+        'text_tab_setup' => 'Setup',
+        'text_tab_user' => 'User',
+
+        'text_tab_desc_user' => 'Configure registration email confirmation, default customer group, ...',
+        'text_tab_desc_setup' => 'Configure order and reservation related settings',
+    ],
+
     'staff_groups' => [
         'text_title' => 'Staff Groups',
         'text_form_name' => 'Staff Group',
