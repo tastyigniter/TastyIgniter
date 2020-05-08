@@ -150,7 +150,7 @@ $config['form']['tabs'] = [
         ],
         '_string_filter' => [
             'tab' => 'lang:system::lang.languages.text_tab_files',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'context' => 'edit',
             'span' => 'none',
             'cssClass' => 'pull-left mr-3',

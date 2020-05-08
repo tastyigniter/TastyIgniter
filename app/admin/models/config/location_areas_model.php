@@ -23,7 +23,7 @@ return [
             ],
             'type' => [
                 'label' => 'lang:admin::lang.locations.label_area_type',
-                'type' => 'radio',
+                'type' => 'radiotoggle',
                 'default' => 'address',
                 'options' => [
                     'address' => 'lang:admin::lang.locations.text_custom',
@@ -84,7 +84,7 @@ return [
                         ],
                         'type' => [
                             'label' => 'lang:admin::lang.locations.label_charge_condition',
-                            'type' => 'radio',
+                            'type' => 'radiotoggle',
                             'default' => 'above',
                             'options' => [
                                 'all' => 'lang:admin::lang.locations.text_all_orders',

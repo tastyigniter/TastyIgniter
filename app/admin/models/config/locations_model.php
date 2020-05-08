@@ -191,21 +191,19 @@ $config['form']['tabs'] = [
         ],
         'options[auto_lat_lng]' => [
             'label' => 'lang:admin::lang.locations.label_auto_lat_lng',
-            'type' => 'radio',
-            'default' => 1,
-            'options' => [
-                1 => 'lang:admin::lang.text_yes',
-                0 => 'lang:admin::lang.text_no',
-            ],
+            'type' => 'switch',
+            'default' => TRUE,
+            'onText' => 'lang:admin::lang.text_yes',
+            'offText' => 'lang:admin::lang.text_no',
         ],
         'location_lat' => [
             'label' => 'lang:admin::lang.locations.label_latitude',
             'type' => 'text',
             'span' => 'left',
             'trigger' => [
-                'action' => 'show',
+                'action' => 'enable',
                 'field' => 'options[auto_lat_lng]',
-                'condition' => 'value[0]',
+                'condition' => 'checked',
             ],
         ],
         'location_lng' => [
@@ -213,9 +211,9 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'right',
             'trigger' => [
-                'action' => 'show',
+                'action' => 'enable',
                 'field' => 'options[auto_lat_lng]',
-                'condition' => 'value[0]',
+                'condition' => 'checked',
             ],
         ],
 
@@ -345,7 +343,7 @@ $config['form']['tabs'] = [
         ],
         'options[hours][opening][type]' => [
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'default' => 'daily',
             'options' => [
                 '24_7' => 'lang:admin::lang.locations.text_24_7',
@@ -356,7 +354,7 @@ $config['form']['tabs'] = [
         'options[hours][opening][days]' => [
             'label' => 'lang:admin::lang.locations.label_opening_days',
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'checkbox',
+            'type' => 'checkboxtoggle',
             'options' => 'getWeekDaysOptions',
             'default' => [0, 1, 2, 3, 4, 5, 6],
             'trigger' => [
@@ -412,7 +410,7 @@ $config['form']['tabs'] = [
         ],
         'options[hours][delivery][type]' => [
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'default' => '24_7',
             'options' => [
                 '24_7' => 'lang:admin::lang.locations.text_24_7',
@@ -423,7 +421,7 @@ $config['form']['tabs'] = [
         'options[hours][delivery][days]' => [
             'label' => 'lang:admin::lang.locations.label_opening_days',
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'checkbox',
+            'type' => 'checkboxtoggle',
             'options' => 'getWeekDaysOptions',
             'default' => [0, 1, 2, 3, 4, 5, 6],
             'trigger' => [
@@ -479,7 +477,7 @@ $config['form']['tabs'] = [
         ],
         'options[hours][collection][type]' => [
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'default' => '24_7',
             'options' => [
                 '24_7' => 'lang:admin::lang.locations.text_24_7',
@@ -490,7 +488,7 @@ $config['form']['tabs'] = [
         'options[hours][collection][days]' => [
             'label' => 'lang:admin::lang.locations.label_opening_days',
             'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'checkbox',
+            'type' => 'checkboxtoggle',
             'options' => 'getWeekDaysOptions',
             'default' => [0, 1, 2, 3, 4, 5, 6],
             'trigger' => [

@@ -151,7 +151,7 @@ $config['form']['tabs'] = [
         ],
         'type' => [
             'label' => 'lang:admin::lang.label_type',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'span' => 'left',
             'cssClass' => 'flex-width',
             'default' => 'F',
@@ -188,7 +188,7 @@ $config['form']['tabs'] = [
         ],
         'order_restriction' => [
             'label' => 'lang:admin::lang.coupons.label_order_restriction',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'comment' => 'lang:admin::lang.coupons.help_order_restriction',
             'span' => 'left',
             'options' => [
@@ -199,7 +199,7 @@ $config['form']['tabs'] = [
         ],
         'validity' => [
             'label' => 'lang:admin::lang.coupons.label_validity',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'default' => 'forever',
             'span' => 'right',
             'options' => [
@@ -271,7 +271,7 @@ $config['form']['tabs'] = [
         ],
         'recurring_every' => [
             'label' => 'lang:admin::lang.coupons.label_recurring_every',
-            'type' => 'checkbox',
+            'type' => 'checkboxtoggle',
             'trigger' => [
                 'action' => 'show',
                 'field' => 'validity',

@@ -108,6 +108,8 @@ class Form extends BaseWidget
      */
     protected $widgetManager;
 
+    protected $optionModelTypes;
+
     public function initialize()
     {
         $this->fillFromConfig([
@@ -119,6 +121,13 @@ class Form extends BaseWidget
             'arrayName',
             'context',
         ]);
+
+        $this->optionModelTypes = [
+            'select', 'selectlist',
+            'radio', 'radiolist', 'radiotoggle',
+            'checkbox', 'checkboxlist', 'checkboxtoggle',
+            'partial',
+        ];
 
         $this->widgetManager = Widgets::instance();
         $this->allTabs = (object)$this->allTabs;
@@ -489,8 +498,7 @@ class Form extends BaseWidget
 //        }
 
         // Get field options from model
-        $optionModelTypes = ['select', 'selectlist', 'radio', 'checkbox', 'checkboxlist', 'radiolist', 'partial'];
-        if (in_array($field->type, $optionModelTypes, FALSE)) {
+        if (in_array($field->type, $this->optionModelTypes, FALSE)) {
 
             // Defer the execution of option data collection
             $field->options(function () use ($field, $config) {

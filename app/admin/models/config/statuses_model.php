@@ -109,14 +109,17 @@ $config['form']['fields'] = [
     ],
     'status_for' => [
         'label' => 'lang:admin::lang.statuses.label_for',
-        'type' => 'radio',
+        'type' => 'radiotoggle',
         'span' => 'right',
+        'cssClass' => 'flex-width',
         'placeholder' => 'lang:admin::lang.text_please_select',
         'options' => 'getStatusForDropdownOptions',
     ],
     'status_color' => [
         'label' => 'lang:admin::lang.statuses.label_color',
         'type' => 'colorpicker',
+        'span' => 'right',
+        'cssClass' => 'flex-width',
     ],
     'status_comment' => [
         'label' => 'lang:admin::lang.statuses.label_comment',
@@ -124,12 +127,10 @@ $config['form']['fields'] = [
     ],
     'notify_customer' => [
         'label' => 'lang:admin::lang.statuses.label_notify',
-        'type' => 'radio',
-        'default' => 1,
-        'options' => [
-            'lang:admin::lang.text_no',
-            'lang:admin::lang.text_yes',
-        ],
+        'type' => 'switch',
+        'default' => TRUE,
+        'onText' => 'lang:admin::lang.text_no',
+        'offText' => 'lang:admin::lang.text_yes',
         'comment' => 'lang:admin::lang.statuses.help_notify',
     ],
 ];

@@ -6,7 +6,7 @@ $config['form']['fields'] = [
     ],
     'display_type' => [
         'label' => 'lang:admin::lang.menu_options.label_display_type',
-        'type' => 'radio',
+        'type' => 'radiotoggle',
         'default' => 'radio',
     ],
     'option_values' => [

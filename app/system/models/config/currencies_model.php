@@ -136,7 +136,7 @@ $config['form']['fields'] = [
     ],
     'symbol_position' => [
         'label' => 'lang:system::lang.currencies.label_symbol_position',
-        'type' => 'radio',
+        'type' => 'radiotoggle',
         'span' => 'left',
         'options' => [
             'lang:system::lang.currencies.text_left',

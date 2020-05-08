@@ -156,7 +156,7 @@ $config['form']['fields'] = [
     ],
     'sale_type' => [
         'label' => 'lang:admin::lang.reviews.label_sale_type',
-        'type' => 'radio',
+        'type' => 'radiotoggle',
         'span' => 'left',
         'default' => 'orders',
     ],
