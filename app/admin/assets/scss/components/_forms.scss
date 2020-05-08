@@ -135,6 +135,12 @@
   }
 }
 
+.field-custom-container {
+  padding-top: $input-padding-y;
+  padding-bottom: $input-padding-y;
+  height: $input-height-inner;
+}
+
 // Control label
 .control-label {
   color: $gray-800;
