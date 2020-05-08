@@ -453,7 +453,7 @@
     background-color: #FFFFFF;
     border: 1px solid #D3D6DE;
     color: #111F46;
-    font-size: 1rem;
+    font-size: 0.8125rem;
     outline: 0; }
   @media (prefers-reduced-motion: reduce) {
     .select2-container--bootstrap .select2-selection {
@@ -469,7 +469,7 @@
   background-color: #FFFFFF;
   border: 1px solid #D3D6DE;
   color: #111F46;
-  font-size: 1rem; }
+  font-size: 0.8125rem; }
   @media (prefers-reduced-motion: reduce) {
     /**
      * No outline for all search fields - in the dropdown
@@ -547,8 +547,8 @@
   color: #939AAD;
   display: block;
   padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.7;
+  font-size: 0.7109375rem;
+  line-height: 1.5;
   white-space: nowrap; }
   .select2-container--bootstrap.select2-container--focus .select2-selection, .select2-container--bootstrap.select2-container--open .select2-selection {
     border-color: #a8c7dd;
@@ -620,8 +620,8 @@
    #SINGLE SELECT2
    \*------------------------------------*/ }
 .select2-container--bootstrap .select2-selection--single {
-  height: calc(2.45rem + 2px);
-  line-height: 1.7;
+  height: calc(1.96875rem + 2px);
+  line-height: 1.5;
   padding: 0.375rem 1.5rem 0.375rem 0.75rem;
   /**
    * Adjust the single Select2's dropdown arrow button appearance.
@@ -652,13 +652,13 @@
      #MULTIPLE SELECT2
      \*------------------------------------*/ }
 .select2-container--bootstrap .select2-selection--multiple {
-  min-height: calc(2.45rem + 2px);
+  min-height: calc(1.96875rem + 2px);
   padding: 0;
   height: auto; }
   .select2-container--bootstrap .select2-selection--multiple .select2-selection__rendered {
     box-sizing: border-box;
     display: block;
-    line-height: 1.7;
+    line-height: 1.5;
     list-style: none;
     margin: 0;
     overflow: hidden;
@@ -688,8 +688,8 @@
     .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field {
       background: transparent;
       padding: 0 0.75rem;
-      height: calc(2.45rem + 2px);
-      line-height: 1.7;
+      height: calc(1.96875rem + 2px);
+      line-height: 1.5;
       margin: -1px 0;
       min-width: 5em; }
   .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice__remove {
@@ -716,33 +716,33 @@
     /* 1 */ }
 .select2-container--bootstrap .select2-selection--single.form-control-sm, .input-group-sm .select2-container--bootstrap .select2-selection--single, .form-group-sm .select2-container--bootstrap .select2-selection--single {
   border-radius: 0.2rem;
-  font-size: 0.875rem;
-  height: calc(1.9875rem + 2px);
-  line-height: 1.7;
+  font-size: 0.7109375rem;
+  height: calc(1.56640625rem + 2px);
+  line-height: 1.5;
   padding: 0.25rem 1.25rem 0.25rem 0.5rem;
   /* 2 */ }
   .select2-container--bootstrap .select2-selection--single.form-control-sm .select2-selection__arrow b, .input-group-sm .select2-container--bootstrap .select2-selection--single .select2-selection__arrow b, .form-group-sm .select2-container--bootstrap .select2-selection--single .select2-selection__arrow b {
     margin-left: -0.25rem; }
 .select2-container--bootstrap .select2-selection--multiple.form-control-sm, .input-group-sm .select2-container--bootstrap .select2-selection--multiple, .form-group-sm .select2-container--bootstrap .select2-selection--multiple {
   border-radius: 0.2rem;
-  min-height: calc(1.9875rem + 2px); }
+  min-height: calc(1.56640625rem + 2px); }
   .select2-container--bootstrap .select2-selection--multiple.form-control-sm .select2-selection__choice, .input-group-sm .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice, .form-group-sm .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
-    font-size: 0.875rem;
-    line-height: 1.7;
+    font-size: 0.7109375rem;
+    line-height: 1.5;
     margin: calc(0.25rem - 1px) 0 0 0.25rem;
     padding: 0 0.25rem; }
   .select2-container--bootstrap .select2-selection--multiple.form-control-sm .select2-search--inline .select2-search__field, .input-group-sm .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field, .form-group-sm .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field {
     padding: 0 0.5rem;
-    font-size: 0.875rem;
-    height: calc(1.9875rem + 2px);
-    line-height: 1.7; }
+    font-size: 0.7109375rem;
+    height: calc(1.56640625rem + 2px);
+    line-height: 1.5; }
   .select2-container--bootstrap .select2-selection--multiple.form-control-sm .select2-selection__clear, .input-group-sm .select2-container--bootstrap .select2-selection--multiple .select2-selection__clear, .form-group-sm .select2-container--bootstrap .select2-selection--multiple .select2-selection__clear {
     margin-top: 0.25rem; }
 .select2-container--bootstrap .select2-selection--single.form-control-lg, .input-group-lg .select2-container--bootstrap .select2-selection--single, .form-group-lg .select2-container--bootstrap .select2-selection--single {
   border-radius: 0.3rem;
-  font-size: 1.25rem;
-  height: calc(3.125rem + 2px);
-  line-height: 1.7;
+  font-size: 1.015625rem;
+  height: calc(2.5234375rem + 2px);
+  line-height: 1.5;
   padding: 0.5rem 1.9375rem 0.5rem 1rem;
   /* 1 */ }
   .select2-container--bootstrap .select2-selection--single.form-control-lg .select2-selection__arrow, .input-group-lg .select2-container--bootstrap .select2-selection--single .select2-selection__arrow, .form-group-lg .select2-container--bootstrap .select2-selection--single .select2-selection__arrow {
@@ -753,19 +753,19 @@
       margin-left: -0.5rem;
       margin-top: -0.15625rem; }
 .select2-container--bootstrap .select2-selection--multiple.form-control-lg, .input-group-lg .select2-container--bootstrap .select2-selection--multiple, .form-group-lg .select2-container--bootstrap .select2-selection--multiple {
-  min-height: calc(3.125rem + 2px);
+  min-height: calc(2.5234375rem + 2px);
   border-radius: 0.3rem; }
   .select2-container--bootstrap .select2-selection--multiple.form-control-lg .select2-selection__choice, .input-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice, .form-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
-    font-size: 1.25rem;
-    line-height: 1.7;
+    font-size: 1.015625rem;
+    line-height: 1.5;
     border-radius: 0.25rem;
     margin: calc(0.5rem - 1px) 0 0 0.5rem;
     padding: 0 0.5rem; }
   .select2-container--bootstrap .select2-selection--multiple.form-control-lg .select2-search--inline .select2-search__field, .input-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field, .form-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field {
     padding: 0 1rem;
-    font-size: 1.25rem;
-    height: calc(3.125rem + 2px);
-    line-height: 1.7; }
+    font-size: 1.015625rem;
+    height: calc(2.5234375rem + 2px);
+    line-height: 1.5; }
   .select2-container--bootstrap .select2-selection--multiple.form-control-lg .select2-selection__clear, .input-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-selection__clear, .form-group-lg .select2-container--bootstrap .select2-selection--multiple .select2-selection__clear {
     margin-top: 0.5rem; }
 .select2-container--bootstrap .select2-selection.form-control-lg.select2-container--open .select2-selection--single {
@@ -1078,6 +1078,11 @@ body.dragging {
   margin-top: 15px;
   margin-bottom: 0; }
 
+.field-custom-container {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  height: calc(1.5em + 0.75rem); }
+
 .control-label {
   color: #27365C; }
 
@@ -1097,21 +1102,21 @@ body.dragging {
   color: #111F46; }
 
 .select2-container--bootstrap .select2-selection--single {
-  height: calc(1.7em + 0.75rem + 2px);
+  height: calc(1.5em + 0.75rem + 2px);
   padding: 0.375rem 0.75rem; }
 
 .input-sm + .select2-container--bootstrap .select2-selection--single {
   height: calc(1.5em + 0.5rem + 2px);
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem; }
+  font-size: 0.7109375rem; }
 
 .input-lg + .select2-container--bootstrap .select2-selection--single {
   height: calc(1.5em + 1rem + 2px);
   padding: 0.5rem 1rem;
-  font-size: 1.25rem; }
+  font-size: 1.015625rem; }
 
 .select2-container--bootstrap .select2-selection--multiple {
-  height: calc(1.7em + 0.75rem + 2px); }
+  height: calc(1.5em + 0.75rem + 2px); }
 
 .select2-container--bootstrap .select2-selection, .select2-container--bootstrap .select2-search--dropdown .select2-search__field {
   border-color: #D3D6DE;
@@ -1137,7 +1142,7 @@ body.dragging {
   border-color: #D3D6DE; }
 
 .select2-dropdown {
-  font-size: 1rem; }
+  font-size: 0.8125rem; }
 
 .sidebar {
   position: fixed;
@@ -1174,8 +1179,8 @@ body.dragging {
       opacity: 0.65;
       line-height: 50px;
       padding: 0 1rem;
-      text-transform: uppercase;
-      font-weight: 500; }
+      font-weight: 400;
+      font-size: 15px; }
     .nav-sidebar .nav > li > a:focus, .nav-sidebar .nav > li > a:hover {
       background-color: #111f46;
       opacity: 1; }
@@ -1190,7 +1195,8 @@ body.dragging {
         padding-left: 48px;
         line-height: 42px;
         text-transform: none;
-        font-weight: 400; }
+        font-weight: 400;
+        font-size: 0.8125rem; }
       .nav-sidebar .nav .nav li > a:hover, .nav-sidebar .nav .nav li > a:focus {
         background-color: transparent; }
     .nav-sidebar .nav .arrow {
@@ -1293,14 +1299,14 @@ body.dragging {
   right: 25px;
   padding: 0;
   margin-top: -8px;
-  line-height: 1.7;
+  line-height: 1.5;
   min-width: 300px;
   box-shadow: 0 0.5rem 1rem rgba(12, 22, 49, 0.15);
   border: 1px solid #D3D6DE; }
   .navbar-top .dropdown-menu .dropdown-item .fa {
     margin-right: 14px; }
   .navbar-top .dropdown-menu .dropdown-header {
-    font-size: 1rem;
+    font-size: 0.8125rem;
     color: #939AAD;
     padding: 10px 20px 8px;
     border-bottom: 1px solid #D3D6DE; }
@@ -1308,7 +1314,7 @@ body.dragging {
     text-align: center;
     padding: 10px 0;
     border-top: 1px solid #D3D6DE;
-    font-size: 1rem;
+    font-size: 0.8125rem;
     color: #27365C;
     display: block;
     outline: 0; }
@@ -1625,12 +1631,13 @@ body.dragging {
 
 html {
   position: relative;
-  font-size: 85%;
+  font-size: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
   min-height: 100%;
   height: 100%; }
 
 body {
-  font-size: 13px;
   margin-bottom: 50px; }
 
 body.page {

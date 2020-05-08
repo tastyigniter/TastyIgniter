@@ -1,5 +1,7 @@
 $admin-page-bg: #12224C !default;
 
+$font-size-base: 0.8125rem !default;
+
 $page-padding-x: 15px !default;
 $page-padding-y: 15px !default;
 $page-top: 62px !default;
@@ -30,9 +32,9 @@ $sidenav-bg: $admin-page-bg !default;
 $sidenav-bg-light: lighten($sidenav-bg, 2%) !default;
 $sidenav-bg-dark: darken($sidenav-bg, 3%) !default;
 
-$sidenav-font-size-sm: 1.066rem !default;
-$sidenav-font-size: 1.1rem !default;
-
+$sidenav-font-size: 15px !default;
+$sidenav-submenu-font-size: $font-size-base !default;
+$sidenav-font-weight: 400 !default;
 $sidenav-line-height: 50px !default;
 $sidenav-line-height-sm: 42px !default;
 $sidenav-padding-x: 0 !default;

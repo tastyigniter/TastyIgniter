@@ -617,7 +617,7 @@ return [
         'is_required' => 'is required',
         'is_not_required' => 'is not required',
         'text_option' => 'Option',
-        'text_option_summary' => 'Option %s and will be displayed as a %s HTML input tag',
+        'text_option_summary' => 'Display as a %s HTML element',
 
         'column_display_type' => 'Display Type',
 

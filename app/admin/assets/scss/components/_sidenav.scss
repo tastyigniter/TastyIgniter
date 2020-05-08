@@ -40,8 +40,8 @@
       opacity: 0.65;
       line-height: $sidenav-line-height;
       padding: $sidenav-padding-x $sidenav-padding-y;
-      text-transform: uppercase;
-      font-weight: 500;
+      font-weight: $sidenav-font-weight;
+      font-size: $sidenav-font-size;
     }
 
     > li > a:focus,
@@ -69,6 +69,7 @@
         line-height: $sidenav-line-height-sm;
         text-transform: none;
         font-weight: $font-weight-normal;
+        font-size: $sidenav-submenu-font-size;
       }
 
       li > a:hover,

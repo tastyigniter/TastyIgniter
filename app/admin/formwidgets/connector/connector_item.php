@@ -3,7 +3,7 @@
     class="card bg-light border-none shadow-sm mb-2"
     data-item-index="<?= $index ?>"
 >
-    <div class="card-body p-3">
+    <div class="card-body">
         <div class="d-flex w-100 justify-content-between">
             <?php if (!$this->previewMode AND $sortable) { ?>
                 <input type="hidden" name="<?= $sortableInputName ?>[]" value="<?= $item->getKey(); ?>">
@@ -24,7 +24,7 @@
                 <?php if ($this->partial) { ?>
                     <?= $this->makePartial($this->partial, ['item' => $item]) ?>
                 <?php } else { ?>
-                    <span class="card-title font-weight-bold mb-0"><?= $item->{$nameFrom} ?></span>
+                    <p class="card-title font-weight-bold"><?= $item->{$nameFrom} ?></p>
                     <p class="card-subtitle mb-0"><?= $item->{$descriptionFrom} ?></p>
                 <?php } ?>
             </div>

@@ -1,12 +1,13 @@
 html {
   position: relative;
-  font-size: 85%;
+  font-size: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
   min-height: 100%;
   height: 100%;
 }
 
 body {
-  font-size: 13px;
   margin-bottom: 50px;
 }
 

@@ -207,7 +207,7 @@ return [
         'text_order_alert' => 'Order alert email to admin',
         'text_reservation_alert' => 'Reservation alert to admin',
         'text_order_update' => 'Order status update email to customer',
-        'text_reservation_update' => 'Reservation status update email to admin',
+        'text_reservation_update' => 'Reservation status update email to customer',
 
         'button_test_message' => 'Send test message',
 

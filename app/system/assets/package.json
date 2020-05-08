@@ -15,7 +15,7 @@
     "metismenu": "2.7.7",
     "popper.js": "^1.14.7",
     "sass": "^1.20.1",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "^8.0.0",
     "select2": "4.0.6-rc.1",
     "select2-theme-bootstrap4": "0.2.0-beta.2",
     "sweetalert": "^2.1.0",

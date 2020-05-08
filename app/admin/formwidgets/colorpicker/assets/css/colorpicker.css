@@ -1,9 +1,11 @@
 .control-colorpicker .input-group-icon {
-  padding: 4px;
+  padding: 0;
 }
 .control-colorpicker .input-group-icon .fa {
   color: transparent;
-  font-size: 2rem;
+  font-size: 1rem;
+  height: 2rem;
+  width: 2rem;
 }
 .colorpicker.dropdown-menu {
   padding: 10px;
