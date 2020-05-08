@@ -2,13 +2,12 @@
 
 namespace System\Classes;
 
-use Igniter\Flame\Setting\Facades\Setting;
 use Igniter\Flame\Support\PagicHelper;
 use Igniter\Flame\Support\StringParser;
 use Igniter\Flame\Traits\Singleton;
 use Illuminate\Mail\Markdown;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
 use System\Helpers\ViewHelper;
 use System\Models\Mail_partials_model;
@@ -89,14 +88,39 @@ class MailManager
 
     public function applyMailerConfigValues()
     {
-        Config::set('mail.driver', Setting::get('protocol', Config::get('mail.driver')));
-        Config::set('mail.host', Setting::get('smtp_host', Config::get('mail.host')));
-        Config::set('mail.port', Setting::get('smtp_port', Config::get('mail.port')));
-        Config::set('mail.encryption', Setting::get('mail_encryption', Config::get('mail.encryption')));
-        Config::set('mail.from.address', Setting::get('sender_email', Config::get('mail.from.address')));
-        Config::set('mail.from.name', Setting::get('sender_name', Config::get('mail.from.name')));
-        Config::set('mail.username', Setting::get('smtp_user', Config::get('mail.username')));
-        Config::set('mail.password', Setting::get('smtp_pass', Config::get('mail.password')));
+        $config = App::make('config');
+        $settings = App::make('system.setting');
+        $config->set('mail.driver', $settings->get('protocol'));
+        $config->set('mail.from.name', $settings->get('sender_email'));
+        $config->set('mail.from.address', $settings->get('sender_name'));
+
+        switch ($settings->get('protocol')) {
+            case 'sendmail':
+                $config->set('mail.sendmail', $settings->get('sendmail_path'));
+                break;
+            case 'smtp':
+                $config->set('mail.host', $settings->get('smtp_host'));
+                $config->set('mail.port', $settings->get('smtp_port'));
+                $config->set('mail.encryption', strlen($settings->get('smtp_encryption'))
+                    ? $settings->get('smtp_encryption') : null
+                );
+                $config->set('mail.username', strlen($settings->get('smtp_user'))
+                    ? $settings->get('smtp_user') : null
+                );
+                $config->set('mail.password', strlen($settings->get('smtp_pass'))
+                    ? $settings->get('smtp_pass') : null
+                );
+                break;
+            case 'mailgun':
+                $config->set('services.mailgun.domain', $settings->get('mailgun_domain'));
+                $config->set('services.mailgun.secret', $settings->get('mailgun_secret'));
+                break;
+            case 'ses':
+                $config->set('services.ses.key', $settings->get('ses_key'));
+                $config->set('services.ses.secret', $settings->get('ses_secret'));
+                $config->set('services.ses.region', $settings->get('ses_region'));
+                break;
+        }
     }
 
     /**
