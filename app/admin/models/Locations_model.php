@@ -156,8 +156,10 @@ class Locations_model extends AbstractLocation
             'longitude' => null,
         ], $options));
 
-        if ($latitude AND $longitude)
+        if ($latitude AND $longitude) {
+            $query->select('*');
             $query->selectDistance($latitude, $longitude);
+        }
 
         $searchableFields = ['location_name', 'location_address_1', 'location_address_2', 'location_city',
             'location_state', 'location_postcode', 'description'];
