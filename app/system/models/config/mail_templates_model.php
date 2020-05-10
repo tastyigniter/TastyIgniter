@@ -133,7 +133,7 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'fields' => [
         'body' => [
-            'tab' => 'lang:system::lang.mail_templates.label_body',
+            'tab' => 'lang:system::lang.mail_templates.label_markdown',
             'type' => 'markdowneditor',
         ],
         'plain_body' => [
@@ -142,12 +142,6 @@ $config['form']['tabs'] = [
             'attributes' => [
                 'rows' => 10,
             ],
-        ],
-        'variables' => [
-            'tab' => 'lang:system::lang.mail_templates.text_variables',
-            'type' => 'partial',
-            'path' => 'mailtemplates/variables',
-            'disabled' => TRUE,
         ],
     ],
 ];

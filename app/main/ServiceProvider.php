@@ -53,7 +53,7 @@ class ServiceProvider extends AppServiceProvider
         else {
             $this->registerFormWidgets();
             $this->registerPermissions();
-            $this->registerSettings();
+            $this->registerSystemSettings();
         }
     }
 
@@ -140,7 +140,7 @@ class ServiceProvider extends AppServiceProvider
         });
     }
 
-    protected function registerSettings()
+    protected function registerSystemSettings()
     {
         Settings_model::registerCallback(function (Settings_model $manager) {
             $manager->registerSettingItems('core', [

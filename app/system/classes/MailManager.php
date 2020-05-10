@@ -44,6 +44,11 @@ class MailManager
     protected $registeredLayouts;
 
     /**
+     * @var array List of registered variables in the system
+     */
+    protected $registeredVariables;
+
+    /**
      * @var bool Internal marker for rendering mode
      */
     protected $isRenderingHtml = FALSE;
@@ -337,6 +342,18 @@ class MailManager
     }
 
     /**
+     * Returns a list of the registered variables.
+     * @return array
+     */
+    public function listRegisteredVariables()
+    {
+        if (is_null($this->registeredVariables))
+            $this->loadRegisteredTemplates();
+
+        return $this->registeredVariables;
+    }
+
+    /**
      * Registers mail views and manageable layouts.
      * @param array $definitions
      */
@@ -373,6 +390,19 @@ class MailManager
         }
 
         $this->registeredPartials = $definitions + $this->registeredPartials;
+    }
+
+    /**
+     * Registers mail variables.
+     * @param array $definitions
+     */
+    public function registerMailVariables(array $definitions)
+    {
+        if (!$this->registeredVariables) {
+            $this->registeredVariables = [];
+        }
+
+        $this->registeredVariables = $definitions + $this->registeredVariables;
     }
 
     /**

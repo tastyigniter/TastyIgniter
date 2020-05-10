@@ -52,7 +52,7 @@ class ServiceProvider extends AppServiceProvider
 
         if ($this->app->runningInAdmin()) {
             $this->registerAssets();
-            $this->registerSettings();
+            $this->registerSystemSettings();
             $this->registerPermissions();
             $this->registerDashboardWidgets();
             $this->registerFormWidgets();
@@ -713,7 +713,7 @@ class ServiceProvider extends AppServiceProvider
         });
     }
 
-    protected function registerSettings()
+    protected function registerSystemSettings()
     {
         Settings_model::registerCallback(function (Settings_model $manager) {
             $manager->registerSettingItems('core', [

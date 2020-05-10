@@ -16,6 +16,7 @@ use Igniter\Flame\Currency\CurrencyServiceProvider;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Geolite\GeoliteServiceProvider;
 use Igniter\Flame\Pagic\PagicServiceProvider;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -66,7 +67,7 @@ class ServiceProvider extends AppServiceProvider
 
         if (App::runningInAdmin()) {
             $this->registerPermissions();
-            $this->registerSettings();
+            $this->registerSystemSettings();
         }
     }
 
@@ -245,6 +246,10 @@ class ServiceProvider extends AppServiceProvider
                 'subcopy' => 'system::_mail.partials.subcopy',
                 'promotion' => 'system::_mail.partials.promotion',
             ]);
+
+            $manager->registerMailVariables(
+                File::getRequire(__DIR__.'/models/config/mail_variables.php')
+            );
         });
 
         Event::listen('mailer.beforeRegister', function () {
@@ -437,7 +442,7 @@ class ServiceProvider extends AppServiceProvider
         });
     }
 
-    protected function registerSettings()
+    protected function registerSystemSettings()
     {
         Settings_model::registerCallback(function (Settings_model $manager) {
             $manager->registerSettingItems('core', [
