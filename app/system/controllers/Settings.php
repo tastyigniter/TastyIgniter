@@ -7,6 +7,8 @@ use AdminMenu;
 use Exception;
 use File;
 use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
 use Mail;
 use Request;
 use Session;
@@ -72,6 +74,9 @@ class Settings extends \Admin\Classes\AdminController
                 throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
             }
 
+            if ($definition->permission AND !AdminAuth::user()->hasPermission($definition->permission))
+                return Response::make(View::make('admin::access_denied'), 403);
+
             $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition->label));
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
@@ -93,6 +98,9 @@ class Settings extends \Admin\Classes\AdminController
         if (!$definition) {
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
+
+        if ($definition->permission AND !AdminAuth::user()->hasPermission($definition->permission))
+            return Response::make(View::make('admin::access_denied'), 403);
 
         $this->initWidgets($model, $definition);
 
@@ -214,10 +222,12 @@ class Settings extends \Admin\Classes\AdminController
             $settingValues = array_undot($model->getFieldValues());
 
             foreach ($settingItems as $settingItem) {
-                if (!isset($settingItem->form['rules']))
+                $settingItemForm = $this->createModel()->getFieldConfig($settingItem->code);
+
+                if (!isset($settingItemForm['rules']))
                     continue;
 
-                $validator = $this->makeValidator($settingValues, $settingItem->form['rules']);
+                $validator = $this->makeValidator($settingValues, $settingItemForm['rules']);
                 $errors = $validator->fails() ? $validator->errors() : [];
 
                 $settingItemErrors[$settingItem->code] = $errors;
