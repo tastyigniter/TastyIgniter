@@ -44,6 +44,7 @@ return [
                     'sendmail' => 'lang:system::lang.settings.text_sendmail',
                     'smtp' => 'lang:system::lang.settings.text_smtp',
                     'mailgun' => 'lang:system::lang.settings.text_mailgun',
+                    'postmark' => 'lang:system::lang.settings.text_postmark',
                     'ses' => 'lang:system::lang.settings.text_ses',
                 ],
             ],
@@ -137,6 +138,16 @@ return [
                 ],
             ],
 
+            'postmark_token' => [
+                'label' => 'lang:system::lang.settings.label_postmark_token',
+                'type' => 'text',
+                'trigger' => [
+                    'action' => 'show',
+                    'field' => 'protocol',
+                    'condition' => 'value[postmark]',
+                ],
+            ],
+
             'ses_key' => [
                 'label' => 'lang:system::lang.settings.label_ses_key',
                 'type' => 'text',
@@ -187,9 +198,11 @@ return [
             ['mailgun_domain', 'lang:system::lang.settings.label_smtp_pass', 'required_if:protocol,mailgun|string'],
             ['mailgun_secret', 'lang:system::lang.settings.label_smtp_pass', 'required_if:protocol,mailgun|string'],
 
-            ['ses_key', 'lang:system::lang.settings.label_smtp_pass', 'required_if:protocol,ses|string'],
-            ['ses_secret', 'lang:system::lang.settings.label_smtp_pass', 'required_if:protocol,ses|string'],
-            ['ses_region', 'lang:system::lang.settings.label_smtp_pass', 'required_if:protocol,ses|string'],
+            ['postmark_token', 'lang:system::lang.settings.label_postmark_token', 'required_if:protocol,postmark|string'],
+
+            ['ses_key', 'lang:system::lang.settings.label_ses_key', 'required_if:protocol,ses|string'],
+            ['ses_secret', 'lang:system::lang.settings.label_ses_secret', 'required_if:protocol,ses|string'],
+            ['ses_region', 'lang:system::lang.settings.label_ses_region', 'required_if:protocol,ses|string'],
         ],
     ],
 ];

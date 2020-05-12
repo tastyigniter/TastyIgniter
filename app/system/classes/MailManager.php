@@ -120,6 +120,9 @@ class MailManager
                 $config->set('services.mailgun.domain', $settings->get('mailgun_domain'));
                 $config->set('services.mailgun.secret', $settings->get('mailgun_secret'));
                 break;
+            case 'postmark':
+                $config->set('services.postmark.token', $settings->get('postmark_token'));
+                break;
             case 'ses':
                 $config->set('services.ses.key', $settings->get('ses_key'));
                 $config->set('services.ses.secret', $settings->get('ses_secret'));
