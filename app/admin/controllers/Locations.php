@@ -86,7 +86,7 @@ class Locations extends \Admin\Classes\AdminController
     public function settings_onSave($context = null)
     {
         try {
-            $this->asExtension('FormController')->edit_onSave('edit', params('default_location_id'));
+            $this->asExtension('FormController')->edit_onSave('edit', $this->getLocationId());
 
             return $this->refresh();
         }
