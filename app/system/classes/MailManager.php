@@ -96,8 +96,8 @@ class MailManager
         $config = App::make('config');
         $settings = App::make('system.setting');
         $config->set('mail.driver', $settings->get('protocol'));
-        $config->set('mail.from.name', $settings->get('sender_email'));
-        $config->set('mail.from.address', $settings->get('sender_name'));
+        $config->set('mail.from.name', $settings->get('sender_name'));
+        $config->set('mail.from.address', $settings->get('sender_email'));
 
         switch ($settings->get('protocol')) {
             case 'sendmail':

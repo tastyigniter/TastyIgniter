@@ -13072,6 +13072,22 @@ a.ti-loading:before, button.ti-loading:before, span.ti-loading:before {
 .btn-group > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) {
   margin-left: 0; }
 
+.btn-group > .btn, .btn-group-vertical > .btn {
+  position: relative;
+  flex: 1 1 auto; }
+
+.btn-group-toggle {
+  padding: calc(0.5rem - 4px) calc(1rem - 10px);
+  background-color: #FFFFFF;
+  border: 1px solid #D3D6DE;
+  border-radius: 3px; }
+  .btn-group-toggle .btn {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border-radius: 3px !important; }
+    .btn-group-toggle .btn:not(:last-child) {
+      margin-right: calc(1rem - 10px); }
+
 .media {
   background-color: #E9EAEE; }
 

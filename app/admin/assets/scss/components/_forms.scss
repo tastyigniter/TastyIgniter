@@ -12,7 +12,9 @@
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  padding: $form-fields-padding-y $form-fields-padding-x;
+  padding: $form-fields-padding-y;
+  margin-bottom: $form-fields-padding-x;
+  border-radius: $input-border-radius;
 }
 
 .hidden-field {
@@ -22,6 +24,11 @@
 // Form groups
 //
 .form-group {
+  &:last-child,
+  &:only-child {
+    margin-bottom: 0;
+  }
+
   &.span-full {
     clear: both;
     width: 100%;

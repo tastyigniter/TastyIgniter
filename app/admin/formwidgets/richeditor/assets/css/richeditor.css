@@ -5,3 +5,6 @@
 	background-color: var(--gray-300);
 	border-top: 1px solid var(--gray-300);
 }
+.note-editor.note-frame .note-status-output {
+	height: 10px;
+}

@@ -14,6 +14,7 @@ return [
                     'class' => 'btn btn-primary',
                     'data-request-submit' => 'true',
                     'data-request' => 'onSave',
+                    'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
                 'saveClose' => [
                     'label' => 'lang:admin::lang.button_save_close',
@@ -21,6 +22,7 @@ return [
                     'data-request' => 'onSave',
                     'data-request-submit' => 'true',
                     'data-request-data' => 'close:1',
+                    'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
             ],
         ],

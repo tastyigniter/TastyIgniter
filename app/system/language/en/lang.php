@@ -227,6 +227,8 @@ return [
         'label_markdown' => 'Markdown',
         'label_plain' => 'Plain Text',
 
+        'help_variables' => 'Drag these variables into the content area:',
+
         'alert_test_message_sent' => 'Test message successfully sent to %s',
     ],
 
@@ -462,7 +464,7 @@ return [
         'help_detect_language' => 'Enable or disable user browser language detection. If enabled your site will be translated to the browser language.',
         'help_maps_api_key' => 'An API Key is required to use Google Maps and/or Geocoding. <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key">Where can I find my Google Maps API Key?</a> Enable Google Maps Geocoding API and Google Maps JavaScript API in your Google Developer account',
         'help_default_geocoder' => 'Tell the system which geocoder service to use when geocoding addresses. \'Chain\' is a special geocoder that runs both google and open street maps geocoder and stops once it gets a valid response.',
-        'help_accepted_currency' => 'Select all currencies that you accept as payment as well as your default currency',
+        'help_site_currency' => 'Enable more currencies from Localisation > Currencies.',
         'help_currency_converter_oer_api' => 'You can <a target="_blank" href="https://openexchangerates.org/signup/">sign up here</a> for your Open Exchange Rates API.',
         'help_currency_converter_fixer_api' => 'You can <a target="_blank" href="https://fixer.io/signup/">sign up here</a> for your Fixer.io API.',
         'help_special_category' => 'Select which category to use automatically for special menus',

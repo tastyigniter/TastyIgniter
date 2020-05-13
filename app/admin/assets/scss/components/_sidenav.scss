@@ -9,7 +9,7 @@
 .nav-sidebar {
   background-color: $sidenav-bg;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   table-layout: fixed;
   position: relative;
   display: block;
@@ -18,7 +18,6 @@
   left: 0;
   right: 0;
   padding-top: 20px;
-  padding-bottom: 35px;
 
   &::-webkit-scrollbar {
     display: none;
@@ -26,6 +25,8 @@
 
   > .nav {
     @include flex-direction(column);
+    padding-bottom: 35px;
+    margin-right: -15px;
   }
 
   .nav {

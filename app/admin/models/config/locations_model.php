@@ -201,7 +201,7 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'left',
             'trigger' => [
-                'action' => 'enable',
+                'action' => 'disable',
                 'field' => 'options[auto_lat_lng]',
                 'condition' => 'checked',
             ],
@@ -211,7 +211,7 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'right',
             'trigger' => [
-                'action' => 'enable',
+                'action' => 'disable',
                 'field' => 'options[auto_lat_lng]',
                 'condition' => 'checked',
             ],

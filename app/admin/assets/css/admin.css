@@ -961,7 +961,7 @@
   padding: 15px 15px;
   overflow-y: auto;
   position: absolute;
-  top: 62px;
+  top: 64px;
   bottom: 0;
   left: 230px;
   right: 0; }
@@ -1010,11 +1010,15 @@ body.dragging {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  padding: 15px 20px; }
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 3px; }
 
 .hidden-field {
   margin: 0; }
 
+.form-group:last-child, .form-group:only-child {
+  margin-bottom: 0; }
 .form-group.span-full {
   clear: both;
   width: 100%; }
@@ -1146,7 +1150,7 @@ body.dragging {
 
 .sidebar {
   position: fixed;
-  top: 62px;
+  top: 64px;
   bottom: 0;
   width: 230px;
   z-index: 1030; }
@@ -1154,7 +1158,7 @@ body.dragging {
 .nav-sidebar {
   background-color: #12224C;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   table-layout: fixed;
   position: relative;
   display: block;
@@ -1162,15 +1166,16 @@ body.dragging {
   bottom: 0;
   left: 0;
   right: 0;
-  padding-top: 20px;
-  padding-bottom: 35px; }
+  padding-top: 20px; }
   .nav-sidebar::-webkit-scrollbar {
     display: none; }
   .nav-sidebar > .nav {
     -webkit-flex-direction: column;
     -moz-flex-direction: column;
     -ms-flex-direction: column;
-    flex-direction: column; }
+    flex-direction: column;
+    padding-bottom: 35px;
+    margin-right: -15px; }
     .nav-sidebar .nav .nav-item {
       width: 100%; }
     .nav-sidebar .nav > li > a {
@@ -1265,7 +1270,7 @@ body.dragging {
   font-size: 10px;
   position: absolute;
   top: 15px;
-  right: 6px; }
+  right: 8px; }
 .navbar-top .navbar-nav > li.nav-item.show > a .fa {
   color: #4C8CBA; }
 .navbar-top .navbar-nav > li.dropdown.show > a::after, .navbar-top .navbar-nav > li.dropdown.show > a::before {
@@ -1643,3 +1648,18 @@ body {
 body.page {
   height: 100%;
   overflow: hidden; }
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(0, 0, 0, 0.4) transparent; }
+
+*::-webkit-scrollbar {
+  width: 12px; }
+
+*::-webkit-scrollbar-track {
+  background: transparent; }
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  border: 3px solid transparent; }

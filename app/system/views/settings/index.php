@@ -1,13 +1,13 @@
 <div class="row-fluid">
-    <?php foreach ($settings as $item => $categories) { ?>
-        <?php
-        if (!count($categories)) continue;
-        ?>
-        <div class="card card-light">
+    <div class="card card-light">
+        <?php foreach ($settings as $item => $categories) { ?>
+            <?php
+            if (!count($categories)) continue;
+            ?>
             <div class="card-header">
-                <h5 class="card-title"><?= ucwords($item) ?></h5>
+                <h5 class="card-title mb-0"><?= ucwords($item) ?></h5>
             </div>
-            <div class="list-group list-group-flush">
+            <div class="list-group list-group-flush shadow-sm">
                 <?php foreach ($categories as $key => $category) { ?>
                     <a
                         class="list-group-item list-group-item-action"
@@ -35,7 +35,7 @@
                     </a>
                 <?php } ?>
             </div>
-        </div>
-    <?php } ?>
+        <?php } ?>
+    </div>
 </div>
 

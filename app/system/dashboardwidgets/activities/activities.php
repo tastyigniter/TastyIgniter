@@ -4,7 +4,7 @@
     <div class="list-group list-group-flush">
         <?php if ($activities) { ?>
             <?php foreach ($activities as $activity) { ?>
-                <div class="list-group-item px-0">
+                <div class="list-group-item">
                     <i class="<?= $activity['icon']; ?> fa-fw bg-primary"></i>
                     <b><?= $activity['causer']['staff_name'] ?? null; ?></b>
                     <?= $activity['message']; ?>

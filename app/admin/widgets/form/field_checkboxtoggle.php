@@ -7,7 +7,7 @@ $checkedValues = (array)$field->value;
     <?php if ($this->previewMode AND $field->value) { ?>
         <div
             id="<?= $field->getId() ?>"
-            class="btn-group btn-group-toggle"
+            class="btn-group btn-group-toggle bg-light"
             data-toggle="buttons">
             <?php $index = 0;
             foreach ($fieldOptions as $value => $option) { ?>
@@ -32,7 +32,7 @@ $checkedValues = (array)$field->value;
     <?php } elseif (!$this->previewMode AND count($fieldOptions)) { ?>
         <div
             id="<?= $field->getId() ?>"
-            class="btn-group btn-group-toggle"
+            class="btn-group btn-group-toggle bg-light"
             data-toggle="buttons">
             <?php $index = 0;
             foreach ($fieldOptions as $value => $option) { ?>

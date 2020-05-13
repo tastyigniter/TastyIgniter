@@ -782,6 +782,14 @@ class Form extends BaseWidget
 
         $activeTab = $activeTabs[$cookieKey] ?? null;
 
+        $tabs = $this->allTabs->primary;
+        $type = $tabs->section;
+        $activeTabIndex = (int)str_after($activeTab, '#'.$type.'tab-');
+
+        // In cases where a tab has been removed, the first tab becomes the active tab
+        $activeTab = ($activeTabIndex <= count($tabs->fields))
+            ? $activeTab : '#'.$type.'tab-1';
+
         return $this->activeTab = $activeTab;
     }
 

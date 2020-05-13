@@ -127,6 +127,7 @@ $config['form']['toolbar'] = [
             'class' => 'btn btn-default',
             'data-request' => 'onImpersonate',
             'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
+            'context' => ['edit'],
         ],
     ],
 ];

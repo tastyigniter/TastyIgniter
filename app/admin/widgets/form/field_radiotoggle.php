@@ -5,7 +5,7 @@ $fieldOptions = $field->options();
     <?php if ($fieldCount = count($fieldOptions)) { ?>
         <div
             id="<?= $field->getId() ?>"
-            class="btn-group btn-group-toggle"
+            class="btn-group btn-group-toggle bg-light"
             data-toggle="buttons">
             <?php $index = 0;
             foreach ($fieldOptions as $key => $value) { ?>

@@ -48,7 +48,7 @@
                     <span class="help-block"><?= e(lang('admin::lang.list.help_page_limit')) ?></span>
                 </label>
                 <div
-                    class="btn-group btn-group-toggle d-block"
+                    class="btn-group btn-group-toggle"
                     data-toggle="buttons"
                 >
                     <?php $index = 0;

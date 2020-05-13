@@ -12,15 +12,15 @@ return [
                 'save' => [
                     'label' => 'lang:admin::lang.button_save',
                     'class' => 'btn btn-primary',
-                    'data-request-submit' => 'true',
                     'data-request' => 'onSave',
+                    'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
                 'saveClose' => [
                     'label' => 'lang:admin::lang.button_save_close',
                     'class' => 'btn btn-default',
                     'data-request' => 'onSave',
-                    'data-request-submit' => 'true',
                     'data-request-data' => 'close:1',
+                    'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
             ],
         ],
@@ -191,12 +191,12 @@ return [
 
             ['smtp_host', 'lang:system::lang.settings.label_smtp_host', 'string'],
             ['smtp_port', 'lang:system::lang.settings.label_smtp_port', 'string'],
-            ['smtp_encryption', 'lang:system::lang.settings.label_smtp_encryption', 'required_if:protocol,smtp|string'],
+            ['smtp_encryption', 'lang:system::lang.settings.label_smtp_encryption'],
             ['smtp_user', 'lang:system::lang.settings.label_smtp_user', 'string'],
             ['smtp_pass', 'lang:system::lang.settings.label_smtp_pass', 'string'],
 
-            ['mailgun_domain', 'lang:system::lang.settings.label_smtp_pass', 'required_if:protocol,mailgun|string'],
-            ['mailgun_secret', 'lang:system::lang.settings.label_smtp_pass', 'required_if:protocol,mailgun|string'],
+            ['mailgun_domain', 'lang:system::lang.settings.label_mailgun_domain', 'required_if:protocol,mailgun|string'],
+            ['mailgun_secret', 'lang:system::lang.settings.label_mailgun_secret', 'required_if:protocol,mailgun|string'],
 
             ['postmark_token', 'lang:system::lang.settings.label_postmark_token', 'required_if:protocol,postmark|string'],
 

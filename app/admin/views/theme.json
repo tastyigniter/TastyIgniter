@@ -3,11 +3,5 @@
   "name": "TastyIgniter Admin Blue",
   "domain": "admin",
   "description": "Responsive theme for admin panel",
-  "version": "1.1",
-  "author": "SamPoyigi",
-  "homepage": "https://github.com/sampoyigi/tastyigniter-blue-theme",
-  "tags": {
-    "1.0.0": "Added fancy checkbox and wysiwyg",
-    "1.1.0": "Update theme code to use latest Extension API"
-  }
+  "author": "SamPoyigi"
 }

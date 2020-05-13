@@ -4,7 +4,7 @@ $widget = $areaForm['widget'];
 ?>
 <div
     id="<?= $this->getId('area-'.$index) ?>"
-    class="map-area card bg-light border-none mb-2"
+    class="map-area card bg-light border-none shadow-sm mb-2"
     data-control="area"
     data-area-color="<?= $area['color'] ?>"
     data-index-value="<?= $index ?>"

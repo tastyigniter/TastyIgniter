@@ -13,12 +13,14 @@ return [
                     'label' => 'lang:admin::lang.button_save',
                     'class' => 'btn btn-primary',
                     'data-request' => 'onSave',
+                    'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
                 'saveClose' => [
                     'label' => 'lang:admin::lang.button_save_close',
                     'class' => 'btn btn-default',
                     'data-request' => 'onSave',
                     'data-request-data' => 'close:1',
+                    'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
             ],
         ],
@@ -140,6 +142,7 @@ return [
                     'default' => 'GBP',
                     'options' => ['System\Models\Currencies_model', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::lang.text_please_select',
+                    'comment' => 'lang:system::lang.settings.help_site_currency',
                 ],
                 'currency_converter[api]' => [
                     'label' => 'lang:system::lang.settings.label_currency_converter',

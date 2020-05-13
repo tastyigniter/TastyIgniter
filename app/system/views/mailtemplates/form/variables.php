@@ -20,7 +20,7 @@
         id="email-variables"
         class="card card-body bg-white mt-2"
     >
-        <p class="small">Click or drag these variables into the content area:</p>
+        <p class="small"><?= lang('system::lang.mail_templates.help_variables') ?></p>
         <?php $index = 0; ?>
         <?php foreach ($variables as $groupName => $vars) {
             $index++;

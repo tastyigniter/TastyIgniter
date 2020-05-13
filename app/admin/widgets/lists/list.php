@@ -7,7 +7,7 @@
 ); ?>
 
 <div class="list-table table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped mb-0">
         <thead>
         <?= $this->makePartial('lists/list_head') ?>
         </thead>

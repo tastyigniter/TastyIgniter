@@ -13,10 +13,12 @@ return [
             ],
             'is_default' => [
                 'label' => 'lang:admin::lang.locations.label_area_default',
-                'type' => 'switch',
+                'type' => 'radiotoggle',
                 'span' => 'right',
-                'on' => 'lang:admin::lang.text_yes',
-                'off' => 'lang:admin::lang.text_no',
+                'options' => [
+                    'lang:admin::lang.text_no',
+                    'lang:admin::lang.text_yes',
+                ],
                 'attributes' => [
                     'data-toggle' => 'area-default',
                 ],

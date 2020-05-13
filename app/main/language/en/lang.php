@@ -5,7 +5,8 @@ return [
 
     'text_free' => 'Free',
     'text_equals' => ' = ',
-    'text_plus' => '+ ',
+    'text_plus' => '+',
+    'text_minus' => '-',
     'text_minutes' => 'minutes',
     'text_min' => 'min',
     'text_my_account' => 'My Account',

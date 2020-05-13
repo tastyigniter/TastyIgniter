@@ -22,7 +22,7 @@
             $newsFeed = array_slice($newsFeed, 0, $count);
             ?>
             <?php foreach ($newsFeed as $feed) { ?>
-                <a class="list-group-item px-0" target="_blank" href="<?= $feed['link']; ?>">
+                <a class="list-group-item" target="_blank" href="<?= $feed['link']; ?>">
                     <b class="d-block text-truncate"><?= $feed['title']; ?></b>
                     <span class="text-muted d-block text-truncate"><?= strip_tags($feed['description']); ?></span>
                 </a>

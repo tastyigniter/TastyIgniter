@@ -1,0 +1,25 @@
+.btn-group,
+.btn-group-vertical {
+
+  > .btn {
+    position: relative;
+    flex: 1 1 auto;
+  }
+}
+
+.btn-group-toggle {
+  padding: calc(#{$input-padding-y-lg} - 4px) calc(#{$input-padding-x-lg} - 10px);
+  background-color: $input-bg;
+  border: $input-border-width solid $input-border-color;
+  border-radius: $input-border-radius;
+
+  .btn {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border-radius: $input-border-radius !important;
+
+    &:not(:last-child) {
+      margin-right: calc(#{$input-padding-x-lg} - 10px);
+    }
+  }
+}
