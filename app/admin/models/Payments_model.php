@@ -4,6 +4,7 @@ use Admin\Classes\PaymentGateways;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\ValidationException;
 use Lang;
 use Model;
 
@@ -45,6 +46,8 @@ class Payments_model extends Model
     ];
 
     protected $purgeable = ['payment'];
+
+    protected static $defaultPayment;
 
     public function getDropdownOptions()
     {
@@ -108,6 +111,9 @@ class Payments_model extends Model
         if (!$this->exists)
             return;
 
+        if ($this->is_default)
+            $this->makeDefault();
+
         $data = [];
         $fields = ($configFields = $this->getConfigFields()) ? $configFields : [];
         foreach ($fields as $name => $config) {
@@ -121,16 +127,6 @@ class Payments_model extends Model
         }
 
         $this->data = $data;
-    }
-
-    public function makeDefault()
-    {
-        if (!$this->status) {
-            return FALSE;
-        }
-
-        $this->newQuery()->where('payment_id', $this->payment_id)->update(['is_default' => 1]);
-        $this->newQuery()->where('payment_id', '<>', $this->payment_id)->update(['is_default' => 0]);
     }
 
     //
@@ -190,6 +186,37 @@ class Payments_model extends Model
     // Helpers
     //
 
+    public function makeDefault()
+    {
+        if (!$this->status) {
+            throw new ValidationException(['status' => sprintf(
+                lang('admin::lang.alert_error_set_default'), $this->name
+            )]);
+        }
+
+        $this->timestamps = FALSE;
+        $this->newQuery()->where('is_default', '!=', 0)->update(['is_default' => 0]);
+        $this->newQuery()->where('payment_id', $this->payment_id)->update(['is_default' => 1]);
+        $this->timestamps = TRUE;
+    }
+
+    public static function getDefault()
+    {
+        if (self::$defaultPayment !== null) {
+            return self::$defaultPayment;
+        }
+
+        $defaultPayment = self::isEnabled()->where('is_default', TRUE)->first();
+
+        if (!$defaultPayment) {
+            if ($defaultPayment = self::isEnabled()->first()) {
+                $defaultPayment->makeDefault();
+            }
+        }
+
+        return self::$defaultPayment = $defaultPayment;
+    }
+
     /**
      * Return all payments
      *
@@ -241,8 +268,8 @@ class Payments_model extends Model
         $query = Payment_profiles_model::query();
 
         return $query->where('customer_id', $customer->customer_id)
-                     ->where('payment_id', $this->payment_id)
-                     ->first();
+            ->where('payment_id', $this->payment_id)
+            ->first();
     }
 
     /**

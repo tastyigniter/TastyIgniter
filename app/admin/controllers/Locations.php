@@ -76,7 +76,7 @@ class Locations extends \Admin\Classes\AdminController
     {
         $defaultId = post('default');
 
-        if (Locations_model::updateDefault(['location_id' => $defaultId])) {
+        if (Locations_model::updateDefault($defaultId)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.locations.alert_set_default')));
         }
 

@@ -5,6 +5,7 @@ use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
 
 /**
@@ -287,32 +288,32 @@ class Locations_model extends AbstractLocation
         }
     }
 
+    public function makeDefault()
+    {
+        if (!$this->location_status) {
+            throw new ValidationException(['location_status' => sprintf(
+                lang('admin::lang.alert_error_set_default'), $this->location_name
+            )]);
+        }
+
+        params('default_location_id', $this->getKey());
+        params()->save();
+    }
+
     /**
      * Update the default location
      *
-     * @param array $update
+     * @param string $locationId
      *
      * @return bool|int
      */
-    public static function updateDefault(array $update = [])
+    public static function updateDefault($locationId)
     {
-        $location_id = isset($update['location_id'])
-            ? (int)$update['location_id']
-            : params('default_location_id');
+        if ($model = self::find($locationId)) {
+            $model->makeDefault();
 
-        $locationModel = self::findOrNew($location_id);
-
-        $saved = null;
-        if ($locationModel) {
-            $locationModel->location_status = TRUE;
-            self::unguard();
-            $saved = $locationModel->fill($update)->save();
-            self::reguard();
-
-            params()->set('default_location_id', $locationModel->getKey());
+            return TRUE;
         }
-
-        return $saved ? $locationModel->getKey() : $saved;
     }
 
     public static function getDefault()
@@ -323,10 +324,8 @@ class Locations_model extends AbstractLocation
 
         $defaultLocation = self::isEnabled()->where('location_id', params('default_location_id'))->first();
         if (!$defaultLocation) {
-            $defaultLocation = self::isEnabled()->first();
-            if ($defaultLocation) {
-                params('default_location_id', $defaultLocation->getKey());
-                params()->save();
+            if ($defaultLocation = self::isEnabled()->first()) {
+                $defaultLocation->makeDefault();
             }
         }
 
