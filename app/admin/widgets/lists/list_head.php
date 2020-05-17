@@ -46,8 +46,19 @@
         <?php } ?>
     <?php } ?>
 
+    <?php if ($showFilter) { ?>
+        <th class="list-setup px-1">
+            <button
+                type="button"
+                class="btn btn-outline-default btn-sm border-none"
+                title="<?= lang('admin::lang.button_filter') ?>"
+                data-toggle="list-filter"
+                data-target=".list-filter"
+            ><i class="fa fa-filter"></i></button>
+        </th>
+    <?php } ?>
     <?php if ($showSetup) { ?>
-        <th class="list-setup">
+        <th class="list-setup px-1">
             <button
                 type="button"
                 class="btn btn-outline-default btn-sm border-none"
@@ -55,9 +66,7 @@
                 data-toggle="modal"
                 data-target="#<?= $listId ?>-setup-modal"
                 data-request="<?= $this->getEventHandler('onLoadSetup'); ?>"
-            >
-                <i class="fa fa-sliders"></i>
-            </button>
+            ><i class="fa fa-sliders"></i></button>
         </th>
     <?php } ?>
 </tr>

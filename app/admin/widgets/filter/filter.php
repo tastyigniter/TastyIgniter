@@ -13,6 +13,7 @@
             action="<?= current_url(); ?>"
             role="form"
         >
+            <?= csrf_field(); ?>
             <input type="hidden" name="_handler" value="<?= $onSubmitHandler; ?>">
 
             <?= $this->makePartial('filter/filter_scopes') ?>
@@ -20,20 +21,18 @@
     <?php } ?>
 
     <?php if ($search) { ?>
-    <div class="d-flex mt-3">
-        <div class="mr-3">
-            <button
-                class="btn btn-outline-danger"
-                type="button"
-                data-request="<?= $onClearHandler; ?>"
-                data-attach-loading
-            >
-                <i class="fa fa-times"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_clear'); ?>
-            </button>
+        <div class="d-flex mt-3">
+            <div class="mr-3">
+                <button
+                    class="btn btn-outline-danger"
+                    type="button"
+                    data-request="<?= $onClearHandler; ?>"
+                    data-attach-loading
+                ><i class="fa fa-times"></i>&nbsp;&nbsp;<?= lang('admin::lang.text_clear'); ?></button>
+            </div>
+            <div class="flex-fill">
+                <div class="filter-search"><?= $search ?></div>
+            </div>
         </div>
-        <div class="flex-fill">
-            <div class="filter-search"><?= $search ?></div>
-        </div>
-        <?php } ?>
-    </div>
+    <?php } ?>
 </div>

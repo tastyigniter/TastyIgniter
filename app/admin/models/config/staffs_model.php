@@ -41,12 +41,6 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
         'groups' => [
             'label' => 'lang:admin::lang.side_menu.staff_group',
             'class' => 'btn btn-default',

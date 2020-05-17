@@ -40,8 +40,12 @@
             </td>
         <?php } ?>
 
+        <?php if ($showFilter) { ?>
+            <td class="list-setup px-1">&nbsp;</td>
+        <?php } ?>
+
         <?php if ($showSetup) { ?>
-            <td class="list-setup">&nbsp;</td>
+            <td class="list-setup px-1">&nbsp;</td>
         <?php } ?>
     </tr>
 <?php } ?>

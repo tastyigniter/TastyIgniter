@@ -182,6 +182,7 @@ class Lists extends BaseWidget
         $this->vars['showCheckboxes'] = $this->showCheckboxes;
         $this->vars['showDragHandle'] = $this->showDragHandle;
         $this->vars['showSetup'] = $this->showSetup;
+        $this->vars['showFilter'] = count($this->filterCallbacks);
         $this->vars['showPagination'] = $this->showPagination;
         $this->vars['showSorting'] = $this->showSorting;
         $this->vars['sortColumn'] = $this->getSortColumn();

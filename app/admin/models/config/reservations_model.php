@@ -69,12 +69,6 @@ $config['list']['toolbar'] = [
             'href' => 'reservations/assigned',
             'context' => 'index',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
     ],
 ];
 

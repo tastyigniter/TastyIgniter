@@ -74,12 +74,6 @@ $config['list']['toolbar'] = [
             'href' => 'orders/assigned',
             'context' => 'index',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
     ],
 ];
 
