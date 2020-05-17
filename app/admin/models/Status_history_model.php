@@ -101,6 +101,7 @@ class Status_history_model extends Model
 
         $model->save();
 
+        // Update using query to prevent model events from firing
         $object->newQuery()->where($object->getKeyName(), $object->getKey())->update([
             'status_id' => $statusId,
             'status_updated_at' => Carbon::now(),

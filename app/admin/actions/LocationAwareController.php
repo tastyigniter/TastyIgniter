@@ -58,7 +58,7 @@ class LocationAwareController extends ControllerAction
             OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
         ) return;
 
-        $query->whereHasLocation($this->controller->getLocationId());
+        $query->whereHasOrDoesntHaveLocation($this->controller->getLocationId());
     }
 
     protected function locationBindEvents()

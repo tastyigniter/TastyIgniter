@@ -87,10 +87,13 @@ class Menu_item_option_values_model extends Model
 
         $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
 
-        $update = $this->update(['quantity' => $stockQty]);
+        // Update using query to prevent model events from firing
+        $this->newQuery()
+             ->where($this->getKeyName(), $this->getKey())
+             ->update(['quantity' => $stockQty]);
 
         Event::fire('admin.menuOption.stockUpdated', [$this, $quantity, $subtract]);
 
-        return $update;
+        return TRUE;
     }
 }

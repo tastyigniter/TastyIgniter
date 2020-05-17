@@ -189,11 +189,14 @@ class Menus_model extends Model
 
         $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
 
-        $update = $this->update(['stock_qty' => $stockQty]);
+        // Update using query to prevent model events from firing
+        $this->newQuery()
+             ->where($this->getKeyName(), $this->getKey())
+             ->update(['stock_qty' => $stockQty]);
 
         Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
 
-        return $update;
+        return TRUE;
     }
 
     /**
