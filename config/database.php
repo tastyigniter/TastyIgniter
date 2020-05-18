@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => 'mysql',
+    'default' => 'mysqli',
 
     /*
     |--------------------------------------------------------------------------
@@ -39,9 +39,9 @@ return [
             'prefix' => '',
         ],
 
-        'mysql' => [
-            'driver' => 'mysql',
-            'host' => '127.0.0.1',
+        'mysqli' => [
+            'driver' => 'mysqli',
+            'host' => 'localhost',
             'port' => 3306,
             'database' => 'database',
             'username' => 'username',
@@ -56,7 +56,7 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => '127.0.0.1',
+            'host' => 'localhost',
             'port' => 5432,
             'database' => 'database',
             'username' => 'username',
@@ -111,7 +111,7 @@ return [
         'client' => 'predis',
 
         'default' => [
-            'host' => '127.0.0.1',
+            'host' => 'localhost',
             'password' => null,
             'port' => 6379,
             'database' => 0,
