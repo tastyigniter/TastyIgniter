@@ -112,8 +112,7 @@ class Components extends BaseFormWidget
         if (!$template = $this->getTemplate())
             throw new ApplicationException('Template file not found');
 
-        $componentDefinition = $this->getComponentProperties($codeAlias, $isCreateContext);
-        $template->update(['settings' => $componentDefinition]);
+        $this->updateComponent($codeAlias, $isCreateContext, $template);
 
         flash()->success(sprintf(lang('admin::lang.alert_success'),
             'Component '.($isCreateContext ? 'added' : 'updated')))->now();
@@ -189,7 +188,7 @@ class Components extends BaseFormWidget
             [$code, $alias] = $this->getCodeAlias($codeAlias);
             $propertyValues = array_get((array)$this->getLoadValue(), $codeAlias, []);
             $componentObj = $this->manager->makeComponent($code, $alias, $propertyValues);
-            $componentObj->alias = $alias;
+            $componentObj->alias = $codeAlias;
         }
 
         return $componentObj;
@@ -261,7 +260,7 @@ class Components extends BaseFormWidget
         return ThemeManager::instance()->readFile($fileName, $this->model->code);
     }
 
-    protected function getComponentProperties($codeAlias, $isCreateContext)
+    protected function updateComponent($codeAlias, $isCreateContext, $template)
     {
         $componentObj = $this->makeComponentBy($codeAlias);
         $form = $this->makeComponentFormWidget('edit', $componentObj);
@@ -269,18 +268,27 @@ class Components extends BaseFormWidget
             ? $this->manager->getComponentPropertyValues($componentObj)
             : $form->getSaveData();
 
-        $properties['alias'] = $isCreateContext
-            ? $this->getUniqueAlias($properties['alias'])
-            : $codeAlias;
+        $properties = $this->convertComponentPropertyValues($properties);
 
-        $alias = sprintf('[%s]', array_get($properties, 'alias'));
-        $result[$alias] = array_map(function ($propertyValue) {
+        if ($isCreateContext) {
+            $alias = sprintf('[%s]', $this->getUniqueAlias($codeAlias));
+            $template->update(['settings' => [$alias => $properties]]);
+        }
+        else {
+            $alias = sprintf('[%s]', $codeAlias);
+            $template->updateComponent($alias, $properties);
+        }
+    }
+
+    protected function convertComponentPropertyValues($properties)
+    {
+        $properties['alias'] = sprintf('[%s]', $properties['alias']);
+
+        return array_map(function ($propertyValue) {
             if (is_numeric($propertyValue))
                 $propertyValue += 0; // Convert to int or float
 
             return $propertyValue;
-        }, array_except($properties, 'alias'));
-
-        return $result;
+        }, $properties);
     }
 }
