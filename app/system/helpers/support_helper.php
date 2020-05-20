@@ -577,3 +577,15 @@ if (!function_exists('generate_extension_icon')) {
     }
 }
 
+if (!function_exists('array_replace_key')) {
+    function array_replace_key($array, $oldKey, $newKey)
+    {
+        $keys = array_keys($array);
+
+        if (($keyIndex = array_search($oldKey, $keys, TRUE)) !== FALSE) {
+            $keys[$keyIndex] = $newKey;
+        }
+
+        return array_combine($keys, array_values($array));
+    }
+}
