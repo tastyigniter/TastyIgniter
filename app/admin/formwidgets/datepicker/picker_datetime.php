@@ -9,6 +9,8 @@
         <?= $field->getAttributes() ?>
         <?= $this->previewMode ? 'readonly="readonly"' : '' ?>
         data-control="datepicker"
+        data-toggle="datetimepicker"
+        data-target="#<?= $this->getId('datetime') ?>"
         data-mode="<?= $this->mode ?>"
         <?php if ($startDate) { ?>data-start-date="<?= $startDate ?>"<?php } ?>
         <?php if ($endDate) { ?>data-end-date="<?= $endDate ?>"<?php } ?>
