@@ -85,6 +85,8 @@
 
         this.$appendTo.append($newTemplate[0].innerHTML.replace(find, replace).replace(secFind, replace))
         $template.data('replace', parseInt(replace) + 1)
+
+        $('select.form-control', document).select2();
     }
 
     // FIELD REPEATER PLUGIN DEFINITION

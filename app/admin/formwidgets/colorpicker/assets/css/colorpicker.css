@@ -4,8 +4,10 @@
 .control-colorpicker .input-group-icon .fa {
   color: transparent;
   font-size: 1rem;
-  height: 2rem;
+  height: 1.65625rem;
   width: 2rem;
+  margin: 0 6px;
+  border-radius: 2px;
 }
 .colorpicker.dropdown-menu {
   padding: 10px;

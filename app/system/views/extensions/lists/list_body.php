@@ -1,5 +1,5 @@
 <?php foreach ($records as $record) { ?>
-    <div class="card<?= ($record->status) ? ' bg-light' : ''; ?> border-none shadow-sm mb-2">
+    <div class="card <?= ($record->status) ? 'disabled' : 'bg-light shadow-sm'; ?> mb-3">
         <div class="card-body p-3">
             <div class="d-flex w-100 align-items-center">
                 <?php $icon = $record->icon; ?>

@@ -1,0 +1,15 @@
+.list-table {
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $page-padding-x;
+      padding-right: 0;
+    }
+  }
+}
+.table-striped {
+  thead th {
+    background-color: $gray-200;
+    border-bottom: 2px solid $gray-300;
+  }
+}

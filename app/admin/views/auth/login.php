@@ -23,15 +23,16 @@
                     <?= form_error('password', '<span class="text-danger">', '</span>'); ?>
                 </div>
                 <div class="form-group">
-                    <button
-                        type="submit"
-                        class="btn btn-primary btn-lg pull-right"
-                    ><i class="fa fa-sign-in fa-fw"></i>&nbsp;&nbsp;&nbsp;<?= lang('admin::lang.login.button_login'); ?>
-                    </button>
-                    <p>
+                    <p class="text-right">
                         <a href="<?= admin_url('login/reset'); ?>"><?= lang('admin::lang.login.text_forgot_password'); ?></a>
                     </p>
                 </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-block"
+                ><i class="fa fa-sign-in fa-fw"></i>&nbsp;&nbsp;&nbsp;<?= lang('admin::lang.login.button_login'); ?>
+                </button>
 
                 <?= form_close(); ?>
             </div>

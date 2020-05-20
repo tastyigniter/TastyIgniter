@@ -1,7 +1,7 @@
 <?php foreach ($records ?? [] as $theme) { ?>
     <?php if (!$theme->getTheme()) { ?>
         <div class="row mb-3">
-            <div class="media p-4 w-100 border border-danger text-danger">
+            <div class="media bg-light p-4 w-100 border border-danger text-danger">
                 <a class="media-left align-self-center mr-4 preview-thumb"
                    style="width:200px;">
                 </a>
@@ -16,7 +16,7 @@
         </div>
     <?php } else { ?>
         <div class="row mb-3">
-            <div class="media p-4 w-100">
+            <div class="media bg-light p-4 w-100">
                 <a class="media-left align-self-center mr-4 preview-thumb"
                    data-toggle="modal"
                    data-target="#theme-preview-<?= $theme->code; ?>"

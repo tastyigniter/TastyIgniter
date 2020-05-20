@@ -1,37 +1,18 @@
-.btn {
-  cursor: pointer;
-}
-
-.btn-edit {
-  color: $primary;
-  background-color: transparent;
-}
-
-.btn-action {
-  border: 0;
-  padding: $btn-action-padding;
-}
-
 .btn-light {
   background-color: $light;
   border-color: $gray-300;
 
   &:hover {
+    background-color: $gray-200;
     border-color: $gray-400;
   }
 }
-
 .btn-light:not(:disabled):not(.disabled):active,
 .btn-light:not(:disabled):not(.disabled).active,
 .show > .btn-light.dropdown-toggle {
   background-color: $gray-400;
   border-color: $gray-400;
 }
-
-.btn-group .btn:not(:last-child) {
-  border-right: 1px solid rgba(0, 0, 0, 0.09);
-}
-
 .btn-group > .btn:not(:first-child),
 .btn-group > .btn-group:not(:first-child) {
   margin-left: 0;

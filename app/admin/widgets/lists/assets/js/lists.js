@@ -5,7 +5,7 @@ $(function () {
     var $listFilterButton = $('[data-toggle="list-filter"]'),
         $listFilterTarget = $($listFilterButton.data('target')),
         listFilterStoreName = $listFilterTarget.data('storeName'),
-        displayFilterPanel = Cookies.set(listFilterStoreName)
+        displayFilterPanel = Cookies.get(listFilterStoreName)
 
     $listFilterButton.on('click', function () {
         var $button = $(this)

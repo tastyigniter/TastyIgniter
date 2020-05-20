@@ -37,9 +37,9 @@ $weekdays = $formModel->getWeekDaysOptions();
                                         autocomplete="off"
                                         value="<?= $hour['open'] ?>"
                                         <?= $field->getAttributes() ?> />
-                                    <span class="input-group-prepend">
-                                <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
-                            </span>
+                                    <div class="input-group-append">
+                                        <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
+                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -51,9 +51,9 @@ $weekdays = $formModel->getWeekDaysOptions();
                                         autocomplete="off"
                                         value="<?= $hour['close'] ?>"
                                         <?= $field->getAttributes() ?> />
-                                    <span class="input-group-prepend">
-                                <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
-                            </span>
+                                    <div class="input-group-append">
+                                        <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
+                                    </div>
                                 </div>
                             </td>
                             <td>

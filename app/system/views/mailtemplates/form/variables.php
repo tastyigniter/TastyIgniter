@@ -1,4 +1,4 @@
-<div class="w-100 form-fields flex-column">
+<div class="w-100 form-fields pl-0 flex-column">
     <label class="sr-only">
         <?= lang('system::lang.mail_templates.text_variables') ?>
     </label>

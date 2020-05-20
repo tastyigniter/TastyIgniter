@@ -1,20 +1,24 @@
 .pagination-bar {
-	padding: 15px;
+  padding: 15px 15px $page-padding-y;
 
-	.pagination {
-		justify-content: flex-end;
-		margin-bottom: 0;
-	
-		> li > a,
-		> li > span {
-			margin: 0 1px;
-		}
-	
-		> li > a[rel="next"],
-		> li > a[rel="prev"] {
-			padding-left: 15px;
-			padding-right: 15px;
-		}
-	}
+  .pagination {
+    justify-content: flex-end;
+    margin-bottom: 0;
+
+    .page-link {
+      border-radius: $border-radius;
+    }
+
+    > li > a,
+    > li > span {
+      margin: 0 1px;
+    }
+
+    > li > a[rel="next"],
+    > li > a[rel="prev"] {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
 }
 

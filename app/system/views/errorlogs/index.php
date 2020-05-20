@@ -10,7 +10,7 @@
     <?= $this->widgets['toolbar']->render() ?>
 
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-striped border-bottom">
             <thead>
             <tr>
                 <th width="10%">Level</th>

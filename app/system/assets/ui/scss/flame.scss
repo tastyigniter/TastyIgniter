@@ -5,16 +5,7 @@
 // Helpers
 @import "helpers/+import-helpers";
 //
-// Admin Helpers
-@import "../../../../admin/assets/scss/helpers/+import-helpers";
-//
-// Bootstrap
-@import "vendor/bootstrap-helpers";
-//
-// Vendors
-@import "vendor/+import_vendors";
-//
-// Partials
+// Components
 @import "components/+import-components";
 //
 // Utilities

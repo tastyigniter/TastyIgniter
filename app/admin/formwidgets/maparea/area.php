@@ -4,7 +4,7 @@ $widget = $areaForm['widget'];
 ?>
 <div
     id="<?= $this->getId('area-'.$index) ?>"
-    class="map-area card bg-light border-none shadow-sm mb-2"
+    class="map-area card bg-light shadow-sm mb-2"
     data-control="area"
     data-area-color="<?= $area['color'] ?>"
     data-index-value="<?= $index ?>"
@@ -46,7 +46,7 @@ $widget = $areaForm['widget'];
                         data-area-selector="#<?= $this->getId('area-'.$index) ?>"
                         data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
                     <?php } ?>
-                ><i class="fa fa-times"></i></a>
+                ><i class="fa fa-trash-alt"></i></a>
             </div>
         </div>
     </div>

@@ -1,13 +1,15 @@
-<div class="control-repeater"
-     data-control="repeater"
-     data-append-to="#<?= $this->getId('append-to') ?>"
-     data-sortable-container="#<?= $this->getId('sortable') ?>"
-     data-sortable-handle=".<?= $this->getId('items') ?>-handle">
+<div
+    class="control-repeater"
+    data-control="repeater"
+    data-append-to="#<?= $this->getId('append-to') ?>"
+    data-sortable-container="#<?= $this->getId('sortable') ?>"
+    data-sortable-handle=".<?= $this->getId('items') ?>-handle">
 
     <div id="<?= $this->getId('items') ?>" class="repeater-items">
         <div class="table-responsive">
-            <table id="<?= $this->getId('sortable') ?>"
-                   class="table table-striped <?= ($sortable) ? 'is-sortable' : '' ?> mb-0">
+            <table
+                id="<?= $this->getId('sortable') ?>"
+                class="table <?= ($sortable) ? 'is-sortable' : '' ?> mb-0">
                 <thead>
                 <tr>
                     <?php if (!$this->previewMode AND $sortable) { ?>

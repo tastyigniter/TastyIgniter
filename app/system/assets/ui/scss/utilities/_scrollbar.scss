@@ -1,18 +1,21 @@
-* {
-  scrollbar-width: auto;
-  scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
-}
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
+    scroll-padding: 0px;
+  }
 
-*::-webkit-scrollbar {
-  width: 12px;
-}
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
 
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-*::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 20px;
-  border: 3px solid transparent;
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    border: 3px solid transparent;
+  }
 }

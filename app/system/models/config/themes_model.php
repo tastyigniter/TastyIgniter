@@ -30,7 +30,7 @@ $config['list']['columns'] = [
     ],
     'source' => [
         'type' => 'button',
-        'iconCssClass' => 'fa fa-pencil',
+        'iconCssClass' => 'fa fa-file',
         'attributes' => [
             'class' => 'btn btn-outline-default',
             'href' => 'themes/source/{code}',
@@ -40,7 +40,7 @@ $config['list']['columns'] = [
         'type' => 'button',
         'iconCssClass' => 'fa fa-star-o',
         'attributes' => [
-            'class' => 'btn btn-outline-warning',
+            'class' => 'btn btn-outline-warning bg-transparent',
             'title' => 'lang:system::lang.themes.text_set_default',
             'data-request' => 'onSetDefault',
             'data-request-form' => '#list-form',

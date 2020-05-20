@@ -450,7 +450,7 @@
 
         modalFooter: [
             '<div class="text-right">',
-            '<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>',
+            '<button type="button" class="btn btn-link" data-dismiss="modal" aria-hidden="true">Close</button>',
             '&nbsp;&nbsp;&nbsp;&nbsp;',
             '{{#installed}}',
             '<button type="submit" class="btn btn-primary" disabled><i class="fa fa-cloud-download"></i>&nbsp;&nbsp;{{submit}}</button>',

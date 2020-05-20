@@ -2,20 +2,29 @@
 // Tastyigniter's Admin UI
 // ======================================================================== //
 //
-// UI Helpers
-@import "../../../system/assets/ui/scss/helpers/+import-helpers";
-//
 // Helpers
 @import "helpers/+import-helpers";
 //
+// UI Helpers
+@import "../../../system/assets/ui/scss/helpers/+import-helpers";
+//
 // Bootstrap Helpers
-@import "../../../system/assets/ui/scss/vendor/bootstrap-helpers";
+@import "vendor/bootstrap-helpers";
 //
 // Vendors
 @import "vendor/+import_vendors";
 //
+// Bootstrap components
+@import "vendor/bootstrap-components";
+//
+// UI Components
+@import "../../../system/assets/ui/scss/components/+import-components";
+//
 // Components
 @import "components/+import-components";
+//
+// UI Utilities
+@import "../../../system/assets/ui/scss/utilities/+import-utilities";
 //
 // Utilities
 @import "utilities/+import-utilities";

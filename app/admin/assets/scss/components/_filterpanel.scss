@@ -1,6 +1,5 @@
 .list-filter {
-  background-color: $gray-100;
-  border-radius: $input-border-radius $input-border-radius 0 0;
-  margin-bottom: 0px;
-  padding: 1rem;
+  background-color: $gray-200;
+  border-top: 1px solid $border-color;
+  padding: $page-padding-x;
 }

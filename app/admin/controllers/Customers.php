@@ -52,8 +52,6 @@ class Customers extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        $this->addJs('js/addresstabs.js', 'addresstabs-js');
-
         AdminMenu::setContext('customers', 'users');
     }
 
@@ -67,7 +65,7 @@ class Customers extends \Admin\Classes\AdminController
         if ($customer = $this->formFindModelObject((int)$id)) {
             Auth::stopImpersonate();
             Auth::impersonate($customer);
-            flash()->success(lang('admin::lang.customers.alert_impersonate_success'));
+            flash()->success(sprintf(lang('admin::lang.customers.alert_impersonate_success'), $customer->full_name));
         }
     }
 }

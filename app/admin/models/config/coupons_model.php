@@ -180,27 +180,27 @@ $config['form']['tabs'] = [
             'default' => 0,
             'comment' => 'lang:admin::lang.coupons.help_customer_redemption',
         ],
-        'order_restriction' => [
-            'label' => 'lang:admin::lang.coupons.label_order_restriction',
-            'type' => 'radiotoggle',
-            'comment' => 'lang:admin::lang.coupons.help_order_restriction',
-            'span' => 'left',
-            'options' => [
-                'lang:admin::lang.text_none',
-                'lang:admin::lang.coupons.text_delivery_only',
-                'lang:admin::lang.coupons.text_collection_only',
-            ],
-        ],
         'validity' => [
             'label' => 'lang:admin::lang.coupons.label_validity',
             'type' => 'radiotoggle',
             'default' => 'forever',
-            'span' => 'right',
+            'span' => 'left',
             'options' => [
                 'forever' => 'lang:admin::lang.coupons.text_forever',
                 'fixed' => 'lang:admin::lang.coupons.text_fixed',
                 'period' => 'lang:admin::lang.coupons.text_period',
                 'recurring' => 'lang:admin::lang.coupons.text_recurring',
+            ],
+        ],
+        'order_restriction' => [
+            'label' => 'lang:admin::lang.coupons.label_order_restriction',
+            'type' => 'radiotoggle',
+            'comment' => 'lang:admin::lang.coupons.help_order_restriction',
+            'span' => 'right',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.coupons.text_delivery_only',
+                'lang:admin::lang.coupons.text_collection_only',
             ],
         ],
         'fixed_date' => [

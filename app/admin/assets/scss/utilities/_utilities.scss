@@ -15,3 +15,11 @@ body.page {
   height: 100%;
   overflow: hidden;
 }
+.page-x-spacer {
+  padding-right: $page-padding-x;
+  padding-left: $page-padding-x;
+}
+.page-y-spacer {
+  padding-top: $page-padding-y;
+  padding-bottom: $page-padding-y;
+}

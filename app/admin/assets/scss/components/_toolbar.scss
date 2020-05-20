@@ -1,16 +1,17 @@
 .toolbar {
-
   .toolbar-action {
     clear: both;
     width: 100%;
-    //padding-top: 20px;
+    padding-left: $page-padding-x;
+    padding-right: $page-padding-x;
     padding-bottom: 20px;
   }
 }
-
 .toolbar-action {
-  .btn-group:not(:last-child) {
-    margin-right: 8px;
+  .btn-group {
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 
   > .btn {
@@ -19,7 +20,6 @@
   }
 
   .btn {
-    border-bottom-width: 4px;
     outline: 0 none;
 
     &:first-child {
@@ -30,43 +30,58 @@
       margin-right: 0;
     }
 
+    &.active,
+    &:active {
+      box-shadow: none;
+    }
+
     .fa {
-      padding-right: 3px;
+      padding-right: 4px;
     }
   }
 
-  .btn:hover,
-  .btn:focus {
-    margin-top: 1px;
-    border-bottom-width: 3px;
-  }
-
-  .btn.active,
-  .btn:active {
-    box-shadow: none;
-    border-bottom-width: 2px;
-    margin-top: 2px;
+  .btn + .btn {
+    margin-left: $btn-spacer;
   }
 
   .fa {
     padding: 0;
   }
 
-  .btn-default {
-    border-width: 1px 1px 4px 1px;
+  .btn-left {
+    float: left;
   }
 
-  .btn-filter {
+  .btn-right {
     float: right;
   }
 
-  @each $color, $value in $theme-colors {
-    .btn-#{$color} {
-      border-bottom-color: darken($value, 7.5%);
+  .btn-primary {
+    color: #FFFFFF;
+    @include hover() {
+      color: #FFFFFF;
     }
+  }
 
-    @include hover-focus {
-      border-bottom-color: $value;
+  .btn-outline-primary {
+    color: $primary;
+    @include hover() {
+      color: #FFFFFF;
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    @if not ($color == "primary") {
+      .btn-#{$color} {
+        @include button-variant($secondary, $secondary, darken($value, 7.5%), darken($value, 10%), darken($value, 10%), darken($value, 12.5%));
+      }
+    }
+  }
+  @each $color, $value in $theme-colors {
+    @if not ($color == "primary") {
+      .btn-outline-#{$color} {
+        @include button-outline-variant($secondary, color-yiq($value), $value, $value);
+      }
     }
   }
 }

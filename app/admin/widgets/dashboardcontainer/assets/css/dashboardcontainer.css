@@ -1,10 +1,13 @@
+.dashboard-widgets {
+  margin-top: -15px;
+}
 .dashboard-toolbar {
-  padding: 0 0 30px;
+  padding: 0 0 20px;
 }
 .widget-item-action {
   position: absolute;
-  right: 5px;
-  top: 5px;
+  right: 0;
+  top: 0;
   display: none;
 }
 .widget-item:hover .widget-item-action {

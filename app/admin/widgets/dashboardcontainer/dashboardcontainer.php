@@ -1,4 +1,5 @@
 <div
+    class="page-x-spacer"
     data-control="dashboard-container"
     data-alias="<?= $this->alias ?>"
 >
@@ -9,8 +10,9 @@
         </div>
     </div>
 
-    <div id="<?= $this->getId('container-toolbar') ?>" class="toolbar dashboard-toolbar btn-toolbar"
-         data-container-toolbar>
+    <div
+        id="<?= $this->getId('container-toolbar') ?>" class="toolbar dashboard-toolbar btn-toolbar"
+        data-container-toolbar>
         <?= $this->makePartial('widget_toolbar') ?>
     </div>
 </div>

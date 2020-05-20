@@ -28,9 +28,6 @@
 Toolbar
 */
 .media-toolbar {
-	padding: 20px 0;
-}
-.media-modal .media-toolbar {
 	padding: 15px;
 }
 /*
@@ -112,7 +109,7 @@ Breadcrumb
 */
 
 .media-breadcrumb .breadcrumb {
-	background-color: var(--gray-400);
+	background-color: var(--gray-300);
 	margin-bottom: 0;
 	border-radius: 3px 3px 0 0;
 }
@@ -120,8 +117,7 @@ Breadcrumb
 Statusbar
 */
 .media-statusbar {
-	background-color: var(--gray-400);
-	border: 0 none;
+	border-top: 1px solid var(--gray-300);
 	padding: 10px 15px;
 }
 .media-statusbar .statusbar-text {

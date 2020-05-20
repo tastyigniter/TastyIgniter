@@ -59,8 +59,7 @@ $staffState = \Admin\Classes\UserState::forUser();
             data-target="#editStaffStatusModal"
             role="button"
         >
-            <i class="fa fa-circle fa-fw text-<?= $staffState->getStatusColorName(); ?>"></i>
-            <?= lang('admin::lang.text_set_status'); ?>
+            <i class="fa fa-circle fa-fw text-<?= $staffState->getStatusColorName(); ?>"></i><?= lang('admin::lang.text_set_status'); ?>
         </a>
         <a class="dropdown-item" href="<?= $staffEditLink; ?>">
             <i class="fa fa-user fa-fw"></i><?= lang('admin::lang.text_edit_details'); ?>

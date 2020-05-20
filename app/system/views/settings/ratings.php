@@ -1,5 +1,5 @@
 <div id="ratings-field">
-    <table class="table table-striped table-border table-sortable">
+    <table class="table table-sortable">
         <thead>
         <tr>
             <th class="list-action"></th>
@@ -14,10 +14,10 @@
                 <td class="list-action text-center handle"><i class="fa fa-bars"></i></td>
                 <td class="list-action handle">
                     <a
-                        class="btn btn-outline-danger"
+                        class="btn btn-outline-danger border-none"
                         role="button"
                         onclick="confirm('<?= lang('admin::lang.alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false"
-                    ><i class="fa fa-times-circle"></i></a>
+                    ><i class="fa fa-trash-alt"></i></a>
                 </td>
                 <td>
                     <input type="text"

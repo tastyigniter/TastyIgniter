@@ -1,5 +1,6 @@
 .page-wrapper {
-  padding: $page-padding-x $page-padding-y;
+  padding-top: $page-padding-y;
+  padding-bottom: $page-padding-y;
   overflow-y: auto;
   position: absolute;
   top: $page-top;
@@ -11,13 +12,11 @@
     margin: 0;
   }
 }
-
 @include media-breakpoint-down(sm) {
   .page-wrapper {
     left: 0;
   }
 }
-
 body.dragging, body.dragging {
   cursor: move !important;
 

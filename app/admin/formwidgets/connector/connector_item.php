@@ -1,6 +1,6 @@
 <div
     id="<?= $this->getId('item-'.$index) ?>"
-    class="card bg-light border-none shadow-sm mb-2"
+    class="card bg-light shadow-sm mb-2"
     data-item-index="<?= $index ?>"
 >
     <div class="card-body">

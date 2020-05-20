@@ -69,9 +69,10 @@ return [
     'button_add' => 'Add',
     'button_edit' => 'Edit',
     'button_continue' => 'Continue',
+    'button_filter' => 'Filter',
     'button_save' => '<i class="fa fa-save"></i> Save',
     'button_save_close' => '<i class="fa fa-save"></i> Save & Close',
-    'button_icon_back' => '<i class="fa fa-angle-double-left"></i>',
+    'button_icon_back' => '<i class="fa fa-angle-double-left px-0"></i>',
     'button_icon_filter' => '<i class="fa fa-filter"></i>',
     'button_icon_delete' => '<i class="fa fa-trash-o"></i>',
     'button_close' => 'Close',
@@ -319,7 +320,7 @@ return [
         'text_empty' => 'There are no customers available.',
         'text_subscribe' => 'Subscribe',
         'text_un_subscribe' => 'Un-subscribe',
-        'text_title_edit_address' => 'Edit Address',
+        'text_title_edit_address' => 'Address',
         'text_impersonate' => 'Impersonate Customer',
 
         'column_full_name' => 'Full Name',
@@ -344,7 +345,7 @@ return [
 
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
         'alert_impersonate_confirm' => 'Are you sure you want to impersonate this customer? You can revert to your original state by logging out.',
-        'alert_impersonate_success' => 'You are now impersonating this customer',
+        'alert_impersonate_success' => 'You are now impersonating customer: %s',
     ],
 
     'dashboard' => [
@@ -439,6 +440,7 @@ return [
         'label_widget' => 'Widget',
         'label_widget_title' => 'Widget Title',
         'label_widget_columns' => 'Widget Grid Width',
+        'label_widget_css_class' => 'Widget CSS Class',
 
         'button_add_widget' => 'Add Widget',
         'button_reset_widgets' => 'Reset Widgets',

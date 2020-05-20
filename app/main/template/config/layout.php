@@ -19,7 +19,9 @@ return [
                             'label' => 'lang:system::lang.themes.label_component_alias',
                             'type' => 'text',
                             'context' => 'edit',
-                            'disabled' => TRUE,
+                            'attributes' => [
+                                'data-toggle' => 'disabled',
+                            ],
                         ],
                     ],
                 ],

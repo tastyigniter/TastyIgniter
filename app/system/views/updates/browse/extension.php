@@ -16,7 +16,7 @@
         </div>
         <div class="flex-grow-1 px-0 ml-auto">
             <b><?= str_limit($item['name'], 22) ?></b>
-            <p class="mb-0 text-muted"><?= str_limit($item['description'], 128); ?></p>
+            <p class="mb-0"><?= str_limit($item['description'], 128); ?></p>
         </div>
     </div>
     <div class="d-flex p-3">

@@ -13,12 +13,12 @@
     <?php if (!$this->previewMode AND $showRemoveButton) { ?>
         <td class="list-action repeater-item-remove">
             <a
-                class="btn btn-outline-danger"
+                class="btn btn-outline-danger border-none"
                 role="button"
                 data-control="remove-item"
                 data-target="#<?= $this->getId('item-'.$indexValue) ?>"
                 data-prompt="<?= lang('admin::lang.alert_confirm') ?>"
-            ><i class="fa fa-times-circle"></i></a>
+            ><i class="fa fa-trash-alt"></i></a>
         </td>
     <?php } ?>
 
