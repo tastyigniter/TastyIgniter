@@ -211,7 +211,7 @@ class Lists extends BaseWidget
 
     protected function validateModel()
     {
-        if (!$this->model OR !$this->model instanceof Model) {
+        if (!$this->model OR !($this->model instanceof Model OR is_subclass_of($this->model, \Illuminate\Database\Eloquent\Model::class))) {
             throw new Exception(sprintf(lang('admin::lang.list.missing_model'), get_class($this->controller)));
         }
 
