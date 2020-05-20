@@ -211,7 +211,7 @@ class Lists extends BaseWidget
 
     protected function validateModel()
     {
-        if (!$this->model OR !($this->model instanceof Model OR is_subclass_of($this->model, \Illuminate\Database\Eloquent\Model::class))) {
+        if (!$this->model OR !$this->model instanceof \Illuminate\Database\Eloquent\Model) {
             throw new Exception(sprintf(lang('admin::lang.list.missing_model'), get_class($this->controller)));
         }
 
@@ -666,7 +666,7 @@ class Lists extends BaseWidget
             if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
                 $result[$key] = $this->controller->pageUrl($value);
             }
-            else if (is_string($value)) {
+            elseif (is_string($value)) {
                 $result[$key] = lang($value);
             }
         }

@@ -89,7 +89,7 @@ class Payment_profiles_model extends Model
 
     public function scopeApplyCustomer($query, $customer)
     {
-        if ($customer instanceof Model) {
+        if ($customer instanceof \Illuminate\Database\Eloquent\Model) {
             $customer = $customer->getKey();
         }
 

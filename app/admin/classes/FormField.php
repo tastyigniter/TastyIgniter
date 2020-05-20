@@ -1,7 +1,7 @@
 <?php namespace Admin\Classes;
 
 use Html;
-use Model;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Form Field definition
