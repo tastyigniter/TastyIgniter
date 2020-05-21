@@ -409,14 +409,15 @@ class DashboardContainer extends BaseWidget
     {
         $properties = $widget->defineProperties();
 
-        $property = [
-            'property' => 'width',
-            'label' => lang('admin::lang.dashboard.label_widget_columns'),
-            'comment' => lang('admin::lang.dashboard.help_widget_columns'),
-            'type' => 'select',
-            'options' => $this->getWidgetPropertyWidthOptions(),
+        $result = [
+            'width' => [
+                'property' => 'width',
+                'label' => lang('admin::lang.dashboard.label_widget_columns'),
+                'comment' => lang('admin::lang.dashboard.help_widget_columns'),
+                'type' => 'select',
+                'options' => $this->getWidgetPropertyWidthOptions(),
+            ],
         ];
-        $result['width'] = $property;
 
         foreach ($properties as $name => $params) {
 

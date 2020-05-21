@@ -310,6 +310,7 @@
         }
 
         if (this.options.uniqueId) {
+            dropzoneOptions.headers['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content')
             dropzoneOptions.headers['X-IGNITER-FILEUPLOAD'] = this.options.uniqueId
         }
 

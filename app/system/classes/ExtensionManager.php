@@ -21,14 +21,9 @@ class ExtensionManager
     use Singleton;
 
     /**
-     * @var
+     * The application instance, since Extensions are an extension of a Service Provider
      */
-    public $routes;
-
-    /**
-     * @var
-     */
-    public $registry;
+    protected $app;
 
     /**
      * @var array used for storing extension information objects.
@@ -67,6 +62,7 @@ class ExtensionManager
 
     public function initialize()
     {
+        $this->app = App::make('app');
         $this->metaFile = storage_path('system/installed.json');
         $this->loadInstalled();
         $this->loadExtensions();
@@ -390,7 +386,7 @@ class ExtensionManager
             throw new SystemException("Missing Extension class '{$class}' in '{$identifier}', create the Extension class to override extensionMeta() method.");
         }
 
-        $classObj = new $class(App::getInstance());
+        $classObj = new $class($this->app);
 
         // Check for disabled extensions
         if ($this->isDisabled($identifier)) {
