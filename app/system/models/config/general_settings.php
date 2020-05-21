@@ -221,7 +221,7 @@ return [
         ],
         'rules' => [
             ['site_name', 'lang:system::lang.settings.label_site_name', 'required|min:2|max:128'],
-            ['site_email', 'lang:system::lang.settings.label_site_email', 'required|email'],
+            ['site_email', 'lang:system::lang.settings.label_site_email', 'required|email:filter|max:96'],
             ['site_logo', 'lang:system::lang.settings.label_site_logo', 'required'],
             ['timezone', 'lang:system::lang.settings.label_timezone', 'required'],
             ['date_format', 'lang:system::lang.settings.label_date_format', 'required'],

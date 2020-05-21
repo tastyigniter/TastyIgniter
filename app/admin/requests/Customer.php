@@ -16,7 +16,7 @@ class Customer extends FormRequest
         $rules = [
             ['first_name', 'admin::lang.customers.label_first_name', 'required|between:1,48'],
             ['last_name', 'admin::lang.customers.label_last_name', 'required|between:1,48'],
-            ['email', 'admin::lang.label_email', 'required|email|max:96|unique:customers,email'],
+            ['email', 'admin::lang.label_email', 'required|email:filter|max:96|unique:customers,email'],
             ['telephone', 'admin::lang.customers.label_telephone', 'sometimes'],
             ['newsletter', 'admin::lang.customers.label_newsletter', 'sometimes|required|boolean'],
             ['customer_group_id', 'admin::lang.customers.label_customer_group', 'required|integer'],

@@ -134,7 +134,7 @@ class Login extends \Admin\Classes\AdminController
             ];
         }
         else {
-            $rules[] = ['email', 'lang:admin::lang.label_email', 'required|email|exists:staffs,staff_email'];
+            $rules[] = ['email', 'lang:admin::lang.label_email', 'required|email:filter|max:96|exists:staffs,staff_email'];
         }
 
         return $this->validatePasses($post, $rules);

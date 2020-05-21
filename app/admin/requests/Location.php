@@ -10,7 +10,7 @@ class Location extends FormRequest
     {
         return [
             ['location_name', 'admin::lang.label_name', 'required|between:2,32'],
-            ['location_email', 'admin::lang.label_email', 'required|email'],
+            ['location_email', 'admin::lang.label_email', 'required|email:filter|max:96'],
             ['location_telephone', 'admin::lang.locations.label_telephone', 'required|between:2,15'],
             ['location_address_1', 'admin::lang.locations.label_address_1', 'required|between:2,128'],
             ['location_address_2', 'admin::lang.locations.label_address_2', 'max:128'],
