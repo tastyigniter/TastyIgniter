@@ -1,4 +1,4 @@
-<?php $lockerValue = $value ? $value->format($dateTimeFormat) : null ?>
+<?php $lockerValue = $value ? $value->format($formatAlias) : null ?>
 <div class="input-group">
     <input
         type="text"
