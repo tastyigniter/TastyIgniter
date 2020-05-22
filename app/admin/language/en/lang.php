@@ -132,7 +132,6 @@ return [
         'updates' => 'Updates',
         'storefront' => 'Storefront',
         'page' => 'Static Pages',
-        'banner' => 'Banners',
         'error_log' => 'System Logs',
         'setting' => 'Settings',
         'dashboard' => 'Dashboard',
