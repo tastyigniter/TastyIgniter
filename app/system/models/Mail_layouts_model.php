@@ -44,7 +44,7 @@ class Mail_layouts_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'templates' => ['System\Models\Mail_templates_model', 'foreignKey' => 'layout_id', 'delete' => TRUE],
+            'templates' => ['System\Models\Mail_templates_model', 'foreignKey' => 'layout_id'],
         ],
         'belongsTo' => [
             'language' => 'System\Models\Languages_model',

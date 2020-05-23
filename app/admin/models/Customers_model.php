@@ -1,7 +1,6 @@
 <?php namespace Admin\Models;
 
 use Carbon\Carbon;
-use DB;
 use Exception;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -38,8 +37,8 @@ class Customers_model extends AuthUserModel
     public $relation = [
         'hasMany' => [
             'addresses' => ['Admin\Models\Addresses_model', 'delete' => TRUE],
-            'orders' => ['Admin\Models\Orders_model', 'delete' => TRUE],
-            'reservations' => ['Admin\Models\Reservations_model', 'delete' => TRUE],
+            'orders' => ['Admin\Models\Orders_model'],
+            'reservations' => ['Admin\Models\Reservations_model'],
         ],
         'belongsTo' => [
             'group' => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],

@@ -16,7 +16,7 @@ trait Assignable
             $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staffs_model'];
             $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\Staff_groups_model'];
             $model->relation['morphMany']['assignable_logs'] = [
-                'Admin\Models\Assignable_logs_model', 'name' => 'assignable', 'delete' => TRUE,
+                'Admin\Models\Assignable_logs_model', 'name' => 'assignable',
             ];
 
             $model->casts = array_merge($model->casts, [
