@@ -53,7 +53,7 @@ class Menus extends AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('menus', 'kitchen');
+        AdminMenu::setContext('menus', 'restaurant');
     }
 
     public function edit_onChooseMenuOption($context, $recordId)

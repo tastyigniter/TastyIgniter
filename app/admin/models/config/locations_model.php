@@ -321,14 +321,6 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'comment' => 'lang:admin::lang.locations.help_reservation_stay_time',
         ],
-        'tables' => [
-            'label' => 'lang:admin::lang.locations.label_tables',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'relation',
-            'relationFrom' => 'tables',
-            'nameFrom' => 'table_name',
-            'comment' => 'lang:admin::lang.locations.help_tables',
-        ],
 
         'opening_type' => [
             'label' => 'lang:admin::lang.locations.label_opening_type',
@@ -529,6 +521,30 @@ $config['form']['tabs'] = [
                 'field' => 'options[hours][collection][type]',
                 'condition' => 'value[flexible]',
             ],
+        ],
+
+        '_table' => [
+            'tab' => 'lang:admin::lang.locations.text_tab_tables',
+            'type' => 'recordeditor',
+            'context' => ['edit', 'preview'],
+            'form' => 'tables_model',
+            'modelClass' => 'Admin\Models\Tables_model',
+            'placeholder' => 'lang:admin::lang.locations.help_tables',
+            'formName' => 'lang:admin::lang.tables.text_form_name',
+            'addonRight' => [
+                'label' => '<i class="fa fa-long-arrow-down"></i> Add to Location',
+                'tag' => 'button',
+                'attributes' => [
+                    'class' => 'btn btn-default',
+                    'data-control' => 'choose-record',
+                    'data-request' => 'formTables::onAttachTable',
+                ],
+            ],
+        ],
+        'tables' => [
+            'tab' => 'lang:admin::lang.locations.text_tab_tables',
+            'label' => 'lang:admin::lang.locations.label_tables',
+            'type' => 'seatmap',
         ],
 
         'options[payments]' => [

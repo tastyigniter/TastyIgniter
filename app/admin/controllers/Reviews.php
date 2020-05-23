@@ -50,6 +50,6 @@ class Reviews extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('reviews', 'marketing');
+        AdminMenu::setContext('reviews', 'restaurant');
     }
 }

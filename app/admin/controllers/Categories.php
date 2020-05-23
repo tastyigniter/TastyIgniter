@@ -52,7 +52,7 @@ class Categories extends AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('categories', 'kitchen');
+        AdminMenu::setContext('categories', 'restaurant');
     }
 
     public function formBeforeSave($model)
