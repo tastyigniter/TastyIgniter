@@ -86,14 +86,6 @@ class Extensions extends \Admin\Classes\AdminController
         }
     }
 
-    public function upload($context = null)
-    {
-        Template::setTitle(lang('system::lang.extensions.text_add_title'));
-        Template::setHeading(lang('system::lang.extensions.text_add_title'));
-
-        Template::setButton(lang('system::lang.extensions.button_browse'), ['class' => 'btn btn-default', 'href' => admin_url('updates/browse/extensions')]);
-    }
-
     public function delete($context, $extensionCode = null)
     {
         try {
@@ -209,27 +201,6 @@ class Extensions extends \Admin\Classes\AdminController
         return $this->refresh();
     }
 
-    public function upload_onUpload($context = null)
-    {
-        try {
-            $extensionManager = ExtensionManager::instance();
-
-            $this->validateUpload();
-
-            $zipFile = Request::file('extension_zip');
-            $extensionManager->extractExtension($zipFile->path());
-
-            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Extension uploaded '));
-
-            return $this->redirect('extensions');
-        }
-        catch (Exception $ex) {
-            flash()->danger($ex->getMessage());
-
-            return $this->refresh();
-        }
-    }
-
     public function delete_onDelete($context = null, $extensionCode = null)
     {
         $manager = ExtensionManager::instance();
@@ -318,31 +289,6 @@ class Extensions extends \Admin\Classes\AdminController
             $rules = $form->config['rules'];
 
         return $this->validatePasses($form->getSaveData(), $rules);
-    }
-
-    protected function validateUpload()
-    {
-        $zipFile = Request::file('extension_zip');
-        if (!Request::hasFile('extension_zip') OR !$zipFile->isValid())
-            throw new SystemException("Please upload a zip file");
-
-        $name = $zipFile->getClientOriginalName();
-        $extension = $zipFile->extension();
-
-        if (preg_match('/\s/', $name))
-            throw new SystemException(lang('system::lang.extensions.error_upload_name'));
-
-        if ($extension != 'zip')
-            throw new SystemException(lang('system::lang.extensions.error_upload_type'));
-
-        if ($zipFile->getError())
-            throw new SystemException(lang('system::lang.extensions.error_php_upload').$zipFile->getErrorMessage());
-
-        $name = substr($name, -strlen($extension));
-        if (ExtensionManager::instance()->hasExtension($name))
-            throw new SystemException(lang('system::lang.extensions.error_extension_exists'));
-
-        return TRUE;
     }
 
     protected function checkDependencies($extension)

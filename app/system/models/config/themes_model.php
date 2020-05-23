@@ -1,14 +1,9 @@
 <?php
 $config['list']['toolbar'] = [
     'buttons' => [
-        'upload' => [
-            'label' => 'lang:system::lang.themes.button_new',
-            'class' => 'btn btn-primary',
-            'href' => 'themes/upload',
-        ],
         'browse' => [
             'label' => 'lang:system::lang.themes.button_browse',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-primary',
             'href' => 'updates/browse/themes',
         ],
         'check' => [

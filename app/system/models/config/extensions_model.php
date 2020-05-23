@@ -15,14 +15,9 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'upload' => [
-            'label' => 'lang:system::lang.extensions.button_new',
-            'class' => 'btn btn-primary',
-            'href' => 'extensions/upload',
-        ],
         'browse' => [
             'label' => 'lang:system::lang.extensions.button_browse',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-primary',
             'href' => 'updates/browse/extensions',
         ],
         'check' => [
