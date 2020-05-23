@@ -82,7 +82,7 @@ class ServiceProvider extends AppServiceProvider
 
                 $manager->addFromManifest('~/app/admin/views/_meta/assets.json', 'admin');
             }
-            
+
             // Admin asset bundles
             $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss', null, 'admin');
             $manager->registerBundle('js', [
@@ -202,6 +202,11 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerFormWidget('Admin\FormWidgets\RichEditor', [
                 'label' => 'Rich editor',
                 'code' => 'richeditor',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\SeatMap', [
+                'label' => 'Seat Map',
+                'code' => 'seatmap',
             ]);
 
             $manager->registerFormWidget('Admin\FormWidgets\StatusEditor', [
