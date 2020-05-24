@@ -27,6 +27,16 @@ return [
             ],
         ],
         'fields' => [
+            'system_log' => [
+                'label' => 'lang:system::lang.settings.text_tab_title_system_log',
+                'type' => 'section',
+            ],
+            'enable_request_log' => [
+                'label' => 'lang:system::lang.settings.label_enable_request_log',
+                'type' => 'switch',
+                'default' => TRUE,
+                'comment' => 'lang:system::lang.settings.help_enable_request_log',
+            ],
             'maintenance' => [
                 'label' => 'lang:system::lang.settings.text_tab_title_maintenance',
                 'type' => 'section',
