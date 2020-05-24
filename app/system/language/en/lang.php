@@ -84,11 +84,6 @@ return [
         'help_iso' => 'Learn more about <a target="_blank" href="https://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a>',
     ],
 
-    'error_logs' => [
-        'text_title' => 'System Logs',
-        'text_clear_logs' => 'Clear Logs',
-    ],
-
     'extensions' => [
         'text_title' => 'Extensions',
         'text_delete_title' => 'Extension: Delete',
@@ -295,12 +290,28 @@ return [
         'activities' => 'Access activities',
         'countries' => 'Create, edit and delete countries',
         'currencies' => 'Create, edit and delete currencies',
-        'error_logs' => 'View system logs',
+        'system_logs' => 'View system and requests logs',
         'extensions' => 'Install, uninstall and delete extension',
         'mail_templates' => 'Create, edit and delete mail templates',
         'languages' => 'Create, edit and delete site languages',
         'settings' => 'Manage system settings',
         'updates' => 'Ability to apply updates when a new version of TastyIgniter is available',
+    ],
+
+    'request_logs' => [
+        'text_title' => 'Request Logs',
+        'text_form_name' => 'Request Log',
+        'text_filter_search' => 'Search by name.',
+        'text_filter_status' => 'View all status',
+        'text_empty' => 'There are no request logs available.',
+        'text_empty_referrer' => 'There are no referrers to this URL.',
+
+        'column_status_code' => 'Status Code',
+        'column_url' => 'Requested Url',
+        'column_count' => 'Counter',
+
+        'label_url' => 'Requested Url',
+        'label_referer' => 'Referrer',
     ],
 
     'settings' => [
@@ -491,9 +502,13 @@ return [
         'help_order_email' => 'Send a confirmation mail to the customer, admin and/or location email after a new order has been created',
         'help_reservation_email' => 'Send a confirmation mail to the customer, admin and/or location email when a new reservation is received',
         'help_maintenance' => 'Enable to prevent customers from viewing your store. The maintenance message will be displayed to customers except logged admin.',
-        'help_permalink' => 'To use SEO URLs, apache module mod-rewrite must be installed.',
-        'help_cache_mode' => 'Enable if you want to cache pages in order to achieve maximum performance.',
-        'help_cache_time' => 'Set the number of minutes a page remain cached.',
+    ],
+
+    'system_logs' => [
+        'text_title' => 'System Logs',
+
+        'button_empty' => '<i class="fa fa-eraser"></i>&nbsp;&nbsp;Empty Logs',
+        'button_request_logs' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Request Logs',
     ],
 
     'themes' => [

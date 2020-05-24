@@ -420,8 +420,8 @@ class ServiceProvider extends AppServiceProvider
                 'Site.Updates' => [
                     'label' => 'system::lang.permissions.updates', 'group' => 'system::lang.permissions.name',
                 ],
-                'Admin.ErrorLogs' => [
-                    'label' => 'system::lang.permissions.error_logs', 'group' => 'system::lang.permissions.name',
+                'Admin.SystemLogs' => [
+                    'label' => 'system::lang.permissions.system_logs', 'group' => 'system::lang.permissions.name',
                 ],
             ]);
         });

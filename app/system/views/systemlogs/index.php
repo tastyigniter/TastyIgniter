@@ -9,7 +9,7 @@
 
     <?= $this->widgets['toolbar']->render() ?>
 
-    <div class="table-responsive">
+    <div class="list-table table-responsive">
         <table class="table table-striped border-bottom">
             <thead>
             <tr>
