@@ -1,4 +1,5 @@
-<div class="w-100 form-fields pl-0 flex-column">
+<?php $variables = $variables ?? $field->options(); ?>
+<div class="w-100 flex-column<?= $variables ? ' form-fields pl-0' : ''; ?>">
     <label class="sr-only">
         <?= lang('system::lang.mail_templates.text_variables') ?>
     </label>

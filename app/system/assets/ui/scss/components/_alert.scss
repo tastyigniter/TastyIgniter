@@ -1,25 +1,28 @@
 #notification {
   position: fixed;
-  top: 20px;
+  top: 40px;
   left: 0;
   right: 0;
   margin: 0 auto;
-  width: 40%;
+  width: 35%;
   z-index: 1090;
+}
+.alert {
+  color: $white;
+  font-weight: $font-weight-bold;
+  box-shadow: $box-shadow;
+  text-align: center;
 
-  .alert {
-    box-shadow: $box-shadow;
-    p {
-      margin-bottom: 0;
-    }
+  p {
+    margin-bottom: 0;
+  }
 
-    &:not(.show) {
-      display: none;
-    }
+  &:not(.show) {
+    display: none;
+  }
 
-    .show {
-      display: block;
-    }
+  .show {
+    display: block;
   }
 }
 .alert-collapse {

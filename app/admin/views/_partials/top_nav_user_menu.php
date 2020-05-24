@@ -68,10 +68,10 @@ $staffState = \Admin\Classes\UserState::forUser();
             <i class="fa fa-power-off fa-fw"></i><?= lang('admin::lang.text_logout'); ?>
         </a>
         <div role="separator" class="dropdown-divider"></div>
-        <a class="dropdown-item text-muted" href="https://tastyigniter.com/about/" target="_blank">
+        <a class="dropdown-item text-muted" href="https://tastyigniter.com/about" target="_blank">
             <i class="fa fa-info-circle fa-fw"></i><?= lang('admin::lang.text_about_tastyigniter'); ?>
         </a>
-        <a class="dropdown-item text-muted" href="https://docs.tastyigniter.com" target="_blank">
+        <a class="dropdown-item text-muted" href="https://tastyigniter.com/docs" target="_blank">
             <i class="fa fa-book fa-fw"></i><?= lang('admin::lang.text_documentation'); ?>
         </a>
         <a class="dropdown-item text-muted" href="https://forum.tastyigniter.com" target="_blank">

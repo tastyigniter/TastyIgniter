@@ -31,11 +31,6 @@
 // Form groups
 //
 .form-group {
-  &:last-child,
-  &:only-child {
-    margin-bottom: 0;
-  }
-
   &.span-full {
     clear: both;
     width: 100%;

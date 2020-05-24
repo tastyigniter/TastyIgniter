@@ -34,7 +34,7 @@ class Updates extends \Admin\Classes\AdminController
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
 
-        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), 'extensions'), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/extensions')]);
+        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), 'extensions'), ['class' => 'btn btn-primary', 'href' => admin_url($this->browseUrl.'/extensions')]);
         Template::setButton(lang('system::lang.updates.button_check'), ['class' => 'btn btn-success', 'data-request' => 'onCheckUpdates']);
         Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
@@ -83,7 +83,7 @@ class Updates extends \Admin\Classes\AdminController
         $buttonType = ($itemType == 'extensions') ? 'themes' : 'extensions';
         $buttonTitle = lang('system::lang.updates.text_tab_title_'.$buttonType);
 
-        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), $buttonTitle), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
+        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), $buttonTitle), ['class' => 'btn btn-primary', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
         Template::setButton(lang('system::lang.updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
         Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 

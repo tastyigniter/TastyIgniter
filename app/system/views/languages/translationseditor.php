@@ -54,7 +54,7 @@ $translationStrings = $field->options;
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td colspan="999"><?= lang('system::lang.languages.text_empty_translations') ?>
+                    <td colspan="99" class="text-center"><?= lang('system::lang.languages.text_empty_translations') ?>
                     </td>
                 </tr>
             <?php } ?>

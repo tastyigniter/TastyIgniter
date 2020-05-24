@@ -34,18 +34,10 @@
     &:active {
       box-shadow: none;
     }
-
-    .fa {
-      padding-right: 4px;
-    }
   }
 
   .btn + .btn {
     margin-left: $btn-spacer;
-  }
-
-  .fa {
-    padding: 0;
   }
 
   .btn-left {

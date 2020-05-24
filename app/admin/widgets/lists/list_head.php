@@ -47,7 +47,7 @@
     <?php } ?>
 
     <?php if ($showFilter) { ?>
-        <th class="list-setup px-1">
+        <th class="list-setup">
             <button
                 type="button"
                 class="btn btn-outline-default btn-sm border-none"
@@ -58,7 +58,7 @@
         </th>
     <?php } ?>
     <?php if ($showSetup) { ?>
-        <th class="list-setup px-1">
+        <th class="list-setup">
             <button
                 type="button"
                 class="btn btn-outline-default btn-sm border-none"

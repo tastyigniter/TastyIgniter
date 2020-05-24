@@ -13,7 +13,6 @@
             <h4 class="modal-title"><?= e(lang($formTitle)) ?></h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
-        <div id="modal-notification"></div>
         <input type="hidden" name="recordId" value="<?= $formRecordId ?>">
         <div class="modal-body">
             <div class="form-fields p-0">

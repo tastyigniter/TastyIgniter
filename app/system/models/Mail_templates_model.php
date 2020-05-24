@@ -42,6 +42,11 @@ class Mail_templates_model extends Model
      */
     public $timestamps = TRUE;
 
+    public static function getVariableOptions()
+    {
+        return MailManager::instance()->listRegisteredVariables();
+    }
+
     protected function afterFetch()
     {
         if (!$this->is_custom) {

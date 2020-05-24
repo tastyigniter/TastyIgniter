@@ -135,7 +135,9 @@ $modal-content-bg: $gray-200 !default;
 $modal-header-border-color: $gray-300 !default;
 
 // Alert
-$alert-border-level: -8 !default;
+$alert-bg-level: -3 !default;
+$alert-border-level: -3 !default;
+$alert-color-level: 6 !default;
 
 // List group
 $list-group-bg: $gray-100 !default;

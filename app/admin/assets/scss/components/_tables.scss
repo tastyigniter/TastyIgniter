@@ -5,6 +5,12 @@
       padding-left: $page-padding-x;
       padding-right: 0;
     }
+
+    th:last-child,
+    td:last-child {
+      padding-left: 0;
+      padding-right: $page-padding-x;
+    }
   }
 }
 .table-striped {

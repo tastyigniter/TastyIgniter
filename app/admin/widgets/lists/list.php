@@ -17,7 +17,7 @@
         <?php }
         else { ?>
             <tr>
-                <td colspan="<?= $columnTotal ?>"><?= $emptyMessage; ?></td>
+                <td colspan="99" class="text-center"><?= $emptyMessage; ?></td>
             </tr>
         <?php } ?>
         </tbody>

@@ -8,7 +8,6 @@
             <h4 class="modal-title"><?= $formTitle ? e(lang($formTitle)) : '' ?></h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
         </div>
-        <div id="modal-notification"></div>
         <?= form_open(
             [
                 'id' => 'status-editor-form',

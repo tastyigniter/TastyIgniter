@@ -52,7 +52,6 @@
 
     RecordEditorModal.prototype.handleFormError = function (event, dataOrXhr, textStatus, jqXHR) {
         $.ti.flashMessage({
-            container: '#modal-notification',
             class: 'danger',
             text: jqXHR.responseText,
             interval: 0

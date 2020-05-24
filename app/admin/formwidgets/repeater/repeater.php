@@ -33,7 +33,7 @@
                     <?php } ?>
                 <?php } else { ?>
                     <tr class="repeater-item-placeholder">
-                        <td colspan="99"><?= is_lang_key($emptyMessage) ? lang($emptyMessage) : $emptyMessage ?></td>
+                        <td colspan="99" class="text-center"><?= is_lang_key($emptyMessage) ? lang($emptyMessage) : $emptyMessage ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>
