@@ -12,6 +12,7 @@ use AdminLocation;
 use AdminMenu;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
 use System\Classes\MailManager;
@@ -537,6 +538,7 @@ class ServiceProvider extends AppServiceProvider
     {
         Relation::morphMap([
             'addresses' => 'Admin\Models\Addresses_model',
+            'assignable_logs' => 'Admin\Models\Assignable_logs_model',
             'categories' => 'Admin\Models\Categories_model',
             'coupons_history' => 'Admin\Models\Coupons_history_model',
             'coupons' => 'Admin\Models\Coupons_model',
@@ -709,10 +711,10 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerAllocatorSchedule()
     {
-        Event::listen('console.schedule', function ($schedule) {
+        Event::listen('console.schedule', function (Schedule $schedule) {
             // Check for assignables to assign every minute
             $schedule->call(function () {
-                Classes\Allocator::instance()->allocate();
+                Classes\Allocator::allocate();
             })->everyMinute();
         });
     }

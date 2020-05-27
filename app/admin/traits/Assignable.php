@@ -5,7 +5,6 @@ namespace Admin\Traits;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Assignable_logs_model;
 use Admin\Models\Staff_groups_model;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Assignable
@@ -16,7 +15,7 @@ trait Assignable
             $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staffs_model'];
             $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\Staff_groups_model'];
             $model->relation['morphMany']['assignable_logs'] = [
-                'Admin\Models\Assignable_logs_model', 'name' => 'assignable',
+                'Admin\Models\Assignable_logs_model', 'name' => 'assignable', 'delete' => TRUE,
             ];
 
             $model->casts = array_merge($model->casts, [
@@ -34,7 +33,7 @@ trait Assignable
     protected function performOnAssignableAssigned()
     {
         if (
-            $this->wasChanged(['assignee_group_id', 'assignee_id', 'status_id'])
+            $this->wasChanged('status_id')
             AND strlen($this->assignee_group_id)
         ) Assignable_logs_model::createLog($this);
     }
@@ -43,35 +42,25 @@ trait Assignable
     //
     //
 
-    public static function getUnAssignedQueue()
+    /**
+     * @param \Admin\Models\Staffs_model $assignee
+     * @return bool
+     */
+    public function assignTo($assignee)
     {
-        $query = self::make()->newQuery();
+        if (is_null($this->assignee_group))
+            return FALSE;
 
-        return $query
-            ->whereUnAssigned()
-            ->whereHasAutoAssignGroup()
-            ->orderBy('assignee_updated_at', 'asc')
-            ->get();
+        return $this->updateAssignTo($this->assignee_group, $assignee);
     }
 
     /**
      * @param \Admin\Models\Staff_groups_model $group
-     * @param \Admin\Models\Staffs_model $assignee
      * @return bool
      */
-    public function assignTo($group, $assignee = null)
+    public function assignToGroup($group)
     {
-        $oldAssignee = $this->assignee;
-
-        $this->fireSystemEvent('admin.assignable.beforeAssignTo', [$group, $assignee, $oldAssignee]);
-
-        $saved = $this->updateAssignTo($group, $assignee);
-
-        if ($this->wasChanged(['assignee_id', 'assignee_group_id'])) {
-            $this->fireSystemEvent('admin.assignable.assigned');
-        }
-
-        return $saved;
+        return $this->updateAssignTo($group);
     }
 
     public function updateAssignTo($group = null, $assignee = null)
@@ -81,13 +70,28 @@ trait Assignable
 
         $this->assignee_group()->associate($group);
 
+        $oldAssignee = $this->assignee;
         if (!is_null($assignee))
             $this->assignee()->associate($assignee);
 
-        if ($this->isDirty(['assignee_group_id', 'assignee_id']))
-            $this->assignee_updated_at = Carbon::now();
+        $this->fireSystemEvent('admin.assignable.beforeAssignTo', [$group, $assignee, $oldAssignee]);
 
-        return $this->save();
+        $this->save();
+
+        if (!$log = Assignable_logs_model::createLog($this))
+            return FALSE;
+
+        $this->fireSystemEvent('admin.assignable.assigned');
+
+        return $log;
+    }
+
+    public function isAssignedToStaffGroup($staff)
+    {
+        return $staff
+            ->groups()
+            ->whereKey($this->assignee_group_id)
+            ->exists();
     }
 
     public function hasAssignTo()
@@ -102,10 +106,10 @@ trait Assignable
 
     public function listGroupAssignees()
     {
-        if (!$this->assign_group instanceof Staff_groups_model)
+        if (!$this->assignee_group instanceof Staff_groups_model)
             return [];
 
-        return $this->assign_group->listAssignees();
+        return $this->assignee_group->listAssignees();
     }
 
     //

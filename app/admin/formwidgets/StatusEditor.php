@@ -148,7 +148,8 @@ class StatusEditor extends BaseFormWidget
         $arrayName = $this->getModeConfig('arrayName');
         $recordId = post($arrayName.'.'.$keyFrom);
 
-        $this->checkAssigneePermission();
+        if (!$this->isStatusMode)
+            $this->checkAssigneePermission();
 
         $model = $this->createFormModel();
         $form = $this->makeEditorFormWidget($model);
@@ -169,20 +170,14 @@ class StatusEditor extends BaseFormWidget
             throw new ApplicationException($ex->getMessage());
         }
 
-        if (!$this->isStatusMode) {
-            $group = Staff_groups_model::find(array_get($saveData, $this->assigneeGroupKeyFrom));
-            $staff = Staffs_model::find(array_get($saveData, $keyFrom));
-            $this->model->assignTo($group, $staff);
-        }
-        else {
-            $status = Statuses_model::find(array_get($saveData, $keyFrom));
-            $this->model->addStatusHistory($status, $saveData);
-            $this->model->reloadRelations();
-        }
-
         $this->prepareVars();
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->getModeConfig('formName')).' '.'updated'))->now();
+        if ($this->saveRecord($saveData, $keyFrom)) {
+            flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->getModeConfig('formName')).' '.'updated'))->now();
+        }
+        else {
+            flash()->error(lang('admin::lang.alert_error_try_again'))->now();
+        }
 
         return [
             '#notification' => $this->makePartial('flash'),
@@ -335,9 +330,6 @@ class StatusEditor extends BaseFormWidget
 
     protected function checkAssigneePermission()
     {
-        if ($this->isStatusMode)
-            return;
-
         $saleType = $this->model instanceof Orders_model
             ? 'orderPermission' : 'reservationPermission';
 
@@ -345,5 +337,21 @@ class StatusEditor extends BaseFormWidget
 
         if (!$this->controller->getUser()->hasPermission($permission))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
+    }
+
+    protected function saveRecord(array $saveData, string $keyFrom)
+    {
+        if (!$this->isStatusMode) {
+            $group = Staff_groups_model::find(array_get($saveData, $this->assigneeGroupKeyFrom));
+            $staff = Staffs_model::find(array_get($saveData, $keyFrom));
+            $record = $this->model->updateAssignTo($group, $staff);
+        }
+        else {
+            $status = Statuses_model::find(array_get($saveData, $keyFrom));
+            $record = $this->model->addStatusHistory($status, $saveData);
+            $this->model->reloadRelations();
+        }
+
+        return $record;
     }
 }

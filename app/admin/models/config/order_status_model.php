@@ -62,7 +62,7 @@ return [
             ['notify', 'admin::lang.statuses.label_notify', 'sometimes|required|boolean'],
 
             ['assignee_group_id', 'admin::lang.statuses.label_assignee_group', 'sometimes|required|integer|exists:staff_groups,staff_group_id'],
-            ['assignee_id', 'admin::lang.statuses.label_staff', 'sometimes|required|integer|exists:staffs,staff_id'],
+            ['assignee_id', 'admin::lang.statuses.label_assignee', 'sometimes|required|integer|exists:staffs,staff_id'],
         ],
     ],
 ];
