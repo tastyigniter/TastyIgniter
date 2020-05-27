@@ -204,11 +204,6 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'richeditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\SeatMap', [
-                'label' => 'Seat Map',
-                'code' => 'seatmap',
-            ]);
-
             $manager->registerFormWidget('Admin\FormWidgets\StatusEditor', [
                 'label' => 'Status Editor',
                 'code' => 'statuseditor',
@@ -318,12 +313,12 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.mealtimes'),
                             'permission' => 'Admin.Mealtimes',
                         ],
-                        'reviews' => [
+                        'tables' => [
                             'priority' => 50,
-                            'class' => 'reviews',
-                            'href' => admin_url('reviews'),
-                            'title' => lang('admin::lang.side_menu.review'),
-                            'permission' => 'Admin.Reviews',
+                            'class' => 'tables',
+                            'href' => admin_url('tables'),
+                            'title' => lang('admin::lang.side_menu.table'),
+                            'permission' => 'Admin.Tables',
                         ],
                     ],
                 ],
@@ -347,15 +342,22 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.reservation'),
                             'permission' => 'Admin.Reservations',
                         ],
-                        'statuses' => [
+                        'reviews' => [
                             'priority' => 30,
+                            'class' => 'reviews',
+                            'href' => admin_url('reviews'),
+                            'title' => lang('admin::lang.side_menu.review'),
+                            'permission' => 'Admin.Reviews',
+                        ],
+                        'statuses' => [
+                            'priority' => 40,
                             'class' => 'statuses',
                             'href' => admin_url('statuses'),
                             'title' => lang('admin::lang.side_menu.status'),
                             'permission' => 'Admin.Statuses',
                         ],
                         'payments' => [
-                            'priority' => 40,
+                            'priority' => 50,
                             'class' => 'payments',
                             'href' => admin_url('payments'),
                             'title' => lang('admin::lang.side_menu.payment'),
@@ -661,6 +663,9 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.Locations' => [
                     'label' => 'admin::lang.permissions.locations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Tables' => [
+                    'label' => 'admin::lang.permissions.tables', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.Orders' => [
                     'label' => 'admin::lang.permissions.orders', 'group' => 'admin::lang.permissions.name',

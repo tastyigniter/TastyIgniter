@@ -5,6 +5,14 @@ $config['list']['filter'] = [
         'mode' => 'all' // or any, exact
     ],
     'scopes' => [
+        'location' => [
+            'label' => 'lang:admin::lang.text_filter_location',
+            'type' => 'select',
+            'scope' => 'whereHasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom' => 'location_name',
+            'locationAware' => 'hide',
+        ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
@@ -54,6 +62,13 @@ $config['list']['columns'] = [
     'max_capacity' => [
         'label' => 'lang:admin::lang.tables.column_capacity',
         'type' => 'number',
+    ],
+    'locations' => [
+        'label' => 'lang:admin::lang.column_location',
+        'type' => 'text',
+        'relation' => 'locations',
+        'select' => 'location_name',
+        'locationAware' => 'hide',
     ],
     'table_status' => [
         'label' => 'lang:admin::lang.label_status',
@@ -105,6 +120,13 @@ $config['form']['fields'] = [
     'max_capacity' => [
         'label' => 'lang:admin::lang.tables.label_capacity',
         'type' => 'number',
+    ],
+    'locations' => [
+        'label' => 'lang:admin::lang.label_location',
+        'type' => 'relation',
+        'valueFrom' => 'locations',
+        'nameFrom' => 'location_name',
+        'locationAware' => 'hide',
     ],
     'table_status' => [
         'label' => 'lang:admin::lang.label_status',

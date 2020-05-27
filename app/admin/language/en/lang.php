@@ -137,6 +137,7 @@ return [
         'dashboard' => 'Dashboard',
         'menu' => 'Menu Items',
         'category' => 'Categories',
+        'table' => 'Tables',
         'sale' => 'Sales',
         'order' => 'Orders',
         'reservation' => 'Reservations',
@@ -456,7 +457,6 @@ return [
         'text_tab_general' => 'Location',
         'text_tab_data' => 'Settings',
         'text_tab_opening_hours' => 'Opening Hours',
-        'text_tab_tables' => 'Tables',
         'text_tab_order' => 'Accepting Orders',
         'text_tab_reservation' => 'Accepting Reservations',
         'text_tab_delivery' => 'Delivery',
@@ -513,7 +513,6 @@ return [
         'label_future_delivery_days' => 'Future Delivery Order Days In Advance',
         'label_future_collection_days' => 'Future Pick-up Order Days In Advance',
         'label_payments' => 'Payments',
-        'label_tables' => 'Reservable Tables',
         'label_offer_reservation' => 'Offer Reservations',
         'label_reservation_time_interval' => 'Time Interval',
         'label_reservation_stay_time' => 'Stay Time',
@@ -560,7 +559,6 @@ return [
         'help_no_payments' => 'No enabled payment was found.',
         'help_reservation_time_interval' => 'Set the number of minutes between each reservation time',
         'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table',
-        'help_tables' => 'Select a table to attach to this location.',
         'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least one delivery area to accept delivery orders.',
         'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
         'help_delivery_components' => 'All rules must be VALID to apply this delivery area, each rule is matched against the user\'s address component. Values can contain Regular Expressions.',
@@ -795,6 +793,7 @@ return [
         'staff_groups' => 'Manage staff groups',
         'staffs' => 'Create, edit and delete staffs',
         'statuses' => 'Manage orders and reservations statuses',
+        'tables' => 'Create, edit and delete reservations tables',
         'mealtimes' => 'Create, edit and delete mealtimes',
     ],
 
@@ -1015,6 +1014,8 @@ return [
 
         'label_min_capacity' => 'Minimum',
         'label_capacity' => 'Capacity',
+
+        'help_tables' => 'Select a table to attach to this location.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
     ],

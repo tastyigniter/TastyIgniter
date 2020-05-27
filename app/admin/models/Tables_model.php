@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Traits\Validation;
 use Model;
 
@@ -10,7 +11,10 @@ use Model;
  */
 class Tables_model extends Model
 {
+    use Locationable;
     use Validation;
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     /**
      * @var string The database table name
@@ -48,7 +52,7 @@ class Tables_model extends Model
         ['table_status', 'lang:admin::lang.label_status', 'required|boolean'],
     ];
 
-    public static function getRecordEditorOptions()
+    public static function getDropdownOptions()
     {
         return self::selectRaw('table_id, concat(table_name, " (", min_capacity, " - ", max_capacity, ")") AS display_name')
             ->dropdown('display_name');
@@ -62,14 +66,6 @@ class Tables_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('table_status', 1);
-    }
-
-    public function scopeWhereHasLocation($query, $locationId)
-    {
-        return $query->whereHas('locations',
-            function ($query) use ($locationId) {
-                $query->where('locations.location_id', $locationId);
-            });
     }
 
     public function scopeWhereBetweenCapacity($query, $noOfGuests)

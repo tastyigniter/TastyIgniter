@@ -523,30 +523,6 @@ $config['form']['tabs'] = [
             ],
         ],
 
-        '_table' => [
-            'tab' => 'lang:admin::lang.locations.text_tab_tables',
-            'type' => 'recordeditor',
-            'context' => ['edit', 'preview'],
-            'form' => 'tables_model',
-            'modelClass' => 'Admin\Models\Tables_model',
-            'placeholder' => 'lang:admin::lang.locations.help_tables',
-            'formName' => 'lang:admin::lang.tables.text_form_name',
-            'addonRight' => [
-                'label' => '<i class="fa fa-long-arrow-down"></i> Add to Location',
-                'tag' => 'button',
-                'attributes' => [
-                    'class' => 'btn btn-default',
-                    'data-control' => 'choose-record',
-                    'data-request' => 'formTables::onAttachTable',
-                ],
-            ],
-        ],
-        'tables' => [
-            'tab' => 'lang:admin::lang.locations.text_tab_tables',
-            'label' => 'lang:admin::lang.locations.label_tables',
-            'type' => 'seatmap',
-        ],
-
         'options[payments]' => [
             'label' => 'lang:admin::lang.locations.label_payments',
             'tab' => 'lang:admin::lang.locations.label_payments',
