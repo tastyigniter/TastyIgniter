@@ -32,6 +32,7 @@ return [
         'text_title' => 'Activities',
         'button_mark_as_read' => 'Mark all as read',
         'text_empty' => 'There are no activities available.',
+        'activity_system' => 'System',
         'activity_self' => 'You',
         'activity_master_logged_in' => ' <b>logged</b> in as <b>:subject.first_name :subject.last_name</b>.',
     ],

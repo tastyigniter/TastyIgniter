@@ -206,9 +206,6 @@ return [
 
             'button_login' => 'Login',
             'button_register' => 'Register',
-
-            'activity_logged_in' => ' <b>logged</b> in.',
-            'activity_registered_account' => ' <b>created</b> an account.',
         ],
 
         'register' => [

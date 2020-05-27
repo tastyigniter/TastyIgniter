@@ -753,8 +753,10 @@ return [
         'label_payment_method' => 'Payment Method',
         'label_total_items' => 'Total Items',
 
-        'activity_event_log' => ' updated order (#:properties.order_id) status to ',
-        'activity_event_log_assigned' => ' assigned order (#:properties.order_id) to ',
+        'activity_event_log_title' => 'Order status updated',
+        'activity_event_log_assigned_title' => 'Order assigned',
+        'activity_event_log' => 'updated order (#:properties.order_id) status to <b>:properties.status_name</b>',
+        'activity_event_log_assigned' => 'assigned order (#:properties.order_id) to',
     ],
 
     'payments' => [
@@ -859,8 +861,10 @@ return [
 
         'help_reservation_duration' => 'Stay time in minutes. Leave blank to use the default stay time',
 
+        'activity_event_log_title' => 'Reservation status updated',
+        'activity_event_log_assigned_title' => 'Reservation assigned',
         'activity_event_log' => 'updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
-        'activity_event_log_assigned' => '<b>:causer.staff_name</b> assigned reservation (#:properties.reservation_id) to <b>:properties.assignee_name</b>',
+        'activity_event_log_assigned' => 'assigned reservation (#:properties.reservation_id) to',
     ],
 
     'reviews' => [

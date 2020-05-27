@@ -1,7 +1,5 @@
 <?php namespace Admin\Models;
 
-use Admin\ActivityTypes\OrderAssigned;
-use Admin\ActivityTypes\ReservationAssigned;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -74,13 +72,6 @@ class Assignable_logs_model extends Model
 
         $model->save();
 
-        if ($assignable instanceof Orders_model) {
-            OrderAssigned::log($assignable);
-        }
-        elseif ($assignable instanceof Reservations_model) {
-            ReservationAssigned::log($assignable);
-        }
-
         return $model;
     }
 
@@ -96,6 +87,11 @@ class Assignable_logs_model extends Model
             ->orderBy('created_at', 'desc')
             ->limit($limit)
             ->get();
+    }
+
+    public function isForOrder()
+    {
+        return $this->assignable_type === Orders_model::make()->getMorphClass();
     }
 
     //

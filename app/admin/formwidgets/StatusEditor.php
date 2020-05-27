@@ -1,9 +1,12 @@
 <?php namespace Admin\FormWidgets;
 
+use Admin\ActivityTypes\AssigneeUpdated;
+use Admin\ActivityTypes\StatusUpdated;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Orders_model;
+use Admin\Models\Reservations_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staffs_model;
 use Admin\Models\Statuses_model;
@@ -344,14 +347,30 @@ class StatusEditor extends BaseFormWidget
         if (!$this->isStatusMode) {
             $group = Staff_groups_model::find(array_get($saveData, $this->assigneeGroupKeyFrom));
             $staff = Staffs_model::find(array_get($saveData, $keyFrom));
-            $record = $this->model->updateAssignTo($group, $staff);
+            if ($record = $this->model->updateAssignTo($group, $staff))
+                AssigneeUpdated::log($record, $this->getController()->getUser());
         }
         else {
             $status = Statuses_model::find(array_get($saveData, $keyFrom));
-            $record = $this->model->addStatusHistory($status, $saveData);
-            $this->model->reloadRelations();
+            if ($record = $this->model->addStatusHistory($status, $saveData)) {
+                $this->model->reloadRelations();
+
+                StatusUpdated::log($record, $this->getController()->getUser());
+
+                $this->mailStatusUpdated($record);
+            }
         }
 
         return $record;
+    }
+
+    protected function mailStatusUpdated($recordLog)
+    {
+        if ($recordLog->notify) {
+            $mailView = ($recordLog->object instanceof Reservations_model)
+                ? 'admin::_mail.reservation_update' : 'admin::_mail.order_update';
+
+            $recordLog->object->mailSend($mailView, 'customer');
+        }
     }
 }
