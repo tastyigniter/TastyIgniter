@@ -368,6 +368,9 @@ class Themes extends \Admin\Classes\AdminController
         if (!$model->getFieldsConfig())
             return;
 
+        if (!config('system.bundleThemeAssets', TRUE))
+            return;
+
         $loaded = FALSE;
         $theme = $model->getTheme();
         $file = '/_meta/assets.json';
