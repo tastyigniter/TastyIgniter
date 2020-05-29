@@ -6,7 +6,6 @@ use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
 use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
-use Admin\Facades\AdminAuth;
 use Admin\Middleware\LogUserLastSeen;
 use AdminLocation;
 use AdminMenu;
@@ -518,18 +517,6 @@ class ServiceProvider extends AppServiceProvider
                     'href' => admin_url('locations/settings'),
                     'title' => lang('admin::lang.side_menu.setting'),
                 ], 'restaurant');
-            }
-
-            if (AdminAuth::staff() AND !AdminAuth::staff()->hasGlobalAssignableScope()) {
-                $manager->mergeNavItem('orders', [
-                    'href' => admin_url('orders/assigned'),
-                    'permission' => '',
-                ], 'sales');
-
-                $manager->mergeNavItem('reservations', [
-                    'href' => admin_url('reservations/assigned'),
-                    'permission' => '',
-                ], 'sales');
             }
         });
     }

@@ -112,6 +112,7 @@ return [
     'text_administration' => 'Administration',
     'text_logout' => 'Logout',
     'text_switch_to_assigned' => 'Switch to assigned view',
+    'text_switch_to_list' => 'Switch to list view',
 
     'help_permalink' => 'Use ONLY alpha-numeric lowercase characters, _ or - and make sure it is unique GLOBALLY.',
 
@@ -816,7 +817,6 @@ return [
         'text_empty' => 'There are no reservations available.',
         'text_filter_assignee' => 'View all assignees',
         'text_filter_search' => 'Search by id, location, guest number, status, customer or table name.',
-        'text_switch_to_list' => 'Switch to list view',
         'text_switch_to_calendar' => 'Switch to calender view',
         'text_no_booking' => 'No Bookings',
         'text_restaurant' => 'Location',

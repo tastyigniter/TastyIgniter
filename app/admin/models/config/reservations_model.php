@@ -63,12 +63,6 @@ $config['list']['toolbar'] = [
             'href' => 'reservations/calendar',
             'context' => 'index',
         ],
-        'assigned' => [
-            'label' => 'lang:admin::lang.text_switch_to_assigned',
-            'class' => 'btn btn-default',
-            'href' => 'reservations/assigned',
-            'context' => 'index',
-        ],
     ],
 ];
 
@@ -140,7 +134,7 @@ $config['calendar']['toolbar'] = [
             'href' => 'reservations/create',
         ],
         'list' => [
-            'label' => 'lang:admin::lang.reservations.text_switch_to_list',
+            'label' => 'lang:admin::lang.text_switch_to_list',
             'class' => 'btn btn-default',
             'href' => 'reservations',
             'context' => 'calendar',

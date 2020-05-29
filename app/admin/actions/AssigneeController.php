@@ -58,21 +58,17 @@ class AssigneeController extends ControllerAction
         });
     }
 
-    public function assigned()
-    {
-        $this->controller->asExtension('ListController')->index();
-    }
-
     public function assigneeApplyScope($query)
     {
-        if ($this->controller->getUser()->staff->hasGlobalAssignableScope())
+        $staff = $this->controller->getUser()->staff;
+
+        if ($staff->hasGlobalAssignableScope())
             return;
 
-        $user = $this->controller->getUser();
-        $query->whereInAssignToGroup($user->staff->groups->pluck('staff_group_id')->all());
+        $query->whereInAssignToGroup($staff->groups->pluck('staff_group_id')->all());
 
-        if ($user->staff->hasRestrictedAssignableScope())
-            $query->whereAssignTo($user->staff);
+        if ($staff->hasRestrictedAssignableScope())
+            $query->whereAssignTo($staff->getKey());
     }
 
     protected function assigneeBindToolbarEvents()
@@ -92,12 +88,7 @@ class AssigneeController extends ControllerAction
 
     protected function assigneeBindListsEvents()
     {
-        $action = $this->controller->getAction();
-
-        if ($action === 'assigned' AND $this->controller->isClassExtendedWith('Admin\Actions\ListController')) {
-            $listController = $this->controller->asExtension('ListController');
-            $listController->listConfig['list']['showCheckboxes'] = FALSE;
-
+        if ($this->controller->isClassExtendedWith('Admin\Actions\ListController')) {
             Event::listen('admin.list.extendQuery', function ($listWidget, $query) {
                 if (!(bool)$this->getConfig('applyScopeOnListQuery', TRUE))
                     return;
@@ -129,7 +120,8 @@ class AssigneeController extends ControllerAction
                 if (!$assignable->hasAssignToGroup() OR $assignable->hasAssignTo())
                     return;
 
-                if (!$assignable->assignee_group->autoAssignEnabled())
+                // Let the allocator handle assignment when auto assign is enabled
+                if ($assignable->assignee_group->autoAssignEnabled())
                     return;
 
                 $staff = $this->controller->getUser()->staff;

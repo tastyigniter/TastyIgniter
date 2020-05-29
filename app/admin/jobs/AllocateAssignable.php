@@ -38,13 +38,13 @@ class AllocateAssignable implements ShouldQueue
 
         try {
             if ($this->assignableLog->assignee_id)
-                return TRUE;
+                return;
 
             if (!in_array(Assignable::class, class_uses_recursive(get_class($this->assignableLog->assignable))))
-                return TRUE;
+                return;
 
             if (!$this->assignableLog->assignee_group instanceof Staff_groups_model)
-                return TRUE;
+                return;
 
             Allocator::addSlot($this->assignableLog->getKey());
 
