@@ -41,7 +41,9 @@ $staffState = \Admin\Classes\UserState::forUser();
                             class="form-control"
                             data-request="<?= $this->getEventHandler('onChooseLocation') ?>"
                         >
-                            <option value="0"><?= e(lang('admin::lang.text_select_location')) ?></option>
+                            <?php if (AdminAuth::isSuperUser()) { ?>
+                                <option value="0"><?= e(lang('admin::lang.text_select_location')) ?></option>
+                            <?php } ?>
                             <?php foreach ($staffLocations as $key => $value) { ?>
                                 <option
                                     value="<?= $key ?>"
