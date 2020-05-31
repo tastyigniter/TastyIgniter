@@ -199,8 +199,6 @@ return [
         'column_code' => 'Code',
         'column_title' => 'Title',
         'column_layout' => 'Layout',
-        'column_date_added' => 'Date Added',
-        'column_date_updated' => 'Date Updated',
         'column_status' => 'Status',
 
         'label_language' => 'Language',
@@ -556,6 +554,7 @@ return [
         'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
         'button_customize' => '<i class="fa fa-paint-brush"></i>&nbsp;&nbsp;Customize',
         'button_child' => '<i class="fa fa-child"></i>&nbsp;&nbsp;Create child theme',
+        'button_choose' => 'Choose',
         'button_new_source' => 'New %s',
         'button_rename_source' => 'Rename %s',
         'button_delete_source' => 'Delete %s',

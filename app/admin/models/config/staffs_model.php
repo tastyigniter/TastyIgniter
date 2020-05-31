@@ -97,7 +97,7 @@ $config['list']['columns'] = [
         'select' => 'last_login',
     ],
     'date_added' => [
-        'label' => 'lang:admin::lang.staff.column_date_added',
+        'label' => 'lang:admin::lang.column_date_added',
         'type' => 'datesince',
     ],
     'staff_status' => [

@@ -61,7 +61,7 @@ $config['list']['columns'] = [
         'offText' => 'admin::lang.text_no',
     ],
     'date_updated' => [
-        'label' => 'lang:admin::lang.payments.column_date_updated',
+        'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'timetense',
     ],
     'payment_id' => [

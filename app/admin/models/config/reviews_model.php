@@ -93,7 +93,7 @@ $config['list']['columns'] = [
         'offText' => 'lang:admin::lang.reviews.text_approved',
     ],
     'date_added' => [
-        'label' => 'lang:admin::lang.reviews.column_date_added',
+        'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
     ],
     'review_id' => [

@@ -29,7 +29,7 @@ return [
     'text_select_all' => 'Select All',
     'text_select_none' => 'Select None',
     'text_select' => 'Select',
-    'text_select_location' => 'Select Location',
+    'text_all_locations' => 'All Locations',
     'text_selected' => 'Selected',
     'text_now' => 'Now',
     'text_never' => 'Never',
@@ -58,6 +58,9 @@ return [
 
     'column_id' => 'ID',
     'column_location' => 'Location(s)',
+    'column_date_added' => 'Date Added',
+    'column_date_updated' => 'Date Updated',
+
     'text_filter_location' => 'View all locations',
     'text_filter_status' => 'View all status',
     'text_filter_date' => 'View all dates',
@@ -432,7 +435,6 @@ return [
 
         'column_location' => 'Location',
         'column_ready_type' => 'Ready Time',
-        'column_date_added' => 'Date Added',
         'column_total_orders' => '# Orders',
         'column_total_sale' => 'Total Sale',
 
@@ -725,7 +727,6 @@ return [
         'column_total' => 'Total',
         'column_time' => 'Order Time',
         'column_date' => 'Order Date',
-        'column_date_added' => 'Date Added',
         'column_time_date' => 'Date Time',
         'column_staff' => 'Staff',
         'column_comment' => 'Comment',
@@ -767,8 +768,6 @@ return [
         'text_tab_config' => 'Config',
         'text_filter_search' => 'Search by name or description.',
         'text_empty' => 'There are no payments available.',
-
-        'column_date_updated' => 'Date Updated',
 
         'label_payments' => 'Payment Gateways',
         'label_code' => 'Unique Code',
@@ -882,7 +881,6 @@ return [
         'column_author' => 'Author',
         'column_sale_id' => 'Sale ID',
         'column_sale_type' => 'Sale Type',
-        'column_date_added' => 'Date Added',
 
         'label_sale_type' => 'Sale Type',
         'label_sale_id' => 'Sale ID',
@@ -952,7 +950,6 @@ return [
         'column_role' => 'Staff Roles',
         'column_location' => 'Locations',
         'column_last_login' => 'Last Login',
-        'column_date_added' => 'Date Added',
 
         'label_super_staff' => 'Super Admin',
         'label_username' => 'Username',

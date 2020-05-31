@@ -56,12 +56,12 @@ $config['list']['columns'] = [
         'sortable' => FALSE,
     ],
     'date_updated' => [
-        'label' => 'lang:system::lang.mail_templates.column_date_updated',
+        'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'timetense',
         'searchable' => TRUE,
     ],
     'date_added' => [
-        'label' => 'lang:system::lang.mail_templates.column_date_added',
+        'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
         'searchable' => TRUE,
     ],
