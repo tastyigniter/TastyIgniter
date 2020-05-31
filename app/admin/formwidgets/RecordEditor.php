@@ -64,7 +64,8 @@ class RecordEditor extends BaseFormWidget
 
     public function loadAssets()
     {
-        $this->addJs('../../repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
+        $this->addJs('../../repeater/assets/vendor/sortablejs/Sortable.min.js', 'sortable-js');
+        $this->addJs('../../repeater/assets/vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js');
         $this->addJs('../../repeater/assets/js/repeater.js', 'repeater-js');
 
         $this->addJs('js/recordeditor.modal.js', 'recordeditor-modal-js');

@@ -14,8 +14,9 @@
     var Repeater = function (element, options) {
         this.options = options
         this.$el = $(element)
-        this.$sortable = $(this.options.sortableContainer, this.$el)
         this.$appendTo = $(this.options.appendTo, this.$el)
+        this.$sortable = null
+        this.$sortableContainer = $(this.options.sortableContainer, this.$el)
 
         // Init
         this.init()
@@ -23,12 +24,8 @@
 
     Repeater.DEFAULTS = {
         appendTo: 'table.repeater-items > tbody',
-        sortableContainer: 'table.repeater-items',
-        sortableContainerSelector: 'is-sortable',
-        sortableItemPath: '> tbody',
-        sortableItemSelector: 'tr',
+        sortableContainer: 'table.repeater-items > tbody',
         sortableHandle: '.repeater-item-handle',
-        sortablePlaceholder: '<tr class="placeholder sortable-placeholder"><td colspan="99"></td></tr>',
     }
 
     Repeater.prototype.init = function () {
@@ -40,19 +37,19 @@
 
     Repeater.prototype.bindSorting = function () {
         var sortableOptions = {
-            containerSelector: this.options.sortableContainerSelector,
-            itemPath: this.options.sortableItemPath,
-            itemSelector: this.options.sortableItemSelector,
-            placeholder: this.options.sortablePlaceholder,
             handle: this.options.sortableHandle,
-            nested: false
+
+            ghostClass: "sortable-ghost",  // Class name for the drop placeholder
+            chosenClass: "sortable-chosen",  // Class name for the chosen item
+            dragClass: "sortable-drag",  // Class name for the dragging item
+            fallbackClass: "sortable-fallback",  // Class name for the cloned DOM Element when using forceFallback
         }
 
-        this.$sortable.sortable(sortableOptions)
+        this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
     }
 
     Repeater.prototype.unbind = function () {
-        this.$sortable.sortable('destroy')
+        this.$sortable.destroy()
         this.$el.removeData('ti.repeater')
     }
 

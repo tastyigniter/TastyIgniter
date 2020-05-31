@@ -33,12 +33,9 @@ $(function () {
 
 $(function ($) {
     // List setup form sortables
-    $('#lists-setup-modal-content').sortable({
-        // containerSelector: '.form-check-group',
-        itemPath: '.modal-body .list-group',
-        itemSelector: '.list-group-item',
-        placeholder: '<div class="placeholder sortable-placeholder"></div>',
-        handle: '.form-check-handle',
-        nested: false
+    $('#lists-setup-modal-content').on('ajaxUpdate', function() {
+        Sortable.create($('#lists-setup-sortable').get(0), {
+            handle: '.form-check-handle',
+        })
     })
 })

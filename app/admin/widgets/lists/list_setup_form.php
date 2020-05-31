@@ -11,7 +11,10 @@
                     <?= e(lang('admin::lang.list.label_visible_columns')) ?>
                     <span class="help-block"><?= e(lang('admin::lang.list.help_visible_columns')) ?></span>
                 </label>
-                <div class="list-group list-group-flush">
+                <div
+                    id="lists-setup-sortable"
+                    class="list-group list-group-flush"
+                >
                     <?php foreach ($columns as $column) { ?>
                         <?php if ($column->type == 'button') { ?>
                             <input
@@ -21,8 +24,10 @@
                                 value="<?= e($column->columnName) ?>"
                             />
                         <?php } else { ?>
-                            <div class="list-group-item">
-                                <div class="btn btn-handle form-check-handle"><i class="fa fa-bars"></i></div>
+                            <div class="list-group-item px-2">
+                                <div class="btn btn-handle form-check-handle mr-2">
+                                    <i class="fa fa-arrows-alt-v text-muted"></i>
+                                </div>
                                 <div class="custom-control custom-checkbox custom-control-inline">
                                     <input
                                         type="checkbox"

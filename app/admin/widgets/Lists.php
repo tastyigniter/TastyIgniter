@@ -161,7 +161,8 @@ class Lists extends BaseWidget
 
     public function loadAssets()
     {
-        $this->addJs('../../../formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
+        $this->addJs('../../../formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js', 'sortable-js');
+        $this->addJs('../../../formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js');
         $this->addJs('js/lists.js', 'lists-js');
     }
 

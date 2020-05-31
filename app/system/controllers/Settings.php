@@ -63,7 +63,8 @@ class Settings extends \Admin\Classes\AdminController
     public function edit($context, $settingCode = null)
     {
         if ($settingCode == 'setup') {
-            $this->addJs('~/app/admin/formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
+            $this->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js', 'sortable-js');
+            $this->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js');
             $this->addJs('~/app/admin/assets/js/ratings.js', 'ratings-js');
         }
 

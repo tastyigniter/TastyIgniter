@@ -7,11 +7,11 @@
         <div class="d-flex w-100 justify-content-between">
             <?php if (!$this->previewMode AND $sortable) { ?>
                 <input type="hidden" name="<?= $sortableInputName ?>[]" value="<?= $item->getKey(); ?>">
-                <div class="align-self-center mr-3">
+                <div class="align-self-center">
                     <a
-                        class="handle <?= $this->getId('items') ?>-handle"
+                        class="btn handle <?= $this->getId('items') ?>-handle"
                         role="button">
-                        <i class="fa fa-bars text-black-50"></i>
+                        <i class="fa fa-arrows-alt-v text-black-50"></i>
                     </a>
                 </div>
             <?php } ?>

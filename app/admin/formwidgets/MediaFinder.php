@@ -98,7 +98,6 @@ class MediaFinder extends BaseFormWidget
     public function loadAssets()
     {
         if ($this->getConfig('useAttachment')) {
-            $this->addJs('../../repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
             $this->addJs('../../repeater/assets/js/repeater.js', 'repeater-js');
         }
 
