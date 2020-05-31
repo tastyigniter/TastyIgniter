@@ -2,6 +2,7 @@
     class="page-x-spacer"
     data-control="dashboard-container"
     data-alias="<?= $this->alias ?>"
+    data-sortable-container="#<?= $this->getId('container-list') ?>"
 >
     <div id="<?= $this->getId('container') ?>" class="dashboard-widgets">
         <div class="progress-indicator">
