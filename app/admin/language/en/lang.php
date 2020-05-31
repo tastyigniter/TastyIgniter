@@ -179,6 +179,7 @@ return [
         'delete_empty' => 'Nothing selected to delete.',
         'text_empty' => 'Nothing found.',
         'text_setup' => 'Setup',
+        'text_showing' => 'Showing %s-%s of %s records',
         'setup_title' => 'List Setup - %s',
         'label_visible_columns' => 'Visible Columns',
         'label_page_limit' => 'Items Per Page',

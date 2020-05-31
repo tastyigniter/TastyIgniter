@@ -53,6 +53,11 @@ class Lists extends BaseWidget
     public $showPagination = 'auto';
 
     /**
+     * @var bool Display page numbers with pagination, disable to improve performance.
+     */
+    public $showPageNumbers = TRUE;
+
+    /**
      * @var bool Display a drag handle next to each record row.
      */
     public $showDragHandle = FALSE;
@@ -185,6 +190,7 @@ class Lists extends BaseWidget
         $this->vars['showSetup'] = $this->showSetup;
         $this->vars['showFilter'] = count($this->filterCallbacks);
         $this->vars['showPagination'] = $this->showPagination;
+        $this->vars['showPageNumbers'] = $this->showPageNumbers;
         $this->vars['showSorting'] = $this->showSorting;
         $this->vars['sortColumn'] = $this->getSortColumn();
         $this->vars['sortDirection'] = $this->sortDirection;
@@ -287,7 +293,6 @@ class Lists extends BaseWidget
 
         // Apply search term
         $query->where(function ($innerQuery) use ($primarySearchable, $relationSearchable, $joins) {
-
             // Search primary columns
             if (count($primarySearchable) > 0) {
                 $this->applySearchToQuery($innerQuery, $primarySearchable, 'or');
@@ -318,7 +323,6 @@ class Lists extends BaseWidget
 
             // Relation column
             if (isset($column->relation)) {
-
                 $relationType = $this->model->getRelationType($column->relation);
                 if ($relationType == 'morphTo') {
                     throw new Exception('The relationship morphTo is not supported for list columns.');
