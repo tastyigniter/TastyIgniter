@@ -53,7 +53,7 @@ class Reservations_model extends Model
 
     public $guarded = ['ip_address', 'user_agent', 'hash'];
 
-    public $appends = ['customer_name', 'duration', 'reservation_datetime', 'table_name'];
+    public $appends = ['customer_name', 'duration', 'reservation_datetime'];
 
     public $casts = [
         'location_id' => 'integer',

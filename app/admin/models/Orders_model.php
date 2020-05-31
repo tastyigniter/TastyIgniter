@@ -57,8 +57,6 @@ class Orders_model extends Model
      */
     public $timestamps = TRUE;
 
-    public $appends = ['customer_name', 'order_type_name'];
-
     public $casts = [
         'customer_id' => 'integer',
         'location_id' => 'integer',
