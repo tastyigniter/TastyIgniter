@@ -95,13 +95,21 @@ class AssigneeController extends ControllerAction
 
                 $this->assigneeApplyScope($query);
             });
+
+            Event::listen('admin.filter.extendScopesBefore', function ($widget) {
+                $staff = $this->controller->getUser()->staff;
+
+                if (!$staff->hasRestrictedAssignableScope())
+                    return;
+
+                unset($widget->scopes['assignee']);
+            });
         }
     }
 
     protected function assigneeBindFormEvents()
     {
         if ($this->controller->isClassExtendedWith('Admin\Actions\FormController')) {
-
             $this->controller->bindEvent('controller.form.extendQuery', function ($query) {
                 if (!(bool)$this->getConfig('applyScopeOnFormQuery', TRUE))
                     return;
