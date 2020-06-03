@@ -189,7 +189,7 @@ class Reservations_model extends Model
         if (!$location = $this->location)
             return $value;
 
-        return $location->reservation_stay_time;
+        return $location->getOption('reservation_lead_time');
     }
 
     public function getReserveEndTimeAttribute($value)
@@ -237,7 +237,7 @@ class Reservations_model extends Model
     public function setDurationAttribute($value)
     {
         if (empty($value))
-            $value = ($location = $this->location) ? $location->reservation_stay_time : $value;
+            $value = ($location = $this->location) ? $location->getOption('reservation_lead_time') : $value;
 
         $this->attributes['duration'] = $value;
     }

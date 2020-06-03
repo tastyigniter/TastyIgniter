@@ -33,13 +33,6 @@ class Locations_model extends AbstractLocation
         'location_country_id' => 'integer',
         'location_lat' => 'double',
         'location_lng' => 'double',
-        'offer_delivery' => 'boolean',
-        'offer_collection' => 'boolean',
-        'delivery_time' => 'integer',
-        'collection_time' => 'integer',
-        'last_order_time' => 'integer',
-        'reservation_time_interval' => 'integer',
-        'reservation_stay_time' => 'integer',
         'location_status' => 'boolean',
         'options' => 'serialize',
     ];
@@ -199,12 +192,12 @@ class Locations_model extends AbstractLocation
 
     public function getDeliveryTimeAttribute($value)
     {
-        return (int)$value;
+        return (int)$this->getOption('delivery_time_interval');
     }
 
     public function getCollectionTimeAttribute($value)
     {
-        return (int)$value;
+        return (int)$this->getOption('collection_time_interval');
     }
 
     public function getFutureOrdersAttribute($value)
@@ -214,7 +207,7 @@ class Locations_model extends AbstractLocation
 
     public function getReservationTimeIntervalAttribute($value)
     {
-        return (int)$value;
+        return (int)$this->getOption('reservation_time_interval');
     }
 
     //
