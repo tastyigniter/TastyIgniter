@@ -210,13 +210,12 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-
         'description' => [
             'label' => 'lang:admin::lang.label_description',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
             'type' => 'richeditor',
             'size' => 'small',
         ],
+
         'order' => [
             'label' => 'lang:admin::lang.locations.text_tab_order',
             'tab' => 'lang:admin::lang.locations.text_tab_data',

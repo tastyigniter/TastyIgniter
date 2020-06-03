@@ -25,6 +25,12 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-success',
             'href' => 'updates',
         ],
+        'filter' => [
+            'label' => 'lang:admin::lang.button_icon_filter',
+            'class' => 'btn btn-default btn-filter',
+            'data-toggle' => 'list-filter',
+            'data-target' => '.list-filter',
+        ],
         'setting' => [
             'label' => 'lang:system::lang.extensions.button_settings',
             'class' => 'btn btn-default pull-right',

@@ -13,7 +13,7 @@ $staffState = \Admin\Classes\UserState::forUser();
 <li class="nav-item dropdown">
     <a href="#" class="nav-link" data-toggle="dropdown">
         <img
-            class="rounded-circle<?= (!$isSingleMode AND $staffLocationId) ? ' icon-border border-info' : '' ?>"
+            class="rounded-circle"
             src="<?= '//www.gravatar.com/avatar/'.$staffAvatar.'.png?s=64&d=mm'; ?>"
         >
     </a>
@@ -32,7 +32,7 @@ $staffState = \Admin\Classes\UserState::forUser();
                 <form method="POST" accept-charset="UTF-8">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <div class="input-group-text<?= $staffLocationId ? ' text-info' : '' ?>">
+                            <div class="input-group-text<?= $staffLocationId ? ' text-info' : ' text-muted' ?>">
                                 <i class="fa fa-map-marker fa-fw"></i>
                             </div>
                         </div>

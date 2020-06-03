@@ -153,11 +153,11 @@
 // Control label
 .control-label {
   color: $gray-800;
+  font-size: 0.9375rem;
 }
 .help-block {
   @extend .form-text;
   color: $gray-600;
-  font-size: $font-size-sm;
   margin: 0;
 
   &.before-field {

@@ -17,7 +17,9 @@
     <?php } ?>
 
     <div class="page-wrapper">
-        <?= Template::getBlock('body') ?>
+        <div class="page-content">
+            <?= Template::getBlock('body') ?>
+        </div>
     </div>
 
     <div id="notification">

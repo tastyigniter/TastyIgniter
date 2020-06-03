@@ -33,7 +33,9 @@ $text-muted: $gray-500 !default;
 //
 // Fonts
 //
-$font-size-base: 0.8125rem !default;
+$font-size-base: 0.875rem !default;
+$font-size-lg: $font-size-base * 1.25 !default;
+$font-size-sm: $font-size-base * .875 !default;
 //
 // Tables
 //
