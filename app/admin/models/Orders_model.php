@@ -11,6 +11,7 @@ use Main\Classes\MainController;
 use Model;
 use Request;
 use System\Traits\SendsMailTemplate;
+use Carbon\Carbon;
 
 /**
  * Orders Model Class
@@ -326,12 +327,12 @@ class Orders_model extends Model
         $data['order_comment'] = $model->comment;
 
         $data['order_type'] = $model->order_type_name;
-        $data['order_time'] = $model->order_time.' '.$model->order_date->format('d M');
-        $data['order_date'] = $model->date_added->format('d M y');
+        $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(setting('time_format'));
+        $data['order_date'] = $model->date_added->format(setting('date_format'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;
-        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format('d M y') : null;
+        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format(setting('date_format')) : null;
 
         $data['order_payment'] = ($model->payment_method)
             ? $model->payment_method->name
