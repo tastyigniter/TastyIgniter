@@ -87,7 +87,7 @@ class Status_history_model extends Model
         $model->object_id = $object->getKey();
         $model->object_type = $object->getMorphClass();
         $model->staff_id = array_get($options, 'staff_id');
-        $model->comment = array_get($options, 'comment', $status->comment);
+        $model->comment = array_get($options, 'comment', $status->status_comment);
         $model->notify = array_get($options, 'notify', $status->notify_customer);
 
         if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
