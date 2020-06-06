@@ -11713,7 +11713,7 @@ a.close.disabled {
 
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 500px;
+    max-width: 600px;
     margin: 1.75rem auto; }
   .modal-dialog-scrollable {
     max-height: calc(100% - 3.5rem); }
@@ -11726,7 +11726,7 @@ a.close.disabled {
   .modal-content {
     box-shadow: 0 0.5rem 1rem rgba(0, 3, 41, 0.5); }
   .modal-sm {
-    max-width: 300px; } }
+    max-width: 400px; } }
 
 @media (min-width: 992px) {
   .modal-lg, .modal-xl {

@@ -39,13 +39,8 @@ class LanguageManager
         return $namespaces;
     }
 
-    public function supportedLocales()
-    {
-        return setting('supported_languages', config('system.supportedLocales', ['en']));
-    }
-
     //
-    //
+    // Translations
     //
 
     public function listLocaleFiles($locale)

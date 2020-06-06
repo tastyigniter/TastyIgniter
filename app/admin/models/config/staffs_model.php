@@ -189,11 +189,24 @@ $config['form']['fields'] = [
         'nameFrom' => 'staff_group_name',
         'comment' => 'lang:admin::lang.staff.help_groups',
     ],
+    'sale_permission' => [
+        'label' => 'lang:admin::lang.staff.label_sale_permission',
+        'type' => 'radiolist',
+        'context' => ['create', 'edit'],
+        'span' => 'left',
+        'default' => 1,
+        'options' => [
+            1 => ['lang:admin::lang.staff.text_sale_permission_global_access', 'lang:admin::lang.staff.help_sale_permission_global_access'],
+            2 => ['lang:admin::lang.staff.text_sale_permission_groups', 'lang:admin::lang.staff.help_sale_permission_groups'],
+            3 => ['lang:admin::lang.staff.text_sale_permission_restricted', 'lang:admin::lang.staff.help_sale_permission_restricted'],
+        ],
+    ],
     'user[super_user]' => [
         'label' => 'lang:admin::lang.staff.label_super_staff',
         'type' => 'switch',
         'context' => ['create', 'edit'],
-        'span' => 'left',
+        'span' => 'right',
+        'cssClass' => 'flex-width',
         'comment' => 'lang:admin::lang.staff.help_super_staff',
     ],
     'staff_status' => [
@@ -201,18 +214,8 @@ $config['form']['fields'] = [
         'type' => 'switch',
         'context' => ['create', 'edit'],
         'span' => 'right',
+        'cssClass' => 'flex-width',
         'default' => 1,
-    ],
-    'sale_permission' => [
-        'label' => 'lang:admin::lang.staff.label_sale_permission',
-        'type' => 'radiolist',
-        'context' => ['create', 'edit'],
-        'default' => 1,
-        'options' => [
-            1 => ['lang:admin::lang.staff.text_sale_permission_global_access', 'lang:admin::lang.staff.help_sale_permission_global_access'],
-            2 => ['lang:admin::lang.staff.text_sale_permission_groups', 'lang:admin::lang.staff.help_sale_permission_groups'],
-            3 => ['lang:admin::lang.staff.text_sale_permission_restricted', 'lang:admin::lang.staff.help_sale_permission_restricted'],
-        ],
     ],
     'staff_role_id' => [
         'label' => 'lang:admin::lang.staff.label_role',

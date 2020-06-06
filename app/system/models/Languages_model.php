@@ -1,6 +1,7 @@
 <?php namespace System\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Translation\Models\Language;
 use Illuminate\Support\Facades\Lang;
 
@@ -31,6 +32,21 @@ class Languages_model extends Language
      */
     protected $guarded = [];
 
+    /**
+     * @var array Object cache of self, by code.
+     */
+    protected static $cacheLanguageCodes = [];
+
+    /**
+     * @var array A cache of supported locales.
+     */
+    protected static $cacheListSupported;
+
+    /**
+     * @var self Default language cache.
+     */
+    protected static $defaultLanguage;
+
     public static function applySupportedLanguages()
     {
         setting()->set('supported_languages', self::getDropdownOptions()->keys()->toArray());
@@ -52,6 +68,8 @@ class Languages_model extends Language
 
     protected function afterSave()
     {
+        self::applySupportedLanguages();
+
         $this->restorePurgedValues();
 
         if (array_key_exists('translations', $this->attributes))
@@ -78,10 +96,74 @@ class Languages_model extends Language
     // Helpers
     //
 
+    public static function findByCode($code = null)
+    {
+        if (!$code)
+            return null;
+
+        if (isset(self::$cacheLanguageCodes[$code]))
+            return self::$cacheLanguageCodes[$code];
+
+        return self::$cacheLanguageCodes[$code] = self::whereCode($code)->first();
+    }
+
+    public function makeDefault()
+    {
+        if (!$this->status) {
+            throw new ValidationException(['status' => sprintf(
+                lang('admin::lang.alert_error_set_default'), $this->name
+            )]);
+        }
+
+        setting('default_language', $this->code);
+        setting()->save();
+    }
+
+    /**
+     * Returns the default language defined.
+     * @return self
+     */
+    public static function getDefault()
+    {
+        if (self::$defaultLanguage !== null) {
+            return self::$defaultLanguage;
+        }
+
+        $defaultLanguage = self::isEnabled()
+            ->where('code', setting('default_language'))
+            ->first();
+
+        if (!$defaultLanguage) {
+            if ($defaultLanguage = self::whereIsEnabled()->first()) {
+                $defaultLanguage->makeDefault();
+            }
+        }
+
+        return self::$defaultLanguage = $defaultLanguage;
+    }
+
     public function isDefault()
     {
         return ($this->code == setting('default_language'));
     }
+
+    public static function listSupported()
+    {
+        if (self::$cacheListSupported) {
+            return self::$cacheListSupported;
+        }
+
+        return self::$cacheListSupported = self::isEnabled()->pluck('name', 'code')->all();
+    }
+
+    public static function supportsLocale()
+    {
+        return count(self::listSupported()) > 1;
+    }
+
+    //
+    // Translations
+    //
 
     public function listAllFiles()
     {

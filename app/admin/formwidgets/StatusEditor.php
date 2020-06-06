@@ -173,14 +173,14 @@ class StatusEditor extends BaseFormWidget
             throw new ApplicationException($ex->getMessage());
         }
 
-        $this->prepareVars();
-
         if ($this->saveRecord($saveData, $keyFrom)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->getModeConfig('formName')).' '.'updated'))->now();
         }
         else {
             flash()->error(lang('admin::lang.alert_error_try_again'))->now();
         }
+
+        $this->prepareVars();
 
         return [
             '#notification' => $this->makePartial('flash'),

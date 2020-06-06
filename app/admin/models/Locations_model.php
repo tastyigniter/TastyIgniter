@@ -244,8 +244,6 @@ class Locations_model extends AbstractLocation
         $this->parseAreasFromOptions($value);
 
         $this->attributes['options'] = @serialize($value);
-
-        return $value;
     }
 
     public function listAvailablePayments()
