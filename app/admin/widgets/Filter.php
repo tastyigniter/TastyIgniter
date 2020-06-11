@@ -58,6 +58,14 @@ class Filter extends BaseWidget
      * @var array List of CSS classes to apply to the filter container element
      */
     public $cssClasses = [];
+    
+    public function loadAssets()
+    {
+        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js', 'daterangepicker-js');
+        $this->addJs('js/daterange.js', 'daterangepicker-js');
+        $this->addCss('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.css', 'daterangepicker-css');
+    }
 
     public function initialize()
     {
@@ -150,6 +158,10 @@ class Filter extends BaseWidget
                 case 'date':
                     $date = $value ? mdate('%Y-%m', strtotime($value)) : null;
                     $this->setScopeValue($scope, $date);
+                    break;
+                    
+                case 'daterange':
+                    $this->setScopeValue($scope, $value);
                     break;
             }
         }
@@ -302,7 +314,7 @@ class Filter extends BaseWidget
     {
         foreach ($scopes as $name => $config) {
             $scopeObj = $this->makeFilterScope($name, $config);
-
+  
             // Check if admin has permissions to show this column
             $permissions = array_get($config, 'permissions');
             if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
@@ -409,6 +421,27 @@ class Filter extends BaseWidget
                         ':year' => mdate('%Y', strtotime($scope->value)),
                         ':month' => mdate('%m', strtotime($scope->value)),
                         ':day' => mdate('%d', strtotime($scope->value)),
+                    ]));
+                } // Scope
+                elseif ($scopeMethod = $scope->scope) {
+                    $query->$scopeMethod($value);
+                }
+
+                break;
+                
+            case 'daterange':
+                $value = explode('|', $scope->value);
+
+                if ($scopeConditions = $scope->conditions) {               
+                    $query->whereRaw(strtr($scopeConditions, [
+                        ':filtered_start' => '"'.mdate('%Y-%m-%d', strtotime($value[0])).'"',
+                        ':year_start' => mdate('%Y', strtotime($value[0])),
+                        ':month_start' => mdate('%m', strtotime($value[0])),
+                        ':day_start' => mdate('%d', strtotime($value[0])),
+                        ':filtered_end' => '"'.mdate('%Y-%m-%d', strtotime($value[1])).'"',
+                        ':year_end' => mdate('%Y', strtotime($value[1])),
+                        ':month_end' => mdate('%m', strtotime($value[1])),
+                        ':day_end' => mdate('%d', strtotime($value[1])),
                     ]));
                 } // Scope
                 elseif ($scopeMethod = $scope->scope) {
