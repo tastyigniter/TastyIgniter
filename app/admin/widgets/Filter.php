@@ -62,9 +62,18 @@ class Filter extends BaseWidget
     public function loadAssets()
     {
         $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+        
+        // daterange picker
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js', 'daterangepicker-js');
         $this->addJs('js/daterange.js', 'daterangepicker-js');
         $this->addCss('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.css', 'daterangepicker-css');
+        
+        // date picker
+        $this->addCss('~/app/admin/formwidgets/datepicker/assets/vendor/datepicker/bootstrap-datepicker.min.css', 'bootstrap-datepicker-css');
+        $this->addJs('~/app/admin/formwidgets/datepicker/assets/vendor/datepicker/bootstrap-datepicker.min.js', 'bootstrap-datepicker-js');
+        $this->addCss('~/app/admin/formwidgets/datepicker/assets/css/datepicker.css', 'datepicker-css');
+        $this->addJs('js/datepicker.js', 'datepicker-js');
+        
     }
 
     public function initialize()
@@ -156,7 +165,7 @@ class Filter extends BaseWidget
                     break;
 
                 case 'date':
-                    $date = $value ? mdate('%Y-%m', strtotime($value)) : null;
+                    $date = $value ? mdate('%Y-%m-%d', strtotime($value)) : null;
                     $this->setScopeValue($scope, $date);
                     break;
                     
