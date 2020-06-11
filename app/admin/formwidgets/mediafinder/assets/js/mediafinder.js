@@ -110,10 +110,13 @@
                 items = self.extractItemData(items)
 
                 if (self.options.useAttachment) {
+                    $.ti.loadingIndicator.show()
                     $.request(self.options.alias+'::onAddAttachment', {
                         data: {items: items}
                     }).done(function (response) {
                         self.updateFinder($button, response)
+                    }).always(function () {
+                        $.ti.loadingIndicator.hide()
                     })
                 } else {
                     self.updateFinder($button, items)

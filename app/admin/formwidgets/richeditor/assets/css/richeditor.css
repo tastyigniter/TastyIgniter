@@ -1,7 +1,18 @@
 .note-editor.note-frame {
 	border-color: var(--gray-300);
 }
+.note-editor.note-frame .note-toolbar {
+	background-color: var(--gray-200);
+	border-radius: 3px 3px 0 0;
+}
+.note-editor.note-frame .note-toolbar .btn-group .btn + .btn {
+	margin-left: -1px;
+}
 .note-editor.note-frame .note-statusbar {
-	background-color: var(--gray-300);
+	background-color: var(--gray-200);
 	border-top: 1px solid var(--gray-300);
+	margin-top: -1px;
+}
+.note-editor.note-frame .note-status-output {
+	height: 11px;
 }

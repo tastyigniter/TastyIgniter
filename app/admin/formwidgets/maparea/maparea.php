@@ -4,7 +4,7 @@
     data-alias="<?= $this->alias ?>"
     data-last-counter="<?= $indexCount ?>"
 >
-    <div class="map-area-container mt-3">
+    <div class="map-area-container my-3">
         <?= $this->makePartial('maparea/areas') ?>
     </div>
 

@@ -2,7 +2,7 @@
     <nav class="navbar navbar-top navbar-expand navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-brand">
-                <a class="logo" href="<?= admin_url('dashboard'); ?>">
+                <a class="logo">
                     <i class="logo-icon icon-ti-logo"></i>
                 </a>
             </div>

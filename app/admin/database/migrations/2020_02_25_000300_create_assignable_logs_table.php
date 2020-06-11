@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-class createAssignableLogsTable extends Migration
+class CreateAssignableLogsTable extends Migration
 {
     public function up()
     {

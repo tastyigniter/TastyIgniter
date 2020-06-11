@@ -1,12 +1,9 @@
-<?php if ($this->previewMode) { ?>
-    <p class="form-control-static"><?= $field->value ? e($field->value) : '&nbsp;' ?></p>
-<?php } else { ?>
-    <textarea
-        name="<?= $field->getName() ?>"
-        id="<?= $field->getId() ?>"
-        autocomplete="off"
-        class="form-control field-textarea"
-        placeholder="<?= e($field->placeholder) ?>"
-        <?= $field->getAttributes() ?>
-    ><?= e($field->value) ?></textarea>
-<?php } ?>
+<textarea
+    name="<?= $field->getName() ?>"
+    id="<?= $field->getId() ?>"
+    autocomplete="off"
+    class="form-control field-textarea"
+    placeholder="<?= e($field->placeholder) ?>"
+    <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
+    <?= $field->getAttributes() ?>
+><?= e($field->value) ?></textarea>

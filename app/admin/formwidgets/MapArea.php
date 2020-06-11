@@ -90,7 +90,8 @@ class MapArea extends BaseFormWidget
 
     public function loadAssets()
     {
-        $this->addJs('../../repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
+        $this->addJs('../../repeater/assets/vendor/sortablejs/js/Sortable.min.js', 'sortable-js');
+        $this->addJs('../../repeater/assets/vendor/sortablejs/js/jquery-sortable.js', 'jquery-sortable-js');
         $this->addJs('../../repeater/assets/js/repeater.js', 'repeater-js');
         $this->addJs('../../recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
 

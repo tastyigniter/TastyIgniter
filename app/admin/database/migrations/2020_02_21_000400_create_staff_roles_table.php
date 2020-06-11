@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-class createStaffRolesTable extends Migration
+class CreateStaffRolesTable extends Migration
 {
     public function up()
     {

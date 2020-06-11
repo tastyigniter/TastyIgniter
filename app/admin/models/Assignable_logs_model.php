@@ -1,9 +1,8 @@
 <?php namespace Admin\Models;
 
-use Admin\ActivityTypes\OrderAssigned;
-use Admin\ActivityTypes\ReservationAssigned;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -48,45 +47,51 @@ class Assignable_logs_model extends Model
     /**
      * @param \Igniter\Flame\Database\Model|mixed $assignable
      * @return static|bool
+     * @throws \Exception
      */
     public static function createLog($assignable)
     {
-        $model = self::firstOrNew([
+        $attributes = [
             'assignable_type' => $assignable->getMorphClass(),
             'assignable_id' => $assignable->getKey(),
             'assignee_group_id' => $assignable->assignee_group_id,
-        ]);
+            'assignee_id' => null,
+        ];
 
-        $model->assignee_id = $assignable->assignee_id;
+        self::query()->where($attributes)->delete();
+
+        $model = self::query()->firstOrNew(array_merge($attributes, [
+            'assignee_id' => $assignable->assignee_id,
+        ]));
+
         $model->status_id = $assignable->status_id;
 
-        $exists = $model->exists;
+        $assignable->newQuery()->where($assignable->getKeyName(), $assignable->getKey())->update([
+            'assignee_updated_at' => Carbon::now(),
+        ]);
 
-        if ($model->save()) {
-            $exists
-                ? $model->fireSystemEvent('admin.assignableLog.beforeUpdateAssignee')
-                : $model->fireSystemEvent('admin.assignableLog.beforeAddAssignee');
-
-            $assignable->newQuery()->where($assignable->getKeyName(), $assignable->getKey())->update([
-                'assignee_updated_at' => Carbon::now(),
-            ]);
-        }
+        $model->save();
 
         return $model;
     }
 
-    //
-    //
-    //
-
-    protected function beforeSave()
+    /**
+     * @param $limit
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getUnAssignedQueue($limit)
     {
-        if ($this->assignable instanceof Orders_model) {
-            OrderAssigned::log($this->assignable);
-        }
-        elseif ($this->assignable instanceof Reservations_model) {
-            ReservationAssigned::log($this->assignable);
-        }
+        return self::query()
+            ->whereUnAssigned()
+            ->whereHasAutoAssignGroup()
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function isForOrder()
+    {
+        return $this->assignable_type === Orders_model::make()->getMorphClass();
     }
 
     //
@@ -133,5 +138,55 @@ class Assignable_logs_model extends Model
             ->groupBy('assignee_id')
             ->orderBy('assign_value', 'desc')
             ->havingRaw('assign_value < 1');
+    }
+
+    /**
+     * @param \Igniter\Flame\Database\Query\Builder $query
+     * @return mixed
+     */
+    public function scopeWhereUnAssigned($query)
+    {
+        return $query->whereNotNull('assignee_group_id')->whereNull('assignee_id');
+    }
+
+    /**
+     * @param \Igniter\Flame\Database\Query\Builder $query
+     * @param $assigneeId
+     * @return mixed
+     */
+    public function scopeWhereAssignTo($query, $assigneeId)
+    {
+        return $query->where('assignee_id', $assigneeId);
+    }
+
+    /**
+     * @param \Igniter\Flame\Database\Query\Builder $query
+     * @param $assigneeGroupId
+     * @return mixed
+     */
+    public function scopeWhereAssignToGroup($query, $assigneeGroupId)
+    {
+        return $query->where('assignee_group_id', $assigneeGroupId);
+    }
+
+    /**
+     * @param \Igniter\Flame\Database\Query\Builder $query
+     * @param array $assigneeGroupIds
+     * @return mixed
+     */
+    public function scopeWhereInAssignToGroup($query, array $assigneeGroupIds)
+    {
+        return $query->whereIn('assignee_group_id', $assigneeGroupIds);
+    }
+
+    /**
+     * @param \Igniter\Flame\Database\Query\Builder $query
+     * @return mixed
+     */
+    public function scopeWhereHasAutoAssignGroup($query)
+    {
+        return $query->whereHas('assignee_group', function (Builder $query) {
+            $query->where('auto_assign', 1);
+        });
     }
 }

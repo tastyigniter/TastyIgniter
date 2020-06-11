@@ -48,12 +48,6 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
     ],
 ];
 
@@ -99,7 +93,7 @@ $config['list']['columns'] = [
         'offText' => 'lang:admin::lang.reviews.text_approved',
     ],
     'date_added' => [
-        'label' => 'lang:admin::lang.reviews.column_date_added',
+        'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
     ],
     'review_id' => [
@@ -156,7 +150,7 @@ $config['form']['fields'] = [
     ],
     'sale_type' => [
         'label' => 'lang:admin::lang.reviews.label_sale_type',
-        'type' => 'radio',
+        'type' => 'radiotoggle',
         'span' => 'left',
         'default' => 'orders',
     ],

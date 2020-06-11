@@ -68,18 +68,6 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
-        'assigned' => [
-            'label' => 'lang:admin::lang.text_switch_to_assigned',
-            'class' => 'btn btn-default',
-            'href' => 'orders/assigned',
-            'context' => 'index',
-        ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
     ],
 ];
 
@@ -157,7 +145,7 @@ $config['list']['columns'] = [
         'type' => 'currency',
     ],
     'date_added' => [
-        'label' => 'lang:admin::lang.orders.column_date_added',
+        'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timesince',
         'invisible' => TRUE,
     ],
@@ -219,7 +207,7 @@ $config['form']['tabs'] = [
         ],
         'location[location_name]' => [
             'label' => 'lang:admin::lang.orders.text_restaurant',
-            'type' => 'text',
+            'type' => 'location',
             'disabled' => TRUE,
             'span' => 'right',
             'placeholder' => 'lang:admin::lang.text_please_select',
@@ -240,9 +228,9 @@ $config['form']['tabs'] = [
             'span' => 'left',
             'cssClass' => 'flex-width',
         ],
-        'customer_name' => [
-            'label' => 'lang:admin::lang.orders.label_customer_name',
-            'type' => 'text',
+        'customer[full_name]' => [
+            'label' => 'lang:admin::lang.orders.text_customer',
+            'type' => 'customer',
             'disabled' => TRUE,
             'span' => 'right',
         ],
@@ -274,7 +262,7 @@ $config['form']['tabs'] = [
             'addonCssClass' => ['input-addon-btn'],
             'addonRight' => [
                 'tag' => 'a',
-                'label' => 'admin::lang.orders.button_view_invoice',
+                'label' => 'admin::lang.orders.button_print_invoice',
                 'attributes' => [
                     'class' => 'btn btn-outline-default',
                     'target' => '_blank',
@@ -339,6 +327,21 @@ $config['form']['tabs'] = [
                 ],
                 'staff_name' => [
                     'title' => 'lang:admin::lang.orders.column_staff',
+                ],
+            ],
+        ],
+        'payment_logs' => [
+            'tab' => 'lang:admin::lang.orders.text_payment_logs',
+            'type' => 'datatable',
+            'columns' => [
+                'date_added_since' => [
+                    'title' => 'lang:admin::lang.orders.column_time_date',
+                ],
+                'payment_name' => [
+                    'title' => 'lang:admin::lang.orders.label_payment_method',
+                ],
+                'message' => [
+                    'title' => 'lang:admin::lang.orders.column_comment',
                 ],
             ],
         ],

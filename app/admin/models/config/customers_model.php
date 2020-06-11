@@ -35,12 +35,6 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
         'groups' => [
             'label' => 'lang:admin::lang.side_menu.customer_group',
             'class' => 'btn btn-default',
@@ -122,6 +116,13 @@ $config['form']['toolbar'] = [
             'data-progress-indicator' => 'admin::lang.text_deleting',
             'context' => ['edit'],
         ],
+        'impersonate' => [
+            'label' => 'lang:admin::lang.customers.text_impersonate',
+            'class' => 'btn btn-default',
+            'data-request' => 'onImpersonate',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
+            'context' => ['edit'],
+        ],
     ],
 ];
 
@@ -183,9 +184,8 @@ $config['form']['tabs'] = [
         ],
         'addresses' => [
             'tab' => 'lang:admin::lang.customers.text_tab_address',
-            'type' => 'partial',
-            'path' => 'customers/address_tabs',
-            'options' => 'listAddresses',
+            'type' => 'repeater',
+            'form' => 'addresses_model',
         ],
         'orders' => [
             'tab' => 'lang:admin::lang.customers.text_tab_orders',

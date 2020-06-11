@@ -13,7 +13,7 @@ $staffState = \Admin\Classes\UserState::forUser();
 <li class="nav-item dropdown">
     <a href="#" class="nav-link" data-toggle="dropdown">
         <img
-            class="rounded-circle<?= (!$isSingleMode AND $staffLocationId) ? ' icon-border border-info' : '' ?>"
+            class="rounded-circle"
             src="<?= '//www.gravatar.com/avatar/'.$staffAvatar.'.png?s=64&d=mm'; ?>"
         >
     </a>
@@ -32,7 +32,7 @@ $staffState = \Admin\Classes\UserState::forUser();
                 <form method="POST" accept-charset="UTF-8">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <div class="input-group-text<?= $staffLocationId ? ' text-info' : '' ?>">
+                            <div class="input-group-text<?= $staffLocationId ? ' text-info' : ' text-muted' ?>">
                                 <i class="fa fa-map-marker fa-fw"></i>
                             </div>
                         </div>
@@ -41,7 +41,9 @@ $staffState = \Admin\Classes\UserState::forUser();
                             class="form-control"
                             data-request="<?= $this->getEventHandler('onChooseLocation') ?>"
                         >
-                            <option value="0"><?= e(lang('admin::lang.text_select_location')) ?></option>
+                            <?php if (AdminAuth::isSuperUser()) { ?>
+                                <option value="0"><?= e(lang('admin::lang.text_all_locations')) ?></option>
+                            <?php } ?>
                             <?php foreach ($staffLocations as $key => $value) { ?>
                                 <option
                                     value="<?= $key ?>"
@@ -59,8 +61,7 @@ $staffState = \Admin\Classes\UserState::forUser();
             data-target="#editStaffStatusModal"
             role="button"
         >
-            <i class="fa fa-circle fa-fw text-<?= $staffState->getStatusColorName(); ?>"></i>
-            <?= lang('admin::lang.text_set_status'); ?>
+            <i class="fa fa-circle fa-fw text-<?= $staffState->getStatusColorName(); ?>"></i><?= lang('admin::lang.text_set_status'); ?>
         </a>
         <a class="dropdown-item" href="<?= $staffEditLink; ?>">
             <i class="fa fa-user fa-fw"></i><?= lang('admin::lang.text_edit_details'); ?>
@@ -69,10 +70,10 @@ $staffState = \Admin\Classes\UserState::forUser();
             <i class="fa fa-power-off fa-fw"></i><?= lang('admin::lang.text_logout'); ?>
         </a>
         <div role="separator" class="dropdown-divider"></div>
-        <a class="dropdown-item text-muted" href="https://tastyigniter.com/about/" target="_blank">
+        <a class="dropdown-item text-muted" href="https://tastyigniter.com/about" target="_blank">
             <i class="fa fa-info-circle fa-fw"></i><?= lang('admin::lang.text_about_tastyigniter'); ?>
         </a>
-        <a class="dropdown-item text-muted" href="https://docs.tastyigniter.com" target="_blank">
+        <a class="dropdown-item text-muted" href="https://tastyigniter.com/docs" target="_blank">
             <i class="fa fa-book fa-fw"></i><?= lang('admin::lang.text_documentation'); ?>
         </a>
         <a class="dropdown-item text-muted" href="https://forum.tastyigniter.com" target="_blank">

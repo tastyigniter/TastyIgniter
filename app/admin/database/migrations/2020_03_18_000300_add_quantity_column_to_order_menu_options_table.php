@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-class addQuantityColumnToOrderMenuOptionsTable extends Migration
+class AddQuantityColumnToOrderMenuOptionsTable extends Migration
 {
     public function up()
     {

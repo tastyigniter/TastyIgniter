@@ -44,12 +44,6 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
     ],
 ];
 
@@ -191,7 +185,7 @@ $config['form']['tabs'] = [
         ],
         'order_restriction' => [
             'label' => 'lang:admin::lang.menus.label_order_restriction',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
             'options' => [
@@ -267,7 +261,7 @@ $config['form']['tabs'] = [
         'special[type]' => [
             'label' => 'lang:admin::lang.menus.label_special_type',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'span' => 'left',
             'cssClass' => 'flex-width',
             'default' => 'F',
@@ -286,7 +280,7 @@ $config['form']['tabs'] = [
         'special[validity]' => [
             'label' => 'lang:admin::lang.coupons.label_validity',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'default' => 'forever',
             'options' => [
                 'forever' => 'lang:admin::lang.coupons.text_forever',
@@ -323,7 +317,7 @@ $config['form']['tabs'] = [
         'special[recurring_every]' => [
             'label' => 'lang:admin::lang.coupons.label_recurring_every',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
-            'type' => 'checkbox',
+            'type' => 'checkboxtoggle',
             'options' => [\Admin\Models\Menus_specials_model::class, 'getRecurringEveryOptions'],
             'trigger' => [
                 'action' => 'show',

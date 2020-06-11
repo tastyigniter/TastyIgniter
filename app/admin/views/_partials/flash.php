@@ -27,7 +27,6 @@
             data-allow-dismiss="false"
             role="alert"
         >
-            <b><?= lang('admin::lang.alert_form_error_message') ?></b>
             <?php foreach ($messages as $message) { ?>
                 <p><?= $message; ?></p>
             <?php } ?>

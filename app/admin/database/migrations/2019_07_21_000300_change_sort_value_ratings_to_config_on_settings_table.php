@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 /**
  *
  */
-class changeSortValueRatingsToConfigOnSettingsTable extends Migration
+class ChangeSortValueRatingsToConfigOnSettingsTable extends Migration
 {
     public function up()
     {

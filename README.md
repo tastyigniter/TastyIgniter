@@ -1,4 +1,4 @@
-<img src="https://tastyigniter.com/assets/ui/images/logos/tastyigniter-horizontal-logo.png">
+<img src="https://tastyigniter.com/assets/ui/images/logos/tastyigniter-horizontal-logo-cropped.png">
 
 [![Stable](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Stable&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
 [![Total Downloads](https://poser.pugx.org/tastyigniter/flame/downloads)](https://packagist.org/packages/tastyigniter/flame)
@@ -12,20 +12,20 @@
 ![screenshot](https://tastyigniter.com/assets/ui/images/mockups/Menus.png)
 
 ### Documentation
-The best place to learn TastyIgniter is by reading the [documentation](https://docs.tastyigniter.com)
+The best place to learn TastyIgniter is by reading the [documentation](https://tastyigniter.com/docs)
 
 ### Installation
-Please read the [Installation Guide](https://docs.tastyigniter.com/3.0/installation) for more information.
+Please read the [Installation Guide](https://tastyigniter.com/docs/installation) for more information.
 
 ### Questions
-For questions and support please use the [Community Forum](https://forum.tastyigniter.com) or [Join us on Slack](http://slack.tastyigniter.com/). 
+For questions and support please use the [Community Forum](https://forum.tastyigniter.com) or [Join us on Slack](http://tastyigniter.com/slack). 
 
 ### Issues
 Please report bugs using the [GitHub issue tracker](https://github.com/tastyigniter/TastyIgniter/issues)
 
 ### Stay in touch
 - [Follow us on Twitter](https://twitter.com/tastyigniter/) for announcements and updates.
-- [Blog](https://tastyigniter.com/blog/) for tips and latest developments in the food industry.
+- [Blog](https://tastyigniter.com/blog) for tips and latest developments in the food industry.
 
 ## Contributing
 We would love your help building TastyIgniter! Please read the [Contributing Guidelines](CONTRIBUTING.md) to learn how you can help.

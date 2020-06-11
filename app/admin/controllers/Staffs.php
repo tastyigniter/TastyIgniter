@@ -90,4 +90,11 @@ class Staffs extends \Admin\Classes\AdminController
             $query->whereNotSuperUser();
         }
     }
+
+    public function formExtendFields($form)
+    {
+        if (!AdminAuth::isSuperUser()) {
+            $form->removeField('user[super_user]');
+        }
+    }
 }

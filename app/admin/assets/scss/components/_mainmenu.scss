@@ -1,7 +1,7 @@
 .navbar-top {
   background-color: $gray-200;
   padding: 0;
-  border-bottom: 0px solid $gray-400;
+  border-bottom: 1px solid $gray-400;
   box-shadow: 0 1px 1px rgba(0, 0, 0, .075);
 
   &.navbar-expand {
@@ -43,7 +43,7 @@
       font-size: 10px;
       position: absolute;
       top: 15px;
-      right: 6px;
+      right: 8px;
     }
 
     > li.nav-item.show > a .fa {
@@ -172,7 +172,7 @@
         padding: 15px 0 9px;
         display: block;
         border: 1px solid transparent;
-        color: $gray-700;
+        color: $gray-600;
       }
 
       .menu-link:hover {
@@ -198,8 +198,8 @@
       margin-left: 0;
 
       .navbar {
-        border-bottom: $border-width solid $sidenav-bg;
-        background-color: $sidenav-bg-dark;
+        border-bottom: $border-width solid $gray-800;
+        background-color: $gray-900;
         position: fixed;
         top: 0;
         left: 0;
@@ -247,7 +247,7 @@
     padding-left: 10px;
     line-height: $logo-line-height;
     font-size: $logo-font-size;
-    color: $logo-font-color;
+    color: $gray-800;
   }
 }
 

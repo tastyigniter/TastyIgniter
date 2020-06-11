@@ -216,7 +216,7 @@ trait ManagesOrderItems
         if (!$this->exists)
             return FALSE;
 
-        return Coupons_history_model::createHistory($couponCondition, $customer);
+        return Coupons_history_model::createHistory($couponCondition, $this, $customer);
     }
 
     public function orderMenusQuery()
@@ -226,7 +226,7 @@ trait ManagesOrderItems
 
     public function orderMenuOptionsQuery()
     {
-        return DB::table('order_options');
+        return DB::table('order_menu_options');
     }
 
     public function orderTotalsQuery()

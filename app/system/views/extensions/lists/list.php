@@ -6,7 +6,7 @@
     ]
 ); ?>
 
-<div class="list-extensions">
+<div class="list-extensions page-x-spacer">
         <?php if (count($records)) { ?>
             <?= $this->makePartial('lists/list_body') ?>
         <?php }

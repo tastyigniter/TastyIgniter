@@ -97,11 +97,6 @@ class BaseController extends Extendable
         return $methodExists;
     }
 
-    public function pageUrl($uri = '', $params = [])
-    {
-        return site_url($uri, $params);
-    }
-
     public function setStatusCode($code)
     {
         $this->statusCode = $code;

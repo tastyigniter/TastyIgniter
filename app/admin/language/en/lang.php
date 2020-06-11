@@ -11,8 +11,8 @@ return [
     'text_active' => 'Active',
     'text_inactive' => 'Inactive',
     'text_new' => 'New',
-    'text_no' => 'NO',
-    'text_yes' => 'YES',
+    'text_no' => 'No',
+    'text_yes' => 'Yes',
     'text_none' => 'None',
     'text_hide' => 'Hide',
     'text_show' => 'Show',
@@ -29,7 +29,7 @@ return [
     'text_select_all' => 'Select All',
     'text_select_none' => 'Select None',
     'text_select' => 'Select',
-    'text_select_location' => 'Select Location',
+    'text_all_locations' => 'All Locations',
     'text_selected' => 'Selected',
     'text_now' => 'Now',
     'text_never' => 'Never',
@@ -58,24 +58,28 @@ return [
 
     'column_id' => 'ID',
     'column_location' => 'Location(s)',
+    'column_date_added' => 'Date Added',
+    'column_date_updated' => 'Date Updated',
+
     'text_filter_location' => 'View all locations',
     'text_filter_status' => 'View all status',
     'text_filter_date' => 'View all dates',
     'text_back_link' => 'Go back to the previous page',
     'text_admin_link' => 'Return to the admin panel',
 
-    'button_new' => '<i class="fa fa-plus"></i> New',
-    'button_delete' => '<i class="fa fa-trash-o"></i> Delete',
+    'button_new' => '<i class="fa fa-plus"></i>&nbsp;&nbsp;New',
+    'button_delete' => '<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Delete',
     'button_add' => 'Add',
     'button_edit' => 'Edit',
     'button_continue' => 'Continue',
-    'button_save' => '<i class="fa fa-save"></i> Save',
-    'button_save_close' => '<i class="fa fa-save"></i> Save & Close',
-    'button_icon_back' => '<i class="fa fa-angle-double-left"></i>',
+    'button_filter' => 'Filter',
+    'button_save' => '<i class="fa fa-save"></i>&nbsp;&nbsp;Save',
+    'button_save_close' => '<i class="fa fa-save"></i>&nbsp;&nbsp;Save & Close',
+    'button_icon_back' => '<i class="fa fa-angle-double-left px-0"></i>',
     'button_icon_filter' => '<i class="fa fa-filter"></i>',
     'button_icon_delete' => '<i class="fa fa-trash-o"></i>',
     'button_close' => 'Close',
-    'button_refresh' => '<i class="fa fa-refresh"></i> Refresh',
+    'button_refresh' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Refresh',
 
     'alert_success' => '%s successfully.',
     'alert_error' => 'An error occurred, %s.',
@@ -87,6 +91,7 @@ return [
     'alert_user_restricted' => 'Warning: You do not have the right permission to view this page, please contact the system administrator.',
     'alert_location_restricted' => 'Warning: You do not have the right permission to access context outside your location, please contact the system administrator.',
     'alert_form_error_message' => 'Sorry but form validation has failed, please check for errors.',
+    'alert_error_set_default' => '"%s" is disabled and cannot be set as default.',
     'access_denied' => [
         'label' => 'Access denied',
         'help' => "You don't have the required permissions to view this page.",
@@ -110,6 +115,7 @@ return [
     'text_administration' => 'Administration',
     'text_logout' => 'Logout',
     'text_switch_to_assigned' => 'Switch to assigned view',
+    'text_switch_to_list' => 'Switch to list view',
 
     'help_permalink' => 'Use ONLY alpha-numeric lowercase characters, _ or - and make sure it is unique GLOBALLY.',
 
@@ -130,13 +136,10 @@ return [
         'updates' => 'Updates',
         'storefront' => 'Storefront',
         'page' => 'Static Pages',
-        'banner' => 'Banners',
-        'error_log' => 'System Logs',
+        'system_logs' => 'System Logs',
         'setting' => 'Settings',
         'dashboard' => 'Dashboard',
-        'kitchen' => 'Kitchen',
         'menu' => 'Menu Items',
-        'option' => 'Options',
         'category' => 'Categories',
         'table' => 'Tables',
         'sale' => 'Sales',
@@ -179,6 +182,7 @@ return [
         'delete_empty' => 'Nothing selected to delete.',
         'text_empty' => 'Nothing found.',
         'text_setup' => 'Setup',
+        'text_showing' => 'Showing %s-%s of %s records',
         'setup_title' => 'List Setup - %s',
         'label_visible_columns' => 'Visible Columns',
         'label_page_limit' => 'Items Per Page',
@@ -254,7 +258,7 @@ return [
         'text_period' => 'Period',
         'text_recurring' => 'Recurring',
         'text_delivery_only' => 'Delivery Only',
-        'text_collection_only' => 'Collection Only',
+        'text_collection_only' => 'Pick-up Only',
         'text_redeemed' => 'Redeemed',
         'text_not_redeemed' => 'Not Yet Redeemed',
 
@@ -310,13 +314,16 @@ return [
         'text_title' => 'Customers',
         'text_form_name' => 'Customer',
         'text_tab_general' => 'Customer',
-        'text_tab_address' => 'Address',
+        'text_tab_address' => 'Addresses',
         'text_tab_orders' => 'Orders',
         'text_tab_reservations' => 'Reservations',
+        'text_tab_reviews' => 'Reviews',
         'text_filter_search' => 'Search by name or email.',
         'text_empty' => 'There are no customers available.',
         'text_subscribe' => 'Subscribe',
         'text_un_subscribe' => 'Un-subscribe',
+        'text_title_edit_address' => 'Address',
+        'text_impersonate' => 'Impersonate Customer',
 
         'column_full_name' => 'Full Name',
         'column_telephone' => 'Telephone',
@@ -340,7 +347,7 @@ return [
 
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
         'alert_impersonate_confirm' => 'Are you sure you want to impersonate this customer? You can revert to your original state by logging out.',
-        'alert_impersonate_success' => 'You are now impersonating this customer',
+        'alert_impersonate_success' => 'You are now impersonating customer: %s',
     ],
 
     'dashboard' => [
@@ -428,13 +435,13 @@ return [
 
         'column_location' => 'Location',
         'column_ready_type' => 'Ready Time',
-        'column_date_added' => 'Date Added',
         'column_total_orders' => '# Orders',
         'column_total_sale' => 'Total Sale',
 
         'label_widget' => 'Widget',
         'label_widget_title' => 'Widget Title',
         'label_widget_columns' => 'Widget Grid Width',
+        'label_widget_css_class' => 'Widget CSS Class',
 
         'button_add_widget' => 'Add Widget',
         'button_reset_widgets' => 'Reset Widgets',
@@ -502,18 +509,18 @@ return [
         'label_image' => 'Image',
         'label_offer_delivery' => 'Offer Delivery',
         'label_offer_collection' => 'Offer Pick-up',
-        'label_delivery_time' => 'Delivery Time',
-        'label_collection_time' => 'Pick-up Time',
-        'label_last_order_time' => 'Last Order Time',
-        'label_future_order' => 'Accept Future Orders',
-        'label_future_order_days' => 'Future Delivery & Pick-up Order Days In Advance',
-        'label_future_delivery_days' => 'Future Delivery Order Days In Advance',
-        'label_future_collection_days' => 'Future Pick-up Order Days In Advance',
+        'label_delivery_time_interval' => 'Delivery Time Interval',
+        'label_collection_time_interval' => 'Pick-up Time Interval',
+        'label_delivery_lead_time' => 'Delivery Lead Time',
+        'label_collection_lead_time' => 'Pick-up Lead Time',
+        'label_future_delivery_order' => 'Allow Pre-order for Delivery',
+        'label_future_collection_order' => 'Allow Pre-order for Pick-up',
+        'label_future_delivery_days' => 'Delivery Pre-order Days In Advance',
+        'label_future_collection_days' => 'Pick-up Pre-order Days In Advance',
         'label_payments' => 'Payments',
-        'label_tables' => 'Tables',
         'label_offer_reservation' => 'Offer Reservations',
-        'label_reservation_time_interval' => 'Time Interval',
-        'label_reservation_stay_time' => 'Stay Time',
+        'label_reservation_time_interval' => 'Reservation Time Interval',
+        'label_reservation_lead_time' => 'Reservation Lead Time',
         'label_opening_type' => 'Opening Hours',
         'label_opening_days' => 'Days',
         'label_opening_hour' => 'Hours',
@@ -547,17 +554,16 @@ return [
 
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
         'help_image' => 'Select a logo for this location.',
-        'help_delivery_time' => 'Set in minutes the average time it takes an order to be delivered after being placed',
-        'help_collection_time' => 'Set in minutes the average time it takes an order to be ready for pick-up after being placed',
-        'help_last_order_time' => 'Set in minutes when to take the last order before the closing time. Set to 0 to accept orders until the closing time.',
-        'help_future_order' => 'When the restaurant is closed for delivery or pick-up, allow a customer to place an order for a later working time',
-        'help_future_delivery_days' => 'Set the number of days in advance a customer can place a delivery order.',
-        'help_future_collection_days' => 'Set the number of days in advance a customer can place a pick-up order.',
+        'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
+        'help_collection_time_interval' => 'Set the minutes between each pick-up order time available to your customer.',
+        'help_delivery_lead_time' => 'Set in minutes the average time it takes an order to be delivered after being placed',
+        'help_collection_lead_time' => 'Set in minutes the average time it takes an order to be ready for pick-up after being placed',
+        'help_future_delivery_days' => 'Set the number of days a customer can order for delivery in advance.',
+        'help_future_collection_days' => 'Set the number of days a customer can order for pick-up in advance.',
         'help_payments' => 'Select the payment(s) available at this location. Leave blank to use all enabled payments',
         'help_no_payments' => 'No enabled payment was found.',
         'help_reservation_time_interval' => 'Set the number of minutes between each reservation time',
-        'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table',
-        'help_tables' => 'Select table(s) to attach to this location.',
+        'help_reservation_lead_time' => 'Set in minutes the average time a guest will stay at a table',
         'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least one delivery area to accept delivery orders.',
         'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
         'help_delivery_components' => 'All rules must be VALID to apply this delivery area, each rule is matched against the user\'s address component. Values can contain Regular Expressions.',
@@ -614,7 +620,7 @@ return [
         'is_required' => 'is required',
         'is_not_required' => 'is not required',
         'text_option' => 'Option',
-        'text_option_summary' => 'Option %s and will be displayed as a %s HTML input tag',
+        'text_option_summary' => 'Display as a %s HTML element',
 
         'column_display_type' => 'Display Type',
 
@@ -673,7 +679,7 @@ return [
 
         'help_image' => 'Select a file to update menu image, otherwise leave blank.',
         'help_mealtime' => 'Set what time of day your customers can order this menu. Mealtimes can be managed under Kitchen > Mealtimes',
-        'help_stock_qty' => 'Enter the amount of stock available. This amount can be set to zero to represent unlimited stock quantity.',
+        'help_stock_qty' => 'Enter the amount of stock available. This amount can be set to zero to represent unlimited stock quantity or a negative number to represent out of stock.',
         'help_minimum_qty' => 'Enter the minimum quantity that can be ordered by customers.',
         'help_subtract_stock' => 'Select Yes for the ordered menu and options quantity to be subtracted from their original stock quantity.',
         'help_menu_option' => 'Choose from the dropdown to add an option to this menu item.',
@@ -690,6 +696,7 @@ return [
         'text_invoice_heading' => 'Order Invoice: %s',
         'text_tab_general' => 'Order',
         'text_status_history' => 'Status History',
+        'text_payment_logs' => 'Payment Attempts',
         'text_tab_menu' => 'Menu Items',
         'text_empty' => 'There are no orders available.',
         'text_filter_search' => 'Search by id, location, status, staff or customer name.',
@@ -713,10 +720,7 @@ return [
         'text_assigned_to_self' => 'Assigned To Me',
         'text_assigned_to_others' => 'Assigned To Other Staff',
 
-        'button_create_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;Generate Invoice',
-        'button_view_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;View Invoice',
-        'button_print_invoice' => 'Print Invoice',
-        'button_download_invoice' => 'Download Invoice',
+        'button_print_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;View Invoice',
 
         'column_location' => 'Location',
         'column_customer_name' => 'Customer Name',
@@ -724,7 +728,6 @@ return [
         'column_total' => 'Total',
         'column_time' => 'Order Time',
         'column_date' => 'Order Date',
-        'column_date_added' => 'Date Added',
         'column_time_date' => 'Date Time',
         'column_staff' => 'Staff',
         'column_comment' => 'Comment',
@@ -754,8 +757,10 @@ return [
         'label_payment_method' => 'Payment Method',
         'label_total_items' => 'Total Items',
 
-        'activity_event_log' => ' updated order (#:properties.order_id) status to ',
-        'activity_event_log_assigned' => ' assigned order (#:properties.order_id) to ',
+        'activity_event_log_title' => 'Order status updated',
+        'activity_event_log_assigned_title' => 'Order assigned',
+        'activity_event_log' => 'updated order (#:properties.order_id) status to <b>:properties.status_name</b>',
+        'activity_event_log_assigned' => 'assigned order (#:properties.order_id) to',
     ],
 
     'payments' => [
@@ -764,8 +769,6 @@ return [
         'text_tab_config' => 'Config',
         'text_filter_search' => 'Search by name or description.',
         'text_empty' => 'There are no payments available.',
-
-        'column_date_updated' => 'Date Updated',
 
         'label_payments' => 'Payment Gateways',
         'label_code' => 'Unique Code',
@@ -815,7 +818,6 @@ return [
         'text_empty' => 'There are no reservations available.',
         'text_filter_assignee' => 'View all assignees',
         'text_filter_search' => 'Search by id, location, guest number, status, customer or table name.',
-        'text_switch_to_list' => 'Switch to list view',
         'text_switch_to_calendar' => 'Switch to calender view',
         'text_no_booking' => 'No Bookings',
         'text_restaurant' => 'Location',
@@ -860,8 +862,10 @@ return [
 
         'help_reservation_duration' => 'Stay time in minutes. Leave blank to use the default stay time',
 
+        'activity_event_log_title' => 'Reservation status updated',
+        'activity_event_log_assigned_title' => 'Reservation assigned',
         'activity_event_log' => 'updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
-        'activity_event_log_assigned' => '<b>:causer.staff_name</b> assigned reservation (#:properties.reservation_id) to <b>:properties.assignee_name</b>',
+        'activity_event_log_assigned' => 'assigned reservation (#:properties.reservation_id) to',
     ],
 
     'reviews' => [
@@ -878,7 +882,6 @@ return [
         'column_author' => 'Author',
         'column_sale_id' => 'Sale ID',
         'column_sale_type' => 'Sale Type',
-        'column_date_added' => 'Date Added',
 
         'label_sale_type' => 'Sale Type',
         'label_sale_id' => 'Sale ID',
@@ -892,6 +895,14 @@ return [
 
         'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
         'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
+    ],
+
+    'settings' => [
+        'text_tab_setup' => 'Setup',
+        'text_tab_user' => 'User',
+
+        'text_tab_desc_user' => 'Configure registration email confirmation, default customer group, ...',
+        'text_tab_desc_setup' => 'Configure order and reservation related settings',
     ],
 
     'staff_groups' => [
@@ -940,7 +951,6 @@ return [
         'column_role' => 'Staff Roles',
         'column_location' => 'Locations',
         'column_last_login' => 'Last Login',
-        'column_date_added' => 'Date Added',
 
         'label_super_staff' => 'Super Admin',
         'label_username' => 'Username',
@@ -1007,6 +1017,8 @@ return [
 
         'label_min_capacity' => 'Minimum',
         'label_capacity' => 'Capacity',
+
+        'help_tables' => 'Select a table to attach to this location.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
     ],

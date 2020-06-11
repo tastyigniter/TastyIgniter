@@ -1,6 +1,8 @@
 <div
+    class="page-x-spacer"
     data-control="dashboard-container"
     data-alias="<?= $this->alias ?>"
+    data-sortable-container="#<?= $this->getId('container-list') ?>"
 >
     <div id="<?= $this->getId('container') ?>" class="dashboard-widgets">
         <div class="progress-indicator">
@@ -9,8 +11,9 @@
         </div>
     </div>
 
-    <div id="<?= $this->getId('container-toolbar') ?>" class="toolbar dashboard-toolbar btn-toolbar"
-         data-container-toolbar>
+    <div
+        id="<?= $this->getId('container-toolbar') ?>" class="toolbar dashboard-toolbar btn-toolbar"
+        data-container-toolbar>
         <?= $this->makePartial('widget_toolbar') ?>
     </div>
 </div>

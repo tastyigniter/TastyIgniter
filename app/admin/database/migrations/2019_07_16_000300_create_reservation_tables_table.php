@@ -8,7 +8,7 @@ use Schema;
 /**
  * Create reservation_tables table
  */
-class createReservationTablesTable extends Migration
+class CreateReservationTablesTable extends Migration
 {
     public function up()
     {

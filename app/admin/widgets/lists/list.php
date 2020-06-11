@@ -7,7 +7,7 @@
 ); ?>
 
 <div class="list-table table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped mb-0 border-bottom">
         <thead>
         <?= $this->makePartial('lists/list_head') ?>
         </thead>
@@ -17,7 +17,7 @@
         <?php }
         else { ?>
             <tr>
-                <td colspan="<?= $columnTotal ?>"><?= $emptyMessage; ?></td>
+                <td colspan="99" class="text-center"><?= $emptyMessage; ?></td>
             </tr>
         <?php } ?>
         </tbody>

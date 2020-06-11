@@ -11,6 +11,7 @@ use Main\Classes\MainController;
 use Model;
 use Request;
 use System\Traits\SendsMailTemplate;
+use Carbon\Carbon;
 
 /**
  * Orders Model Class
@@ -50,12 +51,12 @@ class Orders_model extends Model
 
     public $guarded = ['ip_address', 'user_agent', 'hash'];
 
+    protected $hidden = ['cart'];
+
     /**
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
-
-    public $appends = ['customer_name', 'order_type_name'];
 
     public $casts = [
         'customer_id' => 'integer',
@@ -244,9 +245,9 @@ class Orders_model extends Model
         return $this->processed;
     }
 
-    public function logPaymentAttempt($message, $status, $request = [], $response = [])
+    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [])
     {
-        Payment_logs_model::logAttempt($this, $message, $status, $request, $response);
+        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response);
     }
 
     public function updateOrderStatus($id, $options = [])
@@ -325,13 +326,13 @@ class Orders_model extends Model
         $data['telephone'] = $model->telephone;
         $data['order_comment'] = $model->comment;
 
-        $data['order_type'] = $model->order_type;
-        $data['order_time'] = $model->order_time.' '.$model->order_date->format('d M');
-        $data['order_date'] = $model->date_added->format('d M y');
+        $data['order_type'] = $model->order_type_name;
+        $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(setting('time_format'));
+        $data['order_date'] = $model->date_added->format(setting('date_format'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;
-        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format('d M y') : null;
+        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format(setting('date_format')) : null;
 
         $data['order_payment'] = ($model->payment_method)
             ? $model->payment_method->name
@@ -380,9 +381,9 @@ class Orders_model extends Model
             $data['location_address'] = format_address($model->location->getAddress());
         }
 
-        $status = $model->status()->first();
-        $data['status_name'] = $status ? $status->status_name : null;
-        $data['status_comment'] = $status ? $status->status_comment : null;
+        $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();
+        $data['status_name'] = $statusHistory ? optional($statusHistory->status)->status_name : null;
+        $data['status_comment'] = $statusHistory ? $statusHistory->comment : null;
 
         $controller = MainController::getController() ?: new MainController;
         $data['order_view_url'] = $controller->pageUrl('account/order', [

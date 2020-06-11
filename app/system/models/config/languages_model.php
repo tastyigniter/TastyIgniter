@@ -29,12 +29,6 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
     ],
 ];
 
@@ -150,7 +144,7 @@ $config['form']['tabs'] = [
         ],
         '_string_filter' => [
             'tab' => 'lang:system::lang.languages.text_tab_files',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'context' => 'edit',
             'span' => 'none',
             'cssClass' => 'pull-left mr-3',

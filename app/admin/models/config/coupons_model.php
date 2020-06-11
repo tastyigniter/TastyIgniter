@@ -46,12 +46,6 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
     ],
 ];
 
@@ -151,7 +145,7 @@ $config['form']['tabs'] = [
         ],
         'type' => [
             'label' => 'lang:admin::lang.label_type',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'span' => 'left',
             'cssClass' => 'flex-width',
             'default' => 'F',
@@ -186,27 +180,27 @@ $config['form']['tabs'] = [
             'default' => 0,
             'comment' => 'lang:admin::lang.coupons.help_customer_redemption',
         ],
-        'order_restriction' => [
-            'label' => 'lang:admin::lang.coupons.label_order_restriction',
-            'type' => 'radio',
-            'comment' => 'lang:admin::lang.coupons.help_order_restriction',
-            'span' => 'left',
-            'options' => [
-                'lang:admin::lang.text_none',
-                'lang:admin::lang.coupons.text_delivery_only',
-                'lang:admin::lang.coupons.text_collection_only',
-            ],
-        ],
         'validity' => [
             'label' => 'lang:admin::lang.coupons.label_validity',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'default' => 'forever',
-            'span' => 'right',
+            'span' => 'left',
             'options' => [
                 'forever' => 'lang:admin::lang.coupons.text_forever',
                 'fixed' => 'lang:admin::lang.coupons.text_fixed',
                 'period' => 'lang:admin::lang.coupons.text_period',
                 'recurring' => 'lang:admin::lang.coupons.text_recurring',
+            ],
+        ],
+        'order_restriction' => [
+            'label' => 'lang:admin::lang.coupons.label_order_restriction',
+            'type' => 'radiotoggle',
+            'comment' => 'lang:admin::lang.coupons.help_order_restriction',
+            'span' => 'right',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.coupons.text_delivery_only',
+                'lang:admin::lang.coupons.text_collection_only',
             ],
         ],
         'fixed_date' => [
@@ -271,7 +265,7 @@ $config['form']['tabs'] = [
         ],
         'recurring_every' => [
             'label' => 'lang:admin::lang.coupons.label_recurring_every',
-            'type' => 'checkbox',
+            'type' => 'checkboxtoggle',
             'trigger' => [
                 'action' => 'show',
                 'field' => 'validity',

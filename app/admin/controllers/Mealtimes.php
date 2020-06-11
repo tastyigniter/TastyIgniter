@@ -49,6 +49,6 @@ class Mealtimes extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('mealtimes', 'kitchen');
+        AdminMenu::setContext('mealtimes', 'restaurant');
     }
 }

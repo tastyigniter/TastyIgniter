@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <?= get_metas(); ?>
+    <meta name="csrf-token" content="<?= csrf_token() ?>">
     <?= get_favicon(); ?>
     <title><?= sprintf(lang('admin::lang.site_title'), Template::getTitle(), setting('site_name')); ?></title>
     <?= get_style_tags(); ?>
@@ -16,7 +17,9 @@
     <?php } ?>
 
     <div class="page-wrapper">
-        <?= Template::getBlock('body') ?>
+        <div class="page-content">
+            <?= Template::getBlock('body') ?>
+        </div>
     </div>
 
     <div id="notification">

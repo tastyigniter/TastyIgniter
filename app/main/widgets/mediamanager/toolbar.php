@@ -3,7 +3,7 @@
         <div class="toolbar-item">
             <div class="btn-group">
                 <div
-                    class="dropdown"
+                    class="dropdown mr-2"
                     data-control="folder-tree-dropdown"
                 >
                     <button
@@ -62,25 +62,25 @@
 
         <div class="toolbar-item">
             <div class="input-group">
-                <div class="dropdown">
-                    <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Sort">
-                        <?php if (isset($sortBy[1]) AND $sortBy[1] === 'ascending') { ?>
-                            <i class="fa fa-sort-amount-asc"></i> <i class="caret"></i>
-                        <?php } else { ?>
-                            <i class="fa fa-sort-amount-desc"></i> <i class="caret"></i>
-                        <?php } ?>
-                    </a>
-                    <?= $this->makePartial('mediamanager/sorting', ['sortBy', $sortBy]) ?>
-                </div>
-
                 <div class="input-group-prepend">
+                    <div class="dropdown mr-2">
+                        <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Sort">
+                            <?php if (isset($sortBy[1]) AND $sortBy[1] === 'ascending') { ?>
+                                <i class="fa fa-sort-amount-asc"></i> <i class="caret"></i>
+                            <?php } else { ?>
+                                <i class="fa fa-sort-amount-desc"></i> <i class="caret"></i>
+                            <?php } ?>
+                        </a>
+                        <?= $this->makePartial('mediamanager/sorting', ['sortBy', $sortBy]) ?>
+                    </div>
+
                     <?php if (!$isPopup) { ?>
-                        <a class="btn btn-default btn-options"
-                           href="<?= admin_url('settings/edit/media'); ?>">
+                        <a
+                            class="btn btn-default btn-options mr-2"
+                            href="<?= admin_url('settings/edit/media'); ?>">
                             <i class="fa fa-gears"></i>
                         </a>
                     <?php } ?>
-
                 </div>
                 <?= $this->makePartial('mediamanager/search') ?>
             </div>

@@ -76,7 +76,7 @@ class Locations extends \Admin\Classes\AdminController
     {
         $defaultId = post('default');
 
-        if (Locations_model::updateDefault(['location_id' => $defaultId])) {
+        if (Locations_model::updateDefault($defaultId)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.locations.alert_set_default')));
         }
 
@@ -86,7 +86,7 @@ class Locations extends \Admin\Classes\AdminController
     public function settings_onSave($context = null)
     {
         try {
-            $this->asExtension('FormController')->edit_onSave('edit', params('default_location_id'));
+            $this->asExtension('FormController')->edit_onSave('edit', $this->getLocationId());
 
             return $this->refresh();
         }

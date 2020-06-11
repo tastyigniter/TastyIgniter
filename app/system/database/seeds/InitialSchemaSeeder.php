@@ -21,6 +21,8 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedLanguages();
 
+        $this->seedDefaultLocation();
+
         $this->seedMealtimes();
 
         $this->seedSettings();
@@ -84,6 +86,44 @@ class InitialSchemaSeeder extends Seeder
             'status' => TRUE,
             'can_delete' => FALSE,
         ]);
+    }
+
+    protected function seedDefaultLocation()
+    {
+        // Abort: a location already exists
+        if (DB::table('locations')->count())
+            return TRUE;
+
+        $location = $this->getSeedRecords('location');
+        $location['location_email'] = DatabaseSeeder::$siteEmail;
+        $location['options'] = serialize($location['options']);
+        $location['delivery_areas'][0]['boundaries']['circle'] = json_encode(
+            $location['delivery_areas'][0]['boundaries']['circle']
+        );
+
+        $locationId = DB::table('locations')->insertGetId(array_except($location, ['delivery_areas']));
+
+        $this->seedLocationTables($locationId);
+    }
+
+    protected function seedLocationTables($locationId)
+    {
+        if (DB::table('tables')->count())
+            return;
+
+        for ($i = 1; $i < 15; $i++) {
+            $tableId = DB::table('tables')->insertGetId([
+                'table_name' => 'Table '.$i,
+                'min_capacity' => random_int(2, 5),
+                'max_capacity' => random_int(6, 12),
+                'table_status' => 1,
+            ]);
+
+            DB::table('location_tables')->insert([
+                'location_id' => $locationId,
+                'table_id' => $tableId,
+            ]);
+        }
     }
 
     protected function seedMealtimes()

@@ -1,9 +1,6 @@
 <?php namespace Admin\Models;
 
-use Admin\ActivityTypes\OrderStatusUpdated;
-use Admin\ActivityTypes\ReservationStatusUpdated;
 use Carbon\Carbon;
-use Event;
 use Model;
 
 /**
@@ -50,8 +47,8 @@ class Status_history_model extends Model
     public static function alreadyExists($model, $statusId)
     {
         return self::where('object_id', $model->getKey())
-                   ->where('object_type', $model->getMorphClass())
-                   ->where('status_id', $statusId)->exists();
+            ->where('object_type', $model->getMorphClass())
+            ->where('status_id', $statusId)->exists();
     }
 
     public function getStaffNameAttribute($value)
@@ -90,45 +87,26 @@ class Status_history_model extends Model
         $model->object_id = $object->getKey();
         $model->object_type = $object->getMorphClass();
         $model->staff_id = array_get($options, 'staff_id');
-        $model->comment = array_get($options, 'comment', $status->comment);
+        $model->comment = array_get($options, 'comment', $status->status_comment);
         $model->notify = array_get($options, 'notify', $status->notify_customer);
 
-        if (Event::fire('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
-            return FALSE;
-
-        if ($model->fireSystemEvent('statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
+        if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
             return FALSE;
 
         $model->save();
 
+        // Update using query to prevent model events from firing
         $object->newQuery()->where($object->getKeyName(), $object->getKey())->update([
             'status_id' => $statusId,
             'status_updated_at' => Carbon::now(),
         ]);
 
-        self::logStatusUpdated($object);
-
         return $model;
     }
 
-    //
-    //
-    //
-
-    protected static function logStatusUpdated($object)
+    public function isForOrder()
     {
-        if ($object instanceof Orders_model) {
-            OrderStatusUpdated::log($object);
-
-            if (optional($object->status_history->first())->notify)
-                $object->mailSend('admin::_mail.order_update', 'customer');
-        }
-        elseif ($object instanceof Reservations_model) {
-            ReservationStatusUpdated::log($object);
-
-            if (optional($object->status_history->first())->notify)
-                $object->mailSend('admin::_mail.reservation_update', 'customer');
-        }
+        return $this->object_type === Orders_model::make()->getMorphClass();
     }
 
     //
@@ -138,6 +116,11 @@ class Status_history_model extends Model
     public function scopeApplyRelated($query, $model)
     {
         return $query->where('object_type', $model->getMorphClass())
-                     ->where('object_id', $model->getKey());
+            ->where('object_id', $model->getKey());
+    }
+
+    public function scopeWhereStatusIsLatest($query, $statusId)
+    {
+        return $query->where('status_id', $statusId)->orderBy('date_added');
     }
 }

@@ -2,7 +2,6 @@
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
-use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Seeder;
 
@@ -23,10 +22,6 @@ class UpdateRecordsSeeder extends Seeder
         $this->updateMorphsOnReviews();
 
         $this->fixPermalinkSlugColumns();
-
-        $this->copyRecordsFromExtensionsToThemes();
-
-        $this->copyRecordsFromExtensionsToPayments();
 
         $this->copyRecordsFromLocationsToLocationAreas();
 
@@ -87,44 +82,6 @@ class UpdateRecordsSeeder extends Seeder
         });
     }
 
-    protected function copyRecordsFromExtensionsToThemes()
-    {
-        if (DB::table('themes')->count())
-            return;
-
-        DB::table('extensions')->where('type', 'theme')->get()->each(function ($model) {
-            DB::table('themes')->insert([
-                'name' => $model->title,
-                'code' => $model->name,
-                'version' => $model->version,
-                'data' => $model->data,
-                'status' => $model->status,
-                'is_default' => FALSE,
-            ]);
-        });
-    }
-
-    protected function copyRecordsFromExtensionsToPayments()
-    {
-        if (DB::table('payments')->count())
-            return;
-
-        DB::table('extensions')->where('type', 'payment')->get()->each(function ($model) {
-
-            $code = str_replace(['-', '_'], '', $model->name);
-            DB::table('payments')->insert([
-                'name' => $model->title,
-                'code' => $code,
-                'class_name' => 'SamPoyigi\\PayRegister\\Payments\\'.studly_case($model->name),
-                'data' => $model->data,
-                'status' => $model->status,
-                'is_default' => FALSE,
-                'date_added' => Carbon::now(),
-                'date_updated' => Carbon::now(),
-            ]);
-        });
-    }
-
     protected function copyRecordsFromLocationsToLocationAreas()
     {
         if (DB::table('location_areas')->count())
@@ -132,7 +89,7 @@ class UpdateRecordsSeeder extends Seeder
 
         collect(DB::table('locations')->pluck('options', 'location_id'))->each(function ($options, $id) {
             $options = is_string($options) ? unserialize($options) : [];
-            
+
             if (!isset($options['delivery_areas']))
                 return TRUE;
 
@@ -157,14 +114,6 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function fillColumnsOnMailTemplatesData()
     {
-        DB::table('mail_templates_data')->update(['is_custom' => 1]);
-    }
-
-    protected function fillIsCustomOnPermissions()
-    {
-        if (DB::table('permissions')->where('is_custom', 1)->count())
-            return;
-
-        DB::table('permissions')->update(['is_custom' => 1]);
+        DB::table('mail_templates')->update(['is_custom' => 1]);
     }
 }

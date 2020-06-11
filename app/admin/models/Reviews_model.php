@@ -106,6 +106,9 @@ class Reviews_model extends Model
         else if (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
+        else {
+            $query->has('customer');
+        }
 
         if (!is_array($sort)) {
             $sort = [$sort];
@@ -117,7 +120,7 @@ class Reviews_model extends Model
                 if (count($parts) < 2) {
                     array_push($parts, 'desc');
                 }
-                list($sortField, $sortDirection) = $parts;
+                [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
             }
         }

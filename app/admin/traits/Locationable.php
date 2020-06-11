@@ -125,7 +125,7 @@ trait Locationable
 
         if ($this->locationableIsSingleRelationType()) {
             $relationObj = $this->getLocationableRelationObject();
-            $attributeName = $relationObj->getForeignKey();
+            $attributeName = $relationObj->getForeignKeyName();
             $this->{$attributeName} = $this->locationableGetUserLocation();
         }
         else {

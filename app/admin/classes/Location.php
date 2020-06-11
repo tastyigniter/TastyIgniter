@@ -81,7 +81,7 @@ class Location extends Manager
     {
         $locations = null;
         if (!$this->getAuth()->isSuperUser()) {
-            $locations = $this->getAuth()->locations()->pluck(
+            $locations = $this->getAuth()->locations()->where('location_status', TRUE)->pluck(
                 'location_name', 'location_id'
             );
         }

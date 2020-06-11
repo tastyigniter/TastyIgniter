@@ -1,9 +1,10 @@
-<div class="modal slideInDown fade"
-     id="newWidgetModal"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="newWidgetModalTitle"
-     aria-hidden="true"
+<div
+    class="modal slideInDown fade"
+    id="newWidgetModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="newWidgetModalTitle"
+    aria-hidden="true"
 >
     <div class="modal-dialog" role="document">
         <div id="<?= $this->getId('new-widget-modal-content') ?>" class="modal-content">
@@ -16,7 +17,7 @@
         </div>
     </div>
 </div>
-<div class="toolbar-action">
+<div class="toolbar-action pt-3 px-0">
     <?php if ($this->canManage) { ?>
         <button
             type="button"

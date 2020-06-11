@@ -52,7 +52,6 @@
 
     RecordEditorModal.prototype.handleFormError = function (event, dataOrXhr, textStatus, jqXHR) {
         $.ti.flashMessage({
-            container: '#modal-notification',
             class: 'danger',
             text: jqXHR.responseText,
             interval: 0
@@ -90,19 +89,22 @@
 
     RecordEditorModal.prototype.onModalShown = function (event) {
         var self = this,
-            handler = this.options.alias + '::onLoadRecord'
+            handler = this.options.handler ? this.options.handler : this.options.alias + '::onLoadRecord'
 
-        this.$modalElement = $(event.target)
+        self.$modalElement = $(event.target)
 
         $.request(handler, {
             data: {recordId: this.options.recordId},
         }).done($.proxy(this.onRecordLoaded, this)).fail(function () {
             self.$modalElement.modal('hide')
+        }).always(function () {
+            self.$modalElement.modal('handleUpdate')
         })
     }
 
     RecordEditorModal.DEFAULTS = {
         alias: undefined,
+        handler: undefined,
         recordId: undefined,
         onLoad: undefined,
         onSubmit: undefined,

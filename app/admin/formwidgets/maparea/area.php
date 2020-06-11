@@ -4,7 +4,7 @@ $widget = $areaForm['widget'];
 ?>
 <div
     id="<?= $this->getId('area-'.$index) ?>"
-    class="map-area card bg-light border-none mb-2"
+    class="map-area card bg-light shadow-sm mb-2"
     data-control="area"
     data-area-color="<?= $area['color'] ?>"
     data-index-value="<?= $index ?>"
@@ -15,15 +15,6 @@ $widget = $areaForm['widget'];
         id="<?= $this->getId('area-header-'.$index) ?>"
     >
         <div class="d-flex w-100 justify-content-between">
-            <?php if (!$this->previewMode AND $this->sortable) { ?>
-                <div class="align-self-center mr-3">
-                    <a
-                        class="map-area-handle <?= $this->getId('area-handle-'.$index) ?>"
-                        role="button">
-                        <i class="fa fa-bars text-black-50"></i>
-                    </a>&nbsp;&nbsp;
-                </div>
-            <?php } ?>
             <div class="align-self-center mr-3">
                  <span
                      class="badge border-circle"
@@ -31,7 +22,7 @@ $widget = $areaForm['widget'];
                  >&nbsp;</span>
             </div>
             <div
-                class="flex-fill"
+                class="flex-fill align-self-center"
                 data-toggle="modal"
                 data-target="#<?= $this->getId('area-modal-'.$index) ?>"
                 aria-expanded="true"
@@ -46,7 +37,7 @@ $widget = $areaForm['widget'];
                         data-area-selector="#<?= $this->getId('area-'.$index) ?>"
                         data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
                     <?php } ?>
-                ><i class="fa fa-times"></i></a>
+                ><i class="fa fa-trash-alt"></i></a>
             </div>
         </div>
     </div>

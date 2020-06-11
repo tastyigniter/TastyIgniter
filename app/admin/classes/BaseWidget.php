@@ -61,8 +61,10 @@ class BaseWidget extends Extendable
         $classPath = strtolower(str_replace('\\', '/', get_called_class()));
         $this->partialPath[] = '~/app/'.dirname($classPath); // match view folder/file
         $this->partialPath[] = '~/app/'.$classPath;
+        $this->partialPath[] = '$/'.dirname($classPath);
+        $this->partialPath[] = '$/'.$classPath;
 
-        $this->assetPath = '~/app/'.$classPath.'/assets';
+        $this->assetPath[] = '~/app/'.$classPath.'/assets';
 
         $this->configPath = $controller->configPath;
 

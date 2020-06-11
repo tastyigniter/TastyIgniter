@@ -40,14 +40,17 @@ class Settings_model extends Model
 
     protected $items;
 
+    /**
+     * @var array Cache of registration callbacks.
+     */
+    protected static $callbacks = [];
+
     public static function listMenuSettingItems($menu, $item, $user)
     {
-        $fieldConfig = (new static)->getFieldConfig();
-        $settingsConfig = array_except($fieldConfig, 'toolbar');
-
         $options = [];
-        foreach ($settingsConfig as $settingItem) {
-            $options[$settingItem['label']] = [$settingItem['icon'], $settingItem['url']];
+        $settingItems = (new static)->listSettingItems();
+        foreach (array_get($settingItems, 'core', []) as $settingItem) {
+            $options[$settingItem->label] = [$settingItem->icon, $settingItem->url];
         }
 
         return $options;
@@ -131,16 +134,17 @@ class Settings_model extends Model
     // Registration
     //
 
-    public function getFieldConfig()
+    public function getFieldConfig($code)
     {
         if ($this->fieldConfig !== null) {
             return $this->fieldConfig;
         }
 
-        $this->configPath = '~/app/system/models/config';
-        $config = $this->makeConfig($this->settingsFields, ['form']);
+        $settingItem = $this->getSettingItem('core.'.$code);
+        if (!is_array($settingItem->form))
+            $settingItem->form = array_get($this->makeConfig($settingItem->form, ['form']), 'form', []);
 
-        return $this->fieldConfig = $config['form'] ?? [];
+        return $this->fieldConfig = $settingItem->form ?? [];
     }
 
     public function getFieldValues()
@@ -159,9 +163,7 @@ class Settings_model extends Model
 
     public function getSettingDefinitions($code)
     {
-        $fieldConfig = $this->getFieldConfig();
-
-        return $fieldConfig[$code] ?? [];
+        return $this->getSettingItem('core.'.$code);
     }
 
     public function getSettingItem($code)
@@ -182,9 +184,9 @@ class Settings_model extends Model
 
     public function loadSettingItems()
     {
-        $fieldConfig = $this->getFieldConfig();
-        $settingsConfig = array_except($fieldConfig, 'toolbar');
-        $this->registerSettingItems('core', $settingsConfig);
+        foreach (self::$callbacks as $callback) {
+            $callback($this);
+        }
 
         // Load extension items
         $extensions = ExtensionManager::instance()->getExtensions();
@@ -248,6 +250,11 @@ class Settings_model extends Model
 
             $this->items[] = (object)$item;
         }
+    }
+
+    public static function registerCallback(callable $callback)
+    {
+        self::$callbacks[] = $callback;
     }
 
     //

@@ -35,7 +35,7 @@ class Menus_model extends Model
     public $casts = [
         'menu_price' => 'float',
         'menu_category_id' => 'integer',
-        //'mealtime_id' => 'integer',
+        'mealtime_id' => 'integer',
         'stock_qty' => 'integer',
         'minimum_qty' => 'integer',
         'subtract_stock' => 'boolean',
@@ -200,11 +200,14 @@ class Menus_model extends Model
 
         $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
 
-        $update = $this->update(['stock_qty' => $stockQty]);
+        // Update using query to prevent model events from firing
+        $this->newQuery()
+             ->where($this->getKeyName(), $this->getKey())
+             ->update(['stock_qty' => $stockQty]);
 
         Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
 
-        return $update;
+        return TRUE;
     }
 
     /**
