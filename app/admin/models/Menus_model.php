@@ -307,7 +307,7 @@ class Menus_model extends Model
 	    
 	    $isAvailable = true;
 	    
-	    if (sizeof($this->mealtimes) > 0) {
+	    if (count($this->mealtimes) > 0) {
 		    
 		    $isAvailable = false;
 		    foreach ($this->mealtimes as $mealtime) {
