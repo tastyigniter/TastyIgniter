@@ -268,7 +268,7 @@ $config['form']['tabs'] = [
             'comment' => 'lang:admin::lang.locations.help_future_delivery_days',
             'trigger' => [
                 'action' => 'enable',
-                'field' => 'options[future_orders][delivery]',
+                'field' => 'options[future_orders][enable_delivery]',
                 'condition' => 'checked',
             ],
         ],
@@ -320,7 +320,7 @@ $config['form']['tabs'] = [
             'comment' => 'lang:admin::lang.locations.help_future_collection_days',
             'trigger' => [
                 'action' => 'enable',
-                'field' => 'options[future_orders][collection]',
+                'field' => 'options[future_orders][enable_collection]',
                 'condition' => 'checked',
             ],
         ],
