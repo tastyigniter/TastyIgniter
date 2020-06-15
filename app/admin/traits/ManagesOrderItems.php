@@ -105,11 +105,11 @@ trait ManagesOrderItems
     /**
      * Add cart menu items to order by order_id
      *
-     * @param \Igniter\Flame\Cart\CartContent $content
+     * @param array $content
      *
      * @return bool
      */
-    public function addOrderMenus(CartContent $content)
+    public function addOrderMenus(array $content)
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
