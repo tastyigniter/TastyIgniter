@@ -10,7 +10,7 @@
     // FIELD CHART CONTROL CLASS DEFINITION
     // ============================
 
-    var DaterangeControl = function (element, options) {
+    var DateRangeControl = function (element, options) {
         this.options = options
         this.$el = $(element)
         this.rangePicker = null
@@ -19,7 +19,7 @@
         this.initDateRange();
     }
 
-    DaterangeControl.DEFAULTS = {
+    DateRangeControl.DEFAULTS = {
         opens: 'left',
         parentEl: '.filter-scope',
         startDate: moment().subtract(29, 'days'),
@@ -36,8 +36,8 @@
         },
     }
 
-    DaterangeControl.prototype.initDateRange = function () {
-        var options = DaterangeControl.DEFAULTS
+    DateRangeControl.prototype.initDateRange = function () {
+        var options = DateRangeControl.DEFAULTS
         options.parentEl = this.options.rangeParentSelector
         this.$el.daterangepicker(options, $.proxy(this.onRangeSelected, this))
         this.rangePicker = this.$el.data('daterangepicker');
@@ -47,11 +47,11 @@
 	        value = value.split('|');
         	this.onRangeSelected(moment(value[0]), moment(value[1]), null, true);
 	    } else {
-	        this.onRangeSelected(DaterangeControl.DEFAULTS.startDate, DaterangeControl.DEFAULTS.endDate, null, true)
+	        this.onRangeSelected(DateRangeControl.DEFAULTS.startDate, DateRangeControl.DEFAULTS.endDate, null, true)
 	    }
     }
     
-    DaterangeControl.prototype.onRangeSelected = function (start, end, label, initialize) {
+    DateRangeControl.prototype.onRangeSelected = function (start, end, label, initialize) {
         $('span', this.$el).html(start.format(this.options.rangeFormat)
             + ' - ' + end.format(this.options.rangeFormat));
             
@@ -60,24 +60,24 @@
         if (!initialize) this.$el.closest('form').submit();
     }
 
-    DaterangeControl.prototype.unbind = function () {
-        this.$el.daterangeControl('destroy')
-        this.$el.removeData('ti.daterangeControl')
+    DateRangeControl.prototype.unbind = function () {
+        this.$el.dateRangeControl('destroy')
+        this.$el.removeData('ti.dateRangeControl')
         this.chartJs = null
     }
 
     // FIELD DATERANGE CONTROL PLUGIN DEFINITION
     // ============================
 
-    var old = $.fn.daterangeControl
+    var old = $.fn.dateRangeControl
 
-    $.fn.daterangeControl = function (option) {
+    $.fn.dateRangeControl = function (option) {
         var args = Array.prototype.slice.call(arguments, 1), result
         this.each(function () {
             var $this = $(this)
-            var data = $this.data('ti.daterangeControl')
-            var options = $.extend({}, DaterangeControl.DEFAULTS, $this.data(), typeof option === 'object' && option)
-            if (!data) $this.data('ti.daterangeControl', (data = new DaterangeControl(this, options)))
+            var data = $this.data('ti.dateRangeControl')
+            var options = $.extend({}, DateRangeControl.DEFAULTS, $this.data(), typeof option === 'object' && option)
+            if (!data) $this.data('ti.dateRangeControl', (data = new DateRangeControl(this, options)))
             if (typeof option === 'string') result = data[option].apply(data, args)
             if (typeof result !== 'undefined') return false
         })
@@ -85,13 +85,13 @@
         return result ? result : this
     }
 
-    $.fn.daterangeControl.Constructor = DaterangeControl
+    $.fn.dateRangeControl.Constructor = DateRangeControl
 
     // FIELD DATERANGE CONTROL NO CONFLICT
     // =================
 
-    $.fn.daterangeControl.noConflict = function () {
-        $.fn.daterangeControl = old
+    $.fn.dateRangeControl.noConflict = function () {
+        $.fn.dateRangeControl = old
         return this
     }
 
@@ -99,6 +99,6 @@
     // ===============
 
     $(document).render(function () {
-        $('[data-control="daterange"]').daterangeControl()
+        $('[data-control="daterange"]').dateRangeControl()
     })
 }(window.jQuery)
