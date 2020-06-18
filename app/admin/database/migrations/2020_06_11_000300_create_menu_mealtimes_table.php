@@ -19,19 +19,15 @@ class CreateMenuMealtimesTable extends Migration
             $table->unique(['menu_id', 'mealtime_id']);
         });
 
-        $menus = DB::table('menus')->select('menu_id', 'mealtime_id')->get();
-        $migrate = [];
-        foreach ($menus as $menu) {
-            if (!is_null($menu->mealtime_id)) {
-                $migrate[] = [
-                    'mealtime_id' => $menu->mealtime_id,
-                    'menu_id' => $menu->menu_id,
-                ];
-            }
-        }
+        DB::table('menus')->select('menu_id', 'mealtime_id')->get()->each(function ($menu) {
+            if (is_null($menu->mealtime_id))
+                return TRUE;
 
-        if (count($migrate) > 0)
-            DB::table('menu_mealtimes')->insert($migrate);
+            DB::table('menu_mealtimes')->insert([
+                'mealtime_id' => $menu->mealtime_id,
+                'menu_id' => $menu->menu_id,
+            ]);
+        });
 
         Schema::table('menus', function (Blueprint $table) {
             $table->dropColumn('mealtime_id');
