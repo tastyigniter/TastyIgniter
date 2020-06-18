@@ -69,12 +69,13 @@ class Coupons_history_model extends Model
      * @param \Admin\Models\Customers_model $customer
      * @return \Admin\Models\Coupons_history_model|bool
      */
-    public static function createHistory($couponCondition, $customer)
+    public static function createHistory($couponCondition, $customer, $orderId)
     {
         if (!$coupon = $couponCondition->getModel())
             return FALSE;
 
         $model = new static;
+        $model->order_id = $orderId ? $orderId : 0;
         $model->customer_id = $customer ? $customer->getKey() : 0;
         $model->coupon_id = $coupon->coupon_id;
         $model->code = $coupon->code;
