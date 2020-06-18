@@ -40,11 +40,23 @@ class Mealtimes_model extends Model
         return $query->where('mealtime_status', 1);
     }
 
-    public function isAvailableNow()
+    public function isAvailable($datetime = null)
     {
-        return Carbon::now()->between(
+        if (is_null($datetime))
+            $datetime = Carbon::now();
+
+        if (!$datetime instanceof Carbon) {
+            $datetime = Carbon::parse($datetime);
+        }
+
+        return $datetime->between(
             Carbon::createFromTimeString($this->start_time),
             Carbon::createFromTimeString($this->end_time)
         );
+    }
+
+    public function isAvailableNow()
+    {
+        $this->isAvailable();
     }
 }

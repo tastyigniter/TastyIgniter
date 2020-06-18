@@ -154,14 +154,12 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'default' => 0,
         ],
-        'mealtime_id' => [
+        'mealtimes' => [
             'label' => 'lang:admin::lang.menus.label_mealtime',
             'type' => 'relation',
             'span' => 'left',
-            'relationFrom' => 'mealtime',
             'nameFrom' => 'mealtime_name',
             'comment' => 'lang:admin::lang.menus.help_mealtime',
-            'placeholder' => 'lang:admin::lang.menus.text_mealtime_all',
         ],
         'locations' => [
             'label' => 'lang:admin::lang.label_location',
