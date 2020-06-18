@@ -57,7 +57,7 @@
         $('span', this.$el).html(start.format(this.options.rangeFormat)
             + ' - ' + end.format(this.options.rangeFormat));
             
-        this.$el.prev('[data-datepickertype="start"]').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+        this.$el.prev('[data-datepicker-value]').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
             
         if (!initialize) this.$el.closest('form').submit();
     }

@@ -1,4 +1,5 @@
 <div class="filter-scope date form-group">
+    <input type="hidden" name="<?= $this->getScopeName($scope) ?>" value="<?= $scope->value ?>" data-datepicker-value="">
 	<input 
 		type="text"
 		id="<?= $this->getScopeName($scope) ?>-datepicker"
@@ -8,5 +9,4 @@
 		data-control="datepicker" 
 		data-format="dd-mm-yyyy"
 	>
-    <input type="hidden" name="<?= $this->getScopeName($scope) ?>" value="<?= $scope->value ?>" data-datepicker-value="">
 </div>
