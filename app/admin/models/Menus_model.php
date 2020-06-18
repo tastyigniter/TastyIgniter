@@ -1,11 +1,11 @@
 <?php namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Carbon\Carbon;
 use Event;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Carbon\Carbon;
 
 /**
  * Menus Model Class
@@ -76,7 +76,7 @@ class Menus_model extends Model
             $q->where('categories.category_id', $categoryId);
         });
     }
-    
+
     public function scopeWhereHasMealtime($query, $mealtimeId)
     {
         $query->whereHas('mealtimes', function ($q) use ($mealtimeId) {
@@ -152,7 +152,7 @@ class Menus_model extends Model
 
         if (array_key_exists('categories', $this->attributes))
             $this->addMenuCategories((array)$this->attributes['categories']);
-            
+
         if (array_key_exists('mealtimes', $this->attributes))
             $this->addMenuMealtimes((array)$this->attributes['mealtimes']);
 
@@ -202,8 +202,8 @@ class Menus_model extends Model
 
         // Update using query to prevent model events from firing
         $this->newQuery()
-             ->where($this->getKeyName(), $this->getKey())
-             ->update(['stock_qty' => $stockQty]);
+            ->where($this->getKeyName(), $this->getKey())
+            ->update(['stock_qty' => $stockQty]);
 
         Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
 
@@ -224,7 +224,7 @@ class Menus_model extends Model
 
         $this->categories()->sync($categoryIds);
     }
-    
+
     /**
      * Create new or update existing menu mealtimes
      *
@@ -288,7 +288,7 @@ class Menus_model extends Model
             'special_id' => $menuSpecial['special_id'],
         ], array_except($menuSpecial, 'special_id'));
     }
-    
+
     /**
      * Is menu item available on a given datetime
      *
@@ -296,29 +296,27 @@ class Menus_model extends Model
      *
      * @return bool
      */
-    public function isAvailable($datetime = null){
-	    
-	    if (is_null($datetime)) 
-	    	$datetime = Carbon::now();
-	    
-	    if (!$datetime instanceof Carbon){
-		    $datetime = Carbon::parse($datetime);
-	    }
-	    
-	    $isAvailable = true;
-	    
-	    if (count($this->mealtimes) > 0) {
-		    
-		    $isAvailable = false;
-		    foreach ($this->mealtimes as $mealtime) {
-			    if ($mealtime->mealtime_status) {
-			    	$isAvailable = $isAvailable || $mealtime->isAvailable($datetime);
-			    }
-		    }
-	    
-	    }
-	    
-	    return $isAvailable;
+    public function isAvailable($datetime = null)
+    {
+        if (is_null($datetime))
+            $datetime = Carbon::now();
+
+        if (!$datetime instanceof Carbon) {
+            $datetime = Carbon::parse($datetime);
+        }
+
+        $isAvailable = TRUE;
+
+        if (count($this->mealtimes) > 0) {
+            $isAvailable = FALSE;
+            foreach ($this->mealtimes as $mealtime) {
+                if ($mealtime->mealtime_status) {
+                    $isAvailable = $isAvailable || $mealtime->isAvailable($datetime);
+                }
+            }
+        }
+
+        return $isAvailable;
     }
-    
+
 }
