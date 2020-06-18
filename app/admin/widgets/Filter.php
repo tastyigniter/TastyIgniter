@@ -439,8 +439,7 @@ class Filter extends BaseWidget
                 break;
                 
             case 'daterange':
-                $value = explode('|', $scope->value);
-
+                $value = explode(' - ', $scope->value);
                 if ($scopeConditions = $scope->conditions) {               
                     $query->whereRaw(strtr($scopeConditions, [
                         ':filtered_start' => '"'.mdate('%Y-%m-%d', strtotime($value[0])).'"',

@@ -28,35 +28,36 @@
         timePicker: true,
         rangeFormat: 'MMMM D, YYYY',
         ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            'Today': [moment().startOf('day'), moment().endOf('day')],
+            'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+            'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+            'Last 30 Days': [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+            'This Month': [moment().startOf('month').startOf('day'), moment().endOf('month').endOf('day')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month').startOf('day'), moment().subtract(1, 'month').endOf('month').endOf('day')]
         },
     }
 
     DateRangeControl.prototype.initDateRange = function () {
         var options = DateRangeControl.DEFAULTS
         options.parentEl = this.options.rangeParentSelector
-        this.$el.daterangepicker(options, $.proxy(this.onRangeSelected, this))
         this.rangePicker = this.$el.data('daterangepicker');
         
         var value = this.$el.val();
         if (value != '') {
-	        value = value.split('|');
-        	this.onRangeSelected(moment(value[0]), moment(value[1]), null, true);
-	    } else {
-	        this.onRangeSelected(DateRangeControl.DEFAULTS.startDate, DateRangeControl.DEFAULTS.endDate, null, true)
-	    }
+	        value = value.split(' - ');
+	        options.startDate = moment(value[0]);
+	        options.endDate = moment(value[1]);
+        }
+	    	    
+        this.$el.daterangepicker(options, $.proxy(this.onRangeSelected, this))
+        this.onRangeSelected(options.startDate, options.endDate, null, true);
     }
     
     DateRangeControl.prototype.onRangeSelected = function (start, end, label, initialize) {
         $('span', this.$el).html(start.format(this.options.rangeFormat)
             + ' - ' + end.format(this.options.rangeFormat));
             
-        this.$el.prev('[data-datepickertype="start"]').val(start.format('YYYY-MM-DD HH:mm:ss') + '|' + end.format('YYYY-MM-DD HH:mm:ss'));
+        this.$el.prev('[data-datepickertype="start"]').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
             
         if (!initialize) this.$el.closest('form').submit();
     }
