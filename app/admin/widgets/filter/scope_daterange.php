@@ -1,8 +1,8 @@
 <div class="filter-scope date form-group">
-	<input type="hidden" name="<?= $this->getScopeName($scope) ?>" value="" data-datepickertype="start" />
+    <input type="hidden" name="<?= $this->getScopeName($scope) ?>" value="" data-datepickertype="start"/>
     <button
         id="<?= $this->getScopeName($scope) ?>"
-        class="btn btn-light btn-sm"
+        class="btn btn-light text-nowrap"
         data-control="daterange"
         type="button"
         value="<?= $scope->value; ?>"

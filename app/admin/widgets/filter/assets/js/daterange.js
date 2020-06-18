@@ -21,6 +21,7 @@
 
     DateRangeControl.DEFAULTS = {
         opens: 'left',
+        autoUpdateInput: false,
         parentEl: '.filter-scope',
         startDate: moment().subtract(29, 'days'),
         endDate: moment(),
