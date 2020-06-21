@@ -40,7 +40,7 @@
         if (value != '') {
 	        options.startDate = moment(value);
 	        if (!options.startDate.isValid())
-	            options.startDate = moment();
+	            options.startDate = DateControl.DEFAULTS.startDate;
         }
 	    	    
         this.$el.daterangepicker(options, $.proxy(this.onDateSelected, this))

@@ -48,9 +48,9 @@
 	        options.startDate = moment(value[0]);
 	        options.endDate = moment(value[1]);
 	        if (!options.startDate.isValid())
-	            options.startDate = moment().subtract(29, 'days');
+	            options.startDate = DateRangeControl.DEFAULTS.startDate;
 	        if (!options.endDate.isValid())
-	            options.endDate = moment();
+	            options.endDate = DateRangeControl.DEFAULTS.endDate;
         }
 	    	    
         this.$el.daterangepicker(options, $.proxy(this.onRangeSelected, this))
