@@ -8,6 +8,7 @@
                         'id' => 'edit-form',
                         'role' => 'form',
                         'method' => 'POST',
+                        'data-request' => empty($resetCode) ? 'onRequestResetPassword' : 'onResetPassword'
                     ]
                 ); ?>
 
@@ -22,6 +23,7 @@
                     </div>
                 <?php }
                 else { ?>
+                    <input type="hidden" name="code" value="<?= $resetCode; ?>">
                     <div class="form-group">
                         <input type="password"
                                id="password"

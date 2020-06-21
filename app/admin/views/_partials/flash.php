@@ -18,19 +18,16 @@
         ><?= $message['message']; ?></div>
     <?php } ?>
 <?php } ?>
-
-<?php if (AdminAuth::isLogged()) { ?>
-    <?php if ($messages = session('admin_errors', collect())->all()) { ?>
-        <div
-            class="alert alert-danger"
-            data-control="flash-message"
-            data-allow-dismiss="false"
-            role="alert"
-        >
-            <?php foreach ($messages as $message) { ?>
-                <p><?= $message; ?></p>
-            <?php } ?>
-        </div>
-        <?php session()->forget('admin_errors'); ?>
-    <?php } ?>
+<?php if ($messages = session('admin_errors', collect())->all()) { ?>
+    <div
+        class="alert alert-danger"
+        data-control="flash-message"
+        data-allow-dismiss="false"
+        role="alert"
+    >
+        <?php foreach ($messages as $message) { ?>
+            <p><?= $message; ?></p>
+        <?php } ?>
+    </div>
+    <?php session()->forget('admin_errors'); ?>
 <?php } ?>
