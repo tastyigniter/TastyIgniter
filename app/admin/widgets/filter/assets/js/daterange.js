@@ -47,6 +47,10 @@
 	        value = value.split(' - ');
 	        options.startDate = moment(value[0]);
 	        options.endDate = moment(value[1]);
+	        if (!options.startDate.isValid())
+	            options.startDate = moment().subtract(29, 'days');
+	        if (!options.endDate.isValid())
+	            options.endDate = moment();
         }
 	    	    
         this.$el.daterangepicker(options, $.proxy(this.onRangeSelected, this))
