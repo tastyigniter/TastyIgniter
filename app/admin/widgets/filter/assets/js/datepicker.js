@@ -47,7 +47,7 @@
     
     DateControl.prototype.onDateSelected = function (start, end, label, initialize) {
         this.$el.val(start.format(this.options.dateFormat));
-        this.$el.prev('[data-datepicker-value]').val(start.format('YYYY-MM-DD'));
+        this.$el.closest('.input-group').prev('[data-datepicker-value]').val(start.format('YYYY-MM-DD'));
         if (!initialize) this.$el.closest('form').submit();
     }
 
