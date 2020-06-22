@@ -6,7 +6,7 @@
             id="<?= $this->getScopeName($scope) ?>-datepicker"
             class="form-control"
             autocomplete="off"
-            value="<?= mdate('%d-%m-%Y', strtotime($scope->value)) ?>"
+            value="<?= mdate('%Y-%m-%d', strtotime($scope->value)) ?>"
             data-control="datepicker"
             data-format="dd-mm-yyyy"
         >
