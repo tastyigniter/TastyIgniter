@@ -11,16 +11,14 @@ $config['list']['filter'] = [
             'conditions' => 'staff_role_id = :filtered',
             'modelClass' => 'Admin\Models\Staff_roles_model',
         ],
-        'date' => [
-            'label' => 'lang:admin::lang.text_filter_date',
-            'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
-            'modelClass' => 'Admin\Models\Staffs_model',
-            'options' => 'getStaffDates',
-        ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
+        ],
+        'date' => [
+            'label' => 'lang:admin::lang.text_filter_date',
+            'type' => 'date',
+            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month AND DAY(date_added) = :day',
         ],
     ],
 ];

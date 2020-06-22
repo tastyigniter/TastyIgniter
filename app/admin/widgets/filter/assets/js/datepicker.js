@@ -2,7 +2,7 @@
  * Datepicker plugin
  *
  * Data attributes:
- * - data-control="datePicker" - enables the plugin on an element
+ * - data-control="datepicker" - enables the plugin on an element
  */
 +function ($) {
     "use strict"
@@ -10,67 +10,74 @@
     // FIELD CHART CONTROL CLASS DEFINITION
     // ============================
 
-    var DateControl = function (element, options) {
+    var DatePickerControl = function (element, options) {
         this.options = options
         this.$el = $(element)
-        this.rangePicker = null
 
         // Init
-        this.initDateRange();
+        this.initPicker();
     }
 
-    DateControl.DEFAULTS = {
-        opens: 'left',
+    DatePickerControl.DEFAULTS = {
+        opens: 'right',
         autoUpdateInput: false,
-        parentEl: '.filter-scope',
-        startDate: moment(),
-        endDate: moment(),
         singleDatePicker: true,
         showDropdowns: true,
+        autoApply: true,
         timePicker: false,
-        dateFormat: 'MMMM D, YYYY',
+        locale: {
+            format: 'MMM D, YYYY',
+        }
     }
 
-    DateControl.prototype.initDateRange = function () {
-        var options = DateControl.DEFAULTS
-        options.parentEl = this.options.rangeParentSelector
-        this.rangePicker = this.$el.data('daterangepicker');
-        
-        var value = this.$el.val();
-        if (value != '') {
-	        options.startDate = moment(value);
-	        if (!options.startDate.isValid())
-	            options.startDate = DateControl.DEFAULTS.startDate;
+    DatePickerControl.prototype.initPicker = function () {
+        var options = this.options,
+            $el = this.$el.find('[data-datepicker-trigger]')
+
+        if (!options.singleDatePicker) {
+            options.ranges = {
+                'Today': [moment().startOf('day'), moment().endOf('day')],
+                'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+                'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+                'Last 30 Days': [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+                'This Month': [moment().startOf('month').startOf('day'), moment().endOf('month').endOf('day')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month').startOf('day'), moment().subtract(1, 'month').endOf('month').endOf('day')]
+            }
         }
-	    	    
-        this.$el.daterangepicker(options, $.proxy(this.onDateSelected, this))
-        this.onDateSelected(options.startDate, null, null, true);
+
+        $el.daterangepicker(options, $.proxy(this.onDateSelected, this))
     }
-    
-    DateControl.prototype.onDateSelected = function (start, end, label, initialize) {
-        this.$el.val(start.format(this.options.dateFormat));
-        this.$el.closest('.input-group').prev('[data-datepicker-value]').val(start.format('YYYY-MM-DD'));
+
+    DatePickerControl.prototype.onDateSelected = function (start, end, label, initialize) {
+        var format = this.options.timePicker ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'
+
+        if (!this.options.singleDatePicker) {
+            this.$el.find('[data-datepicker-range-start]').val(start.format(format));
+            this.$el.find('[data-datepicker-range-end]').val(end.format(format));
+        } else {
+            this.$el.find('[data-datepicker-input]').val(start.format(format));
+        }
+
         if (!initialize) this.$el.closest('form').submit();
     }
 
-    DateControl.prototype.unbind = function () {
-        this.$el.dateControl('destroy')
-        this.$el.removeData('ti.dateControl')
-        this.chartJs = null
+    DatePickerControl.prototype.unbind = function () {
+        this.$el.datePickerControl('destroy')
+        this.$el.removeData('ti.datePickerControl')
     }
 
-    // FIELD DATERANGE CONTROL PLUGIN DEFINITION
+    // FIELD DATEPICKER CONTROL PLUGIN DEFINITION
     // ============================
 
-    var old = $.fn.dateControl
+    var old = $.fn.datePickerControl
 
-    $.fn.dateControl = function (option) {
+    $.fn.datePickerControl = function (option) {
         var args = Array.prototype.slice.call(arguments, 1), result
         this.each(function () {
             var $this = $(this)
-            var data = $this.data('ti.dateControl')
-            var options = $.extend({}, DateControl.DEFAULTS, $this.data(), typeof option === 'object' && option)
-            if (!data) $this.data('ti.dateControl', (data = new DateControl(this, options)))
+            var data = $this.data('ti.datePickerControl')
+            var options = $.extend({}, DatePickerControl.DEFAULTS, $this.data(), typeof option === 'object' && option)
+            if (!data) $this.data('ti.datePickerControl', (data = new DatePickerControl(this, options)))
             if (typeof option === 'string') result = data[option].apply(data, args)
             if (typeof result !== 'undefined') return false
         })
@@ -78,20 +85,20 @@
         return result ? result : this
     }
 
-    $.fn.dateControl.Constructor = DateControl
+    $.fn.datePickerControl.Constructor = DatePickerControl
 
-    // FIELD DATERANGE CONTROL NO CONFLICT
+    // FIELD DATEPICKER CONTROL NO CONFLICT
     // =================
 
-    $.fn.dateControl.noConflict = function () {
-        $.fn.dateControl = old
+    $.fn.datePickerControl.noConflict = function () {
+        $.fn.datePickerControl = old
         return this
     }
 
-    // FIELD DATERANGE CONTROL DATA-API
+    // FIELD DATEPICKER CONTROL DATA-API
     // ===============
 
     $(document).render(function () {
-        $('[data-control="datepicker"]').dateControl()
+        $('[data-control="datepicker"]').datePickerControl()
     })
 }(window.jQuery)

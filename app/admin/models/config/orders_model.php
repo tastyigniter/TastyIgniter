@@ -50,8 +50,6 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'daterange',
             'conditions' => 'order_date >= CAST(:filtered_start AS DATE) AND order_date <= CAST(:filtered_end AS DATE)',
-            'modelClass' => 'Admin\Models\Orders_model',
-            'options' => 'getOrderDates',
         ],
     ],
 ];
