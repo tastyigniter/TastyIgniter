@@ -32,10 +32,8 @@ $config['list']['filter'] = [
         ],
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
-            'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
-            'modelClass' => 'Admin\Models\Reservations_model',
-            'options' => 'getReservationDates',
+            'type' => 'daterange',
+            'conditions' => 'reserve_date >= CAST(:filtered_start AS DATE) AND reserve_date <= CAST(:filtered_end AS DATE)',
         ],
     ],
 ];
