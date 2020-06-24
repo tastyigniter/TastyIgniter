@@ -23,6 +23,11 @@
                 title="<?= sprintf(lang('admin::lang.menu_options.text_option_summary'), $item->display_type) ?>"
                 class="fa fa-caret-square-down text-muted"
             ></i>
+        <?php } elseif ($item->display_type == 'quantity') { ?>
+            <i
+                title="<?= sprintf(lang('admin::lang.menu_options.text_option_summary'), $item->display_type) ?>"
+                class="fa fa-plus-square text-muted"
+            ></i>
         <?php } else { ?>
             <?= sprintf(lang('admin::lang.menu_options.text_option_summary'), $item->display_type); ?>
         <?php } ?>
