@@ -7,25 +7,7 @@
   }
 
   .login-container {
-    max-width: 400px;
-    margin: 70px auto;
-
-    .card {
-      background: transparent;
-      border-color: transparent;
-
-      .card-header {
-        background: transparent;
-        text-align: center;
-        margin-bottom: -2px;
-        padding-top: 40px;
-        padding-bottom: 0;
-      }
-
-      .card-body {
-        background: $card-bg;
-        padding: 20px 30px 15px;
-      }
-    }
+    max-width: 420px;
+    margin: 15vh auto 50px;
   }
 }

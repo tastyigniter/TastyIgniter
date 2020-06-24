@@ -14678,20 +14678,8 @@ body.dragging {
     left: 0;
     padding: 25px; }
   .page-login .login-container {
-    max-width: 400px;
-    margin: 70px auto; }
-    .page-login .login-container .card, .page-login .login-container .panel, .page-login .login-container .well, .page-login .login-container .thumbnail {
-      background: transparent;
-      border-color: transparent; }
-      .page-login .login-container .card .card-header, .page-login .login-container .panel .card-header, .page-login .login-container .panel .panel-header, .page-login .login-container .panel .panel-heading, .page-login .login-container .well .card-header, .page-login .login-container .well .panel-header, .page-login .login-container .well .panel-heading, .page-login .login-container .thumbnail .card-header, .page-login .login-container .thumbnail .panel-header, .page-login .login-container .thumbnail .panel-heading, .page-login .login-container .card .panel-header, .page-login .login-container .card .panel-heading {
-        background: transparent;
-        text-align: center;
-        margin-bottom: -2px;
-        padding-top: 40px;
-        padding-bottom: 0; }
-      .page-login .login-container .card .card-body, .page-login .login-container .panel .card-body, .page-login .login-container .panel .panel-body, .page-login .login-container .panel .well, .page-login .login-container .panel .thumbnail, .page-login .login-container .well .card-body, .page-login .login-container .well .panel-body, .page-login .login-container .well .well, .page-login .login-container .well .thumbnail, .page-login .login-container .thumbnail .card-body, .page-login .login-container .thumbnail .panel-body, .page-login .login-container .thumbnail .well, .page-login .login-container .thumbnail .thumbnail, .page-login .login-container .card .panel-body, .page-login .login-container .card .well, .page-login .login-container .card .thumbnail {
-        background: #E8E9EF;
-        padding: 20px 30px 15px; }
+    max-width: 420px;
+    margin: 15vh auto 50px; }
 
 .form-control:disabled, .form-control[readonly] {
   border-color: #D2D4DF; }
@@ -15010,10 +14998,10 @@ body.dragging {
   font-size: 16px;
   vertical-align: middle; }
 .navbar-top .navbar-nav .nav-link > .badge, .navbar-top .navbar-nav .nav navbar > li > a > .badge, .nav .navbar-top .navbar-nav navbar > li > a > .badge, .navbar-top .navbar-nav .nav-link > .label, .navbar-top .navbar-nav .nav navbar > li > a > .label {
-  font-size: 10px;
+  font-size: 9px;
   position: absolute;
-  top: 15px;
-  right: 8px; }
+  top: 18px;
+  right: 10px; }
 .navbar-top .navbar-nav > li.nav-item.show > a .fa, .navbar-top .navbar-nav > li.show.navbar-btn > a .fa, .navbar-top .nav navbar.navbar-nav > li.show > a .fa, .nav .navbar-top navbar > .navbar-nav > li.show > a .fa {
   color: #217DC0; }
 .navbar-top .navbar-nav > li.dropdown.show > a::after, .navbar-top .navbar-nav > li.dropdown.show > a::before {

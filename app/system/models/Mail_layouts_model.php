@@ -59,7 +59,7 @@ class Mail_layouts_model extends Model
     protected function beforeDelete()
     {
         if ($this->is_locked) {
-            throw new ApplicationException('Cannot delete this template because it is locked');
+            throw new ApplicationException('You cannot delete a locked template');
         }
     }
 

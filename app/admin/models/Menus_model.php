@@ -35,7 +35,6 @@ class Menus_model extends Model
     public $casts = [
         'menu_price' => 'float',
         'menu_category_id' => 'integer',
-        'mealtime_id' => 'integer',
         'stock_qty' => 'integer',
         'minimum_qty' => 'integer',
         'subtract_stock' => 'boolean',
