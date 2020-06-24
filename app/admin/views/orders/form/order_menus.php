@@ -21,9 +21,11 @@ $orderTotals = $model->getOrderTotals();
                     <?php if ($menuItemOptions = $menuItemsOptions->get($menuItem->order_menu_id)) { ?>
                         <ul class="list-unstyled">
                             <?php foreach ($menuItemOptions as $menuItemOption) { ?>
-                                <li><?= $menuItemOption->order_option_name; ?>&nbsp;
+                                <li>
+                                    <?= $menuItemOption->quantity; ?>x
+                                    <?= $menuItemOption->order_option_name; ?>&nbsp;
                                     <?php if ($menuItemOption->order_option_price > 0) { ?>
-                                        (<?= currency_format($menuItemOption->order_option_price); ?>)
+                                        (<?= currency_format($menuItemOption->quantity*$menuItemOption->order_option_price); ?>)
                                     <?php } ?>
                                 </li>
                             <?php } ?>

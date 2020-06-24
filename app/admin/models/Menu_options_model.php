@@ -57,6 +57,7 @@ class Menu_options_model extends Model
             'radio' => 'lang:admin::lang.menu_options.text_radio',
             'checkbox' => 'lang:admin::lang.menu_options.text_checkbox',
             'select' => 'lang:admin::lang.menu_options.text_select',
+            'quantity' => 'lang:admin::lang.menu_options.text_quantity',
         ];
     }
 

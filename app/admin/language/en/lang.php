@@ -618,6 +618,7 @@ return [
         'text_select' => 'Select',
         'text_radio' => 'Radio',
         'text_checkbox' => 'Checkbox',
+        'text_quantity' => 'Quantity',
         'is_required' => 'is required',
         'is_not_required' => 'is not required',
         'text_option' => 'Option',
