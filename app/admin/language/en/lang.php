@@ -478,6 +478,7 @@ return [
         'text_shape' => 'Shape (polygon)',
         'text_custom' => 'Address',
         'text_address_component_street' => 'Match by Street name',
+        'text_address_component_town' => 'Match by town or sub-locality',
         'text_address_component_city' => 'Match by city or locality',
         'text_address_component_region' => 'Match by region or administrative area level 2',
         'text_address_component_state' => 'Match by state or administrative area level 1',

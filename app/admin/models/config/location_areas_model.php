@@ -56,6 +56,7 @@ return [
                             'default' => 'region',
                             'options' => [
                                 'street' => 'lang:admin::lang.locations.text_address_component_street',
+                                'sub_locality' => 'lang:admin::lang.locations.text_address_component_town',
                                 'locality' => 'lang:admin::lang.locations.text_address_component_city',
                                 'admin_level_2' => 'lang:admin::lang.locations.text_address_component_region',
                                 'admin_level_1' => 'lang:admin::lang.locations.text_address_component_state',
