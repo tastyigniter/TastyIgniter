@@ -25,21 +25,12 @@ class HubManager
     public function initialize()
     {
         $this->cachePrefix = 'hub_';
-        $this->cacheTtl = now()->addDay();
+        $this->cacheTtl = now()->addHours(3);
     }
 
     public function listItems($filter = [])
     {
-        $cacheKey = $this->getCacheKey('items', $filter);
-
-        if (!$items = Cache::get($cacheKey)) {
-            $items = $this->requestRemoteData('items', array_merge(['include' => 'require'], $filter));
-
-            if (!empty($items) AND is_array($items))
-                Cache::put($cacheKey, $items, $this->cacheTtl);
-        }
-
-        return $items;
+        return $this->requestRemoteData('items', array_merge(['include' => 'require'], $filter));
     }
 
     public function getDetail($type, $itemName = [])
