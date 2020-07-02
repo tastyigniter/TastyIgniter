@@ -62,9 +62,6 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function edit($action, $vendor = null, $extension = null, $context = null)
     {
-        if (!$this->getUser()->hasPermission('Site.Settings'))
-            throw new SystemException(lang('admin::lang.alert_user_restricted'));
-
         AdminMenu::setContext('settings', 'system');
 
         try {
