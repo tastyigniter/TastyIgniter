@@ -31,7 +31,7 @@ class Extensions extends \Admin\Classes\AdminController
         ],
     ];
 
-    protected $requiredPermissions = 'Admin.Extensions';
+    protected $requiredPermissions = ['Admin.Extensions', 'Site.Settings'];
 
     /**
      * @var \Admin\Widgets\Form
@@ -52,6 +52,9 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function index()
     {
+        if (!$this->getUser()->hasPermission('Admin.Extensions'))
+            throw new SystemException(lang('admin::lang.alert_user_restricted'));
+        
         Extensions_model::syncAll();
 
         $this->asExtension('ListController')->index();
@@ -59,6 +62,9 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function edit($action, $vendor = null, $extension = null, $context = null)
     {
+        if (!$this->getUser()->hasPermission('Site.Settings'))        
+            throw new SystemException(lang('admin::lang.alert_user_restricted'));
+
         AdminMenu::setContext('settings', 'system');
 
         try {
@@ -89,6 +95,9 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function delete($context, $extensionCode = null)
     {
+        if (!$this->getUser()->hasPermission('Admin.Extensions'))
+            throw new SystemException(lang('admin::lang.alert_user_restricted'));
+
         try {
             $pageTitle = lang('system::lang.extensions.text_delete_title');
             Template::setTitle($pageTitle);
