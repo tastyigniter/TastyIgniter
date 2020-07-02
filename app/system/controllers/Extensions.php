@@ -31,7 +31,7 @@ class Extensions extends \Admin\Classes\AdminController
         ],
     ];
 
-    protected $requiredPermissions = 'Admin.*';
+    protected $requiredPermissions = ['Admin.Extensions', 'Site.Settings'];
 
     /**
      * @var \Admin\Widgets\Form
