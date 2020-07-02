@@ -31,6 +31,7 @@
             <button
                 type="submit"
                 class="btn btn-primary"
+                data-attach-loading
             ><?= lang('admin::lang.button_save') ?></button>
         </div>
         <?= form_close(); ?>

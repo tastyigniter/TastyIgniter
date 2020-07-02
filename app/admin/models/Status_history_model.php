@@ -121,6 +121,6 @@ class Status_history_model extends Model
 
     public function scopeWhereStatusIsLatest($query, $statusId)
     {
-        return $query->where('status_id', $statusId)->orderBy('date_added');
+        return $query->where('status_id', $statusId)->orderBy('date_added', 'desc');
     }
 }
