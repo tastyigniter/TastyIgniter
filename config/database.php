@@ -111,8 +111,8 @@ return [
         'client' => 'phpredis',
 
         'options' => [
-            'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', 'tastyigniter_database_'),
+            'cluster' => 'redis',
+            'prefix' => 'tastyigniter_database_',
         ],
 
         'default' => [
