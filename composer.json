@@ -23,18 +23,16 @@
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.2",
     "ext-mbstring": "*",
-    "ext-json": "*",
     "ext-openssl": "*",
-    "composer/installers": "~1.0",
-    "laravel/framework": "^6.0",
-    "tastyigniter/flame": "^1.0",
+    "tastyigniter/flame": "~1.0",
+    "laravel/framework": "~6.0",
     "wikimedia/composer-merge-plugin": "^1.4"
   },
   "require-dev": {
-    "fzaninotto/faker": "~1.7",
-    "phpunit/phpunit": "~7.5"
+    "phpunit/phpunit": "^8.0|^9.0",
+    "fzaninotto/faker": "~1.9"
   },
   "replace": {
     "kriswallsmith/assetic": "*"
@@ -49,7 +47,18 @@
       "php artisan key:generate"
     ]
   },
+  "config": {
+    "preferred-install": "dist",
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "beta",
+  "prefer-stable": true,
   "extra": {
+    "laravel": {
+      "dont-discover": [
+        "*"
+      ]
+    },
     "merge-plugin": {
       "include": [
         "extensions/*/*/composer.json"
@@ -58,11 +67,5 @@
       "recurse": true,
       "merge-dev": false
     }
-  },
-  "config": {
-    "preferred-install": "dist",
-    "optimize-autoloader": true
-  },
-  "minimum-stability": "beta",
-  "prefer-stable": true
+  }
 }
