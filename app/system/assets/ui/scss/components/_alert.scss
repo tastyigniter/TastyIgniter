@@ -6,6 +6,16 @@
   margin: 0 auto;
   width: 35%;
   z-index: 1090;
+
+  .alert {
+    &:not(.show) {
+      display: none;
+    }
+
+    .show {
+      display: block;
+    }
+  }
 }
 .alert {
   color: $white;
@@ -15,14 +25,6 @@
 
   p {
     margin-bottom: 0;
-  }
-
-  &:not(.show) {
-    display: none;
-  }
-
-  .show {
-    display: block;
   }
 }
 .alert-collapse {

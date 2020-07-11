@@ -38,6 +38,7 @@ $activeTab = $activeTab ? $activeTab : '#'.$type.'tab-1';
     </div>
     <div class="col-md-4">
         <?= $this->makePartial('mailtemplates/form/variables', [
+            'cssClass' => ' form-fields pl-0',
             'variables' => \System\Classes\MailManager::instance()->listRegisteredVariables()
         ]) ?>
     </div>

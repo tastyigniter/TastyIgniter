@@ -14008,6 +14008,10 @@ a.close.disabled {
   margin: 0 auto;
   width: 35%;
   z-index: 1090; }
+  #notification .alert:not(.show) {
+    display: none; }
+  #notification .alert .show {
+    display: block; }
 
 .alert {
   color: #FFFFFF;
@@ -14016,10 +14020,6 @@ a.close.disabled {
   text-align: center; }
   .alert p {
     margin-bottom: 0; }
-  .alert:not(.show) {
-    display: none; }
-  .alert .show {
-    display: block; }
 
 .alert-collapse .alert {
   padding: 0.3rem 1.25rem;
