@@ -31,14 +31,21 @@ class SystemLogs extends \Admin\Classes\AdminController
             'href' => 'request_logs',
         ]);
 
-        LogViewer::setFile(storage_path('logs/system.log'));
+        $logFile = storage_path('logs/system.log');
 
-        $this->vars['logs'] = LogViewer::all() ?? [];
+        $logs = [];
+        if (File::exists($logFile)) {
+            LogViewer::setFile($logFile);
+            $logs = LogViewer::all() ?? [];
+        }
+
+        $this->vars['logs'] = $logs;
     }
 
     public function index_onEmptyLog()
     {
-        if (File::isWritable(storage_path('logs/system.log'))) {
+        $logFile = storage_path('logs/system.log');
+        if (File::exists($logFile) AND File::isWritable($logFile)) {
             File::put(storage_path('logs/system.log'), "");
 
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Logs Emptied '));
