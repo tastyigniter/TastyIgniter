@@ -35,7 +35,8 @@
     "fzaninotto/faker": "~1.9"
   },
   "replace": {
-    "kriswallsmith/assetic": "*"
+    "kriswallsmith/assetic": "*",
+    "leafo/scssphp": "*"
   },
   "autoload-dev": {
     "psr-4": {
