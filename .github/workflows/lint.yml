@@ -1,0 +1,27 @@
+name: Lint
+
+on: [push, pull_request]
+
+jobs:
+  codeQuality:
+    name: Code Quality Checks (PHP-CS-Fixer)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout changes
+      - uses: actions/checkout@master
+      - name: Install PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: 7.2
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --no-suggest
+      - name: Reset TastyIgniter library
+        run: |
+          git reset --hard HEAD
+          rm -rf ./vendor/tastyigniter/flame
+          wget https://github.com/tastyigniter/flame/archive/develop.zip -O ./vendor/tastyigniter/develop.zip
+          unzip ./vendor/tastyigniter/develop.zip -d ./vendor/tastyigniter
+          mv ./vendor/tastyigniter/flame-develop ./vendor/tastyigniter/flame
+          composer dump-autoload
+      - name: Run code quality checks
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff 1>&2
