@@ -293,7 +293,7 @@ class UpdateManager
 
         $items = $this->getHubManager()->listItems([
             'browse' => 'recommended',
-            'limit' => 9,
+            'limit' => 12,
             'type' => $itemType,
         ]);
 
