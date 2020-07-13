@@ -8,14 +8,14 @@
   ##
   # Options +FollowSymlinks
 
-	## Turn on URL rewriting
+  ## Turn on URL rewriting
   ##
-	RewriteEngine On
+  RewriteEngine On
 
-	## !IMPORTANT! You may need to uncomment the following line for some hosting environments,
-	## If your installation resides in a subdirectory, enter the name here also
+  ## !IMPORTANT! You may need to uncomment the following line for some hosting environments,
+  ## If your installation resides in a subdirectory, enter the name here also
   ##
-	# RewriteBase /
+  # RewriteBase /
 
   ## Redirect index.php from url to prevent duplicate urls
   ##
@@ -27,7 +27,7 @@
 
   ## Redirect Trailing Slashes If Not A Folder...
   ##
-	RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} (.+)/$
   RewriteRule ^ %1 [L,R=301]
 
@@ -43,7 +43,7 @@
 
   # Handle Front Controller...
   ##
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.php [L,QSA]
 </IfModule>
