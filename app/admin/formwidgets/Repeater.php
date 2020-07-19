@@ -83,6 +83,11 @@ class Repeater extends BaseFormWidget
     {
         $this->prepareVars();
 
+        // Apply preview mode to widgets
+        foreach ($this->formWidgets as $widget) {
+            $widget->previewMode = $this->previewMode;
+        }
+
         return $this->makePartial('repeater/repeater');
     }
 
@@ -109,7 +114,8 @@ class Repeater extends BaseFormWidget
      */
     public function loadAssets()
     {
-        $this->addJs('js/jquery-sortable.js', 'jquery-sortable-js');
+        $this->addJs('vendor/sortablejs/Sortable.min.js', 'sortable-js');
+        $this->addJs('vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js');
         $this->addJs('js/repeater.js', 'repeater-js');
     }
 

@@ -1,11 +1,20 @@
 <?php
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'mail_templates/create'],
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'mail_templates/create',
+        ],
         'delete' => [
-            'label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form',
-            'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
+            'label' => 'lang:admin::lang.button_delete',
+            'class' => 'btn btn-danger',
+            'data-attach-loading' => '',
+            'data-request' => 'onDelete',
+            'data-request-form' => '#list-form',
+            'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
         ],
         'layouts' => [
             'label' => 'lang:system::lang.mail_templates.text_layouts',
@@ -26,7 +35,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'mail_templates/edit/{template_data_id}',
+            'href' => 'mail_templates/edit/{template_id}',
         ],
     ],
     'title' => [
@@ -40,23 +49,23 @@ $config['list']['columns'] = [
         'type' => 'text',
         'searchable' => TRUE,
     ],
-    'template_id' => [
+    'layout_id' => [
         'label' => 'lang:system::lang.mail_templates.column_layout',
         'relation' => 'layout',
         'valueFrom' => 'name',
         'sortable' => FALSE,
     ],
     'date_updated' => [
-        'label' => 'lang:system::lang.mail_templates.column_date_updated',
-        'type' => 'datesince',
+        'label' => 'lang:admin::lang.column_date_updated',
+        'type' => 'timetense',
         'searchable' => TRUE,
     ],
     'date_added' => [
-        'label' => 'lang:system::lang.mail_templates.column_date_added',
-        'type' => 'datesince',
+        'label' => 'lang:admin::lang.column_date_added',
+        'type' => 'timetense',
         'searchable' => TRUE,
     ],
-    'template_data_id' => [
+    'template_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
@@ -64,18 +73,27 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'class' => 'btn btn-primary',
+            'data-request' => 'onSave',
+            'data-progress-indicator' => 'admin::lang.text_saving',
+        ],
         'saveClose' => [
             'label' => 'lang:admin::lang.button_save_close',
             'class' => 'btn btn-default',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
             'data-request-data' => 'close:1',
+            'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
-            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => 'edit',
+            'label' => 'lang:admin::lang.button_icon_delete',
+            'class' => 'btn btn-danger',
+            'data-request' => 'onDelete',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
+            'context' => 'edit',
         ],
         'test_message' => [
             'label' => 'lang:system::lang.mail_templates.button_test_message',
@@ -103,7 +121,7 @@ $config['form']['fields'] = [
         'span' => 'left',
         'type' => 'text',
     ],
-    'template_id' => [
+    'layout_id' => [
         'label' => 'lang:system::lang.mail_templates.label_layout',
         'span' => 'right',
         'type' => 'relation',
@@ -115,7 +133,7 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'fields' => [
         'body' => [
-            'tab' => 'lang:system::lang.mail_templates.label_body',
+            'tab' => 'lang:system::lang.mail_templates.label_markdown',
             'type' => 'markdowneditor',
         ],
         'plain_body' => [
@@ -124,12 +142,6 @@ $config['form']['tabs'] = [
             'attributes' => [
                 'rows' => 10,
             ],
-        ],
-        'variables' => [
-            'tab' => 'lang:system::lang.mail_templates.text_variables',
-            'type' => 'partial',
-            'path' => 'mailtemplates/variables',
-            'disabled' => TRUE,
         ],
     ],
 ];

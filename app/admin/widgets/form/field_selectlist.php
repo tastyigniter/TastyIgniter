@@ -1,6 +1,7 @@
 <?php
 $fieldOptions = $field->options();
-$selectMultiple = (isset($field->config['mode']) AND $field->config['mode'] == 'checkbox');
+$isCheckboxMode = $field->config['mode'] ?? 'checkbox';
+$selectMultiple = $isCheckboxMode == 'checkbox';
 $checkedValues = (array)$field->value;
 $enableFilter = (count($fieldOptions) > 20);
 ?>
@@ -10,10 +11,12 @@ $enableFilter = (count($fieldOptions) > 20);
         id="<?= $field->getId() ?>"
         name="<?= $field->getName() ?><?= $selectMultiple ? '[]' : '' ?>"
         <?php if ($field->placeholder) { ?>data-non-selected-text="<?= e(lang($field->placeholder)) ?>"<?php } ?>
+        <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
         <?= $selectMultiple ? 'multiple="multiple"' : '' ?>
         data-enable-filtering="<?= $enableFilter; ?>"
         data-enable-case-insensitive-filtering="<?= $enableFilter; ?>"
-        <?= $field->getAttributes() ?>>
+        <?= $field->getAttributes() ?>
+    >
 
         <?php if ($field->placeholder) { ?>
             <option value=""><?= e(lang($field->placeholder)) ?></option>
@@ -27,9 +30,9 @@ $enableFilter = (count($fieldOptions) > 20);
             <option
                 <?= in_array($value, $checkedValues) ? 'selected="selected"' : '' ?>
                 value="<?= $value ?>">
-                <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
+                <?= e(is_lang_key($option[0]) ? lang($option[0]) : $option[0]) ?>
                 <?php if (isset($option[1])) { ?>
-                    <span><?= e((sscanf($option[1], 'lang:%s', $line) === 1) ? lang($line) : $option[1]) ?></span>
+                    <span><?= e(is_lang_key($option[1]) ? lang($option[1]) : $option[1]) ?></span>
                 <?php } ?>
             </option>
         <?php } ?>

@@ -37,9 +37,9 @@ $weekdays = $formModel->getWeekDaysOptions();
                                         autocomplete="off"
                                         value="<?= $hour['open'] ?>"
                                         <?= $field->getAttributes() ?> />
-                                    <span class="input-group-prepend">
-                                <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
-                            </span>
+                                    <div class="input-group-append">
+                                        <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
+                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -51,9 +51,9 @@ $weekdays = $formModel->getWeekDaysOptions();
                                         autocomplete="off"
                                         value="<?= $hour['close'] ?>"
                                         <?= $field->getAttributes() ?> />
-                                    <span class="input-group-prepend">
-                                <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
-                            </span>
+                                    <div class="input-group-append">
+                                        <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
+                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -63,33 +63,21 @@ $weekdays = $formModel->getWeekDaysOptions();
                                     value="0"
                                     <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                                 >
-                                <div
-                                    class="field-switch"
-                                    data-control="switch"
-                                >
+                                <div class="custom-control custom-switch">
                                     <input
                                         type="checkbox"
                                         name="<?= $field->getName() ?>[<?= $index; ?>][status]"
                                         id="<?= $field->getId($index.'status') ?>"
-                                        class="field-switch-input"
+                                        class="custom-control-input"
                                         value="1"
                                         <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
                                         <?= $hour['status'] == 1 ? 'checked="checked"' : '' ?>
                                         <?= $field->getAttributes() ?>
-                                    >
+                                    />
                                     <label
-                                        class="field-switch-label"
+                                        class="custom-control-label"
                                         for="<?= $field->getId($index.'status') ?>"
-                                    >
-                                <span class="field-switch-container">
-                                    <span class="field-switch-active">
-                                        <span class="field-switch-toggle bg-success"><?= e(lang('admin::lang.locations.text_open')) ?></span>
-                                    </span>
-                                    <span class="field-switch-inactive">
-                                        <span class="field-switch-toggle bg-danger"><?= e(lang('admin::lang.locations.text_closed')) ?></span>
-                                    </span>
-                                </span>
-                                    </label>
+                                    ><?= e(lang('admin::lang.locations.text_closed')) ?>/<?= e(lang('admin::lang.locations.text_open')) ?></label>
                                 </div>
                             </td>
                         </tr>

@@ -22,6 +22,7 @@ class StaffGroups extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.staff_groups.text_form_name',
         'model' => 'Admin\Models\Staff_groups_model',
+        'request' => 'Admin\Requests\StaffGroup',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'staff_groups/edit/{staff_group_id}',
@@ -49,18 +50,5 @@ class StaffGroups extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('staffs', 'users');
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-            ['staff_group_name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
-            ['customer_account_access', 'lang:admin::lang.staff_groups.label_customer_account_access', 'required|integer'],
-            ['location_access', 'lang:admin::lang.staff_groups.label_location_access', 'required|integer'],
-        ];
-
-        $rules[] = ['permissions.*.*', 'Permission', 'string'];
-
-        return $this->validatePasses($form->getSaveData(), $rules);
     }
 }

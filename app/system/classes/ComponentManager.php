@@ -119,7 +119,7 @@ class ComponentManager
         $this->classMap[$class_path] = $code;
         $this->components[$code] = array_merge($component, [
             'code' => $code,
-            'path' => $class_path
+            'path' => $class_path,
         ]);
 
         if ($extension !== null) {
@@ -213,10 +213,6 @@ class ComponentManager
         if (isset($this->components[$name])) {
             return $this->components[$name];
         }
-
-//        if (isset($this->paymentGateways[$name])) {
-//            return $this->paymentGateways[$name];
-//        }
 
         return null;
     }

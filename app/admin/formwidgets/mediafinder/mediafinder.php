@@ -15,7 +15,10 @@
                 <div id="<?= $this->getId('config-modal-content') ?>">
                     <div class="modal-content">
                         <div class="modal-body text-center">
-                            <span class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
+                            <div class="progress-indicator">
+                                <span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>
+                                <?= e(lang('admin::lang.text_loading')) ?>
+                            </div>
                         </div>
                     </div>
                 </div>

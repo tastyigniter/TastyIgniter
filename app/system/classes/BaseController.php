@@ -57,11 +57,6 @@ class BaseController extends Extendable
     protected $statusCode = 200;
 
     /**
-     * @var array A list of libraries to be auto-loaded
-     */
-    protected $libraries = [];
-
-    /**
      * Class constructor
      */
     public function __construct()
@@ -100,11 +95,6 @@ class BaseController extends Extendable
         }
 
         return $methodExists;
-    }
-
-    public function pageUrl($uri = '', $protocol = null)
-    {
-        return site_url($uri, $protocol);
     }
 
     public function setStatusCode($code)

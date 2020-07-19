@@ -33,14 +33,18 @@ class Pages_model extends Model
      */
     public $timestamps = TRUE;
 
+    protected $guarded = [];
+
+    public $casts = [
+        'language_id' => 'integer',
+        'metadata' => 'json',
+        'status' => 'boolean',
+    ];
+
     public $relation = [
         'belongsTo' => [
             'language' => 'System\Models\Languages_model',
         ],
-    ];
-
-    public $casts = [
-        'navigation' => 'serialize',
     ];
 
     protected $permalinkable = [
@@ -51,7 +55,7 @@ class Pages_model extends Model
 
     public static function getDropdownOptions()
     {
-        return static::isEnabled()->dropdown('name');
+        return static::isEnabled()->dropdown('title');
     }
 
     //

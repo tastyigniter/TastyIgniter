@@ -39,10 +39,13 @@
             $findId = $('[data-find-identifier]', $button.closest('.media-finder'))
 
         if (this.options.useAttachment) {
+            $.ti.loadingIndicator.show()
             $.request(this.options.alias+'::onRemoveAttachment', {
                 data: {media_id: $findId.val()}
             }).done(function () {
                 self.removeMediaItem($button)
+            }).always(function () {
+                $.ti.loadingIndicator.hide()
             })
         } else {
             self.removeMediaItem($button)
@@ -107,10 +110,13 @@
                 items = self.extractItemData(items)
 
                 if (self.options.useAttachment) {
+                    $.ti.loadingIndicator.show()
                     $.request(self.options.alias+'::onAddAttachment', {
                         data: {items: items}
                     }).done(function (response) {
                         self.updateFinder($button, response)
+                    }).always(function () {
+                        $.ti.loadingIndicator.hide()
                     })
                 } else {
                     self.updateFinder($button, items)

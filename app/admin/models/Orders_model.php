@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
@@ -10,6 +11,7 @@ use Main\Classes\MainController;
 use Model;
 use Request;
 use System\Traits\SendsMailTemplate;
+use Carbon\Carbon;
 
 /**
  * Orders Model Class
@@ -23,6 +25,7 @@ class Orders_model extends Model
     use LogsStatusHistory;
     use SendsMailTemplate;
     use Locationable;
+    use Assignable;
 
     const CREATED_AT = 'date_added';
 
@@ -44,14 +47,11 @@ class Orders_model extends Model
      */
     protected $primaryKey = 'order_id';
 
-    protected $guarded = ['*'];
-
-    protected $fillable = ['customer_id', 'first_name', 'last_name', 'email', 'telephone', 'location_id', 'address_id',
-        'cart', 'total_items', 'comment', 'payment', 'order_type', 'order_time', 'order_date', 'order_total',
-        'status_id', 'ip_address', 'user_agent', 'notify', 'assignee_id',
-    ];
-
     protected $timeFormat = 'H:i';
+
+    public $guarded = ['ip_address', 'user_agent', 'hash'];
+
+    protected $hidden = ['cart'];
 
     /**
      * @var array The model table column to convert to dates on insert/update
@@ -59,10 +59,16 @@ class Orders_model extends Model
     public $timestamps = TRUE;
 
     public $casts = [
+        'customer_id' => 'integer',
+        'location_id' => 'integer',
+        'address_id' => 'integer',
+        'total_items' => 'integer',
         'cart' => 'serialize',
         'order_date' => 'date',
         'order_time' => 'time',
-        'invoice_date' => 'dateTime',
+        'order_total' => 'float',
+        'notify' => 'boolean',
+        'processed' => 'boolean',
     ];
 
     public $relation = [
@@ -70,8 +76,6 @@ class Orders_model extends Model
             'customer' => 'Admin\Models\Customers_model',
             'location' => 'Admin\Models\Locations_model',
             'address' => 'Admin\Models\Addresses_model',
-            'status' => 'Admin\Models\Statuses_model',
-            'assignee' => ['Admin\Models\Staffs_model', 'foreignKey' => 'assignee_id'],
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
         ],
         'hasMany' => [
@@ -80,11 +84,8 @@ class Orders_model extends Model
         ],
         'morphMany' => [
             'review' => ['Admin\Models\Reviews_model'],
-            'status_history' => ['Admin\Models\Status_history_model', 'name' => 'object'],
         ],
     ];
-
-    public $appends = ['customer_name', 'order_type_name'];
 
     public static $allowedSortingColumns = [
         'order_id asc', 'order_id desc',
@@ -103,20 +104,12 @@ class Orders_model extends Model
     // Events
     //
 
-    public function beforeCreate()
+    protected function beforeCreate()
     {
         $this->generateHash();
 
         $this->ip_address = Request::getClientIp();
         $this->user_agent = Request::userAgent();
-    }
-
-    public function afterSave()
-    {
-        if (!$this->isDirty('assignee_id'))
-            return;
-
-        Event::fire('admin.order.assigned', [$this]);
     }
 
     //
@@ -159,7 +152,7 @@ class Orders_model extends Model
                 if (count($parts) < 2) {
                     array_push($parts, 'desc');
                 }
-                list($sortField, $sortDirection) = $parts;
+                [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
             }
         }
@@ -198,6 +191,16 @@ class Orders_model extends Model
     // Helpers
     //
 
+    public function isCompleted()
+    {
+        if (!$this->isPaymentProcessed())
+            return FALSE;
+
+        return $this->status_history()->where(
+            'status_id', setting('completed_order_status')
+        )->exists();
+    }
+
     /**
      * Check if an order was successfully placed
      *
@@ -207,7 +210,7 @@ class Orders_model extends Model
      */
     public function isPaymentProcessed()
     {
-        return $this->processed;
+        return $this->processed AND !empty($this->status_id);
     }
 
     public function isDeliveryType()
@@ -232,8 +235,7 @@ class Orders_model extends Model
 
     public function markAsPaymentProcessed()
     {
-        if ($this->processed)
-            return FALSE;
+        Event::fire('admin.order.beforePaymentProcessed', [$this]);
 
         $this->processed = 1;
         $this->save();
@@ -243,18 +245,18 @@ class Orders_model extends Model
         return $this->processed;
     }
 
-    public function logPaymentAttempt($message, $status, $request = [], $response = [])
+    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [])
     {
-        Payment_logs_model::logAttempt($this, $message, $status, $request, $response);
+        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response);
     }
 
     public function updateOrderStatus($id, $options = [])
     {
-        if (!$status = Statuses_model::find($id)) {
-            return;
-        }
+        $id = $id ?? $this->status_id ?? setting('default_order_status');
 
-        return $this->addStatusHistory($status, $options);
+        return $this->addStatusHistory(
+            Statuses_model::find($id), $options
+        );
     }
 
     /**
@@ -324,12 +326,13 @@ class Orders_model extends Model
         $data['telephone'] = $model->telephone;
         $data['order_comment'] = $model->comment;
 
-        $data['order_type'] = ($model->order_type == '1') ? 'delivery' : 'collection';
-        $data['order_time'] = $model->order_time.' '.$model->order_date->format('d M');
-        $data['order_date'] = $model->date_added->format('d M y');
+        $data['order_type'] = $model->order_type_name;
+        $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(setting('time_format'));
+        $data['order_date'] = $model->date_added->format(setting('date_format'));
 
-        $data['invoice_id'] = $model->invoice_id;
-        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format('d M y') : null;
+        $data['invoice_id'] = $model->invoice_number;
+        $data['invoice_number'] = $model->invoice_number;
+        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format(setting('date_format')) : null;
 
         $data['order_payment'] = ($model->payment_method)
             ? $model->payment_method->name
@@ -339,7 +342,6 @@ class Orders_model extends Model
         $menus = $model->getOrderMenus();
         $menuOptions = $model->getOrderMenuOptions();
         foreach ($menus as $menu) {
-
             $optionData = [];
             if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
                 foreach ($menuItemOptions as $menuItemOption) {
@@ -379,13 +381,13 @@ class Orders_model extends Model
             $data['location_address'] = format_address($model->location->getAddress());
         }
 
-        $status = $model->status()->first();
-        $data['status_name'] = $status ? $status->status_name : null;
-        $data['status_comment'] = $status ? $status->status_comment : null;
+        $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();
+        $data['status_name'] = $statusHistory ? optional($statusHistory->status)->status_name : null;
+        $data['status_comment'] = $statusHistory ? $statusHistory->comment : null;
 
         $controller = MainController::getController() ?: new MainController;
-        $data['order_view_url'] = $controller->pageUrl('account/orders', [
-            'orderId' => $model->order_id,
+        $data['order_view_url'] = $controller->pageUrl('account/order', [
+            'hash' => $model->hash,
         ]);
 
         return $data;

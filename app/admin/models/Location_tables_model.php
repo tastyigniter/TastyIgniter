@@ -18,6 +18,11 @@ class Location_tables_model extends Model
 
     public $incrementing = FALSE;
 
+    public $casts = [
+        'location_id' => 'integer',
+        'table_id' => 'integer',
+    ];
+
     public $relation = [
         'belongsTo' => [
             'tables' => ['Admin\Models\Tables_model'],

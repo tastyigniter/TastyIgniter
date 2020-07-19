@@ -1,5 +1,4 @@
 .page-wrapper {
-  padding: $page-padding-x $page-padding-y $page-padding-y;
   overflow-y: auto;
   position: absolute;
   top: $page-top;
@@ -9,6 +8,11 @@
 
   > .content {
     margin: 0;
+  }
+
+  .page-content {
+    padding-top: $page-padding-y;
+    padding-bottom: $page-padding-y;
   }
 }
 @include media-breakpoint-down(sm) {

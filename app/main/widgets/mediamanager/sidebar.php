@@ -137,5 +137,5 @@
 </script>
 
 <script type="text/template" data-media-no-selection-template>
-    <? //= $this->makePartial('mediamanager/multi_preview_template') ?>
+    <div></div>
 </script>

@@ -131,18 +131,13 @@
   },
   {
     "sort": "config",
+    "item": "menus_page",
+    "value": "local/menus"
+  },
+  {
+    "sort": "config",
     "item": "guest_order",
     "value": "1"
-  },
-  {
-    "sort": "config",
-    "item": "delivery_time",
-    "value": "45"
-  },
-  {
-    "sort": "config",
-    "item": "collection_time",
-    "value": "15"
   },
   {
     "sort": "config",
@@ -177,11 +172,6 @@
   {
     "sort": "config",
     "item": "allow_reviews",
-    "value": "1"
-  },
-  {
-    "sort": "config",
-    "item": "auto_invoicing",
     "value": "1"
   },
   {

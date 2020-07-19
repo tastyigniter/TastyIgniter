@@ -28,6 +28,11 @@ class Addresses_model extends Model
         ],
     ];
 
+    public $casts = [
+        'customer_id' => 'integer',
+        'country_id' => 'integer',
+    ];
+
     public static $allowedSortingColumns = [
         'address_id asc', 'address_id desc',
     ];

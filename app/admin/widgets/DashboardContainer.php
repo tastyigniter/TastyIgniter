@@ -21,7 +21,7 @@ class DashboardContainer extends BaseWidget
     /**
      * @var string Determines whether widgets could be added and deleted.
      */
-    public $canAddAndDelete = TRUE;
+    public $canManage = TRUE;
 
     /**
      * @var string Determines whether widgets could be set as default.
@@ -99,6 +99,9 @@ class DashboardContainer extends BaseWidget
 
     public function loadAssets()
     {
+        $this->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js', 'sortable-js');
+        $this->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js');
+
         $this->addCss('css/dashboardcontainer.css');
         $this->addJs('js/dashboardcontainer.js');
     }
@@ -165,6 +168,10 @@ class DashboardContainer extends BaseWidget
 
     public function onResetWidgets()
     {
+        if (!$this->canManage) {
+            throw new ApplicationException('Access denied.');
+        }
+
         $this->resetWidgets();
 
         $this->vars['widgets'] = $this->dashboardWidgets;
@@ -189,6 +196,10 @@ class DashboardContainer extends BaseWidget
 
     public function onUpdateWidget()
     {
+        if (!$this->canManage) {
+            throw new ApplicationException('Access denied.');
+        }
+
         $alias = post('alias');
 
         $widget = $this->findWidgetByAlias($alias);
@@ -220,7 +231,7 @@ class DashboardContainer extends BaseWidget
      */
     public function addWidget($widget, $size)
     {
-        if (!$this->canAddAndDelete) {
+        if (!$this->canManage) {
             throw new ApplicationException('Access denied.');
         }
 
@@ -251,34 +262,36 @@ class DashboardContainer extends BaseWidget
         ];
     }
 
-    public function onSetWidgetOrders()
+    public function onSetWidgetPriorities()
     {
         $aliases = trim(post('aliases'));
-        $orders = trim(post('orders'));
+        $priorities = trim(post('priorities'));
 
         if (!$aliases) {
             throw new ApplicationException('Invalid aliases string.');
         }
 
-        if (!$orders) {
-            throw new ApplicationException('Invalid orders string.');
+        if (!$priorities) {
+            throw new ApplicationException('Invalid priorities string.');
         }
 
         $aliases = explode(',', $aliases);
-        $orders = explode(',', $orders);
+        $priorities = explode(',', $priorities);
 
-        if (count($aliases) != count($orders)) {
+        if (count($aliases) != count($priorities)) {
             throw new ApplicationException('Invalid data posted.');
         }
 
         $widgets = $this->getWidgetsFromUserPreferences();
         foreach ($aliases as $index => $alias) {
             if (isset($widgets[$alias])) {
-                $widgets[$alias]['sortOrder'] = $orders[$index];
+                $widgets[$alias]['priority'] = (int)$index;
             }
         }
 
         $this->setWidgetsToUserPreferences($widgets);
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Dashboard widgets updated'))->now();
     }
 
     //
@@ -339,7 +352,7 @@ class DashboardContainer extends BaseWidget
 
     protected function removeWidget($alias)
     {
-        if (!$this->canAddAndDelete) {
+        if (!$this->canManage) {
             throw new ApplicationException('Access denied.');
         }
 
@@ -401,17 +414,17 @@ class DashboardContainer extends BaseWidget
     {
         $properties = $widget->defineProperties();
 
-        $property = [
-            'property' => 'width',
-            'label' => lang('admin::lang.dashboard.label_widget_columns'),
-            'comment' => lang('admin::lang.dashboard.help_widget_columns'),
-            'type' => 'select',
-            'options' => $this->getWidgetPropertyWidthOptions(),
+        $result = [
+            'width' => [
+                'property' => 'width',
+                'label' => lang('admin::lang.dashboard.label_widget_columns'),
+                'comment' => lang('admin::lang.dashboard.help_widget_columns'),
+                'type' => 'select',
+                'options' => $this->getWidgetPropertyWidthOptions(),
+            ],
         ];
-        $result['width'] = $property;
 
         foreach ($properties as $name => $params) {
-
             $propertyType = array_get($params, 'type', 'text');
 
             if (!$this->checkWidgetPropertyType($propertyType)) continue;
@@ -485,7 +498,7 @@ class DashboardContainer extends BaseWidget
         $defaultWidgets = params()->get($this->getSystemParametersKey(), $this->defaultWidgets);
 
         $widgets = User_preferences_model::onUser()
-                                         ->get($this->getUserPreferencesKey(), $defaultWidgets);
+            ->get($this->getUserPreferencesKey(), $defaultWidgets);
 
         if (!is_array($widgets)) {
             return [];

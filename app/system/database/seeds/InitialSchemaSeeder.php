@@ -1,15 +1,7 @@
 <?php namespace System\Database\Seeds;
 
-use Admin\Models\Customer_groups_model;
-use Admin\Models\Mealtimes_model;
-use Admin\Models\Staff_groups_model;
-use Admin\Models\Statuses_model;
 use Illuminate\Database\Seeder;
-use System\Models\Countries_model;
-use System\Models\Currencies_model;
-use System\Models\Languages_model;
-use System\Models\Permissions_model;
-use System\Models\Settings_model;
+use Illuminate\Support\Facades\DB;
 
 class InitialSchemaSeeder extends Seeder
 {
@@ -29,53 +21,54 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedLanguages();
 
-        $this->seedMealtimes();
+        $this->seedDefaultLocation();
 
-        $this->seedPermissions();
+        $this->seedMealtimes();
 
         $this->seedSettings();
 
         $this->seedStaffGroups();
+
+        $this->seedStaffRoles();
 
         $this->seedStatuses();
     }
 
     protected function seedCountries()
     {
-        if (Countries_model::count())
+        if (DB::table('countries')->count())
             return;
 
-        $countries = $this->getSeedRecords('countries');
+        DB::table('countries')->insert($this->getSeedRecords('countries'));
 
-        foreach ($countries as $country) {
-            $country['format'] = '{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}';
-            $country['status'] = 1;
-            Countries_model::insert($country);
-        }
+        DB::table('countries')->update([
+            'format' => '{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}',
+            'status' => 1,
+        ]);
     }
 
     protected function seedCurrencies()
     {
-        if (Currencies_model::count())
+        if (DB::table('currencies')->count())
             return;
 
         $currencies = $this->getSeedRecords('currencies');
 
         foreach ($currencies as $currency) {
-            $query = Countries_model::where('iso_code_3', $currency['iso_alpha3']);
+            $query = DB::table('countries')->where('iso_code_3', $currency['iso_alpha3']);
             if ($country = $query->first()) {
                 $currency['country_id'] = $country->country_id;
-                Currencies_model::insert($currency);
+                DB::table('currencies')->insert($currency);
             }
         }
     }
 
     protected function seedCustomerGroups()
     {
-        if (Customer_groups_model::count())
+        if (DB::table('customer_groups')->count())
             return;
 
-        Customer_groups_model::create([
+        DB::table('customer_groups')->insert([
             'group_name' => 'Default group',
             'approval' => FALSE,
         ]);
@@ -83,10 +76,10 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedLanguages()
     {
-        if (Languages_model::count())
+        if (DB::table('languages')->count())
             return;
 
-        Languages_model::insert([
+        DB::table('languages')->insert([
             'code' => 'en',
             'name' => 'English',
             'idiom' => 'english',
@@ -95,118 +88,144 @@ class InitialSchemaSeeder extends Seeder
         ]);
     }
 
+    protected function seedDefaultLocation()
+    {
+        // Abort: a location already exists
+        if (DB::table('locations')->count())
+            return TRUE;
+
+        $location = $this->getSeedRecords('location');
+        $location['location_email'] = DatabaseSeeder::$siteEmail;
+        $location['options'] = serialize($location['options']);
+        $location['delivery_areas'][0]['boundaries']['circle'] = json_encode(
+            $location['delivery_areas'][0]['boundaries']['circle']
+        );
+
+        $locationId = DB::table('locations')->insertGetId(array_except($location, ['delivery_areas']));
+
+        $this->seedLocationTables($locationId);
+    }
+
+    protected function seedLocationTables($locationId)
+    {
+        if (DB::table('tables')->count())
+            return;
+
+        for ($i = 1; $i < 15; $i++) {
+            $tableId = DB::table('tables')->insertGetId([
+                'table_name' => 'Table '.$i,
+                'min_capacity' => random_int(2, 5),
+                'max_capacity' => random_int(6, 12),
+                'table_status' => 1,
+            ]);
+
+            DB::table('location_tables')->insert([
+                'location_id' => $locationId,
+                'table_id' => $tableId,
+            ]);
+        }
+    }
+
     protected function seedMealtimes()
     {
-        if (Mealtimes_model::count())
+        if (DB::table('mealtimes')->count())
             return;
 
-        Mealtimes_model::insert([
+        DB::table('mealtimes')->insert([
             [
-                "mealtime_name" => "Breakfast",
-                "start_time" => "07:00:00",
-                "end_time" => "10:00:00",
-                "mealtime_status" => TRUE,
+                'mealtime_name' => 'Breakfast',
+                'start_time' => '07:00:00',
+                'end_time' => '10:00:00',
+                'mealtime_status' => TRUE,
             ],
             [
-                "mealtime_name" => "Lunch",
-                "start_time" => "12:00:00",
-                "end_time" => "14:30:00",
-                "mealtime_status" => TRUE,
+                'mealtime_name' => 'Lunch',
+                'start_time' => '12:00:00',
+                'end_time' => '14:30:00',
+                'mealtime_status' => TRUE,
             ],
             [
-                "mealtime_name" => "Dinner",
-                "start_time" => "18:00:00",
-                "end_time" => "20:00:00",
-                "mealtime_status" => TRUE,
+                'mealtime_name' => 'Dinner',
+                'start_time' => '18:00:00',
+                'end_time' => '20:00:00',
+                'mealtime_status' => TRUE,
             ],
         ]);
-    }
-
-    protected function seedPages()
-    {
-        if (Pages_model::count())
-            return;
-
-        $language = Languages_model::whereCode('en')->first();
-
-        Pages_model::insert([
-            [
-                "language_id" => $language->language_id,
-                "name" => "About Us",
-                "title" => "About Us",
-                "heading" => "About Us",
-                "content" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "meta_description" => "",
-                "meta_keywords" => "",
-//                "layout_id"        => 17,
-                "navigation" => "a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}",
-                "date_added" => "2014-04-19 16:57:21",
-                "date_updated" => "2015-05-07 12:39:52",
-                "status" => 1,
-            ], [
-                "language_id" => $language->language_id,
-                "name" => "Policy",
-                "title" => "Policy",
-                "heading" => "Policy",
-                "content" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "meta_description" => "",
-                "meta_keywords" => "",
-//                "layout_id"        => 17,
-                "navigation" => "a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}",
-                "date_added" => "2014-04-19 17:21:23",
-                "date_updated" => "2015-05-16 09:18:39",
-                "status" => 1,
-            ],
-        ]);
-    }
-
-    protected function seedPermissions()
-    {
-        if (Permissions_model::count())
-            return;
-
-        $permissions = $this->getSeedRecords('permissions');
-
-        foreach ($permissions as $permission) {
-            Permissions_model::insert($permission);
-        }
     }
 
     protected function seedSettings()
     {
-        if (Settings_model::count())
+        if (DB::table('settings')->count())
             return;
 
-        $settings = $this->getSeedRecords('settings');
-
-        foreach ($settings as $setting) {
-            Settings_model::insert($setting);
-        }
+        DB::table('settings')->insert($this->getSeedRecords('settings'));
     }
 
     protected function seedStaffGroups()
     {
-        if (Staff_groups_model::count())
+        if (DB::table('staff_groups')->count())
             return;
 
-        Staff_groups_model::insert([
-            'staff_group_name' => 'Administrator',
-            'customer_account_access' => TRUE,
-            'location_access' => TRUE,
-            'permissions' => '',
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Owners',
+            'description' => 'Default group for owners',
+        ]);
+
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Managers',
+            'description' => 'Default group for managers',
+        ]);
+
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Waiters',
+            'description' => 'Default group for waiters.',
+        ]);
+
+        DB::table('staff_groups')->insert([
+            'staff_group_name' => 'Delivery',
+            'description' => 'Default group for delivery drivers.',
+        ]);
+    }
+
+    protected function seedStaffRoles()
+    {
+        if (DB::table('staff_roles')->count())
+            return;
+
+        DB::table('staff_roles')->insert([
+            'name' => 'Owner',
+            'code' => 'owner',
+            'description' => 'Default role for restaurant owners',
+        ]);
+
+        DB::table('staff_roles')->insert([
+            'name' => 'Manager',
+            'code' => 'manager',
+            'description' => 'Default role for restaurant managers.',
+            'permissions' => 'a:18:{s:15:"Admin.Dashboard";s:1:"1";s:16:"Admin.Categories";s:1:"1";s:14:"Admin.Statuses";s:1:"1";s:12:"Admin.Staffs";s:1:"1";s:17:"Admin.StaffGroups";s:1:"1";s:15:"Admin.Customers";s:1:"1";s:20:"Admin.CustomerGroups";s:1:"1";s:13:"Admin.Reviews";s:1:"1";s:14:"Admin.Payments";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";s:12:"Admin.Tables";s:1:"1";s:15:"Admin.Locations";s:1:"1";s:13:"Admin.Coupons";s:1:"1";s:15:"Admin.Mealtimes";s:1:"1";s:11:"Admin.Menus";s:1:"1";s:11:"Site.Themes";s:1:"1";s:18:"Admin.MediaManager";s:1:"1";}',
+        ]);
+
+        DB::table('staff_roles')->insert([
+            'name' => 'Waiter',
+            'code' => 'waiter',
+            'description' => 'Default role for restaurant waiters.',
+            'permissions' => 'a:4:{s:16:"Admin.Categories";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";s:11:"Admin.Menus";s:1:"1";}',
+        ]);
+
+        DB::table('staff_roles')->insert([
+            'name' => 'Delivery',
+            'code' => 'delivery',
+            'description' => 'Default role for restaurant delivery.',
+            'permissions' => 'a:3:{s:14:"Admin.Statuses";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";}',
         ]);
     }
 
     protected function seedStatuses()
     {
-        if (Statuses_model::count())
+        if (DB::table('statuses')->count())
             return;
 
-        $statuses = $this->getSeedRecords('statuses');
-
-        foreach ($statuses as $status) {
-            Statuses_model::insert($status);
-        }
+        DB::table('statuses')->insert($this->getSeedRecords('statuses'));
     }
 
     protected function getSeedRecords($name)

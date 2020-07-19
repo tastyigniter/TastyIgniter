@@ -26,8 +26,6 @@ description: Default layout
     <footer id="page-footer">
         <?= partial('footer'); ?>
     </footer>
-    <script type="text/javascript" src="<?= asset('app/system/assets/ui/js/vendor/vendor.js'); ?>" id="vendor-js"></script>
-    <script type="text/javascript" src="<?= asset('app/system/assets/ui/js/flashmessage.js'); ?>" id="flashmessage-js"></script>
-    <script type="text/javascript" src="<?= asset('app/system/assets/ui/js/app.js'); ?>" id="app-js"></script>
+    <script type="text/javascript" src="<?= asset('app/admin/assets/js/admin.js'); ?>" id="app-js"></script>
     <?= get_script_tags(['ui', 'widget', 'component', 'custom', 'theme']); ?></body>
 </html>

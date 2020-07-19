@@ -18,12 +18,6 @@
     </div>
 
     <div class="media-container">
-
-        <div id="<?= $this->getId('folder-tree') ?>"
-             data-control="folder-tree">
-            <?= $this->makePartial('mediamanager/folder_tree') ?>
-        </div>
-
         <div class="row no-gutters">
             <div
                 class="col-9 border-right wrap-none wrap-left"

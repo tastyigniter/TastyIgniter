@@ -31,15 +31,11 @@ class Location_areas_model extends AbstractArea
         return $conditions;
     }
 
-    public function afterSave()
+    protected function afterSave()
     {
         if (!$this->is_default)
             return;
 
         $this->newQuery()->whereKeyNot($this->getKey())->update(['is_default' => 0]);
     }
-
-    //
-    // Helpers
-    //
 }

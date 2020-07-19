@@ -6,6 +6,7 @@ use Igniter\Flame\Support\PagicHelper;
 use Igniter\Flame\Support\StringParser;
 use Igniter\Flame\Traits\Singleton;
 use Illuminate\Mail\Markdown;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use System\Helpers\ViewHelper;
@@ -41,6 +42,11 @@ class MailManager
      * @var array List of registered layouts in the system
      */
     protected $registeredLayouts;
+
+    /**
+     * @var array List of registered variables in the system
+     */
+    protected $registeredVariables;
 
     /**
      * @var bool Internal marker for rendering mode
@@ -85,6 +91,46 @@ class MailManager
         return $this->addContentToMailerInternal($message, $template, $data);
     }
 
+    public function applyMailerConfigValues()
+    {
+        $config = App::make('config');
+        $settings = App::make('system.setting');
+        $config->set('mail.driver', $settings->get('protocol'));
+        $config->set('mail.from.name', $settings->get('sender_name'));
+        $config->set('mail.from.address', $settings->get('sender_email'));
+
+        switch ($settings->get('protocol')) {
+            case 'sendmail':
+                $config->set('mail.sendmail', $settings->get('sendmail_path'));
+                break;
+            case 'smtp':
+                $config->set('mail.host', $settings->get('smtp_host'));
+                $config->set('mail.port', $settings->get('smtp_port'));
+                $config->set('mail.encryption', strlen($settings->get('smtp_encryption'))
+                    ? $settings->get('smtp_encryption') : null
+                );
+                $config->set('mail.username', strlen($settings->get('smtp_user'))
+                    ? $settings->get('smtp_user') : null
+                );
+                $config->set('mail.password', strlen($settings->get('smtp_pass'))
+                    ? $settings->get('smtp_pass') : null
+                );
+                break;
+            case 'mailgun':
+                $config->set('services.mailgun.domain', $settings->get('mailgun_domain'));
+                $config->set('services.mailgun.secret', $settings->get('mailgun_secret'));
+                break;
+            case 'postmark':
+                $config->set('services.postmark.token', $settings->get('postmark_token'));
+                break;
+            case 'ses':
+                $config->set('services.ses.key', $settings->get('ses_key'));
+                $config->set('services.ses.secret', $settings->get('ses_secret'));
+                $config->set('services.ses.region', $settings->get('ses_region'));
+                break;
+        }
+    }
+
     /**
      * @param \Illuminate\Mail\Message $message
      * @param $template
@@ -127,8 +173,8 @@ class MailManager
     /**
      * Render the Markdown template into HTML.
      *
-     * @param  string $content
-     * @param  array $data
+     * @param string $content
+     * @param array $data
      * @return string
      */
     public function render($content, $data = [])
@@ -299,6 +345,18 @@ class MailManager
     }
 
     /**
+     * Returns a list of the registered variables.
+     * @return array
+     */
+    public function listRegisteredVariables()
+    {
+        if (is_null($this->registeredVariables))
+            $this->loadRegisteredTemplates();
+
+        return $this->registeredVariables;
+    }
+
+    /**
      * Registers mail views and manageable layouts.
      * @param array $definitions
      */
@@ -321,13 +379,6 @@ class MailManager
             $this->registeredTemplates = [];
         }
 
-        // Prior syntax where (key) code => (value) description
-        if (!isset($definitions[0])) {
-            $definitions = array_keys($definitions);
-        }
-
-        $definitions = array_combine($definitions, $definitions);
-
         $this->registeredTemplates = $definitions + $this->registeredTemplates;
     }
 
@@ -342,6 +393,19 @@ class MailManager
         }
 
         $this->registeredPartials = $definitions + $this->registeredPartials;
+    }
+
+    /**
+     * Registers mail variables.
+     * @param array $definitions
+     */
+    public function registerMailVariables(array $definitions)
+    {
+        if (!$this->registeredVariables) {
+            $this->registeredVariables = [];
+        }
+
+        $this->registeredVariables = $definitions + $this->registeredVariables;
     }
 
     /**

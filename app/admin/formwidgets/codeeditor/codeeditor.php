@@ -8,7 +8,7 @@
         data-theme="<?= $theme ?>"
         data-line-separator="<?= $lineSeparator ?>"
         data-read-only="<?= $readOnly ?>"
-        data-height="<?= $size == 'small' ? 350 : 600 ?>"
+        data-height="<?= $size == 'small' ? 250 : 520 ?>"
     >
         <textarea
             name="<?= $name ?>"

@@ -15,7 +15,7 @@ class Onboarding extends BaseDashboardWidget
 
     public function initialize()
     {
-        $this->setProperty('cssClass', 'widget-item-onboarding');
+        $this->setProperty('cssClass', 'bg-light widget-item-onboarding');
     }
 
     public function defineProperties()

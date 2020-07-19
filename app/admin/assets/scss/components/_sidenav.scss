@@ -5,11 +5,10 @@
   width: $page-margin-left;
   z-index: 1030;
 }
-
 .nav-sidebar {
   background-color: $sidenav-bg;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   table-layout: fixed;
   position: relative;
   display: block;
@@ -18,7 +17,6 @@
   left: 0;
   right: 0;
   padding-top: 20px;
-  padding-bottom: 35px;
 
   &::-webkit-scrollbar {
     display: none;
@@ -26,10 +24,13 @@
 
   > .nav {
     @include flex-direction(column);
+    padding-bottom: 35px;
+    @-moz-document url-prefix() {
+      margin-right: -15px;
+    }
   }
 
   .nav {
-
     .nav-item {
       width: 100%;
     }
@@ -37,16 +38,15 @@
     > li > a {
       display: block;
       color: $white;
-      opacity: 0.65;
+      opacity: 0.75;
       line-height: $sidenav-line-height;
       padding: $sidenav-padding-x $sidenav-padding-y;
-      text-transform: uppercase;
-      font-weight: 500;
+      font-weight: $sidenav-font-weight;
+      font-size: $sidenav-font-size;
     }
 
     > li > a:focus,
     > li > a:hover {
-      background-color: darken($sidenav-bg, 1.5%);
       opacity: 1;
     }
 
@@ -58,7 +58,7 @@
     }
 
     .nav {
-      background-color: $sidenav-bg-light;
+      background-color: lighten($sidenav-bg, 3%);
 
       &.show {
         display: block;
@@ -69,6 +69,7 @@
         line-height: $sidenav-line-height-sm;
         text-transform: none;
         font-weight: $font-weight-normal;
+        font-size: $sidenav-submenu-font-size;
       }
 
       li > a:hover,
@@ -114,12 +115,10 @@
     transform: rotate(-135deg) translate(0, -50%);
   }
 }
-
 @include media-breakpoint-down(sm) {
   .navbar-brand {
     display: none;
   }
-
   .sidebar {
     width: 100%;
 
@@ -127,7 +126,6 @@
       height: 0;
     }
   }
-
   .nav-sidebar {
     display: none;
     position: relative;

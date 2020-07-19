@@ -1,6 +1,7 @@
 <?php namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
+use Admin\Models\Categories_model;
 use AdminMenu;
 
 class Categories extends AdminController
@@ -8,6 +9,7 @@ class Categories extends AdminController
     public $implement = [
         'Admin\Actions\ListController',
         'Admin\Actions\FormController',
+        'Admin\Actions\LocationAwareController',
     ];
 
     public $listConfig = [
@@ -23,6 +25,7 @@ class Categories extends AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.categories.text_form_name',
         'model' => 'Admin\Models\Categories_model',
+        'request' => 'Admin\Requests\Category',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'categories/edit/{category_id}',
@@ -49,21 +52,12 @@ class Categories extends AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('categories', 'kitchen');
+        AdminMenu::setContext('categories', 'restaurant');
     }
 
-    public function formValidate($model, $form)
+    public function formBeforeSave($model)
     {
-        $namedRules = [
-            ['name', 'lang:admin::lang.label_name', 'required|min:2|max:128'],
-            ['description', 'lang:admin::lang.label_description', 'min:2'],
-            ['permalink_slug', 'lang:admin::lang.categories.label_permalink_slug', 'alpha_dash|max:255'],
-            ['parent_id', 'lang:admin::lang.categories.label_parent', 'integer'],
-            ['priority', 'lang:admin::lang.categories.label_priority', 'integer'],
-            ['status', 'lang:admin::lang.label_status', 'required|integer'],
-            ['locations.*', 'lang:admin::lang.column_location', 'integer'],
-        ];
-
-        return $this->validatePasses(post($form->arrayName), $namedRules);
+        if (Categories_model::isBroken())
+            Categories_model::fixTree();
     }
 }

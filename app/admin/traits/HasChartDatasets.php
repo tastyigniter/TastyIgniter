@@ -29,6 +29,11 @@ trait HasChartDatasets
         $start = Carbon::parse($start);
         $end = Carbon::parse($end);
 
+        if ($start->eq($end)) {
+            $start = $start->startOfDay();
+            $end = $end->endOfDay();
+        }
+
         return $this->getDatasets($start, $end);
     }
 

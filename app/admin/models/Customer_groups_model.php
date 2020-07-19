@@ -19,13 +19,17 @@ class Customer_groups_model extends Model
      */
     protected $primaryKey = 'customer_group_id';
 
-    protected $fillable = ['group_name', 'approval'];
+    public $casts = [
+        'approval' => 'boolean',
+    ];
 
     public $relation = [
         'hasMany' => [
             'customers' => 'Admin\Models\Customers_model',
         ],
     ];
+
+    protected static $defaultGroup;
 
     public static function getDropdownOptions()
     {
@@ -41,9 +45,19 @@ class Customer_groups_model extends Model
         return $this->customers()->count();
     }
 
+    //
+    //
+    //
+
     public function requiresApproval()
     {
         return $this->approval == 1;
+    }
+
+    public function makeDefault()
+    {
+        setting('customer_group_id', $this->getKey());
+        setting()->save();
     }
 
     /**
@@ -53,9 +67,25 @@ class Customer_groups_model extends Model
     public static function updateDefault($groupId)
     {
         if ($model = self::find($groupId)) {
-            setting()->set('customer_group_id', $model->getKey());
+            $model->makeDefault();
 
             return TRUE;
         }
+    }
+
+    public static function getDefault()
+    {
+        if (self::$defaultGroup !== null) {
+            return self::$defaultGroup;
+        }
+
+        $defaultGroup = self::where('customer_group_id', setting('customer_group_id'))->first();
+        if (!$defaultGroup) {
+            if ($defaultGroup = self::first()) {
+                $defaultGroup->makeDefault();
+            }
+        }
+
+        return self::$defaultGroup = $defaultGroup;
     }
 }

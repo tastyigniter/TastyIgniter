@@ -17,7 +17,7 @@ class Menu_option_values_model extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'option_values';
+    protected $table = 'menu_option_values';
 
     /**
      * @var string The database table primary key
@@ -26,6 +26,13 @@ class Menu_option_values_model extends Model
 
     protected $fillable = ['option_id', 'value', 'price'];
 
+    public $casts = [
+        'option_value_id' => 'integer',
+        'option_id' => 'integer',
+        'price' => 'float',
+        'priority' => 'integer',
+    ];
+
     public $relation = [
         'belongsTo' => [
             'option' => ['Admin\Models\Menu_options_model'],
@@ -33,7 +40,7 @@ class Menu_option_values_model extends Model
     ];
 
     public $sortable = [
-        'sortOrderColumn'  => 'priority',
+        'sortOrderColumn' => 'priority',
         'sortWhenCreating' => FALSE,
     ];
 

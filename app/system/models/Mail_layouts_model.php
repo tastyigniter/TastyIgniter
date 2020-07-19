@@ -22,23 +22,29 @@ class Mail_layouts_model extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'mail_templates';
+    protected $table = 'mail_layouts';
 
     /**
      * @var string The database table primary key
      */
-    protected $primaryKey = 'template_id';
+    protected $primaryKey = 'layout_id';
 
-    protected $fillable = ['name', 'code', 'language_id', 'layout', 'layout_css', 'plain_layout', 'status'];
+    protected $guarded = [];
 
     /**
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
 
+    public $casts = [
+        'language_id' => 'integer',
+        'status' => 'boolean',
+        'is_locked' => 'boolean',
+    ];
+
     public $relation = [
         'hasMany' => [
-            'templates' => ['System\Models\Mail_templates_model', 'foreignKey' => 'template_id', 'delete' => TRUE],
+            'templates' => ['System\Models\Mail_templates_model', 'foreignKey' => 'layout_id'],
         ],
         'belongsTo' => [
             'language' => 'System\Models\Languages_model',
@@ -50,10 +56,10 @@ class Mail_layouts_model extends Model
         return self::dropdown('name');
     }
 
-    public function beforeDelete()
+    protected function beforeDelete()
     {
         if ($this->is_locked) {
-            throw new ApplicationException('Cannot delete this template because it is locked');
+            throw new ApplicationException('You cannot delete a locked template');
         }
     }
 
@@ -80,7 +86,7 @@ class Mail_layouts_model extends Model
             return self::$codeCache;
         }
 
-        return self::$codeCache = self::lists('template_id', 'code');
+        return self::$codeCache = self::lists('layout_id', 'code');
     }
 
     public static function getIdFromCode($code)

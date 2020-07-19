@@ -1,61 +1,78 @@
 .toolbar {
-  padding: 20px 0;
-
   .toolbar-action {
     clear: both;
     width: 100%;
+    padding-left: $page-padding-x;
+    padding-right: $page-padding-x;
+    padding-bottom: 20px;
+  }
+}
+.toolbar-action {
+  .btn-group {
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
 
-    .btn {
-      border-bottom-width: 4px;
-      outline: 0 none;
-      margin-left: 5px;
-      margin-right: 5px;
+  > .btn {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 
-      &:first-child {
-        margin-left: 0;
-      }
+  .btn {
+    outline: 0 none;
 
-      &:last-child {
-        margin-right: 0;
-      }
-
-      .fa {
-        padding-right: 3px;
-      }
+    &:first-child {
+      margin-left: 0;
     }
 
-    .btn:hover,
-    .btn:focus {
-      margin-top: 1px;
-      border-bottom-width: 3px;
+    &:last-child {
+      margin-right: 0;
     }
 
-    .btn.active,
-    .btn:active {
+    &.active,
+    &:active {
       box-shadow: none;
-      border-bottom-width: 2px;
-      margin-top: 2px;
     }
+  }
 
-    .fa {
-      padding: 0;
+  .btn + .btn {
+    margin-left: $btn-spacer;
+  }
+
+  .btn-left {
+    float: left;
+  }
+
+  .btn-right {
+    float: right;
+  }
+
+  .btn-primary {
+    color: #FFFFFF;
+    @include hover() {
+      color: #FFFFFF;
     }
+  }
 
-    .btn-default {
-      border-width: 1px 1px 4px 1px;
+  .btn-outline-primary {
+    color: $primary;
+    @include hover() {
+      color: #FFFFFF;
     }
+  }
 
-    .btn-filter {
-      float: right;
-    }
-
-    @each $color, $value in $theme-colors {
+  @each $color, $value in $theme-colors {
+    @if not ($color == "primary") {
       .btn-#{$color} {
-        border-bottom-color: darken($value, 7.5%);
+        @include button-variant($secondary, $secondary, darken($value, 7.5%), darken($value, 10%), darken($value, 10%), darken($value, 12.5%));
       }
-
-      @include hover-focus {
-        border-bottom-color: $value;
+    }
+  }
+  @each $color, $value in $theme-colors {
+    @if not ($color == "primary") {
+      .btn-outline-#{$color} {
+        @include button-outline-variant($secondary, color-yiq($value), $value, $value);
       }
     }
   }

@@ -19,6 +19,10 @@ class Statuses_model extends Model
      */
     protected $primaryKey = 'status_id';
 
+    public $casts = [
+        'notify_customer' => 'boolean',
+    ];
+
     public $relation = [
         'hasMany' => [
             'status_history' => 'Admin\Models\Status_history_model',
@@ -41,7 +45,7 @@ class Statuses_model extends Model
     public function getStatusForDropdownOptions()
     {
         return [
-            'order'   => lang('admin::lang.statuses.text_order'),
+            'order' => lang('admin::lang.statuses.text_order'),
             'reserve' => lang('admin::lang.statuses.text_reservation'),
         ];
     }

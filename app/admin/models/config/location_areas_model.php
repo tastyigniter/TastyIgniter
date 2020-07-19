@@ -13,17 +13,19 @@ return [
             ],
             'is_default' => [
                 'label' => 'lang:admin::lang.locations.label_area_default',
-                'type' => 'switch',
+                'type' => 'radiotoggle',
                 'span' => 'right',
-                'on' => 'lang:admin::lang.text_yes',
-                'off' => 'lang:admin::lang.text_no',
+                'options' => [
+                    'lang:admin::lang.text_no',
+                    'lang:admin::lang.text_yes',
+                ],
                 'attributes' => [
                     'data-toggle' => 'area-default',
                 ],
             ],
             'type' => [
                 'label' => 'lang:admin::lang.locations.label_area_type',
-                'type' => 'radio',
+                'type' => 'radiotoggle',
                 'default' => 'address',
                 'options' => [
                     'address' => 'lang:admin::lang.locations.text_custom',
@@ -54,6 +56,7 @@ return [
                             'default' => 'region',
                             'options' => [
                                 'street' => 'lang:admin::lang.locations.text_address_component_street',
+                                'sub_locality' => 'lang:admin::lang.locations.text_address_component_town',
                                 'locality' => 'lang:admin::lang.locations.text_address_component_city',
                                 'admin_level_2' => 'lang:admin::lang.locations.text_address_component_region',
                                 'admin_level_1' => 'lang:admin::lang.locations.text_address_component_state',
@@ -79,12 +82,12 @@ return [
                         ],
                         'amount' => [
                             'label' => 'lang:admin::lang.locations.label_area_charge',
-                            'type' => 'number',
+                            'type' => 'currency',
                             'default' => 0,
                         ],
                         'type' => [
                             'label' => 'lang:admin::lang.locations.label_charge_condition',
-                            'type' => 'radio',
+                            'type' => 'radiotoggle',
                             'default' => 'above',
                             'options' => [
                                 'all' => 'lang:admin::lang.locations.text_all_orders',
@@ -94,7 +97,7 @@ return [
                         ],
                         'total' => [
                             'label' => 'lang:admin::lang.locations.label_area_min_amount',
-                            'type' => 'number',
+                            'type' => 'currency',
                             'default' => 0,
                         ],
                     ],

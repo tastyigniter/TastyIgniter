@@ -6,10 +6,14 @@ use Admin\Traits\FormExtendable;
 use Admin\Widgets\Toolbar;
 use DB;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Foundation\Application;
+use Illuminate\Routing\Redirector;
 use Model;
 use Redirect;
 use Request;
 use System\Classes\ControllerAction;
+use System\Classes\FormRequest;
 use Template;
 
 /**
@@ -76,6 +80,11 @@ class FormController extends ControllerAction
     protected $model;
 
     /**
+     * @var Model The initialized request used by the form.
+     */
+    protected $request;
+
+    /**
      * @var array List of prepared models that require saving.
      */
     protected $modelsToSave = [];
@@ -131,6 +140,7 @@ class FormController extends ControllerAction
      *
      * @param \Model $model
      *
+     * @param null $context
      * @return void
      * @throws \Exception
      */
@@ -161,7 +171,8 @@ class FormController extends ControllerAction
         $formConfig['model'] = $model;
         $formConfig['arrayName'] = str_singular(strip_class_basename($model, '_model'));
         $formConfig['context'] = $context;
-        $formConfig['locationContext'] = $this->controller->locationContext();
+
+        $this->controller->formExtendConfig($formConfig);
 
         // Form Widget with extensibility
         $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
@@ -193,7 +204,7 @@ class FormController extends ControllerAction
         if (isset($modelConfig['toolbar']) AND isset($this->controller->widgets['toolbar'])) {
             $this->toolbarWidget = $this->controller->widgets['toolbar'];
             if ($this->toolbarWidget instanceof Toolbar) {
-                $this->toolbarWidget->addButtons(array_get($modelConfig['toolbar'], 'buttons', []));
+                $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
             }
         }
 
@@ -203,6 +214,7 @@ class FormController extends ControllerAction
 
     /**
      * Prepares common form data
+     * @param $model
      */
     protected function prepareVars($model)
     {
@@ -214,9 +226,9 @@ class FormController extends ControllerAction
     public function create($context = null)
     {
         try {
-            $this->context = $context ? $context : $this->getConfig('create[context]', self::CONTEXT_CREATE);
+            $this->context = $context ?: $this->getConfig('create[context]', self::CONTEXT_CREATE);
 
-            $this->setFormTitle('create[title]', 'lang:admin::lang.form.create_title');
+            $this->setFormTitle('lang:admin::lang.form.create_title');
 
             $model = $this->controller->formCreateModelObject();
             $model = $this->controller->formExtendModel($model) ?: $model;
@@ -229,13 +241,15 @@ class FormController extends ControllerAction
 
     public function create_onSave($context = null)
     {
-        $this->context = $context ? $context : $this->getConfig('create[context]', self::CONTEXT_CREATE);
+        $this->context = $context ?: $this->getConfig('create[context]', self::CONTEXT_CREATE);
         $model = $this->controller->formCreateModelObject();
         $model = $this->controller->formExtendModel($model) ?: $model;
         $this->initForm($model, $context);
 
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeCreate($model);
+
+        $this->validateFormRequest($model);
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
@@ -253,7 +267,7 @@ class FormController extends ControllerAction
         $title = sprintf(lang('admin::lang.form.create_success'), lang($this->getConfig('name')));
         flash()->success(lang($this->getConfig('create[flashSave]', $title)));
 
-        if ($redirect = $this->makeRedirect('create', $model)) {
+        if ($redirect = $this->makeRedirect($context, $model)) {
             return $redirect;
         }
     }
@@ -261,9 +275,9 @@ class FormController extends ControllerAction
     public function edit($context = null, $recordId = null)
     {
         try {
-            $this->context = $context ? $context : $this->getConfig('edit[context]', self::CONTEXT_CREATE);
+            $this->context = $context ?: $this->getConfig('edit[context]', self::CONTEXT_CREATE);
 
-            $this->setFormTitle('edit[title]', 'lang:admin::lang.form.edit_title');
+            $this->setFormTitle('lang:admin::lang.form.edit_title');
 
             $model = $this->controller->formFindModelObject($recordId);
 
@@ -276,7 +290,7 @@ class FormController extends ControllerAction
 
     public function edit_onSave($context = null, $recordId = null)
     {
-        $this->context = $context ? $context : $this->getConfig('edit[context]', self::CONTEXT_EDIT);
+        $this->context = $context ?: $this->getConfig('edit[context]', self::CONTEXT_EDIT);
 
         $model = $this->controller->formFindModelObject($recordId);
         $this->initForm($model, $context);
@@ -285,6 +299,9 @@ class FormController extends ControllerAction
         $this->controller->formBeforeUpdate($model);
 
         $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
+
+        $this->validateFormRequest($model);
+
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
@@ -300,14 +317,14 @@ class FormController extends ControllerAction
         $title = sprintf(lang('admin::lang.form.edit_success'), lang($this->getConfig('name')));
         flash()->success(lang($this->getConfig('edit[flashSave]', $title)));
 
-        if ($redirect = $this->makeRedirect('edit', $model)) {
+        if ($redirect = $this->makeRedirect($context, $model)) {
             return $redirect;
         }
     }
 
     public function edit_onDelete($context = null, $recordId = null)
     {
-        $this->context = $context ? $context : $this->getConfig('edit[context]', self::CONTEXT_EDIT);
+        $this->context = $context ?: $this->getConfig('edit[context]', self::CONTEXT_EDIT);
 
         $model = $this->controller->formFindModelObject($recordId);
         $this->initForm($model, $context);
@@ -330,9 +347,9 @@ class FormController extends ControllerAction
     public function preview($context = null, $recordId = null)
     {
         try {
-            $this->context = $context ? $context : $this->getConfig('preview[context]', self::CONTEXT_PREVIEW);
+            $this->context = $context ?: $this->getConfig('preview[context]', self::CONTEXT_PREVIEW);
 
-            $this->setFormTitle('preview[title]', 'lang:admin::lang.form.preview_title');
+            $this->setFormTitle('lang:admin::lang.form.preview_title');
 
             $model = $this->controller->formFindModelObject($recordId);
             $this->initForm($model, $context);
@@ -390,10 +407,10 @@ class FormController extends ControllerAction
         return $this->context;
     }
 
-    protected function setFormTitle($lang, $default)
+    protected function setFormTitle($default)
     {
         $title = lang($this->getConfig('name'));
-        $lang = lang($this->getConfig($lang, $default));
+        $lang = lang($this->getConfig($this->context.'[title]', $default));
 
         $pageTitle = (strpos($lang, ':name') !== FALSE)
             ? str_replace(':name', $title, $lang) : $lang;
@@ -451,21 +468,13 @@ class FormController extends ControllerAction
      */
     protected function getRedirectUrl($context = null)
     {
-        $redirects = [
-            'default' => $this->getConfig('defaultRedirect', ''),
-            'create' => $this->getConfig('create[redirect]', ''),
-            'create-close' => $this->getConfig('create[redirectClose]', ''),
-            'edit' => $this->getConfig('edit[redirect]', ''),
-            'edit-close' => $this->getConfig('edit[redirectClose]', ''),
-            'delete' => $this->getConfig('delete[redirect]', ''),
-            'preview' => $this->getConfig('preview[redirect]', ''),
-        ];
+        $redirectContext = explode('-', $context, 2)[0];
+        $redirectSource = ends_with($context, '-close') ? 'redirectClose' : 'redirect';
 
-        if (!isset($redirects[$context])) {
-            return $redirects['default'];
-        }
+        $redirects = [$context => $this->getConfig("{$redirectContext}[{$redirectSource}]", '')];
+        $redirects['default'] = $this->getConfig('defaultRedirect', '');
 
-        return $redirects[$context];
+        return $redirects[$context] ?? $redirects['default'];
     }
 
     protected function prepareModelsToSave($model, $saveData)
@@ -508,5 +517,33 @@ class FormController extends ControllerAction
                     $model->{$attribute} = $value;
             }
         }
+    }
+
+    protected function validateFormRequest($model)
+    {
+        $requestClass = $this->getConfig('request', FALSE);
+
+        if ($requestClass === FALSE)
+            return;
+
+        if (!class_exists($requestClass))
+            throw new ApplicationException("Form Request class ($requestClass) not found");
+
+        $request = $this->makeFormRequest($requestClass, app());
+
+        $request->validateResolved();
+    }
+
+    protected function makeFormRequest($class, Application $app)
+    {
+        $request = new $class();
+
+        $request = FormRequest::createFrom($app->make('request'), $request);
+
+        $request->setContainer($app)->setRedirector($app->make(Redirector::class));
+
+        $request->setController($this->controller);
+
+        return $request;
     }
 }

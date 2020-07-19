@@ -5,13 +5,23 @@ $config['list']['filter'] = [
         'mode' => 'all',
     ],
     'scopes' => [
+        'assignee' => [
+            'label' => 'lang:admin::lang.reservations.text_filter_assignee',
+            'type' => 'select',
+            'scope' => 'filterAssignedTo',
+            'options' => [
+                1 => 'lang:admin::lang.statuses.text_unassigned',
+                2 => 'lang:admin::lang.statuses.text_assigned_to_self',
+                3 => 'lang:admin::lang.statuses.text_assigned_to_others',
+            ],
+        ],
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationContext' => 'multiple',
+            'locationAware' => 'hide',
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -22,25 +32,35 @@ $config['list']['filter'] = [
         ],
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
-            'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
-            'modelClass' => 'Admin\Models\Reservations_model',
-            'options' => 'getReservationDates',
+            'type' => 'daterange',
+            'conditions' => 'reserve_date >= CAST(:filtered_start AS DATE) AND reserve_date <= CAST(:filtered_end AS DATE)',
         ],
     ],
 ];
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'reservations/create'],
-        'delete' => ['label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm'],
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'reservations/create',
+        ],
+        'delete' => [
+            'label' => 'lang:admin::lang.button_delete',
+            'class' => 'btn btn-danger',
+            'context' => 'index',
+            'data-attach-loading' => '',
+            'data-request' => 'onDelete',
+            'data-request-form' => '#list-form',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+        ],
         'calendar' => [
             'label' => 'lang:admin::lang.reservations.text_switch_to_calendar',
             'class' => 'btn btn-default',
             'href' => 'reservations/calendar',
             'context' => 'index',
         ],
-        'filter' => ['label' => 'lang:admin::lang.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
     ],
 ];
 
@@ -61,7 +81,7 @@ $config['list']['columns'] = [
         'relation' => 'location',
         'select' => 'location_name',
         'searchable' => TRUE,
-        'locationContext' => 'multiple',
+        'locationAware' => 'hide',
     ],
     'full_name' => [
         'label' => 'lang:admin::lang.label_name',
@@ -88,7 +108,7 @@ $config['list']['columns'] = [
         'path' => 'reservations/status_column',
         'searchable' => TRUE,
     ],
-    'assignee_id' => [
+    'assignee_name' => [
         'label' => 'lang:admin::lang.reservations.column_staff',
         'type' => 'text',
         'relation' => 'assignee',
@@ -106,9 +126,13 @@ $config['list']['columns'] = [
 
 $config['calendar']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'reservations/create'],
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'reservations/create',
+        ],
         'list' => [
-            'label' => 'lang:admin::lang.reservations.text_switch_to_list',
+            'label' => 'lang:admin::lang.text_switch_to_list',
             'class' => 'btn btn-default',
             'href' => 'reservations',
             'context' => 'calendar',
@@ -118,85 +142,44 @@ $config['calendar']['toolbar'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'class' => 'btn btn-primary',
+            'data-request' => 'onSave',
+            'data-progress-indicator' => 'admin::lang.text_saving',
+        ],
         'saveClose' => [
             'label' => 'lang:admin::lang.button_save_close',
             'class' => 'btn btn-default',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
             'data-request-data' => 'close:1',
+            'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
-            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => ['edit'],
+            'label' => 'lang:admin::lang.button_icon_delete',
+            'class' => 'btn btn-danger',
+            'data-request' => 'onDelete',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
+            'context' => ['edit'],
         ],
     ],
 ];
 
 $config['form']['fields'] = [
-    'reservation_id' => [
-        'label' => 'lang:admin::lang.reservations.label_reservation_id',
-        'type' => 'text',
+    '_info' => [
+        'type' => 'partial',
+        'disabled' => TRUE,
+        'path' => 'reservations/form/info',
         'span' => 'left',
-        'disabled' => TRUE,
-        'context' => ['edit', 'preview'],
-    ],
-    'table_name' => [
-        'label' => 'lang:admin::lang.reservations.label_table_name',
-        'type' => 'text',
-        'span' => 'right',
-        'disabled' => TRUE,
         'context' => ['edit', 'preview'],
     ],
     'status_id' => [
-        'label' => 'lang:admin::lang.label_status',
         'type' => 'statuseditor',
-        'span' => 'left',
-        'relationFrom' => 'status',
-        'options' => ['Admin\Models\Statuses_model', 'listStatuses'],
-        'list' => 'status_history_model',
-        'form' => [
-            'fields' => [
-                'status_id' => [
-                    'label' => 'lang:admin::lang.label_status',
-                    'type' => 'select',
-                    'options' => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
-                    'placeholder' => 'lang:admin::lang.text_please_select',
-                    'attributes' => [
-                        'data-status-value' => '',
-                    ],
-                ],
-                'comment' => [
-                    'label' => 'lang:admin::lang.reservations.label_comment',
-                    'type' => 'textarea',
-                    'attributes' => [
-                        'data-status-comment' => '',
-                    ],
-                ],
-                'notify' => [
-                    'label' => 'lang:admin::lang.reservations.label_notify',
-                    'type' => 'radio',
-                    'default' => 1,
-                    'options' => [
-                        'lang:admin::lang.text_no',
-                        'lang:admin::lang.text_yes',
-                    ],
-                    'comment' => 'lang:admin::lang.reservations.help_notify_customer',
-                    'attributes' => [
-                        'data-status-notify' => '',
-                    ],
-                ],
-            ],
-        ],
-    ],
-    'assignee_id' => [
-        'label' => 'lang:admin::lang.reservations.label_assign_staff',
-        'type' => 'relation',
-        'relationFrom' => 'assignee',
-        'nameFrom' => 'staff_name',
         'span' => 'right',
-        'placeholder' => 'lang:admin::lang.text_please_select',
+        'context' => ['edit', 'preview'],
+        'form' => 'reservation_status_model',
     ],
 ];
 
@@ -244,7 +227,7 @@ $config['form']['tabs'] = [
             'nameFrom' => 'location_name',
             'span' => 'right',
             'placeholder' => 'lang:admin::lang.text_please_select',
-            'locationContext' => 'multiple',
+            'locationAware' => 'hide',
         ],
         'guest_num' => [
             'label' => 'lang:admin::lang.reservations.label_guest',
@@ -273,7 +256,7 @@ $config['form']['tabs'] = [
             'default' => 1,
         ],
         'comment' => [
-            'label' => 'lang:admin::lang.reservations.label_comment',
+            'label' => 'lang:admin::lang.statuses.label_comment',
             'type' => 'textarea',
         ],
         'date_added' => [
@@ -309,15 +292,10 @@ $config['form']['tabs'] = [
         'status_history' => [
             'tab' => 'lang:admin::lang.reservations.text_status_history',
             'type' => 'datatable',
+            'context' => ['edit', 'preview'],
             'columns' => [
-                'date_added' => [
+                'date_added_since' => [
                     'title' => 'lang:admin::lang.reservations.column_date_time',
-                ],
-                'staff_name' => [
-                    'title' => 'lang:admin::lang.reservations.column_staff',
-                ],
-                'assignee_name' => [
-                    'title' => 'lang:admin::lang.reservations.column_assignee',
                 ],
                 'status_name' => [
                     'title' => 'lang:admin::lang.label_status',
@@ -327,6 +305,9 @@ $config['form']['tabs'] = [
                 ],
                 'notified' => [
                     'title' => 'lang:admin::lang.reservations.column_notify',
+                ],
+                'staff_name' => [
+                    'title' => 'lang:admin::lang.reservations.column_staff',
                 ],
             ],
         ],

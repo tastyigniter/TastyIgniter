@@ -3,7 +3,7 @@
 namespace Admin\Traits;
 
 use Admin;
-use AdminAuth;
+use AdminLocation;
 use Igniter\Flame\Database\Model;
 
 trait Locationable
@@ -30,9 +30,6 @@ trait Locationable
     {
         static::saving(function (Model $model) {
             $model->purgeLocationableAttributes();
-        });
-
-        static::saving(function (Model $model) {
             $model->setLocationableAttributes();
         });
 
@@ -50,12 +47,12 @@ trait Locationable
         if ($this->locationScopeEnabled)
             return TRUE;
 
-        return AdminAuth::isSingleLocationContext();
+        return AdminLocation::check();
     }
 
     public function locationableGetUserLocation()
     {
-        return AdminAuth::getLocationId();
+        return AdminLocation::getId();
     }
 
     //
@@ -128,7 +125,7 @@ trait Locationable
 
         if ($this->locationableIsSingleRelationType()) {
             $relationObj = $this->getLocationableRelationObject();
-            $attributeName = $relationObj->getForeignKey();
+            $attributeName = $relationObj->getForeignKeyName();
             $this->{$attributeName} = $this->locationableGetUserLocation();
         }
         else {

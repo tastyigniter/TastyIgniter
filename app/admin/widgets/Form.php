@@ -6,6 +6,7 @@ use Admin\Classes\BaseWidget;
 use Admin\Classes\FormField;
 use Admin\Classes\FormTabs;
 use Admin\Classes\Widgets;
+use Admin\Facades\AdminAuth;
 use Admin\Traits\FormModelWidget;
 use Exception;
 use Model;
@@ -53,12 +54,6 @@ class Form extends BaseWidget
      * to this context will not be shown.
      */
     public $context;
-
-    /**
-     * @var string The location context of this form, fields that do not belong
-     * to this context will not be shown.
-     */
-    public $locationContext;
 
     /**
      * @var string If the field element names should be contained in an array.
@@ -113,6 +108,8 @@ class Form extends BaseWidget
      */
     protected $widgetManager;
 
+    protected $optionModelTypes;
+
     public function initialize()
     {
         $this->fillFromConfig([
@@ -123,8 +120,14 @@ class Form extends BaseWidget
             'data',
             'arrayName',
             'context',
-            'locationContext',
         ]);
+
+        $this->optionModelTypes = [
+            'select', 'selectlist',
+            'radio', 'radiolist', 'radiotoggle',
+            'checkbox', 'checkboxlist', 'checkboxtoggle',
+            'partial',
+        ];
 
         $this->widgetManager = Widgets::instance();
         $this->allTabs = (object)$this->allTabs;
@@ -360,16 +363,22 @@ class Form extends BaseWidget
     public function addFields(array $fields, $addToArea = null)
     {
         foreach ($fields as $name => $config) {
-            // Check that the form field matches the active context
-            if (array_key_exists('context', $config)) {
-                $context = (array)$config['context'];
-                if (!in_array($this->getContext(), $context)) {
-                    continue;
-                }
+            // Check if admin has permissions to show this field
+            $permissions = array_get($config, 'permissions');
+            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+                continue;
             }
 
             $fieldObj = $this->makeFormField($name, $config);
             $fieldTab = is_array($config) ? array_get($config, 'tab') : null;
+
+            // Check that the form field matches the active context
+            if ($fieldObj->context !== null) {
+                $context = is_array($fieldObj->context) ? $fieldObj->context : [$fieldObj->context];
+                if (!in_array($this->getContext(), $context)) {
+                    continue;
+                }
+            }
 
             $this->allFields[$name] = $fieldObj;
 
@@ -443,7 +452,7 @@ class Form extends BaseWidget
     public function makeFormField($name, $config)
     {
         $label = $config['label'] ?? null;
-        list($fieldName, $fieldContext) = $this->getFieldName($name);
+        [$fieldName, $fieldContext] = $this->getFieldName($name);
 
         $field = new FormField($fieldName, $label);
         if ($fieldContext) {
@@ -489,8 +498,7 @@ class Form extends BaseWidget
 //        }
 
         // Get field options from model
-        $optionModelTypes = ['select', 'selectlist', 'radio', 'checkbox', 'checkboxlist', 'partial'];
-        if (in_array($field->type, $optionModelTypes, FALSE)) {
+        if (in_array($field->type, $this->optionModelTypes, FALSE)) {
 
             // Defer the execution of option data collection
             $field->options(function () use ($field, $config) {
@@ -677,7 +685,7 @@ class Form extends BaseWidget
      * Returns a HTML encoded value containing the other fields this
      * field depends on
      *
-     * @param  \Admin\Classes\FormField $field
+     * @param \Admin\Classes\FormField $field
      *
      * @return string
      */
@@ -697,7 +705,7 @@ class Form extends BaseWidget
      * Helper method to determine if field should be rendered
      * with label and comments.
      *
-     * @param  \Admin\Classes\FormField $field
+     * @param \Admin\Classes\FormField $field
      *
      * @return boolean
      */
@@ -774,6 +782,14 @@ class Form extends BaseWidget
 
         $activeTab = $activeTabs[$cookieKey] ?? null;
 
+        $tabs = $this->allTabs->primary;
+        $type = $tabs->section;
+        $activeTabIndex = (int)str_after($activeTab, '#'.$type.'tab-');
+
+        // In cases where a tab has been removed, the first tab becomes the active tab
+        $activeTab = ($activeTabIndex <= count($tabs->fields))
+            ? $activeTab : '#'.$type.'tab-1';
+
         return $this->activeTab = $activeTab;
     }
 
@@ -806,15 +822,6 @@ class Form extends BaseWidget
     public function getContext()
     {
         return $this->context;
-    }
-
-    /**
-     * Returns the active location context for displaying the form field.
-     * @return string
-     */
-    public function getLocationContext()
-    {
-        return $this->locationContext;
     }
 
     /**
@@ -869,7 +876,10 @@ class Form extends BaseWidget
         $this->fireSystemEvent('admin.form.extendFields', [$this->allFields]);
 
         // Check that the form field matches the active location context
-        $this->processLocationContext($this->allFields);
+        foreach ($this->allFields as $field) {
+            if ($this->isLocationAware($field->config))
+                $field->disabled = TRUE;
+        }
 
         // Convert automatic spanned fields
         foreach ($this->allTabs->outside->getFields() as $fields) {
@@ -935,7 +945,7 @@ class Form extends BaseWidget
     /**
      * Check if a field type is a widget or not
      *
-     * @param  string $fieldType
+     * @param string $fieldType
      *
      * @return boolean
      */
@@ -990,7 +1000,7 @@ class Form extends BaseWidget
 
         // Refer to the model method or any of its behaviors
         if (!is_array($fieldOptions) AND !$fieldOptions) {
-            list($model, $attribute) = $field->resolveModelAttribute($this->model, $field->fieldName);
+            [$model, $attribute] = $field->resolveModelAttribute($this->model, $field->fieldName);
 
             $methodName = 'get'.studly_case($attribute).'Options';
             if (
@@ -1022,8 +1032,8 @@ class Form extends BaseWidget
     /**
      * Internal helper for method existence checks.
      *
-     * @param  object $object
-     * @param  string $method
+     * @param object $object
+     * @param string $method
      *
      * @return boolean
      */
@@ -1106,19 +1116,5 @@ class Form extends BaseWidget
         return $this->arrayName
             ? post($this->arrayName)
             : post();
-    }
-
-    protected function processLocationContext($fields)
-    {
-        foreach ($fields as $field) {
-            if (!array_key_exists('locationContext', $field->config))
-                continue;
-
-            $locationContext = (array)$field->config['locationContext'];
-            if (!$this->getLocationContext() OR in_array($this->getLocationContext(), $locationContext))
-                continue;
-
-            $field->disabled = TRUE;
-        }
     }
 }

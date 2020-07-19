@@ -3,6 +3,7 @@
 namespace Admin\Classes;
 
 use File;
+use Igniter\Flame\Exception\SystemException;
 use Model;
 use System\Actions\ModelAction;
 use URL;
@@ -14,14 +15,14 @@ use URL;
  */
 class BasePaymentGateway extends ModelAction
 {
+    /**
+     * @var \Admin\Models\Payments_model|Model Reference to the controller associated to this action
+     */
+    protected $model;
+
     protected $orderModel = 'Admin\Models\Orders_model';
 
     protected $orderStatusModel = 'Admin\Models\Statuses_model';
-
-    /**
-     * @var array Action configuration
-     */
-    protected $configArray;
 
     protected $configFields = [];
 
@@ -60,70 +61,10 @@ class BasePaymentGateway extends ModelAction
     /**
      * Initializes configuration data when the payment method is first created.
      *
-     * @param  Model $host
+     * @param Model $host
      */
     public function initConfigData($host)
     {
-    }
-
-    /**
-     * Reads the contents of the supplied file and applies it to this object.
-     *
-     * @param array $configFile
-     * @param array $requiredConfig
-     * @param null $index
-     *
-     * @return array
-     */
-    public function loadConfig($configFile = [], $requiredConfig = [], $index = null)
-    {
-        $configArray = $this->makeConfig($configFile, $requiredConfig);
-
-        if (is_null($index))
-            return $configArray;
-
-        return $configArray[$index] ?? null;
-    }
-
-    /**
-     * Sets the gateway configuration values
-     *
-     * @param array $config
-     * @param array $required Required config items
-     *
-     * @throws \SystemException
-     */
-    public function setConfig($config, $required = [])
-    {
-        $this->config = $this->makeConfig($config, $required);
-    }
-
-    /**
-     * Get the gateway configuration values.
-     *
-     * @param string $name Config name, supports array names like "field[key]"
-     * @param mixed $default Default value if nothing is found
-     *
-     * @return mixed
-     */
-    public function getConfig($name = null, $default = null)
-    {
-        if (is_null($name))
-            return $this->configArray;
-
-        $nameArray = name_to_array($name);
-
-        $fieldName = array_shift($nameArray);
-        $result = $this->configArray[$fieldName] ?? null;
-
-        foreach ($nameArray as $key) {
-            if (!is_array($result) OR !array_key_exists($key, $result))
-                return $default;
-
-            $result = $result[$key];
-        }
-
-        return $result;
     }
 
     /**
@@ -160,7 +101,7 @@ class BasePaymentGateway extends ModelAction
     /**
      * Utility function, creates a link to a registered entry point.
      *
-     * @param  string $code Key used to define the entry point
+     * @param string $code Key used to define the entry point
      *
      * @return string
      */
@@ -172,14 +113,42 @@ class BasePaymentGateway extends ModelAction
     /**
      * Returns true if the payment type is applicable for a specified order amount
      *
-     * @param float $amount Specifies an order amount
+     * @param float $total Specifies an order amount
      * @param $host Model object to add fields to
      *
-     * @return true
+     * @return bool
      */
-    public function isApplicable($amount, $host)
+    public function isApplicable($total, $host)
     {
         return TRUE;
+    }
+
+    /**
+     * Returns true if the payment type has additional fee
+     *
+     * @param $host Model object to add fields to
+     * @return bool
+     */
+    public function hasApplicableFee($host = null)
+    {
+        $host = is_null($host) ? $this->model : $host;
+
+        return ($host->order_fee ?? 0) > 0;
+    }
+
+    /**
+     * Returns the payment type additional fee
+     *
+     * @param $host Model object to add fields to
+     * @return string
+     */
+    public function getFormattedApplicableFee($host = null)
+    {
+        $host = is_null($host) ? $this->model : $host;
+
+        return ((int)$host->order_fee_type === 2)
+            ? $host->order_fee.'%'
+            : currency_format($host->order_fee);
     }
 
     /**
@@ -198,6 +167,58 @@ class BasePaymentGateway extends ModelAction
      */
     public function beforeRenderPaymentForm($host, $controller)
     {
+    }
+
+    /**
+     * @return \Admin\Models\Payments_model
+     */
+    public function getHostObject()
+    {
+        return $this->model;
+    }
+
+    //
+    // Payment Profiles
+    //
+
+    /**
+     * This method should return TRUE if the gateway supports user payment profiles.
+     * The payment gateway must implement the updatePaymentProfile(), deletePaymentProfile() and payFromPaymentProfile() methods if this method returns true.
+     */
+    public function supportsPaymentProfiles()
+    {
+        return FALSE;
+    }
+
+    /**
+     * Creates a customer profile on the payment gateway or update if the profile already exists.
+     * @param \Admin\Models\Customers_model $customer Customer model to create a profile for
+     * @param array $data Posted payment form data
+     * @return \Admin\Models\Payment_profiles_model|object Returns the customer payment profile model
+     */
+    public function updatePaymentProfile($customer, $data)
+    {
+        throw new SystemException('The updatePaymentProfile() method is not supported by the payment gateway.');
+    }
+
+    /**
+     * Deletes a customer payment profile from the payment gateway.
+     * @param \Admin\Models\Customers_model $customer Customer model
+     * @param \Admin\Models\Payment_profiles_model $profile Payment profile model
+     */
+    public function deletePaymentProfile($customer, $profile)
+    {
+        throw new SystemException('The deletePaymentProfile() method is not supported by the payment gateway.');
+    }
+
+    /**
+     * Creates a payment transaction from an existing payment profile.
+     * @param \Admin\Models\Orders_model $order An order object to pay
+     * @param array $data
+     */
+    public function payFromPaymentProfile($order, $data = [])
+    {
+        throw new SystemException('The payFromPaymentProfile() method is not supported by the payment gateway.');
     }
 
     /**

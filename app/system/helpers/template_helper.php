@@ -15,9 +15,24 @@ if (!function_exists('page')) {
     }
 }
 
+if (!function_exists('content')) {
+    /**
+     * Load a content template file
+     *
+     * @param string $content
+     * @param array $data
+     *
+     * @return string
+     */
+    function content($content = '', array $data = [])
+    {
+        return controller()->renderContent($content, $data);
+    }
+}
+
 if (!function_exists('partial')) {
     /**
-     * Load a partial view file
+     * Load a partial template file
      *
      * @param string $partial
      * @param array $data

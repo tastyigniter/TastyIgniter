@@ -1,5 +1,6 @@
 <?php namespace Admin\Models;
 
+use Carbon\Carbon;
 use Model;
 
 /**
@@ -9,6 +10,10 @@ use Model;
  */
 class Staff_groups_model extends Model
 {
+    public const AUTO_ASSIGN_ROUND_ROBIN = 1;
+
+    public const AUTO_ASSIGN_LOAD_BALANCED = 2;
+
     /**
      * @var string The database table name
      */
@@ -19,14 +24,20 @@ class Staff_groups_model extends Model
      */
     protected $primaryKey = 'staff_group_id';
 
-    public $casts = [
-        'permissions' => 'serialize',
-    ];
-
     public $relation = [
         'hasMany' => [
-            'staffs' => ['Admin\Models\Staffs_model', 'foreignKey' => 'staff_group_id', 'otherKey' => 'staff_group_id']
-        ]
+            'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_group_id'],
+        ],
+        'belongsToMany' => [
+            'staffs' => ['Admin\Models\Staffs_model', 'table' => 'staffs_groups'],
+        ],
+    ];
+
+    public $casts = [
+        'auto_assign' => 'boolean',
+        'auto_assign_mode' => 'integer',
+        'auto_assign_limit' => 'integer',
+        'auto_assign_availability' => 'boolean',
     ];
 
     public static function getDropdownOptions()
@@ -34,8 +45,72 @@ class Staff_groups_model extends Model
         return static::dropdown('staff_group_name');
     }
 
+    public static function listDropdownOptions()
+    {
+        return self::select('staff_group_id', 'staff_group_name', 'description')
+                   ->get()
+                   ->keyBy('staff_group_id')
+                   ->map(function ($model) {
+                       return [$model->staff_group_name, $model->description];
+                   });
+    }
+
     public function getStaffCountAttribute($value)
     {
-        return Staffs_model::where('staff_group_id', $this->staff_group_id)->count();
+        return $this->staffs->count();
+    }
+
+    //
+    // Assignment
+    //
+
+    public function getAutoAssignLimitAttribute($value)
+    {
+        return $this->attributes['auto_assign_limit'] ?? 20;
+    }
+
+    /**
+     * @return bool
+     */
+    public function autoAssignEnabled()
+    {
+        return $this->auto_assign;
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function listAssignees()
+    {
+        return $this->staffs->filter(function (Staffs_model $staff) {
+            return $staff->isEnabled() AND $staff->canAssignTo();
+        })->values();
+    }
+
+    /**
+     * @return \Admin\Models\Staffs_model|object
+     */
+    public function findAvailableAssignee()
+    {
+        $query = $this->assignable_logs()->newQuery();
+
+        $useLoadBalance = ($this->auto_assign_mode == self::AUTO_ASSIGN_LOAD_BALANCED);
+
+        $useLoadBalance
+            ? $query->applyLoadBalancedScope($this->auto_assign_limit)
+            : $query->applyRoundRobinScope();
+
+        $logs = $query->pluck('assign_value', 'assignee_id');
+
+        $assignees = $this->listAssignees()->map(function (Staffs_model $model) use ($useLoadBalance, $logs) {
+            $assignValue = $useLoadBalance ?
+                0 : Carbon::now()->addYear()->toDateTimeString();
+
+            $model->assign_value = $logs[$model->getKey()] ?? $assignValue;
+
+            return $model;
+        });
+
+        return $assignees->sortBy('assign_value')->first();
     }
 }

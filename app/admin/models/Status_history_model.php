@@ -1,6 +1,6 @@
 <?php namespace Admin\Models;
 
-use Event;
+use Carbon\Carbon;
 use Model;
 
 /**
@@ -21,10 +21,22 @@ class Status_history_model extends Model
 
     protected $primaryKey = 'status_history_id';
 
+    protected $guarded = [];
+
+    protected $appends = ['staff_name', 'status_name', 'notified', 'date_added_since'];
+
+    public $timestamps = TRUE;
+
+    public $casts = [
+        'object_id' => 'integer',
+        'staff_id' => 'integer',
+        'status_id' => 'integer',
+        'notify' => 'boolean',
+    ];
+
     public $relation = [
         'belongsTo' => [
             'staff' => 'Admin\Models\Staffs_model',
-            'assignee' => 'Admin\Models\Staffs_model',
             'status' => ['Admin\Models\Statuses_model', 'status_id'],
         ],
         'morphTo' => [
@@ -32,17 +44,11 @@ class Status_history_model extends Model
         ],
     ];
 
-    protected $fillable = ['status_id', 'staff_id', 'assignee_id', 'notify', 'status_for', 'comment'];
-
-    protected $appends = ['staff_name', 'assignee_name', 'status_name', 'notified'];
-
-    public $timestamps = TRUE;
-
     public static function alreadyExists($model, $statusId)
     {
         return self::where('object_id', $model->getKey())
-                   ->where('object_type', $model->getMorphClass())
-                   ->where('status_id', $statusId)->exists();
+            ->where('object_type', $model->getMorphClass())
+            ->where('status_id', $statusId)->exists();
     }
 
     public function getStaffNameAttribute($value)
@@ -50,9 +56,9 @@ class Status_history_model extends Model
         return ($this->staff AND $this->staff->exists) ? $this->staff->staff_name : $value;
     }
 
-    public function getAssigneeNameAttribute($value)
+    public function getDateAddedSinceAttribute($value)
     {
-        return ($this->assignee AND $this->assignee->exists) ? $this->assignee->staff_name : $value;
+        return $this->date_added ? time_elapsed($this->date_added) : null;
     }
 
     public function getStatusNameAttribute($value)
@@ -65,7 +71,13 @@ class Status_history_model extends Model
         return $this->notify == 1 ? lang('admin::lang.text_yes') : lang('admin::lang.text_no');
     }
 
-    public static function addStatusHistory(Model $status, Model $object, $options = [])
+    /**
+     * @param \Igniter\Flame\Database\Model|mixed $status
+     * @param \Igniter\Flame\Database\Model|mixed $object
+     * @param array $options
+     * @return static|bool
+     */
+    public static function createHistory($status, $object, $options = [])
     {
         $statusId = $status->getKey();
         $previousStatus = $object->getOriginal('status_id');
@@ -74,32 +86,41 @@ class Status_history_model extends Model
         $model->status_id = $statusId;
         $model->object_id = $object->getKey();
         $model->object_type = $object->getMorphClass();
-        $model->status_for = $object instanceof Orders_model ? 'order' : 'reserve';
         $model->staff_id = array_get($options, 'staff_id');
-        $model->assignee_id = array_get($options, 'assignee_id', $object->assignee_id);
-        $model->comment = array_get($options, 'comment', $status->comment);
+        $model->comment = array_get($options, 'comment', $status->status_comment);
+        $model->notify = array_get($options, 'notify', $status->notify_customer);
 
-        if (Event::fire('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
-            return FALSE;
-
-        if ($model->fireEvent('statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
+        if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
             return FALSE;
 
         $model->save();
 
-        $object->newQuery()
-               ->where($object->getKeyName(), $object->getKey())
-               ->update(['status_id' => $statusId]);
-
-        if (array_get($options, 'notify', $status->notify_customer)) {
-            $statusFor = $model->status_for == 'reserve' ? 'reservation' : $model->status_for;
-            $object->mailSend('admin::_mail.'.$statusFor.'_update', 'customer');
-
-            $model->notify = TRUE;
-            $model->timestamps = FALSE;
-            $model->save();
-        }
+        // Update using query to prevent model events from firing
+        $object->newQuery()->where($object->getKeyName(), $object->getKey())->update([
+            'status_id' => $statusId,
+            'status_updated_at' => Carbon::now(),
+        ]);
 
         return $model;
+    }
+
+    public function isForOrder()
+    {
+        return $this->object_type === Orders_model::make()->getMorphClass();
+    }
+
+    //
+    //
+    //
+
+    public function scopeApplyRelated($query, $model)
+    {
+        return $query->where('object_type', $model->getMorphClass())
+            ->where('object_id', $model->getKey());
+    }
+
+    public function scopeWhereStatusIsLatest($query, $statusId)
+    {
+        return $query->where('status_id', $statusId)->orderBy('date_added', 'desc');
     }
 }

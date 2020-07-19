@@ -1,6 +1,7 @@
 <?php namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Validation;
+use Illuminate\Support\Facades\Event;
 use Model;
 
 /**
@@ -15,14 +16,26 @@ class Menu_item_option_values_model extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'menu_option_values';
+    protected $table = 'menu_item_option_values';
 
     /**
      * @var string The database table primary key
      */
     protected $primaryKey = 'menu_option_value_id';
 
-    protected $fillable = ['menu_option_id', 'menu_id', 'option_id', 'option_value_id', 'new_price', 'priority', 'is_default', 'quantity', 'subtract_stock'];
+    protected $fillable = ['menu_option_id', 'menu_id', 'option_id', 'option_value_id', 'new_price', 'priority', 'is_default', 'quantity'];
+
+    public $appends = ['name', 'price'];
+
+    public $casts = [
+        'menu_option_value_id' => 'integer',
+        'menu_option_id' => 'integer',
+        'option_value_id' => 'integer',
+        'new_price' => 'float',
+        'quantity' => 'integer',
+        'priority' => 'integer',
+        'is_default' => 'boolean',
+    ];
 
     public $relation = [
         'belongsTo' => [
@@ -32,14 +45,11 @@ class Menu_item_option_values_model extends Model
     ];
 
     public $rules = [
-        ['menu_option_id', 'lang:admin::lang.column_id', 'required|integer'],
-        ['option_value_id', 'lang:admin::lang.menus.label_option_value', 'required|integer'],
-        ['new_price', 'lang:admin::lang.menus.label_option_price', 'numeric'],
-        ['quantity', 'lang:admin::lang.menus.label_option_qty', 'numeric'],
-        ['subtract_stock', 'lang:admin::lang.menus.label_option_subtract_stock', 'numeric'],
+        ['menu_option_id', 'admin::lang.column_id', 'required|integer'],
+        ['option_value_id', 'admin::lang.menus.label_option_value', 'required|integer'],
+        ['new_price', 'admin::lang.menus.label_option_price', 'numeric'],
+        ['quantity', 'admin::lang.menus.label_option_qty', 'numeric'],
     ];
-
-    public $appends = ['name', 'price'];
 
     public function getNameAttribute()
     {
@@ -48,14 +58,42 @@ class Menu_item_option_values_model extends Model
 
     public function getPriceAttribute()
     {
-        if (!$this->option_value)
-            return $this->new_price;
+        if (is_null($this->new_price) AND $this->option_value)
+            return $this->option_value->price;
 
-        return (!$this->new_price OR $this->new_price <= 0) ? $this->option_value->price : $this->new_price;
+        return $this->new_price;
     }
 
     public function isDefault()
     {
         return $this->is_default == 1;
+    }
+
+    /**
+     * Subtract or add to menu option item stock quantity
+     *
+     * @param int $quantity
+     * @param bool $subtract
+     * @return bool TRUE on success, or FALSE on failure
+     */
+    public function updateStock($quantity = 0, $subtract = TRUE)
+    {
+        if ($this->quantity == 0)
+            return FALSE;
+
+        $stockQty = ($subtract === TRUE)
+            ? $this->quantity - $quantity
+            : $this->quantity + $quantity;
+
+        $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
+
+        // Update using query to prevent model events from firing
+        $this->newQuery()
+             ->where($this->getKeyName(), $this->getKey())
+             ->update(['quantity' => $stockQty]);
+
+        Event::fire('admin.menuOption.stockUpdated', [$this, $quantity, $subtract]);
+
+        return TRUE;
     }
 }

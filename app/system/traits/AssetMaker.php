@@ -6,7 +6,7 @@ use File;
 trait AssetMaker
 {
     /**
-     * @var string Specifies a path to the asset directory.
+     * @var array Specifies a path to the asset directory.
      */
     public $assetPath;
 
@@ -34,18 +34,20 @@ trait AssetMaker
         if ($symbolizedPath = File::symbolizePath($fileName, null))
             return File::localToPublic($symbolizedPath);
 
-        if (!$assetPath) {
+        if (!$assetPath)
             $assetPath = $this->assetPath;
+
+        if (!is_array($assetPath))
+            $assetPath = [$assetPath];
+
+        foreach ($assetPath as $path) {
+            $_fileName = File::symbolizePath($path).'/'.$fileName;
+            if (File::isFile($_fileName)) {
+                return File::localToPublic($_fileName);
+            }
         }
 
-        if ($assetPath = File::symbolizePath($assetPath))
-            $assetPath = File::localToPublic($assetPath);
-
-        if (strpos($fileName, '/') === 0 OR $assetPath === null) {
-            return $fileName;
-        }
-
-        return $assetPath.'/'.$fileName;
+        return $fileName;
     }
 
     public function addMeta($meta)

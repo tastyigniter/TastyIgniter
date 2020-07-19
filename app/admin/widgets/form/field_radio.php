@@ -3,27 +3,30 @@ $fieldOptions = $field->options();
 ?>
 <div class="field-radio">
     <?php if ($fieldCount = count($fieldOptions)) { ?>
-        <div
-            id="<?= $field->getId() ?>"
-            class="btn-group btn-group-toggle"
-            data-toggle="buttons">
-            <?php $index = 0;
-            foreach ($fieldOptions as $key => $value) { ?>
-                <?php
-                $index++;
-                ?>
-                <label class="btn btn-light <?= $field->value == $key ? 'active' : ''; ?><?= $this->previewMode ? 'disabled' : ''; ?>">
-                    <input
-                        type="radio"
-                        id="<?= $field->getId($index) ?>"
-                        name="<?= $field->getName() ?>"
-                        value="<?= $key ?>"
-                        <?= $field->value == $key ? 'checked="checked"' : '' ?>
-                        <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
-                        <?= $field->getAttributes() ?>>
-                    <?= e((sscanf($value, 'lang:%s', $line) === 1) ? lang($line) : $value) ?>
-                </label>
-            <?php } ?>
-        </div>
+        <?php $index = 0;
+        foreach ($fieldOptions as $key => $value) { ?>
+            <?php
+            $index++;
+            ?>
+            <div
+                id="<?= $field->getId() ?>"
+                class="custom-control custom-radio custom-control-inline"
+            >
+                <input
+                    type="radio"
+                    id="<?= $field->getId($index) ?>"
+                    class="custom-control-input"
+                    name="<?= $field->getName() ?>"
+                    value="<?= $key ?>"
+                    <?= $field->value == $key ? 'checked="checked"' : '' ?>
+                    <?= $this->previewMode ? 'disabled="disabled"' : '' ?>
+                    <?= $field->getAttributes() ?>
+                />
+                <label
+                    class="custom-control-label"
+                    for="<?= $field->getId($index) ?>"
+                ><?= e(is_lang_key($value) ? lang($value) : $value) ?></label>
+            </div>
+        <?php } ?>
     <?php } ?>
 </div>

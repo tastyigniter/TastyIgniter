@@ -2,7 +2,6 @@
 
 use AdminAuth;
 use AdminMenu;
-use Request;
 
 class Staffs extends \Admin\Classes\AdminController
 {
@@ -24,6 +23,7 @@ class Staffs extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.staff.text_form_name',
         'model' => 'Admin\Models\Staffs_model',
+        'request' => 'Admin\Requests\Staff',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'staffs/edit/{staff_id}',
@@ -50,26 +50,37 @@ class Staffs extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        if ($this->action == 'edit' AND Request::method() != 'DELETE' AND AdminAuth::getStaffId() == current($this->params))
+        if ($this->action == 'account') {
             $this->requiredPermissions = null;
+        }
 
         AdminMenu::setContext('staffs', 'users');
+    }
+
+    public function account()
+    {
+        return $this->asExtension('FormController')->edit('account', $this->getUser()->getKey());
+    }
+
+    public function account_onSave()
+    {
+        $result = $this->asExtension('FormController')->edit_onSave('account', $this->currentUser->user_id);
+
+        $usernameChanged = $this->currentUser->username != post('Staff[user][username]');
+        $passwordChanged = strlen(post('Staff[user][password]'));
+        $languageChanged = $this->currentUser->language != post('Staff[language_id]');
+        if ($usernameChanged OR $passwordChanged OR $languageChanged) {
+            $this->currentUser->reload()->reloadRelations();
+            AdminAuth::login($this->currentUser, TRUE);
+        }
+
+        return $result;
     }
 
     public function listExtendQuery($query)
     {
         if (!AdminAuth::isSuperUser()) {
             $query->whereNotSuperUser();
-        }
-    }
-
-    public function formExtendFields($form, $fields)
-    {
-        if (!AdminAuth::isSuperUser()) {
-            $form->removeField('staff_group_id');
-            $form->removeField('staff_location_id');
-            $form->removeField('user[super_user]');
-            $form->removeField('staff_status');
         }
     }
 
@@ -80,27 +91,10 @@ class Staffs extends \Admin\Classes\AdminController
         }
     }
 
-    public function formValidate($model, $form)
+    public function formExtendFields($form)
     {
-        $rules = [
-            ['staff_name', 'lang:admin::lang.label_name', 'required|min:2|max:128'],
-            ['staff_email', 'lang:admin::lang.label_email', 'required|max:96|email'
-                .($form->context == 'create' ? '|unique:staffs,staff_email' : '')],
-        ];
-
-        $rules[] = ['user.password', 'lang:admin::lang.staff.label_password',
-            ($form->context == 'create' ? 'required' : 'sometimes')
-            .'|min:6|max:32|same:user.password_confirm'];
-        $rules[] = ['user.password_confirm', 'lang:admin::lang.staff.label_confirm_password'];
-
-        if (AdminAuth::isSuperUser()) {
-            $rules[] = ['user.username', 'lang:admin::lang.staff.label_username', 'required|min:2|max:32'
-                .($form->context == 'create' ? '|unique:users,username' : '')];
-            $rules[] = ['staff_status', 'lang:admin::lang.label_status', 'integer'];
-            $rules[] = ['staff_group_id', 'lang:admin::lang.staff.label_group', 'required|integer'];
-            $rules[] = ['staff_location_id', 'lang:admin::lang.staff.label_location', 'integer'];
+        if (!AdminAuth::isSuperUser()) {
+            $form->removeField('user[super_user]');
         }
-
-        return $this->validatePasses($form->getSaveData(), $rules);
     }
 }

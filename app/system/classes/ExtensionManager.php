@@ -7,6 +7,7 @@ use Igniter\Flame\Traits\Singleton;
 use Lang;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use System\Models\Extensions_model;
 use SystemException;
 use View;
 use ZipArchive;
@@ -20,14 +21,9 @@ class ExtensionManager
     use Singleton;
 
     /**
-     * @var
+     * The application instance, since Extensions are an extension of a Service Provider
      */
-    public $routes;
-
-    /**
-     * @var
-     */
-    public $registry;
+    protected $app;
 
     /**
      * @var array used for storing extension information objects.
@@ -66,6 +62,7 @@ class ExtensionManager
 
     public function initialize()
     {
+        $this->app = App::make('app');
         $this->metaFile = storage_path('system/installed.json');
         $this->loadInstalled();
         $this->loadExtensions();
@@ -202,7 +199,7 @@ class ExtensionManager
      */
     public function findMissingDependencies()
     {
-        $missing = [];
+        $result = $missing = [];
         foreach ($this->extensions as $code => $extension) {
             if (!$required = $this->getDependencies($extension))
                 continue;
@@ -211,16 +208,19 @@ class ExtensionManager
                 if ($this->hasExtension($require))
                     continue;
 
-                $missing[] = $require;
+                if (!in_array($require, $missing)) {
+                    $missing[] = $require;
+                    $result[$code][] = $require;
+                }
             }
         }
 
-        return $missing;
+        return $result;
     }
 
     /**
      * Checks all extensions and their dependencies, if not met extensions
-     * are disabled and vice versa.
+     * are disabled.
      * @return void
      */
     protected function loadDependencies()
@@ -229,20 +229,23 @@ class ExtensionManager
             if (!$required = $this->getDependencies($extension))
                 continue;
 
-            $enable = FALSE;
+            $disable = FALSE;
             foreach ($required as $require) {
                 $extensionObj = $this->findExtension($require);
-                $enable = !(!$extensionObj OR $extensionObj->disabled);
+                if (!$extensionObj OR $extensionObj->disabled)
+                    $disable = TRUE;
             }
 
-            $this->updateInstalledExtensions($code, $enable);
+            // Only disable extension with missing dependencies.
+            if ($disable AND !$extension->disabled)
+                $this->updateInstalledExtensions($code, FALSE);
         }
     }
 
     /**
      * Returns the extension codes that are required by the supplied extension.
      *
-     * @param  string $extension
+     * @param string $extension
      *
      * @return bool|array
      */
@@ -267,7 +270,7 @@ class ExtensionManager
      * Sorts extensions, in the order that they should be actioned,
      * according to their given dependencies. Least required come first.
      *
-     * @param  array $extensions Array to sort, or null to sort all.
+     * @param array $extensions Array to sort, or null to sort all.
      *
      * @return array Collection of sorted extension identifiers
      */
@@ -383,7 +386,7 @@ class ExtensionManager
             throw new SystemException("Missing Extension class '{$class}' in '{$identifier}', create the Extension class to override extensionMeta() method.");
         }
 
-        $classObj = new $class(App::getInstance());
+        $classObj = new $class($this->app);
 
         // Check for disabled extensions
         if ($this->isDisabled($identifier)) {
@@ -602,7 +605,7 @@ class ExtensionManager
 
     /**
      * Spins over every extension object and collects the results of a method call.
-     * @param  string $methodName
+     * @param string $methodName
      * @return array
      */
     public function getRegistrationMethodValues($methodName)
@@ -632,7 +635,7 @@ class ExtensionManager
         if (!File::exists($this->metaFile))
             return;
 
-        $this->installedExtensions = json_decode(File::get($this->metaFile), TRUE) ?: [];
+        $this->installedExtensions = json_decode(File::get($this->metaFile, TRUE), TRUE) ?: [];
     }
 
     /**
@@ -644,9 +647,6 @@ class ExtensionManager
     {
         $code = $this->getIdentifier($code);
 
-        if (!$this->installedExtensions)
-            $this->readInstalledExtensionsFromDb();
-
         if (is_null($enable)) {
             array_pull($this->installedExtensions, $code);
         }
@@ -654,7 +654,8 @@ class ExtensionManager
             $this->installedExtensions[$code] = $enable;
         }
 
-        $this->saveInstalled();
+        // Write the installed extensions to a meta file.
+        File::put($this->metaFile, json_encode($this->installedExtensions), TRUE);
 
         if ($enable === FALSE AND $extension = $this->findExtension($code)) {
             $extension->disabled = TRUE;
@@ -726,21 +727,80 @@ class ExtensionManager
     }
 
     /**
-     * Write the installed extensions to a meta file.
+     * Install a new or existing extension by code
+     *
+     * @param string $code
+     * @param string $version
+     * @return bool
      */
-    protected function saveInstalled()
+    public function installExtension($code, $version = null)
     {
-        File::put($this->metaFile, json_encode($this->installedExtensions));
+        $model = Extensions_model::firstOrNew(['name' => $code]);
+        if (!$model->applyExtensionClass())
+            return FALSE;
+
+        if (!$extension = $this->findExtension($model->name))
+            return FALSE;
+
+        // Register and boot the extension to make
+        // its services available before migrating
+        $extension->disabled = FALSE;
+        $this->registerExtension($model->name, $extension);
+        $this->bootExtension($extension);
+
+        // set extension migration to the latest version
+        UpdateManager::instance()->migrateExtension($model->name);
+
+        $extensionMeta = $extension->extensionMeta();
+        $model->version = $version ?? array_get($extensionMeta, 'version');
+        $model->save();
+
+        $this->updateInstalledExtensions($model->name);
+
+        return TRUE;
     }
 
-    protected function readInstalledExtensionsFromDb()
+    /**
+     * Uninstall a new or existing extension by code
+     *
+     * @param string $code
+     *
+     * @param bool $purgeData
+     * @return bool
+     */
+    public function uninstallExtension($code, $purgeData = FALSE)
     {
-        if (!App::hasDatabase() OR !App::bound('system.setting'))
-            return;
+        if ($purgeData)
+            UpdateManager::instance()->purgeExtension($code);
 
-        if (($installedExtensions = setting('installed_extensions')) AND is_array($installedExtensions)) {
-            $this->installedExtensions = array_dot($installedExtensions);
-            setting()->forget('installed_extensions');
-        }
+        $this->updateInstalledExtensions($code, FALSE);
+
+        return TRUE;
+    }
+
+    /**
+     * Delete a single extension by code
+     *
+     * @param string $code
+     * @param bool $purgeData
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function deleteExtension($code, $purgeData = TRUE)
+    {
+        if ($extensionModel = Extensions_model::where('name', $code)->first())
+            $extensionModel->delete();
+
+        if ($purgeData)
+            UpdateManager::instance()->purgeExtension($code);
+
+        // Remove extensions files from filesystem
+        $this->removeExtension($code);
+
+        // remove extension from installed.json meta file
+        $this->updateInstalledExtensions($code, null);
+
+        return TRUE;
     }
 }

@@ -131,6 +131,8 @@ class IgniterInstall extends Command
         $siteUrl = $this->ask('Site URL', Config::get('app.url'));
         $this->writeToConfig('app', ['url' => $siteUrl]);
 
+        DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
+
         DatabaseSeeder::$siteName = $siteName;
         DatabaseSeeder::$siteUrl = $siteUrl;
         DatabaseSeeder::$siteEmail = $this->ask('Admin Email', DatabaseSeeder::$siteEmail);
@@ -144,12 +146,14 @@ class IgniterInstall extends Command
 
         $staff = \Admin\Models\Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
         $staff->staff_name = DatabaseSeeder::$staffName;
-        $staff->staff_group_id = \Admin\Models\Staff_groups_model::first()->staff_group_id;
-        $staff->staff_location_id = \Admin\Models\Locations_model::first()->location_id;
+        $staff->staff_role_id = \Admin\Models\Staff_roles_model::first()->staff_role_id;
         $staff->language_id = \System\Models\Languages_model::first()->language_id;
         $staff->timezone = FALSE;
         $staff->staff_status = TRUE;
         $staff->save();
+
+        $staff->groups()->attach(\Admin\Models\Staff_groups_model::first()->staff_group_id);
+        $staff->locations()->attach(\Admin\Models\Locations_model::first()->location_id);
 
         $user = \Admin\Models\Users_model::firstOrNew(['username' => $username]);
         $user->staff_id = $staff->staff_id;

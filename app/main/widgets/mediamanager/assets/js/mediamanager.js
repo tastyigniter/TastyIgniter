@@ -226,8 +226,7 @@
         if (this.navigationAjax !== null) {
             try {
                 this.navigationAjax.abort()
-            }
-            catch (e) {
+            } catch (e) {
             }
             this.releaseNavigationAjax()
         }
@@ -305,12 +304,13 @@
             addRemoveLinks: true,
             maxFilesize: this.options.maxUploadSize, // MB
             clickable: this.$el.find('[data-media-control="upload"]').get(0),
-            dictInvalidFileType: 'File extension is not allowed.',
+            dictInvalidFileType: this.options.extensionNotAllowed,
             dictFileTooBig: 'The uploaded file exceeds the max size allowed.',
             accept: $.proxy(this.checkUploadAllowedType, this),
         }
 
         if (this.options.uniqueId) {
+            dropzoneOptions.headers['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content')
             dropzoneOptions.headers['X-IGNITER-FILEUPLOAD'] = this.options.uniqueId
         }
 
@@ -333,7 +333,7 @@
     MediaManager.prototype.checkUploadAllowedType = function (file, done) {
         var fileExt = file.name.split('.').pop().toLowerCase();
 
-        done($.inArray(fileExt, this.options.allowedExtensions) == -1 ? 'File extension is not allowed.' : null);
+        done($.inArray(fileExt, this.options.allowedExtensions) == -1 ? this.options.extensionNotAllowed : null);
     }
 
     MediaManager.prototype.destroyUploader = function () {
@@ -353,11 +353,18 @@
     }
 
     MediaManager.prototype.uploadError = function (file, message, xhr) {
-        Notification.show(message);
+        $.ti.flashMessage({class: 'danger', text: message});
     }
 
     MediaManager.prototype.uploadQueueComplete = function () {
-        this.refresh()
+        var status = false;
+
+        $.each(this.dropzone.getAcceptedFiles(), function() {
+            if (this.status === 'success')
+                status = true
+        })
+
+        if (status) this.refresh()
     }
 
     //
@@ -380,7 +387,10 @@
 
     MediaManager.prototype.initFolderTree = function () {
         this.$folderTreeElement = this.$el.find('[data-control="folder-tree"]')
-        var $folderTree = this.$folderTreeElement.find('.folder-tree')
+        var $folderTreeDropdown = this.$el.find('[data-control="folder-tree-dropdown"]'),
+            $folderTree = this.$folderTreeElement.find('.folder-tree')
+
+        $folderTreeDropdown.find('[data-toggle="dropdown"]').dropdown('hide')
 
         var treeOptions = {
             data: $folderTree[0].getAttribute('data-tree-data'),
@@ -392,14 +402,9 @@
 
         $folderTree.treeview(treeOptions)
         $folderTree.on('nodeSelected', $.proxy(this.onTreeNodeSelected, this))
-    }
 
-    MediaManager.prototype.showFolderTree = function () {
-        this.$folderTreeElement.find('.folder-tree').removeClass('hide')
-    }
-
-    MediaManager.prototype.hideFolderTree = function () {
-        this.$folderTreeElement.find('.folder-tree').addClass('hide')
+        $folderTreeDropdown.on('show.bs.dropdown', $.proxy(this.onShowFolderTree, this));
+        $folderTreeDropdown.on('hide.bs.dropdown', $.proxy(this.onHideFolderTree, this));
     }
 
     //
@@ -415,8 +420,8 @@
     }
 
     MediaManager.prototype.renameFolder = function () {
-        if (this.$el.find('[data-media-type="current-folder"]').val() == '/') {
-            Notification.show(this.options.renameDisabled)
+        if (this.$el.find('[data-media-type="current-folder"]').val() === '/') {
+            $.ti.flashMessage({text: this.options.renameDisabled, class: 'warning'});
             return;
         }
 
@@ -429,8 +434,8 @@
     }
 
     MediaManager.prototype.deleteFolder = function () {
-        if (this.$el.find('[data-media-type="current-folder"]').val() == '/') {
-            Notification.show(this.options.deleteDisabled)
+        if (this.$el.find('[data-media-type="current-folder"]').val() === '/') {
+            $.ti.flashMessage({text: this.options.deleteDisabled, class: 'warning'});
             return;
         }
 
@@ -444,7 +449,7 @@
     MediaManager.prototype.renameItem = function () {
         var items = this.getSelectedItems()
         if (items.length > 1) {
-            Notification.show(this.options.selectSingleImage)
+            $.ti.flashMessage({text: this.options.selectSingleImage, class: 'danger'});
             return
         }
 
@@ -459,7 +464,7 @@
     MediaManager.prototype.moveItems = function () {
         var items = this.getSelectedItems()
         if (!items.length) {
-            Notification.show(this.options.moveEmpty)
+            $.ti.flashMessage({text: this.options.moveEmpty, class: 'danger'});
             return
         }
 
@@ -474,7 +479,7 @@
     MediaManager.prototype.copyItems = function () {
         var items = this.getSelectedItems()
         if (!items.length) {
-            Notification.show(this.options.copyEmpty)
+            $.ti.flashMessage({text: this.options.copyEmpty, class: 'danger'});
             return
         }
 
@@ -489,7 +494,7 @@
     MediaManager.prototype.deleteItems = function () {
         var items = this.getSelectedItems()
         if (!items.length) {
-            Notification.show(this.options.deleteEmpty)
+            $.ti.flashMessage({text: this.options.deleteEmpty, class: 'danger'});
             return
         }
 
@@ -515,6 +520,20 @@
         $(this).find('form').trigger('submit.dialog')
     }
 
+    MediaManager.prototype.onShowFolderTree = function (event) {
+        var $el = $(event.currentTarget);
+        $el.find('.list-group').addClass('list-group-flush')
+    }
+
+    MediaManager.prototype.onHideFolderTree = function (event) {
+        if (event.clickEvent !== undefined) {
+            var $el = $(event.clickEvent.target);
+            if ($el.hasClass("list-group-item") || $el.parents(".list-group-item").length) {
+                return false;
+            }
+        }
+    }
+
     MediaManager.prototype.onTreeNodeSelected = function (event, data) {
         if (data.path)
             this.goToFolder(data.path);
@@ -528,9 +547,6 @@
         var control = $(event.currentTarget).data('media-control')
 
         switch (control) {
-            case 'folder-tree':
-                this.showFolderTree()
-                break;
             case 'refresh':
                 this.refresh()
                 break;
@@ -562,8 +578,6 @@
                 this.deleteItems()
                 break;
         }
-
-        return false
     }
 
     MediaManager.prototype.onSortingChanged = function (event) {
@@ -795,6 +809,7 @@
         deleteEmpty: 'Please select files to delete.',
         selectSingleImage: 'Please select a single image.',
         selectionNotImage: 'The selected item is not an image.',
+        extensionNotAllowed: 'File extension is not allowed.',
     }
 
     var old = $.fn.mediaManager
@@ -833,31 +848,4 @@
     $(document).render(function () {
         $('div[data-control=media-manager]').mediaManager()
     })
-
-    var Notification = (function () {
-        "use strict";
-
-        var elem,
-            hideHandler,
-            that = {};
-
-        that.init = function (options) {
-            elem = $(options.selector);
-        };
-
-        that.show = function (text) {
-            clearTimeout(hideHandler);
-
-            elem.find("span").html(text);
-            elem.delay(200).fadeIn().delay(4000).fadeOut();
-        };
-
-        return that;
-    }());
-
-    $(document).render(function () {
-        Notification.init({
-            "selector": "#notification"
-        });
-    });
 }(window.jQuery);

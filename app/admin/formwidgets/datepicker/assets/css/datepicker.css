@@ -1,6 +1,9 @@
+.datepicker-dropdown,
+.bootstrap-datetimepicker-widget {
+	z-index: 9999 !important;
+}
 .datepicker-dropdown {
 	background-color: var(--gray-200);
-	z-index: 9999 !important;
 }
 .datepicker-dropdown.datepicker-orient-bottom:before {
 	bottom: -7px;
@@ -16,7 +19,7 @@
 	color: var(--white);
 }
 .datepicker table {
-	border-collapse: separate;
+	border-collapse: collapse;
 }
 .datepicker table tr td,
 .datepicker table tr th {
@@ -81,6 +84,16 @@
 .datepicker table tr td span.active.focus:hover:active,
 .datepicker table tr td span.active:hover:active:focus,
 .datepicker table tr td span.active:hover:active:hover {
-	background-color: #39B3D7;
-	border-color: #39B3D7;
+	background-color: var(--primary);
+	border-color: var(--primary);
+}
+
+.bootstrap-datetimepicker-widget table td {
+	border-top: 0 none;
+}
+.bootstrap-datetimepicker-widget table th,
+.bootstrap-datetimepicker-widget table td.day {
+	height: 30px;
+	line-height: 30px;
+	width: 30px;
 }

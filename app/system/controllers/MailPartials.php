@@ -20,8 +20,9 @@ class MailPartials extends \Admin\Classes\AdminController
     ];
 
     public $formConfig = [
-        'name' => 'lang:system::lang.mail_templates.text_form_name',
+        'name' => 'lang:system::lang.mail_templates.text_partial_form_name',
         'model' => 'System\Models\Mail_partials_model',
+        'request' => 'System\Requests\MailPartial',
         'create' => [
             'title' => 'lang:system::lang.mail_templates.text_new_partial_title',
             'redirect' => 'mail_partials/edit/{partial_id}',
@@ -62,14 +63,5 @@ class MailPartials extends \Admin\Classes\AdminController
     public function formBeforeSave($model)
     {
         $model->is_custom = TRUE;
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules[] = ['name', 'lang:admin::lang.label_name', 'required'];
-        $rules[] = ['code', 'lang:system::lang.mail_templates.label_language', 'required|unique:system_mail_partials'];
-        $rules[] = ['html', 'lang:system::lang.mail_templates.label_html', 'required'];
-
-        return $this->validatePasses(post($form->arrayName), $rules);
     }
 }

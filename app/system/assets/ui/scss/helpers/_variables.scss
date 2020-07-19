@@ -1,6 +1,5 @@
 // Color system
 //
-
 $white: #FFFFFF !default;
 $gray-100: #FAFAFB !default;
 $gray-200: #E9EAEE !default;
@@ -45,15 +44,14 @@ $theme-colors: map-merge($theme-colors, (
   "warning": $warning,
   "danger": $danger,
   "light": $light,
-  "dark": $dark
+  "dark": $dark,
+  "white": $white
 ));
-
 // Options
 //
-$icon-font-path: '../fonts/FontAwesome';
-$logo-font-path: '../fonts/TastyIgniterLogos';
-$fa-font-path: $icon-font-path;
-
+$icon-font-path: '../../../system/assets/ui/fonts/';
+$logo-font-path: $icon-font-path+'TastyIgniterLogos';
+$fa-font-path: $icon-font-path+'FontAwesome';
 // Body
 //
 $body-bg: $gray-300 !default;
@@ -61,28 +59,20 @@ $body-color: $gray-800 !default;
 
 $link-hover-decoration: none !default;
 
-$line-height-base: 1.7 !default;
+$line-height-base: 1.5 !default;
 
 // Fonts
 //
 $font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif !default;
-$font-family-monospace: "Fira Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-monospace: -apple-system, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 
-$font-weight-bold: 500 !default;
-
-$text-muted: $gray-700 !default;
-
+$font-weight-bold: 600 !default;
+$font-size-xs: 0.8125rem !default;
+$text-muted: $gray-600 !default;
 $h5-font-size: 15px !default;
 
 $label-padding-y: .5rem !default;
 $label-padding-x: .75rem !default;
-
-// Buttons
-//
-$btn-border-radius: 2px !default;
-
-$btn-action-padding: 4px 8px !default;
-
 // Tables
 //
 $table-cell-padding: .45rem !default;
@@ -91,7 +81,14 @@ $table-head-bg: $gray-200 !default;
 $table-accent-bg: $light !default;
 $table-border-color: $gray-200 !default;
 
+// Buttons
+//
+$btn-border-radius: 2px !default;
+$btn-font-weight: 500 !default;
+$btn-action-padding: 4px 8px !default;
+
 // Forms
+//
 $input-bg: $white !default;
 $input-disabled-bg: $gray-300 !default;
 
@@ -99,10 +96,12 @@ $input-color: $dark !default;
 $input-border-color: $gray-300 !default;
 
 $input-border-radius: 3px !default;
+$input-box-shadow: none !default;
+$custom-control-indicator-size: 1.5rem !default;
 
-$custom-control-indicator-size: 1.2rem !default;
-$custom-control-indicator-border-color: $gray-300 !default;
-
+// Navs
+//
+$nav-tabs-border-radius: .625rem !default;
 // Dropdowns
 //
 // Dropdown menu container and contents.
@@ -112,6 +111,8 @@ $dropdown-padding-x: .5rem !default;
 $card-border-color: $gray-300 !default;
 $card-cap-bg: $gray-300 !default;
 $card-bg: $gray-200 !default;
+$card-spacer-y: .625rem !default;
+$card-spacer-x: 0.9375rem !default;
 
 // Popover
 $popover-bg: $gray-200 !default;
@@ -134,11 +135,18 @@ $modal-content-bg: $gray-200 !default;
 $modal-header-border-color: $gray-300 !default;
 
 // Alert
-$alert-border-level: -8 !default;
+$alert-bg-level: -3 !default;
+$alert-border-level: -3 !default;
+$alert-color-level: 6 !default;
 
 // List group
-$list-group-bg: $gray-200 !default;
-$list-group-hover-bg: $gray-300 !default;
+$list-group-bg: $gray-100 !default;
+$list-group-hover-bg: $gray-200 !default;
 $list-group-action-color: $body-color !default;
 $list-group-border-color: $input-border-color !default;
 
+// Modals
+$modal-xl: 1140px !default;
+$modal-lg: 800px !default;
+$modal-md: 600px !default;
+$modal-sm: 400px !default;

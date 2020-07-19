@@ -24,15 +24,8 @@
     <?php $deleteAction = !empty($themeData)
         ? lang('system::lang.themes.text_files_data')
         : lang('system::lang.themes.text_files'); ?>
-    <p><?= sprintf(lang('system::lang.themes.alert_delete_warning'), $deleteAction, $themeName); ?></p>
+    <p><?= sprintf(lang('system::lang.themes.alert_delete_warning'), $deleteAction, $themeObj->label); ?></p>
     <p><?= sprintf(lang('system::lang.themes.alert_delete_confirm'), $deleteAction); ?></p>
-    <div id="deletedFiles" class="form-group">
-        <textarea
-            class="form-control"
-            rows="10"
-            readonly
-        ><?= implode(PHP_EOL, $filesToDelete); ?></textarea>
-    </div>
 
     <?php if ($themeData) { ?>
         <div class="form-group span-full">
@@ -47,31 +40,18 @@
                     name="delete_data"
                     value="0"
                 >
-                <div
-                    class="field-switch"
-                    data-control="switch"
-                >
+                <div class="custom-control custom-switch">
                     <input
                         type="checkbox"
                         name="delete_data"
                         id="delete-data"
-                        class="field-switch-input"
+                        class="custom-control-input"
                         value="1"
-                    >
+                    />
                     <label
-                        class="field-switch-label"
+                        class="custom-control-label"
                         for="delete-data"
-                        style="width: 120px;"
-                    >
-                        <span class="field-switch-container">
-                            <span class="field-switch-active">
-                                <span class="field-switch-toggle bg-success"><?= lang('admin::lang.text_yes'); ?></span>
-                            </span>
-                            <span class="field-switch-inactive">
-                                <span class="field-switch-toggle bg-danger"><?= lang('admin::lang.text_no'); ?></span>
-                            </span>
-                        </span>
-                    </label>
+                    ><?= e(lang('admin::lang.text_no')) ?>/<?= e(lang('admin::lang.text_yes')) ?></label>
                 </div>
             </div>
         </div>

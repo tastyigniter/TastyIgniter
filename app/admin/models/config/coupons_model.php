@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationContext' => 'multiple',
+            'locationAware' => 'hide',
         ],
         'type' => [
             'label' => 'lang:admin::lang.coupons.text_filter_type',
@@ -32,17 +32,19 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'coupons/create'],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger',
-            'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'coupons/create',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
+        'delete' => [
+            'label' => 'lang:admin::lang.button_delete',
+            'class' => 'btn btn-danger',
+            'data-attach-loading' => '',
+            'data-request' => 'onDelete',
+            'data-request-form' => '#list-form',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
     ],
 ];
@@ -71,13 +73,16 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
-        'locationContext' => 'multiple',
+        'locationAware' => 'hide',
         'invisible' => TRUE,
     ],
     'formatted_discount' => [
         'label' => 'lang:admin::lang.coupons.column_discount',
         'type' => 'text',
         'sortable' => FALSE,
+        'formatter' => function ($record, $column, $value) {
+            return $record->isFixed() ? currency_format($value) : $value;
+        },
     ],
     'validity' => [
         'label' => 'lang:admin::lang.coupons.column_validity',
@@ -100,18 +105,27 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'class' => 'btn btn-primary',
+            'data-request' => 'onSave',
+            'data-progress-indicator' => 'admin::lang.text_saving',
+        ],
         'saveClose' => [
             'label' => 'lang:admin::lang.button_save_close',
             'class' => 'btn btn-default',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
             'data-request-data' => 'close:1',
+            'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
-            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => ['edit'],
+            'label' => 'lang:admin::lang.button_icon_delete',
+            'class' => 'btn btn-danger',
+            'data-request' => 'onDelete',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
+            'context' => ['edit'],
         ],
     ],
 ];
@@ -120,7 +134,7 @@ $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::lang.coupons.text_tab_general',
     'fields' => [
         'name' => [
-            'label' => 'lang:admin::lang.coupons.label_name',
+            'label' => 'lang:admin::lang.label_name',
             'type' => 'text',
             'span' => 'left',
         ],
@@ -131,7 +145,7 @@ $config['form']['tabs'] = [
         ],
         'type' => [
             'label' => 'lang:admin::lang.label_type',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'span' => 'left',
             'cssClass' => 'flex-width',
             'default' => 'F',
@@ -142,13 +156,13 @@ $config['form']['tabs'] = [
         ],
         'discount' => [
             'label' => 'lang:admin::lang.coupons.label_discount',
-            'type' => 'number',
+            'type' => 'money',
             'span' => 'left',
             'cssClass' => 'flex-width',
         ],
         'min_total' => [
             'label' => 'lang:admin::lang.coupons.label_min_total',
-            'type' => 'number',
+            'type' => 'currency',
             'span' => 'right',
             'default' => 0,
         ],
@@ -166,27 +180,27 @@ $config['form']['tabs'] = [
             'default' => 0,
             'comment' => 'lang:admin::lang.coupons.help_customer_redemption',
         ],
-        'order_restriction' => [
-            'label' => 'lang:admin::lang.coupons.label_order_restriction',
-            'type' => 'radio',
-            'comment' => 'lang:admin::lang.coupons.help_order_restriction',
-            'span' => 'left',
-            'options' => [
-                'lang:admin::lang.text_none',
-                'lang:admin::lang.coupons.text_delivery_only',
-                'lang:admin::lang.coupons.text_collection_only',
-            ],
-        ],
         'validity' => [
             'label' => 'lang:admin::lang.coupons.label_validity',
-            'type' => 'radio',
+            'type' => 'radiotoggle',
             'default' => 'forever',
-            'span' => 'right',
+            'span' => 'left',
             'options' => [
                 'forever' => 'lang:admin::lang.coupons.text_forever',
                 'fixed' => 'lang:admin::lang.coupons.text_fixed',
                 'period' => 'lang:admin::lang.coupons.text_period',
                 'recurring' => 'lang:admin::lang.coupons.text_recurring',
+            ],
+        ],
+        'order_restriction' => [
+            'label' => 'lang:admin::lang.coupons.label_order_restriction',
+            'type' => 'radiotoggle',
+            'comment' => 'lang:admin::lang.coupons.help_order_restriction',
+            'span' => 'right',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.coupons.text_delivery_only',
+                'lang:admin::lang.coupons.text_collection_only',
             ],
         ],
         'fixed_date' => [
@@ -251,7 +265,7 @@ $config['form']['tabs'] = [
         ],
         'recurring_every' => [
             'label' => 'lang:admin::lang.coupons.label_recurring_every',
-            'type' => 'checkbox',
+            'type' => 'checkboxtoggle',
             'trigger' => [
                 'action' => 'show',
                 'field' => 'validity',
@@ -287,7 +301,7 @@ $config['form']['tabs'] = [
             'type' => 'relation',
             'valueFrom' => 'locations',
             'nameFrom' => 'location_name',
-            'locationContext' => 'multiple',
+            'locationAware' => 'hide',
             'comment' => 'lang:admin::lang.coupons.help_locations',
         ],
         'description' => [

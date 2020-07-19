@@ -1,19 +1,20 @@
-<div class="control-repeater"
-     data-control="repeater"
-     data-append-to="#<?= $this->getId('append-to') ?>"
-     data-sortable-container="#<?= $this->getId('sortable') ?>"
-     data-sortable-handle=".<?= $this->getId('items') ?>-handle">
+<div
+    class="control-repeater"
+    data-control="repeater"
+    data-append-to="#<?= $this->getId('append-to') ?>"
+    data-sortable-container="#<?= $this->getId('append-to') ?>"
+    data-sortable-handle=".<?= $this->getId('items') ?>-handle">
 
     <div id="<?= $this->getId('items') ?>" class="repeater-items">
         <div class="table-responsive">
-            <table id="<?= $this->getId('sortable') ?>"
-                   class="table table-striped <?= ($sortable) ? 'is-sortable' : '' ?> mb-0">
+            <table
+                class="table <?= ($sortable) ? 'is-sortable' : '' ?> mb-0">
                 <thead>
                 <tr>
                     <?php if (!$this->previewMode AND $sortable) { ?>
                         <th class="list-action"></th>
                     <?php } ?>
-                    <?php if ($showRemoveButton) { ?>
+                    <?php if (!$this->previewMode AND $showRemoveButton) { ?>
                         <th class="list-action"></th>
                     <?php } ?>
                     <?php foreach ($this->getVisibleColumns() as $name => $label) { ?>
@@ -31,7 +32,7 @@
                     <?php } ?>
                 <?php } else { ?>
                     <tr class="repeater-item-placeholder">
-                        <td colspan="99"><?= (sscanf($emptyMessage, 'lang:%s', $line) === 1) ? lang($line) : $emptyMessage ?></td>
+                        <td colspan="99" class="text-center"><?= is_lang_key($emptyMessage) ? lang($emptyMessage) : $emptyMessage ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>

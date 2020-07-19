@@ -398,7 +398,7 @@
             '{{#thumb}}',
             '<img src="{{thumb}}" class="img-rounded" alt="No Image" style="width: 48px; height: 48px;" />',
             '{{/thumb}}{{^thumb}}',
-            '<i class="fa {{icon}} fa-2x"></i>',
+            '<span class="extension-icon rounded" style="{{icon.styles}};"><i class="{{icon.class}}"></i></span>',
             '{{/thumb}}',
             '</div>',
             '<div class="item-name">{{name}}</div>',
@@ -422,7 +422,7 @@
             '{{#thumb}}',
             '<img src="{{thumb}}" class="img-rounded" alt="No Image" style="width: 68px; height: 68px;">',
             '{{/thumb}}{{^thumb}}',
-            '<i class="fa {{icon}} fa-3x text-muted"></i>',
+            '<span class="extension-icon icon-lg rounded" style="{{icon.styles}};"><i class="{{icon.class}}"></i></span>',
             '{{/thumb}}',
             '</a><div class="media-body pl-3">',
             '<p>{{{description}}}</p><span class="text-muted">Version:</span> <strong>{{version}}</strong>, ',
@@ -450,7 +450,7 @@
 
         modalFooter: [
             '<div class="text-right">',
-            '<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>',
+            '<button type="button" class="btn btn-link" data-dismiss="modal" aria-hidden="true">Close</button>',
             '&nbsp;&nbsp;&nbsp;&nbsp;',
             '{{#installed}}',
             '<button type="submit" class="btn btn-primary" disabled><i class="fa fa-cloud-download"></i>&nbsp;&nbsp;{{submit}}</button>',

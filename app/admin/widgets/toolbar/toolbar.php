@@ -1,8 +1,12 @@
 <div
     id="<?= $toolbarId ?>"
-    class="toolbar btn-toolbar <?= $cssClasses ?><?= (!$this->showToolbar) ? ' hide' : '' ?>"
+    class="toolbar btn-toolbar <?= $cssClasses ?>"
 >
-    <div class="toolbar-action">
-        <?= $buttonsHtml; ?>
-    </div>
+    <?php if (strlen($buttonsHtml)) { ?>
+        <div class="toolbar-action">
+            <div class="progress-indicator-container">
+                <?= $buttonsHtml; ?>
+            </div>
+        </div>
+    <?php } ?>
 </div>

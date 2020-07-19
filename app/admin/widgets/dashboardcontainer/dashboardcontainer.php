@@ -1,15 +1,19 @@
 <div
+    class="page-x-spacer"
     data-control="dashboard-container"
     data-alias="<?= $this->alias ?>"
+    data-sortable-container="#<?= $this->getId('container-list') ?>"
 >
     <div id="<?= $this->getId('container') ?>" class="dashboard-widgets">
-        <div class="loading">
-            <span class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
+        <div class="progress-indicator">
+            <span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>
+            <?= e(lang('admin::lang.text_loading')) ?>
         </div>
     </div>
 
-    <div id="<?= $this->getId('container-toolbar') ?>" class="toolbar dashboard-toolbar btn-toolbar"
-         data-container-toolbar>
+    <div
+        id="<?= $this->getId('container-toolbar') ?>" class="toolbar dashboard-toolbar btn-toolbar"
+        data-container-toolbar>
         <?= $this->makePartial('widget_toolbar') ?>
     </div>
 </div>

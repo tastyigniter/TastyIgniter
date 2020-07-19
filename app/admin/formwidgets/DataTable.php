@@ -1,6 +1,7 @@
 <?php namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
+use Admin\Classes\FormField;
 use Admin\Widgets\Table;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -88,7 +89,7 @@ class DataTable extends BaseFormWidget
             unset($result[$key]['id']);
         }
 
-        return -1;
+        return $result ?: FormField::NO_SAVE_DATA;
     }
 
     /**

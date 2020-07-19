@@ -1,8 +1,7 @@
-TastyIgniter :fire:
-============
+<img src="https://tastyigniter.com/assets/ui/images/logos/tastyigniter-horizontal-logo-cropped.png">
 
-[![Packagist](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Packagist&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
-[![Packagist](https://img.shields.io/packagist/php-v/tastyigniter/TastyIgniter.svg?label=PHP&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
+[![Stable](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Stable&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
+[![Total Downloads](https://poser.pugx.org/tastyigniter/flame/downloads)](https://packagist.org/packages/tastyigniter/flame)
 [![Build Status](https://img.shields.io/travis/tastyigniter/TastyIgniter.svg?label=TravisCI&style=flat-square)](https://travis-ci.org/tastyigniter/TastyIgniter)
 [![License](https://img.shields.io/github/license/tastyigniter/TastyIgniter.svg?label=License&style=flat-square)](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt)
 [![Crowdin](https://badges.crowdin.net/tastyigniter/localized.svg)](https://crowdin.com/project/tastyigniter)
@@ -10,30 +9,30 @@ TastyIgniter :fire:
 
 [TastyIgniter](https://tastyigniter.com/) is a food ordering and restaurant management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
-> **TastyIgniter v3 (uses [Laravel](https://laravel.com/) PHP framework) is currently in beta and should not be used in production.** Join the [Dev Team](http://slack.tastyigniter.com/) to follow along with our progress. See branch [2.1.x](https://github.com/tastyigniter/TastyIgniter/tree/2.1.x) for a stable version.
+![screenshot](https://tastyigniter.com/assets/ui/images/mockups/Menus.png)
 
 ### Documentation
-The best place to learn TastyIgniter is by reading the [documentation](https://docs.tastyigniter.com)
+The best place to learn TastyIgniter is by reading the [documentation](https://tastyigniter.com/docs)
 
 ### Installation
-Please read the [Installation Guide](https://docs.tastyigniter.com/3.0/installation) for more information.
+Please read the [Installation Guide](https://tastyigniter.com/docs/installation) for more information.
 
 ### Questions
-For questions and support please use the [Community Forum](https://forum.tastyigniter.com) or [Join us on Slack](http://slack.tastyigniter.com/). 
+For questions and support please use the [Community Forum](https://forum.tastyigniter.com) or [Join us on Slack](http://tastyigniter.com/slack). 
 
 ### Issues
 Please report bugs using the [GitHub issue tracker](https://github.com/tastyigniter/TastyIgniter/issues)
 
 ### Stay in touch
 - [Follow us on Twitter](https://twitter.com/tastyigniter/) for announcements and updates.
-- [Blog](https://tastyigniter.com/blog/) for tips and latest developments in the food industry.
+- [Blog](https://tastyigniter.com/blog) for tips and latest developments in the food industry.
 
 ## Contributing
 We would love your help building TastyIgniter! Please read the [Contributing Guidelines](CONTRIBUTING.md) to learn how you can help.
 
 Thank you to all the people who already contributed to TastyIgniter!
 
-<a href="https://github.com/tastyigniter/TastyIgniter/graphs/contributors"><img src="https://opencollective.com/tastyigniter/contributors.svg?width=890" /></a>
+<a href="https://github.com/tastyigniter/TastyIgniter/graphs/contributors"><img src="https://opencollective.com/tastyigniter/contributors.svg?width=890&button=false" /></a>
 
 ## Supporting TastyIgniter
 TastyIgniter is an MIT-licensed community-driven project with its continuous development made possible by the support of these awesome [backers](#contributing). If you'd like to help support the future of the project, please consider:
@@ -45,7 +44,9 @@ TastyIgniter is an MIT-licensed community-driven project with its continuous dev
 Become a sponsor and get your logo on our README on Github with a link to your site. 
 
 ### via Open Collective
-<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/tiers/bronze-sponsor.svg"></a>
+<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/sponsors.svg"></a>
+
+<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/backers.svg"></a>
 
 ### via Patreon
 [[Become a Patreon sponsor](https://www.patreon.com/sampoyigi)]

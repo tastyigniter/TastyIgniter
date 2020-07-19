@@ -1,4 +1,4 @@
-<div class="folder-tree hide"
+<div class="folder-tree"
      data-tree-data="<?= e(json_encode($folderTree)); ?>">
     <button>
         Go to root folder

@@ -2,6 +2,7 @@
 $fieldOptions = $field->options();
 $checkedValues = (array)$field->value;
 $isScrollable = count($fieldOptions) > 10;
+$inlineMode = (bool)$field->getConfig('inlineMode');
 ?>
 <?php if ($this->previewMode && $field->value) { ?>
 
@@ -14,7 +15,7 @@ $isScrollable = count($fieldOptions) > 10;
             if (!in_array($value, $checkedValues)) continue;
             if (!is_array($option)) $option = [$option];
             ?>
-            <div class="custom-control custom-checkbox mb-2">
+            <div class="custom-control custom-checkbox<?= $inlineMode ? ' custom-control-inline' : '' ?> mb-2">
                 <input
                     type="checkbox"
                     id="<?= $checkboxId ?>"
@@ -25,9 +26,9 @@ $isScrollable = count($fieldOptions) > 10;
                     checked="checked"
                 >
                 <label class="custom-control-label" for="<?= $checkboxId ?>">
-                    <?= e((sscanf($option[0], 'lang:%s', $line) === 1) ? lang($line) : $option[0]) ?>
+                    <?= e(is_lang_key($option[0]) ? lang($option[0]) : $option[0]) ?>
                     <?php if (isset($option[1])) { ?>
-                        <p class="help-block font-weight-normal"><?= e((sscanf($option[1], 'lang:%s', $line) === 1) ? lang($line) : $option[1]) ?></p>
+                        <p class="help-block font-weight-normal"><?= e(is_lang_key($option[1]) ? lang($option[1]) : $option[1]) ?></p>
                     <?php } ?>
                 </label>
             </div>
@@ -60,7 +61,7 @@ $isScrollable = count($fieldOptions) > 10;
                     $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
                     if (is_string($option)) $option = [$option];
                     ?>
-                    <div class="custom-control custom-checkbox mb-2">
+                    <div class="custom-control custom-checkbox<?= $inlineMode ? ' custom-control-inline' : '' ?> mb-2">
                         <input
                             type="checkbox"
                             id="<?= $checkboxId ?>"

@@ -1,12 +1,16 @@
 .multiselect.dropdown-toggle {
 	text-align: left;
 	border: 1px solid var(--gray-300);
-	background-color: var(--gray-100);
+	background-color: var(--white);
+	box-shadow: none;
+}
+.multiselect.dropdown-toggle:not(:last-child) {
+	border-right-color: var(--gray-300);
 }
 .multiselect.dropdown-toggle:focus {
 	color: var(--gray-800);
-	background-color: var(--gray-100);
-	border-color: #7797da;
+	background-color: var(--white);
+	border-color: var(--primary);
 	outline: 0;
 	-webkit-box-shadow: 0 0 0 0.2rem rgba(45, 84, 164, 0.25);
 	box-shadow: 0 0 0 0.2rem rgba(45, 84, 164, 0.25);
@@ -24,7 +28,7 @@
 	font-weight: 500;
 }
 .multiselect-container.dropdown-menu {
-	background-color: var(--gray-100);
+	background-color: var(--white);
 	padding: 0;
 }
 .multiselect-item {

@@ -1,10 +1,9 @@
 <div
     class="input-group control-colorpicker"
     data-control="colorpicker"
-    data-color-selectors="<?= e(json_encode($availableColors)) ?>">
-    <span class="component input-group-prepend">
-        <span class="input-group-icon"><i class="fa fa-square"></i></span>
-    </span>
+    data-swatches-colors="<?= e(json_encode($availableColors)) ?>"
+>
+    <div class="component input-group-prepend input-group-icon"><i class="fa fa-square"></i></div>
     <input
         type="text"
         id="<?= $this->getId('input') ?>"

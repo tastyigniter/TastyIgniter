@@ -19,9 +19,15 @@ class Menus_specials_model extends Model
     protected $fillable = ['menu_id', 'start_date', 'end_date', 'special_price', 'special_status', 'type',
         'validity', 'recurring_every', 'recurring_from', 'recurring_to'];
 
-    public $dates = ['start_date', 'end_date'];
 
     public $casts = [
+        'menu_id' => 'integer',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'special_price' => 'float',
+        'special_status' => 'boolean',
+        'recurring_from' => 'time',
+        'recurring_to' => 'time',
         'recurring_every' => 'array',
     ];
 

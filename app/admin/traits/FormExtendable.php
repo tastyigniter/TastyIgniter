@@ -82,8 +82,9 @@ trait FormExtendable
 
         // Prepare query and find model record
         $query = $model->newQuery();
-        $this->controller->applyLocationScope($query);
+        $this->controller->fireEvent('controller.form.extendQuery', [$query]);
         $this->controller->formExtendQuery($query);
+
         $result = $query->find($recordId);
 
         if (!$result) {
@@ -187,10 +188,15 @@ trait FormExtendable
     {
     }
 
+    public function formExtendConfig($formConfig)
+    {
+
+    }
+
     /**
      * Static helper for extending form fields.
      *
-     * @param  callable $callback
+     * @param callable $callback
      *
      * @return void
      */

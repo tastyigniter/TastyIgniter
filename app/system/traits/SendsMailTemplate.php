@@ -18,7 +18,7 @@ trait SendsMailTemplate
 
     public function mailSend($view, $recipientType = null)
     {
-        Mail::send(
+        Mail::queue(
             $view,
             $this->mailGetData(),
             is_callable($recipientType)
@@ -33,7 +33,7 @@ trait SendsMailTemplate
 
         return function ($message) use ($recipients) {
             foreach ($recipients as $recipient) {
-                list($email, $name) = $recipient;
+                [$email, $name] = $recipient;
                 $message->to($email, $name);
             }
         };

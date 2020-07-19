@@ -8,9 +8,6 @@ namespace Main\Template;
  */
 class Layout extends Model
 {
-    use Concerns\HasComponents;
-    use Concerns\HasViewBag;
-
     /**
      * @var string The directory name associated with the model, eg: pages.
      */

@@ -2,16 +2,11 @@
 $config['list']['columns'] = [
     'date_added' => [
         'label' => 'lang:admin::lang.statuses.column_time_date',
-        'type' => 'datesince',
+        'type' => 'timetense',
     ],
     'staff_name' => [
         'label' => 'lang:admin::lang.statuses.column_staff',
         'relation' => 'staff',
-        'select' => 'staff_name',
-    ],
-    'assignee_name' => [
-        'label' => 'lang:admin::lang.statuses.column_assignee',
-        'relation' => 'assignee',
         'select' => 'staff_name',
     ],
     'status' => [

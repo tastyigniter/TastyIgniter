@@ -1,7 +1,7 @@
 <div class="media-finder">
     <div class="input-group">
-        <span class="input-group-prepend">
-            <i class="input-group-icon">
+        <div class="input-group-prepend">
+            <i class="input-group-icon" style="width: 50px;">
                 <?php if (!is_null($mediaItem)) { ?>
                     <img
                         data-find-image
@@ -11,7 +11,7 @@
                     >
                 <?php } ?>
             </i>
-        </span>
+        </div>
         <span
             class="form-control<?= (!is_null($mediaItem) AND $useAttachment) ? ' find-config-button' : '' ?>"
             data-find-name><?= e($this->getMediaName($mediaItem)) ?></span>
@@ -29,15 +29,16 @@
             data-find-identifier
         />
         <?php if (!$this->previewMode) { ?>
-            <span class="input-group-btn">
-                <button class="btn btn-primary find-button<?= !is_null($mediaItem) ? ' hide' : '' ?>" type="button">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary find-button<?= !is_null($mediaItem) ? ' hide' : '' ?>" type="button">
                     <i class="fa fa-picture-o"></i>
                 </button>
-                <button class="btn btn-danger find-remove-button<?= !is_null($mediaItem) ? '' : ' hide' ?>"
-                        type="button">
+                <button
+                    class="btn btn-outline-danger find-remove-button<?= !is_null($mediaItem) ? '' : ' hide' ?>"
+                    type="button">
                     <i class="fa fa-times-circle"></i>
                 </button>
-            </span>
+            </div>
         <?php } ?>
     </div>
 </div>

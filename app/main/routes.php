@@ -7,12 +7,14 @@ App::before(function () {
      * handled by the admin modules.
      */
 
-    Route::group(['middleware' => 'web'], function () {
+    Route::group([
+        'middleware' => ['web'],
+    ], function () {
         // Register Assets Combiner routes
-        Route::group(['prefix' => config('system.assetsCombinerUri', '/_assets')], function () {
-            Route::any('{asset}', 'System\Classes\Controller@combineAssets');
-        });
+        Route::any(config('system.assetsCombinerUri', '_assets').'/{asset}', 'System\Classes\Controller@combineAssets');
 
-        Route::any('{slug}', 'System\Classes\Controller@run')->where('slug', '(.*)?');
+        Route::any('{slug}', 'System\Classes\Controller@run')
+            ->where('slug', '(.*)?')
+            ->middleware(\Igniter\Flame\Foundation\Http\Middleware\VerifyCsrfToken::class);
     });
 });

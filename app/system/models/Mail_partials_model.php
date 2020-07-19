@@ -26,17 +26,21 @@ class Mail_partials_model extends Model
      */
     protected $primaryKey = 'partial_id';
 
-    protected $fillable = ['name', 'code', 'html', 'plain'];
+    protected $guarded = [];
 
     /**
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
 
+    public $casts = [
+        'is_custom' => 'boolean',
+    ];
+
     //
     // Events
     //
-    public function afterFetch()
+    protected function afterFetch()
     {
         if (!$this->is_custom) {
             $this->fillFromCode();

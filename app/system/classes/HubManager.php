@@ -25,21 +25,12 @@ class HubManager
     public function initialize()
     {
         $this->cachePrefix = 'hub_';
-        $this->cacheTtl = now()->addDay();
+        $this->cacheTtl = now()->addHours(3);
     }
 
     public function listItems($filter = [])
     {
-        $cacheKey = $this->getCacheKey('items', $filter);
-
-        if (!$items = Cache::get($cacheKey)) {
-            $items = $this->requestRemoteData('items', array_merge(['include' => 'require'], $filter));
-
-            if (!empty($items) AND is_array($items))
-                Cache::put($cacheKey, $items, $this->cacheTtl);
-        }
-
-        return $items;
+        return $this->requestRemoteData('items', array_merge(['include' => 'require'], $filter));
     }
 
     public function getDetail($type, $itemName = [])
@@ -56,8 +47,6 @@ class HubManager
     {
         $response = $this->requestRemoteData('core/apply', [
             'items' => $itemNames,
-            'version' => params('ti_version'),
-            'edge' => Config::get('system.edgeUpdates', FALSE),
         ]);
 
         return $response;
@@ -71,8 +60,6 @@ class HubManager
             $response = $this->requestRemoteData('core/apply', [
                 'items' => $itemNames,
                 'include' => 'tags',
-                'version' => params('ti_version'),
-                'edge' => Config::get('system.edgeUpdates', FALSE),
             ]);
 
             if (is_array($response)) {
@@ -86,9 +73,7 @@ class HubManager
 
     public function applyCoreVersion()
     {
-        $result = $this->requestRemoteData('ping', [
-            'edge' => Config::get('system.edgeUpdates', FALSE),
-        ]);
+        $result = $this->requestRemoteData('ping');
 
         return array_get($result, 'pong', 'v3.0.0');
     }
@@ -122,13 +107,19 @@ class HubManager
     {
         return $this->requestRemoteFile('core/download', [
             'item' => $params,
-            'edge' => Config::get('system.edgeUpdates', FALSE),
         ], $filePath, $fileHash);
     }
 
     protected function getSecurityKey()
     {
-        return (!$carteKey = params('carte_key')) ? md5('NULL') : decrypt($carteKey);
+        $carteKey = params('carte_key', '');
+        try {
+            $carteKey = decrypt($carteKey);
+        }
+        catch (Exception $e) {
+        }
+
+        return strlen($carteKey) ? $carteKey : md5('NULL');
     }
 
     protected function getCacheKey($fileName, $suffix)
@@ -138,6 +129,11 @@ class HubManager
 
     protected function requestRemoteData($url, $params = [])
     {
+        if (!function_exists('curl_init')) {
+            echo 'cURL PHP extension required.'.PHP_EOL;
+            exit(1);
+        }
+
         $result = null;
 
         try {
@@ -171,8 +167,13 @@ class HubManager
         return $response;
     }
 
-    protected function requestRemoteFile($url, $params = [], $filePath, $fileHash)
+    protected function requestRemoteFile($url, array $params, $filePath, $fileHash)
     {
+        if (!function_exists('curl_init')) {
+            echo 'cURL PHP extension required.'.PHP_EOL;
+            exit(1);
+        }
+
         if (!is_dir($fileDir = dirname($filePath)))
             throw new ApplicationException("Downloading failed, download path ({$filePath}) not found.");
 
@@ -205,7 +206,7 @@ class HubManager
                     : "Download failed, File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)"
             );
 
-            throw new ApplicationException(sprintf('Downloading %s failed, check error logs.', array_get($params, 'item.name')));
+            throw new ApplicationException(sprintf('Downloading %s failed, check system logs.', array_get($params, 'item.name')));
         }
 
         return TRUE;
@@ -223,7 +224,16 @@ class HubManager
         curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
 
-        $params['url'] = base64_encode(root_url());
+        $params['client'] = 'tastyigniter';
+        $params['server'] = base64_encode(serialize([
+            'php' => PHP_VERSION,
+            'url' => url()->to('/'),
+            'version' => params('ti_version', 'v3.0.0'),
+        ]));
+
+        if (Config::get('system.edgeUpdates', FALSE)) {
+            $params['edge'] = 1;
+        }
 
         if ($siteKey = $this->getSecurityKey()) {
             curl_setopt($curl, CURLOPT_HTTPHEADER, ["TI-Rest-Key: bearer {$siteKey}"]);

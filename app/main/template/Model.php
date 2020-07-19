@@ -18,12 +18,19 @@ use Main\Classes\ThemeManager;
  */
 class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 {
+    use Concerns\HasComponents;
+    use Concerns\HasViewBag;
+
     /**
      * @var \Main\Classes\Theme The theme object.
      */
     protected $themeCache;
 
     protected $fillable = [];
+
+    public $settings = [
+        'components' => [],
+    ];
 
     /**
      * The "booting" method of the model.
@@ -46,10 +53,9 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
             return;
         }
 
-        $manager = ThemeManager::instance();
-        $defaultTheme = $manager->getActiveThemeCode();
+        $activeTheme = ThemeManager::instance()->getActiveThemeCode();
 
-        $resolver->setDefaultSourceName($defaultTheme);
+        $resolver->setDefaultSourceName($activeTheme);
     }
 
     /**
@@ -110,14 +116,29 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
         return $instance->newCollection($result);
     }
 
-    public static function inTheme($theme)
+    public static function inTheme(Theme $theme)
     {
-        if (is_string($theme)) {
-            $theme = Theme::load($theme);
-        }
-
         return static::on($theme->getDirName());
     }
+
+    public static function getDropdownOptions(Theme $theme = null, $skipCache = FALSE)
+    {
+        $result = [];
+
+        $pages = is_null($theme) ? self::get() : self::listInTheme($theme, $skipCache);
+        foreach ($pages as $page) {
+            $fileName = $page->getBaseFileName();
+            $description = $page instanceof Page ? $page->title : $page->description;
+            $description = strlen($description) ? lang($description) : $fileName;
+            $result[$fileName] = $description.' ['.$fileName.']';
+        }
+
+        return collect($result)->sort()->all();
+    }
+
+    //
+    //
+    //
 
     /**
      * Returns the unique id of this object.
@@ -215,5 +236,55 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     public function getTemplateCacheKey()
     {
         return $this->getFilePath();
+    }
+
+    //
+    // Magic
+    //
+
+    /**
+     * Implements getter functionality for visible properties defined in
+     * the settings section or view bag array.
+     * @param $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (is_array($this->settings) AND array_key_exists($name, $this->settings)) {
+            return $this->settings[$name];
+        }
+
+        return parent::__get($name);
+    }
+
+    /**
+     * Dynamically set attributes on the model.
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        parent::__set($key, $value);
+
+        if (array_key_exists($key, $this->settings)) {
+            $this->settings[$key] = $this->attributes[$key];
+        }
+    }
+
+    /**
+     * Determine if an attribute exists on the object.
+     *
+     * @param  string $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        if (parent::__isset($key) === TRUE) {
+            return TRUE;
+        }
+
+        return isset($this->settings[$key]);
     }
 }

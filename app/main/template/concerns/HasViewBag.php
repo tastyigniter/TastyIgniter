@@ -18,6 +18,23 @@ trait HasViewBag
     protected $viewBagCache = FALSE;
 
     /**
+     * Boot the sortable trait for this model.
+     *
+     * @return void
+     */
+    public static function bootHasViewBag()
+    {
+        static::retrieved(function (self $model) {
+            $model->parseSettings();
+        });
+    }
+
+    public function parseSettings()
+    {
+        $this->fillViewBagArray();
+    }
+
+    /**
      * Returns the configured view bag component.
      * This method is used only in the back-end and for internal system needs when
      * the standard way to access components is not an option.

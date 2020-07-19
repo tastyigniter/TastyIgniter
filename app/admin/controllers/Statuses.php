@@ -22,6 +22,7 @@ class Statuses extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.statuses.text_form_name',
         'model' => 'Admin\Models\Statuses_model',
+        'request' => 'Admin\Requests\Status',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'statuses/edit/{status_id}',
@@ -65,11 +66,6 @@ class Statuses extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['status_name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
-            ['status_for', 'lang:admin::lang.statuses.label_for', 'required|alpha'],
-            ['status_color', 'lang:admin::lang.statuses.label_color', 'max:7'],
-            ['status_comment', 'lang:admin::lang.statuses.label_comment', 'max:1028'],
-            ['notify_customer', 'lang:admin::lang.statuses.label_notify', 'required|integer'],
         ];
 
         return $this->validatePasses($form->getSaveData(), $rules);

@@ -7,7 +7,7 @@ use Schema;
 /**
  * Add validity columns on menus_specials table
  */
-class addColumnsOnMenuSpecialsTable extends Migration
+class AddColumnsOnMenuSpecialsTable extends Migration
 {
     public function up()
     {

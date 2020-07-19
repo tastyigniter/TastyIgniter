@@ -30,11 +30,16 @@ class Coupons_model extends Model
      */
     protected $primaryKey = 'coupon_id';
 
-    public $timestamps = TRUE;
-
     protected $timeFormat = 'H:i';
 
+    public $timestamps = TRUE;
+
     public $casts = [
+        'discount' => 'float',
+        'min_total' => 'float',
+        'redemptions' => 'integer',
+        'customer_redemptions' => 'integer',
+        'status' => 'boolean',
         'period_start_date' => 'date',
         'period_end_date' => 'date',
         'fixed_date' => 'date',
@@ -42,6 +47,7 @@ class Coupons_model extends Model
         'fixed_to_time' => 'time',
         'recurring_from_time' => 'time',
         'recurring_to_time' => 'time',
+        'order_restriction' => 'integer',
     ];
 
     public $relation = [
@@ -145,7 +151,7 @@ class Coupons_model extends Model
 
         $orderTypes = [AbstractLocation::DELIVERY => 1, AbstractLocation::COLLECTION => 2];
 
-        return array_get($orderTypes, $orderType) != $this->order_restriction;
+        return array_get($orderTypes, $orderType, $orderType) != $this->order_restriction;
     }
 
     public function hasLocationRestriction($locationId)

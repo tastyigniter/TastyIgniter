@@ -87,7 +87,7 @@ class UpdateManager
     /**
      * Set the output implementation that should be used by the console.
      *
-     * @param  \Illuminate\Console\OutputStyle $output
+     * @param \Illuminate\Console\OutputStyle $output
      * @return $this
      */
     public function setLogsOutput($output)
@@ -293,12 +293,15 @@ class UpdateManager
 
         $items = $this->getHubManager()->listItems([
             'browse' => 'recommended',
-            'limit' => 9,
+            'limit' => 12,
             'type' => $itemType,
         ]);
 
         $installedItems = array_column($installedItems, 'name');
         if (isset($items['data'])) foreach ($items['data'] as &$item) {
+            if ($item['type'] !== 'theme')
+                $item['icon'] = generate_extension_icon($item['icon'] ?? []);
+
             $item['installed'] = in_array($item['code'], $installedItems);
         }
 
@@ -316,6 +319,7 @@ class UpdateManager
 
         $installedItems = array_column($installedItems, 'name');
         if (isset($items['data'])) foreach ($items['data'] as &$item) {
+            $item['icon'] = generate_extension_icon($item['icon'] ?? []);
             $item['installed'] = in_array($item['code'], $installedItems);
         }
 
@@ -364,6 +368,7 @@ class UpdateManager
             $update = $this->parseTagDescription($update);
 
             if (array_get($update, 'type') == 'core') {
+                $update['icon'] = 'logo-icon icon-ti-logo';
                 $update['installedVer'] = params('ti_version');
                 if ($this->disableCoreUpdates)
                     continue;
@@ -374,6 +379,7 @@ class UpdateManager
                 continue;
             }
 
+            $update['icon'] = generate_extension_icon($update['icon'] ?? []);
             $items[] = $update;
         }
 
@@ -464,7 +470,7 @@ class UpdateManager
 
     public function setSecurityKey($key, $info)
     {
-        params()->set('carte_key', $key ? encrypt($key) : '');
+        params()->set('carte_key', $key ?: '');
 
         if ($info AND is_array($info))
             params()->set('carte_info', $info);

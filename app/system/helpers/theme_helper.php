@@ -33,7 +33,7 @@ if (!function_exists('parent_theme')) {
      */
     function parent_theme($theme)
     {
-        return ThemeManager::instance()->findParent($theme);
+        return ThemeManager::instance()->findParentCode($theme);
     }
 }
 

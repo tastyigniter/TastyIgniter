@@ -5,8 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Widgets\Table\Source\DataSource;
 use Exception;
-use Input;
-use Request;
+use Illuminate\Support\Facades\Request;
 
 class Table extends BaseWidget
 {
@@ -154,8 +153,8 @@ class Table extends BaseWidget
 
     public function onGetDropdownOptions()
     {
-        $columnName = Input::get('column');
-        $rowData = Input::get('rowData');
+        $columnName = Request::get('column');
+        $rowData = Request::get('rowData');
 
         $eventResults = $this->fireEvent('table.getDropdownOptions', [$columnName, $rowData]);
 

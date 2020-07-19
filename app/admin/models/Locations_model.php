@@ -1,8 +1,11 @@
 <?php namespace Admin\Models;
 
+use Admin\Traits\HasDeliveryAreas;
+use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
 
 /**
@@ -12,6 +15,8 @@ use Igniter\Flame\Location\Models\AbstractLocation;
  */
 class Locations_model extends AbstractLocation
 {
+    use HasWorkingHours;
+    use HasDeliveryAreas;
     use HasPermalink;
     use Purgeable;
     use HasMedia;
@@ -20,17 +25,23 @@ class Locations_model extends AbstractLocation
 
     const LOCATION_CONTEXT_MULTIPLE = 'multiple';
 
-    public $fillable = ['location_name', 'location_email', 'description', 'location_address_1',
-        'location_address_2', 'location_city', 'location_state', 'location_postcode', 'location_country_id',
-        'location_telephone', 'location_lat', 'location_lng', 'offer_delivery', 'offer_collection',
-        'delivery_time', 'last_order_time', 'reservation_time_interval', 'reservation_stay_time', 'location_status',
-        'collection_time', 'options', 'location_image'];
+    protected $appends = ['location_thumb'];
+
+    protected $hidden = ['options'];
+
+    public $casts = [
+        'location_country_id' => 'integer',
+        'location_lat' => 'double',
+        'location_lng' => 'double',
+        'location_status' => 'boolean',
+        'options' => 'serialize',
+    ];
 
     public $relation = [
         'hasMany' => [
             'working_hours' => ['Admin\Models\Working_hours_model', 'delete' => TRUE],
             'delivery_areas' => ['Admin\Models\Location_areas_model', 'delete' => TRUE],
-            'reviews' => ['Admin\Models\Reviews_model', 'delete' => TRUE],
+            'reviews' => ['Admin\Models\Reviews_model'],
         ],
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
@@ -40,11 +51,7 @@ class Locations_model extends AbstractLocation
         ],
     ];
 
-    public $purgeable = ['tables', 'delivery_areas'];
-
-    protected $appends = ['location_thumb'];
-
-    protected $hidden = ['options'];
+    protected $purgeable = ['tables', 'delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [
@@ -66,6 +73,8 @@ class Locations_model extends AbstractLocation
     ];
 
     public $url;
+
+    protected static $defaultLocation;
 
     public static function getDropdownOptions()
     {
@@ -96,22 +105,22 @@ class Locations_model extends AbstractLocation
     // Events
     //
 
-    public function afterFetch()
+    protected function afterFetch()
     {
         $this->parseOptionsValue();
     }
 
-    public function beforeSave()
+    protected function beforeSave()
     {
         $this->parseOptionsValue();
     }
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->performAfterSave();
     }
 
-    public function beforeDelete()
+    protected function beforeDelete()
     {
         Location_tables_model::where('location_id', $this->getKey())->delete();
     }
@@ -141,8 +150,10 @@ class Locations_model extends AbstractLocation
             'longitude' => null,
         ], $options));
 
-        if ($latitude AND $longitude)
+        if ($latitude AND $longitude) {
+            $query->select('*');
             $query->selectDistance($latitude, $longitude);
+        }
 
         $searchableFields = ['location_name', 'location_address_1', 'location_address_2', 'location_city',
             'location_state', 'location_postcode', 'description'];
@@ -157,7 +168,7 @@ class Locations_model extends AbstractLocation
                 if (count($parts) < 2) {
                     array_push($parts, 'desc');
                 }
-                list($sortField, $sortDirection) = $parts;
+                [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
             }
         }
@@ -181,12 +192,12 @@ class Locations_model extends AbstractLocation
 
     public function getDeliveryTimeAttribute($value)
     {
-        return (int)$value;
+        return (int)$this->getOption('delivery_time_interval');
     }
 
     public function getCollectionTimeAttribute($value)
     {
-        return (int)$value;
+        return (int)$this->getOption('collection_time_interval');
     }
 
     public function getFutureOrdersAttribute($value)
@@ -196,7 +207,7 @@ class Locations_model extends AbstractLocation
 
     public function getReservationTimeIntervalAttribute($value)
     {
-        return (int)$value;
+        return (int)$this->getOption('reservation_time_interval');
     }
 
     //
@@ -233,19 +244,17 @@ class Locations_model extends AbstractLocation
         $this->parseAreasFromOptions($value);
 
         $this->attributes['options'] = @serialize($value);
-
-        return $value;
     }
 
     public function listAvailablePayments()
     {
-        $paymentGateways = Payments_model::listPayments();
-        if (!$payments = array_get($this->options, 'payments', []))
-            return $paymentGateways;
-
         $result = [];
+
+        $payments = array_get($this->options, 'payments', []);
+        $paymentGateways = Payments_model::listPayments();
+
         foreach ($paymentGateways as $payment) {
-            if (!in_array($payment->code, $payments)) continue;
+            if ($payments AND !in_array($payment->code, $payments)) continue;
 
             $result[$payment->code] = $payment;
         }
@@ -270,30 +279,48 @@ class Locations_model extends AbstractLocation
         }
     }
 
+    public function makeDefault()
+    {
+        if (!$this->location_status) {
+            throw new ValidationException(['location_status' => sprintf(
+                lang('admin::lang.alert_error_set_default'), $this->location_name
+            )]);
+        }
+
+        params('default_location_id', $this->getKey());
+        params()->save();
+    }
+
     /**
      * Update the default location
      *
-     * @param array $update
+     * @param string $locationId
      *
      * @return bool|int
      */
-    public static function updateDefault(array $update = [])
+    public static function updateDefault($locationId)
     {
-        $location_id = isset($update['location_id'])
-            ? (int)$update['location_id']
-            : params('default_location_id');
+        if ($model = self::find($locationId)) {
+            $model->makeDefault();
 
-        $locationModel = self::findOrNew($location_id);
+            return TRUE;
+        }
+    }
 
-        $saved = null;
-        if ($locationModel) {
-            $locationModel->location_status = TRUE;
-            $saved = $locationModel->fill($update)->save();
-
-            params()->set('default_location_id', $locationModel->getKey());
+    public static function getDefault()
+    {
+        if (self::$defaultLocation !== null) {
+            return self::$defaultLocation;
         }
 
-        return $saved ? $locationModel->getKey() : $saved;
+        $defaultLocation = self::isEnabled()->where('location_id', params('default_location_id'))->first();
+        if (!$defaultLocation) {
+            if ($defaultLocation = self::isEnabled()->first()) {
+                $defaultLocation->makeDefault();
+            }
+        }
+
+        return self::$defaultLocation = $defaultLocation;
     }
 
     /**

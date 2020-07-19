@@ -35,7 +35,7 @@
         this.$dataLocker = this.$el.parent('div').find('[data-datepicker-value]')
 
         if (this.options.mode === 'datetime') {
-            this.picker = this.$el.datetimepicker({
+            this.$el.datetimepicker({
                 format: this.options.format,
                 icons: {
                     time: "fa fa-clock-o",
@@ -45,7 +45,7 @@
                 }
             });
 
-            this.$el.on('dp.change', $.proxy(this.onSelectDateTimePicker, this))
+            this.$el.on('change.datetimepicker', $.proxy(this.onSelectDateTimePicker, this))
         } else {
             this.picker = this.$el.datepicker(this.options);
             this.parsePickerValue()
@@ -71,6 +71,8 @@
         var lockerValue = event.date.format('YYYY-MM-DD HH:mm:ss')
 
         this.$dataLocker.val(lockerValue)
+
+        this.$el.datetimepicker('hide')
     }
 
     //

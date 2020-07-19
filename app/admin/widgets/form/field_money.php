@@ -10,10 +10,11 @@
                 type="number"
                 name="<?= $field->getName() ?>"
                 id="<?= $field->getId() ?>"
-                value="<?= e($field->value) ?>"
-                placeholder="<?= e($field->placeholder) ?>"
+                value="<?= number_format($field->value, 2, '.', '') ?>"
+                placeholder="<?= e(lang($field->placeholder)) ?>"
                 class="form-control"
                 autocomplete="off"
+                step="any"
                 <?= $field->hasAttribute('pattern') ? '' : 'pattern="-?\d+(\.\d+)?"' ?>
                 <?= $field->hasAttribute('maxlength') ? '' : 'maxlength="255"' ?>
                 <?= $field->getAttributes() ?>

@@ -3,7 +3,7 @@
 >
     <div
         id="<?= $this->getId('container-list') ?>"
-        class="widget-list row <?= $this->canAddAndDelete ? 'add-delete' : null ?>"
+        class="widget-list row <?= $this->canManage ? 'add-delete' : null ?>"
         data-container-widget
     >
         <?= $this->makePartial('widget_list') ?>

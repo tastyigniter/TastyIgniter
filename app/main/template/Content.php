@@ -2,36 +2,49 @@
 
 namespace Main\Template;
 
-class Content extends Partial
+use Igniter\Flame\Mail\Markdown;
+use Igniter\Flame\Support\Facades\File;
+
+class Content extends Model
 {
     /**
      * @var string The directory name associated with the model
      */
     protected $dirName = '_content';
 
-    /**
-     * Loads the template.
-     *
-     * @param  \Main\Classes\Theme|\System\Classes\BaseComponent $source
-     * @param  string $fileName
-     *
-     * @return mixed
-     */
-    public static function load($source, $fileName)
+    public static function initCacheItem(&$item)
     {
-        return (new static($source))->find($fileName);
+        $item['parsedMarkup'] = (new static($item))->parseMarkup();
+    }
+
+    public function getParsedMarkupAttribute()
+    {
+        if (array_key_exists('parsedMarkup', $this->attributes)) {
+            return $this->attributes['parsedMarkup'];
+        }
+
+        return $this->attributes['parsedMarkup'] = $this->parseMarkup();
     }
 
     /**
-     * Loads and caches the template.
-     *
-     * @param  \Main\Classes\Theme|\System\Classes\BaseComponent $source
-     * @param  string $fileName
-     *
-     * @return mixed
+     * Parses the content markup according to the file type.
+     * @return string
      */
-    public static function loadCached($source, $fileName)
+    public function parseMarkup()
     {
-        return static::load($source, $fileName);
+        $extension = strtolower(File::extension($this->fileName));
+
+        switch ($extension) {
+            case 'txt':
+                $result = htmlspecialchars($this->markup);
+                break;
+            case 'md':
+                $result = (new Markdown)->parse($this->markup);
+                break;
+            default:
+                $result = $this->markup;
+        }
+
+        return $result;
     }
 }

@@ -1,4 +1,4 @@
-<div class="panel panel-item item-theme">
+<div class="card<?= empty($item['installed']) ? ' bg-light' : ''  ?> item-theme shadow-sm">
     <img
         src="<?= $item['icon'] ?>"
         class="img-responsive img-rounded"

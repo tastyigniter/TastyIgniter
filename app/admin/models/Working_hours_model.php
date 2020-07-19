@@ -11,6 +11,13 @@ class Working_hours_model extends AbstractWorkingHour
 {
     public $fillable = ['location_id', 'weekday', 'opening_time', 'closing_time', 'status', 'type'];
 
+    public $casts = [
+        'weekday' => 'integer',
+        'opening_time' => 'time',
+        'closing_time' => 'time',
+        'status' => 'boolean',
+    ];
+
     public function getHoursByLocation($id)
     {
         $collection = [];

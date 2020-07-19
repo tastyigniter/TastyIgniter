@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title><?= $model->invoice_id.' - '.lang('admin::lang.orders.text_invoice'); ?>
+    <title><?= $model->invoice_number.' - '.lang('admin::lang.orders.text_invoice'); ?>
         - <?= setting('site_name'); ?></title>
     <?= get_style_tags(); ?>
     <style>
@@ -50,18 +50,19 @@
         <div class="col-6">
             <p>
                 <strong><?= lang('admin::lang.orders.text_customer'); ?></strong><br>
-                <?= $model->first_name; ?> <?= $model->last_name; ?><br>
-                <?= $model->email; ?>
+                <?= $model->first_name; ?> <?= $model->last_name; ?> (<?= $model->email; ?>)
             </p>
             <?php if ($model->isDeliveryType()) { ?>
-                <span class="text-muted"><?= lang('admin::lang.orders.text_deliver_to'); ?></span><br>
-                <address><?= $model->formatted_address; ?></address>
+                <div>
+                    <strong><?= lang('admin::lang.orders.text_deliver_to'); ?></strong><br>
+                    <address><?= $model->formatted_address; ?></address>
+                </div>
             <?php } ?>
         </div>
         <div class="col-3 text-left">
             <p>
                 <strong><?= lang('admin::lang.orders.text_invoice_no'); ?></strong><br>
-                <?= $model->invoice_id; ?>
+                <?= $model->invoice_number; ?>
             </p>
             <p>
                 <strong><?= lang('admin::lang.orders.text_invoice_date'); ?></strong><br>
@@ -108,9 +109,10 @@
                                     <div>
                                         <?php foreach ($menuItemOptions as $menuItemOption) { ?>
                                             <small>
+                                                <?= $menuItemOption->quantity; ?>x
                                                 <?= $menuItemOption->order_option_name; ?>
                                                 =
-                                                <?= currency_format($menuItemOption->order_option_price); ?>
+                                                <?= currency_format($menuItemOption->quantity*$menuItemOption->order_option_price); ?>
                                             </small><br>
                                         <?php } ?>
                                     </div>

@@ -1,12 +1,9 @@
 <?php namespace Admin\Models;
 
+use Admin\Classes\PermissionManager;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
-use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Request;
-use System\Classes\Controller;
-use System\Models\Permissions_model;
 
 /**
  * Users Model Class
@@ -23,9 +20,19 @@ class Users_model extends AuthUserModel
 
     protected $primaryKey = 'user_id';
 
-    protected $dates = [
-        'reset_time',
-        'date_activated',
+    protected $fillable = ['username', 'super_user'];
+
+    protected $appends = ['staff_name'];
+
+    protected $hidden = ['password'];
+
+    public $casts = [
+        'staff_id' => 'integer',
+        'super_user' => 'boolean',
+        'is_activated' => 'boolean',
+        'reset_time' => 'datetime',
+        'date_activated' => 'datetime',
+        'last_login' => 'datetime',
     ];
 
     public $relation = [
@@ -36,26 +43,19 @@ class Users_model extends AuthUserModel
 
     protected $with = ['staff'];
 
-    protected $fillable = ['username', 'super_user'];
-
-    protected $appends = ['staff_name'];
-
-    protected $hidden = ['password'];
-
     protected $purgeable = ['password_confirm'];
-
-    protected $availablePermissions = [];
-
-    protected $groupPermissions = [];
-
-    protected $filteredPermissions = [];
-
-    protected $permissionsLoaded = FALSE;
 
     public function beforeLogin()
     {
-        if ($language = $this->staff->language)
-            app('translator.localization')->setSessionLocale($language->code);
+        app('translator.localization')->setSessionLocale(
+            optional($this->staff->language)->code ?? setting('default_language')
+        );
+    }
+
+    public function afterLogin()
+    {
+        $this->last_login = Carbon::now();
+        $this->save();
     }
 
     public function getStaffNameAttribute()
@@ -93,156 +93,49 @@ class Users_model extends AuthUserModel
     // Permissions
     //
 
-    public function hasPermission($permission, $displayError = FALSE)
+    public function hasAnyPermission($permissions)
     {
-        if (!is_array($permission))
-            $permission = [$permission];
+        return $this->hasPermission($permissions, FALSE);
+    }
 
-        foreach ($permission as $name) {
-            if ($this->checkPermittedActions($name, $displayError))
-                return TRUE;
-        }
+    public function hasPermission($permissions, $checkAll = TRUE)
+    {
+        // Bail out if the staff is a super user
+        if ($this->isSuperUser())
+            return TRUE;
+
+        $staffPermissions = $this->getPermissions();
+
+        if (!is_array($permissions))
+            $permissions = [$permissions];
+
+        if (PermissionManager::instance()->checkPermission(
+            $staffPermissions, $permissions, $checkAll)
+        ) return TRUE;
 
         return FALSE;
     }
 
-    protected function checkPermittedActions($perm, $displayError = FALSE)
+    public function getPermissions()
     {
-        $this->loadPermissions();
+        $role = $this->staff->role;
 
-        // Bail out if the staff is a super user
-        if ($this->isSuperUser()) return TRUE;
-
-        list($permName, $action) = $this->filterPermissionName($perm);
-
-        $actionsToCheck = $action
-            ? [$action]
-            : $this->getRequestedAction();
-
-        $availableActions = $this->getPermissionActions($permName, 'available');
-        $permittedActions = $this->getPermissionActions($permName, 'filtered');
-
-        foreach ($actionsToCheck as $value) {
-            // Fail if action is available and not permitted.
-            if (in_array($value, $availableActions) AND !in_array($value, $permittedActions)) {
-                if ($displayError) {
-                    flash()->warning(sprintf(lang('admin::lang.alert_user_restricted'), $value, $permName));
-                }
-
-                return FALSE;
-            }
+        $permissions = [];
+        if ($role AND is_array($role->permissions)) {
+            $permissions = $role->permissions;
         }
 
-        return TRUE;
-    }
-
-    protected function loadPermissions()
-    {
-        if ($this->permissionsLoaded)
-            return FALSE;
-
-        $groupModel = $this->staff->group;
-        if (!$groupModel)
-            return FALSE;
-
-        $this->groupPermissions = is_array($groupModel->permissions) ? $groupModel->permissions : [];
-        $this->availablePermissions = Permissions_model::listPermissionActions();
-
-        $this->filteredPermissions = [];
-        foreach ($this->groupPermissions as $permission => $actions) {
-            if (!$availableActions = array_get($this->availablePermissions, $permission, FALSE))
-                continue;
-
-            if (!array_filter(array_intersect($actions, $availableActions)))
-                continue;
-
-            $this->filteredPermissions[$permission] = $actions;
-        }
-
-        $this->permissionsLoaded = TRUE;
-    }
-
-    protected function getRequestedAction()
-    {
-        $result = [];
-
-        // Specify the requested action if not present, based on the $_SERVER REQUEST_METHOD
-        $requestMethod = Request::server('REQUEST_METHOD');
-        if ($requestMethod !== 'GET' AND in_array(Controller::$action, ['create', 'edit', 'manage', 'settings']))
-            $requestMethod = Controller::$action;
-
-        if (is_string(post('_method')))
-            $requestMethod = post('_method');
-
-        switch (strtolower($requestMethod)) {
-            case 'get':
-                $result = ['access'];
-                break;
-            case 'post':
-                $result = ['access', 'add'];
-                break;
-            case 'delete':
-                $result = ['delete'];
-                break;
-            case 'edit':
-            case 'manage':
-            case 'settings':
-            case 'patch':
-                $result = ['access', 'manage'];
-                break;
-            case 'create':
-            case 'put':
-                $result = ['add'];
-                break;
-        }
-
-        return $result;
-    }
-
-    protected function getPermissionActions($permission, $whichAction)
-    {
-        $whichAction .= 'Permissions';
-        if (!isset($this->{$whichAction}[$permission]))
-            return [];
-
-        return is_array($this->{$whichAction}[$permission])
-            ? $this->{$whichAction}[$permission] : [];
-    }
-
-    protected function filterPermissionName($permission)
-    {
-        $permArray = explode('.', $permission);
-
-        $name = array_slice($permArray, 0, 2);
-        $action = array_slice($permArray, 2, 1);
-
-        return [implode('.', $name), strtolower(current($action))];
+        return $permissions;
     }
 
     //
     // Location
     //
 
-    public function hasStrictLocationAccess()
+    public function hasLocationAccess($location)
     {
-        return (bool)$this->staff->group->location_access;
-    }
-
-    public function hasLocationAccess($location, $displayError = FALSE)
-    {
-        if ($location instanceof Model)
-            $location = $location->getKey();
-
-        if (!$this->hasStrictLocationAccess())
-            return TRUE;
-
-        if ($this->staff_location_id != $location) {
-            if ($displayError)
-                flash()->warning(lang('admin::lang.alert_location_restricted'));
-
-            return FALSE;
-        }
-
-        return TRUE;
+        return $this->staff->locations->contains(function ($model) use ($location) {
+            return $model->location_id === $location->location_id;
+        });
     }
 }
