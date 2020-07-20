@@ -1,0 +1,73 @@
+name: Tests
+
+on:
+  push:
+    branches: [ develop, tests ]
+  pull_request
+    branches: [ develop, tests ]
+
+jobs:
+  PHPUnitTests:
+#    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    strategy:
+#      max-parallel: 6
+      matrix:
+#        os: [ubuntu-latest, windows-latest]
+        php: ['7.2', '7.3', '7.4']
+        db: ['mysql:5.7', mariadb]
+        include:
+          - db: 'mysql:5.7'
+            dbName: MySQL
+          - db: mariadb
+            dbName: MariaDB
+#      fail-fast: false
+
+    services:
+      mysql:
+        image: ${{ matrix.db }}
+        ports:
+          - 13306:3306
+
+    name: 'PHPUnit Tests ${{ matrix.php }} / ${{ matrix.dbName }}'
+
+    steps:
+      - name: Checkout changes
+        uses: actions/checkout@v1
+
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v1
+#        with:
+#          php-version: ${{ matrix.php }}
+#          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_mysql, bcmath, soap, intl, gd, exif, iconv, imagick
+#          coverage: none
+
+      - name: Create MySQL Database
+        run: |
+          sudo systemctl start mysql
+          mysql -uroot -proot -e 'CREATE DATABASE ti_test;' --port 13306
+
+      - name: Install composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress --no-suggest --no-scripts
+
+      - name: Reset TastyIgniter library
+        run: |
+          git reset --hard HEAD
+          rm -rf ./vendor/tastyigniter/flame
+          wget https://github.com/tastyigniter/flame/archive/develop.zip -O ./vendor/tastyigniter/develop.zip
+          unzip ./vendor/tastyigniter/develop.zip -d ./vendor/tastyigniter
+          mv ./vendor/tastyigniter/flame-develop ./vendor/tastyigniter/flame
+          composer dump-autoload
+        env:
+          DB_PORT: 13306
+          DB_PASSWORD: root
+          DB_PREFIX: ${{ matrix.prefix }}
+
+      - name: Run composer post-update scripts
+        run: |
+          php artisan key:generate
+          php artisan igniter:util set version
+          php artisan package:discover
+
+      - name: Run PHPUnit Test Suite
+        run: ./vendor/bin/phpunit
