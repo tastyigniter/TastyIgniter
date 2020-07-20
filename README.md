@@ -2,7 +2,7 @@
 
 [![Stable](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Stable&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
 [![Total Downloads](https://poser.pugx.org/tastyigniter/flame/downloads)](https://packagist.org/packages/tastyigniter/flame)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/tastyigniter/TastyIgniter/run-php-tests?label=Tests)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/tastyigniter/TastyIgniter/Tests?label=Tests)
 [![Build Status](https://github.styleci.io/repos/7548986/shield?style=flat)](https://github.styleci.io/repos/16455664)
 [![License](https://img.shields.io/github/license/tastyigniter/TastyIgniter.svg?label=License&style=flat-square)](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt)
 [![Crowdin](https://badges.crowdin.net/tastyigniter/localized.svg)](https://crowdin.com/project/tastyigniter)
