@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use ApplicationException;
 use Cache;
@@ -10,7 +12,6 @@ use Request;
 
 /**
  * Hub Manager Class
- * @package System
  */
 class HubManager
 {
@@ -113,6 +114,7 @@ class HubManager
     protected function getSecurityKey()
     {
         $carteKey = params('carte_key', '');
+
         try {
             $carteKey = decrypt($carteKey);
         }
@@ -143,7 +145,6 @@ class HubManager
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
                 throw new ApplicationException('Server error try again');
-
             curl_close($curl);
         }
         catch (Exception $ex) {
@@ -151,6 +152,7 @@ class HubManager
         }
 
         $response = null;
+
         try {
             $response = @json_decode($result, TRUE);
         }
@@ -186,7 +188,6 @@ class HubManager
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
                 throw new ApplicationException('Server error try again');
-
             curl_close($curl);
             fclose($fileStream);
         }

@@ -1,4 +1,6 @@
-<?php namespace Main\Template;
+<?php
+
+namespace Main\Template;
 
 use Main\Classes\MainController;
 use Main\Classes\Theme;
@@ -6,8 +8,6 @@ use Main\Classes\ThemeManager;
 
 /**
  * Page Template Class
- *
- * @package Main
  */
 class Page extends Model
 {
@@ -18,8 +18,10 @@ class Page extends Model
 
     /**
      * Helper that makes a URL for a page in the active theme.
+     *
      * @param $page
      * @param array $params
+     *
      * @return string
      */
     public static function url($page, array $params = [])
@@ -31,7 +33,9 @@ class Page extends Model
 
     /**
      * Handler for the pages.menuitem.getTypeInfo event.
+     *
      * @param string $type
+     *
      * @return array|void
      */
     public static function getMenuTypeInfo(string $type)
@@ -49,9 +53,11 @@ class Page extends Model
 
     /**
      * Handler for the pages.menuitem.resolveItem event.
+     *
      * @param $item
      * @param string $url
      * @param \Main\Classes\Theme $theme
+     *
      * @return array|void
      */
     public static function resolveMenuItem($item, string $url, Theme $theme)

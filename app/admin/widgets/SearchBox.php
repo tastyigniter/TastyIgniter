@@ -113,6 +113,7 @@ class SearchBox extends BaseWidget
 
     /**
      * Returns a value suitable for the field name property.
+     *
      * @return string
      */
     public function getName()

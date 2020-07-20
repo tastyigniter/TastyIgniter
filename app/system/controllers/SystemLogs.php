@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use AdminMenu;
 use File;
@@ -46,7 +48,7 @@ class SystemLogs extends \Admin\Classes\AdminController
     {
         $logFile = storage_path('logs/system.log');
         if (File::exists($logFile) AND File::isWritable($logFile)) {
-            File::put(storage_path('logs/system.log'), "");
+            File::put(storage_path('logs/system.log'), '');
 
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Logs Emptied '));
         }

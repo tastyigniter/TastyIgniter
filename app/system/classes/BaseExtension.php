@@ -9,7 +9,6 @@ use SystemException;
 
 /**
  * Base Extension Class
- * @package System
  */
 class BaseExtension extends ServiceProvider
 {
@@ -20,12 +19,13 @@ class BaseExtension extends ServiceProvider
 
     /**
      * @todo: link with controller autoload property
+     *
      * @var array Autoload libraries, models, helpers, and languages
      */
     public $autoload = [];
 
     /**
-     * @var boolean Determine if this extension should be loaded (false) or not (true).
+     * @var bool Determine if this extension should be loaded (false) or not (true).
      */
     public $disabled = FALSE;
 
@@ -45,6 +45,7 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Returns information about this extension
+     *
      * @return array
      */
     public function extensionMeta()
@@ -56,6 +57,7 @@ class BaseExtension extends ServiceProvider
      * Registers any front-end components implemented in this extension.
      * The components must be returned in the following format:
      * ['path/to/class' => ['code' => 'component_code']]
+     *
      * @return array
      */
     public function registerComponents()
@@ -67,6 +69,7 @@ class BaseExtension extends ServiceProvider
      * Registers any payment gateway implemented in this extension.
      * The payment gateway must be returned in the following format:
      * ['path/to/class' => 'alias']
+     *
      * @return array
      */
     public function registerPaymentGateways()
@@ -76,6 +79,7 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Registers back-end navigation menu items for this extension.
+     *
      * @return array
      */
     public function registerNavigation()
@@ -85,6 +89,7 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Registers any back-end permissions used by this extension.
+     *
      * @return array
      */
     public function registerPermissions()
@@ -94,6 +99,7 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Registers the back-end setting links used by this extension.
+     *
      * @return array
      */
     public function registerSettings()
@@ -105,6 +111,7 @@ class BaseExtension extends ServiceProvider
      * Registers scheduled tasks that are executed on a regular basis.
      *
      * @param string $schedule
+     *
      * @return void
      */
     public function registerSchedule($schedule)
@@ -113,6 +120,7 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Registers any dashboard widgets provided by this extension.
+     *
      * @return array
      */
     public function registerDashboardWidgets()
@@ -125,6 +133,7 @@ class BaseExtension extends ServiceProvider
      * The widgets must be returned in the following format:
      * ['className1' => 'alias'],
      * ['className2' => 'anotherAlias']
+     *
      * @return array
      */
     public function registerFormWidgets()
@@ -139,6 +148,7 @@ class BaseExtension extends ServiceProvider
      *  'igniter.demo::mail.registration' => 'Registration email to customer.',
      * ]
      * The array key will be used as the template code
+     *
      * @return array
      */
     public function registerMailTemplates()
@@ -151,6 +161,7 @@ class BaseExtension extends ServiceProvider
      *
      * @param string $key The command name
      * @param string $class The command class
+     *
      * @return void
      */
     public function registerConsoleCommand($key, $class)
@@ -165,8 +176,9 @@ class BaseExtension extends ServiceProvider
     /**
      * Read configuration from Config file
      *
-     * @return array|bool
      * @throws SystemException
+     *
+     * @return array|bool
      */
     protected function getConfigFromFile()
     {
@@ -184,18 +196,19 @@ class BaseExtension extends ServiceProvider
 
         $config = json_decode(File::get($configFile), TRUE) ?? [];
         foreach ([
-                     'code',
-                     'name',
-                     'description',
-                     'version',
-                     'author',
-                     'icon',
-                 ] as $item) {
+            'code',
+            'name',
+            'description',
+            'version',
+            'author',
+            'icon',
+        ] as $item) {
 
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.missing.config_key'),
-                    $item, File::localToPublic($configFile)
+                    $item,
+                    File::localToPublic($configFile)
                 ));
             }
         }

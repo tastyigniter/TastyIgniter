@@ -1,4 +1,6 @@
-<?php namespace Admin\Actions;
+<?php
+
+namespace Admin\Actions;
 
 use Admin\Classes\AdminController;
 use Admin\Classes\FormField;
@@ -18,7 +20,6 @@ use Template;
 
 /**
  * Form Controller Class
- * @package Admin
  */
 class FormController extends ControllerAction
 {
@@ -46,6 +47,7 @@ class FormController extends ControllerAction
 
     /**
      * Define controller list configuration array.
+     *
      * @var array
      */
     public $formConfig;
@@ -139,10 +141,11 @@ class FormController extends ControllerAction
      * Prepare the widgets used by this action
      *
      * @param \Model $model
-     *
      * @param null $context
-     * @return void
+     *
      * @throws \Exception
+     *
+     * @return void
      */
     public function initForm($model, $context = null)
     {
@@ -214,6 +217,7 @@ class FormController extends ControllerAction
 
     /**
      * Prepares common form data
+     *
      * @param $model
      */
     protected function prepareVars($model)
@@ -368,8 +372,9 @@ class FormController extends ControllerAction
      *
      * @param array $options Custom options to pass to the form widget.
      *
-     * @return string Rendered HTML for the form.
      * @throws \Exception
+     *
+     * @return string Rendered HTML for the form.
      */
     public function renderForm($options = [])
     {
@@ -388,6 +393,7 @@ class FormController extends ControllerAction
 
     /**
      * Returns the model initialized by this form behavior.
+     *
      * @return Model
      */
     public function getFormModel()
@@ -397,6 +403,7 @@ class FormController extends ControllerAction
 
     /**
      * Returns the form context from the postback or configuration.
+     *
      * @return string
      */
     public function getFormContext()
@@ -421,6 +428,7 @@ class FormController extends ControllerAction
 
     /**
      * Internal method, prepare the form model object
+     *
      * @return Model
      */
     protected function createModel()
@@ -489,7 +497,6 @@ class FormController extends ControllerAction
      * Sets a data collection to a model attributes, relations will also be set.
      *
      * @param \Model $model Model to save to
-     *
      * @param array $saveData Data to save.
      *
      * @return void
@@ -528,7 +535,6 @@ class FormController extends ControllerAction
 
         if (!class_exists($requestClass))
             throw new ApplicationException("Form Request class ($requestClass) not found");
-
         $request = $this->makeFormRequest($requestClass, app());
 
         $request->validateResolved();

@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use App;
 use ApplicationException;
@@ -164,6 +166,7 @@ class ExtensionManager
 
     /**
      * Returns an array of the folders in which extensions may be stored.
+     *
      * @return array The folders in which extensions may be stored.
      */
     public function folders()
@@ -173,6 +176,7 @@ class ExtensionManager
 
     /**
      * Returns a list of all extensions in the system.
+     *
      * @return array A list of all extensions in the system.
      */
     public function listExtensions()
@@ -195,6 +199,7 @@ class ExtensionManager
     /**
      * Scans extensions to locate any dependencies that are not currently
      * installed. Returns an array of extension codes that are needed.
+     *
      * @return array
      */
     public function findMissingDependencies()
@@ -221,6 +226,7 @@ class ExtensionManager
     /**
      * Checks all extensions and their dependencies, if not met extensions
      * are disabled.
+     *
      * @return void
      */
     protected function loadDependencies()
@@ -309,6 +315,7 @@ class ExtensionManager
 
     /**
      * Create a Directory Map of all extensions
+     *
      * @return array A list of all extensions in the system.
      */
     public function paths()
@@ -320,14 +327,15 @@ class ExtensionManager
         }
 
         $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
-            $dirPath, RecursiveDirectoryIterator::FOLLOW_SYMLINKS
+            $dirPath,
+            RecursiveDirectoryIterator::FOLLOW_SYMLINKS
         ));
 
         $it->setMaxDepth(2);
         $it->rewind();
 
         while ($it->valid()) {
-            if (($it->getDepth() > 1) AND $it->isFile() AND (strtolower($it->getFilename()) == "extension.php")) {
+            if (($it->getDepth() > 1) AND $it->isFile() AND (strtolower($it->getFilename()) == 'extension.php')) {
                 $filePath = dirname($it->getPathname());
                 $extensionName = basename($filePath);
                 $extensionVendor = basename(dirname($filePath));
@@ -342,8 +350,10 @@ class ExtensionManager
 
     /**
      * Finds all available extensions and loads them in to the $extensions array.
-     * @return array
+     *
      * @throws \SystemException
+     *
+     * @return array
      */
     public function loadExtensions()
     {
@@ -362,8 +372,9 @@ class ExtensionManager
      * @param string $name Eg: directory_name
      * @param string $path Eg: base_path().'/extensions/directory_name';
      *
-     * @return object|bool
      * @throws \SystemException
+     *
+     * @return object|bool
      */
     public function loadExtension($name, $path)
     {
@@ -401,6 +412,7 @@ class ExtensionManager
 
     /**
      * Runs the boot() method on all extensions. Can only be called once.
+     *
      * @return void
      */
     public function bootExtensions()
@@ -438,6 +450,7 @@ class ExtensionManager
 
     /**
      * Runs the register() method on all extensions. Can only be called once.
+     *
      * @return void
      */
     public function registerExtensions()
@@ -605,7 +618,9 @@ class ExtensionManager
 
     /**
      * Spins over every extension object and collects the results of a method call.
+     *
      * @param string $methodName
+     *
      * @return array
      */
     public function getRegistrationMethodValues($methodName)
@@ -641,6 +656,7 @@ class ExtensionManager
     /**
      * @param string $code
      * @param bool $enable
+     *
      * @return bool
      */
     public function updateInstalledExtensions($code, $enable = TRUE)
@@ -709,14 +725,11 @@ class ExtensionManager
 
             if (!$this->checkName($extensionDir))
                 throw new SystemException('Extension name can not have spaces.');
-
             if ($zip->locateName($extensionDir.'Extension.php') === FALSE)
                 throw new SystemException('Extension registration class was not found.');
-
             $meta = @json_decode($zip->getFromName($extensionDir.'extension.json'));
             if (!$meta OR !strlen($meta->code))
                 throw new SystemException(lang('system::lang.extensions.error_config_no_found'));
-
             $extensionCode = $meta->code;
             $extractToPath = $extractTo.'/'.$this->getNamePath($meta->code);
             $zip->extractTo($extractToPath);
@@ -731,6 +744,7 @@ class ExtensionManager
      *
      * @param string $code
      * @param string $version
+     *
      * @return bool
      */
     public function installExtension($code, $version = null)
@@ -764,8 +778,8 @@ class ExtensionManager
      * Uninstall a new or existing extension by code
      *
      * @param string $code
-     *
      * @param bool $purgeData
+     *
      * @return bool
      */
     public function uninstallExtension($code, $purgeData = FALSE)
@@ -784,8 +798,9 @@ class ExtensionManager
      * @param string $code
      * @param bool $purgeData
      *
-     * @return bool
      * @throws \Exception
+     *
+     * @return bool
      */
     public function deleteExtension($code, $purgeData = TRUE)
     {

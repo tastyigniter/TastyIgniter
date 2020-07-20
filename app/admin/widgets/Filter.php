@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class Filter
- * @package Admin
  */
 class Filter extends BaseWidget
 {
@@ -40,7 +39,7 @@ class Filter extends BaseWidget
     protected $defaultAlias = 'filter';
 
     /**
-     * @var boolean Determines if scope definitions have been created.
+     * @var bool Determines if scope definitions have been created.
      */
     protected $scopesDefined = FALSE;
 
@@ -131,6 +130,7 @@ class Filter extends BaseWidget
 
     /**
      * Update a filter scope value.
+     *
      * @return array
      */
     public function onSubmit()
@@ -278,8 +278,11 @@ class Filter extends BaseWidget
             $methodName = $options;
 
             if (!$model->methodExists($methodName)) {
-                throw new Exception(sprintf("The model class %s must define a method %s returning options for the '%s' filter.",
-                    get_class($model), $methodName, $scope->scopeName
+                throw new Exception(sprintf(
+                    "The model class %s must define a method %s returning options for the '%s' filter.",
+                    get_class($model),
+                    $methodName,
+                    $scope->scopeName
                 ));
             }
 
@@ -544,6 +547,7 @@ class Filter extends BaseWidget
 
     /**
      * Get all the registered scopes for the instance.
+     *
      * @return array
      */
     public function getScopes()
@@ -585,6 +589,7 @@ class Filter extends BaseWidget
 
     /**
      * Returns the active context for displaying the filter.
+     *
      * @return string
      */
     public function getContext()

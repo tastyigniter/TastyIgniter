@@ -11,18 +11,21 @@ class ExtensionRefresh extends Command
 {
     /**
      * The console command name.
+     *
      * @var string
      */
     protected $name = 'extension:refresh';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Rollback and re-migrate an existing extension.';
 
     /**
      * Execute the console command.
+     *
      * @return void
      */
     public function handle()
@@ -47,6 +50,7 @@ class ExtensionRefresh extends Command
 
     /**
      * Get the console command arguments.
+     *
      * @return array
      */
     protected function getArguments()

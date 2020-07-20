@@ -21,6 +21,7 @@ class CalendarController extends ControllerAction
      *          'configFile'   => null,
      *      ],
      *  ];
+     *
      * @var array
      */
     public $calendarConfig;

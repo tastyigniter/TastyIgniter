@@ -1,12 +1,12 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 
 /**
  * Star Rating
  * Renders a raty star field.
- *
- * @package Admin
  */
 class StarRating extends BaseFormWidget
 {

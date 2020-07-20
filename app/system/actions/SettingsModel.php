@@ -90,6 +90,7 @@ class SettingsModel extends ModelAction
 
     /**
      * Returns the raw Model record that stores the settings.
+     *
      * @return Model
      */
     public function getSettingsRecord()
@@ -164,6 +165,7 @@ class SettingsModel extends ModelAction
 
     /**
      * Internal save method for the model
+     *
      * @return void
      */
     public function saveModelInternal()
@@ -186,6 +188,7 @@ class SettingsModel extends ModelAction
 
     /**
      * After the model is saved, clear the cached query entry.
+     *
      * @return void
      */
     public function afterModelSave()
@@ -233,6 +236,7 @@ class SettingsModel extends ModelAction
 
     /**
      * Clears the internal memory cache of model instances.
+     *
      * @return void
      */
     public static function clearInternalCache()

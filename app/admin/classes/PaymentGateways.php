@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Admin\Models\Payments_model;
 use File;
@@ -9,8 +11,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Manages payment gateways
- *
- * @package Admin
  */
 class PaymentGateways
 {
@@ -45,6 +45,7 @@ class PaymentGateways
 
     /**
      * Returns a list of the payment gateway objects
+     *
      * @return \Admin\Classes\BasePaymentGateway[]
      */
     public function listGatewayObjects()
@@ -178,6 +179,7 @@ class PaymentGateways
     /**
      * Loops over each payment type and ensures the editing theme has a payment form partial,
      * if the partial does not exist, it will create one.
+     *
      * @return void
      */
     public static function createPartials()

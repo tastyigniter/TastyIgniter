@@ -1,13 +1,13 @@
 <div class="modal-dialog modal-dialog-scrollable <?= $this->popupSize ?>">
     <?= form_open(
-        [
-            'id' => 'record-editor-form',
-            'role' => 'form',
-            'method' => $formWidget->context == 'create' ? 'POST' : 'PATCH',
-            'data-request' => $this->alias.'::onSaveRecord',
-            'class' => 'w-100',
-        ]
-    ); ?>
+    [
+        'id' => 'record-editor-form',
+        'role' => 'form',
+        'method' => $formWidget->context == 'create' ? 'POST' : 'PATCH',
+        'data-request' => $this->alias.'::onSaveRecord',
+        'class' => 'w-100',
+    ]
+); ?>
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title"><?= e(lang($formTitle)) ?></h4>
@@ -16,9 +16,9 @@
         <input type="hidden" name="recordId" value="<?= $formRecordId ?>">
         <div class="modal-body">
             <div class="form-fields p-0">
-                <?php foreach ($formWidget->getFields() as $field): ?>
+                <?php foreach ($formWidget->getFields() as $field) { ?>
                     <?= $formWidget->renderField($field) ?>
-                <?php endforeach ?>
+                <?php } ?>
             </div>
         </div>
         <div class="modal-footer text-right">

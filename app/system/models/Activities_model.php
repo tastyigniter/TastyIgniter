@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Model;
@@ -6,7 +8,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Activities Model Class
- * @package System
  */
 class Activities_model extends Activity
 {

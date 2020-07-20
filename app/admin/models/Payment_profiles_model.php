@@ -46,6 +46,7 @@ class Payment_profiles_model extends Model
 
     /**
      * Makes this model the default
+     *
      * @return void
      */
     public function makePrimary()

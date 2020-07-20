@@ -127,7 +127,11 @@ class LanguageManager
         ];
 
         return App::makeWith(LengthAwarePaginator::class, compact(
-            'items', 'total', 'perPage', 'page', 'options'
+            'items',
+            'total',
+            'perPage',
+            'page',
+            'options'
         ));
     }
 }

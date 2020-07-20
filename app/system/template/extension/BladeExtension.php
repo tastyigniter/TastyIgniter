@@ -32,6 +32,7 @@ class BladeExtension extends AbstractExtension
      * The argument is an array of the directives definitions. The array keys represent the
      * directive name, specific for the extension. Each element in the
      * array should be an associative array.
+     *
      * @param array $definitions An array of the extension definitions.
      */
     public function registerDirectives(array $definitions)
@@ -46,6 +47,7 @@ class BladeExtension extends AbstractExtension
 
     /**
      * Returns a list of the registered directives.
+     *
      * @return array
      */
     public function listDirectives()

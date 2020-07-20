@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
@@ -9,8 +11,6 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Menus Model Class
- *
- * @package Admin
  */
 class Menus_model extends Model
 {
@@ -183,6 +183,7 @@ class Menus_model extends Model
      *
      * @param int $quantity
      * @param bool $subtract
+     *
      * @return bool TRUE on success, or FALSE on failure
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
@@ -317,5 +318,4 @@ class Menus_model extends Model
 
         return $isAvailable;
     }
-
 }

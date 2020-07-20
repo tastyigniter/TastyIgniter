@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
 use Admin\Models\Payments_model;
@@ -67,8 +69,9 @@ class Payments extends \Admin\Classes\AdminController
      *
      * @param string $paymentCode
      *
-     * @return Model
      * @throws \Exception
+     *
+     * @return Model
      */
     public function formFindModelObject($paymentCode = null)
     {
@@ -85,7 +88,6 @@ class Payments extends \Admin\Classes\AdminController
 
         if (!$result)
             throw new Exception(sprintf(lang('admin::lang.form.not_found'), $paymentCode));
-
         $result = $this->formExtendModel($result) ?: $result;
 
         return $result;
@@ -130,7 +132,6 @@ class Payments extends \Admin\Classes\AdminController
     {
         if (!strlen($code = post('Payment.payment')))
             throw new ApplicationException('Invalid payment gateway code selected');
-
         $paymentGateway = PaymentGateways::instance()->findGateway($code);
 
         $model->class_name = $paymentGateway['class'];

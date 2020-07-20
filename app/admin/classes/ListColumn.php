@@ -1,12 +1,12 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 /**
  * List Columns definition
  * A translation of the list column configuration
  *
  * Adapted from october\backend\classes\ListColumn
- *
- * @package Admin
  */
 class ListColumn
 {
@@ -198,6 +198,7 @@ class ListColumn
 
     /**
      * Returns a HTML valid name for the column name.
+     *
      * @return string
      */
     public function getName()

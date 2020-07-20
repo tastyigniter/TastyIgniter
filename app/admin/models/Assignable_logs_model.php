@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
@@ -7,8 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Assignable logs Model Class
- *
- * @package Admin
  */
 class Assignable_logs_model extends Model
 {
@@ -46,8 +46,10 @@ class Assignable_logs_model extends Model
 
     /**
      * @param \Igniter\Flame\Database\Model|mixed $assignable
-     * @return static|bool
+     *
      * @throws \Exception
+     *
+     * @return static|bool
      */
     public static function createLog($assignable)
     {
@@ -77,6 +79,7 @@ class Assignable_logs_model extends Model
 
     /**
      * @param $limit
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public static function getUnAssignedQueue($limit)
@@ -101,6 +104,7 @@ class Assignable_logs_model extends Model
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param \Igniter\Flame\Database\Model $assignable
+     *
      * @return mixed
      */
     public function scopeApplyAssignable($query, $assignable)
@@ -112,6 +116,7 @@ class Assignable_logs_model extends Model
 
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
+     *
      * @return mixed
      */
     public function scopeApplyRoundRobinScope($query)
@@ -127,6 +132,7 @@ class Assignable_logs_model extends Model
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param $limit
+     *
      * @return mixed
      */
     public function scopeApplyLoadBalancedScope($query, $limit)
@@ -142,6 +148,7 @@ class Assignable_logs_model extends Model
 
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
+     *
      * @return mixed
      */
     public function scopeWhereUnAssigned($query)
@@ -152,6 +159,7 @@ class Assignable_logs_model extends Model
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param $assigneeId
+     *
      * @return mixed
      */
     public function scopeWhereAssignTo($query, $assigneeId)
@@ -162,6 +170,7 @@ class Assignable_logs_model extends Model
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param $assigneeGroupId
+     *
      * @return mixed
      */
     public function scopeWhereAssignToGroup($query, $assigneeGroupId)
@@ -172,6 +181,7 @@ class Assignable_logs_model extends Model
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param array $assigneeGroupIds
+     *
      * @return mixed
      */
     public function scopeWhereInAssignToGroup($query, array $assigneeGroupIds)
@@ -181,6 +191,7 @@ class Assignable_logs_model extends Model
 
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
+     *
      * @return mixed
      */
     public function scopeWhereHasAutoAssignGroup($query)

@@ -1,17 +1,17 @@
-<?php namespace Main\Components;
+<?php
+
+namespace Main\Components;
 
 use System\Classes\BaseComponent;
 
 /**
  * The view bag stores custom template properties.
  * This is a hidden component ignored by the back-end UI.
- *
- * @package Main
  */
 class ViewBag extends BaseComponent
 {
     /**
-     * @var boolean This component is hidden from the admin UI.
+     * @var bool This component is hidden from the admin UI.
      */
     public $isHidden = TRUE;
 

@@ -1,4 +1,6 @@
-<?php namespace Main\Classes;
+<?php
+
+namespace Main\Classes;
 
 use Cache;
 use Config;
@@ -11,7 +13,6 @@ use SystemException;
 
 /**
  * MediaLibrary Class
- * @package System
  */
 class MediaLibrary
 {

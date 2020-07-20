@@ -1,11 +1,12 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\Database\Traits\Sortable;
 use Model;
 
 /**
  * Countries Model Class
- * @package System
  */
 class Countries_model extends Model
 {
@@ -47,6 +48,7 @@ class Countries_model extends Model
 
     /**
      * Scope a query to only include enabled country
+     *
      * @return $this
      */
     public function scopeIsEnabled($query)

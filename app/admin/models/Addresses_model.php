@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * Addresses Model Class
- *
- * @package Admin
  */
 class Addresses_model extends Model
 {
@@ -61,7 +61,7 @@ class Addresses_model extends Model
         if ($customer instanceof Customers_model) {
             $query->where('customer_id', $customer->getKey());
         }
-        else if (strlen($customer)) {
+        elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 

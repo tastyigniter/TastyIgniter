@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
@@ -7,7 +9,6 @@ use Illuminate\Support\Facades\Lang;
 
 /**
  * Languages Model Class
- * @package System
  */
 class Languages_model extends Language
 {
@@ -28,6 +29,7 @@ class Languages_model extends Language
 
     /**
      *  List of variables that cannot be mass assigned
+     *
      * @var array
      */
     protected $guarded = [];
@@ -111,7 +113,8 @@ class Languages_model extends Language
     {
         if (!$this->status) {
             throw new ValidationException(['status' => sprintf(
-                lang('admin::lang.alert_error_set_default'), $this->name
+                lang('admin::lang.alert_error_set_default'),
+                $this->name
             )]);
         }
 
@@ -121,6 +124,7 @@ class Languages_model extends Language
 
     /**
      * Returns the default language defined.
+     *
      * @return self
      */
     public static function getDefault()
@@ -144,7 +148,7 @@ class Languages_model extends Language
 
     public function isDefault()
     {
-        return ($this->code == setting('default_language'));
+        return $this->code == setting('default_language');
     }
 
     public static function listSupported()

@@ -68,18 +68,20 @@ class Form extends BaseWidget
     protected $defaultAlias = 'form';
 
     /**
-     * @var boolean Determines if field definitions have been created.
+     * @var bool Determines if field definitions have been created.
      */
     protected $fieldsDefined = FALSE;
 
     /**
      * @var array Collection of all fields used in this form.
+     *
      * @see \Admin\Classes\FormField
      */
     protected $allFields = [];
 
     /**
      * @var object Collection of tab sections used in this form.
+     *
      * @see \Admin\Classes\FormTabs
      */
     protected $allTabs = [
@@ -138,6 +140,7 @@ class Form extends BaseWidget
      * Ensure fields are defined and form widgets are registered so they can
      * also be bound to the controller this allows their AJAX features to
      * operate.
+     *
      * @return void
      */
     public function bindToController()
@@ -222,8 +225,9 @@ class Form extends BaseWidget
      * @param string|array $field The field name or definition
      * @param array $options
      *
-     * @return bool|string The rendered partial contents, or false if suppressing an exception
      * @throws \Exception
+     *
+     * @return bool|string The rendered partial contents, or false if suppressing an exception
      */
     public function renderField($field, $options = [])
     {
@@ -268,6 +272,7 @@ class Form extends BaseWidget
 
     /**
      * Prepares the form data
+     *
      * @return void
      */
     protected function prepareVars()
@@ -446,8 +451,9 @@ class Form extends BaseWidget
      * @param string $name
      * @param array $config
      *
-     * @return \Admin\Classes\FormField
      * @throws \Exception
+     *
+     * @return \Admin\Classes\FormField
      */
     public function makeFormField($name, $config)
     {
@@ -476,7 +482,8 @@ class Form extends BaseWidget
             $fieldType = $config['type'] ?? null;
             if (!is_string($fieldType) AND !is_null($fieldType)) {
                 throw new Exception(sprintf(
-                    lang('admin::lang.form.field_invalid_type'), gettype($fieldType)
+                    lang('admin::lang.form.field_invalid_type'),
+                    gettype($fieldType)
                 ));
             }
 
@@ -517,8 +524,9 @@ class Form extends BaseWidget
      *
      * @param FormField $field
      *
-     * @return \Admin\Classes\BaseFormWidget|null
      * @throws \Exception
+     *
+     * @return \Admin\Classes\BaseFormWidget|null
      */
     public function makeFormFieldWidget($field)
     {
@@ -562,6 +570,7 @@ class Form extends BaseWidget
 
     /**
      * Get all the loaded form widgets for the instance.
+     *
      * @return array
      */
     public function getFormWidgets()
@@ -587,6 +596,7 @@ class Form extends BaseWidget
 
     /**
      * Get all the registered fields for the instance.
+     *
      * @return array
      */
     public function getFields()
@@ -612,6 +622,7 @@ class Form extends BaseWidget
 
     /**
      * Get all tab objects for the instance.
+     *
      * @return object[FormTabs]
      */
     public function getTabs()
@@ -657,8 +668,9 @@ class Form extends BaseWidget
      *
      * @param mixed $field
      *
-     * @return string
      * @throws \Exception
+     *
+     * @return string
      */
     public function getFieldValue($field)
     {
@@ -707,7 +719,7 @@ class Form extends BaseWidget
      *
      * @param \Admin\Classes\FormField $field
      *
-     * @return boolean
+     * @return bool
      */
     public function showFieldLabels($field)
     {
@@ -724,6 +736,7 @@ class Form extends BaseWidget
 
     /**
      * Returns post data from a submitted form.
+     *
      * @return array
      */
     public function getSaveData()
@@ -800,6 +813,7 @@ class Form extends BaseWidget
 
     /**
      * Returns the active session key.
+     *
      * @return \Illuminate\Routing\Route|mixed|string
      */
     public function getSessionKey()
@@ -817,6 +831,7 @@ class Form extends BaseWidget
 
     /**
      * Returns the active context for displaying the form.
+     *
      * @return string
      */
     public function getContext()
@@ -826,14 +841,17 @@ class Form extends BaseWidget
 
     /**
      * Validate the supplied form model.
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     protected function validateModel()
     {
         if (!$this->model) {
             throw new Exception(sprintf(
-                lang('admin::lang.form.missing_model'), get_class($this->controller)
+                lang('admin::lang.form.missing_model'),
+                get_class($this->controller)
             ));
         }
 
@@ -845,6 +863,7 @@ class Form extends BaseWidget
     /**
      * Creates a flat array of form fields from the configuration.
      * Also slots fields in to their respective tabs.
+     *
      * @return void
      */
     protected function defineFormFields()
@@ -947,7 +966,7 @@ class Form extends BaseWidget
      *
      * @param string $fieldType
      *
-     * @return boolean
+     * @return bool
      */
     protected function isFormWidget($fieldType)
     {
@@ -988,8 +1007,9 @@ class Form extends BaseWidget
      * @param FormField $field
      * @param $fieldOptions
      *
-     * @return mixed
      * @throws \Exception
+     *
+     * @return mixed
      */
     protected function getOptionsFromModel($field, $fieldOptions)
     {
@@ -1007,8 +1027,11 @@ class Form extends BaseWidget
                 !$this->objectMethodExists($model, $methodName) AND
                 !$this->objectMethodExists($model, 'getDropdownOptions')
             ) {
-                throw new Exception(sprintf(lang('admin::lang.form.options_method_not_exists'),
-                    get_class($model), $methodName, $field->fieldName
+                throw new Exception(sprintf(
+                    lang('admin::lang.form.options_method_not_exists'),
+                    get_class($model),
+                    $methodName,
+                    $field->fieldName
                 ));
             }
 
@@ -1018,8 +1041,11 @@ class Form extends BaseWidget
         } // Field options are an explicit method reference
         elseif (is_string($fieldOptions)) {
             if (!$this->objectMethodExists($this->model, $fieldOptions)) {
-                throw new Exception(sprintf(lang('admin::lang.form.options_method_not_exists'),
-                    get_class($this->model), $fieldOptions, $field->fieldName
+                throw new Exception(sprintf(
+                    lang('admin::lang.form.options_method_not_exists'),
+                    get_class($this->model),
+                    $fieldOptions,
+                    $field->fieldName
                 ));
             }
 
@@ -1035,7 +1061,7 @@ class Form extends BaseWidget
      * @param object $object
      * @param string $method
      *
-     * @return boolean
+     * @return bool
      */
     protected function objectMethodExists($object, $method)
     {
@@ -1103,7 +1129,7 @@ class Form extends BaseWidget
                 $array[$key] = [];
             }
 
-            $array =& $array[$key];
+            $array = &$array[$key];
         }
 
         $array[array_shift($parts)] = $value;

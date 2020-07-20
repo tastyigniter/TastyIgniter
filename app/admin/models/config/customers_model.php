@@ -2,7 +2,7 @@
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.customers.text_filter_search',
-        'mode' => 'all' // or any, exact
+        'mode' => 'all', // or any, exact
     ],
     'scopes' => [
         'date' => [

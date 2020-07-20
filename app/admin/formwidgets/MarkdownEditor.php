@@ -8,8 +8,6 @@ use Igniter\Flame\Mail\Markdown;
 /**
  * Code Editor
  * Renders a code editor field.
- *
- * @package Admin
  */
 class MarkdownEditor extends BaseFormWidget
 {

@@ -7,8 +7,6 @@ use Model;
 
 /**
  * Pages Model Class
- *
- * @package Admin
  */
 class Pages_model extends Model
 {

@@ -1,11 +1,11 @@
-<?php namespace System\Libraries;
+<?php
+
+namespace System\Libraries;
 
 use System\Models\Countries_model;
 
 /**
  * Country Class
- *
- * @package System
  */
 class Country
 {
@@ -34,8 +34,12 @@ class Country
         if (!empty($address['format']))
             $format = $address['format'];
 
-        $formattedAddress = str_replace(["\r\n", "\r", "\n"], '<br />',
-            preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />',
+        $formattedAddress = str_replace(
+            ["\r\n", "\r", "\n"],
+            '<br />',
+            preg_replace(
+                ["/\s\s+/", "/\r\r+/", "/\n\n+/"],
+                '<br />',
                 trim(str_replace($placeholders, $this->evalAddress($address), $format))
             )
         );
@@ -121,7 +125,7 @@ class Country
         if (is_numeric($country)) {
             return $this->getCountryNameById($country);
         }
-        else if (!is_string($country) AND isset($country['country_name'])) {
+        elseif (!is_string($country) AND isset($country['country_name'])) {
             return $country['country_name'];
         }
 

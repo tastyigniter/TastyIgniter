@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 
@@ -7,8 +9,6 @@ use Admin\Classes\BaseFormWidget;
  * Renders a color picker field.
  *
  * Adapted from october\backend\formwidgets\ColorPicker
- *
- * @package Admin
  */
 class ColorPicker extends BaseFormWidget
 {
@@ -77,7 +77,7 @@ class ColorPicker extends BaseFormWidget
         foreach ($this->availableColors as $availableColor) {
             $colors[$availableColor] = $availableColor;
         }
-        
+
         return $colors;
     }
 }

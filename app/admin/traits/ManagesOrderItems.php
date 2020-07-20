@@ -209,7 +209,8 @@ trait ManagesOrderItems
         if (!$couponCondition instanceof CartCondition) {
             throw new \InvalidArgumentException(sprintf(
                 'Invalid argument, expected %s, got %s',
-                CartCondition::class, get_class($couponCondition)
+                CartCondition::class,
+                get_class($couponCondition)
             ));
         }
 

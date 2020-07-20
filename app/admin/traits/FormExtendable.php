@@ -69,8 +69,9 @@ trait FormExtendable
      *
      * @param string $recordId
      *
-     * @return \Model
      * @throws \Exception
+     *
+     * @return \Model
      */
     public function formFindModelObject($recordId)
     {
@@ -99,6 +100,7 @@ trait FormExtendable
     /**
      * Creates a new instance of a form model. This logic can be changed
      * by overriding it in the controller.
+     *
      * @return \Model
      */
     public function formCreateModelObject()

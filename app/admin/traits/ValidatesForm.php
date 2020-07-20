@@ -54,6 +54,7 @@ trait ValidatesForm
 
         if ($validator->fails()) {
             $this->flashValidationErrors($validator->errors());
+
             throw new ValidationException($validator);
         }
 
@@ -67,7 +68,10 @@ trait ValidatesForm
         $customAttributes = Arr::get($parsed, 'attributes', $customAttributes);
 
         $validator = $this->getValidationFactory()->make(
-            $request ?? [], $rules, $messages, $customAttributes
+            $request ?? [],
+            $rules,
+            $messages,
+            $customAttributes
         );
 
         if ($this->validateAfterCallback instanceof Closure)
@@ -95,7 +99,7 @@ trait ValidatesForm
             return [];
 
         $result = [];
-        foreach ($rules as $key => list($name, $attribute,)) {
+        foreach ($rules as $key => list($name, $attribute)) {
             $result[$name] = is_lang_key($attribute) ? lang($attribute) : $attribute;
         }
 
@@ -121,6 +125,7 @@ trait ValidatesForm
 
     /**
      * Get a validation factory instance.
+     *
      * @return \Illuminate\Contracts\Validation\Factory
      */
     protected function getValidationFactory()

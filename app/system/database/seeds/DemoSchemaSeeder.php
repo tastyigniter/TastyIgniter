@@ -1,4 +1,6 @@
-<?php namespace System\Database\Seeds;
+<?php
+
+namespace System\Database\Seeds;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -9,6 +11,7 @@ class DemoSchemaSeeder extends Seeder
 
     /**
      * Run the demo schema seeds.
+     *
      * @return void
      */
     public function run()

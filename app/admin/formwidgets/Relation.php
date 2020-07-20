@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -12,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
  * Renders a field prepopulated with a belongsTo and belongsToHasMany relation.
  *
  * Adapted from october\backend\formwidgets\Relation
- *
- * @package Admin
  */
 class Relation extends BaseFormWidget
 {
@@ -178,15 +178,18 @@ class Relation extends BaseFormWidget
     /**
      * Returns the value as a relation object from the model,
      * supports nesting via HTML array.
-     * @return \Admin\FormWidgets\Relation
+     *
      * @throws \Exception
+     *
+     * @return \Admin\FormWidgets\Relation
      */
     protected function getRelationObject()
     {
         list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new Exception(sprintf(
+                "Model '%s' does not contain a definition for '%s'.",
                 get_class($this->model),
                 $this->valueFrom
             ));

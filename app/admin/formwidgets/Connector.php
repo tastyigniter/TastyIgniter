@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -10,8 +12,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Form Relationship
- *
- * @package Admin
  */
 class Connector extends BaseFormWidget
 {
@@ -166,7 +166,6 @@ class Connector extends BaseFormWidget
         $model = $this->getRelationModel()->find($recordId);
         if (!$model)
             throw new ApplicationException(sprintf(lang('admin::lang.form.not_found'), $recordId));
-
         $model->delete();
 
         flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName).' deleted'))->now();

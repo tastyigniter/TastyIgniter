@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * Coupons History Model Class
- *
- * @package Admin
  */
 class Coupons_history_model extends Model
 {
@@ -69,6 +69,7 @@ class Coupons_history_model extends Model
      * @param \Igniter\Flame\Cart\CartCondition $couponCondition
      * @param \Admin\Models\Orders_model $order
      * @param \Admin\Models\Customers_model $customer
+     *
      * @return \Admin\Models\Coupons_history_model|bool
      */
     public static function createHistory($couponCondition, $order, $customer)

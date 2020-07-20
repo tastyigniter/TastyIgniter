@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
 use AdminMenu;
@@ -134,7 +136,7 @@ class Themes extends \Admin\Classes\AdminController
             // so delete from database
             if (!$theme) {
                 Themes_model::deleteTheme($themeCode, TRUE);
-                flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
+                flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
 
                 return $this->redirectBack();
             }
@@ -264,7 +266,7 @@ class Themes extends \Admin\Classes\AdminController
     public function delete_onDelete($context = null, $themeCode = null)
     {
         if (Themes_model::deleteTheme($themeCode, post('delete_data', 1) == 1)) {
-            flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
         }
         else {
             flash()->danger(lang('admin::lang.alert_error_try_again'));

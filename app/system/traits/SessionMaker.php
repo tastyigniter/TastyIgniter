@@ -1,4 +1,6 @@
-<?php namespace System\Traits;
+<?php
+
+namespace System\Traits;
 
 use Session;
 
@@ -104,6 +106,7 @@ trait SessionMaker
 
     /**
      * Returns a unique session identifier for this location.
+     *
      * @return string
      */
     protected function makeSessionKey()

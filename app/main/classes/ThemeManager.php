@@ -1,4 +1,6 @@
-<?php namespace Main\Classes;
+<?php
+
+namespace Main\Classes;
 
 use App;
 use File;
@@ -13,7 +15,6 @@ use ZipArchive;
 
 /**
  * Theme Manager Class
- * @package Main
  */
 class ThemeManager
 {
@@ -91,6 +92,7 @@ class ThemeManager
 
     /**
      * Returns a list of all themes in the system.
+     *
      * @return array A list of all themes in the system.
      */
     public function listThemes()
@@ -115,8 +117,10 @@ class ThemeManager
 
     /**
      * Finds all available themes and loads them in to the $themes array.
-     * @return array
+     *
      * @throws \SystemException
+     *
+     * @return array
      */
     public function loadThemes()
     {
@@ -133,8 +137,9 @@ class ThemeManager
      * @param string $themeCode Eg: directory_name
      * @param string $path Ex: base_path().'directory_name';
      *
-     * @return bool|object
      * @throws \SystemException
+     *
+     * @return bool|object
      */
     public function loadTheme($themeCode, $path)
     {
@@ -245,6 +250,7 @@ class ThemeManager
 
     /**
      * Create a Directory Map of all themes
+     *
      * @return array A list of all themes in the system.
      */
     public function paths()
@@ -271,7 +277,7 @@ class ThemeManager
             return FALSE;
         }
 
-        return (rtrim($themeCode, '/') == $this->getActiveThemeCode());
+        return rtrim($themeCode, '/') == $this->getActiveThemeCode();
     }
 
     /**
@@ -384,7 +390,7 @@ class ThemeManager
         if (is_null($base)) {
             $base = ['/'];
         }
-        else if (!is_array($base)) {
+        elseif (!is_array($base)) {
             $base = [$base];
         }
 
@@ -426,7 +432,6 @@ class ThemeManager
 
         if (File::isFile($path))
             throw new ApplicationException("Theme template file already exists: $filePath");
-
         if (!File::exists($path))
             File::makeDirectory(File::dirname($path), 0777, TRUE, TRUE);
 
@@ -472,7 +477,6 @@ class ThemeManager
 
         if (!$source = $theme->onTemplate($dirName)->find($fileName))
             throw new ApplicationException("Theme template file not found: $filePath");
-
         $oldFilePath = $theme->path.'/'.$dirName.'/'.$fileName;
         $newFilePath = $theme->path.'/'.$newDirName.'/'.$newFileName;
 
@@ -507,8 +511,9 @@ class ThemeManager
      *
      * @param string $zipPath The path to the zip folder
      *
-     * @return bool
      * @throws \SystemException
+     *
+     * @return bool
      */
     public function extractTheme($zipPath)
     {
@@ -530,11 +535,9 @@ class ThemeManager
             $meta = @json_decode($zip->getFromName($themeDir.'theme.json'));
             if (!$meta OR !strlen($meta->code))
                 throw new SystemException(lang('system::lang.themes.error_config_no_found'));
-
             $themeCode = $meta->code;
             if (!$this->checkName($themeDir) OR !$this->checkName($themeCode))
                 throw new SystemException('Theme directory name can not have spaces.');
-
             $extractToPath = $themesFolder.'/'.$themeCode;
             $zip->extractTo($extractToPath);
             $zip->close();
@@ -565,18 +568,18 @@ class ThemeManager
 
     /**
      * @param \System\Models\Themes_model $model
-     * @return \System\Models\Themes_model
+     *
      * @throws \Igniter\Flame\Exception\ApplicationException
+     *
+     * @return \System\Models\Themes_model
      */
     public function createChildTheme($model)
     {
         if ($this->checkParent($model->code))
             throw new ApplicationException('Child theme already exists.');
-
         $parentTheme = $this->findTheme($model->code);
         if ($parentTheme->hasParent())
             throw new ApplicationException('Can not create a child theme from another child theme');
-
         $childThemeCode = Themes_model::generateUniqueCode($model->code);
         $childThemePath = dirname($parentTheme->getPath()).'/'.$childThemeCode;
 
@@ -588,7 +591,9 @@ class ThemeManager
         ];
 
         $this->writeChildThemeMetaFile(
-            $childThemePath, $parentTheme, $themeConfig
+            $childThemePath,
+            $parentTheme,
+            $themeConfig
         );
 
         $themeConfig['data'] = $model->data ?? [];
@@ -601,9 +606,10 @@ class ThemeManager
      *
      * @param string $themeCode
      *
-     * @return array|null
      * @throws \SystemException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     *
+     * @return array|null
      */
     public function getMetaFromFile($themeCode)
     {
@@ -636,9 +642,10 @@ class ThemeManager
      * @param string $path
      * @param $themeCode
      *
-     * @return array|null
      * @throws \SystemException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     *
+     * @return array|null
      */
     protected function validateMetaFile($path, $themeCode)
     {
@@ -647,16 +654,17 @@ class ThemeManager
         }
 
         foreach ([
-                     'code',
-                     'name',
-                     'description',
-                     'version',
-                     'author',
-                 ] as $item) {
+            'code',
+            'name',
+            'description',
+            'version',
+            'author',
+        ] as $item) {
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.missing.config_key'),
-                    $item, $path
+                    $item,
+                    $path
                 ));
             }
         }
@@ -672,7 +680,6 @@ class ThemeManager
 
         if (File::isDirectory($path))
             throw new ApplicationException('Child theme path already exists.');
-
         File::makeDirectory($path, 0777, FALSE, TRUE);
 
         $manifestFile = $path.'/theme.json';

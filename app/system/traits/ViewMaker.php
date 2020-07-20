@@ -42,7 +42,7 @@ trait ViewMaker
      */
     public $suppressLayout = FALSE;
 
-    protected $viewFileExtension = ".php";
+    protected $viewFileExtension = '.php';
 
     public function getViewPath($view, $viewPath = null)
     {
@@ -95,8 +95,9 @@ trait ViewMaker
      * @param array $vars Parameter variables to pass to the view.
      * @param bool $throwException Throw an exception if the layout is not found
      *
-     * @return mixed The layout contents, or false.
      * @throws \SystemException
+     *
+     * @return mixed The layout contents, or false.
      */
     public function makeLayout($name = null, $vars = [], $throwException = TRUE)
     {
@@ -147,8 +148,9 @@ trait ViewMaker
      * @param array $vars Parameter variables to pass to the view.
      * @param bool $throwException Throw an exception if the partial is not found.
      *
-     * @return mixed Partial contents or false if not throwing an exception.
      * @throws \SystemException
+     *
+     * @return mixed Partial contents or false if not throwing an exception.
      */
     public function makePartial($partial, $vars = [], $throwException = TRUE)
     {

@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Html;
 use Illuminate\Database\Eloquent\Model;
@@ -8,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  * A translation of the form field configuration
  *
  * Adapted from october\backend\classes\FormField
- *
- * @package Admin
  */
 class FormField
 {
@@ -423,7 +423,6 @@ class FormField
      * Returns the attributes for this field at a given position.
      *
      * @param string $position
-     *
      * @param bool $htmlBuild
      *
      * @return string

@@ -39,7 +39,6 @@ use View;
 
 /**
  * Main Controller Class
- * @package Main
  */
 class MainController extends BaseController
 {
@@ -142,7 +141,6 @@ class MainController extends BaseController
         $this->theme = $theme ?: ThemeManager::instance()->getActiveTheme();
         if (!$this->theme)
             throw new ApplicationException(Lang::get('main::lang.not_found.active_theme'));
-
         $this->assetPath[] = $this->theme->getPath().'/assets';
         if ($this->theme->hasParent())
             $this->assetPath[] = $this->theme->getParentPath().'/assets';
@@ -220,7 +218,8 @@ class MainController extends BaseController
         }
         elseif (($layout = LayoutTemplate::loadCached($this->theme, $page->layout)) === null) {
             throw new ApplicationException(sprintf(
-                Lang::get('main::lang.not_found.layout_name'), $page->layout
+                Lang::get('main::lang.not_found.layout_name'),
+                $page->layout
             ));
         }
 
@@ -340,6 +339,7 @@ class MainController extends BaseController
 
     /**
      * Returns the AJAX handler for the current request, if available.
+     *
      * @return string
      */
     public function getHandler()
@@ -385,10 +385,10 @@ class MainController extends BaseController
             if (is_array($result)) {
                 $response = array_merge($response, $result);
             }
-            else if (is_string($result)) {
+            elseif (is_string($result)) {
                 $response['result'] = $result;
             }
-            else if (is_object($result)) {
+            elseif (is_object($result)) {
                 return $result;
             }
 
@@ -397,6 +397,7 @@ class MainController extends BaseController
         catch (ValidationException $ex) {
             $response['X_IGNITER_ERROR_FIELDS'] = $ex->getFields();
             $response['X_IGNITER_ERROR_MESSAGE'] = $ex->getMessage();
+
             throw new AjaxException($response);
         }
         catch (Exception $ex) {
@@ -467,6 +468,7 @@ class MainController extends BaseController
     /**
      * Returns an existing instance of the controller.
      * If the controller doesn't exists, returns null.
+     *
      * @return mixed Returns the controller object or null.
      */
     public static function getController()
@@ -476,6 +478,7 @@ class MainController extends BaseController
 
     /**
      * Returns the Layout object being processed by the controller.
+     *
      * @return \Main\Template\Code\LayoutCode Returns the Layout object or null.
      */
     public function getLayoutObj()
@@ -485,6 +488,7 @@ class MainController extends BaseController
 
     /**
      * Returns the current theme.
+     *
      * @return \Main\Classes\Theme
      */
     public function getTheme()
@@ -494,6 +498,7 @@ class MainController extends BaseController
 
     /**
      * Returns the routing object.
+     *
      * @return \Main\Classes\Router
      */
     public function getRouter()
@@ -505,6 +510,7 @@ class MainController extends BaseController
      * Returns the template page object being processed by the controller.
      * The object is not available on the early stages of the controller
      * initialization.
+     *
      * @return \Main\Template\Page Returns the Page object or null.
      */
     public function getPage()
@@ -518,6 +524,7 @@ class MainController extends BaseController
 
     /**
      * Initializes the Template environment and loader.
+     *
      * @return void
      */
     protected function initTemplateEnvironment()
@@ -616,7 +623,7 @@ class MainController extends BaseController
             $this->vars['__SELF__'] = $this->componentContext;
         }
         // Process theme partial
-        else if (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
+        elseif (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
             return FALSE;
         }
 
@@ -641,8 +648,9 @@ class MainController extends BaseController
      * @param string $name The content view to load.
      * @param array $params Parameter variables to pass to the view.
      *
-     * @return string
      * @throws \ApplicationException
+     *
+     * @return string
      */
     public function renderContent($name, array $params = [])
     {
@@ -653,7 +661,8 @@ class MainController extends BaseController
         // Load content from theme
         elseif (($content = Content::loadCached($this->theme, $name)) === null) {
             throw new ApplicationException(sprintf(
-                Lang::get('main::lang.not_found.content'), $name
+                Lang::get('main::lang.not_found.content'),
+                $name
             ));
         }
 
@@ -686,8 +695,9 @@ class MainController extends BaseController
      * @param array $params Parameter variables to pass to the view.
      * @param bool $throwException Throw an exception if the partial is not found.
      *
-     * @return mixed Partial contents or false if not throwing an exception.
      * @throws \ApplicationException
+     *
+     * @return mixed Partial contents or false if not throwing an exception.
      */
     public function renderComponent($name, array $params = [], $throwException = TRUE)
     {
@@ -723,8 +733,9 @@ class MainController extends BaseController
      * @param array $properties Component properties
      * @param bool $addToLayout
      *
-     * @return \System\Classes\BaseComponent Component object
      * @throws \Exception
+     *
+     * @return \System\Classes\BaseComponent Component object
      */
     public function addComponent($name, $alias, $properties = [], $addToLayout = FALSE)
     {
@@ -950,7 +961,6 @@ class MainController extends BaseController
     {
         if ($throwException)
             throw new ApplicationException($message);
-
         flash()->danger($message);
     }
 

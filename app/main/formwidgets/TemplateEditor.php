@@ -1,4 +1,6 @@
-<?php namespace Main\FormWidgets;
+<?php
+
+namespace Main\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
@@ -8,8 +10,6 @@ use Main\Classes\Theme;
 
 /**
  * Template Editor
- *
- * @package Admin
  */
 class TemplateEditor extends BaseFormWidget
 {
@@ -80,7 +80,6 @@ class TemplateEditor extends BaseFormWidget
     {
         if (!$themeObject = $this->model->getTheme() OR !$themeObject instanceof Theme)
             throw new ApplicationException('Missing theme object on '.get_class($this->model));
-
         $type = array_get((array)$this->getLoadValue(), 'type') ?? '_pages';
         /** @var \Main\Template\Model $templateClass */
         $templateClass = $themeObject->getTemplateClass($type);

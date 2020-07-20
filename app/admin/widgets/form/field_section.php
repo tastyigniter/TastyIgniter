@@ -1,9 +1,9 @@
 <div class="field-section">
-    <?php if ($field->label): ?>
+    <?php if ($field->label) { ?>
         <h5 class="section-title"><?= e(lang($field->label)) ?></h5>
-    <?php endif ?>
+    <?php } ?>
 
-    <?php if ($field->comment): ?>
+    <?php if ($field->comment) { ?>
         <p class="help-block"><?= lang($field->comment) ?></p>
-    <?php endif ?>
+    <?php } ?>
 </div>

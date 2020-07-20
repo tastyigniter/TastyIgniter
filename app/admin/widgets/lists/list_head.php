@@ -38,7 +38,7 @@
             </th>
         <?php } else { ?>
             <th
-                <?php if ($column->width): ?>style="width: <?= $column->width ?>"<?php endif ?>
+                <?php if ($column->width) { ?>style="width: <?= $column->width ?>"<?php } ?>
                 class="list-cell-name-<?= $column->getName() ?> list-cell-type-<?= $column->type ?>"
             >
                 <span><?= $this->getHeaderValue($column) ?></span>

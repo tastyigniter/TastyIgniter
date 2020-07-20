@@ -3,13 +3,13 @@
         <div class="card">
             <div class="card-body">
                 <?= form_open(
-                    [
-                        'id' => 'edit-form',
-                        'role' => 'form',
-                        'method' => 'POST',
-                        'data-request' => 'onLogin'
-                    ]
-                ); ?>
+    [
+        'id' => 'edit-form',
+        'role' => 'form',
+        'method' => 'POST',
+        'data-request' => 'onLogin',
+    ]
+); ?>
 
                 <div class="form-group mb-0">
                     <label for="input-username"

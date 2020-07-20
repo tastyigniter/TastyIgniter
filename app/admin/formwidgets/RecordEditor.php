@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
@@ -9,8 +11,6 @@ use Html;
 
 /**
  * Record Editor
- *
- * @package Admin
  */
 class RecordEditor extends BaseFormWidget
 {
@@ -113,8 +113,10 @@ class RecordEditor extends BaseFormWidget
             }
         });
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'),
-            lang($this->formName).' '.($form->context == 'create' ? 'created' : 'updated')))->now();
+        flash()->success(sprintf(
+            lang('admin::lang.alert_success'),
+            lang($this->formName).' '.($form->context == 'create' ? 'created' : 'updated')
+        ))->now();
 
         return [
             '#notification'               => $this->makePartial('flash'),

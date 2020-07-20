@@ -9,8 +9,6 @@ use Template;
 
 /**
  * List Controller Class
- *
- * @package Admin
  */
 class ListController extends ControllerAction
 {
@@ -36,6 +34,7 @@ class ListController extends ControllerAction
      *          ],
      *      ],
      *  ];
+     *
      * @var array
      */
     public $listConfig;

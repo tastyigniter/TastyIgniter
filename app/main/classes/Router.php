@@ -35,8 +35,6 @@ use Main\Template\Page as PageTemplate;
  * /pages/:page_name?|^[a-z0-9\-]+$ - this will match /pages/my-page</pre>
  *
  * Based on october\cms\Router
- *
- * @package Main
  */
 class Router
 {
@@ -164,6 +162,7 @@ class Router
 
     /**
      * Autoloads the URL map only allowing a single execution.
+     *
      * @return \Igniter\Flame\Router\Router
      */
     protected function getRouterObject()
@@ -186,6 +185,7 @@ class Router
 
     /**
      * Autoloads the URL map only allowing a single execution.
+     *
      * @return array Returns the URL map.
      */
     protected function getUrlMap()
@@ -202,7 +202,8 @@ class Router
      * The URL map can is cached. The clearUrlMap() method resets the cache. By default
      * the map is updated every time when a page is saved in the back-end, or
      * when the interval defined with the system.urlMapCacheTtl expires.
-     * @return boolean Returns true if the URL map was loaded from the cache. Otherwise returns false.
+     *
+     * @return bool Returns true if the URL map was loaded from the cache. Otherwise returns false.
      */
     protected function loadUrlMap()
     {
@@ -260,6 +261,7 @@ class Router
 
     /**
      * Returns the current routing parameters.
+     *
      * @return array
      */
     public function getParameters()
@@ -269,6 +271,7 @@ class Router
 
     /**
      * Returns the last URL to be looked up.
+     *
      * @return string
      */
     public function getUrl()
@@ -307,6 +310,7 @@ class Router
 
     /**
      * Returns the cache key name for the URL list.
+     *
      * @return string
      */
     protected function getUrlListCacheKey()
@@ -316,6 +320,7 @@ class Router
 
     /**
      * Returns the cache key name for the URL list.
+     *
      * @return string
      */
     protected function getUrlMapCacheKey()

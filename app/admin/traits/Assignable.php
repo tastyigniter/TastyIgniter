@@ -44,6 +44,7 @@ trait Assignable
 
     /**
      * @param \Admin\Models\Staffs_model $assignee
+     *
      * @return bool
      */
     public function assignTo($assignee)
@@ -56,6 +57,7 @@ trait Assignable
 
     /**
      * @param \Admin\Models\Staff_groups_model $group
+     *
      * @return bool
      */
     public function assignToGroup($group)
@@ -119,6 +121,7 @@ trait Assignable
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param null $assignedTo
+     *
      * @return mixed
      */
     public function scopeFilterAssignedTo($query, $assignedTo = null)
@@ -135,6 +138,7 @@ trait Assignable
 
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
+     *
      * @return mixed
      */
     public function scopeWhereUnAssigned($query)
@@ -145,6 +149,7 @@ trait Assignable
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param $assigneeId
+     *
      * @return mixed
      */
     public function scopeWhereAssignTo($query, $assigneeId)
@@ -155,6 +160,7 @@ trait Assignable
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param $assigneeGroupId
+     *
      * @return mixed
      */
     public function scopeWhereAssignToGroup($query, $assigneeGroupId)
@@ -165,6 +171,7 @@ trait Assignable
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
      * @param array $assigneeGroupIds
+     *
      * @return mixed
      */
     public function scopeWhereInAssignToGroup($query, array $assigneeGroupIds)
@@ -174,6 +181,7 @@ trait Assignable
 
     /**
      * @param \Igniter\Flame\Database\Query\Builder $query
+     *
      * @return mixed
      */
     public function scopeWhereHasAutoAssignGroup($query)

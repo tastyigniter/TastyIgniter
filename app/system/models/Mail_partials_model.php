@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use ApplicationException;
 use Exception;
@@ -10,7 +12,6 @@ use View;
 
 /**
  * MailPartials Model Class
- * @package System
  */
 class Mail_partials_model extends Model
 {
@@ -59,7 +60,6 @@ class Mail_partials_model extends Model
         $definitions = MailManager::instance()->listRegisteredPartials();
         if (!$definition = array_get($definitions, $code))
             throw new ApplicationException('Unable to find a registered partial with code: '.$code);
-
         $this->fillFromView($definition);
     }
 
@@ -90,6 +90,7 @@ class Mail_partials_model extends Model
     /**
      * Loops over each mail layout and ensures the system has a layout,
      * if the layout does not exist, it will create one.
+     *
      * @return void
      */
     public static function createPartials()

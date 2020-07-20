@@ -15,7 +15,7 @@ use Illuminate\Queue\SerializesModels;
 
 class AllocateAssignable implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable; use InteractsWithQueue; use Queueable; use SerializesModels;
 
     /**
      * @var \Admin\Models\Assignable_logs_model
@@ -50,7 +50,6 @@ class AllocateAssignable implements ShouldQueue
 
             if (!$assignee = $this->assignableLog->assignee_group->findAvailableAssignee())
                 throw new Exception('No available assignee');
-
             $this->assignableLog->assignable->assignTo($assignee);
 
             Allocator::removeSlot($this->assignableLog->getKey());

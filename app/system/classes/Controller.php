@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use App;
 use Assets;
@@ -22,8 +24,8 @@ use View;
  * /admin/(any)             `admin`, `location` or `system` app directory
  * /admin/acme/cod/(any)    `Acme.Cod` extension
  * /(any)                   `main` app directory
+ *
  * @see \Admin\Classes\AdminController|\Main\Classes\MainController  controller class
- * @package System
  */
 class Controller extends IlluminateController
 {

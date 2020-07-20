@@ -9,7 +9,6 @@ use SystemException;
 
 /**
  * Model Action base Class
- * @package System
  */
 class ModelAction
 {
@@ -41,7 +40,9 @@ class ModelAction
             if (!isset($model->{$property})) {
                 throw new SystemException(sprintf(
                     'Class %s must define property %s used by %s',
-                    get_class($model), $property, get_called_class()
+                    get_class($model),
+                    $property,
+                    get_called_class()
                 ));
             }
         }

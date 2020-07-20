@@ -1,4 +1,6 @@
-<?php namespace Admin\Traits;
+<?php
+
+namespace Admin\Traits;
 
 use Admin\Classes\FormField;
 use ApplicationException;
@@ -27,8 +29,10 @@ trait FormModelWidget
 
     /**
      * @param $recordId
-     * @return \Igniter\Flame\Database\Model
+     *
      * @throws \ApplicationException
+     *
+     * @return \Igniter\Flame\Database\Model
      */
     public function findFormModel($recordId)
     {
@@ -72,15 +76,18 @@ trait FormModelWidget
 
     /**
      * Returns the model of a relation type.
-     * @return \Admin\FormWidgets\Relation
+     *
      * @throws \Exception
+     *
+     * @return \Admin\FormWidgets\Relation
      */
     protected function getRelationModel()
     {
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new ApplicationException(sprintf(
+                "Model '%s' does not contain a definition for '%s'.",
                 get_class($this->model),
                 $this->valueFrom
             ));
@@ -94,7 +101,8 @@ trait FormModelWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new ApplicationException(sprintf(
+                "Model '%s' does not contain a definition for '%s'.",
                 get_class($this->model),
                 $this->valueFrom
             ));
@@ -122,7 +130,6 @@ trait FormModelWidget
      * Sets a data collection to a model attributes, relations will also be set.
      *
      * @param \Model $model Model to save to
-     *
      * @param array $saveData Data to save.
      *
      * @return void

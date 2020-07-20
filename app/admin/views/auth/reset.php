@@ -3,14 +3,15 @@
         <div class="card">
             <div class="card-body">
                 <h5><?= lang('admin::lang.login.text_reset_password_title'); ?></h5>
-                <?= form_open(current_url(),
-                    [
-                        'id' => 'edit-form',
-                        'role' => 'form',
-                        'method' => 'POST',
-                        'data-request' => empty($resetCode) ? 'onRequestResetPassword' : 'onResetPassword'
-                    ]
-                ); ?>
+                <?= form_open(
+    current_url(),
+    [
+        'id' => 'edit-form',
+        'role' => 'form',
+        'method' => 'POST',
+        'data-request' => empty($resetCode) ? 'onRequestResetPassword' : 'onResetPassword',
+    ]
+); ?>
 
                 <?php if (empty($resetCode)) { ?>
                     <div class="form-group">

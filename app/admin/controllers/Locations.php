@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Facades\AdminLocation;
 use Admin\Models\Locations_model;

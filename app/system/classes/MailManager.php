@@ -106,13 +106,19 @@ class MailManager
             case 'smtp':
                 $config->set('mail.host', $settings->get('smtp_host'));
                 $config->set('mail.port', $settings->get('smtp_port'));
-                $config->set('mail.encryption', strlen($settings->get('smtp_encryption'))
+                $config->set(
+                    'mail.encryption',
+                    strlen($settings->get('smtp_encryption'))
                     ? $settings->get('smtp_encryption') : null
                 );
-                $config->set('mail.username', strlen($settings->get('smtp_user'))
+                $config->set(
+                    'mail.username',
+                    strlen($settings->get('smtp_user'))
                     ? $settings->get('smtp_user') : null
                 );
-                $config->set('mail.password', strlen($settings->get('smtp_pass'))
+                $config->set(
+                    'mail.password',
+                    strlen($settings->get('smtp_pass'))
                     ? $settings->get('smtp_pass') : null
                 );
                 break;
@@ -136,6 +142,7 @@ class MailManager
      * @param $template
      * @param $data
      * @param bool $plainOnly
+     *
      * @return bool
      */
     protected function addContentToMailerInternal($message, $template, $data, $plainOnly = FALSE)
@@ -175,6 +182,7 @@ class MailManager
      *
      * @param string $content
      * @param array $data
+     *
      * @return string
      */
     public function render($content, $data = [])
@@ -191,8 +199,10 @@ class MailManager
 
     /**
      * Render the Markdown template into text.
+     *
      * @param $content
      * @param array $data
+     *
      * @return string
      */
     public function renderText($content, $data = [])
@@ -216,10 +226,10 @@ class MailManager
 
         if ($template->layout) {
             $html = $this->renderView($template->layout->layout, [
-                    'body' => $html,
-                    'layout_css' => $template->layout->layout_css,
-                    'custom_css' => Mail_themes_model::renderCss(),
-                ] + (array)$data);
+                'body' => $html,
+                'layout_css' => $template->layout->layout_css,
+                'custom_css' => Mail_themes_model::renderCss(),
+            ] + (array)$data);
         }
 
         return $html;
@@ -237,8 +247,8 @@ class MailManager
 
         if ($template->layout) {
             $text = $this->renderView($template->layout->plain_layout, [
-                    'body' => $text,
-                ] + (array)$data);
+                'body' => $text,
+            ] + (array)$data);
         }
 
         /*        $cleanText = preg_replace('/<br\s?\/?>/i', "\r\n", $text);*/
@@ -292,6 +302,7 @@ class MailManager
 
     /**
      * Loads registered templates from extensions
+     *
      * @return void
      */
     public function loadRegisteredTemplates()
@@ -310,6 +321,7 @@ class MailManager
 
     /**
      * Returns a list of the registered layouts.
+     *
      * @return array
      */
     public function listRegisteredLayouts()
@@ -322,6 +334,7 @@ class MailManager
 
     /**
      * Returns a list of the registered templates.
+     *
      * @return array
      */
     public function listRegisteredTemplates()
@@ -334,6 +347,7 @@ class MailManager
 
     /**
      * Returns a list of the registered partials.
+     *
      * @return array
      */
     public function listRegisteredPartials()
@@ -346,6 +360,7 @@ class MailManager
 
     /**
      * Returns a list of the registered variables.
+     *
      * @return array
      */
     public function listRegisteredVariables()
@@ -358,6 +373,7 @@ class MailManager
 
     /**
      * Registers mail views and manageable layouts.
+     *
      * @param array $definitions
      */
     public function registerMailLayouts(array $definitions)
@@ -371,6 +387,7 @@ class MailManager
 
     /**
      * Registers mail views and manageable templates.
+     *
      * @param array $definitions
      */
     public function registerMailTemplates(array $definitions)
@@ -384,6 +401,7 @@ class MailManager
 
     /**
      * Registers mail views and manageable partials.
+     *
      * @param array $definitions
      */
     public function registerMailPartials(array $definitions)
@@ -397,6 +415,7 @@ class MailManager
 
     /**
      * Registers mail variables.
+     *
      * @param array $definitions
      */
     public function registerMailVariables(array $definitions)

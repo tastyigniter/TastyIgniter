@@ -1,4 +1,6 @@
-<?php namespace System\Database\Seeds;
+<?php
+
+namespace System\Database\Seeds;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
@@ -13,6 +15,7 @@ class UpdateRecordsSeeder extends Seeder
 {
     /**
      * Run the demo schema seeds.
+     *
      * @return void
      */
     public function run()

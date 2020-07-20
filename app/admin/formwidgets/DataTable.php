@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -11,8 +13,6 @@ use Illuminate\Database\Eloquent\Collection;
  * Renders a table field.
  *
  * Adapted from october\backend\classes\DataTable
- *
- * @package Admin
  */
 class DataTable extends BaseFormWidget
 {
@@ -119,8 +119,9 @@ class DataTable extends BaseFormWidget
      * @param  string $field Table field name
      * @param  string $data Data for the entire table
      *
-     * @return array
      * @throws \Exception
+     *
+     * @return array
      */
     public function getDataTableOptions($field, $data)
     {

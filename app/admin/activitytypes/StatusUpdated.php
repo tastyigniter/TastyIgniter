@@ -48,7 +48,7 @@ class StatusUpdated implements ActivityInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getType()
     {

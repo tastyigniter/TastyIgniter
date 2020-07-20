@@ -1,11 +1,12 @@
-<?php namespace Main\Models;
+<?php
+
+namespace Main\Models;
 
 use Main\Classes\MediaLibrary;
 use Model;
 
 /**
  * Image_tool Model Class
- * @package Admin
  */
 class Image_tool_model extends Model
 {

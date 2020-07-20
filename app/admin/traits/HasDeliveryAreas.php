@@ -54,6 +54,7 @@ trait HasDeliveryAreas
 
     /**
      * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
+     *
      * @return \Igniter\Flame\Location\Contracts\AreaInterface|null
      */
     public function searchOrDefaultDeliveryArea($coordinates)
@@ -66,6 +67,7 @@ trait HasDeliveryAreas
 
     /**
      * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
+     *
      * @return \Igniter\Flame\Location\Contracts\AreaInterface|null
      */
     public function searchOrFirstDeliveryArea($coordinates)
@@ -78,6 +80,7 @@ trait HasDeliveryAreas
 
     /**
      * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
+     *
      * @return \Igniter\Flame\Location\Contracts\AreaInterface|null
      */
     public function searchDeliveryArea($coordinates)

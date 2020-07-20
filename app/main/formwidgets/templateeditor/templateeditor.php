@@ -52,7 +52,7 @@
                             <?php if (!is_array($option)) $option = [$option]; ?>
                             <option
                                 <?= $value == $selectedFile ? 'selected="selected"' : '' ?>
-                                <?php if (isset($option[1])): ?>data-<?= strpos($option[1], '.') ? 'image' : 'icon' ?>="<?= $option[1] ?>"<?php endif ?>
+                                <?php if (isset($option[1])) { ?>data-<?= strpos($option[1], '.') ? 'image' : 'icon' ?>="<?= $option[1] ?>"<?php } ?>
                                 value="<?= $value ?>"
                             ><?= e(is_lang_key($option[0]) ? lang($option[0]) : $option[0]) ?></option>
                         <?php } ?>

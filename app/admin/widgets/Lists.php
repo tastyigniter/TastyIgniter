@@ -76,6 +76,7 @@ class Lists extends BaseWidget
 
     /**
      * @var array Collection of all list columns used in this list.
+     *
      * @see ListColumn
      */
     protected $allColumns;
@@ -153,7 +154,8 @@ class Lists extends BaseWidget
             'defaultSort',
         ]);
 
-        $this->pageLimit = $this->getSession('page_limit',
+        $this->pageLimit = $this->getSession(
+            'page_limit',
             $this->pageLimit ?? 20
         );
 
@@ -336,12 +338,12 @@ class Lists extends BaseWidget
                 $countQuery = $relationObj->getRelationExistenceCountQuery($relationObj->getRelated()->newQueryWithoutScopes(), $query);
 
                 $joinSql = $this->isColumnRelated($column, TRUE)
-                    ? Db::raw("group_concat(".$sqlSelect." separator ', ')")
+                    ? Db::raw('group_concat('.$sqlSelect." separator ', ')")
                     : Db::raw($sqlSelect);
 
                 $joinSql = $countQuery->select($joinSql)->toRawSql();
 
-                $selects[] = Db::raw("(".$joinSql.") as ".$alias);
+                $selects[] = Db::raw('('.$joinSql.') as '.$alias);
             } // Primary column
             else {
                 $sqlSelect = $this->parseTableName($column->sqlSelect, $primaryTable);
@@ -376,6 +378,7 @@ class Lists extends BaseWidget
 
     /**
      * Returns all the records from the supplied model, after filtering.
+     *
      * @return Collection
      */
     protected function getRecords()
@@ -397,6 +400,7 @@ class Lists extends BaseWidget
 
     /**
      * Get all the registered columns for the instance.
+     *
      * @return array
      */
     public function getColumns()
@@ -432,7 +436,8 @@ class Lists extends BaseWidget
             $invalidColumns = array_diff($this->columnOverride, array_keys($definitions));
             if (!count($definitions)) {
                 throw new Exception(sprintf(
-                    lang('admin::lang.list.missing_column'), implode(',', $invalidColumns)
+                    lang('admin::lang.list.missing_column'),
+                    implode(',', $invalidColumns)
                 ));
             }
 
@@ -873,7 +878,8 @@ class Lists extends BaseWidget
 
         if (!$value instanceof Carbon) {
             throw new ApplicationException(sprintf(
-                lang('admin::lang.list.invalid_column_datetime'), $column->columnName
+                lang('admin::lang.list.invalid_column_datetime'),
+                $column->columnName
             ));
         }
 
@@ -922,6 +928,7 @@ class Lists extends BaseWidget
 
     /**
      * Returns a collection of columns which can be searched.
+     *
      * @return array
      */
     protected function getSearchableColumns()
@@ -1040,7 +1047,7 @@ class Lists extends BaseWidget
     protected function isSortable($column = null)
     {
         if ($column === null) {
-            return (count($this->getSortableColumns()) > 0);
+            return count($this->getSortableColumns()) > 0;
         }
         else {
             return array_key_exists($column, $this->getSortableColumns());
@@ -1144,10 +1151,11 @@ class Lists extends BaseWidget
      * Check if column refers to a relation of the model
      *
      * @param ListColumn $column List column object
-     * @param boolean $multi If set, returns true only if the relation is a "multiple relation type"
+     * @param bool $multi If set, returns true only if the relation is a "multiple relation type"
+     *
+     * @throws \Exception
      *
      * @return bool
-     * @throws \Exception
      */
     protected function isColumnRelated($column, $multi = FALSE)
     {
@@ -1181,7 +1189,7 @@ class Lists extends BaseWidget
      *
      * @param ListColumn $column List column object
      *
-     * @return boolean
+     * @return bool
      */
     protected function isColumnPivot($column)
     {

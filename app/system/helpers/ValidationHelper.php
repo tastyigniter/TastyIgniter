@@ -9,6 +9,7 @@ class ValidationHelper
      * Such as content blocks and mail templates.
      *
      * @param $rules
+     *
      * @return array
      */
     public static function prepareRules($rules)

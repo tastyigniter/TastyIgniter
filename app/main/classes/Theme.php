@@ -61,7 +61,7 @@ class Theme
     public $publicPath;
 
     /**
-     * @var boolean Determine if this theme is active (false) or not (true).
+     * @var bool Determine if this theme is active (false) or not (true).
      */
     public $active;
 
@@ -240,6 +240,7 @@ class Theme
 
     /**
      * Returns variables that should be passed to the asset combiner.
+     *
      * @return array
      */
     public function getAssetVariables()
@@ -320,6 +321,7 @@ class Theme
 
     /**
      * Ensures this theme is registered as a Pagic source.
+     *
      * @return void
      */
     public function registerAsSource()
@@ -344,6 +346,7 @@ class Theme
 
     /**
      * @param $dirName
+     *
      * @return \Main\Template\Model|\Igniter\Flame\Pagic\Finder
      */
     public function onTemplate($dirName)
@@ -355,6 +358,7 @@ class Theme
 
     /**
      * @param $dirName
+     *
      * @return \Main\Template\Model
      */
     public function newTemplate($dirName)
@@ -366,8 +370,10 @@ class Theme
 
     /**
      * @param $dirName
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function getTemplateClass($dirName)
     {

@@ -30,6 +30,7 @@ class PermissionManager
 
     /**
      * Returns a list of the registered permissions.
+     *
      * @return array
      */
     public function listPermissions()

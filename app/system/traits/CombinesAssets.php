@@ -342,8 +342,8 @@ trait CombinesAssets
      * Returns bundles.
      *
      * @param string $extension
-     *
      * @param string $appContext
+     *
      * @return array
      */
     public function getBundles($extension = null, $appContext = 'main')

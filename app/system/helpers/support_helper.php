@@ -5,6 +5,7 @@ use Carbon\Carbon;
 if (!function_exists('controller')) {
     /**
      * Get the page controller
+     *
      * @return Main\Classes\MainController
      */
     function controller()
@@ -87,6 +88,7 @@ if (!function_exists('uploads_url')) {
      * Returns the full URL (including segments) of the assets media uploads directory
      *
      * @param null $path
+     *
      * @return string
      */
     function uploads_url($path = null)
@@ -359,11 +361,12 @@ if (!function_exists('is_single_location')) {
     /**
      * Is Single Location Mode
      * Test to see system config multi location mode is set to single.
+     *
      * @return bool
      */
     function is_single_location()
     {
-        return (setting('site_location_mode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE);
+        return setting('site_location_mode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
     }
 }
 
@@ -489,7 +492,7 @@ if (!function_exists('convert_underscore_to_camelcase')) {
      * Current URL
      * Converts a string_with_underscore into StringWithCamelCase. Strings can be passed via the
      * first parameter either as a string or an array.
-     * @access    public
+     *
      * @return    string
      */
     function convert_underscore_to_camelcase($string = '')
@@ -501,7 +504,6 @@ if (!function_exists('convert_underscore_to_camelcase')) {
 if (!function_exists('contains_substring')) {
     /**
      * Determine if a given string contains a given substring.
-     * @access    public
      *
      * @param string $haystack
      * @param string|array $needles
@@ -523,7 +525,6 @@ if (!function_exists('contains_substring')) {
 if (!function_exists('is_lang_key')) {
     /**
      * Determine if a given string matches a language key.
-     * @access    public
      *
      * @param string $line
      *

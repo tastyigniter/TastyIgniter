@@ -1,4 +1,5 @@
-<?= form_open(current_url(),
+<?= form_open(
+    current_url(),
     [
         'id' => 'list-form',
         'role' => 'form',

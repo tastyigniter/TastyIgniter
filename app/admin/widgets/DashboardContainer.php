@@ -1,4 +1,6 @@
-<?php namespace Admin\Widgets;
+<?php
+
+namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\Widgets;
@@ -51,7 +53,7 @@ class DashboardContainer extends BaseWidget
     //
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected $defaultAlias = 'dashboardContainer';
 
@@ -61,12 +63,13 @@ class DashboardContainer extends BaseWidget
     protected $dashboardWidgets = [];
 
     /**
-     * @var boolean Determines if dashboard widgets have been created.
+     * @var bool Determines if dashboard widgets have been created.
      */
     protected $widgetsDefined = FALSE;
 
     /**
      * Constructor.
+     *
      * @param $controller
      * @param array $config
      */
@@ -81,6 +84,7 @@ class DashboardContainer extends BaseWidget
     /**
      * Ensure dashboard widgets are registered so they can also be bound to
      * the controller this allows their AJAX features to operate.
+     *
      * @return void
      */
     public function bindToController()
@@ -132,7 +136,6 @@ class DashboardContainer extends BaseWidget
 
         if (!$widgetAlias)
             throw new ApplicationException('Please select a widget to update.');
-
         $this->vars['widgetAlias'] = $widgetAlias;
         $this->vars['widget'] = $widget = $this->findWidgetByAlias($widgetAlias);
         $this->vars['widgetForm'] = $this->getFormWidget($widgetAlias, $widget);
@@ -147,14 +150,11 @@ class DashboardContainer extends BaseWidget
 
         if (!$className)
             throw new ApplicationException('Please select a widget to add.');
-
         if (!class_exists($className))
             throw new ApplicationException('The selected class does not exist.');
-
         $widget = new $className($this->controller);
         if (!($widget instanceof \Admin\Classes\BaseDashboardWidget))
             throw new ApplicationException('The selected class is not a dashboard widget.');
-
         $widgetInfo = $this->addWidget($widget, $size);
 
         return [
@@ -226,8 +226,9 @@ class DashboardContainer extends BaseWidget
      * @param \Admin\Classes\BaseDashboardWidget $widget
      * @param $size
      *
-     * @return array
      * @throws \ApplicationException
+     *
+     * @return array
      */
     public function addWidget($widget, $size)
     {

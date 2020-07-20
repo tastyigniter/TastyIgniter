@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Carbon\Carbon;
 use DateTime;
@@ -14,7 +16,6 @@ use System\Traits\ConfigMaker;
 
 /**
  * Settings Model Class
- * @package System
  */
 class Settings_model extends Model
 {
@@ -243,7 +244,8 @@ class Settings_model extends Model
             ]));
 
             if (!isset($item['url']))
-                $item['url'] = admin_url($owner == 'core'
+                $item['url'] = admin_url(
+                    $owner == 'core'
                     ? 'settings/edit/'.$code
                     : 'extensions/edit/'.str_replace('.', '/', $owner).'/'.$code
                 );

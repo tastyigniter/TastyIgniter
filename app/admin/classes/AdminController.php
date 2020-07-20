@@ -149,9 +149,11 @@ class AdminController extends BaseController
 
             // Check that user has permission to view this page
             if ($this->requiredPermissions AND !$this->getUser()->hasAnyPermission($this->requiredPermissions)) {
-                return Response::make(Request::ajax()
+                return Response::make(
+                    Request::ajax()
                     ? lang('admin::lang.alert_user_restricted')
-                    : View::make('admin::access_denied'), 403
+                    : View::make('admin::access_denied'),
+                    403
                 );
             }
         }
@@ -196,7 +198,8 @@ class AdminController extends BaseController
         if (!$this->checkAction($action)) {
             throw new Exception(sprintf(
                 'Method [%s] is not found in the controller [%s]',
-                $action, get_class($this)
+                $action,
+                get_class($this)
             ));
         }
 
@@ -232,6 +235,7 @@ class AdminController extends BaseController
 
     /**
      * Returns the AJAX handler for the current request, if available.
+     *
      * @return string
      */
     public function getHandler()
@@ -278,10 +282,10 @@ class AdminController extends BaseController
             if (is_array($result)) {
                 $response = array_merge($response, $result);
             }
-            else if (is_string($result)) {
+            elseif (is_string($result)) {
                 $response['result'] = $result;
             }
-            else if (is_object($result)) {
+            elseif (is_object($result)) {
                 return $result;
             }
 

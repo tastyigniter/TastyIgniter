@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use System\Classes\BaseController;
 
@@ -7,8 +9,6 @@ use System\Classes\BaseController;
  * Widgets used specifically for forms
  *
  * Adapted from october\backend\classes\FormWidgetBase
- *
- * @package Admin
  */
 class BaseFormWidget extends BaseWidget
 {
@@ -117,6 +117,7 @@ class BaseFormWidget extends BaseWidget
     /**
      * Returns the value for this form field,
      * supports nesting via HTML array.
+     *
      * @return string
      */
     public function getLoadValue()
