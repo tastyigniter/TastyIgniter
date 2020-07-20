@@ -3,19 +3,17 @@ name: Tests
 on:
   push:
     branches:
+      - master
       - develop
       - tests
   pull_request:
-    branches:
-      - develop
-      - tests
 
 jobs:
   PHPUnitTests:
 #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
     strategy:
-#      max-parallel: 6
+      max-parallel: 6
       matrix:
 #        os: [ubuntu-latest, windows-latest]
         php: ['7.2', '7.3', '7.4']
@@ -25,7 +23,7 @@ jobs:
             dbName: MySQL
           - db: mariadb
             dbName: MariaDB
-#      fail-fast: false
+      fail-fast: false
 
     services:
       mysql:
@@ -39,17 +37,16 @@ jobs:
       - name: Checkout changes
         uses: actions/checkout@v1
 
-#      - name: Setup PHP
-#        uses: shivammathur/setup-php@v1
-#        with:
-#          php-version: ${{ matrix.php }}
-#          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_mysql, bcmath, soap, intl, gd, exif, iconv, imagick
-#          coverage: none
-
       - name: Create MySQL Database
         run: |
           sudo systemctl start mysql
           mysql -uroot -proot -e 'CREATE DATABASE ti_test;' --port 13306
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: ${{ matrix.php }}
+          extension-csv: mbstring, intl, gd, xml, sqlite
 
       - name: Install composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-suggest --no-scripts
