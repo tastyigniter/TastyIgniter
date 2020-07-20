@@ -2,9 +2,13 @@ name: Tests
 
 on:
   push:
-    branches: [ develop, tests ]
-  pull_request
-    branches: [ develop, tests ]
+    branches:
+      - develop
+      - tests
+  pull_request:
+    branches:
+      - develop
+      - tests
 
 jobs:
   PHPUnitTests:
