@@ -46,7 +46,7 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php }}
-          extension-csv: mbstring, intl, gd, xml, sqlite
+          extensions: mbstring, intl, gd, xml, sqlite
 
       - name: Install composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-suggest --no-scripts
