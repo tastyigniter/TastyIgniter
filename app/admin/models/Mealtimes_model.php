@@ -50,8 +50,8 @@ class Mealtimes_model extends Model
         }
 
         return $datetime->between(
-            Carbon::createFromTimeString($this->start_time),
-            Carbon::createFromTimeString($this->end_time)
+            Carbon::createFromFormat('Y-m-d H:i:s', $datetime->format('Y-m-d ').$this->start_time),
+            Carbon::createFromFormat('Y-m-d H:i:s', $datetime->format('Y-m-d ').$this->end_time)
         );
     }
 
