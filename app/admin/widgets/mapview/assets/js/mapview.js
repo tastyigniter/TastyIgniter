@@ -104,6 +104,7 @@
                 center: mapCenter,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 zoomControl: true,
+                fullscreenControl: true,
                 mapTypeControl: false,
                 rotateControl: true,
                 streetViewControl: false,
