@@ -57,6 +57,6 @@ class Mealtimes_model extends Model
 
     public function isAvailableNow()
     {
-        $this->isAvailable();
+        return $this->isAvailable();
     }
 }
