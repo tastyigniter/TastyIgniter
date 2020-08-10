@@ -85,7 +85,7 @@ class Menus_specials_model extends Model
             case 'period':
                 return !$now->between($this->start_date, $this->end_date);
             case 'recurring':
-                if (!in_array($now->format('w'), $this->recurring_every))
+                if (!in_array($now->format('w'), $this->recurring_every ?? []))
                     return TRUE;
 
                 $start = $now->copy()->setTimeFromTimeString($this->recurring_from);
