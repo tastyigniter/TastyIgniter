@@ -50,13 +50,13 @@ class Mealtimes_model extends Model
         }
 
         return $datetime->between(
-            Carbon::createFromTimeString($this->start_time),
-            Carbon::createFromTimeString($this->end_time)
+            $datetime->copy()->setTimeFromTimeString($this->start_time),
+            $datetime->copy()->setTimeFromTimeString($this->end_time)
         );
     }
 
     public function isAvailableNow()
     {
-        $this->isAvailable();
+        return $this->isAvailable();
     }
 }
