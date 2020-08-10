@@ -478,7 +478,7 @@ return [
         'help_processing_order_status' => 'Select the order status an order must reach before the order starts stock reduction and coupon redemption',
         'help_completed_order_status' => 'Select the order status to mark an order as completed before the order invoice is created and a customer can leave review',
         'help_canceled_order_status' => 'Select the order status when an order is marked as canceled or suspected of fraudulent activity',
-        'help_menus_page' => 'Select the page used as the page for your menu items',
+        'help_menus_page' => 'Choose a page to display your menu items',
         'help_guest_order' => 'Allow customer to place an order without creating an account.',
         'help_location_order' => 'If disabled, the customer will be allowed to order without entering their postcode/adddress.',
         'help_invoice_prefix' => 'Set the invoice prefix (e.g. <b>INV-2015-00</b>1123). Leave blank to use no prefix. The following macros are available: {year} {month} {day} {hour} {minute} {second}',
