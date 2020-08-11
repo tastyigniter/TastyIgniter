@@ -344,8 +344,7 @@ class Themes_model extends Model
         do {
             $uniqueCode = $code.($suffix ? '-'.$suffix : '');
             $suffix = strtolower(str_random('3'));
-        } // Already in the DB? Fail. Try again
-        while (self::themeCodeExists($uniqueCode));
+        } while (self::themeCodeExists($uniqueCode)); // Already in the DB? Fail. Try again
 
         return $uniqueCode;
     }
@@ -353,11 +352,11 @@ class Themes_model extends Model
     /**
      * Checks whether a code exists in the database or not
      *
-     * @param $uniqueCode
+     * @param string $uniqueCode
      * @return bool
      */
     protected static function themeCodeExists($uniqueCode)
     {
-        return (self::where('code', '=', $uniqueCode)->limit(1)->count() > 0);
+        return self::where('code', '=', $uniqueCode)->limit(1)->count() > 0;
     }
 }
