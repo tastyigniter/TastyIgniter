@@ -60,10 +60,10 @@ class MapView extends BaseWidget
 
     public function prepareVars()
     {
-        $this->vars['mapHeight'] = (int)$this->height;
-        $this->vars['mapZoom'] = (int)$this->zoom;
-        $this->vars['mapCenter'] = $this->center;
-        $this->vars['shapeSelector'] = $this->shapeSelector;
+        $this->vars['mapHeight'] = (int)$this->config['config'] ? $this->config['config']['height'] : $this->height;
+        $this->vars['mapZoom'] = (int)$this->config['config'] ? $this->config['config']['zoom'] : $this->zoom;
+        $this->vars['mapCenter'] = $this->config['config'] ? $this->config['config']['center'] : $this->center;
+        $this->vars['shapeSelector'] = $this->config['config'] ? $this->config['config']['shapeSelector'] : $this->shapeSelector;
         $this->vars['previewMode'] = $this->previewMode;
     }
 }

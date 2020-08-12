@@ -110,7 +110,7 @@ class MapArea extends BaseFormWidget
     {
         $this->vars['field'] = $this->formField;
         $this->vars['formWidgets'] = $this->formWidgets;
-        $this->vars['mapViewWidget'] = $this->makeMapViewWidget();
+        //$this->vars['mapViewWidget'] = $this->makeMapViewWidget();
         $this->vars['indexCount'] = $this->indexCount;
 
         $this->vars['prompt'] = $this->prompt;
@@ -250,6 +250,17 @@ class MapArea extends BaseFormWidget
 
         return $this->mapViewWidget = $widget;
     }
+    
+    protected function makeMapViewConfig($config)
+    {
+        $config['center'] = [
+            'lat' => $this->model->{$this->latFrom},
+            'lng' => $this->model->{$this->lngFrom},
+        ];
+        $config['zoom'] = $this->zoom;
+        $config['height'] = array_get($this->availableSizes, $this->size);	 
+        return $config;   
+    }
 
     protected function makeAreaFormWidget($index, $data)
     {
@@ -258,7 +269,13 @@ class MapArea extends BaseFormWidget
         $config['data'] = $data;
         $config['alias'] = $this->alias.'Form'.$index;
         $config['arrayName'] = $this->formField->getName().'['.$index.']';
-
+        
+        foreach ($config['fields'] as $i=>$j){
+	        if ($j['type'] == 'Admin\Widgets\MapView'){
+		        $config['fields'][$i] = $this->makeMapViewConfig($j);
+	        }
+        }
+        
         $widget = $this->makeWidget('Admin\Widgets\Form', $config);
         $widget->bindToController();
 
