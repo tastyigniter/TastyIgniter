@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Igniter\Flame\Auth\Models\User;
@@ -7,8 +9,6 @@ use Model;
 
 /**
  * Reviews Model Class
- *
- * @package Admin
  */
 class Reviews_model extends Model
 {
@@ -103,7 +103,7 @@ class Reviews_model extends Model
         if ($customer instanceof User) {
             $query->where('customer_id', $customer->getKey());
         }
-        else if (strlen($customer)) {
+        elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
         else {

@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Traits\FormExtendable;
 use Admin\Traits\WidgetMaker;
@@ -182,7 +184,6 @@ class Settings extends \Admin\Classes\AdminController
     {
         if (!strlen($code))
             throw new Exception(lang('admin::lang.form.missing_id'));
-
         // Prep the list widget config
         $model = $this->createModel();
 

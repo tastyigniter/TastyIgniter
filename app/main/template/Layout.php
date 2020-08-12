@@ -4,7 +4,6 @@ namespace Main\Template;
 
 /**
  * Layout Template Class
- * @package Main
  */
 class Layout extends Model
 {

@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Admin\Facades\AdminAuth;
 use Admin\Models\User_preferences_model;
@@ -6,7 +8,6 @@ use Carbon\Carbon;
 
 /**
  * Admin User State
- * @package Admin
  */
 class UserState
 {

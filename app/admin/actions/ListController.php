@@ -9,8 +9,6 @@ use Template;
 
 /**
  * List Controller Class
- *
- * @package Admin
  */
 class ListController extends ControllerAction
 {
@@ -241,7 +239,7 @@ class ListController extends ControllerAction
                 $widget->setSearchTerm($searchWidget->getActiveTerm());
             }
 
-            $filterWidget->bindEvent('filter.submit', function () use ($widget, $filterWidget) {
+            $filterWidget->bindEvent('filter.submit', function () use ($widget) {
                 return $widget->onRefresh();
             });
 

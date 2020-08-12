@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use App;
 use ApplicationException;
@@ -327,7 +329,7 @@ class ExtensionManager
         $it->rewind();
 
         while ($it->valid()) {
-            if (($it->getDepth() > 1) AND $it->isFile() AND (strtolower($it->getFilename()) == "extension.php")) {
+            if (($it->getDepth() > 1) AND $it->isFile() AND (strtolower($it->getFilename()) == 'extension.php')) {
                 $filePath = dirname($it->getPathname());
                 $extensionName = basename($filePath);
                 $extensionVendor = basename(dirname($filePath));
@@ -709,14 +711,11 @@ class ExtensionManager
 
             if (!$this->checkName($extensionDir))
                 throw new SystemException('Extension name can not have spaces.');
-
             if ($zip->locateName($extensionDir.'Extension.php') === FALSE)
                 throw new SystemException('Extension registration class was not found.');
-
             $meta = @json_decode($zip->getFromName($extensionDir.'extension.json'));
             if (!$meta OR !strlen($meta->code))
                 throw new SystemException(lang('system::lang.extensions.error_config_no_found'));
-
             $extensionCode = $meta->code;
             $extractToPath = $extractTo.'/'.$this->getNamePath($meta->code);
             $zip->extractTo($extractToPath);

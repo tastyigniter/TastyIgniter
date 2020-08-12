@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -7,8 +9,6 @@ use Html;
 
 /**
  * Map Area
- *
- * @package Admin
  */
 class MapArea extends BaseFormWidget
 {
@@ -161,7 +161,7 @@ class MapArea extends BaseFormWidget
 
     public function getAreaColor($key)
     {
-        --$key;
+        $key--;
 
         return $this->areaColors[$key] ?? $this->areaColors[0];
     }

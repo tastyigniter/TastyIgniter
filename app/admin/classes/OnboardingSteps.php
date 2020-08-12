@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Igniter\Flame\Traits\Singleton;
 use System\Classes\ExtensionManager;
@@ -6,8 +8,6 @@ use System\Classes\ExtensionManager;
 /**
  * Onboarding step definition
  * This contains all the logic for creating, and accessing onboarding steps.
- *
- * @package Admin
  */
 class OnboardingSteps
 {

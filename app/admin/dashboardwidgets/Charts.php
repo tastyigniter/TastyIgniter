@@ -1,4 +1,6 @@
-<?php namespace Admin\DashboardWidgets;
+<?php
+
+namespace Admin\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use Admin\Models\Customers_model;

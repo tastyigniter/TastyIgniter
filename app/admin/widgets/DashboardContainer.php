@@ -1,4 +1,6 @@
-<?php namespace Admin\Widgets;
+<?php
+
+namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\Widgets;
@@ -51,7 +53,7 @@ class DashboardContainer extends BaseWidget
     //
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected $defaultAlias = 'dashboardContainer';
 
@@ -61,7 +63,7 @@ class DashboardContainer extends BaseWidget
     protected $dashboardWidgets = [];
 
     /**
-     * @var boolean Determines if dashboard widgets have been created.
+     * @var bool Determines if dashboard widgets have been created.
      */
     protected $widgetsDefined = FALSE;
 
@@ -132,7 +134,6 @@ class DashboardContainer extends BaseWidget
 
         if (!$widgetAlias)
             throw new ApplicationException('Please select a widget to update.');
-
         $this->vars['widgetAlias'] = $widgetAlias;
         $this->vars['widget'] = $widget = $this->findWidgetByAlias($widgetAlias);
         $this->vars['widgetForm'] = $this->getFormWidget($widgetAlias, $widget);
@@ -147,14 +148,11 @@ class DashboardContainer extends BaseWidget
 
         if (!$className)
             throw new ApplicationException('Please select a widget to add.');
-
         if (!class_exists($className))
             throw new ApplicationException('The selected class does not exist.');
-
         $widget = new $className($this->controller);
         if (!($widget instanceof \Admin\Classes\BaseDashboardWidget))
             throw new ApplicationException('The selected class is not a dashboard widget.');
-
         $widgetInfo = $this->addWidget($widget, $size);
 
         return [

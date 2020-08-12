@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
@@ -6,8 +8,6 @@ use Model;
 
 /**
  * MenuOptions Model Class
- *
- * @package Admin
  */
 class Menu_item_option_values_model extends Model
 {

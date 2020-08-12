@@ -1,4 +1,6 @@
-<?php namespace Main\FormWidgets;
+<?php
+
+namespace Main\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Carbon\Carbon;
@@ -10,8 +12,6 @@ use System\Classes\ComponentManager as ComponentsManager;
 /**
  * Components
  * This widget is used by the system internally on the Layouts pages.
- *
- * @package Admin
  */
 class Components extends BaseFormWidget
 {
@@ -109,10 +109,8 @@ class Components extends BaseFormWidget
 
         if (!strlen($codeAlias))
             throw new ApplicationException('Invalid component selected');
-
         if (!$template = $this->getTemplate())
             throw new ApplicationException('Template file not found');
-
         $this->updateComponent($codeAlias, $isCreateContext, $template);
 
         flash()->success(sprintf(lang('admin::lang.alert_success'),
@@ -135,7 +133,6 @@ class Components extends BaseFormWidget
         $codeAlias = post('code');
         if (!strlen($codeAlias))
             throw new ApplicationException('Invalid component selected');
-
         $template = $this->getTemplate();
 
         $attributes = $template->attributes;

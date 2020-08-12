@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use File;
 use Igniter\Flame\Exception\ApplicationException;
@@ -9,7 +11,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Extensions Model Class
- * @package System
  */
 class Extensions_model extends Model
 {
@@ -94,7 +95,6 @@ class Extensions_model extends Model
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
                 if (!array_key_exists($extension, self::ICON_MIMETYPES))
                     throw new ApplicationException('Invalid extension icon type');
-
                 $mimeType = self::ICON_MIMETYPES[$extension];
                 $data = base64_encode(file_get_contents($file));
                 $icon['backgroundImage'] = [$mimeType, $data];
@@ -134,7 +134,7 @@ class Extensions_model extends Model
 
     /**
      * Sets the extension class as a property of this class
-     * @return boolean
+     * @return bool
      */
     public function applyExtensionClass()
     {

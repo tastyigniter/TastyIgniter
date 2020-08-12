@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use ApplicationException;
 use File;
@@ -9,7 +11,6 @@ use View;
 
 /**
  * MailLayouts Model Class
- * @package System
  */
 class Mail_layouts_model extends Model
 {
@@ -102,7 +103,6 @@ class Mail_layouts_model extends Model
         $definitions = MailManager::instance()->listRegisteredLayouts();
         if (!$definition = array_get($definitions, $code))
             throw new ApplicationException('Unable to find a registered layout with code: '.$code);
-
         $this->fillFromView($definition);
     }
 

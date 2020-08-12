@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Exception;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -11,7 +13,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Themes Model Class
- * @package System
  */
 class Themes_model extends Model
 {
@@ -178,7 +179,7 @@ class Themes_model extends Model
 
     /**
      * Attach the theme object to this class
-     * @return boolean
+     * @return bool
      */
     public function applyThemeManager()
     {

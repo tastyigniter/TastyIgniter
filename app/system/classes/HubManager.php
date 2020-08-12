@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use ApplicationException;
 use Cache;
@@ -10,7 +12,6 @@ use Request;
 
 /**
  * Hub Manager Class
- * @package System
  */
 class HubManager
 {
@@ -143,7 +144,6 @@ class HubManager
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
                 throw new ApplicationException('Server error try again');
-
             curl_close($curl);
         }
         catch (Exception $ex) {
@@ -176,7 +176,6 @@ class HubManager
 
         if (!is_dir($fileDir = dirname($filePath)))
             throw new ApplicationException("Downloading failed, download path ({$filePath}) not found.");
-
         try {
             $curl = $this->prepareRequest($url, $params);
             $fileStream = fopen($filePath, 'wb');
@@ -186,7 +185,6 @@ class HubManager
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($httpCode == 500)
                 throw new ApplicationException('Server error try again');
-
             curl_close($curl);
             fclose($fileStream);
         }

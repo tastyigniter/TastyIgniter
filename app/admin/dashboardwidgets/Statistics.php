@@ -1,4 +1,6 @@
-<?php namespace Admin\DashboardWidgets;
+<?php
+
+namespace Admin\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use Admin\Models\Customers_model;
@@ -153,10 +155,10 @@ class Statistics extends BaseDashboardWidget
         if ($range === 'week') {
             $start = Carbon::now()->subWeek();
         }
-        else if ($range === 'month') {
+        elseif ($range === 'month') {
             $start = Carbon::now()->subMonth();
         }
-        else if ($range === 'year') {
+        elseif ($range === 'year') {
             $start = Carbon::now()->startOfYear();
         }
         else {

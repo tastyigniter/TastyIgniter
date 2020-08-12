@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Classes\UserState;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -6,7 +8,6 @@ use Model;
 
 /**
  * Staffs Model Class
- * @package Admin
  */
 class Staffs_model extends Model
 {

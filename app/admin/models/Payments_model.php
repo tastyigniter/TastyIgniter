@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -10,8 +12,6 @@ use Model;
 
 /**
  * Payments Model Class
- *
- * @package Admin
  */
 class Payments_model extends Model
 {
@@ -138,7 +138,7 @@ class Payments_model extends Model
      *
      * @param string $class Class name
      *
-     * @return boolean
+     * @return bool
      */
     public function applyGatewayClass($class = null)
     {

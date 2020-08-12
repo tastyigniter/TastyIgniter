@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
 use AdminMenu;
@@ -54,7 +56,6 @@ class Extensions extends \Admin\Classes\AdminController
     {
         if (!$this->getUser()->hasPermission('Admin.Extensions'))
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
-        
         Extensions_model::syncAll();
 
         $this->asExtension('ListController')->index();
@@ -62,9 +63,8 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function edit($action, $vendor = null, $extension = null, $context = null)
     {
-        if (!$this->getUser()->hasPermission('Site.Settings'))        
+        if (!$this->getUser()->hasPermission('Site.Settings'))
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
-
         AdminMenu::setContext('settings', 'system');
 
         try {
@@ -79,7 +79,6 @@ class Extensions extends \Admin\Classes\AdminController
 
             if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions))
                 throw new SystemException(lang('admin::lang.alert_user_restricted'));
-
             $pageTitle = lang($settingItem->label ?: 'text_edit_title');
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
@@ -97,7 +96,6 @@ class Extensions extends \Admin\Classes\AdminController
     {
         if (!$this->getUser()->hasPermission('Admin.Extensions'))
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
-
         try {
             $pageTitle = lang('system::lang.extensions.text_delete_title');
             Template::setTitle($pageTitle);
@@ -110,7 +108,7 @@ class Extensions extends \Admin\Classes\AdminController
             // so delete from database
             if (!$extensionClass) {
                 $extensionManager->deleteExtension($extensionCode);
-                flash()->success(sprintf(lang('admin::lang.alert_success'), "Extension deleted "));
+                flash()->success(sprintf(lang('admin::lang.alert_success'), 'Extension deleted '));
 
                 return $this->redirectBack();
             }
@@ -139,12 +137,10 @@ class Extensions extends \Admin\Classes\AdminController
     {
         if (!$extensionCode = trim(post('code')))
             throw new ApplicationException(lang('admin::lang.alert_error_try_again'));
-
         $manager = ExtensionManager::instance();
         $extension = $manager->findExtension($extensionCode);
         if ($feedback = $this->checkDependencies($extension))
             throw new ApplicationException($feedback);
-
         if ($manager->installExtension($extensionCode)) {
             $title = array_get($extension->extensionMeta(), 'name');
             flash()->success(sprintf(lang('admin::lang.alert_success'), "Extension {$title} installed "));
@@ -160,7 +156,6 @@ class Extensions extends \Admin\Classes\AdminController
     {
         if (!$extensionCode = trim(post('code')))
             throw new ApplicationException(lang('admin::lang.alert_error_try_again'));
-
         $manager = ExtensionManager::instance();
         $extension = $manager->findExtension($extensionCode);
 
@@ -188,7 +183,6 @@ class Extensions extends \Admin\Classes\AdminController
 
         if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions))
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
-
         $model = $this->formFindModelObject($settingItem);
 
         $this->initFormWidget($model, $action);
@@ -216,7 +210,6 @@ class Extensions extends \Admin\Classes\AdminController
         $manager = ExtensionManager::instance();
         if (!$extension = $manager->findExtension($extensionCode))
             throw new ApplicationException(lang('admin::lang.alert_error_try_again'));
-
         $purgeData = post('delete_data') == 1;
         if ($manager->deleteExtension($extensionCode, $purgeData)) {
             $title = array_get($extension->extensionMeta(), 'name');
@@ -269,10 +262,8 @@ class Extensions extends \Admin\Classes\AdminController
     {
         if (!strlen($class))
             throw new SystemException(lang('system::lang.extensions.alert_setting_model_missing'));
-
         if (!class_exists($class))
             throw new SystemException(sprintf(lang('system::lang.extensions.alert_setting_model_not_found'), $class));
-
         $model = new $class;
 
         return $model;

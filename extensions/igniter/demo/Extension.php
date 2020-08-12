@@ -1,4 +1,6 @@
-<?php namespace Igniter\Demo;
+<?php
+
+namespace Igniter\Demo;
 
 use System\Classes\BaseExtension;
 

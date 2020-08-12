@@ -1,12 +1,12 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Model;
 
 /**
  * Status History Model Class
- *
- * @package Admin
  */
 class Status_history_model extends Model
 {

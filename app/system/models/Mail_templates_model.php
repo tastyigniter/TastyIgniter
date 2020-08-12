@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use File;
 use Igniter\Flame\Mail\MailParser;
@@ -8,7 +10,6 @@ use View;
 
 /**
  * Mail templates Model Class
- * @package System
  */
 class Mail_templates_model extends Model
 {
@@ -158,7 +159,6 @@ class Mail_templates_model extends Model
     /**
      * @param callable $callback A callable function.
      * @deprecated see System\Classes\MailManager::registerCallback
-     *
      */
     public static function registerCallback(callable $callback)
     {

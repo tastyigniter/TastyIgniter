@@ -50,7 +50,6 @@ class AllocateAssignable implements ShouldQueue
 
             if (!$assignee = $this->assignableLog->assignee_group->findAvailableAssignee())
                 throw new Exception('No available assignee');
-
             $this->assignableLog->assignable->assignTo($assignee);
 
             Allocator::removeSlot($this->assignableLog->getKey());

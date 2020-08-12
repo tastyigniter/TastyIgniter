@@ -1,4 +1,6 @@
-<?php namespace Admin\Traits;
+<?php
+
+namespace Admin\Traits;
 
 use Admin\Classes\FormField;
 use ApplicationException;

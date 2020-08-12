@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use AdminMenu;
 use ApplicationException;
@@ -147,7 +149,6 @@ class Updates extends \Admin\Classes\AdminController
         $items = post('items');
         if (!$items OR count($items) < 1)
             throw new ApplicationException('Select item(s) to ignore.');
-
         $updateManager = UpdateManager::instance();
 
         $updateManager->ignoreUpdates($items);
@@ -197,7 +198,6 @@ class Updates extends \Admin\Classes\AdminController
         $carteKey = post('carte_key');
         if (!strlen($carteKey))
             throw new ApplicationException('No carte key specified.');
-
         $response = UpdateManager::instance()->applySiteDetail($carteKey);
 
         return [
@@ -217,7 +217,6 @@ class Updates extends \Admin\Classes\AdminController
 
         if (!count($items))
             throw new ApplicationException('No item(s) specified.');
-
         $this->validateItems();
 
         if ($context == 'index') {

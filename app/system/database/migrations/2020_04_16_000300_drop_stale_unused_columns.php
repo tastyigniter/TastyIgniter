@@ -1,4 +1,6 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;

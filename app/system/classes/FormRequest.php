@@ -40,7 +40,6 @@ class FormRequest extends BaseFormRequest
     {
         if (!$this->controller instanceof AdminController)
             throw new SystemException('Missing controller in: '.get_class($this));
-
         if (!$this->controller->isClassExtendedWith(FormController::class))
             throw new SystemException('Missing FormController class in: '.get_class($this));
 

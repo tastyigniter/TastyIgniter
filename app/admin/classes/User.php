@@ -1,10 +1,11 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Igniter\Flame\Auth\Manager;
 
 /**
  * Admin User authentication manager
- * @package Admin
  */
 class User extends Manager
 {

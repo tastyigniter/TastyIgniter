@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\ActivityTypes\AssigneeUpdated;
 use Admin\ActivityTypes\StatusUpdated;
@@ -19,8 +21,6 @@ use Igniter\Flame\Exception\ValidationException;
 
 /**
  * Status Editor
- *
- * @package Admin
  */
 class StatusEditor extends BaseFormWidget
 {
@@ -131,7 +131,6 @@ class StatusEditor extends BaseFormWidget
         $context = post('recordId');
         if (!in_array($context, ['load-status', 'load-assignee']))
             throw new ApplicationException('Invalid action');
-
         $this->setMode(str_after($context, 'load-'));
 
         $formTitle = sprintf(lang($this->formTitle), lang($this->getModeConfig('formName')));
@@ -192,7 +191,6 @@ class StatusEditor extends BaseFormWidget
     {
         if (!strlen($statusId = post('statusId')))
             throw new ApplicationException(lang('admin::lang.form.missing_id'));
-
         if (!$status = Statuses_model::find($statusId))
             throw new Exception('Status ID ['.$statusId.'] not found.');
 
@@ -203,7 +201,6 @@ class StatusEditor extends BaseFormWidget
     {
         if (!strlen($groupId = post('groupId')))
             throw new ApplicationException(lang('admin::lang.form.missing_id'));
-
         $this->setMode('assignee');
 
         $model = $this->createFormModel();

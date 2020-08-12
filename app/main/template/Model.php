@@ -94,7 +94,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      * This method is used internally by the system.
      *
      * @param \Main\Classes\Theme $theme Specifies a parent theme.
-     * @param boolean $skipCache Indicates if objects should be reloaded from the disk bypassing the cache.
+     * @param bool $skipCache Indicates if objects should be reloaded from the disk bypassing the cache.
      *
      * @return array|\Illuminate\Support\Collection
      */

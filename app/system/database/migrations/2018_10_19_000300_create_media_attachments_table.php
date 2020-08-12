@@ -1,4 +1,6 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;

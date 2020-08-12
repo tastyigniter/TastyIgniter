@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use AdminMenu;
 use ApplicationException;
@@ -79,10 +81,8 @@ class MailTemplates extends \Admin\Classes\AdminController
     {
         if (!strlen($recordId))
             throw new ApplicationException('Template id not found');
-
         if (!$model = $this->formFindModelObject($recordId))
             throw new ApplicationException('Template not found');
-
         $adminUser = $this->getUser()->staff;
 
         Mail::queue($model->code, [], function ($message) use ($adminUser) {

@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use App;
 use ApplicationException;
@@ -12,7 +14,6 @@ use ZipArchive;
 
 /**
  * TastyIgniter Updates Manager Class
- * @package System
  */
 class UpdateManager
 {
@@ -281,7 +282,7 @@ class UpdateManager
         $response = $this->requestUpdateList();
 
         if (isset($response['last_check'])) {
-            return (strtotime('-7 day') < strtotime($response['last_check']));
+            return strtotime('-7 day') < strtotime($response['last_check']);
         }
 
         return TRUE;

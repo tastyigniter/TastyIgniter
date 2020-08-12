@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
 use Admin\Models\Menu_options_model;
@@ -61,7 +63,6 @@ class Menus extends AdminController
         $menuOptionId = post('Menu._options');
         if (!$menuOption = Menu_options_model::find($menuOptionId))
             throw new ApplicationException('Please select a menu option to attach');
-
         $model = $this->asExtension('FormController')->formFindModelObject($recordId);
 
         $menuItemOption = $model->menu_options()->create(['option_id' => $menuOptionId]);

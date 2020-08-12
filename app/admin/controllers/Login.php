@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
@@ -62,7 +64,6 @@ class Login extends \Admin\Classes\AdminController
 
         if (!AdminAuth::authenticate($credentials, TRUE, TRUE))
             throw new ValidationException(['username' => lang('admin::lang.login.alert_username_not_found')]);
-
         if ($redirectUrl = input('redirect'))
             return $this->redirect($redirectUrl);
 
@@ -80,10 +81,8 @@ class Login extends \Admin\Classes\AdminController
         $staff = Staffs_model::whereStaffEmail(post('email'))->first();
         if (!$staff OR !$user = $staff->user)
             throw new ValidationException(['email' => lang('admin::lang.login.alert_email_not_sent')]);
-
         if (!$user->resetPassword())
             throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);
-
         $data = [
             'staff_name' => $staff->staff_name,
             'reset_link' => admin_url('login/reset?code='.$user->reset_code),
@@ -113,7 +112,6 @@ class Login extends \Admin\Classes\AdminController
 
         if (!$user OR !$user->completeResetPassword($code, post('password')))
             throw new ValidationException(['password' => lang('admin::lang.login.alert_failed_reset')]);
-
         $data = [
             'staff_name' => $user->staff->staff_name,
         ];

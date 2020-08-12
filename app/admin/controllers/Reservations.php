@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Models\Reservations_model;
 use AdminMenu;
@@ -78,7 +80,6 @@ class Reservations extends \Admin\Classes\AdminController
     {
         if (!$reservation = Reservations_model::find($eventId))
             throw new Exception('No matching reservation found');
-
         $startAt = make_carbon($startAt);
         $endAt = make_carbon($endAt);
 

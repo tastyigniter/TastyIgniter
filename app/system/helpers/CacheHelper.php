@@ -1,4 +1,6 @@
-<?php namespace System\Helpers;
+<?php
+
+namespace System\Helpers;
 
 use App;
 use Cache;

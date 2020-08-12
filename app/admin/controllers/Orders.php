@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use AdminMenu;
 use Igniter\Flame\Exception\ApplicationException;
@@ -59,7 +61,6 @@ class Orders extends \Admin\Classes\AdminController
 
         if (!$model->hasInvoice())
             throw new ApplicationException('Invoice has not yet been generated');
-
         $this->vars['model'] = $model;
 
         $this->suppressLayout = TRUE;

@@ -39,7 +39,6 @@ use View;
 
 /**
  * Main Controller Class
- * @package Main
  */
 class MainController extends BaseController
 {
@@ -142,7 +141,6 @@ class MainController extends BaseController
         $this->theme = $theme ?: ThemeManager::instance()->getActiveTheme();
         if (!$this->theme)
             throw new ApplicationException(Lang::get('main::lang.not_found.active_theme'));
-
         $this->assetPath[] = $this->theme->getPath().'/assets';
         if ($this->theme->hasParent())
             $this->assetPath[] = $this->theme->getParentPath().'/assets';
@@ -385,10 +383,10 @@ class MainController extends BaseController
             if (is_array($result)) {
                 $response = array_merge($response, $result);
             }
-            else if (is_string($result)) {
+            elseif (is_string($result)) {
                 $response['result'] = $result;
             }
-            else if (is_object($result)) {
+            elseif (is_object($result)) {
                 return $result;
             }
 
@@ -616,7 +614,7 @@ class MainController extends BaseController
             $this->vars['__SELF__'] = $this->componentContext;
         }
         // Process theme partial
-        else if (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
+        elseif (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
             return FALSE;
         }
 
@@ -950,7 +948,6 @@ class MainController extends BaseController
     {
         if ($throwException)
             throw new ApplicationException($message);
-
         flash()->danger($message);
     }
 

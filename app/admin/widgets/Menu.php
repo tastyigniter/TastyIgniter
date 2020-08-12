@@ -26,7 +26,7 @@ class Menu extends BaseWidget
     protected $defaultAlias = 'top-menu';
 
     /**
-     * @var boolean Determines if item definitions have been created.
+     * @var bool Determines if item definitions have been created.
      */
     protected $itemsDefined = FALSE;
 
@@ -207,12 +207,10 @@ class Menu extends BaseWidget
     {
         if (!strlen($itemName = input('item')))
             throw new ApplicationException('Invalid item specified');
-
         $this->defineMenuItems();
 
         if (!$item = $this->getItem($itemName))
             throw new ApplicationException("No main menu item found matching {$itemName}");
-
         $itemOptions = $item->options();
 
         // Return a partial if item has a path defined
@@ -238,12 +236,10 @@ class Menu extends BaseWidget
     {
         if (!strlen($itemName = post('item')))
             throw new ApplicationException('Invalid item specified');
-
         $this->defineMenuItems();
 
         if (!$item = $this->getItem($itemName))
             throw new ApplicationException("No main menu item found matching {$itemName}");
-
         $this->resolveMarkAsReadFromModel($item);
     }
 
@@ -271,7 +267,6 @@ class Menu extends BaseWidget
 
         if ($status < 1 AND !strlen($message))
             throw new ApplicationException('Status message is required');
-
         $stateData['status'] = $status;
         $stateData['isAway'] = $status !== 1;
         $stateData['updatedAt'] = Carbon::now();

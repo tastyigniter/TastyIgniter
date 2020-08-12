@@ -1,12 +1,12 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Model;
 
 /**
  * Mealtimes Model Class
- *
- * @package Admin
  */
 class Mealtimes_model extends Model
 {
