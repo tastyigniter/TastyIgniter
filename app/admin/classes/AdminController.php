@@ -149,9 +149,11 @@ class AdminController extends BaseController
 
             // Check that user has permission to view this page
             if ($this->requiredPermissions AND !$this->getUser()->hasAnyPermission($this->requiredPermissions)) {
-                return Response::make(Request::ajax()
+                return Response::make(
+                    Request::ajax()
                     ? lang('admin::lang.alert_user_restricted')
-                    : View::make('admin::access_denied'), 403
+                    : View::make('admin::access_denied'),
+                    403
                 );
             }
         }
@@ -171,8 +173,9 @@ class AdminController extends BaseController
         // Loads the requested controller action
         $response = $this->execPageAction($action, $params);
 
-        if (!is_string($response))
+        if (!is_string($response)) {
             return $response;
+        }
 
         // Return response
         return is_string($response)
@@ -196,7 +199,8 @@ class AdminController extends BaseController
         if (!$this->checkAction($action)) {
             throw new Exception(sprintf(
                 'Method [%s] is not found in the controller [%s]',
-                $action, get_class($this)
+                $action,
+                get_class($this)
             ));
         }
 
@@ -215,8 +219,9 @@ class AdminController extends BaseController
 
     protected function makeMainMenuWidget()
     {
-        if (AdminMenu::isCollapsed())
+        if (AdminMenu::isCollapsed()) {
             $this->bodyClass .= 'sidebar-collapsed';
+        }
 
         $config = [];
         $config['alias'] = 'mainmenu';
@@ -232,23 +237,27 @@ class AdminController extends BaseController
 
     /**
      * Returns the AJAX handler for the current request, if available.
+     *
      * @return string
      */
     public function getHandler()
     {
-        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER')) {
             return trim($handler);
+        }
 
-        if ($handler = post('_handler'))
+        if ($handler = post('_handler')) {
             return trim($handler);
+        }
 
         return null;
     }
 
     protected function processHandlers()
     {
-        if (!$handler = $this->getHandler())
+        if (!$handler = $this->getHandler()) {
             return FALSE;
+        }
 
         try {
             $this->validateHandler($handler);
@@ -269,36 +278,31 @@ class AdminController extends BaseController
                 if ($result instanceof RedirectResponse) {
                     $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
                     $result = null;
-                }
-                elseif (Flash::messages()->isNotEmpty()) {
+                } elseif (Flash::messages()->isNotEmpty()) {
                     $response['#notification'] = $this->makePartial('flash');
                 }
             }
 
             if (is_array($result)) {
                 $response = array_merge($response, $result);
-            }
-            else if (is_string($result)) {
+            } elseif (is_string($result)) {
                 $response['result'] = $result;
-            }
-            else if (is_object($result)) {
+            } elseif (is_object($result)) {
                 return $result;
             }
 
             return $response;
-        }
-        catch (ValidationException $ex) {
+        } catch (ValidationException $ex) {
             $this->flashValidationErrors($ex->getErrors());
 
-            if (Request::ajax())
+            if (Request::ajax()) {
                 return ['#notification' => $this->makePartial('flash')];
+            }
 
             throw new AjaxException($ex->getMessage());
-        }
-        catch (MassAssignmentException $ex) {
+        } catch (MassAssignmentException $ex) {
             throw new ApplicationException(lang('admin::lang.form.mass_assignment_failed', ['attribute' => $ex->getMessage()]));
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             throw $ex;
         }
     }
@@ -312,8 +316,9 @@ class AdminController extends BaseController
 
     protected function validateHandlerPartials()
     {
-        if (!$partials = trim(Request::header('X-IGNITER-REQUEST-PARTIALS')))
+        if (!$partials = trim(Request::header('X-IGNITER-REQUEST-PARTIALS'))) {
             return [];
+        }
 
         $partials = explode('&', $partials);
 

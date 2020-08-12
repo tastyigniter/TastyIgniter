@@ -22,11 +22,13 @@ trait HasDeliveryAreas
 
     protected function geocodeAddressOnSave()
     {
-        if (!array_get($this->options, 'auto_lat_lng', TRUE))
+        if (!array_get($this->options, 'auto_lat_lng', TRUE)) {
             return;
+        }
 
-        if (!empty($this->location_lat) AND !empty($this->location_lng))
+        if (!empty($this->location_lat) AND !empty($this->location_lng)) {
             return;
+        }
 
         $address = format_address($this->getAddress(), FALSE);
 
@@ -54,36 +56,42 @@ trait HasDeliveryAreas
 
     /**
      * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
+     *
      * @return \Igniter\Flame\Location\Contracts\AreaInterface|null
      */
     public function searchOrDefaultDeliveryArea($coordinates)
     {
-        if ($area = $this->searchDeliveryArea($coordinates))
+        if ($area = $this->searchDeliveryArea($coordinates)) {
             return $area;
+        }
 
         return $this->delivery_areas->where('is_default', 1)->first();
     }
 
     /**
      * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
+     *
      * @return \Igniter\Flame\Location\Contracts\AreaInterface|null
      */
     public function searchOrFirstDeliveryArea($coordinates)
     {
-        if (!$area = $this->searchDeliveryArea($coordinates))
+        if (!$area = $this->searchDeliveryArea($coordinates)) {
             $area = $this->delivery_areas->first();
+        }
 
         return $area;
     }
 
     /**
      * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
+     *
      * @return \Igniter\Flame\Location\Contracts\AreaInterface|null
      */
     public function searchDeliveryArea($coordinates)
     {
-        if (!$coordinates)
+        if (!$coordinates) {
             return null;
+        }
 
         return $this->delivery_areas->first(function (AreaInterface $model) use ($coordinates) {
             return $model->checkBoundary($coordinates);
@@ -109,11 +117,13 @@ trait HasDeliveryAreas
     public function addLocationAreas($deliveryAreas)
     {
         $locationId = $this->getKey();
-        if (!is_numeric($locationId))
+        if (!is_numeric($locationId)) {
             return FALSE;
+        }
 
-        if (!is_array($deliveryAreas))
+        if (!is_array($deliveryAreas)) {
             return FALSE;
+        }
 
         foreach ($deliveryAreas as $area) {
             $locationArea = $this->delivery_areas()->firstOrNew([
@@ -135,10 +145,14 @@ trait HasDeliveryAreas
         // to ['delivery_areas']['conditions']
         if (isset($value['delivery_areas'])) {
             foreach ($value['delivery_areas'] as &$area) {
-                if (!isset($charge['charge'])) continue;
+                if (!isset($charge['charge'])) {
+                    continue;
+                }
                 $area['conditions'] = is_array($area['charge']) ? $area['charge'] : [];
                 foreach ($area['conditions'] as $id => &$charge) {
-                    if (!isset($charge['condition'])) continue;
+                    if (!isset($charge['condition'])) {
+                        continue;
+                    }
                     $charge['type'] = $charge['condition'];
                     unset($charge['condition']);
                 }

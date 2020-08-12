@@ -1,11 +1,12 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Model;
 
 /**
  * Menu Specials Model Class
- * @package Admin
  */
 class Menus_specials_model extends Model
 {
@@ -17,8 +18,7 @@ class Menus_specials_model extends Model
     protected $primaryKey = 'special_id';
 
     protected $fillable = ['menu_id', 'start_date', 'end_date', 'special_price', 'special_status', 'type',
-        'validity', 'recurring_every', 'recurring_from', 'recurring_to'];
-
+        'validity', 'recurring_every', 'recurring_from', 'recurring_to', ];
 
     public $casts = [
         'menu_id' => 'integer',
@@ -38,8 +38,9 @@ class Menus_specials_model extends Model
 
     public function getPrettyEndDateAttribute()
     {
-        if ($this->isRecurring() OR !$this->end_date)
+        if ($this->isRecurring() OR !$this->end_date) {
             return null;
+        }
 
         return mdate(setting('date_format'), $this->end_date->getTimestamp());
     }
@@ -56,16 +57,18 @@ class Menus_specials_model extends Model
 
     public function active()
     {
-        if (!$this->special_status)
+        if (!$this->special_status) {
             return FALSE;
+        }
 
         return !($this->isExpired() === TRUE);
     }
 
     public function daysRemaining()
     {
-        if ($this->validity != 'period' OR !$this->end_date->greaterThan(Carbon::now()))
+        if ($this->validity != 'period' OR !$this->end_date->greaterThan(Carbon::now())) {
             return 0;
+        }
 
         return $this->end_date->diffForHumans();
     }
@@ -85,8 +88,9 @@ class Menus_specials_model extends Model
             case 'period':
                 return !$now->between($this->start_date, $this->end_date);
             case 'recurring':
-                if (!in_array($now->format('w'), $this->recurring_every ?? []))
+                if (!in_array($now->format('w'), $this->recurring_every ?? [])) {
                     return TRUE;
+                }
 
                 $start = $now->copy()->setTimeFromTimeString($this->recurring_from);
                 $end = $now->copy()->setTimeFromTimeString($this->recurring_to);
@@ -102,8 +106,9 @@ class Menus_specials_model extends Model
 
     public function getMenuPrice($price)
     {
-        if ($this->isFixed())
+        if ($this->isFixed()) {
             return $this->special_price;
+        }
 
         return $price - (($price / 100) * round($this->special_price));
     }

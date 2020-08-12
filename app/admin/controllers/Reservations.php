@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Models\Reservations_model;
 use AdminMenu;
@@ -63,8 +65,9 @@ class Reservations extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        if ($this->action === 'assigned')
+        if ($this->action === 'assigned') {
             $this->requiredPermissions = null;
+        }
 
         AdminMenu::setContext('reservations', 'sales');
     }
@@ -76,9 +79,9 @@ class Reservations extends \Admin\Classes\AdminController
 
     public function calendarUpdateEvent($eventId, $startAt, $endAt)
     {
-        if (!$reservation = Reservations_model::find($eventId))
+        if (!$reservation = Reservations_model::find($eventId)) {
             throw new Exception('No matching reservation found');
-
+        }
         $startAt = make_carbon($startAt);
         $endAt = make_carbon($endAt);
 

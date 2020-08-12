@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
@@ -6,8 +8,6 @@ use Model;
 
 /**
  * MenuOptions Model Class
- *
- * @package Admin
  */
 class Menu_item_option_values_model extends Model
 {
@@ -58,8 +58,9 @@ class Menu_item_option_values_model extends Model
 
     public function getPriceAttribute()
     {
-        if (is_null($this->new_price) AND $this->option_value)
+        if (is_null($this->new_price) AND $this->option_value) {
             return $this->option_value->price;
+        }
 
         return $this->new_price;
     }
@@ -74,12 +75,14 @@ class Menu_item_option_values_model extends Model
      *
      * @param int $quantity
      * @param bool $subtract
+     *
      * @return bool TRUE on success, or FALSE on failure
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        if ($this->quantity == 0)
+        if ($this->quantity == 0) {
             return FALSE;
+        }
 
         $stockQty = ($subtract === TRUE)
             ? $this->quantity - $quantity

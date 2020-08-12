@@ -1,9 +1,7 @@
 <?php if (count($records)) {
-
     $groupedRecords = $records->groupBy(function ($item) {
         return day_elapsed($item->date_added, false);
-    });
-    ?>
+    }); ?>
     <ul class="timeline">
         <?php foreach ($groupedRecords as $dateAdded => $activities) { ?>
             <li class="time-label">
@@ -21,8 +19,8 @@
             <?php } ?>
         <?php } ?>
     </ul>
-<?php }
-else { ?>
+<?php
+} else { ?>
     <p class="p-4 text-center"><?= lang('system::lang.activities.text_empty'); ?></p>
 <?php } ?>
 

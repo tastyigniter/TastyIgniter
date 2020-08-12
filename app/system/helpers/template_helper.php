@@ -3,10 +3,10 @@
 /**
  * Template helper functions
  */
-
 if (!function_exists('page')) {
     /**
      * Get the page content
+     *
      * @return string
      */
     function page()
@@ -77,6 +77,7 @@ if (!function_exists('component')) {
 if (!function_exists('get_title')) {
     /**
      * Get page title html tag
+     *
      * @return    string
      */
     function get_title()

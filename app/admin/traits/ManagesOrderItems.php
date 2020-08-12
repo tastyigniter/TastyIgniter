@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use DB;
 use Event;
 use Igniter\Flame\Cart\CartCondition;
-use Igniter\Flame\Cart\CartContent;
 
 trait ManagesOrderItems
 {
@@ -36,18 +35,22 @@ trait ManagesOrderItems
     {
         $orderMenuOptions = $this->getOrderMenuOptions();
         $this->getOrderMenus()->each(function ($orderMenu) use ($orderMenuOptions) {
-            if (!$menu = Menus_model::find($orderMenu->menu_id))
+            if (!$menu = Menus_model::find($orderMenu->menu_id)) {
                 return TRUE;
+            }
 
-            if ($menu->subtract_stock)
+            if ($menu->subtract_stock) {
                 $menu->updateStock($orderMenu->quantity);
+            }
 
             $orderMenuOptions
                 ->where('order_menu_id', $orderMenu->order_menu_id)
                 ->each(function ($orderMenuOption) {
                     if (!$menuOptionValue = Menu_item_option_values_model::find(
                         $orderMenuOption->menu_option_value_id
-                    )) return TRUE;
+                    )) {
+                        return TRUE;
+                    }
 
                     $menuOptionValue->updateStock($orderMenuOption->quantity);
                 });
@@ -112,14 +115,17 @@ trait ManagesOrderItems
     public function addOrderMenus(array $content)
     {
         $orderId = $this->getKey();
-        if (!is_numeric($orderId))
+        if (!is_numeric($orderId)) {
             return FALSE;
+        }
 
         $this->orderMenusQuery()->where('order_id', $orderId)->delete();
         $this->orderMenuOptionsQuery()->where('order_id', $orderId)->delete();
 
         foreach ($content as $rowId => $cartItem) {
-            if ($rowId != $cartItem->rowId) continue;
+            if ($rowId != $cartItem->rowId) {
+                continue;
+            }
 
             $orderMenuId = $this->orderMenusQuery()->insertGetId([
                 'order_id' => $orderId,
@@ -151,8 +157,9 @@ trait ManagesOrderItems
     protected function addOrderMenuOptions($orderMenuId, $menuId, $options)
     {
         $orderId = $this->getKey();
-        if (!is_numeric($orderId))
+        if (!is_numeric($orderId)) {
             return FALSE;
+        }
 
         foreach ($options as $option) {
             foreach ($option->values as $value) {
@@ -180,8 +187,9 @@ trait ManagesOrderItems
     public function addOrderTotals(array $totals = [])
     {
         $orderId = $this->getKey();
-        if (!is_numeric($orderId))
+        if (!is_numeric($orderId)) {
             return FALSE;
+        }
 
         $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
 
@@ -209,12 +217,14 @@ trait ManagesOrderItems
         if (!$couponCondition instanceof CartCondition) {
             throw new \InvalidArgumentException(sprintf(
                 'Invalid argument, expected %s, got %s',
-                CartCondition::class, get_class($couponCondition)
+                CartCondition::class,
+                get_class($couponCondition)
             ));
         }
 
-        if (!$this->exists)
+        if (!$this->exists) {
             return FALSE;
+        }
 
         return Coupons_history_model::createHistory($couponCondition, $this, $customer);
     }

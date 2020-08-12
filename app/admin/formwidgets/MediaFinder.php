@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -21,8 +23,6 @@ use SystemException;
  *        type: mediafinder
  *        mode: inline
  *        prompt: Click the %s button to find a user
- *
- * @package Admin
  */
 class MediaFinder extends BaseFormWidget
 {
@@ -52,7 +52,7 @@ class MediaFinder extends BaseFormWidget
     ];
 
     /**
-     * @var boolean Automatically attaches the chosen file if the parent record exists. Defaults to false.
+     * @var bool Automatically attaches the chosen file if the parent record exists. Defaults to false.
      */
     public $useAttachment = FALSE;
 
@@ -107,49 +107,55 @@ class MediaFinder extends BaseFormWidget
 
     public function getMediaIdentifier($media)
     {
-        if ($media instanceof Media)
+        if ($media instanceof Media) {
             return $media->getKey();
+        }
     }
 
     public function getMediaName($media)
     {
-        if ($media instanceof Media)
+        if ($media instanceof Media) {
             return $media->getFilename();
+        }
 
         return trim($media, '/');
     }
 
     public function getMediaPath($media)
     {
-        if ($media instanceof Media)
+        if ($media instanceof Media) {
             return $media->getDiskPath();
+        }
 
         try {
             return MediaLibrary::instance()->getMediaRelativePath(trim($media, '/'));
-        }
-        catch (SystemException $ex) {
+        } catch (SystemException $ex) {
             return $media;
         }
     }
 
     public function getMediaThumb($media)
     {
-        if ($media instanceof Media)
+        if ($media instanceof Media) {
             return $media->getThumb($this->thumbOptions);
+        }
 
-        if (!strlen($path = trim($media, '/')))
+        if (!strlen($path = trim($media, '/'))) {
             return $path;
+        }
 
         return MediaLibrary::instance()->getMediaThumb($path, $this->thumbOptions);
     }
 
     public function onLoadAttachmentConfig()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment OR !$mediaId = post('media_id')) {
             return;
+        }
 
-        if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
+        if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model)))) {
             return;
+        }
 
         $media = $this->model->findMedia($mediaId);
 
@@ -163,11 +169,13 @@ class MediaFinder extends BaseFormWidget
 
     public function onSaveAttachmentConfig()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment OR !$mediaId = post('media_id')) {
             return;
+        }
 
-        if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
+        if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model)))) {
             return;
+        }
 
         $configData = post('media.custom_properties', []);
 
@@ -186,31 +194,35 @@ class MediaFinder extends BaseFormWidget
 
     public function onRemoveAttachment()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment OR !$mediaId = post('media_id')) {
             return;
+        }
 
-        if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
+        if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model)))) {
             return;
+        }
 
         $this->model->deleteMedia($mediaId);
     }
 
     public function onAddAttachment()
     {
-        if (!$this->useAttachment)
+        if (!$this->useAttachment) {
             return;
+        }
 
-        if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
+        if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model)))) {
             return;
+        }
 
         $items = post('items');
-        if (!is_array($items))
+        if (!is_array($items)) {
             throw new ApplicationException('Select an item to attach');
-
+        }
         $model = $this->model;
-        if (!$model->exists)
+        if (!$model->exists) {
             throw new ApplicationException('You can only attach media to a saved form');
-
+        }
         $manager = MediaLibrary::instance();
         foreach ($items as &$item) {
             $media = $model->newMediaInstance();
@@ -230,11 +242,13 @@ class MediaFinder extends BaseFormWidget
     public function getLoadValue()
     {
         $value = parent::getLoadValue();
-        if (!is_array($value) AND !$value instanceof Collection)
+        if (!is_array($value) AND !$value instanceof Collection) {
             $value = [$value];
+        }
 
-        if (is_array($value))
+        if (is_array($value)) {
             $value = array_filter($value);
+        }
 
         if ($this->isMulti) {
             $value[] = null;

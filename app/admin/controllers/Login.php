@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
@@ -18,8 +20,9 @@ class Login extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if (AdminAuth::isLogged())
+        if (AdminAuth::isLogged()) {
             return $this->redirect('dashboard');
+        }
 
         Template::setTitle(lang('admin::lang.login.text_title'));
 
@@ -60,11 +63,12 @@ class Login extends \Admin\Classes\AdminController
             'password' => array_get($data, 'password'),
         ];
 
-        if (!AdminAuth::authenticate($credentials, TRUE, TRUE))
+        if (!AdminAuth::authenticate($credentials, TRUE, TRUE)) {
             throw new ValidationException(['username' => lang('admin::lang.login.alert_username_not_found')]);
-
-        if ($redirectUrl = input('redirect'))
+        }
+        if ($redirectUrl = input('redirect')) {
             return $this->redirect($redirectUrl);
+        }
 
         return $this->redirectIntended('dashboard');
     }
@@ -78,12 +82,12 @@ class Login extends \Admin\Classes\AdminController
         ]);
 
         $staff = Staffs_model::whereStaffEmail(post('email'))->first();
-        if (!$staff OR !$user = $staff->user)
+        if (!$staff OR !$user = $staff->user) {
             throw new ValidationException(['email' => lang('admin::lang.login.alert_email_not_sent')]);
-
-        if (!$user->resetPassword())
+        }
+        if (!$user->resetPassword()) {
             throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);
-
+        }
         $data = [
             'staff_name' => $staff->staff_name,
             'reset_link' => admin_url('login/reset?code='.$user->reset_code),
@@ -111,9 +115,9 @@ class Login extends \Admin\Classes\AdminController
         $code = array_get($data, 'code');
         $user = Users_model::whereResetCode($code)->first();
 
-        if (!$user OR !$user->completeResetPassword($code, post('password')))
+        if (!$user OR !$user->completeResetPassword($code, post('password'))) {
             throw new ValidationException(['password' => lang('admin::lang.login.alert_failed_reset')]);
-
+        }
         $data = [
             'staff_name' => $user->staff->staff_name,
         ];

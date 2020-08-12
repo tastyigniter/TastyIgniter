@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * CustomerGroups Model Class
- *
- * @package Admin
  */
 class Customer_groups_model extends Model
 {
@@ -62,6 +62,7 @@ class Customer_groups_model extends Model
 
     /**
      * Update the default group
+     *
      * @param $groupId
      */
     public static function updateDefault($groupId)

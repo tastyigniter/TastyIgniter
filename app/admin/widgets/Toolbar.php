@@ -53,8 +53,9 @@ class Toolbar extends BaseWidget
 
     protected function prepareButtons()
     {
-        if ($templateButtons = Template::getButtonList())
+        if ($templateButtons = Template::getButtonList()) {
             $this->buttons['templateButtons'] = $templateButtons;
+        }
     }
 
     public function getContext()
@@ -109,13 +110,11 @@ class Toolbar extends BaseWidget
 
             if (isset($attributes['partial'])) {
                 $buttons[$name] = $this->makePartial($attributes['partial']);
-            }
-            else {
+            } else {
                 foreach ($attributes as $key => $value) {
                     if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
                         $attributes[$key] = $this->controller->pageUrl($value);
-                    }
-                    else if (is_string($value)) {
+                    } elseif (is_string($value)) {
                         $attributes[$key] = lang($value);
                     }
                 }

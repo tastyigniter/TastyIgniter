@@ -38,7 +38,9 @@ class AssigneeUpdated implements ActivityInterface
 
         $recipients = [];
         foreach ($assignableLog->assignable->listGroupAssignees() as $assignee) {
-            if ($user AND $assignee->getKey() === $user->staff->getKey()) continue;
+            if ($user AND $assignee->getKey() === $user->staff->getKey()) {
+                continue;
+            }
             $recipients[] = $assignee->user;
         }
 
@@ -46,7 +48,7 @@ class AssigneeUpdated implements ActivityInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -101,8 +103,9 @@ class AssigneeUpdated implements ActivityInterface
     public static function getUrl(Activity $activity)
     {
         $url = $activity->type == self::ORDER_ASSIGNED_TYPE ? 'orders' : 'reservations';
-        if ($activity->subject)
+        if ($activity->subject) {
             $url .= '/edit/'.$activity->subject->getKey();
+        }
 
         return admin_url($url);
     }

@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -10,8 +12,6 @@ use Model;
 
 /**
  * Payments Model Class
- *
- * @package Admin
  */
 class Payments_model extends Model
 {
@@ -102,27 +102,34 @@ class Payments_model extends Model
     {
         $this->applyGatewayClass();
 
-        if (is_array($this->data))
+        if (is_array($this->data)) {
             $this->attributes = array_merge($this->data, $this->attributes);
+        }
     }
 
     protected function beforeSave()
     {
-        if (!$this->exists)
+        if (!$this->exists) {
             return;
+        }
 
-        if ($this->is_default)
+        if ($this->is_default) {
             $this->makeDefault();
+        }
 
         $data = [];
         $fields = ($configFields = $this->getConfigFields()) ? $configFields : [];
         foreach ($fields as $name => $config) {
-            if (!array_key_exists($name, $this->attributes)) continue;
+            if (!array_key_exists($name, $this->attributes)) {
+                continue;
+            }
             $data[$name] = $this->attributes[$name];
         }
 
         foreach ($this->attributes as $name => $value) {
-            if (in_array($name, $this->fillable)) continue;
+            if (in_array($name, $this->fillable)) {
+                continue;
+            }
             unset($this->attributes[$name]);
         }
 
@@ -138,12 +145,13 @@ class Payments_model extends Model
      *
      * @param string $class Class name
      *
-     * @return boolean
+     * @return bool
      */
     public function applyGatewayClass($class = null)
     {
-        if (is_null($class))
+        if (is_null($class)) {
             $class = $this->class_name;
+        }
 
         if (!class_exists($class)) {
             $class = null;
@@ -190,7 +198,8 @@ class Payments_model extends Model
     {
         if (!$this->status) {
             throw new ValidationException(['status' => sprintf(
-                lang('admin::lang.alert_error_set_default'), $this->name
+                lang('admin::lang.alert_error_set_default'),
+                $this->name
             )]);
         }
 
@@ -235,7 +244,9 @@ class Payments_model extends Model
 
         $gatewayManager = PaymentGateways::instance();
         foreach ($gatewayManager->listGateways() as $code => $gateway) {
-            if (in_array($code, $payments)) continue;
+            if (in_array($code, $payments)) {
+                continue;
+            }
 
             $model = self::make([
                 'code' => $code,
@@ -257,13 +268,16 @@ class Payments_model extends Model
 
     /**
      * Finds and returns a customer payment profile for this payment method.
+     *
      * @param \Admin\Models\Customers_model $customer Specifies customer to find a profile for.
+     *
      * @return \Admin\Models\Payment_profiles_model|object Returns the payment profile object or NULL if the payment profile doesn't exist.
      */
     public function findPaymentProfile($customer)
     {
-        if (!$customer)
+        if (!$customer) {
             return null;
+        }
 
         $query = Payment_profiles_model::query();
 
@@ -275,7 +289,9 @@ class Payments_model extends Model
     /**
      * Initializes a new empty customer payment profile.
      * This method should be used by payment methods internally.
+     *
      * @param \Admin\Models\Customers_model $customer Specifies customer to initialize a profile for.
+     *
      * @return \Admin\Models\Payment_profiles_model Returns the payment profile object or NULL if the payment profile doesn't exist.
      */
     public function initPaymentProfile($customer)

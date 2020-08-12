@@ -30,8 +30,7 @@
                         >
                             <span class="text-success"><?= lang('admin::lang.text_remove') ?></span>
                         </button>
-                    <?php }
-                    else { ?>
+                    <?php } else { ?>
                         <button
                             class="btn btn-light"
                             type="button"

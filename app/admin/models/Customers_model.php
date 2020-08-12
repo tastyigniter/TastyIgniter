@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Exception;
@@ -7,8 +9,6 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Customers Model Class
- *
- * @package Admin
  */
 class Customers_model extends AuthUserModel
 {
@@ -96,14 +96,17 @@ class Customers_model extends AuthUserModel
 
     public function beforeLogin()
     {
-        if (!$this->group OR !$this->group->requiresApproval())
+        if (!$this->group OR !$this->group->requiresApproval()) {
             return;
+        }
 
-        if ($this->is_activated OR $this->status)
+        if ($this->is_activated OR $this->status) {
             return;
+        }
 
         throw new Exception(sprintf(
-            'Cannot login user "%s" until activated.', $this->email
+            'Cannot login user "%s" until activated.',
+            $this->email
         ));
     }
 
@@ -116,11 +119,13 @@ class Customers_model extends AuthUserModel
     {
         $this->restorePurgedValues();
 
-        if (!$this->exists)
+        if (!$this->exists) {
             return;
+        }
 
-        if (array_key_exists('addresses', $this->attributes))
+        if (array_key_exists('addresses', $this->attributes)) {
             $this->saveAddresses($this->attributes['addresses']);
+        }
     }
 
     //
@@ -162,8 +167,9 @@ class Customers_model extends AuthUserModel
      */
     public function resetPassword()
     {
-        if (!$this->enabled())
+        if (!$this->enabled()) {
             return FALSE;
+        }
 
         $this->reset_code = $resetCode = $this->generateResetCode();
         $this->reset_time = Carbon::now();
@@ -175,8 +181,9 @@ class Customers_model extends AuthUserModel
     public function saveAddresses($addresses)
     {
         $customerId = $this->getKey();
-        if (!is_numeric($customerId))
+        if (!is_numeric($customerId)) {
             return FALSE;
+        }
 
         $idsToKeep = [];
         foreach ($addresses as $address) {
@@ -209,7 +216,9 @@ class Customers_model extends AuthUserModel
             Orders_model::where('email', $customer_email)->update($update);
             if ($orders = Orders_model::where('email', $customer_email)->get()) {
                 foreach ($orders as $row) {
-                    if (empty($row['order_id'])) continue;
+                    if (empty($row['order_id'])) {
+                        continue;
+                    }
 
                     Coupons_history_model::where('order_id', $row['order_id'])->update($update);
 

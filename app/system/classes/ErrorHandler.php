@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use App;
 use ApplicationException;
@@ -28,6 +30,7 @@ class ErrorHandler extends BaseErrorHandler
     /**
      * Looks up an error page using the route "/error". If the route does not
      * exist, this function will use the error view found in the MAIN app.
+     *
      * @return mixed Error page contents.
      */
     public function handleCustomError()
@@ -36,8 +39,9 @@ class ErrorHandler extends BaseErrorHandler
             return FALSE;
         }
 
-        if (!App::hasDatabase())
+        if (!App::hasDatabase()) {
             return View::make('main::error');
+        }
 
         $theme = ThemeManager::instance()->getActiveTheme();
         $router = new Router($theme);

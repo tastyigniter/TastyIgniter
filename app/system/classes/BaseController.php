@@ -7,7 +7,6 @@ use Igniter\Flame\Traits\EventEmitter;
 
 /**
  * Base Controller Class
- * @package System
  */
 class BaseController extends Extendable
 {
@@ -82,11 +81,13 @@ class BaseController extends Extendable
 
     public function checkAction($action)
     {
-        if (!$methodExists = $this->methodExists($action))
+        if (!$methodExists = $this->methodExists($action)) {
             return FALSE;
+        }
 
-        if (in_array(strtolower($action), array_map('strtolower', $this->hiddenActions)))
+        if (in_array(strtolower($action), array_map('strtolower', $this->hiddenActions))) {
             return FALSE;
+        }
 
         if ($ownMethod = method_exists($this, $action)) {
             $methodInfo = new \ReflectionMethod($this, $action);

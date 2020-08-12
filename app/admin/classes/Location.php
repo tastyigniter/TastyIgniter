@@ -17,26 +17,31 @@ class Location extends Manager
 
     public function current()
     {
-        if (!is_null($this->model))
+        if (!is_null($this->model)) {
             return $this->model;
+        }
 
-        if (!$this->getAuth()->isLogged())
+        if (!$this->getAuth()->isLogged()) {
             return null;
+        }
 
         $model = null;
         if ($this->isSingleMode()) {
             $model = $this->getById(params('default_location_id'));
-        }
-        else {
+        } else {
             $id = $this->getSession('id');
-            if (!$id AND $this->hasRestriction())
+            if (!$id AND $this->hasRestriction()) {
                 $id = $this->getDefaultLocation();
+            }
 
-            if ($id) $model = $this->getById($id);
+            if ($id) {
+                $model = $this->getById($id);
+            }
         }
 
-        if ($model)
+        if ($model) {
             $this->setCurrent($model);
+        }
 
         return $this->model;
     }
@@ -48,16 +53,18 @@ class Location extends Manager
 
     public function hasAccess($location)
     {
-        if ($this->getAuth()->isSuperUser())
+        if ($this->getAuth()->isSuperUser()) {
             return TRUE;
+        }
 
         return $this->getAuth()->user()->hasLocationAccess($location);
     }
 
     public function hasRestriction()
     {
-        if ($this->getAuth()->isSuperUser())
+        if ($this->getAuth()->isSuperUser()) {
             return FALSE;
+        }
 
         return $this->getAuth()->locations()->isNotEmpty();
     }
@@ -82,7 +89,8 @@ class Location extends Manager
         $locations = null;
         if (!$this->getAuth()->isSuperUser()) {
             $locations = $this->getAuth()->locations()->where('location_status', TRUE)->pluck(
-                'location_name', 'location_id'
+                'location_name',
+                'location_id'
             );
         }
 
@@ -92,8 +100,9 @@ class Location extends Manager
 
     public function getDefaultLocation()
     {
-        if (!$staffLocation = $this->getAuth()->locations()->first())
+        if (!$staffLocation = $this->getAuth()->locations()->first()) {
             return null;
+        }
 
         return $staffLocation->getKey();
     }

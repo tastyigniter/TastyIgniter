@@ -1,12 +1,12 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 /**
  * List Columns definition
  * A translation of the list column configuration
  *
  * Adapted from october\backend\classes\ListColumn
- *
- * @package Admin
  */
 class ListColumn
 {
@@ -148,56 +148,72 @@ class ListColumn
      */
     protected function evalConfig($config)
     {
-        if (isset($config['width']))
+        if (isset($config['width'])) {
             $this->width = $config['width'];
+        }
 
-        if (isset($config['cssClass']))
+        if (isset($config['cssClass'])) {
             $this->cssClass = $config['cssClass'];
+        }
 
-        if (isset($config['searchable']))
+        if (isset($config['searchable'])) {
             $this->searchable = $config['searchable'];
+        }
 
-        if (isset($config['sortable']))
+        if (isset($config['sortable'])) {
             $this->sortable = $config['sortable'];
+        }
 
-        if (isset($config['editable']))
+        if (isset($config['editable'])) {
             $this->editable = $config['editable'];
+        }
 
-        if (isset($config['invisible']))
+        if (isset($config['invisible'])) {
             $this->invisible = $config['invisible'];
+        }
 
-        if (isset($config['valueFrom']))
+        if (isset($config['valueFrom'])) {
             $this->valueFrom = $config['valueFrom'];
+        }
 
-        if (isset($config['default']))
+        if (isset($config['default'])) {
             $this->defaults = $config['default'];
+        }
 
-        if (isset($config['select']))
+        if (isset($config['select'])) {
             $this->sqlSelect = $config['select'];
+        }
 
-        if (isset($config['relation']))
+        if (isset($config['relation'])) {
             $this->relation = $config['relation'];
+        }
 
-        if (isset($config['attributes']))
+        if (isset($config['attributes'])) {
             $this->attributes = $config['attributes'];
+        }
 
-        if (isset($config['format']))
+        if (isset($config['format'])) {
             $this->format = $config['format'];
+        }
 
-        if (isset($config['path']))
+        if (isset($config['path'])) {
             $this->path = $config['path'];
+        }
 
-        if (isset($config['formatter']))
+        if (isset($config['formatter'])) {
             $this->formatter = $config['formatter'];
+        }
 
-        if (isset($config['iconCssClass']))
+        if (isset($config['iconCssClass'])) {
             $this->iconCssClass = $config['iconCssClass'];
+        }
 
         return $config;
     }
 
     /**
      * Returns a HTML valid name for the column name.
+     *
      * @return string
      */
     public function getName()

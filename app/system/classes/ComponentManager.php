@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use SystemException;
 
@@ -42,6 +44,7 @@ class ComponentManager
 
     /**
      * Scans each extension and loads it components.
+     *
      * @return void
      */
     protected function loadComponents()
@@ -104,8 +107,9 @@ class ComponentManager
             $this->codeMap = [];
         }
 
-        if (is_string($component))
+        if (is_string($component)) {
             $component = ['code' => $component];
+        }
 
         $component = array_merge([
             'code' => null,
@@ -129,6 +133,7 @@ class ComponentManager
 
     /**
      * Returns a list of registered components.
+     *
      * @return array Array keys are codes, values are component meta array.
      */
     public function listComponents()
@@ -224,21 +229,26 @@ class ComponentManager
      * @param \Main\Template\Code\PageCode $page The page that spawned this component.
      * @param array $params The properties set by the Page or Layout.
      *
-     * @return \System\Classes\BaseComponent The component object.
      * @throws \SystemException
+     *
+     * @return \System\Classes\BaseComponent The component object.
      */
     public function makeComponent($name, $page = null, $params = [])
     {
         $className = $this->resolve($name);
-        if (!$className)
+        if (!$className) {
             throw new SystemException(sprintf(
-                'Component "%s" is not registered.', $name
+                'Component "%s" is not registered.',
+                $name
             ));
+        }
 
-        if (!class_exists($className))
+        if (!class_exists($className)) {
             throw new SystemException(sprintf(
-                'Component class "%s" not found.', $className
+                'Component class "%s" not found.',
+                $className
             ));
+        }
 
         // Create and register the new controller.
         $component = new $className($page, $params);
@@ -288,7 +298,7 @@ class ComponentManager
      * Returns a component property configuration as a JSON string or array.
      *
      * @param mixed $component The component object
-     * @param boolean $addAliasProperty Determines if the Alias property should be added to the result.
+     * @param bool $addAliasProperty Determines if the Alias property should be added to the result.
      *
      * @return array
      */
@@ -314,7 +324,9 @@ class ComponentManager
         foreach ($properties as $name => $params) {
             $propertyType = array_get($params, 'type', 'text');
 
-            if (!$this->checkComponentPropertyType($propertyType)) continue;
+            if (!$this->checkComponentPropertyType($propertyType)) {
+                continue;
+            }
 
             $property = [
                 'property' => $name,
@@ -329,7 +341,9 @@ class ComponentManager
             }
 
             foreach ($params as $paramName => $paramValue) {
-                if (isset($property[$paramName])) continue;
+                if (isset($property[$paramName])) {
+                    continue;
+                }
 
                 $property[$paramName] = $paramValue;
             }
@@ -337,14 +351,15 @@ class ComponentManager
             // Translate human values
             $translate = ['label', 'description', 'options', 'group', 'validationMessage'];
             foreach ($property as $propertyName => $propertyValue) {
-                if (!in_array($propertyName, $translate)) continue;
+                if (!in_array($propertyName, $translate)) {
+                    continue;
+                }
 
                 if (is_array($propertyValue)) {
                     array_walk($property[$propertyName], function (&$_propertyValue) {
                         $_propertyValue = lang($_propertyValue);
                     });
-                }
-                else {
+                } else {
                     $property[$propertyName] = lang($propertyValue);
                 }
             }

@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -10,8 +12,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Form Relationship
- *
- * @package Admin
  */
 class Connector extends BaseFormWidget
 {
@@ -122,8 +122,9 @@ class Connector extends BaseFormWidget
         $recordId = post('recordId');
         $model = $this->getRelationModel()->find($recordId);
 
-        if (!$model)
+        if (!$model) {
             throw new ApplicationException('Record not found');
+        }
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
@@ -160,13 +161,14 @@ class Connector extends BaseFormWidget
 
     public function onDeleteRecord()
     {
-        if (!strlen($recordId = post('recordId')))
+        if (!strlen($recordId = post('recordId'))) {
             return FALSE;
+        }
 
         $model = $this->getRelationModel()->find($recordId);
-        if (!$model)
+        if (!$model) {
             throw new ApplicationException(sprintf(lang('admin::lang.form.not_found'), $recordId));
-
+        }
         $model->delete();
 
         flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName).' deleted'))->now();
@@ -194,12 +196,14 @@ class Connector extends BaseFormWidget
 
     protected function processSaveValue($value)
     {
-        if (!$this->sortable)
+        if (!$this->sortable) {
             return FormField::NO_SAVE_DATA;
+        }
 
         $items = $this->formField->value;
-        if (!$items instanceof Collection)
+        if (!$items instanceof Collection) {
             return $items;
+        }
 
         $sortedIndexes = (array)post($this->sortableInputName);
         $sortedIndexes = array_flip($sortedIndexes);

@@ -22,11 +22,12 @@ trait RuleInjector
      * validation.
      *
      * @param  bool $value
+     *
      * @return void
      */
     public function setInjectRuleParameters($value)
     {
-        $this->injectRuleParameters = (boolean)$value;
+        $this->injectRuleParameters = (bool)$value;
     }
 
     /**
@@ -39,6 +40,7 @@ trait RuleInjector
      * will work as expected.
      *
      * @param  array $rules
+     *
      * @return array
      */
     protected function injectParametersToRules(array $rules)
@@ -71,6 +73,7 @@ trait RuleInjector
      * exists, otherwise return false.
      *
      * @param  string $validationRule
+     *
      * @return mixed
      */
     protected function getRuleInjectorMethod($validationRule)
@@ -86,6 +89,7 @@ trait RuleInjector
      *
      * @param  array $parameters
      * @param  string $field
+     *
      * @return string
      */
     protected function prepareUniqueRule($parameters, $field)
@@ -135,6 +139,7 @@ trait RuleInjector
      *
      * @param  array $parameters
      * @param  string $field
+     *
      * @return string
      */
     protected function prepareUniqueWithRule($parameters, $field)

@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use BadMethodCallException;
 use Igniter\Flame\Pagic\TemplateCode;
@@ -11,7 +13,6 @@ use System\Traits\PropertyContainer;
 
 /**
  * Base Component Class
- * @package System
  */
 abstract class BaseComponent extends Extendable
 {
@@ -32,7 +33,7 @@ abstract class BaseComponent extends Extendable
     public $name;
 
     /**
-     * @var boolean Determines whether the component is hidden from the admin UI.
+     * @var bool Determines whether the component is hidden from the admin UI.
      */
     public $isHidden = FALSE;
 
@@ -114,7 +115,9 @@ abstract class BaseComponent extends Extendable
 
     /**
      * Renders a requested partial in context of this component,
+     *
      * @see \Main\Classes\MainController::renderPartial for usage.
+     *
      * @return mixed
      */
     public function renderPartial()
@@ -147,12 +150,12 @@ abstract class BaseComponent extends Extendable
 
     public function param($name, $default = null)
     {
-        if (is_null($segment = $this->controller->param($name, $default)))
+        if (is_null($segment = $this->controller->param($name, $default))) {
             $segment = input($name);
+        }
 
         return is_null($segment) ? $default : $segment;
     }
-
 
     //
     // Magic methods
@@ -170,8 +173,7 @@ abstract class BaseComponent extends Extendable
     {
         try {
             return parent::__call($method, $parameters);
-        }
-        catch (BadMethodCallException $ex) {
+        } catch (BadMethodCallException $ex) {
         }
 
         if (method_exists($this->controller, $method)) {

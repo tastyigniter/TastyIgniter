@@ -11,8 +11,7 @@
         <span class="extension-name font-weight-bold<?= (!$record->class) ? ' text-muted' : ''; ?>">
             <?php if (!$record->class) { ?>
                 <s><?= $record->title; ?></s>&nbsp;&nbsp;
-            <?php }
-            else { ?>
+            <?php } else { ?>
                 <?= $record->title; ?>
             <?php } ?>
         </span>

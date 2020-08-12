@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Validation;
@@ -6,8 +8,6 @@ use Model;
 
 /**
  * MenuOptions Model Class
- *
- * @package Admin
  */
 class Menu_item_options_model extends Model
 {
@@ -80,8 +80,9 @@ class Menu_item_options_model extends Model
 
     public function getOptionValueIdOptions()
     {
-        if (!empty(self::$optionValuesCollection[$this->option_id]))
+        if (!empty(self::$optionValuesCollection[$this->option_id])) {
             return self::$optionValuesCollection[$this->option_id];
+        }
 
         $result = $this->option_values()->dropdown('value');
 
@@ -98,8 +99,9 @@ class Menu_item_options_model extends Model
     {
         $this->restorePurgedValues();
 
-        if (array_key_exists('menu_option_values', $this->attributes))
+        if (array_key_exists('menu_option_values', $this->attributes)) {
             $this->addMenuOptionValues($this->attributes['menu_option_values']);
+        }
     }
 
     //
@@ -128,8 +130,9 @@ class Menu_item_options_model extends Model
     public function addMenuOptionValues(array $optionValues = [])
     {
         $menuOptionId = $this->getKey();
-        if (!is_numeric($menuOptionId))
+        if (!is_numeric($menuOptionId)) {
             return FALSE;
+        }
 
         $idsToKeep = [];
         foreach ($optionValues as $value) {

@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Widgets\Form;
 use AdminMenu;
@@ -99,8 +101,9 @@ class Languages extends \Admin\Classes\AdminController
 
     public function formExtendFields(Form $form, $fields)
     {
-        if ($form->getContext() !== 'edit')
+        if ($form->getContext() !== 'edit') {
             return;
+        }
 
         $fileField = $form->getField('_file');
         $searchField = $form->getField('_search');
@@ -112,8 +115,9 @@ class Languages extends \Admin\Classes\AdminController
         $stringFilterField->value = $this->getFilterValue('string_filter', 'all');
         $field->value = $this->getFilterValue('search');
 
-        if (is_null($this->localeFiles))
+        if (is_null($this->localeFiles)) {
             $this->localeFiles = LanguageManager::instance()->listLocaleFiles('en');
+        }
 
         $fileField->options = $this->prepareNamespaces();
         $field->options = post($field->getName()) ?: $this->prepareTranslations($form->model);
@@ -145,8 +149,7 @@ class Languages extends \Admin\Classes\AdminController
             if (!array_get($file, 'system', FALSE)
                 AND ($extension = $extensionManager->findExtension($file['namespace']))) {
                 $result[$name] = array_get($extension->extensionMeta(), 'name').' - '.$name;
-            }
-            else {
+            } else {
                 $result[$name] = ucfirst($file['namespace']).' - '.$name;
             }
         }

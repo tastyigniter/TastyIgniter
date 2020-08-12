@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Exception;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -11,7 +13,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Themes Model Class
- * @package System
  */
 class Themes_model extends Model
 {
@@ -70,11 +71,13 @@ class Themes_model extends Model
 
     public static function onboardingIsComplete()
     {
-        if (!$code = params('default_themes.main'))
+        if (!$code = params('default_themes.main')) {
             return FALSE;
+        }
 
-        if (!$model = self::where('code', $code)->first())
+        if (!$model = self::where('code', $code)->first()) {
             return FALSE;
+        }
 
         return !is_null($model->data);
     }
@@ -92,11 +95,12 @@ class Themes_model extends Model
             try {
                 $componentObj = $manager->makeComponent($code, null, $definition);
 
-                if ($componentObj->isHidden) continue;
+                if ($componentObj->isHidden) {
+                    continue;
+                }
 
                 $components[$code] = [$definition['name'], lang($definition['description'])];
-            }
-            catch (Exception $ex) {
+            } catch (Exception $ex) {
             }
         }
 
@@ -141,8 +145,7 @@ class Themes_model extends Model
     {
         if (!$this->isFillable($key)) {
             $this->fieldValues[$key] = $value;
-        }
-        else {
+        } else {
             parent::setAttribute($key, $value);
         }
     }
@@ -178,14 +181,16 @@ class Themes_model extends Model
 
     /**
      * Attach the theme object to this class
-     * @return boolean
+     *
+     * @return bool
      */
     public function applyThemeManager()
     {
         $code = $this->code;
 
-        if (!$code)
+        if (!$code) {
             return FALSE;
+        }
 
         $themeManager = ThemeManager::instance();
         if (!$themeClass = $themeManager->findTheme($code)) {
@@ -210,15 +215,17 @@ class Themes_model extends Model
 
     public function getFieldsConfig()
     {
-        if (!is_null($this->fieldConfig))
+        if (!is_null($this->fieldConfig)) {
             return $this->fieldConfig;
+        }
 
         $fields = [];
         $formConfig = $this->getTheme()->getFormConfig();
         foreach ($formConfig as $section => $item) {
             foreach (array_get($item, 'fields', []) as $name => $field) {
-                if (!isset($field['tab']))
+                if (!isset($field['tab'])) {
                     $field['tab'] = $item['title'];
+                }
 
                 $fields[$name] = $field;
             }
@@ -254,13 +261,16 @@ class Themes_model extends Model
         $installedThemes = [];
         $themeManager = ThemeManager::instance();
         foreach ($themeManager->paths() as $code => $path) {
-
-            if (!($themeObj = $themeManager->findTheme($code))) continue;
+            if (!($themeObj = $themeManager->findTheme($code))) {
+                continue;
+            }
 
             $installedThemes[] = $name = $themeObj->name ?? $code;
 
             // Only add themes whose meta code match their directory name
-            if ($code != $name) continue;
+            if ($code != $name) {
+                continue;
+            }
 
             $theme = self::firstOrNew(['code' => $name]);
             $theme->name = $themeObj->label ?? title_case($code);
@@ -285,8 +295,9 @@ class Themes_model extends Model
     {
         $installedThemes = self::select('status', 'code')->lists('status', 'code')->all();
 
-        if (!is_array($installedThemes))
+        if (!is_array($installedThemes)) {
             $installedThemes = [];
+        }
 
         $installedThemes = array_map(function ($status) {
             return (bool)$status;
@@ -305,8 +316,9 @@ class Themes_model extends Model
      */
     public static function activateTheme($code)
     {
-        if (empty($code) OR !$theme = self::whereCode($code)->first())
+        if (empty($code) OR !$theme = self::whereCode($code)->first()) {
             return FALSE;
+        }
 
         params()->set('default_themes.main', $theme->code);
         params()->save();
@@ -353,6 +365,7 @@ class Themes_model extends Model
      * Checks whether a code exists in the database or not
      *
      * @param string $uniqueCode
+     *
      * @return bool
      */
     protected static function themeCodeExists($uniqueCode)

@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use AdminMenu;
 use Igniter\Flame\Exception\ApplicationException;
@@ -47,8 +49,9 @@ class Orders extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        if ($this->action === 'assigned')
+        if ($this->action === 'assigned') {
             $this->requiredPermissions = null;
+        }
 
         AdminMenu::setContext('orders', 'sales');
     }
@@ -57,9 +60,9 @@ class Orders extends \Admin\Classes\AdminController
     {
         $model = $this->formFindModelObject($recordId);
 
-        if (!$model->hasInvoice())
+        if (!$model->hasInvoice()) {
             throw new ApplicationException('Invoice has not yet been generated');
-
+        }
         $this->vars['model'] = $model;
 
         $this->suppressLayout = TRUE;
@@ -67,13 +70,13 @@ class Orders extends \Admin\Classes\AdminController
 
     public function formExtendFieldsBefore($form)
     {
-        if (!array_key_exists('invoice_number', $form->tabs['fields']))
+        if (!array_key_exists('invoice_number', $form->tabs['fields'])) {
             return;
+        }
 
         if (!$form->model->hasInvoice()) {
             array_pull($form->tabs['fields']['invoice_number'], 'addonRight');
-        }
-        else {
+        } else {
             $form->tabs['fields']['invoice_number']['addonRight']['attributes']['href'] = admin_url('orders/invoice/'.$form->model->getKey());
         }
     }

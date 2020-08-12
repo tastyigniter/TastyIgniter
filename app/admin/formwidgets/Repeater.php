@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Illuminate\Database\Eloquent\Collection;
@@ -94,8 +96,9 @@ class Repeater extends BaseFormWidget
     public function getLoadValue()
     {
         $value = parent::getLoadValue();
-        if ($value instanceof Collection)
+        if ($value instanceof Collection) {
             $value = $value->toArray();
+        }
 
         if ($this->sortable) {
             $value = sort_array($value, $this->sortColumnName);
@@ -109,9 +112,6 @@ class Repeater extends BaseFormWidget
         return (array)$this->processSaveValue($value);
     }
 
-    /**
-     *
-     */
     public function loadAssets()
     {
         $this->addJs('vendor/sortablejs/Sortable.min.js', 'sortable-js');
@@ -138,13 +138,15 @@ class Repeater extends BaseFormWidget
 
     public function getVisibleColumns()
     {
-        if (!isset($this->itemDefinitions['fields']))
+        if (!isset($this->itemDefinitions['fields'])) {
             return [];
+        }
 
         $columns = [];
         foreach ($this->itemDefinitions['fields'] as $name => $field) {
-            if (isset($field['type']) AND $field['type'] == 'hidden')
+            if (isset($field['type']) AND $field['type'] == 'hidden') {
                 continue;
+            }
 
             $columns[$name] = $field['label'] ?? null;
         }
@@ -161,14 +163,17 @@ class Repeater extends BaseFormWidget
 
     protected function processSaveValue($value)
     {
-        if (!is_array($value) OR !$value) return $value;
+        if (!is_array($value) OR !$value) {
+            return $value;
+        }
 
         $sortedIndexes = (array)post($this->sortableInputName);
         $sortedIndexes = array_flip($sortedIndexes);
 
         foreach ($value as $index => &$data) {
-            if ($sortedIndexes AND $this->sortable)
+            if ($sortedIndexes AND $this->sortable) {
                 $data[$this->sortColumnName] = $sortedIndexes[$index];
+            }
 
             $items[$index] = $data;
         }
@@ -179,8 +184,9 @@ class Repeater extends BaseFormWidget
     protected function processItemDefinitions()
     {
         $form = $this->form;
-        if (!is_array($form))
+        if (!is_array($form)) {
             $form = $this->loadConfig($form, ['form'], 'form');
+        }
 
         $this->itemDefinitions = ['fields' => array_get($form, 'fields')];
     }
@@ -196,7 +202,9 @@ class Repeater extends BaseFormWidget
 
         $itemIndexes = post($this->sortableInputName, $loadedIndexes);
 
-        if (!count($itemIndexes)) return;
+        if (!count($itemIndexes)) {
+            return;
+        }
 
         foreach ($itemIndexes as $itemIndex) {
             $this->formWidgets[$itemIndex] = $this->makeItemFormWidget($itemIndex);

@@ -1,4 +1,6 @@
-<?php namespace Admin\Traits;
+<?php
+
+namespace Admin\Traits;
 
 use Admin\Classes\FormField;
 use Exception;
@@ -7,8 +9,6 @@ use Exception;
  * Widget Maker Trait Class
  *
  * Adapted from october\backend\traits\WidgetMaker.php
- *
- * @package Admin
  */
 trait WidgetMaker
 {
@@ -41,8 +41,9 @@ trait WidgetMaker
      * @param mixed $fieldConfig A field name, an array of config or a FormField object.
      * @param array $widgetConfig An array of config.
      *
-     * @return \Admin\Classes\BaseFormWidget The widget object
      * @throws \Exception
+     *
+     * @return \Admin\Classes\BaseFormWidget The widget object
      */
     public function makeFormWidget($class, $fieldConfig = [], $widgetConfig = [])
     {
@@ -64,8 +65,7 @@ trait WidgetMaker
                 array_get($fieldConfig, 'label')
             );
             $formField->displayAs('widget', $fieldConfig);
-        }
-        else {
+        } else {
             $formField = $fieldConfig;
         }
 

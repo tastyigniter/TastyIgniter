@@ -2,7 +2,9 @@
     <?php foreach ($navItems as $code => $menu) { ?>
         <?php
         // Don't display items filtered by user permisions
-        if (isset($menu['child']) AND empty($menu['child'])) continue;
+        if (isset($menu['child']) AND empty($menu['child'])) {
+            continue;
+        }
         $isActive = $this->isActiveNavItem($code);
         $hasChild = isset($menu['child']) AND count($menu['child']);
         ?>

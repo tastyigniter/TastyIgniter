@@ -17,7 +17,7 @@ class Table extends BaseWidget
     protected $columns = [];
 
     /**
-     * @var boolean Show data table header
+     * @var bool Show data table header
      */
     protected $showHeader = TRUE;
 
@@ -67,8 +67,7 @@ class Table extends BaseWidget
         if (Request::method() == 'post' AND $this->isClientDataSource()) {
             if (strpos($this->fieldName, '[') === FALSE) {
                 $requestDataField = $this->fieldName.'TableData';
-            }
-            else {
+            } else {
                 $requestDataField = $this->fieldName.'[TableData]';
             }
 
@@ -82,6 +81,7 @@ class Table extends BaseWidget
 
     /**
      * Returns the data source object.
+     *
      * @return \Admin\Widgets\Table\Source\DataSource
      */
     public function getDataSource()
@@ -117,7 +117,8 @@ class Table extends BaseWidget
 
         $isClientDataSource = $this->isClientDataSource();
         $this->vars['clientDataSourceClass'] = $isClientDataSource ? 'client' : 'server';
-        $this->vars['data'] = json_encode($isClientDataSource
+        $this->vars['data'] = json_encode(
+            $isClientDataSource
             ? $this->dataSource->getAllRecords() : []
         );
     }
@@ -137,8 +138,9 @@ class Table extends BaseWidget
         foreach ($this->columns as $key => $data) {
             $data['field'] = $key;
 
-            if (isset($data['title']))
+            if (isset($data['title'])) {
                 $data['title'] = lang($data['title']);
+            }
 
             $result[] = $data;
         }

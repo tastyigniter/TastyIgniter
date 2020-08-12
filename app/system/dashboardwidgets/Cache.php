@@ -1,4 +1,6 @@
-<?php namespace System\DashboardWidgets;
+<?php
+
+namespace System\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use Exception;
@@ -54,7 +56,6 @@ class Cache extends BaseDashboardWidget
         $totalCacheSize = 0;
         $cacheSizes = [];
         foreach (self::$caches as $cacheInfo) {
-
             $size = $this->folderSize(storage_path().'/'.$cacheInfo['path']);
 
             $cacheSizes[] = (object)[
@@ -75,10 +76,10 @@ class Cache extends BaseDashboardWidget
     public function onClearCache()
     {
         \Artisan::call('cache:clear');
+
         try {
             \Artisan::call('view:clear');
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             // ...
         }
 

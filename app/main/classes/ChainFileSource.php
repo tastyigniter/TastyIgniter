@@ -22,7 +22,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
     protected $pathCache = [];
 
     /**
-     * @var boolean Flag on whether the cache should respect refresh requests
+     * @var bool Flag on whether the cache should respect refresh requests
      */
     protected $allowCacheRefreshes = TRUE;
 
@@ -50,7 +50,8 @@ class ChainFileSource extends AbstractSource implements SourceInterface
     /**
      * Populate the local cache of paths available in each source
      *
-     * @param boolean $refresh Default false, set to true to force the cache to be rebuilt
+     * @param bool $refresh Default false, set to true to force the cache to be rebuilt
+     *
      * @return void
      */
     protected function populateCache($refresh = FALSE)
@@ -60,8 +61,9 @@ class ChainFileSource extends AbstractSource implements SourceInterface
             $cacheKey = $source->getPathsCacheKey();
 
             // Remove any existing cache data
-            if ($refresh AND $this->allowCacheRefreshes)
+            if ($refresh AND $this->allowCacheRefreshes) {
                 Cache::forget($cacheKey);
+            }
 
             // Load the cache
             $pathCache[] = Cache::rememberForever($cacheKey, function () use ($source) {
@@ -86,6 +88,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
      * Get the appropriate source for the provided path
      *
      * @param string $path
+     *
      * @return \Igniter\Flame\Pagic\Source\SourceInterface
      */
     protected function getSourceForPath(string $path)
@@ -111,6 +114,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
      * @param string $dirName
      * @param string $fileName
      * @param string $extension
+     *
      * @return string
      */
     protected function makeFilePath(string $dirName, string $fileName, string $extension)
@@ -133,8 +137,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
             $result = $this->getSourceForPath(
                 $this->makeFilePath($dirName, $fileName, $extension)
             )->select($dirName, $fileName, $extension);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             $result = null;
         }
 
@@ -212,8 +215,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
 
         if (!empty($source->select($dirName, $searchFileName, $searchExt))) {
             $result = $source->update($dirName, $fileName, $extension, $content, $oldFileName, $oldExtension);
-        }
-        else {
+        } else {
             $result = $source->insert($dirName, $fileName, $extension, $content);
         }
 

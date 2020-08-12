@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Admin\Models\Payments_model;
 use File;
@@ -9,8 +11,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Manages payment gateways
- *
- * @package Admin
  */
 class PaymentGateways
 {
@@ -45,6 +45,7 @@ class PaymentGateways
 
     /**
      * Returns a list of the payment gateway objects
+     *
      * @return \Admin\Classes\BasePaymentGateway[]
      */
     public function listGatewayObjects()
@@ -75,8 +76,9 @@ class PaymentGateways
 
         $result = [];
         foreach ($this->gateways as $gateway) {
-            if (!class_exists($gateway['class']))
+            if (!class_exists($gateway['class'])) {
                 continue;
+            }
 
             $gatewayObj = new $gateway['class'];
             $result[$gateway['code']] = array_merge($gateway, [
@@ -97,8 +99,9 @@ class PaymentGateways
         // Load extensions payment gateways
         $extensions = ExtensionManager::instance()->getExtensions();
         foreach ($extensions as $id => $extension) {
-            if (!method_exists($extension, 'registerPaymentGateways'))
+            if (!method_exists($extension, 'registerPaymentGateways')) {
                 continue;
+            }
 
             $paymentGateways = $extension->registerPaymentGateways();
             if (!is_array($paymentGateways)) {
@@ -118,8 +121,9 @@ class PaymentGateways
      */
     public function registerGateways($owner, array $classes)
     {
-        if (!$this->gateways)
+        if (!$this->gateways) {
             $this->gateways = [];
+        }
 
         foreach ($classes as $classPath => $paymentGateway) {
             $code = $paymentGateway['code'] ?? strtolower(basename($classPath));
@@ -164,8 +168,9 @@ class PaymentGateways
         foreach ($gateways as $gateway) {
             $points = $gateway->registerEntryPoints();
 
-            if (isset($points[$code]))
+            if (isset($points[$code])) {
                 return $gateway->{$points[$code]}($params);
+            }
         }
 
         return Response::make('Access Forbidden', '403');
@@ -178,6 +183,7 @@ class PaymentGateways
     /**
      * Loops over each payment type and ensures the editing theme has a payment form partial,
      * if the partial does not exist, it will create one.
+     *
      * @return void
      */
     public static function createPartials()
@@ -190,14 +196,16 @@ class PaymentGateways
         foreach ($paymentMethods as $paymentMethod) {
             $class = $paymentMethod->getGatewayClass();
 
-            if (!$class OR get_parent_class($class) != BasePaymentGateway::class)
+            if (!$class OR get_parent_class($class) != BasePaymentGateway::class) {
                 continue;
+            }
 
             $partialName = 'payregister/'.strtolower(class_basename($class));
             $partialPath = $theme->getPath().'/_partials/'.$partialName.'.php';
 
-            if (!File::isDirectory(dirname($partialPath)))
+            if (!File::isDirectory(dirname($partialPath))) {
                 File::makeDirectory(dirname($partialPath), null, TRUE);
+            }
 
             if (!array_key_exists($partialName, $partials)) {
                 $filePath = dirname(File::fromClass($class)).'/'.strtolower(class_basename($class)).'/payment_form.php';

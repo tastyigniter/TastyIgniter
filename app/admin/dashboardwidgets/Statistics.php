@@ -1,4 +1,6 @@
-<?php namespace Admin\DashboardWidgets;
+<?php
+
+namespace Admin\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use Admin\Models\Customers_model;
@@ -142,8 +144,9 @@ class Statistics extends BaseDashboardWidget
     {
         $count = 0;
         $contextMethod = 'getTotal'.studly_case($context).'Sum';
-        if (method_exists($this, $contextMethod))
+        if (method_exists($this, $contextMethod)) {
             $count = $this->$contextMethod($this->property('range'));
+        }
 
         return $count;
     }
@@ -152,14 +155,11 @@ class Statistics extends BaseDashboardWidget
     {
         if ($range === 'week') {
             $start = Carbon::now()->subWeek();
-        }
-        else if ($range === 'month') {
+        } elseif ($range === 'month') {
             $start = Carbon::now()->subMonth();
-        }
-        else if ($range === 'year') {
+        } elseif ($range === 'year') {
             $start = Carbon::now()->startOfYear();
-        }
-        else {
+        } else {
             $start = Carbon::now()->subDay();
         }
 
@@ -191,6 +191,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total amount of lost order sales
      *
      * @param $range
+     *
      * @return string
      */
     protected function getTotalLostSaleSum($range)
@@ -210,6 +211,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total amount of cash payment order sales
      *
      * @param $range
+     *
      * @return string
      */
     protected function getTotalCashPaymentSum($range)
@@ -229,6 +231,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total number of customers
      *
      * @param $range
+     *
      * @return int
      */
     protected function getTotalCustomerSum($range)
@@ -243,6 +246,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total number of orders placed
      *
      * @param $range
+     *
      * @return int
      */
     protected function getTotalOrderSum($range)
@@ -257,6 +261,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total number of completed orders
      *
      * @param $range
+     *
      * @return int
      */
     protected function getTotalCompletedOrderSum($range)
@@ -293,6 +298,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total number of collection orders
      *
      * @param $range
+     *
      * @return int
      */
     protected function getTotalCollectionOrderSum($range)
@@ -312,6 +318,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total number of reserved tables
      *
      * @param $range
+     *
      * @return int
      */
     protected function getTotalReservedTableSum($range)
@@ -330,6 +337,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total number of reserved table guests
      *
      * @param $range
+     *
      * @return int
      */
     protected function getTotalReservedGuestSum($range)
@@ -346,6 +354,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total number of reservations
      *
      * @param $range
+     *
      * @return int
      */
     protected function getTotalReservationSum($range)
@@ -362,6 +371,7 @@ class Statistics extends BaseDashboardWidget
      * Return the total number of completed reservations
      *
      * @param $range
+     *
      * @return int
      */
     protected function getTotalCompletedReservationSum($range)

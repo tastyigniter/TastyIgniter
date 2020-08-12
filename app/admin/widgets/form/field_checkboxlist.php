@@ -12,8 +12,12 @@ $inlineMode = (bool)$field->getConfig('inlineMode');
             <?php
             $index++;
             $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
-            if (!in_array($value, $checkedValues)) continue;
-            if (!is_array($option)) $option = [$option];
+            if (!in_array($value, $checkedValues)) {
+                continue;
+            }
+            if (!is_array($option)) {
+                $option = [$option];
+            }
             ?>
             <div class="custom-control custom-checkbox<?= $inlineMode ? ' custom-control-inline' : '' ?> mb-2">
                 <input
@@ -59,7 +63,9 @@ $inlineMode = (bool)$field->getConfig('inlineMode');
                     <?php
                     $index++;
                     $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
-                    if (is_string($option)) $option = [$option];
+                    if (is_string($option)) {
+                        $option = [$option];
+                    }
                     ?>
                     <div class="custom-control custom-checkbox<?= $inlineMode ? ' custom-control-inline' : '' ?> mb-2">
                         <input

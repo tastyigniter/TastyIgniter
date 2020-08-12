@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use App;
 use Assets;
@@ -22,8 +24,8 @@ use View;
  * /admin/(any)             `admin`, `location` or `system` app directory
  * /admin/acme/cod/(any)    `Acme.Cod` extension
  * /(any)                   `main` app directory
+ *
  * @see \Admin\Classes\AdminController|\Main\Classes\MainController  controller class
- * @package System
  */
 class Controller extends IlluminateController
 {
@@ -127,8 +129,7 @@ class Controller extends IlluminateController
             $cacheKey = $parts[0];
 
             return Assets::combineGetContents($cacheKey);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             $errorMessage = ErrorHandler::getDetailedMessage($ex);
 
             return '/* '.e($errorMessage).' */';
@@ -148,8 +149,9 @@ class Controller extends IlluminateController
      */
     protected function locateController($controller, $modules, $inPath)
     {
-        if (isset($this->requestedController))
+        if (isset($this->requestedController)) {
             return $this->requestedController;
+        }
 
         is_array($modules) OR $modules = [$modules];
 
@@ -158,12 +160,14 @@ class Controller extends IlluminateController
         foreach ($modules as $module => $namespace) {
             $controller = strtolower(str_replace(['\\', '_'], ['/', ''], $controller));
             $controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller));
-            if ($controllerFile AND !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller))
+            if ($controllerFile AND !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller)) {
                 include_once $controllerFile;
+            }
         }
 
-        if (!$controllerClass OR !class_exists($controllerClass))
+        if (!$controllerClass OR !class_exists($controllerClass)) {
             return $this->requestedController = null;
+        }
 
         $controllerObj = App::make($controllerClass);
 
@@ -213,8 +217,9 @@ class Controller extends IlluminateController
             self::$segments = array_slice($segments, 4);
 
             $extensionCode = sprintf('%s.%s', $author, $extension);
-            if (ExtensionManager::instance()->isDisabled($extensionCode))
+            if (ExtensionManager::instance()->isDisabled($extensionCode)) {
                 return;
+            }
 
             if ($controllerObj = $this->locateController(
                 $controller,

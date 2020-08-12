@@ -18,8 +18,9 @@ class LocationScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if (!$model->locationableScopeEnabled())
+        if (!$model->locationableScopeEnabled()) {
             return;
+        }
 
         $builder->whereHasLocation($model->locationableGetUserLocation());
     }

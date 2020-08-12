@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
 use AdminMenu;
@@ -134,7 +136,7 @@ class Themes extends \Admin\Classes\AdminController
             // so delete from database
             if (!$theme) {
                 Themes_model::deleteTheme($themeCode, TRUE);
-                flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
+                flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
 
                 return $this->redirectBack();
             }
@@ -144,8 +146,7 @@ class Themes extends \Admin\Classes\AdminController
             $this->vars['themeModel'] = $model;
             $this->vars['themeObj'] = $theme;
             $this->vars['themeData'] = $model->data;
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -228,12 +229,10 @@ class Themes extends \Admin\Classes\AdminController
         if ($fileAction == 'rename') {
             $manager->renameFile($fileName, $newFileName, $themeCode);
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Template file renamed '));
-        }
-        elseif ($fileAction == 'delete') {
+        } elseif ($fileAction == 'delete') {
             $manager->deleteFile($fileName, $themeCode);
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Template file deleted '));
-        }
-        else {
+        } else {
             $manager->newFile($newFileName, $themeCode);
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Template file created '));
         }
@@ -264,9 +263,8 @@ class Themes extends \Admin\Classes\AdminController
     public function delete_onDelete($context = null, $themeCode = null)
     {
         if (Themes_model::deleteTheme($themeCode, post('delete_data', 1) == 1)) {
-            flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
-        }
-        else {
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
+        } else {
             flash()->danger(lang('admin::lang.alert_error_try_again'));
         }
 
@@ -275,8 +273,9 @@ class Themes extends \Admin\Classes\AdminController
 
     public function listOverrideColumnValue($record, $column, $alias = null)
     {
-        if ($column->type != 'button' OR $column->columnName != 'default')
+        if ($column->type != 'button' OR $column->columnName != 'default') {
             return null;
+        }
 
         $attributes = $column->attributes;
 
@@ -309,11 +308,13 @@ class Themes extends \Admin\Classes\AdminController
         $file = $this->getTemplateValue('file');
         $formConfig['fields']['template']['default']['type'] = $type;
 
-        if (!empty($file))
+        if (!empty($file)) {
             $this->mergeTemplateConfigIntoFormConfig($formConfig, $type, $file);
+        }
 
-        if (Request::method() === 'GET')
+        if (Request::method() === 'GET') {
             $this->setTemplateValue('mTime', optional($formConfig['data']['fileSource'] ?? [])->mTime);
+        }
     }
 
     public function formFindModelObject($recordId)
@@ -365,11 +366,13 @@ class Themes extends \Admin\Classes\AdminController
 
     protected function buildAssetsBundle($model)
     {
-        if (!$model->getFieldsConfig())
+        if (!$model->getFieldsConfig()) {
             return;
+        }
 
-        if (!config('system.bundleThemeAssets', TRUE))
+        if (!config('system.bundleThemeAssets', TRUE)) {
             return;
+        }
 
         $loaded = FALSE;
         $theme = $model->getTheme();
@@ -385,8 +388,9 @@ class Themes extends \Admin\Classes\AdminController
             $loaded = TRUE;
         }
 
-        if (!$loaded)
+        if (!$loaded) {
             return;
+        }
 
         Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) {
             ThemeManager::applyAssetVariablesOnCombinerFilters(
@@ -403,8 +407,7 @@ class Themes extends \Admin\Classes\AdminController
             $output .= Artisan::output();
 
             Log::info($output);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             Log::error($ex);
             flash()->error('Building assets bundle error: '.$ex->getMessage())->important();
         }
@@ -449,8 +452,7 @@ class Themes extends \Admin\Classes\AdminController
                 'codeSection' => $template->getCode(),
                 'fileSource' => $template,
             ], $formConfig['data']);
-        }
-        catch (ApplicationException $e) {
+        } catch (ApplicationException $e) {
         }
     }
 }

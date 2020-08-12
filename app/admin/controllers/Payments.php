@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
 use Admin\Models\Payments_model;
@@ -67,8 +69,9 @@ class Payments extends \Admin\Classes\AdminController
      *
      * @param string $paymentCode
      *
-     * @return Model
      * @throws \Exception
+     *
+     * @return Model
      */
     public function formFindModelObject($paymentCode = null)
     {
@@ -83,9 +86,9 @@ class Payments extends \Admin\Classes\AdminController
         $this->formExtendQuery($query);
         $result = $query->whereCode($paymentCode)->first();
 
-        if (!$result)
+        if (!$result) {
             throw new Exception(sprintf(lang('admin::lang.form.not_found'), $paymentCode));
-
+        }
         $result = $this->formExtendModel($result) ?: $result;
 
         return $result;
@@ -106,8 +109,9 @@ class Payments extends \Admin\Classes\AdminController
 
     public function formExtendModel($model)
     {
-        if (!$model->exists)
+        if (!$model->exists) {
             $model->applyGatewayClass();
+        }
 
         return $model;
     }
@@ -128,9 +132,9 @@ class Payments extends \Admin\Classes\AdminController
 
     public function formBeforeCreate($model)
     {
-        if (!strlen($code = post('Payment.payment')))
+        if (!strlen($code = post('Payment.payment'))) {
             throw new ApplicationException('Invalid payment gateway code selected');
-
+        }
         $paymentGateway = PaymentGateways::instance()->findGateway($code);
 
         $model->class_name = $paymentGateway['class'];
@@ -148,8 +152,9 @@ class Payments extends \Admin\Classes\AdminController
             ['status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
 
-        if (isset($form->config['rules']))
+        if (isset($form->config['rules'])) {
             $rules = array_merge($rules, $form->config['rules']);
+        }
 
         return $this->validatePasses($form->getSaveData(), $rules);
     }

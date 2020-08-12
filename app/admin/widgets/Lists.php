@@ -76,6 +76,7 @@ class Lists extends BaseWidget
 
     /**
      * @var array Collection of all list columns used in this list.
+     *
      * @see ListColumn
      */
     protected $allColumns;
@@ -153,7 +154,8 @@ class Lists extends BaseWidget
             'defaultSort',
         ]);
 
-        $this->pageLimit = $this->getSession('page_limit',
+        $this->pageLimit = $this->getSession(
+            'page_limit',
             $this->pageLimit ?? 20
         );
 
@@ -279,8 +281,9 @@ class Lists extends BaseWidget
 
         // Prepare related eager loads (withs) and custom selects (joins)
         foreach ($this->getVisibleColumns() as $column) {
-            if (!$this->isColumnRelated($column) OR (!isset($column->sqlSelect) AND !isset($column->valueFrom)))
+            if (!$this->isColumnRelated($column) OR (!isset($column->sqlSelect) AND !isset($column->valueFrom))) {
                 continue;
+            }
 
             $withs[] = $column->relation;
 
@@ -288,8 +291,9 @@ class Lists extends BaseWidget
         }
 
         // Add eager loads to the query
-        if ($withs)
+        if ($withs) {
             $query->with(array_unique($withs));
+        }
 
         // Apply search term
         $query->where(function ($innerQuery) use ($primarySearchable, $relationSearchable, $joins) {
@@ -336,12 +340,12 @@ class Lists extends BaseWidget
                 $countQuery = $relationObj->getRelationExistenceCountQuery($relationObj->getRelated()->newQueryWithoutScopes(), $query);
 
                 $joinSql = $this->isColumnRelated($column, TRUE)
-                    ? Db::raw("group_concat(".$sqlSelect." separator ', ')")
+                    ? Db::raw('group_concat('.$sqlSelect." separator ', ')")
                     : Db::raw($sqlSelect);
 
                 $joinSql = $countQuery->select($joinSql)->toRawSql();
 
-                $selects[] = Db::raw("(".$joinSql.") as ".$alias);
+                $selects[] = Db::raw('('.$joinSql.') as '.$alias);
             } // Primary column
             else {
                 $sqlSelect = $this->parseTableName($column->sqlSelect, $primaryTable);
@@ -376,19 +380,20 @@ class Lists extends BaseWidget
 
     /**
      * Returns all the records from the supplied model, after filtering.
+     *
      * @return Collection
      */
     protected function getRecords()
     {
         $model = $this->prepareModel();
 
-        if (!$this->currentPageNumber)
+        if (!$this->currentPageNumber) {
             $this->currentPageNumber = input('page');
+        }
 
         if ($this->showPagination) {
             $records = $model->paginate($this->pageLimit, $this->currentPageNumber);
-        }
-        else {
+        } else {
             $records = $model->get();
         }
 
@@ -397,6 +402,7 @@ class Lists extends BaseWidget
 
     /**
      * Get all the registered columns for the instance.
+     *
      * @return array
      */
     public function getColumns()
@@ -432,7 +438,8 @@ class Lists extends BaseWidget
             $invalidColumns = array_diff($this->columnOverride, array_keys($definitions));
             if (!count($definitions)) {
                 throw new Exception(sprintf(
-                    lang('admin::lang.list.missing_column'), implode(',', $invalidColumns)
+                    lang('admin::lang.list.missing_column'),
+                    implode(',', $invalidColumns)
                 ));
             }
 
@@ -441,10 +448,11 @@ class Lists extends BaseWidget
                 $definitions[$columnName]->invisible = FALSE;
                 $columns[$columnName] = $definitions[$columnName];
             }
-        }
-        else {
+        } else {
             foreach ($definitions as $columnName => $column) {
-                if ($column->invisible) continue;
+                if ($column->invisible) {
+                    continue;
+                }
 
                 $columns[$columnName] = $definitions[$columnName];
             }
@@ -509,7 +517,9 @@ class Lists extends BaseWidget
             }
 
             // Check that the filter scope matches the active location context
-            if ($this->isLocationAware($config)) continue;
+            if ($this->isLocationAware($config)) {
+                continue;
+            }
 
             $this->allColumns[$columnName] = $this->makeListColumn($columnName, $config);
         }
@@ -534,11 +544,9 @@ class Lists extends BaseWidget
     {
         if (is_string($config)) {
             $label = $config;
-        }
-        elseif (isset($config['label'])) {
+        } elseif (isset($config['label'])) {
             $label = $config['label'];
-        }
-        else {
+        } else {
             $label = studly_case($name);
         }
 
@@ -547,8 +555,7 @@ class Lists extends BaseWidget
             $config['relation'] = array_shift($_name);
             $config['valueFrom'] = array_shift($_name);
             $config['searchable'] = FALSE;
-        }
-        elseif (strpos($name, '[') !== FALSE AND strpos($name, ']') !== FALSE) {
+        } elseif (strpos($name, '[') !== FALSE AND strpos($name, ']') !== FALSE) {
             $config['valueFrom'] = $name;
             $config['sortable'] = FALSE;
             $config['searchable'] = FALSE;
@@ -584,14 +591,17 @@ class Lists extends BaseWidget
     {
         $columns = $this->visibleColumns ?: $this->getVisibleColumns();
         $total = count($columns);
-        if ($this->showCheckboxes)
+        if ($this->showCheckboxes) {
             $total++;
+        }
 
-        if ($this->showSetup)
+        if ($this->showSetup) {
             $total++;
+        }
 
-        if ($this->showDragHandle)
+        if ($this->showDragHandle) {
             $total++;
+        }
 
         return $total;
     }
@@ -635,8 +645,9 @@ class Lists extends BaseWidget
         }
 
         // Apply default value.
-        if ($value === '' OR $value === null)
+        if ($value === '' OR $value === null) {
             $value = $column->defaults;
+        }
 
         // Extensibility
         if ($response = $this->fireSystemEvent('admin.list.overrideColumnValue', [$record, $column, $value], TRUE)) {
@@ -659,19 +670,20 @@ class Lists extends BaseWidget
             $result = $response;
         }
 
-        if (!is_array($result))
+        if (!is_array($result)) {
             $result = '';
+        }
 
-        if (isset($result['title']))
+        if (isset($result['title'])) {
             $result['title'] = e(lang($result['title']));
+        }
 
         $result['class'] = 'btn-action'.(isset($result['class']) ? ' '.$result['class'] : null);
 
         foreach ($result as $key => $value) {
             if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
                 $result[$key] = $this->controller->pageUrl($value);
-            }
-            elseif (is_string($value)) {
+            } elseif (is_string($value)) {
                 $result[$key] = lang($value);
             }
         }
@@ -689,25 +701,20 @@ class Lists extends BaseWidget
 
             if (!array_key_exists($columnName, $record->getRelations())) {
                 $value = null;
-            }
-            elseif ($this->isColumnRelated($column, TRUE)) {
+            } elseif ($this->isColumnRelated($column, TRUE)) {
                 $value = implode(', ', $record->{$columnName}->pluck($column->valueFrom)->all());
-            }
-            elseif ($this->isColumnRelated($column) OR $this->isColumnPivot($column)) {
+            } elseif ($this->isColumnRelated($column) OR $this->isColumnPivot($column)) {
                 $value = $record->{$columnName} ? $record->{$columnName}->{$column->valueFrom} : null;
-            }
-            else {
+            } else {
                 $value = null;
             }
-        }
-        elseif ($column->valueFrom) {
+        } elseif ($column->valueFrom) {
             $keyParts = name_to_array($column->valueFrom);
             $value = $record;
             foreach ($keyParts as $key) {
                 $value = $value->{$key};
             }
-        }
-        else {
+        } else {
             $value = $record->{$columnName};
         }
 
@@ -873,7 +880,8 @@ class Lists extends BaseWidget
 
         if (!$value instanceof Carbon) {
             throw new ApplicationException(sprintf(
-                lang('admin::lang.list.invalid_column_datetime'), $column->columnName
+                lang('admin::lang.list.invalid_column_datetime'),
+                $column->columnName
             ));
         }
 
@@ -922,6 +930,7 @@ class Lists extends BaseWidget
 
     /**
      * Returns a collection of columns which can be searched.
+     *
      * @return array
      */
     protected function getSearchableColumns()
@@ -952,8 +961,7 @@ class Lists extends BaseWidget
             $query->$searchMethod(function ($q) use ($term, $scopeMethod) {
                 $q->$scopeMethod($term);
             });
-        }
-        else {
+        } else {
             $searchMethod = $boolean == 'and' ? 'search' : 'orSearch';
             $query->$searchMethod($term, $columns, $this->searchMode);
         }
@@ -974,8 +982,7 @@ class Lists extends BaseWidget
 
             if ($column != $sortOptions[0] OR strtolower($sortOptions[1]) == 'asc') {
                 $this->sortDirection = $sortOptions[1] = 'desc';
-            }
-            else {
+            } else {
                 $this->sortDirection = $sortOptions[1] = 'asc';
             }
 
@@ -995,11 +1002,13 @@ class Lists extends BaseWidget
      */
     protected function getSortColumn()
     {
-        if (!$this->isSortable())
+        if (!$this->isSortable()) {
             return FALSE;
+        }
 
-        if ($this->sortColumn !== null)
+        if ($this->sortColumn !== null) {
             return $this->sortColumn;
+        }
 
         // User preference
         if ($this->showSorting AND ($sortOptions = $this->getSession('sort'))) {
@@ -1010,8 +1019,7 @@ class Lists extends BaseWidget
             if (is_string($this->defaultSort)) {
                 $this->sortColumn = $this->defaultSort;
                 $this->sortDirection = 'desc';
-            }
-            elseif (is_array($this->defaultSort) AND isset($this->defaultSort[0])) {
+            } elseif (is_array($this->defaultSort) AND isset($this->defaultSort[0])) {
                 $this->sortColumn = $this->defaultSort[0];
                 $this->sortDirection = (isset($this->defaultSort[1])) ? $this->defaultSort[1] : 'desc';
             }
@@ -1040,9 +1048,8 @@ class Lists extends BaseWidget
     protected function isSortable($column = null)
     {
         if ($column === null) {
-            return (count($this->getSortableColumns()) > 0);
-        }
-        else {
+            return count($this->getSortableColumns()) > 0;
+        } else {
             return array_key_exists($column, $this->getSortableColumns());
         }
     }
@@ -1144,10 +1151,11 @@ class Lists extends BaseWidget
      * Check if column refers to a relation of the model
      *
      * @param ListColumn $column List column object
-     * @param boolean $multi If set, returns true only if the relation is a "multiple relation type"
+     * @param bool $multi If set, returns true only if the relation is a "multiple relation type"
+     *
+     * @throws \Exception
      *
      * @return bool
-     * @throws \Exception
      */
     protected function isColumnRelated($column, $multi = FALSE)
     {
@@ -1181,7 +1189,7 @@ class Lists extends BaseWidget
      *
      * @param ListColumn $column List column object
      *
-     * @return boolean
+     * @return bool
      */
     protected function isColumnPivot($column)
     {

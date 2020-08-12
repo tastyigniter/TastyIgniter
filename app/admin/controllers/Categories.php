@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
 use Admin\Models\Categories_model;
@@ -57,7 +59,8 @@ class Categories extends AdminController
 
     public function formBeforeSave($model)
     {
-        if (Categories_model::isBroken())
+        if (Categories_model::isBroken()) {
             Categories_model::fixTree();
+        }
     }
 }

@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -12,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
  * Renders a field prepopulated with a belongsTo and belongsToHasMany relation.
  *
  * Adapted from october\backend\formwidgets\Relation
- *
- * @package Admin
  */
 class Relation extends BaseFormWidget
 {
@@ -118,7 +118,6 @@ class Relation extends BaseFormWidget
     protected function makeFormField()
     {
         return $this->clonedFormField = RelationBase::noConstraints(function () {
-
             $field = clone $this->formField;
             $relationObject = $this->getRelationObject();
             $query = $relationObject->newQuery();
@@ -130,8 +129,7 @@ class Relation extends BaseFormWidget
             $field->type = 'selectlist';
             if (in_array($relationType, ['belongsToMany', 'morphToMany', 'morphedByMany', 'hasMany'])) {
                 $field->config['mode'] = 'checkbox';
-            }
-            elseif (in_array($relationType, ['belongsTo', 'hasOne'])) {
+            } elseif (in_array($relationType, ['belongsTo', 'hasOne'])) {
                 $field->config['mode'] = 'radio';
             }
 
@@ -155,8 +153,7 @@ class Relation extends BaseFormWidget
                 $nameFrom = 'selection';
                 $selectColumn = $this->relatedModel->getKeyName();
                 $result = $query->select($selectColumn, DB::raw($this->sqlSelect.' AS '.$nameFrom));
-            }
-            else {
+            } else {
                 $nameFrom = $this->nameFrom;
                 $result = $query->getQuery()->get();
             }
@@ -169,8 +166,9 @@ class Relation extends BaseFormWidget
 
     protected function processFieldValue($value, $model)
     {
-        if ($value instanceof Collection)
+        if ($value instanceof Collection) {
             $value = $value->pluck($model->getKeyName())->toArray();
+        }
 
         return $value;
     }
@@ -178,15 +176,18 @@ class Relation extends BaseFormWidget
     /**
      * Returns the value as a relation object from the model,
      * supports nesting via HTML array.
-     * @return \Admin\FormWidgets\Relation
+     *
      * @throws \Exception
+     *
+     * @return \Admin\FormWidgets\Relation
      */
     protected function getRelationObject()
     {
         list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new Exception(sprintf(
+                "Model '%s' does not contain a definition for '%s'.",
                 get_class($this->model),
                 $this->valueFrom
             ));

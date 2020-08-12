@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Html;
 use Illuminate\Database\Eloquent\Model;
@@ -8,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  * A translation of the form field configuration
  *
  * Adapted from october\backend\classes\FormField
- *
- * @package Admin
  */
 class FormField
 {
@@ -230,16 +230,14 @@ class FormField
         if ($value === null) {
             if (is_array($this->options)) {
                 return $this->options;
-            }
-            elseif (is_callable($this->options)) {
+            } elseif (is_callable($this->options)) {
                 $callable = $this->options;
 
                 return $callable();
             }
 
             return [];
-        }
-        else {
+        } else {
             $this->options = $value;
         }
 
@@ -342,8 +340,7 @@ class FormField
 
         if (isset($config['valueFrom'])) {
             $this->valueFrom = $config['valueFrom'];
-        }
-        else {
+        } else {
             $this->valueFrom = $this->fieldName;
         }
 
@@ -423,7 +420,6 @@ class FormField
      * Returns the attributes for this field at a given position.
      *
      * @param string $position
-     *
      * @param bool $htmlBuild
      *
      * @return string
@@ -489,8 +485,7 @@ class FormField
 
         if ($this->arrayName) {
             $fullTriggerField = $this->arrayName.'['.implode('][', name_to_array($triggerField)).']';
-        }
-        else {
+        } else {
             $fullTriggerField = $triggerField;
         }
 
@@ -529,8 +524,7 @@ class FormField
 
         if ($this->arrayName) {
             $fullPresetField = $this->arrayName.'['.implode('][', name_to_array($presetField)).']';
-        }
-        else {
+        } else {
             $fullPresetField = $presetField;
         }
 
@@ -564,8 +558,7 @@ class FormField
 
         if ($arrayName) {
             return $arrayName.'['.implode('][', name_to_array($this->fieldName)).']';
-        }
-        else {
+        } else {
             return $this->fieldName;
         }
     }
@@ -692,22 +685,18 @@ class FormField
         // To support relations only the last field should return th
         // relation value, all others will look up the relation object as normal.
         foreach ($keyParts as $key) {
-
             if ($result instanceof Model AND $result->hasRelation($key)) {
                 if ($key == $lastField) {
                     $result = $result->getRelationValue($key) ?: $default;
-                }
-                else {
+                } else {
                     $result = $result->{$key};
                 }
-            }
-            elseif (is_array($result)) {
+            } elseif (is_array($result)) {
                 if (!array_key_exists($key, $result)) {
                     return $default;
                 }
                 $result = $result[$key];
-            }
-            else {
+            } else {
                 if (!isset($result->{$key})) {
                     return $default;
                 }

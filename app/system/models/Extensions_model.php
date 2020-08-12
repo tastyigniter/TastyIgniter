@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use File;
 use Igniter\Flame\Exception\ApplicationException;
@@ -9,7 +11,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Extensions Model Class
- * @package System
  */
 class Extensions_model extends Model
 {
@@ -45,14 +46,16 @@ class Extensions_model extends Model
     public static function onboardingIsComplete()
     {
         $activeTheme = ThemeManager::instance()->getActiveTheme();
-        if (!$activeTheme)
+        if (!$activeTheme) {
             return FALSE;
+        }
 
         $requiredExtensions = (array)$activeTheme->requires;
         foreach ($requiredExtensions as $name => $constraint) {
             $extension = ExtensionManager::instance()->findExtension($name);
-            if (!$extension OR $extension->disabled)
+            if (!$extension OR $extension->disabled) {
                 return FALSE;
+            }
         }
 
         return TRUE;
@@ -85,16 +88,17 @@ class Extensions_model extends Model
     public function getIconAttribute()
     {
         $icon = array_get($this->meta, 'icon', []);
-        if (is_string($icon))
+        if (is_string($icon)) {
             $icon = ['class' => 'fa '.$icon];
+        }
 
         if (strlen($image = array_get($icon, 'image'))) {
             $file = extension_path(str_replace('.', '/', $this->name).'/'.$image);
             if (file_exists($file)) {
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
-                if (!array_key_exists($extension, self::ICON_MIMETYPES))
+                if (!array_key_exists($extension, self::ICON_MIMETYPES)) {
                     throw new ApplicationException('Invalid extension icon type');
-
+                }
                 $mimeType = self::ICON_MIMETYPES[$extension];
                 $data = base64_encode(file_get_contents($file));
                 $icon['backgroundImage'] = [$mimeType, $data];
@@ -113,8 +117,9 @@ class Extensions_model extends Model
     public function getReadmeAttribute($value)
     {
         $extensionPath = ExtensionManager::instance()->path($this->name);
-        if (!$readmePath = File::existsInsensitive($extensionPath.'readme.md'))
+        if (!$readmePath = File::existsInsensitive($extensionPath.'readme.md')) {
             return $value;
+        }
 
         return (new Markdown)->parse(File::get($readmePath));
     }
@@ -134,14 +139,16 @@ class Extensions_model extends Model
 
     /**
      * Sets the extension class as a property of this class
-     * @return boolean
+     *
+     * @return bool
      */
     public function applyExtensionClass()
     {
         $code = $this->name;
 
-        if (!$code)
+        if (!$code) {
             return FALSE;
+        }
 
         if (!$extensionClass = ExtensionManager::instance()->findExtension($code)) {
             return FALSE;
@@ -161,7 +168,9 @@ class Extensions_model extends Model
         foreach ($extensionManager->namespaces() as $namespace => $path) {
             $code = $extensionManager->getIdentifier($namespace);
 
-            if (!($extension = $extensionManager->findExtension($code))) continue;
+            if (!($extension = $extensionManager->findExtension($code))) {
+                continue;
+            }
 
             $model = self::firstOrNew(['name' => $code]);
 

@@ -4,7 +4,6 @@ namespace System\Classes;
 
 /**
  * ComposerManager Class
- * @package System
  */
 class ComposerManager
 {
@@ -43,7 +42,9 @@ class ComposerManager
         if (file_exists($file = $dir.'/autoload_namespaces.php')) {
             $map = require $file;
             foreach ($map as $namespace => $path) {
-                if (isset($this->namespacePool[$namespace])) continue;
+                if (isset($this->namespacePool[$namespace])) {
+                    continue;
+                }
                 $this->loader->set($namespace, $path);
                 $this->namespacePool[$namespace] = TRUE;
             }
@@ -52,7 +53,9 @@ class ComposerManager
         if (file_exists($file = $dir.'/autoload_psr4.php')) {
             $map = require $file;
             foreach ($map as $namespace => $path) {
-                if (isset($this->psr4Pool[$namespace])) continue;
+                if (isset($this->psr4Pool[$namespace])) {
+                    continue;
+                }
                 $this->loader->setPsr4($namespace, $path);
                 $this->psr4Pool[$namespace] = TRUE;
             }
@@ -71,7 +74,9 @@ class ComposerManager
             $includeFiles = require $file;
             foreach ($includeFiles as $includeFile) {
                 $relativeFile = $this->stripVendorDir($includeFile, $vendorPath);
-                if (isset($this->includeFilesPool[$relativeFile])) continue;
+                if (isset($this->includeFilesPool[$relativeFile])) {
+                    continue;
+                }
                 require $includeFile;
                 $this->includeFilesPool[$relativeFile] = TRUE;
             }

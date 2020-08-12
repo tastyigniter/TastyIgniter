@@ -1,11 +1,12 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\Currency\Models\Currency;
 use Igniter\Flame\Exception\ValidationException;
 
 /**
  * Currencies Model Class
- * @package System
  */
 class Currencies_model extends Currency
 {
@@ -50,7 +51,8 @@ class Currencies_model extends Currency
     {
         if (!$this->currency_status) {
             throw new ValidationException(['currency_status' => sprintf(
-                lang('admin::lang.alert_error_set_default'), $this->currency_name
+                lang('admin::lang.alert_error_set_default'),
+                $this->currency_name
             )]);
         }
 
@@ -60,6 +62,7 @@ class Currencies_model extends Currency
 
     /**
      * Returns the default currency defined.
+     *
      * @return self
      */
     public static function getDefault()

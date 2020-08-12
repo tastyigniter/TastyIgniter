@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Carbon\Carbon;
 use DateTime;
@@ -14,7 +16,6 @@ use System\Traits\ConfigMaker;
 
 /**
  * Settings Model Class
- * @package System
  */
 class Settings_model extends Model
 {
@@ -106,8 +107,9 @@ class Settings_model extends Model
 
     public static function onboardingIsComplete()
     {
-        if (!Session::has('settings.errors'))
+        if (!Session::has('settings.errors')) {
             return FALSE;
+        }
 
         return count(array_filter((array)Session::get('settings.errors'))) === 0;
     }
@@ -118,8 +120,7 @@ class Settings_model extends Model
             $updates = UpdateManager::instance()->requestUpdateList();
 
             return count(array_get($updates, 'items', []));
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
         }
     }
 
@@ -141,16 +142,18 @@ class Settings_model extends Model
         }
 
         $settingItem = $this->getSettingItem('core.'.$code);
-        if (!is_array($settingItem->form))
+        if (!is_array($settingItem->form)) {
             $settingItem->form = array_get($this->makeConfig($settingItem->form, ['form']), 'form', []);
+        }
 
         return $this->fieldConfig = $settingItem->form ?? [];
     }
 
     public function getFieldValues()
     {
-        if (is_array($this->fieldValues))
+        if (is_array($this->fieldValues)) {
             return $this->fieldValues;
+        }
 
         $values = [];
         $records = $this->newQuery()->where('sort', 'config')->get();
@@ -168,16 +171,18 @@ class Settings_model extends Model
 
     public function getSettingItem($code)
     {
-        if (!$this->allItems)
+        if (!$this->allItems) {
             $this->loadSettingItems();
+        }
 
         return $this->allItems[$code] ?? null;
     }
 
     public function listSettingItems()
     {
-        if (!$this->items)
+        if (!$this->items) {
             $this->loadSettingItems();
+        }
 
         return $this->items;
     }
@@ -242,11 +247,13 @@ class Settings_model extends Model
                 'owner' => $owner,
             ]));
 
-            if (!isset($item['url']))
-                $item['url'] = admin_url($owner == 'core'
+            if (!isset($item['url'])) {
+                $item['url'] = admin_url(
+                    $owner == 'core'
                     ? 'settings/edit/'.$code
                     : 'extensions/edit/'.str_replace('.', '/', $owner).'/'.$code
                 );
+            }
 
             $this->items[] = (object)$item;
         }

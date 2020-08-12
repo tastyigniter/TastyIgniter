@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Classes\UserState;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -6,7 +8,6 @@ use Model;
 
 /**
  * Staffs Model Class
- * @package Admin
  */
 class Staffs_model extends Model
 {
@@ -83,6 +84,7 @@ class Staffs_model extends Model
 
     /**
      * Scope a query to only include enabled staff
+     *
      * @return $this
      */
     public function scopeIsEnabled($query)
@@ -105,14 +107,17 @@ class Staffs_model extends Model
     {
         $this->restorePurgedValues();
 
-        if (array_key_exists('user', $this->attributes))
+        if (array_key_exists('user', $this->attributes)) {
             $this->addStaffUser($this->attributes['user']);
+        }
 
-        if (array_key_exists('groups', $this->attributes))
+        if (array_key_exists('groups', $this->attributes)) {
             $this->addStaffGroups($this->attributes['groups']);
+        }
 
-        if (array_key_exists('locations', $this->attributes))
+        if (array_key_exists('locations', $this->attributes)) {
             $this->addStaffLocations($this->attributes['locations']);
+        }
     }
 
     //
@@ -121,6 +126,7 @@ class Staffs_model extends Model
 
     /**
      * Return the dates of all staff
+     *
      * @return array
      */
     public function getStaffDates()
@@ -132,14 +138,17 @@ class Staffs_model extends Model
     {
         $userModel = $this->user()->firstOrNew(['staff_id' => $this->getKey()]);
 
-        if (isset($user['super_user']))
+        if (isset($user['super_user'])) {
             $userModel->super_user = $user['super_user'];
+        }
 
-        if (isset($user['username']))
+        if (isset($user['username'])) {
             $userModel->username = $user['username'];
+        }
 
-        if (isset($user['password']))
+        if (isset($user['password'])) {
             $userModel->password = $user['password'];
+        }
 
         if (!$userModel->exists) {
             $userModel->is_activated = TRUE;

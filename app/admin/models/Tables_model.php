@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Traits\Validation;
@@ -6,8 +8,6 @@ use Model;
 
 /**
  * Tables Model Class
- *
- * @package Admin
  */
 class Tables_model extends Model
 {

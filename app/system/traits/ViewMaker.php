@@ -42,7 +42,7 @@ trait ViewMaker
      */
     public $suppressLayout = FALSE;
 
-    protected $viewFileExtension = ".php";
+    protected $viewFileExtension = '.php';
 
     public function getViewPath($view, $viewPath = null)
     {
@@ -56,8 +56,9 @@ trait ViewMaker
             $viewPath = $this->viewPath;
         }
 
-        if (!is_array($viewPath))
+        if (!is_array($viewPath)) {
             $viewPath = [$viewPath];
+        }
 
         foreach ($viewPath as $path) {
             $_view = File::symbolizePath($path).'/'.$view;
@@ -95,8 +96,9 @@ trait ViewMaker
      * @param array $vars Parameter variables to pass to the view.
      * @param bool $throwException Throw an exception if the layout is not found
      *
-     * @return mixed The layout contents, or false.
      * @throws \SystemException
+     *
+     * @return mixed The layout contents, or false.
      */
     public function makeLayout($name = null, $vars = [], $throwException = TRUE)
     {
@@ -108,8 +110,9 @@ trait ViewMaker
         $layoutPath = $this->getViewPath($layout.$this->viewFileExtension, $this->layoutPath);
 
         if (!File::exists($layoutPath)) {
-            if ($throwException)
+            if ($throwException) {
                 throw new SystemException(Lang::get('system::lang.not_found.layout', ['name' => $layoutPath]));
+            }
 
             return FALSE;
         }
@@ -131,8 +134,9 @@ trait ViewMaker
         $viewPath = $this->getViewPath(strtolower($view).$this->viewFileExtension);
         $contents = $this->makeFileContent($viewPath);
 
-        if ($this->suppressLayout OR $this->layout === '')
+        if ($this->suppressLayout OR $this->layout === '') {
             return $contents;
+        }
 
         // Append content to the body template
         Template::setBlock('body', $contents);
@@ -147,8 +151,9 @@ trait ViewMaker
      * @param array $vars Parameter variables to pass to the view.
      * @param bool $throwException Throw an exception if the partial is not found.
      *
-     * @return mixed Partial contents or false if not throwing an exception.
      * @throws \SystemException
+     *
+     * @return mixed Partial contents or false if not throwing an exception.
      */
     public function makePartial($partial, $vars = [], $throwException = TRUE)
     {
@@ -157,14 +162,16 @@ trait ViewMaker
         $partialPath = $this->getViewPath($partial, $this->partialPath);
 
         if (!File::exists($partialPath)) {
-            if ($throwException)
+            if ($throwException) {
                 throw new SystemException(Lang::get('system::lang.not_found.partial', ['name' => $partialPath]));
+            }
 
             return FALSE;
         }
 
-        if (isset($this->controller))
+        if (isset($this->controller)) {
             $vars = array_merge($this->controller->vars, $vars);
+        }
 
         return $this->makeFileContent($partialPath, $vars);
     }
@@ -201,11 +208,9 @@ trait ViewMaker
         // an exception is thrown. This prevents any partial views from leaking.
         try {
             include $filePath;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->handleViewException($e, $obLevel);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->handleViewException(new FatalThrowableError($e), $obLevel);
         }
 

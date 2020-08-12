@@ -1,4 +1,6 @@
-<?php namespace System\Console\Commands;
+<?php
+
+namespace System\Console\Commands;
 
 use Assets;
 use File;
@@ -12,18 +14,21 @@ class IgniterUtil extends Command
 {
     /**
      * The console command name.
+     *
      * @var string
      */
     protected $name = 'igniter:util';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'TastyIgniter Utility commands.';
 
     /**
      * Execute the console command.
+     *
      * @return void
      */
     public function handle()
@@ -42,6 +47,7 @@ class IgniterUtil extends Command
 
     /**
      * Get the console command arguments.
+     *
      * @return array
      */
     protected function getArguments()

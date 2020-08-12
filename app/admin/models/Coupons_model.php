@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
@@ -7,8 +9,6 @@ use Model;
 
 /**
  * Coupons Model Class
- *
- * @package Admin
  */
 class Coupons_model extends Model
 {
@@ -109,7 +109,7 @@ class Coupons_model extends Model
 
     public function discountWithOperand()
     {
-        return ($this->isFixed() ? "-" : "-%").$this->discount;
+        return ($this->isFixed() ? '-' : '-%').$this->discount;
     }
 
     public function minimumOrderTotal()
@@ -132,8 +132,9 @@ class Coupons_model extends Model
             case 'period':
                 return !$now->between($this->period_start_date, $this->period_end_date);
             case 'recurring':
-                if (!in_array($now->format('w'), $this->recurring_every))
+                if (!in_array($now->format('w'), $this->recurring_every)) {
                     return TRUE;
+                }
 
                 $start = $now->copy()->setTimeFromTimeString($this->recurring_from_time);
                 $end = $now->copy()->setTimeFromTimeString($this->recurring_to_time);
@@ -146,8 +147,9 @@ class Coupons_model extends Model
 
     public function hasRestriction($orderType)
     {
-        if (empty($this->order_restriction))
+        if (empty($this->order_restriction)) {
             return FALSE;
+        }
 
         $orderTypes = [AbstractLocation::DELIVERY => 1, AbstractLocation::COLLECTION => 2];
 
@@ -156,8 +158,9 @@ class Coupons_model extends Model
 
     public function hasLocationRestriction($locationId)
     {
-        if (!$this->locations OR $this->locations->isEmpty())
+        if (!$this->locations OR $this->locations->isEmpty()) {
             return FALSE;
+        }
 
         $locationKeyColumn = $this->locations()->getModel()->qualifyColumn('location_id');
 

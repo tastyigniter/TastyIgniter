@@ -66,6 +66,7 @@ trait PropertyContainer
 
     /**
      * Returns all properties.
+     *
      * @return array
      */
     public function getProperties()

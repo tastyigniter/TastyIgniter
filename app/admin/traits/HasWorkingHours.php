@@ -27,8 +27,9 @@ trait HasWorkingHours
      */
     public function getCurrentTime()
     {
-        if (!is_null($this->currentTime))
+        if (!is_null($this->currentTime)) {
             return $this->currentTime;
+        }
 
         return $this->currentTime = Carbon::now();
     }
@@ -40,8 +41,9 @@ trait HasWorkingHours
 
     public function listWorkingHours()
     {
-        if (!$this->workingHours)
+        if (!$this->workingHours) {
             $this->workingHours = $this->loadWorkingHours();
+        }
 
         return $this->workingHours;
     }
@@ -58,32 +60,36 @@ trait HasWorkingHours
 
     public function getWorkingHoursByType($type)
     {
-        if (!$workingHours = $this->listWorkingHours())
+        if (!$workingHours = $this->listWorkingHours()) {
             return null;
+        }
 
         return $workingHours->groupBy('type')->get($type);
     }
 
     public function getWorkingHoursByDay($weekday)
     {
-        if (!$workingHours = $this->listWorkingHours())
+        if (!$workingHours = $this->listWorkingHours()) {
             return null;
+        }
 
         return $workingHours->groupBy('weekday')->get($weekday);
     }
 
     public function getWorkingHourByDayAndType($weekday, $type)
     {
-        if (!$workingHours = $this->getWorkingHoursByDay($weekday))
+        if (!$workingHours = $this->getWorkingHoursByDay($weekday)) {
             return null;
+        }
 
         return $workingHours->groupBy('type')->get($type)->first();
     }
 
     public function getWorkingHourByDateAndType($date, $type)
     {
-        if (!$date instanceof Carbon)
+        if (!$date instanceof Carbon) {
             $date = make_carbon($date);
+        }
 
         $weekday = $date->format('N') - 1;
 
@@ -92,9 +98,12 @@ trait HasWorkingHours
 
     public function loadWorkingHours()
     {
-        if (!$this->hasRelation('working_hours'))
-            throw new Exception(sprintf("Model '%s' does not contain a definition for 'working_hours'.",
-                get_class($this)));
+        if (!$this->hasRelation('working_hours')) {
+            throw new Exception(sprintf(
+                "Model '%s' does not contain a definition for 'working_hours'.",
+                get_class($this)
+            ));
+        }
 
         return $this->working_hours()->get();
     }
@@ -102,16 +111,17 @@ trait HasWorkingHours
     public function newWorkingSchedule($type, $days = null)
     {
         $types = $this->availableWorkingTypes();
-        if (is_null($type) OR !in_array($type, $types))
+        if (is_null($type) OR !in_array($type, $types)) {
             throw new InvalidArgumentException("Defined parameter '$type' is not a valid working type.");
-
+        }
         if (is_null($days)) {
             $days = $this->hasFutureOrder($type)
                 ? (int)$this->futureOrderDays($type)
                 : 0;
         }
 
-        $schedule = WorkingSchedule::create($days,
+        $schedule = WorkingSchedule::create(
+            $days,
             $this->getWorkingHoursByType($type) ?? new Collection([])
         );
 
@@ -138,8 +148,9 @@ trait HasWorkingHours
 
         $this->working_hours()->delete();
 
-        if (!$data OR !isset($data['opening']))
+        if (!$data OR !isset($data['opening'])) {
             return FALSE;
+        }
 
         foreach ($data as $type => $hours) {
             $hourType = $hours['type'] ?? '24_7';
@@ -171,8 +182,9 @@ trait HasWorkingHours
     public function createWorkingHoursArray($type, $data)
     {
         $hours = ['open' => '00:00', 'close' => '23:59', 'status' => 1];
-        if ($type != '24_7')
+        if ($type != '24_7') {
             $hours = ['open' => $data['open'], 'close' => $data['close']];
+        }
 
         $days = $data['days'] ?? [];
 
@@ -200,16 +212,16 @@ trait HasWorkingHours
                 foreach (['type', 'days', 'hours'] as $suffix) {
                     if (isset($hours["{$type}_{$suffix}"])) {
                         $valueItem = $hours["{$type}_{$suffix}"];
-                        if ($suffix == 'type')
+                        if ($suffix == 'type') {
                             $valueItem = $valueItem != '24_7' ? $valueItem : '24_7';
+                        }
 
                         $typeIndex = $type == 'daily' ? 'opening' : $type;
 
                         if ($suffix == 'hours') {
                             $value['hours'][$typeIndex]['open'] = $valueItem['open'] ?? '00:00';
                             $value['hours'][$typeIndex]['close'] = $valueItem['close'] ?? '23:59';
-                        }
-                        else {
+                        } else {
                             $value['hours'][$typeIndex][$suffix] = $valueItem;
                         }
                     }
@@ -227,8 +239,9 @@ trait HasWorkingHours
 
         // Ensures form checkbox is unchecked when value is empty
         foreach (['opening', 'delivery', 'collection'] as $type) {
-            if (!isset($value['hours'][$type]['days']))
+            if (!isset($value['hours'][$type]['days'])) {
                 $value['hours'][$type]['days'] = [];
+            }
         }
     }
 }

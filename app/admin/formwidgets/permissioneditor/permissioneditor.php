@@ -3,7 +3,7 @@
         <table class="table table-border mb-0">
             <?php $index = 0;
             foreach ($groupedPermissions as $group => $permissions) {
-                ++$index; ?>
+                $index++; ?>
                 <thead>
                 <tr>
                     <th class="<?= $index === 1 ? '' : 'pt-4' ?>">
@@ -21,17 +21,18 @@
                 <tbody>
                 <?php foreach ($permissions as $permission) {
                     $checkedValue = array_key_exists($permission->code, $checkedPermissions) ?
-                        $checkedPermissions[$permission->code] : 0;
-                    ?>
+                        $checkedPermissions[$permission->code] : 0; ?>
 
                     <?= $this->makePartial('permissioneditor/permission', [
                         'permission' => $permission,
                         'checkedValue' => (int)$checkedValue,
                     ]) ?>
 
-                <?php } ?>
+                <?php
+                } ?>
                 </tbody>
-            <?php } ?>
+            <?php
+            } ?>
         </table>
     </div>
 </div>

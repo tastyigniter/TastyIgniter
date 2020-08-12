@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
@@ -6,7 +8,6 @@ use Model;
 
 /**
  * RequestLogs Model Class
- * @package System
  */
 class Request_logs_model extends Model
 {
@@ -28,11 +29,13 @@ class Request_logs_model extends Model
 
     public static function createLog($statusCode = 404)
     {
-        if (!App::hasDatabase())
+        if (!App::hasDatabase()) {
             return;
+        }
 
-        if (!setting('enable_request_log', TRUE))
+        if (!setting('enable_request_log', TRUE)) {
             return;
+        }
 
         $url = Request::fullUrl();
         $referrer = Request::header('referer');
@@ -58,8 +61,7 @@ class Request_logs_model extends Model
         if (!$this->exists) {
             $this->count = 1;
             $this->save();
-        }
-        else {
+        } else {
             $this->increment('count');
         }
 

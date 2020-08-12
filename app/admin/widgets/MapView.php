@@ -42,7 +42,8 @@ class MapView extends BaseWidget
     {
         if (strlen($key = setting('maps_api_key'))) {
             $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
-            $this->addJs(sprintf($url, $key),
+            $this->addJs(
+                sprintf($url, $key),
                 ['name' => 'google-maps-js', 'async' => null, 'defer' => null]
             );
         }

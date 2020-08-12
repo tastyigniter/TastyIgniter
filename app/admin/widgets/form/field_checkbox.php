@@ -10,7 +10,9 @@ $checkedValues = (array)$field->value;
             <?php
             $index++;
             $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
-            if (is_string($option)) $option = [$option];
+            if (is_string($option)) {
+                $option = [$option];
+            }
             ?>
             <div
                 id="<?= $field->getId() ?>"

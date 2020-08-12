@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use AdminMenu;
 use ApplicationException;
@@ -63,16 +65,16 @@ class Updates extends \Admin\Classes\AdminController
                     'id' => 'apply-updates', 'role' => 'button',
                 ]);
             }
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             Flash::warning($ex->getMessage())->now();
         }
     }
 
     public function browse($context, $itemType = null)
     {
-        if (!in_array($itemType, ['themes', 'extensions']))
+        if (!in_array($itemType, ['themes', 'extensions'])) {
             return $this->redirectBack();
+        }
 
         $updateManager = UpdateManager::instance();
 
@@ -102,14 +104,12 @@ class Updates extends \Admin\Classes\AdminController
         $json = [];
 
         if ($filter = input('filter') AND is_array($filter)) {
-
             $itemType = $filter['type'] ?? 'extension';
             $searchQuery = isset($filter['search']) ? strtolower($filter['search']) : '';
 
             try {
                 $json = UpdateManager::instance()->searchItems($itemType, $searchQuery);
-            }
-            catch (Exception $ex) {
+            } catch (Exception $ex) {
                 $json = $ex->getMessage();
             }
         }
@@ -145,9 +145,9 @@ class Updates extends \Admin\Classes\AdminController
     public function index_onIgnoreUpdate()
     {
         $items = post('items');
-        if (!$items OR count($items) < 1)
+        if (!$items OR count($items) < 1) {
             throw new ApplicationException('Select item(s) to ignore.');
-
+        }
         $updateManager = UpdateManager::instance();
 
         $updateManager->ignoreUpdates($items);
@@ -195,9 +195,9 @@ class Updates extends \Admin\Classes\AdminController
     protected function applyCarte()
     {
         $carteKey = post('carte_key');
-        if (!strlen($carteKey))
+        if (!strlen($carteKey)) {
             throw new ApplicationException('No carte key specified.');
-
+        }
         $response = UpdateManager::instance()->applySiteDetail($carteKey);
 
         return [
@@ -211,20 +211,19 @@ class Updates extends \Admin\Classes\AdminController
 
         $items = input('items') ?? [];
 
-// Uncomment this block to require carte key
+        // Uncomment this block to require carte key
 //        if (!params()->has('carte_key'))
 //            throw new ApplicationException(lang('system::lang.missing.carte_key'));
 
-        if (!count($items))
+        if (!count($items)) {
             throw new ApplicationException('No item(s) specified.');
-
+        }
         $this->validateItems();
 
         if ($context == 'index') {
             $updates = UpdateManager::instance()->requestUpdateList(input('check') == 'force');
             $response['data'] = array_get($updates, 'items');
-        }
-        else {
+        } else {
             $response = UpdateManager::instance()->requestApplyItems($items);
         }
 
@@ -236,8 +235,9 @@ class Updates extends \Admin\Classes\AdminController
     protected function buildProcessSteps($meta, $params = [])
     {
         $processSteps = [];
-        if (!count($meta['data']))
+        if (!count($meta['data'])) {
             return $processSteps;
+        }
 
         foreach (['download', 'extract', 'complete'] as $step) {
 
@@ -268,8 +268,7 @@ class Updates extends \Admin\Classes\AdminController
                         'label' => sprintf(lang("system::lang.updates.progress_{$step}"), $item['name'].' update'),
                         'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
-                }
-                else {
+                } else {
                     $singularType = str_singular($item['type']);
                     $pluralType = str_plural($item['type']);
 
@@ -315,26 +314,36 @@ class Updates extends \Admin\Classes\AdminController
             case 'downloadExtension':
             case 'downloadTheme':
                 $result = $updateManager->downloadFile($meta['code'], $meta['hash'], $params);
-                if ($result) $json['result'] = 'success';
+                if ($result) {
+                    $json['result'] = 'success';
+                }
                 break;
 
             case 'extractCore':
                 $response = $updateManager->extractCore($meta['code']);
-                if ($response) $json['result'] = 'success';
+                if ($response) {
+                    $json['result'] = 'success';
+                }
                 break;
 
             case 'extractExtension':
                 $response = $updateManager->extractFile($meta['code'], 'extensions/');
-                if ($response) $json['result'] = 'success';
+                if ($response) {
+                    $json['result'] = 'success';
+                }
                 break;
             case 'extractTheme':
                 $response = $updateManager->extractFile($meta['code'], 'themes/');
-                if ($response) $json['result'] = 'success';
+                if ($response) {
+                    $json['result'] = 'success';
+                }
                 break;
 
             case 'complete':
                 $response = $this->completeProcess($meta['items']);
-                if ($response) $json['result'] = 'success';
+                if ($response) {
+                    $json['result'] = 'success';
+                }
                 break;
         }
 
@@ -343,8 +352,9 @@ class Updates extends \Admin\Classes\AdminController
 
     protected function completeProcess($items)
     {
-        if (!count($items))
+        if (!count($items)) {
             return FALSE;
+        }
 
         $updateManager = UpdateManager::instance();
 
@@ -366,8 +376,9 @@ class Updates extends \Admin\Classes\AdminController
     protected function getActionFromItems($code, $itemNames)
     {
         foreach ($itemNames as $itemName) {
-            if ($code == $itemName['name'])
+            if ($code == $itemName['name']) {
                 return $itemName['action'];
+            }
         }
     }
 
@@ -393,8 +404,7 @@ class Updates extends \Admin\Classes\AdminController
             $rules[] = ['meta.hash', 'lang:system::lang.updates.label_meta_hash', 'required'];
             $rules[] = ['meta.description', 'lang:system::lang.updates.label_meta_description', 'sometimes'];
             $rules[] = ['meta.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'];
-        }
-        else {
+        } else {
             $rules[] = ['meta.items', 'lang:system::lang.updates.label_meta_items', 'required|array'];
         }
 

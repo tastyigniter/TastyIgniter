@@ -61,6 +61,7 @@ class ComponentPartial extends Extendable implements TemplateSource
     /**
      * @param \System\Classes\BaseComponent $component
      * @param string $fileName
+     *
      * @return \Main\Template\ComponentPartial|mixed
      */
     public static function load($component, $fileName)
@@ -71,6 +72,7 @@ class ComponentPartial extends Extendable implements TemplateSource
     /**
      * @param \System\Classes\BaseComponent $component
      * @param string $fileName
+     *
      * @return \Main\Template\ComponentPartial|mixed
      */
     public static function loadCached($component, $fileName)
@@ -82,6 +84,7 @@ class ComponentPartial extends Extendable implements TemplateSource
      * @param \Main\Classes\Theme $theme
      * @param \System\Classes\BaseComponent $component
      * @param string $fileName
+     *
      * @return mixed
      */
     public static function loadOverrideCached($theme, $component, $fileName)
@@ -104,8 +107,9 @@ class ComponentPartial extends Extendable implements TemplateSource
      */
     public function find($fileName)
     {
-        if ('' === File::extension($fileName))
+        if ('' === File::extension($fileName)) {
             $fileName .= '.'.$this->defaultExtension;
+        }
 
         $filePath = $this->getFilePath($fileName);
 
@@ -145,6 +149,7 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the key used by the Template cache.
+     *
      * @return string
      */
     public function getTemplateCacheKey()
@@ -154,6 +159,7 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the default extension used by this template.
+     *
      * @return string
      */
     public function getDefaultExtension()
@@ -190,6 +196,7 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the file name.
+     *
      * @return string
      */
     public function getFileName()
@@ -199,6 +206,7 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the file name without the extension.
+     *
      * @return string
      */
     public function getBaseFileName()
@@ -213,6 +221,7 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the file content.
+     *
      * @return string
      */
     public function getContent()
@@ -222,6 +231,7 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Gets the markup section of a template
+     *
      * @return string The template source code
      */
     public function getMarkup()
@@ -231,6 +241,7 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Gets the code section of a template
+     *
      * @return string The template source code
      */
     public function getCode()

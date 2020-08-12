@@ -103,8 +103,7 @@ class SearchBox extends BaseWidget
     {
         if (strlen($term)) {
             $this->putSession('term', $term);
-        }
-        else {
+        } else {
             $this->resetSession();
         }
 
@@ -113,6 +112,7 @@ class SearchBox extends BaseWidget
 
     /**
      * Returns a value suitable for the field name property.
+     *
      * @return string
      */
     public function getName()

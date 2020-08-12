@@ -6,8 +6,6 @@ use Igniter\Flame\Location\Models\AbstractArea;
 
 /**
  * Location areas Model Class
- *
- * @package Admin
  */
 class Location_areas_model extends AbstractArea
 {
@@ -18,8 +16,9 @@ class Location_areas_model extends AbstractArea
     public function getConditionsAttribute($value)
     {
         // backward compatibility v2.0
-        if (!is_array($conditions = unserialize($value)))
+        if (!is_array($conditions = unserialize($value))) {
             $conditions = [];
+        }
 
         foreach ($conditions as $key => &$item) {
             if (isset($item['condition'])) {
@@ -33,8 +32,9 @@ class Location_areas_model extends AbstractArea
 
     protected function afterSave()
     {
-        if (!$this->is_default)
+        if (!$this->is_default) {
             return;
+        }
 
         $this->newQuery()->whereKeyNot($this->getKey())->update(['is_default' => 0]);
     }

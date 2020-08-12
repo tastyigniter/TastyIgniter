@@ -1,11 +1,11 @@
-<?php namespace System\Libraries;
+<?php
+
+namespace System\Libraries;
 
 use System\Models\Countries_model;
 
 /**
  * Country Class
- *
- * @package System
  */
 class Country
 {
@@ -31,17 +31,23 @@ class Country
         list($format, $placeholders) = $this->getDefaultFormat();
 
         // Override format if present in address array
-        if (!empty($address['format']))
+        if (!empty($address['format'])) {
             $format = $address['format'];
+        }
 
-        $formattedAddress = str_replace(["\r\n", "\r", "\n"], '<br />',
-            preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />',
+        $formattedAddress = str_replace(
+            ["\r\n", "\r", "\n"],
+            '<br />',
+            preg_replace(
+                ["/\s\s+/", "/\r\r+/", "/\n\n+/"],
+                '<br />',
                 trim(str_replace($placeholders, $this->evalAddress($address), $format))
             )
         );
 
-        if (!$useLineBreaks)
+        if (!$useLineBreaks) {
             $formattedAddress = str_replace('<br />', ', ', $formattedAddress);
+        }
 
         return $formattedAddress;
     }
@@ -50,8 +56,9 @@ class Country
     {
         $this->loadCountries();
 
-        if (!$countryModel = $this->countriesCollection->find($id))
+        if (!$countryModel = $this->countriesCollection->find($id)) {
             return null;
+        }
 
         return $countryModel->country_name;
     }
@@ -60,8 +67,9 @@ class Country
     {
         $this->loadCountries();
 
-        if (!$countryModel = $this->countriesCollection->where('country_id', $id)->first())
+        if (!$countryModel = $this->countriesCollection->where('country_id', $id)->first()) {
             return null;
+        }
 
         return (is_null($codeType) OR $codeType == static::ISO_CODE_2)
             ? $countryModel->iso_code_2 : $countryModel->iso_code_3;
@@ -71,8 +79,9 @@ class Country
     {
         $this->loadCountries();
 
-        if (!$countryModel = $this->countriesCollection->where('iso_code_2', $isoCodeTwo)->first())
+        if (!$countryModel = $this->countriesCollection->where('iso_code_2', $isoCodeTwo)->first()) {
             return null;
+        }
 
         return $countryModel->country_name;
     }
@@ -91,16 +100,18 @@ class Country
     {
         $this->loadCountries();
 
-        if (is_null($column))
+        if (is_null($column)) {
             return $this->countriesCollection;
+        }
 
         return $this->countriesCollection->pluck($column, $key);
     }
 
     protected function evalAddress($address)
     {
-        if (isset($address['country_id']) AND !isset($address['country']))
+        if (isset($address['country_id']) AND !isset($address['country'])) {
             $address['country'] = $address['country_id'];
+        }
 
         $result = [];
         foreach ($this->requiredAddressKeys as $key) {
@@ -120,8 +131,7 @@ class Country
     {
         if (is_numeric($country)) {
             return $this->getCountryNameById($country);
-        }
-        else if (!is_string($country) AND isset($country['country_name'])) {
+        } elseif (!is_string($country) AND isset($country['country_name'])) {
             return $country['country_name'];
         }
 
@@ -130,8 +140,9 @@ class Country
 
     protected function loadCountries()
     {
-        if (!count($this->countriesCollection))
+        if (!count($this->countriesCollection)) {
             $this->countriesCollection = Countries_model::isEnabled()->sorted()->get();
+        }
 
         return $this->countriesCollection;
     }

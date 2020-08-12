@@ -9,8 +9,6 @@ use System\Classes\ExtensionManager;
  * Widget manager
  *
  * Adapted from october\backend\classes\WidgetManager
- *
- * @package Admin
  */
 class Widgets
 {
@@ -60,6 +58,7 @@ class Widgets
 
     /**
      * Returns a list of registered form widgets.
+     *
      * @return array Array keys are class names.
      */
     public function listFormWidgets()
@@ -162,6 +161,7 @@ class Widgets
 
     /**
      * Returns a list of registered dashboard widgets.
+     *
      * @return array Array keys are class names.
      */
     public function listDashboardWidgets()

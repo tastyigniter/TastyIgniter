@@ -8,8 +8,7 @@
             data-close-on-click-outside="<?= $message['important'] ? 'false' : 'true'; ?>"
             data-close-on-esc="<?= $message['important'] ? 'false' : 'true'; ?>"
         ></div>
-    <?php }
-    else { ?>
+    <?php } else { ?>
         <div
             class="alert alert-<?= $message['level']; ?><?= $message['important'] ? ' alert-important' : ''; ?>"
             data-control="flash-message"

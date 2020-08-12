@@ -70,13 +70,21 @@ class LanguageManager
         foreach ($sourceLines as $key => $sourceLine) {
             $translationLine = array_get($translationLines, $key, $sourceLine);
 
-            if ($stringFilter === 'changed' AND !array_has($translationLines, $key)) continue;
+            if ($stringFilter === 'changed' AND !array_has($translationLines, $key)) {
+                continue;
+            }
 
-            if ($stringFilter === 'unchanged' AND array_has($translationLines, $key)) continue;
+            if ($stringFilter === 'unchanged' AND array_has($translationLines, $key)) {
+                continue;
+            }
 
-            if ((!is_null($sourceLine) AND !is_string($sourceLine))) continue;
+            if ((!is_null($sourceLine) AND !is_string($sourceLine))) {
+                continue;
+            }
 
-            if ((!is_null($translationLine) AND !is_string($translationLine))) continue;
+            if ((!is_null($translationLine) AND !is_string($translationLine))) {
+                continue;
+            }
 
             $namespacedKey = sprintf('%s::%s.%s', $file['namespace'], $file['group'], $key);
 
@@ -91,8 +99,9 @@ class LanguageManager
 
     public function searchTranslations($translations, $term = null)
     {
-        if (!strlen($term))
+        if (!strlen($term)) {
             return $translations;
+        }
 
         $result = [];
         $term = strtolower($term);
@@ -103,8 +112,7 @@ class LanguageManager
                     OR stripos(strtolower($key), $term) !== FALSE) {
                     $result[$key] = $value;
                 }
-            }
-            else {
+            } else {
                 $result[$key] = $value;
             }
         }
@@ -127,7 +135,11 @@ class LanguageManager
         ];
 
         return App::makeWith(LengthAwarePaginator::class, compact(
-            'items', 'total', 'perPage', 'page', 'options'
+            'items',
+            'total',
+            'perPage',
+            'page',
+            'options'
         ));
     }
 }

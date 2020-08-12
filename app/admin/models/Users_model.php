@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Classes\PermissionManager;
 use Carbon\Carbon;
@@ -7,7 +9,6 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Users Model Class
- * @package Admin
  */
 class Users_model extends AuthUserModel
 {
@@ -60,20 +61,20 @@ class Users_model extends AuthUserModel
 
     public function getStaffNameAttribute()
     {
-        if (!$staff = $this->staff)
+        if (!$staff = $this->staff) {
             return null;
+        }
 
         return $staff->staff_name;
     }
 
     public function isSuperUser()
     {
-        return ($this->super_user == 1);
+        return $this->super_user == 1;
     }
 
     /**
      * Reset a staff password,
-     *
      */
     public function resetPassword()
     {
@@ -101,17 +102,24 @@ class Users_model extends AuthUserModel
     public function hasPermission($permissions, $checkAll = TRUE)
     {
         // Bail out if the staff is a super user
-        if ($this->isSuperUser())
+        if ($this->isSuperUser()) {
             return TRUE;
+        }
 
         $staffPermissions = $this->getPermissions();
 
-        if (!is_array($permissions))
+        if (!is_array($permissions)) {
             $permissions = [$permissions];
+        }
 
         if (PermissionManager::instance()->checkPermission(
-            $staffPermissions, $permissions, $checkAll)
-        ) return TRUE;
+            $staffPermissions,
+            $permissions,
+            $checkAll
+        )
+        ) {
+            return TRUE;
+        }
 
         return FALSE;
     }

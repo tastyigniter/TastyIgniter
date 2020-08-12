@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
@@ -9,8 +11,6 @@ use Html;
 
 /**
  * Record Editor
- *
- * @package Admin
  */
 class RecordEditor extends BaseFormWidget
 {
@@ -113,8 +113,10 @@ class RecordEditor extends BaseFormWidget
             }
         });
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'),
-            lang($this->formName).' '.($form->context == 'create' ? 'created' : 'updated')))->now();
+        flash()->success(sprintf(
+            lang('admin::lang.alert_success'),
+            lang($this->formName).' '.($form->context == 'create' ? 'created' : 'updated')
+        ))->now();
 
         return [
             '#notification'               => $this->makePartial('flash'),
@@ -144,8 +146,9 @@ class RecordEditor extends BaseFormWidget
 
     protected function makeRecordFormWidget($model, $context = null)
     {
-        if (is_null($context))
+        if (is_null($context)) {
             $context = $model->exists ? 'edit' : 'create';
+        }
 
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = $model;
@@ -164,11 +167,13 @@ class RecordEditor extends BaseFormWidget
         $name = camel_case('addon_'.$string);
         $config = $this->{$name};
 
-        if (!$config)
+        if (!$config) {
             return null;
+        }
 
-        if (!is_array($config))
+        if (!is_array($config)) {
             $config = [$config];
+        }
 
         $config = (object)array_merge([
             'tag'        => 'span',
@@ -190,8 +195,7 @@ class RecordEditor extends BaseFormWidget
 
         if ($model->methodExists($methodName)) {
             $result = $model->$methodName();
-        }
-        else {
+        } else {
             $result = $model->getRecordEditorOptions($this->fieldName);
         }
 

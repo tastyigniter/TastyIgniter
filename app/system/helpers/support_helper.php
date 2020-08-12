@@ -5,6 +5,7 @@ use Carbon\Carbon;
 if (!function_exists('controller')) {
     /**
      * Get the page controller
+     *
      * @return Main\Classes\MainController
      */
     function controller()
@@ -87,6 +88,7 @@ if (!function_exists('uploads_url')) {
      * Returns the full URL (including segments) of the assets media uploads directory
      *
      * @param null $path
+     *
      * @return string
      */
     function uploads_url($path = null)
@@ -100,11 +102,13 @@ if (!function_exists('strip_class_basename')) {
     {
         $basename = class_basename($class);
 
-        if (is_null($chop))
+        if (is_null($chop)) {
             return $basename;
+        }
 
-        if (!ends_with($basename, $chop))
+        if (!ends_with($basename, $chop)) {
             return $basename;
+        }
 
         return substr($basename, 0, -strlen($chop));
     }
@@ -133,21 +137,25 @@ if (!function_exists('mdate')) {
             $format = null;
         }
 
-        if (is_null($format))
+        if (is_null($format)) {
             $format = setting('date_format', config('system.dateFormat'));
+        }
 
-        if (is_null($time))
+        if (is_null($time)) {
             return null;
+        }
 
-        if (empty($time))
+        if (empty($time)) {
             $time = time();
+        }
 
-        if (str_contains($format, '%'))
+        if (str_contains($format, '%')) {
             $format = str_replace(
                 '%\\',
                 '',
                 preg_replace('/([a-z]+?){1}/i', '\\\\\\1', $format)
             );
+        }
 
         return date($format, $time);
     }
@@ -246,11 +254,9 @@ if (!function_exists('day_elapsed')) {
 
         if ($datetime->isToday()) {
             $date = 'Today';
-        }
-        elseif ($datetime->isYesterday()) {
+        } elseif ($datetime->isYesterday()) {
             $date = 'Yesterday';
-        }
-        elseif ($datetime->isTomorrow()) {
+        } elseif ($datetime->isTomorrow()) {
             $date = 'Tomorrow';
         }
 
@@ -329,21 +335,16 @@ if (!function_exists('make_carbon')) {
     {
         if ($value instanceof Carbon) {
             // Do nothing
-        }
-        elseif ($value instanceof DateTime) {
+        } elseif ($value instanceof DateTime) {
             $value = Carbon::instance($value);
-        }
-        elseif (is_numeric($value)) {
+        } elseif (is_numeric($value)) {
             $value = Carbon::createFromTimestamp($value);
-        }
-        elseif (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
+        } elseif (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
             $value = Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
-        }
-        else {
+        } else {
             try {
                 $value = Carbon::parse($value);
-            }
-            catch (Exception $ex) {
+            } catch (Exception $ex) {
             }
         }
 
@@ -359,11 +360,12 @@ if (!function_exists('is_single_location')) {
     /**
      * Is Single Location Mode
      * Test to see system config multi location mode is set to single.
+     *
      * @return bool
      */
     function is_single_location()
     {
-        return (setting('site_location_mode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE);
+        return setting('site_location_mode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
     }
 }
 
@@ -439,12 +441,14 @@ if (!function_exists('name_to_array')) {
     {
         $result = [$string];
 
-        if (strpbrk($string, '[]') === FALSE)
+        if (strpbrk($string, '[]') === FALSE) {
             return $result;
+        }
 
         if (preg_match('/^([^\]]+)(?:\[(.+)\])+$/', $string, $matches)) {
-            if (count($matches) < 2)
+            if (count($matches) < 2) {
                 return $result;
+            }
 
             $result = explode('][', $matches[2]);
             array_unshift($result, $matches[1]);
@@ -489,7 +493,7 @@ if (!function_exists('convert_underscore_to_camelcase')) {
      * Current URL
      * Converts a string_with_underscore into StringWithCamelCase. Strings can be passed via the
      * first parameter either as a string or an array.
-     * @access    public
+     *
      * @return    string
      */
     function convert_underscore_to_camelcase($string = '')
@@ -501,7 +505,6 @@ if (!function_exists('convert_underscore_to_camelcase')) {
 if (!function_exists('contains_substring')) {
     /**
      * Determine if a given string contains a given substring.
-     * @access    public
      *
      * @param string $haystack
      * @param string|array $needles
@@ -523,7 +526,6 @@ if (!function_exists('contains_substring')) {
 if (!function_exists('is_lang_key')) {
     /**
      * Determine if a given string matches a language key.
-     * @access    public
      *
      * @param string $line
      *
@@ -550,8 +552,9 @@ if (!function_exists('is_lang_key')) {
 if (!function_exists('generate_extension_icon')) {
     function generate_extension_icon($icon)
     {
-        if (is_string($icon))
+        if (is_string($icon)) {
             $icon = ['class' => 'fa '.$icon];
+        }
 
         $icon = array_merge([
             'class' => 'fa fa-plug',
@@ -562,14 +565,17 @@ if (!function_exists('generate_extension_icon')) {
         ], $icon);
 
         $styles = [];
-        if (strlen($color = array_get($icon, 'color')))
+        if (strlen($color = array_get($icon, 'color'))) {
             $styles[] = "color:$color;";
+        }
 
-        if (strlen($backgroundColor = array_get($icon, 'backgroundColor')))
+        if (strlen($backgroundColor = array_get($icon, 'backgroundColor'))) {
             $styles[] = "background-color:$backgroundColor;";
+        }
 
-        if (is_array($backgroundImage = array_get($icon, 'backgroundImage')))
+        if (is_array($backgroundImage = array_get($icon, 'backgroundImage'))) {
             $styles[] = "background-image:url('data:$backgroundImage[0];base64,$backgroundImage[1]');";
+        }
 
         $icon['styles'] = implode(' ', $styles);
 

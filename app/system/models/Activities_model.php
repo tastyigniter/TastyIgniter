@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Model;
@@ -6,7 +8,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Activities Model Class
- * @package System
  */
 class Activities_model extends Activity
 {
@@ -72,7 +73,6 @@ class Activities_model extends Activity
         }
 
         foreach ($sort as $_sort) {
-
             if (in_array($_sort, ['date_added asc', 'date_added desc', 'date_updated asc', 'date_updated desc'])) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
@@ -83,8 +83,9 @@ class Activities_model extends Activity
             }
         }
 
-        if ($pageLimit)
+        if ($pageLimit) {
             return $query->take($pageLimit);
+        }
 
         return $query;
     }

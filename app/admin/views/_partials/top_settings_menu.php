@@ -8,7 +8,7 @@ $hasSettingsError = count(array_filter(Session::get('settings.errors', [])));
         <i class="fa fa-gears" role="button"></i>
         <?php if ($hasSettingsError) { ?>
             <span class="badge badge-danger"><i class="fa fa-exclamation text-white"></i></span>
-        <?php } else if ($updatesCount) { ?>
+        <?php } elseif ($updatesCount) { ?>
             <span class="badge badge-danger">&nbsp;</span>
         <?php } ?>
     </a>

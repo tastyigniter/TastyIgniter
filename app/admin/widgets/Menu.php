@@ -26,7 +26,7 @@ class Menu extends BaseWidget
     protected $defaultAlias = 'top-menu';
 
     /**
-     * @var boolean Determines if item definitions have been created.
+     * @var bool Determines if item definitions have been created.
      */
     protected $itemsDefined = FALSE;
 
@@ -86,8 +86,9 @@ class Menu extends BaseWidget
      */
     protected function defineMenuItems()
     {
-        if ($this->itemsDefined)
+        if ($this->itemsDefined) {
             return;
+        }
 
         if (!isset($this->items) OR !is_array($this->items)) {
             $this->items = [];
@@ -106,7 +107,6 @@ class Menu extends BaseWidget
     public function addItems(array $items)
     {
         foreach ($items as $name => $config) {
-
             $itemObj = $this->makeMenuItem($name, $config);
 
             // Check that the menu item matches the active context
@@ -162,6 +162,7 @@ class Menu extends BaseWidget
 
     /**
      * Get all the registered items for the instance.
+     *
      * @return array
      */
     public function getItems()
@@ -174,8 +175,9 @@ class Menu extends BaseWidget
      *
      * @param string $item
      *
-     * @return mixed
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function getItem($item)
     {
@@ -188,8 +190,9 @@ class Menu extends BaseWidget
 
     public function getLoggedUser()
     {
-        if (!$this->getController()->checkUser())
+        if (!$this->getController()->checkUser()) {
             return FALSE;
+        }
 
         return $this->getController()->getUser();
     }
@@ -200,26 +203,29 @@ class Menu extends BaseWidget
 
     /**
      * Update a menu item value.
-     * @return array
+     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function onGetDropdownOptions()
     {
-        if (!strlen($itemName = input('item')))
+        if (!strlen($itemName = input('item'))) {
             throw new ApplicationException('Invalid item specified');
-
+        }
         $this->defineMenuItems();
 
-        if (!$item = $this->getItem($itemName))
+        if (!$item = $this->getItem($itemName)) {
             throw new ApplicationException("No main menu item found matching {$itemName}");
-
+        }
         $itemOptions = $item->options();
 
         // Return a partial if item has a path defined
         if (strlen($item->partial)) {
             return [
                 '#'.$item->getId($item->itemName.'-options') => $this->makePartial(
-                    $item->partial, ['item' => $item, 'itemOptions' => $itemOptions]
+                    $item->partial,
+                    ['item' => $item, 'itemOptions' => $itemOptions]
                 ),
             ];
         }
@@ -231,32 +237,34 @@ class Menu extends BaseWidget
 
     /**
      * Mark menu items as read.
-     * @return array
+     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function onMarkOptionsAsRead()
     {
-        if (!strlen($itemName = post('item')))
+        if (!strlen($itemName = post('item'))) {
             throw new ApplicationException('Invalid item specified');
-
+        }
         $this->defineMenuItems();
 
-        if (!$item = $this->getItem($itemName))
+        if (!$item = $this->getItem($itemName)) {
             throw new ApplicationException("No main menu item found matching {$itemName}");
-
+        }
         $this->resolveMarkAsReadFromModel($item);
     }
 
     public function onChooseLocation()
     {
         $location = null;
-        if (is_numeric($locationId = post('location')))
+        if (is_numeric($locationId = post('location'))) {
             $location = Locations_model::find($locationId);
+        }
 
         if ($location AND AdminLocation::hasAccess($location)) {
             AdminLocation::setCurrent($location);
-        }
-        else {
+        } else {
             AdminLocation::clearCurrent();
         }
 
@@ -269,9 +277,9 @@ class Menu extends BaseWidget
         $message = (string)post('message');
         $clearAfterMinutes = (int)post('clear_after');
 
-        if ($status < 1 AND !strlen($message))
+        if ($status < 1 AND !strlen($message)) {
             throw new ApplicationException('Status message is required');
-
+        }
         $stateData['status'] = $status;
         $stateData['isAway'] = $status !== 1;
         $stateData['updatedAt'] = Carbon::now();
@@ -283,6 +291,7 @@ class Menu extends BaseWidget
 
     /**
      * Returns the active context for displaying the menu.
+     *
      * @return string
      */
     public function getContext()

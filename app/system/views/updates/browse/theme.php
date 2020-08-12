@@ -14,8 +14,7 @@
             <button class="btn btn-outline-default btn-block disabled" title="Added">
                 <i class="fa fa-cloud-download"></i>
             </button>
-        <?php }
-        else { ?>
+        <?php } else { ?>
             <button
                 class="btn btn-outline-success btn-block btn-install"
                 data-title="Add <?= $item['name'] ?>"

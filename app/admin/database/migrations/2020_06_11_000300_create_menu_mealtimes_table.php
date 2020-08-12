@@ -1,13 +1,12 @@
-<?php namespace Admin\Database\Migrations;
+<?php
+
+namespace Admin\Database\Migrations;
 
 use DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- *
- */
 class CreateMenuMealtimesTable extends Migration
 {
     public function up()
@@ -20,8 +19,9 @@ class CreateMenuMealtimesTable extends Migration
         });
 
         DB::table('menus')->select('menu_id', 'mealtime_id')->get()->each(function ($menu) {
-            if (is_null($menu->mealtime_id))
+            if (is_null($menu->mealtime_id)) {
                 return TRUE;
+            }
 
             DB::table('menu_mealtimes')->insert([
                 'mealtime_id' => $menu->mealtime_id,

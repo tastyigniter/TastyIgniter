@@ -15,8 +15,7 @@ $itemOptions = $itemOptions['items'] ?? $itemOptions;
             </li>
             <li class="divider"></li>
         <?php } ?>
-    <?php }
-    else { ?>
+    <?php } else { ?>
         <li class="text-center"><?= lang('admin::lang.text_empty_activity'); ?></li>
     <?php } ?>
 </ul>

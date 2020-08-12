@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Admin\Facades\AdminAuth;
 use Admin\Models\User_preferences_model;
@@ -6,7 +8,6 @@ use Carbon\Carbon;
 
 /**
  * Admin User State
- * @package Admin
  */
 class UserState
 {
@@ -67,8 +68,9 @@ class UserState
 
     public function getClearAfterAt()
     {
-        if ($this->getStatus() !== static::CUSTOM_STATUS)
+        if ($this->getStatus() !== static::CUSTOM_STATUS) {
             return null;
+        }
 
         return make_carbon($this->getConfig('updatedAt'))
             ->addMinutes($this->getClearAfterMinutes());
@@ -105,14 +107,17 @@ class UserState
 
     public function clearExpiredStatus()
     {
-        if (!$this->isAway())
+        if (!$this->isAway()) {
             return;
+        }
 
-        if (!$clearAfterAt = $this->getClearAfterAt())
+        if (!$clearAfterAt = $this->getClearAfterAt()) {
             return;
+        }
 
-        if (Carbon::now()->lessThan($clearAfterAt))
+        if (Carbon::now()->lessThan($clearAfterAt)) {
             return;
+        }
 
         $this->updateState();
     }
@@ -128,20 +133,23 @@ class UserState
 
     protected function getConfig($key = null, $default = null)
     {
-        if (is_null($this->stateConfigCache))
+        if (is_null($this->stateConfigCache)) {
             $this->stateConfigCache = $this->loadConfigFromPreference();
+        }
 
         $result = array_merge($this->defaultStateConfig, $this->stateConfigCache);
-        if (is_null($key))
+        if (is_null($key)) {
             return $result;
+        }
 
         return array_get($result, $key, $default);
     }
 
     protected function loadConfigFromPreference()
     {
-        if (!$this->user)
+        if (!$this->user) {
             return [];
+        }
 
         return User_preferences_model::onUser($this->user)->get(self::USER_PREFERENCE_KEY, []);
     }

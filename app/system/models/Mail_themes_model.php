@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Cache;
 use Exception;
@@ -7,7 +9,7 @@ use Model;
 
 /**
  * MailThemes Model Class
- * @package System
+ *
  * @method static instance()
  * @method static get($var, $default)
  */
@@ -46,6 +48,7 @@ class Mail_themes_model extends Model
     /**
      * Initialize the seed data for this model. This only executes when the
      * model is first created or reset to default.
+     *
      * @return void
      */
     public function initSettingsData()
@@ -80,8 +83,7 @@ class Mail_themes_model extends Model
         try {
             $customCss = self::compileCss();
             Cache::forever($cacheKey, $customCss);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             $customCss = '/* '.$ex->getMessage().' */';
         }
 

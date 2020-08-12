@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Admin\Traits\LocationAwareWidget;
 use Admin\Traits\WidgetMaker;
@@ -12,7 +14,6 @@ use System\Traits\ViewMaker;
 /**
  * Base Widget Class
  * Adapted from october\backend\classes\WidgetBase
- * @package Admin
  */
 class BaseWidget extends Extendable
 {
@@ -69,11 +70,13 @@ class BaseWidget extends Extendable
         $this->configPath = $controller->configPath;
 
         // Set config values, if a parent constructor hasn't set already.
-        if ($this->config === null)
+        if ($this->config === null) {
             $this->setConfig($config);
+        }
 
-        if (is_null($this->alias))
+        if (is_null($this->alias)) {
             $this->alias = $this->config['alias'] ?? $this->defaultAlias;
+        }
 
         $this->loadAssets();
 
@@ -84,6 +87,7 @@ class BaseWidget extends Extendable
 
     /**
      * Initialize the widget called by the constructor.
+     *
      * @return void
      */
     public function initialize()
@@ -92,6 +96,7 @@ class BaseWidget extends Extendable
 
     /**
      * Renders the widgets primary contents.
+     *
      * @return string HTML markup supplied by this widget.
      */
     public function render()
@@ -100,6 +105,7 @@ class BaseWidget extends Extendable
 
     /**
      * Binds a widget to the controller for safe use.
+     *
      * @return void
      */
     public function bindToController()
@@ -191,8 +197,9 @@ class BaseWidget extends Extendable
      */
     public function getConfig($name = null, $default = null)
     {
-        if (is_null($name))
+        if (is_null($name)) {
             return $this->config;
+        }
 
         $nameArray = name_to_array($name);
 
@@ -200,8 +207,9 @@ class BaseWidget extends Extendable
         $result = isset($this->config[$fieldName]) ? $this->config[$fieldName] : $default;
 
         foreach ($nameArray as $key) {
-            if (!is_array($result) OR !array_key_exists($key, $result))
+            if (!is_array($result) OR !array_key_exists($key, $result)) {
                 return $default;
+            }
 
             $result = $result[$key];
         }
@@ -212,6 +220,7 @@ class BaseWidget extends Extendable
     /**
      * Adds widget specific asset files.
      * use $this->addCss or $this->addJs
+     *
      * @return void
      */
     public function loadAssets()
@@ -220,6 +229,7 @@ class BaseWidget extends Extendable
 
     /**
      * Returns a unique session identifier for this widget and controller action.
+     *
      * @return string
      */
     protected function makeSessionKey()

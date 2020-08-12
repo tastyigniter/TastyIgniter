@@ -20,15 +20,15 @@
                 $newsCount = $this->property('newsCount');
                 $count = (($count = count($newsFeed)) < $newsCount) ? $count : $newsCount;
 
-                $newsFeed = array_slice($newsFeed, 0, $count);
-                ?>
+                $newsFeed = array_slice($newsFeed, 0, $count); ?>
                 <?php foreach ($newsFeed as $feed) { ?>
                     <a class="list-group-item" target="_blank" href="<?= $feed['link']; ?>">
                         <b class="d-block text-truncate"><?= $feed['title']; ?></b>
                         <span class="text-muted d-block text-truncate"><?= strip_tags($feed['description']); ?></span>
                     </a>
                 <?php } ?>
-            <?php } else { ?>
+            <?php
+            } else { ?>
                 <div class="mt-3">
                     <p class="text-danger">
                         <?= e(trans('admin::lang.dashboard.error_rss')) ?>

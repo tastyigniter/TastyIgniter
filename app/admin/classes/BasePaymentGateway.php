@@ -10,8 +10,6 @@ use URL;
 
 /**
  * Base Payment Gateway Class
- *
- * @package Admin
  */
 class BasePaymentGateway extends ModelAction
 {
@@ -40,8 +38,9 @@ class BasePaymentGateway extends ModelAction
         $this->configPath = extension_path(File::normalizePath($calledClass));
         $this->configFields = $this->loadConfig($this->defineFieldsConfig(), ['fields'], 'fields');
 
-        if (!$model)
+        if (!$model) {
             return;
+        }
 
         $this->initialize($model);
     }
@@ -49,13 +48,15 @@ class BasePaymentGateway extends ModelAction
     /**
      * Initialize method called when the payment gateway is first loaded
      * with an existing model.
+     *
      * @return array
      */
     public function initialize($host)
     {
         // Set default data
-        if (!$host->exists)
+        if (!$host->exists) {
             $this->initConfigData($host);
+        }
     }
 
     /**
@@ -87,6 +88,7 @@ class BasePaymentGateway extends ModelAction
      * Registers a entry page with specific URL. For example,
      * PayPal needs a landing page for the auto-return feature.
      * Important! Payment module access point names should have a prefix.
+     *
      * @return array Returns an array containing page URLs and methods to call for each URL:
      * return ['paypal_return'=>'processPaypalReturn']. The processing methods must be declared
      * in the payment type class. Processing methods must accept one parameter - an array of URL segments
@@ -127,6 +129,7 @@ class BasePaymentGateway extends ModelAction
      * Returns true if the payment type has additional fee
      *
      * @param $host Model object to add fields to
+     *
      * @return bool
      */
     public function hasApplicableFee($host = null)
@@ -140,6 +143,7 @@ class BasePaymentGateway extends ModelAction
      * Returns the payment type additional fee
      *
      * @param $host Model object to add fields to
+     *
      * @return string
      */
     public function getFormattedApplicableFee($host = null)
@@ -192,8 +196,10 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Creates a customer profile on the payment gateway or update if the profile already exists.
+     *
      * @param \Admin\Models\Customers_model $customer Customer model to create a profile for
      * @param array $data Posted payment form data
+     *
      * @return \Admin\Models\Payment_profiles_model|object Returns the customer payment profile model
      */
     public function updatePaymentProfile($customer, $data)
@@ -203,6 +209,7 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Deletes a customer payment profile from the payment gateway.
+     *
      * @param \Admin\Models\Customers_model $customer Customer model
      * @param \Admin\Models\Payment_profiles_model $profile Payment profile model
      */
@@ -213,6 +220,7 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Creates a payment transaction from an existing payment profile.
+     *
      * @param \Admin\Models\Orders_model $order An order object to pay
      * @param array $data
      */

@@ -1,4 +1,6 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
@@ -45,13 +47,15 @@ class CreateMediaAttachmentsTable extends Migration
     protected function seedAttachmentsFromExistingModels()
     {
         Menus_model::select('menu_photo', 'menu_id')->get()->each(function ($model) {
-            if (!empty($model->menu_photo))
+            if (!empty($model->menu_photo)) {
                 $this->createMediaAttachment($model->menu_photo, $model, 'thumb');
+            }
         });
 
         Categories_model::pluck('image', 'category_id')->each(function ($model) {
-            if (!empty($model->image))
+            if (!empty($model->image)) {
                 $this->createMediaAttachment($model->image, $model, 'thumb');
+            }
         });
 
         Locations_model::select('location_image', 'options', 'location_id')->get()->each(function ($model) {
@@ -60,8 +64,9 @@ class CreateMediaAttachmentsTable extends Migration
             }
 
             if (!empty($images = array_get($model->options, 'gallery.images'))) {
-                foreach ($images as $image)
+                foreach ($images as $image) {
                     $this->createMediaAttachment($image, $model, 'gallery');
+                }
             }
         });
     }
@@ -77,8 +82,7 @@ class CreateMediaAttachmentsTable extends Migration
 
             $media->save();
             $model->media()->save($media);
-        }
-        catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             Log::debug($ex);
         }
     }

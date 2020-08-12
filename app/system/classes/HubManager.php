@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use ApplicationException;
 use Cache;
@@ -10,7 +12,6 @@ use Request;
 
 /**
  * Hub Manager Class
- * @package System
  */
 class HubManager
 {
@@ -80,8 +81,9 @@ class HubManager
 
     public function buildMetaArray($response)
     {
-        if (isset($response['type']))
+        if (isset($response['type'])) {
             $response = ['items' => [$response]];
+        }
 
         if (isset($response['items'])) {
             $extensions = [];
@@ -89,8 +91,9 @@ class HubManager
                 if ($item['type'] == 'extension' AND
                     (!ExtensionManager::instance()->findExtension($item['type']) OR ExtensionManager::instance()->isDisabled($item['code']))
                 ) {
-                    if (isset($item['tags']))
+                    if (isset($item['tags'])) {
                         arsort($item['tags']);
+                    }
 
                     $extensions[$item['code']] = $item;
                 }
@@ -113,10 +116,10 @@ class HubManager
     protected function getSecurityKey()
     {
         $carteKey = params('carte_key', '');
+
         try {
             $carteKey = decrypt($carteKey);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
         }
 
         return strlen($carteKey) ? $carteKey : md5('NULL');
@@ -141,25 +144,25 @@ class HubManager
             $result = curl_exec($curl);
 
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            if ($httpCode == 500)
+            if ($httpCode == 500) {
                 throw new ApplicationException('Server error try again');
-
+            }
             curl_close($curl);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             throw new ApplicationException('Server responded with error: '.$ex->getMessage());
         }
 
         $response = null;
+
         try {
             $response = @json_decode($result, TRUE);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
         }
 
         if (isset($response['message']) AND !in_array($httpCode, [200, 201])) {
-            if (isset($response['errors']))
+            if (isset($response['errors'])) {
                 Log::debug('Server validation errors: '.print_r($response['errors'], TRUE));
+            }
 
             throw new ApplicationException($response['message']);
         }
@@ -174,8 +177,9 @@ class HubManager
             exit(1);
         }
 
-        if (!is_dir($fileDir = dirname($filePath)))
+        if (!is_dir($fileDir = dirname($filePath))) {
             throw new ApplicationException("Downloading failed, download path ({$filePath}) not found.");
+        }
 
         try {
             $curl = $this->prepareRequest($url, $params);
@@ -184,13 +188,12 @@ class HubManager
             curl_exec($curl);
 
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            if ($httpCode == 500)
+            if ($httpCode == 500) {
                 throw new ApplicationException('Server error try again');
-
+            }
             curl_close($curl);
             fclose($fileStream);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             throw new ApplicationException('Server responded with error: '.$ex->getMessage());
         }
 

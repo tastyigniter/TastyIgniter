@@ -9,13 +9,13 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
         </div>
         <?= form_open(
-            [
-                'id' => 'status-editor-form',
-                'role' => 'form',
-                'method' => 'PATCH',
-                'data-request' => $this->alias.'::onSaveRecord',
-            ]
-        ); ?>
+    [
+        'id' => 'status-editor-form',
+        'role' => 'form',
+        'method' => 'PATCH',
+        'data-request' => $this->alias.'::onSaveRecord',
+    ]
+); ?>
         <div
             id="<?= $this->getId('form-modal-fields') ?>"
             class="modal-body progress-indicator-container"

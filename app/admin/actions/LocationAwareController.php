@@ -15,6 +15,7 @@ class LocationAwareController extends ControllerAction
      *      'applyScopeOnListQuery'  => true',
      *      'applyScopeOnFormQuery'  => true',
      *  ];
+     *
      * @var array
      */
     public $locationConfig;
@@ -56,7 +57,9 @@ class LocationAwareController extends ControllerAction
         if (
             !AdminLocation::check()
             OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
-        ) return;
+        ) {
+            return;
+        }
 
         $query->whereHasOrDoesntHaveLocation($this->controller->getLocationId());
     }
@@ -65,21 +68,25 @@ class LocationAwareController extends ControllerAction
     {
         if ($this->controller->isClassExtendedWith('Admin\Actions\ListController')) {
             Event::listen('admin.list.extendQuery', function ($listWidget, $query) {
-                if ((bool)$this->getConfig('applyScopeOnListQuery', TRUE))
+                if ((bool)$this->getConfig('applyScopeOnListQuery', TRUE)) {
                     $this->locationApplyScope($query);
+                }
             });
 
             Event::listen('admin.filter.extendQuery', function ($filterWidget, $query, $scope) {
                 if (array_key_exists('locationAware', $scope->config)
                     AND (bool)$this->getConfig('applyScopeOnListQuery', TRUE)
-                ) $this->locationApplyScope($query);
+                ) {
+                    $this->locationApplyScope($query);
+                }
             });
         }
 
         if ($this->controller->isClassExtendedWith('Admin\Actions\FormController')) {
             $this->controller->bindEvent('controller.form.extendQuery', function ($query) {
-                if ((bool)$this->getConfig('applyScopeOnFormQuery', TRUE))
+                if ((bool)$this->getConfig('applyScopeOnFormQuery', TRUE)) {
                     $this->locationApplyScope($query);
+                }
             });
         }
     }

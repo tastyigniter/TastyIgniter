@@ -27,12 +27,12 @@ class MediaItem
     public $path;
 
     /**
-     * @var integer The file size or folder files count.
+     * @var int The file size or folder files count.
      */
     public $size;
 
     /**
-     * @var integer The last modification time (Unix timestamp).
+     * @var int The last modification time (Unix timestamp).
      */
     public $lastModified;
 
@@ -101,6 +101,7 @@ class MediaItem
 
     /**
      * Returns the item size as string.
+     *
      * @return string Returns the size as string.
      */
     public function sizeToString()
@@ -112,6 +113,7 @@ class MediaItem
 
     /**
      * Returns the item last modification date as string.
+     *
      * @return string Returns the item's last modification date as string.
      */
     public function lastModifiedAsString()

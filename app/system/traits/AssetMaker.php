@@ -1,4 +1,6 @@
-<?php namespace System\Traits;
+<?php
+
+namespace System\Traits;
 
 use Assets;
 use File;
@@ -31,14 +33,17 @@ trait AssetMaker
             return $fileName;
         }
 
-        if ($symbolizedPath = File::symbolizePath($fileName, null))
+        if ($symbolizedPath = File::symbolizePath($fileName, null)) {
             return File::localToPublic($symbolizedPath);
+        }
 
-        if (!$assetPath)
+        if (!$assetPath) {
             $assetPath = $this->assetPath;
+        }
 
-        if (!is_array($assetPath))
+        if (!is_array($assetPath)) {
             $assetPath = [$assetPath];
+        }
 
         foreach ($assetPath as $path) {
             $_fileName = File::symbolizePath($path).'/'.$fileName;

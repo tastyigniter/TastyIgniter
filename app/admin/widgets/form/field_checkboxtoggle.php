@@ -14,7 +14,9 @@ $checkedValues = (array)$field->value;
                 <?php
                 $index++;
                 $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
-                if (is_string($option)) $option = [$option];
+                if (is_string($option)) {
+                    $option = [$option];
+                }
                 ?>
                 <label
                     class="btn btn-light <?= in_array($value, $checkedValues) ? 'active' : ($this->previewMode ? 'disabled' : '') ?>">
@@ -39,7 +41,9 @@ $checkedValues = (array)$field->value;
                 <?php
                 $index++;
                 $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
-                if (is_string($option)) $option = [$option];
+                if (is_string($option)) {
+                    $option = [$option];
+                }
                 ?>
                 <label class="btn btn-light <?= in_array($value, $checkedValues) ? 'active' : '' ?>">
                     <input

@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class Filter
- * @package Admin
  */
 class Filter extends BaseWidget
 {
@@ -40,7 +39,7 @@ class Filter extends BaseWidget
     protected $defaultAlias = 'filter';
 
     /**
-     * @var boolean Determines if scope definitions have been created.
+     * @var bool Determines if scope definitions have been created.
      */
     protected $scopesDefined = FALSE;
 
@@ -131,14 +130,16 @@ class Filter extends BaseWidget
 
     /**
      * Update a filter scope value.
+     *
      * @return array
      */
     public function onSubmit()
     {
         $this->defineFilterScopes();
 
-        if (!$scopes = post($this->alias))
+        if (!$scopes = post($this->alias)) {
             return;
+        }
 
         foreach ($scopes as $scope => $value) {
             $scope = $this->getScope($scope);
@@ -278,14 +279,16 @@ class Filter extends BaseWidget
             $methodName = $options;
 
             if (!$model->methodExists($methodName)) {
-                throw new Exception(sprintf("The model class %s must define a method %s returning options for the '%s' filter.",
-                    get_class($model), $methodName, $scope->scopeName
+                throw new Exception(sprintf(
+                    "The model class %s must define a method %s returning options for the '%s' filter.",
+                    get_class($model),
+                    $methodName,
+                    $scope->scopeName
                 ));
             }
 
             $options = $model->$methodName();
-        }
-        elseif (!is_array($options)) {
+        } elseif (!is_array($options)) {
             $options = [];
         }
 
@@ -297,8 +300,9 @@ class Filter extends BaseWidget
      */
     protected function defineFilterScopes()
     {
-        if ($this->scopesDefined)
+        if ($this->scopesDefined) {
             return;
+        }
 
         $this->fireSystemEvent('admin.filter.extendScopesBefore');
 
@@ -338,7 +342,9 @@ class Filter extends BaseWidget
             }
 
             // Check that the filter scope matches the active location context
-            if ($this->isLocationAware($config)) continue;
+            if ($this->isLocationAware($config)) {
+                continue;
+            }
 
             // Validate scope model
             if (isset($config['modelClass'])) {
@@ -475,14 +481,12 @@ class Filter extends BaseWidget
                         $filtered = implode(',', array_map(function ($key) {
                             return DB::getPdo()->quote($key);
                         }, $value));
-                    }
-                    else {
+                    } else {
                         $filtered = DB::getPdo()->quote($value);
                     }
 
                     $query->whereRaw(strtr($scopeConditions, [':filtered' => $filtered]));
-                }
-                elseif ($scopeMethod = $scope->scope) {
+                } elseif ($scopeMethod = $scope->scope) {
                     $query->$scopeMethod($value);
                 }
 
@@ -544,6 +548,7 @@ class Filter extends BaseWidget
 
     /**
      * Get all the registered scopes for the instance.
+     *
      * @return array
      */
     public function getScopes()
@@ -585,6 +590,7 @@ class Filter extends BaseWidget
 
     /**
      * Returns the active context for displaying the filter.
+     *
      * @return string
      */
     public function getContext()
@@ -611,8 +617,9 @@ class Filter extends BaseWidget
      */
     protected function getScopeModel($scope)
     {
-        if (!isset($this->scopeModels[$scope]))
+        if (!isset($this->scopeModels[$scope])) {
             return null;
+        }
 
         return $this->scopeModels[$scope];
     }

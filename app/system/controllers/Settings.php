@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Traits\FormExtendable;
 use Admin\Traits\WidgetMaker;
@@ -75,8 +77,9 @@ class Settings extends \Admin\Classes\AdminController
                 throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
             }
 
-            if ($definition->permission AND !AdminAuth::user()->hasPermission($definition->permission))
+            if ($definition->permission AND !AdminAuth::user()->hasPermission($definition->permission)) {
                 return Response::make(View::make('admin::access_denied'), 403);
+            }
 
             $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition->label));
             Template::setTitle($pageTitle);
@@ -85,10 +88,10 @@ class Settings extends \Admin\Classes\AdminController
             $this->initWidgets($model, $definition);
 
             $this->validateSettingItems();
-            if ($errors = array_get($this->settingItemErrors, $settingCode))
+            if ($errors = array_get($this->settingItemErrors, $settingCode)) {
                 Session::flash('errors', $errors);
-        }
-        catch (Exception $ex) {
+            }
+        } catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -100,13 +103,15 @@ class Settings extends \Admin\Classes\AdminController
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
 
-        if ($definition->permission AND !AdminAuth::user()->hasPermission($definition->permission))
+        if ($definition->permission AND !AdminAuth::user()->hasPermission($definition->permission)) {
             return Response::make(View::make('admin::access_denied'), 403);
+        }
 
         $this->initWidgets($model, $definition);
 
-        if ($this->formValidate($this->formWidget) === FALSE)
+        if ($this->formValidate($this->formWidget) === FALSE) {
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        }
 
         $this->formBeforeSave($model);
 
@@ -133,8 +138,9 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->initWidgets($model, $definition);
 
-        if ($this->formValidate($this->formWidget) === FALSE)
+        if ($this->formValidate($this->formWidget) === FALSE) {
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        }
 
         setting()->set($this->formWidget->getSaveData());
 
@@ -148,8 +154,7 @@ class Settings extends \Admin\Classes\AdminController
             });
 
             flash()->success(sprintf(lang('system::lang.settings.alert_email_sent'), $email));
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             flash()->error($ex->getMessage());
         }
 
@@ -180,9 +185,9 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function findSettingDefinitions($code)
     {
-        if (!strlen($code))
+        if (!strlen($code)) {
             throw new Exception(lang('admin::lang.form.missing_id'));
-
+        }
         // Prep the list widget config
         $model = $this->createModel();
 
@@ -207,8 +212,9 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function formValidate($form)
     {
-        if (!isset($form->config['rules']))
+        if (!isset($form->config['rules'])) {
             return null;
+        }
 
         return $this->validatePasses($form->getSaveData(), $form->config['rules']);
     }
@@ -225,8 +231,9 @@ class Settings extends \Admin\Classes\AdminController
             foreach ($settingItems as $settingItem) {
                 $settingItemForm = $this->createModel()->getFieldConfig($settingItem->code);
 
-                if (!isset($settingItemForm['rules']))
+                if (!isset($settingItemForm['rules'])) {
                     continue;
+                }
 
                 $validator = $this->makeValidator($settingValues, $settingItemForm['rules']);
                 $errors = $validator->fails() ? $validator->errors() : [];

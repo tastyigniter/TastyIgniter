@@ -9,8 +9,6 @@ use Template;
 
 /**
  * List Controller Class
- *
- * @package Admin
  */
 class ListController extends ControllerAction
 {
@@ -36,6 +34,7 @@ class ListController extends ControllerAction
      *          ],
      *      ],
      *  ];
+     *
      * @var array
      */
     public $listConfig;
@@ -112,8 +111,9 @@ class ListController extends ControllerAction
             return $this->controller->refreshList();
         }
 
-        if (!$alias = post('alias'))
+        if (!$alias = post('alias')) {
             $alias = $this->primaryAlias;
+        }
 
         $listConfig = $this->makeConfig($this->listConfig[$alias], $this->requiredConfig);
 
@@ -135,8 +135,7 @@ class ListController extends ControllerAction
 
             $prefix = ($count > 1) ? ' records' : 'record';
             flash()->success(sprintf(lang('admin::lang.alert_success'), '['.$count.']'.$prefix.' '.lang('admin::lang.text_deleted')));
-        }
-        else {
+        } else {
             flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), lang('admin::lang.text_deleted')));
         }
 
@@ -168,8 +167,9 @@ class ListController extends ControllerAction
      */
     public function makeList($alias)
     {
-        if (!$alias OR !isset($this->listConfig[$alias]))
+        if (!$alias OR !isset($this->listConfig[$alias])) {
             $alias = $this->primaryAlias;
+        }
 
         $listConfig = $this->controller->getListConfig($alias);
 
@@ -214,8 +214,9 @@ class ListController extends ControllerAction
         // Prep the optional toolbar widget
         if (isset($modelConfig['toolbar']) AND isset($this->controller->widgets['toolbar'])) {
             $this->toolbarWidget = $this->controller->widgets['toolbar'];
-            if ($this->toolbarWidget instanceof \Admin\Widgets\Toolbar)
+            if ($this->toolbarWidget instanceof \Admin\Widgets\Toolbar) {
                 $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
+            }
         }
 
         // Prep the optional filter widget
@@ -241,7 +242,7 @@ class ListController extends ControllerAction
                 $widget->setSearchTerm($searchWidget->getActiveTerm());
             }
 
-            $filterWidget->bindEvent('filter.submit', function () use ($widget, $filterWidget) {
+            $filterWidget->bindEvent('filter.submit', function () use ($widget) {
                 return $widget->onRefresh();
             });
 
@@ -268,8 +269,9 @@ class ListController extends ControllerAction
 
     public function renderList($alias = null)
     {
-        if (is_null($alias) OR !isset($this->listConfig[$alias]))
+        if (is_null($alias) OR !isset($this->listConfig[$alias])) {
             $alias = $this->primaryAlias;
+        }
 
         $list = [];
 

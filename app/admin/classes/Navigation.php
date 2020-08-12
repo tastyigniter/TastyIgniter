@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use AdminAuth;
 use Igniter\Flame\Traits\EventEmitter;
@@ -36,8 +38,9 @@ class Navigation
 
     public function getNavItems()
     {
-        if (!$this->navItems)
+        if (!$this->navItems) {
             $this->loadItems();
+        }
 
         return $this->navItems;
     }
@@ -74,19 +77,22 @@ class Navigation
 
     public function isActiveNavItem($code)
     {
-        if ($code == $this->navContextParentCode)
+        if ($code == $this->navContextParentCode) {
             return TRUE;
+        }
 
-        if ($code == $this->navContextItemCode)
+        if ($code == $this->navContextItemCode) {
             return TRUE;
+        }
 
         return FALSE;
     }
 
     public function getMainItems()
     {
-        if (!$this->mainItems)
+        if (!$this->mainItems) {
             $this->loadItems();
+        }
 
         return $this->filterPermittedNavItems($this->mainItems);
     }
@@ -116,15 +122,15 @@ class Navigation
         $navItem = array_merge($navItemDefaults, $options);
 
         if ($parentCode) {
-            if (!isset($this->navItems[$parentCode]))
+            if (!isset($this->navItems[$parentCode])) {
                 $this->navItems[$parentCode] = array_merge($navItemDefaults, [
                     'code' => $parentCode,
                     'class' => $parentCode,
                 ]);
+            }
 
             $this->navItems[$parentCode]['child'][$itemCode] = $navItem;
-        }
-        else {
+        } else {
             $this->navItems[$itemCode] = $navItem;
         }
     }
@@ -132,12 +138,13 @@ class Navigation
     public function mergeNavItem($itemCode, array $options = [], $parentCode = null)
     {
         if ($parentCode) {
-            if ($oldItem = array_get($this->navItems, $parentCode.'.child.'.$itemCode, []))
+            if ($oldItem = array_get($this->navItems, $parentCode.'.child.'.$itemCode, [])) {
                 $this->navItems[$parentCode]['child'][$itemCode] = array_merge($oldItem, $options);
-        }
-        else {
-            if ($oldItem = array_get($this->navItems, $itemCode, []))
+            }
+        } else {
+            if ($oldItem = array_get($this->navItems, $itemCode, [])) {
                 $this->navItems[$itemCode] = array_merge($oldItem, $options);
+            }
         }
     }
 
@@ -145,19 +152,20 @@ class Navigation
     {
         if (!is_null($parentCode)) {
             unset($this->navItems[$parentCode]['child'][$itemCode]);
-        }
-        else {
+        } else {
             unset($this->navItems[$itemCode]);
         }
     }
 
     public function loadItems()
     {
-        if ($this->navItemsLoaded)
+        if ($this->navItemsLoaded) {
             return;
+        }
 
-        if (!AdminAuth::check())
+        if (!AdminAuth::check()) {
             return;
+        }
 
         // Load app items
         foreach ($this->callbacks as $callback) {
@@ -167,12 +175,14 @@ class Navigation
         // Load extension items
         $extensions = ExtensionManager::instance()->getExtensions();
         foreach ($extensions as $code => $extension) {
-            if (!$extension instanceof BaseExtension)
+            if (!$extension instanceof BaseExtension) {
                 continue;
+            }
 
             $items = $extension->registerNavigation();
-            if (!is_array($items))
+            if (!is_array($items)) {
                 continue;
+            }
 
             $this->registerNavItems($items);
         }
@@ -185,8 +195,9 @@ class Navigation
     public function filterPermittedNavItems($items)
     {
         return collect($items)->filter(function ($item) {
-            if (!$permission = array_get($item, 'permission'))
+            if (!$permission = array_get($item, 'permission')) {
                 return TRUE;
+            }
 
             return AdminAuth::user()->hasPermission($permission);
         })->toArray();
@@ -228,8 +239,7 @@ class Navigation
     {
         if (!is_null($parent)) {
             $this->navItems[$parent]['child'][$code] = $item;
-        }
-        else {
+        } else {
             $this->navItems[$code] = $item;
         }
     }

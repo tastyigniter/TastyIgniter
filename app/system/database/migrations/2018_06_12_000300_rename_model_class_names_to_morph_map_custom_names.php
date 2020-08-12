@@ -1,4 +1,6 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 
@@ -31,13 +33,16 @@ class RenameModelClassNamesToMorphMapCustomNames extends Migration
     {
         collect($definitions)->each(function ($columns, $className) {
             $className::all()->each(function ($model) use ($columns) {
-
                 foreach ($columns as $column) {
                     $columnValue = $model->{$column};
 
-                    if (!$columnValue) continue;
+                    if (!$columnValue) {
+                        continue;
+                    }
 
-                    if (!array_key_exists($columnValue, $this->morphMap)) continue;
+                    if (!array_key_exists($columnValue, $this->morphMap)) {
+                        continue;
+                    }
 
                     $model->{$column} = array_get($this->morphMap, $columnValue);
                 }

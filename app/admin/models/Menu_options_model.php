@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Validation;
@@ -6,8 +8,6 @@ use Model;
 
 /**
  * MenuOptions Model Class
- *
- * @package Admin
  */
 class Menu_options_model extends Model
 {
@@ -69,8 +69,9 @@ class Menu_options_model extends Model
     {
         $this->restorePurgedValues();
 
-        if (array_key_exists('option_values', $this->attributes))
+        if (array_key_exists('option_values', $this->attributes)) {
             $this->addOptionValues($this->attributes['option_values']);
+        }
     }
 
     //

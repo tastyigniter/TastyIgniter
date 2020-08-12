@@ -1,4 +1,6 @@
-<?php namespace Admin\Database\Migrations;
+<?php
+
+namespace Admin\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -43,8 +45,9 @@ class DropMoreUnusedColumns extends Migration
 
     protected function mergeValuesIntoOptionsColumn()
     {
-        if (!Schema::hasColumn('locations', 'delivery_time'))
+        if (!Schema::hasColumn('locations', 'delivery_time')) {
             return;
+        }
 
         DB::table('locations')->get()->each(function ($model) {
             $options = @unserialize($model->options) ?: [];

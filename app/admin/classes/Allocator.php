@@ -9,8 +9,9 @@ class Allocator
 {
     public static function allocate()
     {
-        if (!$availableSlotCount = self::countAvailableSlot())
+        if (!$availableSlotCount = self::countAvailableSlot()) {
             return;
+        }
 
         $queue = Assignable_logs_model::getUnAssignedQueue($availableSlotCount);
 
@@ -22,8 +23,9 @@ class Allocator
     public static function addSlot($slot)
     {
         $slots = (array)params('allocator_slots', []);
-        if (!is_array($slot))
+        if (!is_array($slot)) {
             $slot = [$slot];
+        }
 
         foreach ($slot as $item) {
             $slots[$item] = TRUE;

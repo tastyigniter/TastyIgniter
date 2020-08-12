@@ -25,7 +25,7 @@ $orderTotals = $model->getOrderTotals();
                                     <?= $menuItemOption->quantity; ?>x
                                     <?= $menuItemOption->order_option_name; ?>&nbsp;
                                     <?php if ($menuItemOption->order_option_price > 0) { ?>
-                                        (<?= currency_format($menuItemOption->quantity*$menuItemOption->order_option_price); ?>)
+                                        (<?= currency_format($menuItemOption->quantity * $menuItemOption->order_option_price); ?>)
                                     <?php } ?>
                                 </li>
                             <?php } ?>
@@ -44,7 +44,9 @@ $orderTotals = $model->getOrderTotals();
             <td class="border-top p-0" colspan="99999"></td>
         </tr>
         <?php foreach ($orderTotals as $total) { ?>
-            <?php if ($model->isCollectionType() AND $total->code == 'delivery') continue; ?>
+            <?php if ($model->isCollectionType() AND $total->code == 'delivery') {
+    continue;
+} ?>
             <?php $thickLine = ($total->code == 'order_total' OR $total->code == 'total'); ?>
             <tr>
                 <td

@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
@@ -12,8 +14,6 @@ use System\Traits\SendsMailTemplate;
 
 /**
  * Reservations Model Class
- *
- * @package Admin
  */
 class Reservations_model extends Model
 {
@@ -122,15 +122,13 @@ class Reservations_model extends Model
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
-        }
-        else if (strlen($location)) {
+        } elseif (strlen($location)) {
             $query->where('location_id', $location);
         }
 
         if ($customer instanceof Customers_model) {
             $query->where('customer_id', $customer->getKey());
-        }
-        else if (strlen($customer)) {
+        } elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 
@@ -181,22 +179,26 @@ class Reservations_model extends Model
 
     public function getDurationAttribute($value)
     {
-        if (!is_null($value))
+        if (!is_null($value)) {
             return $value;
+        }
 
-        if (!$location = $this->location)
+        if (!$location = $this->location) {
             return $value;
+        }
 
         return $location->getOption('reservation_lead_time');
     }
 
     public function getReserveEndTimeAttribute($value)
     {
-        if (!$this->reservation_datetime)
+        if (!$this->reservation_datetime) {
             return null;
+        }
 
-        if ($this->duration)
+        if ($this->duration) {
             return $this->reservation_datetime->copy()->addMinutes($this->duration);
+        }
 
         return $this->reservation_datetime->copy()->endOfDay();
     }
@@ -205,7 +207,9 @@ class Reservations_model extends Model
     {
         if (!isset($this->attributes['reserve_date'])
             AND !isset($this->attributes['reserve_time'])
-        ) return null;
+        ) {
+            return null;
+        }
 
         return Carbon::createFromTimeString(
             "{$this->attributes['reserve_date']} {$this->attributes['reserve_time']}"
@@ -214,8 +218,9 @@ class Reservations_model extends Model
 
     public function getReservationEndDatetimeAttribute($value)
     {
-        if ($this->duration)
+        if ($this->duration) {
             return $this->reservation_datetime->copy()->addMinutes($this->duration);
+        }
 
         return $this->reservation_datetime->copy()->endOfDay();
     }
@@ -234,8 +239,9 @@ class Reservations_model extends Model
 
     public function setDurationAttribute($value)
     {
-        if (empty($value))
+        if (empty($value)) {
             $value = ($location = $this->location) ? $location->getOption('reservation_lead_time') : $value;
+        }
 
         $this->attributes['duration'] = $value;
     }
@@ -247,7 +253,8 @@ class Reservations_model extends Model
     public function isCompleted()
     {
         return $this->status_history()->where(
-            'status_id', setting('confirmed_reservation_status')
+            'status_id',
+            setting('confirmed_reservation_status')
         )->exists();
     }
 
@@ -334,6 +341,7 @@ class Reservations_model extends Model
 
     /**
      * Generate a unique hash for this reservation.
+     *
      * @return string
      */
     protected function generateHash()
@@ -346,6 +354,7 @@ class Reservations_model extends Model
 
     /**
      * Create a hash for this reservation.
+     *
      * @return string
      */
     protected function createHash()
@@ -362,8 +371,9 @@ class Reservations_model extends Model
      */
     public function addReservationTables(array $tableIds = [])
     {
-        if (!$this->exists)
+        if (!$this->exists) {
             return FALSE;
+        }
 
         $this->tables()->sync($tableIds);
     }

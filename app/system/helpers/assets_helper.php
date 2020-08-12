@@ -2,10 +2,10 @@
 /**
  * Assets helper functions
  */
-
 if (!function_exists('get_metas')) {
     /**
      * Get metas html tags
+     *
      * @return    string
      */
     function get_metas()
@@ -29,6 +29,7 @@ if (!function_exists('set_meta')) {
 if (!function_exists('get_favicon')) {
     /**
      * Get favicon html tag
+     *
      * @return    string
      */
     function get_favicon()

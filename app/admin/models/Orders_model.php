@@ -1,22 +1,22 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
+use Carbon\Carbon;
 use Event;
 use Igniter\Flame\Auth\Models\User;
 use Main\Classes\MainController;
 use Model;
 use Request;
 use System\Traits\SendsMailTemplate;
-use Carbon\Carbon;
 
 /**
  * Orders Model Class
- *
- * @package Admin
  */
 class Orders_model extends Model
 {
@@ -94,8 +94,9 @@ class Orders_model extends Model
 
     public function listCustomerAddresses()
     {
-        if (!$this->customer)
+        if (!$this->customer) {
             return [];
+        }
 
         return $this->customer->addresses()->get();
     }
@@ -130,15 +131,13 @@ class Orders_model extends Model
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
-        }
-        else if (strlen($location)) {
+        } elseif (strlen($location)) {
             $query->where('location_id', $location);
         }
 
         if ($customer instanceof User) {
             $query->where('customer_id', $customer->getKey());
-        }
-        else if (strlen($customer)) {
+        } elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 
@@ -171,8 +170,9 @@ class Orders_model extends Model
 
     public function getOrderTypeAttribute($value)
     {
-        if (isset(self::$orderTypes[$value]))
+        if (isset(self::$orderTypes[$value])) {
             return self::$orderTypes[$value];
+        }
 
         return $value;
     }
@@ -193,11 +193,13 @@ class Orders_model extends Model
 
     public function isCompleted()
     {
-        if (!$this->isPaymentProcessed())
+        if (!$this->isPaymentProcessed()) {
             return FALSE;
+        }
 
         return $this->status_history()->where(
-            'status_id', setting('completed_order_status')
+            'status_id',
+            setting('completed_order_status')
         )->exists();
     }
 
@@ -255,12 +257,14 @@ class Orders_model extends Model
         $id = $id ?? $this->status_id ?? setting('default_order_status');
 
         return $this->addStatusHistory(
-            Statuses_model::find($id), $options
+            Statuses_model::find($id),
+            $options
         );
     }
 
     /**
      * Generate a unique hash for this order.
+     *
      * @return string
      */
     protected function generateHash()
@@ -273,6 +277,7 @@ class Orders_model extends Model
 
     /**
      * Create a hash for this order.
+     *
      * @return string
      */
     protected function createHash()
@@ -372,8 +377,9 @@ class Orders_model extends Model
         }
 
         $data['order_address'] = lang('admin::lang.orders.text_collection_order_type');
-        if ($model->address)
+        if ($model->address) {
             $data['order_address'] = format_address($model->address->toArray(), FALSE);
+        }
 
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;

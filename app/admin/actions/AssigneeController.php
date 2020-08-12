@@ -17,6 +17,7 @@ class AssigneeController extends ControllerAction
      *      'applyScopeOnListQuery'  => true',
      *      'applyScopeOnFormQuery'  => true',
      *  ];
+     *
      * @var array
      */
     public $assigneeConfig;
@@ -49,8 +50,9 @@ class AssigneeController extends ControllerAction
         ]);
 
         $this->controller->bindEvent('controller.afterConstructor', function ($controller) {
-            if (!$controller->getUser())
+            if (!$controller->getUser()) {
                 return;
+            }
 
             $this->assigneeBindToolbarEvents();
             $this->assigneeBindListsEvents();
@@ -62,19 +64,22 @@ class AssigneeController extends ControllerAction
     {
         $staff = $this->controller->getUser()->staff;
 
-        if ($staff->hasGlobalAssignableScope())
+        if ($staff->hasGlobalAssignableScope()) {
             return;
+        }
 
         $query->whereInAssignToGroup($staff->groups->pluck('staff_group_id')->all());
 
-        if ($staff->hasRestrictedAssignableScope())
+        if ($staff->hasRestrictedAssignableScope()) {
             $query->whereAssignTo($staff->getKey());
+        }
     }
 
     protected function assigneeBindToolbarEvents()
     {
-        if ($this->controller->getUser()->staff->hasGlobalAssignableScope())
+        if ($this->controller->getUser()->staff->hasGlobalAssignableScope()) {
             return;
+        }
 
         if (isset($this->controller->widgets['toolbar'])) {
             $toolbarWidget = $this->controller->widgets['toolbar'];
@@ -90,8 +95,9 @@ class AssigneeController extends ControllerAction
     {
         if ($this->controller->isClassExtendedWith('Admin\Actions\ListController')) {
             Event::listen('admin.list.extendQuery', function ($listWidget, $query) {
-                if (!(bool)$this->getConfig('applyScopeOnListQuery', TRUE))
+                if (!(bool)$this->getConfig('applyScopeOnListQuery', TRUE)) {
                     return;
+                }
 
                 $this->assigneeApplyScope($query);
             });
@@ -99,8 +105,9 @@ class AssigneeController extends ControllerAction
             Event::listen('admin.filter.extendScopesBefore', function ($widget) {
                 $staff = $this->controller->getUser()->staff;
 
-                if (!$staff->hasRestrictedAssignableScope())
+                if (!$staff->hasRestrictedAssignableScope()) {
                     return;
+                }
 
                 unset($widget->scopes['assignee']);
             });
@@ -111,30 +118,36 @@ class AssigneeController extends ControllerAction
     {
         if ($this->controller->isClassExtendedWith('Admin\Actions\FormController')) {
             $this->controller->bindEvent('controller.form.extendQuery', function ($query) {
-                if (!(bool)$this->getConfig('applyScopeOnFormQuery', TRUE))
+                if (!(bool)$this->getConfig('applyScopeOnFormQuery', TRUE)) {
                     return;
+                }
 
                 $this->assigneeApplyScope($query);
             });
 
             Event::listen('admin.form.extendFields', function (Form $widget) {
-                if (!is_a($widget->getController(), get_class($this->controller)))
+                if (!is_a($widget->getController(), get_class($this->controller))) {
                     return;
+                }
 
-                if (!in_array(Assignable::class, class_uses_recursive(get_class($widget->model))))
+                if (!in_array(Assignable::class, class_uses_recursive(get_class($widget->model)))) {
                     return;
+                }
 
                 $assignable = $widget->model;
-                if (!$assignable->hasAssignToGroup() OR $assignable->hasAssignTo())
+                if (!$assignable->hasAssignToGroup() OR $assignable->hasAssignTo()) {
                     return;
+                }
 
                 // Let the allocator handle assignment when auto assign is enabled
-                if ($assignable->assignee_group->autoAssignEnabled())
+                if ($assignable->assignee_group->autoAssignEnabled()) {
                     return;
+                }
 
                 $staff = $this->controller->getUser()->staff;
-                if (!$assignable->isAssignedToStaffGroup($staff))
+                if (!$assignable->isAssignedToStaffGroup($staff)) {
                     return;
+                }
 
                 $assignable->assignTo($staff);
             });

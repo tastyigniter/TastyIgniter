@@ -2,7 +2,6 @@
 
 namespace Admin\Traits;
 
-use Admin;
 use AdminLocation;
 use Igniter\Flame\Database\Model;
 
@@ -44,8 +43,9 @@ trait Locationable
 
     public function locationableScopeEnabled()
     {
-        if ($this->locationScopeEnabled)
+        if ($this->locationScopeEnabled) {
             return TRUE;
+        }
 
         return AdminLocation::check();
     }
@@ -87,8 +87,7 @@ trait Locationable
 
         if ($this->locationableIsSingleRelationType()) {
             $builder->where($locationModel->getKeyName(), $locationId);
-        }
-        else {
+        } else {
             $qualifiedColumnName = $relationObject->getTable().'.'.$locationModel->getKeyName();
             $builder->whereHas($relationName, function ($query) use ($qualifiedColumnName, $locationId) {
                 $query->where($qualifiedColumnName, $locationId);
@@ -112,43 +111,48 @@ trait Locationable
 
     protected function setLocationableAttributes()
     {
-        if (!$this->locationableScopeEnabled())
+        if (!$this->locationableScopeEnabled()) {
             return;
+        }
 
         $locationsToSync = $this->locationableAttributes;
-        if (count($locationsToSync))
+        if (count($locationsToSync)) {
             return;
+        }
 
         $this->locationableAttributes = null;
-        if ($this->locationableRelationExists())
+        if ($this->locationableRelationExists()) {
             return;
+        }
 
         if ($this->locationableIsSingleRelationType()) {
             $relationObj = $this->getLocationableRelationObject();
             $attributeName = $relationObj->getForeignKeyName();
             $this->{$attributeName} = $this->locationableGetUserLocation();
-        }
-        else {
+        } else {
             $this->locationableAttributes = [$this->locationableGetUserLocation()];
         }
     }
 
     protected function syncLocationsOnSave()
     {
-        if ($this->locationableIsSingleRelationType())
+        if ($this->locationableIsSingleRelationType()) {
             return;
+        }
 
         $locationsToSync = $this->locationableAttributes;
-        if (is_null($locationsToSync))
+        if (is_null($locationsToSync)) {
             return;
+        }
 
         $this->getLocationableRelationObject()->sync($locationsToSync);
     }
 
     protected function detachLocationsOnDelete()
     {
-        if ($this->locationableIsSingleRelationType())
+        if ($this->locationableIsSingleRelationType()) {
             return;
+        }
 
         $this->getLocationableRelationObject()->detach();
     }

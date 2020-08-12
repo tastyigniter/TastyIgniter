@@ -39,7 +39,6 @@ use View;
 
 /**
  * Main Controller Class
- * @package Main
  */
 class MainController extends BaseController
 {
@@ -140,12 +139,13 @@ class MainController extends BaseController
     public function __construct($theme = null)
     {
         $this->theme = $theme ?: ThemeManager::instance()->getActiveTheme();
-        if (!$this->theme)
+        if (!$this->theme) {
             throw new ApplicationException(Lang::get('main::lang.not_found.active_theme'));
-
+        }
         $this->assetPath[] = $this->theme->getPath().'/assets';
-        if ($this->theme->hasParent())
+        if ($this->theme->hasParent()) {
             $this->assetPath[] = $this->theme->getParentPath().'/assets';
+        }
 
         parent::__construct();
 
@@ -160,11 +160,13 @@ class MainController extends BaseController
 
     public function remap($url = null)
     {
-        if ($url === null)
+        if ($url === null) {
             $url = Request::path();
+        }
 
-        if (!strlen($url))
+        if (!strlen($url)) {
             $url = '/';
+        }
 
         $page = $this->router->findByUrl($url);
 
@@ -176,24 +178,28 @@ class MainController extends BaseController
 //        }
 
         // Show maintenance message if maintenance is enabled
-        if (setting('maintenance_mode') == 1 AND !AdminAuth::isLogged())
+        if (setting('maintenance_mode') == 1 AND !AdminAuth::isLogged()) {
             return Response::make(
                 View::make('main::maintenance', ['message' => setting('maintenance_message')]),
                 $this->statusCode
             );
+        }
 
         // If the page was not found,
         // render the 404 page - either provided by the theme or the built-in one.
         if (!$page OR $url === '404') {
-            if (!Request::ajax())
+            if (!Request::ajax()) {
                 $this->setStatusCode(404);
+            }
 
             // Log the 404 request
-            if (!App::runningUnitTests())
+            if (!App::runningUnitTests()) {
                 Request_logs_model::createLog(404);
+            }
 
-            if (!$page = $this->router->findByUrl('/404'))
+            if (!$page = $this->router->findByUrl('/404')) {
                 return Response::make(View::make('main::404'), $this->statusCode);
+            }
         }
 
         // Loads the requested controller action
@@ -217,10 +223,10 @@ class MainController extends BaseController
 
         if (!$page->layout) {
             $layout = LayoutTemplate::initFallback($this->theme);
-        }
-        elseif (($layout = LayoutTemplate::loadCached($this->theme, $page->layout)) === null) {
+        } elseif (($layout = LayoutTemplate::loadCached($this->theme, $page->layout)) === null) {
             throw new ApplicationException(sprintf(
-                Lang::get('main::lang.not_found.layout_name'), $page->layout
+                Lang::get('main::lang.not_found.layout_name'),
+                $page->layout
             ));
         }
 
@@ -267,8 +273,7 @@ class MainController extends BaseController
 
         if ($event = $this->fireSystemEvent('main.page.beforeRenderPage', [$page])) {
             $this->pageContents = $event;
-        }
-        else {
+        } else {
             // Render the page
             $this->loader->setSource($this->page);
             $template = $this->template->load($this->page->getFilePath());
@@ -294,8 +299,9 @@ class MainController extends BaseController
 
     protected function execPageCycle()
     {
-        if ($event = $this->fireSystemEvent('main.page.start'))
+        if ($event = $this->fireSystemEvent('main.page.start')) {
             return $event;
+        }
 
         // Run layout functions
         if ($this->layoutObj) {
@@ -340,23 +346,27 @@ class MainController extends BaseController
 
     /**
      * Returns the AJAX handler for the current request, if available.
+     *
      * @return string
      */
     public function getHandler()
     {
-        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER')) {
             return trim($handler);
+        }
 
-        if ($handler = post('_handler'))
+        if ($handler = post('_handler')) {
             return trim($handler);
+        }
 
         return null;
     }
 
     protected function processHandlers()
     {
-        if (!$handler = $this->getHandler())
+        if (!$handler = $this->getHandler()) {
             return FALSE;
+        }
 
         try {
             $this->validateHandler($handler);
@@ -377,29 +387,25 @@ class MainController extends BaseController
             if ($result instanceof RedirectResponse) {
                 $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
                 $result = null;
-            }
-            elseif (Request::header('X-IGNITER-REQUEST-FLASH') AND Flash::messages()->isNotEmpty()) {
+            } elseif (Request::header('X-IGNITER-REQUEST-FLASH') AND Flash::messages()->isNotEmpty()) {
                 $response['X_IGNITER_FLASH_MESSAGES'] = Flash::all();
             }
 
             if (is_array($result)) {
                 $response = array_merge($response, $result);
-            }
-            else if (is_string($result)) {
+            } elseif (is_string($result)) {
                 $response['result'] = $result;
-            }
-            else if (is_object($result)) {
+            } elseif (is_object($result)) {
                 return $result;
             }
 
             return Response::make($response, $this->statusCode);
-        }
-        catch (ValidationException $ex) {
+        } catch (ValidationException $ex) {
             $response['X_IGNITER_ERROR_FIELDS'] = $ex->getFields();
             $response['X_IGNITER_ERROR_MESSAGE'] = $ex->getMessage();
+
             throw new AjaxException($response);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             throw $ex;
         }
     }
@@ -446,8 +452,9 @@ class MainController extends BaseController
 
     protected function validateHandlerPartials()
     {
-        if (!$partials = trim(Request::header('X-IGNITER-REQUEST-PARTIALS')))
+        if (!$partials = trim(Request::header('X-IGNITER-REQUEST-PARTIALS'))) {
             return [];
+        }
 
         $partials = explode('&', $partials);
 
@@ -467,6 +474,7 @@ class MainController extends BaseController
     /**
      * Returns an existing instance of the controller.
      * If the controller doesn't exists, returns null.
+     *
      * @return mixed Returns the controller object or null.
      */
     public static function getController()
@@ -476,6 +484,7 @@ class MainController extends BaseController
 
     /**
      * Returns the Layout object being processed by the controller.
+     *
      * @return \Main\Template\Code\LayoutCode Returns the Layout object or null.
      */
     public function getLayoutObj()
@@ -485,6 +494,7 @@ class MainController extends BaseController
 
     /**
      * Returns the current theme.
+     *
      * @return \Main\Classes\Theme
      */
     public function getTheme()
@@ -494,6 +504,7 @@ class MainController extends BaseController
 
     /**
      * Returns the routing object.
+     *
      * @return \Main\Classes\Router
      */
     public function getRouter()
@@ -505,6 +516,7 @@ class MainController extends BaseController
      * Returns the template page object being processed by the controller.
      * The object is not available on the early stages of the controller
      * initialization.
+     *
      * @return \Main\Template\Page Returns the Page object or null.
      */
     public function getPage()
@@ -518,6 +530,7 @@ class MainController extends BaseController
 
     /**
      * Initializes the Template environment and loader.
+     *
      * @return void
      */
     protected function initTemplateEnvironment()
@@ -585,8 +598,9 @@ class MainController extends BaseController
         $contents = $this->pageContents;
 
         // Extensibility
-        if ($event = $this->fireSystemEvent('main.page.render', [$contents]))
+        if ($event = $this->fireSystemEvent('main.page.render', [$contents])) {
             return $event;
+        }
 
         return $contents;
     }
@@ -608,15 +622,15 @@ class MainController extends BaseController
         }
         // Process Component partial
         elseif (strpos($name, '::') !== FALSE) {
-
-            if (($partial = $this->loadComponentPartial($name, $throwException)) === FALSE)
+            if (($partial = $this->loadComponentPartial($name, $throwException)) === FALSE) {
                 return FALSE;
+            }
 
             // Set context for self access
             $this->vars['__SELF__'] = $this->componentContext;
         }
         // Process theme partial
-        else if (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
+        elseif (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
             return FALSE;
         }
 
@@ -629,8 +643,9 @@ class MainController extends BaseController
         $this->vars = $vars;
 
         // Extensibility
-        if ($event = $this->fireSystemEvent('main.page.renderPartial', [$name, &$partialContent]))
+        if ($event = $this->fireSystemEvent('main.page.renderPartial', [$name, &$partialContent])) {
             return $event;
+        }
 
         return $partialContent;
     }
@@ -641,8 +656,9 @@ class MainController extends BaseController
      * @param string $name The content view to load.
      * @param array $params Parameter variables to pass to the view.
      *
-     * @return string
      * @throws \ApplicationException
+     *
+     * @return string
      */
     public function renderContent($name, array $params = [])
     {
@@ -653,7 +669,8 @@ class MainController extends BaseController
         // Load content from theme
         elseif (($content = Content::loadCached($this->theme, $name)) === null) {
             throw new ApplicationException(sprintf(
-                Lang::get('main::lang.not_found.content'), $name
+                Lang::get('main::lang.not_found.content'),
+                $name
             ));
         }
 
@@ -686,8 +703,9 @@ class MainController extends BaseController
      * @param array $params Parameter variables to pass to the view.
      * @param bool $throwException Throw an exception if the partial is not found.
      *
-     * @return mixed Partial contents or false if not throwing an exception.
      * @throws \ApplicationException
+     *
+     * @return mixed Partial contents or false if not throwing an exception.
      */
     public function renderComponent($name, array $params = [], $throwException = TRUE)
     {
@@ -723,8 +741,9 @@ class MainController extends BaseController
      * @param array $properties Component properties
      * @param bool $addToLayout
      *
-     * @return \System\Classes\BaseComponent Component object
      * @throws \Exception
+     *
+     * @return \System\Classes\BaseComponent Component object
      */
     public function addComponent($name, $alias, $properties = [], $addToLayout = FALSE)
     {
@@ -745,11 +764,13 @@ class MainController extends BaseController
 
     public function hasComponent($alias)
     {
-        if (!$componentObj = $this->findComponentByAlias($alias))
+        if (!$componentObj = $this->findComponentByAlias($alias)) {
             return FALSE;
+        }
 
-        if ($componentObj instanceof BlankComponent)
+        if ($componentObj instanceof BlankComponent) {
             return FALSE;
+        }
 
         return TRUE;
     }
@@ -763,11 +784,13 @@ class MainController extends BaseController
      */
     public function findComponentByAlias($alias)
     {
-        if (isset($this->page->components[$alias]))
+        if (isset($this->page->components[$alias])) {
             return $this->page->components[$alias];
+        }
 
-        if (isset($this->layout->components[$alias]))
+        if (isset($this->layout->components[$alias])) {
             return $this->layout->components[$alias];
+        }
 
         return null;
     }
@@ -827,14 +850,12 @@ class MainController extends BaseController
         if (!strlen($componentAlias)) {
             if (!is_null($this->componentContext)) {
                 $componentObj = $this->componentContext;
-            }
-            elseif (($componentObj = $this->findComponentByPartial($partialName)) === null) {
+            } elseif (($componentObj = $this->findComponentByPartial($partialName)) === null) {
                 $this->handleException(sprintf(lang('main::lang.not_found.partial'), $partialName), $throwException);
 
                 return FALSE;
             }
-        }
-        elseif (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
+        } elseif (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
             $this->handleException(sprintf(lang('main::lang.not_found.component'), $componentAlias), $throwException);
 
             return FALSE;
@@ -849,8 +870,9 @@ class MainController extends BaseController
         }
 
         // Check the component partial
-        if ($partial === null)
+        if ($partial === null) {
             $partial = ComponentPartial::loadCached($componentObj, $partialName);
+        }
 
         if ($partial === null) {
             $this->handleException(sprintf(lang('main::lang.not_found.partial'), $name), $throwException);
@@ -878,11 +900,13 @@ class MainController extends BaseController
 
     public function url($path = null, $params = [])
     {
-        if (is_null($path))
+        if (is_null($path)) {
             return $this->currentPageUrl($params);
+        }
 
-        if (!$url = $this->router->findByFile($path, $params))
+        if (!$url = $this->router->findByFile($path, $params)) {
             $url = $path;
+        }
 
         return URL::to($url);
     }
@@ -891,11 +915,13 @@ class MainController extends BaseController
     {
         $params = array_merge($this->router->getParameters(), $params);
 
-        if (!is_array($params))
+        if (!is_array($params)) {
             $params = [];
+        }
 
-        if ($path == setting('menus_page'))
+        if ($path == setting('menus_page')) {
             $params = $this->bindLocationRouteParameter($params);
+        }
 
         return $this->url($path, $params);
     }
@@ -948,22 +974,25 @@ class MainController extends BaseController
 
     protected function handleException($message, $throwException)
     {
-        if ($throwException)
+        if ($throwException) {
             throw new ApplicationException($message);
-
+        }
         flash()->danger($message);
     }
 
     protected function bindLocationRouteParameter($params)
     {
-        if (!App::bound('location'))
+        if (!App::bound('location')) {
             return $params;
+        }
 
-        if (isset($params['location']))
+        if (isset($params['location'])) {
             return $params;
+        }
 
-        if (!$location = App::make('location')->current())
+        if (!$location = App::make('location')->current()) {
             $location = App::make('location')->getDefault();
+        }
 
         $params['location'] = $location ? $location->permalink_slug : null;
 

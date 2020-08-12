@@ -1,4 +1,6 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
@@ -43,8 +45,9 @@ class DropStaleUnusedColumns extends Migration
 
     protected function copyRecordsFromExtensionsToThemes()
     {
-        if (DB::table('themes')->count())
+        if (DB::table('themes')->count()) {
             return;
+        }
 
         DB::table('extensions')->where('type', 'theme')->get()->each(function ($model) {
             DB::table('themes')->insert([
@@ -60,8 +63,9 @@ class DropStaleUnusedColumns extends Migration
 
     protected function copyRecordsFromExtensionsToPayments()
     {
-        if (DB::table('payments')->count())
+        if (DB::table('payments')->count()) {
             return;
+        }
 
         DB::table('extensions')->where('type', 'payment')->get()->each(function ($model) {
             $code = str_replace(['-', '_'], '', $model->name);

@@ -24,8 +24,8 @@
         <p class="small"><?= lang('system::lang.mail_templates.help_variables') ?></p>
         <?php $index = 0; ?>
         <?php foreach ($variables as $groupName => $vars) {
-            $index++;
-            $groupId = str_slug($groupName); ?>
+    $index++;
+    $groupId = str_slug($groupName); ?>
             <div
                 id="<?= $groupId; ?>"
                 style="display: <?= $index === 1 ? 'block' : 'none' ?>;"
@@ -38,6 +38,7 @@
                     ><pre class="mb-0 text-muted"><code><?= $variable; ?></code></pre></span>
                 <?php } ?>
             </div>
-        <?php } ?>
+        <?php
+} ?>
     </div>
 </div>

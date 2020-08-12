@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use AdminAuth;
 use Exception;
@@ -122,6 +124,7 @@ class User_preferences_model extends Model
 
     /**
      * Builds a cache key for the preferences record.
+     *
      * @return string
      */
     protected function getCacheKey($item, $user)

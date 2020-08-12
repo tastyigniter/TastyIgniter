@@ -15,18 +15,22 @@
     <?php } ?>
 
     <?php foreach ($columns as $key => $column) { ?>
-        <?php if ($column->type != 'button') continue; ?>
+        <?php if ($column->type != 'button') {
+    continue;
+} ?>
         <th class="list-action <?= $column->cssClass ?>"></th>
     <?php } ?>
     <?php foreach ($columns as $key => $column) { ?>
-        <?php if ($column->type == 'button') continue; ?>
+        <?php if ($column->type == 'button') {
+    continue;
+} ?>
 
         <?php if ($showSorting AND $column->sortable) { ?>
             <th
                 class="list-cell-name-<?= $column->getName() ?> list-cell-type-<?= $column->type ?> <?= $column->cssClass ?>"
                 <?php if ($column->width) {
-                    echo 'style="width: '.$column->width.'"';
-                } ?>>
+    echo 'style="width: '.$column->width.'"';
+} ?>>
                 <a
                     class="sort-col"
                     data-request="<?= $this->getEventHandler('onSort') ?>"
@@ -38,7 +42,7 @@
             </th>
         <?php } else { ?>
             <th
-                <?php if ($column->width): ?>style="width: <?= $column->width ?>"<?php endif ?>
+                <?php if ($column->width) { ?>style="width: <?= $column->width ?>"<?php } ?>
                 class="list-cell-name-<?= $column->getName() ?> list-cell-type-<?= $column->type ?>"
             >
                 <span><?= $this->getHeaderValue($column) ?></span>

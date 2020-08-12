@@ -19,8 +19,9 @@ class Theme extends FormRequest
             $rules = [];
             $fieldsConfig = $this->controller->asExtension('FormController')->getFormModel()->getFieldsConfig();
             foreach ($fieldsConfig as $name => $field) {
-                if (!array_key_exists('rules', $field))
+                if (!array_key_exists('rules', $field)) {
                     continue;
+                }
 
                 $dottedName = implode('.', name_to_array($name));
                 $rules[] = [$dottedName, $field['label'], $field['rules']];
@@ -45,8 +46,9 @@ class Theme extends FormRequest
     {
         $validator->after(function (Validator $validator) {
             $form = $this->controller->widgets['form'];
-            if ($form->context == 'source' AND $this->controller->wasTemplateModified())
+            if ($form->context == 'source' AND $this->controller->wasTemplateModified()) {
                 $validator->errors()->add('markup', lang('system::lang.themes.alert_changes_confirm'));
+            }
         });
     }
 

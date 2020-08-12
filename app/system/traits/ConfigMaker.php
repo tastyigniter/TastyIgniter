@@ -13,7 +13,7 @@ trait ConfigMaker
      */
     public $configPath;
 
-    protected $configFileExtension = ".php";
+    protected $configFileExtension = '.php';
 
     /**
      * Reads the contents of the supplied file and applies it to this object.
@@ -28,8 +28,9 @@ trait ConfigMaker
     {
         $config = $this->makeConfig($configFile, $requiredConfig);
 
-        if (is_null($index))
+        if (is_null($index)) {
             return $config;
+        }
 
         return isset($config[$index]) ? $config[$index] : null;
     }
@@ -40,8 +41,9 @@ trait ConfigMaker
      * @param string|array $configFile
      * @param array $requiredConfig
      *
-     * @return array
      * @throws \SystemException
+     *
+     * @return array
      */
     public function makeConfig($configFile, $requiredConfig = [])
     {
@@ -59,13 +61,13 @@ trait ConfigMaker
         }
         // Process config from file contents
         else {
-
             $configFile = $this->getConfigPath($configFile.$this->configFileExtension);
 
             if (!File::isFile($configFile)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.not_found.config'),
-                    $configFile, get_called_class()
+                    $configFile,
+                    get_called_class()
                 ));
             }
 
@@ -77,7 +79,8 @@ trait ConfigMaker
             if (!is_array($config) OR !array_key_exists($property, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.required.config'),
-                    get_called_class(), $property
+                    get_called_class(),
+                    $property
                 ));
             }
         }

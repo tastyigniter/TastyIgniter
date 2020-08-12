@@ -1,4 +1,6 @@
-<?php namespace Main\Template;
+<?php
+
+namespace Main\Template;
 
 use Main\Template\Partial as PartialTemplate;
 
@@ -9,40 +11,45 @@ class Loader extends \Igniter\Flame\Pagic\Loader
 {
     public function getMarkup($name)
     {
-        if (!$this->validateTemplateSource($name))
+        if (!$this->validateTemplateSource($name)) {
             return parent::getContents($name);
+        }
 
         return $this->source->getMarkup();
     }
 
     public function getContents($name)
     {
-        if (!$this->validateTemplateSource($name))
+        if (!$this->validateTemplateSource($name)) {
             return parent::getContents($name);
+        }
 
         return $this->source->getContent();
     }
 
     public function getFilename($name)
     {
-        if (!$this->validateTemplateSource($name))
+        if (!$this->validateTemplateSource($name)) {
             return parent::getFilename($name);
+        }
 
         return $this->source->getFilePath();
     }
 
     public function getCacheKey($name)
     {
-        if (!$this->validateTemplateSource($name))
+        if (!$this->validateTemplateSource($name)) {
             return parent::getCacheKey($name);
+        }
 
         return $this->source->getTemplateCacheKey();
     }
 
     public function isFresh($name, $time)
     {
-        if (!$this->validateTemplateSource($name))
+        if (!$this->validateTemplateSource($name)) {
             return parent::isFresh($name, $time);
+        }
 
         return $this->source->mTime <= $time;
     }
@@ -84,11 +91,13 @@ class Loader extends \Igniter\Flame\Pagic\Loader
      */
     protected function findFallbackObject($name)
     {
-        if (strpos($name, '::') !== FALSE)
+        if (strpos($name, '::') !== FALSE) {
             return FALSE;
+        }
 
-        if (array_key_exists($name, $this->fallbackCache))
+        if (array_key_exists($name, $this->fallbackCache)) {
             return $this->fallbackCache[$name];
+        }
 
         return $this->fallbackCache[$name] = PartialTemplate::find($name);
     }

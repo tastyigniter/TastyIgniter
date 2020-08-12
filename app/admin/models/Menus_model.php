@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
@@ -9,8 +11,6 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Menus Model Class
- *
- * @package Admin
  */
 class Menus_model extends Model
 {
@@ -146,20 +146,25 @@ class Menus_model extends Model
     {
         $this->restorePurgedValues();
 
-        if (array_key_exists('special', $this->attributes))
+        if (array_key_exists('special', $this->attributes)) {
             $this->addMenuSpecial((array)$this->attributes['special']);
+        }
 
-        if (array_key_exists('categories', $this->attributes))
+        if (array_key_exists('categories', $this->attributes)) {
             $this->addMenuCategories((array)$this->attributes['categories']);
+        }
 
-        if (array_key_exists('mealtimes', $this->attributes))
+        if (array_key_exists('mealtimes', $this->attributes)) {
             $this->addMenuMealtimes((array)$this->attributes['mealtimes']);
+        }
 
-        if (array_key_exists('locations', $this->attributes))
+        if (array_key_exists('locations', $this->attributes)) {
             $this->locations()->sync($this->attributes['locations']);
+        }
 
-        if (array_key_exists('menu_options', $this->attributes))
+        if (array_key_exists('menu_options', $this->attributes)) {
             $this->addMenuOption((array)$this->attributes['menu_options']);
+        }
     }
 
     protected function beforeDelete()
@@ -183,15 +188,18 @@ class Menus_model extends Model
      *
      * @param int $quantity
      * @param bool $subtract
+     *
      * @return bool TRUE on success, or FALSE on failure
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        if (!$this->subtract_stock)
+        if (!$this->subtract_stock) {
             return FALSE;
+        }
 
-        if ($this->stock_qty == 0)
+        if ($this->stock_qty == 0) {
             return FALSE;
+        }
 
         $stockQty = ($subtract === TRUE)
             ? $this->stock_qty - $quantity
@@ -218,8 +226,9 @@ class Menus_model extends Model
      */
     public function addMenuCategories(array $categoryIds = [])
     {
-        if (!$this->exists)
+        if (!$this->exists) {
             return FALSE;
+        }
 
         $this->categories()->sync($categoryIds);
     }
@@ -233,8 +242,9 @@ class Menus_model extends Model
      */
     public function addMenuMealtimes(array $mealtimeIds = [])
     {
-        if (!$this->exists)
+        if (!$this->exists) {
             return FALSE;
+        }
 
         $this->mealtimes()->sync($mealtimeIds);
     }
@@ -249,8 +259,9 @@ class Menus_model extends Model
     public function addMenuOption(array $menuOptions = [])
     {
         $menuId = $this->getKey();
-        if (!is_numeric($menuId))
+        if (!is_numeric($menuId)) {
             return FALSE;
+        }
 
         $idsToKeep = [];
         foreach ($menuOptions as $option) {
@@ -279,8 +290,9 @@ class Menus_model extends Model
     public function addMenuSpecial(array $menuSpecial = [])
     {
         $menuId = $this->getKey();
-        if (!is_numeric($menuId) OR !isset($menuSpecial['special_id']))
+        if (!is_numeric($menuId) OR !isset($menuSpecial['special_id'])) {
             return FALSE;
+        }
 
         $menuSpecial['menu_id'] = $menuId;
         $this->special()->updateOrCreate([
@@ -297,8 +309,9 @@ class Menus_model extends Model
      */
     public function isAvailable($datetime = null)
     {
-        if (is_null($datetime))
+        if (is_null($datetime)) {
             $datetime = Carbon::now();
+        }
 
         if (!$datetime instanceof Carbon) {
             $datetime = Carbon::parse($datetime);
@@ -317,5 +330,4 @@ class Menus_model extends Model
 
         return $isAvailable;
     }
-
 }

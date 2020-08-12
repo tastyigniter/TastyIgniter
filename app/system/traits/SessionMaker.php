@@ -1,4 +1,6 @@
-<?php namespace System\Traits;
+<?php
+
+namespace System\Traits;
 
 use Session;
 
@@ -104,36 +106,42 @@ trait SessionMaker
 
     /**
      * Returns a unique session identifier for this location.
+     *
      * @return string
      */
     protected function makeSessionKey()
     {
-        if (isset($this->sessionKey))
+        if (isset($this->sessionKey)) {
             return $this->sessionKey;
+        }
 
         return get_class_id(get_class($this));
     }
 
     protected function encodeSessionData($data)
     {
-        if (is_null($data))
+        if (is_null($data)) {
             return null;
+        }
 
-        if (!isset($this->encodeSession) OR $this->encodeSession === TRUE)
+        if (!isset($this->encodeSession) OR $this->encodeSession === TRUE) {
             $data = base64_encode(serialize($data));
+        }
 
         return $data;
     }
 
     protected function decodeSessionData($data)
     {
-        if (!is_string($data))
+        if (!is_string($data)) {
             return null;
+        }
 
         $encodeSession = (!isset($this->encodeSession) OR $this->encodeSession === TRUE);
 
-        if ($encodeSession OR (!$encodeSession AND is_string($data)))
+        if ($encodeSession OR (!$encodeSession AND is_string($data))) {
             $data = @unserialize(@base64_decode($data));
+        }
 
         return $data;
     }

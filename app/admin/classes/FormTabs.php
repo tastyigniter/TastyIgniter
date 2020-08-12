@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use ArrayAccess;
 use ArrayIterator;
@@ -9,8 +11,6 @@ use IteratorAggregate;
  * A translation of the form field tab configuration
  *
  * Adapted from october\backend\class\FormTabs
- *
- * @package Admin
  */
 class FormTabs implements IteratorAggregate, ArrayAccess
 {
@@ -39,7 +39,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
     public $stretch = null;
 
     /**
-     * @var boolean If set to TRUE, fields will not be displayed in tabs.
+     * @var bool If set to TRUE, fields will not be displayed in tabs.
      */
     public $suppressTabs = FALSE;
 
@@ -115,7 +115,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function removeField($name)
     {
@@ -141,7 +141,8 @@ class FormTabs implements IteratorAggregate, ArrayAccess
 
     /**
      * Returns true if any fields have been registered for these tabs
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasFields()
     {
@@ -150,6 +151,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
 
     /**
      * Returns an array of the registered fields, including tabs.
+     *
      * @return array
      */
     public function getFields()
@@ -159,6 +161,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
 
     /**
      * Returns an array of the registered fields, without tabs.
+     *
      * @return array
      */
     public function getAllFields()
@@ -174,11 +177,13 @@ class FormTabs implements IteratorAggregate, ArrayAccess
 
     /**
      * Get an iterator for the items.
+     *
      * @return ArrayIterator
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->suppressTabs
+        return new ArrayIterator(
+            $this->suppressTabs
             ? $this->getAllFields()
             : $this->getFields()
         );

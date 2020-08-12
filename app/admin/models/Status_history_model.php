@@ -1,12 +1,12 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Model;
 
 /**
  * Status History Model Class
- *
- * @package Admin
  */
 class Status_history_model extends Model
 {
@@ -75,6 +75,7 @@ class Status_history_model extends Model
      * @param \Igniter\Flame\Database\Model|mixed $status
      * @param \Igniter\Flame\Database\Model|mixed $object
      * @param array $options
+     *
      * @return static|bool
      */
     public static function createHistory($status, $object, $options = [])
@@ -90,8 +91,9 @@ class Status_history_model extends Model
         $model->comment = array_get($options, 'comment', $status->status_comment);
         $model->notify = array_get($options, 'notify', $status->notify_customer);
 
-        if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
+        if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE) {
             return FALSE;
+        }
 
         $model->save();
 

@@ -1,4 +1,6 @@
-<?php namespace Admin\Traits;
+<?php
+
+namespace Admin\Traits;
 
 use Admin\Classes\FormField;
 use ApplicationException;
@@ -27,8 +29,10 @@ trait FormModelWidget
 
     /**
      * @param $recordId
-     * @return \Igniter\Flame\Database\Model
+     *
      * @throws \ApplicationException
+     *
+     * @return \Igniter\Flame\Database\Model
      */
     public function findFormModel($recordId)
     {
@@ -42,8 +46,9 @@ trait FormModelWidget
         $query = $model->newQuery();
         $result = $query->find($recordId);
 
-        if (!$result)
+        if (!$result) {
             throw new Exception('Record ID ['.$recordId.'] not found in model '.get_class($model));
+        }
 
         return $result;
     }
@@ -61,8 +66,7 @@ trait FormModelWidget
     {
         try {
             return $this->formField->resolveModelAttribute($this->model, $attribute);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             throw new ApplicationException(Lang::get('backend::lang.model.missing_relation', [
                 'class' => get_class($this->model),
                 'relation' => $attribute,
@@ -72,15 +76,18 @@ trait FormModelWidget
 
     /**
      * Returns the model of a relation type.
-     * @return \Admin\FormWidgets\Relation
+     *
      * @throws \Exception
+     *
+     * @return \Admin\FormWidgets\Relation
      */
     protected function getRelationModel()
     {
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new ApplicationException(sprintf(
+                "Model '%s' does not contain a definition for '%s'.",
                 get_class($this->model),
                 $this->valueFrom
             ));
@@ -94,7 +101,8 @@ trait FormModelWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new ApplicationException(sprintf(
+                "Model '%s' does not contain a definition for '%s'.",
                 get_class($this->model),
                 $this->valueFrom
             ));
@@ -122,7 +130,6 @@ trait FormModelWidget
      * Sets a data collection to a model attributes, relations will also be set.
      *
      * @param \Model $model Model to save to
-     *
      * @param array $saveData Data to save.
      *
      * @return void
@@ -144,10 +151,10 @@ trait FormModelWidget
 
             if ($isNested AND is_array($value) AND $model->{$attribute}) {
                 $this->setModelAttributes($model->{$attribute}, $value);
-            }
-            elseif ($value !== FormField::NO_SAVE_DATA) {
-                if (!starts_with($attribute, '_'))
+            } elseif ($value !== FormField::NO_SAVE_DATA) {
+                if (!starts_with($attribute, '_')) {
                     $model->{$attribute} = $value;
+                }
             }
         }
     }

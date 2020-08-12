@@ -1,10 +1,11 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Html;
 
 /**
  * Template Class
- * @package Admin
  */
 class Template
 {

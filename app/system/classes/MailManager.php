@@ -71,13 +71,13 @@ class MailManager
     {
         if (isset($this->templateCache[$code])) {
             $template = $this->templateCache[$code];
-        }
-        else {
+        } else {
             $this->templateCache[$code] = $template = Mail_templates_model::findOrMakeTemplate($code);
         }
 
-        if (!$template)
+        if (!$template) {
             return FALSE;
+        }
 
         return $this->addContentToMailerInternal($message, $template, $data);
     }
@@ -106,13 +106,19 @@ class MailManager
             case 'smtp':
                 $config->set('mail.host', $settings->get('smtp_host'));
                 $config->set('mail.port', $settings->get('smtp_port'));
-                $config->set('mail.encryption', strlen($settings->get('smtp_encryption'))
+                $config->set(
+                    'mail.encryption',
+                    strlen($settings->get('smtp_encryption'))
                     ? $settings->get('smtp_encryption') : null
                 );
-                $config->set('mail.username', strlen($settings->get('smtp_user'))
+                $config->set(
+                    'mail.username',
+                    strlen($settings->get('smtp_user'))
                     ? $settings->get('smtp_user') : null
                 );
-                $config->set('mail.password', strlen($settings->get('smtp_pass'))
+                $config->set(
+                    'mail.password',
+                    strlen($settings->get('smtp_pass'))
                     ? $settings->get('smtp_pass') : null
                 );
                 break;
@@ -136,6 +142,7 @@ class MailManager
      * @param $template
      * @param $data
      * @param bool $plainOnly
+     *
      * @return bool
      */
     protected function addContentToMailerInternal($message, $template, $data, $plainOnly = FALSE)
@@ -175,12 +182,14 @@ class MailManager
      *
      * @param string $content
      * @param array $data
+     *
      * @return string
      */
     public function render($content, $data = [])
     {
-        if (!$content)
+        if (!$content) {
             return '';
+        }
 
         $html = $this->renderView($content, $data);
 
@@ -191,8 +200,10 @@ class MailManager
 
     /**
      * Render the Markdown template into text.
+     *
      * @param $content
      * @param array $data
+     *
      * @return string
      */
     public function renderText($content, $data = [])
@@ -216,10 +227,10 @@ class MailManager
 
         if ($template->layout) {
             $html = $this->renderView($template->layout->layout, [
-                    'body' => $html,
-                    'layout_css' => $template->layout->layout_css,
-                    'custom_css' => Mail_themes_model::renderCss(),
-                ] + (array)$data);
+                'body' => $html,
+                'layout_css' => $template->layout->layout_css,
+                'custom_css' => Mail_themes_model::renderCss(),
+            ] + (array)$data);
         }
 
         return $html;
@@ -230,15 +241,16 @@ class MailManager
         $this->isRenderingHtml = FALSE;
 
         $templateText = $template->plain_body;
-        if (!strlen($template->plain_body))
+        if (!strlen($template->plain_body)) {
             $templateText = $template->body;
+        }
 
         $text = $this->renderText($templateText, $data);
 
         if ($template->layout) {
             $text = $this->renderView($template->layout->plain_layout, [
-                    'body' => $text,
-                ] + (array)$data);
+                'body' => $text,
+            ] + (array)$data);
         }
 
         /*        $cleanText = preg_replace('/<br\s?\/?>/i', "\r\n", $text);*/
@@ -270,8 +282,9 @@ class MailManager
         $this->isRenderingHtml = TRUE;
 
         $code = array_pop($this->partialStack);
-        if (!$partial = Mail_partials_model::findOrMakePartial($code))
+        if (!$partial = Mail_partials_model::findOrMakePartial($code)) {
             return '<!-- Missing partial: '.$code.' -->';
+        }
 
         $currentPartial = count($this->partialStack);
         $params = $this->partialData[$currentPartial];
@@ -280,8 +293,9 @@ class MailManager
         $content = $partial->text ?: $partial->html;
         $content = $this->isRenderingHtml ? $partial->html : $content;
 
-        if (!strlen(trim($content)))
+        if (!strlen(trim($content))) {
             return '';
+        }
 
         return $this->renderView($content, $params);
     }
@@ -292,6 +306,7 @@ class MailManager
 
     /**
      * Loads registered templates from extensions
+     *
      * @return void
      */
     public function loadRegisteredTemplates()
@@ -310,54 +325,63 @@ class MailManager
 
     /**
      * Returns a list of the registered layouts.
+     *
      * @return array
      */
     public function listRegisteredLayouts()
     {
-        if (is_null($this->registeredLayouts))
+        if (is_null($this->registeredLayouts)) {
             $this->loadRegisteredTemplates();
+        }
 
         return $this->registeredLayouts;
     }
 
     /**
      * Returns a list of the registered templates.
+     *
      * @return array
      */
     public function listRegisteredTemplates()
     {
-        if (is_null($this->registeredTemplates))
+        if (is_null($this->registeredTemplates)) {
             $this->loadRegisteredTemplates();
+        }
 
         return $this->registeredTemplates;
     }
 
     /**
      * Returns a list of the registered partials.
+     *
      * @return array
      */
     public function listRegisteredPartials()
     {
-        if (is_null($this->registeredPartials))
+        if (is_null($this->registeredPartials)) {
             $this->loadRegisteredTemplates();
+        }
 
         return $this->registeredPartials;
     }
 
     /**
      * Returns a list of the registered variables.
+     *
      * @return array
      */
     public function listRegisteredVariables()
     {
-        if (is_null($this->registeredVariables))
+        if (is_null($this->registeredVariables)) {
             $this->loadRegisteredTemplates();
+        }
 
         return $this->registeredVariables;
     }
 
     /**
      * Registers mail views and manageable layouts.
+     *
      * @param array $definitions
      */
     public function registerMailLayouts(array $definitions)
@@ -371,6 +395,7 @@ class MailManager
 
     /**
      * Registers mail views and manageable templates.
+     *
      * @param array $definitions
      */
     public function registerMailTemplates(array $definitions)
@@ -384,6 +409,7 @@ class MailManager
 
     /**
      * Registers mail views and manageable partials.
+     *
      * @param array $definitions
      */
     public function registerMailPartials(array $definitions)
@@ -397,6 +423,7 @@ class MailManager
 
     /**
      * Registers mail variables.
+     *
      * @param array $definitions
      */
     public function registerMailVariables(array $definitions)
@@ -439,8 +466,9 @@ class MailManager
 
     protected function processRegistrationMethodValues($extension, $method)
     {
-        if (!method_exists($extension, $method))
+        if (!method_exists($extension, $method)) {
             return;
+        }
 
         $results = $extension->$method();
         if (is_array($results)) {

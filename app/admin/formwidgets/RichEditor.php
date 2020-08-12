@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 
@@ -7,8 +9,6 @@ use Admin\Classes\BaseFormWidget;
  * Renders a rich content editor field.
  *
  * Adapted from october\backend\classes\RichEditor
- *
- * @package Admin
  */
 class RichEditor extends BaseFormWidget
 {
@@ -17,7 +17,7 @@ class RichEditor extends BaseFormWidget
     //
 
     /**
-     * @var boolean Determines whether content has HEAD and HTML tags.
+     * @var bool Determines whether content has HEAD and HTML tags.
      */
     public $fullPage = FALSE;
 
@@ -74,6 +74,7 @@ class RichEditor extends BaseFormWidget
 
     /**
      * Determine the toolbar buttons to use based on config.
+     *
      * @return string
      */
     protected function evalToolbarButtons()

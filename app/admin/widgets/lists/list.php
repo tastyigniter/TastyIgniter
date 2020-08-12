@@ -1,4 +1,5 @@
-<?= form_open(current_url(),
+<?= form_open(
+    current_url(),
     [
         'id' => 'list-form',
         'role' => 'form',
@@ -14,8 +15,7 @@
         <tbody>
         <?php if (count($records)) { ?>
             <?= $this->makePartial('lists/list_body') ?>
-        <?php }
-        else { ?>
+        <?php } else { ?>
             <tr>
                 <td colspan="99" class="text-center"><?= $emptyMessage; ?></td>
             </tr>

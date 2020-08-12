@@ -28,6 +28,7 @@ class Content extends Model
 
     /**
      * Parses the content markup according to the file type.
+     *
      * @return string
      */
     public function parseMarkup()

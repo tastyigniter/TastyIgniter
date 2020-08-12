@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -7,8 +9,6 @@ use Html;
 
 /**
  * Map Area
- *
- * @package Admin
  */
 class MapArea extends BaseFormWidget
 {
@@ -84,8 +84,9 @@ class MapArea extends BaseFormWidget
             'form',
         ]);
 
-        if (!self::$onAddItemCalled)
+        if (!self::$onAddItemCalled) {
             $this->processExistingAreas();
+        }
     }
 
     public function loadAssets()
@@ -134,7 +135,9 @@ class MapArea extends BaseFormWidget
 
         // Give widgets an opportunity to process the data.
         foreach ($this->formWidgets as $index => $form) {
-            if (!array_key_exists($index, $value)) continue;
+            if (!array_key_exists($index, $value)) {
+                continue;
+            }
             $value[$index] = $form['widget']->getSaveData();
         }
 
@@ -161,7 +164,7 @@ class MapArea extends BaseFormWidget
 
     public function getAreaColor($key)
     {
-        --$key;
+        $key--;
 
         return $this->areaColors[$key] ?? $this->areaColors[0];
     }
@@ -221,8 +224,9 @@ class MapArea extends BaseFormWidget
         foreach ($value as $key => $area) {
             $this->indexCount++;
 
-            if (!isset($area['color']) OR !strlen($area['color']))
+            if (!isset($area['color']) OR !strlen($area['color'])) {
                 $area['color'] = $this->getAreaColor($this->indexCount);
+            }
 
             $result[$this->indexCount] = [
                 'data' => !is_array($area) ? $area->toArray() : $area,

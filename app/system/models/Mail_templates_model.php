@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use File;
 use Igniter\Flame\Mail\MailParser;
@@ -8,7 +10,6 @@ use View;
 
 /**
  * Mail templates Model Class
- * @package System
  */
 class Mail_templates_model extends Model
 {
@@ -91,6 +92,7 @@ class Mail_templates_model extends Model
 
     /**
      * Synchronise all templates to the database.
+     *
      * @return void
      */
     public static function syncAll()
@@ -104,11 +106,13 @@ class Mail_templates_model extends Model
 
         // Clean up non-customized templates
         foreach ($dbTemplates as $code => $is_custom) {
-            if ($is_custom)
+            if ($is_custom) {
                 continue;
+            }
 
-            if (!array_key_exists($code, $templates))
+            if (!array_key_exists($code, $templates)) {
                 self::whereCode($code)->delete();
+            }
         }
 
         // Create new templates
@@ -157,8 +161,8 @@ class Mail_templates_model extends Model
 
     /**
      * @param callable $callback A callable function.
-     * @deprecated see System\Classes\MailManager::registerCallback
      *
+     * @deprecated see System\Classes\MailManager::registerCallback
      */
     public static function registerCallback(callable $callback)
     {

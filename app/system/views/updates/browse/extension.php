@@ -19,8 +19,7 @@
                          class="img-rounded"
                          alt="No Image"
                          style="width: 64px; height: 64px;">
-                <?php }
-                else { ?>
+                <?php } else { ?>
                     <span
                         class="extension-icon icon-lg rounded"
                         style="<?= $item['icon']['styles'] ?? ''; ?>"

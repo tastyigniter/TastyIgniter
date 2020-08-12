@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Facades\AdminAuth;
 use Admin\Widgets\DashboardContainer;
@@ -19,8 +21,9 @@ class Dashboard extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if (is_null(Request::segment(2)))
+        if (is_null(Request::segment(2))) {
             return $this->redirect('dashboard');
+        }
 
         Template::setTitle(lang('admin::lang.dashboard.text_title'));
         Template::setHeading(lang('admin::lang.dashboard.text_heading'));

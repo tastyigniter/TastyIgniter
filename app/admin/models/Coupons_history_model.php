@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * Coupons History Model Class
- *
- * @package Admin
  */
 class Coupons_history_model extends Model
 {
@@ -69,12 +69,14 @@ class Coupons_history_model extends Model
      * @param \Igniter\Flame\Cart\CartCondition $couponCondition
      * @param \Admin\Models\Orders_model $order
      * @param \Admin\Models\Customers_model $customer
+     *
      * @return \Admin\Models\Coupons_history_model|bool
      */
     public static function createHistory($couponCondition, $order, $customer)
     {
-        if (!$coupon = $couponCondition->getModel())
+        if (!$coupon = $couponCondition->getModel()) {
             return FALSE;
+        }
 
         $model = new static;
         $model->order_id = $order->getKey();
@@ -84,8 +86,9 @@ class Coupons_history_model extends Model
         $model->amount = $couponCondition->getValue();
         $model->min_total = $coupon->min_total;
 
-        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$model, $couponCondition, $customer, $coupon], TRUE) === FALSE)
+        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$model, $couponCondition, $customer, $coupon], TRUE) === FALSE) {
             return FALSE;
+        }
 
         $model->save();
 

@@ -37,18 +37,20 @@ class StatusUpdated implements ActivityInterface
         $type = $history->isForOrder() ? self::ORDER_UPDATED_TYPE : self::RESERVATION_UPDATED_TYPE;
 
         $recipients = [];
-        if ($history->object->assignee AND $history->object->assignee->getKey() !== $user->staff->getKey())
+        if ($history->object->assignee AND $history->object->assignee->getKey() !== $user->staff->getKey()) {
             $recipients[] = $history->object->assignee->user;
+        }
 
         $statusHistory = $history->object->getLatestStatusHistory();
-        if ($history->object->customer AND $statusHistory AND $statusHistory->notify)
+        if ($history->object->customer AND $statusHistory AND $statusHistory->notify) {
             $recipients[] = $history->object->customer;
+        }
 
         activity()->logActivity(new self($type, $history->object, $user), $recipients);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -95,8 +97,9 @@ class StatusUpdated implements ActivityInterface
     public static function getUrl(Activity $activity)
     {
         $url = $activity->type == self::ORDER_UPDATED_TYPE ? 'orders' : 'reservations';
-        if ($activity->subject)
+        if ($activity->subject) {
             $url .= '/edit/'.$activity->subject->getKey();
+        }
 
         return admin_url($url);
     }

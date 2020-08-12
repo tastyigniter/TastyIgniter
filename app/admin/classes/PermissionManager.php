@@ -30,6 +30,7 @@ class PermissionManager
 
     /**
      * Returns a list of the registered permissions.
+     *
      * @return array
      */
     public function listPermissions()
@@ -44,8 +45,9 @@ class PermissionManager
 
         $permissionBundles = ExtensionManager::instance()->getRegistrationMethodValues('registerPermissions');
         foreach ($permissionBundles as $owner => $permissionBundle) {
-            if (!is_array($permissionBundle))
+            if (!is_array($permissionBundle)) {
                 continue;
+            }
 
             $this->registerPermissions($owner, $permissionBundle);
         }
@@ -87,13 +89,17 @@ class PermissionManager
             if ($this->checkPermissionStartsWith($permission, $permissions)
                 OR $this->checkPermissionEndsWith($permission, $permissions)
                 OR $this->checkPermissionMatches($permission, $permissions)
-            ) $matched = TRUE;
+            ) {
+                $matched = TRUE;
+            }
 
-            if ($checkAll === FALSE AND $matched === TRUE)
+            if ($checkAll === FALSE AND $matched === TRUE) {
                 return TRUE;
+            }
 
-            if ($checkAll === TRUE AND $matched === FALSE)
+            if ($checkAll === TRUE AND $matched === FALSE) {
                 return FALSE;
+            }
         }
 
         return !($checkAll === FALSE);
@@ -109,7 +115,9 @@ class PermissionManager
                 if ($checkPermission != $groupPermission
                     AND starts_with($groupPermission, $checkPermission)
                     AND $permitted == 1
-                ) return TRUE;
+                ) {
+                    return TRUE;
+                }
             }
         }
     }
@@ -124,7 +132,9 @@ class PermissionManager
                 if ($checkPermission != $groupPermission
                     AND ends_with($groupPermission, $checkPermission)
                     AND $permitted == 1
-                ) return TRUE;
+                ) {
+                    return TRUE;
+                }
             }
         }
     }
@@ -139,7 +149,9 @@ class PermissionManager
                 if ($checkMergedPermission != $permission
                     AND starts_with($permission, $checkMergedPermission)
                     AND $permitted == 1
-                ) return TRUE;
+                ) {
+                    return TRUE;
+                }
             }
             // Match permissions explicitly.
             elseif ($permission == $groupPermission AND $permitted == 1) {

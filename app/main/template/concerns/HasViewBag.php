@@ -38,6 +38,7 @@ trait HasViewBag
      * Returns the configured view bag component.
      * This method is used only in the back-end and for internal system needs when
      * the standard way to access components is not an option.
+     *
      * @return \Main\Components\ViewBag
      */
     public function getViewBag()
@@ -61,6 +62,7 @@ trait HasViewBag
     /**
      * Copies view bag properties to the view bag array.
      * This is required for the back-end editors.
+     *
      * @return void
      */
     protected function fillViewBagArray()

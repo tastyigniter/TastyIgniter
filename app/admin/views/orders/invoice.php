@@ -112,7 +112,7 @@
                                                 <?= $menuItemOption->quantity; ?>x
                                                 <?= $menuItemOption->order_option_name; ?>
                                                 =
-                                                <?= currency_format($menuItemOption->quantity*$menuItemOption->order_option_price); ?>
+                                                <?= currency_format($menuItemOption->quantity * $menuItemOption->order_option_price); ?>
                                             </small><br>
                                         <?php } ?>
                                     </div>
@@ -131,7 +131,9 @@
                     <tfoot>
                     <?php $totalCount = 1; ?>
                     <?php foreach ($orderTotals as $total) { ?>
-                        <?php if ($model->isCollectionType() AND $total->code == 'delivery') continue; ?>
+                        <?php if ($model->isCollectionType() AND $total->code == 'delivery') {
+        continue;
+    } ?>
                         <?php $thickLine = ($total->code == 'order_total' OR $total->code == 'total'); ?>
                         <tr>
                             <td class="<?= ($totalCount === 1 OR $thickLine) ? 'thick' : 'no'; ?>-line"

@@ -12,8 +12,9 @@ class Translations_model extends Translation
      *
      * @param $text
      *
-     * @return bool
      * @throws \Exception
+     *
+     * @return bool
      */
     public function updateAndLock($text)
     {

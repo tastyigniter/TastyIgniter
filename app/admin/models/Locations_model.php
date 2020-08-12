@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
@@ -10,8 +12,6 @@ use Igniter\Flame\Location\Models\AbstractLocation;
 
 /**
  * Locations Model Class
- *
- * @package Admin
  */
 class Locations_model extends AbstractLocation
 {
@@ -83,11 +83,13 @@ class Locations_model extends AbstractLocation
 
     public static function onboardingIsComplete()
     {
-        if (!$defaultId = params('default_location_id'))
+        if (!$defaultId = params('default_location_id')) {
             return FALSE;
+        }
 
-        if (!$model = self::isEnabled()->find($defaultId))
+        if (!$model = self::isEnabled()->find($defaultId)) {
             return FALSE;
+        }
 
         return isset($model->getAddress()['location_lat'])
             AND isset($model->getAddress()['location_lng'])
@@ -156,7 +158,7 @@ class Locations_model extends AbstractLocation
         }
 
         $searchableFields = ['location_name', 'location_address_1', 'location_address_2', 'location_city',
-            'location_state', 'location_postcode', 'description'];
+            'location_state', 'location_postcode', 'description', ];
 
         if (!is_array($sort)) {
             $sort = [$sort];
@@ -216,8 +218,9 @@ class Locations_model extends AbstractLocation
 
     public function setUrl($suffix = null)
     {
-        if (is_single_location())
+        if (is_single_location()) {
             $suffix = '/menus';
+        }
 
         $this->url = site_url($this->permalink_slug.$suffix);
     }
@@ -254,7 +257,9 @@ class Locations_model extends AbstractLocation
         $paymentGateways = Payments_model::listPayments();
 
         foreach ($paymentGateways as $payment) {
-            if ($payments AND !in_array($payment->code, $payments)) continue;
+            if ($payments AND !in_array($payment->code, $payments)) {
+                continue;
+            }
 
             $result[$payment->code] = $payment;
         }
@@ -283,7 +288,8 @@ class Locations_model extends AbstractLocation
     {
         if (!$this->location_status) {
             throw new ValidationException(['location_status' => sprintf(
-                lang('admin::lang.alert_error_set_default'), $this->location_name
+                lang('admin::lang.alert_error_set_default'),
+                $this->location_name
             )]);
         }
 

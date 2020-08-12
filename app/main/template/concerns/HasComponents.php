@@ -30,8 +30,9 @@ trait HasComponents
         $components = [];
         foreach ($this->settings as $setting => $value) {
             preg_match('/\[(.*?)\]/', $setting, $match);
-            if (!isset($match[1]))
+            if (!isset($match[1])) {
                 continue;
+            }
 
             $components[$match[1]] = is_array($value) ? $value : [];
             unset($this->settings[$setting]);
@@ -51,8 +52,9 @@ trait HasComponents
      */
     public function getComponent($componentName)
     {
-        if (!($name = $this->hasComponent($componentName)))
+        if (!($name = $this->hasComponent($componentName))) {
             return null;
+        }
 
         return ComponentManager::instance()->makeComponent(
             $componentName,
@@ -75,19 +77,22 @@ trait HasComponents
 
         foreach ($this->settings['components'] as $name => $values) {
             $result = $name;
-            if ($name == $componentName)
+            if ($name == $componentName) {
                 return $result;
+            }
 
             $parts = explode(' ', $name);
             if (count($parts) > 1) {
                 $name = trim($parts[0]);
-                if ($name == $componentName)
+                if ($name == $componentName) {
                     return $result;
+                }
             }
 
             $name = $componentManager->resolve($name);
-            if ($name == $componentName)
+            if ($name == $componentName) {
                 return $result;
+            }
         }
 
         return FALSE;
@@ -96,14 +101,17 @@ trait HasComponents
     public function runComponents()
     {
         foreach ($this->components as $component) {
-            if ($event = $component->fireEvent('component.beforeRun', [], TRUE))
+            if ($event = $component->fireEvent('component.beforeRun', [], TRUE)) {
                 return $event;
+            }
 
-            if ($result = $component->onRun())
+            if ($result = $component->onRun()) {
                 return $result;
+            }
 
-            if ($event = $component->fireEvent('component.run', [], TRUE))
+            if ($event = $component->fireEvent('component.run', [], TRUE)) {
                 return $event;
+            }
         }
     }
 

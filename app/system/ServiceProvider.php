@@ -37,6 +37,7 @@ class ServiceProvider extends AppServiceProvider
 {
     /**
      * Register the service provider.
+     *
      * @return void
      */
     public function register()
@@ -73,6 +74,7 @@ class ServiceProvider extends AppServiceProvider
 
     /**
      * Bootstrap the module events.
+     *
      * @return void
      */
     public function boot()
