@@ -17,8 +17,13 @@ class Menus_specials_model extends Model
 
     protected $primaryKey = 'special_id';
 
-    protected $fillable = ['menu_id', 'start_date', 'end_date', 'special_price', 'special_status', 'type',
-        'validity', 'recurring_every', 'recurring_from', 'recurring_to', ];
+    protected $fillable = [
+        'menu_id', 'start_date',
+        'end_date', 'special_price',
+        'special_status', 'type',
+        'validity', 'recurring_every',
+        'recurring_from', 'recurring_to',
+    ];
 
     public $casts = [
         'menu_id' => 'integer',

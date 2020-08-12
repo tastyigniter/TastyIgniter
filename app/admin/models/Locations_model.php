@@ -155,8 +155,12 @@ class Locations_model extends AbstractLocation
             $query->selectDistance($latitude, $longitude);
         }
 
-        $searchableFields = ['location_name', 'location_address_1', 'location_address_2', 'location_city',
-            'location_state', 'location_postcode', 'description', ];
+        $searchableFields = [
+            'location_name', 'location_address_1',
+            'location_address_2', 'location_city',
+            'location_state', 'location_postcode',
+            'description',
+        ];
 
         if (!is_array($sort)) {
             $sort = [$sort];
