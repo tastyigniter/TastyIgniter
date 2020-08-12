@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
 use Admin\Models\Payments_model;

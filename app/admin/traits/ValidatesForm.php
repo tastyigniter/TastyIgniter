@@ -95,7 +95,7 @@ trait ValidatesForm
             return [];
 
         $result = [];
-        foreach ($rules as $key => list($name, $attribute,)) {
+        foreach ($rules as $key => [$name, $attribute,]) {
             $result[$name] = is_lang_key($attribute) ? lang($attribute) : $attribute;
         }
 

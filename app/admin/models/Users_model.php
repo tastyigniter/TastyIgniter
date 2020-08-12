@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Classes\PermissionManager;
 use Carbon\Carbon;
@@ -7,7 +9,6 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Users Model Class
- * @package Admin
  */
 class Users_model extends AuthUserModel
 {
@@ -68,12 +69,11 @@ class Users_model extends AuthUserModel
 
     public function isSuperUser()
     {
-        return ($this->super_user == 1);
+        return $this->super_user == 1;
     }
 
     /**
      * Reset a staff password,
-     *
      */
     public function resetPassword()
     {

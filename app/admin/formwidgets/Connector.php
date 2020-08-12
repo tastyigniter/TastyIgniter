@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -10,8 +12,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Form Relationship
- *
- * @package Admin
  */
 class Connector extends BaseFormWidget
 {

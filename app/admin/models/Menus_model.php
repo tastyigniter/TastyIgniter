@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
@@ -9,8 +11,6 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Menus Model Class
- *
- * @package Admin
  */
 class Menus_model extends Model
 {
@@ -317,5 +317,4 @@ class Menus_model extends Model
 
         return $isAvailable;
     }
-
 }

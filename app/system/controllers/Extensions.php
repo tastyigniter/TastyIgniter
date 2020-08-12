@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
 use AdminMenu;
@@ -54,7 +56,7 @@ class Extensions extends \Admin\Classes\AdminController
     {
         if (!$this->getUser()->hasPermission('Admin.Extensions'))
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
-        
+
         Extensions_model::syncAll();
 
         $this->asExtension('ListController')->index();
@@ -62,7 +64,7 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function edit($action, $vendor = null, $extension = null, $context = null)
     {
-        if (!$this->getUser()->hasPermission('Site.Settings'))        
+        if (!$this->getUser()->hasPermission('Site.Settings'))
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
 
         AdminMenu::setContext('settings', 'system');
@@ -110,7 +112,7 @@ class Extensions extends \Admin\Classes\AdminController
             // so delete from database
             if (!$extensionClass) {
                 $extensionManager->deleteExtension($extensionCode);
-                flash()->success(sprintf(lang('admin::lang.alert_success'), "Extension deleted "));
+                flash()->success(sprintf(lang('admin::lang.alert_success'), 'Extension deleted '));
 
                 return $this->redirectBack();
             }

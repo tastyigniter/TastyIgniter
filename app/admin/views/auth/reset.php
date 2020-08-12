@@ -8,7 +8,7 @@
                         'id' => 'edit-form',
                         'role' => 'form',
                         'method' => 'POST',
-                        'data-request' => empty($resetCode) ? 'onRequestResetPassword' : 'onResetPassword'
+                        'data-request' => empty($resetCode) ? 'onRequestResetPassword' : 'onResetPassword',
                     ]
                 ); ?>
 

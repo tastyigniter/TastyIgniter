@@ -10,8 +10,6 @@ use URL;
 
 /**
  * Base Payment Gateway Class
- *
- * @package Admin
  */
 class BasePaymentGateway extends ModelAction
 {

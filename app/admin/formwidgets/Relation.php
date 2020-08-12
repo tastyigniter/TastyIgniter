@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -12,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
  * Renders a field prepopulated with a belongsTo and belongsToHasMany relation.
  *
  * Adapted from october\backend\formwidgets\Relation
- *
- * @package Admin
  */
 class Relation extends BaseFormWidget
 {
@@ -123,7 +123,7 @@ class Relation extends BaseFormWidget
             $relationObject = $this->getRelationObject();
             $query = $relationObject->newQuery();
 
-            list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
+            [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
             $relationType = $model->getRelationType($attribute);
             $this->relatedModel = $model->makeRelation($attribute);
 
@@ -183,7 +183,7 @@ class Relation extends BaseFormWidget
      */
     protected function getRelationObject()
     {
-        list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
+        [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
             throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",

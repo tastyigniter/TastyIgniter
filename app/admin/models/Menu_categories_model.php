@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * Menu categories Model Class
- *
- * @package Admin
  */
 class Menu_categories_model extends Model
 {

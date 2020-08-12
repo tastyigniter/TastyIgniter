@@ -1,4 +1,6 @@
-<?php namespace Main\Template;
+<?php
+
+namespace Main\Template;
 
 use Main\Template\Partial as PartialTemplate;
 

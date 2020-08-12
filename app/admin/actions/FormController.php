@@ -1,4 +1,6 @@
-<?php namespace Admin\Actions;
+<?php
+
+namespace Admin\Actions;
 
 use Admin\Classes\AdminController;
 use Admin\Classes\FormField;
@@ -18,7 +20,6 @@ use Template;
 
 /**
  * Form Controller Class
- * @package Admin
  */
 class FormController extends ControllerAction
 {

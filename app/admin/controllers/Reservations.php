@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Models\Reservations_model;
 use AdminMenu;

@@ -1,4 +1,6 @@
-<?php namespace Admin\Widgets;
+<?php
+
+namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\Widgets;
@@ -51,7 +53,7 @@ class DashboardContainer extends BaseWidget
     //
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected $defaultAlias = 'dashboardContainer';
 
@@ -61,7 +63,7 @@ class DashboardContainer extends BaseWidget
     protected $dashboardWidgets = [];
 
     /**
-     * @var boolean Determines if dashboard widgets have been created.
+     * @var bool Determines if dashboard widgets have been created.
      */
     protected $widgetsDefined = FALSE;
 

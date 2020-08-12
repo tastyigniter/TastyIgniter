@@ -1,11 +1,12 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\Currency\Models\Currency;
 use Igniter\Flame\Exception\ValidationException;
 
 /**
  * Currencies Model Class
- * @package System
  */
 class Currencies_model extends Currency
 {

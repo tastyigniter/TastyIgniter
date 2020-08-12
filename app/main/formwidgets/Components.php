@@ -1,4 +1,6 @@
-<?php namespace Main\FormWidgets;
+<?php
+
+namespace Main\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Carbon\Carbon;
@@ -10,8 +12,6 @@ use System\Classes\ComponentManager as ComponentsManager;
 /**
  * Components
  * This widget is used by the system internally on the Layouts pages.
- *
- * @package Admin
  */
 class Components extends BaseFormWidget
 {
