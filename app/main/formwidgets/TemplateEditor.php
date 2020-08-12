@@ -1,4 +1,6 @@
-<?php namespace Main\FormWidgets;
+<?php
+
+namespace Main\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
@@ -8,8 +10,6 @@ use Main\Classes\Theme;
 
 /**
  * Template Editor
- *
- * @package Admin
  */
 class TemplateEditor extends BaseFormWidget
 {

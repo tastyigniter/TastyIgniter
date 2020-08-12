@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
@@ -7,8 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Assignable logs Model Class
- *
- * @package Admin
  */
 class Assignable_logs_model extends Model
 {

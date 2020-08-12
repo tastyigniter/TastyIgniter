@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
@@ -6,7 +8,6 @@ use Model;
 
 /**
  * RequestLogs Model Class
- * @package System
  */
 class Request_logs_model extends Model
 {

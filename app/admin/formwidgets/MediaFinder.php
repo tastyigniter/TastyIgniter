@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -21,8 +23,6 @@ use SystemException;
  *        type: mediafinder
  *        mode: inline
  *        prompt: Click the %s button to find a user
- *
- * @package Admin
  */
 class MediaFinder extends BaseFormWidget
 {
@@ -52,7 +52,7 @@ class MediaFinder extends BaseFormWidget
     ];
 
     /**
-     * @var boolean Automatically attaches the chosen file if the parent record exists. Defaults to false.
+     * @var bool Automatically attaches the chosen file if the parent record exists. Defaults to false.
      */
     public $useAttachment = FALSE;
 

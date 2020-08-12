@@ -1,4 +1,6 @@
-<?php namespace System\DashboardWidgets;
+<?php
+
+namespace System\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use DOMDocument;

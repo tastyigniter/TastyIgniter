@@ -1,4 +1,6 @@
-<?php namespace Admin\Traits;
+<?php
+
+namespace Admin\Traits;
 
 use Admin\Classes\FormField;
 use Exception;
@@ -7,8 +9,6 @@ use Exception;
  * Widget Maker Trait Class
  *
  * Adapted from october\backend\traits\WidgetMaker.php
- *
- * @package Admin
  */
 trait WidgetMaker
 {

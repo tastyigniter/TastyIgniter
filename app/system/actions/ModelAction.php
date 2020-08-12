@@ -9,7 +9,6 @@ use SystemException;
 
 /**
  * Model Action base Class
- * @package System
  */
 class ModelAction
 {

@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use System\Classes\BaseController;
 
@@ -7,8 +9,6 @@ use System\Classes\BaseController;
  * Widgets used specifically for forms
  *
  * Adapted from october\backend\classes\FormWidgetBase
- *
- * @package Admin
  */
 class BaseFormWidget extends BaseWidget
 {

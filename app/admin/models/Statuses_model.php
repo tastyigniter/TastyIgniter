@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * Statuses Model Class
- *
- * @package Admin
  */
 class Statuses_model extends Model
 {

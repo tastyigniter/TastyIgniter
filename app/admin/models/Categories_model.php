@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use DB;
@@ -10,8 +12,6 @@ use Model;
 
 /**
  * Categories Model Class
- *
- * @package Admin
  */
 class Categories_model extends Model
 {

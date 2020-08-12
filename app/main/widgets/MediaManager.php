@@ -12,7 +12,6 @@ use Response;
 
 /**
  * Media Manager widget.
- * @package Admin
  */
 class MediaManager extends BaseWidget
 {
@@ -643,7 +642,7 @@ class MediaManager extends BaseWidget
             $u++;
         }
 
-        return (number_format($size, 0)." ".$units[$u]);
+        return number_format($size, 0).' '.$units[$u];
     }
 
     protected function isFolderTreeNodeExpanded($node)

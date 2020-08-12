@@ -22,7 +22,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
     protected $pathCache = [];
 
     /**
-     * @var boolean Flag on whether the cache should respect refresh requests
+     * @var bool Flag on whether the cache should respect refresh requests
      */
     protected $allowCacheRefreshes = TRUE;
 
@@ -50,7 +50,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
     /**
      * Populate the local cache of paths available in each source
      *
-     * @param boolean $refresh Default false, set to true to force the cache to be rebuilt
+     * @param bool $refresh Default false, set to true to force the cache to be rebuilt
      * @return void
      */
     protected function populateCache($refresh = FALSE)

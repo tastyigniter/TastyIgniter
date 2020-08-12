@@ -66,7 +66,7 @@
             <span><?= lang('main::lang.media_manager.label_permission'); ?> :</span>
             <?php if ($file['perms'] === '04' OR $file['perms'] === '05') { ?>
                 <?= lang('main::lang.media_manager.text_read_only'); ?>
-            <?php } else if ($file['perms'] === '06' OR $file['perms'] === '07') { ?>
+            <?php } elseif ($file['perms'] === '06' OR $file['perms'] === '07') { ?>
                 <?= lang('main::lang.media_manager.text_read_write'); ?>
             <?php } else { ?>
                 <?= lang('main::lang.media_manager.text_no_access'); ?>

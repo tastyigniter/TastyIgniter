@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Carbon\Carbon;
 use DateTime;
@@ -14,7 +16,6 @@ use System\Traits\ConfigMaker;
 
 /**
  * Settings Model Class
- * @package System
  */
 class Settings_model extends Model
 {

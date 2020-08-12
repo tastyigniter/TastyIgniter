@@ -1,9 +1,9 @@
-<?php namespace Main\Classes;
+<?php
+
+namespace Main\Classes;
 
 /**
  * Customer Class
- *
- * @package Main
  */
 class Customer extends \Igniter\Flame\Auth\Manager
 {
