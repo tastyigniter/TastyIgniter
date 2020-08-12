@@ -70,6 +70,19 @@ return [
                     ],
                 ],
             ],
+            'delivery_areas' => [
+                'label' => 'lang:admin::lang.locations.text_delivery_area',
+                'type' => 'Admin\\Widgets\\MapView',
+                'latFrom' => 'location_lat',
+                'lngFrom' => 'location_lng',
+                'zoom' => '14',
+                'shapeSelector' => '[data-map-shape]',
+                'trigger' => [
+                    'action' => 'hide',
+                    'field' => 'type',
+                    'condition' => 'value[address]',
+                ],
+            ],
             'conditions' => [
                 'label' => 'lang:admin::lang.locations.label_delivery_condition',
                 'type' => 'repeater',
