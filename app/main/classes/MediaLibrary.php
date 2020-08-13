@@ -1,4 +1,6 @@
-<?php namespace Main\Classes;
+<?php
+
+namespace Main\Classes;
 
 use Cache;
 use Config;
@@ -11,7 +13,6 @@ use SystemException;
 
 /**
  * MediaLibrary Class
- * @package System
  */
 class MediaLibrary
 {
@@ -381,7 +382,7 @@ class MediaLibrary
 
     protected function sortFiles(&$files, $sortBy)
     {
-        list($by, $direction) = $sortBy;
+        [$by, $direction] = $sortBy;
         usort($files, function ($a, $b) use ($by) {
             switch ($by) {
                 case 'name':

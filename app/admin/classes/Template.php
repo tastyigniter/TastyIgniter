@@ -1,10 +1,11 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Html;
 
 /**
  * Template Class
- * @package Admin
  */
 class Template
 {
@@ -89,7 +90,7 @@ class Template
     public function setHeading($heading)
     {
         if (strpos($heading, ':')) {
-            list($normal, $small) = explode(':', $heading);
+            [$normal, $small] = explode(':', $heading);
             $heading = $normal.'&nbsp;<small>'.$small.'</small>';
         }
 

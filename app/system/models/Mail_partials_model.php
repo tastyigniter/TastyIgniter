@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use ApplicationException;
 use Exception;
@@ -10,7 +12,6 @@ use View;
 
 /**
  * MailPartials Model Class
- * @package System
  */
 class Mail_partials_model extends Model
 {

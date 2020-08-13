@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Facades\AdminMenu;
 use System\Models\Request_logs_model;

@@ -7,7 +7,7 @@
                         'id' => 'edit-form',
                         'role' => 'form',
                         'method' => 'POST',
-                        'data-request' => 'onLogin'
+                        'data-request' => 'onLogin',
                     ]
                 ); ?>
 

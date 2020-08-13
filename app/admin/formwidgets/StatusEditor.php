@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\ActivityTypes\AssigneeUpdated;
 use Admin\ActivityTypes\StatusUpdated;
@@ -19,8 +21,6 @@ use Igniter\Flame\Exception\ValidationException;
 
 /**
  * Status Editor
- *
- * @package Admin
  */
 class StatusEditor extends BaseFormWidget
 {

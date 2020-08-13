@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Exception;
@@ -7,8 +9,6 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Customers Model Class
- *
- * @package Admin
  */
 class Customers_model extends AuthUserModel
 {

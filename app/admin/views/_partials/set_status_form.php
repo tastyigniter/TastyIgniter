@@ -1,5 +1,5 @@
 <?php
-use \Admin\Classes\UserState;
+use Admin\Classes\UserState;
 
 $staffState = \Admin\Classes\UserState::forUser();
 $statusOptions = UserState::getStatusDropdownOptions();

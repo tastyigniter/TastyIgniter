@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
@@ -9,8 +11,6 @@ use Html;
 
 /**
  * Record Editor
- *
- * @package Admin
  */
 class RecordEditor extends BaseFormWidget
 {

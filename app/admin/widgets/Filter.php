@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class Filter
- * @package Admin
  */
 class Filter extends BaseWidget
 {
@@ -40,7 +39,7 @@ class Filter extends BaseWidget
     protected $defaultAlias = 'filter';
 
     /**
-     * @var boolean Determines if scope definitions have been created.
+     * @var bool Determines if scope definitions have been created.
      */
     protected $scopesDefined = FALSE;
 

@@ -1,4 +1,6 @@
-<?php namespace System\Libraries;
+<?php
+
+namespace System\Libraries;
 
 use File;
 use Html;
@@ -12,7 +14,6 @@ use System\Traits\CombinesAssets;
  * Within controllers, widgets, components and views, use facade:
  *   Assets::addCss($path, $options);
  *   Assets::addJs($path, $options);
- * @package System
  */
 class Assets
 {
@@ -313,17 +314,17 @@ class Assets
 
         if ($type == 'js') {
             $html = '<script'.Html::attributes(array_merge([
-                    'charset' => strtolower(setting('charset', 'UTF-8')),
-                    'type' => 'text/javascript',
-                    'src' => asset($file),
-                ], $attributes)).'></script>'.PHP_EOL;
+                'charset' => strtolower(setting('charset', 'UTF-8')),
+                'type' => 'text/javascript',
+                'src' => asset($file),
+            ], $attributes)).'></script>'.PHP_EOL;
         }
         else {
             $html = '<link'.Html::attributes(array_merge([
-                    'rel' => 'stylesheet',
-                    'type' => 'text/css',
-                    'href' => asset($file),
-                ], $attributes)).'>'.PHP_EOL;
+                'rel' => 'stylesheet',
+                'type' => 'text/css',
+                'href' => asset($file),
+            ], $attributes)).'>'.PHP_EOL;
         }
 
         return $html;

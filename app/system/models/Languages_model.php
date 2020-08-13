@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
@@ -7,7 +9,6 @@ use Illuminate\Support\Facades\Lang;
 
 /**
  * Languages Model Class
- * @package System
  */
 class Languages_model extends Language
 {
@@ -144,7 +145,7 @@ class Languages_model extends Language
 
     public function isDefault()
     {
-        return ($this->code == setting('default_language'));
+        return $this->code == setting('default_language');
     }
 
     public static function listSupported()

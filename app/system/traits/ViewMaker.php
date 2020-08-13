@@ -42,7 +42,7 @@ trait ViewMaker
      */
     public $suppressLayout = FALSE;
 
-    protected $viewFileExtension = ".php";
+    protected $viewFileExtension = '.php';
 
     public function getViewPath($view, $viewPath = null)
     {

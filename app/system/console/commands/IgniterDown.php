@@ -1,4 +1,6 @@
-<?php namespace System\Console\Commands;
+<?php
+
+namespace System\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;

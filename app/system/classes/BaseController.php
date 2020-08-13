@@ -7,7 +7,6 @@ use Igniter\Flame\Traits\EventEmitter;
 
 /**
  * Base Controller Class
- * @package System
  */
 class BaseController extends Extendable
 {

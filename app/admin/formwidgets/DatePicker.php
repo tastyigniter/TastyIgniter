@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -7,8 +9,6 @@ use Carbon\Carbon;
 /**
  * Date picker
  * Renders a date picker field.
- *
- * @package Admin
  */
 class DatePicker extends BaseFormWidget
 {

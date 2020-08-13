@@ -2,7 +2,6 @@
 
 namespace Admin\Traits;
 
-use Admin;
 use AdminLocation;
 use Igniter\Flame\Database\Model;
 

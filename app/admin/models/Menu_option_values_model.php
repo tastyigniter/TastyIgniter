@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
@@ -6,8 +8,6 @@ use Model;
 
 /**
  * Menu_option_values Model Class
- *
- * @package Admin
  */
 class Menu_option_values_model extends Model
 {
