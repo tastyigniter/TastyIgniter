@@ -1,4 +1,4 @@
-<?php if (AdminAuth::isLogged()) { ?>
+@if(AdminAuth::isLogged())
     <nav class="navbar navbar-top navbar-expand navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-brand">
@@ -8,7 +8,7 @@
             </div>
 
             <div class="page-title">
-                <span><?= Template::getHeading(); ?></span>
+                <span>{{ Template::getHeading() }}</span>
             </div>
 
             <div class="navbar navbar-right">
@@ -24,8 +24,8 @@
                     <span class="fa fa-bars"></span>
                 </button>
 
-                <?= $this->widgets['mainmenu']->render(); ?>
+                {!! $this->widgets['mainmenu']->render() !!}
             </div>
         </div>
     </nav>
-<?php } ?>
+@endif

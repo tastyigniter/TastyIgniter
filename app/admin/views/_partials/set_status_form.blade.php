@@ -1,14 +1,6 @@
-<?php
-use Admin\Classes\UserState;
-
-$staffState = \Admin\Classes\UserState::forUser();
-$statusOptions = UserState::getStatusDropdownOptions();
-$clearAfterMinutesOptions = UserState::getClearAfterMinutesDropdownOptions();
-$selectedStatus = $staffState->getStatus();
-$selectedClearAfterMinutes = $staffState->getClearAfterMinutes();
-$statusUpdatedAt = $staffState->getUpdatedAt();
-$statusMessage = $staffState->getMessage();
-?>
+@php
+    $staffState = \Admin\Classes\UserState::forUser();
+@endphp
 <div
     class="modal fade"
     id="editStaffStatusModal"
@@ -20,7 +12,7 @@ $statusMessage = $staffState->getMessage();
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?= lang('admin::lang.staff_status.text_set_status'); ?></h4>
+                <h4 class="modal-title">@lang('admin::lang.staff_status.text_set_status')</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -34,12 +26,12 @@ $statusMessage = $staffState->getMessage();
                 <div class="modal-body">
                     <div class="form-group">
                         <select class="form-control" name="status">
-                            <?php foreach ($statusOptions as $key => $column) { ?>
+                            @foreach($staffState::getStatusDropdownOptions() as $key => $column)
                                 <option
-                                    value="<?= $key; ?>"
-                                    <?= $key == $selectedStatus ? 'selected="selected"' : ''; ?>
-                                ><?= lang($column); ?></option>
-                            <?php } ?>
+                                    value="{{ $key }}"
+                                    {!! $key == $staffState->getStatus() ? 'selected="selected"' : '' !!}
+                                >@lang($column)</option>
+                            @endforeach
                         </select>
                     </div>
                     <div
@@ -53,8 +45,8 @@ $statusMessage = $staffState->getMessage();
                             type="text"
                             class="form-control"
                             name="message"
-                            value="<?= $statusMessage ?>"
-                            placeholder="<?= lang('admin::lang.staff_status.text_lunch_break'); ?>"
+                            value="{{ $staffState->getMessage() }}"
+                            placeholder="@lang('admin::lang.staff_status.text_lunch_break')"
                         >
                     </div>
                     <div
@@ -65,16 +57,16 @@ $statusMessage = $staffState->getMessage();
                         data-trigger-closest-parent="form"
                     >
                         <select class="form-control" name="clear_after" id="staffClearStatusAfter">
-                            <?php foreach ($clearAfterMinutesOptions as $key => $column) { ?>
+                            @foreach($staffState::getClearAfterMinutesDropdownOptions() as $key => $column)
                                 <option
-                                    value="<?= $key; ?>"
-                                    <?= $key == $selectedClearAfterMinutes ? 'selected="selected"' : ''; ?>
-                                ><?= lang($column); ?></option>
-                            <?php } ?>
+                                    value="{{ $key }}"
+                                    {!! $key == $staffState->getClearAfterMinutes() ? 'selected="selected"' : '' !!}
+                                >@lang($column)</option>
+                            @endforeach
                         </select>
-                        <?php if ($statusUpdatedAt) { ?>
-                            <span class="help-block"><?= time_elapsed($statusUpdatedAt); ?></span>
-                        <?php } ?>
+                        @if($statusUpdatedAt = $staffState->getUpdatedAt())
+                            <span class="help-block">{{ time_elapsed($statusUpdatedAt) }}</span>
+                        @endif
                     </div>
                 </div>
                 <div class="modal-footer text-right">
@@ -82,11 +74,11 @@ $statusMessage = $staffState->getMessage();
                         type="button"
                         class="btn btn-link"
                         data-dismiss="modal"
-                    ><?= lang('admin::lang.button_close') ?></button>
+                    >@lang('admin::lang.button_close')</button>
                     <button
                         type="submit"
                         class="btn btn-primary"
-                    ><?= lang('admin::lang.button_save') ?></button>
+                    >@lang('admin::lang.button_save')</button>
                 </div>
             </form>
         </div>
