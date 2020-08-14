@@ -71,11 +71,14 @@ trait ViewMaker
             }
         }
 
-        return $view;
+        return $this->guessViewFileExtension($view) ?? $view;
     }
 
     public function guessViewFileExtension($path)
     {
+        if (strlen(File::extension($path)))
+            return $path;
+
         $path = preg_replace('#/+#', '/', $path);
 
         foreach ($this->viewFileExtension as $viewFileExtension) {
