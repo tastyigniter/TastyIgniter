@@ -19,9 +19,9 @@ trait ValidatesForm
      * Validate the given request with the given rules.
      *
      * @param  $request
-     * @param  array $rules
-     * @param  array $messages
-     * @param  array $customAttributes
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
      *
      * @return array|bool
      */
@@ -42,9 +42,9 @@ trait ValidatesForm
      * Validate the given request with the given rules.
      *
      * @param  $request
-     * @param  array $rules
-     * @param  array $messages
-     * @param  array $customAttributes
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
      *
      * @return array
      */
@@ -95,7 +95,7 @@ trait ValidatesForm
             return [];
 
         $result = [];
-        foreach ($rules as $key => [$name, $attribute,]) {
+        foreach ($rules as $key => [$name, $attribute]) {
             $result[$name] = is_lang_key($attribute) ? lang($attribute) : $attribute;
         }
 
@@ -105,8 +105,8 @@ trait ValidatesForm
     /**
      * Get the request input based on the given validation rules.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  array $rules
+     * @param \Illuminate\Http\Request $request
+     * @param array $rules
      *
      * @return array
      */
