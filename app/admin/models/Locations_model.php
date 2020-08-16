@@ -46,12 +46,9 @@ class Locations_model extends AbstractLocation
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
-        'belongsToMany' => [
-            'tables' => ['Admin\Models\Tables_model', 'table' => 'location_tables'],
-        ],
     ];
 
-    protected $purgeable = ['tables', 'delivery_areas'];
+    protected $purgeable = ['delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [
@@ -118,11 +115,6 @@ class Locations_model extends AbstractLocation
     protected function afterSave()
     {
         $this->performAfterSave();
-    }
-
-    protected function beforeDelete()
-    {
-        Location_tables_model::where('location_id', $this->getKey())->delete();
     }
 
     //
@@ -277,10 +269,6 @@ class Locations_model extends AbstractLocation
         if (array_key_exists('delivery_areas', $this->attributes)) {
             $this->addLocationAreas($this->attributes['delivery_areas']);
         }
-
-        if (array_key_exists('tables', $this->attributes)) {
-            $this->addLocationTables($this->attributes['tables']);
-        }
     }
 
     public function makeDefault()
@@ -325,17 +313,5 @@ class Locations_model extends AbstractLocation
         }
 
         return self::$defaultLocation = $defaultLocation;
-    }
-
-    /**
-     * Create a new or update existing location tables
-     *
-     * @param array $tables
-     *
-     * @return bool
-     */
-    public function addLocationTables($tables = [])
-    {
-        return $this->tables()->sync($tables);
     }
 }

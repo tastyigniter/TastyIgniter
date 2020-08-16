@@ -37,15 +37,8 @@ class Tables_model extends Model
     ];
 
     public $relation = [
-        'hasManyThrough' => [
-            'reservations' => [
-                'Admin\Models\Reservations_model',
-                'throughKey' => 'table_id',
-                'through' => 'Admin\Models\Location_tables_model',
-            ],
-        ],
-        'belongsToMany' => [
-            'locations' => ['Admin\Models\Locations_model', 'table' => 'location_tables'],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -76,14 +69,5 @@ class Tables_model extends Model
     {
         return $query->where('min_capacity', '<=', $noOfGuests)
             ->where('max_capacity', '>=', $noOfGuests);
-    }
-
-    public function scopeWhereHasReservationBetween($query, $start, $end)
-    {
-        $query->whereHas('reservations', function ($q) use ($start, $end) {
-            $q->whereRaw('ADDTIME(reserve_date, reserve_time) between ? and ?', [$start, $end]);
-        });
-
-        return $query;
     }
 }
