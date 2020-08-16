@@ -3,6 +3,7 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
 use Model;
 
@@ -13,8 +14,11 @@ class Tables_model extends Model
 {
     use Locationable;
     use Validation;
+    use Sortable;
 
     const LOCATIONABLE_RELATION = 'locations';
+
+    const SORT_ORDER = 'priority';
 
     /**
      * @var string The database table name
