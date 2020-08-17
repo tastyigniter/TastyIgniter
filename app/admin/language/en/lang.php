@@ -510,7 +510,6 @@ return [
         'label_image' => 'Image',
         'label_limit_orders' => 'Limit Order Count',
         'label_limit_orders_count' => 'Maximum Orders Per Interval',
-        'label_limit_orders_interval' => 'Limit Orders Time Interval',
         'label_offer_delivery' => 'Offer Delivery',
         'label_offer_collection' => 'Offer Pick-up',
         'label_delivery_time_interval' => 'Delivery Time Interval',
