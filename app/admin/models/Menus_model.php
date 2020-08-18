@@ -155,7 +155,7 @@ class Menus_model extends Model
 
         if (array_key_exists('special', $this->attributes))
             $this->addMenuSpecial((array)$this->attributes['special']);
-            
+
         if (array_key_exists('allergens', $this->attributes))
             $this->addMenuAllergens((array)$this->attributes['allergens']);
 
@@ -219,7 +219,7 @@ class Menus_model extends Model
 
         return TRUE;
     }
-    
+
     /**
      * Create new or update existing menu allergens
      *
@@ -343,5 +343,4 @@ class Menus_model extends Model
 
         return $isAvailable;
     }
-
 }
