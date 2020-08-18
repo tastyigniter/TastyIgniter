@@ -18,9 +18,9 @@
         <input type="hidden" data-map-shape <?= $this->getMapShapeAttributes($formWidget->model) ?>>
         <div class="modal-body">
             <div class="form-fields p-0">
-                <?php foreach ($formWidget->getFields() as $field): ?>
+                <?php foreach ($formWidget->getFields() as $field) { ?>
                     <?= $formWidget->renderField($field) ?>
-                <?php endforeach ?>
+                <?php } ?>
             </div>
         </div>
         <div class="modal-footer text-right">
