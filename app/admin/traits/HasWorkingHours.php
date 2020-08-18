@@ -106,7 +106,7 @@ trait HasWorkingHours
             throw new InvalidArgumentException("Defined parameter '$type' is not a valid working type.");
 
         if (is_null($days)) {
-            $days = $this->hasFutureOrder()
+            $days = $this->hasFutureOrder($type)
                 ? (int)$this->futureOrderDays($type)
                 : 0;
         }

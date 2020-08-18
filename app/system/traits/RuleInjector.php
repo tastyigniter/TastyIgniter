@@ -26,7 +26,7 @@ trait RuleInjector
      */
     public function setInjectRuleParameters($value)
     {
-        $this->injectRuleParameters = (boolean)$value;
+        $this->injectRuleParameters = (bool)$value;
     }
 
     /**

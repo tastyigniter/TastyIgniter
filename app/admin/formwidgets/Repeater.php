@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Illuminate\Database\Eloquent\Collection;
@@ -109,9 +111,6 @@ class Repeater extends BaseFormWidget
         return (array)$this->processSaveValue($value);
     }
 
-    /**
-     *
-     */
     public function loadAssets()
     {
         $this->addJs('vendor/sortablejs/Sortable.min.js', 'sortable-js');

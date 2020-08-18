@@ -363,7 +363,7 @@ if (!function_exists('is_single_location')) {
      */
     function is_single_location()
     {
-        return (setting('site_location_mode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE);
+        return setting('site_location_mode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
     }
 }
 
@@ -489,7 +489,6 @@ if (!function_exists('convert_underscore_to_camelcase')) {
      * Current URL
      * Converts a string_with_underscore into StringWithCamelCase. Strings can be passed via the
      * first parameter either as a string or an array.
-     * @access    public
      * @return    string
      */
     function convert_underscore_to_camelcase($string = '')
@@ -501,7 +500,6 @@ if (!function_exists('convert_underscore_to_camelcase')) {
 if (!function_exists('contains_substring')) {
     /**
      * Determine if a given string contains a given substring.
-     * @access    public
      *
      * @param string $haystack
      * @param string|array $needles
@@ -523,7 +521,6 @@ if (!function_exists('contains_substring')) {
 if (!function_exists('is_lang_key')) {
     /**
      * Determine if a given string matches a language key.
-     * @access    public
      *
      * @param string $line
      *

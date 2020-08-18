@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use ArrayAccess;
 use ArrayIterator;
@@ -9,8 +11,6 @@ use IteratorAggregate;
  * A translation of the form field tab configuration
  *
  * Adapted from october\backend\class\FormTabs
- *
- * @package Admin
  */
 class FormTabs implements IteratorAggregate, ArrayAccess
 {
@@ -39,7 +39,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
     public $stretch = null;
 
     /**
-     * @var boolean If set to TRUE, fields will not be displayed in tabs.
+     * @var bool If set to TRUE, fields will not be displayed in tabs.
      */
     public $suppressTabs = FALSE;
 
@@ -115,7 +115,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function removeField($name)
     {
@@ -141,7 +141,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
 
     /**
      * Returns true if any fields have been registered for these tabs
-     * @return boolean
+     * @return bool
      */
     public function hasFields()
     {

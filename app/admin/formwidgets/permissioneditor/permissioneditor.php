@@ -3,7 +3,7 @@
         <table class="table table-border mb-0">
             <?php $index = 0;
             foreach ($groupedPermissions as $group => $permissions) {
-                ++$index; ?>
+                $index++; ?>
                 <thead>
                 <tr>
                     <th class="<?= $index === 1 ? '' : 'pt-4' ?>">

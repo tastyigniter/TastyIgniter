@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * Coupons History Model Class
- *
- * @package Admin
  */
 class Coupons_history_model extends Model
 {

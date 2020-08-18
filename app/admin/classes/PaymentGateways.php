@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Admin\Models\Payments_model;
 use File;
@@ -9,8 +11,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Manages payment gateways
- *
- * @package Admin
  */
 class PaymentGateways
 {

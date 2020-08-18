@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Location\Models\AbstractWorkingHour;
 
 /**
  * Working hours Model Class
- *
- * @package Admin
  */
 class Working_hours_model extends AbstractWorkingHour
 {

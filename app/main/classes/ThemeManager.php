@@ -1,4 +1,6 @@
-<?php namespace Main\Classes;
+<?php
+
+namespace Main\Classes;
 
 use App;
 use File;
@@ -13,7 +15,6 @@ use ZipArchive;
 
 /**
  * Theme Manager Class
- * @package Main
  */
 class ThemeManager
 {
@@ -271,7 +272,7 @@ class ThemeManager
             return FALSE;
         }
 
-        return (rtrim($themeCode, '/') == $this->getActiveThemeCode());
+        return rtrim($themeCode, '/') == $this->getActiveThemeCode();
     }
 
     /**
@@ -384,7 +385,7 @@ class ThemeManager
         if (is_null($base)) {
             $base = ['/'];
         }
-        else if (!is_array($base)) {
+        elseif (!is_array($base)) {
             $base = [$base];
         }
 
@@ -647,12 +648,12 @@ class ThemeManager
         }
 
         foreach ([
-                     'code',
-                     'name',
-                     'description',
-                     'version',
-                     'author',
-                 ] as $item) {
+            'code',
+            'name',
+            'description',
+            'version',
+            'author',
+        ] as $item) {
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.missing.config_key'),

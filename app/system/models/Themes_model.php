@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Exception;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -11,7 +13,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Themes Model Class
- * @package System
  */
 class Themes_model extends Model
 {
@@ -178,7 +179,7 @@ class Themes_model extends Model
 
     /**
      * Attach the theme object to this class
-     * @return boolean
+     * @return bool
      */
     public function applyThemeManager()
     {
@@ -344,8 +345,7 @@ class Themes_model extends Model
         do {
             $uniqueCode = $code.($suffix ? '-'.$suffix : '');
             $suffix = strtolower(str_random('3'));
-        } // Already in the DB? Fail. Try again
-        while (self::themeCodeExists($uniqueCode));
+        } while (self::themeCodeExists($uniqueCode)); // Already in the DB? Fail. Try again
 
         return $uniqueCode;
     }
@@ -353,11 +353,11 @@ class Themes_model extends Model
     /**
      * Checks whether a code exists in the database or not
      *
-     * @param $uniqueCode
+     * @param string $uniqueCode
      * @return bool
      */
     protected static function themeCodeExists($uniqueCode)
     {
-        return (self::where('code', '=', $uniqueCode)->limit(1)->count() > 0);
+        return self::where('code', '=', $uniqueCode)->limit(1)->count() > 0;
     }
 }

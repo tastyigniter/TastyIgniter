@@ -1,12 +1,12 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use System\Traits\PropertyContainer;
 
 /**
  * Dashboard Widget base class
  * Dashboard widgets are used inside the DashboardContainer.
- *
- * @package Admin
  */
 class BaseDashboardWidget extends BaseWidget
 {

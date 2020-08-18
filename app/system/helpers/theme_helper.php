@@ -4,7 +4,6 @@ use Main\Classes\ThemeManager;
 
 /**
  * Theme helper functions
- * @package System
  */
 
 // ------------------------------------------------------------------------

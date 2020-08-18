@@ -1,22 +1,22 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
+use Carbon\Carbon;
 use Event;
 use Igniter\Flame\Auth\Models\User;
 use Main\Classes\MainController;
 use Model;
 use Request;
 use System\Traits\SendsMailTemplate;
-use Carbon\Carbon;
 
 /**
  * Orders Model Class
- *
- * @package Admin
  */
 class Orders_model extends Model
 {
@@ -131,14 +131,14 @@ class Orders_model extends Model
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
         }
-        else if (strlen($location)) {
+        elseif (strlen($location)) {
             $query->where('location_id', $location);
         }
 
         if ($customer instanceof User) {
             $query->where('customer_id', $customer->getKey());
         }
-        else if (strlen($customer)) {
+        elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 

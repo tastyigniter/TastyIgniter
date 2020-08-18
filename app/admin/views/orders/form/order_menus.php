@@ -25,7 +25,7 @@ $orderTotals = $model->getOrderTotals();
                                     <?= $menuItemOption->quantity; ?>x
                                     <?= $menuItemOption->order_option_name; ?>&nbsp;
                                     <?php if ($menuItemOption->order_option_price > 0) { ?>
-                                        (<?= currency_format($menuItemOption->quantity*$menuItemOption->order_option_price); ?>)
+                                        (<?= currency_format($menuItemOption->quantity * $menuItemOption->order_option_price); ?>)
                                     <?php } ?>
                                 </li>
                             <?php } ?>

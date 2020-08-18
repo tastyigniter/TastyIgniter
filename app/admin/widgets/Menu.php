@@ -26,7 +26,7 @@ class Menu extends BaseWidget
     protected $defaultAlias = 'top-menu';
 
     /**
-     * @var boolean Determines if item definitions have been created.
+     * @var bool Determines if item definitions have been created.
      */
     protected $itemsDefined = FALSE;
 

@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -11,8 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Map Area
- *
- * @package Admin
  */
 class MapArea extends BaseFormWidget
 {

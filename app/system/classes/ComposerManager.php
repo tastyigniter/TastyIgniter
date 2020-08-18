@@ -4,7 +4,6 @@ namespace System\Classes;
 
 /**
  * ComposerManager Class
- * @package System
  */
 class ComposerManager
 {

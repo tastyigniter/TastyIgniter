@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use File;
 use Igniter\Flame\Exception\ApplicationException;
@@ -9,7 +11,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Extensions Model Class
- * @package System
  */
 class Extensions_model extends Model
 {
@@ -134,7 +135,7 @@ class Extensions_model extends Model
 
     /**
      * Sets the extension class as a property of this class
-     * @return boolean
+     * @return bool
      */
     public function applyExtensionClass()
     {

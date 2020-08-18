@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * Payment logs Model Class
- *
- * @package Admin
  */
 class Payment_logs_model extends Model
 {

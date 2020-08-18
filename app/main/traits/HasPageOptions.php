@@ -4,7 +4,6 @@ namespace Main\Traits;
 
 /**
  * Trait HasPageOptions
- * @package Main\Traits
  * @todo remove in v3.1
  */
 trait HasPageOptions

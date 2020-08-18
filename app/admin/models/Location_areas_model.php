@@ -7,8 +7,6 @@ use Igniter\Flame\Location\Models\AbstractArea;
 
 /**
  * Location areas Model Class
- *
- * @package Admin
  */
 class Location_areas_model extends AbstractArea
 {

@@ -13,7 +13,7 @@ trait ConfigMaker
      */
     public $configPath;
 
-    protected $configFileExtension = ".php";
+    protected $configFileExtension = '.php';
 
     /**
      * Reads the contents of the supplied file and applies it to this object.

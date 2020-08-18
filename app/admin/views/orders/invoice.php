@@ -112,7 +112,7 @@
                                                 <?= $menuItemOption->quantity; ?>x
                                                 <?= $menuItemOption->order_option_name; ?>
                                                 =
-                                                <?= currency_format($menuItemOption->quantity*$menuItemOption->order_option_price); ?>
+                                                <?= currency_format($menuItemOption->quantity * $menuItemOption->order_option_price); ?>
                                             </small><br>
                                         <?php } ?>
                                     </div>

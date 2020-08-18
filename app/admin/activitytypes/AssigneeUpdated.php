@@ -46,7 +46,7 @@ class AssigneeUpdated implements ActivityInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getType()
     {

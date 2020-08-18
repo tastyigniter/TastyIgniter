@@ -64,15 +64,17 @@ $config['list']['columns'] = [
     'location_state' => [
         'label' => 'lang:admin::lang.locations.column_state',
         'type' => 'text',
-        'invisible' => TRUE,
+        'searchable' => TRUE,
     ],
-    'options.offer_delivery' => [
-        'label' => 'lang:admin::lang.locations.label_offer_delivery',
-        'type' => 'switch',
+    'location_postcode' => [
+        'label' => 'lang:admin::lang.locations.column_postcode',
+        'type' => 'text',
+        'searchable' => TRUE,
     ],
-    'options.offer_collection' => [
-        'label' => 'lang:admin::lang.locations.label_offer_collection',
-        'type' => 'switch',
+    'location_telephone' => [
+        'label' => 'lang:admin::lang.locations.column_telephone',
+        'type' => 'text',
+        'searchable' => TRUE,
     ],
     'location_status' => [
         'label' => 'lang:admin::lang.label_status',
