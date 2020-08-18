@@ -142,18 +142,25 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_price',
             'type' => 'currency',
             'span' => 'right',
-        ],
-        'categories' => [
-            'label' => 'lang:admin::lang.menus.label_category',
-            'type' => 'relation',
-            'span' => 'left',
+            'cssClass' => 'flex-width',
         ],
         'menu_priority' => [
             'label' => 'lang:admin::lang.menus.label_menu_priority',
             'type' => 'number',
             'span' => 'right',
             'default' => 0,
+            'cssClass' => 'flex-width',
+        ],        
+        'categories' => [
+            'label' => 'lang:admin::lang.menus.label_category',
+            'type' => 'relation',
+            'span' => 'left',
         ],
+        'allergens' => [
+            'label' => 'lang:admin::lang.menus.label_allergens',
+            'type' => 'relation',
+            'span' => 'right',
+        ],        
         'mealtimes' => [
             'label' => 'lang:admin::lang.menus.label_mealtime',
             'type' => 'relation',
