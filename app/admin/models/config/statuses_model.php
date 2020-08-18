@@ -109,6 +109,12 @@ $config['form']['fields'] = [
         'placeholder' => 'lang:admin::lang.text_please_select',
         'options' => 'getStatusForDropdownOptions',
     ],
+    'status_width' => [
+        'label' => 'lang:admin::lang.statuses.label_width',
+        'type' => 'number',
+        'default' => 25,
+        'span' => 'left'
+    ],    
     'status_color' => [
         'label' => 'lang:admin::lang.statuses.label_color',
         'type' => 'colorpicker',
