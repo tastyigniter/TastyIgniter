@@ -113,8 +113,8 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.statuses.label_width',
         'type' => 'number',
         'default' => 25,
-        'span' => 'left'
-    ],    
+        'span' => 'left',
+    ],
     'status_color' => [
         'label' => 'lang:admin::lang.statuses.label_color',
         'type' => 'colorpicker',
