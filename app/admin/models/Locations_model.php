@@ -270,10 +270,6 @@ class Locations_model extends AbstractLocation
             $this->addOpeningHours($this->options['hours']);
         }
 
-        if (array_key_exists('delivery_areas', $this->attributes)) {
-            $this->addLocationAreas($this->attributes['delivery_areas']);
-        }
-
         if (array_key_exists('tables', $this->attributes)) {
             $this->addLocationTables($this->attributes['tables']);
         }

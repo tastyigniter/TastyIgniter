@@ -4,7 +4,7 @@
     aria-multiselectable="true"
     data-control="areas"
 >
-    <?php foreach ($formWidgets as $index => $areaForm) { ?>
-        <?= $this->makePartial('maparea/area', ['areaForm' => $areaForm, 'index' => $index]) ?>
+    <?php foreach ($mapAreas as $index => $mapArea) { ?>
+        <?= $this->makePartial('maparea/area', ['area' => $mapArea]) ?>
     <?php } ?>
 </div>

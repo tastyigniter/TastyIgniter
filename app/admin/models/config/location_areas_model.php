@@ -120,8 +120,11 @@ return [
                     'data-shape-value' => 'area_id',
                 ],
             ],
-            'priority' => [
+            'color' => [
                 'type' => 'hidden',
+                'attributes' => [
+                    'data-shape-value' => 'color',
+                ],
             ],
             'boundaries[polygon]' => [
                 'type' => 'hidden',
