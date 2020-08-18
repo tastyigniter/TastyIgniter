@@ -82,7 +82,7 @@
     }
 
     MapView.prototype.initMap = function () {
-        if (!this.options.mapCenter.lat || !this.options.mapCenter.lng) {
+        if (!this.options.mapCenter || !this.options.mapCenter.lat || !this.options.mapCenter.lng) {
             alert('Map is missing center coordinates, please enter an address then click save.')
             return;
         }
@@ -361,12 +361,6 @@
         $.fn.mapView = old
         return this
     }
-
-    // MapView DATA-API
-    // ===============
-    $(document).render(function () {
-        $('[data-control="map-view"]').mapView()
-    })
 
 
     // BUTTON DEFINITIONS

@@ -70,12 +70,10 @@ return [
                     ],
                 ],
             ],
-            'delivery_areas' => [
-                'label' => 'lang:admin::lang.locations.text_delivery_area',
-                'type' => 'Admin\\Widgets\\MapView',
-                'latFrom' => 'location_lat',
-                'lngFrom' => 'location_lng',
-                'zoom' => '14',
+            '_mapview' => [
+                'type' => 'mapview',
+                'zoom' => 14,
+                'height' => 640,
                 'shapeSelector' => '[data-map-shape]',
                 'trigger' => [
                     'action' => 'hide',
