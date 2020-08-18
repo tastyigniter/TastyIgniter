@@ -299,6 +299,13 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.menu'),
                             'permission' => 'Admin.Menus',
                         ],
+                        'allergens' => [
+                            'priority' => 25,
+                            'class' => 'allergens',
+                            'href' => admin_url('allergens'),
+                            'title' => lang('admin::lang.side_menu.allergen'),
+                            'permission' => 'Admin.Allergens',
+                        ],                        
                         'categories' => [
                             'priority' => 30,
                             'class' => 'categories',
@@ -525,6 +532,7 @@ class ServiceProvider extends AppServiceProvider
     {
         Relation::morphMap([
             'addresses' => 'Admin\Models\Addresses_model',
+            'allergens' => 'Admin\Models\Allergens_model',
             'assignable_logs' => 'Admin\Models\Assignable_logs_model',
             'categories' => 'Admin\Models\Categories_model',
             'coupons_history' => 'Admin\Models\Coupons_history_model',
@@ -642,6 +650,9 @@ class ServiceProvider extends AppServiceProvider
                 'Admin.Dashboard' => [
                     'label' => 'admin::lang.permissions.dashboard', 'group' => 'admin::lang.permissions.name',
                 ],
+                'Admin.Allergens' => [
+                    'label' => 'admin::lang.permissions.allergens', 'group' => 'admin::lang.permissions.name',
+                ],                
                 'Admin.Categories' => [
                     'label' => 'admin::lang.permissions.categories', 'group' => 'admin::lang.permissions.name',
                 ],
