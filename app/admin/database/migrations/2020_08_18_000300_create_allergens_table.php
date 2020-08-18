@@ -2,14 +2,10 @@
 
 namespace Admin\Database\Migrations;
 
-use DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- *
- */
 class CreateAllergensTable extends Migration
 {
     public function up()
@@ -21,8 +17,7 @@ class CreateAllergensTable extends Migration
             $table->string('description');
             $table->integer('status', 1);
         });
-	    
-	    
+
         Schema::create('menu_allergens', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('menu_id')->unsigned()->index();
