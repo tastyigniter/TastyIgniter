@@ -2,18 +2,12 @@
 	
 namespace Admin\Models;
 
-use Admin\Traits\Locationable;
 use DB;
 use Igniter\Flame\Database\Attach\HasMedia;
-use Igniter\Flame\Database\Traits\HasPermalink;
-use Igniter\Flame\Database\Traits\NestedTree;
-use Igniter\Flame\Database\Traits\Sortable;
 use Model;
 
 /**
  * Allergens Model Class
- *
- * @package Admin
  */
 class Allergens_model extends Model
 {
@@ -38,7 +32,7 @@ class Allergens_model extends Model
     public $relation = [
         'belongsToMany' => [
             'menus' => ['Admin\Models\Menus_model', 'table' => 'menu_allergens'],
-        ]
+        ],
     ];
 
     public $mediable = ['thumb'];

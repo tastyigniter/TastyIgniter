@@ -69,13 +69,12 @@ class Menus_model extends Model
     //
     // Scopes
     //
-    
     public function scopeWhereHasAllergen($query, $categoryId)
     {
         $query->whereHas('allergens', function ($q) use ($allergenId) {
             $q->where('allergens.allergen_id', $allergenId);
         });
-    }    
+    }
 
     public function scopeWhereHasCategory($query, $categoryId)
     {

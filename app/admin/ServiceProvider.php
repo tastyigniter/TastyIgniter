@@ -305,7 +305,7 @@ class ServiceProvider extends AppServiceProvider
                             'href' => admin_url('allergens'),
                             'title' => lang('admin::lang.side_menu.allergen'),
                             'permission' => 'Admin.Allergens',
-                        ],                        
+                        ],
                         'categories' => [
                             'priority' => 30,
                             'class' => 'categories',
@@ -652,7 +652,7 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.Allergens' => [
                     'label' => 'admin::lang.permissions.allergens', 'group' => 'admin::lang.permissions.name',
-                ],                
+                ],
                 'Admin.Categories' => [
                     'label' => 'admin::lang.permissions.categories', 'group' => 'admin::lang.permissions.name',
                 ],

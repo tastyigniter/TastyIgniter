@@ -150,7 +150,7 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'default' => 0,
             'cssClass' => 'flex-width',
-        ],        
+        ],
         'categories' => [
             'label' => 'lang:admin::lang.menus.label_category',
             'type' => 'relation',
@@ -160,7 +160,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_allergens',
             'type' => 'relation',
             'span' => 'right',
-        ],        
+        ],
         'mealtimes' => [
             'label' => 'lang:admin::lang.menus.label_mealtime',
             'type' => 'relation',
