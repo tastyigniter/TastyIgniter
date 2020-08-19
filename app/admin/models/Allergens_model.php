@@ -30,8 +30,9 @@ class Allergens_model extends Model
     ];
 
     public $relation = [
-        'belongsToMany' => [
-            'menus' => ['Admin\Models\Menus_model', 'table' => 'menu_allergens'],
+        'morphedByMany' => [
+            'menus' => ['Admin\Models\Menus_model', 'name' => 'allergenable'],
+            'menu_option_values' => ['Admin\Models\Menu_option_values_model', 'name' => 'allergenable'],
         ],
     ];
 

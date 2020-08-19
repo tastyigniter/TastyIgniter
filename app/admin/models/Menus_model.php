@@ -51,11 +51,11 @@ class Menus_model extends Model
             'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
         ],
         'belongsToMany' => [
-            'allergens' => ['Admin\Models\Allergens_model', 'table' => 'menu_allergens'],
             'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
             'mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];

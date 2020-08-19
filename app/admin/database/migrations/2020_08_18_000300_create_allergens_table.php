@@ -15,20 +15,20 @@ class CreateAllergensTable extends Migration
             $table->increments('allergen_id');
             $table->string('name');
             $table->string('description');
-            $table->integer('status', 1);
+            $table->boolean('status')->default(1);
         });
 
-        Schema::create('menu_allergens', function (Blueprint $table) {
+        Schema::create('allergenables', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('menu_id')->unsigned()->index();
             $table->integer('allergen_id')->unsigned()->index();
-            $table->unique(['menu_id', 'allergen_id']);
+            $table->morphs('allergenable', 'allergenable_index');
+            $table->unique(['allergen_id', 'allergenable_id', 'allergenable_type'], 'allergenable_unique');
         });
     }
 
     public function down()
     {
         Schema::dropIfExists('allergens');
-        Schema::dropIfExists('menu_allergens');
+        Schema::dropIfExists('allergenables');
     }
 }

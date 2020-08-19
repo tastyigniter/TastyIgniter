@@ -37,6 +37,9 @@ class Menu_option_values_model extends Model
         'belongsTo' => [
             'option' => ['Admin\Models\Menu_options_model'],
         ],
+        'morphToMany' => [
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
+        ],
     ];
 
     public $sortable = [
