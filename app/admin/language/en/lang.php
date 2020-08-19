@@ -229,7 +229,6 @@ return [
     'allergens' => [
         'text_title' => 'Allergens',
         'text_allergens' => 'Allergens',
-        'text_none' => 'None',
 
         'label_image' => 'Image',
         'help_photo' => 'Select a file to update allergen image, otherwise leave blank.',
