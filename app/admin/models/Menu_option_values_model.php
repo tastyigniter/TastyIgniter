@@ -61,7 +61,7 @@ class Menu_option_values_model extends Model
     {
         return static::dropdown('value');
     }
-    
+
     //
     // Events
     //
@@ -72,12 +72,12 @@ class Menu_option_values_model extends Model
         if (array_key_exists('allergens', $this->attributes))
             $this->addMenuAllergens((array)$this->attributes['allergens']);
     }
-    
+
     protected function beforeDelete()
     {
         $this->addMenuAllergens([]);
     }
-    
+
     /**
      * Create new or update existing menu allergens
      *
@@ -92,5 +92,5 @@ class Menu_option_values_model extends Model
 
         $this->allergens()->sync($allergenIds);
     }
-    
+
 }
