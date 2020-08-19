@@ -68,7 +68,7 @@ class Menu_options_model extends Model
         if (self::$allergensOptionsCache)
             return self::$allergensOptionsCache;
 
-        return self::$allergensOptionsCache = Allergens_model::dropdown('name');
+        return self::$allergensOptionsCache = collect(['' => lang('admin::lang.allergens.text_none')] + Allergens_model::dropdown('name')->all());
     }
 
     //
