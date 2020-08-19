@@ -160,6 +160,8 @@ class MapArea extends BaseFormWidget
             'Area '.($form->context == 'create' ? 'created' : 'updated')
         ))->now();
 
+        $this->model->reloadRelations();
+
         $this->prepareVars();
 
         return [
@@ -237,6 +239,9 @@ class MapArea extends BaseFormWidget
     {
         if (is_null($context))
             $context = $model->exists ? 'edit' : 'create';
+
+        if (is_null($model->location_id))
+            $model->location_id = $this->model->getKey();
 
         $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $config['context'] = $context;

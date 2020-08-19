@@ -114,11 +114,8 @@ return [
                     ],
                 ],
             ],
-            'area_id' => [
+            'location_id' => [
                 'type' => 'hidden',
-                'attributes' => [
-                    'data-shape-value' => 'area_id',
-                ],
             ],
             'color' => [
                 'type' => 'hidden',
