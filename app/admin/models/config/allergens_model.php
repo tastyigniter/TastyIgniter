@@ -2,7 +2,7 @@
 $config['list']['filter'] = [
     'scopes' => [
         'status' => [
-            'label' => 'lang:admin::lang.categories.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch', // checkbox, switch, date, daterange
             'conditions' => 'status = :filtered',
         ],
@@ -54,6 +54,11 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'allergens',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
             'context' => ['create', 'edit'],

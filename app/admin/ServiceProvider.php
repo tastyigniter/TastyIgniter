@@ -299,13 +299,6 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.menu'),
                             'permission' => 'Admin.Menus',
                         ],
-                        'allergens' => [
-                            'priority' => 25,
-                            'class' => 'allergens',
-                            'href' => admin_url('allergens'),
-                            'title' => lang('admin::lang.side_menu.allergen'),
-                            'permission' => 'Admin.Allergens',
-                        ],
                         'categories' => [
                             'priority' => 30,
                             'class' => 'categories',

@@ -53,6 +53,6 @@ class Allergens extends AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('allergens', 'restaurant');
+        AdminMenu::setContext('menus', 'restaurant');
     }
 }

@@ -44,6 +44,11 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
+        'allergens' => [
+            'label' => 'lang:admin::lang.allergens.text_allergens',
+            'class' => 'btn btn-default',
+            'href' => 'allergens',
+        ],
     ],
 ];
 
