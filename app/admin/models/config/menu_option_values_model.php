@@ -20,7 +20,7 @@ $config['form'] = [
             'label' => 'lang:admin::lang.menus.label_allergens',
             'type' => 'select',
             'span' => 'right',
-            'placeholder' => 'lang:admin::lang.text_please_select'
+            'placeholder' => 'lang:admin::lang.text_please_select',
         ],
         'priority' => [
             'label' => 'lang:admin::lang.menu_options.label_priority',
