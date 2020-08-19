@@ -94,7 +94,7 @@
     MapArea.prototype.onShapeTypeToggle = function (event) {
         var $input = $(event.target),
             $container = $input.closest('[data-control="area-form"]'),
-            areaId = $container.find('[data-shape-value="area_id"]').val(),
+            areaId = $container.find('[data-map-shape]').data('id'),
             type = $input.val()
 
         if (type === 'address')
@@ -106,6 +106,9 @@
         if (shape.options) {
             shape.options.default = type
             this.$mapView.mapView('hideShape', areaId).mapView('showShape', areaId, type)
+            window.setTimeout(function() {
+                this.$mapView.mapView('resize')
+            }.bind(this), 200);            
         }
     }
 
