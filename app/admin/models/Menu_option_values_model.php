@@ -92,5 +92,4 @@ class Menu_option_values_model extends Model
 
         $this->allergens()->sync($allergenIds);
     }
-
 }
