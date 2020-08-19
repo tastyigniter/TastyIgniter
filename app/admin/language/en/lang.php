@@ -225,16 +225,16 @@ return [
         'not_found' => 'Form record with ID [%s] could not be found.',
         'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
     ],
-    
+
     'allergens' => [
         'text_title' => 'Allergens',
         'text_allergens' => 'Allergens',
         'text_none' => 'None',
-        
+
         'label_image' => 'Image',
         'help_photo' => 'Select a file to update allergen image, otherwise leave blank.',
     ],
-    
+
     'categories' => [
         'text_title' => 'Categories',
         'text_form_name' => 'Category',
