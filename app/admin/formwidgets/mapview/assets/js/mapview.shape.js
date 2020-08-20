@@ -71,8 +71,8 @@
         var distanceUnit = shape.options.mapView.closest('[data-map-distance-unit]').data('mapDistanceUnit');
 
         google.maps.event.addListener(circleInfoWindow, 'domready', function(){
-			document.querySelector('.gm-style-iw button').style.display = 'none';
-		});
+            document.querySelector('.gm-style-iw button').style.display = 'none';
+        });
         
         google.maps.event.addListener(drawing, 'mouseover', function () {
             circleMarker.setPosition(this.getCenter()); // get circle's center
