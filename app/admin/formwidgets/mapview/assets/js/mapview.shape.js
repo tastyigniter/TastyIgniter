@@ -68,13 +68,15 @@
             map: drawOptions.map
         });
         
+        var distanceUnit = shape.options.mapView.closest('[data-map-distance-unit]').data('mapDistanceUnit');
+
         google.maps.event.addListener(circleInfoWindow, 'domready', function(){
 			document.querySelector('.gm-style-iw button').style.display = 'none';
 		});
         
         google.maps.event.addListener(drawing, 'mouseover', function () {
             circleMarker.setPosition(this.getCenter()); // get circle's center
-            circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius/100))/10 + "km</b>"); // set content
+            circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius * (distanceUnit == 'mi' ? 0.621371 : 1)/100))/10 + distanceUnit + "</b>"); // set content
             circleInfoWindow.open(drawOptions.map, circleMarker); // open at marker's location
             circleMarker.setVisible(false); // hide the marker
 	    });
@@ -84,7 +86,7 @@
         });
 
         google.maps.event.addListener(drawing, 'radius_changed', function () {
-            circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius/100))/10 + "km</b>"); // set content
+            circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius * (distanceUnit == 'mi' ? 0.621371 : 1)/100))/10 + distanceUnit + "</b>"); // set content
             self.onEventTriggered('radius_changed')
         })
 
