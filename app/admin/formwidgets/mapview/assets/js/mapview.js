@@ -178,14 +178,6 @@
     }
 
     MapView.prototype.createShape = function ($el, shapeOptions) {
-        var $shapeBadge = $('<a class="badge text-white" ' +
-                'data-shape-id="'+shapeOptions.id+'" ' +
-                'style="background-color:'+shapeOptions.options.fillColor+'">' +
-                shapeOptions.name + '</a>')
-
-        this.$el.find('[data-map-labels]').append($shapeBadge)
-        $shapeBadge.on('click', $.proxy(this.onShapeToggleClicked, this))
-
         shapeOptions.options.map = this.map;
         shapeOptions.options.mapView = this.$mapView;
         shapeOptions.editable = !!this.options.mapEditableShape;
@@ -314,23 +306,6 @@
 
         clearTimeout(this.shapeTrackerTimer)
         this.shapeTrackerTimer = null
-    }
-
-    // EVENT HANDLERS
-    // ============================
-
-    MapView.prototype.onShapeToggleClicked = function (event) {
-        var $button = $(event.target),
-            shape = this.getShape($button.data('shapeId'));
-
-        if (!shape.getMapObject(shape.options.default)) {
-            alert('Please select shape or circle as the area type')
-            return;
-        }
-
-        this.editShape($button.data('shapeId'));
-
-        window.setTimeout(this.resize(), 500)
     }
 
     // MapView PLUGIN DEFINITION
