@@ -178,42 +178,21 @@
     }
 
     MapView.prototype.createShape = function ($el, shapeOptions) {
+        var $shapeBadge = $('<a class="badge text-white" ' +
+                'data-shape-id="'+shapeOptions.id+'" ' +
+                'style="background-color:'+shapeOptions.options.fillColor+'">' +
+                shapeOptions.name + '</a>')
+
+        this.$el.find('[data-map-labels]').append($shapeBadge)
+        $shapeBadge.on('click', $.proxy(this.onShapeToggleClicked, this))
+
         shapeOptions.options.map = this.map;
         shapeOptions.options.mapView = this.$mapView;
         shapeOptions.editable = !!this.options.mapEditableShape;
 
         var shape = new $.ti.mapView.shape($el, shapeOptions)
         $el.data('ti.mapView.shape', shape)
-        this.setShape(shape);
-          
-        var circle = shape.getMapObject('circle');      
-        var circleInfoWindow = new google.maps.InfoWindow({});
-        var circleMarker = new google.maps.Marker({
-            map: shapeOptions.options.map
-        });
-        
-        google.maps.event.addListener(circleInfoWindow, 'domready', function(){
-            document.querySelector('.gm-style-iw button').style.display = 'none';
-        });
-        
-        google.maps.event.addListener(circle, 'mouseover', function () {
-            circleMarker.setPosition(this.getCenter()); // get circle's center
-            circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius/100))/10 + "km</b>"); // set content
-            circleInfoWindow.open(shapeOptions.options.map, circleMarker); // open at marker's location
-            circleMarker.setVisible(false); // hide the marker
-        });
-	    
-        google.maps.event.addListener(circle, 'mouseout', function () {
-            circleInfoWindow.close();
-        });
-
-        google.maps.event.addListener(circle, 'radius_changed', function () {
-            circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius/100))/10 + "km</b>"); // set content
-        });
-
-        google.maps.event.addListener(circle, 'center_changed', function () {
-            circleMarker.setPosition(this.getCenter()); // get circle's center
-        });
+        this.setShape(shape)
     }
 
     MapView.prototype.removeShape = function (shape) {
