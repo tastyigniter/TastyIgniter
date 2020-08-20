@@ -207,6 +207,7 @@ class MapArea extends BaseFormWidget
             'data-options' => json_encode([
                 'fillColor' => $areaColor,
                 'strokeColor' => $areaColor,
+                'distanceUnit' => setting('distance_unit'),
             ]),
         ];
 
