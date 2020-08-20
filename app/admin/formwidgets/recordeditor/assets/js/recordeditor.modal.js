@@ -46,8 +46,8 @@
     }
 
     RecordEditorModal.prototype.handleFormSetup = function (event, context) {
-        if (this.options.onFail !== undefined)
-            this.options.onFail.call(this, context)
+        if (this.options.onSubmit !== undefined)
+            this.options.onSubmit.call(this, context)
     }
 
     RecordEditorModal.prototype.handleFormError = function (event, dataOrXhr, textStatus, jqXHR) {
