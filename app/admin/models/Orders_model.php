@@ -345,9 +345,11 @@ class Orders_model extends Model
             $optionData = [];
             if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
                 foreach ($menuItemOptions as $menuItemOption) {
-                    $optionData[] = $menuItemOption->order_option_name
-                        .lang('admin::lang.text_equals')
-                        .currency_format($menuItemOption->order_option_price);
+                    $optionData[] = [
+	                    'menu_option_quantity' => $menuItemOption->quantity,
+	                    'menu_option_name' => $menuItemOption->order_option_name,
+	                    'menu_option_price' => $menuItemOption->order_option_price,
+                    ];
                 }
             }
 
