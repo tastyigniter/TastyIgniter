@@ -328,7 +328,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.locations.label_limit_orders',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 0,
-            'type' => 'switch'
+            'type' => 'switch',
         ],
         'options[limit_orders_count]' => [
             'label' => 'lang:admin::lang.locations.label_limit_orders_count',
