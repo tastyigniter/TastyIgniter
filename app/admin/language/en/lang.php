@@ -508,6 +508,8 @@ return [
         'label_telephone' => 'Telephone',
         'label_permalink_slug' => 'Slug',
         'label_image' => 'Image',
+        'label_limit_orders' => 'Limit Order Count',
+        'label_limit_orders_count' => 'Maximum Orders Per Interval',
         'label_offer_delivery' => 'Offer Delivery',
         'label_offer_collection' => 'Offer Pick-up',
         'label_delivery_time_interval' => 'Delivery Time Interval',
@@ -555,6 +557,7 @@ return [
 
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
         'help_image' => 'Select a logo for this location.',
+        'help_limit_orders_interval' => 'Set the minutes between each limitation timeslot.',
         'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
         'help_collection_time_interval' => 'Set the minutes between each pick-up order time available to your customer.',
         'help_delivery_lead_time' => 'Set in minutes the average time it takes an order to be delivered after being placed',

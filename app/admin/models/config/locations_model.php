@@ -326,6 +326,24 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[limit_orders]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_orders',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'switch',
+        ],
+        'options[limit_orders_count]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_orders_count',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 50,
+            'type' => 'number',
+            'span' => 'left',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[limit_orders]',
+                'condition' => 'checked',
+            ],
+        ],
 
         'reservation' => [
             'label' => 'lang:admin::lang.locations.text_tab_reservation',
