@@ -37,10 +37,6 @@
     "jakub-onderka/php-parallel-lint": "^1.0",
     "laravel/dusk": "^5.8"
   },
-  "replace": {
-    "kriswallsmith/assetic": "*",
-    "leafo/scssphp": "*"
-  },
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests"
@@ -50,10 +46,6 @@
     "post-create-project-cmd": [
       "php artisan key:generate"
     ]
-  },
-  "config": {
-    "preferred-install": "dist",
-    "optimize-autoloader": true
   },
   "minimum-stability": "beta",
   "prefer-stable": true,
