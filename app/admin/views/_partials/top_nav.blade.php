@@ -8,7 +8,7 @@
             </div>
 
             <div class="page-title">
-                <span>{{ Template::getHeading() }}</span>
+                <span>{!! Template::getHeading() !!}</span>
             </div>
 
             <div class="navbar navbar-right">
