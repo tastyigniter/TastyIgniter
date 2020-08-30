@@ -19,6 +19,7 @@ return [
     'text_action' => 'Action',
     'text_dashes' => ' -- ',
     'text_equals' => ' = ',
+    'text_times' => 'x ',
     'text_plus' => '+ ',
     'text_please_select' => ' - please select - ',
     'text_use_default' => 'Use Default',
