@@ -243,6 +243,7 @@ return [
         'text_order_type' => 'Order type ex. delivery/pick-up',
         'text_order_time' => 'Order delivery/pick-up time',
         'text_order_date' => 'Order delivery/pick-up date',
+        'text_order_added' => 'Order created date',
         'text_order_payment' => 'Order payment method',
         'text_order_address' => 'Customer address for delivery order',
         'text_invoice_number' => 'Customer telephone address',
