@@ -165,7 +165,6 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_allergens',
             'type' => 'relation',
             'span' => 'right',
-            'placeholder' => 'lang:admin::lang.text_please_select',
         ],
         'mealtimes' => [
             'label' => 'lang:admin::lang.menus.label_mealtime',
