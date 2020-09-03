@@ -55,11 +55,12 @@ class Menus_model extends Model
             'mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
-    protected $purgeable = ['special', 'menu_options', 'categories', 'mealtimes', 'locations'];
+    protected $purgeable = ['special', 'menu_options', 'allergens', 'categories', 'mealtimes', 'locations'];
 
     public $mediable = ['thumb'];
 
@@ -68,6 +69,12 @@ class Menus_model extends Model
     //
     // Scopes
     //
+    public function scopeWhereHasAllergen($query, $categoryId)
+    {
+        $query->whereHas('allergens', function ($q) use ($allergenId) {
+            $q->where('allergens.allergen_id', $allergenId);
+        });
+    }
 
     public function scopeWhereHasCategory($query, $categoryId)
     {
@@ -149,6 +156,9 @@ class Menus_model extends Model
         if (array_key_exists('special', $this->attributes))
             $this->addMenuSpecial((array)$this->attributes['special']);
 
+        if (array_key_exists('allergens', $this->attributes))
+            $this->addMenuAllergens((array)$this->attributes['allergens']);
+
         if (array_key_exists('categories', $this->attributes))
             $this->addMenuCategories((array)$this->attributes['categories']);
 
@@ -164,6 +174,7 @@ class Menus_model extends Model
 
     protected function beforeDelete()
     {
+        $this->addMenuAllergens([]);
         $this->addMenuCategories([]);
         $this->addMenuMealtimes([]);
         $this->locations()->detach();
@@ -207,6 +218,21 @@ class Menus_model extends Model
         Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
 
         return TRUE;
+    }
+
+    /**
+     * Create new or update existing menu allergens
+     *
+     * @param array $allergenIds if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuAllergens(array $allergenIds = [])
+    {
+        if (!$this->exists)
+            return FALSE;
+
+        $this->allergens()->sync($allergenIds);
     }
 
     /**

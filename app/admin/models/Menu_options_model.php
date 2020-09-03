@@ -14,6 +14,8 @@ class Menu_options_model extends Model
     use Purgeable;
     use Validation;
 
+    protected static $allergensOptionsCache;
+
     /**
      * @var string The database table name
      */
@@ -59,6 +61,14 @@ class Menu_options_model extends Model
             'select' => 'lang:admin::lang.menu_options.text_select',
             'quantity' => 'lang:admin::lang.menu_options.text_quantity',
         ];
+    }
+
+    public function getAllergensOptions()
+    {
+        if (self::$allergensOptionsCache)
+            return self::$allergensOptionsCache;
+
+        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
     }
 
     //

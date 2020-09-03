@@ -44,6 +44,11 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
+        'allergens' => [
+            'label' => 'lang:admin::lang.allergens.text_allergens',
+            'class' => 'btn btn-default',
+            'href' => 'allergens',
+        ],
     ],
 ];
 
@@ -142,17 +147,24 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_price',
             'type' => 'currency',
             'span' => 'right',
-        ],
-        'categories' => [
-            'label' => 'lang:admin::lang.menus.label_category',
-            'type' => 'relation',
-            'span' => 'left',
+            'cssClass' => 'flex-width',
         ],
         'menu_priority' => [
             'label' => 'lang:admin::lang.menus.label_menu_priority',
             'type' => 'number',
             'span' => 'right',
             'default' => 0,
+            'cssClass' => 'flex-width',
+        ],
+        'categories' => [
+            'label' => 'lang:admin::lang.menus.label_category',
+            'type' => 'relation',
+            'span' => 'left',
+        ],
+        'allergens' => [
+            'label' => 'lang:admin::lang.menus.label_allergens',
+            'type' => 'relation',
+            'span' => 'right',
         ],
         'mealtimes' => [
             'label' => 'lang:admin::lang.menus.label_mealtime',

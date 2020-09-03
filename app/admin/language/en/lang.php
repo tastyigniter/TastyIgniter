@@ -226,6 +226,15 @@ return [
         'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
     ],
 
+    'allergens' => [
+        'text_title' => 'Allergens',
+        'text_allergens' => 'Allergens',
+        'text_form_name' => 'Allergen',
+
+        'label_image' => 'Image',
+        'help_photo' => 'Select a file to update allergen image, otherwise leave blank.',
+    ],
+
     'categories' => [
         'text_title' => 'Categories',
         'text_form_name' => 'Category',
@@ -682,6 +691,7 @@ return [
         'label_end_date' => 'End Date',
         'label_special_price' => 'Special Price',
         'label_special_type' => 'Special Type',
+        'label_allergens' => 'Allergens',
 
         'help_image' => 'Select a file to update menu image, otherwise leave blank.',
         'help_mealtime' => 'Set what time of day your customers can order this menu. Mealtimes can be managed under Kitchen > Mealtimes',
