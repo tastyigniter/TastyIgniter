@@ -63,11 +63,35 @@
 
         var drawing = new google.maps.Circle(drawOptions)
 
+        var circleInfoWindow = new google.maps.InfoWindow({});
+        var circleMarker = new google.maps.Marker({
+            map: drawOptions.map
+        });
+
+        var distanceUnit = shape.options.distanceUnit;
+
+        google.maps.event.addListener(circleInfoWindow, 'domready', function(){
+            document.querySelector('.gm-style-iw button').style.display = 'none';
+        });
+
+        google.maps.event.addListener(drawing, 'mouseover', function () {
+            circleMarker.setPosition(this.getCenter()); // get circle's center
+            circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius * (distanceUnit == 'mi' ? 0.621371 : 1)/100))/10 + distanceUnit + "</b>"); // set content
+            circleInfoWindow.open(drawOptions.map, circleMarker); // open at marker's location
+            circleMarker.setVisible(false); // hide the marker
+	    });
+
+        google.maps.event.addListener(drawing, 'mouseout', function () {
+            circleInfoWindow.close();
+        });
+
         google.maps.event.addListener(drawing, 'radius_changed', function () {
+            circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius * (distanceUnit == 'mi' ? 0.621371 : 1)/100))/10 + distanceUnit + "</b>"); // set content
             self.onEventTriggered('radius_changed')
         })
 
         google.maps.event.addListener(drawing, 'center_changed', function () {
+            circleMarker.setPosition(this.getCenter()); // get circle's center
             self.onEventTriggered('center_changed')
         })
 

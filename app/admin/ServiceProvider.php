@@ -169,6 +169,11 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'maparea',
             ]);
 
+            $manager->registerFormWidget('Admin\FormWidgets\MapView', [
+                'label' => 'Map View',
+                'code' => 'mapview',
+            ]);
+
             $manager->registerFormWidget('Admin\FormWidgets\MarkdownEditor', [
                 'label' => 'Markdown Editor',
                 'code' => 'markdowneditor',

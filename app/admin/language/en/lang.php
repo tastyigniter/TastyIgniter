@@ -495,7 +495,7 @@ return [
         'text_address_component_postal_code' => 'Match by postal code',
         'text_delivery_area' => 'Delivery Areas',
         'text_add_new_area' => 'Add new area',
-        'text_edit_area' => 'Edit map areas',
+        'text_edit_area' => 'Delivery Area',
         'text_all_orders' => 'all',
         'text_above_order_total' => 'above',
         'text_below_order_total' => 'below',
