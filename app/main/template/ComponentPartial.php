@@ -86,10 +86,10 @@ class ComponentPartial extends Extendable implements TemplateSource
      */
     public static function loadOverrideCached($theme, $component, $fileName)
     {
-        $partial = Partial::loadCached($theme, strtolower($component->alias).'/'.$fileName);
+        $partial = Partial::loadCached($theme, $component->alias.'/'.$fileName);
 
         if ($partial === null) {
-            $partial = Partial::loadCached($theme, $component->alias.'/'.$fileName);
+            $partial = Partial::loadCached($theme, strtolower($component->alias).'/'.$fileName);
         }
 
         return $partial;
@@ -98,7 +98,7 @@ class ComponentPartial extends Extendable implements TemplateSource
     /**
      * Find a single template by its file name.
      *
-     * @param  string $fileName
+     * @param string $fileName
      *
      * @return mixed|static
      */

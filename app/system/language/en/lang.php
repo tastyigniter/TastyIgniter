@@ -398,7 +398,7 @@ return [
         'label_default_geocoder' => 'Default Geocoder',
         'label_tax_mode' => 'Tax Mode',
         'label_tax_title' => 'Tax Title',
-        'label_tax_percentage' => 'Tax Percentage',
+        'label_tax_percentage' => 'Tax Rate',
         'label_tax_menu_price' => 'Tax Menu Price',
         'label_tax_delivery_charge' => 'Tax Delivery Charge',
         'label_allow_reviews' => 'Allow Reviews',
