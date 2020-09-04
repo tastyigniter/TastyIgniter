@@ -1,7 +1,7 @@
 <div class="d-flex">
     <div class="mr-3 flex-fill text-center">
         <label class="control-label">
-            <?= lang('admin::lang.label_status') ?>
+            {{ lang('admin::lang.label_status') }}
         </label>
         <a
             class="d-flex align-items-center justify-content-center"
@@ -9,13 +9,13 @@
             data-editor-control="load-status"
         >
             <h3
-                style="border-bottom: 2px dashed;color: <?= $status ? e($status->status_color) : '' ?>;"
-            ><?= $status ? e(lang($status->status_name)) : '--' ?></h3>
+                style="border-bottom: 2px dashed;{{ $status ? 'color: '.$status->status_color : '' }};"
+            >{{ $status ? lang($status->status_name) : '--' }}</h3>
         </a>
     </div>
     <div class="mr-3 flex-fill text-center">
         <label class="control-label">
-            <?= lang('admin::lang.orders.label_assign_staff') ?>
+            {{ lang('admin::lang.orders.label_assign_staff') }}
         </label>
         <a
             class="d-flex align-items-center justify-content-center"
@@ -24,7 +24,7 @@
         >
             <h3
                 style="border-bottom: 2px dashed;"
-            ><?= $assignee ? $assignee->staff_name : '--' ?></h3>
+            >{{ $assignee ? $assignee->staff_name : '--' }}</h3>
         </a>
     </div>
 </div>
