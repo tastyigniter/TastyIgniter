@@ -13,8 +13,8 @@
                 value="1"
                 name="{{ $field->getName() }}[{{ $permission->code }}]"
                 data-permission-group="{{ str_slug($permission->group) }}"
-                @if($checkedValue == 1) checked="checked" @endif
-                @if($this->previewMode) disabled="disabled" @endif
+                @if ($checkedValue == 1) checked="checked" @endif
+                @if ($this->previewMode) disabled="disabled" @endif
             />
             <label class="custom-control-label" for="checkbox-{{ str_replace('.', '-', $permission->code) }}"></label>
         </div>

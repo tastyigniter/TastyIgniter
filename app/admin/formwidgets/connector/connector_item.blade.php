@@ -5,7 +5,7 @@
 >
     <div class="card-body">
         <div class="d-flex w-100 justify-content-between">
-            @if($this->previewMode AND $sortable)
+            @if ($this->previewMode AND $sortable)
                 <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $item->getKey(); }}">
                 <div class="align-self-center">
                     <a
@@ -21,14 +21,14 @@
                 data-item-id="{{ $item->getKey() }}"
                 role="button"
             >
-                @if($this->partial)
+                @if ($this->partial)
                     {{ $this->makePartial($this->partial, ['item' => $item]) }}
                 @else
                     <p class="card-title font-weight-bold">{{ $item->{$nameFrom} }}</p>
                     <p class="card-subtitle mb-0">{{ $item->{$descriptionFrom} }}</p>
                 @endif
             </div>
-            @if($this->previewMode)
+            @if ($this->previewMode)
                 <div class="align-self-center ml-auto">
                     <a
                         class="close text-danger"

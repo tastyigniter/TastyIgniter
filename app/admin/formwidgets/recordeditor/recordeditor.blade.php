@@ -1,4 +1,4 @@
-@if(!$this->previewMode)
+@if (!$this->previewMode)
     <div
         id="{{ $this->getId() }}"
         class="control-recordeditor"
@@ -9,7 +9,7 @@
             class="input-group" data-toggle="modal"
             data-target="#{{ $this->getId('form-modal') }}"
         >
-            @if($addonLeft)
+            @if ($addonLeft)
                 <div class="input-group-prepend">{{ $addonLeft }}</div>
             @endif
             <select
@@ -19,10 +19,10 @@
                 data-control="choose-record"
                 {!! $field->getAttributes() !!}
             >
-                @if($fieldPlaceholder = $field->placeholder ?: $this->emptyOption)
+                @if ($fieldPlaceholder = $field->placeholder ?: $this->emptyOption)
                     <option value="0">@lang($fieldPlaceholder)</option>
                 @endif
-                @foreach($fieldOptions as $value => $option)
+                @foreach ($fieldOptions as $value => $option)
                     @php if (!is_array($option)) $option = [$option] @endphp
                     <option
                         {!! $value == $field->value ? 'selected="selected"' : '' !!}
@@ -32,7 +32,7 @@
                 @endforeach
             </select>
             <div class="input-group-append ml-1">
-                @if($addonRight)
+                @if ($addonRight)
                     {!! $addonRight !!}
                 @endif
                 <button

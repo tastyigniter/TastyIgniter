@@ -1,7 +1,7 @@
 <tr
     id="{{ $this->getId('item-'.$indexValue) }}"
     class="repeater-item" data-item-index="{{ $indexValue }}">
-    @if(!$this->previewMode AND $sortable)
+    @if (!$this->previewMode AND $sortable)
         <td class="repeater-item-handle">
             <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $indexValue }}">
             <div class="btn {{ $this->getId('items') }}-handle">
@@ -10,7 +10,7 @@
         </td>
     @endif
 
-    @if(!$this->previewMode AND $showRemoveButton)
+    @if (!$this->previewMode AND $showRemoveButton)
         <td class="list-action repeater-item-remove">
             <a
                 class="btn btn-outline-danger border-none"
@@ -27,7 +27,7 @@
         $fieldError = form_error($field->getName());
         ?>
 
-        @if($field->type == 'hidden')
+        @if ($field->type == 'hidden')
             {{ $widget->renderFieldElement($field) }}
         @else
             <td>

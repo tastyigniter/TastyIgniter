@@ -1,4 +1,4 @@
-@if($this->previewMode)
+@if ($this->previewMode)
     <div class="form-control-static">{{ $value }}</div>
 @else
     <div

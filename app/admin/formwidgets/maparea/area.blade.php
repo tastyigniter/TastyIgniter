@@ -27,7 +27,7 @@
                     class="close text-danger"
                     aria-label="Remove"
                     role="button"
-                    @if($this->previewMode)
+                    @if ($this->previewMode)
                         data-control="remove-area"
                         data-confirm-message="{{ lang('admin::lang.alert_warning_confirm') }}"
                     @endif

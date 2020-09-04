@@ -8,9 +8,9 @@
         {{ $field->getAttributes() }}
         {{ $this->previewMode ? 'readonly="readonly"' : '' }}
         data-control="datepicker"
-        @if($startDate) data-start-date="{{ $startDate }}" @endif
-        @if($endDate) data-end-date="{{ $endDate }}" @endif
-        @if($datesDisabled) data-dates-disabled="{{ $datesDisabled }}" @endif
+        @if ($startDate) data-start-date="{{ $startDate }}" @endif
+        @if ($endDate) data-end-date="{{ $endDate }}" @endif
+        @if ($datesDisabled) data-dates-disabled="{{ $datesDisabled }}" @endif
         data-format="{{ $datePickerFormat }}"
     />
     <input

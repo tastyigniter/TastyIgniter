@@ -11,10 +11,10 @@
                 class="table {{ ($sortable) ? 'is-sortable' : '' }} mb-0">
                 <thead>
                 <tr>
-                    @if($this->previewMode AND $sortable)
+                    @if ($this->previewMode AND $sortable)
                         <th class="list-action"></th>
                     @endif
-                    @if(!$this->previewMode AND $showRemoveButton)
+                    @if (!$this->previewMode AND $showRemoveButton)
                         <th class="list-action"></th>
                     @endif
                     @foreach ($this->getVisibleColumns() as $label)
@@ -23,7 +23,7 @@
                 </tr>
                 </thead>
                 <tbody id="{{ $this->getId('append-to') }}">
-                @if($this->formWidgets)
+                @if ($this->formWidgets)
                     @foreach ($this->formWidgets as $widget)
                         {{ $this->makePartial('repeater/repeater_item', [
                             'widget' => $widget,
@@ -36,7 +36,7 @@
                     </tr>
                 @endif
                 </tbody>
-                @if($showAddButton AND !$this->previewMode)
+                @if ($showAddButton AND !$this->previewMode)
                     <tfoot>
                     <tr>
                         <th colspan="99">
