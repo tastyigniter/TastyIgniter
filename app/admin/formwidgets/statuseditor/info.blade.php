@@ -1,7 +1,7 @@
 <div class="d-flex">
     <div class="mr-3 flex-fill text-center">
         <label class="control-label">
-            {{ lang('admin::lang.label_status') }}
+            @lang('admin::lang.label_status')
         </label>
         <a
             class="d-flex align-items-center justify-content-center"

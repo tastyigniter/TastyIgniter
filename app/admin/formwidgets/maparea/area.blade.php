@@ -29,7 +29,7 @@
                     role="button"
                     @if ($this->previewMode)
                         data-control="remove-area"
-                        data-confirm-message="{{ lang('admin::lang.alert_warning_confirm') }}"
+                        data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
                     @endif
                 ><i class="fa fa-trash-alt"></i></a>
             </div>

@@ -7,7 +7,7 @@
     data-choose-button-text="{{ $chooseButtonText }}"
     data-use-attachment="{{ $useAttachment }}"
 >
-    {{ $this->makePartial('mediafinder/image') }}
+    {!! $this->makePartial('mediafinder/image') !!}
 
     @if ($useAttachment)
         <script type="text/template" data-config-modal-template>
@@ -17,7 +17,7 @@
                         <div class="modal-body text-center">
                             <div class="progress-indicator">
                                 <span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>
-                                {{ lang('admin::lang.text_loading') }}
+                                @lang('admin::lang.text_loading')
                             </div>
                         </div>
                     </div>

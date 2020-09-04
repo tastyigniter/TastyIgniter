@@ -6,7 +6,7 @@
     <div class="card-body">
         <div class="d-flex w-100 justify-content-between">
             @if ($this->previewMode AND $sortable)
-                <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $item->getKey(); }}">
+                <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $item->getKey() }}">
                 <div class="align-self-center">
                     <a
                         class="btn handle {{ $this->getId('items') }}-handle"
@@ -22,7 +22,7 @@
                 role="button"
             >
                 @if ($this->partial)
-                    {{ $this->makePartial($this->partial, ['item' => $item]) }}
+                    {!! $this->makePartial($this->partial, ['item' => $item]) !!}
                 @else
                     <p class="card-title font-weight-bold">{{ $item->{$nameFrom} }}</p>
                     <p class="card-subtitle mb-0">{{ $item->{$descriptionFrom} }}</p>
@@ -36,7 +36,7 @@
                         data-control="delete-item"
                         data-item-id="{{ $item->getKey() }}"
                         data-item-selector="#{{ $this->getId('item-'.$index) }}"
-                        data-confirm-message="{{ lang('admin::lang.alert_warning_confirm') }}"
+                        data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
                     ><i class="fa fa-trash-alt"></i></a>
                 </div>
             @endif

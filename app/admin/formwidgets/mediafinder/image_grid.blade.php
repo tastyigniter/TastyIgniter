@@ -12,7 +12,7 @@
                     <i class="fa fa-plus"></i>
                 </a>
             @else
-                <i class="find-remove-button fa fa-times-circle" title="{{ lang('admin::lang.text_remove'); }}"></i>
+                <i class="find-remove-button fa fa-times-circle" title="@lang('admin::lang.text_remove')"></i>
                 <div class="icon-container">
                     <span data-find-name>{{ $this->getMediaName($mediaItem) }}</span>
                 </div>
@@ -26,7 +26,7 @@
             @endif
             <input
                 type="hidden"
-                {{ (!is_null($mediaItem) AND !$useAttachment) ? 'name="'.$fieldName.'"' : '' }}
+                {!! (!is_null($mediaItem) AND !$useAttachment) ? 'name="'.$fieldName.'"' : '' !!}
                 value="{{ $this->getMediaPath($mediaItem) }}"
                 data-find-value
             />

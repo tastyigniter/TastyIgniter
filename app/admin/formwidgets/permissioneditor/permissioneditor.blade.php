@@ -5,7 +5,7 @@
                 <thead>
                 <tr>
                     <th class="{{ $loop->first ? '' : 'pt-4' }}">
-                        <h5 class="panel-title">{{ lang($group) }}</h5>
+                        <h5 class="panel-title">@lang($group)</h5>
                     </th>
                     <th class="{{ $loop->first ? '' : 'pt-4 ' }}text-center">
                         <a
@@ -18,10 +18,10 @@
                 </thead>
                 <tbody>
                 @foreach ($permissions as $permission)
-                    {{ $this->makePartial('permissioneditor/permission', [
+                    {!! $this->makePartial('permissioneditor/permission', [
                         'permission' => $permission,
                         'checkedValue' => (int)(array_key_exists($permission->code, $checkedPermissions) ? $checkedPermissions[$permission->code] : 0),
-                    ]) }}
+                    ]) !!}
                 @endforeach
                 </tbody>
             @endforeach

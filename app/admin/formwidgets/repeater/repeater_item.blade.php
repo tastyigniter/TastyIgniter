@@ -17,7 +17,7 @@
                 role="button"
                 data-control="remove-item"
                 data-target="#{{ $this->getId('item-'.$indexValue) }}"
-                data-prompt="{{ lang('admin::lang.alert_confirm') }}"
+                data-prompt="@lang('admin::lang.alert_confirm')"
             ><i class="fa fa-trash-alt"></i></a>
         </td>
     @endif
@@ -28,10 +28,10 @@
         ?>
 
         @if ($field->type == 'hidden')
-            {{ $widget->renderFieldElement($field) }}
+            {!! $widget->renderFieldElement($field) !!}
         @else
             <td>
-                {{ $widget->renderFieldElement($field) }}
+                {!! $widget->renderFieldElement($field) !!}
             </td>
         @endif
     @endforeach

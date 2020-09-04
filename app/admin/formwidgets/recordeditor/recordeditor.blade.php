@@ -40,7 +40,7 @@
                     class="btn btn-outline-default"
                     data-control="edit-record"
                     {!! ($this->previewMode) ? 'disabled="disabled"' : '' !!}
-                ><i class="fa fa-pencil"></i>&nbsp;&nbsp;{{ lang($editLabel).' '.lang($this->formName) }}</button>
+                ><i class="fa fa-pencil"></i>&nbsp;&nbsp;@lang($editLabel)&nbsp;@lang($this->formName) }}</button>
                 <button
                     type="button"
                     class="btn btn-outline-danger"
@@ -54,7 +54,7 @@
                     class="btn btn-outline-default"
                     data-control="create-record"
                     {!! ($this->previewMode) ? 'disabled="disabled"' : '' !!}
-                ><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ lang($addLabel).' '.lang($this->formName) }}</button>
+                ><i class="fa fa-plus"></i>&nbsp;&nbsp;@lang($addLabel)&nbsp;@lang($this->formName)</button>
             </div>
         </div>
     </div>

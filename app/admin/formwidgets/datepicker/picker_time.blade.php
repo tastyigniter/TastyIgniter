@@ -9,7 +9,7 @@
         class="form-control"
         autocomplete="off"
         value="{{ $value ? $value->format($timeFormat) : null }}"
-        {{ $field->getAttributes() }}
+        {!! $field->getAttributes() !!}
         @if ($this->previewMode) readonly="readonly" @endif
     />
     <div class="input-group-append">

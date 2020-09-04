@@ -6,7 +6,7 @@
         autocomplete="off"
         value="{{ $value ? $value->format($formatAlias) : null }}"
         {{ $field->getAttributes() }}
-        {{ $this->previewMode ? 'readonly="readonly"' : '' }}
+        @if ($this->previewMode) readonly="readonly" @endif
         data-control="datepicker"
         data-toggle="datetimepicker"
         data-target="#{{ $this->getId('datetime') }}"

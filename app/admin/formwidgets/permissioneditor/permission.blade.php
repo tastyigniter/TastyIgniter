@@ -1,6 +1,6 @@
 <tr class="{{ !$checkedValue ? 'text-muted' : ''; }}">
     <td role="button" data-toggle="permission">
-        <span>{{ lang($permission->label) }}</span>&nbsp;-&nbsp;
+        <span>@lang($permission->label)</span>&nbsp;-&nbsp;
         <em class="small">[{{ $permission->code }}]</em>&nbsp;&nbsp;
         <span>{{ $permission->description }}</span>
     </td>

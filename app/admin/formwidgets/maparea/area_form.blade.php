@@ -1,5 +1,5 @@
 <div class="modal-dialog modal-lg">
-    {{ form_open(
+    {!! form_open(
         [
             'id' => 'record-editor-form',
             'role' => 'form',
@@ -8,18 +8,18 @@
             'data-control' => 'area-form',
             'class' => 'w-100',
         ]
-    ) }}
+    ) !!}
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">{{ lang($formTitle) }}</h4>
+            <h4 class="modal-title">@lang($formTitle)</h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <input type="hidden" name="areaId" value="{{ $formAreaId }}">
-        <input type="hidden" data-map-shape {{ $this->getMapShapeAttributes($formWidget->model) }}>
+        <input type="hidden" data-map-shape {!! $this->getMapShapeAttributes($formWidget->model) !!}>
         <div class="modal-body">
             <div class="form-fields p-0">
                 @foreach ($formWidget->getFields() as $field)
-                    {{ $formWidget->renderField($field) }}
+                    {!! $formWidget->renderField($field) !!}
                 @endforeach
             </div>
         </div>
@@ -28,12 +28,12 @@
                 type="button"
                 class="btn btn-link"
                 data-dismiss="modal"
-            >{{ lang('admin::lang.button_close') }}</button>
+            >@lang('admin::lang.button_close')</button>
             <button
                 type="submit"
                 class="btn btn-primary"
-            >{{ lang('admin::lang.button_save') }}</button>
+            >@lang('admin::lang.button_save')</button>
         </div>
     </div>
-    {{ form_close() }}
+    {!! form_close() !!}
 </div>
