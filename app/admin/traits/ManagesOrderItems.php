@@ -118,6 +118,7 @@ trait ManagesOrderItems
         $this->orderMenuOptionsQuery()->where('order_id', $orderId)->delete();
 
         foreach ($content as $rowId => $cartItem) {
+            $cartItem = is_array($cartItem) ? (object) $cartItem : $cartItem;
             if ($rowId != $cartItem->rowId) continue;
 
             $orderMenuId = $this->orderMenusQuery()->insertGetId([
