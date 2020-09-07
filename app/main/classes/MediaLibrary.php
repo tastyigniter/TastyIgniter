@@ -276,8 +276,9 @@ class MediaLibrary
             $filePath = $this->getDefaultThumbPath($thumbPath, array_get($options, 'default'));
 
         Manipulator::make($filePath)
-                   ->manipulate(array_except($options, ['extension', 'default']))
-                   ->save($thumbPath);
+            ->useSource($this->getStorageDisk()->getDriver())
+            ->manipulate(array_except($options, ['extension', 'default']))
+            ->save($thumbPath);
 
         return asset($thumbPublicPath);
     }

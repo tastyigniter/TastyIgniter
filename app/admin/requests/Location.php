@@ -11,7 +11,7 @@ class Location extends FormRequest
         return [
             ['location_name', 'admin::lang.label_name', 'required|between:2,32'],
             ['location_email', 'admin::lang.label_email', 'required|email:filter|max:96'],
-            ['location_telephone', 'admin::lang.locations.label_telephone', 'required|between:2,15'],
+            ['location_telephone', 'admin::lang.locations.label_telephone', 'sometimes'],
             ['location_address_1', 'admin::lang.locations.label_address_1', 'required|between:2,128'],
             ['location_address_2', 'admin::lang.locations.label_address_2', 'max:128'],
             ['location_city', 'admin::lang.locations.label_city', 'max:128'],
@@ -49,21 +49,6 @@ class Location extends FormRequest
             ['options.hours.*.flexible.*.open', 'admin::lang.locations.label_open_hour', 'sometimes|required_if:options.hours.*.type,flexible|valid_time'],
             ['options.hours.*.flexible.*.close', 'admin::lang.locations.label_close_hour', 'sometimes|required_if:options.hours.*.type,flexible|valid_time'],
             ['options.hours.*.flexible.*.status', 'admin::lang.label_status', 'sometimes|required_if:options.hours.*.type,flexible|boolean'],
-
-            ['delivery_areas', 'admin::lang.locations.text_delivery_area', 'sometimes'],
-            ['delivery_areas.*.type', 'admin::lang.locations.label_area_type', 'sometimes|required|string'],
-            ['delivery_areas.*.name', 'admin::lang.locations.label_area_name', 'sometimes|required|string'],
-            ['delivery_areas.*.area_id', 'admin::lang.locations.label_area_id', 'integer'],
-            ['delivery_areas.*.boundaries.components', 'admin::lang.locations.label_address_component', 'sometimes|required_if:delivery_areas.*.type,address'],
-            ['delivery_areas.*.boundaries.components.*.type', 'admin::lang.locations.label_address_component_type', 'sometimes|required|string'],
-            ['delivery_areas.*.boundaries.components.*.value', 'admin::lang.locations.label_address_component_value', 'sometimes|required|string'],
-            ['delivery_areas.*.boundaries.polygon', 'admin::lang.locations.label_area_shape', 'sometimes'],
-            ['delivery_areas.*.boundaries.circle', 'admin::lang.locations.label_area_circle', 'sometimes|json'],
-            ['delivery_areas.*.boundaries.vertices', 'admin::lang.locations.label_area_vertices', 'sometimes|json'],
-            ['delivery_areas.*.conditions', 'admin::lang.locations.label_delivery_condition', 'sometimes|required'],
-            ['delivery_areas.*.conditions.*.amount', 'admin::lang.locations.label_area_charge', 'sometimes|required|numeric'],
-            ['delivery_areas.*.conditions.*.type', 'admin::lang.locations.label_charge_condition', 'sometimes|required|alpha_dash'],
-            ['delivery_areas.*.conditions.*.total', 'admin::lang.locations.label_area_min_amount', 'sometimes|required|numeric'],
         ];
     }
 }

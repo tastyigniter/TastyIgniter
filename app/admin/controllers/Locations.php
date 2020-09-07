@@ -127,4 +127,14 @@ class Locations extends \Admin\Classes\AdminController
                 flash()->error(implode(PHP_EOL, $logs))->important();
         }
     }
+
+    public function mapViewCenterCoords()
+    {
+        $model = $this->getFormModel();
+
+        return [
+            'lat' => $model->location_lat,
+            'lng' => $model->location_lng,
+        ];
+    }
 }

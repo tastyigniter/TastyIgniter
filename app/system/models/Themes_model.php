@@ -4,6 +4,7 @@ namespace System\Models;
 
 use Exception;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Exception\ApplicationException;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 use Main\Template\Layout;
@@ -255,7 +256,6 @@ class Themes_model extends Model
         $installedThemes = [];
         $themeManager = ThemeManager::instance();
         foreach ($themeManager->paths() as $code => $path) {
-
             if (!($themeObj = $themeManager->findTheme($code))) continue;
 
             $installedThemes[] = $name = $themeObj->name ?? $code;
@@ -309,12 +309,23 @@ class Themes_model extends Model
         if (empty($code) OR !$theme = self::whereCode($code)->first())
             return FALSE;
 
+        $extensionManager = ExtensionManager::instance();
+
+        $notFound = [];
+        foreach ($theme->getTheme()->requires as $require => $version) {
+            if (!$extensionManager->hasExtension($require)) {
+                $notFound[] = $require;
+            }
+            else {
+                $extensionManager->installExtension($require);
+            }
+        }
+
+        if (count($notFound))
+            throw new ApplicationException(sprintf('The following required extensions must be installed before activating this theme, %s', implode(', ', $notFound)));
+
         params()->set('default_themes.main', $theme->code);
         params()->save();
-
-        foreach ($theme->getTheme()->requires as $require => $version) {
-            ExtensionManager::instance()->installExtension($require);
-        }
 
         return $theme;
     }
