@@ -1,5 +1,9 @@
 <?php
 $config['list']['filter'] = [
+    'search' => [
+        'prompt' => 'lang:admin::lang.categories.text_filter_search',
+        'mode' => 'all',
+    ],
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
@@ -10,7 +14,7 @@ $config['list']['filter'] = [
             'locationAware' => 'hide',
         ],
         'status' => [
-            'label' => 'lang:admin::lang.categories.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch', // checkbox, switch, date, daterange
             'conditions' => 'status = :filtered',
         ],

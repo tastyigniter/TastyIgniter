@@ -1,5 +1,9 @@
 <?php
 $config['list']['filter'] = [
+    'search' => [
+        'prompt' => 'lang:admin::lang.allergens.text_filter_search',
+        'mode' => 'all',
+    ],
     'scopes' => [
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
