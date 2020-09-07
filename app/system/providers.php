@@ -7,7 +7,6 @@ return [
     Illuminate\Bus\BusServiceProvider::class,
     Illuminate\Cache\CacheServiceProvider::class,
     Illuminate\Cookie\CookieServiceProvider::class,
-    Laravel\Dusk\DuskServiceProvider::class,
     Illuminate\Encryption\EncryptionServiceProvider::class,
     Illuminate\Foundation\Providers\FoundationServiceProvider::class,
     Illuminate\Hashing\HashServiceProvider::class,

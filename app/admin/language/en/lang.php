@@ -231,6 +231,8 @@ return [
         'text_title' => 'Allergens',
         'text_allergens' => 'Allergens',
         'text_form_name' => 'Allergen',
+        'text_filter_search' => 'Search by name.',
+        'text_empty' => 'There are no allergens available.',
 
         'label_image' => 'Image',
         'help_photo' => 'Select a file to update allergen image, otherwise leave blank.',

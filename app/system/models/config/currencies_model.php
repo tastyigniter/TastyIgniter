@@ -6,7 +6,7 @@ $config['list']['filter'] = [
     ],
     'scopes' => [
         'status' => [
-            'label' => 'lang:system::lang.currencies.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
             'conditions' => 'currency_status = :filtered',
         ],
