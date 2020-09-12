@@ -16,6 +16,7 @@ return [
     Illuminate\Redis\RedisServiceProvider::class,
     Illuminate\Session\SessionServiceProvider::class,
     Illuminate\View\ViewServiceProvider::class,
+    Laravel\Tinker\TinkerServiceProvider::class,
 
     // TastyIgniter flame providers
     Igniter\Flame\Foundation\Providers\ConsoleSupportServiceProvider::class,
