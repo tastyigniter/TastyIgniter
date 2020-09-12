@@ -275,10 +275,14 @@ class MediaLibrary
         if (!File::exists($filePath))
             $filePath = $this->getDefaultThumbPath($thumbPath, array_get($options, 'default'));
 
-        Manipulator::make($filePath)
-            ->useSource($this->getStorageDisk()->getDriver())
-            ->manipulate(array_except($options, ['extension', 'default']))
-            ->save($thumbPath);
+        $manipulator = Manipulator::make($filePath)->useSource(
+            $this->getStorageDisk()->getDriver()
+        );
+
+        if ($manipulator->isSupported())
+            $manipulator->manipulate(array_except($options, ['extension', 'default']));
+
+        $manipulator->save($thumbPath);
 
         return asset($thumbPublicPath);
     }
