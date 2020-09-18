@@ -66,7 +66,7 @@ class Coupons_model extends Model
         ],
     ];
 
-    protected $purgeable = ['categories', 'menus',];
+    protected $purgeable = ['categories', 'menus'];
 
     public function getRecurringEveryOptions()
     {
