@@ -2,8 +2,10 @@
 
 namespace Admin\Models;
 
+use Admin\Traits\Locationable;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Location\Models\AbstractLocation;
 use Model;
 
@@ -12,8 +14,9 @@ use Model;
  */
 class Coupons_model extends Model
 {
-    use \Admin\Traits\Locationable;
-
+    use Locationable;
+    use Purgeable;
+    
     const UPDATED_AT = null;
 
     const CREATED_AT = 'date_added';
@@ -51,6 +54,10 @@ class Coupons_model extends Model
     ];
 
     public $relation = [
+        'belongsToMany' => [
+            'categories' => ['Admin\Models\Categories_model', 'table' => 'coupon_categories'],
+            'menus' => ['Admin\Models\Menus_model', 'table' => 'coupon_menus'],
+        ],
         'hasMany' => [
             'history' => 'Admin\Models\Coupons_history_model',
         ],
@@ -58,6 +65,8 @@ class Coupons_model extends Model
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
+
+    protected $purgeable = [ 'categories', 'menus', ];
 
     public function getRecurringEveryOptions()
     {
@@ -96,6 +105,71 @@ class Coupons_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('status', '1');
+    }
+
+    public function scopeWhereHasCategory($query, $categoryId)
+    {
+        $query->whereHas('categories', function ($q) use ($categoryId) {
+            $q->where('categories.category_id', $categoryId);
+        });
+    }
+
+    public function scopeWhereHasMenu($query, $menuId)
+    {
+        $query->whereHas('menus', function ($q) use ($menuId) {
+            $q->where('menus.menu_id', $menuId);
+        });
+    }
+
+    //
+    // Events
+    //
+
+    protected function afterSave()
+    {
+        $this->restorePurgedValues();
+
+        if (array_key_exists('categories', $this->attributes))
+            $this->addMenuCategories((array)$this->attributes['categories']);
+
+        if (array_key_exists('menus', $this->attributes))
+            $this->addMenus((array)$this->attributes['menus']);
+    }
+
+    protected function beforeDelete()
+    {
+        $this->addMenuCategories([]);
+        $this->addMenus([]);
+    }
+    
+    /**
+     * Create new or update existing menu categories
+     *
+     * @param array $categoryIds if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuCategories(array $categoryIds = [])
+    {
+        if (!$this->exists)
+            return FALSE;
+
+        $this->categories()->sync($categoryIds);
+    }
+
+    /**
+     * Create new or update existing menus
+     *
+     * @param array $menuIds if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenus(array $menuIds = [])
+    {
+        if (!$this->exists)
+            return FALSE;
+
+        $this->menus()->sync($menuIds);
     }
 
     //

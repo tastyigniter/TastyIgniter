@@ -304,6 +304,17 @@ $config['form']['tabs'] = [
             'locationAware' => 'hide',
             'comment' => 'lang:admin::lang.coupons.help_locations',
         ],
+        'categories' => [
+            'label' => 'lang:admin::lang.coupons.label_categories',
+            'type' => 'relation',
+            'comment' => 'lang:admin::lang.coupons.help_categories',
+        ],
+        'menus' => [
+            'label' => 'lang:admin::lang.coupons.label_menus',
+            'type' => 'relation',
+            'comment' => 'lang:admin::lang.coupons.help_menus',
+            'nameFrom' => 'menu_name',
+        ],
         'description' => [
             'label' => 'lang:admin::lang.label_description',
             'type' => 'textarea',

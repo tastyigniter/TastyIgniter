@@ -291,6 +291,8 @@ return [
         'label_customer_redemption' => 'Customer Redemptions',
         'label_validity' => 'Validity',
         'label_order_restriction' => 'Order Restriction',
+        'label_categories' => 'Categories',
+        'label_menus' => 'Menu items',
         'label_date' => 'Date',
         'label_fixed_date' => 'Fixed date',
         'label_fixed_from_time' => 'Fixed from time',
@@ -306,6 +308,8 @@ return [
         'help_customer_redemption' => 'The number of times a specific customer can redeem this coupon. Set to 0 to allow any number of redemptions.',
         'help_order_restriction' => 'Whether to restrict the coupon to a specific order type.',
         'help_locations' => 'Apply this coupon ONLY on orders made at the selected location(s). Leave blank to make coupon available across all locations',
+        'help_categories' => 'Apply this coupon ONLY on items in the order that appear in this/these categories. Leave blank to make coupon available across all items',
+        'help_menus' => 'Apply this coupon ONLY on these items in the order. Leave blank to make coupon available across all items',
     ],
 
     'customer_groups' => [
