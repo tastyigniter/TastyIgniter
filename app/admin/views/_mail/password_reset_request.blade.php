@@ -12,7 +12,9 @@ Someone requested a password reset for your **{{ $site_name }}** account.
 
 If you did request a password reset, click the button below to reset password.
 
-@include('_mail.partials.button', ['url' => $reset_link, 'type' => 'primary'. 'text' => 'Reset your password'])
+@partial('_mail.partials.button', ['url' => $reset_link, 'type' => 'primary'])
+Reset your password
+@endpartial
 
 Alternatively, copy and paste the link below in a new browser window: <br>
 {{ $reset_link }}

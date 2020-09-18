@@ -18,4 +18,6 @@ Your reservation **{{ $reservation_number }}** at **{{ $location_name }}** has b
 The comments for your reservation are: <br>
 {{ $status_comment }}
 
-@include('_mail.partials.button', ['url' => '{{ $reservation_view_url }}', 'type' => 'primary', 'text' => 'View your reservation status'])
+@partial('_mail.partials.button', ['url' => '{{ $reservation_view_url }}', 'type' => 'primary'])
+View your reservation status
+@endpartial
