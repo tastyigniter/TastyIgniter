@@ -1,5 +1,5 @@
-@if($this->previewMode)
-    <div class="form-control-static">{{ $value }}</div>
+@if ($this->previewMode)
+    <div class="form-control-static">{!! $value !!}</div>
 @else
     <div
         class="field-codeeditor size-{{ $size }}"
@@ -15,6 +15,6 @@
             id="{{ $this->getId('textarea') }}"
             rows="20"
             class="form-control"
-        >{{ trim($value) }}</textarea>
+        >{!! trim($value) !!}</textarea>
     </div>
 @endif
