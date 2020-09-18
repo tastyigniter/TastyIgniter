@@ -1,5 +1,5 @@
 @if ($this->previewMode)
-    <div class="form-control-static">{{ $value }}</div>
+    <div class="form-control-static">{!! $value !!}</div>
 @else
     <div
         class="field-richeditor size-{{ $size }}"

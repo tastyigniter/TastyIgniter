@@ -10,6 +10,6 @@
         id="{{ $this->getId('items') }}"
         role="tablist"
         aria-multiselectable="true">
-        {{ $this->makePartial('connector/connector_items') }}
+        {!! $this->makePartial('connector/connector_items') !!}
     </div>
 </div>
