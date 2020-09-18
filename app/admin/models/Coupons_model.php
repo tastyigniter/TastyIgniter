@@ -16,7 +16,7 @@ class Coupons_model extends Model
 {
     use Locationable;
     use Purgeable;
-    
+
     const UPDATED_AT = null;
 
     const CREATED_AT = 'date_added';
@@ -66,7 +66,7 @@ class Coupons_model extends Model
         ],
     ];
 
-    protected $purgeable = [ 'categories', 'menus', ];
+    protected $purgeable = ['categories', 'menus',];
 
     public function getRecurringEveryOptions()
     {
@@ -141,7 +141,7 @@ class Coupons_model extends Model
         $this->addMenuCategories([]);
         $this->addMenus([]);
     }
-    
+
     /**
      * Create new or update existing menu categories
      *
