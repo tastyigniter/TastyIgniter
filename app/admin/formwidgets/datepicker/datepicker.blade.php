@@ -6,7 +6,7 @@
         id="{{ $this->getId() }}"
         class="control-datepicker"
     >
-        {{ $this->makePartial('datepicker/picker_'.$mode) }}
+        {!! $this->makePartial('datepicker/picker_'.$mode) !!}
     </div>
 
 @endif

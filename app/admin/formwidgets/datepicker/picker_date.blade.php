@@ -5,8 +5,8 @@
         class="form-control"
         autocomplete="off"
         value="{{ $value ? $value->format($dateFormat) : null }}"
-        {{ $field->getAttributes() }}
-        {{ $this->previewMode ? 'readonly="readonly"' : '' }}
+        {!! $field->getAttributes() !!}
+        {!! $this->previewMode ? 'readonly="readonly"' : '' !!}
         data-control="datepicker"
         @if ($startDate) data-start-date="{{ $startDate }}" @endif
         @if ($endDate) data-end-date="{{ $endDate }}" @endif

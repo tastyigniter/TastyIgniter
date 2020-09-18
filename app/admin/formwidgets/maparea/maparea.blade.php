@@ -5,14 +5,14 @@
     data-last-counter="{{ $indexCount }}"
 >
     <div class="map-area-container my-3">
-        {{ $this->makePartial('maparea/areas') }}
+        {!! $this->makePartial('maparea/areas') !!}
     </div>
 
     <div
         id="{{ $this->getId('toolbar') }}"
         class="map-area-toolbar"
     >
-        {{ $this->makePartial('maparea/toolbar') }}
+        {!! $this->makePartial('maparea/toolbar') !!}
     </div>
 
     <div
@@ -24,6 +24,6 @@
         aria-hidden="true"
         data-area-map-modal
     >
-        {{ $this->makePartial('maparea/map_modal') }}
+        {!! $this->makePartial('maparea/map_modal') !!}
     </div>
 </div>

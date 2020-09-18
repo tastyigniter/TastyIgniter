@@ -18,10 +18,10 @@
         <input
             id="{{ $field->getId() }}"
             type="hidden"
-            {{ !$useAttachment ? 'name="'.$fieldName.'"' : '' }}
+            {!! !$useAttachment ? 'name="'.$fieldName.'"' : '' !!}
             data-find-value
             value="{{ $this->getMediaPath($mediaItem) }}"
-            {{ $this->previewMode ? 'disabled="disabled"' : '' }}
+            {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
         >
         <input
             type="hidden"

@@ -5,6 +5,6 @@
     data-control="areas"
 >
     @foreach ($mapAreas as $mapArea)
-        {{ $this->makePartial('maparea/area', ['area' => $mapArea]) }}
+        {!! $this->makePartial('maparea/area', ['area' => $mapArea]) !!}
     @endforeach
 </div>

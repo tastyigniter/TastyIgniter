@@ -5,7 +5,7 @@
         class="form-control"
         autocomplete="off"
         value="{{ $value ? $value->format($formatAlias) : null }}"
-        {{ $field->getAttributes() }}
+        {!! $field->getAttributes() !!}
         @if ($this->previewMode) readonly="readonly" @endif
         data-control="datepicker"
         data-toggle="datetimepicker"
