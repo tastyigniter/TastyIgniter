@@ -15,9 +15,9 @@ class Menu_options_model extends Model
     use Locationable;
     use Purgeable;
     use Validation;
-    
+
     const LOCATIONABLE_RELATION = 'locations';
-    
+
     protected static $allergensOptionsCache;
 
     /**
@@ -45,7 +45,7 @@ class Menu_options_model extends Model
         'morphToMany' => [
             'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
-        ],        
+        ],
     ];
 
     public $rules = [

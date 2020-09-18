@@ -21,7 +21,7 @@ $config['form']['fields'] = [
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
         'locationAware' => 'hide',
-    ],    
+    ],
 ];
 
 return $config;
