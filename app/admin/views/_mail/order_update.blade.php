@@ -18,6 +18,6 @@ Your order **{{ $order_number }}** has been updated to the following status: <br
 The comments for your order are: <br>
 **{{ $status_comment }}**
 
-@partial('_mail.partials.button', ['url' => $order_view_url, 'type' => 'primary'])
+@partial('button', ['url' => $order_view_url, 'type' => 'primary'])
 View your order progress
 @endpartial
