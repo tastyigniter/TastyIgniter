@@ -8,7 +8,7 @@ $config['list']['filter'] = [
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
             'locationAware' => 'hide',
-        ],        
+        ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
@@ -133,7 +133,7 @@ $config['form']['fields'] = [
         'type' => 'switch',
         'default' => TRUE,
         'span' => 'left',
-    ]
+    ],
 ];
 
 return $config;
