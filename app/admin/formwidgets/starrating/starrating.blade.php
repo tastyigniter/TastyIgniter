@@ -4,7 +4,7 @@
     data-score="{{ $value }}"
     data-hints="@json($hints)"
     data-score-name="{{ $field->getName() }}"
-    {{ $field->getAttributes() }}>
+    {!! $field->getAttributes() !!}>
 
     <div class="rating rating-star"></div>
 </div>

@@ -25,10 +25,10 @@
                 <tbody id="{{ $this->getId('append-to') }}">
                 @if ($this->formWidgets)
                     @foreach ($this->formWidgets as $widget)
-                        {{ $this->makePartial('repeater/repeater_item', [
+                        {!! $this->makePartial('repeater/repeater_item', [
                             'widget' => $widget,
                             'indexValue' => $loop->index,
-                        ]) }}
+                        ]) !!}
                     @endforeach
                 @else
                     <tr class="repeater-item-placeholder">
@@ -62,6 +62,6 @@
         data-find="{{ $indexSearch }}"
         data-replace="{{ $nextIndex }}"
         data-repeater-template>
-        {{ $this->makePartial('repeater/repeater_item', ['widget' => $widgetTemplate, 'indexValue' => $indexSearch]) }}
+        {!! $this->makePartial('repeater/repeater_item', ['widget' => $widgetTemplate, 'indexValue' => $indexSearch]) !!}
     </script>
 </div>

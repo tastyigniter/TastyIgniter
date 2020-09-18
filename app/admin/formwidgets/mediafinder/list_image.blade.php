@@ -3,9 +3,9 @@
     @if (count($value))
         @foreach ($value as $item)
             @if (!$item) @continue
-            {{ $this->makePartial('mediafinder/image_'.$mode, ['value' => !is_string($item) ? null : $item]) }}
+            {!! $this->makePartial('mediafinder/image_'.$mode, ['value' => !is_string($item) ? null : $item]) !!}
         @endforeach
     @endif
 
-    {{ $this->makePartial('mediafinder/image_'.$mode, ['value' => null]) }}
+    {!! $this->makePartial('mediafinder/image_'.$mode, ['value' => null]) !!}
 </div>

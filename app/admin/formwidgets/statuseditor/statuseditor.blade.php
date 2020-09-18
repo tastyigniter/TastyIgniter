@@ -4,5 +4,5 @@
     data-control="status-editor"
     data-alias="{{ $this->alias }}"
 >
-    {{ $this->makePartial('statuseditor/info') }}
+    {!! $this->makePartial('statuseditor/info') !!}
 </div>
