@@ -111,24 +111,24 @@ return [
     |
     | The URL map used in the Main page routing process. By default
     | the map is updated every time when a page is saved in the admin or when the
-    | interval, in seconds, specified with the urlMapCacheTTL parameter expires.
+    | interval, in minutes, specified with the urlMapCacheTTL parameter expires.
     |
     */
 
-    'urlMapCacheTtl' => 600,
+    'urlMapCacheTtl' => 10,
 
     /*
     |--------------------------------------------------------------------------
     | Time to live for parsed Template Pages.
     |--------------------------------------------------------------------------
     |
-    | Specifies the number of seconds the Template object cache lives. After the interval
+    | Specifies the number of minutes the Template object cache lives. After the interval
     | is expired item are re-cached. Note that items are re-cached automatically when
     | the corresponding template file is modified.
     |
     */
 
-    'parsedTemplateCacheTTL' => 600,
+    'parsedTemplateCacheTTL' => 10,
 
     'parsedTemplateCachePath' => storage_path('system/cache'),
 
@@ -165,6 +165,22 @@ return [
             'path' => '/assets/media/attachments',
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | URL Linking policy
+    |--------------------------------------------------------------------------
+    |
+    | Controls how URL links are generated.
+    |
+    | detect   - detect hostname and use the current schema
+    | secure   - detect hostname and force HTTPS schema
+    | insecure - detect hostname and force HTTP schema
+    | force    - force hostname and schema using app.url config value
+    |
+    */
+
+    'urlPolicy' => 'force',
 
     /*
     |--------------------------------------------------------------------------

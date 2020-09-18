@@ -1,11 +1,13 @@
-<?php namespace Main\Components;
+<?php
+
+namespace Main\Components;
 
 use System\Classes\BaseComponent;
 
 class BlankComponent extends BaseComponent
 {
     /**
-     * @var boolean This component is hidden from the admin UI.
+     * @var bool This component is hidden from the admin UI.
      */
     public $isHidden = TRUE;
 
@@ -15,7 +17,7 @@ class BlankComponent extends BaseComponent
     protected $errorMessage;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct($cmsObject, $properties, $errorMessage)
     {

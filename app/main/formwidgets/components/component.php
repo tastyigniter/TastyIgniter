@@ -8,7 +8,7 @@
             data-component-control="drag"
             class="handle btn btn-light btn-sm"
             role="button"
-        ><i class="fa fa-bars"></i></a>
+        ><i class="fa fa-arrows-alt"></i></a>
         <a
             data-component-control="remove"
             class="remove btn btn-light btn-sm pull-right"

@@ -24,12 +24,10 @@ return [
             'notify' => [
                 'context' => 'status',
                 'label' => 'lang:admin::lang.statuses.label_notify_customer',
-                'type' => 'radio',
-                'default' => 1,
-                'options' => [
-                    'lang:admin::lang.text_no',
-                    'lang:admin::lang.text_yes',
-                ],
+                'type' => 'switch',
+                'default' => TRUE,
+                'offText' => 'lang:admin::lang.text_no',
+                'onText' => 'lang:admin::lang.text_yes',
                 'comment' => 'lang:admin::lang.statuses.help_notify_customer',
                 'attributes' => [
                     'data-status-notify' => '',
@@ -64,7 +62,7 @@ return [
             ['notify', 'admin::lang.statuses.label_notify', 'sometimes|required|boolean'],
 
             ['assignee_group_id', 'admin::lang.statuses.label_assignee_group', 'sometimes|required|integer|exists:staff_groups,staff_group_id'],
-            ['assignee_id', 'admin::lang.statuses.label_staff', 'sometimes|required|integer|exists:staffs,staff_id'],
+            ['assignee_id', 'admin::lang.statuses.label_assignee', 'integer|exists:staffs,staff_id'],
         ],
     ],
 ];

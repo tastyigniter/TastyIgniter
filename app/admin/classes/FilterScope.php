@@ -7,8 +7,6 @@ namespace Admin\Classes;
  * A translation of the filter scope configuration
  *
  * Adapted from october\backend\classes\FilterScope
- *
- * @package Admin
  */
 class FilterScope
 {

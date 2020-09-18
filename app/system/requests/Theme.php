@@ -50,7 +50,7 @@ class Theme extends FormRequest
         });
     }
 
-    protected function validationData()
+    public function validationData()
     {
         return array_undot($this->getForm()->getSaveData());
     }

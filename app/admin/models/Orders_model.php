@@ -1,10 +1,13 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
+use Carbon\Carbon;
 use Event;
 use Igniter\Flame\Auth\Models\User;
 use Main\Classes\MainController;
@@ -14,8 +17,6 @@ use System\Traits\SendsMailTemplate;
 
 /**
  * Orders Model Class
- *
- * @package Admin
  */
 class Orders_model extends Model
 {
@@ -50,12 +51,12 @@ class Orders_model extends Model
 
     public $guarded = ['ip_address', 'user_agent', 'hash'];
 
+    protected $hidden = ['cart'];
+
     /**
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
-
-    public $appends = ['customer_name', 'order_type_name'];
 
     public $casts = [
         'customer_id' => 'integer',
@@ -130,14 +131,14 @@ class Orders_model extends Model
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
         }
-        else if (strlen($location)) {
+        elseif (strlen($location)) {
             $query->where('location_id', $location);
         }
 
         if ($customer instanceof User) {
             $query->where('customer_id', $customer->getKey());
         }
-        else if (strlen($customer)) {
+        elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 
@@ -244,9 +245,9 @@ class Orders_model extends Model
         return $this->processed;
     }
 
-    public function logPaymentAttempt($message, $status, $request = [], $response = [])
+    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [])
     {
-        Payment_logs_model::logAttempt($this, $message, $status, $request, $response);
+        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response);
     }
 
     public function updateOrderStatus($id, $options = [])
@@ -325,13 +326,14 @@ class Orders_model extends Model
         $data['telephone'] = $model->telephone;
         $data['order_comment'] = $model->comment;
 
-        $data['order_type'] = $model->order_type;
-        $data['order_time'] = $model->order_time.' '.$model->order_date->format('d M');
-        $data['order_date'] = $model->date_added->format('d M y');
+        $data['order_type'] = $model->order_type_name;
+        $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(setting('time_format'));
+        $data['order_date'] = $model->order_date->format(setting('date_format'));
+        $data['order_added'] = $model->date_added->format(setting('date_format'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;
-        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format('d M y') : null;
+        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format(setting('date_format')) : null;
 
         $data['order_payment'] = ($model->payment_method)
             ? $model->payment_method->name
@@ -344,7 +346,9 @@ class Orders_model extends Model
             $optionData = [];
             if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
                 foreach ($menuItemOptions as $menuItemOption) {
-                    $optionData[] = $menuItemOption->order_option_name
+                    $optionData[] = $menuItemOption->quantity
+                        .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'
+                        .$menuItemOption->order_option_name
                         .lang('admin::lang.text_equals')
                         .currency_format($menuItemOption->order_option_price);
                 }
@@ -380,9 +384,9 @@ class Orders_model extends Model
             $data['location_address'] = format_address($model->location->getAddress());
         }
 
-        $status = $model->status()->first();
-        $data['status_name'] = $status ? $status->status_name : null;
-        $data['status_comment'] = $status ? $status->status_comment : null;
+        $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();
+        $data['status_name'] = $statusHistory ? optional($statusHistory->status)->status_name : null;
+        $data['status_comment'] = $statusHistory ? $statusHistory->comment : null;
 
         $controller = MainController::getController() ?: new MainController;
         $data['order_view_url'] = $controller->pageUrl('account/order', [

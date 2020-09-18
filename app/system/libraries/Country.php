@@ -1,11 +1,11 @@
-<?php namespace System\Libraries;
+<?php
+
+namespace System\Libraries;
 
 use System\Models\Countries_model;
 
 /**
  * Country Class
- *
- * @package System
  */
 class Country
 {
@@ -28,7 +28,7 @@ class Country
 
     public function addressFormat($address, $useLineBreaks = TRUE)
     {
-        list($format, $placeholders) = $this->getDefaultFormat();
+        [$format, $placeholders] = $this->getDefaultFormat();
 
         // Override format if present in address array
         if (!empty($address['format']))
@@ -121,7 +121,7 @@ class Country
         if (is_numeric($country)) {
             return $this->getCountryNameById($country);
         }
-        else if (!is_string($country) AND isset($country['country_name'])) {
+        elseif (!is_string($country) AND isset($country['country_name'])) {
             return $country['country_name'];
         }
 

@@ -2,9 +2,9 @@
     id="<?= $this->getId() ?>"
     data-control="map-area"
     data-alias="<?= $this->alias ?>"
-    data-last-counter="<?= $indexCount ?>"
+    data-remove-handler="<?= $this->getEventHandler('onDeleteArea') ?>"
 >
-    <div class="map-area-container mt-3">
+    <div class="map-area-container my-3">
         <?= $this->makePartial('maparea/areas') ?>
     </div>
 
@@ -13,17 +13,5 @@
         class="map-area-toolbar"
     >
         <?= $this->makePartial('maparea/toolbar') ?>
-    </div>
-
-    <div
-        class="modal fade"
-        id="<?= $this->getId('map-modal') ?>"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="<?= $this->getId('map-modal-title') ?>"
-        aria-hidden="true"
-        data-area-map-modal
-    >
-        <?= $this->makePartial('maparea/map_modal') ?>
     </div>
 </div>

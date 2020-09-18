@@ -7,7 +7,6 @@ use Igniter\Flame\Traits\EventEmitter;
 
 /**
  * Base Controller Class
- * @package System
  */
 class BaseController extends Extendable
 {
@@ -95,11 +94,6 @@ class BaseController extends Extendable
         }
 
         return $methodExists;
-    }
-
-    public function pageUrl($uri = '', $params = [])
-    {
-        return site_url($uri, $params);
     }
 
     public function setStatusCode($code)

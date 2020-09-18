@@ -17,7 +17,6 @@ use Igniter\Flame\Pagic\Parsers\FileParser;
 use Igniter\Flame\Traits\EventEmitter;
 use Illuminate\Http\RedirectResponse;
 use Lang;
-use Log;
 use Main\Components\BlankComponent;
 use Main\Template\ComponentPartial;
 use Main\Template\Content;
@@ -32,6 +31,7 @@ use System\Classes\BaseComponent;
 use System\Classes\BaseController;
 use System\Classes\ComponentManager;
 use System\Helpers\ViewHelper;
+use System\Models\Request_logs_model;
 use System\Template\Extension\BladeExtension as SystemBladeExtension;
 use System\Traits\AssetMaker;
 use URL;
@@ -39,7 +39,6 @@ use View;
 
 /**
  * Main Controller Class
- * @package Main
  */
 class MainController extends BaseController
 {
@@ -190,7 +189,7 @@ class MainController extends BaseController
 
             // Log the 404 request
             if (!App::runningUnitTests())
-                Log::error(sprintf(lang('main::lang.not_found.page_message').': %s', $url));
+                Request_logs_model::createLog(404);
 
             if (!$page = $this->router->findByUrl('/404'))
                 return Response::make(View::make('main::404'), $this->statusCode);
@@ -385,10 +384,10 @@ class MainController extends BaseController
             if (is_array($result)) {
                 $response = array_merge($response, $result);
             }
-            else if (is_string($result)) {
+            elseif (is_string($result)) {
                 $response['result'] = $result;
             }
-            else if (is_object($result)) {
+            elseif (is_object($result)) {
                 return $result;
             }
 
@@ -616,7 +615,7 @@ class MainController extends BaseController
             $this->vars['__SELF__'] = $this->componentContext;
         }
         // Process theme partial
-        else if (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
+        elseif (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
             return FALSE;
         }
 

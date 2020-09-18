@@ -1,9 +1,11 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Schema;
 
-class deleteStaleUnusedTable extends Migration
+class DeleteStaleUnusedTable extends Migration
 {
     public function up()
     {

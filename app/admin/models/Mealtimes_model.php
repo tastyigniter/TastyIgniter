@@ -1,12 +1,12 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Model;
 
 /**
  * Mealtimes Model Class
- *
- * @package Admin
  */
 class Mealtimes_model extends Model
 {
@@ -40,11 +40,23 @@ class Mealtimes_model extends Model
         return $query->where('mealtime_status', 1);
     }
 
+    public function isAvailable($datetime = null)
+    {
+        if (is_null($datetime))
+            $datetime = Carbon::now();
+
+        if (!$datetime instanceof Carbon) {
+            $datetime = Carbon::parse($datetime);
+        }
+
+        return $datetime->between(
+            $datetime->copy()->setTimeFromTimeString($this->start_time),
+            $datetime->copy()->setTimeFromTimeString($this->end_time)
+        );
+    }
+
     public function isAvailableNow()
     {
-        return Carbon::now()->between(
-            Carbon::createFromTimeString($this->start_time),
-            Carbon::createFromTimeString($this->end_time)
-        );
+        return $this->isAvailable();
     }
 }

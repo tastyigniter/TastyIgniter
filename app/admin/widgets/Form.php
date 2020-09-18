@@ -6,6 +6,7 @@ use Admin\Classes\BaseWidget;
 use Admin\Classes\FormField;
 use Admin\Classes\FormTabs;
 use Admin\Classes\Widgets;
+use Admin\Facades\AdminAuth;
 use Admin\Traits\FormModelWidget;
 use Exception;
 use Model;
@@ -67,7 +68,7 @@ class Form extends BaseWidget
     protected $defaultAlias = 'form';
 
     /**
-     * @var boolean Determines if field definitions have been created.
+     * @var bool Determines if field definitions have been created.
      */
     protected $fieldsDefined = FALSE;
 
@@ -107,6 +108,8 @@ class Form extends BaseWidget
      */
     protected $widgetManager;
 
+    protected $optionModelTypes;
+
     public function initialize()
     {
         $this->fillFromConfig([
@@ -118,6 +121,13 @@ class Form extends BaseWidget
             'arrayName',
             'context',
         ]);
+
+        $this->optionModelTypes = [
+            'select', 'selectlist',
+            'radio', 'radiolist', 'radiotoggle',
+            'checkbox', 'checkboxlist', 'checkboxtoggle',
+            'partial',
+        ];
 
         $this->widgetManager = Widgets::instance();
         $this->allTabs = (object)$this->allTabs;
@@ -353,16 +363,22 @@ class Form extends BaseWidget
     public function addFields(array $fields, $addToArea = null)
     {
         foreach ($fields as $name => $config) {
-            // Check that the form field matches the active context
-            if (array_key_exists('context', $config)) {
-                $context = (array)$config['context'];
-                if (!in_array($this->getContext(), $context)) {
-                    continue;
-                }
+            // Check if admin has permissions to show this field
+            $permissions = array_get($config, 'permissions');
+            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+                continue;
             }
 
             $fieldObj = $this->makeFormField($name, $config);
             $fieldTab = is_array($config) ? array_get($config, 'tab') : null;
+
+            // Check that the form field matches the active context
+            if ($fieldObj->context !== null) {
+                $context = is_array($fieldObj->context) ? $fieldObj->context : [$fieldObj->context];
+                if (!in_array($this->getContext(), $context)) {
+                    continue;
+                }
+            }
 
             $this->allFields[$name] = $fieldObj;
 
@@ -482,8 +498,7 @@ class Form extends BaseWidget
 //        }
 
         // Get field options from model
-        $optionModelTypes = ['select', 'selectlist', 'radio', 'checkbox', 'checkboxlist', 'radiolist', 'partial'];
-        if (in_array($field->type, $optionModelTypes, FALSE)) {
+        if (in_array($field->type, $this->optionModelTypes, FALSE)) {
 
             // Defer the execution of option data collection
             $field->options(function () use ($field, $config) {
@@ -692,7 +707,7 @@ class Form extends BaseWidget
      *
      * @param \Admin\Classes\FormField $field
      *
-     * @return boolean
+     * @return bool
      */
     public function showFieldLabels($field)
     {
@@ -766,6 +781,14 @@ class Form extends BaseWidget
         $cookieKey = $this->getCookieKey();
 
         $activeTab = $activeTabs[$cookieKey] ?? null;
+
+        $tabs = $this->allTabs->primary;
+        $type = $tabs->section;
+        $activeTabIndex = (int)str_after($activeTab, '#'.$type.'tab-');
+
+        // In cases where a tab has been removed, the first tab becomes the active tab
+        $activeTab = ($activeTabIndex <= count($tabs->fields))
+            ? $activeTab : '#'.$type.'tab-1';
 
         return $this->activeTab = $activeTab;
     }
@@ -924,7 +947,7 @@ class Form extends BaseWidget
      *
      * @param string $fieldType
      *
-     * @return boolean
+     * @return bool
      */
     protected function isFormWidget($fieldType)
     {
@@ -1012,7 +1035,7 @@ class Form extends BaseWidget
      * @param object $object
      * @param string $method
      *
-     * @return boolean
+     * @return bool
      */
     protected function objectMethodExists($object, $method)
     {
@@ -1080,7 +1103,7 @@ class Form extends BaseWidget
                 $array[$key] = [];
             }
 
-            $array =& $array[$key];
+            $array = &$array[$key];
         }
 
         $array[array_shift($parts)] = $value;

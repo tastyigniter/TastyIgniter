@@ -29,12 +29,6 @@ $config['list']['toolbar'] = [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
-        ],
     ],
 ];
 
@@ -67,7 +61,7 @@ $config['list']['columns'] = [
         'offText' => 'admin::lang.text_no',
     ],
     'date_updated' => [
-        'label' => 'lang:admin::lang.payments.column_date_updated',
+        'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'timetense',
     ],
     'payment_id' => [

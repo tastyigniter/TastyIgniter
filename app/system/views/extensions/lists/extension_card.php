@@ -8,15 +8,13 @@
             role="button"
         <?php } ?>
     >
-        <span class="extension-name<?= (!$record->class) ? ' text-muted' : ''; ?>">
-            <b>
-                <?php if ($record->class) { ?>
-                    <?= $record->title; ?>
-                <?php }
-                else { ?>
-                    <s><?= $record->title; ?></s>&nbsp;&nbsp;
-                <?php } ?>
-            </b>
+        <span class="extension-name font-weight-bold<?= (!$record->class) ? ' text-muted' : ''; ?>">
+            <?php if (!$record->class) { ?>
+                <s><?= $record->title; ?></s>&nbsp;&nbsp;
+            <?php }
+            else { ?>
+                <?= $record->title; ?>
+            <?php } ?>
         </span>
         <span class="small text-muted"><?= $record->version; ?></span>
         <p class="extension-desc mb-0 text-muted"><?= $record->description; ?></p>
@@ -33,12 +31,17 @@
         tabindex="-1"
         role="dialog"
     >
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title"><?= $record->title; ?></h4>
+                    <?php if (isset($record->meta['homepage'])) { ?>
+                        <button type="button" class="close">
+                            <a href="<?= $record->meta['homepage']?>"><i class="fa fa-external-link"></i></a>
+                        </button>
+                    <?php } ?>
                 </div>
-                <div class="modal-body bg-light">
+                <div class="modal-body bg-light markdown">
                     <?= $record->readme; ?>
                 </div>
             </div>

@@ -2,15 +2,13 @@
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.customers.text_filter_search',
-        'mode' => 'all' // or any, exact
+        'mode' => 'all', // or any, exact
     ],
     'scopes' => [
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
-            'modelClass' => 'Admin\Models\Customers_model',
-            'options' => 'getCustomerDates',
+            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month AND DAY(date_added) = :day',
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -34,12 +32,6 @@ $config['list']['toolbar'] = [
             'data-request-form' => '#list-form',
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
         ],
         'groups' => [
             'label' => 'lang:admin::lang.side_menu.customer_group',
@@ -122,6 +114,13 @@ $config['form']['toolbar'] = [
             'data-progress-indicator' => 'admin::lang.text_deleting',
             'context' => ['edit'],
         ],
+        'impersonate' => [
+            'label' => 'lang:admin::lang.customers.text_impersonate',
+            'class' => 'btn btn-default',
+            'data-request' => 'onImpersonate',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
+            'context' => ['edit'],
+        ],
     ],
 ];
 
@@ -183,9 +182,8 @@ $config['form']['tabs'] = [
         ],
         'addresses' => [
             'tab' => 'lang:admin::lang.customers.text_tab_address',
-            'type' => 'partial',
-            'path' => 'customers/address_tabs',
-            'options' => 'listAddresses',
+            'type' => 'repeater',
+            'form' => 'addresses_model',
         ],
         'orders' => [
             'tab' => 'lang:admin::lang.customers.text_tab_orders',

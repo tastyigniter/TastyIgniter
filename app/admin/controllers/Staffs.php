@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use AdminAuth;
 use AdminMenu;
@@ -88,6 +90,13 @@ class Staffs extends \Admin\Classes\AdminController
     {
         if (!AdminAuth::isSuperUser()) {
             $query->whereNotSuperUser();
+        }
+    }
+
+    public function formExtendFields($form)
+    {
+        if (!AdminAuth::isSuperUser()) {
+            $form->removeField('user[super_user]');
         }
     }
 }

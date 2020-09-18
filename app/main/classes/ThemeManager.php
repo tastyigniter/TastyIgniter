@@ -1,17 +1,20 @@
-<?php namespace Main\Classes;
+<?php
+
+namespace Main\Classes;
 
 use App;
 use File;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Traits\Singleton;
+use Illuminate\Support\Facades\Event;
 use Lang;
 use System\Libraries\Assets;
+use System\Models\Themes_model;
 use SystemException;
 use ZipArchive;
 
 /**
  * Theme Manager Class
- * @package Main
  */
 class ThemeManager
 {
@@ -177,7 +180,12 @@ class ThemeManager
 
     public function getActiveThemeCode()
     {
-        return trim(params('default_themes.main', config('system.defaultTheme')), '/');
+        $activeTheme = trim(params('default_themes.main', config('system.defaultTheme')), '/');
+
+        if (!is_null($apiResult = Event::fire('theme.getActiveTheme', [], TRUE)))
+            $activeTheme = $apiResult;
+
+        return $activeTheme;
     }
 
     /**
@@ -264,7 +272,7 @@ class ThemeManager
             return FALSE;
         }
 
-        return (rtrim($themeCode, '/') == $this->getActiveThemeCode());
+        return rtrim($themeCode, '/') == $this->getActiveThemeCode();
     }
 
     /**
@@ -377,7 +385,7 @@ class ThemeManager
         if (is_null($base)) {
             $base = ['/'];
         }
-        else if (!is_array($base)) {
+        elseif (!is_array($base)) {
             $base = [$base];
         }
 
@@ -556,32 +564,37 @@ class ThemeManager
         return TRUE;
     }
 
-    public function createChildTheme($themeCode)
+    /**
+     * @param \System\Models\Themes_model $model
+     * @return \System\Models\Themes_model
+     * @throws \Igniter\Flame\Exception\ApplicationException
+     */
+    public function createChildTheme($model)
     {
-        if ($this->checkParent($themeCode))
+        if ($this->checkParent($model->code))
             throw new ApplicationException('Child theme already exists.');
 
-        $theme = $this->findTheme($themeCode);
-        if ($theme->hasParent())
+        $parentTheme = $this->findTheme($model->code);
+        if ($parentTheme->hasParent())
             throw new ApplicationException('Can not create a child theme from another child theme');
 
-        $config = $theme->config;
-        $config['code'] = $theme->name.'-child';
-        $config['name'] = $theme->label.' [child]';
-        $config['parent'] = $theme->name;
-        $config['version'] = '1.0.0';
-        unset($config['locked'], $config['require']);
+        $childThemeCode = Themes_model::generateUniqueCode($model->code);
+        $childThemePath = dirname($parentTheme->getPath()).'/'.$childThemeCode;
 
-        $childThemePath = $theme->getPath().'-child';
-        if (File::isDirectory($childThemePath))
-            throw new ApplicationException('Child theme path already exists.');
+        $themeConfig = [
+            'name' => $parentTheme->label.' [child]',
+            'code' => $childThemeCode,
+            'version' => $parentTheme->version ?? '1.0.0',
+            'description' => $parentTheme->description,
+        ];
 
-        File::makeDirectory($childThemePath, 0777, FALSE, TRUE);
+        $this->writeChildThemeMetaFile(
+            $childThemePath, $parentTheme, $themeConfig
+        );
 
-        $manifestFile = $childThemePath.'/theme.json';
-        File::put($manifestFile, json_encode($config, JSON_PRETTY_PRINT));
+        $themeConfig['data'] = $model->data ?? [];
 
-        return $theme->name.'-child';
+        return Themes_model::create($themeConfig);
     }
 
     /**
@@ -635,12 +648,12 @@ class ThemeManager
         }
 
         foreach ([
-                     'code',
-                     'name',
-                     'description',
-                     'version',
-                     'author',
-                 ] as $item) {
+            'code',
+            'name',
+            'description',
+            'version',
+            'author',
+        ] as $item) {
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.missing.config_key'),
@@ -650,5 +663,22 @@ class ThemeManager
         }
 
         return $config;
+    }
+
+    protected function writeChildThemeMetaFile($path, $parentTheme, $themeConfig): string
+    {
+        $config = array_merge($parentTheme->config, $themeConfig);
+        $config['parent'] = $parentTheme->name;
+        unset($config['locked'], $config['require']);
+
+        if (File::isDirectory($path))
+            throw new ApplicationException('Child theme path already exists.');
+
+        File::makeDirectory($path, 0777, FALSE, TRUE);
+
+        $manifestFile = $path.'/theme.json';
+        File::put($manifestFile, json_encode($config, JSON_PRETTY_PRINT));
+
+        return $manifestFile;
     }
 }

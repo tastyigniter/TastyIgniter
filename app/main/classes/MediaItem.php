@@ -27,12 +27,12 @@ class MediaItem
     public $path;
 
     /**
-     * @var integer The file size or folder files count.
+     * @var int The file size or folder files count.
      */
     public $size;
 
     /**
-     * @var integer The last modification time (Unix timestamp).
+     * @var int The last modification time (Unix timestamp).
      */
     public $lastModified;
 

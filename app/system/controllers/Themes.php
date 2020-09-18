@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use Admin\Traits\WidgetMaker;
 use AdminMenu;
@@ -15,7 +17,6 @@ use System\Libraries\Assets as AssetsManager;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
 use System\Traits\SessionMaker;
-use SystemException;
 use Template;
 
 class Themes extends \Admin\Classes\AdminController
@@ -109,15 +110,6 @@ class Themes extends \Admin\Classes\AdminController
         $this->asExtension('FormController')->edit($context, $themeCode);
     }
 
-    public function upload()
-    {
-        $pageTitle = lang('system::lang.themes.text_add_title');
-        Template::setTitle($pageTitle);
-        Template::setHeading($pageTitle);
-
-        Template::setButton(lang('system::lang.themes.button_browse'), ['class' => 'btn btn-default', 'href' => admin_url('updates/browse/themes')]);
-    }
-
     public function delete($context, $themeCode = null)
     {
         try {
@@ -144,7 +136,7 @@ class Themes extends \Admin\Classes\AdminController
             // so delete from database
             if (!$theme) {
                 Themes_model::deleteTheme($themeCode, TRUE);
-                flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
+                flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
 
                 return $this->redirectBack();
             }
@@ -256,52 +248,25 @@ class Themes extends \Admin\Classes\AdminController
 
     public function source_onCreateChild($context, $themeCode = null)
     {
+        $manager = ThemeManager::instance();
+
         $model = $this->formFindModelObject($themeCode);
 
-        $childThemeCode = ThemeManager::instance()->createChildTheme($themeCode);
+        $childTheme = $manager->createChildTheme($model);
 
-        ThemeManager::instance()->loadThemes();
-        Themes_model::create([
-            'name' => $model->name.' [child]',
-            'code' => $childThemeCode,
-            'version' => '1.0.0',
-            'description' => $model->description,
-            'data' => $model->data,
-        ]);
-
+        $manager->loadThemes();
         Themes_model::syncAll();
-        Themes_model::activateTheme($childThemeCode);
+        Themes_model::activateTheme($childTheme->code);
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Child theme ['.$childThemeCode.'] created '));
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Child theme ['.$childTheme->name.'] created '));
 
-        return $this->redirect('themes/source/'.$childThemeCode);
-    }
-
-    public function upload_onUpload($context = null)
-    {
-        try {
-            $themeManager = ThemeManager::instance();
-
-            $this->validateUpload();
-
-            $zipFile = Request::file('theme_zip');
-            $themeManager->extractTheme($zipFile->path());
-
-            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme uploaded '));
-
-            return $this->redirect('themes');
-        }
-        catch (Exception $ex) {
-            flash()->danger($ex->getMessage());
-
-            return $this->refresh();
-        }
+        return $this->redirect('themes/source/'.$childTheme->code);
     }
 
     public function delete_onDelete($context = null, $themeCode = null)
     {
         if (Themes_model::deleteTheme($themeCode, post('delete_data', 1) == 1)) {
-            flash()->success(sprintf(lang('admin::lang.alert_success'), "Theme deleted "));
+            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
         }
         else {
             flash()->danger(lang('admin::lang.alert_error_try_again'));
@@ -384,31 +349,6 @@ class Themes extends \Admin\Classes\AdminController
         return $this->getTemplateValue('mTime') != optional($this->widgets['form']->data->fileSource)->mTime;
     }
 
-    protected function validateUpload()
-    {
-        $zipFile = Request::file('theme_zip');
-        if (!Request::hasFile('theme_zip') OR !$zipFile->isValid())
-            throw new SystemException('Please upload a zip file');
-
-        $name = $zipFile->getClientOriginalName();
-        $theme = $zipFile->extension();
-
-        if (preg_match('/\s/', $name))
-            throw new SystemException(lang('system::lang.themes.error_upload_name'));
-
-        if ($theme != 'zip')
-            throw new SystemException(lang('system::lang.themes.error_upload_type'));
-
-        if ($zipFile->getError())
-            throw new SystemException(lang('system::lang.themes.error_php_upload').$zipFile->getErrorMessage());
-
-        $name = substr($name, -strlen($theme));
-        if (ThemeManager::instance()->hasTheme($name))
-            throw new SystemException(lang('system::lang.themes.error_theme_exists'));
-
-        return TRUE;
-    }
-
     protected function getTemplateAttributes()
     {
         $formData = $this->widgets['form']->getSaveData();
@@ -428,6 +368,9 @@ class Themes extends \Admin\Classes\AdminController
     protected function buildAssetsBundle($model)
     {
         if (!$model->getFieldsConfig())
+            return;
+
+        if (!config('system.bundleThemeAssets', TRUE))
             return;
 
         $loaded = FALSE;

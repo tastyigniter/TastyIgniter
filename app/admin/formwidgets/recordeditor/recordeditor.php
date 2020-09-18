@@ -37,16 +37,10 @@ $fieldPlaceholder = $field->placeholder ?: $this->emptyOption;
                     ><?= e(is_lang_key($option[0]) ? lang($option[0]) : $option[0]) ?></option>
                 <?php } ?>
             </select>
-            <div class="input-group-prepend ml-1">
+            <div class="input-group-append ml-1">
                 <?php if ($addonRight) { ?>
                     <?= $addonRight ?>
                 <?php } ?>
-                <button
-                    type="button"
-                    class="btn btn-outline-default"
-                    data-control="create-record"
-                    <?= ($this->previewMode) ? 'disabled="disabled"' : '' ?>
-                ><i class="fa fa-plus"></i>&nbsp;&nbsp;<?= e(lang($addLabel).' '.lang($this->formName)) ?></button>
                 <button
                     type="button"
                     class="btn btn-outline-default"
@@ -61,6 +55,12 @@ $fieldPlaceholder = $field->placeholder ?: $this->emptyOption;
                     data-confirm-message="<?= lang('admin::lang.alert_warning_confirm') ?>"
                     <?= ($this->previewMode) ? 'disabled="disabled"' : '' ?>
                 ><i class="fa fa-trash"></i></button>
+                <button
+                    type="button"
+                    class="btn btn-outline-default"
+                    data-control="create-record"
+                    <?= ($this->previewMode) ? 'disabled="disabled"' : '' ?>
+                ><i class="fa fa-plus"></i>&nbsp;&nbsp;<?= e(lang($addLabel).' '.lang($this->formName)) ?></button>
             </div>
         </div>
     </div>

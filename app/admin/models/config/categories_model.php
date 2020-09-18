@@ -1,5 +1,9 @@
 <?php
 $config['list']['filter'] = [
+    'search' => [
+        'prompt' => 'lang:admin::lang.categories.text_filter_search',
+        'mode' => 'all',
+    ],
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
@@ -10,7 +14,7 @@ $config['list']['filter'] = [
             'locationAware' => 'hide',
         ],
         'status' => [
-            'label' => 'lang:admin::lang.categories.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch', // checkbox, switch, date, daterange
             'conditions' => 'status = :filtered',
         ],
@@ -32,12 +36,6 @@ $config['list']['toolbar'] = [
             'data-request-form' => '#list-form',
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
         ],
     ],
 ];

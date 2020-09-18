@@ -1,4 +1,6 @@
-<?php namespace System\Database\Seeds;
+<?php
+
+namespace System\Database\Seeds;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +15,7 @@ class DemoSchemaSeeder extends Seeder
      */
     public function run()
     {
-        $this->seedDefaultLocation();
+        if (!DatabaseSeeder::$seedDemo) return;
 
         $this->seedCategories();
 
@@ -22,44 +24,6 @@ class DemoSchemaSeeder extends Seeder
         $this->seedMenuItems();
 
         $this->seedCoupons();
-    }
-
-    protected function seedDefaultLocation()
-    {
-        // Abort: a location already exists
-        if (DB::table('locations')->count())
-            return TRUE;
-
-        $location = $this->getSeedRecords('location');
-        $location['location_email'] = DatabaseSeeder::$siteEmail;
-        $location['options'] = serialize($location['options']);
-        $location['delivery_areas'][0]['boundaries']['circle'] = json_encode(
-            $location['delivery_areas'][0]['boundaries']['circle']
-        );
-
-        $locationId = DB::table('locations')->insertGetId(array_except($location, ['delivery_areas']));
-
-        $this->seedLocationTables($locationId);
-    }
-
-    protected function seedLocationTables($locationId)
-    {
-        if (DB::table('tables')->count())
-            return;
-
-        for ($i = 1; $i < 15; $i++) {
-            $tableId = DB::table('tables')->insertGetId([
-                'table_name' => 'Table '.$i,
-                'min_capacity' => random_int(2, 5),
-                'max_capacity' => random_int(6, 12),
-                'table_status' => 1,
-            ]);
-
-            DB::table('location_tables')->insert([
-                'location_id' => $locationId,
-                'table_id' => $tableId,
-            ]);
-        }
     }
 
     protected function seedWorkingHours($locationId)
@@ -88,14 +52,14 @@ class DemoSchemaSeeder extends Seeder
 
     protected function seedMenuOptions()
     {
-        if (DB::table('options')->count())
+        if (DB::table('menu_options')->count())
             return;
 
         foreach ($this->getSeedRecords('menu_options') as $menuOption) {
-            $optionId = DB::table('options')->insertGetId(array_except($menuOption, 'option_values'));
+            $optionId = DB::table('menu_options')->insertGetId(array_except($menuOption, 'option_values'));
 
             foreach (array_get($menuOption, 'option_values') as $optionValue) {
-                DB::table('option_values')->insert(array_merge($optionValue, [
+                DB::table('menu_option_values')->insert(array_merge($optionValue, [
                     'option_id' => $optionId,
                 ]));
             }
@@ -111,17 +75,17 @@ class DemoSchemaSeeder extends Seeder
             $menuId = DB::table('menus')->insertGetId(array_except($menu, 'menu_options'));
 
             foreach (array_get($menu, 'menu_options', []) as $name) {
-                $option = DB::table('options')->where('option_name', $name)->first();
+                $option = DB::table('menu_options')->where('option_name', $name)->first();
 
-                $menuOptionId = DB::table('menu_options')->insertGetId([
+                $menuOptionId = DB::table('menu_item_options')->insertGetId([
                     'option_id' => $option->option_id,
                     'menu_id' => $menuId,
                 ]);
 
-                $optionValues = DB::table('option_values')->where('option_id', $option->option_id)->get();
+                $optionValues = DB::table('menu_option_values')->where('option_id', $option->option_id)->get();
 
                 foreach ($optionValues as $optionValue) {
-                    DB::table('menu_option_values')->insertGetId([
+                    DB::table('menu_item_option_values')->insertGetId([
                         'menu_option_id' => $menuOptionId,
                         'option_value_id' => $optionValue->option_value_id,
                         'new_price' => $optionValue->price,

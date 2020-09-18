@@ -1,4 +1,6 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use AdminMenu;
 
@@ -14,7 +16,7 @@ class MailLayouts extends \Admin\Classes\AdminController
             'model' => 'System\Models\Mail_layouts_model',
             'title' => 'lang:system::lang.mail_templates.text_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
-            'defaultSort' => ['template_id', 'DESC'],
+            'defaultSort' => ['layout_id', 'DESC'],
             'configFile' => 'mail_layouts_model',
         ],
     ];
@@ -25,12 +27,12 @@ class MailLayouts extends \Admin\Classes\AdminController
         'request' => 'System\Requests\MailLayout',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
-            'redirect' => 'mail_layouts/edit/{template_id}',
+            'redirect' => 'mail_layouts/edit/{layout_id}',
             'redirectClose' => 'mail_layouts',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
-            'redirect' => 'mail_layouts/edit/{template_id}',
+            'redirect' => 'mail_layouts/edit/{layout_id}',
             'redirectClose' => 'mail_layouts',
         ],
         'preview' => [

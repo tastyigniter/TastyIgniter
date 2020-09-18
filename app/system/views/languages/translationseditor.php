@@ -14,7 +14,7 @@ $translationStrings = $field->options;
         id="<?= $this->getId('items') ?>"
         class="table-responsive"
     >
-        <table class="table table-striped">
+        <table class="table mb-0 border-bottom">
             <thead>
             <tr>
                 <th width="45%"><?= lang('system::lang.languages.column_variable') ?></th>
@@ -45,7 +45,7 @@ $translationStrings = $field->options;
                         </td>
                     </tr>
             <?php } ?>
-                <tr>
+                <tr class="border-top">
                     <td colspan="999">
                         <div class="d-flex justify-content-end">
                             <?= $translationStrings->render(); ?>
@@ -54,7 +54,7 @@ $translationStrings = $field->options;
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td colspan="999"><?= lang('system::lang.languages.text_empty_translations') ?>
+                    <td colspan="99" class="text-center"><?= lang('system::lang.languages.text_empty_translations') ?>
                     </td>
                 </tr>
             <?php } ?>

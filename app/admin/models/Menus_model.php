@@ -1,6 +1,9 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Carbon\Carbon;
 use Event;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
@@ -8,8 +11,6 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Menus Model Class
- *
- * @package Admin
  */
 class Menus_model extends Model
 {
@@ -34,7 +35,6 @@ class Menus_model extends Model
     public $casts = [
         'menu_price' => 'float',
         'menu_category_id' => 'integer',
-        'mealtime_id' => 'integer',
         'stock_qty' => 'integer',
         'minimum_qty' => 'integer',
         'subtract_stock' => 'boolean',
@@ -50,18 +50,17 @@ class Menus_model extends Model
         'hasOne' => [
             'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
         ],
-        'belongsTo' => [
-            'mealtime' => ['Admin\Models\Mealtimes_model'],
-        ],
         'belongsToMany' => [
             'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
+            'mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
-    protected $purgeable = ['special', 'menu_options', 'categories', 'locations'];
+    protected $purgeable = ['special', 'menu_options', 'allergens', 'categories', 'mealtimes', 'locations'];
 
     public $mediable = ['thumb'];
 
@@ -70,11 +69,24 @@ class Menus_model extends Model
     //
     // Scopes
     //
+    public function scopeWhereHasAllergen($query, $categoryId)
+    {
+        $query->whereHas('allergens', function ($q) use ($allergenId) {
+            $q->where('allergens.allergen_id', $allergenId);
+        });
+    }
 
     public function scopeWhereHasCategory($query, $categoryId)
     {
         $query->whereHas('categories', function ($q) use ($categoryId) {
             $q->where('categories.category_id', $categoryId);
+        });
+    }
+
+    public function scopeWhereHasMealtime($query, $mealtimeId)
+    {
+        $query->whereHas('mealtimes', function ($q) use ($mealtimeId) {
+            $q->where('mealtimes.mealtime_id', $mealtimeId);
         });
     }
 
@@ -144,8 +156,14 @@ class Menus_model extends Model
         if (array_key_exists('special', $this->attributes))
             $this->addMenuSpecial((array)$this->attributes['special']);
 
+        if (array_key_exists('allergens', $this->attributes))
+            $this->addMenuAllergens((array)$this->attributes['allergens']);
+
         if (array_key_exists('categories', $this->attributes))
             $this->addMenuCategories((array)$this->attributes['categories']);
+
+        if (array_key_exists('mealtimes', $this->attributes))
+            $this->addMenuMealtimes((array)$this->attributes['mealtimes']);
 
         if (array_key_exists('locations', $this->attributes))
             $this->locations()->sync($this->attributes['locations']);
@@ -156,7 +174,9 @@ class Menus_model extends Model
 
     protected function beforeDelete()
     {
+        $this->addMenuAllergens([]);
         $this->addMenuCategories([]);
+        $this->addMenuMealtimes([]);
         $this->locations()->detach();
     }
 
@@ -190,11 +210,29 @@ class Menus_model extends Model
 
         $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
 
-        $update = $this->update(['stock_qty' => $stockQty]);
+        // Update using query to prevent model events from firing
+        $this->newQuery()
+            ->where($this->getKeyName(), $this->getKey())
+            ->update(['stock_qty' => $stockQty]);
 
         Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
 
-        return $update;
+        return TRUE;
+    }
+
+    /**
+     * Create new or update existing menu allergens
+     *
+     * @param array $allergenIds if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuAllergens(array $allergenIds = [])
+    {
+        if (!$this->exists)
+            return FALSE;
+
+        $this->allergens()->sync($allergenIds);
     }
 
     /**
@@ -210,6 +248,21 @@ class Menus_model extends Model
             return FALSE;
 
         $this->categories()->sync($categoryIds);
+    }
+
+    /**
+     * Create new or update existing menu mealtimes
+     *
+     * @param array $mealtimeIds if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuMealtimes(array $mealtimeIds = [])
+    {
+        if (!$this->exists)
+            return FALSE;
+
+        $this->mealtimes()->sync($mealtimeIds);
     }
 
     /**
@@ -259,5 +312,35 @@ class Menus_model extends Model
         $this->special()->updateOrCreate([
             'special_id' => $menuSpecial['special_id'],
         ], array_except($menuSpecial, 'special_id'));
+    }
+
+    /**
+     * Is menu item available on a given datetime
+     *
+     * @param string | \Carbon\Carbon $datetime
+     *
+     * @return bool
+     */
+    public function isAvailable($datetime = null)
+    {
+        if (is_null($datetime))
+            $datetime = Carbon::now();
+
+        if (!$datetime instanceof Carbon) {
+            $datetime = Carbon::parse($datetime);
+        }
+
+        $isAvailable = TRUE;
+
+        if (count($this->mealtimes) > 0) {
+            $isAvailable = FALSE;
+            foreach ($this->mealtimes as $mealtime) {
+                if ($mealtime->mealtime_status) {
+                    $isAvailable = $isAvailable || $mealtime->isAvailable($datetime);
+                }
+            }
+        }
+
+        return $isAvailable;
     }
 }

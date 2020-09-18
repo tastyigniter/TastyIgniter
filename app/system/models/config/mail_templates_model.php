@@ -35,7 +35,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'mail_templates/edit/{template_data_id}',
+            'href' => 'mail_templates/edit/{template_id}',
         ],
     ],
     'title' => [
@@ -49,23 +49,23 @@ $config['list']['columns'] = [
         'type' => 'text',
         'searchable' => TRUE,
     ],
-    'template_id' => [
+    'layout_id' => [
         'label' => 'lang:system::lang.mail_templates.column_layout',
         'relation' => 'layout',
         'valueFrom' => 'name',
         'sortable' => FALSE,
     ],
     'date_updated' => [
-        'label' => 'lang:system::lang.mail_templates.column_date_updated',
+        'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'timetense',
         'searchable' => TRUE,
     ],
     'date_added' => [
-        'label' => 'lang:system::lang.mail_templates.column_date_added',
+        'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
         'searchable' => TRUE,
     ],
-    'template_data_id' => [
+    'template_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
@@ -121,7 +121,7 @@ $config['form']['fields'] = [
         'span' => 'left',
         'type' => 'text',
     ],
-    'template_id' => [
+    'layout_id' => [
         'label' => 'lang:system::lang.mail_templates.label_layout',
         'span' => 'right',
         'type' => 'relation',
@@ -133,7 +133,7 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'fields' => [
         'body' => [
-            'tab' => 'lang:system::lang.mail_templates.label_body',
+            'tab' => 'lang:system::lang.mail_templates.label_markdown',
             'type' => 'markdowneditor',
         ],
         'plain_body' => [
@@ -142,12 +142,6 @@ $config['form']['tabs'] = [
             'attributes' => [
                 'rows' => 10,
             ],
-        ],
-        'variables' => [
-            'tab' => 'lang:system::lang.mail_templates.text_variables',
-            'type' => 'partial',
-            'path' => 'mailtemplates/variables',
-            'disabled' => TRUE,
         ],
     ],
 ];

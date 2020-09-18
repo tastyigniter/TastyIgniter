@@ -13,10 +13,9 @@ $(function () {
             storeName = $selectedTab.closest('[data-control="form-tabs"]').data('storeName'),
             selectedTab = $selectedTab.attr('href')
 
-        if (!storeName || !storeName.length)
-            return
-
-        activeFormTabs[storeName] = selectedTab
-        Cookies.set('ti_activeFormTabs', JSON.stringify(activeFormTabs))
+        if (storeName && storeName.length) {
+            activeFormTabs[storeName] = selectedTab
+            Cookies.set('ti_activeFormTabs', JSON.stringify(activeFormTabs))
+        }
     })
 })

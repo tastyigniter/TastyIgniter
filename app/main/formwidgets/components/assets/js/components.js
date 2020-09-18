@@ -16,17 +16,11 @@
     }
 
     Components.prototype.initSortable = function () {
-        var $sortableContainer = $(this.options.sortableContainer, this.$el)
+        var $sortableContainer = $(this.options.sortableContainer, this.$el).get(0)
 
-        $sortableContainer.sortable({
-            group: 'components',
-            containerSelector: this.options.sortableContainer,
-            itemSelector: '.components-item',
-            placeholder: '<div class="placeholder sortable-placeholder"></div>',
+        Sortable.create($sortableContainer, {
             handle: '.handle',
-            nested: false,
-            vertical: false,
-            exclude: '.components-picker',
+            filter: '.components-picker',
         })
     }
 

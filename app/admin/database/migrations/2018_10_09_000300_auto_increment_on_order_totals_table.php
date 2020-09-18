@@ -1,4 +1,6 @@
-<?php namespace Admin\Database\Migrations;
+<?php
+
+namespace Admin\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -7,7 +9,7 @@ use Schema;
 /**
  * Set order_total_id to auto increment PRIMARY key
  */
-class autoIncrementOnOrderTotalsTable extends Migration
+class AutoIncrementOnOrderTotalsTable extends Migration
 {
     public function up()
     {

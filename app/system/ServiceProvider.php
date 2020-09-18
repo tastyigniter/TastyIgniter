@@ -16,6 +16,7 @@ use Igniter\Flame\Currency\CurrencyServiceProvider;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Geolite\GeoliteServiceProvider;
 use Igniter\Flame\Pagic\PagicServiceProvider;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -30,6 +31,7 @@ use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
 use System\Helpers\ValidationHelper;
 use System\Libraries\Assets;
+use System\Models\Settings_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -65,6 +67,7 @@ class ServiceProvider extends AppServiceProvider
 
         if (App::runningInAdmin()) {
             $this->registerPermissions();
+            $this->registerSystemSettings();
         }
     }
 
@@ -243,6 +246,10 @@ class ServiceProvider extends AppServiceProvider
                 'subcopy' => 'system::_mail.partials.subcopy',
                 'promotion' => 'system::_mail.partials.promotion',
             ]);
+
+            $manager->registerMailVariables(
+                File::getRequire(__DIR__.'/models/config/mail_variables.php')
+            );
         });
 
         Event::listen('mailer.beforeRegister', function () {
@@ -319,17 +326,11 @@ class ServiceProvider extends AppServiceProvider
         });
 
         Assets::registerCallback(function (Assets $manager) {
-            // System asset bundles
-            $manager->registerBundle('scss',
-                '~/app/system/assets/ui/scss/flame.scss',
-                '~/app/system/assets/ui/flame.css',
-                'admin'
-            );
             $manager->registerBundle('js', [
-                '~/app/system/assets/node_modules/jquery/dist/jquery.min.js',
-                '~/app/system/assets/node_modules/popper.js/dist/umd/popper.min.js',
-                '~/app/system/assets/node_modules/bootstrap/dist/js/bootstrap.min.js',
-                '~/app/system/assets/node_modules/sweetalert/dist/sweetalert.min.js',
+                '~/app/admin/assets/node_modules/jquery/dist/jquery.min.js',
+                '~/app/admin/assets/node_modules/popper.js/dist/umd/popper.min.js',
+                '~/app/admin/assets/node_modules/bootstrap/dist/js/bootstrap.min.js',
+                '~/app/admin/assets/node_modules/sweetalert/dist/sweetalert.min.js',
                 '~/app/system/assets/ui/js/vendor/waterfall.min.js',
                 '~/app/system/assets/ui/js/vendor/transition.js',
                 '~/app/system/assets/ui/js/app.js',
@@ -339,15 +340,6 @@ class ServiceProvider extends AppServiceProvider
                 '~/app/system/assets/ui/js/toggler.js',
                 '~/app/system/assets/ui/js/trigger.js',
             ], '~/app/system/assets/ui/flame.js', 'admin');
-
-            // Admin asset bundles
-            $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss', null, 'admin');
-            $manager->registerBundle('js', [
-                '~/app/system/assets/node_modules/js-cookie/src/js.cookie.js',
-                '~/app/system/assets/node_modules/select2/dist/js/select2.min.js',
-                '~/app/system/assets/node_modules/metismenu/dist/metisMenu.min.js',
-                '~/app/admin/assets/js/src/app.js',
-            ], '~/app/admin/assets/js/admin.js', 'admin');
         });
     }
 
@@ -428,8 +420,43 @@ class ServiceProvider extends AppServiceProvider
                 'Site.Updates' => [
                     'label' => 'system::lang.permissions.updates', 'group' => 'system::lang.permissions.name',
                 ],
-                'Admin.ErrorLogs' => [
-                    'label' => 'system::lang.permissions.error_logs', 'group' => 'system::lang.permissions.name',
+                'Admin.SystemLogs' => [
+                    'label' => 'system::lang.permissions.system_logs', 'group' => 'system::lang.permissions.name',
+                ],
+            ]);
+        });
+    }
+
+    protected function registerSystemSettings()
+    {
+        Settings_model::registerCallback(function (Settings_model $manager) {
+            $manager->registerSettingItems('core', [
+                'general' => [
+                    'label' => 'system::lang.settings.text_tab_general',
+                    'description' => 'system::lang.settings.text_tab_desc_general',
+                    'icon' => 'fa fa-sliders',
+                    'priority' => 0,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/general'),
+                    'form' => '~/app/system/models/config/general_settings',
+                ],
+                'mail' => [
+                    'label' => 'lang:system::lang.settings.text_tab_mail',
+                    'description' => 'lang:system::lang.settings.text_tab_desc_mail',
+                    'icon' => 'fa fa-envelope',
+                    'priority' => 5,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/mail'),
+                    'form' => '~/app/system/models/config/mail_settings',
+                ],
+                'advanced' => [
+                    'label' => 'lang:system::lang.settings.text_tab_server',
+                    'description' => 'lang:system::lang.settings.text_tab_desc_server',
+                    'icon' => 'fa fa-cog',
+                    'priority' => 6,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/advanced'),
+                    'form' => '~/app/system/models/config/advanced_settings',
                 ],
             ]);
         });

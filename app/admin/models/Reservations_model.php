@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
@@ -12,8 +14,6 @@ use System\Traits\SendsMailTemplate;
 
 /**
  * Reservations Model Class
- *
- * @package Admin
  */
 class Reservations_model extends Model
 {
@@ -52,8 +52,6 @@ class Reservations_model extends Model
     protected $timeFormat = 'H:i';
 
     public $guarded = ['ip_address', 'user_agent', 'hash'];
-
-    public $appends = ['customer_name', 'duration', 'reservation_datetime', 'table_name'];
 
     public $casts = [
         'location_id' => 'integer',
@@ -125,14 +123,14 @@ class Reservations_model extends Model
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
         }
-        else if (strlen($location)) {
+        elseif (strlen($location)) {
             $query->where('location_id', $location);
         }
 
         if ($customer instanceof Customers_model) {
             $query->where('customer_id', $customer->getKey());
         }
-        else if (strlen($customer)) {
+        elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 
@@ -189,7 +187,7 @@ class Reservations_model extends Model
         if (!$location = $this->location)
             return $value;
 
-        return $location->reservation_stay_time;
+        return $location->getOption('reservation_lead_time');
     }
 
     public function getReserveEndTimeAttribute($value)
@@ -237,7 +235,7 @@ class Reservations_model extends Model
     public function setDurationAttribute($value)
     {
         if (empty($value))
-            $value = ($location = $this->location) ? $location->reservation_stay_time : $value;
+            $value = ($location = $this->location) ? $location->getOption('reservation_lead_time') : $value;
 
         $this->attributes['duration'] = $value;
     }
@@ -423,9 +421,9 @@ class Reservations_model extends Model
             $data['location_email'] = $model->location->location_email;
         }
 
-        $status = $model->status()->first();
-        $data['status_name'] = $status ? $status->status_name : null;
-        $data['status_comment'] = $status ? $status->status_comment : null;
+        $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();
+        $data['status_name'] = $statusHistory ? optional($statusHistory->status)->status_name : null;
+        $data['status_comment'] = $statusHistory ? $statusHistory->comment : null;
 
         $controller = MainController::getController() ?: new MainController;
         $data['reservation_view_url'] = $controller->pageUrl('account/reservations', [

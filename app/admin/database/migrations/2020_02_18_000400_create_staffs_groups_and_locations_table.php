@@ -1,14 +1,13 @@
-<?php namespace Admin\Database\Migrations;
+<?php
+
+namespace Admin\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-/**
- *
- */
-class createStaffsGroupsAndLocationsTable extends Migration
+class CreateStaffsGroupsAndLocationsTable extends Migration
 {
     public function up()
     {

@@ -4,6 +4,7 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
+use Admin\Facades\AdminAuth;
 use DB;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -11,7 +12,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class Filter
- * @package Admin
  */
 class Filter extends BaseWidget
 {
@@ -39,7 +39,7 @@ class Filter extends BaseWidget
     protected $defaultAlias = 'filter';
 
     /**
-     * @var boolean Determines if scope definitions have been created.
+     * @var bool Determines if scope definitions have been created.
      */
     protected $scopesDefined = FALSE;
 
@@ -57,6 +57,18 @@ class Filter extends BaseWidget
      * @var array List of CSS classes to apply to the filter container element
      */
     public $cssClasses = [];
+
+    public function loadAssets()
+    {
+        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+
+        // daterange picker
+        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js', 'daterangepicker-js');
+        $this->addCss('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.css', 'daterangepicker-css');
+
+        // date picker
+        $this->addJs('js/datepicker.js', 'datepicker-js');
+    }
 
     public function initialize()
     {
@@ -128,7 +140,6 @@ class Filter extends BaseWidget
             return;
 
         foreach ($scopes as $scope => $value) {
-
             $scope = $this->getScope($scope);
 
             switch ($scope->type) {
@@ -147,8 +158,17 @@ class Filter extends BaseWidget
                     break;
 
                 case 'date':
-                    $date = $value ? mdate('%Y-%m', strtotime($value)) : null;
+                    $date = $value ? make_carbon($value)->format('Y-m-d') : null;
                     $this->setScopeValue($scope, $date);
+                    break;
+
+                case 'daterange':
+                    $format = array_get($scope->config, 'showTimePicker', FALSE) ? 'Y-m-d H:i:s' : 'Y-m-d';
+                    $dateRange = (is_array($value) AND count($value) === 2) ? [
+                        make_carbon($value[0])->format($format),
+                        make_carbon($value[1])->format($format),
+                    ] : null;
+                    $this->setScopeValue($scope, $dateRange);
                     break;
             }
         }
@@ -302,6 +322,12 @@ class Filter extends BaseWidget
         foreach ($scopes as $name => $config) {
             $scopeObj = $this->makeFilterScope($name, $config);
 
+            // Check if admin has permissions to show this column
+            $permissions = array_get($config, 'permissions');
+            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+                continue;
+            }
+
             // Check that the filter scope matches the active context
             if ($scopeObj->context !== null) {
                 $context = (array)$scopeObj->context;
@@ -397,11 +423,35 @@ class Filter extends BaseWidget
                 $value = $scope->value;
 
                 if ($scopeConditions = $scope->conditions) {
+                    $date = make_carbon($scope->value);
                     $query->whereRaw(strtr($scopeConditions, [
-                        ':filtered' => mdate('%Y-%m-%d', strtotime($scope->value)),
-                        ':year' => mdate('%Y', strtotime($scope->value)),
-                        ':month' => mdate('%m', strtotime($scope->value)),
-                        ':day' => mdate('%d', strtotime($scope->value)),
+                        ':filtered' => $date->format('Y-m-d'),
+                        ':year' => $date->format('Y'),
+                        ':month' => $date->format('m'),
+                        ':day' => $date->format('d'),
+                    ]));
+                } // Scope
+                elseif ($scopeMethod = $scope->scope) {
+                    $query->$scopeMethod($value);
+                }
+
+                break;
+
+            case 'daterange':
+                $value = $scope->value;
+
+                if ($scopeConditions = $scope->conditions) {
+                    $startDate = make_carbon($value[0]);
+                    $endDate = make_carbon($value[1]);
+                    $query->whereRaw(strtr($scopeConditions, [
+                        ':filtered_start' => '"'.$startDate->format('Y-m-d').'"',
+                        ':year_start' => $startDate->format('Y'),
+                        ':month_start' => $startDate->format('m'),
+                        ':day_start' => $startDate->format('d'),
+                        ':filtered_end' => '"'.$endDate->format('Y-m-d').'"',
+                        ':year_end' => $endDate->format('Y'),
+                        ':month_end' => $endDate->format('m'),
+                        ':day_end' => $endDate->format('d'),
                     ]));
                 } // Scope
                 elseif ($scopeMethod = $scope->scope) {
@@ -414,7 +464,6 @@ class Filter extends BaseWidget
                 $value = is_array($scope->value) ? array_keys($scope->value) : $scope->value;
 
                 if ($scopeConditions = $scope->conditions) {
-
                     // Switch scope: multiple conditions, value either 1 or 2
                     if (is_array($scopeConditions)) {
                         $conditionNum = is_array($value) ? 0 : $value - 1;

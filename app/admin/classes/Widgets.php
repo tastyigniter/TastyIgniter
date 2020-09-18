@@ -9,8 +9,6 @@ use System\Classes\ExtensionManager;
  * Widget manager
  *
  * Adapted from october\backend\classes\WidgetManager
- *
- * @package Admin
  */
 class Widgets
 {

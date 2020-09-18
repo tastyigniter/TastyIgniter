@@ -106,4 +106,21 @@ trait HasComponents
                 return $event;
         }
     }
+
+    public function updateComponent($alias, array $properties)
+    {
+        $attributes = $this->attributes;
+
+        $newAlias = array_get($properties, 'alias');
+        if ($newAlias AND $newAlias !== $alias) {
+            $attributes = array_replace_key($attributes, $alias, $newAlias);
+            $alias = $newAlias;
+        }
+
+        $attributes[$alias] = array_except($properties, 'alias');
+
+        $this->attributes = $attributes;
+
+        return $this->save();
+    }
 }

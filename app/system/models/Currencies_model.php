@@ -1,10 +1,12 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\Currency\Models\Currency;
+use Igniter\Flame\Exception\ValidationException;
 
 /**
  * Currencies Model Class
- * @package System
  */
 class Currencies_model extends Currency
 {
@@ -45,6 +47,18 @@ class Currencies_model extends Currency
      */
     protected static $defaultCurrency;
 
+    public function makeDefault()
+    {
+        if (!$this->currency_status) {
+            throw new ValidationException(['currency_status' => sprintf(
+                lang('admin::lang.alert_error_set_default'), $this->currency_name
+            )]);
+        }
+
+        setting('default_currency_code', $this->currency_code);
+        setting()->save();
+    }
+
     /**
      * Returns the default currency defined.
      * @return self
@@ -56,14 +70,12 @@ class Currencies_model extends Currency
         }
 
         $defaultCurrency = self::whereIsEnabled()->where('currency_id', setting('default_currency_code'))
-                               ->orWhere('currency_code', setting('default_currency_code'))
-                               ->first();
+            ->orWhere('currency_code', setting('default_currency_code'))
+            ->first();
 
         if (!$defaultCurrency) {
-            $defaultCurrency = self::whereIsEnabled()->first();
-            if ($defaultCurrency) {
-                setting('default_currency_code', $defaultCurrency->currency_code);
-                setting()->save();
+            if ($defaultCurrency = self::whereIsEnabled()->first()) {
+                $defaultCurrency->makeDefault();
             }
         }
 
@@ -73,11 +85,11 @@ class Currencies_model extends Currency
     public static function getDropdownOptions()
     {
         return static::select(['currency_id', 'currencies.country_id', 'priority'])
-                     ->selectRaw("CONCAT_WS(' - ', country_name, currency_code, currency_symbol) as name")
-                     ->leftJoin('countries', 'currencies.country_id', '=', 'countries.country_id')
-                     ->orderBy('priority')
-                     ->where('currency_status', 1)
-                     ->dropdown('name', 'currency_id');
+            ->selectRaw("CONCAT_WS(' - ', country_name, currency_code, currency_symbol) as name")
+            ->leftJoin('countries', 'currencies.country_id', '=', 'countries.country_id')
+            ->orderBy('priority')
+            ->where('currency_status', 1)
+            ->dropdown('name', 'currency_id');
     }
 
     public static function getConverterDropdownOptions()

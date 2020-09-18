@@ -10,8 +10,6 @@ trait HasInvoice
     {
         self::extend(function (self $model) {
             $model->casts = array_merge($model->casts, ['invoice_date' => 'dateTime']);
-
-            $model->append(['invoice_number']);
         });
 
         static::saved(function (self $model) {

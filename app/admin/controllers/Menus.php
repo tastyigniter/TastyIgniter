@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
 use Admin\Models\Menu_options_model;
@@ -53,7 +55,7 @@ class Menus extends AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('menus', 'kitchen');
+        AdminMenu::setContext('menus', 'restaurant');
     }
 
     public function edit_onChooseMenuOption($context, $recordId)

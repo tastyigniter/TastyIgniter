@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
@@ -6,8 +8,6 @@ use Model;
 
 /**
  * MenuOptions Model Class
- *
- * @package Admin
  */
 class Menu_item_option_values_model extends Model
 {
@@ -16,7 +16,7 @@ class Menu_item_option_values_model extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'menu_option_values';
+    protected $table = 'menu_item_option_values';
 
     /**
      * @var string The database table primary key
@@ -58,10 +58,10 @@ class Menu_item_option_values_model extends Model
 
     public function getPriceAttribute()
     {
-        if (!$this->option_value)
-            return $this->new_price;
+        if (is_null($this->new_price) AND $this->option_value)
+            return $this->option_value->price;
 
-        return (!$this->new_price OR $this->new_price <= 0) ? $this->option_value->price : $this->new_price;
+        return $this->new_price;
     }
 
     public function isDefault()
@@ -87,10 +87,13 @@ class Menu_item_option_values_model extends Model
 
         $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
 
-        $update = $this->update(['quantity' => $stockQty]);
+        // Update using query to prevent model events from firing
+        $this->newQuery()
+             ->where($this->getKeyName(), $this->getKey())
+             ->update(['quantity' => $stockQty]);
 
         Event::fire('admin.menuOption.stockUpdated', [$this, $quantity, $subtract]);
 
-        return $update;
+        return TRUE;
     }
 }

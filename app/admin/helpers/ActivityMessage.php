@@ -10,11 +10,12 @@ class ActivityMessage
 {
     public static function attachCauserPlaceholders($line, Activity $activity)
     {
-        if (!$activity->causer instanceof Users_model)
-            return $line;
-
         $prefix = '<b>:causer.staff_name</b> ';
         $self = lang('system::lang.activities.activity_self');
+
+        if (!$activity->causer instanceof Users_model)
+            $prefix = '<b>'.lang('system::lang.activities.activity_system').'</b> ';
+
         if ($activity->causer AND $activity->causer->user_id == AdminAuth::getId())
             $prefix = '<b>'.ucfirst($self).'</b> ';
 
@@ -23,12 +24,14 @@ class ActivityMessage
 
     public static function attachAssignedPlaceholders($line, Activity $activity)
     {
-        if (!$activity->causer instanceof Users_model)
-            return $line;
+        $self = lang('system::lang.activities.activity_self');
 
         $prefix = '<b>:causer.staff_name</b> ';
-        $suffix = ' <b>:properties.assignee_name</b>';
-        $self = lang('system::lang.activities.activity_self');
+        if (!$activity->causer instanceof Users_model)
+            $prefix = '<b>'.lang('system::lang.activities.activity_system').'</b> ';
+
+        if ($activity->causer AND $activity->causer->user_id == AdminAuth::getId())
+            $prefix = '<b>'.ucfirst($self).'</b> ';
 
         $assigneeId = $activity->properties->get('assignee_id');
         if (!$assigneeId AND strlen($activity->properties->get('assignee_group_id'))) {
@@ -37,9 +40,9 @@ class ActivityMessage
         elseif ($assigneeId == optional(AdminAuth::staff())->getKey()) {
             $suffix = ' <b>'.$self.'</b>';
         }
-
-        if ($activity->causer AND $activity->causer->user_id == AdminAuth::getId())
-            $prefix = '<b>'.ucfirst($self).'</b> ';
+        else {
+            $suffix = ' <b>:properties.assignee_name</b>';
+        }
 
         return $prefix.lang($line).$suffix;
     }

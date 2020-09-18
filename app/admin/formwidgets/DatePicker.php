@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -7,8 +9,6 @@ use Carbon\Carbon;
 /**
  * Date picker
  * Renders a date picker field.
- *
- * @package Admin
  */
 class DatePicker extends BaseFormWidget
 {
@@ -88,8 +88,8 @@ class DatePicker extends BaseFormWidget
 
         if ($mode == 'datetime') {
             $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
-            $this->addCss('vendor/datetimepicker/bootstrap-datetimepicker.min.css', 'bootstrap-datetimepicker-css');
-            $this->addJs('vendor/datetimepicker/bootstrap-datetimepicker.min.js', 'bootstrap-datetimepicker-js');
+            $this->addCss('vendor/datetimepicker/tempusdominus-bootstrap-4.min.css', 'tempusdominus-bootstrap-4-css');
+            $this->addJs('vendor/datetimepicker/tempusdominus-bootstrap-4.min.js', 'tempusdominus-bootstrap-4-js');
             $this->addCss('css/datepicker.css', 'datepicker-css');
             $this->addJs('js/datepicker.js', 'datepicker-js');
         }

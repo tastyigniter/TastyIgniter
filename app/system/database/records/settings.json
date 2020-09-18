@@ -141,16 +141,6 @@
   },
   {
     "sort": "config",
-    "item": "delivery_time",
-    "value": "45"
-  },
-  {
-    "sort": "config",
-    "item": "collection_time",
-    "value": "15"
-  },
-  {
-    "sort": "config",
     "item": "default_reservation_status",
     "value": "8"
   },

@@ -159,6 +159,10 @@ class AdminController extends BaseController
         // Top menu widget is available on all admin pages
         $this->makeMainMenuWidget();
 
+        if ($event = $this->fireSystemEvent('admin.controller.beforeResponse', [$action, $params])) {
+            return $event;
+        }
+
         // Execute post handler and AJAX event
         if ($handlerResponse = $this->processHandlers() AND $handlerResponse !== TRUE) {
             return $handlerResponse;
@@ -169,10 +173,6 @@ class AdminController extends BaseController
 
         if (!is_string($response))
             return $response;
-
-        if ($event = $this->fireEvent('controller.beforeResponse', [$this, $response])) {
-            return $event;
-        }
 
         // Return response
         return is_string($response)
@@ -278,10 +278,10 @@ class AdminController extends BaseController
             if (is_array($result)) {
                 $response = array_merge($response, $result);
             }
-            else if (is_string($result)) {
+            elseif (is_string($result)) {
                 $response['result'] = $result;
             }
-            else if (is_object($result)) {
+            elseif (is_object($result)) {
                 return $result;
             }
 

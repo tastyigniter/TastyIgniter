@@ -1,11 +1,12 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Model;
 
 /**
  * Menu Specials Model Class
- * @package Admin
  */
 class Menus_specials_model extends Model
 {
@@ -16,9 +17,13 @@ class Menus_specials_model extends Model
 
     protected $primaryKey = 'special_id';
 
-    protected $fillable = ['menu_id', 'start_date', 'end_date', 'special_price', 'special_status', 'type',
-        'validity', 'recurring_every', 'recurring_from', 'recurring_to'];
-
+    protected $fillable = [
+        'menu_id', 'start_date',
+        'end_date', 'special_price',
+        'special_status', 'type',
+        'validity', 'recurring_every',
+        'recurring_from', 'recurring_to',
+    ];
 
     public $casts = [
         'menu_id' => 'integer',
@@ -85,7 +90,7 @@ class Menus_specials_model extends Model
             case 'period':
                 return !$now->between($this->start_date, $this->end_date);
             case 'recurring':
-                if (!in_array($now->format('w'), $this->recurring_every))
+                if (!in_array($now->format('w'), $this->recurring_every ?? []))
                     return TRUE;
 
                 $start = $now->copy()->setTimeFromTimeString($this->recurring_from);

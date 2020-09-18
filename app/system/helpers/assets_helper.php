@@ -2,7 +2,6 @@
 /**
  * Assets helper functions
  */
-
 if (!function_exists('get_metas')) {
     /**
      * Get metas html tags

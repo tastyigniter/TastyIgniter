@@ -9,7 +9,6 @@ use SystemException;
 
 /**
  * Base Extension Class
- * @package System
  */
 class BaseExtension extends ServiceProvider
 {
@@ -25,7 +24,7 @@ class BaseExtension extends ServiceProvider
     public $autoload = [];
 
     /**
-     * @var boolean Determine if this extension should be loaded (false) or not (true).
+     * @var bool Determine if this extension should be loaded (false) or not (true).
      */
     public $disabled = FALSE;
 
@@ -184,13 +183,13 @@ class BaseExtension extends ServiceProvider
 
         $config = json_decode(File::get($configFile), TRUE) ?? [];
         foreach ([
-                     'code',
-                     'name',
-                     'description',
-                     'version',
-                     'author',
-                     'icon',
-                 ] as $item) {
+            'code',
+            'name',
+            'description',
+            'version',
+            'author',
+            'icon',
+        ] as $item) {
 
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(

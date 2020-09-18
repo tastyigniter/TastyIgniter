@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use AdminMenu;
 
@@ -49,6 +51,6 @@ class Mealtimes extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('mealtimes', 'kitchen');
+        AdminMenu::setContext('mealtimes', 'restaurant');
     }
 }

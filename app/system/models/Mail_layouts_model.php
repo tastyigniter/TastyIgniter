@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use ApplicationException;
 use File;
@@ -9,7 +11,6 @@ use View;
 
 /**
  * MailLayouts Model Class
- * @package System
  */
 class Mail_layouts_model extends Model
 {
@@ -22,12 +23,12 @@ class Mail_layouts_model extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'mail_templates';
+    protected $table = 'mail_layouts';
 
     /**
      * @var string The database table primary key
      */
-    protected $primaryKey = 'template_id';
+    protected $primaryKey = 'layout_id';
 
     protected $guarded = [];
 
@@ -44,7 +45,7 @@ class Mail_layouts_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'templates' => ['System\Models\Mail_templates_model', 'foreignKey' => 'template_id', 'delete' => TRUE],
+            'templates' => ['System\Models\Mail_templates_model', 'foreignKey' => 'layout_id'],
         ],
         'belongsTo' => [
             'language' => 'System\Models\Languages_model',
@@ -59,7 +60,7 @@ class Mail_layouts_model extends Model
     protected function beforeDelete()
     {
         if ($this->is_locked) {
-            throw new ApplicationException('Cannot delete this template because it is locked');
+            throw new ApplicationException('You cannot delete a locked template');
         }
     }
 
@@ -86,7 +87,7 @@ class Mail_layouts_model extends Model
             return self::$codeCache;
         }
 
-        return self::$codeCache = self::lists('template_id', 'code');
+        return self::$codeCache = self::lists('layout_id', 'code');
     }
 
     public static function getIdFromCode($code)

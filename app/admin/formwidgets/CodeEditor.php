@@ -1,12 +1,12 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 
 /**
  * Code Editor
  * Renders a code editor field.
- *
- * @package Admin
  */
 class CodeEditor extends BaseFormWidget
 {
@@ -19,7 +19,7 @@ class CodeEditor extends BaseFormWidget
     public $theme = 'material';
 
     /**
-     * @var boolean Determines whether content has HEAD and HTML tags.
+     * @var bool Determines whether content has HEAD and HTML tags.
      */
     public $fullPage = FALSE;
 

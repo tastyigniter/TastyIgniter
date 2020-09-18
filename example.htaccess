@@ -1,49 +1,49 @@
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
+  <IfModule mod_negotiation.c>
+    Options -MultiViews -Indexes
+  </IfModule>
 
-    ## You may need to uncomment the following line for some hosting environments,
-    ## to use URL Alias you need to be running apache with mod_rewrite enabled.
-    ##
-    # Options +FollowSymlinks
+  ## You may need to uncomment the following line for some hosting environments,
+  ## to use URL Alias you need to be running apache with mod_rewrite enabled.
+  ##
+  # Options +FollowSymlinks
 
-	## Turn on URL rewriting
-    ##
-	RewriteEngine On
+  ## Turn on URL rewriting
+  ##
+  RewriteEngine On
 
-	## !IMPORTANT! You may need to uncomment the following line for some hosting environments,
-	## If your installation resides in a subdirectory, enter the name here also
-    ##
-	# RewriteBase /subdirectory
+  ## !IMPORTANT! You may need to uncomment the following line for some hosting environments,
+  ## If your installation resides in a subdirectory, enter the name here also
+  ##
+  # RewriteBase /
 
-    ## Redirect index.php from url to prevent duplicate urls
-    ##
-    RewriteCond %{THE_REQUEST} /index\.php [NC]
-    RewriteRule ^(.*?)index\.php[^/] /$1? [L,R=301,NC,NE]
+  ## Redirect index.php from url to prevent duplicate urls
+  ##
+  RewriteCond %{THE_REQUEST} /index\.php [NC]
+  RewriteRule ^(.*?)index\.php[^/] /$1? [L,R=301,NC,NE]
 
-    RewriteCond %{THE_REQUEST} /index\.php [NC]
-    RewriteRule ^(.*?)index\.php(?:/(.*))?$ /$1$2? [L,R=301,NC,NE]
+  RewriteCond %{THE_REQUEST} /index\.php [NC]
+  RewriteRule ^(.*?)index\.php(?:/(.*))?$ /$1$2? [L,R=301,NC,NE]
 
-    ## Redirect Trailing Slashes If Not A Folder...
-    ##
-	RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
+  ## Redirect Trailing Slashes If Not A Folder...
+  ##
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} (.+)/$
+  RewriteRule ^ %1 [L,R=301]
 
-    ## Block all PHP files, except index
-    ##
-    RewriteCond %{REQUEST_FILENAME} -f
-    RewriteCond %{REQUEST_FILENAME} \.php$
-    RewriteRule !^index.php index.php [L,NC]
+  ## Block all PHP files, except index
+  ##
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteCond %{REQUEST_FILENAME} \.php$
+  RewriteRule !^index.php index.php [L,NC]
 
-    ## Blacklisted folders
-    ##
-    RewriteRule ^assets/downloads/(.*) not_found [L]
+  ## Blacklisted folders
+  ##
+  RewriteRule ^assets/downloads/(.*) not_found [L]
 
-    # Handle Front Controller...
-    ##
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.php [L,QSA]
+  # Handle Front Controller...
+  ##
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [L,QSA]
 </IfModule>

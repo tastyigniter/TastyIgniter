@@ -2,7 +2,6 @@
 
 namespace Admin\Traits;
 
-use Admin;
 use AdminLocation;
 use Igniter\Flame\Database\Model;
 
@@ -125,7 +124,7 @@ trait Locationable
 
         if ($this->locationableIsSingleRelationType()) {
             $relationObj = $this->getLocationableRelationObject();
-            $attributeName = $relationObj->getForeignKey();
+            $attributeName = $relationObj->getForeignKeyName();
             $this->{$attributeName} = $this->locationableGetUserLocation();
         }
         else {

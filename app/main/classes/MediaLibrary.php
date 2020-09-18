@@ -1,4 +1,6 @@
-<?php namespace Main\Classes;
+<?php
+
+namespace Main\Classes;
 
 use Cache;
 use Config;
@@ -11,7 +13,6 @@ use SystemException;
 
 /**
  * MediaLibrary Class
- * @package System
  */
 class MediaLibrary
 {
@@ -274,9 +275,14 @@ class MediaLibrary
         if (!File::exists($filePath))
             $filePath = $this->getDefaultThumbPath($thumbPath, array_get($options, 'default'));
 
-        Manipulator::make($filePath)
-                   ->manipulate(array_except($options, ['extension', 'default']))
-                   ->save($thumbPath);
+        $manipulator = Manipulator::make($filePath)->useSource(
+            $this->getStorageDisk()->getDriver()
+        );
+
+        if ($manipulator->isSupported())
+            $manipulator->manipulate(array_except($options, ['extension', 'default']));
+
+        $manipulator->save($thumbPath);
 
         return asset($thumbPublicPath);
     }
@@ -381,7 +387,7 @@ class MediaLibrary
 
     protected function sortFiles(&$files, $sortBy)
     {
-        list($by, $direction) = $sortBy;
+        [$by, $direction] = $sortBy;
         usort($files, function ($a, $b) use ($by) {
             switch ($by) {
                 case 'name':

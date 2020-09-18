@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Facades\AdminLocation;
 use Admin\Models\Locations_model;
@@ -76,7 +78,7 @@ class Locations extends \Admin\Classes\AdminController
     {
         $defaultId = post('default');
 
-        if (Locations_model::updateDefault(['location_id' => $defaultId])) {
+        if (Locations_model::updateDefault($defaultId)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.locations.alert_set_default')));
         }
 
@@ -86,7 +88,7 @@ class Locations extends \Admin\Classes\AdminController
     public function settings_onSave($context = null)
     {
         try {
-            $this->asExtension('FormController')->edit_onSave('edit', params('default_location_id'));
+            $this->asExtension('FormController')->edit_onSave('edit', $this->getLocationId());
 
             return $this->refresh();
         }
@@ -124,5 +126,15 @@ class Locations extends \Admin\Classes\AdminController
             if ($logs = Geocoder::getLogs())
                 flash()->error(implode(PHP_EOL, $logs))->important();
         }
+    }
+
+    public function mapViewCenterCoords()
+    {
+        $model = $this->getFormModel();
+
+        return [
+            'lat' => $model->location_lat,
+            'lng' => $model->location_lng,
+        ];
     }
 }

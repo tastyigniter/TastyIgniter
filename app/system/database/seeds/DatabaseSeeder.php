@@ -1,4 +1,6 @@
-<?php namespace System\Database\Seeds;
+<?php
+
+namespace System\Database\Seeds;
 
 use Illuminate\Database\Seeder;
 
@@ -11,6 +13,8 @@ class DatabaseSeeder extends Seeder
     public static $siteEmail = 'admin@domain.tld';
 
     public static $staffName = 'Chef Admin';
+
+    public static $seedDemo = TRUE;
 
     /**
      * Run the database seeds.

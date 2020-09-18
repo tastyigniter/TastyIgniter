@@ -1,14 +1,9 @@
 <?php
 $config['list']['toolbar'] = [
     'buttons' => [
-        'upload' => [
-            'label' => 'lang:system::lang.themes.button_new',
-            'class' => 'btn btn-primary',
-            'href' => 'themes/upload',
-        ],
         'browse' => [
             'label' => 'lang:system::lang.themes.button_browse',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-primary',
             'href' => 'updates/browse/themes',
         ],
         'check' => [
@@ -30,7 +25,7 @@ $config['list']['columns'] = [
     ],
     'source' => [
         'type' => 'button',
-        'iconCssClass' => 'fa fa-pencil',
+        'iconCssClass' => 'fa fa-file',
         'attributes' => [
             'class' => 'btn btn-outline-default',
             'href' => 'themes/source/{code}',
@@ -40,7 +35,7 @@ $config['list']['columns'] = [
         'type' => 'button',
         'iconCssClass' => 'fa fa-star-o',
         'attributes' => [
-            'class' => 'btn btn-outline-warning',
+            'class' => 'btn btn-outline-warning bg-transparent',
             'title' => 'lang:system::lang.themes.text_set_default',
             'data-request' => 'onSetDefault',
             'data-request-form' => '#list-form',

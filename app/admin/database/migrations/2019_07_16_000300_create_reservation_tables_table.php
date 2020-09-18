@@ -1,4 +1,6 @@
-<?php namespace Admin\Database\Migrations;
+<?php
+
+namespace Admin\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,7 +10,7 @@ use Schema;
 /**
  * Create reservation_tables table
  */
-class createReservationTablesTable extends Migration
+class CreateReservationTablesTable extends Migration
 {
     public function up()
     {

@@ -32,10 +32,8 @@ $config['list']['filter'] = [
         ],
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
-            'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month',
-            'modelClass' => 'Admin\Models\Reservations_model',
-            'options' => 'getReservationDates',
+            'type' => 'daterange',
+            'conditions' => 'reserve_date >= CAST(:filtered_start AS DATE) AND reserve_date <= CAST(:filtered_end AS DATE)',
         ],
     ],
 ];
@@ -62,18 +60,6 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-default',
             'href' => 'reservations/calendar',
             'context' => 'index',
-        ],
-        'assigned' => [
-            'label' => 'lang:admin::lang.text_switch_to_assigned',
-            'class' => 'btn btn-default',
-            'href' => 'reservations/assigned',
-            'context' => 'index',
-        ],
-        'filter' => [
-            'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
-            'data-toggle' => 'list-filter',
-            'data-target' => '.list-filter',
         ],
     ],
 ];
@@ -146,7 +132,7 @@ $config['calendar']['toolbar'] = [
             'href' => 'reservations/create',
         ],
         'list' => [
-            'label' => 'lang:admin::lang.reservations.text_switch_to_list',
+            'label' => 'lang:admin::lang.text_switch_to_list',
             'class' => 'btn btn-default',
             'href' => 'reservations',
             'context' => 'calendar',
@@ -270,7 +256,7 @@ $config['form']['tabs'] = [
             'default' => 1,
         ],
         'comment' => [
-            'label' => 'lang:admin::lang.reservations.label_comment',
+            'label' => 'lang:admin::lang.statuses.label_comment',
             'type' => 'textarea',
         ],
         'date_added' => [

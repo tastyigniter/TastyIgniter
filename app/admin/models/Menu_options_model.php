@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Validation;
@@ -6,18 +8,18 @@ use Model;
 
 /**
  * MenuOptions Model Class
- *
- * @package Admin
  */
 class Menu_options_model extends Model
 {
     use Purgeable;
     use Validation;
 
+    protected static $allergensOptionsCache;
+
     /**
      * @var string The database table name
      */
-    protected $table = 'options';
+    protected $table = 'menu_options';
 
     /**
      * @var string The database table primary key
@@ -57,7 +59,16 @@ class Menu_options_model extends Model
             'radio' => 'lang:admin::lang.menu_options.text_radio',
             'checkbox' => 'lang:admin::lang.menu_options.text_checkbox',
             'select' => 'lang:admin::lang.menu_options.text_select',
+            'quantity' => 'lang:admin::lang.menu_options.text_quantity',
         ];
+    }
+
+    public function getAllergensOptions()
+    {
+        if (self::$allergensOptionsCache)
+            return self::$allergensOptionsCache;
+
+        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
     }
 
     //

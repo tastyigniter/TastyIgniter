@@ -1,9 +1,12 @@
-<?php namespace System\Controllers;
+<?php
+
+namespace System\Controllers;
 
 use AdminMenu;
 use ApplicationException;
 use Exception;
 use Flash;
+use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 use System\Models\Extensions_model;
 use System\Models\Themes_model;
@@ -33,7 +36,7 @@ class Updates extends \Admin\Classes\AdminController
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);
 
-        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), 'extensions'), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/extensions')]);
+        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), 'extensions'), ['class' => 'btn btn-primary', 'href' => admin_url($this->browseUrl.'/extensions')]);
         Template::setButton(lang('system::lang.updates.button_check'), ['class' => 'btn btn-success', 'data-request' => 'onCheckUpdates']);
         Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
@@ -82,7 +85,7 @@ class Updates extends \Admin\Classes\AdminController
         $buttonType = ($itemType == 'extensions') ? 'themes' : 'extensions';
         $buttonTitle = lang('system::lang.updates.text_tab_title_'.$buttonType);
 
-        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), $buttonTitle), ['class' => 'btn btn-default', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
+        Template::setButton(sprintf(lang('system::lang.updates.button_browse'), $buttonTitle), ['class' => 'btn btn-primary', 'href' => admin_url($this->browseUrl.'/'.$buttonType)]);
         Template::setButton(lang('system::lang.updates.button_updates'), ['class' => 'btn btn-success', 'href' => admin_url($this->checkUrl)]);
         Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
 
@@ -354,7 +357,7 @@ class Updates extends \Admin\Classes\AdminController
                     $updateManager->setCoreVersion($item['version'], $item['hash']);
                     break;
                 case 'extension':
-                    Extensions_model::install($item['code'], $item['version']);
+                    ExtensionManager::instance()->installExtension($item['code'], $item['version']);
                     break;
             }
         }

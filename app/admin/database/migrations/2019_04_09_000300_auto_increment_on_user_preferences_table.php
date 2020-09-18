@@ -1,4 +1,6 @@
-<?php namespace Admin\Database\Migrations;
+<?php
+
+namespace Admin\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -7,7 +9,7 @@ use Schema;
 /**
  * Set PRIMARY key on user_preferences table
  */
-class autoIncrementOnUserPreferencesTable extends Migration
+class AutoIncrementOnUserPreferencesTable extends Migration
 {
     public function up()
     {

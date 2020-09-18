@@ -1,4 +1,6 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
@@ -73,7 +75,7 @@ class CreateMediaAttachmentsTable extends Migration
             $path = $mediaLibrary->getMediaRelativePath($path);
 
             $media = $model->newMediaInstance();
-            $media->addFromFile(image_path($mediaLibrary->getMediaPath($path)), $tagName);
+            $media->addFromFile(assets_path($mediaLibrary->getMediaPath($path)), $tagName);
 
             $media->save();
             $model->media()->save($media);

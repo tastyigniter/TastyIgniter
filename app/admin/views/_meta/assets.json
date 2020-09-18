@@ -20,19 +20,11 @@
   ],
   "style": [
     {
-      "path": "/app/system/assets/ui/flame.css",
-      "name": "flame-css"
-    },
-    {
       "path": "css/admin.css",
       "name": "admin-css"
     }
   ],
   "script": [
-    {
-      "path": "/app/system/assets/ui/flame.js",
-      "name": "flame-js"
-    },
     {
       "path": "js/admin.js",
       "name": "admin-js"

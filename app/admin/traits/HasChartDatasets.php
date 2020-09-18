@@ -47,7 +47,7 @@ trait HasChartDatasets
 
     protected function makeDataset($config, $start, $end)
     {
-        list($r, $g, $b) = sscanf($config['color'], '#%02x%02x%02x');
+        [$r, $g, $b] = sscanf($config['color'], '#%02x%02x%02x');
         $backgroundColor = sprintf('rgba(%s, %s, %s, 0.5)', $r, $g, $b);
         $borderColor = sprintf('rgb(%s, %s, %s)', $r, $g, $b);
 

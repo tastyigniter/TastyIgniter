@@ -1,9 +1,11 @@
-<form id="search-form"
-      class="form-inline"
-      accept-charset="utf-8"
-      method="POST"
-      action="<?= current_url(); ?>"
-      role="form">
+<form
+    id="search-form"
+    class="form-inline"
+    accept-charset="utf-8"
+    method="POST"
+    action="<?= current_url(); ?>"
+    role="form">
+    <?= csrf_field(); ?>
     <input type="hidden" name="_handler" value="<?= $searchBox->getEventHandler('onSubmit'); ?>">
     <div class="input-group flex-fill">
         <input

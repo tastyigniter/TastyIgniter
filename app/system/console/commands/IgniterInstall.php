@@ -131,6 +131,8 @@ class IgniterInstall extends Command
         $siteUrl = $this->ask('Site URL', Config::get('app.url'));
         $this->writeToConfig('app', ['url' => $siteUrl]);
 
+        DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
+
         DatabaseSeeder::$siteName = $siteName;
         DatabaseSeeder::$siteUrl = $siteUrl;
         DatabaseSeeder::$siteEmail = $this->ask('Admin Email', DatabaseSeeder::$siteEmail);

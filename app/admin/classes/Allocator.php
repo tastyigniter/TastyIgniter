@@ -2,65 +2,53 @@
 
 namespace Admin\Classes;
 
-use Admin\Models\Orders_model;
-use Admin\Models\Reservations_model;
-use Admin\Models\Staff_groups_model;
-use Igniter\Flame\Traits\Singleton;
+use Admin\Jobs\AllocateAssignable;
+use Admin\Models\Assignable_logs_model;
 
 class Allocator
 {
-    use Singleton;
-
-    protected static $running = FALSE;
-
-    public function allocate()
+    public static function allocate()
     {
-        if (self::$running)
+        if (!$availableSlotCount = self::countAvailableSlot())
             return;
 
-        self::$running = TRUE;
+        $queue = Assignable_logs_model::getUnAssignedQueue($availableSlotCount);
 
-        $this->getUnAssignedQueue()->each(function ($assignable) {
-            $assigneeGroup = $assignable->assignee_group;
-            if (!$assigneeGroup instanceof Staff_groups_model)
-                return TRUE;
-
-            if ($assignee = $assigneeGroup->findAvailableAssignee()) {
-                $this->allocateToAssignee($assignable, $assignee);
-            }
+        $queue->each(function ($assignableLog) {
+            AllocateAssignable::dispatch($assignableLog);
         });
-
-        self::$running = FALSE;
     }
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $assignable
-     * @param \Admin\Models\Staffs_model $assignee
-     * @return bool
-     */
-    protected function allocateToAssignee($assignable, $assignee)
+    public static function addSlot($slot)
     {
-        $assignable->reload();
-        $assignable->reloadRelations();
+        $slots = (array)params('allocator_slots', []);
+        if (!is_array($slot))
+            $slot = [$slot];
 
-        if ($assignable->assignee)
-            return FALSE;
+        foreach ($slot as $item) {
+            $slots[$item] = TRUE;
+        }
 
-        $assigneeGroup = $assignable->assignee_group;
-        if (!method_exists($assignable, 'assignTo'))
-            throw new \BadMethodCallException('Method assignTo() not found in '.get_class($assignable));
-
-        $assignable->assignTo($assigneeGroup, $assignee);
+        params()->set('allocator_slots', $slots);
+        params()->save();
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected function getUnAssignedQueue()
+    public static function removeSlot($slot)
     {
-        return collect()->merge(
-            Orders_model::getUnAssignedQueue(),
-            Reservations_model::getUnAssignedQueue()
-        );
+        $slots = (array)params('allocator_slots', []);
+
+        unset($slots[$slot]);
+
+        params()->set('allocator_slots', $slots);
+        params()->save();
+    }
+
+    protected static function countAvailableSlot()
+    {
+        $slotMaxCount = (int)params('allocator_slot_size', 10);
+        $slotSize = count((array)params('allocator_slots', []));
+
+        return ($slotSize < $slotMaxCount)
+            ? $slotMaxCount - $slotSize : 0;
     }
 }

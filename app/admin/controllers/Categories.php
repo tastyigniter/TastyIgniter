@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
 use Admin\Models\Categories_model;
@@ -52,7 +54,7 @@ class Categories extends AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('categories', 'kitchen');
+        AdminMenu::setContext('categories', 'restaurant');
     }
 
     public function formBeforeSave($model)

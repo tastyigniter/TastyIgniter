@@ -61,7 +61,7 @@ class Theme
     public $publicPath;
 
     /**
-     * @var boolean Determine if this theme is active (false) or not (true).
+     * @var bool Determine if this theme is active (false) or not (true).
      */
     public $active;
 

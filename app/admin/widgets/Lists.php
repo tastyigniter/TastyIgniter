@@ -4,6 +4,7 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ListColumn;
+use Admin\Facades\AdminAuth;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -50,6 +51,11 @@ class Lists extends BaseWidget
      * @var bool|string Display pagination when limiting records per page.
      */
     public $showPagination = 'auto';
+
+    /**
+     * @var bool Display page numbers with pagination, disable to improve performance.
+     */
+    public $showPageNumbers = TRUE;
 
     /**
      * @var bool Display a drag handle next to each record row.
@@ -160,7 +166,8 @@ class Lists extends BaseWidget
 
     public function loadAssets()
     {
-        $this->addJs('../../../formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
+        $this->addJs('../../../formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js', 'sortable-js');
+        $this->addJs('../../../formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js');
         $this->addJs('js/lists.js', 'lists-js');
     }
 
@@ -181,7 +188,9 @@ class Lists extends BaseWidget
         $this->vars['showCheckboxes'] = $this->showCheckboxes;
         $this->vars['showDragHandle'] = $this->showDragHandle;
         $this->vars['showSetup'] = $this->showSetup;
+        $this->vars['showFilter'] = count($this->filterCallbacks);
         $this->vars['showPagination'] = $this->showPagination;
+        $this->vars['showPageNumbers'] = $this->showPageNumbers;
         $this->vars['showSorting'] = $this->showSorting;
         $this->vars['sortColumn'] = $this->getSortColumn();
         $this->vars['sortDirection'] = $this->sortDirection;
@@ -209,7 +218,7 @@ class Lists extends BaseWidget
 
     protected function validateModel()
     {
-        if (!$this->model OR !$this->model instanceof Model) {
+        if (!$this->model OR !$this->model instanceof \Illuminate\Database\Eloquent\Model) {
             throw new Exception(sprintf(lang('admin::lang.list.missing_model'), get_class($this->controller)));
         }
 
@@ -284,7 +293,6 @@ class Lists extends BaseWidget
 
         // Apply search term
         $query->where(function ($innerQuery) use ($primarySearchable, $relationSearchable, $joins) {
-
             // Search primary columns
             if (count($primarySearchable) > 0) {
                 $this->applySearchToQuery($innerQuery, $primarySearchable, 'or');
@@ -315,7 +323,6 @@ class Lists extends BaseWidget
 
             // Relation column
             if (isset($column->relation)) {
-
                 $relationType = $this->model->getRelationType($column->relation);
                 if ($relationType == 'morphTo') {
                     throw new Exception('The relationship morphTo is not supported for list columns.');
@@ -329,12 +336,12 @@ class Lists extends BaseWidget
                 $countQuery = $relationObj->getRelationExistenceCountQuery($relationObj->getRelated()->newQueryWithoutScopes(), $query);
 
                 $joinSql = $this->isColumnRelated($column, TRUE)
-                    ? Db::raw("group_concat(".$sqlSelect." separator ', ')")
+                    ? Db::raw('group_concat('.$sqlSelect." separator ', ')")
                     : Db::raw($sqlSelect);
 
                 $joinSql = $countQuery->select($joinSql)->toRawSql();
 
-                $selects[] = Db::raw("(".$joinSql.") as ".$alias);
+                $selects[] = Db::raw('('.$joinSql.') as '.$alias);
             } // Primary column
             else {
                 $sqlSelect = $this->parseTableName($column->sqlSelect, $primaryTable);
@@ -495,6 +502,12 @@ class Lists extends BaseWidget
     public function addColumns(array $columns)
     {
         foreach ($columns as $columnName => $config) {
+            // Check if admin has permissions to show this column
+            $permissions = array_get($config, 'permissions');
+            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+                continue;
+            }
+
             // Check that the filter scope matches the active location context
             if ($this->isLocationAware($config)) continue;
 
@@ -658,7 +671,7 @@ class Lists extends BaseWidget
             if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
                 $result[$key] = $this->controller->pageUrl($value);
             }
-            else if (is_string($value)) {
+            elseif (is_string($value)) {
                 $result[$key] = lang($value);
             }
         }
@@ -1027,7 +1040,7 @@ class Lists extends BaseWidget
     protected function isSortable($column = null)
     {
         if ($column === null) {
-            return (count($this->getSortableColumns()) > 0);
+            return count($this->getSortableColumns()) > 0;
         }
         else {
             return array_key_exists($column, $this->getSortableColumns());
@@ -1131,7 +1144,7 @@ class Lists extends BaseWidget
      * Check if column refers to a relation of the model
      *
      * @param ListColumn $column List column object
-     * @param boolean $multi If set, returns true only if the relation is a "multiple relation type"
+     * @param bool $multi If set, returns true only if the relation is a "multiple relation type"
      *
      * @return bool
      * @throws \Exception
@@ -1168,7 +1181,7 @@ class Lists extends BaseWidget
      *
      * @param ListColumn $column List column object
      *
-     * @return boolean
+     * @return bool
      */
     protected function isColumnPivot($column)
     {

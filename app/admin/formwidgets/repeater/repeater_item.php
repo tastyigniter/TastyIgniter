@@ -2,27 +2,23 @@
     id="<?= $this->getId('item-'.$indexValue) ?>"
     class="repeater-item" data-item-index="<?= $indexValue ?>">
     <?php if (!$this->previewMode AND $sortable) { ?>
-        <td class="repeater-item-handle <?= $this->getId('items') ?>-handle">
+        <td class="repeater-item-handle">
             <input type="hidden" name="<?= $sortableInputName ?>[]" value="<?= $indexValue; ?>">
-            <div class="btn btn-handle">
-                <i class="fa fa-bars"></i>
+            <div class="btn <?= $this->getId('items') ?>-handle">
+                <i class="fa fa-arrows-alt-v"></i>
             </div>
         </td>
     <?php } ?>
 
-    <?php if ($showRemoveButton) { ?>
+    <?php if (!$this->previewMode AND $showRemoveButton) { ?>
         <td class="list-action repeater-item-remove">
             <a
-                class="btn btn-outline-danger"
+                class="btn btn-outline-danger border-none"
                 role="button"
-                <?php if (!$this->previewMode) { ?>
-                    data-control="remove-item"
-                    data-target="#<?= $this->getId('item-'.$indexValue) ?>"
-                    data-prompt="<?= lang('admin::lang.alert_confirm') ?>"
-                <?php } ?>
-            >
-                <i class="fa fa-times-circle"></i>
-            </a>
+                data-control="remove-item"
+                data-target="#<?= $this->getId('item-'.$indexValue) ?>"
+                data-prompt="<?= lang('admin::lang.alert_confirm') ?>"
+            ><i class="fa fa-trash-alt"></i></a>
         </td>
     <?php } ?>
 

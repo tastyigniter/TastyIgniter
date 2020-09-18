@@ -1,4 +1,6 @@
-<?php namespace Admin\DashboardWidgets;
+<?php
+
+namespace Admin\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use Admin\Classes\OnboardingSteps;
@@ -15,7 +17,7 @@ class Onboarding extends BaseDashboardWidget
 
     public function initialize()
     {
-        $this->setProperty('cssClass', 'widget-item-onboarding');
+        $this->setProperty('cssClass', 'bg-light widget-item-onboarding');
     }
 
     public function defineProperties()

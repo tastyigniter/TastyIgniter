@@ -13,7 +13,7 @@ class DataSource
     protected $keyColumn;
 
     /**
-     * @var integer Internal record offset
+     * @var int Internal record offset
      */
     protected $offset = 0;
 
@@ -47,7 +47,7 @@ class DataSource
 
     /**
      * Returns a total number of records in the data source.
-     * @return integer
+     * @return int
      */
     public function getCount()
     {
@@ -65,8 +65,8 @@ class DataSource
     /**
      * Return records from the data source.
      *
-     * @param integer $offset Specifies the offset of the first record to return, zero-based.
-     * @param integer $count Specifies the number of records to return.
+     * @param int $offset Specifies the offset of the first record to return, zero-based.
+     * @param int $count Specifies the number of records to return.
      *
      * @return array Returns the records.
      * If there are no more records, returns an empty array.
@@ -97,7 +97,7 @@ class DataSource
     /**
      * Returns a set of records from the data source.
      *
-     * @param integer $count Specifies the number of records to return.
+     * @param int $count Specifies the number of records to return.
      *
      * @return array Returns the records.
      * If there are no more records, returns an empty array.

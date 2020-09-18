@@ -20,8 +20,6 @@ trait LogsStatusHistory
                 'status_id' => 'integer',
                 'status_updated_at' => 'dateTime',
             ]);
-
-            $model->append(['status_name', 'status_color']);
         });
     }
 
