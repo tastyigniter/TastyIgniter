@@ -84,7 +84,7 @@ class Coupons_history_model extends Model
         $model->amount = $couponCondition->getValue();
         $model->min_total = $coupon->min_total;
 
-        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$model, $couponCondition, $customer, $coupon], TRUE) === FALSE)
+        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$couponCondition, $customer, $coupon], TRUE) === FALSE)
             return FALSE;
 
         $model->save();
