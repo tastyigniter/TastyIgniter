@@ -2,22 +2,22 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?= lang('system::lang.updates.text_title_carte'); ?></h4>
+                <h4 class="modal-title">@lang('system::lang.updates.text_title_carte')</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body wrap-none">
                 <div class="panel panel-light panel-carte">
                     <div id="carte-details">
-                        <?= $this->makePartial('updates/carte_info', ['carteInfo' => $carteInfo]); ?>
+                        {!! $this->makePartial('updates/carte_info', ['carteInfo' => $carteInfo]) !!}
                     </div>
                     <div class="panel-footer">
-                        <?= form_open(current_url(),
+                        {!! form_open(current_url(),
                             [
                                 'id' => 'carte-form',
                                 'role' => 'form',
                                 'method' => 'POST',
                             ]
-                        ); ?>
+                        ) !!}
                         <div class="input-group">
                             <input type="text"
                                    class="form-control"
@@ -36,11 +36,11 @@
                                     type="button"><i class="fa fa-arrow-right"></i></button>
                             </span>
                         </div>
-                        <?= form_close(); ?>
+                        {!! form_close() !!}
                         <div
                             id="carte-help"
                             class="wrap-horizontal"
-                            style="display: <?= $carteInfo ? 'none' : 'block'; ?>;"><?= sprintf(lang('system::lang.updates.help_carte_key'), 'https://tastyigniter.com/signin'); ?>
+                            style="display: {{ $carteInfo ? 'none' : 'block' }};">{{ sprintf(lang('system::lang.updates.help_carte_key'), 'https://tastyigniter.com/signin') }}
                         </div>
                     </div>
                 </div>
