@@ -14,6 +14,7 @@ class Payments extends \Admin\Classes\AdminController
     public $implement = [
         'Admin\Actions\ListController',
         'Admin\Actions\FormController',
+        'Admin\Actions\LocationAwareController',
     ];
 
     public $listConfig = [
@@ -114,7 +115,7 @@ class Payments extends \Admin\Classes\AdminController
         return $model;
     }
 
-    public function formExtendFields($form)
+    public function formExtendFields($form, $fields)
     {
         $model = $form->model;
         if ($model->exists) {
@@ -125,6 +126,9 @@ class Payments extends \Admin\Classes\AdminController
         if ($form->context != 'create') {
             $field = $form->getField('code');
             $field->disabled = TRUE;
+        }
+        if (!$this->currentUser->isSuperUser()) {
+            $fields['locations']->hidden = true;
         }
     }
 

@@ -1,6 +1,4 @@
-<?php
-
-namespace Admin\Controllers;
+<?php namespace Admin\Controllers;
 
 use AdminMenu;
 use Igniter\Flame\Exception\ApplicationException;
@@ -87,5 +85,13 @@ class Orders extends \Admin\Classes\AdminController
                 $q->orderBy('date_added', 'desc');
             },
         ]);
+    }
+
+    public function formExtendFields($host, $fields){
+
+        if(!$this->currentUser->isSuperUser()){
+            $fields['ip_address']->hidden = true;
+            $fields['user_agent']->hidden = true;
+        }
     }
 }

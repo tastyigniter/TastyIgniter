@@ -1,7 +1,6 @@
-<?php
+<?php namespace Admin\Models;
 
-namespace Admin\Models;
-
+use Admin\Traits\Locationable;
 use Model;
 
 /**
@@ -9,6 +8,10 @@ use Model;
  */
 class Statuses_model extends Model
 {
+    use Locationable;
+
+    const LOCATIONABLE_RELATION = 'locations';
+
     /**
      * @var string The database table name
      */
@@ -26,6 +29,9 @@ class Statuses_model extends Model
     public $relation = [
         'hasMany' => [
             'status_history' => 'Admin\Models\Status_history_model',
+        ],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -52,7 +58,13 @@ class Statuses_model extends Model
 
     public static function getDropdownOptionsForOrder()
     {
-        return static::isForOrder()->dropdown('status_name');
+        $query = static::isForOrder();
+
+        if (app('admin.location')->getModel()) {
+            $query->whereHasOrDoesntHaveLocation(app('admin.location')->getModel()->location_id);
+        }
+
+        return $query->dropdown('status_name');
     }
 
     public static function getDropdownOptionsForReservation()

@@ -11,6 +11,13 @@ $config['list']['filter'] = [
             'type' => 'switch',
             'conditions' => 'location_status = :filtered',
         ],
+//        'category' => [
+//            'label' => 'lang:admin::lang.menus.text_filter_category',
+//            'type' => 'select',
+//            'scope' => 'whereHasCategory',
+//            'modelClass' => 'Admin\Models\Categories_model',
+//            'nameFrom' => 'name',
+//        ],
     ],
 ];
 
@@ -64,17 +71,15 @@ $config['list']['columns'] = [
     'location_state' => [
         'label' => 'lang:admin::lang.locations.column_state',
         'type' => 'text',
-        'searchable' => TRUE,
+        'invisible' => TRUE,
     ],
-    'location_postcode' => [
-        'label' => 'lang:admin::lang.locations.column_postcode',
-        'type' => 'text',
-        'searchable' => TRUE,
+    'options.offer_delivery' => [
+        'label' => 'lang:admin::lang.locations.label_offer_delivery',
+        'type' => 'switch',
     ],
-    'location_telephone' => [
-        'label' => 'lang:admin::lang.locations.column_telephone',
-        'type' => 'text',
-        'searchable' => TRUE,
+    'options.offer_collection' => [
+        'label' => 'lang:admin::lang.locations.label_offer_collection',
+        'type' => 'switch',
     ],
     'location_status' => [
         'label' => 'lang:admin::lang.label_status',
@@ -84,6 +89,12 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
+//    'category' => [
+//        'label' => 'lang:admin::lang.menus.column_category',
+//        'relation' => 'categories',
+//        'select' => 'name',
+//        'locationAware' => 'hide',
+//    ],
 
 ];
 
@@ -122,12 +133,59 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'left',
         ],
+
         'permalink_slug' => [
             'label' => 'lang:admin::lang.locations.label_permalink_slug',
             'type' => 'permalink',
             'span' => 'right',
             'comment' => 'lang:admin::lang.help_permalink',
         ],
+        'company_number' => [
+            'label' => 'lang:admin::lang.label_company_number',
+            'type' => 'text',
+            'span' => 'left',
+        ],
+        'location_status' => [
+            'label' => 'lang:admin::lang.label_status',
+            'type' => 'switch',
+            'default' => 1,
+            'span' => 'right',
+        ],
+
+
+        'location_categories' => [
+            'label' => 'lang:admin::lang.menus.label_category',
+            'type' => 'selectlist',
+            'span' => 'left',
+            'options' => [Admin\Models\Categories_model::class, 'getStoreCategoryDropdownOptions'],
+        ],
+
+        'price_range' => [
+            'label' => 'lang:admin::lang.label_price_range',
+            'type' => 'select',
+            'span' => 'right',
+            'options' => [
+                '' => '',
+                '$' => '$',
+                '$$' => '$$',
+                '$$$' => '$$$',
+                '$$$$' => '$$$$',
+            ],
+        ],
+//        'categories' => [
+//            'label' => 'lang:admin::lang.menus.label_category',
+//            'type' => 'relation',
+//            'span' => 'left',
+//            'valueFrom' => 'categories',
+//            'nameFrom' => 'name',
+////            'relationFrom' =>
+////            'options' => [Admin\Models\Categories_model::class, 'getStoreCategoryDropdownOptions'],
+////            'condition' => "category_type = 'store'",
+//            'locationAware' => 'hide',
+//        ],
+
+
+
         'location_email' => [
             'label' => 'lang:admin::lang.label_email',
             'type' => 'text',
@@ -138,19 +196,54 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'right',
         ],
+        'website' => [
+            'label' => 'lang:admin::lang.label_website',
+            'type' => 'text',
+            'span' => 'left',
+        ],
+        'facebook' => [
+            'label' => 'lang:admin::lang.label_facebook',
+            'type' => 'text',
+            'span' => 'right',
+        ],
+        'instagram' => [
+            'label' => 'lang:admin::lang.label_instagram',
+            'type' => 'text',
+            'span' => 'left',
+        ],
+        'twitter' => [
+            'label' => 'lang:admin::lang.label_twitter',
+            'type' => 'text',
+            'span' => 'right',
+        ],
+        'linkedin' => [
+            'label' => 'lang:admin::lang.label_linkedin',
+            'type' => 'text',
+            'span' => 'left',
+        ],
         'thumb' => [
-            'label' => 'lang:admin::lang.locations.label_image',
+            'label' => 'lang:admin::lang.label_image_thumb',
+            'type' => 'mediafinder',
+            'span' => 'right',
+            'mode' => 'inline',
+            'useAttachment' => TRUE,
+//            'comment' => 'lang:admin::lang.locations.help_image',
+        ],
+
+        'logo' => [
+            'label' => 'lang:admin::lang.label_image_logo',
             'type' => 'mediafinder',
             'span' => 'left',
             'mode' => 'inline',
             'useAttachment' => TRUE,
-            'comment' => 'lang:admin::lang.locations.help_image',
         ],
-        'location_status' => [
-            'label' => 'lang:admin::lang.label_status',
-            'type' => 'switch',
-            'default' => 1,
+
+        'page_banner' => [
+            'label' => 'lang:admin::lang.label_image_banner',
+            'type' => 'mediafinder',
             'span' => 'right',
+            'mode' => 'inline',
+            'useAttachment' => TRUE,
         ],
         'location_address_1' => [
             'label' => 'lang:admin::lang.locations.label_address_1',
@@ -344,44 +437,44 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-
-        'reservation' => [
-            'label' => 'lang:admin::lang.locations.text_tab_reservation',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'section',
-        ],
-        'options[offer_reservation]' => [
-            'label' => 'lang:admin::lang.locations.label_offer_reservation',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 1,
-            'type' => 'switch',
-        ],
-        'options[reservation_time_interval]' => [
-            'label' => 'lang:admin::lang.locations.label_reservation_time_interval',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 15,
-            'type' => 'number',
-            'span' => 'left',
-            'comment' => 'lang:admin::lang.locations.help_reservation_time_interval',
-            'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_reservation]',
-                'condition' => 'checked',
-            ],
-        ],
-        'options[reservation_lead_time]' => [
-            'label' => 'lang:admin::lang.locations.label_reservation_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 45,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_reservation_lead_time',
-            'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_reservation]',
-                'condition' => 'checked',
-            ],
-        ],
+//smoova
+//        'reservation' => [
+//            'label' => 'lang:admin::lang.locations.text_tab_reservation',
+//            'tab' => 'lang:admin::lang.locations.text_tab_data',
+//            'type' => 'section',
+//        ],
+//        'options[offer_reservation]' => [
+//            'label' => 'lang:admin::lang.locations.label_offer_reservation',
+//            'tab' => 'lang:admin::lang.locations.text_tab_data',
+//            'default' => 1,
+//            'type' => 'switch',
+//        ],
+//        'options[reservation_time_interval]' => [
+//            'label' => 'lang:admin::lang.locations.label_reservation_time_interval',
+//            'tab' => 'lang:admin::lang.locations.text_tab_data',
+//            'default' => 15,
+//            'type' => 'number',
+//            'span' => 'left',
+//            'comment' => 'lang:admin::lang.locations.help_reservation_time_interval',
+//            'trigger' => [
+//                'action' => 'enable',
+//                'field' => 'options[offer_reservation]',
+//                'condition' => 'checked',
+//            ],
+//        ],
+//        'options[reservation_lead_time]' => [
+//            'label' => 'lang:admin::lang.locations.label_reservation_lead_time',
+//            'tab' => 'lang:admin::lang.locations.text_tab_data',
+//            'default' => 45,
+//            'type' => 'number',
+//            'span' => 'right',
+//            'comment' => 'lang:admin::lang.locations.help_reservation_lead_time',
+//            'trigger' => [
+//                'action' => 'enable',
+//                'field' => 'options[offer_reservation]',
+//                'condition' => 'checked',
+//            ],
+//        ],
 
         'opening_type' => [
             'label' => 'lang:admin::lang.locations.label_opening_type',

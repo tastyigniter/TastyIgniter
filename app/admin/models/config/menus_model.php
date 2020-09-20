@@ -70,6 +70,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.menus.column_category',
         'relation' => 'categories',
         'select' => 'name',
+        'locationAware' => 'hide',
     ],
     'locations' => [
         'label' => 'lang:admin::lang.column_location',
@@ -147,19 +148,19 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_price',
             'type' => 'currency',
             'span' => 'right',
-            'cssClass' => 'flex-width',
+        ],
+        'categories' => [
+            'label' => 'lang:admin::lang.menus.label_category',
+//            'type' => 'relation',
+            'type' => 'selectlist',
+            'span' => 'left',
+            'options' => [Admin\Models\Categories_model::class, 'getLocationDropdownOptions'],
         ],
         'menu_priority' => [
             'label' => 'lang:admin::lang.menus.label_menu_priority',
             'type' => 'number',
             'span' => 'right',
             'default' => 0,
-            'cssClass' => 'flex-width',
-        ],
-        'categories' => [
-            'label' => 'lang:admin::lang.menus.label_category',
-            'type' => 'relation',
-            'span' => 'left',
         ],
         'allergens' => [
             'label' => 'lang:admin::lang.menus.label_allergens',
@@ -212,27 +213,33 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'comment' => 'lang:admin::lang.menus.help_subtract_stock',
         ],
-        'menu_description' => [
-            'label' => 'lang:admin::lang.label_description',
-            'type' => 'textarea',
-            'span' => 'left',
-            'attributes' => [
-                'rows' => 5,
-            ],
-        ],
+
         'thumb' => [
             'label' => 'lang:admin::lang.menus.label_image',
             'type' => 'mediafinder',
             'comment' => 'lang:admin::lang.menus.help_image',
-            'span' => 'right',
+            'span' => 'left',
             'useAttachment' => TRUE,
         ],
         'menu_status' => [
             'label' => 'lang:admin::lang.label_status',
             'type' => 'switch',
             'default' => 1,
-            'span' => 'left',
+            'span' => 'right',
         ],
+
+        'menu_description' => [
+            'label' => 'lang:admin::lang.label_description',
+            'type' => 'richeditor',
+            'size' => 'small',
+//            'type' => 'textarea',
+//            'span' => 'left',
+//            'attributes' => [
+//                'rows' => 5,
+//            ],
+        ],
+
+
 
         '_options' => [
             'label' => 'lang:admin::lang.menus.label_option',

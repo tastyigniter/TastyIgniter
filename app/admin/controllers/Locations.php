@@ -7,6 +7,7 @@ use Admin\Models\Locations_model;
 use AdminMenu;
 use Exception;
 use Geocoder;
+use Illuminate\Support\Facades\DB;
 
 class Locations extends \Admin\Classes\AdminController
 {
@@ -50,6 +51,10 @@ class Locations extends \Admin\Classes\AdminController
     ];
 
     protected $requiredPermissions = 'Admin.Locations';
+
+    protected $savedLocationCategories = null;
+
+    protected $selectedLocationCategories = [];
 
     public function __construct()
     {
@@ -122,12 +127,52 @@ class Locations extends \Admin\Classes\AdminController
 
     public function formAfterSave($model)
     {
+        //remove categories no longer selected.
+        foreach ($this->savedLocationCategories as $savedSategory) {
+            if (!$this->selectedLocationCategories || !in_array($savedSategory, $this->selectedLocationCategories)) {
+                DB::table('locationables')->where('location_id', '=', $model->location_id)
+                    ->where('locationable_id', '=', $savedSategory)
+                    ->where('locationable_type', '=', 'categories')
+                    ->delete();
+            }
+        }
+
+        //insert newly selected
+        if ($this->selectedLocationCategories) {
+            foreach ($this->selectedLocationCategories as $selectedCategory) {
+                if (!in_array($selectedCategory, $this->savedLocationCategories)) {
+                    DB::table('locationables')->insert([
+                        'location_id' => $model->location_id,
+                        'locationable_id' => $selectedCategory,
+                        'locationable_type' => 'categories',
+                        'options' => '',
+                    ]);
+                }
+            }
+        }
+
         if (post('Location.options.auto_lat_lng')) {
             if ($logs = Geocoder::getLogs())
                 flash()->error(implode(PHP_EOL, $logs))->important();
         }
     }
 
+    public function formExtendFields($host, $fields)
+    {
+        if (!$this->saveLocationCategories) {
+            $fields['location_categories']->value = array_pluck($host->model->getStoreSelectedCategories(), 'category_id');
+            $this->savedLocationCategories = $fields['location_categories']->value;
+        }
+    }
+
+    /**
+     * Called to validate create or edit form.
+     */
+    public function formValidate($model, $form)
+    {
+        $this->selectedLocationCategories = $model->location_categories;
+        unset($model->location_categories);
+    }
     public function mapViewCenterCoords()
     {
         $model = $this->getFormModel();

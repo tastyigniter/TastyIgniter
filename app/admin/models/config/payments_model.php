@@ -5,6 +5,14 @@ $config['list']['filter'] = [
         'mode' => 'all',
     ],
     'scopes' => [
+        'location' => [
+            'label' => 'lang:admin::lang.text_filter_location',
+            'type' => 'select',
+            'scope' => 'whereHasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom' => 'location_name',
+            'locationAware' => 'hide',
+        ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
@@ -53,6 +61,14 @@ $config['list']['columns'] = [
     'status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
+    ],
+    'locations' => [
+        'label' => 'lang:admin::lang.column_location',
+        'type' => 'text',
+        'relation' => 'locations',
+        'select' => 'location_name',
+        'locationAware' => 'hide',
+        'invisible' => TRUE,
     ],
     'is_default' => [
         'label' => 'lang:admin::lang.payments.label_default',
@@ -140,6 +156,14 @@ $config['form']['fields'] = [
         'type' => 'switch',
         'span' => 'right',
         'cssClass' => 'flex-width',
+    ],
+    'locations' => [
+        'label' => 'lang:admin::lang.label_location',
+        'type' => 'relation',
+        'span' => 'left',
+        'valueFrom' => 'locations',
+        'nameFrom' => 'location_name',
+        'locationAware' => 'hide',
     ],
 ];
 

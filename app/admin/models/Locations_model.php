@@ -1,7 +1,6 @@
-<?php
+<?php namespace Admin\Models;
 
-namespace Admin\Models;
-
+use Admin\Models\Categories_model;
 use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
@@ -9,9 +8,12 @@ use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Locations Model Class
+ *
+ * @package Admin
  */
 class Locations_model extends AbstractLocation
 {
@@ -48,7 +50,7 @@ class Locations_model extends AbstractLocation
         ],
         'belongsToMany' => [
             'tables' => ['Admin\Models\Tables_model', 'table' => 'location_tables'],
-        ],
+       ],
     ];
 
     protected $purgeable = ['tables', 'delivery_areas'];
@@ -62,6 +64,8 @@ class Locations_model extends AbstractLocation
 
     public $mediable = [
         'thumb',
+        'logo',
+        'page_banner',
         'gallery' => ['multiple' => TRUE],
     ];
 
@@ -90,10 +94,10 @@ class Locations_model extends AbstractLocation
             return FALSE;
 
         return isset($model->getAddress()['location_lat'])
-            AND isset($model->getAddress()['location_lng'])
-            AND ($model->hasDelivery() OR $model->hasCollection())
-            AND isset($model->options['hours'])
-            AND $model->delivery_areas->where('is_default', 1)->count() > 0;
+            and isset($model->getAddress()['location_lng'])
+            and ($model->hasDelivery() or $model->hasCollection())
+            and isset($model->options['hours'])
+            and $model->delivery_areas->where('is_default', 1)->count() > 0;
     }
 
     public function getWeekDaysOptions()
@@ -148,19 +152,32 @@ class Locations_model extends AbstractLocation
             'search' => null,
             'latitude' => null,
             'longitude' => null,
+            'categories' => null,
+            'openNow' => null,
+            'freeDelivery' => null,
+            'hasPickup' => null,
+            'hasDelivery' => null,
+            'topRated' => null
         ], $options));
 
-        if ($latitude AND $longitude) {
-            $query->select('*');
+        $query->select('locations.*');
+        if ($latitude and $longitude) {
             $query->selectDistance($latitude, $longitude);
         }
 
-        $searchableFields = [
-            'location_name', 'location_address_1',
-            'location_address_2', 'location_city',
-            'location_state', 'location_postcode',
-            'description',
-        ];
+        $query->distinct();
+
+        $query = $this->scopeIsEnabled($query);
+        if ($hasDelivery) {
+            $query->where('locations.options', 'like', '%offer_delivery";s:1:"1%');
+        }
+
+        if ($hasPickup) {
+            $query->where('locations.options', 'like', '%offer_collection";s:1:"1%');
+        }
+
+        $searchableFields = ['location_name', 'location_address_1', 'location_address_2', 'location_city',
+            'location_state', 'location_postcode', 'description'];
 
         if (!is_array($sort)) {
             $sort = [$sort];
@@ -181,6 +198,18 @@ class Locations_model extends AbstractLocation
         if (strlen($search)) {
             $query->search($search, $searchableFields);
         }
+
+        if (empty($selectedCategories)) {
+            return $query->paginate($pageLimit, $page);
+        } else {
+            $query->join('locationables', 'locations.location_id', '=', 'locationables.location_id')
+                ->join('categories', 'locationables.locationable_id', '=', 'categories.category_id');
+            $query->whereIn('categories.category_id', $selectedCategories);
+            $query->where('locationables.locationable_type', '=', 'categories');
+
+            return $query->paginate($pageLimit, $page);
+        }
+
 
         return $query->paginate($pageLimit, $page);
     }
@@ -220,10 +249,10 @@ class Locations_model extends AbstractLocation
 
     public function setUrl($suffix = null)
     {
-        if (is_single_location())
-            $suffix = '/menus';
+//        if (is_single_location())
+//            $suffix = '/menus';
 
-        $this->url = site_url($this->permalink_slug.$suffix);
+        $this->url = site_url($this->permalink_slug . $suffix);
     }
 
     public function hasGallery()
@@ -258,7 +287,7 @@ class Locations_model extends AbstractLocation
         $paymentGateways = Payments_model::listPayments();
 
         foreach ($paymentGateways as $payment) {
-            if ($payments AND !in_array($payment->code, $payments)) continue;
+            if ($payments and !in_array($payment->code, $payments)) continue;
 
             $result[$payment->code] = $payment;
         }
@@ -337,4 +366,34 @@ class Locations_model extends AbstractLocation
     {
         return $this->tables()->sync($tables);
     }
+
+    //smoova
+
+    public function loadCategories()
+    {
+        $this->categories = [];
+        $query = Categories_model::with(['children', 'children.children'])->isEnabled()->sorted();
+
+        $query->whereHasLocation($this->location_id);
+        $query->where('category_type', '=', 'store');
+
+        $this->categories = $query->get();
+        return $this->categories;
+    }
+
+    public function getStoreSelectedCategories()
+    {
+        $query = Categories_model::with(['children', 'children.children']);
+
+        $query->isEnabled()
+            ->sorted()
+            ->where('category_type', '=', 'store');
+
+        if (!app('admin.auth')->isSuperUser()) {
+            $query->whereHasLocation($this->location_id);
+        }
+        return $query->get();
+    }
+
+
 }

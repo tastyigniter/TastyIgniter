@@ -1,10 +1,11 @@
-<?php
+<?php namespace Admin\Models;
 
 namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Validation;
 use Model;
+use Admin\Traits\Locationable;
 
 /**
  * MenuOptions Model Class
@@ -13,6 +14,9 @@ class Menu_options_model extends Model
 {
     use Purgeable;
     use Validation;
+    use Locationable;
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     protected static $allergensOptionsCache;
 
@@ -38,6 +42,9 @@ class Menu_options_model extends Model
             'menu_options' => ['Admin\Models\Menu_item_options_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+        ],
     ];
 
     public $rules = [
@@ -49,8 +56,18 @@ class Menu_options_model extends Model
 
     public static function getRecordEditorOptions()
     {
-        return self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name')
-                   ->dropdown('display_name');
+
+        $query = self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name');
+
+        //smoova
+        if (!app('admin.auth')->isSuperUser()) {
+            $locations = app('admin.auth')->locations();
+
+            foreach ($locations as $location) {
+                $query->whereHasLocation($location->getKey());
+            }
+        }
+        return $query->dropdown('display_name');
     }
 
     public function getDisplayTypeOptions()

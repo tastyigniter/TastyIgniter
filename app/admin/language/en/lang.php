@@ -57,6 +57,17 @@ return [
     'label_location' => 'Location(s)',
     'label_description' => 'Description',
 
+    'label_website' => 'Website',
+    'label_facebook' => 'Facebook',
+    'label_instagram' => 'Instagram',
+    'label_twitter' => 'Twitter',
+    'label_linkedin' => 'LinkedIn',
+    'label_price_range' => 'Price Range',
+    'label_company_number' => 'ABN',
+    'label_image_thumb' => 'Image used in the search results',
+    'label_image_logo' => 'Logo',
+    'label_image_banner' => 'Banner image used in store page',
+
     'column_id' => 'ID',
     'column_location' => 'Location(s)',
     'column_date_added' => 'Date Added',
@@ -243,6 +254,10 @@ return [
         'text_form_name' => 'Category',
         'text_filter_search' => 'Search by name.',
         'text_empty' => 'There are no categories available.',
+        'text_filter_status' => 'View all status',
+        'text_product_category' => 'Product Category',
+        'text_store_category' => 'Store Category',
+        'text_store_type' => 'Store Type',
 
         'column_parent' => 'Parent',
         'column_priority' => 'Priority',
@@ -251,6 +266,7 @@ return [
         'label_parent' => 'Parent',
         'label_image' => 'Image',
         'label_priority' => 'Priority',
+        'label_category_type' => 'Category Type',
 
         'help_photo' => 'Select a file to update category image, otherwise leave blank.',
     ],
@@ -591,6 +607,7 @@ return [
         'text_forgot_password' => 'Forgot your password?',
         'text_reset_password_title' => 'Reset your Password',
         'text_back_to_login' => 'Back to Login',
+        'login_with' => 'Login with',
 
         'button_login' => 'Login',
         'button_reset_password' => 'Reset Password',

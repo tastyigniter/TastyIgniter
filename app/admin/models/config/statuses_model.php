@@ -1,6 +1,14 @@
 <?php
 $config['list']['filter'] = [
     'scopes' => [
+        'location' => [
+            'label' => 'lang:admin::lang.text_filter_location',
+            'type' => 'select',
+            'scope' => 'whereHasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom' => 'location_name',
+            'locationAware' => 'hide',
+        ],
         'type' => [
             'label' => 'lang:admin::lang.statuses.text_filter_status',
             'type' => 'select', // checkbox, switch, date, daterange
@@ -61,6 +69,14 @@ $config['list']['columns'] = [
         'type' => 'switch',
         'offText' => 'lang:admin::lang.text_no',
         'onText' => 'lang:admin::lang.text_yes',
+    ],
+    'locations' => [
+        'label' => 'lang:admin::lang.column_location',
+        'type' => 'text',
+        'relation' => 'locations',
+        'select' => 'location_name',
+        'locationAware' => 'hide',
+        'invisible' => TRUE,
     ],
     'status_id' => [
         'label' => 'lang:admin::lang.column_id',

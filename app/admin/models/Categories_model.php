@@ -1,6 +1,4 @@
-<?php
-
-namespace Admin\Models;
+<?php namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use DB;
@@ -105,4 +103,38 @@ class Categories_model extends Model
     {
         return $query->where('status', 1);
     }
+
+    //smoova
+    public function scopeHasAllowedCategories($query)
+    {
+        return $query->where('category_type' , '=', 'product');
+    }
+
+    public static function getLocationDropdownOptions()
+    {
+        $query = Categories_model::with(['children', 'children.children']);
+
+        $query->isEnabled()
+              ->sorted()
+              ->where('category_type' , '=', 'product');
+
+        if (app('admin.location')->getModel()) {
+            $query->whereHasLocation(app('admin.location')->getModel()->location_id);
+        }
+
+        return $query->pluck('name', 'category_id');
+    }
+
+    public static function getStoreCategoryDropdownOptions()
+    {
+        $query = Categories_model::with(['children', 'children.children']);
+
+        $query->isEnabled()
+            ->sorted()
+            ->where('category_type' , '=', 'store');
+
+        return $query->pluck('name', 'category_id');
+    }
+
+
 }

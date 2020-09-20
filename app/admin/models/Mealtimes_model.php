@@ -1,15 +1,20 @@
-<?php
+<?php namespace Admin\Models;
 
-namespace Admin\Models;
-
+use Admin\Traits\Locationable;
 use Carbon\Carbon;
 use Model;
 
 /**
  * Mealtimes Model Class
+ *
+ * @package Admin
  */
 class Mealtimes_model extends Model
 {
+    use Locationable;
+
+    const LOCATIONABLE_RELATION = 'locations';
+
     /**
      * @var string The database table name
      */
@@ -24,6 +29,12 @@ class Mealtimes_model extends Model
         'start_time' => 'time',
         'end_time' => 'time',
         'mealtime_status' => 'boolean',
+    ];
+
+    public $relation = [
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+        ],
     ];
 
     public function getDropdownOptions()

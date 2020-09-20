@@ -1,9 +1,5 @@
 <?php
 $config['list']['filter'] = [
-    'search' => [
-        'prompt' => 'lang:admin::lang.categories.text_filter_search',
-        'mode' => 'all',
-    ],
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
@@ -14,10 +10,21 @@ $config['list']['filter'] = [
             'locationAware' => 'hide',
         ],
         'status' => [
-            'label' => 'lang:admin::lang.text_filter_status',
+            'label' => 'lang:admin::lang.categories.text_filter_status',
             'type' => 'switch', // checkbox, switch, date, daterange
             'conditions' => 'status = :filtered',
         ],
+//        'category_type' => [
+//            'label' => 'lang:admin::lang.categories.label_category_type',
+//            'type' => 'select',
+//            'conditions' => 'category_type = :filtered',
+//            'options' => [
+//                'product' => 'lang:admin::lang.categories.text_product_category',
+//                'store' => 'lang:admin::lang.categories.text_store_category',
+//                'store_type' => 'lang:admin::lang.categories.text_store_type',
+//            ],
+//        ],
+
     ],
 ];
 
@@ -53,12 +60,6 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
-    'parent_cat' => [
-        'label' => 'lang:admin::lang.categories.column_parent',
-        'type' => 'text',
-        'relation' => 'parent_cat',
-        'select' => 'name',
-    ],
     'locations' => [
         'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
@@ -67,6 +68,14 @@ $config['list']['columns'] = [
         'locationAware' => 'hide',
         'invisible' => TRUE,
     ],
+    'parent_cat' => [
+        'label' => 'lang:admin::lang.categories.column_parent',
+        'type' => 'text',
+        'relation' => 'parent_cat',
+        'select' => 'name',
+        'invisible' => TRUE,
+    ],
+
     'priority' => [
         'label' => 'lang:admin::lang.categories.column_priority',
         'type' => 'text',
@@ -122,20 +131,29 @@ $config['form']['fields'] = [
         'comment' => 'lang:admin::lang.help_permalink',
         'span' => 'right',
     ],
-    'parent_id' => [
-        'label' => 'lang:admin::lang.categories.label_parent',
-        'type' => 'relation',
-        'span' => 'left',
-        'relationFrom' => 'parent_cat',
-        'placeholder' => 'lang:admin::lang.text_please_select',
-    ],
     'locations' => [
         'label' => 'lang:admin::lang.label_location',
         'type' => 'relation',
-        'span' => 'right',
+        'span' => 'left',
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
         'locationAware' => 'hide',
+    ],
+    'parent_id' => [
+        'label' => 'lang:admin::lang.categories.label_parent',
+        'type' => 'relation',
+        'span' => 'right',
+        'relationFrom' => 'parent_cat',
+        'placeholder' => 'lang:admin::lang.text_please_select',
+    ],
+    'category_type' => [
+        'label' => 'lang:admin::lang.categories.label_category_type',
+        'type' => 'select',
+        'options' => [
+            'product' => 'lang:admin::lang.categories.text_product_category',
+            'store' => 'lang:admin::lang.categories.text_store_category',
+            'store_type' => 'lang:admin::lang.categories.text_store_type',
+        ],
     ],
     'priority' => [
         'label' => 'lang:admin::lang.categories.label_priority',

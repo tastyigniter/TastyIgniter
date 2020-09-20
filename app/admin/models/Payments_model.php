@@ -1,7 +1,6 @@
-<?php
+<?php namespace Admin\Models;
 
-namespace Admin\Models;
-
+use Admin\Traits\Locationable;
 use Admin\Classes\PaymentGateways;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
@@ -9,14 +8,20 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\ValidationException;
 use Lang;
 use Model;
+use System\Classes\ExtensionManager;
 
 /**
  * Payments Model Class
+ *
+ * @package Admin
  */
 class Payments_model extends Model
 {
     use Sortable;
     use Purgeable;
+    use Locationable;
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     const SORT_ORDER = 'priority';
 
@@ -45,18 +50,34 @@ class Payments_model extends Model
         'priority' => 'integer',
     ];
 
+    public $relation = [
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+        ],
+    ];
+
     protected $purgeable = ['payment'];
 
     protected static $defaultPayment;
 
     public function getDropdownOptions()
     {
-        return $this->isEnabled()->dropdown('name', 'code');
+        $query = $this->isEnabled();
+
+        if (app('admin.location')->getModel()) {
+            $query->whereHasLocation(app('admin.location')->getModel()->location_id);
+        }
+
+        return $query->dropdown('name', 'code');
     }
 
     public static function listDropdownOptions()
     {
-        $all = self::select('code', 'name', 'description')->isEnabled()->get();
+        $query = self::select('code', 'name', 'description')->isEnabled();
+        if (app('admin.location')->getModel()) {
+            $query->whereHasLocation(app('admin.location')->getModel()->location_id);
+        }
+        $all = $query->get();
         $collection = $all->keyBy('code')->map(function ($model) {
             return [$model->name, $model->description];
         });
@@ -76,7 +97,6 @@ class Payments_model extends Model
         foreach ($this->gatewayManager->listGateways() as $code => $gateway) {
             $result[$gateway['code']] = $gateway['name'];
         }
-
         return $result;
     }
 
@@ -138,7 +158,7 @@ class Payments_model extends Model
      *
      * @param string $class Class name
      *
-     * @return bool
+     * @return boolean
      */
     public function applyGatewayClass($class = null)
     {
@@ -149,7 +169,7 @@ class Payments_model extends Model
             $class = null;
         }
 
-        if ($class AND !$this->isClassExtendedWith($class)) {
+        if ($class and !$this->isClassExtendedWith($class)) {
             $this->extendClassWith($class);
         }
 
@@ -163,7 +183,7 @@ class Payments_model extends Model
         $this->beforeRenderPaymentForm($this, $controller);
 
         $paymentMethodFile = strtolower(class_basename($this->class_name));
-        $partialName = 'payregister/'.$paymentMethodFile;
+        $partialName = 'payregister/' . $paymentMethodFile;
 
         return $controller->renderPartial($partialName, ['paymentMethod' => $this]);
     }
@@ -306,4 +326,15 @@ class Payments_model extends Model
 
         $profile->delete();
     }
+
+    //smoova
+    public function getPaymentCodeType()
+    {
+        $gatewayManager = ExtensionManager::instance()->getExtensions()['igniter.payregister'];
+        $gateways = $gatewayManager->registerPaymentGateways();
+        return $gateways[$this->class_name]['code'];
+    }
+
+
+
 }

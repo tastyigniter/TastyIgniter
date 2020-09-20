@@ -61,4 +61,11 @@ class Coupons extends \Admin\Classes\AdminController
             return ucwords($record->validity);
         }
     }
+
+    public function formExtendFields($host, $fields)
+    {
+        if (!$this->currentUser->isSuperUser()) {
+            $fields['locations']->hidden = true;
+        }
+    }
 }

@@ -1,6 +1,4 @@
-<?php
-
-namespace Admin\Controllers;
+<?php namespace Admin\Controllers;
 
 use AdminMenu;
 
@@ -9,6 +7,7 @@ class Statuses extends \Admin\Classes\AdminController
     public $implement = [
         'Admin\Actions\ListController',
         'Admin\Actions\FormController',
+        'Admin\Actions\LocationAwareController',
     ];
 
     public $listConfig = [
@@ -71,5 +70,14 @@ class Statuses extends \Admin\Classes\AdminController
         ];
 
         return $this->validatePasses($form->getSaveData(), $rules);
+    }
+
+    //smoova
+
+    public function formExtendFields($host, $fields){
+
+        if(!$this->currentUser->isSuperUser()){
+            $fields['status_for']->hidden = true;
+        }
     }
 }

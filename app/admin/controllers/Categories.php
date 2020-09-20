@@ -61,5 +61,28 @@ class Categories extends AdminController
     {
         if (Categories_model::isBroken())
             Categories_model::fixTree();
+
+        if(!$this->currentUser->isSuperUser()){
+            $model->category_type = 'product';
+        }
     }
+
+    //smoova
+    public function listExtendQueryBefore($query, $alias = null)
+    {
+        if(!$this->currentUser->isSuperUser()){
+            $query->where('category_type', '=', 'product');
+        }
+    }
+
+    public function formExtendFields($host, $fields){
+
+        if(!$this->currentUser->isSuperUser()){
+            $fields['parent_id']->hidden = true;
+            $fields['locations']->hidden = true;
+            $fields['permalink_slug']->hidden = true;
+            $fields['category_type']->hidden = true;
+        }
+    }
+
 }

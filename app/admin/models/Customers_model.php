@@ -1,6 +1,4 @@
-<?php
-
-namespace Admin\Models;
+<?php namespace Admin\Models;
 
 use Carbon\Carbon;
 use Exception;
@@ -9,6 +7,8 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Customers Model Class
+ *
+ * @package Admin
  */
 class Customers_model extends AuthUserModel
 {
@@ -137,6 +137,14 @@ class Customers_model extends AuthUserModel
         return $this->first_name.' '.$this->last_name;
     }
 
+    public function getDefaultAddress(){
+        foreach ($this->addresses as $address){
+            if ($address->address_id == $this->address_id){
+                return format_address($address, false);
+            }
+        }
+        return null;
+    }
     public function listAddresses()
     {
         return $this->addresses()->get()->groupBy(function ($address) {

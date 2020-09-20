@@ -1,6 +1,14 @@
 <?php
 $config['list']['filter'] = [
     'scopes' => [
+        'location' => [
+            'label' => 'lang:admin::lang.text_filter_location',
+            'type' => 'select',
+            'scope' => 'whereHasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom' => 'location_name',
+            'locationAware' => 'hide',
+        ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
@@ -48,6 +56,14 @@ $config['list']['columns'] = [
     'end_time' => [
         'label' => 'lang:admin::lang.mealtimes.column_end_time',
         'type' => 'time',
+    ],
+    'locations' => [
+        'label' => 'lang:admin::lang.column_location',
+        'type' => 'text',
+        'relation' => 'locations',
+        'select' => 'location_name',
+        'locationAware' => 'hide',
+        'invisible' => TRUE,
     ],
     'mealtime_status' => [
         'label' => 'lang:admin::lang.label_status',
@@ -110,6 +126,14 @@ $config['form']['fields'] = [
         'type' => 'datepicker',
         'mode' => 'time',
         'span' => 'right',
+    ],
+    'locations' => [
+        'label' => 'lang:admin::lang.label_location',
+        'type' => 'relation',
+        'span' => 'left',
+        'valueFrom' => 'locations',
+        'nameFrom' => 'location_name',
+        'locationAware' => 'hide',
     ],
 ];
 

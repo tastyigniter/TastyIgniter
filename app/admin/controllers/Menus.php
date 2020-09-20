@@ -1,8 +1,7 @@
-<?php
-
-namespace Admin\Controllers;
+<?php namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
+use Admin\Models\Categories_model;
 use Admin\Models\Menu_options_model;
 use AdminMenu;
 use ApplicationException;
@@ -90,4 +89,12 @@ class Menus extends AdminController
             ]),
         ];
     }
+
+    public function formExtendFields($host, $fields){
+        $fields['categories']->value = array_pluck($fields['categories']->value, 'category_id');
+        if(!$this->currentUser->isSuperUser()){
+            $fields['locations']->hidden = true;
+        }
+    }
+
 }

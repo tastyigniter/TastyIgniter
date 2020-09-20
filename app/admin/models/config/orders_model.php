@@ -275,24 +275,24 @@ $config['form']['tabs'] = [
         'date_added' => [
             'label' => 'lang:admin::lang.orders.label_date_added',
             'type' => 'datepicker',
-            'mode' => 'date',
+            'mode' => 'datetime',
             'disabled' => TRUE,
             'span' => 'left',
+            'context' => ['edit', 'preview'],
+        ],
+        'date_modified' => [
+            'label' => 'lang:admin::lang.orders.label_date_modified',
+            'type' => 'datepicker',
+            'mode' => 'datetime',
+            'span' => 'right',
+            'disabled' => TRUE,
             'context' => ['edit', 'preview'],
         ],
         'ip_address' => [
             'label' => 'lang:admin::lang.orders.label_ip_address',
             'type' => 'text',
             'disabled' => TRUE,
-            'span' => 'right',
-            'context' => ['edit', 'preview'],
-        ],
-        'date_modified' => [
-            'label' => 'lang:admin::lang.orders.label_date_modified',
-            'type' => 'datepicker',
-            'mode' => 'date',
             'span' => 'left',
-            'disabled' => TRUE,
             'context' => ['edit', 'preview'],
         ],
         'user_agent' => [
