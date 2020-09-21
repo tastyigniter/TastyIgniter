@@ -1,4 +1,4 @@
-@if (isset($carteInfo['owner']))
+@isset($carteInfo['owner'])
     <div class="panel-body border-bottom">
         <div class="d-flex">
             <div class="media-right media-middle">
@@ -14,4 +14,4 @@
             </div>
         </div>
     </div>
-@endif
+@endisset

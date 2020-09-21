@@ -4,13 +4,9 @@ $activeTab = $activeTab ? $activeTab : '#'.$type.'tab-1';
 @endphp
 <div class="tab-heading">
     <ul class="form-nav nav nav-tabs">
-        @php
-            $index = 0;
-        @endphp
         @foreach ($tabs as $name => $fields)
             @php
-                $index++;
-                $tabName = '#'.$type.'tab-'.$index
+                $tabName = '#'.$type.'tab-'.$loop->iteration;
             @endphp
             <li class="nav-item">
                 <a
@@ -26,13 +22,9 @@ $activeTab = $activeTab ? $activeTab : '#'.$type.'tab-1';
 <div class="row no-gutters">
     <div class="col-md-8">
         <div class="tab-content">
-            @php
-                $index = 0;
-            @endphp
             @foreach ($tabs as $name => $fields)
                 @php
-                    $index++;
-                    $tabName = '#'.$type.'tab-'.$index
+                    $tabName = '#'.$type.'tab-'.$loop->iteration;
                 @endphp
                 <div
                     class="tab-pane {{ ($tabName == $activeTab) ? 'active' : '' }}"
