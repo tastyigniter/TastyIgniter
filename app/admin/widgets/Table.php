@@ -15,6 +15,11 @@ class Table extends BaseWidget
      * @var array Table columns
      */
     protected $columns = [];
+    
+    /**
+     * @var array of table columns needing formatted
+     */
+    protected $columnsFormatting = [];
 
     /**
      * @var bool Show data table header
@@ -118,7 +123,7 @@ class Table extends BaseWidget
         $isClientDataSource = $this->isClientDataSource();
         $this->vars['clientDataSourceClass'] = $isClientDataSource ? 'client' : 'server';
         $this->vars['data'] = json_encode($isClientDataSource
-            ? $this->dataSource->getAllRecords() : []
+            ? $this->formatRecords($this->dataSource->getAllRecords()) : []
         );
     }
 
@@ -139,10 +144,15 @@ class Table extends BaseWidget
 
             if (isset($data['title']))
                 $data['title'] = lang($data['title']);
+                
+            if (isset($data['formatter'])){
+                $this->columnsFormatting[$key] = $data['formatter'];
+                unset($data['formatter']);
+            }
 
             $result[] = $data;
         }
-
+        
         return $result;
     }
 
@@ -167,4 +177,22 @@ class Table extends BaseWidget
             'options' => $options,
         ];
     }
+    
+    public function formatRecords($records)
+    {
+        if (count($this->columnsFormatting)){
+            foreach ($records as $i=>$record){
+                foreach ($this->columnsFormatting as $key=>$formatter){
+                    if (isset($record[$key])){
+                        if (is_callable($formatter) AND ($response = call_user_func_array($formatter, [$record, $record[$key]])) !== null) {
+                            $records[$i][$key] = $response;
+                        }                        
+                    }
+                }
+            }            
+        }
+
+        return $records;
+    }
+    
 }
