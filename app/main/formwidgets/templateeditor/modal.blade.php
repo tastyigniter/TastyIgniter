@@ -1,5 +1,5 @@
 <div
-    id="<?= $this->getId('modal') ?>"
+    id="{{ $this->getId('modal') }}"
     class="modal show"
     tabindex="-1"
     role="dialog"
@@ -16,7 +16,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label><?= e(lang('system::lang.themes.label_file')) ?></label>
+                    <label>@lang('system::lang.themes.label_file')</label>
                     <input data-modal-input="source-name" type="text" class="form-control" name="name"/>
                     <input data-modal-input="source-action" type="hidden" name="action"/>
                 </div>
@@ -26,12 +26,12 @@
                     type="button"
                     class="btn btn-secondary"
                     data-dismiss="modal"
-                ><?= lang('admin::lang.button_close') ?></button>
+                >@lang('admin::lang.button_close')</button>
                 <button
                     type="button"
                     class="btn btn-primary"
                     data-request="onManageSource"
-                ><?= lang('admin::lang.button_save') ?></button>
+                >@lang('admin::lang.button_save')</button>
             </div>
         </div>
     </div>

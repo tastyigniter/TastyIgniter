@@ -5,7 +5,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
         </div>
         <div class="modal-body">
-            <?= $this->render() ?>
+            {!! $this->render() !!}
         </div>
     </div>
 </div>
