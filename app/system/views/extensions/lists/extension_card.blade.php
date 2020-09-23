@@ -8,7 +8,7 @@
         role="button"
         @endif
     >
-        <span class="extension-name font-weight-bold @unless($record->class) text-muted@endunless">
+        <span class="extension-name font-weight-bold @unless($record->class) text-muted @endunless">
             @unless ($record->class)<s>{{ $record->title }}</s>@else{{ $record->title }}@endunless
         </span>&nbsp;&nbsp;
         <span class="small text-muted">{{ $record->version }}</span>
