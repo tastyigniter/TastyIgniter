@@ -1,11 +1,14 @@
 <?php
 
-namespace Admin\Widgets;
+namespace Admin\FormWidgets;
 
-use Admin\Classes\BaseWidget;
+use Admin\Classes\BaseFormWidget;
+use Admin\Traits\FormModelWidget;
 
-class MapView extends BaseWidget
+class MapView extends BaseFormWidget
 {
+    use FormModelWidget;
+
     /**
      * @var string Partial name containing the toolbar buttons
      */
@@ -20,8 +23,6 @@ class MapView extends BaseWidget
     public $shapeSelector = '[data-map-shape]';
 
     protected $defaultAlias = 'mapview';
-
-    protected $previewMode = FALSE;
 
     /**
      * @var array List of CSS classes to apply to the map container element
@@ -62,8 +63,17 @@ class MapView extends BaseWidget
     {
         $this->vars['mapHeight'] = (int)$this->height;
         $this->vars['mapZoom'] = (int)$this->zoom;
-        $this->vars['mapCenter'] = $this->center;
+        $this->vars['mapCenter'] = $this->getCenter();
         $this->vars['shapeSelector'] = $this->shapeSelector;
         $this->vars['previewMode'] = $this->previewMode;
+    }
+
+    protected function getCenter()
+    {
+        if ($this->center)
+            return $this->center;
+
+        if (method_exists($this->controller, 'mapViewCenterCoords'))
+            return $this->controller->mapViewCenterCoords();
     }
 }

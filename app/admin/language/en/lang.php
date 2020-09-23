@@ -19,6 +19,7 @@ return [
     'text_action' => 'Action',
     'text_dashes' => ' -- ',
     'text_equals' => ' = ',
+    'text_times' => 'x ',
     'text_plus' => '+ ',
     'text_please_select' => ' - please select - ',
     'text_use_default' => 'Use Default',
@@ -224,6 +225,17 @@ return [
         'missing_id' => 'Form record ID has not been specified.',
         'not_found' => 'Form record with ID [%s] could not be found.',
         'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
+    ],
+
+    'allergens' => [
+        'text_title' => 'Allergens',
+        'text_allergens' => 'Allergens',
+        'text_form_name' => 'Allergen',
+        'text_filter_search' => 'Search by name.',
+        'text_empty' => 'There are no allergens available.',
+
+        'label_image' => 'Image',
+        'help_photo' => 'Select a file to update allergen image, otherwise leave blank.',
     ],
 
     'categories' => [
@@ -485,7 +497,7 @@ return [
         'text_address_component_postal_code' => 'Match by postal code',
         'text_delivery_area' => 'Delivery Areas',
         'text_add_new_area' => 'Add new area',
-        'text_edit_area' => 'Edit map areas',
+        'text_edit_area' => 'Delivery Area',
         'text_all_orders' => 'all',
         'text_above_order_total' => 'above',
         'text_below_order_total' => 'below',
@@ -682,6 +694,7 @@ return [
         'label_end_date' => 'End Date',
         'label_special_price' => 'Special Price',
         'label_special_type' => 'Special Type',
+        'label_allergens' => 'Allergens',
 
         'help_image' => 'Select a file to update menu image, otherwise leave blank.',
         'help_mealtime' => 'Set what time of day your customers can order this menu. Mealtimes can be managed under Kitchen > Mealtimes',

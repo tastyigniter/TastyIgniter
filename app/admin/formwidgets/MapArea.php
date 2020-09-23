@@ -4,8 +4,12 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
+use Admin\Models\Location_areas_model;
 use Admin\Traits\FormModelWidget;
 use Html;
+use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Map Area
@@ -15,45 +19,30 @@ class MapArea extends BaseFormWidget
     use FormModelWidget;
 
     //
+    // Configurable properties
+    //
+
+    public $form;
+
+    public $modelClass = Location_areas_model::class;
+
+    public $prompt = 'lang:admin::lang.locations.text_add_new_area';
+
+    public $formName = 'lang:admin::lang.locations.text_edit_area';
+
+    public $addLabel = 'New';
+
+    public $editLabel = 'Edit';
+
+    public $deleteLabel = 'Delete';
+
+    //
     // Object properties
     //
 
     protected $defaultAlias = 'maparea';
 
-    protected $prompt = 'lang:admin::lang.locations.text_add_new_area';
-
-    protected $mapPrompt = 'lang:admin::lang.locations.text_edit_area';
-
-    protected $indexCount = 0;
-
-    protected $latFrom;
-
-    protected $lngFrom;
-
-    protected $size = 'normal';
-
-    protected $zoom;
-
-    protected $form;
-
-    protected $areaColors = [
-        '#F16745', '#FFC65D',
-        '#7BC8A4', '#4CC3D9',
-        '#93648D', '#404040',
-        '#F16745', '#FFC65D',
-        '#7BC8A4', '#4CC3D9',
-        '#93648D', '#404040',
-        '#F16745', '#FFC65D',
-        '#7BC8A4', '#4CC3D9',
-        '#93648D', '#404040',
-        '#F16745', '#FFC65D',
-    ];
-
-    protected $availableSizes = [
-        'small' => 360,
-        'normal' => 640,
-        'large' => 860,
-    ];
+    protected $areaColors;
 
     protected $shapeDefaultProperties = [
         'id' => null,
@@ -66,26 +55,23 @@ class MapArea extends BaseFormWidget
         'editable' => FALSE,
     ];
 
-    protected static $onAddItemCalled = FALSE;
+    protected $formWidget;
 
-    protected $formWidgets = [];
-
-    protected $mapViewWidget;
+    protected $mapAreas;
 
     public function initialize()
     {
         $this->fillFromConfig([
+            'modelClass',
             'prompt',
-            'mapPrompt',
-            'latFrom',
-            'lngFrom',
-            'zoom',
-            'size',
             'form',
+            'formName',
+            'addLabel',
+            'editLabel',
+            'deleteLabel',
         ]);
 
-        if (!self::$onAddItemCalled)
-            $this->processExistingAreas();
+        $this->areaColors = Location_areas_model::$areaColors;
     }
 
     public function loadAssets()
@@ -97,6 +83,17 @@ class MapArea extends BaseFormWidget
 
         $this->addCss('css/maparea.css', 'maparea-css');
         $this->addJs('js/maparea.js', 'maparea-js');
+
+        // Make the mapview assets available
+        if (strlen($key = setting('maps_api_key'))) {
+            $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
+            $this->addJs(sprintf($url, $key),
+                ['name' => 'google-maps-js', 'async' => null, 'defer' => null]
+            );
+        }
+
+        $this->addJs('../../mapview/assets/js/mapview.js', 'mapview-js');
+        $this->addJs('../../mapview/assets/js/mapview.shape.js', 'mapview-shape-js');
     }
 
     public function render()
@@ -109,183 +106,153 @@ class MapArea extends BaseFormWidget
     public function prepareVars()
     {
         $this->vars['field'] = $this->formField;
-        $this->vars['formWidgets'] = $this->formWidgets;
-        $this->vars['mapViewWidget'] = $this->makeMapViewWidget();
-        $this->vars['indexCount'] = $this->indexCount;
+        $this->vars['mapAreas'] = $this->getMapAreas();
 
         $this->vars['prompt'] = $this->prompt;
-        $this->vars['mapPrompt'] = $this->mapPrompt;
-        $this->vars['zoom'] = $this->zoom;
     }
 
     public function getSaveValue($value)
     {
-        if ($this->formField->disabled OR $this->formField->hidden) {
-            return FormField::NO_SAVE_DATA;
-        }
-
-        if (!is_array($value) && !strlen($value)) {
-            return null;
-        }
-
-        if (is_array($value) && !count($value)) {
-            return null;
-        }
-
-        // Give widgets an opportunity to process the data.
-        foreach ($this->formWidgets as $index => $form) {
-            if (!array_key_exists($index, $value)) continue;
-            $value[$index] = $form['widget']->getSaveData();
-        }
-
-        return $value;
+        return FormField::NO_SAVE_DATA;
     }
 
-    public function getLatValue()
+    public function getAreaColor($id)
     {
-        if (!$this->relationModel OR !$this->latFrom) {
-            return null;
+        $index = 0;
+        if (!is_null($id)) {
+            $ids = array_flip($this->getRelationObject()->pluck('area_id')->all());
+            $index = min($ids[$id], count($this->areaColors));
         }
 
-        return $this->relationModel->{$this->latFrom};
+        return $this->areaColors[$index];
     }
 
-    public function getLngValue()
+    public function onLoadRecord()
     {
-        if (!$this->relationModel OR !$this->lngFrom) {
-            return null;
-        }
+        $model = strlen($areaId = post('recordId'))
+            ? $this->findFormModel($areaId)
+            : $this->createFormModel();
 
-        return $this->relationModel->{$this->lngFrom};
+        return $this->makePartial('maparea/area_form', [
+            'formAreaId' => $areaId,
+            'formTitle' => ($model->exists ? $this->editLabel : $this->addLabel).' '.lang($this->formName),
+            'formWidget' => $this->makeAreaFormWidget($model, 'edit'),
+        ]);
     }
 
-    public function getAreaColor($key)
+    public function onSaveRecord()
     {
-        $key--;
+        $model = strlen($areaId = post('areaId'))
+            ? $this->findFormModel($areaId)
+            : $this->createFormModel();
 
-        return $this->areaColors[$key] ?? $this->areaColors[0];
-    }
+        $form = $this->makeAreaFormWidget($model, 'edit');
 
-    public function onAddArea()
-    {
-        self::$onAddItemCalled = TRUE;
+        $modelsToSave = $this->prepareModelsToSave($model, $form->getSaveData());
 
-        $lastCount = post('lastCounter', $this->indexCount);
-        $lastCount++;
+        DB::transaction(function () use ($modelsToSave) {
+            foreach ($modelsToSave as $modelToSave) {
+                $modelToSave->saveOrFail();
+            }
+        });
 
-        $area = [
-            'name' => 'Area '.$lastCount,
-            'color' => $this->getAreaColor($lastCount),
-        ];
+        flash()->success(sprintf(lang('admin::lang.alert_success'),
+            'Area '.($form->context == 'create' ? 'created' : 'updated')
+        ))->now();
 
-        $this->vars['index'] = $lastCount;
-        $this->vars['areaForm'] = [
-            'data' => $area,
-            'widget' => $this->makeAreaFormWidget($lastCount, $area),
-        ];
+        $this->model->reloadRelations();
 
-        $itemContainer = '@#'.$this->getId('areas');
+        $this->prepareVars();
 
         return [
-            'areaShapeId' => $this->getId('area-'.$lastCount),
-            $itemContainer => $this->makePartial('area'),
+            '#notification' => $this->makePartial('flash'),
+            '.map-area-container' => $this->makePartial('maparea/areas'),
         ];
     }
 
-    public function getMapShapeAttributes($index, $area)
+    public function onDeleteArea()
     {
-        $area = (object)$area;
+        if (!strlen($areaId = post('areaId')))
+            throw new ApplicationException('Invalid area selected');
+
+        $model = $this->getRelationModel()->find($areaId);
+        if (!$model)
+            throw new ApplicationException(sprintf(lang('admin::lang.form.not_found'), $areaId));
+
+        $model->delete();
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName).' deleted'))->now();
+
+        $this->prepareVars();
+
+        return [
+            '#notification' => $this->makePartial('flash'),
+        ];
+    }
+
+    public function getMapShapeAttributes($area)
+    {
+        if (!strlen($areaColor = $area->color))
+            $areaColor = $this->getAreaColor($area->area_id);
 
         $attributes = [
-            'data-id' => $this->getId('area-'.$index),
+            'data-id' => $area->area_id,
             'data-name' => $area->name,
             'data-default' => $area->type ?? 'address',
+            'data-color' => $areaColor,
             'data-polygon' => $area->boundaries['polygon'] ?? null,
             'data-circle' => $area->boundaries['circle'] ?? null,
             'data-vertices' => $area->boundaries['vertices'] ?? null,
             'data-editable' => $this->previewMode ? 'false' : 'true',
             'data-options' => json_encode([
-                'fillColor' => $area->color ?? $this->getAreaColor($index),
-                'strokeColor' => $area->color ?? $this->getAreaColor($index),
+                'fillColor' => $areaColor,
+                'strokeColor' => $areaColor,
+                'distanceUnit' => setting('distance_unit'),
             ]),
         ];
 
         return Html::attributes($attributes);
     }
 
-    protected function processExistingAreas()
+    protected function getMapAreas()
     {
+        $loadValue = $this->getLoadValue();
+
+        $loadValue = $loadValue instanceof Collection
+            ? $loadValue->toArray()
+            : $loadValue;
+
         $result = [];
 
-        $value = $this->getLoadValue() ?: [];
-        foreach ($value as $key => $area) {
-            $this->indexCount++;
+        foreach ($loadValue as $key => $area) {
+            if (!isset($area['color']) OR !strlen($area['color'])) {
+                $index = min($key, count($this->areaColors));
+                $area['color'] = $this->areaColors[$index] ?? $this->areaColors[0];
+            }
 
-            if (!isset($area['color']) OR !strlen($area['color']))
-                $area['color'] = $this->getAreaColor($this->indexCount);
-
-            $result[$this->indexCount] = [
-                'data' => !is_array($area) ? $area->toArray() : $area,
-                'widget' => $this->makeAreaFormWidget($this->indexCount, $area),
-            ];
+            $result[$key] = (object)$area;
         }
 
-        return $this->formWidgets = $result;
+        return $this->mapAreas = $result;
     }
 
-    protected function makeMapViewWidget()
+    protected function makeAreaFormWidget($model, $context = null)
     {
-        $config = $this->config;
+        if (is_null($context))
+            $context = $model->exists ? 'edit' : 'create';
 
-//        $config['shapes'] = $this->getMapShapes();
-        $config['center'] = [
-            'lat' => $this->model->{$this->latFrom},
-            'lng' => $this->model->{$this->lngFrom},
-        ];
-        $config['zoom'] = $this->zoom;
-        $config['height'] = array_get($this->availableSizes, $this->size);
+        if (is_null($model->location_id))
+            $model->location_id = $this->model->getKey();
 
-        $widget = $this->makeWidget('Admin\Widgets\MapView', $config);
-        $widget->bindToController();
-
-        return $this->mapViewWidget = $widget;
-    }
-
-    protected function makeAreaFormWidget($index, $data)
-    {
         $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-        $config['model'] = $this->model;
-        $config['data'] = $data;
-        $config['alias'] = $this->alias.'Form'.$index;
-        $config['arrayName'] = $this->formField->getName().'['.$index.']';
+        $config['context'] = $context;
+        $config['model'] = $model;
+        $config['alias'] = $this->alias.'Form';
+        $config['arrayName'] = $this->formField->arrayName.'[areaData]';
 
         $widget = $this->makeWidget('Admin\Widgets\Form', $config);
         $widget->bindToController();
 
-        return $widget;
-    }
-
-    protected function getMapShapes()
-    {
-        $result = [];
-
-        foreach ($this->formWidgets as $key => $area) {
-            $area = (object)$area['data'];
-
-            $result[] = [
-                'id' => $this->getId('area-'.$key), //$area->area_id,
-                'type' => $area->type ?? 'polygon',
-                'polygon' => $area->boundaries['polygon'],
-                'circle' => @json_decode($area->boundaries['circle']),
-                'vertices' => @json_decode($area->boundaries['vertices']),
-                'editable' => !$this->previewMode,
-                'options' => [
-                    'fillColor' => $area->color,
-                    'strokeColor' => $area->color,
-                ],
-            ];
-        }
-
-        return $result;
+        return $this->formWidget = $widget;
     }
 }

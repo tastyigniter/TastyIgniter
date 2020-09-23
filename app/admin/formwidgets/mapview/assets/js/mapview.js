@@ -82,7 +82,7 @@
     }
 
     MapView.prototype.initMap = function () {
-        if (!this.options.mapCenter.lat || !this.options.mapCenter.lng) {
+        if (!this.options.mapCenter || !this.options.mapCenter.lat || !this.options.mapCenter.lng) {
             alert('Map is missing center coordinates, please enter an address then click save.')
             return;
         }
@@ -104,6 +104,7 @@
                 center: mapCenter,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 zoomControl: true,
+                fullscreenControl: true,
                 mapTypeControl: false,
                 rotateControl: true,
                 streetViewControl: false,
@@ -177,14 +178,6 @@
     }
 
     MapView.prototype.createShape = function ($el, shapeOptions) {
-        var $shapeBadge = $('<a class="badge text-white" ' +
-                'data-shape-id="'+shapeOptions.id+'" ' +
-                'style="background-color:'+shapeOptions.options.fillColor+'">' +
-                shapeOptions.name + '</a>')
-
-        this.$el.find('[data-map-labels]').append($shapeBadge)
-        $shapeBadge.on('click', $.proxy(this.onShapeToggleClicked, this))
-
         shapeOptions.options.map = this.map;
         shapeOptions.options.mapView = this.$mapView;
         shapeOptions.editable = !!this.options.mapEditableShape;
@@ -315,23 +308,6 @@
         this.shapeTrackerTimer = null
     }
 
-    // EVENT HANDLERS
-    // ============================
-
-    MapView.prototype.onShapeToggleClicked = function (event) {
-        var $button = $(event.target),
-            shape = this.getShape($button.data('shapeId'));
-
-        if (!shape.getMapObject(shape.options.default)) {
-            alert('Please select shape or circle as the area type')
-            return;
-        }
-
-        this.editShape($button.data('shapeId'));
-
-        window.setTimeout(this.resize(), 500)
-    }
-
     // MapView PLUGIN DEFINITION
     // ============================
 
@@ -360,12 +336,6 @@
         $.fn.mapView = old
         return this
     }
-
-    // MapView DATA-API
-    // ===============
-    $(document).render(function () {
-        $('[data-control="map-view"]').mapView()
-    })
 
 
     // BUTTON DEFINITIONS
