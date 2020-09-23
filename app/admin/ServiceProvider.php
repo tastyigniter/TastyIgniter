@@ -375,15 +375,7 @@ class ServiceProvider extends AppServiceProvider
                     'class' => 'marketing',
                     'icon' => 'fa-chart-line',
                     'title' => lang('admin::lang.side_menu.marketing'),
-                    'child' => [
-                        'coupons' => [
-                            'priority' => 10,
-                            'class' => 'coupons',
-                            'href' => admin_url('coupons'),
-                            'title' => lang('admin::lang.side_menu.coupon'),
-                            'permission' => 'Admin.Coupons',
-                        ],
-                    ],
+                    'child' => [],
                 ],
                 'design' => [
                     'priority' => 200,
