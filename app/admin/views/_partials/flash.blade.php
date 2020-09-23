@@ -29,6 +29,6 @@
         @endforeach
     </div>
     @php
-        session()->forget('admin_errors');
+        session()->forget('admin_errors')
     @endphp
 @endif

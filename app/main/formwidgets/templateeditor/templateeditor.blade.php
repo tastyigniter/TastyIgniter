@@ -46,16 +46,16 @@
                         @if ($fieldPlaceholder)
                             <option
                                 value=""
-                            >{{ sprintf(lang($fieldPlaceholder), strtolower($selectedTypeLabel))) }}</option>
+                            >{{ sprintf(lang($fieldPlaceholder), strtolower($selectedTypeLabel)) }}</option>
                         @endif
                         @foreach ($fieldOptions as $value => $option)
-                            @if (!is_array($option)) $option = [$option
+                            @php if (!is_array($option)) $option = [$option]; @endphp
                             <option
                                 {!! $value == $selectedFile ? 'selected="selected"' : '' !!}
-                                <?php if (isset($option[1])): ?>data-<?= strpos($option[1], '.') ? 'image' : 'icon' ?>="<?= $option[1] ?>"<?php endif ?>
+                                @isset($option[1]) data-<?= strpos($option[1], '.') ? 'image' : 'icon' ?>="<?= $option[1] ?>" @endisset
                                 value="{{ $value }}"
-                            >{{ is_lang_key($option[0]) ? lang($option[0]) : $option[0]) }}</option>
-                                @endif
+                            >{{ is_lang_key($option[0]) ? lang($option[0]) : $option[0] }}</option>
+                            @endforeach
                     </select>
                     <div class="input-group-append ml-1">
                         <button
@@ -63,10 +63,10 @@
                             class="btn btn-outline-default"
                             data-toggle="modal"
                             data-target="#{{ $this->getId('modal') }}"
-                            data-modal-title="{{ sprintf(lang($this->addLabel), $selectedTypeLabel)) }}"
+                            data-modal-title="{{ sprintf(lang($this->addLabel), $selectedTypeLabel) }}"
                             data-modal-source-action="new"
                             data-modal-source-name=""
-                        ><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ sprintf(lang($this->addLabel), $selectedTypeLabel)) }}
+                        ><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ sprintf(lang($this->addLabel), $selectedTypeLabel) }}
                         </button>
                         @if (!empty($selectedFile))
                             <button
@@ -74,15 +74,15 @@
                                 class="btn btn-outline-default"
                                 data-toggle="modal"
                                 data-target="#{{ $this->getId('modal') }}"
-                                data-modal-title="{{ sprintf(lang($this->editLabel), $selectedTypeLabel)) }}"
+                                data-modal-title="{{ sprintf(lang($this->editLabel), $selectedTypeLabel) }}"
                                 data-modal-source-action="rename"
                                 data-modal-source-name="{{ $selectedFile }}"
-                            ><i class="fa fa-pencil"></i>&nbsp;&nbsp;{{ sprintf(lang($this->editLabel), $selectedTypeLabel)) }}
+                            ><i class="fa fa-pencil"></i>&nbsp;&nbsp;{{ sprintf(lang($this->editLabel), $selectedTypeLabel) }}
                             </button>
                             <button
                                 type="button"
                                 class="btn btn-outline-danger"
-                                title="{{ sprintf(lang($this->deleteLabel), $selectedTypeLabel)) }}"
+                                title="{{ sprintf(lang($this->deleteLabel), $selectedTypeLabel) }}"
                                 data-request="onManageSource"
                                 data-request-data="action: 'delete'"
                                 data-request-confirm="@lang('admin::lang.alert_warning_confirm')"

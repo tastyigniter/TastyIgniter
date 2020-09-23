@@ -22,8 +22,7 @@
         class="card card-body bg-white mt-2"
     >
         <p class="small">@lang('system::lang.mail_templates.help_variables')</p>
-        <?php $index = 0; ?>
-        @foreach ($variables as $groupName => $vars) {
+        @foreach ($variables as $groupName => $vars)
             <div
                 id="{{ str_slug($groupName) }}"
                 style="display: {{ $loop->first ? 'block' : 'none' }};"

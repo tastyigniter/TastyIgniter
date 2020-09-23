@@ -2,7 +2,7 @@
     @if (count($value))
         @foreach ($value as $mediaItem)
             {!! $this->makePartial('mediafinder/image_'.$mode, ['mediaItem' => $mediaItem]) !!}
-        @foreach
+        @endforeach
     @else
         {!! $this->makePartial('mediafinder/image_'.$mode, ['mediaItem' => null]) !!}
     @endif

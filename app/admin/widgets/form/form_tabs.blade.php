@@ -1,5 +1,5 @@
 @php
-$activeTab = $activeTab ? $activeTab : '#'.$type.'tab-1';
+$activeTab = $activeTab ? $activeTab : '#'.$tabs->section.'tab-1';
 @endphp
 <div class="tab-heading">
     <ul class="form-nav nav nav-tabs">
@@ -18,7 +18,7 @@ $activeTab = $activeTab ? $activeTab : '#'.$type.'tab-1';
 <div class="tab-content">
     @foreach ($tabs as $name => $fields)
         <div
-            class="tab-pane {{ (('#'.$tabs->section.'tab-'.$index) == $activeTab) ? 'active' : '' }}"
+            class="tab-pane {{ (('#'.$tabs->section.'tab-'.$loop->iteration) == $activeTab) ? 'active' : '' }}"
             id="{{ $tabs->section.'tab-'.$loop->iteration }}">
             <div class="form-fields">
                 {!! $this->makePartial('form/form_fields', ['fields' => $fields]) !!}

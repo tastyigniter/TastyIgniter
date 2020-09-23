@@ -11,9 +11,9 @@
     <div
         class="modal-body"
     >
-        <?php foreach ($widgetForm->getFields() as $field) { ?>
+        @foreach ($widgetForm->getFields() as $field)
             {!! $widgetForm->renderField($field) !!}
-        <?php } ?>
+        @endforeach
     </div>
     <div class="modal-footer">
         <button

@@ -1,5 +1,5 @@
 @php
-    $staffState = \Admin\Classes\UserState::forUser();
+    $staffState = \Admin\Classes\UserState::forUser()
 @endphp
 <div
     class="modal fade"

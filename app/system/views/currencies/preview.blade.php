@@ -7,7 +7,7 @@
         ]
     ) !!}
 
-    {!! $this->renderForm(['preview' => TRUE]) !}}
+    {!! $this->renderForm(['preview' => TRUE]) !!}
 
     {!! form_close() !!}
 </div>

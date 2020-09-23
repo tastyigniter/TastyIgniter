@@ -19,7 +19,7 @@ $fieldOptions = $field->options();
                 />
                 <label
                     class="custom-control-label"
-                    for="{{ $field->getId($index) }}"
+                    for="{{ $field->getId($loop->iteration) }}"
                 >{{ is_lang_key($value) ? lang($value) : $value }}</label>
             </div>
     @endforelse

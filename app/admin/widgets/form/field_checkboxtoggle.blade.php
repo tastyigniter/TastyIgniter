@@ -11,7 +11,6 @@
             data-toggle="buttons">
             @foreach ($fieldOptions as $value => $option)
                 @php
-                    $index++;
                     $checkboxId = 'checkbox_'.$field->getId().'_'.$loop->iteration;
                     if (is_string($option)) $option = [$option];
                 @endphp
@@ -36,7 +35,6 @@
             data-toggle="buttons">
             @foreach ($fieldOptions as $value => $option)
                 @php
-                    $index++;
                     $checkboxId = 'checkbox_'.$field->getId().'_'.$loop->iteration;
                     if (is_string($option)) $option = [$option];
                 @endphp

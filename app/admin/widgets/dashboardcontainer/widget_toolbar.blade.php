@@ -18,7 +18,7 @@
     </div>
 </div>
 <div class="toolbar-action pt-3 px-0">
-    <?php if ($this->canManage) { ?>
+    @if ($this->canManage)
         <button
             type="button"
             class="btn btn-outline-primary"
@@ -32,13 +32,13 @@
             type="button"
             class="btn btn-outline-danger"
             data-request="{{ $this->getEventHandler('onResetWidgets') }}"
-            data-request-confirm="<?= e(trans('admin::lang.alert_warning_confirm')) ?>"
+            data-request-confirm="@lang('admin::lang.alert_warning_confirm')"
             data-attach-loading
             title="@lang('admin::lang.dashboard.button_reset_widgets')"
             tabindex="-1"
         ><i class="fa fa-refresh"></i></button>
-    <?php } ?>
-    <?php if ($this->canSetDefault) { ?>
+    @endif
+    @if ($this->canSetDefault)
         <button
             type="button"
             class="btn btn-outline-default"
@@ -48,5 +48,5 @@
             title="@lang('admin::lang.dashboard.button_set_default')"
             tabindex="-1"
         ><i class="fa fa-save"></i></button>
-    <?php } ?>
+    @endif
 </div>

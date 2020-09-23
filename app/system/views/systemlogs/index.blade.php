@@ -23,7 +23,7 @@
                 <tr>
                     <td class="text-{{ $log['class'] }}">
                         <span
-                            class="fa fa-{{ $log['icon']) }}"
+                            class="fa fa-{{ $log['icon'] }}"
                             aria-hidden="true"
                         ></span>&nbsp;&nbsp;{{ $log['level'] }}
                     </td>
@@ -38,10 +38,10 @@
                             aria-controls="stack{{ $key }}"
                         @endif
                     >
-                        {{ $log['text']) }}
+                        {{ $log['text'] }}
 
                         @if (isset($log['summary']))
-                            <br/> {{ $log['summary']) }}
+                            <br/> {{ $log['summary'] }}
                         @endif
 
                         @if ($log['stack'])

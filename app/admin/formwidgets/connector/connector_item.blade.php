@@ -1,7 +1,7 @@
 <div
-    id="{{ $this->getId('item-'.$index) }}"
+    id="{{ $this->getId('item-'.$loop->iteration) }}"
     class="card bg-light shadow-sm mb-2"
-    data-item-index="{{ $index }}"
+    data-item-index="{{ $loop->iteration }}"
 >
     <div class="card-body">
         <div class="d-flex w-100 justify-content-between">
@@ -35,7 +35,7 @@
                         aria-label="Remove"
                         data-control="delete-item"
                         data-item-id="{{ $item->getKey() }}"
-                        data-item-selector="#{{ $this->getId('item-'.$index) }}"
+                        data-item-selector="#{{ $this->getId('item-'.$loop->iteration) }}"
                         data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
                     ><i class="fa fa-trash-alt"></i></a>
                 </div>

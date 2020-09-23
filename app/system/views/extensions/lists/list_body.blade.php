@@ -9,15 +9,15 @@
                     ><i class="{{ $record->icon['class'] ?? '' }}"></i></span>
                 </div>
                 <div class="list-action mr-3">
-                    @foreach ($columns as $key => $column) { ?>
-                        @if ($column->type != 'button') @continue
-                        @if (($key == 'install' AND $record->status) OR ($key == 'uninstall' AND !$record->status)) @continue
+                    @foreach ($columns as $key => $column)
+                        @continue($column->type != 'button')
+                        @continue(($key == 'install' AND $record->status) OR ($key == 'uninstall' AND !$record->status))
                         {!! $this->makePartial('lists/list_button', ['record' => $record, 'column' => $column]) !!}
                     @endforeach
                 </div>
 
                 @foreach ($columns as $key => $column)
-                    @if ($column->type == 'button') @continue
+                    @continue($column->type == 'button')
                     <div class="flex-grow-1">
                         {!! $this->getColumnValue($record, $column) !!}
                     </div>

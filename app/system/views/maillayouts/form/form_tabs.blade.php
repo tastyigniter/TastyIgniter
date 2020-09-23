@@ -28,7 +28,7 @@ $activeTab = $activeTab ? $activeTab : '#'.$type.'tab-1';
                 @endphp
                 <div
                     class="tab-pane {{ ($tabName == $activeTab) ? 'active' : '' }}"
-                    id="{{ $type.'tab-'.$index }}">
+                    id="{{ $type.'tab-'.$loop->iteration }}">
                     <div class="form-fields">
                         {!! $this->makePartial('form/form_fields', ['fields' => $fields]) !!}
                     </div>

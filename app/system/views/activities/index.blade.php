@@ -1,4 +1,3 @@
 <div class="row-fluid">
-    {!! $this->renderList() !}}
+    {!! $this->renderList() !!}
 </div>
-

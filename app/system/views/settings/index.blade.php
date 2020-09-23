@@ -1,7 +1,7 @@
 <div class="row-fluid">
     <div class="card border-none">
-        @foreach ($settings as $item => $categories) {
-            @if (!count($categories)) @continue
+        @foreach ($settings as $item => $categories)
+            @continue(!count($categories))
             <div class="card-header">
                 <h5 class="card-title mb-0">{{ ucwords($item) }}</h5>
             </div>

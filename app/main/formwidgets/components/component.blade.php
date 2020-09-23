@@ -22,9 +22,9 @@
     >
         <b>@lang($component->name)</b>
         <p class="text-muted mb-0">{{ $component->description ? lang($component->description) : '' }}</p>
-        <?php if ($component->fatalError) { ?>
+        @if ($component->fatalError)
             <p class="text-danger mb-0">{{ $component->fatalError }}</p>
-        <?php } ?>
+        @endif
     </div>
     <input
         type="hidden"

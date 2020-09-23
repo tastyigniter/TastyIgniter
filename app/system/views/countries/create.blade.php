@@ -9,5 +9,5 @@
 
     {!! $this->renderForm() !!}
 
-    {!! form_close() !}}
+    {!! form_close() !!}
 </div>

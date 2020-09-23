@@ -4,7 +4,7 @@
     data-store-name="{{ $cookieStoreName }}"
     {!! !$this->isActiveState() ? ' style="display:none"' : '' !!}
 >
-    <?php if (count($scopes)) { ?>
+    @if (count($scopes))
         <form
             id="filter-form"
             class="form-inline"
@@ -18,9 +18,9 @@
 
             {!! $this->makePartial('filter/filter_scopes') !!}
         </form>
-    <?php } ?>
+    @endif
 
-    <?php if ($search) { ?>
+    @if ($search)
         <div class="d-flex mt-3">
             <div class="mr-3">
                 <button
@@ -34,5 +34,5 @@
                 <div class="filter-search">{!! $search !!}</div>
             </div>
         </div>
-    <?php } ?>
+    @endif
 </div>

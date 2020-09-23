@@ -54,8 +54,7 @@
 
                     @foreach ($fieldOptions as $value => $option)
                         @php
-                            $index++;
-                            $checkboxId = 'checkbox_'.$field->getId().'_'.$index;
+                            $checkboxId = 'checkbox_'.$field->getId().'_'.$loop->iteration;
                             if (is_string($option)) $option = [$option];
                         @endphp
                         <div class="custom-control custom-checkbox{{ $inlineMode ? ' custom-control-inline' : '' }} mb-2">

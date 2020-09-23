@@ -5,7 +5,7 @@
         @endif
         @php
             // Don't display items filtered by user permissions
-            $hasChild = isset($menu['child']) AND count($menu['child']);
+            $hasChild = isset($menu['child']) AND count($menu['child'])
         @endphp
         <li class="nav-item{{ ($isActive = $this->isActiveNavItem($code)) ? ' active' : '' }}">
             <a

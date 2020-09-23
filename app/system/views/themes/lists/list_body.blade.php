@@ -1,5 +1,5 @@
 @foreach ($records ?? [] as $theme)
-    @if (!$theme->getTheme())
+    @unless ($theme->getTheme())
         <div class="row mb-3">
             <div class="media bg-light p-4 w-100 border border-danger text-danger">
                 <a class="media-left align-self-center mr-4 preview-thumb"
@@ -39,7 +39,7 @@
 
                         {!! $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('default')]) !!}
 
-                        {!! $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('delete')]) !}}
+                        {!! $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('delete')]) !!}
 
                     </div>
                     <div class="row metas align-self-end">
@@ -71,5 +71,5 @@
                 </div>
             @endif
         </div>
-    @endif
+    @endunless
 @endforeach
