@@ -14,16 +14,4 @@
     >
         {!! $this->makePartial('maparea/toolbar') !!}
     </div>
-
-    <div
-        class="modal fade"
-        id="{{ $this->getId('map-modal') }}"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="{{ $this->getId('map-modal-title') }}"
-        aria-hidden="true"
-        data-area-map-modal
-    >
-        {!! $this->makePartial('maparea/map_modal') !!}
-    </div>
 </div>

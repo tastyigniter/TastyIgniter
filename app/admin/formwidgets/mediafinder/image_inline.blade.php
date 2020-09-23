@@ -28,7 +28,7 @@
             value="{{ $this->getMediaIdentifier($mediaItem) }}"
             data-find-identifier
         />
-        @if (!$this->previewMode)
+        @unless ($this->previewMode)
             <div class="input-group-append">
                 <button class="btn btn-outline-primary find-button{{ !is_null($mediaItem) ? ' hide' : '' }}" type="button">
                     <i class="fa fa-picture-o"></i>
@@ -39,6 +39,6 @@
                     <i class="fa fa-times-circle"></i>
                 </button>
             </div>
-        @endif
+        @endunless
     </div>
 </div>

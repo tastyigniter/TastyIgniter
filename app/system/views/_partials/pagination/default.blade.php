@@ -15,7 +15,7 @@
                         <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
                     @else
                         <li class="page-item">
-                            <a class="page-link" href="{{ $url.$page }}"></a>
+                            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                         </li>
                     @endif
                 @endforeach

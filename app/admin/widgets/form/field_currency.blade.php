@@ -7,9 +7,9 @@ $symbol = $currencyModel->getSymbol();
     <p class="form-control-static">{{ $field->value ? currency_format($field->value) : '0' }}</p>
 @else
     <div class="input-group">
-        @if (!$symbolAfter)
+        @unless ($symbolAfter)
             <span class="input-group-prepend"><span class="input-group-text"><b>{{$symbol}}</b></span></span>
-        @endif
+        @endunless
         <input
             name="{{ $field->getName() }}"
             id="{{ $field->getId() }}"

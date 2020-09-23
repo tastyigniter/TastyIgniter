@@ -34,7 +34,7 @@
             <td
                 class="list-col-index-{{ $loop->index }} list-col-name-{{ $column->getName() }} list-col-type-{{ $column->type }} {{ $column->cssClass }}"
             >
-                {{ $this->getColumnValue($record, $column) }}
+                {!! $this->getColumnValue($record, $column) !!}
             </td>
         @endforeach
 

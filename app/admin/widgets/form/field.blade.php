@@ -1,14 +1,14 @@
-@if (!$field->hidden)
-    @if (!$this->showFieldLabels($field))
+@unless ($field->hidden)
+    @unless ($this->showFieldLabels($field))
         {!! $this->renderFieldElement($field) !!}
     @else
         @if ($field->label)
-            <label for="<?= $field->getId() ?>" class="control-label">@lang($field->label)</label>
+            <label for="{{ $field->getId() }}" class="control-label">@lang($field->label)</label>
         @endif
 
         @if ($field->comment AND $field->commentPosition == 'above')
             <p class="help-block before-field">
-                @if ($field->commentHtml) {!! $field->comment !!} @else {{ $field->comment }} @endif
+                @if ($field->commentHtml) {!! $field->comment !!} @else @lang($field->comment) @endif
             </p>
         @endif
 
@@ -16,9 +16,9 @@
 
         @if ($field->comment AND $field->commentPosition == 'below')
             <p class="help-block">
-                @if ($field->commentHtml) {!! $field->comment !!} @else {{ $field->comment }} @endif
+                @if ($field->commentHtml) {!! $field->comment !!} @else @lang($field->comment) @endif
             </p>
         @endif
 
-    @endif
-@endif
+    @endunless
+@endunless

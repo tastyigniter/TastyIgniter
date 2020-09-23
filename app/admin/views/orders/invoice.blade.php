@@ -32,10 +32,10 @@
             <div class="col-6">
                 <strong>@lang('admin::lang.orders.text_restaurant')</strong><br>
                 <span>{{ $model->location->getName() }}</span><br>
-                <address>{{ format_address($model->location->getAddress(), TRUE) }}</address>
+                <address>{!! format_address($model->location->getAddress(), TRUE) !!}</address>
             </div>
             <div class="col-6 text-right">
-                <img class="img-responsive" src="{{ uploads_url(setting('site_logo')) }}" alt=""/>
+                <img class="img-responsive" src="{{ uploads_url(setting('site_logo')) }}" alt="" style="max-height:120px;" />
             </div>
         </div>
 

@@ -10,7 +10,7 @@
 </head>
 <body>
     <article>
-        <?= $message; ?>
+        {!! $message !!}
     </article>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <a
     class="text-reset"
     role="button"
-    @if (empty($item['installed']))
+    @empty($item['installed'])
         data-control="add-item"
         data-item-code="{{ $item['code'] }}"
         data-item-name="{{ $item['name'] }}"
@@ -9,7 +9,7 @@
         data-item-version="{{ $item['version'] }}"
         data-item-context='@json($item)'
         data-item-action="install"
-    @endif
+    @endempty
 >
     <div class="card{{ empty($item['installed']) ? ' bg-light' : '' }} item-extension h-100 shadow-sm">
         <div class="d-flex align-items-center h-100 p-3">

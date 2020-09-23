@@ -1,7 +1,7 @@
 <div
     class="input-group control-colorpicker"
     data-control="colorpicker"
-    data-swatches-colors="@json($availableColors)"
+    data-swatches-colors='@json($availableColors)'
 >
     <div class="component input-group-prepend input-group-icon"><i class="fa fa-square"></i></div>
     <input

@@ -23,7 +23,7 @@
 
         @if ($showSorting AND $column->sortable)
             <th
-                class="list-cell-name-<?= $column->getName() ?> list-cell-type-<?= $column->type ?> <?= $column->cssClass ?>"
+                class="list-cell-name-{{ $column->getName() }} list-cell-type-{{ $column->type }} {{ $column->cssClass }}"
                 @if ($column->width) style="width: {{ $column->width }}" @endif>
                 <a
                     class="sort-col"

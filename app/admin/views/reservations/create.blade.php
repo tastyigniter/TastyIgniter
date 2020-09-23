@@ -1,13 +1,11 @@
 <div class="row-fluid">
-    <?= form_open(current_url(),
-        [
+    {!! form_open([
             'id'     => 'edit-form',
             'role'   => 'form',
             'method' => 'POST',
-        ]
-    ); ?>
+    ]) !!}
 
-    <?= $this->renderForm(); ?>
+    {!! $this->renderForm() !!}
 
-    <?= form_close(); ?>
+    {!! form_close() !!}
 </div>

@@ -1,5 +1,5 @@
 <div class="folder-tree"
-     data-tree-data="@json($folderTree)">
+     data-tree-data='@json($folderTree)'>
     <button>Go to root folder</button>
 </div>
 <select class="hide">

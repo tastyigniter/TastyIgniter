@@ -1,11 +1,11 @@
 <div
-    id="{{ $this->getId('item-'.$loop->iteration) }}"
+    id="{{ $this->getId('item-'.$index) }}"
     class="card bg-light shadow-sm mb-2"
-    data-item-index="{{ $loop->iteration }}"
+    data-item-index="{{ $index }}"
 >
     <div class="card-body">
         <div class="d-flex w-100 justify-content-between">
-            @if ($this->previewMode AND $sortable)
+            @if (!$this->previewMode AND $sortable)
                 <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $item->getKey() }}">
                 <div class="align-self-center">
                     <a
@@ -28,18 +28,18 @@
                     <p class="card-subtitle mb-0">{{ $item->{$descriptionFrom} }}</p>
                 @endif
             </div>
-            @if ($this->previewMode)
+            @unless ($this->previewMode)
                 <div class="align-self-center ml-auto">
                     <a
                         class="close text-danger"
                         aria-label="Remove"
                         data-control="delete-item"
                         data-item-id="{{ $item->getKey() }}"
-                        data-item-selector="#{{ $this->getId('item-'.$loop->iteration) }}"
+                        data-item-selector="#{{ $this->getId('item-'.$index) }}"
                         data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
                     ><i class="fa fa-trash-alt"></i></a>
                 </div>
-            @endif
+            @endunless
         </div>
     </div>
 </div>

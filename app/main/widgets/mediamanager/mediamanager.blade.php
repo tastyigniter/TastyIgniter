@@ -3,7 +3,7 @@
     data-control="media-manager"
     data-alias="{{ $this->alias }}"
     data-max-upload-size="{{ $maxUploadSize }}"
-    data-allowed-extensions="@json($allowedExtensions)"
+    data-allowed-extensions='@json($allowedExtensions)'
     data-select-mode="{{ $selectMode }}"
     data-unique-id="{{ $this->getId() }}"
 >

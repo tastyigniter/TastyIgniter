@@ -83,18 +83,18 @@
                 class="btn btn-link text-danger mr-sm-auto"
                 data-request="{{ $this->getEventHandler('onResetSetup')}}"
                 data-progress-indicator="@lang('admin::lang.text_resetting')"
-            ><?= lang('admin::lang.list.button_reset_setup') ?></button>
+            >@lang('admin::lang.list.button_reset_setup')</button>
             <button
                 type="button"
                 class="btn btn-link"
                 data-dismiss="modal"
-            ><?= lang('admin::lang.list.button_cancel_setup') ?></button>
+            >@lang('admin::lang.list.button_cancel_setup')</button>
             <button
                 type="button"
                 class="btn btn-primary"
                 data-request="{{ $this->getEventHandler('onApplySetup')}}"
                 data-progress-indicator="@lang('admin::lang.text_saving')"
-            ><?= lang('admin::lang.list.button_apply_setup') ?></button>
+            >@lang('admin::lang.list.button_apply_setup')</button>
         </div>
     </div>
     {!! form_close() !!}

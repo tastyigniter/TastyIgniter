@@ -1,4 +1,4 @@
-@if (!$this->previewMode)
+@unless ($this->previewMode)
     <div
         id="{{ $this->getId() }}"
         class="control-recordeditor"
@@ -26,7 +26,7 @@
                     @php if (!is_array($option)) $option = [$option] @endphp
                     <option
                         {!! $value == $field->value ? 'selected="selected"' : '' !!}
-                        @if (isset($option[1]))data-{{ strpos($option[1], '.') ? 'image' : 'icon' }}="{{ $option[1] }}" @endif
+                        @isset($option[1]) data-{{ strpos($option[1], '.') ? 'image' : 'icon' }}="{{ $option[1] }}" @endisset
                         value="{{ $value }}"
                     >{{ is_lang_key($option[0]) ? lang($option[0]) : $option[0] }}</option>
                 @endforeach
@@ -40,7 +40,7 @@
                     class="btn btn-outline-default"
                     data-control="edit-record"
                     {!! ($this->previewMode) ? 'disabled="disabled"' : '' !!}
-                ><i class="fa fa-pencil"></i>&nbsp;&nbsp;@lang($editLabel)&nbsp;@lang($this->formName) }}</button>
+                ><i class="fa fa-pencil"></i>&nbsp;&nbsp;@lang($editLabel)&nbsp;@lang($this->formName)</button>
                 <button
                     type="button"
                     class="btn btn-outline-danger"
@@ -58,4 +58,4 @@
             </div>
         </div>
     </div>
-@endif
+@endunless

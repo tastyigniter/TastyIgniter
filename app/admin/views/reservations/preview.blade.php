@@ -1,12 +1,10 @@
 <div class="row-fluid">
-    <?= form_open(current_url(),
-        [
-            'id'   => 'preview-form',
-            'role' => 'form',
-        ]
-    ); ?>
+    {!! form_open([
+        'id'   => 'preview-form',
+        'role' => 'form',
+    ]) !!}
 
-    <?= $this->renderForm(['preview' => TRUE]); ?>
+    {!! $this->renderForm(['preview' => TRUE]) !!}
 
-    <?= form_close(); ?>
+    {!! form_close() !!}
 </div>

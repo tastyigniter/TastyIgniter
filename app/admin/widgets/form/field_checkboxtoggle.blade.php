@@ -72,7 +72,7 @@
                 {!! $field->getAttributes() !!}
             />
             <label class="custom-control-label" for="{{ $field->getId() }}">
-                {{ $field->placeholder ? lang($field->placeholder) : '&nbsp;' }}
+                @if ($field->placeholder) @lang($field->placeholder) @else &nbsp; @endif
             </label>
         </div>
     @endif

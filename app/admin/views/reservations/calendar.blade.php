@@ -1,4 +1,4 @@
 <div class="row-fluid">
-    <?= $this->renderCalendar(); ?>
+    {!! $this->renderCalendar() !!}
 </div>
 

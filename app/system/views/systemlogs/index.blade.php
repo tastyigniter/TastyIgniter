@@ -40,9 +40,9 @@
                     >
                         {{ $log['text'] }}
 
-                        @if (isset($log['summary']))
+                        @isset($log['summary'])
                             <br/> {{ $log['summary'] }}
-                        @endif
+                        @endisset
 
                         @if ($log['stack'])
                             <div class="collapse" id="stack-{{ $key }}">

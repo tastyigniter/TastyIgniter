@@ -23,9 +23,9 @@
     @endif
 
     @foreach ($widget->getFields() as $field)
-        <?php
-        $fieldError = form_error($field->getName());
-        ?>
+        @php
+            $fieldError = form_error($field->getName());
+        @endphp
 
         @if ($field->type == 'hidden')
             {!! $widget->renderFieldElement($field) !!}

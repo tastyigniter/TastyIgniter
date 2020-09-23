@@ -2,7 +2,7 @@
     id="{{ $tableId }}"
     data-control="table"
     class="control-table"
-    data-columns="@json($columns)"
+    data-columns='@json($columns)'
     data-data="{{$data}}"
     data-data-field="{{$recordsKeyFrom}}"
     data-alias="{{$tableAlias}}"

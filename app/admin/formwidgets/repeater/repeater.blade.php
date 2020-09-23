@@ -11,7 +11,7 @@
                 class="table {{ ($sortable) ? 'is-sortable' : '' }} mb-0">
                 <thead>
                 <tr>
-                    @if ($this->previewMode AND $sortable)
+                    @if (!$this->previewMode AND $sortable)
                         <th class="list-action"></th>
                     @endif
                     @if (!$this->previewMode AND $showRemoveButton)
@@ -23,18 +23,16 @@
                 </tr>
                 </thead>
                 <tbody id="{{ $this->getId('append-to') }}">
-                @if ($this->formWidgets)
-                    @foreach ($this->formWidgets as $widget)
-                        {!! $this->makePartial('repeater/repeater_item', [
-                            'widget' => $widget,
-                            'indexValue' => $loop->index,
-                        ]) !!}
-                    @endforeach
-                @else
+                @forelse ($this->formWidgets as $widget)
+                    {!! $this->makePartial('repeater/repeater_item', [
+                        'widget' => $widget,
+                        'indexValue' => $loop->iteration,
+                    ]) !!}
+                @empty
                     <tr class="repeater-item-placeholder">
                         <td colspan="99" class="text-center">{{ is_lang_key($emptyMessage) ? lang($emptyMessage) : $emptyMessage }}</td>
                     </tr>
-                @endif
+                @endforelse
                 </tbody>
                 @if ($showAddButton AND !$this->previewMode)
                     <tfoot>

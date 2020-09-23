@@ -24,7 +24,7 @@
                 <option
                     value="{{ $column }}"
                     @if ($column == 12) selected="selected" @endif
-                ><?= e($name) ?></option>
+                >{{ $name }}</option>
             @endforeach
         </select>
     </div>

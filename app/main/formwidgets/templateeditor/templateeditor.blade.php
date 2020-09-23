@@ -1,17 +1,17 @@
-@if (!$this->previewMode)
+@unless ($this->previewMode)
     <div
         id="{{ $this->getId() }}"
         class="control-template-editor progress-indicator-container"
         data-control="template-editor"
         data-alias="{{ $this->alias }}"
     >
-        <?php
-        $fieldValue = $field->value;
-        $fieldPlaceholder = $this->placeholder;
-        $selectedType = array_get($fieldValue, 'type') ?? '_pages';
-        $selectedFile = array_get($fieldValue, 'file');
-        $selectedTypeLabel = str_singular(lang($templateTypes[$selectedType]));
-        ?>
+        @php
+            $fieldValue = $field->value;
+            $fieldPlaceholder = $this->placeholder;
+            $selectedType = array_get($fieldValue, 'type') ?? '_pages';
+            $selectedFile = array_get($fieldValue, 'file');
+            $selectedTypeLabel = str_singular(lang($templateTypes[$selectedType]));
+        @endphp
         <div class="form-row">
             <div class="col-sm-2">
                 <select
@@ -52,10 +52,10 @@
                             @php if (!is_array($option)) $option = [$option]; @endphp
                             <option
                                 {!! $value == $selectedFile ? 'selected="selected"' : '' !!}
-                                @isset($option[1]) data-<?= strpos($option[1], '.') ? 'image' : 'icon' ?>="<?= $option[1] ?>" @endisset
+                                @isset($option[1]) data-{{ strpos($option[1], '.') ? 'image' : 'icon' }}="{{ $option[1] }}" @endisset
                                 value="{{ $value }}"
                             >{{ is_lang_key($option[0]) ? lang($option[0]) : $option[0] }}</option>
-                            @endforeach
+                        @endforeach
                     </select>
                     <div class="input-group-append ml-1">
                         <button
@@ -96,4 +96,4 @@
 
         {!! $this->makePartial('templateeditor/modal') !!}
     </div>
-@endif
+@endunless
