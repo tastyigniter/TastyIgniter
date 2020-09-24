@@ -15,7 +15,11 @@ use Igniter\Flame\ActivityLog\ActivityLogServiceProvider;
 use Igniter\Flame\Currency\CurrencyServiceProvider;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Geolite\GeoliteServiceProvider;
+use Igniter\Flame\Pagic\Cache\FileSystem as FileCache;
+use Igniter\Flame\Pagic\Environment;
+use Igniter\Flame\Pagic\Loader;
 use Igniter\Flame\Pagic\PagicServiceProvider;
+use Igniter\Flame\Pagic\Parsers\FileParser;
 use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
@@ -32,6 +36,7 @@ use System\Classes\MailManager;
 use System\Helpers\ValidationHelper;
 use System\Libraries\Assets;
 use System\Models\Settings_model;
+use System\Template\Extension\SystemExtension;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -54,6 +59,7 @@ class ServiceProvider extends AppServiceProvider
         $this->registerSchedule();
         $this->registerConsole();
         $this->registerErrorHandler();
+        $this->registerPagicParser();
         $this->registerMailer();
         $this->registerPaginator();
         $this->registerAssets();
@@ -459,6 +465,21 @@ class ServiceProvider extends AppServiceProvider
                     'form' => '~/app/system/models/config/advanced_settings',
                 ],
             ]);
+        });
+    }
+
+    protected function registerPagicParser()
+    {
+        FileParser::setCache(new FileCache(config('system.parsedTemplateCachePath')));
+
+        App::singleton('pagic.environment', function () {
+            $pagic = new Environment(new Loader, [
+                'cache' => new FileCache(storage_path().'/system/templates'),
+            ]);
+
+            $pagic->addExtension(new SystemExtension());
+
+            return $pagic;
         });
     }
 }
