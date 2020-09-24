@@ -102,7 +102,7 @@ class Relation extends BaseFormWidget
      * a nested HTML array attribute.
      * Eg: list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
      *
-     * @param  string $attribute .
+     * @param string $attribute .
      *
      * @return array
      */
@@ -201,7 +201,7 @@ class Relation extends BaseFormWidget
     /**
      * Apply location scope where required
      */
-    private function locationApplyScope($query)
+    protected function locationApplyScope($query)
     {
         if (
             !AdminLocation::check() OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
