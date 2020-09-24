@@ -23,7 +23,6 @@ class DemoSchemaSeeder extends Seeder
 
         $this->seedMenuItems();
 
-        $this->seedCoupons();
     }
 
     protected function seedWorkingHours($locationId)
@@ -96,18 +95,5 @@ class DemoSchemaSeeder extends Seeder
                 }
             }
         }
-    }
-
-    protected function seedCoupons()
-    {
-        if (DB::table('coupons')->count())
-            return;
-
-        DB::table('coupons')->insert($this->getSeedRecords('coupons'));
-    }
-
-    protected function getSeedRecords($name)
-    {
-        return json_decode(file_get_contents($this->recordsPath.'/'.$name.'.json'), TRUE);
     }
 }

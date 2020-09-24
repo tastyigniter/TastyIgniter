@@ -8,7 +8,7 @@ use Schema;
 
 /**
  * Create the initial tables:
- *    activities, addresses, banners, categories, countries, coupons, coupons_history,
+ *    activities, addresses, banners, categories, countries,
  *  currencies, customers, customers_activity, customer_groups, extensions,
  *  languages, layouts, layout_modules, layout_routes, locations, location_tables,
  *  mail_templates, mail_templates_data, menus, menus_specials,
@@ -117,50 +117,6 @@ class CreateTables extends Migration
             $table->text('format');
             $table->boolean('status');
             $table->string('flag');
-        };
-    }
-
-    protected function _create_coupons()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->increments('coupon_id');
-            $table->string('name');
-            $table->string('code', 15)->unique('code');
-            $table->char('type', 1);
-            $table->decimal('discount', 15, 4)->nullable();
-            $table->decimal('min_total', 15, 4)->nullable();
-            $table->integer('redemptions')->default(0);
-            $table->integer('customer_redemptions')->default(0);
-            $table->text('description');
-            $table->boolean('status');
-            $table->date('date_added');
-            $table->char('validity', 15);
-            $table->date('fixed_date')->nullable();
-            $table->time('fixed_from_time')->nullable();
-            $table->time('fixed_to_time')->nullable();
-            $table->date('period_start_date')->nullable();
-            $table->date('period_end_date')->nullable();
-            $table->string('recurring_every', 35);
-            $table->time('recurring_from_time')->nullable();
-            $table->time('recurring_to_time')->nullable();
-            $table->boolean('order_restriction');
-        };
-    }
-
-    protected function _create_coupons_history()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->increments('coupon_history_id');
-            $table->integer('coupon_id');
-            $table->integer('order_id');
-            $table->integer('customer_id');
-            $table->string('code', 15);
-            $table->decimal('min_total', 15, 4)->nullable();
-            $table->decimal('amount', 15, 4)->nullable();
-            $table->dateTime('date_used');
-            $table->boolean('status');
         };
     }
 
