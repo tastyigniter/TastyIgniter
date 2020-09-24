@@ -9,19 +9,10 @@ class BladeExtension extends AbstractExtension
     public function getDirectives()
     {
         return [
-            'endcomponent' => '@endcomponent directive has been disabled.',
-            'extends' => '@extends directive has been disabled. Use theme layouts instead.',
-            'componentFirst' => '@componentFirst directive has been disabled. See @component instead.',
-            'hasSection' => '@hasSection directive has been disabled.',
-            'show' => '@show directive has been disabled.',
-            'slot' => '@slot directive has been disabled.',
-            'section' => '@section directive has been disabled. See @partial instead.',
-            'endsection' => '@endsection directive has been disabled. See @partial instead.',
-            'endslot' => '@endslot directive has been disabled.',
-            'yield' => '@yield directive has been disabled. See @content instead.',
+            'extends' => '@extends directive is not supported. Use theme layouts instead.',
             'content' => [$this, 'contentDirective'],
-            'component' => [$this, 'componentDirective'],
-            'hasComponent' => [$this, 'hasComponentDirective'],
+            'componentPartial' => [$this, 'componentDirective'],
+            'hasComponentPartial' => [$this, 'hasComponentDirective'],
             'page' => [$this, 'pageDirective'],
             'partial' => [$this, 'partialDirective'],
             'placeholder' => [$this, 'placeholderDirective'],
