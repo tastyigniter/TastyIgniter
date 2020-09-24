@@ -123,7 +123,7 @@ class Relation extends BaseFormWidget
             $field = clone $this->formField;
             $relationObject = $this->getRelationObject();
             $query = $relationObject->newQuery();
-            
+
             $this->locationApplyScope($query);
 
             [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
@@ -204,11 +204,9 @@ class Relation extends BaseFormWidget
     private function locationApplyScope($query)
     {
         if (
-            !AdminLocation::check()
-            OR 
-            !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
+            !AdminLocation::check() OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
         ) return;
-        
+
         $query->whereHasOrDoesntHaveLocation(AdminLocation::getId());
-    }    
+    }
 }
