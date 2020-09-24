@@ -40,7 +40,7 @@
                         <div
                             id="carte-help"
                             class="wrap-horizontal"
-                            style="display: {{ $carteInfo ? 'none' : 'block' }};">{{ sprintf(lang('system::lang.updates.help_carte_key'), 'https://tastyigniter.com/signin') }}
+                            style="display: {{ $carteInfo ? 'none' : 'block' }};">{!! sprintf(lang('system::lang.updates.help_carte_key'), 'https://tastyigniter.com/signin') !!}
                         </div>
                     </div>
                 </div>

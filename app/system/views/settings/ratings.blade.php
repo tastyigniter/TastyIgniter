@@ -22,10 +22,12 @@
                     ><i class="fa fa-trash-alt"></i></a>
                 </td>
                 <td>
-                    <input type="text"
-                           name="{{ $field->getName() }}[{{ $table_row }}]"
-                           class="form-control"
-                           value="{{ set_value('ratings['.$table_row.']', $value) }}"/>
+                    <input
+                        type="text"
+                        name="{{ $field->getName() }}[{{ $table_row }}]"
+                        class="form-control"
+                        value="{{ set_value('ratings['.$table_row.']', $value) }}"
+                    />
                     {!! form_error('ratings['.$table_row.']', '<span class="text-danger">', '</span>') !!}
                 </td>
             </tr>
@@ -38,7 +40,7 @@
         <tr id="tfoot">
             <td class="list-action text-center">
                 <a
-                    class="btn btn-primary btn-lg"
+                    class="btn btn-primary"
                     role="button"
                     data-control="ratings"
                     data-table-row="{{ $table_row }}"
