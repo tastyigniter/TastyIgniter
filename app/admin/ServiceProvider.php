@@ -525,8 +525,6 @@ class ServiceProvider extends AppServiceProvider
             'allergens' => 'Admin\Models\Allergens_model',
             'assignable_logs' => 'Admin\Models\Assignable_logs_model',
             'categories' => 'Admin\Models\Categories_model',
-            'coupons_history' => 'Admin\Models\Coupons_history_model',
-            'coupons' => 'Admin\Models\Coupons_model',
             'customer_groups' => 'Admin\Models\Customer_groups_model',
             'customers' => 'Admin\Models\Customers_model',
             'location_areas' => 'Admin\Models\Location_areas_model',
@@ -651,9 +649,6 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.Mealtimes' => [
                     'label' => 'admin::lang.permissions.mealtimes', 'group' => 'admin::lang.permissions.name',
-                ],
-                'Admin.Coupons' => [
-                    'label' => 'admin::lang.permissions.coupons', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.Locations' => [
                     'label' => 'admin::lang.permissions.locations', 'group' => 'admin::lang.permissions.name',
