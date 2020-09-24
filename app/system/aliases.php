@@ -14,7 +14,7 @@ return [
     'DB' => Illuminate\Support\Facades\DB::class,
     'Eloquent' => Illuminate\Database\Eloquent\Model::class,
     'Event' => Illuminate\Support\Facades\Event::class,
-    'Input' => Illuminate\Support\Facades\Input::class,
+    'Input' => Illuminate\Support\Facades\Request::class,
     'Hash' => Illuminate\Support\Facades\Hash::class,
     'Lang' => Illuminate\Support\Facades\Lang::class,
     'Log' => Illuminate\Support\Facades\Log::class,
