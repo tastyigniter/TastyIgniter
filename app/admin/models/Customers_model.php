@@ -215,7 +215,6 @@ class Customers_model extends AuthUserModel
                         Addresses_model::where('address_id', $row['address_id'])->update($update);
                     }
 
-                    Event::fire('admin.customer.guestOrderHistory', [$row['order_id'], $customer_id]);
                 }
             }
 
