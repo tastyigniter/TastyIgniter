@@ -2,10 +2,8 @@
 
 namespace Admin\Traits;
 
-use Admin\Models\Coupons_history_model;
 use Admin\Models\Menu_item_option_values_model;
 use Admin\Models\Menus_model;
-use Carbon\Carbon;
 use DB;
 use Event;
 
