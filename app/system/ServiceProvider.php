@@ -36,7 +36,7 @@ use System\Classes\MailManager;
 use System\Helpers\ValidationHelper;
 use System\Libraries\Assets;
 use System\Models\Settings_model;
-use System\Template\Extension\SystemExtension;
+use System\Template\Extension\BladeExtension;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -477,7 +477,7 @@ class ServiceProvider extends AppServiceProvider
                 'cache' => new FileCache(storage_path().'/system/templates'),
             ]);
 
-            $pagic->addExtension(new SystemExtension());
+            $pagic->addExtension(new BladeExtension());
 
             return $pagic;
         });
