@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Validation;
 use Model;
@@ -11,8 +12,11 @@ use Model;
  */
 class Menu_options_model extends Model
 {
+    use Locationable;
     use Purgeable;
     use Validation;
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     protected static $allergensOptionsCache;
 
@@ -37,6 +41,10 @@ class Menu_options_model extends Model
         'hasMany' => [
             'menu_options' => ['Admin\Models\Menu_item_options_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
+        ],
+        'morphToMany' => [
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 

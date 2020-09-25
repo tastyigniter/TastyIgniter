@@ -14,6 +14,14 @@ $config['form']['fields'] = [
         'type' => 'repeater',
         'form' => 'menu_option_values_model',
     ],
+    'locations' => [
+        'label' => 'lang:admin::lang.label_location',
+        'type' => 'relation',
+        'span' => 'right',
+        'valueFrom' => 'locations',
+        'nameFrom' => 'location_name',
+        'locationAware' => 'hide',
+    ],
 ];
 
 return $config;
