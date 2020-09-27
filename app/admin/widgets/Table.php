@@ -17,11 +17,6 @@ class Table extends BaseWidget
     protected $columns = [];
 
     /**
-     * @var array of table columns needing formatted
-     */
-    protected $columnsFormatting = [];
-
-    /**
      * @var bool Show data table header
      */
     protected $showHeader = TRUE;
