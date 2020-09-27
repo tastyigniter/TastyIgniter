@@ -341,21 +341,6 @@ $config['form']['tabs'] = [
                 'message' => [
                     'title' => 'lang:admin::lang.orders.column_comment',
                 ],
-                'is_success' => [
-                    'title' => 'Refund',
-                    'formatter' => function($row, $value){
-                        if ($value){
-                            if ($method = \Admin\Models\Orders_model::where('order_id', $row['order_id'])->with('payment_method')->first()){
-                                $klass = '\\'.$method->payment_method->class_name;
-                                $payment = new $klass();
-                                if (method_exists($payment, 'supportsRefunds') AND $payment->supportsRefunds()){
-                                    return '<a class="btn btn-outline-default">Refund</a>';
-                                }
-                            }
-                        }  
-                        return '';
-                    }
-                ],
             ],
         ],
     ],

@@ -15,7 +15,7 @@ class Table extends BaseWidget
      * @var array Table columns
      */
     protected $columns = [];
-    
+
     /**
      * @var array of table columns needing formatted
      */
@@ -123,7 +123,7 @@ class Table extends BaseWidget
         $isClientDataSource = $this->isClientDataSource();
         $this->vars['clientDataSourceClass'] = $isClientDataSource ? 'client' : 'server';
         $this->vars['data'] = json_encode($isClientDataSource
-            ? $this->formatRecords($this->dataSource->getAllRecords()) : []
+            ? $this->processRecords($this->dataSource->getAllRecords()) : []
         );
     }
 
@@ -144,15 +144,14 @@ class Table extends BaseWidget
 
             if (isset($data['title']))
                 $data['title'] = lang($data['title']);
-                
-            if (isset($data['formatter'])){
-                $this->columnsFormatting[$key] = $data['formatter'];
-                unset($data['formatter']);
+
+            if (isset($data['partial'])) {
+                unset($data['partial']);
             }
 
             $result[] = $data;
         }
-        
+
         return $result;
     }
 
@@ -177,22 +176,30 @@ class Table extends BaseWidget
             'options' => $options,
         ];
     }
-    
-    public function formatRecords($records)
+
+    public function processRecords($records)
     {
-        if (count($this->columnsFormatting)){
-            foreach ($records as $i=>$record){
-                foreach ($this->columnsFormatting as $key=>$formatter){
-                    if (isset($record[$key])){
-                        if (is_callable($formatter) AND ($response = call_user_func_array($formatter, [$record, $record[$key]])) !== null) {
-                            $records[$i][$key] = $response;
-                        }                        
-                    }
-                }
-            }            
+        foreach ($records as $index => $record) {
+            $result[$index] = $this->processRecord($record);
         }
 
         return $records;
     }
-    
+
+    protected function processRecord($record)
+    {
+        foreach ($record as $key => &$value) {
+            if ($columnConfig = array_get($this->columns, $key, [])) {
+                if (isset($columnConfig['partial'])) {
+                    $value = $this->makePartial($columnConfig['partial'], [
+                        'record' => $record,
+                        'item' => $value,
+                    ]);
+                }
+            }
+        }
+
+        return $record;
+    }
+
 }
