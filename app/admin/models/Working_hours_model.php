@@ -44,4 +44,9 @@ class Working_hours_model extends AbstractWorkingHour
 
         return $collection;
     }
+
+    public function getWeekDaysOptions()
+    {
+        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    }
 }

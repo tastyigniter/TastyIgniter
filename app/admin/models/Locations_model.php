@@ -96,11 +96,6 @@ class Locations_model extends AbstractLocation
             AND $model->delivery_areas->where('is_default', 1)->count() > 0;
     }
 
-    public function getWeekDaysOptions()
-    {
-        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    }
-
     //
     // Events
     //

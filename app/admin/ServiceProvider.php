@@ -218,6 +218,11 @@ class ServiceProvider extends AppServiceProvider
                 'label' => 'Star Rating',
                 'code' => 'starrating',
             ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\ScheduleEditor', [
+                'label' => 'Schedule Editor',
+                'code' => 'scheduleeditor',
+            ]);
         });
     }
 
