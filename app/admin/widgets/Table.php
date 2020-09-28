@@ -180,7 +180,7 @@ class Table extends BaseWidget
     public function processRecords($records)
     {
         foreach ($records as $index => $record) {
-            $result[$index] = $this->processRecord($record);
+            $records[$index] = $this->processRecord($record);
         }
 
         return $records;
