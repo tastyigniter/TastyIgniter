@@ -201,5 +201,4 @@ class Table extends BaseWidget
 
         return $record;
     }
-
 }
