@@ -51,6 +51,7 @@ class Menu_options_model extends Model
     public $rules = [
         ['option_name', 'lang:admin::lang.menu_options.label_option_name', 'required|min:2|max:32'],
         ['display_type', 'lang:admin::lang.menu_options.label_display_type', 'required|alpha'],
+        ['locations.*', 'lang:admin::lang.label_location', 'integer'],
     ];
 
     protected $purgeable = ['option_values'];
@@ -58,7 +59,7 @@ class Menu_options_model extends Model
     public static function getRecordEditorOptions()
     {
         return self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name')
-                   ->dropdown('display_name');
+            ->dropdown('display_name');
     }
 
     public function getDisplayTypeOptions()
@@ -136,7 +137,7 @@ class Menu_options_model extends Model
         }
 
         $this->option_values()->where('option_id', $optionId)
-             ->whereNotIn('option_value_id', $idsToKeep)->delete();
+            ->whereNotIn('option_value_id', $idsToKeep)->delete();
 
         return count($idsToKeep);
     }
