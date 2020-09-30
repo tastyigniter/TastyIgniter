@@ -90,7 +90,7 @@ class Status_history_model extends Model
         $model->comment = array_get($options, 'comment', $status->status_comment);
         $model->notify = array_get($options, 'notify', $status->notify_customer);
 
-        if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$model, $object, $statusId, $previousStatus], TRUE) === FALSE)
+        if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$object, $statusId, $previousStatus], TRUE) === FALSE)
             return FALSE;
 
         $model->save();

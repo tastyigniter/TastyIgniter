@@ -7,7 +7,7 @@ $(function () {
 
         html = '<tr id="table-row' + table_row + '">'
         html += '	<td class="list-action text-center handle"><i class="fa fa-arrows-alt-v"></i></td>'
-        html += '	<td class="list-action handle"><a role="button" class="btn btn-outline-danger" onclick="confirm(\''+confirmMessage+'\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>'
+        html += '	<td class="list-action handle"><a role="button" class="btn btn-outline-danger" onclick="confirm(\''+confirmMessage+'\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-trash-alt"></i></a></td>'
         html += '	<td><input type="text" name="ratings[' + table_row + ']" class="form-control" value="" /></td>'
         html += '</tr>'
 
