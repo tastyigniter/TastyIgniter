@@ -102,13 +102,15 @@
 
         this.refreshMap()
 
+        if (!areaId) areaId = 1;
+
         var shape = this.$mapView.mapView('getShape', areaId)
         if (shape.options) {
             shape.options.default = type
             this.$mapView.mapView('hideShape', areaId).mapView('showShape', areaId, type)
             window.setTimeout(function() {
                 this.$mapView.mapView('resize')
-            }.bind(this), 200);            
+            }.bind(this), 200);
         }
     }
 
