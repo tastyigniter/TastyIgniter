@@ -34,7 +34,7 @@ class Payment_logs_model extends Model
         'status' => 'boolean',
     ];
 
-    public static function logAttempt($order, $message, $isSuccess, $request = [], $response = [])
+    public static function logAttempt($order, $message, $isSuccess, $request = [], $response = [], $isRefundable = false)
     {
         $record = new static;
         $record->message = $message;
@@ -43,6 +43,7 @@ class Payment_logs_model extends Model
         $record->is_success = $isSuccess;
         $record->request = $request;
         $record->response = $response;
+        $record->is_refundable = $isRefundable;
 
         $record->save();
     }
