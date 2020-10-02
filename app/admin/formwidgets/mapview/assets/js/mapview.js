@@ -201,7 +201,7 @@
     }
 
     MapView.prototype.setShape = function (shape) {
-        var shapeId = shape.options.id ? shape.options.id : 1
+        var shapeId = shape.options.id
         this.mapShapes[shapeId] = shape
         this.resize()
     }

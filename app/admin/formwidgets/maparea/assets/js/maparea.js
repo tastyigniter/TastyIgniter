@@ -102,8 +102,6 @@
 
         this.refreshMap()
 
-        if (!areaId) areaId = 1;
-
         var shape = this.$mapView.mapView('getShape', areaId)
         if (shape.options) {
             shape.options.default = type

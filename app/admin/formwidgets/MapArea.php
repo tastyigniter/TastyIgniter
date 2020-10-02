@@ -196,8 +196,8 @@ class MapArea extends BaseFormWidget
             $areaColor = $this->getAreaColor($area->area_id);
 
         $attributes = [
-            'data-id' => $area->area_id,
-            'data-name' => $area->name,
+            'data-id' => $area->area_id ?? 1,
+            'data-name' => $area->name ?? '',
             'data-default' => $area->type ?? 'address',
             'data-color' => $areaColor,
             'data-polygon' => $area->boundaries['polygon'] ?? null,
