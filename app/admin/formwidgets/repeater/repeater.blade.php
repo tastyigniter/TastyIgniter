@@ -23,10 +23,10 @@
                 </tr>
                 </thead>
                 <tbody id="{{ $this->getId('append-to') }}">
-                @forelse ($this->formWidgets as $widget)
+                @forelse ($this->formWidgets as $index => $widget)
                     {!! $this->makePartial('repeater/repeater_item', [
                         'widget' => $widget,
-                        'indexValue' => $loop->iteration,
+                        'indexValue' => $index,
                     ]) !!}
                 @empty
                     <tr class="repeater-item-placeholder">
