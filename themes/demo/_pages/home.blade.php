@@ -9,7 +9,7 @@ permalink: /
         <div class="col-sm-8">
             <p class="mb-4">This is TastyIgniter's <b>demonstration theme</b> to help you get started if you plan on designing your theme from scratch.</p>
             <p class="mb-4">
-                Navigate to your admin dashboard <a target="_blank" href="<?= admin_url('themes') ?>">(Design > Themes)</a>
+                Navigate to your admin dashboard <a target="_blank" href="{{ admin_url('themes') }}">(Design > Themes)</a>
                 to <b>choose from a variety of themes</b> pre-built for you to start receiving orders.
             </p>
 
