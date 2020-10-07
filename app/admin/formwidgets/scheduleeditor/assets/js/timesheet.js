@@ -251,11 +251,7 @@
          *
          *      sheetClass : "",
          *      start : function(ev){...}
-<<<<<<< HEAD
          *      end : function(ev, selectedArea){...}
-=======
-         *      end : function(ev,selectedArea){...}
->>>>>>> b2f70472ecb97bbf9ecdc7f205ea10c8e5e7b929
          *      remarks : false
          * }
          *

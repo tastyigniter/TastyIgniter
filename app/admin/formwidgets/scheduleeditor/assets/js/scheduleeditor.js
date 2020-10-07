@@ -46,11 +46,9 @@
                             for (var k=0; k<60; k=k+15) {
                                 if (openHour[0] == j && openHour[1] <= k){
                                     isOpen = true;
-                                    console.log('is open', j, k);
                                 }
                                 if (closeHour[0] == j && closeHour[1] <= k){
                                     isOpen = false;  
-                                    console.log('is closed', j, k);
                                 }
                                 day.push(isOpen ? 1 : 0);    
                             }
@@ -58,9 +56,8 @@
                     }
                     data.push(day);
                 }
-                console.log(data);
                 
-                $timesheetEl.TimeSheet({
+                var $timesheetInstance = $timesheetEl.TimeSheet({
                     data: {
                         dimensions: [7,24*4],
                         colHead: [
@@ -93,7 +90,53 @@
                         sheetHead: {name:"Date\\Time"},
                         sheetData : data,
                     },
-                    remarks: null
+                    remarks: null,
+                    end: function(){
+                        var $value = [];                        
+                        $timesheetInstance.getSheetStates().forEach(function(day, idx) {
+                            var isOpen = false;
+                            var myValue = [];
+                            var openTime = '';
+                            var closeTime = '';
+                            
+                            for (var j=0; j<24*4; j++)
+                            {
+                                if (day[j] === 1 && !isOpen)
+                                {
+                                    isOpen = true;
+                                    openTime = Math.floor(j/4) + ':' + (j%4)*15;
+                                    if (openTime.indexOf(':') == 1) openTime = '0' + openTime;
+                                    if (openTime.length == 4) openTime += '0';
+                                }
+                                else if(day[j] === 0 && isOpen)
+                                {
+                                    isOpen = false;
+                                    closeTime = Math.floor(j/4) + ':' + (j%4)*15;
+                                    if (closeTime.indexOf(':') == 1) closeTime = '0' + closeTime;
+                                    if (closeTime.length == 4) closeTime += '0';                                    
+                                    
+                                    myValue.push({
+                                        open: openTime,
+                                        close: closeTime
+                                    });
+                                    
+                                    openTime = '';
+                                    closeTime = '';
+                                }
+                            }
+
+                            if (isOpen)
+                            {
+                                myValue.push({
+                                    open: openTime,
+                                    close: '00:00'
+                                });
+                            }
+                            $value.push(myValue);
+                        });
+                        
+                        $('[name="' + $timesheetOptions.field + '"]').val(JSON.stringify($value));
+                    }
                 });
             }
         })
