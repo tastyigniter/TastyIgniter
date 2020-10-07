@@ -7,6 +7,7 @@
         $timesheet[] = $fieldOptions[$key] ?? ['day' => $key, 'open' => '00:00', 'close' => '23:59', 'status' => 1];
     }
 @endphp
+<input type="hidden" name="{{ $field->getName() }}" value="@json($field->value ?? [])" />
 <div class="field-flexible-hours">
     <div class="table-responsive">
         <table class="table table-striped">
