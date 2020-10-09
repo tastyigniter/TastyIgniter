@@ -27,10 +27,10 @@
                     class="close text-danger"
                     aria-label="Remove"
                     role="button"
-                    @if ($this->previewMode)
+                    @unless ($this->previewMode)
                         data-control="remove-area"
                         data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
-                    @endif
+                    @endunless
                 ><i class="fa fa-trash-alt"></i></a>
             </div>
         </div>
