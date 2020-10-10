@@ -79,4 +79,16 @@ class Payment_logs_model extends Model
     {
         return $this->date_added ? time_elapsed($this->date_added) : null;
     }
+
+    public function markAsRefundProcessed()
+    {
+        Event::fire('admin.paymentLog.beforeRefundProcessed', [$this]);
+
+        $this->refunded_at = Carbon::now();
+        $this->save();
+
+        Event::fire('admin.paymentLog.refundProcessed', [$this]);
+
+        return TRUE;
+    }
 }
