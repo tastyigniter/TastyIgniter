@@ -14,7 +14,7 @@ class AddRefundColumnsToPaymentLogsTable extends Migration
         Schema::table('payment_logs', function (Blueprint $table) {
             $table->string('payment_code');
             $table->boolean('is_refundable')->default(FALSE);
-            $table->dateTime('refunded_at');
+            $table->dateTime('refunded_at')->nullable();
         });
 
         DB::table('payment_logs')->get()->each(function ($log) {
