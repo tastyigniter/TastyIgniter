@@ -183,14 +183,13 @@ class Table extends BaseWidget
 
     protected function processRecord($record)
     {
-        foreach ($record as $key => &$value) {
-            if ($columnConfig = array_get($this->columns, $key, [])) {
-                if (isset($columnConfig['partial'])) {
-                    $value = $this->makePartial($columnConfig['partial'], [
-                        'record' => $record,
-                        'item' => $value,
-                    ]);
-                }
+        foreach ($this->columns as $key => $column) {
+            if (isset($record[$key], $column['partial'])) {
+                $record[$key] = $this->makePartial($column['partial'], [
+                    'column' => $column,
+                    'record' => $record,
+                    'item' => $record[$key],
+                ]);
             }
         }
 
