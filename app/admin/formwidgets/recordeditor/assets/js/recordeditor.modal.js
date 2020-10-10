@@ -75,6 +75,9 @@
         $(window).trigger(_event, [this.$modalElement])
         if (_event.isDefaultPrevented()) return
 
+        if (this.options.onLoad !== undefined)
+            this.options.onLoad.call(this, data)
+
         this.$modalElement.find('form').on('ajaxSetup', $.proxy(this.handleFormSetup, this))
         this.$modalElement.find('form').on('ajaxError', $.proxy(this.handleFormError, this))
         this.$modalElement.find('form').on('ajaxDone', $.proxy(this.handleFormDone, this))

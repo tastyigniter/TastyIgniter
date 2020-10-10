@@ -69,7 +69,7 @@ class Menus_model extends Model
     //
     // Scopes
     //
-    public function scopeWhereHasAllergen($query, $categoryId)
+    public function scopeWhereHasAllergen($query, $allergenId)
     {
         $query->whereHas('allergens', function ($q) use ($allergenId) {
             $q->where('allergens.allergen_id', $allergenId);
@@ -100,7 +100,10 @@ class Menus_model extends Model
             'group' => null,
             'location' => null,
             'category' => null,
+            'search' => '',
         ], $options));
+
+        $searchableFields = ['menu_name', 'menu_description'];
 
         if (strlen($location) AND is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
@@ -125,6 +128,11 @@ class Menus_model extends Model
                 [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
             }
+        }
+
+        $search = trim($search);
+        if (strlen($search)) {
+            $query->search($search, $searchableFields);
         }
 
         if (strlen($group)) {

@@ -4,6 +4,13 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.menu_options.label_option_name',
         'type' => 'text',
     ],
+    'locations' => [
+        'label' => 'lang:admin::lang.label_location',
+        'type' => 'relation',
+        'valueFrom' => 'locations',
+        'nameFrom' => 'location_name',
+        'locationAware' => 'hide',
+    ],
     'display_type' => [
         'label' => 'lang:admin::lang.menu_options.label_display_type',
         'type' => 'radiotoggle',
