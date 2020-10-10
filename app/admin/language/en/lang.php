@@ -483,6 +483,8 @@ return [
         'text_24_7' => '24/7',
         'text_daily' => 'Daily',
         'text_flexible' => 'Flexible',
+        'text_timesheet' => 'Timesheet',
+        'text_schedule' => 'Schedule',
         'text_title_schedule' => 'Edit %s schedule',
         'text_same_as' => 'Same as %s hours',
         'text_open' => 'Open',

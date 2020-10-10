@@ -15,12 +15,9 @@ class ScheduleEditor extends BaseFormWidget
     use FormModelWidget;
     use ValidatesForm;
 
-    /**
-     * @var Orders_model|\Admin\Models\Reservations_model Form model object.
-     */
-    public $model;
-
     public $form;
+
+    public $popupSize = 'modal-lg';
 
     public $formTitle = 'admin::lang.locations.text_title_schedule';
 
@@ -29,6 +26,8 @@ class ScheduleEditor extends BaseFormWidget
         AbstractLocation::DELIVERY,
         AbstractLocation::COLLECTION,
     ];
+
+    protected $schedulesCache;
 
     public function initialize()
     {
@@ -64,23 +63,68 @@ class ScheduleEditor extends BaseFormWidget
         ]);
     }
 
+    public function onSaveRecord()
+    {
+    }
+
     public function loadAssets()
     {
+        $this->addCss('../../datepicker/assets/vendor/clockpicker/bootstrap-clockpicker.min.css', 'bootstrap-clockpicker-css');
+        $this->addJs('../../datepicker/assets/vendor/clockpicker/bootstrap-clockpicker.min.js', 'bootstrap-clockpicker-js');
+        $this->addCss('../../datepicker/assets/css/clockpicker.css', 'clockpicker-css');
+        $this->addJs('../../datepicker/assets/js/clockpicker.js', 'clockpicker-js');
+
         $this->addJs('../../recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
-        $this->addJs('js/timesheet.js', 'timesheet-js');
+        $this->addJs('vendor/timesheet/timesheet.js', 'timesheet-js');
         $this->addJs('js/scheduleeditor.js', 'scheduleeditor-js');
-        $this->addCss('css/timesheet.css', 'timesheet-css');
+        $this->addCss('vendor/timesheet/timesheet.css', 'timesheet-css');
+        $this->addCss('css/scheduleeditor.css', 'scheduleeditor-css');
     }
 
     public function prepareVars()
     {
-        $this->vars['schedules'] = $this->listSchedules();
         $this->vars['field'] = $this->formField;
+        $this->vars['schedules'] = $this->listSchedules();
     }
 
     protected function listSchedules()
     {
-        return $this->availableSchedules;
+        if ($this->schedulesCache)
+            return $this->schedulesCache;
+
+        $schedules = [];
+        foreach ($this->availableSchedules as $schedule) {
+            $schedules[$schedule] = $this->loadSchedule($schedule);
+        }
+
+        return $this->schedulesCache = $schedules;
+    }
+
+    protected function loadSchedule($schedule)
+    {
+        $scheduleObj = new \stdClass();
+
+        $scheduleObj->code = $schedule;
+        $scheduleObj->hours = $this->getScheduleHours($schedule);
+        $scheduleObj->config = array_get($this->model->getOption('hours', []), $schedule, []);
+
+        return $scheduleObj;
+    }
+
+    protected function getScheduleHours($schedule)
+    {
+        $weekdays = Working_hours_model::make()->getWeekDaysOptions();
+
+        $hours = $this->model->getWorkingHoursByType($schedule);
+
+        return collect($weekdays)->map(function ($day, $index) use ($hours) {
+            $hourObj = new \stdClass();
+
+            $hourObj->day = $day;
+            $hourObj->hour = $hours->get($index);
+
+            return $hourObj;
+        });
     }
 
     protected function makeScheduleFormWidget($scheduleCode)
