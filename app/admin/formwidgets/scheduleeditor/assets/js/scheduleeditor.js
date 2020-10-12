@@ -29,7 +29,7 @@
             onSave: function () {
                 this.hide()
             },
-            onLoad: this.onModalLoad
+            onLoad: this.onModalLoad.bind(this)
         })
     }
 
@@ -45,89 +45,89 @@
                 break;
         }
     }
-    
+
     ScheduleEditor.prototype.onModalLoad = function () {
-                
-        this.timesheetEl = $(".timesheet-editor"); 
+
+        this.timesheetEl = $(".timesheet-editor");
         this.timesheetOptions = this.timesheetEl.data();
-        
+
         var data = [];
         var initialRemarks = [];
-        for (var i=0; i<7; i++)
+        for (var dayOfWeek=0; dayOfWeek<7; dayOfWeek++)
         {
             var day = [];
-            if (this.timesheetOptions.values[i])
+            if (this.timesheetOptions.values[dayOfWeek])
             {
                 // convert single opening/closing hours to multiple
-                if (this.timesheetOptions.values[i].open)
+                if (this.timesheetOptions.values[dayOfWeek].open)
                 {
-                    this.timesheetOptions.values[i].hours = [{
-                        open: this.timesheetOptions.values[i].open, 
-                        close: this.timesheetOptions.values[i].close
-                    }];  
-                    delete this.timesheetOptions.values[i].open;
-                    delete this.timesheetOptions.values[i].close;  
+                    this.timesheetOptions.values[dayOfWeek].hours = [{
+                        open: this.timesheetOptions.values[dayOfWeek].open,
+                        close: this.timesheetOptions.values[dayOfWeek].close
+                    }];
+                    delete this.timesheetOptions.values[dayOfWeek].open;
+                    delete this.timesheetOptions.values[dayOfWeek].close;
                 }
-                
+
                 var isOpen = false;
-                for (var j=0; j<24; j++)
+                for (var hourOfDay=0; hourOfDay<24; hourOfDay++)
                 {
-                    for (var k=0; k<60; k=k+15)
+                    for (var minuteOfDay=0; minuteOfDay<60; minuteOfDay=minuteOfDay+15)
                     {
-                        for (var l=0; l<this.timesheetOptions.values[i].hours.length; l++)
+                        for (var valueIterator=0; valueIterator<this.timesheetOptions.values[dayOfWeek].hours.length; valueIterator++)
                         {
-                            var openHour = this.timesheetOptions.values[i].hours[l].open.split(':').map(function(v){ return parseInt(v) });               
-                            var closeHour = this.timesheetOptions.values[i].hours[l].close.split(':').map(function(v){ return parseInt(v) }); 
-                            
-                            if (openHour[0] == j && openHour[1] <= k){
+                            var openHour = this.timesheetOptions.values[dayOfWeek].hours[valueIterator].open.split(':').map(function(v){ return parseInt(v) });
+                            var closeHour = this.timesheetOptions.values[dayOfWeek].hours[valueIterator].close.split(':').map(function(v){ return parseInt(v) });
+
+                            if (openHour[0] == hourOfDay && openHour[1] <= minuteOfDay){
                                 isOpen = true;
                             }
-                            if (closeHour[0] == j && closeHour[1] <= k){
-                                isOpen = false;  
+                            if (closeHour[0] == hourOfDay && closeHour[1] <= minuteOfDay){
+                                isOpen = false;
                             }
                         }
-                        day.push(isOpen ? 1 : 0);    
+                        day.push(isOpen ? 1 : 0);
                     }
-                }  
-                
+                }
+
                 var remark = [];
-                this.timesheetOptions.values[i].hours
+                this.timesheetOptions.values[dayOfWeek].hours
                 .forEach(function(hours) {
                     remark.push(hours.open + '-' + hours.close);
                 });
-                remark = remark.join(', '); 
-                initialRemarks.push(remark);                       
-                  
-            } 
+                remark = remark.join(', ');
+                initialRemarks.push(remark);
+
+            }
             else {
                 initialRemarks.push('-');
             }
             data.push(day);
         }
-        
-        var $dimensions = [7,24*4];
-        
+
+        this.dimensions = [7,24*4];
+
         var $headings = [];
-        for (let i=0; i<24; i++)
+        for (let hourOfDay=0; hourOfDay<24; hourOfDay++)
         {
-            let iPadded = i.toString();
-            if (iPadded.length < 2) iPadded = '0' + iPadded;
-            let nextiPadded = (i == 23 ? 0 : (i + 1)).toString();
-            if (nextiPadded.length < 2) nextiPadded = '0' + nextiPadded;
-            for (let j=0; j<60; j=j+15)
+            let hourPadded = hourOfDay.toString();
+            if (hourPadded.length < 2) hourPadded = '0' + hourPadded;
+            let nexthourPadded = (hourOfDay == 23 ? 0 : (hourOfDay + 1)).toString();
+            if (nexthourPadded.length < 2) nexthourPadded = '0' + nexthourPadded;
+            for (let minuteOfDay=0; minuteOfDay<60; minuteOfDay=minuteOfDay+15)
             {
-                let jPadded = j.toString();
-                if (jPadded.length < 2) jPadded = '0' + jPadded;
+                let minutePadded = minuteOfDay.toString();
+                if (minutePadded.length < 2) minutePadded = '0' + minutePadded;
                 $headings.push({
-                    name: j==0 ? iPadded : '&nbsp;&nbsp;&nbsp;&nbsp;',
-                    title: iPadded + ':' + jPadded + '-' + (j==45 ? nextiPadded + ':00' : iPadded + ':' + (j+15)),
+                    name: minuteOfDay==0 ? hourPadded : '&nbsp;&nbsp;&nbsp;&nbsp;',
+                    title: hourPadded + ':' + minutePadded + '-' + (minuteOfDay==45 ? nexthourPadded + ':00' : hourPadded + ':' + (minuteOfDay+15)),
                 })
             }
         }
-        
+
         this.timesheetInstance = this.timesheetEl.timeSheet({
             data: {
-                dimensions: $dimensions,
+                dimensions: this.dimensions,
                 colHead: $headings,
                 rowHead: this.timesheetOptions.days,
                 sheetHead: {name:"Date\\Time"},
@@ -137,16 +137,16 @@
                 title : "-",
                 default : '-',
             },
-            end: this.onTimesheetEnd
+            end: this.onTimesheetEnd.bind(this)
         });
-        
+
         initialRemarks.forEach(function(remark, idx){
             this.timesheetInstance.setRemark(idx, remark == '' ? '-' : remark);
         }, this);
     }
-    
+
     ScheduleEditor.prototype.onTimesheetEnd = function(sheet){
-        var $value = [];                        
+        var $value = [];
         this.timesheetInstance.getSheetStates()
         .forEach(function(day, idx) {
             var isOpen = false;
@@ -154,28 +154,28 @@
             var openTime = '';
             var closeTime = '';
             var remark = '';
-            
-            for (var j=0; j<$dimensions[1]; j++)
+
+            for (var dayIterator=0; dayIterator<this.dimensions[1]; dayIterator++)
             {
-                if (day[j] === 1 && !isOpen)
+                if (day[dayIterator] === 1 && !isOpen)
                 {
                     isOpen = true;
-                    openTime = Math.floor(j/4) + ':' + (j%4)*15;
+                    openTime = Math.floor(dayIterator/4) + ':' + (dayIterator%4)*15;
                     if (openTime.indexOf(':') == 1) openTime = '0' + openTime;
                     if (openTime.length == 4) openTime += '0';
                 }
-                else if(day[j] === 0 && isOpen)
+                else if(day[dayIterator] === 0 && isOpen)
                 {
                     isOpen = false;
-                    closeTime = Math.floor(j/4) + ':' + (j%4)*15;
+                    closeTime = Math.floor(dayIterator/4) + ':' + (dayIterator%4)*15;
                     if (closeTime.indexOf(':') == 1) closeTime = '0' + closeTime;
-                    if (closeTime.length == 4) closeTime += '0';                                    
-                    
+                    if (closeTime.length == 4) closeTime += '0';
+
                     myValue.push({
                         open: openTime,
                         close: closeTime
                     });
-                    
+
                     openTime = '';
                     closeTime = '';
                 }
@@ -188,13 +188,13 @@
                     close: '00:00'
                 });
             }
-            
+
             $value.push({
                 day: idx,
                 hours: myValue,
-                status: hours.length > 0
+                status: myValue.length > 0
             });
-            
+
             if (myValue.length)
             {
                 remark = [];
@@ -203,13 +203,13 @@
                 });
                 remark = remark.join(', ');
             }
-            
+
             this.timesheetInstance.setRemark(idx, remark == '' ? '-' : remark);
-            
-        });
-        
+
+        }, this);
+
         $('[name="' + this.timesheetOptions.field + '"]').val(JSON.stringify($value));
-               
+
     }
 
     ScheduleEditor.DEFAULTS = {
