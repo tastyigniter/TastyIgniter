@@ -223,7 +223,7 @@
     
 
 
-    $.fn.TimeSheet = function(opt){
+    $.fn.timeSheet = function(opt){
 
         /*
          *   说明 ：
