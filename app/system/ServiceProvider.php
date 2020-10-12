@@ -336,7 +336,7 @@ class ServiceProvider extends AppServiceProvider
                 '~/app/admin/assets/node_modules/jquery/dist/jquery.min.js',
                 '~/app/admin/assets/node_modules/popper.js/dist/umd/popper.min.js',
                 '~/app/admin/assets/node_modules/bootstrap/dist/js/bootstrap.min.js',
-                '~/app/admin/assets/node_modules/sweetalert/dist/sweetalert.min.js',
+                '~/app/admin/assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js',
                 '~/app/system/assets/ui/js/vendor/waterfall.min.js',
                 '~/app/system/assets/ui/js/vendor/transition.js',
                 '~/app/system/assets/ui/js/app.js',

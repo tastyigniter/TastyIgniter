@@ -23,6 +23,6 @@
     "select2": "4.0.13",
     "select2-theme-bootstrap4": "0.2.0-beta.2",
     "sortablejs": "^1.10.2",
-    "sweetalert": "^2.1.0"
+    "sweetalert2": "^10.4.0"
   }
 }

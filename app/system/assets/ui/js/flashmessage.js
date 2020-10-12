@@ -81,10 +81,10 @@
 
         $('[data-control="flash-overlay"]').each(function (index, element) {
             var $this = $(element),
-                options = $.extend({}, $this.data(), $this.data('closeOnEsc') === true ? {
+                options = $.extend({buttonsStyling: false}, $this.data(), $this.data('allowEscapeKey') === true ? {
                 timer: (index + 1) * 3000
             } : {})
-            swal(options)
+            Swal.fire(options)
         })
     })
 

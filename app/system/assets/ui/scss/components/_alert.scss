@@ -33,9 +33,9 @@
     margin-bottom: 0;
   }
 }
-.swal-button--confirm {
+.swal2-confirm {
   @extend .btn-primary;
 }
-.swal-button--cancel {
+.swal2-cancel {
   @extend .btn-light;
 }

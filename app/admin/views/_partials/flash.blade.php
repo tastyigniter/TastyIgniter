@@ -5,8 +5,8 @@
             data-title="{{ array_get($message, 'title') }}"
             data-text="{!! array_get($message, 'message') !!}"
             data-icon="{{ $message['level'] }}"
-            data-close-on-click-outside="{{ $message['important'] ? 'false' : 'true' }}"
-            data-close-on-esc="{{ $message['important'] ? 'false' : 'true' }}"
+            data-allow-outside-click="{{ $message['important'] ? 'false' : 'true' }}"
+            data-allow-escape-key="{{ $message['important'] ? 'false' : 'true' }}"
         ></div>
     @else
         <div
