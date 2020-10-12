@@ -1,4 +1,6 @@
-<?php namespace Admin\Helpers;
+<?php
+
+namespace Admin\Helpers;
 
 use Config;
 use Igniter\Flame\Support\RouterHelper;
@@ -8,7 +10,6 @@ use URL;
 
 /**
  * Admin Helper
- * @package Admin
  * @see \Admin\Facades\Admin
  */
 class Admin

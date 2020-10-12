@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use ApplicationException;
 use Cache;
@@ -10,7 +12,6 @@ use Request;
 
 /**
  * Hub Manager Class
- * @package System
  */
 class HubManager
 {

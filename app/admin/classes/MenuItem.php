@@ -1,12 +1,12 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Html;
 
 /**
  * Menu item definition
  * A translation of the menu item configuration
- *
- * @package Admin
  */
 class MenuItem
 {

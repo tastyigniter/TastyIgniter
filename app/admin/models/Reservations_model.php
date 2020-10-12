@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
@@ -12,8 +14,6 @@ use System\Traits\SendsMailTemplate;
 
 /**
  * Reservations Model Class
- *
- * @package Admin
  */
 class Reservations_model extends Model
 {
@@ -123,14 +123,14 @@ class Reservations_model extends Model
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
         }
-        else if (strlen($location)) {
+        elseif (strlen($location)) {
             $query->where('location_id', $location);
         }
 
         if ($customer instanceof Customers_model) {
             $query->where('customer_id', $customer->getKey());
         }
-        else if (strlen($customer)) {
+        elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 

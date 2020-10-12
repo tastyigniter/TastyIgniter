@@ -1,4 +1,6 @@
-<?php namespace Main\Template;
+<?php
+
+namespace Main\Template;
 
 use Main\Classes\MainController;
 use Main\Classes\Theme;
@@ -6,8 +8,6 @@ use Main\Classes\ThemeManager;
 
 /**
  * Page Template Class
- *
- * @package Main
  */
 class Page extends Model
 {
@@ -26,7 +26,7 @@ class Page extends Model
     {
         $controller = MainController::getController() ?: new MainController;
 
-        return $controller->pageUrl($page, $params, TRUE);
+        return $controller->pageUrl($page, $params);
     }
 
     /**

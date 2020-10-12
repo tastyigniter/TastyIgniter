@@ -7,7 +7,6 @@ return [
     Illuminate\Bus\BusServiceProvider::class,
     Illuminate\Cache\CacheServiceProvider::class,
     Illuminate\Cookie\CookieServiceProvider::class,
-    Laravel\Dusk\DuskServiceProvider::class,
     Illuminate\Encryption\EncryptionServiceProvider::class,
     Illuminate\Foundation\Providers\FoundationServiceProvider::class,
     Illuminate\Hashing\HashServiceProvider::class,
@@ -17,6 +16,7 @@ return [
     Illuminate\Redis\RedisServiceProvider::class,
     Illuminate\Session\SessionServiceProvider::class,
     Illuminate\View\ViewServiceProvider::class,
+    Laravel\Tinker\TinkerServiceProvider::class,
 
     // TastyIgniter flame providers
     Igniter\Flame\Foundation\Providers\ConsoleSupportServiceProvider::class,

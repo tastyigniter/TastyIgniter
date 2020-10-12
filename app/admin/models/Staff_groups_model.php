@@ -1,12 +1,12 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Model;
 
 /**
  * StaffGroups Model Class
- *
- * @package Admin
  */
 class Staff_groups_model extends Model
 {

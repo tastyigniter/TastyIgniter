@@ -1,7 +1,10 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Exception;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Exception\ApplicationException;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 use Main\Template\Layout;
@@ -11,7 +14,6 @@ use System\Classes\ExtensionManager;
 
 /**
  * Themes Model Class
- * @package System
  */
 class Themes_model extends Model
 {
@@ -178,7 +180,7 @@ class Themes_model extends Model
 
     /**
      * Attach the theme object to this class
-     * @return boolean
+     * @return bool
      */
     public function applyThemeManager()
     {
@@ -254,7 +256,6 @@ class Themes_model extends Model
         $installedThemes = [];
         $themeManager = ThemeManager::instance();
         foreach ($themeManager->paths() as $code => $path) {
-
             if (!($themeObj = $themeManager->findTheme($code))) continue;
 
             $installedThemes[] = $name = $themeObj->name ?? $code;
@@ -308,12 +309,23 @@ class Themes_model extends Model
         if (empty($code) OR !$theme = self::whereCode($code)->first())
             return FALSE;
 
+        $extensionManager = ExtensionManager::instance();
+
+        $notFound = [];
+        foreach ($theme->getTheme()->requires as $require => $version) {
+            if (!$extensionManager->hasExtension($require)) {
+                $notFound[] = $require;
+            }
+            else {
+                $extensionManager->installExtension($require);
+            }
+        }
+
+        if (count($notFound))
+            throw new ApplicationException(sprintf('The following required extensions must be installed before activating this theme, %s', implode(', ', $notFound)));
+
         params()->set('default_themes.main', $theme->code);
         params()->save();
-
-        foreach ($theme->getTheme()->requires as $require => $version) {
-            ExtensionManager::instance()->installExtension($require);
-        }
 
         return $theme;
     }
@@ -344,8 +356,7 @@ class Themes_model extends Model
         do {
             $uniqueCode = $code.($suffix ? '-'.$suffix : '');
             $suffix = strtolower(str_random('3'));
-        } // Already in the DB? Fail. Try again
-        while (self::themeCodeExists($uniqueCode));
+        } while (self::themeCodeExists($uniqueCode)); // Already in the DB? Fail. Try again
 
         return $uniqueCode;
     }
@@ -353,11 +364,11 @@ class Themes_model extends Model
     /**
      * Checks whether a code exists in the database or not
      *
-     * @param $uniqueCode
+     * @param string $uniqueCode
      * @return bool
      */
     protected static function themeCodeExists($uniqueCode)
     {
-        return (self::where('code', '=', $uniqueCode)->limit(1)->count() > 0);
+        return self::where('code', '=', $uniqueCode)->limit(1)->count() > 0;
     }
 }

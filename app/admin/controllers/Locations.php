@@ -1,4 +1,6 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Facades\AdminLocation;
 use Admin\Models\Locations_model;
@@ -124,5 +126,15 @@ class Locations extends \Admin\Classes\AdminController
             if ($logs = Geocoder::getLogs())
                 flash()->error(implode(PHP_EOL, $logs))->important();
         }
+    }
+
+    public function mapViewCenterCoords()
+    {
+        $model = $this->getFormModel();
+
+        return [
+            'lat' => $model->location_lat,
+            'lng' => $model->location_lng,
+        ];
     }
 }

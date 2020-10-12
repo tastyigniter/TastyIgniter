@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\PermissionManager;
@@ -6,8 +8,6 @@ use Admin\Classes\PermissionManager;
 /**
  * Staff group permission editor
  * This widget is used by the system internally on the Users / Staff Groups pages.
- *
- * @package Admin
  */
 class PermissionEditor extends BaseFormWidget
 {

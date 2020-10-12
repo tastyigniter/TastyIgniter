@@ -4,6 +4,9 @@ namespace System\Traits;
 
 use Exception;
 use File;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\View;
 use Lang;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use SystemException;
@@ -42,11 +45,15 @@ trait ViewMaker
      */
     public $suppressLayout = FALSE;
 
-    protected $viewFileExtension = ".php";
+    protected $viewFileExtension = ['.blade.php', '.php'];
 
     public function getViewPath($view, $viewPath = null)
     {
         $view = File::symbolizePath($view);
+
+        if (File::isLocalPath($view, FALSE)) {
+            return $this->guessViewFileExtension($view) ?? $view;
+        }
 
         if (!isset($this->viewPath)) {
             $this->viewPath = $this->guessViewPath();
@@ -60,13 +67,26 @@ trait ViewMaker
             $viewPath = [$viewPath];
 
         foreach ($viewPath as $path) {
-            $_view = File::symbolizePath($path).'/'.$view;
-            if (File::isFile($_view)) {
-                return $_view;
+            if ($vPath = $this->guessViewFileExtension(File::symbolizePath($path).'/'.$view)) {
+                return $vPath;
             }
         }
 
-        return $view;
+        return $this->guessViewFileExtension($view) ?? $view;
+    }
+
+    public function guessViewFileExtension($path)
+    {
+        if (strlen(File::extension($path)))
+            return $path;
+
+        $path = preg_replace('#/+#', '/', $path);
+
+        foreach ($this->viewFileExtension as $viewFileExtension) {
+            if (File::isFile($path.$viewFileExtension)) {
+                return $path.$viewFileExtension;
+            }
+        }
     }
 
     /**
@@ -105,7 +125,7 @@ trait ViewMaker
             return '';
         }
 
-        $layoutPath = $this->getViewPath($layout.$this->viewFileExtension, $this->layoutPath);
+        $layoutPath = $this->getViewPath($layout, $this->layoutPath);
 
         if (!File::exists($layoutPath)) {
             if ($throwException)
@@ -128,7 +148,7 @@ trait ViewMaker
      */
     public function makeView($view)
     {
-        $viewPath = $this->getViewPath(strtolower($view).$this->viewFileExtension);
+        $viewPath = $this->getViewPath(strtolower($view));
         $contents = $this->makeFileContent($viewPath);
 
         if ($this->suppressLayout OR $this->layout === '')
@@ -152,7 +172,7 @@ trait ViewMaker
      */
     public function makePartial($partial, $vars = [], $throwException = TRUE)
     {
-        $partial = strtolower($partial).$this->viewFileExtension;
+        $partial = strtolower($partial);
 
         $partialPath = $this->getViewPath($partial, $this->partialPath);
 
@@ -180,7 +200,7 @@ trait ViewMaker
      */
     public function makeFileContent($filePath, $extraParams = [])
     {
-        if ($filePath == 'index.php' OR !strlen($filePath) OR !File::isFile($filePath)) {
+        if (!strlen($filePath) OR $filePath == 'index.php' OR !File::isFile($filePath)) {
             return '';
         }
 
@@ -189,6 +209,10 @@ trait ViewMaker
         }
 
         $vars = array_merge($this->vars, $extraParams);
+
+        $filePath = $this->compileFileContent($filePath);
+
+        $vars = $this->gatherViewData($vars);
 
         $obLevel = ob_get_level();
 
@@ -212,11 +236,24 @@ trait ViewMaker
         return ob_get_clean();
     }
 
+    public function compileFileContent($filePath)
+    {
+        $pagic = App::make('pagic.environment');
+
+        $compiler = $pagic->getCompiler();
+
+        if ($compiler->isExpired($filePath)) {
+            $compiler->compile($filePath);
+        }
+
+        return $compiler->getCompiledPath($filePath);
+    }
+
     /**
      * Handle a view exception.
      *
-     * @param  \Exception $e
-     * @param  int $obLevel
+     * @param \Exception $e
+     * @param int $obLevel
      *
      * @return void
      */
@@ -227,5 +264,23 @@ trait ViewMaker
         }
 
         throw $e;
+    }
+
+    /**
+     * Get the data bound to the view instance.
+     *
+     * @param $data
+     * @return array
+     */
+    protected function gatherViewData($data)
+    {
+        $data = array_merge(View::getShared(), $data);
+
+        return array_map(function ($value) {
+            if ($value instanceof Renderable)
+                return $value->render();
+
+            return $value;
+        }, $data);
     }
 }

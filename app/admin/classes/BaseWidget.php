@@ -1,4 +1,6 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Admin\Traits\LocationAwareWidget;
 use Admin\Traits\WidgetMaker;
@@ -12,7 +14,6 @@ use System\Traits\ViewMaker;
 /**
  * Base Widget Class
  * Adapted from october\backend\classes\WidgetBase
- * @package Admin
  */
 class BaseWidget extends Extendable
 {
@@ -65,6 +66,7 @@ class BaseWidget extends Extendable
         $this->partialPath[] = '$/'.$classPath;
 
         $this->assetPath[] = '~/app/'.$classPath.'/assets';
+        $this->assetPath[] = '$/'.$classPath.'/assets';
 
         $this->configPath = $controller->configPath;
 

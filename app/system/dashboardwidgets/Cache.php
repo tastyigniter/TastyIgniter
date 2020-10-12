@@ -1,4 +1,6 @@
-<?php namespace System\DashboardWidgets;
+<?php
+
+namespace System\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use Exception;
@@ -14,7 +16,7 @@ class Cache extends BaseDashboardWidget
 
     protected static $caches = [
         [
-            'path'  => 'system/templates',
+            'path' => 'framework/views',
             'color' => '#2980b9',
         ],
         [

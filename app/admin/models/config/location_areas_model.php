@@ -70,6 +70,17 @@ return [
                     ],
                 ],
             ],
+            '_mapview' => [
+                'type' => 'mapview',
+                'zoom' => 14,
+                'height' => 640,
+                'shapeSelector' => '[data-map-shape]',
+                'trigger' => [
+                    'action' => 'hide',
+                    'field' => 'type',
+                    'condition' => 'value[address]',
+                ],
+            ],
             'conditions' => [
                 'label' => 'lang:admin::lang.locations.label_delivery_condition',
                 'type' => 'repeater',
@@ -103,14 +114,14 @@ return [
                     ],
                 ],
             ],
-            'area_id' => [
+            'location_id' => [
+                'type' => 'hidden',
+            ],
+            'color' => [
                 'type' => 'hidden',
                 'attributes' => [
-                    'data-shape-value' => 'area_id',
+                    'data-shape-value' => 'color',
                 ],
-            ],
-            'priority' => [
-                'type' => 'hidden',
             ],
             'boundaries[polygon]' => [
                 'type' => 'hidden',

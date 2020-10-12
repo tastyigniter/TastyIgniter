@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use SystemException;
 
@@ -288,7 +290,7 @@ class ComponentManager
      * Returns a component property configuration as a JSON string or array.
      *
      * @param mixed $component The component object
-     * @param boolean $addAliasProperty Determines if the Alias property should be added to the result.
+     * @param bool $addAliasProperty Determines if the Alias property should be added to the result.
      *
      * @return array
      */

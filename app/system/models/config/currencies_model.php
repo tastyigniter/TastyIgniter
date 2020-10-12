@@ -2,11 +2,11 @@
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:system::lang.currencies.text_filter_search',
-        'mode' => 'all' // or any, exact
+        'mode' => 'all', // or any, exact
     ],
     'scopes' => [
         'status' => [
-            'label' => 'lang:system::lang.currencies.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
             'conditions' => 'currency_status = :filtered',
         ],

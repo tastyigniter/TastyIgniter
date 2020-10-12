@@ -336,12 +336,12 @@ class Lists extends BaseWidget
                 $countQuery = $relationObj->getRelationExistenceCountQuery($relationObj->getRelated()->newQueryWithoutScopes(), $query);
 
                 $joinSql = $this->isColumnRelated($column, TRUE)
-                    ? Db::raw("group_concat(".$sqlSelect." separator ', ')")
+                    ? Db::raw('group_concat('.$sqlSelect." separator ', ')")
                     : Db::raw($sqlSelect);
 
                 $joinSql = $countQuery->select($joinSql)->toRawSql();
 
-                $selects[] = Db::raw("(".$joinSql.") as ".$alias);
+                $selects[] = Db::raw('('.$joinSql.') as '.$alias);
             } // Primary column
             else {
                 $sqlSelect = $this->parseTableName($column->sqlSelect, $primaryTable);
@@ -1040,7 +1040,7 @@ class Lists extends BaseWidget
     protected function isSortable($column = null)
     {
         if ($column === null) {
-            return (count($this->getSortableColumns()) > 0);
+            return count($this->getSortableColumns()) > 0;
         }
         else {
             return array_key_exists($column, $this->getSortableColumns());
@@ -1144,7 +1144,7 @@ class Lists extends BaseWidget
      * Check if column refers to a relation of the model
      *
      * @param ListColumn $column List column object
-     * @param boolean $multi If set, returns true only if the relation is a "multiple relation type"
+     * @param bool $multi If set, returns true only if the relation is a "multiple relation type"
      *
      * @return bool
      * @throws \Exception
@@ -1181,7 +1181,7 @@ class Lists extends BaseWidget
      *
      * @param ListColumn $column List column object
      *
-     * @return boolean
+     * @return bool
      */
     protected function isColumnPivot($column)
     {

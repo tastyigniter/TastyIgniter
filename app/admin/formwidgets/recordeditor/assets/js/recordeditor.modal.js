@@ -46,8 +46,8 @@
     }
 
     RecordEditorModal.prototype.handleFormSetup = function (event, context) {
-        if (this.options.onFail !== undefined)
-            this.options.onFail.call(this, context)
+        if (this.options.onSubmit !== undefined)
+            this.options.onSubmit.call(this, context)
     }
 
     RecordEditorModal.prototype.handleFormError = function (event, dataOrXhr, textStatus, jqXHR) {
@@ -74,6 +74,9 @@
         var _event = jQuery.Event('recordEditorModalShown')
         $(window).trigger(_event, [this.$modalElement])
         if (_event.isDefaultPrevented()) return
+
+        if (this.options.onLoad !== undefined)
+            this.options.onLoad.call(this, data)
 
         this.$modalElement.find('form').on('ajaxSetup', $.proxy(this.handleFormSetup, this))
         this.$modalElement.find('form').on('ajaxError', $.proxy(this.handleFormError, this))

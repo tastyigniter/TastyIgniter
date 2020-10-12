@@ -1,4 +1,6 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
@@ -7,8 +9,6 @@ use Model;
 
 /**
  * Coupons Model Class
- *
- * @package Admin
  */
 class Coupons_model extends Model
 {
@@ -109,7 +109,7 @@ class Coupons_model extends Model
 
     public function discountWithOperand()
     {
-        return ($this->isFixed() ? "-" : "-%").$this->discount;
+        return ($this->isFixed() ? '-' : '-%').$this->discount;
     }
 
     public function minimumOrderTotal()

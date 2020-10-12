@@ -17,7 +17,7 @@ class Table extends BaseWidget
     protected $columns = [];
 
     /**
-     * @var boolean Show data table header
+     * @var bool Show data table header
      */
     protected $showHeader = TRUE;
 

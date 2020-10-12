@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use DB;
 use Event;
 use Igniter\Flame\Cart\CartCondition;
-use Igniter\Flame\Cart\CartContent;
 
 trait ManagesOrderItems
 {

@@ -64,15 +64,17 @@ $config['list']['columns'] = [
     'location_state' => [
         'label' => 'lang:admin::lang.locations.column_state',
         'type' => 'text',
-        'invisible' => TRUE,
+        'searchable' => TRUE,
     ],
-    'options.offer_delivery' => [
-        'label' => 'lang:admin::lang.locations.label_offer_delivery',
-        'type' => 'switch',
+    'location_postcode' => [
+        'label' => 'lang:admin::lang.locations.column_postcode',
+        'type' => 'text',
+        'searchable' => TRUE,
     ],
-    'options.offer_collection' => [
-        'label' => 'lang:admin::lang.locations.label_offer_collection',
-        'type' => 'switch',
+    'location_telephone' => [
+        'label' => 'lang:admin::lang.locations.column_telephone',
+        'type' => 'text',
+        'searchable' => TRUE,
     ],
     'location_status' => [
         'label' => 'lang:admin::lang.label_status',
@@ -321,6 +323,24 @@ $config['form']['tabs'] = [
             'trigger' => [
                 'action' => 'enable',
                 'field' => 'options[future_orders][enable_collection]',
+                'condition' => 'checked',
+            ],
+        ],
+        'options[limit_orders]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_orders',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'switch',
+        ],
+        'options[limit_orders_count]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_orders_count',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 50,
+            'type' => 'number',
+            'span' => 'left',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[limit_orders]',
                 'condition' => 'checked',
             ],
         ],
@@ -578,9 +598,6 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.locations.text_delivery_area',
             'type' => 'maparea',
             'context' => ['edit'],
-            'latFrom' => 'location_lat',
-            'lngFrom' => 'location_lng',
-            'zoom' => '14',
             'form' => 'location_areas_model',
             'commentAbove' => 'lang:admin::lang.locations.help_delivery_areas',
         ],

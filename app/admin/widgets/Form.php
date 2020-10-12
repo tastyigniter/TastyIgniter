@@ -68,7 +68,7 @@ class Form extends BaseWidget
     protected $defaultAlias = 'form';
 
     /**
-     * @var boolean Determines if field definitions have been created.
+     * @var bool Determines if field definitions have been created.
      */
     protected $fieldsDefined = FALSE;
 
@@ -150,6 +150,8 @@ class Form extends BaseWidget
     {
         $this->addJs('vendor/bootstrap-multiselect/bootstrap-multiselect.js', 'bootstrap-multiselect-js');
         $this->addCss('vendor/bootstrap-multiselect/bootstrap-multiselect.css', 'bootstrap-multiselect-css');
+
+        $this->addJs('vendor/inputmask/jquery.inputmask.min.js', 'inputmask-js');
 
         $this->addJs('js/selectlist.js', 'selectlist-js');
         $this->addCss('css/selectlist.css', 'selectlist-css');
@@ -707,7 +709,7 @@ class Form extends BaseWidget
      *
      * @param \Admin\Classes\FormField $field
      *
-     * @return boolean
+     * @return bool
      */
     public function showFieldLabels($field)
     {
@@ -947,7 +949,7 @@ class Form extends BaseWidget
      *
      * @param string $fieldType
      *
-     * @return boolean
+     * @return bool
      */
     protected function isFormWidget($fieldType)
     {
@@ -1035,7 +1037,7 @@ class Form extends BaseWidget
      * @param object $object
      * @param string $method
      *
-     * @return boolean
+     * @return bool
      */
     protected function objectMethodExists($object, $method)
     {
@@ -1103,7 +1105,7 @@ class Form extends BaseWidget
                 $array[$key] = [];
             }
 
-            $array =& $array[$key];
+            $array = &$array[$key];
         }
 
         $array[array_shift($parts)] = $value;

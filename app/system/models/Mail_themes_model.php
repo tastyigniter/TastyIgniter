@@ -1,4 +1,6 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Cache;
 use Exception;
@@ -7,7 +9,6 @@ use Model;
 
 /**
  * MailThemes Model Class
- * @package System
  * @method static instance()
  * @method static get($var, $default)
  */

@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use App;
 use ApplicationException;
@@ -83,7 +85,6 @@ class ExtensionManager
     public function path($extension = null, $folder = null)
     {
         foreach ($this->folders() as $extensionFolder) {
-
             $extension = $this->getNamePath($this->checkName($extension));
 
             // Check each folder for the extension's folder.
@@ -284,7 +285,6 @@ class ExtensionManager
 
         $loopCount = 0;
         while (count($checklist) > 0) {
-
             if (++$loopCount > 999) {
                 throw new ApplicationException('Too much recursion');
             }
@@ -327,7 +327,7 @@ class ExtensionManager
         $it->rewind();
 
         while ($it->valid()) {
-            if (($it->getDepth() > 1) AND $it->isFile() AND (strtolower($it->getFilename()) == "extension.php")) {
+            if (($it->getDepth() > 1) AND $it->isFile() AND (strtolower($it->getFilename()) == 'extension.php')) {
                 $filePath = dirname($it->getPathname());
                 $extensionName = basename($filePath);
                 $extensionVendor = basename(dirname($filePath));
@@ -752,7 +752,7 @@ class ExtensionManager
         UpdateManager::instance()->migrateExtension($model->name);
 
         $extensionMeta = $extension->extensionMeta();
-        $model->version = $version ?? array_get($extensionMeta, 'version');
+        $model->version = $version ?? $model->version ?? array_get($extensionMeta, 'version');
         $model->save();
 
         $this->updateInstalledExtensions($model->name);

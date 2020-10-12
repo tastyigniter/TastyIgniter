@@ -39,7 +39,6 @@ use View;
 
 /**
  * Main Controller Class
- * @package Main
  */
 class MainController extends BaseController
 {
@@ -385,10 +384,10 @@ class MainController extends BaseController
             if (is_array($result)) {
                 $response = array_merge($response, $result);
             }
-            else if (is_string($result)) {
+            elseif (is_string($result)) {
                 $response['result'] = $result;
             }
-            else if (is_object($result)) {
+            elseif (is_object($result)) {
                 return $result;
             }
 
@@ -533,7 +532,7 @@ class MainController extends BaseController
 
         $useCache = TRUE;
         if ($useCache) {
-            $options['cache'] = new FileSystem(storage_path().'/system/templates');
+            $options['cache'] = new FileSystem(config('view.compiled'));
         }
 
         $this->template = new Environment($this->loader, $options);
@@ -608,7 +607,6 @@ class MainController extends BaseController
         }
         // Process Component partial
         elseif (strpos($name, '::') !== FALSE) {
-
             if (($partial = $this->loadComponentPartial($name, $throwException)) === FALSE)
                 return FALSE;
 
@@ -616,7 +614,7 @@ class MainController extends BaseController
             $this->vars['__SELF__'] = $this->componentContext;
         }
         // Process theme partial
-        else if (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
+        elseif (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
             return FALSE;
         }
 

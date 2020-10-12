@@ -1,7 +1,10 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
+use Admin\Facades\AdminLocation;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,8 +15,6 @@ use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
  * Renders a field prepopulated with a belongsTo and belongsToHasMany relation.
  *
  * Adapted from october\backend\formwidgets\Relation
- *
- * @package Admin
  */
 class Relation extends BaseFormWidget
 {
@@ -101,7 +102,7 @@ class Relation extends BaseFormWidget
      * a nested HTML array attribute.
      * Eg: list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
      *
-     * @param  string $attribute .
+     * @param string $attribute .
      *
      * @return array
      */
@@ -123,7 +124,9 @@ class Relation extends BaseFormWidget
             $relationObject = $this->getRelationObject();
             $query = $relationObject->newQuery();
 
-            list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
+            $this->locationApplyScope($query);
+
+            [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
             $relationType = $model->getRelationType($attribute);
             $this->relatedModel = $model->makeRelation($attribute);
 
@@ -183,7 +186,7 @@ class Relation extends BaseFormWidget
      */
     protected function getRelationObject()
     {
-        list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
+        [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
             throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",
@@ -193,5 +196,17 @@ class Relation extends BaseFormWidget
         }
 
         return $model->{$attribute}();
+    }
+
+    /**
+     * Apply location scope where required
+     */
+    protected function locationApplyScope($query)
+    {
+        if (
+            !AdminLocation::check() OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
+        ) return;
+
+        $query->whereHasOrDoesntHaveLocation(AdminLocation::getId());
     }
 }

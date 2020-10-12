@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Model;
 
 /**
  * Location tables Model Class
- *
- * @package Admin
  */
 class Location_tables_model extends Model
 {
