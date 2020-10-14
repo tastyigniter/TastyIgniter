@@ -4,6 +4,7 @@ tbody.TimeSheet{
 
 .TimeSheet td {
   border-color: var(--gray-200);
+  padding: 0.45rem 0.20rem;
 }
 
 .TimeSheet td:nth-child(4n+1) {
@@ -27,4 +28,11 @@ tbody.TimeSheet{
 
 .TimeSheet-rowHead, .TimeSheet-head{
   border-color: var(--gray-300) !important;
+}
+.TimeSheet-remarkHead, .TimeSheet-remark{
+  width: 100%;
+  background-color: var(--gray-200);
+  border-left-color: var(--gray-300);
+  padding-left: 15px !important;
+  padding-right: 15px !important;
 }

@@ -1,17 +1,12 @@
 @php
-$fieldOptions = $field->value;
-$timesheet = [];
-$daysOfWeek = [];
-foreach ($formModel->getWeekDaysOptions() as $key => $day){
-$daysOfWeek[] = ['name' => $day];
-$timesheet[] = $fieldOptions[$key] ?? ['day' => $key, 'open' => '00:00', 'close' => '23:59', 'status' => 1];
-}
+    $fieldOptions = $field->options();
 @endphp
 <div
     class="field-timesheet"
     data-control="timesheet"
-    data-days='@json($daysOfWeek)'
-    data-values='@json($timesheet)'
+    data-days='@json($fieldOptions->daysOfWeek)'
+    data-values='@json($fieldOptions->timesheet)'
+    data-field-name="{{ $field->getName() }}"
 >
     <div class="table-responsive">
         <table class="table table-borderless">
@@ -22,3 +17,4 @@ $timesheet[] = $fieldOptions[$key] ?? ['day' => $key, 'open' => '00:00', 'close'
         </table>
     </div>
 </div>
+<input type="hidden" name="{{ $field->getName() }}">
