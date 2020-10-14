@@ -26,7 +26,7 @@ class Page extends Model
     {
         $controller = MainController::getController() ?: new MainController;
 
-        return $controller->pageUrl($page, $params, TRUE);
+        return $controller->pageUrl($page, $params);
     }
 
     /**

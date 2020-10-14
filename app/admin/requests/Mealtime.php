@@ -13,6 +13,7 @@ class Mealtime extends FormRequest
             ['start_time', 'admin::lang.mealtimes.label_start_time', 'required|valid_time'],
             ['end_time', 'admin::lang.mealtimes.label_end_time', 'required|valid_time'],
             ['mealtime_status', 'admin::lang.label_status', 'required|boolean'],
+            ['locations.*', 'lang:admin::lang.label_location', 'integer'],
         ];
     }
 }
