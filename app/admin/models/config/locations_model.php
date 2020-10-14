@@ -383,7 +383,7 @@ $config['form']['tabs'] = [
             ],
         ],
 
-        'working_hours' => [
+        'options[working_hours]' => [
             'tab' => 'lang:admin::lang.locations.text_tab_schedules',
             'type' => 'scheduleeditor',
             'span' => 'left',
