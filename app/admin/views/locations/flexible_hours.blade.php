@@ -12,10 +12,12 @@
     <div class="table-responsive">
         <table class="table table-striped">
             <thead></thead>
-            <tbody 
-                class="timesheet-editor" 
+            <tbody
+                class="timesheet-editor"
                 data-days='@json($daysOfWeek)'
                 data-values='@json($timesheet)'
+                data-field="{{ $field->getName() }}"
+                data-timeslot-duration="60"
             ></tbody>
         </table>
     </div>

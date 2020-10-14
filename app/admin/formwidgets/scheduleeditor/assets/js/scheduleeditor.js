@@ -49,7 +49,7 @@
     ScheduleEditor.prototype.onModalLoad = function () {
 
         this.timesheetEl = $(".timesheet-editor");
-        this.timesheetOptions = this.timesheetEl.data();
+        this.timesheetOptions = $.extend({ timeslotDuration: 15 }, this.timesheetEl.data());
 
         var data = [];
         var initialRemarks = [];
@@ -72,7 +72,7 @@
                 var isOpen = false;
                 for (var hourOfDay=0; hourOfDay<24; hourOfDay++)
                 {
-                    for (var minuteOfDay=0; minuteOfDay<60; minuteOfDay=minuteOfDay+15)
+                    for (var minuteOfDay=0; minuteOfDay<60; minuteOfDay=minuteOfDay+this.timesheetOptions.timeslotDuration)
                     {
                         for (var valueIterator=0; valueIterator<this.timesheetOptions.values[dayOfWeek].hours.length; valueIterator++)
                         {
@@ -105,7 +105,7 @@
             data.push(day);
         }
 
-        this.dimensions = [7,24*4];
+        this.dimensions = [7,24 * 60/this.timesheetOptions.timeslotDuration];
 
         var $headings = [];
         for (let hourOfDay=0; hourOfDay<24; hourOfDay++)
@@ -114,13 +114,13 @@
             if (hourPadded.length < 2) hourPadded = '0' + hourPadded;
             let nexthourPadded = (hourOfDay == 23 ? 0 : (hourOfDay + 1)).toString();
             if (nexthourPadded.length < 2) nexthourPadded = '0' + nexthourPadded;
-            for (let minuteOfDay=0; minuteOfDay<60; minuteOfDay=minuteOfDay+15)
+            for (let minuteOfDay=0; minuteOfDay<60; minuteOfDay=minuteOfDay+this.timesheetOptions.timeslotDuration)
             {
                 let minutePadded = minuteOfDay.toString();
                 if (minutePadded.length < 2) minutePadded = '0' + minutePadded;
                 $headings.push({
                     name: minuteOfDay==0 ? hourPadded : '&nbsp;&nbsp;&nbsp;&nbsp;',
-                    title: hourPadded + ':' + minutePadded + '-' + (minuteOfDay==45 ? nexthourPadded + ':00' : hourPadded + ':' + (minuteOfDay+15)),
+                    title: hourPadded + ':' + minutePadded + '-' + (minuteOfDay==(60-this.timesheetOptions.timeslotDuration) ? nexthourPadded + ':00' : hourPadded + ':' + (minuteOfDay+(60/this.timesheetOptions.timeslotDuration))),
                 })
             }
         }
@@ -147,6 +147,7 @@
 
     ScheduleEditor.prototype.onTimesheetEnd = function(sheet){
         var $value = [];
+        var minuteDivisor = (60/this.timesheetOptions.timeslotDuration);
         this.timesheetInstance.getSheetStates()
         .forEach(function(day, idx) {
             var isOpen = false;
@@ -160,14 +161,14 @@
                 if (day[dayIterator] === 1 && !isOpen)
                 {
                     isOpen = true;
-                    openTime = Math.floor(dayIterator/4) + ':' + (dayIterator%4)*15;
+                    openTime = Math.floor(dayIterator/minuteDivisor) + ':' + (dayIterator%minuteDivisor)*this.timesheetOptions.timeslotDuration;
                     if (openTime.indexOf(':') == 1) openTime = '0' + openTime;
                     if (openTime.length == 4) openTime += '0';
                 }
                 else if(day[dayIterator] === 0 && isOpen)
                 {
                     isOpen = false;
-                    closeTime = Math.floor(dayIterator/4) + ':' + (dayIterator%4)*15;
+                    closeTime = Math.floor(dayIterator/minuteDivisor) + ':' + (dayIterator%minuteDivisor)*(60/this.timesheetOptions.timeslotDuration);
                     if (closeTime.indexOf(':') == 1) closeTime = '0' + closeTime;
                     if (closeTime.length == 4) closeTime += '0';
 
