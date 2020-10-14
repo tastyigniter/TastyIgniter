@@ -127,4 +127,26 @@ class IgniterUtil extends Command
             $this->comment(sprintf(' -> %s', $publicDestination));
         }
     }
+
+    protected function utilRemovePagic()
+    {
+        $this->comment('Removing pagic views...');
+
+        $directoryToScan = new \RecursiveDirectoryIterator(app_path());
+        $directoryIterator = new \RecursiveIteratorIterator($directoryToScan);
+        $files = new \RegexIterator($directoryIterator, '#(?:\.blade\.php)$#Di');
+
+        $removeCount = 0;
+        foreach ($files as $file)
+        {
+            $pagicPath = str_replace('.blade.php', '.php', $file->getPathName());
+            if (file_exists($pagicPath))
+            {
+                unlink($pagicPath);
+                $removeCount++;
+            }
+        }
+
+        $this->comment('Removed '.$removeCount.' pagic views...');
+    }
 }
