@@ -128,9 +128,9 @@ class IgniterUtil extends Command
         }
     }
 
-    protected function utilRemovePagic()
+    protected function utilRemoveDuplicates()
     {
-        $this->comment('Removing pagic views...');
+        $this->comment('Removing duplicate views...');
 
         $directoryToScan = new \RecursiveDirectoryIterator(app_path());
         $directoryIterator = new \RecursiveIteratorIterator($directoryToScan);
@@ -143,10 +143,11 @@ class IgniterUtil extends Command
             if (file_exists($pagicPath))
             {
                 unlink($pagicPath);
+                $this->comment('Removed '.$pagicPath);
                 $removeCount++;
             }
         }
 
-        $this->comment('Removed '.$removeCount.' pagic views...');
+        $this->comment('Removed '.$removeCount.' duplicate views...');
     }
 }
