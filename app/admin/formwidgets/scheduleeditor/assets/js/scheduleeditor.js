@@ -175,7 +175,7 @@
             for (var dayIterator = 0; dayIterator < this.options.timesheetXCount; dayIterator++) {
                 if (day[dayIterator] === 1 && !isOpen) {
                     isOpen = true;
-                    openTime = Math.floor(dayIterator / minuteDivisor) + ':' + (dayIterator % minuteDivisor) * timesheetOptions.cellDuration;
+                    openTime = Math.floor(dayIterator / minuteDivisor) + ':' + (dayIterator % minuteDivisor) * (60/timesheetOptions.cellDuration);
                     if (openTime.indexOf(':') === 1) openTime = '0' + openTime;
                     if (openTime.length === 4) openTime += '0';
                 } else if (day[dayIterator] === 0 && isOpen) {
