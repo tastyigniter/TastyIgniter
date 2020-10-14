@@ -25,8 +25,14 @@ trait HasDeliveryAreas
         if (!array_get($this->options, 'auto_lat_lng', TRUE))
             return;
 
-        if (!empty($this->location_lat) AND !empty($this->location_lng))
-            return;
+        if (!$this->isDirty([
+            'location_address_1',
+            'location_address_2',
+            'location_city',
+            'location_state',
+            'location_postcode',
+            'location_country_id',
+        ])) return;
 
         $address = format_address($this->getAddress(), FALSE);
 

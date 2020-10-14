@@ -66,6 +66,7 @@ class BaseWidget extends Extendable
         $this->partialPath[] = '$/'.$classPath;
 
         $this->assetPath[] = '~/app/'.$classPath.'/assets';
+        $this->assetPath[] = '$/'.$classPath.'/assets';
 
         $this->configPath = $controller->configPath;
 

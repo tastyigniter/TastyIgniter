@@ -24,7 +24,7 @@ class Working_hours_model extends AbstractWorkingHour
 
         foreach (self::where('location_id', $id)->get() as $row) {
             $row = $this->parseRecord($row);
-            $collection[$row['type']][$row['weekday']] = $this->parseRecord($row);
+            $collection[$row['type']][$row['weekday']] = $row;
         }
 
         return $collection;
@@ -48,5 +48,20 @@ class Working_hours_model extends AbstractWorkingHour
     public function getWeekDaysOptions()
     {
         return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    }
+
+    public function getTimesheetOptions($value, $data)
+    {
+        $result = new \stdClass();
+        $result->daysOfWeek = [];
+        $result->timesheet = [];
+
+        $options = $value ?? [];
+        foreach ($this->getWeekDaysOptions() as $key => $day) {
+            $result->daysOfWeek[] = ['name' => $day];
+            $result->timesheet[] = $options[$key] ?? ['day' => $key, 'open' => '00:00', 'close' => '23:59', 'status' => 1];
+        }
+
+        return $result;
     }
 }

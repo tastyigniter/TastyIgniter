@@ -18,4 +18,8 @@ $(function () {
             Cookies.set('ti_activeFormTabs', JSON.stringify(activeFormTabs))
         }
     })
+
+    $(document).render(function(){
+        $('[data-control="inputmask"]').inputmask();
+    });
 })
