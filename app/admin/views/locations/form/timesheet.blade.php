@@ -7,6 +7,7 @@
     data-days='@json($fieldOptions->daysOfWeek)'
     data-values='@json($fieldOptions->timesheet)'
     data-field-name="{{ $field->getName() }}"
+    data-cell-duration="{{ $field->getConfig('cellDuration', '60') }}"
 >
     <div class="table-responsive">
         <table class="table table-borderless">

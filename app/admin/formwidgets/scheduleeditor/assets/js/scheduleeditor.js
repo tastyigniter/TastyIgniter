@@ -23,22 +23,23 @@
 
     ScheduleEditor.prototype.initTimesheet = function () {
         var $timesheet = $(this.options.timesheetSelector),
+            timesheetOptions = $timesheet.data(),
             timesheetHeadings = this.getTimesheetHeadings(),
-            timesheetOptions = this.parseTimesheetOptions()
+            timesheetData = this.parseTimesheetData()
 
         this.timesheet = $timesheet.find('table > tbody').timeSheet({
             data: {
-                dimensions: [this.options.timesheetYCount, this.options.timesheetXCount],
+                dimensions: [this.options.timesheetYCount, this.options.timesheetXCount * 60/timesheetOptions.cellDuration],
                 colHead: timesheetHeadings,
                 rowHead: timesheetOptions.days,
                 sheetHead: {name: this.options.timesheetHeadText},
-                sheetData: timesheetOptions.data,
+                sheetData: timesheetData.data,
             },
             remarks: {title: '', default: this.options.timesheetEmptyText},
             end: $.proxy(this.onTimesheetEnd, this)
         });
 
-        timesheetOptions.remarks.forEach(function (remark, idx) {
+        timesheetData.remarks.forEach(function (remark, idx) {
             this.timesheet.setRemark(idx, remark === '' ? '-' : remark);
         }, this);
     }
@@ -57,7 +58,8 @@
     }
 
     ScheduleEditor.prototype.getTimesheetHeadings = function () {
-        var result = [];
+        var timesheetOptions = $(this.options.timesheetSelector).data(),
+            result = [];
 
         for (let hourOfDay = 0; hourOfDay < 24; hourOfDay++) {
             let hourPadded = hourOfDay.toString();
@@ -66,14 +68,14 @@
             if (hourPadded.length < 2) hourPadded = '0' + hourPadded;
             if (nextHourPadded.length < 2) nextHourPadded = '0' + nextHourPadded;
 
-            for (let minuteOfDay = 0; minuteOfDay < 60; minuteOfDay = minuteOfDay + 15) {
+            for (let minuteOfDay = 0; minuteOfDay < 60; minuteOfDay = minuteOfDay + timesheetOptions.cellDuration) {
                 let minutePadded = minuteOfDay.toString();
 
                 if (minutePadded.length < 2) minutePadded = '0' + minutePadded;
 
                 result.push({
-                    name: minuteOfDay === 0 ? hourPadded : '&nbsp;&nbsp;&nbsp;&nbsp;',
-                    title: hourPadded + ':' + minutePadded + '-' + (minuteOfDay === 45 ? nextHourPadded + ':00' : hourPadded + ':' + (minuteOfDay + 15)),
+                    name: (hourOfDay % 4 === 0) ? hourPadded : '&nbsp;&nbsp;&nbsp;&nbsp;',
+                    title: hourPadded + ':' + minutePadded + '-' + (minuteOfDay === (60-timesheetOptions.cellDuration) ? nextHourPadded + ':00' : hourPadded + ':' + (minuteOfDay + (60/timesheetOptions.cellDuration))),
                 })
             }
         }
@@ -81,11 +83,9 @@
         return result;
     }
 
-    ScheduleEditor.prototype.parseTimesheetOptions = function () {
-        var $timesheet = $(this.options.timesheetSelector),
-            timesheetOptions = $timesheet.data(),
+    ScheduleEditor.prototype.parseTimesheetData = function () {
+        var timesheetOptions = $(this.options.timesheetSelector).data(),
             result = {
-                days: timesheetOptions.days,
                 data: [],
                 remarks: [],
             }
@@ -105,7 +105,7 @@
 
                 var isOpen = false;
                 for (var hourOfDay = 0; hourOfDay < 24; hourOfDay++) {
-                    for (var minuteOfDay = 0; minuteOfDay < 60; minuteOfDay = minuteOfDay + 15) {
+                    for (var minuteOfDay = 0; minuteOfDay < 60; minuteOfDay = minuteOfDay + timesheetOptions.cellDuration) {
                         for (var valueIterator = 0; valueIterator < timesheetOptions.values[dayOfWeek].hours.length; valueIterator++) {
                             var openHour = timesheetOptions.values[dayOfWeek].hours[valueIterator].open.split(':').map(function (v) {
                                 return parseInt(v)
@@ -160,9 +160,9 @@
     }
 
     ScheduleEditor.prototype.onTimesheetEnd = function (sheet) {
-        var $value = [];
-
-        var timesheetOptions = $(this.options.timesheetSelector).data()
+        var $value = [],
+            timesheetOptions = $(this.options.timesheetSelector).data(),
+            minuteDivisor = (60/timesheetOptions.cellDuration);
 
         this.timesheet.getSheetStates()
         .forEach(function (day, idx) {
@@ -175,12 +175,12 @@
             for (var dayIterator = 0; dayIterator < this.options.timesheetXCount; dayIterator++) {
                 if (day[dayIterator] === 1 && !isOpen) {
                     isOpen = true;
-                    openTime = Math.floor(dayIterator / 4) + ':' + (dayIterator % 4) * 15;
+                    openTime = Math.floor(dayIterator / minuteDivisor) + ':' + (dayIterator % minuteDivisor) * timesheetOptions.cellDuration;
                     if (openTime.indexOf(':') === 1) openTime = '0' + openTime;
                     if (openTime.length === 4) openTime += '0';
                 } else if (day[dayIterator] === 0 && isOpen) {
                     isOpen = false;
-                    closeTime = Math.floor(dayIterator / 4) + ':' + (dayIterator % 4) * 15;
+                    closeTime = Math.floor(dayIterator / minuteDivisor) + ':' + (dayIterator % minuteDivisor) * (60/timesheetOptions.cellDuration);
                     if (closeTime.indexOf(':') === 1) closeTime = '0' + closeTime;
                     if (closeTime.length === 4) closeTime += '0';
 
