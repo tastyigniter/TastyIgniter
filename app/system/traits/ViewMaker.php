@@ -5,6 +5,7 @@ namespace System\Traits;
 use Exception;
 use File;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
 use Lang;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
@@ -209,17 +210,9 @@ trait ViewMaker
 
         $vars = array_merge($this->vars, $extraParams);
 
-        if (ends_with($filePath, '.blade.php')) {
-            $compiler = app('blade.compiler');
+        $filePath = $this->compileFileContent($filePath);
 
-            if ($compiler->isExpired($filePath)) {
-                $compiler->compile($filePath);
-            }
-
-            $filePath = $compiler->getCompiledPath($filePath);
-
-            $vars = $this->gatherViewData($vars);
-        }
+        $vars = $this->gatherViewData($vars);
 
         $obLevel = ob_get_level();
 
@@ -241,6 +234,19 @@ trait ViewMaker
         }
 
         return ob_get_clean();
+    }
+
+    public function compileFileContent($filePath)
+    {
+        $pagic = App::make('pagic.environment');
+
+        $compiler = $pagic->getCompiler();
+
+        if ($compiler->isExpired($filePath)) {
+            $compiler->compile($filePath);
+        }
+
+        return $compiler->getCompiledPath($filePath);
     }
 
     /**

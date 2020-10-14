@@ -1,6 +1,14 @@
 <?php
 $config['list']['filter'] = [
     'scopes' => [
+        'location' => [
+            'label' => 'lang:admin::lang.text_filter_location',
+            'type' => 'select',
+            'scope' => 'whereHasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom' => 'location_name',
+            'locationAware' => 'hide',
+        ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch',
@@ -57,7 +65,14 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'locations' => [
+        'label' => 'lang:admin::lang.column_location',
+        'type' => 'text',
+        'relation' => 'locations',
+        'select' => 'location_name',
+        'locationAware' => 'hide',
+        'invisible' => TRUE,
+    ],
 ];
 
 $config['form']['toolbar'] = [
@@ -93,11 +108,13 @@ $config['form']['fields'] = [
         'type' => 'text',
         'span' => 'left',
     ],
-    'mealtime_status' => [
-        'label' => 'lang:admin::lang.label_status',
-        'type' => 'switch',
-        'default' => TRUE,
+    'locations' => [
+        'label' => 'lang:admin::lang.label_location',
+        'type' => 'relation',
         'span' => 'right',
+        'valueFrom' => 'locations',
+        'nameFrom' => 'location_name',
+        'locationAware' => 'hide',
     ],
     'start_time' => [
         'label' => 'lang:admin::lang.mealtimes.label_start_time',
@@ -110,6 +127,12 @@ $config['form']['fields'] = [
         'type' => 'datepicker',
         'mode' => 'time',
         'span' => 'right',
+    ],
+    'mealtime_status' => [
+        'label' => 'lang:admin::lang.label_status',
+        'type' => 'switch',
+        'default' => TRUE,
+        'span' => 'left',
     ],
 ];
 

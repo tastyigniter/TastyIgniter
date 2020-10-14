@@ -4,11 +4,3 @@
 
 # Set the default behavior, in case people don't have core.autocrlf set.
 text=auto
-
-# Ignore files when exporting
-/.gitattributes export-ignore
-/.gitignore export-ignore
-.github/ export-ignore
-tests/ export-ignore
-phpunit.xml export-ignore
-phpunit.dusk.xml export-ignore
