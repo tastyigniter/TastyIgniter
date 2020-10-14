@@ -3,10 +3,6 @@
 return [
     'form' => [
         'fields' => [
-            'name' => [
-                'label' => 'lang:admin::lang.locations.label_schedule_name',
-                'type' => 'text',
-            ],
             'type' => [
                 'label' => 'lang:admin::lang.locations.label_schedule_type',
                 'type' => 'radiotoggle',
@@ -14,6 +10,7 @@ return [
                 'options' => [
                     '24_7' => 'lang:admin::lang.locations.text_24_7',
                     'daily' => 'lang:admin::lang.locations.text_daily',
+                    'timesheet' => 'lang:admin::lang.locations.text_timesheet',
                     'flexible' => 'lang:admin::lang.locations.text_flexible',
                 ],
             ],
@@ -52,10 +49,20 @@ return [
                     'condition' => 'value[daily]',
                 ],
             ],
+            'timesheet' => [
+                'label' => 'lang:admin::lang.locations.text_timesheet',
+                'type' => 'partial',
+                'path' => 'locations/form/timesheet',
+                'trigger' => [
+                    'action' => 'show',
+                    'field' => 'type',
+                    'condition' => 'value[timesheet]',
+                ],
+            ],
             'flexible' => [
                 'label' => 'lang:admin::lang.locations.text_flexible',
                 'type' => 'partial',
-                'path' => 'locations/flexible_hours',
+                'path' => 'locations/form/flexible_hours',
                 'trigger' => [
                     'action' => 'show',
                     'field' => 'type',

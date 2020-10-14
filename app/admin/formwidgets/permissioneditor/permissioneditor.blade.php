@@ -1,7 +1,7 @@
 <div class="permission-editor" {!! $field->getAttributes() !!}>
     <div class="table-responsive">
         <table class="table table-border mb-0">
-            @foreach ($groupedPermissions as $group => $permission)
+            @foreach ($groupedPermissions as $group => $permissions)
                 <thead>
                 <tr>
                     <th class="{{ $loop->first ? '' : 'pt-4' }}">
