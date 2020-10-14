@@ -197,7 +197,7 @@
             if (isOpen) {
                 myValue.push({
                     open: openTime,
-                    close: '00:00'
+                    close: '23:59'
                 });
             }
 
