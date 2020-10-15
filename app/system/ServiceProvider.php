@@ -474,7 +474,7 @@ class ServiceProvider extends AppServiceProvider
 
         App::singleton('pagic.environment', function () {
             $pagic = new Environment(new Loader, [
-                'cache' => new FileCache(storage_path().'/system/templates'),
+                'cache' => new FileCache(config('view.compiled')),
             ]);
 
             $pagic->addExtension(new BladeExtension());

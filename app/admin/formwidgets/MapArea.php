@@ -116,17 +116,6 @@ class MapArea extends BaseFormWidget
         return FormField::NO_SAVE_DATA;
     }
 
-    public function getAreaColor($id)
-    {
-        $index = 0;
-        if (!is_null($id)) {
-            $ids = array_flip($this->getRelationObject()->pluck('area_id')->all());
-            $index = min($ids[$id], count($this->areaColors));
-        }
-
-        return $this->areaColors[$index];
-    }
-
     public function onLoadRecord()
     {
         $model = strlen($areaId = post('recordId'))
@@ -160,6 +149,7 @@ class MapArea extends BaseFormWidget
             'Area '.($form->context == 'create' ? 'created' : 'updated')
         ))->now();
 
+        $this->formField->value = null;
         $this->model->reloadRelations();
 
         $this->prepareVars();
@@ -192,8 +182,7 @@ class MapArea extends BaseFormWidget
 
     public function getMapShapeAttributes($area)
     {
-        if (!strlen($areaColor = $area->color))
-            $areaColor = $this->getAreaColor($area->area_id);
+        $areaColor = $area->color;
 
         $attributes = [
             'data-id' => $area->area_id ?? 1,

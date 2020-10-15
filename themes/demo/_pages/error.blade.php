@@ -1,6 +1,7 @@
-title = Error page (500)
-layout = default
-permalink = /error
+---
+title: Error page (500)
+layout: default
+permalink: /error
 ---
 <div class="jumbotron">
     <div class="container">

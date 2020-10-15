@@ -16,7 +16,7 @@ class Cache extends BaseDashboardWidget
 
     protected static $caches = [
         [
-            'path'  => 'system/templates',
+            'path' => 'framework/views',
             'color' => '#2980b9',
         ],
         [
