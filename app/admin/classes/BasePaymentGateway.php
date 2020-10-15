@@ -232,6 +232,14 @@ class BasePaymentGateway extends ModelAction
         throw new SystemException('The payFromPaymentProfile() method is not supported by the payment gateway.');
     }
 
+    //
+    // Payment Refunds
+    //
+
+    public function processRefundForm($data, $order, $paymentLog)
+    {
+    }
+
     /**
      * Creates an instance of the order model
      */
