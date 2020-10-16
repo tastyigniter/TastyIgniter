@@ -140,7 +140,7 @@
   color: #fff; }
 
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
- readers do not read off random characters that represent icons */
+readers do not read off random characters that represent icons */
 .fa-500px:before {
   content: "\f26e"; }
 
@@ -7105,7 +7105,7 @@
   background-image: -o-linear-gradient(top, white 50%, #eeeeee 100%);
   background-image: linear-gradient(to bottom, white 50%, #eeeeee 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#FFFFFFFF", endColorstr="#FFEEEEEE", GradientType=0); }
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0); }
   .select2-container--classic .select2-selection--single:focus {
     border: 1px solid #5897fb; }
   .select2-container--classic .select2-selection--single .select2-selection__rendered {
@@ -7133,7 +7133,7 @@
     background-image: -o-linear-gradient(top, #eeeeee 50%, #cccccc 100%);
     background-image: linear-gradient(to bottom, #eeeeee 50%, #cccccc 100%);
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#FFEEEEEE", endColorstr="#FFCCCCCC", GradientType=0); }
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFCCCCCC', GradientType=0); }
     .select2-container--classic .select2-selection--single .select2-selection__arrow b {
       border-color: #888 transparent transparent transparent;
       border-style: solid;
@@ -7171,7 +7171,7 @@
   background-image: -o-linear-gradient(top, white 0%, #eeeeee 50%);
   background-image: linear-gradient(to bottom, white 0%, #eeeeee 50%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#FFFFFFFF", endColorstr="#FFEEEEEE", GradientType=0); }
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0); }
 .select2-container--classic.select2-container--open.select2-container--below .select2-selection--single {
   border-bottom: none;
   border-bottom-left-radius: 0;
@@ -7180,7 +7180,7 @@
   background-image: -o-linear-gradient(top, #eeeeee 50%, white 100%);
   background-image: linear-gradient(to bottom, #eeeeee 50%, white 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#FFEEEEEE", endColorstr="#FFFFFFFF", GradientType=0); }
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFFFFFFF', GradientType=0); }
 .select2-container--classic .select2-selection--multiple {
   background-color: white;
   border: 1px solid #D2D4DF;
@@ -7265,8 +7265,57 @@
 .select2-container--bootstrap {
   display: block;
   /*------------------------------------*\
-   #COMMON STYLES
-   \*------------------------------------*/ }
+      #COMMON STYLES
+  \*------------------------------------*/
+  /**
+   * Search field in the Select2 dropdown.
+   */
+  /**
+   * No outline for all search fields - in the dropdown
+   * and inline in multi Select2s.
+   */
+  /**
+   * Adjust Select2's choices hover and selected styles to match
+   * Bootstrap 4's default dropdown styles.
+   *
+   * @see https://getbootstrap.com/docs/4.0/components/dropdowns/
+   */
+  /**
+   * Clear the selection.
+   */
+  /**
+   * Address disabled Select2 styles.
+   *
+   * @see https://select2.github.io/examples.html#disabled
+   * @see hhttps://getbootstrap.com/docs/4.0/components/forms/#disabled-forms
+   */
+  /*------------------------------------*\
+      #DROPDOWN
+  \*------------------------------------*/
+  /**
+   * Dropdown border color and box-shadow.
+   */
+  /**
+   * Limit the dropdown height.
+   */
+  /*------------------------------------*\
+      #SINGLE SELECT2
+  \*------------------------------------*/
+  /*------------------------------------*\
+    #MULTIPLE SELECT2
+  \*------------------------------------*/
+  /**
+   * Address Bootstrap control sizing classes
+   *
+   * 1. Reset Bootstrap defaults.
+   * 2. Adjust the dropdown arrow button icon position.
+   *
+   * @see https://getbootstrap.com/docs/4.0/components/forms/#sizing
+   */
+  /* 1 */
+  /*------------------------------------*\
+    #RTL SUPPORT
+  \*------------------------------------*/ }
   .select2-container--bootstrap .select2-selection {
     box-shadow: none;
     border-radius: 3px;
@@ -7280,10 +7329,7 @@
     .select2-container--bootstrap .select2-selection {
       transition: none; } }
   .select2-container--bootstrap .select2-selection.form-control {
-    border-radius: 0.25rem;
-    /**
-     * Search field in the Select2 dropdown.
-     */ }
+    border-radius: 0.25rem; }
 .select2-container--bootstrap .select2-search--dropdown .select2-search__field {
   box-shadow: none;
   border-radius: 3px;
@@ -7292,57 +7338,47 @@
   border: 1px solid #D2D4DF;
   color: #152248;
   font-size: 0.875rem; }
-  @media (prefers-reduced-motion: reduce) {
-    /**
-     * No outline for all search fields - in the dropdown
-     * and inline in multi Select2s.
-     */
-    .select2-container--bootstrap .select2-search--dropdown .select2-search__field {
-      transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .select2-container--bootstrap .select2-search--dropdown .select2-search__field {
+    transition: none; } }
 .select2-container--bootstrap .select2-search__field {
-  outline: 0; }
-  .select2-container--bootstrap .select2-search__field::-webkit-input-placeholder {
-    color: #6F7B9C;
-    /* Firefox 18- */ }
-  .select2-container--bootstrap .select2-search__field:-moz-placeholder {
-    color: #6F7B9C;
-    /**
+  outline: 0;
+  /* Firefox 18- */
+  /**
      * Firefox 19+
      *
      * @see http://stackoverflow.com/questions/24236240/color-for-styled-placeholder-text-is-muted-in-firefox
      */ }
+  .select2-container--bootstrap .select2-search__field::-webkit-input-placeholder {
+    color: #6F7B9C; }
+  .select2-container--bootstrap .select2-search__field:-moz-placeholder {
+    color: #6F7B9C; }
   .select2-container--bootstrap .select2-search__field::-moz-placeholder {
     color: #6F7B9C;
     opacity: 1; }
   .select2-container--bootstrap .select2-search__field:-ms-input-placeholder {
-    color: #6F7B9C;
-    /**
-     * Adjust Select2's choices hover and selected styles to match
-     * Bootstrap 4's default dropdown styles.
-     *
-     * @see https://getbootstrap.com/docs/4.0/components/dropdowns/
-     */ }
+    color: #6F7B9C; }
 .select2-container--bootstrap .select2-results__option {
-  padding: 0.5rem 0.75rem; }
-  .select2-container--bootstrap .select2-results__option[role=group] {
-    padding: 0;
-    /**
+  padding: 0.5rem 0.75rem;
+  /**
      * Disabled results.
      *
      * @see https://select2.github.io/examples.html#disabled-results
-     */ }
-  .select2-container--bootstrap .select2-results__option[aria-disabled=true] {
-    color: #6F7B9C;
-    cursor: not-allowed;
-    /**
+     */
+  /**
      * Hover state.
-     */ }
-  .select2-container--bootstrap .select2-results__option[aria-selected=true] {
-    background-color: #D2D4DF;
-    color: #0f1934;
-    /**
+     */
+  /**
      * Selected state.
      */ }
+  .select2-container--bootstrap .select2-results__option[role=group] {
+    padding: 0; }
+  .select2-container--bootstrap .select2-results__option[aria-disabled=true] {
+    color: #6F7B9C;
+    cursor: not-allowed; }
+  .select2-container--bootstrap .select2-results__option[aria-selected=true] {
+    background-color: #D2D4DF;
+    color: #0f1934; }
   .select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
     background-color: #217DC0;
     color: #FFFFFF; }
@@ -7377,14 +7413,14 @@
     box-shadow: none, 0 0 0 0.2rem rgba(33, 125, 192, 0.25); }
 .select2-container--bootstrap.select2-container--open {
   /**
-   * Make the dropdown arrow point up while the dropdown is visible.
-   */ }
-  .select2-container--bootstrap.select2-container--open .select2-selection .select2-selection__arrow b {
-    border-color: transparent transparent #6F7B9C transparent;
-    border-width: 0 0.25rem 0.25rem 0.25rem;
-    /**
+     * Make the dropdown arrow point up while the dropdown is visible.
+     */
+  /**
      * Handle border radii of the container when the dropdown is showing.
      */ }
+  .select2-container--bootstrap.select2-container--open .select2-selection .select2-selection__arrow b {
+    border-color: transparent transparent #6F7B9C transparent;
+    border-width: 0 0.25rem 0.25rem 0.25rem; }
     .select2-container--bootstrap.select2-container--open.select2-container--below .select2-selection {
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
@@ -7394,10 +7430,7 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-top-color: transparent;
-    box-shadow: none;
-    /**
-     * Clear the selection.
-     */ }
+    box-shadow: none; }
 .select2-container--bootstrap .select2-selection__clear {
   color: #6F7B9C;
   cursor: pointer;
@@ -7405,13 +7438,7 @@
   font-weight: bold;
   margin-right: 10px; }
   .select2-container--bootstrap .select2-selection__clear:hover {
-    color: "#111";
-    /**
-     * Address disabled Select2 styles.
-     *
-     * @see https://select2.github.io/examples.html#disabled
-     * @see hhttps://getbootstrap.com/docs/4.0/components/forms/#disabled-forms
-     */ }
+    color: "#111"; }
 .select2-container--bootstrap.select2-container--disabled .select2-selection {
   border-color: #D2D4DF;
   box-shadow: none; }
@@ -7420,13 +7447,7 @@
 .select2-container--bootstrap.select2-container--disabled .select2-selection, .select2-container--bootstrap.select2-container--disabled .select2-selection--multiple .select2-selection__choice {
   background-color: #D2D4DF; }
 .select2-container--bootstrap.select2-container--disabled .select2-selection__clear, .select2-container--bootstrap.select2-container--disabled .select2-selection--multiple .select2-selection__choice__remove {
-  display: none;
-  /*------------------------------------*\
-   #DROPDOWN
-   \*------------------------------------*/
-  /**
-   * Dropdown border color and box-shadow.
-   */ }
+  display: none; }
 .select2-container--bootstrap .select2-dropdown {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   border-color: #79b9e8;
@@ -7434,23 +7455,17 @@
   margin-top: -1px; }
   .select2-container--bootstrap .select2-dropdown--above {
     box-shadow: 0px -6px 12px rgba(0, 0, 0, 0.175);
-    margin-top: 1px;
-    /**
-     * Limit the dropdown height.
-     */ }
+    margin-top: 1px; }
 .select2-container--bootstrap .select2-results > .select2-results__options {
   max-height: 200px;
-  overflow-y: auto;
-  /*------------------------------------*\
-   #SINGLE SELECT2
-   \*------------------------------------*/ }
+  overflow-y: auto; }
 .select2-container--bootstrap .select2-selection--single {
   height: calc(2.3125rem + 2px);
   line-height: 1.5;
   padding: 0.5rem 1.5rem 0.5rem 0.75rem;
   /**
-   * Adjust the single Select2's dropdown arrow button appearance.
-   */ }
+     * Adjust the single Select2's dropdown arrow button appearance.
+     */ }
   .select2-container--bootstrap .select2-selection--single .select2-selection__arrow {
     position: absolute;
     bottom: 0;
@@ -7472,14 +7487,20 @@
     color: #152248;
     padding: 0; }
   .select2-container--bootstrap .select2-selection--single .select2-selection__placeholder {
-    color: #6F7B9C;
-    /*------------------------------------*\
-     #MULTIPLE SELECT2
-     \*------------------------------------*/ }
+    color: #6F7B9C; }
 .select2-container--bootstrap .select2-selection--multiple {
   min-height: calc(2.3125rem + 2px);
   padding: 0;
-  height: auto; }
+  height: auto;
+  /**
+     * Make Multi Select2's choices match Bootstrap 4's default button styles.
+     */
+  /**
+     * Minus 2px borders.
+     */
+  /**
+     * Clear the selection.
+     */ }
   .select2-container--bootstrap .select2-selection--multiple .select2-selection__rendered {
     box-sizing: border-box;
     display: block;
@@ -7494,10 +7515,7 @@
   .select2-container--bootstrap .select2-selection--multiple .select2-selection__placeholder {
     color: #6F7B9C;
     float: left;
-    margin-top: 5px;
-    /**
-     * Make Multi Select2's choices match Bootstrap 4's default button styles.
-     */ }
+    margin-top: 5px; }
   .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
     color: #152248;
     background: #E8E9EF;
@@ -7506,10 +7524,7 @@
     cursor: default;
     float: left;
     margin: calc(0.5rem - 1px) 0 0 0.375rem;
-    padding: 0 0.5rem;
-    /**
-     * Minus 2px borders.
-     */ }
+    padding: 0 0.5rem; }
     .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field {
       background: transparent;
       padding: 0 0.75rem;
@@ -7524,21 +7539,9 @@
     font-weight: bold;
     margin-right: 0.25rem; }
     .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice__remove:hover {
-      color: "#111";
-      /**
-       * Clear the selection.
-       */ }
+      color: "#111"; }
   .select2-container--bootstrap .select2-selection--multiple .select2-selection__clear {
-    margin-top: 0.5rem;
-    /**
-     * Address Bootstrap control sizing classes
-     *
-     * 1. Reset Bootstrap defaults.
-     * 2. Adjust the dropdown arrow button icon position.
-     *
-     * @see https://getbootstrap.com/docs/4.0/components/forms/#sizing
-     */
-    /* 1 */ }
+    margin-top: 0.5rem; }
 .select2-container--bootstrap .select2-selection--single.form-control-sm, .select2-container--bootstrap .select2-selection--single.input-sm, .input-group-sm .select2-container--bootstrap .select2-selection--single, .form-group-sm .select2-container--bootstrap .select2-selection--single {
   border-radius: 0.2rem;
   font-size: 0.765625rem;
@@ -7595,28 +7598,28 @@
     margin-top: 0.5rem; }
 .select2-container--bootstrap .select2-selection.form-control-lg.select2-container--open .select2-selection--single, .select2-container--bootstrap .select2-selection.select2-container--open.input-lg .select2-selection--single {
   /**
-   * Make the dropdown arrow point up while the dropdown is visible.
-   */ }
+     * Make the dropdown arrow point up while the dropdown is visible.
+     */ }
   .select2-container--bootstrap .select2-selection.form-control-lg.select2-container--open .select2-selection--single .select2-selection__arrow b, .select2-container--bootstrap .select2-selection.select2-container--open.input-lg .select2-selection--single .select2-selection__arrow b {
     border-color: transparent transparent #6F7B9C transparent;
     border-width: 0 0.3125rem 0.3125rem 0.3125rem; }
 .input-group-lg .select2-container--bootstrap .select2-selection.select2-container--open .select2-selection--single {
   /**
-   * Make the dropdown arrow point up while the dropdown is visible.
-   */ }
+     * Make the dropdown arrow point up while the dropdown is visible.
+     */ }
   .input-group-lg .select2-container--bootstrap .select2-selection.select2-container--open .select2-selection--single .select2-selection__arrow b {
     border-color: transparent transparent #6F7B9C transparent;
-    border-width: 0 0.3125rem 0.3125rem 0.3125rem;
-    /*------------------------------------*\
-     #RTL SUPPORT
-     \*------------------------------------*/ }
+    border-width: 0 0.3125rem 0.3125rem 0.3125rem; }
 .select2-container--bootstrap[dir="rtl"] {
   /**
-   * Single Select2
-   *
-   * 1. Makes sure that .select2-selection__placeholder is positioned
-   *    correctly.
-   */ }
+     * Single Select2
+     *
+     * 1. Makes sure that .select2-selection__placeholder is positioned
+     *    correctly.
+     */
+  /**
+     * Multiple Select2
+     */ }
   .select2-container--bootstrap[dir="rtl"] .select2-selection--single {
     padding-left: 1.5rem;
     padding-right: 0.75rem; }
@@ -7631,10 +7634,7 @@
       left: 0.75rem;
       right: auto; }
       .select2-container--bootstrap[dir="rtl"] .select2-selection--single .select2-selection__arrow b {
-        margin-left: 0;
-        /**
-         * Multiple Select2
-         */ }
+        margin-left: 0; }
   .select2-container--bootstrap[dir="rtl"] .select2-selection--multiple .select2-selection__choice, .select2-container--bootstrap[dir="rtl"] .select2-selection--multiple .select2-selection__placeholder, .select2-container--bootstrap[dir="rtl"] .select2-selection--multiple .select2-search--inline {
     float: right; }
   .select2-container--bootstrap[dir="rtl"] .select2-selection--multiple .select2-selection__choice {
@@ -7647,8 +7647,8 @@
   text-align: right; }
 
 /*------------------------------------*\
- #ADDITIONAL GOODIES
- \*------------------------------------*/
+  #ADDITIONAL GOODIES
+\*------------------------------------*/
 /**
  * Address Bootstrap's validation states
  *
@@ -7743,27 +7743,27 @@
   position: relative;
   z-index: 2;
   width: 1%;
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  /**
+   * Adjust z-index like Bootstrap does to show the focus-box-shadow
+   * above appended buttons in .input-group and .form-group.
+   */
+  /**
+   * Adjust alignment of Bootstrap buttons in Bootstrap Input Groups to address
+   * Multi Select2's height which - depending on how many elements have been selected -
+   * may grow taller than its initial size.
+   *
+   * @see https://github.com/twbs/bootstrap/blob/v4.0.0-beta.2/scss/_input-group.scss
+   */ }
   .input-group > .select2-container--bootstrap > .selection {
     display: flex;
     flex: 1 1 auto; }
     .input-group > .select2-container--bootstrap > .selection > .select2-selection.form-control {
-      float: none;
-      /**
-       * Adjust z-index like Bootstrap does to show the focus-box-shadow
-       * above appended buttons in .input-group and .form-group.
-       */ }
+      float: none; }
   .input-group > .select2-container--bootstrap.select2-container--open, .input-group > .select2-container--bootstrap.select2-container--focus {
     /* .form-group */
     /* .input-group */
-    z-index: 3;
-    /**
-     * Adjust alignment of Bootstrap buttons in Bootstrap Input Groups to address
-     * Multi Select2's height which - depending on how many elements have been selected -
-     * may grow taller than its initial size.
-     *
-     * @see https://github.com/twbs/bootstrap/blob/v4.0.0-beta.2/scss/_input-group.scss
-     */ }
+    z-index: 3; }
   .input-group > .select2-container--bootstrap, .input-group > .select2-container--bootstrap .input-group-append, .input-group > .select2-container--bootstrap .input-group-btn, .input-group > .select2-container--bootstrap .input-group-addon, .input-group > .select2-container--bootstrap .input-group-prepend, .input-group > .select2-container--bootstrap .input-group-append .btn, .input-group > .select2-container--bootstrap .input-group-btn .btn, .input-group > .select2-container--bootstrap .input-group-addon .btn, .input-group > .select2-container--bootstrap .input-group-prepend .btn {
     vertical-align: top; }
 
@@ -8142,7 +8142,7 @@ mark, .mark {
   font-size: 80%;
   color: #6F7B9C; }
   .blockquote-footer::before {
-    content: "\2014\00A0"; }
+    content: "— "; }
 
 .img-fluid, .img-responsive {
   max-width: 100%;
@@ -9183,7 +9183,7 @@ textarea.form-control {
     color: #FFFFFF;
     background-color: rgba(40, 167, 69, 0.9);
     border-radius: 0.25rem; }
-    .was-validated :valid ~ .valid-feedback, .is-valid ~ .valid-feedback, .was-validated :valid ~ .valid-tooltip, .is-valid ~ .valid-tooltip {
+    .was-validated :valid ~ .valid-feedback, .was-validated :valid ~ .valid-tooltip, .is-valid ~ .valid-feedback, .is-valid ~ .valid-tooltip {
       display: block; }
   .was-validated .form-control:valid, .form-control.is-valid {
     border-color: #28A745;
@@ -9207,7 +9207,7 @@ textarea.form-control {
     box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25); }
 .was-validated .form-check-input:valid ~ .form-check-label, .form-check-input.is-valid ~ .form-check-label {
   color: #28A745; }
-.was-validated .form-check-input:valid ~ .valid-feedback, .form-check-input.is-valid ~ .valid-feedback, .was-validated .form-check-input:valid ~ .valid-tooltip, .form-check-input.is-valid ~ .valid-tooltip {
+.was-validated .form-check-input:valid ~ .valid-feedback, .was-validated .form-check-input:valid ~ .valid-tooltip, .form-check-input.is-valid ~ .valid-feedback, .form-check-input.is-valid ~ .valid-tooltip {
   display: block; }
 .was-validated .custom-control-input:valid ~ .custom-control-label, .custom-control-input.is-valid ~ .custom-control-label {
   color: #28A745; }
@@ -9244,7 +9244,7 @@ textarea.form-control {
   color: #FFFFFF;
   background-color: rgba(220, 53, 69, 0.9);
   border-radius: 0.25rem; }
-  .was-validated :invalid ~ .invalid-feedback, .is-invalid ~ .invalid-feedback, .has-error .form-control ~ .invalid-feedback, .was-validated :invalid ~ .invalid-tooltip, .is-invalid ~ .invalid-tooltip, .has-error .form-control ~ .invalid-tooltip {
+  .was-validated :invalid ~ .invalid-feedback, .was-validated :invalid ~ .invalid-tooltip, .is-invalid ~ .invalid-feedback, .has-error .form-control ~ .invalid-feedback, .is-invalid ~ .invalid-tooltip, .has-error .form-control ~ .invalid-tooltip {
     display: block; }
 .was-validated .form-control:invalid, .form-control.is-invalid, .has-error .form-control {
   border-color: #DC3545;
@@ -9268,7 +9268,7 @@ textarea.form-control {
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25); }
 .was-validated .form-check-input:invalid ~ .form-check-label, .form-check-input.is-invalid ~ .form-check-label, .has-error .form-check-input.form-control ~ .form-check-label {
   color: #DC3545; }
-.was-validated .form-check-input:invalid ~ .invalid-feedback, .form-check-input.is-invalid ~ .invalid-feedback, .has-error .form-check-input.form-control ~ .invalid-feedback, .was-validated .form-check-input:invalid ~ .invalid-tooltip, .form-check-input.is-invalid ~ .invalid-tooltip, .has-error .form-check-input.form-control ~ .invalid-tooltip {
+.was-validated .form-check-input:invalid ~ .invalid-feedback, .was-validated .form-check-input:invalid ~ .invalid-tooltip, .form-check-input.is-invalid ~ .invalid-feedback, .has-error .form-check-input.form-control ~ .invalid-feedback, .form-check-input.is-invalid ~ .invalid-tooltip, .has-error .form-check-input.form-control ~ .invalid-tooltip {
   display: block; }
 .was-validated .custom-control-input:invalid ~ .custom-control-label, .custom-control-input.is-invalid ~ .custom-control-label, .has-error .custom-control-input.form-control ~ .custom-control-label {
   color: #DC3545; }
@@ -10034,7 +10034,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
     flex: 1 1 auto; }
     .btn-group > .btn:hover, .btn-group-vertical > .btn:hover {
       z-index: 1; }
-    .btn-group > .btn:focus, .btn-group-vertical > .btn:focus, .btn-group > .btn:active, .btn-group-vertical > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn.active {
+    .btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn:focus, .btn-group-vertical > .btn:active, .btn-group-vertical > .btn.active {
       z-index: 1; }
 
 .btn-toolbar {
@@ -10091,7 +10091,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 
 .btn-group-toggle > .btn, .btn-group-toggle > .btn-group > .btn {
   margin-bottom: 0; }
-  .btn-group-toggle > .btn input[type="radio"], .btn-group-toggle > .btn-group > .btn input[type="radio"], .btn-group-toggle > .btn input[type="checkbox"], .btn-group-toggle > .btn-group > .btn input[type="checkbox"] {
+  .btn-group-toggle > .btn input[type="radio"], .btn-group-toggle > .btn input[type="checkbox"], .btn-group-toggle > .btn-group > .btn input[type="radio"], .btn-group-toggle > .btn-group > .btn input[type="checkbox"] {
     position: absolute;
     clip: rect(0, 0, 0, 0);
     pointer-events: none; }
@@ -10107,7 +10107,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
     flex: 1 1 0%;
     min-width: 0;
     margin-bottom: 0; }
-    .input-group > .form-control + .form-control, .input-group > .form-control-plaintext + .form-control, .input-group > .form-control-static + .form-control, .input-group > .custom-select + .form-control, .input-group > .custom-file + .form-control, .input-group > .form-control + .custom-select, .input-group > .form-control-plaintext + .custom-select, .input-group > .form-control-static + .custom-select, .input-group > .custom-select + .custom-select, .input-group > .custom-file + .custom-select, .input-group > .form-control + .custom-file, .input-group > .form-control-plaintext + .custom-file, .input-group > .form-control-static + .custom-file, .input-group > .custom-select + .custom-file, .input-group > .custom-file + .custom-file {
+    .input-group > .form-control + .form-control, .input-group > .form-control + .custom-select, .input-group > .form-control + .custom-file, .input-group > .form-control-plaintext + .form-control, .input-group > .form-control-static + .form-control, .input-group > .form-control-plaintext + .custom-select, .input-group > .form-control-static + .custom-select, .input-group > .form-control-plaintext + .custom-file, .input-group > .form-control-static + .custom-file, .input-group > .custom-select + .form-control, .input-group > .custom-select + .custom-select, .input-group > .custom-select + .custom-file, .input-group > .custom-file + .form-control, .input-group > .custom-file + .custom-select, .input-group > .custom-file + .custom-file {
       margin-left: -1px; }
   .input-group > .form-control:focus, .input-group > .custom-select:focus, .input-group > .custom-file .custom-file-input:focus ~ .custom-file-label {
     z-index: 3; }
@@ -10136,7 +10136,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
     z-index: 2; }
     .input-group-prepend .btn:focus, .input-group-append .btn:focus, .input-group-btn .btn:focus, .input-group-addon .btn:focus {
       z-index: 3; }
-  .input-group-prepend .btn + .btn, .input-group-append .btn + .btn, .input-group-btn .btn + .btn, .input-group-addon .btn + .btn, .input-group-prepend .btn + .input-group-text, .input-group-prepend .btn + .input-group-icon, .input-group-append .btn + .input-group-text, .input-group-btn .btn + .input-group-text, .input-group-btn .btn + .input-group-icon, .input-group-addon .btn + .input-group-text, .input-group-addon .btn + .input-group-icon, .input-group-append .btn + .input-group-icon, .input-group-prepend .input-group-text + .input-group-text, .input-group-prepend .input-group-icon + .input-group-text, .input-group-prepend .input-group-text + .input-group-icon, .input-group-prepend .input-group-icon + .input-group-icon, .input-group-append .input-group-text + .input-group-text, .input-group-btn .input-group-text + .input-group-text, .input-group-btn .input-group-icon + .input-group-text, .input-group-btn .input-group-text + .input-group-icon, .input-group-btn .input-group-icon + .input-group-icon, .input-group-addon .input-group-text + .input-group-text, .input-group-addon .input-group-icon + .input-group-text, .input-group-addon .input-group-text + .input-group-icon, .input-group-addon .input-group-icon + .input-group-icon, .input-group-append .input-group-icon + .input-group-text, .input-group-append .input-group-text + .input-group-icon, .input-group-append .input-group-icon + .input-group-icon, .input-group-prepend .input-group-text + .btn, .input-group-prepend .input-group-icon + .btn, .input-group-append .input-group-text + .btn, .input-group-btn .input-group-text + .btn, .input-group-btn .input-group-icon + .btn, .input-group-addon .input-group-text + .btn, .input-group-addon .input-group-icon + .btn, .input-group-append .input-group-icon + .btn {
+  .input-group-prepend .btn + .btn, .input-group-prepend .btn + .input-group-text, .input-group-prepend .btn + .input-group-icon, .input-group-prepend .input-group-text + .input-group-text, .input-group-prepend .input-group-icon + .input-group-text, .input-group-prepend .input-group-text + .input-group-icon, .input-group-prepend .input-group-icon + .input-group-icon, .input-group-prepend .input-group-text + .btn, .input-group-prepend .input-group-icon + .btn, .input-group-append .btn + .btn, .input-group-btn .btn + .btn, .input-group-addon .btn + .btn, .input-group-append .btn + .input-group-text, .input-group-btn .btn + .input-group-text, .input-group-btn .btn + .input-group-icon, .input-group-addon .btn + .input-group-text, .input-group-addon .btn + .input-group-icon, .input-group-append .btn + .input-group-icon, .input-group-append .input-group-text + .input-group-text, .input-group-btn .input-group-text + .input-group-text, .input-group-btn .input-group-icon + .input-group-text, .input-group-btn .input-group-text + .input-group-icon, .input-group-btn .input-group-icon + .input-group-icon, .input-group-addon .input-group-text + .input-group-text, .input-group-addon .input-group-icon + .input-group-text, .input-group-addon .input-group-text + .input-group-icon, .input-group-addon .input-group-icon + .input-group-icon, .input-group-append .input-group-icon + .input-group-text, .input-group-append .input-group-text + .input-group-icon, .input-group-append .input-group-icon + .input-group-icon, .input-group-append .input-group-text + .btn, .input-group-btn .input-group-text + .btn, .input-group-btn .input-group-icon + .btn, .input-group-addon .input-group-text + .btn, .input-group-addon .input-group-icon + .btn, .input-group-append .input-group-icon + .btn {
     margin-left: -1px; }
 
 .input-group-prepend {
@@ -11065,7 +11065,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
   position: relative;
   top: -1px; }
 
-.badge-pill, .badge, .label {
+.badge-pill {
   padding-right: 0.6em;
   padding-left: 0.6em;
   border-radius: 10rem; }
@@ -12009,7 +12009,7 @@ a.close.disabled {
 @media (prefers-reduced-motion: reduce) {
   .carousel-control-prev, .carousel-control-next {
     transition: none; } }
-.carousel-control-prev:hover, .carousel-control-next:hover, .carousel-control-prev:focus, .carousel-control-next:focus {
+.carousel-control-prev:hover, .carousel-control-prev:focus, .carousel-control-next:hover, .carousel-control-next:focus {
   color: #FFFFFF;
   text-decoration: none;
   outline: 0;
@@ -12096,43 +12096,43 @@ a.close.disabled {
   vertical-align: text-top !important; }
   .bg-primary, .panel-primary {
     background-color: #217DC0 !important; }
-    a.bg-primary:hover, a.panel-primary:hover, button.bg-primary:hover, button.panel-primary:hover, a.bg-primary:focus, a.panel-primary:focus, button.bg-primary:focus, button.panel-primary:focus {
+    a.bg-primary:hover, a.panel-primary:hover, a.bg-primary:focus, a.panel-primary:focus, button.bg-primary:hover, button.panel-primary:hover, button.bg-primary:focus, button.panel-primary:focus {
       background-color: #1a6194 !important; }
   .bg-secondary, .panel-secondary {
     background-color: #6F7B9C !important; }
-    a.bg-secondary:hover, a.panel-secondary:hover, button.bg-secondary:hover, button.panel-secondary:hover, a.bg-secondary:focus, a.panel-secondary:focus, button.bg-secondary:focus, button.panel-secondary:focus {
+    a.bg-secondary:hover, a.panel-secondary:hover, a.bg-secondary:focus, a.panel-secondary:focus, button.bg-secondary:hover, button.panel-secondary:hover, button.bg-secondary:focus, button.panel-secondary:focus {
       background-color: #586380 !important; }
   .bg-success, .panel-success {
     background-color: #28A745 !important; }
-    a.bg-success:hover, a.panel-success:hover, button.bg-success:hover, button.panel-success:hover, a.bg-success:focus, a.panel-success:focus, button.bg-success:focus, button.panel-success:focus {
+    a.bg-success:hover, a.panel-success:hover, a.bg-success:focus, a.panel-success:focus, button.bg-success:hover, button.panel-success:hover, button.bg-success:focus, button.panel-success:focus {
       background-color: #1e7e34 !important; }
   .bg-info, .panel-info {
     background-color: #5A67D8 !important; }
-    a.bg-info:hover, a.panel-info:hover, button.bg-info:hover, button.panel-info:hover, a.bg-info:focus, a.panel-info:focus, button.bg-info:focus, button.panel-info:focus {
+    a.bg-info:hover, a.panel-info:hover, a.bg-info:focus, a.panel-info:focus, button.bg-info:hover, button.panel-info:hover, button.bg-info:focus, button.panel-info:focus {
       background-color: #3141ce !important; }
   .bg-warning, .panel-warning {
     background-color: #FD7E14 !important; }
-    a.bg-warning:hover, a.panel-warning:hover, button.bg-warning:hover, button.panel-warning:hover, a.bg-warning:focus, a.panel-warning:focus, button.bg-warning:focus, button.panel-warning:focus {
+    a.bg-warning:hover, a.panel-warning:hover, a.bg-warning:focus, a.panel-warning:focus, button.bg-warning:hover, button.panel-warning:hover, button.bg-warning:focus, button.panel-warning:focus {
       background-color: #dc6502 !important; }
   .bg-danger, .panel-danger {
     background-color: #DC3545 !important; }
-    a.bg-danger:hover, a.panel-danger:hover, button.bg-danger:hover, button.panel-danger:hover, a.bg-danger:focus, a.panel-danger:focus, button.bg-danger:focus, button.panel-danger:focus {
+    a.bg-danger:hover, a.panel-danger:hover, a.bg-danger:focus, a.panel-danger:focus, button.bg-danger:hover, button.panel-danger:hover, button.bg-danger:focus, button.panel-danger:focus {
       background-color: #bd2130 !important; }
   .bg-light, .panel-light {
     background-color: #FCFDFF !important; }
-    a.bg-light:hover, a.panel-light:hover, button.bg-light:hover, button.panel-light:hover, a.bg-light:focus, a.panel-light:focus, button.bg-light:focus, button.panel-light:focus {
+    a.bg-light:hover, a.panel-light:hover, a.bg-light:focus, a.panel-light:focus, button.bg-light:hover, button.panel-light:hover, button.bg-light:focus, button.panel-light:focus {
       background-color: #c9dbff !important; }
   .bg-dark, .panel-dark {
     background-color: #152248 !important; }
-    a.bg-dark:hover, a.panel-dark:hover, button.bg-dark:hover, button.panel-dark:hover, a.bg-dark:focus, a.panel-dark:focus, button.bg-dark:focus, button.panel-dark:focus {
+    a.bg-dark:hover, a.panel-dark:hover, a.bg-dark:focus, a.panel-dark:focus, button.bg-dark:hover, button.panel-dark:hover, button.bg-dark:focus, button.panel-dark:focus {
       background-color: #090f21 !important; }
   .bg-default, .panel-default {
     background-color: #6F7B9C !important; }
-    a.bg-default:hover, a.panel-default:hover, button.bg-default:hover, button.panel-default:hover, a.bg-default:focus, a.panel-default:focus, button.bg-default:focus, button.panel-default:focus {
+    a.bg-default:hover, a.panel-default:hover, a.bg-default:focus, a.panel-default:focus, button.bg-default:hover, button.panel-default:hover, button.bg-default:focus, button.panel-default:focus {
       background-color: #586380 !important; }
   .bg-white, .panel-white {
     background-color: #FFFFFF !important; }
-    a.bg-white:hover, a.panel-white:hover, button.bg-white:hover, button.panel-white:hover, a.bg-white:focus, a.panel-white:focus, button.bg-white:focus, button.panel-white:focus {
+    a.bg-white:hover, a.panel-white:hover, a.bg-white:focus, a.panel-white:focus, button.bg-white:hover, button.panel-white:hover, button.bg-white:focus, button.panel-white:focus {
       background-color: #e6e6e6 !important; }
 
 .bg-white, .panel-white {
@@ -13989,16 +13989,16 @@ a.close.disabled {
   -moz-osx-font-smoothing: grayscale; }
 
 .icon-ti-horizontal-logo:before {
-  content: "\e901"; }
+  content: ""; }
 
 .icon-ti-text-logo:before {
-  content: "\e902"; }
+  content: ""; }
 
 .icon-ti-vertical-logo:before {
-  content: "\e903"; }
+  content: ""; }
 
 .icon-ti-logo:before {
-  content: "\e900"; }
+  content: ""; }
 
 #notification {
   position: fixed;
@@ -14793,7 +14793,7 @@ body.dragging {
 
 .input-group-prepend .btn, .input-group-append .btn, .input-group-btn .btn, .input-group-addon .btn {
   border-radius: 3px !important; }
-.input-group-prepend .btn + .btn, .input-group-append .btn + .btn, .input-group-btn .btn + .btn, .input-group-addon .btn + .btn, .input-group-prepend .btn + .input-group-text, .input-group-prepend .btn + .input-group-icon, .input-group-append .btn + .input-group-text, .input-group-btn .btn + .input-group-text, .input-group-btn .btn + .input-group-icon, .input-group-addon .btn + .input-group-text, .input-group-addon .btn + .input-group-icon, .input-group-append .btn + .input-group-icon, .input-group-prepend .input-group-text + .input-group-text, .input-group-prepend .input-group-icon + .input-group-text, .input-group-prepend .input-group-text + .input-group-icon, .input-group-prepend .input-group-icon + .input-group-icon, .input-group-append .input-group-text + .input-group-text, .input-group-btn .input-group-text + .input-group-text, .input-group-btn .input-group-icon + .input-group-text, .input-group-btn .input-group-text + .input-group-icon, .input-group-btn .input-group-icon + .input-group-icon, .input-group-addon .input-group-text + .input-group-text, .input-group-addon .input-group-icon + .input-group-text, .input-group-addon .input-group-text + .input-group-icon, .input-group-addon .input-group-icon + .input-group-icon, .input-group-append .input-group-icon + .input-group-text, .input-group-append .input-group-text + .input-group-icon, .input-group-append .input-group-icon + .input-group-icon, .input-group-prepend .input-group-text + .btn, .input-group-prepend .input-group-icon + .btn, .input-group-append .input-group-text + .btn, .input-group-btn .input-group-text + .btn, .input-group-btn .input-group-icon + .btn, .input-group-addon .input-group-text + .btn, .input-group-addon .input-group-icon + .btn, .input-group-append .input-group-icon + .btn {
+.input-group-prepend .btn + .btn, .input-group-prepend .btn + .input-group-text, .input-group-prepend .btn + .input-group-icon, .input-group-prepend .input-group-text + .input-group-text, .input-group-prepend .input-group-icon + .input-group-text, .input-group-prepend .input-group-text + .input-group-icon, .input-group-prepend .input-group-icon + .input-group-icon, .input-group-prepend .input-group-text + .btn, .input-group-prepend .input-group-icon + .btn, .input-group-append .btn + .btn, .input-group-btn .btn + .btn, .input-group-addon .btn + .btn, .input-group-append .btn + .input-group-text, .input-group-btn .btn + .input-group-text, .input-group-btn .btn + .input-group-icon, .input-group-addon .btn + .input-group-text, .input-group-addon .btn + .input-group-icon, .input-group-append .btn + .input-group-icon, .input-group-append .input-group-text + .input-group-text, .input-group-btn .input-group-text + .input-group-text, .input-group-btn .input-group-icon + .input-group-text, .input-group-btn .input-group-text + .input-group-icon, .input-group-btn .input-group-icon + .input-group-icon, .input-group-addon .input-group-text + .input-group-text, .input-group-addon .input-group-icon + .input-group-text, .input-group-addon .input-group-text + .input-group-icon, .input-group-addon .input-group-icon + .input-group-icon, .input-group-append .input-group-icon + .input-group-text, .input-group-append .input-group-text + .input-group-icon, .input-group-append .input-group-icon + .input-group-icon, .input-group-append .input-group-text + .btn, .input-group-btn .input-group-text + .btn, .input-group-btn .input-group-icon + .btn, .input-group-addon .input-group-text + .btn, .input-group-addon .input-group-icon + .btn, .input-group-append .input-group-icon + .btn {
   margin-left: 6px; }
 
 .btn-group > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn {
@@ -14808,7 +14808,7 @@ body.dragging {
   flex: 1 1 auto; }
   .btn-group > .btn:hover, .btn-group-vertical > .btn:hover {
     z-index: 0; }
-  .btn-group > .btn:focus, .btn-group-vertical > .btn:focus, .btn-group > .btn:active, .btn-group-vertical > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn.active {
+  .btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn:focus, .btn-group-vertical > .btn:active, .btn-group-vertical > .btn.active {
     z-index: 0; }
 .btn-group .btn + .btn, .btn-group-vertical .btn + .btn {
   margin-left: 10px; }
@@ -15001,7 +15001,9 @@ body.dragging {
   font-size: 9px;
   position: absolute;
   top: 18px;
-  right: 10px; }
+  right: 10px;
+  padding: 0.25em 0.6em;
+  border-radius: 10rem; }
 .navbar-top .navbar-nav > li.nav-item.show > a .fa, .navbar-top .navbar-nav > li.show.navbar-btn > a .fa, .navbar-top .nav navbar.navbar-nav > li.show > a .fa, .nav .navbar-top navbar > .navbar-nav > li.show > a .fa {
   color: #217DC0; }
 .navbar-top .navbar-nav > li.dropdown.show > a::after, .navbar-top .navbar-nav > li.dropdown.show > a::before {
