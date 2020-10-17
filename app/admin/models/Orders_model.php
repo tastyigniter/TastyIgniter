@@ -245,9 +245,9 @@ class Orders_model extends Model
         return $this->processed;
     }
 
-    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [])
+    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [], $isRefundable = FALSE)
     {
-        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response);
+        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response, $isRefundable);
     }
 
     public function updateOrderStatus($id, $options = [])
