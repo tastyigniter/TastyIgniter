@@ -253,11 +253,9 @@ class Menu extends BaseWidget
         if (is_numeric($locationId = post('location')))
             $location = Locations_model::find($locationId);
 
+        AdminLocation::clearCurrent();
         if ($location AND AdminLocation::hasAccess($location)) {
             AdminLocation::setCurrent($location);
-        }
-        else {
-            AdminLocation::clearCurrent();
         }
 
         return $this->controller->redirectBack();
