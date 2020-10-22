@@ -47,7 +47,7 @@ class Menu_item_option_values_model extends Model
     public $rules = [
         ['menu_option_id', 'admin::lang.column_id', 'required|integer'],
         ['option_value_id', 'admin::lang.menus.label_option_value', 'required|integer'],
-        ['new_price', 'admin::lang.menus.label_option_price', 'numeric'],
+        ['new_price', 'admin::lang.menus.label_option_price', 'numeric|min:0'],
         ['quantity', 'admin::lang.menus.label_option_qty', 'numeric'],
     ];
 
