@@ -3,6 +3,7 @@
 namespace Main\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
+use Admin\Traits\ValidatesForm;
 use Carbon\Carbon;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
@@ -15,6 +16,8 @@ use System\Classes\ComponentManager as ComponentsManager;
  */
 class Components extends BaseFormWidget
 {
+    use ValidatesForm;
+
     protected static $onAddItemCalled;
 
     /**
@@ -102,6 +105,12 @@ class Components extends BaseFormWidget
 
     public function onSaveRecord()
     {
+        if (ThemeManager::instance()->isLocked($this->model->code)) {
+            flash()->danger(lang('system::lang.themes.alert_theme_locked'))->important();
+
+            return;
+        }
+
         $isCreateContext = !strlen(post('recordId'));
         $codeAlias = $isCreateContext
             ? post($this->formField->arrayName.'[componentData][component]')
@@ -273,12 +282,15 @@ class Components extends BaseFormWidget
 
         if ($isCreateContext) {
             $alias = sprintf('[%s]', $this->getUniqueAlias($codeAlias));
-            $template->update(['settings' => [$alias => $properties]]);
+
+            return $template->update(['settings' => [$alias => $properties]]);
         }
-        else {
-            $alias = sprintf('[%s]', $codeAlias);
-            $template->updateComponent($alias, $properties);
-        }
+
+        [$rules, $messages] = $this->manager->getComponentPropertyRules($componentObj);
+        $this->validate($properties, $rules, $messages);
+
+        $alias = sprintf('[%s]', $codeAlias);
+        $template->updateComponent($alias, $properties);
     }
 
     protected function convertComponentPropertyValues($properties)
