@@ -520,11 +520,12 @@ return [
         'text_select_file' => 'Select a [%s] template to edit',
         'text_is_default' => 'Activated',
         'text_set_default' => 'Activate',
-        'text_author' => 'Author',
+        'text_author' => 'by',
         'text_version' => 'Version',
         'text_theme_is_active' => '. You can not delete an active theme.',
         'text_files' => 'files',
         'text_files_data' => 'files and data',
+        'text_locked_child' => 'Locked theme: create a child theme',
 
         'label_code' => 'Code',
         'label_template' => 'Template',
@@ -556,7 +557,7 @@ return [
         'button_yes_copy' => 'Yes, copy',
         'button_return_to_list' => 'No, return to list',
 
-        'help_components' => 'Render the component on a layout or page by adding [<code>&#x3C;?= component(&#x27;componentAlias&#x27;); ?&#x3E;</code>] to the markup',
+        'help_components' => 'Render the component on a layout or page by adding <code>@component(&#x27;componentAlias&#x27;)</code> to the markup. Learn more <a href="https://tastyigniter.com/docs/master/customize/components">here</a>.',
 
         'error_config_no_found' => 'An error occurred, theme registration file could not be found',
         'error_theme_exists' => 'the theme already exists',
@@ -564,6 +565,7 @@ return [
         'alert_delete_warning' => 'You are about to delete the %s of theme <b>%s</b>',
         'alert_delete_confirm' => 'Are you sure you wish to delete the associated %s? This cannot be undone!',
         'alert_theme_locked' => 'This is a locked theme, changes are restricted, create a child theme to make changes.',
+        'alert_theme_path_locked' => 'This template belongs to a locked theme, such actions are restricted.',
         'alert_changes_confirm' => 'Conflicting versions, template file has changed. Reload the page to continue.',
     ],
 
