@@ -30,7 +30,7 @@
                 <button
                     type="button"
                     class="btn btn-primary"
-                    data-request="onManageSource"
+                    data-request="{{ $this->getEventHandler('onManageSource') }}"
                 >@lang('admin::lang.button_save')</button>
             </div>
         </div>

@@ -64,5 +64,14 @@ return [
                 ],
             ],
         ],
+        'rules' => [
+            ['markup', 'lang:system::lang.themes.text_tab_markup', 'string'],
+            ['codeSection', 'lang:system::lang.themes.text_tab_php_section', 'string'],
+            ['settings.components.*', 'lang:system::lang.themes.label_component_alias', 'required|regex:/^[a-zA-Z\s]+$/'],
+            ['settings.title', 'lang:system::lang.themes.label_title', 'required|max:160'],
+            ['settings.description', 'lang:admin::lang.label_description', 'max:255'],
+            ['settings.layout', 'lang:system::lang.themes.label_layout', 'string'],
+            ['settings.permalink', 'lang:system::lang.themes.label_permalink', 'required|string'],
+        ],
     ],
 ];
