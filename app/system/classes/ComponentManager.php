@@ -304,7 +304,7 @@ class ComponentManager
                 'label' => '',
                 'type' => 'text',
                 'comment' => '',
-                'validationPattern' => '^[a-zA-Z]+[0-9a-z\_]*$',
+                'validationRule' => 'required|regex:^[a-zA-Z]+$',
                 'validationMessage' => '',
                 'required' => TRUE,
                 'showExternalParam' => FALSE,
@@ -376,6 +376,25 @@ class ComponentManager
         }
 
         return $result;
+    }
+
+    public function getComponentPropertyRules($component)
+    {
+        $properties = $component->defineProperties();
+
+        $rules = [];
+        foreach ($properties as $name => $params) {
+            if (strlen($rule = array_get($params, 'validationRule', '')))
+                $rules[] = [$name, array_get($params, 'label', $name), $rule];
+        }
+
+        $messages = [];
+        foreach ($properties as $name => $params) {
+            if (strlen($message = array_get($params, 'validationMessage', '')))
+                $messages[$name] = $message;
+        }
+
+        return [$rules, $messages];
     }
 
     protected function checkComponentPropertyType($type)

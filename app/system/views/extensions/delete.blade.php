@@ -26,9 +26,9 @@
         : lang('system::lang.extensions.text_files');
     @endphp
     <p>
-        {{ sprintf(lang('system::lang.extensions.alert_delete_warning'), $deleteAction, $extensionName) }}
+        {!! sprintf(lang('system::lang.extensions.alert_delete_warning'), $deleteAction, $extensionName) !!}
         <br/>
-        {{ sprintf(lang('system::lang.extensions.alert_delete_confirm'), $deleteAction) }}
+        {!! sprintf(lang('system::lang.extensions.alert_delete_confirm'), $deleteAction) !!}
     </p>
     @if ($extensionData)
         <div class="form-group span-full">

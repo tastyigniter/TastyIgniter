@@ -19,7 +19,7 @@ $config['list']['columns'] = [
         'type' => 'button',
         'iconCssClass' => 'fa fa-paint-brush',
         'attributes' => [
-            'class' => 'btn btn-outline-default',
+            'class' => 'btn btn-outline-default mr-2',
             'href' => 'themes/edit/{code}',
         ],
     ],
@@ -27,7 +27,7 @@ $config['list']['columns'] = [
         'type' => 'button',
         'iconCssClass' => 'fa fa-file',
         'attributes' => [
-            'class' => 'btn btn-outline-default',
+            'class' => 'btn btn-outline-default mr-2',
             'href' => 'themes/source/{code}',
         ],
     ],
@@ -35,7 +35,7 @@ $config['list']['columns'] = [
         'type' => 'button',
         'iconCssClass' => 'fa fa-star-o',
         'attributes' => [
-            'class' => 'btn btn-outline-warning bg-transparent',
+            'class' => 'btn btn-outline-warning mr-2 bg-transparent',
             'title' => 'lang:system::lang.themes.text_set_default',
             'data-request' => 'onSetDefault',
             'data-request-form' => '#list-form',
@@ -95,7 +95,6 @@ $config['form']['fields'] = [
     'template' => [
         'label' => 'lang:system::lang.themes.label_template',
         'type' => 'templateeditor',
-        'form' => 'menu_options_model',
         'context' => ['source'],
     ],
 ];
