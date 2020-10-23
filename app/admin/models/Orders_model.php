@@ -80,7 +80,6 @@ class Orders_model extends Model
         ],
         'hasMany' => [
             'payment_logs' => 'Admin\Models\Payment_logs_model',
-            'coupon_history' => 'Admin\Models\Coupons_history_model',
         ],
         'morphMany' => [
             'review' => ['Admin\Models\Reviews_model'],

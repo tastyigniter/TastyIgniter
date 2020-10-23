@@ -211,11 +211,10 @@ class Customers_model extends AuthUserModel
                 foreach ($orders as $row) {
                     if (empty($row['order_id'])) continue;
 
-                    Coupons_history_model::where('order_id', $row['order_id'])->update($update);
-
                     if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
                         Addresses_model::where('address_id', $row['address_id'])->update($update);
                     }
+
                 }
             }
 

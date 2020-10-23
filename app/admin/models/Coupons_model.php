@@ -9,6 +9,7 @@ use Model;
 
 /**
  * Coupons Model Class
+ * @deprecated remove before v4. Added for backward compatibility, see Igniter\Coupons\Models\Coupons_model
  */
 class Coupons_model extends Model
 {
@@ -182,6 +183,6 @@ class Coupons_model extends Model
     public function countCustomerRedemptions($id)
     {
         return $this->history()->isEnabled()
-                    ->where('customer_id', $id)->count();
+            ->where('customer_id', $id)->count();
     }
 }
