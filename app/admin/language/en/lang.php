@@ -10,6 +10,7 @@ return [
     'text_disabled' => 'Disabled',
     'text_active' => 'Active',
     'text_inactive' => 'Inactive',
+    'text_incomplete' => 'Incomplete',
     'text_new' => 'New',
     'text_no' => 'No',
     'text_yes' => 'Yes',
