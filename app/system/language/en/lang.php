@@ -93,6 +93,7 @@ return [
         'text_files' => 'files',
         'text_files_data' => 'files and data',
         'text_settings' => 'Settings',
+        'text_author' => 'Author',
 
         'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more extensions',
         'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',

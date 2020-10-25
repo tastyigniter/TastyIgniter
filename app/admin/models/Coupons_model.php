@@ -82,7 +82,7 @@ class Coupons_model extends Model
 
     public function getTypeNameAttribute($value)
     {
-        return ($this->type == 'P') ? lang('admin::lang.coupons.text_percentage') : lang('admin::lang.coupons.text_fixed_amount');
+        return ($this->type == 'P') ? lang('admin::lang.menus.text_percentage') : lang('admin::lang.menus.text_fixed_amount');
     }
 
     public function getFormattedDiscountAttribute($value)

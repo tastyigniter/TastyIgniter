@@ -9,7 +9,7 @@
             data-toggle="buttons">
             @foreach ($fieldOptions as $key => $value)
                 <label
-                    class="btn btn-light {{ ($field->value == $key ? 'active' : '').($this->previewMode ? 'disabled' : '') }}">
+                    class="btn btn-light text-nowrap {{ ($field->value == $key ? 'active' : '').($this->previewMode ? 'disabled' : '') }}">
                     <input
                         type="radio"
                         id="{{ $field->getId($loop->iteration) }}"
