@@ -80,6 +80,9 @@
         if (!$itemMenu.length)
             return;
 
+        if (window.matchMedia('(max-width: 600px)'))
+            $('.sidebar, .nav-sidebar').collapse('hide')
+
         this.requestOptions($itemMenu)
     }
 
