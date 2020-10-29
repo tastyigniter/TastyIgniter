@@ -81,7 +81,7 @@ trait Assignable
         if (!$log = Assignable_logs_model::createLog($this))
             return FALSE;
 
-        $this->fireSystemEvent('admin.assignable.assigned');
+        $this->fireSystemEvent('admin.assignable.assigned', [$log]);
 
         return $log;
     }
