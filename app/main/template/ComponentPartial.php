@@ -86,10 +86,10 @@ class ComponentPartial extends Extendable implements TemplateSource
      */
     public static function loadOverrideCached($theme, $component, $fileName)
     {
-        $partial = Partial::loadCached($theme, strtolower($component->alias).'/'.$fileName);
+        $partial = Partial::loadCached($theme, $component->alias.'/'.$fileName);
 
         if ($partial === null) {
-            $partial = Partial::loadCached($theme, $component->alias.'/'.$fileName);
+            $partial = Partial::loadCached($theme, strtolower($component->alias).'/'.$fileName);
         }
 
         return $partial;
@@ -98,15 +98,12 @@ class ComponentPartial extends Extendable implements TemplateSource
     /**
      * Find a single template by its file name.
      *
-     * @param  string $fileName
+     * @param string $fileName
      *
      * @return mixed|static
      */
     public function find($fileName)
     {
-        if ('' === File::extension($fileName))
-            $fileName .= '.'.$this->defaultExtension;
-
         $filePath = $this->getFilePath($fileName);
 
         if (!File::isFile($filePath)) {
@@ -117,7 +114,7 @@ class ComponentPartial extends Extendable implements TemplateSource
             return null;
         }
 
-        $this->fileName = $fileName;
+        $this->fileName = File::basename($filePath);
         $this->mTime = File::lastModified($filePath);
         $this->content = $content;
 
@@ -177,15 +174,22 @@ class ComponentPartial extends Extendable implements TemplateSource
         $component = $this->component;
         $componentPath = $component->getPath();
 
-        if (!File::isFile($path = $componentPath.'/'.$fileName)) {
+        foreach (['.blade.', '.'] as $part) {
+            $basename = $fileName;
+            if (!strlen(File::extension($basename)))
+                $basename .= $part.$this->defaultExtension;
+
+            if (File::isFile($path = $componentPath.'/'.$basename))
+                return $path;
+
             // Check the shared "/partials" directory for the partial
-            $sharedPath = dirname($componentPath).'/partials/'.$fileName;
+            $sharedPath = dirname($componentPath).'/partials/'.$basename;
             if (File::isFile($sharedPath)) {
                 return $sharedPath;
             }
         }
 
-        return $path;
+        return $componentPath.'/'.$fileName;
     }
 
     /**

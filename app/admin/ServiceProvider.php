@@ -169,6 +169,11 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'maparea',
             ]);
 
+            $manager->registerFormWidget('Admin\FormWidgets\MapView', [
+                'label' => 'Map View',
+                'code' => 'mapview',
+            ]);
+
             $manager->registerFormWidget('Admin\FormWidgets\MarkdownEditor', [
                 'label' => 'Markdown Editor',
                 'code' => 'markdowneditor',
@@ -370,15 +375,7 @@ class ServiceProvider extends AppServiceProvider
                     'class' => 'marketing',
                     'icon' => 'fa-chart-line',
                     'title' => lang('admin::lang.side_menu.marketing'),
-                    'child' => [
-                        'coupons' => [
-                            'priority' => 10,
-                            'class' => 'coupons',
-                            'href' => admin_url('coupons'),
-                            'title' => lang('admin::lang.side_menu.coupon'),
-                            'permission' => 'Admin.Coupons',
-                        ],
-                    ],
+                    'child' => [],
                 ],
                 'design' => [
                     'priority' => 200,
@@ -525,10 +522,9 @@ class ServiceProvider extends AppServiceProvider
     {
         Relation::morphMap([
             'addresses' => 'Admin\Models\Addresses_model',
+            'allergens' => 'Admin\Models\Allergens_model',
             'assignable_logs' => 'Admin\Models\Assignable_logs_model',
             'categories' => 'Admin\Models\Categories_model',
-            'coupons_history' => 'Admin\Models\Coupons_history_model',
-            'coupons' => 'Admin\Models\Coupons_model',
             'customer_groups' => 'Admin\Models\Customer_groups_model',
             'customers' => 'Admin\Models\Customers_model',
             'location_areas' => 'Admin\Models\Location_areas_model',
@@ -641,6 +637,9 @@ class ServiceProvider extends AppServiceProvider
                 'Admin.Dashboard' => [
                     'label' => 'admin::lang.permissions.dashboard', 'group' => 'admin::lang.permissions.name',
                 ],
+                'Admin.Allergens' => [
+                    'label' => 'admin::lang.permissions.allergens', 'group' => 'admin::lang.permissions.name',
+                ],
                 'Admin.Categories' => [
                     'label' => 'admin::lang.permissions.categories', 'group' => 'admin::lang.permissions.name',
                 ],
@@ -649,9 +648,6 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.Mealtimes' => [
                     'label' => 'admin::lang.permissions.mealtimes', 'group' => 'admin::lang.permissions.name',
-                ],
-                'Admin.Coupons' => [
-                    'label' => 'admin::lang.permissions.coupons', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.Locations' => [
                     'label' => 'admin::lang.permissions.locations', 'group' => 'admin::lang.permissions.name',

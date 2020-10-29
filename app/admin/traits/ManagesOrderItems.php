@@ -2,13 +2,10 @@
 
 namespace Admin\Traits;
 
-use Admin\Models\Coupons_history_model;
 use Admin\Models\Menu_item_option_values_model;
 use Admin\Models\Menus_model;
-use Carbon\Carbon;
 use DB;
 use Event;
-use Igniter\Flame\Cart\CartCondition;
 
 trait ManagesOrderItems
 {
@@ -22,8 +19,6 @@ trait ManagesOrderItems
     protected function handleOnBeforePaymentProcessed()
     {
         $this->subtractStock();
-
-        $this->redeemCoupon();
     }
 
     /**
@@ -51,24 +46,6 @@ trait ManagesOrderItems
                     $menuOptionValue->updateStock($orderMenuOption->quantity);
                 });
         });
-    }
-
-    /**
-     * Redeem coupon by order_id
-     */
-    public function redeemCoupon()
-    {
-        $this
-            ->coupon_history()
-            ->where('status', '!=', '1')
-            ->get()
-            ->each(function (Coupons_history_model $model) {
-                $model->status = 1;
-                $model->date_used = Carbon::now();
-                $model->save();
-
-                Event::fire('admin.order.couponRedeemed', [$model]);
-            });
     }
 
     /**
@@ -193,29 +170,6 @@ trait ManagesOrderItems
                 'priority' => $total['priority'],
             ]);
         }
-    }
-
-    /**
-     * Add cart coupon to order by order_id
-     *
-     * @param \Igniter\Flame\Cart\CartCondition $couponCondition
-     * @param \Admin\Models\Customers_model $customer
-     *
-     * @return int|bool
-     */
-    public function logCouponHistory($couponCondition, $customer)
-    {
-        if (!$couponCondition instanceof CartCondition) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid argument, expected %s, got %s',
-                CartCondition::class, get_class($couponCondition)
-            ));
-        }
-
-        if (!$this->exists)
-            return FALSE;
-
-        return Coupons_history_model::createHistory($couponCondition, $this, $customer);
     }
 
     public function orderMenusQuery()

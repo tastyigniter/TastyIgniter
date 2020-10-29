@@ -24,6 +24,8 @@ class BasePaymentGateway extends ModelAction
 
     protected $configFields = [];
 
+    protected $configRules = [];
+
     /**
      * Class constructor
      *
@@ -36,7 +38,10 @@ class BasePaymentGateway extends ModelAction
 
         $calledClass = strtolower(get_called_class());
         $this->configPath = extension_path(File::normalizePath($calledClass));
-        $this->configFields = $this->loadConfig($this->defineFieldsConfig(), ['fields'], 'fields');
+
+        $formConfig = $this->loadConfig($this->defineFieldsConfig(), ['fields']);
+        $this->configFields = array_get($formConfig, 'fields');
+        $this->configRules = array_get($formConfig, 'rules');
 
         if (!$model)
             return;
@@ -79,6 +84,14 @@ class BasePaymentGateway extends ModelAction
     public function getConfigFields()
     {
         return $this->configFields;
+    }
+
+    /**
+     * Returns the form configuration used by this model.
+     */
+    public function getConfigRules()
+    {
+        return $this->configRules;
     }
 
     /**
@@ -217,6 +230,14 @@ class BasePaymentGateway extends ModelAction
     public function payFromPaymentProfile($order, $data = [])
     {
         throw new SystemException('The payFromPaymentProfile() method is not supported by the payment gateway.');
+    }
+
+    //
+    // Payment Refunds
+    //
+
+    public function processRefundForm($data, $order, $paymentLog)
+    {
     }
 
     /**

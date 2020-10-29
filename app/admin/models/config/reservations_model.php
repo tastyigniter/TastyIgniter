@@ -105,7 +105,7 @@ $config['list']['columns'] = [
         'relation' => 'status',
         'select' => 'status_name',
         'type' => 'partial',
-        'path' => 'reservations/status_column',
+        'path' => 'statuses/form/status_column',
         'searchable' => TRUE,
     ],
     'assignee_name' => [

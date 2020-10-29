@@ -17,6 +17,11 @@ class BladeExtension extends AbstractExtension
      */
     protected $items;
 
+    /**
+     * @var \System\Classes\ExtensionManager
+     */
+    protected $extensionManager;
+
     public function __construct()
     {
         $this->extensionManager = ExtensionManager::instance();

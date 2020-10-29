@@ -26,7 +26,7 @@ $(function () {
 
 // Submit list filter form on select change
 $(function () {
-    $(document).on('change', '.filter-scope select', function (event) {
+    $(document).on('change', '.filter-scope select, .filter-scope input[type="checkbox"]', function (event) {
         $(event.currentTarget).closest('form').submit()
     })
 })

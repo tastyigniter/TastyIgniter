@@ -167,13 +167,6 @@ class MainController extends BaseController
 
         $page = $this->router->findByUrl($url);
 
-        // Hidden page
-//        if ($page AND !$page->published) {
-//            if (!AdminAuth::getUser()) {
-//                $page = null;
-//            }
-//        }
-
         // Show maintenance message if maintenance is enabled
         if (setting('maintenance_mode') == 1 AND !AdminAuth::isLogged())
             return Response::make(
@@ -532,7 +525,7 @@ class MainController extends BaseController
 
         $useCache = TRUE;
         if ($useCache) {
-            $options['cache'] = new FileSystem(storage_path().'/system/templates');
+            $options['cache'] = new FileSystem(config('view.compiled'));
         }
 
         $this->template = new Environment($this->loader, $options);
@@ -607,7 +600,6 @@ class MainController extends BaseController
         }
         // Process Component partial
         elseif (strpos($name, '::') !== FALSE) {
-
             if (($partial = $this->loadComponentPartial($name, $throwException)) === FALSE)
                 return FALSE;
 

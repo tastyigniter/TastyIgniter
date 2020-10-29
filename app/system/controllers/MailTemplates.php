@@ -87,7 +87,9 @@ class MailTemplates extends \Admin\Classes\AdminController
 
         $adminUser = $this->getUser()->staff;
 
-        Mail::queue($model->code, [], function ($message) use ($adminUser) {
+        config()->set('system.suppressTemplateRuntimeNotice', true);
+
+        Mail::send($model->code, [], function ($message) use ($adminUser) {
             $message->to($adminUser->staff_email, $adminUser->staff_name);
         });
 

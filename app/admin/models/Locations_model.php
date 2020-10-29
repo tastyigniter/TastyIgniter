@@ -279,8 +279,7 @@ class Locations_model extends AbstractLocation
             )]);
         }
 
-        params('default_location_id', $this->getKey());
-        params()->save();
+        params()->set(['default_location_id' => $this->getKey()])->save();
     }
 
     /**

@@ -6,6 +6,8 @@ use Model;
 
 /**
  * Coupons History Model Class
+ *
+ * @deprecated remove before v4. Added for backward compatibility, see Igniter\Coupons\Models\Coupons_history_model
  */
 class Coupons_history_model extends Model
 {
@@ -84,7 +86,7 @@ class Coupons_history_model extends Model
         $model->amount = $couponCondition->getValue();
         $model->min_total = $coupon->min_total;
 
-        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$model, $couponCondition, $customer, $coupon], TRUE) === FALSE)
+        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$couponCondition, $customer, $coupon], TRUE) === FALSE)
             return FALSE;
 
         $model->save();

@@ -80,7 +80,6 @@ class Orders_model extends Model
         ],
         'hasMany' => [
             'payment_logs' => 'Admin\Models\Payment_logs_model',
-            'coupon_history' => 'Admin\Models\Coupons_history_model',
         ],
         'morphMany' => [
             'review' => ['Admin\Models\Reviews_model'],
@@ -245,9 +244,9 @@ class Orders_model extends Model
         return $this->processed;
     }
 
-    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [])
+    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [], $isRefundable = FALSE)
     {
-        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response);
+        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response, $isRefundable);
     }
 
     public function updateOrderStatus($id, $options = [])
@@ -328,7 +327,8 @@ class Orders_model extends Model
 
         $data['order_type'] = $model->order_type_name;
         $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(setting('time_format'));
-        $data['order_date'] = $model->date_added->format(setting('date_format'));
+        $data['order_date'] = $model->order_date->format(setting('date_format'));
+        $data['order_added'] = $model->date_added->format(setting('date_format'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;
@@ -345,7 +345,9 @@ class Orders_model extends Model
             $optionData = [];
             if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
                 foreach ($menuItemOptions as $menuItemOption) {
-                    $optionData[] = $menuItemOption->order_option_name
+                    $optionData[] = $menuItemOption->quantity
+                        .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'
+                        .$menuItemOption->order_option_name
                         .lang('admin::lang.text_equals')
                         .currency_format($menuItemOption->order_option_price);
                 }

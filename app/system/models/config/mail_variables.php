@@ -31,6 +31,7 @@ return [
         '{{ $order_type }}' => 'system::lang.mail_variables.text_order_type',
         '{{ $order_time }}' => 'system::lang.mail_variables.text_order_time',
         '{{ $order_date }}' => 'system::lang.mail_variables.text_order_date',
+        '{{ $order_added }}' => 'system::lang.mail_variables.text_order_added',
         '{{ $order_payment }}' => 'system::lang.mail_variables.text_order_payment',
         '{{ $order_address }}' => 'system::lang.mail_variables.text_order_address',
         '{{ $invoice_number }}' => 'system::lang.mail_variables.text_invoice_number',

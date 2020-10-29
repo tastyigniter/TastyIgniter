@@ -72,16 +72,6 @@ class OptimizeTablesColumns extends Migration
         };
     }
 
-    protected function _optimize_coupons()
-    {
-        return function (Blueprint $table) {
-            $table->text('description')->nullable()->change();
-            $table->boolean('status')->nullable()->change();
-            $table->string('validity', 15)->nullable()->change();
-            $table->string('recurring_every', 35)->nullable()->change();
-        };
-    }
-
     protected function _optimize_countries()
     {
         return function (Blueprint $table) {

@@ -46,5 +46,11 @@ return [
                 ],
             ],
         ],
+        'rules' => [
+            ['markup', 'lang:system::lang.themes.text_tab_markup', 'sometimes'],
+            ['codeSection', 'lang:system::lang.themes.text_tab_php_section', 'sometimes'],
+            ['settings.components.*.alias', 'lang:system::lang.themes.label_component_alias', 'sometimes|required|regex:/^[a-zA-Z\s]+$/'],
+            ['settings.description', 'lang:admin::lang.label_description', 'sometimes|max:255'],
+        ],
     ],
 ];
