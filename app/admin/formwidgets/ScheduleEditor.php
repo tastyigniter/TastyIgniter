@@ -75,9 +75,10 @@ class ScheduleEditor extends BaseFormWidget
         $this->addJs('../../datepicker/assets/js/clockpicker.js', 'clockpicker-js');
 
         $this->addJs('../../recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
-        $this->addJs('js/timesheet.js', 'timesheet-js');
+        $this->addJs('vendor/timesheet/timesheet.js', 'timesheet-js');
         $this->addJs('js/scheduleeditor.js', 'scheduleeditor-js');
-        $this->addCss('css/timesheet.css', 'timesheet-css');
+        $this->addCss('vendor/timesheet/timesheet.css', 'timesheet-css');
+        $this->addCss('css/scheduleeditor.css', 'scheduleeditor-css');
     }
 
     public function prepareVars()
