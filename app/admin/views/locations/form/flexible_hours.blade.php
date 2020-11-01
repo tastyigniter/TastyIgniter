@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th></th>
-                <th>@lang('admin::lang.locations.label_opening_hour')</th>
+                <th>@lang('admin::lang.locations.label_schedule_hours')</th>
                 <th class="text-right">@lang('admin::lang.label_status')</th>
             </tr>
             </thead>
@@ -32,12 +32,12 @@
                             </div>
                             <input
                                 type="text"
-                                name="{{ $field->getName().'['.$loop->index.'][open]' }}"
+                                name="{{ $field->getName().'['.$loop->index.'][hours]' }}"
                                 class="form-control"
                                 data-control="inputmask"
-                                data-inputmask-regex="(([01][0-9]|2[0-3]):([0-5][0-9]))+((,)( )?)*"
+                                data-inputmask-regex="(([01][0-9]|2[0-3]):([0-5][0-9])\-([01][0-9]|2[0-3]):([0-5][0-9])((,)( )?))*$"
                                 placeholder=""
-                                value="{{ $hour['open'] }}"
+                                value="{{ $hour['hours'] }}"
                                 autocomplete="off"
                             />
                         </div>

@@ -11,23 +11,19 @@
                 <div class="card-body">
                     <div class="flex-fill">
                         <h5 class="card-title">{{ ucfirst(strtolower($schedule->code.' '.lang('admin::lang.locations.text_schedule'))) }}</h5>
-                        <p class="card-text text-muted">{{ lang('admin::lang.locations.text_'.$schedule->config['type']) }}</p>
+                        <p class="card-text">{{ lang('admin::lang.locations.text_'.$schedule->config['type']) }}</p>
                     </div>
-                </div>
 
-                <div class="table-responsive px-2">
-                    <table class="table table-borderless">
-                        <tbody>
+                    <div class="pt-3">
                         @foreach($schedule->hours as $hour)
-                        <tr>
-                            <td class="w-100">{{ $hour->day }}</td>
-                            <td class="">
-                                <p class="mb-1">{{ $hour->hour->getOpen() }}<span class="text-muted">-{{ $hour->hour->getClose() }}</span></p>
-                            </td>
-                        </tr>
+                            <div class="d-flex pb-2">
+                                <div class="col-5 p-0 text-muted">{{ $hour->day }}</div>
+                                <div class="col-7 p-0 text-right text-nowrap text-truncate">
+                                    <span title="{{ $hour->hours }}">{{ $hour->hours }}</span>
+                                </div>
+                            </div>
                         @endforeach
-                        </tbody>
-                    </table>
+                    </div>
                 </div>
             </div>
         </div>

@@ -25,7 +25,7 @@ return [
                     'condition' => 'value[daily]',
                 ],
             ],
-            'start_time' => [
+            'open' => [
                 'label' => 'lang:admin::lang.locations.label_schedule_open',
                 'type' => 'datepicker',
                 'default' => '12:00 AM',
@@ -37,7 +37,7 @@ return [
                     'condition' => 'value[daily]',
                 ],
             ],
-            'end_time' => [
+            'close' => [
                 'label' => 'lang:admin::lang.locations.label_schedule_close',
                 'type' => 'datepicker',
                 'default' => '11:59 PM',
@@ -63,12 +63,23 @@ return [
                 'label' => 'lang:admin::lang.locations.text_flexible',
                 'type' => 'partial',
                 'path' => 'locations/form/flexible_hours',
+                'commentAbove' => 'lang:admin::lang.locations.help_flexible_hours',
                 'trigger' => [
                     'action' => 'show',
                     'field' => 'type',
                     'condition' => 'value[flexible]',
                 ],
             ],
+        ],
+        'rules' => [
+            ['type', 'admin::lang.locations.label_schedule_type', 'alpha_dash|in:24_7,daily,timesheet,flexible'],
+            ['days.*', 'admin::lang.locations.label_schedule_days', 'required_if:type,daily|integer|between:0,7'],
+            ['open', 'admin::lang.locations.label_schedule_open', 'required_if:type,daily|valid_time'],
+            ['close', 'admin::lang.locations.label_schedule_close', 'required_if:type,daily|valid_time'],
+            ['timesheet', 'admin::lang.locations.text_timesheet', 'required_if:type,timesheet|string'],
+            ['flexible.*.day', 'admin::lang.locations.label_schedule_days', 'required_if:type,flexible|numeric'],
+            ['flexible.*.hours', 'admin::lang.locations.label_schedule_hours', 'required_if:type,flexible|regex:/^[0-9\-\:\?]+$/'],
+            ['flexible.*.status', 'admin::lang.label_status', 'sometimes|required_if:type,flexible|boolean'],
         ],
     ],
 ];

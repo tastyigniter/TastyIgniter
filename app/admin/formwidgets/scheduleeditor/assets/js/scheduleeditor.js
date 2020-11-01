@@ -29,7 +29,7 @@
 
         this.timesheet = $timesheet.find('table > tbody').timeSheet({
             data: {
-                dimensions: [this.options.timesheetYCount, this.options.timesheetXCount * 60/timesheetOptions.cellDuration],
+                dimensions: [this.options.timesheetYCount, this.options.timesheetXCount * 60 / timesheetOptions.cellDuration],
                 colHead: timesheetHeadings,
                 rowHead: timesheetOptions.days,
                 sheetHead: {name: this.options.timesheetHeadText},
@@ -42,6 +42,8 @@
         timesheetData.remarks.forEach(function (remark, idx) {
             this.timesheet.setRemark(idx, remark === '' ? '-' : remark);
         }, this);
+
+        this.onTimesheetEnd()
     }
 
     ScheduleEditor.prototype.loadRecordForm = function (event) {
@@ -50,10 +52,10 @@
         this.editorModal = new $.ti.recordEditor.modal({
             alias: this.options.alias,
             recordId: $button.data('schedule-code'),
+            onLoad: $.proxy(this.onModalLoad, this),
             onSave: function () {
                 this.hide()
-            },
-            onLoad: this.onModalLoad.bind(this)
+            }
         })
     }
 
@@ -75,7 +77,7 @@
 
                 result.push({
                     name: (hourOfDay % 4 === 0) ? hourPadded : '&nbsp;&nbsp;&nbsp;&nbsp;',
-                    title: hourPadded + ':' + minutePadded + '-' + (minuteOfDay === (60-timesheetOptions.cellDuration) ? nextHourPadded + ':00' : hourPadded + ':' + (minuteOfDay + (60/timesheetOptions.cellDuration))),
+                    title: hourPadded + ':' + minutePadded + '-' + (minuteOfDay === (60 - timesheetOptions.cellDuration) ? nextHourPadded + ':00' : hourPadded + ':' + (minuteOfDay + (60 / timesheetOptions.cellDuration))),
                 })
             }
         }
@@ -93,31 +95,22 @@
         for (var dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
             var day = [];
             if (timesheetOptions.values[dayOfWeek]) {
-                // convert single opening/closing hours to multiple
-                if (timesheetOptions.values[dayOfWeek].open) {
-                    timesheetOptions.values[dayOfWeek].hours = [{
-                        open: timesheetOptions.values[dayOfWeek].open,
-                        close: timesheetOptions.values[dayOfWeek].close
-                    }];
-                    delete timesheetOptions.values[dayOfWeek].open;
-                    delete timesheetOptions.values[dayOfWeek].close;
-                }
-
+                var timesheetHours = timesheetOptions.values[dayOfWeek].hours;
                 var isOpen = false;
                 for (var hourOfDay = 0; hourOfDay < 24; hourOfDay++) {
                     for (var minuteOfDay = 0; minuteOfDay < 60; minuteOfDay = minuteOfDay + timesheetOptions.cellDuration) {
-                        for (var valueIterator = 0; valueIterator < timesheetOptions.values[dayOfWeek].hours.length; valueIterator++) {
-                            var openHour = timesheetOptions.values[dayOfWeek].hours[valueIterator].open.split(':').map(function (v) {
+                        for (var valueIterator = 0; valueIterator < timesheetHours.length; valueIterator++) {
+                            var openHour = timesheetHours[valueIterator].open.split(':').map(function (v) {
                                 return parseInt(v)
                             });
-                            var closeHour = timesheetOptions.values[dayOfWeek].hours[valueIterator].close.split(':').map(function (v) {
+                            var closeHour = timesheetHours[valueIterator].close.split(':').map(function (v) {
                                 return parseInt(v)
                             });
 
-                            if (openHour[0] == hourOfDay && openHour[1] <= minuteOfDay) {
+                            if (openHour[0] === hourOfDay && openHour[1] <= minuteOfDay) {
                                 isOpen = true;
                             }
-                            if (closeHour[0] == hourOfDay && closeHour[1] <= minuteOfDay) {
+                            if (closeHour[0] === hourOfDay && closeHour[1] <= minuteOfDay) {
                                 isOpen = false;
                             }
                         }
@@ -126,8 +119,7 @@
                 }
 
                 var remark = [];
-                timesheetOptions.values[dayOfWeek].hours
-                .forEach(function (hours) {
+                timesheetOptions.values[dayOfWeek].hours.forEach(function (hours) {
                     remark.push(hours.open + '-' + hours.close);
                 });
                 remark = remark.join(', ');
@@ -162,10 +154,9 @@
     ScheduleEditor.prototype.onTimesheetEnd = function (sheet) {
         var $value = [],
             timesheetOptions = $(this.options.timesheetSelector).data(),
-            minuteDivisor = (60/timesheetOptions.cellDuration);
+            minuteDivisor = (60 / timesheetOptions.cellDuration);
 
-        this.timesheet.getSheetStates()
-        .forEach(function (day, idx) {
+        this.timesheet.getSheetStates().forEach(function (day, idx) {
             var isOpen = false;
             var myValue = [];
             var openTime = '';
@@ -175,12 +166,12 @@
             for (var dayIterator = 0; dayIterator < this.options.timesheetXCount; dayIterator++) {
                 if (day[dayIterator] === 1 && !isOpen) {
                     isOpen = true;
-                    openTime = Math.floor(dayIterator / minuteDivisor) + ':' + (dayIterator % minuteDivisor) * (60/timesheetOptions.cellDuration);
+                    openTime = Math.floor(dayIterator / minuteDivisor) + ':' + (dayIterator % minuteDivisor) * (60 / timesheetOptions.cellDuration);
                     if (openTime.indexOf(':') === 1) openTime = '0' + openTime;
                     if (openTime.length === 4) openTime += '0';
                 } else if (day[dayIterator] === 0 && isOpen) {
                     isOpen = false;
-                    closeTime = Math.floor(dayIterator / minuteDivisor) + ':' + (dayIterator % minuteDivisor) * (60/timesheetOptions.cellDuration);
+                    closeTime = Math.floor(dayIterator / minuteDivisor) + ':' + (dayIterator % minuteDivisor) * (60 / timesheetOptions.cellDuration);
                     if (closeTime.indexOf(':') === 1) closeTime = '0' + closeTime;
                     if (closeTime.length === 4) closeTime += '0';
 

@@ -18,6 +18,8 @@ class Working_hours_model extends AbstractWorkingHour
         'status' => 'boolean',
     ];
 
+    public static $weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
     public function getHoursByLocation($id)
     {
         $collection = [];
@@ -47,19 +49,17 @@ class Working_hours_model extends AbstractWorkingHour
 
     public function getWeekDaysOptions()
     {
-        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        return self::$weekDays;
     }
 
     public function getTimesheetOptions($value, $data)
     {
         $result = new \stdClass();
-        $result->daysOfWeek = [];
-        $result->timesheet = [];
+        $result->timesheet = $value ?? [];
 
-        $options = $value ?? [];
+        $result->daysOfWeek = [];
         foreach ($this->getWeekDaysOptions() as $key => $day) {
-            $result->daysOfWeek[] = ['name' => $day];
-            $result->timesheet[] = $options[$key] ?? ['day' => $key, 'open' => '00:00', 'close' => '23:59', 'status' => 1];
+            $result->daysOfWeek[$key] = ['name' => $day];
         }
 
         return $result;
