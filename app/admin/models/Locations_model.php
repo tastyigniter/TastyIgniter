@@ -6,6 +6,7 @@ use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
+use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
 
@@ -17,6 +18,7 @@ class Locations_model extends AbstractLocation
     use HasWorkingHours;
     use HasDeliveryAreas;
     use HasPermalink;
+    use Purgeable;
     use HasMedia;
 
     const LOCATION_CONTEXT_SINGLE = 'single';
@@ -48,6 +50,8 @@ class Locations_model extends AbstractLocation
             'tables' => ['Admin\Models\Tables_model', 'table' => 'location_tables'],
         ],
     ];
+
+    protected $purgeable = ['tables', 'delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [
@@ -104,6 +108,16 @@ class Locations_model extends AbstractLocation
     protected function afterFetch()
     {
         $this->parseOptionsValue();
+    }
+
+    protected function beforeSave()
+    {
+        $this->parseOptionsValue();
+    }
+
+    protected function afterSave()
+    {
+        $this->performAfterSave();
     }
 
     protected function beforeDelete()
@@ -250,6 +264,23 @@ class Locations_model extends AbstractLocation
         }
 
         return collect($result);
+    }
+
+    public function performAfterSave()
+    {
+        $this->restorePurgedValues();
+
+        if (array_key_exists('hours', $this->options)) {
+            $this->addOpeningHours($this->options['hours']);
+        }
+
+        if (array_key_exists('delivery_areas', $this->attributes)) {
+            $this->addLocationAreas($this->attributes['delivery_areas']);
+        }
+
+        if (array_key_exists('tables', $this->attributes)) {
+            $this->addLocationTables($this->attributes['tables']);
+        }
     }
 
     public function makeDefault()

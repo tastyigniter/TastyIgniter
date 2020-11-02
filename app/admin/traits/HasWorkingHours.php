@@ -15,6 +15,11 @@ trait HasWorkingHours
      */
     protected $workingHours;
 
+    /**
+     * @var WorkingSchedule
+     */
+    protected $workingSchedules;
+
     protected $currentTime;
 
     /**
@@ -129,24 +134,61 @@ trait HasWorkingHours
      */
     public function addOpeningHours($data = [])
     {
+        $created = FALSE;
+
         $this->working_hours()->delete();
 
-        foreach ($data as $type => $schedules) {
-            foreach ($schedules as $day => $hours) {
-                foreach ($hours as $hour) {
-                    $this->working_hours()->create([
-                        'location_id' => $this->getKey(),
-                        'weekday' => $hour['day'],
-                        'type' => $type,
-                        'opening_time' => mdate('%H:%i', strtotime($hour['open'])),
-                        'closing_time' => mdate('%H:%i', strtotime($hour['close'])),
-                        'status' => $hour['status'],
-                    ]);
-                }
+        if (!$data OR !isset($data['opening']))
+            return FALSE;
+
+        foreach ($data as $type => $hours) {
+            $hourType = $hours['type'] ?? '24_7';
+            $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
+
+            foreach ($hoursArray as $hourValue) {
+                $created = $this->working_hours()->create([
+                    'location_id' => $this->getKey(),
+                    'weekday' => $hourValue['day'],
+                    'type' => $type,
+                    'opening_time' => mdate('%H:%i', strtotime($hourValue['open'])),
+                    'closing_time' => mdate('%H:%i', strtotime($hourValue['close'])),
+                    'status' => $hourValue['status'],
+                ]);
             }
         }
 
-        return TRUE;
+        return $created;
+    }
+
+    /**
+     * Build working hours array
+     *
+     * @param $type
+     * @param $data
+     *
+     * @return array
+     */
+    public function createWorkingHoursArray($type, $data)
+    {
+        $hours = ['open' => '00:00', 'close' => '23:59', 'status' => 1];
+        if ($type != '24_7')
+            $hours = ['open' => $data['open'], 'close' => $data['close']];
+
+        $days = $data['days'] ?? [];
+
+        $workingHours = [];
+        for ($day = 0; $day <= 6; $day++) {
+            $_hours = ($type == 'flexible' AND isset($data['flexible'][$day])) ? $data['flexible'][$day] : $hours;
+            $workingHours[] = [
+                'day' => $day,
+                'type' => $type,
+                'open' => $_hours['open'],
+                'close' => $_hours['close'],
+                'status' => $_hours['status'] ?? (int)in_array($day, $days),
+            ];
+        }
+
+        return $workingHours;
     }
 
     protected function parseHoursFromOptions(&$value)
