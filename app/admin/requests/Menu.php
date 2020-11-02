@@ -11,7 +11,7 @@ class Menu extends FormRequest
         return [
             ['menu_name', 'admin::lang.label_name', 'required|between:2,255'],
             ['menu_description', 'admin::lang.label_description', 'between:2,1028'],
-            ['menu_price', 'admin::lang.menus.label_price', 'required|numeric'],
+            ['menu_price', 'admin::lang.menus.label_price', 'required|numeric|min:0'],
             ['categories.*', 'admin::lang.menus.label_category', 'sometimes|required|integer'],
             ['locations.*', 'admin::lang.column_location', 'sometimes|integer'],
             ['stock_qty', 'admin::lang.menus.label_stock_qty', 'nullable|integer'],

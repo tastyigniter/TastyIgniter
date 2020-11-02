@@ -167,13 +167,6 @@ class MainController extends BaseController
 
         $page = $this->router->findByUrl($url);
 
-        // Hidden page
-//        if ($page AND !$page->published) {
-//            if (!AdminAuth::getUser()) {
-//                $page = null;
-//            }
-//        }
-
         // Show maintenance message if maintenance is enabled
         if (setting('maintenance_mode') == 1 AND !AdminAuth::isLogged())
             return Response::make(
