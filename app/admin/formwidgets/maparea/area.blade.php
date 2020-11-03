@@ -12,7 +12,7 @@
         <div class="d-flex w-100 justify-content-between">
             <div class="align-self-center mr-3">
                  <span
-                     class="badge border-circle"
+                     class="badge"
                      style="background-color:{{ $area->color }}"
                  >&nbsp;</span>
             </div>
@@ -28,8 +28,8 @@
                     aria-label="Remove"
                     role="button"
                     @unless ($this->previewMode)
-                        data-control="remove-area"
-                        data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
+                    data-control="remove-area"
+                    data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
                     @endunless
                 ><i class="fa fa-trash-alt"></i></a>
             </div>
