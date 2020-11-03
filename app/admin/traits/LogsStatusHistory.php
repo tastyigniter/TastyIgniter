@@ -50,6 +50,8 @@ trait LogsStatusHistory
 
         $this->save();
 
+        $this->fireSystemEvent('admin.statusHistory.added', [$history]);
+
         return $history;
     }
 

@@ -54,7 +54,7 @@ class Menu_option_values_model extends Model
     public $rules = [
         ['option_id', 'lang:admin::lang.menu_options.label_option_id', 'required|integer'],
         ['value', 'lang:admin::lang.menu_options.label_option_value', 'required|min:2|max:128'],
-        ['price', 'lang:admin::lang.menu_options.label_option_price', 'required|numeric'],
+        ['price', 'lang:admin::lang.menu_options.label_option_price', 'required|numeric|min:0'],
     ];
 
     public static function getDropDownOptions()

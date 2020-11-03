@@ -127,4 +127,27 @@ class IgniterUtil extends Command
             $this->comment(sprintf(' -> %s', $publicDestination));
         }
     }
+
+    protected function utilRemoveDuplicates()
+    {
+        $this->comment('Removing duplicate views...');
+
+        $directoryToScan = new \RecursiveDirectoryIterator(app_path());
+        $directoryIterator = new \RecursiveIteratorIterator($directoryToScan);
+        $files = new \RegexIterator($directoryIterator, '#(?:\.blade\.php)$#Di');
+
+        $removeCount = 0;
+        foreach ($files as $file)
+        {
+            $pagicPath = str_replace('.blade.php', '.php', $file->getPathName());
+            if (file_exists($pagicPath))
+            {
+                unlink($pagicPath);
+                $this->comment('Removed '.$pagicPath);
+                $removeCount++;
+            }
+        }
+
+        $this->comment('Removed '.$removeCount.' duplicate views...');
+    }
 }

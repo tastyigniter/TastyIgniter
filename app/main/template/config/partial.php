@@ -16,5 +16,9 @@ return [
                 ],
             ],
         ],
+        'rules' => [
+            ['markup', 'lang:system::lang.themes.text_tab_markup', 'sometimes'],
+            ['settings.description', 'lang:admin::lang.label_description', 'sometimes|max:255'],
+        ],
     ],
 ];

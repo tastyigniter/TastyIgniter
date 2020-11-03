@@ -80,7 +80,6 @@ class Orders_model extends Model
         ],
         'hasMany' => [
             'payment_logs' => 'Admin\Models\Payment_logs_model',
-            'coupon_history' => 'Admin\Models\Coupons_history_model',
         ],
         'morphMany' => [
             'review' => ['Admin\Models\Reviews_model'],
@@ -245,9 +244,9 @@ class Orders_model extends Model
         return $this->processed;
     }
 
-    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [])
+    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [], $isRefundable = FALSE)
     {
-        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response);
+        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response, $isRefundable);
     }
 
     public function updateOrderStatus($id, $options = [])
