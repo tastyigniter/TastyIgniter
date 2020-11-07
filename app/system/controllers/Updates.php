@@ -6,6 +6,7 @@ use AdminMenu;
 use ApplicationException;
 use Exception;
 use Flash;
+use Main\Classes\ThemeManager;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 use System\Models\Extensions_model;
@@ -104,7 +105,6 @@ class Updates extends \Admin\Classes\AdminController
         $json = [];
 
         if ($filter = input('filter') AND is_array($filter)) {
-
             $itemType = $filter['type'] ?? 'extension';
             $searchQuery = isset($filter['search']) ? strtolower($filter['search']) : '';
 
@@ -242,7 +242,6 @@ class Updates extends \Admin\Classes\AdminController
             return $processSteps;
 
         foreach (['download', 'extract', 'complete'] as $step) {
-
             // Silly way to sort the process
             $applySteps = [
                 'core' => [],
@@ -358,6 +357,9 @@ class Updates extends \Admin\Classes\AdminController
                     break;
                 case 'extension':
                     ExtensionManager::instance()->installExtension($item['code'], $item['version']);
+                    break;
+                case 'theme':
+                    ThemeManager::instance()->installTheme($item['code'], $item['version']);
                     break;
             }
         }

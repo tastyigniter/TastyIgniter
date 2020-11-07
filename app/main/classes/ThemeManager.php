@@ -580,6 +580,22 @@ class ThemeManager
         return TRUE;
     }
 
+    public function installTheme($code, $version = null)
+    {
+        $model = Themes_model::firstOrNew(['code' => $code]);
+
+        if (!$themeObj = $this->findTheme($model->code))
+            return FALSE;
+
+        $model->name = $themeObj->label ?? title_case($code);
+        $model->code = $code;
+        $model->version = $version ?? $model->version;
+        $model->description = $themeObj->description ?? '';
+        $model->save();
+
+        return TRUE;
+    }
+
     /**
      * @param \System\Models\Themes_model $model
      * @return \System\Models\Themes_model
@@ -600,7 +616,6 @@ class ThemeManager
         $themeConfig = [
             'name' => $parentTheme->label.' [child]',
             'code' => $childThemeCode,
-            'version' => $parentTheme->version ?? '1.0.0',
             'description' => $parentTheme->description,
         ];
 

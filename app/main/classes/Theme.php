@@ -31,11 +31,6 @@ class Theme
     public $description;
 
     /**
-     * @var string The theme version
-     */
-    public $version;
-
-    /**
      * @var string The theme author
      */
     public $author;
@@ -275,9 +270,6 @@ class Theme
         if (isset($this->config['description']))
             $this->description = $this->config['description'];
 
-        if (isset($this->config['version']))
-            $this->version = $this->config['version'];
-
         if (isset($this->config['author']))
             $this->author = $this->config['author'];
 
@@ -311,7 +303,6 @@ class Theme
 
     public function getPagesOptions()
     {
-
     }
 
     //
@@ -380,7 +371,7 @@ class Theme
     /**
      * Implements the getter functionality.
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return void
      */
@@ -396,7 +387,7 @@ class Theme
     /**
      * Determine if an attribute exists on the object.
      *
-     * @param  string $key
+     * @param string $key
      *
      * @return bool
      */
