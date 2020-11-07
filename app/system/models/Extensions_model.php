@@ -68,6 +68,11 @@ class Extensions_model extends Model
         return $this->class ? $this->class->extensionMeta() : [];
     }
 
+    public function getVersionAttribute($value = null)
+    {
+        return $value ?? '0.1.0';
+    }
+
     public function getTitleAttribute()
     {
         return array_get($this->meta, 'name', 'Undefined extension title');
@@ -168,7 +173,6 @@ class Extensions_model extends Model
 
             $enableExtension = ($model->exists AND !$extension->disabled);
 
-            $model->version = array_get($extension->extensionMeta(), 'version');
             $model->save();
 
             $extensionManager->updateInstalledExtensions($code, $enableExtension);

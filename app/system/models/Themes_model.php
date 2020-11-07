@@ -119,9 +119,9 @@ class Themes_model extends Model
         return optional($this->getTheme())->description ?? $value;
     }
 
-    public function getVersionAttribute($value)
+    public function getVersionAttribute($value = null)
     {
-        return optional($this->getTheme())->version ?? $value;
+        return $value ?? '0.1.0';
     }
 
     public function getAuthorAttribute($value)
@@ -266,7 +266,7 @@ class Themes_model extends Model
             $theme = self::firstOrNew(['code' => $name]);
             $theme->name = $themeObj->label ?? title_case($code);
             $theme->code = $name;
-            $theme->version = $themeObj->version ?? '1.0.0';
+            $theme->version = $theme->version ?? '0.1.0';
             $theme->description = $themeObj->description ?? '';
             $theme->save();
         }
