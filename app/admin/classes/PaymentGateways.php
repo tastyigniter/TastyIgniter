@@ -200,9 +200,20 @@ class PaymentGateways
                 File::makeDirectory(dirname($partialPath), null, TRUE);
 
             if (!array_key_exists($partialName, $partials)) {
-                $filePath = dirname(File::fromClass($class)).'/'.strtolower(class_basename($class)).'/payment_form.blade.php';
-                File::put($partialPath, File::get($filePath));
+                File::put($partialPath, self::getFileContent($class));
             }
         }
+    }
+
+    protected static function getFileContent(string $class): string
+    {
+        $filePath = dirname(File::fromClass($class));
+        $filePath .= '/'.strtolower(class_basename($class));
+        $filePath .= '/payment_form';
+
+        if (File::exists($path = $filePath.'.blade.php'))
+            return File::get($path);
+
+        return File::get($filePath.'.php');
     }
 }
