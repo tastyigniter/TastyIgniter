@@ -226,6 +226,18 @@ class Locations_model extends AbstractLocation
         $this->url = site_url($this->permalink_slug.$suffix);
     }
 
+    public function getAddress()
+    {
+        $country = optional($this->country);
+
+        return array_merge(parent::getAddress(), [
+            'country' => $country->country_name,
+            'iso_code_2' => $country->iso_code_2,
+            'iso_code_3' => $country->iso_code_3,
+            'format' => $country->format,
+        ]);
+    }
+
     public function hasGallery()
     {
         return $this->hasMedia('gallery');
