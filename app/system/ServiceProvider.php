@@ -310,7 +310,7 @@ class ServiceProvider extends AppServiceProvider
 
         $this->app->resolving('translator.localization', function ($localization, $app) {
             $app['config']->set('localization.locale', setting('default_language', $app['config']['app.locale']));
-            $app['config']->set('localization.supportedLocales', setting('supported_languages', []));
+            $app['config']->set('localization.supportedLocales', setting('supported_languages', []) ?: ['en']);
             $app['config']->set('localization.detectBrowserLocale', (bool)setting('detect_language', FALSE));
         });
 
