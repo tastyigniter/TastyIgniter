@@ -151,7 +151,6 @@ class Locations_model extends AbstractLocation
         ], $options));
 
         if ($latitude AND $longitude) {
-            $query->select('*');
             $query->selectDistance($latitude, $longitude);
         }
 
