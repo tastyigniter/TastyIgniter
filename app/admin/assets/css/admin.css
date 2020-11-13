@@ -17017,10 +17017,6 @@ a.ti-loading:before, button.ti-loading:before, span.ti-loading:before {
 .table .list-action, .markdown table .list-action, .table .list-setup, .markdown table .list-setup {
   width: 1px;
 }
-.table .list-action .btn, .markdown table .list-action .btn, .table .list-setup .btn, .markdown table .list-setup .btn {
-  border: 0;
-  padding: 4px 8px;
-}
 .form-control-static {
   background-color: #D2D4DF;
   border-radius: 3px;
@@ -17207,6 +17203,10 @@ a.ti-loading:before, button.ti-loading:before, span.ti-loading:before {
 .btn-edit {
   color: #217DC0;
   background-color: transparent;
+}
+.list-action .btn {
+  border: 0;
+  padding: 4px 8px;
 }
 .btn-primary:not([href]), .swal-button--confirm:not([href]) {
   color: #FFFFFF;

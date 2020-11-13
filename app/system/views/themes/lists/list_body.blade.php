@@ -30,7 +30,7 @@
                         @unless ($theme->getTheme()->hasParent())
                             <p class="description text-muted mt-3">{{ $theme->description }}</p>
                         @endunless
-                        <div class="align-self-end my-3">
+                        <div class="list-action align-self-end my-3">
                             {!! $this->makePartial('lists/list_buttons', ['theme' => $theme]) !!}
                         </div>
                     </div>

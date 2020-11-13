@@ -6,6 +6,11 @@
   color: $primary;
   background-color: transparent;
 }
+.list-action .btn,
+.btn-action {
+  border: 0;
+  padding: $btn-action-padding;
+}
 @each $color, $value in $theme-colors {
   .btn-#{$color} {
     &:not([href]) {
