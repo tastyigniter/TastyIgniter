@@ -702,7 +702,7 @@ class ServiceProvider extends AppServiceProvider
             // Check for assignables to assign every minute
             $schedule->call(function () {
                 Classes\Allocator::allocate();
-            })->withoutOverlapping(5)->runInBackground()->everyMinute();
+            })->name('Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
         });
     }
 
