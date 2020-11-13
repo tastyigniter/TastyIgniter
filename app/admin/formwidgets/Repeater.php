@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class Repeater extends BaseFormWidget
 {
-    const INDEX_SEARCH = '___index__';
+    const INDEX_SEARCH = '@@index';
 
     const SORT_PREFIX = '___dragged_';
 
