@@ -71,4 +71,9 @@
 .table .list-action,
 .table .list-setup {
   width: 1px;
+
+  .btn {
+    border: 0;
+    padding: $btn-action-padding;
+  }
 }

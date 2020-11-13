@@ -36,12 +36,12 @@ class Languages_model extends Language
     /**
      * @var array Object cache of self, by code.
      */
-    protected static $cacheLanguageCodes = [];
+    protected static $localesCache = [];
 
     /**
      * @var array A cache of supported locales.
      */
-    protected static $cacheListSupported;
+    protected static $supportedLocalesCache;
 
     /**
      * @var self Default language cache.
@@ -102,10 +102,10 @@ class Languages_model extends Language
         if (!$code)
             return null;
 
-        if (isset(self::$cacheLanguageCodes[$code]))
-            return self::$cacheLanguageCodes[$code];
+        if (isset(self::$localesCache[$code]))
+            return self::$localesCache[$code];
 
-        return self::$cacheLanguageCodes[$code] = self::whereCode($code)->first();
+        return self::$localesCache[$code] = self::whereCode($code)->first();
     }
 
     public function makeDefault()
@@ -150,11 +150,11 @@ class Languages_model extends Language
 
     public static function listSupported()
     {
-        if (self::$cacheListSupported) {
-            return self::$cacheListSupported;
+        if (self::$supportedLocalesCache) {
+            return self::$supportedLocalesCache;
         }
 
-        return self::$cacheListSupported = self::isEnabled()->pluck('name', 'code')->all();
+        return self::$supportedLocalesCache = self::isEnabled()->pluck('name', 'code')->all();
     }
 
     public static function supportsLocale()

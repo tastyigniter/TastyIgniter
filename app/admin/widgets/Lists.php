@@ -665,7 +665,7 @@ class Lists extends BaseWidget
         if (isset($result['title']))
             $result['title'] = e(lang($result['title']));
 
-        $result['class'] = 'btn-action'.(isset($result['class']) ? ' '.$result['class'] : null);
+        $result['class'] = isset($result['class']) ? $result['class'] : null;
 
         foreach ($result as $key => $value) {
             if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {

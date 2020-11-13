@@ -775,6 +775,7 @@ return [
         'statuses' => 'Manage orders and reservations statuses',
         'tables' => 'Create, edit and delete reservations tables',
         'mealtimes' => 'Create, edit and delete mealtimes',
+        'allergens' => 'Create, edit and delete allergens',
     ],
 
     'ratings' => [
