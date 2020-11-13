@@ -94,11 +94,6 @@ class IgniterUtil extends Command
         $this->utilCompileAssets('js');
     }
 
-    protected function utilCompileLess()
-    {
-        $this->utilCompileAssets('less');
-    }
-
     protected function utilCompileScss()
     {
         $this->utilCompileAssets('scss');
