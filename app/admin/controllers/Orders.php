@@ -43,16 +43,33 @@ class Orders extends \Admin\Classes\AdminController
         'configFile' => 'orders_model',
     ];
 
-    protected $requiredPermissions = ['Admin.Orders', 'Admin.AssignOrders'];
+    protected $requiredPermissions = [
+        'Admin.Orders',
+        'Admin.AssignOrders',
+        'Admin.DeleteOrders',
+    ];
 
     public function __construct()
     {
         parent::__construct();
 
-        if ($this->action === 'assigned')
-            $this->requiredPermissions = null;
-
         AdminMenu::setContext('orders', 'sales');
+    }
+
+    public function index_onDelete()
+    {
+        if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
+            throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
+
+        return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
+    }
+
+    public function edit_onDelete()
+    {
+        if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
+            throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
+
+        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete();
     }
 
     public function invoice($context, $recordId = null)
