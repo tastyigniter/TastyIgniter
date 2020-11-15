@@ -135,7 +135,7 @@ class Languages_model extends Language
             ->first();
 
         if (!$defaultLanguage) {
-            if ($defaultLanguage = self::whereIsEnabled()->first()) {
+            if ($defaultLanguage = self::isEnabled()->first()) {
                 $defaultLanguage->makeDefault();
             }
         }

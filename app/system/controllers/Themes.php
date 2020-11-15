@@ -252,7 +252,7 @@ class Themes extends \Admin\Classes\AdminController
         if (!$model->getFieldsConfig())
             return;
 
-        if (!config('system.bundleThemeAssets', TRUE))
+        if (!config('system.publishThemeAssetsBundle', TRUE))
             return;
 
         $loaded = FALSE;

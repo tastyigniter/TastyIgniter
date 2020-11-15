@@ -21,7 +21,7 @@
         $element.attr('data-control', null)
 
         if (options.allowDismiss)
-            $element.append('<button type="button" class="close" aria-hidden="true">&times;</button>')
+            $element.prepend('<button type="button" class="close" aria-hidden="true">&times;</button>')
 
         $element.on('click', 'button', remove)
         if (options.interval > 0) $element.on('click', remove)

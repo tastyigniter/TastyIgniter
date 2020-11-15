@@ -144,7 +144,7 @@ trait FormModelWidget
                     in_array($model->getRelationType($attribute), $singularTypes)
                 ));
 
-            if ($isNested AND is_array($value) AND $model->{$attribute}) {
+            if ($isNested AND is_array($value)) {
                 $this->setModelAttributes($model->{$attribute}, $value);
             }
             elseif ($value !== FormField::NO_SAVE_DATA) {
