@@ -41,7 +41,6 @@ class Locations_model extends AbstractLocation
         'hasMany' => [
             'working_hours' => ['Admin\Models\Working_hours_model', 'delete' => TRUE],
             'delivery_areas' => ['Admin\Models\Location_areas_model', 'delete' => TRUE],
-            'reviews' => ['Admin\Models\Reviews_model'],
         ],
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
@@ -65,9 +64,8 @@ class Locations_model extends AbstractLocation
         'gallery' => ['multiple' => TRUE],
     ];
 
-    protected static $allowedSortingColumns = [
+    public static $allowedSortingColumns = [
         'distance asc', 'distance desc',
-        'reviews_count asc', 'reviews_count desc',
         'location_id asc', 'location_id desc',
         'location_name asc', 'location_name desc',
     ];
