@@ -65,6 +65,7 @@ class Menu_option_values_model extends Model
     //
     // Events
     //
+
     protected function afterSave()
     {
         $this->restorePurgedValues();
@@ -75,7 +76,7 @@ class Menu_option_values_model extends Model
 
     protected function beforeDelete()
     {
-        $this->addMenuAllergens([]);
+        $this->allergens()->detach();
     }
 
     /**

@@ -167,9 +167,9 @@ class Menus_model extends Model
 
     protected function beforeDelete()
     {
-        $this->addMenuAllergens([]);
-        $this->addMenuCategories([]);
-        $this->addMenuMealtimes([]);
+        $this->categories()->detach();
+        $this->mealtimes()->detach();
+        $this->allergens()->detach();
         $this->locations()->detach();
     }
 

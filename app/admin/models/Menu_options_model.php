@@ -92,6 +92,11 @@ class Menu_options_model extends Model
             $this->addOptionValues($this->attributes['option_values']);
     }
 
+    protected function beforeDelete()
+    {
+        $this->locations()->detach();
+    }
+
     //
     // Helpers
     //

@@ -118,7 +118,7 @@ class Locations_model extends AbstractLocation
 
     protected function beforeDelete()
     {
-        Location_tables_model::where('location_id', $this->getKey())->delete();
+        $this->tables()->detach();
     }
 
     //
