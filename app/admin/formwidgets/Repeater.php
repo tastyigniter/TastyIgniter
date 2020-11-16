@@ -3,13 +3,17 @@
 namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
-use Illuminate\Database\Eloquent\Collection;
+use Admin\Traits\FormModelWidget;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Repeater Form Widget
  */
 class Repeater extends BaseFormWidget
 {
+    use FormModelWidget;
+
     const INDEX_SEARCH = '@@index';
 
     const SORT_PREFIX = '___dragged_';
@@ -96,11 +100,15 @@ class Repeater extends BaseFormWidget
     public function getLoadValue()
     {
         $value = parent::getLoadValue();
-        if ($value instanceof Collection)
-            $value = $value->toArray();
 
-        if ($this->sortable) {
+        if (!$this->sortable)
+            return $value;
+
+        if (is_array($value)) {
             $value = sort_array($value, $this->sortColumnName);
+        }
+        elseif ($value instanceof Collection) {
+            $value = $value->sortBy($this->sortColumnName);
         }
 
         return $value;
@@ -155,7 +163,7 @@ class Repeater extends BaseFormWidget
     {
         $index = self::INDEX_SEARCH;
 
-        return $this->makeItemFormWidget($index);
+        return $this->makeItemFormWidget($index, []);
     }
 
     protected function processSaveValue($value)
@@ -192,22 +200,32 @@ class Repeater extends BaseFormWidget
         if (is_array($loadValue)) {
             $loadedIndexes = array_keys($loadValue);
         }
+        elseif ($loadValue instanceof Collection) {
+            $loadedIndexes = $loadValue->keys()->all();
+        }
 
         $itemIndexes = post($this->sortableInputName, $loadedIndexes);
 
         if (!count($itemIndexes)) return;
 
         foreach ($itemIndexes as $itemIndex) {
-            $this->formWidgets[$itemIndex] = $this->makeItemFormWidget($itemIndex);
+            $model = $this->getLoadValueFromIndex($loadValue, $itemIndex);
+            $this->formWidgets[$itemIndex] = $this->makeItemFormWidget($itemIndex, $model);
             $this->indexCount = max((int)$itemIndex, $this->indexCount);
         }
     }
 
-    protected function makeItemFormWidget($index = 0)
+    protected function makeItemFormWidget($index = 0, $model)
     {
+        $data = null;
+        if (!$model instanceof Model) {
+            $data = $model;
+            $model = $this->getRelationModel();
+        }
+
         $config = $this->itemDefinitions;
-        $config['model'] = $this->model;
-        $config['data'] = $this->getLoadValueFromIndex($index);
+        $config['model'] = $model;
+        $config['data'] = $data;
         $config['alias'] = $this->alias.'Form'.$index;
         $config['arrayName'] = $this->formField->getName().'['.$index.']';
 
@@ -224,13 +242,26 @@ class Repeater extends BaseFormWidget
      *
      * @return mixed
      */
-    protected function getLoadValueFromIndex($index)
+    protected function getLoadValueFromIndex($loadValue, $index)
     {
-        $loadValue = $this->getLoadValue();
-        if (!is_array($loadValue)) {
-            $loadValue = [];
+        if (is_array($loadValue)) {
+            return array_get($loadValue, $index, []);
+        }
+        elseif ($loadValue instanceof Collection) {
+            return $loadValue->get($index);
         }
 
-        return array_get($loadValue, $index, []);
+        return null;
+    }
+
+    protected function getRelationModel()
+    {
+        [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
+
+        if (!$model instanceof Model OR !$model->hasRelation($attribute)) {
+            return $this->model;
+        }
+
+        return $model->makeRelation($attribute);
     }
 }
