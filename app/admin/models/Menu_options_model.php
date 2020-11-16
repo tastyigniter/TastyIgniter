@@ -43,7 +43,6 @@ class Menu_options_model extends Model
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
@@ -70,14 +69,6 @@ class Menu_options_model extends Model
             'select' => 'lang:admin::lang.menu_options.text_select',
             'quantity' => 'lang:admin::lang.menu_options.text_quantity',
         ];
-    }
-
-    public function getAllergensOptions()
-    {
-        if (self::$allergensOptionsCache)
-            return self::$allergensOptionsCache;
-
-        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
     }
 
     //
