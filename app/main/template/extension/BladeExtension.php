@@ -84,8 +84,8 @@ class BladeExtension extends AbstractExtension
         $guard = $this->stripQuotes($guard);
 
         return $guard === 'admin'
-            ? "<?php if(AdminAuth::check()): ?>"
-            : "<?php if(Auth::check()): ?>";
+            ? '<?php if(AdminAuth::check()): ?>'
+            : '<?php if(Auth::check()): ?>';
     }
 
     public function compileElseAuth($guard = null)
@@ -93,8 +93,8 @@ class BladeExtension extends AbstractExtension
         $guard = $this->stripQuotes($guard);
 
         return $guard === 'admin'
-            ? "<?php elseif(AdminAuth::check()): ?>"
-            : "<?php elseif(Auth::check()): ?>";
+            ? '<?php elseif(AdminAuth::check()): ?>'
+            : '<?php elseif(Auth::check()): ?>';
     }
 
     public function compilesGuest($guard = null)
@@ -102,8 +102,8 @@ class BladeExtension extends AbstractExtension
         $guard = $this->stripQuotes($guard);
 
         return $guard === 'admin'
-            ? "<?php if (!AdminAuth::check()): ?>"
-            : "<?php if (!Auth::check()): ?>";
+            ? '<?php if (!AdminAuth::check()): ?>'
+            : '<?php if (!Auth::check()): ?>';
     }
 
     public function compileElseGuest($guard = null)
@@ -111,8 +111,8 @@ class BladeExtension extends AbstractExtension
         $guard = $this->stripQuotes($guard);
 
         return $guard === 'admin'
-            ? "<?php elseif (!AdminAuth::check()): ?>"
-            : "<?php elseif (!Auth::check()): ?>";
+            ? '<?php elseif (!AdminAuth::check()): ?>'
+            : '<?php elseif (!Auth::check()): ?>';
     }
 
     protected function stripQuotes($guard)

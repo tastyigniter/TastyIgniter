@@ -48,9 +48,9 @@ class Staff_groups_model extends Model
     public static function listDropdownOptions()
     {
         return self::select('staff_group_id', 'staff_group_name', 'description')
-                   ->get()
-                   ->keyBy('staff_group_id')
-                   ->map(function ($model) {
+            ->get()
+            ->keyBy('staff_group_id')
+            ->map(function ($model) {
                        return [$model->staff_group_name, $model->description];
                    });
     }
