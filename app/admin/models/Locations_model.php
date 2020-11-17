@@ -64,7 +64,7 @@ class Locations_model extends AbstractLocation
         'gallery' => ['multiple' => TRUE],
     ];
 
-    public static $allowedSortingColumns = [
+    public $allowedSortingColumns = [
         'distance asc', 'distance desc',
         'location_id asc', 'location_id desc',
         'location_name asc', 'location_name desc',
