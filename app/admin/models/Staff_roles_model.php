@@ -40,9 +40,9 @@ class Staff_roles_model extends Model
     public static function listDropdownOptions()
     {
         return self::select('staff_role_id', 'name', 'description')
-                   ->get()
-                   ->keyBy('staff_role_id')
-                   ->map(function ($model) {
+            ->get()
+            ->keyBy('staff_role_id')
+            ->map(function ($model) {
                        return [$model->name, $model->description];
                    });
     }

@@ -55,14 +55,14 @@ class Activities_model extends Activity
 
         if ($onlyUser) {
             $query->where('user_id', $onlyUser->getKey())
-                  ->where('user_type', $onlyUser->getMorphClass());
+                ->where('user_type', $onlyUser->getMorphClass());
         }
 
         if ($exceptUser) {
             $query->where('causer_type', '!=', $exceptUser->getMorphClass());
             $query->orWhere(function ($q) use ($exceptUser) {
                 $q->where('causer_type', $exceptUser->getMorphClass())
-                  ->where('causer_id', '<>', $exceptUser->getKey());
+                    ->where('causer_id', '<>', $exceptUser->getKey());
             });
         }
 

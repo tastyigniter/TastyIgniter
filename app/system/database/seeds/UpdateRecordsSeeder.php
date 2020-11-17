@@ -54,9 +54,9 @@ class UpdateRecordsSeeder extends Seeder
     protected function updateMorphsOnReviews()
     {
         if (DB::table('reviews')
-              ->where('sale_type', 'Admin\Models\Orders_model')
-              ->orWhere('sale_type', 'Admin\Models\Reservations_model')
-              ->count()
+            ->where('sale_type', 'Admin\Models\Orders_model')
+            ->orWhere('sale_type', 'Admin\Models\Reservations_model')
+            ->count()
         ) return;
 
         $morphs = [
