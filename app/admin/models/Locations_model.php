@@ -164,7 +164,7 @@ class Locations_model extends AbstractLocation
         }
 
         foreach ($sort as $_sort) {
-            if (in_array($_sort, self::$allowedSortingColumns)) {
+            if (in_array($_sort, $this->allowedSortingColumns)) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
                     array_push($parts, 'desc');
