@@ -6,7 +6,6 @@ use Admin\Classes\BaseDashboardWidget;
 use Admin\Models\Customers_model;
 use Admin\Models\Orders_model;
 use Admin\Models\Reservations_model;
-use Admin\Models\Reviews_model;
 use Admin\Traits\HasChartDatasets;
 
 /**
@@ -71,12 +70,6 @@ class Charts extends BaseDashboardWidget
                 'label' => 'lang:admin::lang.dashboard.charts.text_customers',
                 'color' => '#4DB6AC',
                 'model' => Customers_model::class,
-                'column' => 'date_added',
-            ],
-            'review' => [
-                'label' => 'lang:admin::lang.dashboard.charts.text_reviews',
-                'color' => '#FFB74D',
-                'model' => Reviews_model::class,
                 'column' => 'date_added',
             ],
         ];
