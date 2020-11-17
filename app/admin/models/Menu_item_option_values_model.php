@@ -13,6 +13,8 @@ class Menu_item_option_values_model extends Model
 {
     use Validation;
 
+    protected static $optionValuesCollection;
+
     /**
      * @var string The database table name
      */
@@ -50,6 +52,18 @@ class Menu_item_option_values_model extends Model
         ['new_price', 'admin::lang.menus.label_option_price', 'numeric|min:0'],
         ['quantity', 'admin::lang.menus.label_option_qty', 'numeric'],
     ];
+
+    public function getOptionValueIdOptions()
+    {
+        if (!empty(self::$optionValuesCollection[$this->option_id]))
+            return self::$optionValuesCollection[$this->option_id];
+
+        $result = Menu_option_values_model::dropdown('value');
+
+        self::$optionValuesCollection[$this->option_id] = $result;
+
+        return $result;
+    }
 
     public function getNameAttribute()
     {
@@ -89,8 +103,8 @@ class Menu_item_option_values_model extends Model
 
         // Update using query to prevent model events from firing
         $this->newQuery()
-             ->where($this->getKeyName(), $this->getKey())
-             ->update(['quantity' => $stockQty]);
+            ->where($this->getKeyName(), $this->getKey())
+            ->update(['quantity' => $stockQty]);
 
         Event::fire('admin.menuOption.stockUpdated', [$this, $quantity, $subtract]);
 

@@ -6,7 +6,6 @@ use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
-use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
 
@@ -18,7 +17,6 @@ class Locations_model extends AbstractLocation
     use HasWorkingHours;
     use HasDeliveryAreas;
     use HasPermalink;
-    use Purgeable;
     use HasMedia;
 
     const LOCATION_CONTEXT_SINGLE = 'single';
@@ -50,8 +48,6 @@ class Locations_model extends AbstractLocation
             'tables' => ['Admin\Models\Tables_model', 'table' => 'location_tables'],
         ],
     ];
-
-    protected $purgeable = ['tables', 'delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [
@@ -122,7 +118,7 @@ class Locations_model extends AbstractLocation
 
     protected function beforeDelete()
     {
-        Location_tables_model::where('location_id', $this->getKey())->delete();
+        $this->tables()->detach();
     }
 
     //
@@ -151,7 +147,6 @@ class Locations_model extends AbstractLocation
         ], $options));
 
         if ($latitude AND $longitude) {
-            $query->select('*');
             $query->selectDistance($latitude, $longitude);
         }
 
@@ -226,6 +221,18 @@ class Locations_model extends AbstractLocation
         $this->url = site_url($this->permalink_slug.$suffix);
     }
 
+    public function getAddress()
+    {
+        $country = optional($this->country);
+
+        return array_merge(parent::getAddress(), [
+            'country' => $country->country_name,
+            'iso_code_2' => $country->iso_code_2,
+            'iso_code_3' => $country->iso_code_3,
+            'format' => $country->format,
+        ]);
+    }
+
     public function hasGallery()
     {
         return $this->hasMedia('gallery');
@@ -268,18 +275,8 @@ class Locations_model extends AbstractLocation
 
     public function performAfterSave()
     {
-        $this->restorePurgedValues();
-
         if (array_key_exists('hours', $this->options)) {
             $this->addOpeningHours($this->options['hours']);
-        }
-
-        if (array_key_exists('delivery_areas', $this->attributes)) {
-            $this->addLocationAreas($this->attributes['delivery_areas']);
-        }
-
-        if (array_key_exists('tables', $this->attributes)) {
-            $this->addLocationTables($this->attributes['tables']);
         }
     }
 

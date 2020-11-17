@@ -332,9 +332,7 @@ class ThemeManager
 
     public function isLocked($themeCode)
     {
-        $theme = $this->findTheme($themeCode);
-
-        return (bool)$theme->locked;
+        return (bool)optional($this->findTheme($themeCode))->locked;
     }
 
     public function checkParent($themeCode)

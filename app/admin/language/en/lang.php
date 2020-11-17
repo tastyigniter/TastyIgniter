@@ -764,7 +764,9 @@ return [
         'impersonate_customers' => 'Ability to impersonate customers',
         'locations' => 'Create, edit and delete locations',
         'menus' => 'Create, edit and delete menu items',
-        'orders' => 'Manage orders',
+        'orders' => 'Edit orders',
+        'delete_orders' => 'Delete orders',
+        'delete_reservations' => 'Delete reservations',
         'assign_orders' => 'Assign orders',
         'assign_reservations' => 'Assign reservations',
         'payments' => 'Manage payment gateways',
@@ -775,6 +777,7 @@ return [
         'statuses' => 'Manage orders and reservations statuses',
         'tables' => 'Create, edit and delete reservations tables',
         'mealtimes' => 'Create, edit and delete mealtimes',
+        'allergens' => 'Create, edit and delete allergens',
     ],
 
     'ratings' => [

@@ -659,11 +659,17 @@ class ServiceProvider extends AppServiceProvider
                 'Admin.Orders' => [
                     'label' => 'admin::lang.permissions.orders', 'group' => 'admin::lang.permissions.name',
                 ],
+                'Admin.DeleteOrders' => [
+                    'label' => 'admin::lang.permissions.delete_orders', 'group' => 'admin::lang.permissions.name',
+                ],
                 'Admin.AssignOrders' => [
                     'label' => 'admin::lang.permissions.assign_orders', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.Reservations' => [
                     'label' => 'admin::lang.permissions.reservations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.DeleteReservations' => [
+                    'label' => 'admin::lang.permissions.delete_reservations', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.AssignReservations' => [
                     'label' => 'admin::lang.permissions.assign_reservations', 'group' => 'admin::lang.permissions.name',
@@ -702,7 +708,7 @@ class ServiceProvider extends AppServiceProvider
             // Check for assignables to assign every minute
             $schedule->call(function () {
                 Classes\Allocator::allocate();
-            })->everyMinute();
+            })->name('Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
         });
     }
 

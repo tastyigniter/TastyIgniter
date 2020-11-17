@@ -56,6 +56,11 @@ class UpdateManager
     protected $extensionManager;
 
     /**
+     * @var \Igniter\Flame\Mail\Markdown
+     */
+    protected $markdown;
+
+    /**
      * @var \Igniter\Flame\Database\Migrations\Migrator
      */
     protected $migrator;

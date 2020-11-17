@@ -136,8 +136,8 @@ class Reviews_model extends Model
     public function scopeHasBeenReviewed($query, $sale, $customerId)
     {
         return $query->where('sale_type', $sale->getMorphClass())
-                     ->where('sale_id', $sale->getKey())
-                     ->where('customer_id', $customerId);
+            ->where('sale_id', $sale->getKey())
+            ->where('customer_id', $customerId);
     }
 
     public function scopeWhereReviewable($query, $causer)
@@ -173,7 +173,7 @@ class Reviews_model extends Model
     public static function checkReviewed(Model $object, Model $customer)
     {
         $query = self::whereReviewable($object)
-                     ->where('customer_id', $customer->getKey());
+            ->where('customer_id', $customer->getKey());
 
         return $query->exists();
     }

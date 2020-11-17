@@ -3,7 +3,7 @@
         class="extension-icon rounded"
     ><i class="fa fa-child"></i></span>
 </div>
-<div class="mr-4">
+<div class="list-action mr-4">
     {!! $this->makePartial('lists/list_buttons', ['theme' => $theme]) !!}
 </div>
 <div class="">

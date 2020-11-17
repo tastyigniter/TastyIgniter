@@ -86,7 +86,7 @@ class StatusEditor extends BaseFormWidget
 
     public $assigneeOrderPermission = 'Admin.AssignOrders';
 
-    public $assigneeReservationPermission = 'Admin.AssignReservation';
+    public $assigneeReservationPermission = 'Admin.AssignReservations';
 
     //
     // Object properties
