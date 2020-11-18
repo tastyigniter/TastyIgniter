@@ -64,7 +64,7 @@ class Locations_model extends AbstractLocation
         'gallery' => ['multiple' => TRUE],
     ];
 
-    public $allowedSortingColumns = [
+    public static $allowedSortingColumns = [
         'distance asc', 'distance desc',
         'location_id asc', 'location_id desc',
         'location_name asc', 'location_name desc',
@@ -164,7 +164,7 @@ class Locations_model extends AbstractLocation
         }
 
         foreach ($sort as $_sort) {
-            if (in_array($_sort, $this->allowedSortingColumns)) {
+            if (in_array($_sort, self::$allowedSortingColumns)) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
                     array_push($parts, 'desc');
