@@ -44,6 +44,7 @@ return [
     'components' => [
         'button_new' => 'Add Component',
         'button_edit' => 'Edit Component',
+        'button_delete' => 'Delete Component',
     ],
 
     'media_manager' => [

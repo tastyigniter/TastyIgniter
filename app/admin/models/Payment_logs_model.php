@@ -2,6 +2,9 @@
 
 namespace Admin\Models;
 
+use Carbon\Carbon;
+use Igniter\Flame\Database\Traits\Validation;
+use Illuminate\Support\Facades\Event;
 use Model;
 
 /**
@@ -9,6 +12,8 @@ use Model;
  */
 class Payment_logs_model extends Model
 {
+    use Validation;
+
     const UPDATED_AT = 'date_updated';
 
     const CREATED_AT = 'date_added';
@@ -27,22 +32,45 @@ class Payment_logs_model extends Model
 
     public $timestamps = TRUE;
 
+    public $dates = ['refunded_at'];
+
+    public $relation = [
+        'belongsTo' => [
+            'order' => ['Admin\Models\Orders_model'],
+            'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment_code', 'otherKey' => 'code'],
+        ],
+    ];
+
+    public $rules = [
+        'message' => 'string',
+        'order_id' => 'integer',
+        'payment_code' => 'string',
+        'payment_name' => 'string',
+        'is_success' => 'boolean',
+        'request' => 'array',
+        'response' => 'array',
+        'is_refundable' => 'boolean',
+    ];
+
     public $casts = [
         'order_id' => 'integer',
         'request' => 'array',
         'response' => 'array',
-        'status' => 'boolean',
+        'is_success' => 'boolean',
+        'is_refundable' => 'boolean',
     ];
 
-    public static function logAttempt($order, $message, $isSuccess, $request = [], $response = [])
+    public static function logAttempt($order, $message, $isSuccess, $request = [], $response = [], $isRefundable = FALSE)
     {
         $record = new static;
         $record->message = $message;
         $record->order_id = $order->order_id;
+        $record->payment_code = $order->payment_method->code;
         $record->payment_name = $order->payment_method->name;
         $record->is_success = $isSuccess;
         $record->request = $request;
         $record->response = $response;
+        $record->is_refundable = $isRefundable;
 
         $record->save();
     }
@@ -50,5 +78,17 @@ class Payment_logs_model extends Model
     public function getDateAddedSinceAttribute($value)
     {
         return $this->date_added ? time_elapsed($this->date_added) : null;
+    }
+
+    public function markAsRefundProcessed()
+    {
+        Event::fire('admin.paymentLog.beforeRefundProcessed', [$this]);
+
+        $this->refunded_at = Carbon::now();
+        $this->save();
+
+        Event::fire('admin.paymentLog.refundProcessed', [$this]);
+
+        return TRUE;
     }
 }

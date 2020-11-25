@@ -103,7 +103,7 @@ class Locations_model extends AbstractLocation
 
     protected function beforeDelete()
     {
-        Location_tables_model::where('location_id', $this->getKey())->delete();
+        $this->tables()->detach();
     }
 
     //
@@ -132,7 +132,6 @@ class Locations_model extends AbstractLocation
         ], $options));
 
         if ($latitude AND $longitude) {
-            $query->select('*');
             $query->selectDistance($latitude, $longitude);
         }
 
@@ -205,6 +204,18 @@ class Locations_model extends AbstractLocation
             $suffix = '/menus';
 
         $this->url = site_url($this->permalink_slug.$suffix);
+    }
+
+    public function getAddress()
+    {
+        $country = optional($this->country);
+
+        return array_merge(parent::getAddress(), [
+            'country' => $country->country_name,
+            'iso_code_2' => $country->iso_code_2,
+            'iso_code_3' => $country->iso_code_3,
+            'format' => $country->format,
+        ]);
     }
 
     public function hasGallery()

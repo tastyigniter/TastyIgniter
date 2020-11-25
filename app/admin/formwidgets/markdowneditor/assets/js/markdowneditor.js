@@ -23,15 +23,9 @@
         this.$form = this.$el.closest('form')
 
         this.initEditor()
-
-        // this.$toolbar.on('click', '.btn, .md-dropdown-button', this.proxy(this.onClickToolbarButton))
     }
 
     MarkdownEditor.prototype.dispose = function () {
-        this.$el.off('dispose-control', this.proxy(this.dispose))
-
-        this.$toolbar.off('click', '.btn, .md-dropdown-button', this.proxy(this.onClickToolbarButton))
-
         this.$el.removeData('ti.markdownEditor')
 
         this.$el = null
@@ -54,27 +48,6 @@
     //
     // Events
     //
-
-    MarkdownEditor.prototype.onClickToolbarButton = function (ev) {
-        var $target = $(ev.target),
-            $button = $target.is('a') ? $target : $target.closest('.btn'),
-            action = $button.data('button-action'),
-            template = $button.data('button-template')
-
-        $button.blur()
-
-        this.pauseUpdates()
-
-        if (template) {
-            this[action](template)
-        }
-        else {
-            this[action]()
-        }
-
-        this.resumeUpdates()
-        this.handleChange()
-    }
 
     //
     // Media Manager

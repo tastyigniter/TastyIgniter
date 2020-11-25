@@ -15,7 +15,7 @@
                     if (is_string($option)) $option = [$option];
                 @endphp
                 <label
-                    class="btn btn-light {{ in_array($value, $checkedValues) ? 'active' : ($this->previewMode ? 'disabled' : '') }}">
+                    class="btn btn-light text-nowrap {{ in_array($value, $checkedValues) ? 'active' : ($this->previewMode ? 'disabled' : '') }}">
                     <input
                         type="checkbox"
                         id="{{ $checkboxId }}"

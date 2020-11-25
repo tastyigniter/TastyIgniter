@@ -162,7 +162,7 @@ class Statistics extends BaseDashboardWidget
             $start = Carbon::now()->startOfYear();
         }
         else {
-            $start = Carbon::now()->subDay();
+            $start = Carbon::now()->today();
         }
 
         $query->whereBetween('date_added', [
@@ -182,7 +182,7 @@ class Statistics extends BaseDashboardWidget
     {
         $query = Orders_model::query();
         $query->where('status_id', '>', '0')
-              ->where('status_id', '!=', setting('canceled_order_status'));
+            ->where('status_id', '!=', setting('canceled_order_status'));
 
         $this->applyRangeQuery($query, $range);
 

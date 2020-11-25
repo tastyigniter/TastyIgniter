@@ -5,6 +5,7 @@ namespace Admin\Controllers;
 use Admin\Models\Reservations_model;
 use AdminMenu;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Reservations extends \Admin\Classes\AdminController
 {
@@ -59,16 +60,33 @@ class Reservations extends \Admin\Classes\AdminController
         'configFile' => 'reservations_model',
     ];
 
-    protected $requiredPermissions = ['Admin.Reservations', 'Admin.AssignReservations'];
+    protected $requiredPermissions = [
+        'Admin.Reservations',
+        'Admin.AssignReservations',
+        'Admin.DeleteReservations',
+    ];
 
     public function __construct()
     {
         parent::__construct();
 
-        if ($this->action === 'assigned')
-            $this->requiredPermissions = null;
-
         AdminMenu::setContext('reservations', 'sales');
+    }
+
+    public function index_onDelete()
+    {
+        if (!$this->getUser()->hasPermission('Admin.DeleteReservations'))
+            throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
+
+        return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
+    }
+
+    public function edit_onDelete()
+    {
+        if (!$this->getUser()->hasPermission('Admin.DeleteReservations'))
+            throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
+
+        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete();
     }
 
     public function calendarGenerateEvents($startAt, $endAt)

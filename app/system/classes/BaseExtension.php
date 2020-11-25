@@ -182,15 +182,7 @@ class BaseExtension extends ServiceProvider
                 'Create the file or override extensionMeta() method in the extension class.');
 
         $config = json_decode(File::get($configFile), TRUE) ?? [];
-        foreach ([
-            'code',
-            'name',
-            'description',
-            'version',
-            'author',
-            'icon',
-        ] as $item) {
-
+        foreach (['code', 'name', 'description', 'author', 'icon'] as $item) {
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.missing.config_key'),

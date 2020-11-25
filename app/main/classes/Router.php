@@ -154,7 +154,7 @@ class Router
     public function findByFile($fileName, $parameters = [])
     {
         if (!strlen(File::extension($fileName))) {
-            $fileName .= '.php';
+            $fileName .= '.blade.php';
         }
 
         return $this->getRouterObject()->url($fileName, $parameters);

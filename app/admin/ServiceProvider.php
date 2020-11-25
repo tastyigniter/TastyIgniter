@@ -380,15 +380,7 @@ class ServiceProvider extends AppServiceProvider
                     'class' => 'marketing',
                     'icon' => 'fa-chart-line',
                     'title' => lang('admin::lang.side_menu.marketing'),
-                    'child' => [
-                        'coupons' => [
-                            'priority' => 10,
-                            'class' => 'coupons',
-                            'href' => admin_url('coupons'),
-                            'title' => lang('admin::lang.side_menu.coupon'),
-                            'permission' => 'Admin.Coupons',
-                        ],
-                    ],
+                    'child' => [],
                 ],
                 'design' => [
                     'priority' => 200,
@@ -538,8 +530,6 @@ class ServiceProvider extends AppServiceProvider
             'allergens' => 'Admin\Models\Allergens_model',
             'assignable_logs' => 'Admin\Models\Assignable_logs_model',
             'categories' => 'Admin\Models\Categories_model',
-            'coupons_history' => 'Admin\Models\Coupons_history_model',
-            'coupons' => 'Admin\Models\Coupons_model',
             'customer_groups' => 'Admin\Models\Customer_groups_model',
             'customers' => 'Admin\Models\Customers_model',
             'location_areas' => 'Admin\Models\Location_areas_model',
@@ -665,9 +655,6 @@ class ServiceProvider extends AppServiceProvider
                 'Admin.Mealtimes' => [
                     'label' => 'admin::lang.permissions.mealtimes', 'group' => 'admin::lang.permissions.name',
                 ],
-                'Admin.Coupons' => [
-                    'label' => 'admin::lang.permissions.coupons', 'group' => 'admin::lang.permissions.name',
-                ],
                 'Admin.Locations' => [
                     'label' => 'admin::lang.permissions.locations', 'group' => 'admin::lang.permissions.name',
                 ],
@@ -677,11 +664,17 @@ class ServiceProvider extends AppServiceProvider
                 'Admin.Orders' => [
                     'label' => 'admin::lang.permissions.orders', 'group' => 'admin::lang.permissions.name',
                 ],
+                'Admin.DeleteOrders' => [
+                    'label' => 'admin::lang.permissions.delete_orders', 'group' => 'admin::lang.permissions.name',
+                ],
                 'Admin.AssignOrders' => [
                     'label' => 'admin::lang.permissions.assign_orders', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.Reservations' => [
                     'label' => 'admin::lang.permissions.reservations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.DeleteReservations' => [
+                    'label' => 'admin::lang.permissions.delete_reservations', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.AssignReservations' => [
                     'label' => 'admin::lang.permissions.assign_reservations', 'group' => 'admin::lang.permissions.name',
@@ -720,7 +713,7 @@ class ServiceProvider extends AppServiceProvider
             // Check for assignables to assign every minute
             $schedule->call(function () {
                 Classes\Allocator::allocate();
-            })->everyMinute();
+            })->name('Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
         });
     }
 

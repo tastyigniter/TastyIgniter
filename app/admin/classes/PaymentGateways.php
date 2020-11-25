@@ -151,8 +151,8 @@ class PaymentGateways
     /**
      * Executes an entry point for registered gateways, defined in routes.php file.
      *
-     * @param  string $code Entry point code
-     * @param  string $uri Remaining uri parts
+     * @param string $code Entry point code
+     * @param string $uri Remaining uri parts
      *
      * @return \Illuminate\Http\Response
      */
@@ -194,15 +194,26 @@ class PaymentGateways
                 continue;
 
             $partialName = 'payregister/'.strtolower(class_basename($class));
-            $partialPath = $theme->getPath().'/_partials/'.$partialName.'.php';
+            $partialPath = $theme->getPath().'/_partials/'.$partialName.'.blade.php';
 
             if (!File::isDirectory(dirname($partialPath)))
                 File::makeDirectory(dirname($partialPath), null, TRUE);
 
             if (!array_key_exists($partialName, $partials)) {
-                $filePath = dirname(File::fromClass($class)).'/'.strtolower(class_basename($class)).'/payment_form.php';
-                File::put($partialPath, File::get($filePath));
+                File::put($partialPath, self::getFileContent($class));
             }
         }
+    }
+
+    protected static function getFileContent(string $class): string
+    {
+        $filePath = dirname(File::fromClass($class));
+        $filePath .= '/'.strtolower(class_basename($class));
+        $filePath .= '/payment_form';
+
+        if (File::exists($path = $filePath.'.blade.php'))
+            return File::get($path);
+
+        return File::get($filePath.'.php');
     }
 }

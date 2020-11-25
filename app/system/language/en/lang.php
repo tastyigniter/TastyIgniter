@@ -93,6 +93,7 @@ return [
         'text_files' => 'files',
         'text_files_data' => 'files and data',
         'text_settings' => 'Settings',
+        'text_author' => 'Author',
 
         'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more extensions',
         'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
@@ -471,7 +472,7 @@ return [
         'help_approve_reviews' => 'Approve new review entry automatically or manually',
         'help_default_location' => 'Choose or add a new location to set as your main/default restaurant location.',
         'help_default_order_status' => 'Select the default order status when a new order is placed/received',
-        'help_processing_order_status' => 'Select the order status an order must reach before the order starts stock reduction and coupon redemption',
+        'help_processing_order_status' => 'Select the order status an order must reach before the order starts stock reduction',
         'help_completed_order_status' => 'Select the order status to mark an order as completed before the order invoice is created and a customer can leave review',
         'help_canceled_order_status' => 'Select the order status when an order is marked as canceled or suspected of fraudulent activity',
         'help_menus_page' => 'Choose a page to display your menu items',
@@ -520,11 +521,12 @@ return [
         'text_select_file' => 'Select a [%s] template to edit',
         'text_is_default' => 'Activated',
         'text_set_default' => 'Activate',
-        'text_author' => 'Author',
+        'text_author' => 'by',
         'text_version' => 'Version',
         'text_theme_is_active' => '. You can not delete an active theme.',
         'text_files' => 'files',
         'text_files_data' => 'files and data',
+        'text_locked_child' => 'Locked theme: create a child theme',
 
         'label_code' => 'Code',
         'label_template' => 'Template',
@@ -556,7 +558,7 @@ return [
         'button_yes_copy' => 'Yes, copy',
         'button_return_to_list' => 'No, return to list',
 
-        'help_components' => 'Render the component on a layout or page by adding [<code>&#x3C;?= component(&#x27;componentAlias&#x27;); ?&#x3E;</code>] to the markup',
+        'help_components' => 'Render the component on a layout or page by adding <code>@component(&#x27;componentAlias&#x27;)</code> to the markup. Learn more <a href="https://tastyigniter.com/docs/master/customize/components">here</a>.',
 
         'error_config_no_found' => 'An error occurred, theme registration file could not be found',
         'error_theme_exists' => 'the theme already exists',
@@ -564,6 +566,7 @@ return [
         'alert_delete_warning' => 'You are about to delete the %s of theme <b>%s</b>',
         'alert_delete_confirm' => 'Are you sure you wish to delete the associated %s? This cannot be undone!',
         'alert_theme_locked' => 'This is a locked theme, changes are restricted, create a child theme to make changes.',
+        'alert_theme_path_locked' => 'This template belongs to a locked theme, such actions are restricted.',
         'alert_changes_confirm' => 'Conflicting versions, template file has changed. Reload the page to continue.',
     ],
 

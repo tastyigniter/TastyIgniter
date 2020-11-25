@@ -6,7 +6,7 @@
         this.options = options
 
         this.init()
-        this.initSortable()
+        // this.initSortable()
     }
 
     Components.prototype.constructor = Components

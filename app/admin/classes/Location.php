@@ -29,7 +29,7 @@ class Location extends Manager
         }
         else {
             $id = $this->getSession('id');
-            if ((!$id AND $this->hasRestriction()) OR $this->isNotAttachedToAuth($id))
+            if ((!$id AND $this->hasRestriction()) OR !$this->isAttachedToAuth($id))
                 $id = $this->getDefaultLocation();
 
             if ($id) $model = $this->getById($id);
@@ -106,8 +106,11 @@ class Location extends Manager
         return app('admin.auth');
     }
 
-    protected function isNotAttachedToAuth($id)
+    protected function isAttachedToAuth($id)
     {
+        if ($this->getAuth()->isSuperUser())
+            return TRUE;
+
         return $this->getAuth()->locations()->contains(function ($model) use ($id) {
             return $model->location_id === $id;
         });

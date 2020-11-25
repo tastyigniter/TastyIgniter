@@ -61,11 +61,11 @@ class Allergens_model extends Model
         return $query->whereExists(function ($q) {
             $prefix = DB::getTablePrefix();
             $q->select(DB::raw(1))
-              ->from('menu_allergens')
-              ->join('menus', 'menus.menu_id', '=', 'menu_allergens.menu_id')
-              ->whereNotNull('menus.menu_status')
-              ->where('menus.menu_status', '=', 1)
-              ->whereRaw($prefix.'allergens.allergen_id = '.$prefix.'menu_allergens.allergen_id');
+                ->from('menu_allergens')
+                ->join('menus', 'menus.menu_id', '=', 'menu_allergens.menu_id')
+                ->whereNotNull('menus.menu_status')
+                ->where('menus.menu_status', '=', 1)
+                ->whereRaw($prefix.'allergens.allergen_id = '.$prefix.'menu_allergens.allergen_id');
         });
     }
 
