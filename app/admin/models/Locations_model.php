@@ -96,11 +96,6 @@ class Locations_model extends AbstractLocation
     // Events
     //
 
-    protected function afterFetch()
-    {
-        $this->parseOptionsValue();
-    }
-
     protected function beforeDelete()
     {
         $this->tables()->detach();
@@ -229,17 +224,6 @@ class Locations_model extends AbstractLocation
         $gallery['images'] = $this->getMedia('gallery');
 
         return $gallery;
-    }
-
-    public function parseOptionsValue()
-    {
-        $value = @unserialize($this->attributes['options']) ?: [];
-
-        $this->parseHoursFromOptions($value);
-
-        $this->parseAreasFromOptions($value);
-
-        $this->attributes['options'] = @serialize($value);
     }
 
     public function listAvailablePayments()

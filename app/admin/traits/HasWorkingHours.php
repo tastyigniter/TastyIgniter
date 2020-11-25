@@ -18,6 +18,31 @@ trait HasWorkingHours
 
     protected $currentTime;
 
+    public static function bootHasWorkingHours()
+    {
+        static::fetched(function (self $model) {
+            $value = @unserialize($model->attributes['options']) ?: [];
+
+            $model->parseHoursFromOptions($value);
+
+            $model->attributes['options'] = @serialize($value);
+        });
+
+        static::saving(function (self $model) {
+            $value = @unserialize($model->attributes['options']) ?: [];
+
+            $model->parseHoursFromOptions($value);
+
+            $model->attributes['options'] = @serialize($value);
+        });
+
+        static::saved(function (self $model) {
+            if (array_key_exists('hours', $model->options)) {
+                $model->addOpeningHours($model->options['hours']);
+            }
+        });
+    }
+
     /**
      * @return Carbon
      */
@@ -140,10 +165,14 @@ trait HasWorkingHours
      */
     public function addOpeningHours($data = [])
     {
-        $this->working_hours()->delete();
+        foreach (['opening', 'delivery', 'collection'] as $type) {
+            if (!is_array($scheduleData = array_get($data, $type)))
+                continue;
 
-        foreach ($data as $type => $schedules) {
-            foreach ($schedules as $day => $hours) {
+            $this->working_hours()->where('type', $type)->delete();
+
+            $scheduleItem = new ScheduleItem($type, $scheduleData);
+            foreach ($scheduleItem->getHours() as $day => $hours) {
                 foreach ($hours as $hour) {
                     $this->working_hours()->create([
                         'location_id' => $this->getKey(),
@@ -192,12 +221,6 @@ trait HasWorkingHours
             }
 
             unset($value['opening_hours']);
-        }
-
-        // Ensures form checkbox is unchecked when value is empty
-        foreach (['opening', 'delivery', 'collection'] as $type) {
-            if (!isset($value['hours'][$type]['days']))
-                $value['hours'][$type]['days'] = [];
         }
     }
 }
