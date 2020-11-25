@@ -3,16 +3,21 @@
 namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
-use Admin\FormWidgets\ScheduleEditor\Source\ScheduleSource;
 use Admin\Models\Working_hours_model;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleEditor extends BaseFormWidget
 {
     use ValidatesForm;
+
+    /**
+     * @var \Admin\Models\Locations_model Form model object.
+     */
+    public $model;
 
     public $form;
 
@@ -65,34 +70,34 @@ class ScheduleEditor extends BaseFormWidget
     public function onLoadRecord()
     {
         $scheduleCode = post('recordId');
-        if (!in_array($scheduleCode, $this->availableSchedules))
-            throw new ApplicationException('Invalid schedule');
+        $scheduleItem = $this->getSchedule($scheduleCode);
 
         $formTitle = sprintf(lang($this->formTitle), $scheduleCode);
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $scheduleCode,
             'formTitle' => $formTitle,
-            'formWidget' => $this->makeScheduleFormWidget($scheduleCode),
+            'formWidget' => $this->makeScheduleFormWidget($scheduleItem),
         ]);
     }
 
     public function onSaveRecord()
     {
         $scheduleCode = post('recordId');
-        if (!in_array($scheduleCode, $this->availableSchedules))
-            throw new ApplicationException('Invalid schedule');
+        $scheduleItem = $this->getSchedule($scheduleCode);
 
-        $formName = sprintf('%s %s', $scheduleCode, lang('admin::lang.locations.text_schedule'));
-
-        $form = $this->makeScheduleFormWidget($scheduleCode);
+        $form = $this->makeScheduleFormWidget($scheduleItem);
         $saveData = $form->getSaveData();
 
         $this->validate($saveData, $form->getConfig('rules', []));
 
         $this->saveSchedule($scheduleCode, $saveData);
 
+        $formName = sprintf('%s %s', $scheduleCode, lang('admin::lang.locations.text_schedule'));
         flash()->success(sprintf(lang('admin::lang.alert_success'), ucfirst($formName).' '.'updated'))->now();
+
+        $this->model->reloadRelations();
+        $this->schedulesCache = null;
 
         $this->prepareVars();
 
@@ -102,6 +107,14 @@ class ScheduleEditor extends BaseFormWidget
         ];
     }
 
+    protected function getSchedule($scheduleCode)
+    {
+        if (!$schedule = array_get($this->listSchedules(), $scheduleCode))
+            throw new ApplicationException('Schedule not loaded');
+
+        return $schedule;
+    }
+
     protected function listSchedules()
     {
         if ($this->schedulesCache)
@@ -109,55 +122,17 @@ class ScheduleEditor extends BaseFormWidget
 
         $schedules = [];
         foreach ($this->availableSchedules as $scheduleCode) {
-            $schedules[$scheduleCode] = $this->loadSchedule($scheduleCode);
+            $schedules[$scheduleCode] = $this->model->createScheduleItem($scheduleCode);
         }
 
         return $this->schedulesCache = $schedules;
     }
 
-    protected function loadSchedule($scheduleCode)
+    protected function makeScheduleFormWidget($scheduleItem)
     {
-        $scheduleObj = new \stdClass();
-
-        $scheduleObj->code = $scheduleCode;
-        $scheduleObj->hours = $this->getScheduleHours($scheduleCode);
-        $scheduleObj->config = array_get($this->model->getOption('hours', []), $scheduleCode, []);
-
-        return $scheduleObj;
-    }
-
-    protected function getScheduleHours($scheduleCode)
-    {
-        $workingHours = $this->model->getWorkingHoursByType($scheduleCode);
-
-        return collect(
-            Working_hours_model::$weekDays
-        )->map(function ($day, $index) use ($workingHours) {
-            $hourObj = new \stdClass();
-
-            $hours = ['--'];
-            if ($workingHours) {
-                $hours = $workingHours->where(
-                    'weekday', $index
-                )->map(function ($workingHour) {
-                    return sprintf('%s-%s', $workingHour->getOpen(), $workingHour->getClose());
-                })->all();
-            }
-
-            $hourObj->day = $day;
-            $hourObj->hours = implode(', ', $hours);
-
-            return $hourObj;
-        });
-    }
-
-    protected function makeScheduleFormWidget($scheduleCode)
-    {
-        $scheduleData = array_get($this->model->getOption('hours'), $scheduleCode);
-
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = Working_hours_model::make();
-        $widgetConfig['data'] = new ScheduleSource($scheduleData);
+        $widgetConfig['data'] = $scheduleItem;
         $widgetConfig['alias'] = $this->alias.'Form'.'schedule-editor';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[scheduleData]';
         $widgetConfig['context'] = 'edit';
@@ -171,27 +146,15 @@ class ScheduleEditor extends BaseFormWidget
 
     protected function saveSchedule($scheduleCode, $saveData)
     {
-        $source = new ScheduleSource($saveData);
-
-        $this->model->working_hours()->where('type', $scheduleCode)->delete();
-
-        foreach ($source->getHours() as $day => $hours) {
-            foreach ($hours as $hour) {
-                $this->model->working_hours()->create([
-                    'location_id' => $this->model->getKey(),
-                    'weekday' => $hour['day'],
-                    'type' => $scheduleCode,
-                    'opening_time' => mdate('%H:%i', strtotime($hour['open'])),
-                    'closing_time' => mdate('%H:%i', strtotime($hour['close'])),
-                    'status' => $hour['status'],
-                ]);
-            }
-        }
-
         $locationHours = $this->model->getOption('hours');
         array_set($locationHours, $scheduleCode, $saveData);
         $this->model->setOption('hours', $locationHours);
 
-        return $this->model->save();
+        DB::transaction(function () use ($scheduleCode) {
+            $this->model->save();
+
+            // Check overlaps
+            $this->model->newWorkingSchedule($scheduleCode);
+        });
     }
 }

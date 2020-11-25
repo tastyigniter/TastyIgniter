@@ -1,12 +1,13 @@
 <?php
 
-namespace Admin\FormWidgets\ScheduleEditor\Source;
+namespace Admin\Classes;
 
 use Admin\Models\Working_hours_model;
-use InvalidArgumentException;
 
-class ScheduleSource
+class ScheduleItem
 {
+    public $name;
+
     public $type;
 
     public $days;
@@ -22,14 +23,12 @@ class ScheduleSource
     /**
      * @var array
      */
-    public $data;
+    protected $data;
 
-    public function __construct(array $data)
+    public function __construct($name, array $data)
     {
-        if (!array_key_exists('type', $data))
-            throw new InvalidArgumentException('Missing type key');
-
-        $this->type = array_get($data, 'type');
+        $this->name = $name;
+        $this->type = array_get($data, 'type', '24_7');
         $this->days = array_get($data, 'days', []);
         $this->open = array_get($data, 'open', '00:00');
         $this->close = array_get($data, 'close', '23:59');
@@ -61,6 +60,29 @@ class ScheduleSource
             elseif ($this->type == 'flexible') {
                 $result[] = $this->createHours($day, $this->flexible[$day]);
             }
+        }
+
+        return $result;
+    }
+
+    public function getFormatted()
+    {
+        $result = [];
+
+        $hours = $this->getHours();
+        foreach (Working_hours_model::$weekDays as $index => $day) {
+            $formattedHours = [];
+            foreach (array_get($hours, $index, []) as $hour) {
+                if (!$hour['status'])
+                    continue;
+
+                $formattedHours[] = sprintf('%s-%s', $hour['open'], $hour['close']);
+            }
+
+            $result[] = (object)[
+                'day' => $day,
+                'hours' => $formattedHours ? implode(', ', $formattedHours) : '--',
+            ];
         }
 
         return $result;

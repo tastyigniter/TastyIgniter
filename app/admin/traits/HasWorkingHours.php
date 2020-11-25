@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Classes\ScheduleItem;
 use Carbon\Carbon;
 use Exception;
 use Igniter\Flame\Location\WorkingSchedule;
@@ -119,6 +120,16 @@ trait HasWorkingHours
     //
     //
     //
+
+    public function createScheduleItem($type)
+    {
+        if (is_null($type) OR !in_array($type, $this->availableWorkingTypes()))
+            throw new InvalidArgumentException("Defined parameter '$type' is not a valid working type.");
+
+        $scheduleData = array_get($this->getOption('hours', []), $type, []);
+
+        return new ScheduleItem($type, $scheduleData);
+    }
 
     /**
      * Create a new or update existing location working hours

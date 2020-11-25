@@ -5,21 +5,21 @@
                 id="{{ $this->getId('item-'.$loop->iteration) }}"
                 class="card bg-light shadow-sm mb-2"
                 data-editor-control="load-schedule"
-                data-schedule-code="{{ $schedule->code }}"
+                data-schedule-code="{{ $schedule->name }}"
                 role="button"
             >
                 <div class="card-body">
                     <div class="flex-fill">
-                        <h5 class="card-title">{{ ucfirst(strtolower($schedule->code.' '.lang('admin::lang.locations.text_schedule'))) }}</h5>
-                        <p class="card-text">{{ lang('admin::lang.locations.text_'.$schedule->config['type']) }}</p>
+                        <h5 class="card-title">{{ ucfirst(strtolower($schedule->name.' '.lang('admin::lang.locations.text_schedule'))) }}</h5>
+                        <p class="card-text">{{ lang('admin::lang.locations.text_'.$schedule->type) }}</p>
                     </div>
 
                     <div class="pt-3">
-                        @foreach($schedule->hours as $hour)
+                        @foreach($schedule->getFormatted() as $value)
                             <div class="d-flex pb-2">
-                                <div class="col-5 p-0 text-muted">{{ $hour->day }}</div>
+                                <div class="col-5 p-0 text-muted">{{ $value->day }}</div>
                                 <div class="col-7 p-0 text-right text-nowrap text-truncate">
-                                    <span title="{{ $hour->hours }}">{{ $hour->hours }}</span>
+                                    <span title="{{ $value->hours }}">{{ $value->hours }}</span>
                                 </div>
                             </div>
                         @endforeach
