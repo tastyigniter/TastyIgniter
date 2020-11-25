@@ -78,7 +78,7 @@ return [
             ['close', 'admin::lang.locations.label_schedule_close', 'required_if:type,daily|valid_time'],
             ['timesheet', 'admin::lang.locations.text_timesheet', 'required_if:type,timesheet|string'],
             ['flexible.*.day', 'admin::lang.locations.label_schedule_days', 'required_if:type,flexible|numeric'],
-            ['flexible.*.hours', 'admin::lang.locations.label_schedule_hours', 'required_if:type,flexible|regex:/^[0-9\-\:\?]+$/'],
+            ['flexible.*.hours', 'admin::lang.locations.label_schedule_hours', 'required_if:type,flexible'],
             ['flexible.*.status', 'admin::lang.label_status', 'sometimes|required_if:type,flexible|boolean'],
         ],
     ],
