@@ -807,7 +807,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? lang('system::lang.date_format_short'));
+        $format = $column->format ?? lang('system::lang.date_format_short');
         $format = parse_date_format($format);
 
         return $format
