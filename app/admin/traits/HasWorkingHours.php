@@ -35,12 +35,6 @@ trait HasWorkingHours
 
             $model->attributes['options'] = @serialize($value);
         });
-
-        static::saved(function (self $model) {
-            if (array_key_exists('hours', $model->options)) {
-                $model->addOpeningHours($model->options['hours']);
-            }
-        });
     }
 
     /**
@@ -156,6 +150,17 @@ trait HasWorkingHours
         return new ScheduleItem($type, $scheduleData);
     }
 
+    public function updateSchedule($type, $scheduleData)
+    {
+        $this->addOpeningHours($type, $scheduleData);
+
+        $locationHours = $this->getOption('hours');
+        array_set($locationHours, $type, $scheduleData);
+        $this->setOption('hours', $locationHours);
+
+        $this->save();
+    }
+
     /**
      * Create a new or update existing location working hours
      *
@@ -163,26 +168,35 @@ trait HasWorkingHours
      *
      * @return bool
      */
-    public function addOpeningHours($data = [])
+    public function addOpeningHours($type, $data = [])
     {
-        foreach (['opening', 'delivery', 'collection'] as $type) {
-            if (!is_array($scheduleData = array_get($data, $type)))
-                continue;
+        if (is_array($type)) {
+            $data = $type;
+            $type = null;
+        }
 
-            $this->working_hours()->where('type', $type)->delete();
+        if (is_null($type)) {
+            foreach (['opening', 'delivery', 'collection'] as $type) {
+                if (!is_array($scheduleData = array_get($data, $type)))
+                    continue;
 
-            $scheduleItem = new ScheduleItem($type, $scheduleData);
-            foreach ($scheduleItem->getHours() as $day => $hours) {
-                foreach ($hours as $hour) {
-                    $this->working_hours()->create([
-                        'location_id' => $this->getKey(),
-                        'weekday' => $hour['day'],
-                        'type' => $type,
-                        'opening_time' => mdate('%H:%i', strtotime($hour['open'])),
-                        'closing_time' => mdate('%H:%i', strtotime($hour['close'])),
-                        'status' => $hour['status'],
-                    ]);
-                }
+                $this->addOpeningHours($type, $scheduleData);
+            }
+        }
+
+        $this->working_hours()->where('type', $type)->delete();
+
+        $scheduleItem = new ScheduleItem($type, $data);
+        foreach ($scheduleItem->getHours() as $day => $hours) {
+            foreach ($hours as $hour) {
+                $this->working_hours()->create([
+                    'location_id' => $this->getKey(),
+                    'weekday' => $hour['day'],
+                    'type' => $type,
+                    'opening_time' => mdate('%H:%i', strtotime($hour['open'])),
+                    'closing_time' => mdate('%H:%i', strtotime($hour['close'])),
+                    'status' => $hour['status'],
+                ]);
             }
         }
 

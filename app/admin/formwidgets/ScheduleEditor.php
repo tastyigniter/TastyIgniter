@@ -91,7 +91,12 @@ class ScheduleEditor extends BaseFormWidget
 
         $this->validate($saveData, $form->getConfig('rules', []));
 
-        $this->saveSchedule($scheduleCode, $saveData);
+        DB::transaction(function () use ($scheduleCode, $saveData) {
+            $this->model->updateSchedule($scheduleCode, $saveData);
+
+            // Check overlaps
+            $this->model->newWorkingSchedule($scheduleCode);
+        });
 
         $formName = sprintf('%s %s', $scheduleCode, lang('admin::lang.locations.text_schedule'));
         flash()->success(sprintf(lang('admin::lang.alert_success'), ucfirst($formName).' '.'updated'))->now();
@@ -142,19 +147,5 @@ class ScheduleEditor extends BaseFormWidget
         $widget->previewMode = $this->previewMode;
 
         return $widget;
-    }
-
-    protected function saveSchedule($scheduleCode, $saveData)
-    {
-        $locationHours = $this->model->getOption('hours');
-        array_set($locationHours, $scheduleCode, $saveData);
-        $this->model->setOption('hours', $locationHours);
-
-        DB::transaction(function () use ($scheduleCode) {
-            $this->model->save();
-
-            // Check overlaps
-            $this->model->newWorkingSchedule($scheduleCode);
-        });
     }
 }
