@@ -23,15 +23,13 @@ trait HasDeliveryAreas
         });
 
         static::saving(function (self $model) {
+            $model->geocodeAddressOnSave();
+
             $value = @unserialize($model->attributes['options']) ?: [];
 
             $model->parseAreasFromOptions($value);
 
             $model->attributes['options'] = @serialize($value);
-        });
-
-        static::saving(function (self $model) {
-            $model->geocodeAddressOnSave();
         });
     }
 
