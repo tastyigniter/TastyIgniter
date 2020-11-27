@@ -326,13 +326,13 @@ class Orders_model extends Model
         $data['order_comment'] = $model->comment;
 
         $data['order_type'] = $model->order_type_name;
-        $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(setting('time_format'));
-        $data['order_date'] = $model->order_date->format(setting('date_format'));
-        $data['order_added'] = $model->date_added->format(setting('date_format'));
+        $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(lang('system::lang.time_format_short'));
+        $data['order_date'] = $model->order_date->format(lang('system::lang.date_format_short'));
+        $data['order_added'] = $model->date_added->format(lang('system::lang.date_and_time_format_short'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;
-        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format(setting('date_format')) : null;
+        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format(lang('system::lang.date_format_short')) : null;
 
         $data['order_payment'] = ($model->payment_method)
             ? $model->payment_method->name
