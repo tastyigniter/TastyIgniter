@@ -115,13 +115,13 @@ class DatePicker extends BaseFormWidget
 
         // Display alias, used by preview mode
         if ($this->mode == 'time') {
-            $formatAlias = setting('time_format');
+            $formatAlias = lang('system::lang.time_format_short');
         }
         elseif ($this->mode == 'date') {
-            $formatAlias = setting('date_format');
+            $formatAlias = lang('system::lang.date_format_short');
         }
         else {
-            $formatAlias = setting('date_format').' '.setting('time_format');
+            $formatAlias = lang('system::lang.date_time_format_short');
         }
 
         $find = ['d' => 'dd', 'D' => 'DD', 'm' => 'mm', 'M' => 'MM', 'y' => 'yy', 'Y' => 'yyyy', 'H' => 'HH', 'i' => 'i'];

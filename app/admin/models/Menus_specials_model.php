@@ -46,7 +46,7 @@ class Menus_specials_model extends Model
         if ($this->isRecurring() OR !$this->end_date)
             return null;
 
-        return mdate(setting('date_format'), $this->end_date->getTimestamp());
+        return mdate(lang('system::lang.date_format_short'), $this->end_date->getTimestamp());
     }
 
     public function getTypeAttribute($value)

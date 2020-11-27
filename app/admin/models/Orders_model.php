@@ -328,7 +328,7 @@ class Orders_model extends Model
         $data['order_type'] = $model->order_type_name;
         $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(lang('system::lang.time_format_short'));
         $data['order_date'] = $model->order_date->format(lang('system::lang.date_format_short'));
-        $data['order_added'] = $model->date_added->format(lang('system::lang.date_and_time_format_short'));
+        $data['order_added'] = $model->date_added->format(lang('system::lang.date_time_format_short'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;
