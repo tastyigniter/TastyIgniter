@@ -212,6 +212,14 @@ class Locations_model extends AbstractLocation
         return (int)$this->getOption('reservation_time_interval');
     }
 
+    public function setOptionsAttribute($value)
+    {
+        if (is_array($value)) {
+            $options = @unserialize($this->attributes['options']) ?: [];
+            $this->attributes['options'] = @serialize(array_merge($options ?? [], $value));
+        }
+    }
+
     //
     // Helpers
     //
