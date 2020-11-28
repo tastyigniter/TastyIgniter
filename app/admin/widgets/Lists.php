@@ -773,7 +773,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? lang('system::lang.date_time_format_short');
+        $format = $column->format ?? lang('system::lang.date_time_format');
         $format = parse_date_format($format);
 
         return $dateTime->format($format);
@@ -790,7 +790,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? lang('system::lang.time_format_short');
+        $format = $column->format ?? lang('system::lang.time_format');
         $format = parse_date_format($format);
 
         return $dateTime->format($format);
@@ -807,7 +807,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? lang('system::lang.date_format_short');
+        $format = $column->format ?? lang('system::lang.date_format');
         $format = parse_date_format($format);
 
         return $format
