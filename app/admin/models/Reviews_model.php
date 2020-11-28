@@ -1,4 +1,3 @@
-@@ -1,180 +0,0 @@
 <?php
 
 namespace Admin\Models;
