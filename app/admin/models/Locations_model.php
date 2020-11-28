@@ -64,7 +64,7 @@ class Locations_model extends AbstractLocation
         'gallery' => ['multiple' => TRUE],
     ];
 
-    public static $allowedSortingColumns = [
+    private static $allowedSortingColumns = [
         'distance asc', 'distance desc',
         'location_id asc', 'location_id desc',
         'location_name asc', 'location_name desc',
@@ -92,6 +92,11 @@ class Locations_model extends AbstractLocation
             AND ($model->hasDelivery() OR $model->hasCollection())
             AND isset($model->options['hours'])
             AND $model->delivery_areas->where('is_default', 1)->count() > 0;
+    }
+
+    public static function addSortingColumns($newColumns)
+    {
+        self::$allowedSortingColumns = array_merge(self::$allowedSortingColumns, $newColumns);
     }
 
     public function getWeekDaysOptions()
