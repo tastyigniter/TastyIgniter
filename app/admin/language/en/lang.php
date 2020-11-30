@@ -388,7 +388,6 @@ return [
             'text_orders' => 'Orders',
             'text_reservations' => 'Reservations',
             'text_customers' => 'Customers',
-            'text_reviews' => 'Reviews',
         ],
 
         'column_location' => 'Location',

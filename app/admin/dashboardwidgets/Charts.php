@@ -28,6 +28,8 @@ class Charts extends BaseDashboardWidget
         'borderColor' => null,
     ];
 
+    public $contextDefinitions;
+
     public function initialize()
     {
         $this->setProperty('rangeFormat', 'MMMM D, YYYY');
@@ -53,7 +55,13 @@ class Charts extends BaseDashboardWidget
 
     public function listContext()
     {
-        return [
+        $this->contextDefinitions = [
+            'customer' => [
+                'label' => 'lang:admin::lang.dashboard.charts.text_customers',
+                'color' => '#4DB6AC',
+                'model' => Customers_model::class,
+                'column' => 'date_added',
+            ],
             'order' => [
                 'label' => 'lang:admin::lang.dashboard.charts.text_orders',
                 'color' => '#64B5F6',
@@ -66,13 +74,11 @@ class Charts extends BaseDashboardWidget
                 'model' => Reservations_model::class,
                 'column' => 'reserve_date',
             ],
-            'customer' => [
-                'label' => 'lang:admin::lang.dashboard.charts.text_customers',
-                'color' => '#4DB6AC',
-                'model' => Customers_model::class,
-                'column' => 'date_added',
-            ],
         ];
+
+        $this->fireSystemEvent('admin.charts.extendDatasets');
+
+        return $this->contextDefinitions;
     }
 
     protected function getDatasets($start, $end)
