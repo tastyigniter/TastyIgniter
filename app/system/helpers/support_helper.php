@@ -161,7 +161,7 @@ if (!function_exists('mdate_to_moment_js_format')) {
      *
      * @return int
      */
-    function convert_php_to_moment_js_format($format)
+    function mdate_to_moment_js_format($format)
     {
         $replacements = [
             'd' => 'DD',
