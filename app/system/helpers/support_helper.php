@@ -425,7 +425,6 @@ if (!function_exists('name_to_id')) {
 }
 
 if (!function_exists('name_to_array')) {
-
     /**
      * Converts a HTML named array string to a PHP array. Empty values are removed.
      * HTML: user[location][city]
