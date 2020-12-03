@@ -153,7 +153,7 @@ if (!function_exists('mdate')) {
     }
 }
 
-if (!function_exists('mdate_to_moment_js_format')) {
+if (!function_exists('convert_php_to_moment_js_format')) {
     /**
      * Convert PHP Date formats to Moment JS Date Formats
      *
@@ -425,7 +425,6 @@ if (!function_exists('name_to_id')) {
 }
 
 if (!function_exists('name_to_array')) {
-
     /**
      * Converts a HTML named array string to a PHP array. Empty values are removed.
      * HTML: user[location][city]
