@@ -250,9 +250,10 @@ class FormController extends ControllerAction
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeCreate($model);
 
+        $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
+
         $this->validateFormRequest($model);
 
-        $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 

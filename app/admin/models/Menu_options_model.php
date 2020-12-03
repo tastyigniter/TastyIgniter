@@ -43,7 +43,6 @@ class Menu_options_model extends Model
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
@@ -72,14 +71,6 @@ class Menu_options_model extends Model
         ];
     }
 
-    public function getAllergensOptions()
-    {
-        if (self::$allergensOptionsCache)
-            return self::$allergensOptionsCache;
-
-        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
-    }
-
     //
     // Events
     //
@@ -90,6 +81,11 @@ class Menu_options_model extends Model
 
         if (array_key_exists('option_values', $this->attributes))
             $this->addOptionValues($this->attributes['option_values']);
+    }
+
+    protected function beforeDelete()
+    {
+        $this->locations()->detach();
     }
 
     //

@@ -61,7 +61,7 @@ class Staffs_model extends Model
 
     protected $hidden = ['password'];
 
-    protected $purgeable = ['user', 'groups', 'locations'];
+    protected $purgeable = ['user'];
 
     public function getFullNameAttribute($value)
     {
@@ -108,12 +108,12 @@ class Staffs_model extends Model
 
         if (array_key_exists('user', $this->attributes))
             $this->addStaffUser($this->attributes['user']);
+    }
 
-        if (array_key_exists('groups', $this->attributes))
-            $this->addStaffGroups($this->attributes['groups']);
-
-        if (array_key_exists('locations', $this->attributes))
-            $this->addStaffLocations($this->attributes['locations']);
+    protected function beforeDelete()
+    {
+        $this->groups()->detach();
+        $this->locations()->detach();
     }
 
     //

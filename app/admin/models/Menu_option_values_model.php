@@ -62,9 +62,18 @@ class Menu_option_values_model extends Model
         return static::dropdown('value');
     }
 
+    public function getAllergensOptions()
+    {
+        if (self::$allergensOptionsCache)
+            return self::$allergensOptionsCache;
+
+        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
+    }
+
     //
     // Events
     //
+
     protected function afterSave()
     {
         $this->restorePurgedValues();
@@ -75,7 +84,7 @@ class Menu_option_values_model extends Model
 
     protected function beforeDelete()
     {
-        $this->addMenuAllergens([]);
+        $this->allergens()->detach();
     }
 
     /**

@@ -137,7 +137,7 @@ trait FormModelWidget
 
         $this->modelsToSave[] = $model;
 
-        $singularTypes = ['belongsTo', 'hasOne', 'morphOne'];
+        $singularTypes = ['belongsTo', 'hasOne', 'morphTo', 'morphOne'];
         foreach ($saveData as $attribute => $value) {
             $isNested = ($attribute == 'pivot' OR (
                     $model->hasRelation($attribute) AND
