@@ -39,7 +39,6 @@ class Locations_model extends AbstractLocation
         'hasMany' => [
             'working_hours' => ['Admin\Models\Working_hours_model', 'delete' => TRUE],
             'delivery_areas' => ['Admin\Models\Location_areas_model', 'delete' => TRUE],
-            'reviews' => ['Admin\Models\Reviews_model'],
         ],
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
@@ -63,7 +62,6 @@ class Locations_model extends AbstractLocation
 
     protected static $allowedSortingColumns = [
         'distance asc', 'distance desc',
-        'reviews_count asc', 'reviews_count desc',
         'location_id asc', 'location_id desc',
         'location_name asc', 'location_name desc',
     ];
@@ -90,6 +88,11 @@ class Locations_model extends AbstractLocation
             AND ($model->hasDelivery() OR $model->hasCollection())
             AND isset($model->options['hours'])
             AND $model->delivery_areas->where('is_default', 1)->count() > 0;
+    }
+
+    public static function addSortingColumns($newColumns)
+    {
+        self::$allowedSortingColumns = array_merge(self::$allowedSortingColumns, $newColumns);
     }
 
     public function getWeekDaysOptions()

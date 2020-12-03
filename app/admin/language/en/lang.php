@@ -147,7 +147,6 @@ return [
         'sale' => 'Sales',
         'order' => 'Orders',
         'reservation' => 'Reservations',
-        'review' => 'Reviews',
         'user' => 'Users',
         'customer' => 'Customers',
         'staff' => 'Staff',
@@ -389,7 +388,6 @@ return [
             'text_orders' => 'Orders',
             'text_reservations' => 'Reservations',
             'text_customers' => 'Customers',
-            'text_reviews' => 'Reviews',
         ],
 
         'column_location' => 'Location',
@@ -771,7 +769,6 @@ return [
         'assign_reservations' => 'Assign reservations',
         'payments' => 'Manage payment gateways',
         'reservations' => 'Manage reservations',
-        'reviews' => 'Manage user reviews',
         'staff_groups' => 'Manage staff groups',
         'staffs' => 'Create, edit and delete staffs',
         'statuses' => 'Manage orders and reservations statuses',
@@ -845,35 +842,6 @@ return [
         'activity_event_log_assigned_title' => 'Reservation assigned',
         'activity_event_log' => 'updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
         'activity_event_log_assigned' => 'assigned reservation (#:properties.reservation_id) to',
-    ],
-
-    'reviews' => [
-        'text_title' => 'Reviews',
-        'text_form_name' => 'Review',
-        'text_empty' => 'There are no reviews available.',
-        'text_filter_search' => 'Search by author, restaurant or sale id.',
-        'text_pending_review' => 'Pending Review',
-        'text_approved' => 'Approved',
-        'text_order' => 'Order',
-        'text_reservation' => 'Reservation',
-
-        'column_location' => 'Location',
-        'column_author' => 'Author',
-        'column_sale_id' => 'Sale ID',
-        'column_sale_type' => 'Sale Type',
-
-        'label_sale_type' => 'Sale Type',
-        'label_sale_id' => 'Sale ID',
-        'label_location' => 'Location',
-        'label_customer' => 'Customer',
-        'label_author' => 'Author',
-        'label_quality' => 'Quality Rating',
-        'label_delivery' => 'Delivery Rating',
-        'label_service' => 'Service Rating',
-        'label_text' => 'Review Text',
-
-        'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
-        'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
     ],
 
     'settings' => [
