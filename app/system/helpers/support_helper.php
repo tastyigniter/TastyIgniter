@@ -134,7 +134,7 @@ if (!function_exists('mdate')) {
         }
 
         if (is_null($format))
-            $format = setting('date_format', config('system.dateFormat'));
+            $format = lang('system::lang.date_format');
 
         if (is_null($time))
             return null;
@@ -425,7 +425,6 @@ if (!function_exists('name_to_id')) {
 }
 
 if (!function_exists('name_to_array')) {
-
     /**
      * Converts a HTML named array string to a PHP array. Empty values are removed.
      * HTML: user[location][city]
