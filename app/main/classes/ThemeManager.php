@@ -63,9 +63,11 @@ class ThemeManager
     {
         $instance = self::instance();
         $theme = $instance->getActiveTheme();
-        $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
 
-        if ($theme->hasParent()) {
+        if (File::exists($theme->path.'/_meta/assets.json')) {
+            $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
+        }
+        elseif ($theme->hasParent()) {
             $parentTheme = $instance->findTheme($theme->getParentName());
             $manager->addFromManifest($parentTheme->publicPath.'/_meta/assets.json');
         }
