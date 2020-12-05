@@ -972,6 +972,7 @@ return [
         'label_joinable' => 'Is Joinable',
 
         'help_tables' => 'Select a table to attach to this location.',
+        'help_extra_capacity' => 'Used internally by the staff to determine table convenience/inconvenience.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
     ],

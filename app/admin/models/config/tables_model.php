@@ -134,38 +134,27 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.tables.label_priority',
         'type' => 'number',
         'span' => 'right',
-        'cssClass' => 'flex-width',
-    ],
-    'table_status' => [
-        'label' => 'lang:admin::lang.label_status',
-        'type' => 'switch',
-        'span' => 'right',
-        'default' => 1,
-        'cssClass' => 'flex-width',
     ],
     'min_capacity' => [
         'label' => 'lang:admin::lang.tables.label_min_capacity',
         'type' => 'number',
         'span' => 'left',
-        'cssClass' => 'flex-width',
     ],
     'max_capacity' => [
         'label' => 'lang:admin::lang.tables.label_capacity',
         'type' => 'number',
-        'span' => 'left',
-        'cssClass' => 'flex-width',
-    ],
-    'extra_capacity' => [
-        'label' => 'lang:admin::lang.tables.label_extra_capacity',
-        'type' => 'number',
         'span' => 'right',
-        'cssClass' => 'flex-width',
+    ],
+    'table_status' => [
+        'label' => 'lang:admin::lang.label_status',
+        'type' => 'switch',
+        'span' => 'left',
+        'default' => 1,
     ],
     'is_joinable' => [
         'label' => 'lang:admin::lang.tables.label_joinable',
         'type' => 'switch',
         'span' => 'right',
-        'cssClass' => 'flex-width',
         'default' => 1,
         'on' => 'lang:admin::lang.text_yes',
         'off' => 'lang:admin::lang.text_no',
@@ -176,6 +165,11 @@ $config['form']['fields'] = [
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
         'locationAware' => 'hide',
+    ],
+    'extra_capacity' => [
+        'label' => 'lang:admin::lang.tables.label_extra_capacity',
+        'type' => 'number',
+        'comment' => 'lang:admin::lang.tables.help_extra_capacity',
     ],
 ];
 
