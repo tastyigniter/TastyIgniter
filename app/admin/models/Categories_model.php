@@ -93,11 +93,11 @@ class Categories_model extends Model
         return $query->whereExists(function ($q) {
             $prefix = DB::getTablePrefix();
             $q->select(DB::raw(1))
-              ->from('menu_categories')
-              ->join('menus', 'menus.menu_id', '=', 'menu_categories.menu_id')
-              ->whereNotNull('menus.menu_status')
-              ->where('menus.menu_status', '=', 1)
-              ->whereRaw($prefix.'categories.category_id = '.$prefix.'menu_categories.category_id');
+                ->from('menu_categories')
+                ->join('menus', 'menus.menu_id', '=', 'menu_categories.menu_id')
+                ->whereNotNull('menus.menu_status')
+                ->where('menus.menu_status', '=', 1)
+                ->whereRaw($prefix.'categories.category_id = '.$prefix.'menu_categories.category_id');
         });
     }
 

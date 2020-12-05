@@ -6,7 +6,7 @@
         <div class="media-body">
             <h4 class="media-heading">{{ $theme->name }}</h4>
             <p class="description">@lang('system::lang.themes.error_config_no_found')</p>
-            <div class="buttons action my-4">
+            <div class="list-action my-4">
                 {!! $this->makePartial('lists/list_button', ['record' => $theme, 'column' => $this->getColumn('delete')]) !!}
             </div>
         </div>

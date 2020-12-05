@@ -6,7 +6,6 @@ use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
-use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
 
@@ -18,7 +17,6 @@ class Locations_model extends AbstractLocation
     use HasWorkingHours;
     use HasDeliveryAreas;
     use HasPermalink;
-    use Purgeable;
     use HasMedia;
 
     const LOCATION_CONTEXT_SINGLE = 'single';
@@ -41,15 +39,11 @@ class Locations_model extends AbstractLocation
         'hasMany' => [
             'working_hours' => ['Admin\Models\Working_hours_model', 'delete' => TRUE],
             'delivery_areas' => ['Admin\Models\Location_areas_model', 'delete' => TRUE],
-            'reviews' => ['Admin\Models\Reviews_model'],
         ],
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
     ];
-
-    protected $purgeable = ['delivery_areas'];
-
     public $permalinkable = [
         'permalink_slug' => [
             'source' => 'location_name',
@@ -64,7 +58,6 @@ class Locations_model extends AbstractLocation
 
     protected static $allowedSortingColumns = [
         'distance asc', 'distance desc',
-        'reviews_count asc', 'reviews_count desc',
         'location_id asc', 'location_id desc',
         'location_name asc', 'location_name desc',
     ];
@@ -93,6 +86,11 @@ class Locations_model extends AbstractLocation
             AND $model->delivery_areas->where('is_default', 1)->count() > 0;
     }
 
+    public static function addSortingColumns($newColumns)
+    {
+        self::$allowedSortingColumns = array_merge(self::$allowedSortingColumns, $newColumns);
+    }
+
     public function getWeekDaysOptions()
     {
         return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -115,6 +113,11 @@ class Locations_model extends AbstractLocation
     protected function afterSave()
     {
         $this->performAfterSave();
+    }
+
+    protected function beforeDelete()
+    {
+        $this->tables()->detach();
     }
 
     //
@@ -143,7 +146,6 @@ class Locations_model extends AbstractLocation
         ], $options));
 
         if ($latitude AND $longitude) {
-            $query->select('*');
             $query->selectDistance($latitude, $longitude);
         }
 
@@ -206,6 +208,14 @@ class Locations_model extends AbstractLocation
         return (int)$this->getOption('reservation_time_interval');
     }
 
+    public function setOptionsAttribute($value)
+    {
+        if (is_array($value)) {
+            $options = @unserialize($this->attributes['options']) ?: [];
+            $this->attributes['options'] = @serialize(array_merge($options ?? [], $value));
+        }
+    }
+
     //
     // Helpers
     //
@@ -216,6 +226,18 @@ class Locations_model extends AbstractLocation
             $suffix = '/menus';
 
         $this->url = site_url($this->permalink_slug.$suffix);
+    }
+
+    public function getAddress()
+    {
+        $country = optional($this->country);
+
+        return array_merge(parent::getAddress(), [
+            'country' => $country->country_name,
+            'iso_code_2' => $country->iso_code_2,
+            'iso_code_3' => $country->iso_code_3,
+            'format' => $country->format,
+        ]);
     }
 
     public function hasGallery()
@@ -260,14 +282,8 @@ class Locations_model extends AbstractLocation
 
     public function performAfterSave()
     {
-        $this->restorePurgedValues();
-
         if (array_key_exists('hours', $this->options)) {
             $this->addOpeningHours($this->options['hours']);
-        }
-
-        if (array_key_exists('delivery_areas', $this->attributes)) {
-            $this->addLocationAreas($this->attributes['delivery_areas']);
         }
     }
 
