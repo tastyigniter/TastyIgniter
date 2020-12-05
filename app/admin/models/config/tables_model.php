@@ -130,14 +130,11 @@ $config['form']['fields'] = [
         'type' => 'text',
         'span' => 'left',
     ],
-    'is_joinable' => [
-        'label' => 'lang:admin::lang.tables.label_joinable',
-        'type' => 'switch',
+    'priority' => [
+        'label' => 'lang:admin::lang.tables.label_priority',
+        'type' => 'number',
         'span' => 'right',
         'cssClass' => 'flex-width',
-        'default' => 1,
-        'on' => 'lang:admin::lang.text_yes',
-        'off' => 'lang:admin::lang.text_no',
     ],
     'table_status' => [
         'label' => 'lang:admin::lang.label_status',
@@ -164,11 +161,14 @@ $config['form']['fields'] = [
         'span' => 'right',
         'cssClass' => 'flex-width',
     ],
-    'priority' => [
-        'label' => 'lang:admin::lang.tables.label_priority',
-        'type' => 'number',
+    'is_joinable' => [
+        'label' => 'lang:admin::lang.tables.label_joinable',
+        'type' => 'switch',
         'span' => 'right',
         'cssClass' => 'flex-width',
+        'default' => 1,
+        'on' => 'lang:admin::lang.text_yes',
+        'off' => 'lang:admin::lang.text_no',
     ],
     'locations' => [
         'label' => 'lang:admin::lang.label_location',
