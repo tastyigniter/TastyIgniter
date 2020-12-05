@@ -961,9 +961,15 @@ return [
 
         'column_min_capacity' => 'Minimum Capacity',
         'column_capacity' => 'Maximum Capacity',
+        'column_extra_capacity' => 'Extra Capacity',
+        'column_priority' => 'Priority',
+        'column_joinable' => 'Is Joinable',
 
-        'label_min_capacity' => 'Minimum',
-        'label_capacity' => 'Capacity',
+        'label_min_capacity' => 'Minimum Capacity',
+        'label_capacity' => 'Maximum Capacity',
+        'label_extra_capacity' => 'Extra Capacity',
+        'label_priority' => 'Priority',
+        'label_joinable' => 'Is Joinable',
 
         'help_tables' => 'Select a table to attach to this location.',
 

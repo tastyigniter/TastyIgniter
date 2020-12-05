@@ -521,7 +521,6 @@ class ServiceProvider extends AppServiceProvider
             'customer_groups' => 'Admin\Models\Customer_groups_model',
             'customers' => 'Admin\Models\Customers_model',
             'location_areas' => 'Admin\Models\Location_areas_model',
-            'location_tables' => 'Admin\Models\Location_tables_model',
             'locations' => 'Admin\Models\Locations_model',
             'mealtimes' => 'Admin\Models\Mealtimes_model',
             'menu_categories' => 'Admin\Models\Menu_categories_model',

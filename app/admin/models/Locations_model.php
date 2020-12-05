@@ -43,11 +43,7 @@ class Locations_model extends AbstractLocation
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
-        'belongsToMany' => [
-            'tables' => ['Admin\Models\Tables_model', 'table' => 'location_tables'],
-        ],
     ];
-
     public $permalinkable = [
         'permalink_slug' => [
             'source' => 'location_name',
@@ -332,17 +328,5 @@ class Locations_model extends AbstractLocation
         }
 
         return self::$defaultLocation = $defaultLocation;
-    }
-
-    /**
-     * Create a new or update existing location tables
-     *
-     * @param array $tables
-     *
-     * @return bool
-     */
-    public function addLocationTables($tables = [])
-    {
-        return $this->tables()->sync($tables);
     }
 }
