@@ -217,7 +217,7 @@ class ListController extends ControllerAction
         }
 
         // Prep the optional filter widget
-        if (isset($modelConfig['filter'])) {
+        if (array_get($modelConfig, 'filter')) {
             $filterConfig = $modelConfig['filter'];
             $filterConfig['alias'] = "{$widget->alias}_filter";
             $filterWidget = $this->makeWidget('Admin\Widgets\Filter', $filterConfig);
