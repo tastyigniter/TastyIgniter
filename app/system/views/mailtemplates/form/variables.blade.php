@@ -29,16 +29,11 @@
             >
                 @foreach ($vars as $variable => $label)
                     <span
-                        class="badge border mb-2"
+                        class="badge border mb-2 text-muted text-draggable"
                         title="@lang($label)"
                         style="font-size: 100%;"
-                    ><pre class="mb-0 text-muted">
-                        <code 
-                            draggable="true"
-                            ondragstart="event.dataTransfer.setData('text/plain', event.target.innerText)">
-                            {{ $variable }}
-                        </code>
-                    </pre></span>
+                        draggable="true"
+                    >{{ $variable }}</span>
                 @endforeach
             </div>
         @endforeach
