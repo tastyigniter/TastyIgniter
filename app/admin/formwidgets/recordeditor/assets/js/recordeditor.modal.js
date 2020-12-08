@@ -50,17 +50,9 @@
             this.options.onSubmit.call(this, context)
     }
 
-    RecordEditorModal.prototype.handleFormError = function (event, dataOrXhr, textStatus, jqXHR) {
-        $.ti.flashMessage({
-            class: 'danger',
-            text: jqXHR.responseText,
-            interval: 0
-        })
-
+    RecordEditorModal.prototype.handleFormError = function (event, context, textStatus, jqXHR) {
         if (this.options.onFail !== undefined)
-            this.options.onFail.call(this, dataOrXhr, jqXHR)
-
-        event.preventDefault()
+            this.options.onFail.call(this, context, jqXHR)
     }
 
     RecordEditorModal.prototype.handleFormDone = function (event, data, textStatus, jqXHR) {
