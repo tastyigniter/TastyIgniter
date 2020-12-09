@@ -347,13 +347,6 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.reservation'),
                             'permission' => 'Admin.Reservations',
                         ],
-                        'reviews' => [
-                            'priority' => 30,
-                            'class' => 'reviews',
-                            'href' => admin_url('reviews'),
-                            'title' => lang('admin::lang.side_menu.review'),
-                            'permission' => 'Admin.Reviews',
-                        ],
                         'statuses' => [
                             'priority' => 40,
                             'class' => 'statuses',
@@ -528,7 +521,6 @@ class ServiceProvider extends AppServiceProvider
             'customer_groups' => 'Admin\Models\Customer_groups_model',
             'customers' => 'Admin\Models\Customers_model',
             'location_areas' => 'Admin\Models\Location_areas_model',
-            'location_tables' => 'Admin\Models\Location_tables_model',
             'locations' => 'Admin\Models\Locations_model',
             'mealtimes' => 'Admin\Models\Mealtimes_model',
             'menu_categories' => 'Admin\Models\Menu_categories_model',
@@ -542,7 +534,6 @@ class ServiceProvider extends AppServiceProvider
             'payment_logs' => 'Admin\Models\Payment_logs_model',
             'payments' => 'Admin\Models\Payments_model',
             'reservations' => 'Admin\Models\Reservations_model',
-            'reviews' => 'Admin\Models\Reviews_model',
             'staff_groups' => 'Admin\Models\Staff_groups_model',
             'staffs' => 'Admin\Models\Staffs_model',
             'status_history' => 'Admin\Models\Status_history_model',
@@ -676,9 +667,6 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.Payments' => [
                     'label' => 'admin::lang.permissions.payments', 'group' => 'admin::lang.permissions.name',
-                ],
-                'Admin.Reviews' => [
-                    'label' => 'admin::lang.permissions.reviews', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.CustomerGroups' => [
                     'label' => 'admin::lang.permissions.customer_groups', 'group' => 'admin::lang.permissions.name',

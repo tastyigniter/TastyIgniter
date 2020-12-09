@@ -81,9 +81,6 @@ class Orders_model extends Model
         'hasMany' => [
             'payment_logs' => 'Admin\Models\Payment_logs_model',
         ],
-        'morphMany' => [
-            'review' => ['Admin\Models\Reviews_model'],
-        ],
     ];
 
     public static $allowedSortingColumns = [

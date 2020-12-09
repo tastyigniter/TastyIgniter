@@ -3,6 +3,7 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
 use Model;
 
@@ -13,8 +14,11 @@ class Tables_model extends Model
 {
     use Locationable;
     use Validation;
+    use Sortable;
 
     const LOCATIONABLE_RELATION = 'locations';
+
+    const SORT_ORDER = 'priority';
 
     /**
      * @var string The database table name
@@ -29,19 +33,15 @@ class Tables_model extends Model
     public $casts = [
         'min_capacity' => 'integer',
         'max_capacity' => 'integer',
+        'extra_capacity' => 'integer',
+        'priority' => 'integer',
+        'is_joinable' => 'boolean',
         'table_status' => 'boolean',
     ];
 
     public $relation = [
-        'hasManyThrough' => [
-            'reservations' => [
-                'Admin\Models\Reservations_model',
-                'throughKey' => 'table_id',
-                'through' => 'Admin\Models\Location_tables_model',
-            ],
-        ],
-        'belongsToMany' => [
-            'locations' => ['Admin\Models\Locations_model', 'table' => 'location_tables'],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -49,6 +49,9 @@ class Tables_model extends Model
         ['table_name', 'lang:admin::lang.label_name', 'required|min:2|max:255'],
         ['min_capacity', 'lang:admin::lang.tables.label_min_capacity', 'required|integer|min:1|lte:max_capacity'],
         ['max_capacity', 'lang:admin::lang.tables.label_capacity', 'required|integer|min:1|gte:min_capacity'],
+        ['extra_capacity', 'lang:admin::lang.tables.label_extra_capacity', 'required|integer'],
+        ['priority', 'lang:admin::lang.tables.label_priority', 'required|integer'],
+        ['is_joinable', 'lang:admin::lang.tables.label_joinable', 'required|boolean'],
         ['table_status', 'lang:admin::lang.label_status', 'required|boolean'],
     ];
 
@@ -72,14 +75,5 @@ class Tables_model extends Model
     {
         return $query->where('min_capacity', '<=', $noOfGuests)
             ->where('max_capacity', '>=', $noOfGuests);
-    }
-
-    public function scopeWhereHasReservationBetween($query, $start, $end)
-    {
-        $query->whereHas('reservations', function ($q) use ($start, $end) {
-            $q->whereRaw('ADDTIME(reserve_date, reserve_time) between ? and ?', [$start, $end]);
-        });
-
-        return $query;
     }
 }

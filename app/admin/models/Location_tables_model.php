@@ -6,6 +6,7 @@ use Model;
 
 /**
  * Location tables Model Class
+ * @deprecated remove before v4. Added for backward compatibility, see Locationable
  */
 class Location_tables_model extends Model
 {

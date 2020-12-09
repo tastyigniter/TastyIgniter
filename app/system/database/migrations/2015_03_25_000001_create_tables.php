@@ -14,7 +14,7 @@ use Schema;
  *  mail_templates, mail_templates_data, menus, menus_specials,
  *  menu_options, options, options_values, menu_options, orders,
  *  orders, order_menus, order_options, order_totals, pages, permalinks,
- *  pp_payments, permissions, reservations, reviews, security_questions, settings,
+ *  pp_payments, permissions, reservations, security_questions, settings,
  *  staffs, staff_groups, statuses, status_history, tables, uri_routes,
  *  users, working_hours
  */
@@ -580,26 +580,6 @@ class CreateTables extends Migration
             $table->string('user_agent');
             $table->boolean('status');
             $table->index(['location_id', 'table_id']);  // was unique
-        };
-    }
-
-    protected function _create_reviews()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->integer('review_id', TRUE);
-            $table->integer('customer_id');
-            $table->integer('sale_id');
-            $table->string('sale_type', 32)->default('');
-            $table->string('author', 32);
-            $table->integer('location_id');
-            $table->integer('quality');
-            $table->integer('delivery');
-            $table->integer('service');
-            $table->text('review_text');
-            $table->dateTime('date_added');
-            $table->boolean('review_status');
-            $table->index(['review_id', 'sale_type', 'sale_id']);  // was unique
         };
     }
 

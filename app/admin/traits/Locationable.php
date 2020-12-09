@@ -17,6 +17,20 @@ trait Locationable
      */
     public $locationScopeEnabled = FALSE;
 
+    protected $locationableAttributes;
+
+    /**
+     * Boot the locationable trait for a model.
+     *
+     * @return void
+     */
+    public static function bootLocationable()
+    {
+        static::deleting(function (self $model) {
+            $model->detachLocationsOnDelete();
+        });
+    }
+
     public function locationableScopeEnabled()
     {
         if ($this->locationScopeEnabled)
@@ -69,6 +83,18 @@ trait Locationable
                 $query->where($qualifiedColumnName, $locationId);
             });
         }
+    }
+
+    //
+    //
+    //
+
+    protected function detachLocationsOnDelete()
+    {
+        if ($this->locationableIsSingleRelationType())
+            return;
+
+        $this->getLocationableRelationObject()->detach();
     }
 
     //

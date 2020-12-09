@@ -132,36 +132,6 @@ return [
                     'comment' => 'lang:system::lang.settings.help_invoice_prefix',
                 ],
 
-                'allow_reviews' => [
-                    'label' => 'lang:system::lang.settings.label_allow_reviews',
-                    'tab' => 'lang:system::lang.settings.text_tab_title_reviews',
-                    'type' => 'switch',
-                    'default' => TRUE,
-                    'on' => 'lang:admin::lang.text_yes',
-                    'off' => 'lang:admin::lang.text_no',
-                    'comment' => 'lang:system::lang.settings.help_allow_reviews',
-                ],
-                'approve_reviews' => [
-                    'label' => 'lang:system::lang.settings.label_approve_reviews',
-                    'tab' => 'lang:system::lang.settings.text_tab_title_reviews',
-                    'type' => 'switch',
-                    'on' => 'lang:system::lang.settings.text_auto',
-                    'off' => 'lang:system::lang.settings.text_manual',
-                    'comment' => 'lang:system::lang.settings.help_approve_reviews',
-                    'trigger' => [
-                        'action' => 'show',
-                        'field' => 'allow_reviews',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'ratings[ratings]' => [
-                    'label' => 'lang:admin::lang.ratings.text_title',
-                    'tab' => 'lang:system::lang.settings.text_tab_title_reviews',
-                    'type' => 'partial',
-                    'path' => 'settings/ratings',
-                    'commentAbove' => 'lang:admin::lang.ratings.help_hints',
-                ],
-
                 'tax_mode' => [
                     'label' => 'lang:system::lang.settings.label_tax_mode',
                     'tab' => 'lang:system::lang.settings.text_tab_title_taxation',
@@ -203,9 +173,6 @@ return [
             ['tax_percentage', 'lang:system::lang.settings.label_tax_percentage', 'required_if:tax_mode,1|numeric'],
             ['tax_menu_price', 'lang:system::lang.settings.label_tax_menu_price', 'numeric'],
             ['tax_delivery_charge', 'lang:system::lang.settings.label_tax_delivery_charge', 'numeric'],
-            ['allow_reviews', 'lang:system::lang.settings.label_allow_reviews', 'required|integer'],
-            ['approve_reviews', 'lang:system::lang.settings.label_approve_reviews', 'required|integer'],
-            ['ratings.*', 'lang:admin::lang.label_name', 'required|min:2|max:32'], ['default_order_status', 'lang:system::lang.settings.label_default_order_status', 'required|integer'],
             ['processing_order_status', 'lang:system::lang.settings.label_processing_order_status', 'required'],
             ['completed_order_status', 'lang:system::lang.settings.label_completed_order_status', 'required'],
             ['canceled_order_status', 'lang:system::lang.settings.label_canceled_order_status', 'required|integer'],

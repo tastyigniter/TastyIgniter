@@ -153,7 +153,7 @@ if (!function_exists('mdate')) {
     }
 }
 
-if (!function_exists('mdate_to_moment_js_format')) {
+if (!function_exists('convert_php_to_moment_js_format')) {
     /**
      * Convert PHP Date formats to Moment JS Date Formats
      *
