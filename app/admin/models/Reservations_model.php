@@ -407,8 +407,8 @@ class Reservations_model extends Model
         $model = $this->fresh();
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;
-        $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->format(lang('system::lang.time_format_long'));
-        $data['reservation_date'] = $model->reserve_date->format(lang('system::lang.date_format_long'));
+        $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->format(lang('admin::lang.time_format_long'));
+        $data['reservation_date'] = $model->reserve_date->format(lang('admin::lang.date_format_long'));
         $data['reservation_guest_no'] = $model->guest_num;
         $data['first_name'] = $model->first_name;
         $data['last_name'] = $model->last_name;

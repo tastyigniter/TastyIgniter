@@ -6,13 +6,6 @@ return [
     'copyright' => 'Thank you for using <a target="_blank" href="http://tastyigniter.com">TastyIgniter</a>',
     'version' => '<b>Version:</b> %s',
 
-    'date_format' => 'd m Y',
-    'date_format_long' => 'l, jS F Y',
-    'time_format' => 'H:i',
-    'time_format_long' => 'h:i a',
-    'date_time_format' => 'd m Y H:i',
-    'date_time_format_long' => 'l, jS F Y \a\t h:i a',
-
     'no_database' => [
         'label' => 'Database Error Was Encountered',
         'help' => 'A database connection is required. Check the database is properly configured and migrated before trying again.',

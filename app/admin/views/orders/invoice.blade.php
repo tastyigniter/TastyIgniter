@@ -65,7 +65,7 @@
                 </p>
                 <p>
                     <strong>@lang('admin::lang.orders.text_invoice_date')</strong><br>
-                    {{ $model->invoice_date->format(lang('system::lang.date_format')) }}<br><br>
+                    {{ $model->invoice_date->format(lang('admin::lang.date_format')) }}<br><br>
                 </p>
             </div>
             <div class="col-3 text-right">
@@ -75,7 +75,7 @@
                 </p>
                 <p>
                     <strong>@lang('admin::lang.orders.text_order_date')</strong><br>
-                    {{ $model->order_date->setTimeFromTimeString($model->order_time)->format(lang('system::lang.date_time_format')) }}
+                    {{ $model->order_date->setTimeFromTimeString($model->order_time)->format(lang('admin::lang.date_time_format')) }}
                 </p>
             </div>
         </div>

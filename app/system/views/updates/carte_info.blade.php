@@ -9,7 +9,7 @@
                 <p>{{ $carteInfo['description'] ?? '' }}</p>
                 <strong>Owner:</strong> {{ $carteInfo['owner'] }}<br/>
                 <span class="small">
-                    <strong>Updated:</strong> {{ mdate(lang('system::lang.date_time_format'), strtotime($carteInfo['updated_at'])) }}
+                    <strong>Updated:</strong> {{ mdate(lang('admin::lang.date_time_format'), strtotime($carteInfo['updated_at'])) }}
                 </span>
             </div>
         </div>

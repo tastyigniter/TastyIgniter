@@ -134,7 +134,7 @@ if (!function_exists('mdate')) {
         }
 
         if (is_null($format))
-            $format = lang('system::lang.date_format');
+            $format = lang('admin::lang.date_format');
 
         if (is_null($time))
             return null;
