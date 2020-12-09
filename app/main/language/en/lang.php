@@ -3,6 +3,13 @@ return [
     'site_title' => '%s - %s',
     'site_copyright' => '&copy; %s %s - ',
 
+    'date_format' => 'DD MMMM YYYY',
+    'date_format_long' => 'dddd, Do MMMM YYYY',
+    'time_format' => 'HH:mm',
+    'time_format_long' => 'H:mm a',
+    'date_time_format' => 'DD MMMM YYYY HH:mm',
+    'date_time_format_long' => 'dddd, Do MMMM YYYY [at] H:mm a',
+
     'text_free' => 'Free',
     'text_equals' => ' = ',
     'text_plus' => '+',
