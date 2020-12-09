@@ -28,6 +28,29 @@ return [
     'error' => [
     ],
 
+    'php' => [
+        'date_format' => 'd M Y',
+        'date_format_short' => 'd M',
+        'date_format_long' => 'l, jS F Y',
+        'time_format' => 'H:i',
+        'date_time_format' => 'd M Y H:i',
+        'date_time_format_short' => 'd M H:i',
+        'date_time_format_long' => 'l, jS F Y \a\t h:i a',
+    ],
+
+    'moment' => [
+        'date_format' => 'DD MMM YYYY',
+        'date_format_short' => 'DD MMM',
+        'date_format_long' => 'dddd, Do MMM YYYY',
+        'time_format' => 'hh:mm a',
+        'date_time_format' => 'DD MMMM YYYY HH:mm',
+        'date_time_format_short' => 'DD MMM \a\t HH:mm',
+        'date_time_format_long' => 'dddd, Do MMMM YYYY \a\t HH:mm a',
+        'day_format' => 'ddd DD',
+        'day_time_format' => 'ddd DD hh:mm a',
+        'day_time_format_short' => 'ddd hh:mm a',
+    ],
+
     'activities' => [
         'text_title' => 'Activities',
         'button_mark_as_read' => 'Mark all as read',

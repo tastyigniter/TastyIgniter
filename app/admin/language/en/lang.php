@@ -3,13 +3,6 @@
 return [
     'site_title' => '%s - Administrator Panel - %s',
 
-    'date_format' => 'd m Y',
-    'date_format_long' => 'l, jS F Y',
-    'time_format' => 'H:i',
-    'time_format_long' => 'h:i a',
-    'date_time_format' => 'd m Y H:i',
-    'date_time_format_long' => 'l, jS F Y \a\t h:i a',
-
     'text_edit' => 'Edit',
     'text_filter' => 'Filter',
     'text_clear' => 'Clear',
