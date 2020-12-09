@@ -134,7 +134,7 @@ if (!function_exists('mdate')) {
         }
 
         if (is_null($format))
-            $format = setting('date_format', config('system.dateFormat'));
+            $format = lang('system::lang.php.date_format');
 
         if (is_null($time))
             return null;

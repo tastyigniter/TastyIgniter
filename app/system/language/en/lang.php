@@ -28,6 +28,29 @@ return [
     'error' => [
     ],
 
+    'php' => [
+        'date_format' => 'd M Y',
+        'date_format_short' => 'd M',
+        'date_format_long' => 'l, jS F Y',
+        'time_format' => 'H:i',
+        'date_time_format' => 'd M Y H:i',
+        'date_time_format_short' => 'd M H:i',
+        'date_time_format_long' => 'l, jS F Y \a\t h:i a',
+    ],
+
+    'moment' => [
+        'date_format' => 'DD MMM YYYY',
+        'date_format_short' => 'DD MMM',
+        'date_format_long' => 'dddd, Do MMM YYYY',
+        'time_format' => 'hh:mm a',
+        'date_time_format' => 'DD MMMM YYYY HH:mm',
+        'date_time_format_short' => 'DD MMM \a\t HH:mm',
+        'date_time_format_long' => 'dddd, Do MMMM YYYY \a\t HH:mm a',
+        'day_format' => 'ddd DD',
+        'day_time_format' => 'ddd DD hh:mm a',
+        'day_time_format_short' => 'ddd hh:mm a',
+    ],
+
     'activities' => [
         'text_title' => 'Activities',
         'button_mark_as_read' => 'Mark all as read',
@@ -376,8 +399,6 @@ return [
         'label_site_url' => 'Restaurant URL',
         'label_site_logo' => 'Restaurant Logo',
         'label_timezone' => 'Default Timezone',
-        'label_date_format' => 'Date Format',
-        'label_time_format' => 'Time Format',
         'label_site_currency' => 'Default Currency',
         'label_currency_converter' => 'Default Currency Converter',
         'label_currency_converter_oer_api_key' => 'Currency Converter (Open Exchange Rates API) App ID',

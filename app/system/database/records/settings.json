@@ -26,16 +26,6 @@
   },
   {
     "sort": "config",
-    "item": "date_format",
-    "value": "d M Y"
-  },
-  {
-    "sort": "config",
-    "item": "time_format",
-    "value": "h:i a"
-  },
-  {
-    "sort": "config",
     "item": "default_currency_code",
     "value": "GBP"
   },
