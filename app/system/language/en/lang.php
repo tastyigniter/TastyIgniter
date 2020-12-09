@@ -399,8 +399,6 @@ return [
         'label_site_url' => 'Restaurant URL',
         'label_site_logo' => 'Restaurant Logo',
         'label_timezone' => 'Default Timezone',
-        'label_date_format' => 'Date Format',
-        'label_time_format' => 'Time Format',
         'label_site_currency' => 'Default Currency',
         'label_currency_converter' => 'Default Currency Converter',
         'label_currency_converter_oer_api_key' => 'Currency Converter (Open Exchange Rates API) App ID',

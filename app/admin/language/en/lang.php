@@ -2,7 +2,6 @@
 
 return [
     'site_title' => '%s - Administrator Panel - %s',
-
     'text_edit' => 'Edit',
     'text_filter' => 'Filter',
     'text_clear' => 'Clear',
