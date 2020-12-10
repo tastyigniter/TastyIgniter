@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Models\Reservations_model;
 use Admin\Models\Status_history_model;
 
 trait LogsStatusHistory
@@ -49,6 +50,15 @@ trait LogsStatusHistory
             return FALSE;
 
         $this->save();
+
+        $this->reloadRelations();
+
+        if ($history->notify) {
+            $mailView = ($this instanceof Reservations_model)
+                ? 'admin::_mail.reservation_update' : 'admin::_mail.order_update';
+
+            $this->mailSend($mailView, 'customer');
+        }
 
         $this->fireSystemEvent('admin.statusHistory.added', [$history]);
 

@@ -21,9 +21,15 @@ class Toolbar extends BaseWidget
 
     public $buttons = [];
 
+    /**
+     * @var string
+     */
+    public $container;
+
     public function initialize()
     {
         $this->fillFromConfig([
+            'container',
             'buttons',
             'context',
             'cssClasses',
@@ -38,6 +44,9 @@ class Toolbar extends BaseWidget
 
     public function render()
     {
+        if (!is_null($this->container))
+            return $this->makePartial($this->container);
+
         $this->prepareVars();
 
         return $this->makePartial('toolbar/toolbar');

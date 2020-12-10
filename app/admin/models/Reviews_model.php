@@ -9,6 +9,7 @@ use Model;
 
 /**
  * Reviews Model Class
+ * @deprecated remove before v4. Added for backward compatibility, see Igniter\Local\Models\Reviews_model
  */
 class Reviews_model extends Model
 {

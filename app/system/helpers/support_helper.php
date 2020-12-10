@@ -60,7 +60,7 @@ if (!function_exists('restaurant_url')) {
      */
     function restaurant_url($uri = null, array $params = [])
     {
-        return page_url($uri, $params);
+        return controller()->pageUrl($uri, $params);
     }
 }
 
@@ -134,7 +134,7 @@ if (!function_exists('mdate')) {
         }
 
         if (is_null($format))
-            $format = setting('date_format', config('system.dateFormat'));
+            $format = lang('system::lang.php.date_format');
 
         if (is_null($time))
             return null;
@@ -153,7 +153,7 @@ if (!function_exists('mdate')) {
     }
 }
 
-if (!function_exists('mdate_to_moment_js_format')) {
+if (!function_exists('convert_php_to_moment_js_format')) {
     /**
      * Convert PHP Date formats to Moment JS Date Formats
      *
@@ -425,7 +425,6 @@ if (!function_exists('name_to_id')) {
 }
 
 if (!function_exists('name_to_array')) {
-
     /**
      * Converts a HTML named array string to a PHP array. Empty values are removed.
      * HTML: user[location][city]
