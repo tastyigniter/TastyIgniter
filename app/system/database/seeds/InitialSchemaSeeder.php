@@ -121,9 +121,10 @@ class InitialSchemaSeeder extends Seeder
                 'table_status' => 1,
             ]);
 
-            DB::table('location_tables')->insert([
+            DB::table('locationables')->insert([
                 'location_id' => $locationId,
-                'table_id' => $tableId,
+                'locationable_id' => $tableId,
+                'locationable_type' => 'tables',
             ]);
         }
     }

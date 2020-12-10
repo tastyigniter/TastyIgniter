@@ -24,11 +24,6 @@ class ModifyColumnsOnTablesReservationsTable extends Migration
 
     public function down()
     {
-        Schema::table('tables', function (Blueprint $table) {
-            $table->dropColumn('extra_capacity');
-            $table->dropColumn('is_joinable');
-            $table->dropColumn('priority');
-        });
     }
 
     protected function moveLocationTablesRecordsToLocationablesTable()
