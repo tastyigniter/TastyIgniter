@@ -275,7 +275,6 @@ return [
         'text_tab_address' => 'Addresses',
         'text_tab_orders' => 'Orders',
         'text_tab_reservations' => 'Reservations',
-        'text_tab_reviews' => 'Reviews',
         'text_filter_search' => 'Search by name or email.',
         'text_empty' => 'There are no customers available.',
         'text_subscribe' => 'Subscribe',
@@ -777,14 +776,6 @@ return [
         'allergens' => 'Create, edit and delete allergens',
     ],
 
-    'ratings' => [
-        'text_title' => 'Rating Hints',
-        'text_heading' => 'Rating Hints',
-        'text_empty' => 'There are no rating, please add.',
-
-        'help_hints' => 'Used when adding reviews.',
-    ],
-
     'reservations' => [
         'text_title' => 'Reservations',
         'text_form_name' => 'Reservation',
@@ -912,7 +903,7 @@ return [
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
         'help_role' => 'Roles define staff permissions, which can be overridden on the user level, on the Permissions tab.',
         'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
-        'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, reservations, and reviews attached to the selected location(s). Does not apply to super admins',
+        'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, and reservations attached to the selected location(s). Does not apply to super admins',
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
         'help_sale_permission_groups' => 'Can view Orders and Reservations in their Group(s) and Orders and Reservations assigned to them',
         'help_sale_permission_restricted' => 'Can only view Orders and Reservations assigned to them',

@@ -21,8 +21,6 @@ class UpdateRecordsSeeder extends Seeder
     {
         $this->updateMorphsOnStatusHistory();
 
-        $this->updateMorphsOnReviews();
-
         $this->fixPermalinkSlugColumns();
 
         $this->copyRecordsFromLocationsToLocationAreas();
@@ -51,29 +49,6 @@ class UpdateRecordsSeeder extends Seeder
         });
     }
 
-    protected function updateMorphsOnReviews()
-    {
-        if (DB::table('reviews')
-            ->where('sale_type', 'Admin\Models\Orders_model')
-            ->orWhere('sale_type', 'Admin\Models\Reservations_model')
-            ->count()
-        ) return;
-
-        $morphs = [
-            'order' => 'Admin\Models\Orders_model',
-            'reservation' => 'Admin\Models\Reservations_model',
-        ];
-
-        DB::table('reviews')->get()->each(function ($model) use ($morphs) {
-            if (!isset($morphs[$model->sale_type]))
-                return FALSE;
-
-            DB::table('reviews')->where('review_id', $model->review_id)->update([
-                'sale_type' => $morphs[$model->sale_type],
-            ]);
-        });
-    }
-
     protected function fixPermalinkSlugColumns()
     {
         Categories_model::all()->each(function (Categories_model $model) {
@@ -97,7 +72,6 @@ class UpdateRecordsSeeder extends Seeder
                 return TRUE;
 
             foreach ($options['delivery_areas'] as $option) {
-
                 $boundaries = array_except($option, ['type', 'name', 'charge', 'conditions']);
                 if (isset($boundaries['shape']))
                     $boundaries['polygon'] = $boundaries['shape'];
