@@ -60,7 +60,7 @@ if (!function_exists('restaurant_url')) {
      */
     function restaurant_url($uri = null, array $params = [])
     {
-        return page_url($uri, $params);
+        return controller()->pageUrl($uri, $params);
     }
 }
 
