@@ -51,8 +51,8 @@ class Staff_groups_model extends Model
             ->get()
             ->keyBy('staff_group_id')
             ->map(function ($model) {
-                       return [$model->staff_group_name, $model->description];
-                   });
+                return [$model->staff_group_name, $model->description];
+            });
     }
 
     public function getStaffCountAttribute($value)
