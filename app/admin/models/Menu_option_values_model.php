@@ -28,7 +28,7 @@ class Menu_option_values_model extends Model
 
     protected $fillable = ['option_id', 'value', 'price', 'allergens'];
 
-    public $casts = [
+    protected $casts = [
         'option_value_id' => 'integer',
         'option_id' => 'integer',
         'price' => 'float',

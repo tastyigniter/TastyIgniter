@@ -32,7 +32,7 @@ class Menu_options_model extends Model
 
     protected $fillable = ['option_id', 'option_name', 'display_type'];
 
-    public $casts = [
+    protected $casts = [
         'option_id' => 'integer',
         'priority' => 'integer',
     ];

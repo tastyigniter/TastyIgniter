@@ -27,7 +27,7 @@ class Locations_model extends AbstractLocation
 
     protected $hidden = ['options'];
 
-    public $casts = [
+    protected $casts = [
         'location_country_id' => 'integer',
         'location_lat' => 'double',
         'location_lng' => 'double',
@@ -44,6 +44,7 @@ class Locations_model extends AbstractLocation
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
     ];
+
     public $permalinkable = [
         'permalink_slug' => [
             'source' => 'location_name',

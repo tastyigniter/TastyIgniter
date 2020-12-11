@@ -16,7 +16,7 @@ class Languages_model extends Language
 
     protected $purgeable = ['translations'];
 
-    public $casts = [
+    protected $casts = [
         'original_id' => 'integer',
         'status' => 'boolean',
     ];

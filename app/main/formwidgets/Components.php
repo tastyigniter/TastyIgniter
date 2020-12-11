@@ -147,9 +147,9 @@ class Components extends BaseFormWidget
 
         $template = $this->getTemplate();
 
-        $attributes = $template->attributes;
+        $attributes = $template->getAttributes();
         unset($attributes[sprintf('[%s]', $codeAlias)]);
-        $template->attributes = $attributes;
+        $template->setRawAttributes($attributes);
 
         $template->mTime = Carbon::now()->timestamp;
         $template->save();

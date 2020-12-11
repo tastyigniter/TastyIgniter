@@ -25,7 +25,7 @@ class Menus_specials_model extends Model
         'recurring_from', 'recurring_to',
     ];
 
-    public $casts = [
+    protected $casts = [
         'menu_id' => 'integer',
         'start_date' => 'datetime',
         'end_date' => 'datetime',

@@ -12,7 +12,7 @@ class Payment_profiles_model extends Model
 
     protected $primaryKey = 'payment_profile_id';
 
-    public $casts = [
+    protected $casts = [
         'customer_id' => 'integer',
         'payment_id' => 'integer',
         'profile_data' => 'array',

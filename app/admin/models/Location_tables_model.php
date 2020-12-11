@@ -19,7 +19,7 @@ class Location_tables_model extends Model
 
     public $incrementing = FALSE;
 
-    public $casts = [
+    protected $casts = [
         'location_id' => 'integer',
         'table_id' => 'integer',
     ];

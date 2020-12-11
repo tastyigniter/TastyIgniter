@@ -33,7 +33,7 @@ class Staff_groups_model extends Model
         ],
     ];
 
-    public $casts = [
+    protected $casts = [
         'auto_assign' => 'boolean',
         'auto_assign_mode' => 'integer',
         'auto_assign_limit' => 'integer',

@@ -53,7 +53,7 @@ class Reservations_model extends Model
 
     public $guarded = ['ip_address', 'user_agent', 'hash'];
 
-    public $casts = [
+    protected $casts = [
         'location_id' => 'integer',
         'table_id' => 'integer',
         'guest_num' => 'integer',

@@ -29,7 +29,7 @@ class Menu_item_option_values_model extends Model
 
     public $appends = ['name', 'price'];
 
-    public $casts = [
+    protected $casts = [
         'menu_option_value_id' => 'integer',
         'menu_option_id' => 'integer',
         'option_value_id' => 'integer',

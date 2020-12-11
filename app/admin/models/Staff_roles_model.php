@@ -28,7 +28,7 @@ class Staff_roles_model extends Model
         ],
     ];
 
-    public $casts = [
+    protected $casts = [
         'permissions' => 'serialize',
     ];
 

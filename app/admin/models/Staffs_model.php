@@ -34,7 +34,7 @@ class Staffs_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'staff_role_id' => 'integer',
         'staff_location_id' => 'integer',
         'sale_permission' => 'integer',
