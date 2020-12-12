@@ -2,7 +2,6 @@
 
 namespace Admin\Models;
 
-use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
 use Model;
@@ -12,7 +11,6 @@ use Model;
  */
 class Menu_option_values_model extends Model
 {
-    use Purgeable;
     use Sortable;
     use Validation;
 
@@ -44,8 +42,6 @@ class Menu_option_values_model extends Model
         ],
     ];
 
-    protected $purgeable = ['allergens'];
-
     public $sortable = [
         'sortOrderColumn' => 'priority',
         'sortWhenCreating' => FALSE,
@@ -73,14 +69,6 @@ class Menu_option_values_model extends Model
     //
     // Events
     //
-
-    protected function afterSave()
-    {
-        $this->restorePurgedValues();
-
-        if (array_key_exists('allergens', $this->attributes))
-            $this->addMenuAllergens((array)$this->attributes['allergens']);
-    }
 
     protected function beforeDelete()
     {

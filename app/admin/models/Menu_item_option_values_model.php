@@ -55,12 +55,15 @@ class Menu_item_option_values_model extends Model
 
     public function getOptionValueIdOptions()
     {
-        if (!empty(self::$optionValuesCollection[$this->option_id]))
-            return self::$optionValuesCollection[$this->option_id];
+        if (!$optionId = optional($this->menu_option)->option_id)
+            return [];
 
-        $result = Menu_option_values_model::dropdown('value');
+        if (!empty(self::$optionValuesCollection[$optionId]))
+            return self::$optionValuesCollection[$optionId];
 
-        self::$optionValuesCollection[$this->option_id] = $result;
+        $result = Menu_option_values_model::where('option_id', $optionId)->dropdown('value');
+
+        self::$optionValuesCollection[$optionId] = $result;
 
         return $result;
     }
