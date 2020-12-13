@@ -480,6 +480,7 @@ return [
         'label_offer_reservation' => 'Offer Reservations',
         'label_reservation_time_interval' => 'Reservation Time Interval',
         'label_reservation_lead_time' => 'Reservation Lead Time',
+        'label_auto_allocate_table' => 'Automatically Allocate Tables',
         'label_opening_type' => 'Opening Hours',
         'label_opening_days' => 'Days',
         'label_opening_hour' => 'Hours',
