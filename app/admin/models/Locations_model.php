@@ -43,6 +43,9 @@ class Locations_model extends AbstractLocation
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
+        'morphedByMany' => [
+            'staffs' => ['Admin\Models\Staffs_model', 'name' => 'locationable'],
+        ],
     ];
 
     public $permalinkable = [

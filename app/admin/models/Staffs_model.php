@@ -3,6 +3,7 @@
 namespace Admin\Models;
 
 use Admin\Classes\UserState;
+use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
 
@@ -12,10 +13,13 @@ use Model;
 class Staffs_model extends Model
 {
     use Purgeable;
+    use Locationable;
 
     const UPDATED_AT = null;
 
     const CREATED_AT = 'date_added';
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     /**
      * @var string The database table name
@@ -55,7 +59,9 @@ class Staffs_model extends Model
         ],
         'belongsToMany' => [
             'groups' => ['Admin\Models\Staff_groups_model', 'table' => 'staffs_groups'],
-            'locations' => ['Admin\Models\Locations_model', 'table' => 'staffs_locations'],
+        ],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -95,6 +101,13 @@ class Staffs_model extends Model
     {
         $query->whereHas('user', function ($q) {
             $q->where('super_user', '!=', 1);
+        });
+    }
+
+    public function scopeWhereIsSuperUser($query)
+    {
+        $query->whereHas('user', function ($q) {
+            $q->where('super_user', 1);
         });
     }
 
