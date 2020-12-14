@@ -356,6 +356,7 @@ return [
         'text_tab_title_reservation' => 'Reservation',
         'text_tab_title_maintenance' => 'Maintenance',
         'text_tab_title_system_log' => 'Log Settings',
+        'text_tab_title_activity_log' => 'Activity Log Settings',
         'text_single' => 'Single',
         'text_multiple' => 'Multiple',
         'text_1_hour' => '1 Hours',
@@ -462,8 +463,7 @@ return [
         'label_enable_request_log' => 'Log Bad Requests',
         'label_maintenance_mode' => 'Maintenance Mode',
         'label_maintenance_message' => 'Maintenance Message',
-        'label_cache_mode' => 'Cache Mode',
-        'label_cache_time' => 'Cache Time',
+        'label_activity_log_timeout' => 'Clean Up Activity Log Older Than',
 
         'alert_email_sending' => 'Sending email...',
         'alert_email_sent' => 'Email sent to %s',
@@ -513,6 +513,7 @@ return [
         'help_reservation_email' => 'Send a confirmation mail to the customer, admin and/or location email when a new reservation is received',
         'help_enable_request_log' => 'Whether to log bad browser requests, such as 404 errors.',
         'help_maintenance' => 'Enable to prevent customers from viewing your store. The maintenance message will be displayed to customers except logged admin.',
+        'help_activity_log_timeout' => 'Delete all recorded activities older than the specified number of days',
     ],
 
     'system_logs' => [

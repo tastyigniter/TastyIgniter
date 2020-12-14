@@ -23,6 +23,8 @@ use Igniter\Flame\Pagic\Parsers\FileParser;
 use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
+use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
@@ -323,6 +325,10 @@ class ServiceProvider extends AppServiceProvider
 
             $app['config']->set('geocoder.providers.google.apiKey', setting('maps_api_key'));
         });
+
+        Event::listen(CommandStarting::class, function () {
+            config()->set('system.activityRecordsTTL', (int)setting('activity_log_timeout', 60));
+        });
     }
 
     protected function registerAssets()
@@ -390,11 +396,14 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerSchedule()
     {
-        Event::listen('console.schedule', function ($schedule) {
+        Event::listen('console.schedule', function (Schedule $schedule) {
             // Check for system updates every 12 hours
             $schedule->call(function () {
                 Classes\UpdateManager::instance()->requestUpdateList(TRUE);
             })->name('System Updates Checker')->cron('0 */12 * * *')->evenInMaintenanceMode();
+
+            // Cleanup activity log
+            $schedule->command('activitylog:cleanup')->name('Activity Log Cleanup')->daily();
         });
     }
 
