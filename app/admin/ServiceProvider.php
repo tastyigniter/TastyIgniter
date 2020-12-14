@@ -49,7 +49,7 @@ class ServiceProvider extends AppServiceProvider
         $this->registerAssets();
         $this->registerActivityTypes();
         $this->registerMailTemplates();
-        $this->registerAllocatorSchedule();
+        $this->registerSchedule();
 
         if ($this->app->runningInAdmin()) {
             $this->registerSystemSettings();
@@ -690,13 +690,13 @@ class ServiceProvider extends AppServiceProvider
         });
     }
 
-    protected function registerAllocatorSchedule()
+    protected function registerSchedule()
     {
         Event::listen('console.schedule', function (Schedule $schedule) {
             // Check for assignables to assign every minute
             $schedule->call(function () {
                 Classes\Allocator::allocate();
-            })->name('Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
+            })->name('Assignables Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
         });
     }
 

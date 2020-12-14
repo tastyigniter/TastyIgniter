@@ -394,7 +394,7 @@ class ServiceProvider extends AppServiceProvider
             // Check for system updates every 12 hours
             $schedule->call(function () {
                 Classes\UpdateManager::instance()->requestUpdateList(TRUE);
-            })->cron('0 */12 * * *')->evenInMaintenanceMode();
+            })->name('System Updates Checker')->cron('0 */12 * * *')->evenInMaintenanceMode();
         });
     }
 
