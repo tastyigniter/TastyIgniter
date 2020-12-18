@@ -93,7 +93,7 @@ trait HasDeliveryAreas
 
         return $this->delivery_areas->filter(function (AreaInterface $model) use ($coordinates) {
             return $model->checkBoundary($coordinates);
-        })->sortBy(function($area, $key) {
+        })->sortBy(function ($area, $key) {
             return head($area->conditions)['amount'];
         })->first();
     }
