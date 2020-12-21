@@ -289,14 +289,8 @@ class Themes extends \Admin\Classes\AdminController
         });
 
         try {
-            $output = '';
             Artisan::call('igniter:util', ['name' => 'compile scss']);
-            $output .= Artisan::output();
-
             Artisan::call('igniter:util', ['name' => 'compile js']);
-            $output .= Artisan::output();
-
-            Log::info($output);
         }
         catch (Exception $ex) {
             Log::error($ex);
