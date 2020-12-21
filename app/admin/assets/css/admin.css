@@ -16414,10 +16414,6 @@ a.text-white:hover, a.panel-white:hover, a.text-white:focus, a.panel-white:focus
 .text-muted {
   color: #9194A6 !important;
 }
-.text-draggable {
-  -webkit-user-select: all; /* for Safari */
-  user-select: all;
-}
 .text-black-50 {
   color: rgba(0, 3, 41, 0.5) !important;
 }

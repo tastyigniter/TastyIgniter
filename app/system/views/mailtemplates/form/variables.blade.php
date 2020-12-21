@@ -33,7 +33,8 @@
                         title="@lang($label)"
                         style="font-size: 100%;"
                         draggable="true"
-                    >{{ $variable }}</span>
+                        ondragstart="event.dataTransfer.setData('text/plain', event.target.innerText)">
+                    {{ $variable }}</span>
                 @endforeach
             </div>
         @endforeach
