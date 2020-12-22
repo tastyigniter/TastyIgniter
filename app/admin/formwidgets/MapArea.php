@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 class MapArea extends BaseFormWidget
 {
     use FormModelWidget;
-    
+
     const SORT_PREFIX = '___dragged_';
 
     //
@@ -37,9 +37,9 @@ class MapArea extends BaseFormWidget
     public $editLabel = 'Edit';
 
     public $deleteLabel = 'Delete';
-    
+
     public $sortColumnName = 'priority';
-    
+
     public $sortable = FALSE;
 
     //
@@ -60,7 +60,7 @@ class MapArea extends BaseFormWidget
         'serialized' => FALSE,
         'editable' => FALSE,
     ];
-    
+
     protected $sortableInputName;
 
     protected $formWidget;
@@ -81,7 +81,7 @@ class MapArea extends BaseFormWidget
         ]);
 
         $this->areaColors = Location_areas_model::$areaColors;
-        
+
         $fieldName = $this->formField->getName(FALSE);
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
     }
@@ -121,7 +121,7 @@ class MapArea extends BaseFormWidget
         $this->vars['mapAreas'] = $this->getMapAreas();
         $this->vars['sortable'] = $this->sortable;
         $this->vars['sortableInputName'] = $this->sortableInputName;
-        
+
         $this->vars['prompt'] = $this->prompt;
     }
 
@@ -242,7 +242,7 @@ class MapArea extends BaseFormWidget
         $loadValue = $loadValue instanceof Collection
             ? $loadValue->toArray()
             : $loadValue;
-            
+
         if ($this->sortable) {
             $loadValue = sort_array($loadValue, $this->sortColumnName);
         }
