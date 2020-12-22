@@ -149,6 +149,8 @@ class Payments extends \Admin\Classes\AdminController
             ['is_default', 'lang:admin::lang.payments.label_default', 'required|integer'],
             ['status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
+        
+        $this->formExtendModel($form->model);
 
         if ($mergeRules = $form->model->getConfigRules())
             array_push($rules, ...$mergeRules);
