@@ -56,10 +56,22 @@ return [
                     'condition' => 'checked',
                 ],
             ],
+            'activity_log' => [
+                'label' => 'lang:system::lang.settings.text_tab_title_activity_log',
+                'type' => 'section',
+            ],
+            'activity_log_timeout' => [
+                'label' => 'lang:system::lang.settings.label_activity_log_timeout',
+                'type' => 'number',
+                'default' => '60',
+                'comment' => 'lang:system::lang.settings.help_activity_log_timeout',
+            ],
         ],
         'rules' => [
+            ['enable_request_log', 'lang:system::lang.settings.label_enable_request_log', 'required|integer'],
             ['maintenance_mode', 'lang:system::lang.settings.label_maintenance_mode', 'required|integer'],
             ['maintenance_message', 'lang:system::lang.settings.label_maintenance_message', 'required'],
+            ['activity_log_timeout_days', 'lang:system::lang.settings.label_activity_log_timeout', 'required|integer'],
         ],
     ],
 ];

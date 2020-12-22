@@ -37,7 +37,7 @@ class Mail_layouts_model extends Model
      */
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'language_id' => 'integer',
         'status' => 'boolean',
         'is_locked' => 'boolean',

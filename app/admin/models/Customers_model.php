@@ -50,7 +50,7 @@ class Customers_model extends AuthUserModel
 
     public $appends = ['full_name'];
 
-    public $casts = [
+    protected $casts = [
         'customer_id' => 'integer',
         'address_id' => 'integer',
         'customer_group_id' => 'integer',
@@ -214,7 +214,6 @@ class Customers_model extends AuthUserModel
                     if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
                         Addresses_model::where('address_id', $row['address_id'])->update($update);
                     }
-
                 }
             }
 

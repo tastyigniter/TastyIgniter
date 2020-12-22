@@ -40,7 +40,7 @@ class SettingsModel extends ModelAction
 
         $this->model->setTable('extension_settings');
         $this->model->setKeyName('id');
-        $this->model->casts = ['data' => 'serialize'];
+        $this->model->addCasts(['data' => 'serialize']);
         $this->model->guard([]);
         $this->model->timestamps = FALSE;
 
@@ -159,7 +159,7 @@ class SettingsModel extends ModelAction
     public function afterModelFetch()
     {
         $this->fieldValues = $this->model->data ?: [];
-        $this->model->attributes = array_merge($this->fieldValues, $this->model->attributes);
+        $this->model->setRawAttributes(array_merge($this->fieldValues, $this->model->getAttributes()));
     }
 
     /**
@@ -169,7 +169,7 @@ class SettingsModel extends ModelAction
     public function saveModelInternal()
     {
         // Purge the field values from the attributes
-        $this->model->attributes = array_diff_key($this->model->attributes, $this->fieldValues);
+        $this->model->setRawAttributes(array_diff_key($this->model->getAttributes(), $this->fieldValues));
     }
 
     /**

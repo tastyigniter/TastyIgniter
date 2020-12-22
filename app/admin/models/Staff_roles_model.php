@@ -28,7 +28,7 @@ class Staff_roles_model extends Model
         ],
     ];
 
-    public $casts = [
+    protected $casts = [
         'permissions' => 'serialize',
     ];
 
@@ -43,8 +43,8 @@ class Staff_roles_model extends Model
             ->get()
             ->keyBy('staff_role_id')
             ->map(function ($model) {
-                       return [$model->name, $model->description];
-                   });
+                return [$model->name, $model->description];
+            });
     }
 
     public function getStaffCountAttribute($value)

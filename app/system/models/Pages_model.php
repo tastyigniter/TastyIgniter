@@ -33,7 +33,7 @@ class Pages_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'language_id' => 'integer',
         'metadata' => 'json',
         'status' => 'boolean',

@@ -342,17 +342,6 @@ class OptimizeTablesColumns extends Migration
         };
     }
 
-    protected function _optimize_reviews()
-    {
-        return function (Blueprint $table) {
-            $table->integer('customer_id')->nullable()->change();
-//            $table->integer('sale_id')->nullable()->change(); @todo remove index before change
-//            $table->string('sale_type')->nullable()->change();
-            $table->string('author')->nullable()->change();
-            $table->text('review_text')->nullable()->change();
-        };
-    }
-
     protected function _optimize_settings()
     {
         return function (Blueprint $table) {

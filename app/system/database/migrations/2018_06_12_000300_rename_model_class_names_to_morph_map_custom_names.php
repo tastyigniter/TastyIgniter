@@ -3,6 +3,8 @@
 namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Rename existing model class_names in all tables
@@ -18,9 +20,8 @@ class RenameModelClassNamesToMorphMapCustomNames extends Migration
         $this->morphMap = array_flip($morphMap);
 
         $this->updateMorphClassName([
-            '\System\Models\Activities_model' => ['subject_type', 'causer_type'],
-            '\Admin\Models\Reviews_model' => ['sale_type'],
-            '\Admin\Models\Status_history_model' => ['object_type'],
+            'activities' => ['subject_type', 'causer_type'],
+            'status_history' => ['object_type'],
         ]);
     }
 
@@ -31,9 +32,12 @@ class RenameModelClassNamesToMorphMapCustomNames extends Migration
 
     protected function updateMorphClassName($definitions)
     {
-        collect($definitions)->each(function ($columns, $className) {
-            $className::all()->each(function ($model) use ($columns) {
+        collect($definitions)->each(function ($columns, $tableName) {
+            if (!Schema::hasTable($tableName))
+                return;
 
+            DB::table($tableName)->get()->each(function ($model) use ($tableName, $columns) {
+                $columnsToUpdate = [];
                 foreach ($columns as $column) {
                     $columnValue = $model->{$column};
 
@@ -41,11 +45,13 @@ class RenameModelClassNamesToMorphMapCustomNames extends Migration
 
                     if (!array_key_exists($columnValue, $this->morphMap)) continue;
 
-                    $model->{$column} = array_get($this->morphMap, $columnValue);
+                    $columnsToUpdate[$column] = array_get($this->morphMap, $columnValue);
                 }
 
-                $model->timestamps = FALSE;
-                $model->save();
+                $keyName = str_singular($tableName).'_id';
+                DB::table($tableName)
+                    ->where($keyName, $model->{$keyName})
+                    ->update($columnsToUpdate);
             });
         });
     }

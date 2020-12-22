@@ -29,7 +29,7 @@ class Coupons_history_model extends Model
 
     protected $appends = ['customer_name'];
 
-    public $casts = [
+    protected $casts = [
         'coupon_history_id' => 'integer',
         'coupon_id' => 'integer',
         'order_id' => 'integer',

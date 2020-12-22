@@ -290,10 +290,11 @@ class AdminController extends BaseController
         catch (ValidationException $ex) {
             $this->flashValidationErrors($ex->getErrors());
 
-            if (Request::ajax())
-                return ['#notification' => $this->makePartial('flash')];
+            $response['#notification'] = $this->makePartial('flash');
+            $response['X_IGNITER_ERROR_FIELDS'] = $ex->getFields();
+            $response['X_IGNITER_ERROR_MESSAGE'] = $ex->getMessage();
 
-            throw new AjaxException($ex->getMessage());
+            throw new AjaxException($response);
         }
         catch (MassAssignmentException $ex) {
             throw new ApplicationException(lang('admin::lang.form.mass_assignment_failed', ['attribute' => $ex->getMessage()]));

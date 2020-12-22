@@ -147,7 +147,6 @@ return [
         'sale' => 'Sales',
         'order' => 'Orders',
         'reservation' => 'Reservations',
-        'review' => 'Reviews',
         'user' => 'Users',
         'customer' => 'Customers',
         'staff' => 'Staff',
@@ -276,7 +275,6 @@ return [
         'text_tab_address' => 'Addresses',
         'text_tab_orders' => 'Orders',
         'text_tab_reservations' => 'Reservations',
-        'text_tab_reviews' => 'Reviews',
         'text_filter_search' => 'Search by name or email.',
         'text_empty' => 'There are no customers available.',
         'text_subscribe' => 'Subscribe',
@@ -389,7 +387,6 @@ return [
             'text_orders' => 'Orders',
             'text_reservations' => 'Reservations',
             'text_customers' => 'Customers',
-            'text_reviews' => 'Reviews',
         ],
 
         'column_location' => 'Location',
@@ -483,6 +480,7 @@ return [
         'label_offer_reservation' => 'Offer Reservations',
         'label_reservation_time_interval' => 'Reservation Time Interval',
         'label_reservation_lead_time' => 'Reservation Lead Time',
+        'label_auto_allocate_table' => 'Automatically Allocate Tables',
         'label_opening_type' => 'Opening Hours',
         'label_opening_days' => 'Days',
         'label_opening_hour' => 'Hours',
@@ -771,21 +769,12 @@ return [
         'assign_reservations' => 'Assign reservations',
         'payments' => 'Manage payment gateways',
         'reservations' => 'Manage reservations',
-        'reviews' => 'Manage user reviews',
         'staff_groups' => 'Manage staff groups',
         'staffs' => 'Create, edit and delete staffs',
         'statuses' => 'Manage orders and reservations statuses',
         'tables' => 'Create, edit and delete reservations tables',
         'mealtimes' => 'Create, edit and delete mealtimes',
         'allergens' => 'Create, edit and delete allergens',
-    ],
-
-    'ratings' => [
-        'text_title' => 'Rating Hints',
-        'text_heading' => 'Rating Hints',
-        'text_empty' => 'There are no rating, please add.',
-
-        'help_hints' => 'Used when adding reviews.',
     ],
 
     'reservations' => [
@@ -845,35 +834,6 @@ return [
         'activity_event_log_assigned_title' => 'Reservation assigned',
         'activity_event_log' => 'updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
         'activity_event_log_assigned' => 'assigned reservation (#:properties.reservation_id) to',
-    ],
-
-    'reviews' => [
-        'text_title' => 'Reviews',
-        'text_form_name' => 'Review',
-        'text_empty' => 'There are no reviews available.',
-        'text_filter_search' => 'Search by author, restaurant or sale id.',
-        'text_pending_review' => 'Pending Review',
-        'text_approved' => 'Approved',
-        'text_order' => 'Order',
-        'text_reservation' => 'Reservation',
-
-        'column_location' => 'Location',
-        'column_author' => 'Author',
-        'column_sale_id' => 'Sale ID',
-        'column_sale_type' => 'Sale Type',
-
-        'label_sale_type' => 'Sale Type',
-        'label_sale_id' => 'Sale ID',
-        'label_location' => 'Location',
-        'label_customer' => 'Customer',
-        'label_author' => 'Author',
-        'label_quality' => 'Quality Rating',
-        'label_delivery' => 'Delivery Rating',
-        'label_service' => 'Service Rating',
-        'label_text' => 'Review Text',
-
-        'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
-        'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
     ],
 
     'settings' => [
@@ -944,7 +904,7 @@ return [
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
         'help_role' => 'Roles define staff permissions, which can be overridden on the user level, on the Permissions tab.',
         'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
-        'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, reservations, and reviews attached to the selected location(s). Does not apply to super admins',
+        'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, and reservations attached to the selected location(s). Does not apply to super admins',
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
         'help_sale_permission_groups' => 'Can view Orders and Reservations in their Group(s) and Orders and Reservations assigned to them',
         'help_sale_permission_restricted' => 'Can only view Orders and Reservations assigned to them',
@@ -993,11 +953,18 @@ return [
 
         'column_min_capacity' => 'Minimum Capacity',
         'column_capacity' => 'Maximum Capacity',
+        'column_extra_capacity' => 'Extra Capacity',
+        'column_priority' => 'Priority',
+        'column_joinable' => 'Is Joinable',
 
-        'label_min_capacity' => 'Minimum',
-        'label_capacity' => 'Capacity',
+        'label_min_capacity' => 'Minimum Capacity',
+        'label_capacity' => 'Maximum Capacity',
+        'label_extra_capacity' => 'Extra Capacity',
+        'label_priority' => 'Priority',
+        'label_joinable' => 'Is Joinable',
 
         'help_tables' => 'Select a table to attach to this location.',
+        'help_extra_capacity' => 'Used internally by the staff to determine table convenience/inconvenience.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
     ],

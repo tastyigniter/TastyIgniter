@@ -27,7 +27,7 @@ class Users_model extends AuthUserModel
 
     protected $hidden = ['password'];
 
-    public $casts = [
+    protected $casts = [
         'staff_id' => 'integer',
         'super_user' => 'boolean',
         'is_activated' => 'boolean',
