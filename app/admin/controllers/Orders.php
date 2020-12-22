@@ -64,12 +64,12 @@ class Orders extends \Admin\Classes\AdminController
         return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
     }
 
-    public function edit_onDelete()
+    public function edit_onDelete($context, $recordId)
     {
         if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
-        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete();
+        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete($context, $recordId);
     }
 
     public function invoice($context, $recordId = null)
