@@ -81,6 +81,8 @@ class Menu_options_model extends Model
 
         if (array_key_exists('option_values', $this->attributes))
             $this->addOptionValues($this->attributes['option_values']);
+
+        $this->removeDeletedValuesFromMenuItems();
     }
 
     protected function beforeDelete()
@@ -140,4 +142,21 @@ class Menu_options_model extends Model
 
         return count($idsToKeep);
     }
+
+     /**
+     * Remove any deleted values from menu items this option is attached to
+     *
+     * @return void
+     */
+    public function removeDeletedValuesFromMenuItems()
+    {
+        $validValues = collect($this->option_values)->pluck('option_value_id')->toArray();
+        $this->menu_options->each(function ($menuOption) use ($validValues) {
+            $menuOption->menu_option_values->each(function ($menuOptionValue) use ($validValues) {
+                if (!in_array($menuOptionValue->option_value_id, $validValues))
+                    $menuOptionValue->delete();
+            });
+        });
+    }
+
 }
