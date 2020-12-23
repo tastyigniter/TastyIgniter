@@ -91,7 +91,8 @@ trait HasDeliveryAreas
         if (!$coordinates)
             return null;
 
-        return $this->delivery_areas->sortBy('priority')
+        return $this->delivery_areas
+            ->sortBy('priority')
             ->first(function (AreaInterface $model) use ($coordinates) {
                 return $model->checkBoundary($coordinates);
             });
