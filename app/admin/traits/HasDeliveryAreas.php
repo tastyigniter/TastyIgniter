@@ -91,9 +91,11 @@ trait HasDeliveryAreas
         if (!$coordinates)
             return null;
 
-        return $this->delivery_areas->first(function (AreaInterface $model) use ($coordinates) {
-            return $model->checkBoundary($coordinates);
-        });
+        return $this->delivery_areas
+            ->sortBy('priority')
+            ->first(function (AreaInterface $model) use ($coordinates) {
+                return $model->checkBoundary($coordinates);
+            });
     }
 
     public function getDistanceUnit()

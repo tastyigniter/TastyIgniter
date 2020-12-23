@@ -6,6 +6,7 @@ use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
+use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
 
@@ -18,6 +19,7 @@ class Locations_model extends AbstractLocation
     use HasDeliveryAreas;
     use HasPermalink;
     use HasMedia;
+    use Purgeable;
 
     const LOCATION_CONTEXT_SINGLE = 'single';
 
@@ -47,6 +49,8 @@ class Locations_model extends AbstractLocation
             'staffs' => ['Admin\Models\Staffs_model', 'name' => 'locationable'],
         ],
     ];
+
+    protected $purgeable = ['delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [
@@ -286,9 +290,14 @@ class Locations_model extends AbstractLocation
 
     public function performAfterSave()
     {
+        $this->restorePurgedValues();
+
         if (array_key_exists('hours', $this->options)) {
             $this->addOpeningHours($this->options['hours']);
         }
+
+        if (array_key_exists('delivery_areas', $this->attributes))
+            $this->addLocationAreas((array)$this->attributes['delivery_areas']);
     }
 
     public function makeDefault()
