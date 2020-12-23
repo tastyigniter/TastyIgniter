@@ -14,6 +14,8 @@ class Location_areas_model extends AbstractArea
     use Validation;
     use Sortable;
 
+    const SORT_ORDER = 'priority';
+
     protected $fillable = ['area_id', 'type', 'name', 'boundaries', 'conditions', 'is_default', 'priority'];
 
     public $rules = [
