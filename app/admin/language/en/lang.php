@@ -42,6 +42,8 @@ return [
     'text_resetting' => 'Resetting...',
     'text_loading' => 'Loading...',
     'text_deleting' => 'Deleting...',
+    'text_save_new' => 'Save & New',
+    'text_save_close' => 'Save & Close',
     'text_about_tastyigniter' => 'About TastyIgniter',
     'text_documentation' => 'Documentation',
     'text_community_support' => 'Community Support',
