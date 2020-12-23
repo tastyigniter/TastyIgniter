@@ -17,8 +17,6 @@ trait Locationable
      */
     public $locationScopeEnabled = FALSE;
 
-    protected $locationableAttributes;
-
     /**
      * Boot the locationable trait for a model.
      *
@@ -26,6 +24,10 @@ trait Locationable
      */
     public static function bootLocationable()
     {
+        static::creating(function (self $model) {
+            $model->setLocationableAttributes();
+        });
+
         static::deleting(function (self $model) {
             $model->detachLocationsOnDelete();
         });
@@ -88,6 +90,25 @@ trait Locationable
     //
     //
     //
+
+    protected function setLocationableAttributes()
+    {
+        if (!$this->locationableScopeEnabled())
+            return;
+
+        if ($this->locationableRelationExists())
+            return;
+
+        if ($this->locationableIsSingleRelationType()) {
+            $relationObj = $this->getLocationableRelationObject();
+            $attributeName = $relationObj->getForeignKeyName();
+            $this->{$attributeName} = $this->locationableGetUserLocation();
+        }
+        else {
+            $relationName = $this->locationableRelationName();
+            $this->{$relationName} = [$this->locationableGetUserLocation()];
+        }
+    }
 
     protected function detachLocationsOnDelete()
     {

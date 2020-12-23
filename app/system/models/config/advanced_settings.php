@@ -71,7 +71,7 @@ return [
             ['enable_request_log', 'lang:system::lang.settings.label_enable_request_log', 'required|integer'],
             ['maintenance_mode', 'lang:system::lang.settings.label_maintenance_mode', 'required|integer'],
             ['maintenance_message', 'lang:system::lang.settings.label_maintenance_message', 'required'],
-            ['activity_log_timeout_days', 'lang:system::lang.settings.label_activity_log_timeout', 'required|integer'],
+            ['activity_log_timeout', 'lang:system::lang.settings.label_activity_log_timeout', 'required|integer'],
         ],
     ],
 ];
