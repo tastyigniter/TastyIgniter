@@ -40,7 +40,7 @@ class MapArea extends BaseFormWidget
 
     public $sortColumnName = 'priority';
 
-    public $sortable = FALSE;
+    public $sortable = TRUE;
 
     //
     // Object properties
