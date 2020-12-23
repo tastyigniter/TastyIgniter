@@ -143,7 +143,7 @@ class Menu_options_model extends Model
         return count($idsToKeep);
     }
 
-     /**
+    /**
      * Remove any deleted values from menu items this option is attached to
      *
      * @return void
@@ -158,5 +158,4 @@ class Menu_options_model extends Model
             });
         });
     }
-
 }
