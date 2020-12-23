@@ -18018,6 +18018,20 @@ body.dragging .dragged {
 .toolbar-action .btn + .btn {
   margin-left: 10px;
 }
+.toolbar-action .btn + .btn-group {
+  margin-left: 10px;
+}
+.toolbar-action .btn-group .btn:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.toolbar-action .btn-group .btn:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.toolbar-action .btn-group .btn + .btn {
+  margin-left: 0;
+}
 .toolbar-action .btn-left {
   float: left;
 }
