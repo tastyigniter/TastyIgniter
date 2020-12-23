@@ -2,9 +2,6 @@
 
 namespace System\Classes;
 
-use Admin\Actions\FormController;
-use Admin\Classes\AdminController;
-use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Traits\EventEmitter;
 use Illuminate\Contracts\Validation\Factory;
@@ -38,12 +35,6 @@ class FormRequest extends BaseFormRequest
      */
     public function getController()
     {
-        if (!$this->controller instanceof AdminController)
-            throw new SystemException('Missing controller in: '.get_class($this));
-
-        if (!$this->controller->isClassExtendedWith(FormController::class))
-            throw new SystemException('Missing FormController class in: '.get_class($this));
-
         return $this->controller;
     }
 
@@ -63,14 +54,12 @@ class FormRequest extends BaseFormRequest
      */
     public function getInputKey()
     {
-        if (is_null($this->inputKey))
-            $this->setInputKey(strip_class_basename($this));
-
         return $this->inputKey;
     }
 
     /**
      * @param bool|string $inputKey
+     * @return \System\Classes\FormRequest
      */
     public function setInputKey($inputKey)
     {
@@ -81,12 +70,18 @@ class FormRequest extends BaseFormRequest
 
     public function getWith($key, $default = null)
     {
-        return $this->get($this->getInputKey().'.'.$key, $default);
+        if (!is_null($inputKey = $this->getInputKey()))
+            $key = $inputKey.'.'.$key;
+
+        return $this->get($key, $default);
     }
 
-    public function inputWith($key = null, $default = null)
+    public function inputWith($key, $default = null)
     {
-        return $this->input($this->getInputKey().'.'.$key, $default);
+        if (!is_null($inputKey = $this->getInputKey()))
+            $key = $inputKey.'.'.$key;
+
+        return $this->input($key, $default);
     }
 
     protected function useDataFrom()
@@ -100,7 +95,7 @@ class FormRequest extends BaseFormRequest
      */
     protected function getForm()
     {
-        return array_get($this->getController()->widgets, 'form');
+        return array_get(optional($this->getController())->widgets ?? [], 'form');
     }
 
     /**
@@ -149,7 +144,7 @@ class FormRequest extends BaseFormRequest
      */
     public function validationData()
     {
-        switch ($this->useDataFrom()) {
+        switch ($this->getForm() AND $this->useDataFrom()) {
             case static::DATA_TYPE_FORM:
                 return $this->getForm()->getSaveData();
             case static::DATA_TYPE_POST:

@@ -4,7 +4,7 @@
     aria-multiselectable="true"
     data-control="areas"
 >
-    @foreach ($mapAreas as $mapArea)
-        {!! $this->makePartial('maparea/area', ['area' => $mapArea]) !!}
+    @foreach ($mapAreas as $index => $mapArea)
+        {!! $this->makePartial('maparea/area', ['index' => $index, 'area' => $mapArea]) !!}
     @endforeach
 </div>

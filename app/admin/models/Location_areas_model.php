@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
 use Igniter\Flame\Location\Models\AbstractArea;
 
@@ -11,8 +12,9 @@ use Igniter\Flame\Location\Models\AbstractArea;
 class Location_areas_model extends AbstractArea
 {
     use Validation;
+    use Sortable;
 
-    protected $fillable = ['area_id', 'type', 'name', 'boundaries', 'conditions', 'is_default'];
+    protected $fillable = ['area_id', 'type', 'name', 'boundaries', 'conditions', 'is_default', 'priority'];
 
     public $rules = [
         ['type', 'admin::lang.locations.label_area_type', 'sometimes|required|string'],
