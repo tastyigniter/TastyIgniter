@@ -223,10 +223,19 @@ class Relation extends BaseFormWidget
      */
     protected function locationApplyScope($query)
     {
+        $classUsesLocationable = in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()));
+        $classIsLocation = get_class($query->getModel()) == \Admin\Models\Locations_model::class;
+
         if (
-            !AdminLocation::check() OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
+            !AdminLocation::check() OR !($classUsesLocationable OR $classIsLocation)
         ) return;
 
-        $query->whereHasOrDoesntHaveLocation(AdminLocation::getId());
+        if ($classIsLocation) {
+            $query->where('location_id', AdminLocation::getId());
+        }
+        else
+        {
+            $query->whereHasOrDoesntHaveLocation(AdminLocation::getId());
+        }
     }
 }
