@@ -36,7 +36,7 @@
                             class="form-control"
                             data-request="{{ $this->getEventHandler('onChooseLocation') }}"
                         >
-                            @if(AdminAuth::isSuperUser())
+                            @if(AdminAuth::isSuperUser() OR count($staffLocations) > 0)
                                 <option value="0">@lang('admin::lang.text_all_locations')</option>
                             @endif
                             @foreach($staffLocations as $key => $value)
