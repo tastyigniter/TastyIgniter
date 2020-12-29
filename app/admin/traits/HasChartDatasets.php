@@ -2,6 +2,8 @@
 
 namespace Admin\Traits;
 
+use AdminAuth;
+use AdminLocation;
 use Carbon\Carbon;
 use DateInterval;
 use DatePeriod;
@@ -69,6 +71,7 @@ trait HasChartDatasets
         $query->whereBetween($dateColumnName, [$start, $end])->groupBy('x');
 
         $dateRanges = $this->getDatePeriod($start, $end);
+        $this->applyLocationQuery($query);
 
         return $this->getPointsArray($dateRanges, $query->get());
     }
@@ -80,6 +83,21 @@ trait HasChartDatasets
             new DateInterval('P1D'),
             Carbon::parse($end)
         );
+    }
+    
+    protected function applyLocationQuery($query)
+    {
+        if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
+            return;
+
+        if (!($locationId = AdminLocation::getId())) {
+            if (!AdminAuth::isSuperUser())
+                $query->whereIn('location_id', AdminAuth::locations()->pluck('location_id'));
+
+            return;
+        }
+            
+        $query->where('location_id', $locationId);
     }
 
     protected function getPointsArray($dateRanges, Collection $result)
