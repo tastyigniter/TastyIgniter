@@ -468,10 +468,11 @@ class ExtensionManager
 
         $path = $this->getNamePath($name);
         $extensionPath = extension_path($path);
+        $extensionNamespace = strtolower($name);
 
         $langPath = $extensionPath.'/language';
         if (File::isDirectory($langPath)) {
-            Lang::addNamespace($name, $langPath);
+            Lang::addNamespace($extensionNamespace, $langPath);
         }
 
         if ($extension->disabled) {
@@ -485,6 +486,12 @@ class ExtensionManager
         }
 
         $extension->register();
+
+        // Register config path
+        $configPath = $extensionPath.'/config';
+        if (File::isDirectory($configPath)) {
+            $this->mergeConfigFrom($extensionNamespace, $configPath);
+        }
 
         // Register views path
         $viewsPath = $extensionPath.'/views';
@@ -801,5 +808,18 @@ class ExtensionManager
         $this->updateInstalledExtensions($code, null);
 
         return TRUE;
+    }
+
+    protected function mergeConfigFrom(string $namespace, string $path)
+    {
+        if ($this->app->configurationIsCached())
+            return;
+
+        foreach (File::glob($path.'/*.php') as $configPath) {
+            $configKey = sprintf('%s::%s', $namespace, array_get(pathinfo($configPath), 'filename'));
+            $this->app['config']->set($configKey, array_merge(
+                require $configPath, $this->app['config']->get($configKey, [])
+            ));
+        }
     }
 }

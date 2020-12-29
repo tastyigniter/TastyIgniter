@@ -32,7 +32,7 @@ class Menus_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'menu_price' => 'float',
         'menu_category_id' => 'integer',
         'stock_qty' => 'integer',
@@ -60,7 +60,7 @@ class Menus_model extends Model
         ],
     ];
 
-    protected $purgeable = ['special', 'menu_options', 'allergens', 'categories', 'mealtimes', 'locations'];
+    protected $purgeable = ['menu_options'];
 
     public $mediable = ['thumb'];
 
@@ -161,30 +161,15 @@ class Menus_model extends Model
     {
         $this->restorePurgedValues();
 
-        if (array_key_exists('special', $this->attributes))
-            $this->addMenuSpecial((array)$this->attributes['special']);
-
-        if (array_key_exists('allergens', $this->attributes))
-            $this->addMenuAllergens((array)$this->attributes['allergens']);
-
-        if (array_key_exists('categories', $this->attributes))
-            $this->addMenuCategories((array)$this->attributes['categories']);
-
-        if (array_key_exists('mealtimes', $this->attributes))
-            $this->addMenuMealtimes((array)$this->attributes['mealtimes']);
-
-        if (array_key_exists('locations', $this->attributes))
-            $this->locations()->sync($this->attributes['locations']);
-
         if (array_key_exists('menu_options', $this->attributes))
             $this->addMenuOption((array)$this->attributes['menu_options']);
     }
 
     protected function beforeDelete()
     {
-        $this->addMenuAllergens([]);
-        $this->addMenuCategories([]);
-        $this->addMenuMealtimes([]);
+        $this->categories()->detach();
+        $this->mealtimes()->detach();
+        $this->allergens()->detach();
         $this->locations()->detach();
     }
 

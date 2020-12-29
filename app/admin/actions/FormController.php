@@ -9,13 +9,10 @@ use Admin\Widgets\Toolbar;
 use DB;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
-use Illuminate\Foundation\Application;
-use Illuminate\Routing\Redirector;
 use Model;
 use Redirect;
 use Request;
 use System\Classes\ControllerAction;
-use System\Classes\FormRequest;
 use Template;
 
 /**
@@ -250,9 +247,10 @@ class FormController extends ControllerAction
         $this->controller->formBeforeSave($model);
         $this->controller->formBeforeCreate($model);
 
+        $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
+
         $this->validateFormRequest($model);
 
-        $modelsToSave = $this->prepareModelsToSave($model, $this->formWidget->getSaveData());
         if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
@@ -530,21 +528,19 @@ class FormController extends ControllerAction
         if (!class_exists($requestClass))
             throw new ApplicationException("Form Request class ($requestClass) not found");
 
-        $request = $this->makeFormRequest($requestClass, app());
-
-        $request->validateResolved();
+        $this->resolveFormRequest($requestClass);
     }
 
-    protected function makeFormRequest($class, Application $app)
+    protected function resolveFormRequest($requestClass)
     {
-        $request = new $class();
+        app()->resolving($requestClass, function ($request, $app) {
+            if (method_exists($request, 'setController'))
+                $request->setController($this->controller);
 
-        $request = FormRequest::createFrom($app->make('request'), $request);
+            if (method_exists($request, 'setInputKey'))
+                $request->setInputKey(strip_class_basename($request));
+        });
 
-        $request->setContainer($app)->setRedirector($app->make(Redirector::class));
-
-        $request->setController($this->controller);
-
-        return $request;
+        return app()->make($requestClass);
     }
 }

@@ -74,6 +74,16 @@ class Themes extends \Admin\Classes\AdminController
         $this->asExtension('ListController')->index();
     }
 
+    public function edit($context, $themeCode = null)
+    {
+        Template::setButton(lang('system::lang.themes.button_source'), [
+            'class' => 'btn btn-default',
+            'href' => admin_url('themes/source/'.$themeCode),
+        ]);
+
+        $this->asExtension('FormController')->edit($context, $themeCode);
+    }
+
     public function source($context, $themeCode = null)
     {
         Template::setButton(lang('system::lang.themes.button_customize'), [
@@ -252,7 +262,7 @@ class Themes extends \Admin\Classes\AdminController
         if (!$model->getFieldsConfig())
             return;
 
-        if (!config('system.bundleThemeAssets', TRUE))
+        if (!config('system.publishThemeAssetsBundle', TRUE))
             return;
 
         $loaded = FALSE;
@@ -279,14 +289,8 @@ class Themes extends \Admin\Classes\AdminController
         });
 
         try {
-            $output = '';
             Artisan::call('igniter:util', ['name' => 'compile scss']);
-            $output .= Artisan::output();
-
             Artisan::call('igniter:util', ['name' => 'compile js']);
-            $output .= Artisan::output();
-
-            Log::info($output);
         }
         catch (Exception $ex) {
             Log::error($ex);

@@ -3,7 +3,7 @@
 namespace Admin\Traits;
 
 use AdminLocation;
-use Igniter\Flame\Database\Model;
+use Igniter\Flame\Exception\ApplicationException;
 
 trait Locationable
 {
@@ -18,8 +18,6 @@ trait Locationable
      */
     public $locationScopeEnabled = FALSE;
 
-    protected $locationableAttributes;
-
     /**
      * Boot the locationable trait for a model.
      *
@@ -27,16 +25,11 @@ trait Locationable
      */
     public static function bootLocationable()
     {
-        static::saving(function (Model $model) {
-            $model->purgeLocationableAttributes();
+        static::creating(function (self $model) {
             $model->setLocationableAttributes();
         });
 
-        static::saved(function (Model $model) {
-            $model->syncLocationsOnSave();
-        });
-
-        static::deleting(function (Model $model) {
+        static::deleting(function (self $model) {
             $model->detachLocationsOnDelete();
         });
     }
@@ -66,7 +59,7 @@ trait Locationable
     public function scopeWhereHasOrDoesntHaveLocation($query, $locationId)
     {
         return $query->whereHasLocation($locationId)
-                     ->orDoesntHave($this->locationableRelationName());
+            ->orDoesntHave($this->locationableRelationName());
     }
 
     /**
@@ -99,26 +92,11 @@ trait Locationable
     //
     //
 
-    protected function purgeLocationableAttributes()
-    {
-        $attributes = $this->getAttributes();
-        $relationName = $this->locationableRelationName();
-        $cleanAttributes = array_except($attributes, [$relationName]);
-        $this->locationableAttributes = array_get($attributes, $relationName) ?? [];
-
-        return $this->attributes = $cleanAttributes;
-    }
-
     protected function setLocationableAttributes()
     {
         if (!$this->locationableScopeEnabled())
             return;
 
-        $locationsToSync = $this->locationableAttributes;
-        if (count($locationsToSync))
-            return;
-
-        $this->locationableAttributes = null;
         if ($this->locationableRelationExists())
             return;
 
@@ -128,20 +106,9 @@ trait Locationable
             $this->{$attributeName} = $this->locationableGetUserLocation();
         }
         else {
-            $this->locationableAttributes = [$this->locationableGetUserLocation()];
+            $relationName = $this->locationableRelationName();
+            $this->{$relationName} = [$this->locationableGetUserLocation()];
         }
-    }
-
-    protected function syncLocationsOnSave()
-    {
-        if ($this->locationableIsSingleRelationType())
-            return;
-
-        $locationsToSync = $this->locationableAttributes;
-        if (is_null($locationsToSync))
-            return;
-
-        $this->getLocationableRelationObject()->sync($locationsToSync);
     }
 
     protected function detachLocationsOnDelete()
@@ -149,7 +116,13 @@ trait Locationable
         if ($this->locationableIsSingleRelationType())
             return;
 
-        $this->getLocationableRelationObject()->detach();
+        $locationable = $this->getLocationableRelationObject();
+
+        if (!app('admin.auth')->isSuperUser() AND $locationable->count() > 1) {
+            throw new ApplicationException('admin::lang.alert_warning_locationable_delete');
+        }
+
+        $locationable->detach();
     }
 
     //

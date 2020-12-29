@@ -3,6 +3,7 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
+use Admin\Facades\AdminAuth;
 use Html;
 use Template;
 
@@ -21,9 +22,15 @@ class Toolbar extends BaseWidget
 
     public $buttons = [];
 
+    /**
+     * @var string
+     */
+    public $container;
+
     public function initialize()
     {
         $this->fillFromConfig([
+            'container',
             'buttons',
             'context',
             'cssClasses',
@@ -38,6 +45,9 @@ class Toolbar extends BaseWidget
 
     public function render()
     {
+        if (!is_null($this->container))
+            return $this->makePartial($this->container);
+
         $this->prepareVars();
 
         return $this->makePartial('toolbar/toolbar');
@@ -99,6 +109,11 @@ class Toolbar extends BaseWidget
                 continue;
             }
 
+            $permission = array_get($attributes, 'permission');
+            if ($permission AND !AdminAuth::user()->hasPermission($permission)) {
+                continue;
+            }
+
             // Check that the toolbar button matches the active context
             if (isset($attributes['context'])) {
                 $context = (array)$attributes['context'];
@@ -120,7 +135,7 @@ class Toolbar extends BaseWidget
                     }
                 }
 
-                $_attributes = Html::attributes(array_except($attributes, ['label', 'context', 'partial']));
+                $_attributes = Html::attributes(array_except($attributes, ['label', 'context', 'permission', 'partial']));
                 $buttons[$name] = '<a'.$_attributes.' tabindex="0">'.(isset($attributes['label']) ? $attributes['label'] : $name).'</a>';
             }
         }

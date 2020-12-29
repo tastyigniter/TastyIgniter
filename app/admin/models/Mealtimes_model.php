@@ -25,7 +25,7 @@ class Mealtimes_model extends Model
      */
     protected $primaryKey = 'mealtime_id';
 
-    public $casts = [
+    protected $casts = [
         'start_time' => 'time',
         'end_time' => 'time',
         'mealtime_status' => 'boolean',

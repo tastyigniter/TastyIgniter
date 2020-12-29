@@ -53,7 +53,7 @@ class Reservations_model extends Model
 
     public $guarded = ['ip_address', 'user_agent', 'hash'];
 
-    public $casts = [
+    protected $casts = [
         'location_id' => 'integer',
         'table_id' => 'integer',
         'guest_num' => 'integer',
@@ -262,12 +262,17 @@ class Reservations_model extends Model
         return $result->pluck('tables')->flatten()->keyBy('table_id');
     }
 
-    public static function listCalendarEvents($startAt, $endAt)
+    public static function listCalendarEvents($startAt, $endAt, $locationId = null)
     {
-        $collection = self::whereBetween('reserve_date', [
+        $query = self::whereBetween('reserve_date', [
             date('Y-m-d H:i:s', strtotime($startAt)),
             date('Y-m-d H:i:s', strtotime($endAt)),
-        ])->get();
+        ]);
+
+        if (!is_null($locationId))
+            $query->whereHasLocation($locationId);
+
+        $collection = $query->get();
 
         $collection->transform(function ($reservation) {
             return $reservation->getEventDetails();
@@ -407,8 +412,8 @@ class Reservations_model extends Model
         $model = $this->fresh();
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;
-        $data['reservation_time'] = $model->reserve_time;
-        $data['reservation_date'] = $model->reserve_date->format('l, F j, Y');
+        $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->format(lang('system::lang.php.time_format'));
+        $data['reservation_date'] = $model->reserve_date->format(lang('system::lang.php.date_format_long'));
         $data['reservation_guest_no'] = $model->guest_num;
         $data['first_name'] = $model->first_name;
         $data['last_name'] = $model->last_name;

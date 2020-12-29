@@ -59,6 +59,9 @@ class Categories extends AdminController
 
     public function formBeforeSave($model)
     {
+        if (!$model->getRgt() OR !$model->getLft())
+            $model->fixTree();
+
         if (Categories_model::isBroken())
             Categories_model::fixTree();
     }

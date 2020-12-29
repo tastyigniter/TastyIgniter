@@ -665,7 +665,7 @@ class Lists extends BaseWidget
         if (isset($result['title']))
             $result['title'] = e(lang($result['title']));
 
-        $result['class'] = 'btn-action'.(isset($result['class']) ? ' '.$result['class'] : null);
+        $result['class'] = isset($result['class']) ? $result['class'] : null;
 
         foreach ($result as $key => $value) {
             if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
@@ -773,7 +773,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? setting('date_format').' '.setting('time_format');
+        $format = $column->format ?? lang('system::lang.php.date_time_format');
         $format = parse_date_format($format);
 
         return $dateTime->format($format);
@@ -790,7 +790,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? setting('time_format');
+        $format = $column->format ?? lang('system::lang.php.time_format');
         $format = parse_date_format($format);
 
         return $dateTime->format($format);
@@ -807,7 +807,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? setting('date_format');
+        $format = $column->format ?? lang('system::lang.php.date_format');
         $format = parse_date_format($format);
 
         return $format

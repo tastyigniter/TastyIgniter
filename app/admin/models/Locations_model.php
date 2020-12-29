@@ -18,8 +18,8 @@ class Locations_model extends AbstractLocation
     use HasWorkingHours;
     use HasDeliveryAreas;
     use HasPermalink;
-    use Purgeable;
     use HasMedia;
+    use Purgeable;
 
     const LOCATION_CONTEXT_SINGLE = 'single';
 
@@ -29,7 +29,7 @@ class Locations_model extends AbstractLocation
 
     protected $hidden = ['options'];
 
-    public $casts = [
+    protected $casts = [
         'location_country_id' => 'integer',
         'location_lat' => 'double',
         'location_lng' => 'double',
@@ -41,17 +41,16 @@ class Locations_model extends AbstractLocation
         'hasMany' => [
             'working_hours' => ['Admin\Models\Working_hours_model', 'delete' => TRUE],
             'delivery_areas' => ['Admin\Models\Location_areas_model', 'delete' => TRUE],
-            'reviews' => ['Admin\Models\Reviews_model'],
         ],
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
-        'belongsToMany' => [
-            'tables' => ['Admin\Models\Tables_model', 'table' => 'location_tables'],
+        'morphedByMany' => [
+            'staffs' => ['Admin\Models\Staffs_model', 'name' => 'locationable'],
         ],
     ];
 
-    protected $purgeable = ['tables', 'delivery_areas'];
+    protected $purgeable = ['delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [
@@ -67,7 +66,6 @@ class Locations_model extends AbstractLocation
 
     protected static $allowedSortingColumns = [
         'distance asc', 'distance desc',
-        'reviews_count asc', 'reviews_count desc',
         'location_id asc', 'location_id desc',
         'location_name asc', 'location_name desc',
     ];
@@ -96,6 +94,11 @@ class Locations_model extends AbstractLocation
             AND $model->delivery_areas->where('is_default', 1)->count() > 0;
     }
 
+    public static function addSortingColumns($newColumns)
+    {
+        self::$allowedSortingColumns = array_merge(self::$allowedSortingColumns, $newColumns);
+    }
+
     public function getWeekDaysOptions()
     {
         return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -122,7 +125,7 @@ class Locations_model extends AbstractLocation
 
     protected function beforeDelete()
     {
-        Location_tables_model::where('location_id', $this->getKey())->delete();
+        $this->tables()->detach();
     }
 
     //
@@ -151,7 +154,6 @@ class Locations_model extends AbstractLocation
         ], $options));
 
         if ($latitude AND $longitude) {
-            $query->select('*');
             $query->selectDistance($latitude, $longitude);
         }
 
@@ -214,6 +216,14 @@ class Locations_model extends AbstractLocation
         return (int)$this->getOption('reservation_time_interval');
     }
 
+    public function setOptionsAttribute($value)
+    {
+        if (is_array($value)) {
+            $options = @unserialize($this->attributes['options']) ?: [];
+            $this->attributes['options'] = @serialize(array_merge($options ?? [], $value));
+        }
+    }
+
     //
     // Helpers
     //
@@ -224,6 +234,18 @@ class Locations_model extends AbstractLocation
             $suffix = '/menus';
 
         $this->url = site_url($this->permalink_slug.$suffix);
+    }
+
+    public function getAddress()
+    {
+        $country = optional($this->country);
+
+        return array_merge(parent::getAddress(), [
+            'country' => $country->country_name,
+            'iso_code_2' => $country->iso_code_2,
+            'iso_code_3' => $country->iso_code_3,
+            'format' => $country->format,
+        ]);
     }
 
     public function hasGallery()
@@ -274,13 +296,8 @@ class Locations_model extends AbstractLocation
             $this->addOpeningHours($this->options['hours']);
         }
 
-        if (array_key_exists('delivery_areas', $this->attributes)) {
-            $this->addLocationAreas($this->attributes['delivery_areas']);
-        }
-
-        if (array_key_exists('tables', $this->attributes)) {
-            $this->addLocationTables($this->attributes['tables']);
-        }
+        if (array_key_exists('delivery_areas', $this->attributes))
+            $this->addLocationAreas((array)$this->attributes['delivery_areas']);
     }
 
     public function makeDefault()
@@ -324,17 +341,5 @@ class Locations_model extends AbstractLocation
         }
 
         return self::$defaultLocation = $defaultLocation;
-    }
-
-    /**
-     * Create a new or update existing location tables
-     *
-     * @param array $tables
-     *
-     * @return bool
-     */
-    public function addLocationTables($tables = [])
-    {
-        return $this->tables()->sync($tables);
     }
 }

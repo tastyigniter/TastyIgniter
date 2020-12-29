@@ -35,7 +35,7 @@ class Coupons_model extends Model
 
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'discount' => 'float',
         'min_total' => 'float',
         'redemptions' => 'integer',

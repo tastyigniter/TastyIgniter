@@ -34,8 +34,8 @@ class Country
         if (!empty($address['format']))
             $format = $address['format'];
 
-        $formattedAddress = str_replace(["\r\n", "\r", "\n"], '<br />',
-            preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />',
+        $formattedAddress = str_replace(['\r\n', '\r', '\n'], '<br />',
+            preg_replace(['/\s\s+/', '/\r\r+/', '/\n\n+/'], '<br />',
                 trim(str_replace($placeholders, $this->evalAddress($address), $format))
             )
         );

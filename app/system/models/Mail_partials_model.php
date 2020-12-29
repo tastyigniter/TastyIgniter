@@ -34,7 +34,7 @@ class Mail_partials_model extends Model
      */
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'is_custom' => 'boolean',
     ];
 

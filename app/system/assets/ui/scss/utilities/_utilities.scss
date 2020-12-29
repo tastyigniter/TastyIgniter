@@ -25,6 +25,11 @@ a[data-request] {
 .text-yellow {
   color: $yellow;
 }
+.text-draggable {
+  -webkit-user-select: all; /* for Safari */
+  user-select: all;
+  cursor: move;
+}
 .bg-white {
   background-color: $white;
 }

@@ -36,7 +36,7 @@ class Themes_model extends Model
 
     protected $fillable = ['theme_id', 'name', 'code', 'version', 'description', 'data', 'status'];
 
-    public $casts = [
+    protected $casts = [
         'data' => 'serialize',
         'status' => 'boolean',
         'is_default' => 'boolean',

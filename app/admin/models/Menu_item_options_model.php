@@ -14,8 +14,6 @@ class Menu_item_options_model extends Model
     use Purgeable;
     use Validation;
 
-    protected static $optionValuesCollection;
-
     /**
      * @var string The database table name
      */
@@ -28,7 +26,7 @@ class Menu_item_options_model extends Model
 
     protected $fillable = ['option_id', 'menu_id', 'required', 'priority', 'min_selected', 'max_selected'];
 
-    public $casts = [
+    protected $casts = [
         'menu_option_id' => 'integer',
         'option_id' => 'integer',
         'menu_id' => 'integer',
@@ -76,18 +74,6 @@ class Menu_item_options_model extends Model
     public function getDisplayTypeAttribute()
     {
         return optional($this->option)->display_type;
-    }
-
-    public function getOptionValueIdOptions()
-    {
-        if (!empty(self::$optionValuesCollection[$this->option_id]))
-            return self::$optionValuesCollection[$this->option_id];
-
-        $result = $this->option_values()->dropdown('value');
-
-        self::$optionValuesCollection[$this->option_id] = $result;
-
-        return $result;
     }
 
     //
@@ -143,9 +129,9 @@ class Menu_item_options_model extends Model
         }
 
         $this->menu_option_values()
-             ->where('menu_option_id', $menuOptionId)
-             ->whereNotIn('menu_option_value_id', $idsToKeep)
-             ->delete();
+            ->where('menu_option_id', $menuOptionId)
+            ->whereNotIn('menu_option_value_id', $idsToKeep)
+            ->delete();
 
         return count($idsToKeep);
     }

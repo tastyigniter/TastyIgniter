@@ -33,7 +33,7 @@ class Staff_groups_model extends Model
         ],
     ];
 
-    public $casts = [
+    protected $casts = [
         'auto_assign' => 'boolean',
         'auto_assign_mode' => 'integer',
         'auto_assign_limit' => 'integer',
@@ -48,11 +48,11 @@ class Staff_groups_model extends Model
     public static function listDropdownOptions()
     {
         return self::select('staff_group_id', 'staff_group_name', 'description')
-                   ->get()
-                   ->keyBy('staff_group_id')
-                   ->map(function ($model) {
-                       return [$model->staff_group_name, $model->description];
-                   });
+            ->get()
+            ->keyBy('staff_group_id')
+            ->map(function ($model) {
+                return [$model->staff_group_name, $model->description];
+            });
     }
 
     public function getStaffCountAttribute($value)

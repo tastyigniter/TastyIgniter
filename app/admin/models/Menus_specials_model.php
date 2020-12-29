@@ -25,7 +25,7 @@ class Menus_specials_model extends Model
         'recurring_from', 'recurring_to',
     ];
 
-    public $casts = [
+    protected $casts = [
         'menu_id' => 'integer',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
@@ -46,7 +46,7 @@ class Menus_specials_model extends Model
         if ($this->isRecurring() OR !$this->end_date)
             return null;
 
-        return mdate(setting('date_format'), $this->end_date->getTimestamp());
+        return $this->end_date->format(lang('system::lang.php.date_time_format'));
     }
 
     public function getTypeAttribute($value)

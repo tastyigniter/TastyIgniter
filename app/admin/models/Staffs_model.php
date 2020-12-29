@@ -3,6 +3,7 @@
 namespace Admin\Models;
 
 use Admin\Classes\UserState;
+use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
 
@@ -12,10 +13,13 @@ use Model;
 class Staffs_model extends Model
 {
     use Purgeable;
+    use Locationable;
 
     const UPDATED_AT = null;
 
     const CREATED_AT = 'date_added';
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     /**
      * @var string The database table name
@@ -34,7 +38,7 @@ class Staffs_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'staff_role_id' => 'integer',
         'staff_location_id' => 'integer',
         'sale_permission' => 'integer',
@@ -55,13 +59,15 @@ class Staffs_model extends Model
         ],
         'belongsToMany' => [
             'groups' => ['Admin\Models\Staff_groups_model', 'table' => 'staffs_groups'],
-            'locations' => ['Admin\Models\Locations_model', 'table' => 'staffs_locations'],
+        ],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
     protected $hidden = ['password'];
 
-    protected $purgeable = ['user', 'groups', 'locations'];
+    protected $purgeable = ['user'];
 
     public function getFullNameAttribute($value)
     {
@@ -98,6 +104,13 @@ class Staffs_model extends Model
         });
     }
 
+    public function scopeWhereIsSuperUser($query)
+    {
+        $query->whereHas('user', function ($q) {
+            $q->where('super_user', 1);
+        });
+    }
+
     //
     // Events
     //
@@ -108,12 +121,12 @@ class Staffs_model extends Model
 
         if (array_key_exists('user', $this->attributes))
             $this->addStaffUser($this->attributes['user']);
+    }
 
-        if (array_key_exists('groups', $this->attributes))
-            $this->addStaffGroups($this->attributes['groups']);
-
-        if (array_key_exists('locations', $this->attributes))
-            $this->addStaffLocations($this->attributes['locations']);
+    protected function beforeDelete()
+    {
+        $this->groups()->detach();
+        $this->locations()->detach();
     }
 
     //

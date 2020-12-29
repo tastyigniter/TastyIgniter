@@ -32,7 +32,7 @@ class Menu_options_model extends Model
 
     protected $fillable = ['option_id', 'option_name', 'display_type'];
 
-    public $casts = [
+    protected $casts = [
         'option_id' => 'integer',
         'priority' => 'integer',
     ];
@@ -43,7 +43,6 @@ class Menu_options_model extends Model
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
@@ -72,14 +71,6 @@ class Menu_options_model extends Model
         ];
     }
 
-    public function getAllergensOptions()
-    {
-        if (self::$allergensOptionsCache)
-            return self::$allergensOptionsCache;
-
-        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
-    }
-
     //
     // Events
     //
@@ -90,6 +81,11 @@ class Menu_options_model extends Model
 
         if (array_key_exists('option_values', $this->attributes))
             $this->addOptionValues($this->attributes['option_values']);
+    }
+
+    protected function beforeDelete()
+    {
+        $this->locations()->detach();
     }
 
     //
@@ -127,6 +123,9 @@ class Menu_options_model extends Model
 
         $idsToKeep = [];
         foreach ($optionValues as $value) {
+            if (!array_key_exists('allergens', $value))
+                $value['allergens'] = [];
+
             $optionValue = $this->option_values()->firstOrNew([
                 'option_value_id' => array_get($value, 'option_value_id'),
                 'option_id' => $optionId,

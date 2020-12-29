@@ -63,7 +63,7 @@ class MarkdownEditor extends BaseFormWidget
     public function onRefresh()
     {
         $value = post($this->formField->getName());
-        $previewHtml = (new Markdown)->parse($value);
+        $previewHtml = Markdown::parse($value)->toHtml();
 
         return [
             'preview' => $previewHtml,

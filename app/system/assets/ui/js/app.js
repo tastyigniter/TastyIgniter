@@ -34,6 +34,8 @@ if (window.jQuery.request !== undefined)
 /*
  * TastyIgniter AJAX plugin..
  *
+ * Adapted from OctoberCMS AJAX plugin
+ *
  * $.request('handler', function() { })
  * $(form).request('handler', function() { })
  */
@@ -176,6 +178,27 @@ if (window.jQuery.request !== undefined)
                 if (message) alert(message)
             },
 
+            handleValidationMessage: function(message, fields) {
+                $triggerEl.trigger('ajaxValidation', [context, message, fields])
+
+                var isFirstInvalidField = true
+                $.each(fields, function focusErrorField(fieldName, fieldMessages) {
+                    fieldName = fieldName.replace(/\.(\w+)/g, '[$1]')
+
+                    var fieldElement = $form.find('[name="'+fieldName+'"], [name="'+fieldName+'[]"], [name$="['+fieldName+']"], [name$="['+fieldName+'][]"]').filter(':enabled').first()
+                    if (fieldElement.length > 0) {
+
+                        var _event = jQuery.Event('ajaxInvalidField')
+                        $(window).trigger(_event, [fieldElement.get(0), fieldName, fieldMessages, isFirstInvalidField])
+
+                        if (isFirstInvalidField) {
+                            if (!_event.isDefaultPrevented()) fieldElement.focus()
+                            isFirstInvalidField = false
+                        }
+                    }
+                })
+            },
+
             // Custom function, redirect the browser to another location
             handleRedirectResponse: function (url) {
                 window.location.href = url
@@ -218,6 +241,9 @@ if (window.jQuery.request !== undefined)
 
                 if (isRedirect)
                     requestOptions.handleRedirectResponse(options.redirect)
+
+                if (data['X_IGNITER_ERROR_FIELDS'])
+                    requestOptions.handleValidationMessage(data['X_IGNITER_ERROR_MESSAGE'], data['X_IGNITER_ERROR_FIELDS'])
 
                 updatePromise.resolve()
 

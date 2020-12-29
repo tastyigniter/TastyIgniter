@@ -19,7 +19,7 @@ class Statuses_model extends Model
      */
     protected $primaryKey = 'status_id';
 
-    public $casts = [
+    protected $casts = [
         'notify_customer' => 'boolean',
     ];
 

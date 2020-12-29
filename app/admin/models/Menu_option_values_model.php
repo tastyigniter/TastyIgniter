@@ -2,7 +2,6 @@
 
 namespace Admin\Models;
 
-use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
 use Model;
@@ -12,7 +11,6 @@ use Model;
  */
 class Menu_option_values_model extends Model
 {
-    use Purgeable;
     use Sortable;
     use Validation;
 
@@ -28,7 +26,7 @@ class Menu_option_values_model extends Model
 
     protected $fillable = ['option_id', 'value', 'price', 'allergens'];
 
-    public $casts = [
+    protected $casts = [
         'option_value_id' => 'integer',
         'option_id' => 'integer',
         'price' => 'float',
@@ -43,8 +41,6 @@ class Menu_option_values_model extends Model
             'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
         ],
     ];
-
-    protected $purgeable = ['allergens'];
 
     public $sortable = [
         'sortOrderColumn' => 'priority',
@@ -62,20 +58,21 @@ class Menu_option_values_model extends Model
         return static::dropdown('value');
     }
 
+    public function getAllergensOptions()
+    {
+        if (self::$allergensOptionsCache)
+            return self::$allergensOptionsCache;
+
+        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
+    }
+
     //
     // Events
     //
-    protected function afterSave()
-    {
-        $this->restorePurgedValues();
-
-        if (array_key_exists('allergens', $this->attributes))
-            $this->addMenuAllergens((array)$this->attributes['allergens']);
-    }
 
     protected function beforeDelete()
     {
-        $this->addMenuAllergens([]);
+        $this->allergens()->detach();
     }
 
     /**

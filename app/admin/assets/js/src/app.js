@@ -57,8 +57,11 @@
     })
 
     $(window).on('ajaxErrorMessage', function (event, message) {
-        event.preventDefault()
+        if (!message) return
+
         $.ti.flashMessage({class: 'danger', text: message, allowDismiss: false})
+
+        event.preventDefault()
     })
 
     /*
