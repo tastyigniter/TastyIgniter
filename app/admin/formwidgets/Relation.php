@@ -5,6 +5,7 @@ namespace Admin\FormWidgets;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Facades\AdminLocation;
+use Admin\Models\Locations_model;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -223,19 +224,19 @@ class Relation extends BaseFormWidget
      */
     protected function locationApplyScope($query)
     {
-        $classUsesLocationable = in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()));
-        $classIsLocation = get_class($query->getModel()) == \Admin\Models\Locations_model::class;
+        if (!AdminLocation::check())
+            return;
 
-        if (
-            !AdminLocation::check() OR !($classUsesLocationable OR $classIsLocation)
-        ) return;
+        $model = $query->getModel();
+        if ($model instanceof Locations_model) {
+            $query->whereKey(AdminLocation::getId());
 
-        if ($classIsLocation) {
-            $query->where('location_id', AdminLocation::getId());
+            return;
         }
-        else
-        {
-            $query->whereHasOrDoesntHaveLocation(AdminLocation::getId());
-        }
+
+        if (!in_array(\Admin\Traits\Locationable::class, class_uses($model)))
+            return;
+
+        $query->whereHasOrDoesntHaveLocation(AdminLocation::getId());
     }
 }
