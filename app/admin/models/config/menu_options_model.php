@@ -26,7 +26,7 @@ $config['form']['fields'] = [
         'type' => 'switch',
         'default' => FALSE,
         'context' => ['edit'],
-    ]
+    ],
 ];
 
 return $config;

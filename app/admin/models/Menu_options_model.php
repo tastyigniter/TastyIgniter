@@ -171,7 +171,7 @@ class Menu_options_model extends Model
     {
         $menuIds = $this->menu_options->pluck('menu_id')->toArray();
         $selfId = $this->option_id;
-        $values = $this->option_values()->get()->map(function($value) use ($selfId) {
+        $values = $this->option_values()->get()->map(function ($value) use ($selfId) {
             return [
                 'menu_option_id' => $selfId,
                 'option_value_id' => $value->option_value_id,
@@ -184,10 +184,10 @@ class Menu_options_model extends Model
             $menuModel = Menus_model::find($menuId);
             if ($menuModel) {
                 $option = $menuModel->menu_options()
-                ->firstOrNew([
-                    'option_id' => $this->option_id,
-                ])
-                ->addMenuOptionValues($values);
+                    ->firstOrNew([
+                        'option_id' => $this->option_id,
+                    ])
+                    ->addMenuOptionValues($values);
             }
         }
     }
