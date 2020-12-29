@@ -18725,6 +18725,12 @@ a:focus, a:hover {
 .text-yellow {
   color: #ffc107;
 }
+.text-draggable {
+  -webkit-user-select: all;
+  /* for Safari */
+  user-select: all;
+  cursor: move;
+}
 .bg-white, .panel-white {
   background-color: #FFFFFF;
 }

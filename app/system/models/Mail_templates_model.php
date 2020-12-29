@@ -26,7 +26,7 @@ class Mail_templates_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'layout_id' => 'integer',
     ];
 

@@ -32,7 +32,7 @@ class Menu_options_model extends Model
 
     protected $fillable = ['option_id', 'option_name', 'display_type'];
 
-    public $casts = [
+    protected $casts = [
         'option_id' => 'integer',
         'priority' => 'integer',
     ];
@@ -123,6 +123,9 @@ class Menu_options_model extends Model
 
         $idsToKeep = [];
         foreach ($optionValues as $value) {
+            if (!array_key_exists('allergens', $value))
+                $value['allergens'] = [];
+
             $optionValue = $this->option_values()->firstOrNew([
                 'option_value_id' => array_get($value, 'option_value_id'),
                 'option_id' => $optionId,

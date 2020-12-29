@@ -52,7 +52,7 @@ class Payment_logs_model extends Model
         'is_refundable' => 'boolean',
     ];
 
-    public $casts = [
+    protected $casts = [
         'order_id' => 'integer',
         'request' => 'array',
         'response' => 'array',

@@ -3,6 +3,7 @@
 namespace Admin\Traits;
 
 use AdminLocation;
+use Igniter\Flame\Exception\ApplicationException;
 
 trait Locationable
 {
@@ -16,6 +17,22 @@ trait Locationable
      * @var bool Flag for arbitrarily enabling location scope.
      */
     public $locationScopeEnabled = FALSE;
+
+    /**
+     * Boot the locationable trait for a model.
+     *
+     * @return void
+     */
+    public static function bootLocationable()
+    {
+        static::creating(function (self $model) {
+            $model->setLocationableAttributes();
+        });
+
+        static::deleting(function (self $model) {
+            $model->detachLocationsOnDelete();
+        });
+    }
 
     public function locationableScopeEnabled()
     {
@@ -69,6 +86,43 @@ trait Locationable
                 $query->where($qualifiedColumnName, $locationId);
             });
         }
+    }
+
+    //
+    //
+    //
+
+    protected function setLocationableAttributes()
+    {
+        if (!$this->locationableScopeEnabled())
+            return;
+
+        if ($this->locationableRelationExists())
+            return;
+
+        if ($this->locationableIsSingleRelationType()) {
+            $relationObj = $this->getLocationableRelationObject();
+            $attributeName = $relationObj->getForeignKeyName();
+            $this->{$attributeName} = $this->locationableGetUserLocation();
+        }
+        else {
+            $relationName = $this->locationableRelationName();
+            $this->{$relationName} = [$this->locationableGetUserLocation()];
+        }
+    }
+
+    protected function detachLocationsOnDelete()
+    {
+        if ($this->locationableIsSingleRelationType())
+            return;
+
+        $locationable = $this->getLocationableRelationObject();
+
+        if (!app('admin.auth')->isSuperUser() AND $locationable->count() > 1) {
+            throw new ApplicationException('admin::lang.alert_warning_locationable_delete');
+        }
+
+        $locationable->detach();
     }
 
     //

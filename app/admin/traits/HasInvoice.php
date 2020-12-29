@@ -9,7 +9,7 @@ trait HasInvoice
     public static function bootHasInvoice()
     {
         self::extend(function (self $model) {
-            $model->casts = array_merge($model->casts, ['invoice_date' => 'dateTime']);
+            $model->addCasts(['invoice_date' => 'dateTime']);
         });
 
         static::saved(function (self $model) {

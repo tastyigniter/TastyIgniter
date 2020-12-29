@@ -38,7 +38,7 @@ class Payments_model extends Model
 
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'data' => 'serialize',
         'status' => 'boolean',
         'is_default' => 'boolean',

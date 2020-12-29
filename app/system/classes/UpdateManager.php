@@ -56,11 +56,6 @@ class UpdateManager
     protected $extensionManager;
 
     /**
-     * @var \Igniter\Flame\Mail\Markdown
-     */
-    protected $markdown;
-
-    /**
      * @var \Igniter\Flame\Database\Migrations\Migrator
      */
     protected $migrator;
@@ -77,7 +72,6 @@ class UpdateManager
         $this->hubManager = HubManager::instance();
         $this->extensionManager = ExtensionManager::instance();
         $this->themeManager = ThemeManager::instance();
-        $this->markdown = new Markdown;
 
         $this->tempDirectory = temp_path();
         $this->baseDirectory = base_path();
@@ -554,7 +548,7 @@ class UpdateManager
     {
         $tags = array_get($update, 'tags.data', []);
         foreach ($tags as &$tag) {
-            $tag['description'] = $this->markdown->parse($tag['description']);
+            $tag['description'] = Markdown::parse($tag['description'])->toHtml();
         }
 
         array_set($update, 'tags.data', $tags);

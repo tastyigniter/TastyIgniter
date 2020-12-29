@@ -2,9 +2,9 @@
 
 namespace System\Models;
 
-use File;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\Markdown;
+use Igniter\Flame\Support\Facades\File;
 use Main\Classes\ThemeManager;
 use Model;
 use System\Classes\ExtensionManager;
@@ -118,11 +118,11 @@ class Extensions_model extends Model
 
     public function getReadmeAttribute($value)
     {
-        $extensionPath = ExtensionManager::instance()->path($this->name);
-        if (!$readmePath = File::existsInsensitive($extensionPath.'readme.md'))
+        $readmePath = ExtensionManager::instance()->path($this->name).'readme.md';
+        if (!$readmePath = File::existsInsensitive($readmePath))
             return $value;
 
-        return (new Markdown)->parse(File::get($readmePath));
+        return Markdown::parseFile($readmePath)->toHtml();
     }
 
     //

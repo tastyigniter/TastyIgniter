@@ -26,7 +26,7 @@ class Menu_item_options_model extends Model
 
     protected $fillable = ['option_id', 'menu_id', 'required', 'priority', 'min_selected', 'max_selected'];
 
-    public $casts = [
+    protected $casts = [
         'menu_option_id' => 'integer',
         'option_id' => 'integer',
         'menu_id' => 'integer',

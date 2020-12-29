@@ -26,7 +26,7 @@ class Countries_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'status' => 'boolean',
         'priority' => 'integer',
     ];

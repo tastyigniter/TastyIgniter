@@ -14,7 +14,7 @@
     <p class="lead">@lang('admin::lang.alert_user_restricted')</p>
     <a href="javascript:;" onclick="history.go(-1); return false;">@lang('admin::lang.text_back_link')</a>
     <br><br>
-    <a href="{{ Admin::url('') }}">@lang('admin::lang.text_admin_link')</a>
+    <a href="{{ Admin::url('/') }}">@lang('admin::lang.text_admin_link')</a>
 </article>
 </body>
 </html>

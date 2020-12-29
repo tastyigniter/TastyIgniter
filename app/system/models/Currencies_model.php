@@ -29,7 +29,7 @@ class Currencies_model extends Currency
      */
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'country_id' => 'integer',
         'currency_rate' => 'float',
         'symbol_position' => 'boolean',

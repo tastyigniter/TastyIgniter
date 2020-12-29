@@ -28,7 +28,7 @@ class Addresses_model extends Model
         ],
     ];
 
-    public $casts = [
+    protected $casts = [
         'customer_id' => 'integer',
         'country_id' => 'integer',
     ];
