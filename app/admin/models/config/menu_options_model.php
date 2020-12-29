@@ -21,6 +21,12 @@ $config['form']['fields'] = [
         'type' => 'repeater',
         'form' => 'menu_option_values_model',
     ],
+    'overwrite_existing_items' => [
+        'label' => 'lang:admin::lang.menu_options.label_overwrite_existing_items',
+        'type' => 'switch',
+        'default' => FALSE,
+        'context' => ['edit'],
+    ]
 ];
 
 return $config;

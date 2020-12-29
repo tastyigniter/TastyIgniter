@@ -53,7 +53,7 @@ class Menu_options_model extends Model
         ['locations.*', 'lang:admin::lang.label_location', 'integer'],
     ];
 
-    protected $purgeable = ['option_values'];
+    protected $purgeable = ['option_values', 'overwrite_existing_items'];
 
     public static function getRecordEditorOptions()
     {
@@ -83,6 +83,9 @@ class Menu_options_model extends Model
             $this->addOptionValues($this->attributes['option_values']);
 
         $this->removeDeletedValuesFromMenuItems();
+
+        if (array_key_exists('overwrite_existing_items', $this->attributes) AND $this->overwrite_existing_items)
+            $this->overwriteExistingMenuItems();
     }
 
     protected function beforeDelete()
@@ -157,5 +160,35 @@ class Menu_options_model extends Model
                     $menuOptionValue->delete();
             });
         });
+    }
+
+    /**
+     * Overwrite any menu items this option is attached to
+     *
+     * @return void
+     */
+    public function overwriteExistingMenuItems()
+    {
+        $menuIds = $this->menu_options->pluck('menu_id')->toArray();
+        $selfId = $this->option_id;
+        $values = $this->option_values()->get()->map(function($value) use ($selfId) {
+            return [
+                'menu_option_id' => $selfId,
+                'option_value_id' => $value->option_value_id,
+                'new_price' => $value->price,
+                'quantity' => 0,
+                'priority' => $value->priority,
+            ];
+        })->toArray();
+        foreach ($menuIds as $menuId) {
+            $menuModel = Menus_model::find($menuId);
+            if ($menuModel) {
+                $option = $menuModel->menu_options()
+                ->firstOrNew([
+                    'option_id' => $this->option_id,
+                ])
+                ->addMenuOptionValues($values);
+            }
+        }
     }
 }
