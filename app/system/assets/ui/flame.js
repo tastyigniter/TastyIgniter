@@ -1115,6 +1115,11 @@ if (window.jQuery.request !== undefined)
                 .toggleClass('control-disabled', status)
                 .trigger('disable.ti.triggerapi', [status])
         }
+        else if (action == 'check' && status) {
+            this.$el
+                .filter('input[type=checkbox]')
+                .prop('checked', true);
+        }
         else if (action == 'empty' && status) {
             this.$el
                 .not('input[type=checkbox], input[type=radio], input[type=button], input[type=submit]')
