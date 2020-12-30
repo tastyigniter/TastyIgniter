@@ -3,7 +3,6 @@
 namespace System\Traits;
 
 use Event;
-use Illuminate\Support\Str;
 use Mail;
 
 trait SendsMailTemplate
@@ -21,7 +20,7 @@ trait SendsMailTemplate
     public function mailSend($view, $recipientType = null)
     {
         $extraData = [];
-        Event::fire(Str::singular($this->table).'.mail.beforeSend', [$this, &$extraData]);
+        Event::fire('model.mail.beforeSend', [$this, &$extraData]);
 
         Mail::queue(
             $view,
