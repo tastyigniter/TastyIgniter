@@ -62,6 +62,8 @@
             return false;
 
         $parent.remove()
+
+        $(window).trigger(jQuery.Event('repeaterItemRemoved'))
     }
 
     Repeater.prototype.addItem = function (event) {
@@ -84,6 +86,8 @@
         $template.data('replace', parseInt(replace) + 1)
 
         $(document).trigger('render')
+
+        $(window).trigger(jQuery.Event('repeaterItemAdded'))
     }
 
     // FIELD REPEATER PLUGIN DEFINITION

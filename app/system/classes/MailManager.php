@@ -79,7 +79,7 @@ class MailManager
         if (!$template)
             return FALSE;
 
-        return $this->addContentToMailerInternal($message, $template, $data);
+        return $this->addContentToMailerInternal($message, $template, $data, $plainOnly);
     }
 
     public function addRawContentToMailer($message, $content, $data)
@@ -216,10 +216,10 @@ class MailManager
 
         if ($template->layout) {
             $html = $this->renderView($template->layout->layout, [
-                'body' => $html,
-                'layout_css' => $template->layout->layout_css,
-                'custom_css' => Mail_themes_model::renderCss(),
-            ] + (array)$data);
+                    'body' => $html,
+                    'layout_css' => $template->layout->layout_css,
+                    'custom_css' => Mail_themes_model::renderCss(),
+                ] + (array)$data);
         }
 
         return $html;
@@ -237,8 +237,8 @@ class MailManager
 
         if ($template->layout) {
             $text = $this->renderView($template->layout->plain_layout, [
-                'body' => $text,
-            ] + (array)$data);
+                    'body' => $text,
+                ] + (array)$data);
         }
 
         /*        $cleanText = preg_replace('/<br\s?\/?>/i', "\r\n", $text);*/
