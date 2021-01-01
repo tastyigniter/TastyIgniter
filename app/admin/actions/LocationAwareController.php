@@ -2,6 +2,7 @@
 
 namespace Admin\Actions;
 
+use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminLocation;
 use Illuminate\Support\Facades\Event;
 use System\Classes\BaseController;
@@ -53,10 +54,16 @@ class LocationAwareController extends ControllerAction
 
     public function locationApplyScope($query)
     {
-        if (
-            !AdminLocation::check()
-            OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
-        ) return;
+        if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
+            return;
+
+        if (!AdminLocation::check()) {
+
+            if (AdminAuth::isSuperUser())
+                return;
+
+            $query->whereHasOrDoesntHaveLocations(AdminAuth::locations()->pluck('location_id')->toArray());
+        }
 
         $query->whereHasOrDoesntHaveLocation($this->controller->getLocationId());
     }
