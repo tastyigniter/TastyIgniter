@@ -215,11 +215,13 @@ class MailManager
         $html = $this->render($template->body, $data);
 
         if ($template->layout) {
-            $html = $this->renderView($template->layout->layout, [
+            $html = $this->renderView($template->layout->layout,
+                [
                     'body' => $html,
                     'layout_css' => $template->layout->layout_css,
                     'custom_css' => Mail_themes_model::renderCss(),
-                ] + (array)$data);
+                ] + (array)$data
+            );
         }
 
         return $html;
@@ -236,12 +238,12 @@ class MailManager
         $text = $this->renderText($templateText, $data);
 
         if ($template->layout) {
-            $text = $this->renderView($template->layout->plain_layout, [
+            $text = $this->renderView($template->layout->plain_layout,
+                [
                     'body' => $text,
-                ] + (array)$data);
+                ] + (array)$data
+            );
         }
-
-        /*        $cleanText = preg_replace('/<br\s?\/?>/i', "\r\n", $text);*/
 
         return $text;
     }
