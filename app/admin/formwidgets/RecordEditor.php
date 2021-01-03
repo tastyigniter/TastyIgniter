@@ -28,6 +28,12 @@ class RecordEditor extends BaseFormWidget
 
     public $formName = 'Record';
 
+    public $hideEditButton = FALSE;
+
+    public $hideDeleteButton = FALSE;
+
+    public $hideCreateButton = FALSE;
+
     public $addLabel = 'New';
 
     public $editLabel = 'Edit';
@@ -48,6 +54,9 @@ class RecordEditor extends BaseFormWidget
             'modelClass',
             'addonLeft',
             'addonRight',
+            'hideAddLabel',
+            'hideEditLabel',
+            'hideDeleteLabel',
             'addLabel',
             'editLabel',
             'deleteLabel',
@@ -82,6 +91,9 @@ class RecordEditor extends BaseFormWidget
         $this->vars['addLabel'] = $this->addLabel;
         $this->vars['editLabel'] = $this->editLabel;
         $this->vars['deleteLabel'] = $this->deleteLabel;
+        $this->vars['showEditButton'] = !$this->hideEditButton;
+        $this->vars['showDeleteButton'] = !$this->hideDeleteButton;
+        $this->vars['showCreateButton'] = !$this->hideCreateButton;
     }
 
     public function onLoadRecord()
