@@ -53,7 +53,7 @@ class Menu_options_model extends Model
         ['locations.*', 'lang:admin::lang.label_location', 'integer'],
     ];
 
-    protected $purgeable = ['option_values', 'overwrite_existing_items'];
+    protected $purgeable = ['option_values', 'update_related_menu_item'];
 
     public static function getRecordEditorOptions()
     {
@@ -84,8 +84,8 @@ class Menu_options_model extends Model
 
         $this->removeDeletedValuesFromMenuItems();
 
-        if (array_key_exists('overwrite_existing_items', $this->attributes) AND $this->overwrite_existing_items)
-            $this->overwriteExistingMenuItems();
+        if (array_key_exists('update_related_menu_item', $this->attributes) AND $this->update_related_menu_item)
+            $this->updateRelatedMenuItem();
     }
 
     protected function beforeDelete()
@@ -167,7 +167,7 @@ class Menu_options_model extends Model
      *
      * @return void
      */
-    public function overwriteExistingMenuItems()
+    public function updateRelatedMenuItem()
     {
         $menuIds = $this->menu_options->pluck('menu_id')->toArray();
         $selfId = $this->option_id;
