@@ -4,7 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Facades\AdminLocation;
+use Admin\Traits\LocationAwareWidget;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
  */
 class Relation extends BaseFormWidget
 {
+    use LocationAwareWidget;
+
     //
     // Configurable properties
     //
@@ -133,7 +135,7 @@ class Relation extends BaseFormWidget
             $relationObject = $this->getRelationObject();
             $query = $relationObject->newQuery();
 
-            $this->locationApplyScope($query, AdminLocation::getAll());
+            $this->locationApplyScope($query);
 
             [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
             $relationType = $model->getRelationType($attribute);

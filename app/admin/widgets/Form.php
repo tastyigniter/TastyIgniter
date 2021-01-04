@@ -8,12 +8,14 @@ use Admin\Classes\FormTabs;
 use Admin\Classes\Widgets;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\FormModelWidget;
+use Admin\Traits\LocationAwareWidget;
 use Exception;
 use Model;
 
 class Form extends BaseWidget
 {
     use FormModelWidget;
+    use LocationAwareWidget;
 
     //
     // Configurable properties

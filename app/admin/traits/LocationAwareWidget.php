@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Facades\AdminLocation;
 use Admin\Models\Locations_model;
 use Exception;
 
@@ -22,9 +23,9 @@ trait LocationAwareWidget
     /**
      * Apply location scope where required
      */
-    protected function locationApplyScope($query, $ids)
+    protected function locationApplyScope($query)
     {
-        if (is_null($ids))
+        if (is_null($ids = AdminLocation::getAll()))
             return;
 
         $model = $query->getModel();
