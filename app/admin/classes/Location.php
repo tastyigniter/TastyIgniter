@@ -72,6 +72,23 @@ class Location extends Manager
         return optional($this->getLocation())->getKey();
     }
 
+    public function getAll()
+    {
+        if ($this->getAuth()->isSuperUser())
+            return null;
+
+        return $this->getAuth()
+            ->locations()
+            ->where('location_status', TRUE)
+            ->pluck('location_id')
+            ->all();
+    }
+
+    public function getIdOrAll()
+    {
+        return $this->check() ? [$this->getId()] : $this->getAll();
+    }
+
     public function getLocation()
     {
         return $this->model;
@@ -96,6 +113,17 @@ class Location extends Manager
             return null;
 
         return $staffLocation->getKey();
+    }
+
+    public function hasOneLocation()
+    {
+        if ($this->isSingleMode())
+            return TRUE;
+
+        if ($this->getAuth()->isSuperUser())
+            return FALSE;
+
+        return $this->getAuth()->locations()->count() === 1;
     }
 
     /**
