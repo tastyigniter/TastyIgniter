@@ -97,15 +97,13 @@ class Location extends Manager
 
     public function listLocations()
     {
-        $locations = null;
-        if (!$this->getAuth()->isSuperUser()) {
-            $locations = $this->getAuth()->locations()->where('location_status', TRUE)->pluck(
-                'location_name', 'location_id'
-            );
-        }
+        if ($this->getAuth()->isSuperUser())
+            return $this->createLocationModel()->getDropdownOptions();
 
-        return ($locations AND $locations->isNotEmpty()) ?
-            $locations : $this->createLocationModel()->getDropdownOptions();
+        return $this->getAuth()
+            ->locations()
+            ->where('location_status', TRUE)
+            ->pluck('location_name', 'location_id');
     }
 
     public function getDefaultLocation()
