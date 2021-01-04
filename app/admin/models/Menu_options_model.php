@@ -30,7 +30,7 @@ class Menu_options_model extends Model
      */
     protected $primaryKey = 'option_id';
 
-    protected $fillable = ['option_id', 'option_name', 'display_type'];
+    protected $fillable = ['option_id', 'option_name', 'display_type', 'update_related_menu_item'];
 
     protected $casts = [
         'option_id' => 'integer',
@@ -53,7 +53,7 @@ class Menu_options_model extends Model
         ['locations.*', 'lang:admin::lang.label_location', 'integer'],
     ];
 
-    protected $purgeable = ['option_values', 'update_related_menu_item'];
+    protected $purgeable = ['option_values'];
 
     public static function getRecordEditorOptions()
     {
@@ -84,7 +84,7 @@ class Menu_options_model extends Model
 
         $this->removeDeletedValuesFromMenuItems();
 
-        if (array_key_exists('update_related_menu_item', $this->attributes) AND $this->update_related_menu_item)
+        if ($this->update_related_menu_item)
             $this->updateRelatedMenuItem();
     }
 
