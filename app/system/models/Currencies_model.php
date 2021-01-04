@@ -152,7 +152,7 @@ class Currencies_model extends Currency
 
     public function getFormat()
     {
-        $format = $this->thousand_sign.'0'.$this->decimal_sign;
+        $format = ($this->thousand_sign ?: '!').'0'.$this->decimal_sign;
         $format .= str_repeat('0', $this->decimal_position);
 
         return $this->getSymbolPosition()
