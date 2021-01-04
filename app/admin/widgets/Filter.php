@@ -5,6 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
 use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminLocation;
 use DB;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -253,6 +254,8 @@ class Filter extends BaseWidget
     {
         $model = $this->getScopeModel($scope->scopeName);
         $query = $model->newQuery();
+
+        $this->locationApplyScope($query, AdminLocation::getAll());
 
         // Extensibility
         $this->fireSystemEvent('admin.filter.extendQuery', [$query, $scope]);

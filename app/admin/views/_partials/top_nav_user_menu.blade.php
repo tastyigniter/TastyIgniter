@@ -22,7 +22,7 @@
                 <div class="text-muted">{{ $staffGroupNames }}</div>
             </div>
         </div>
-        @if(!AdminLocation::hasOneLocation())
+        @if(!AdminLocation::hasOneLocation() AND $staffLocations)
             <div class="px-3 pb-3">
                 <form method="POST" accept-charset="UTF-8">
                     <div class="input-group">
