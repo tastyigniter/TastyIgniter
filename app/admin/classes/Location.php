@@ -23,17 +23,18 @@ class Location extends Manager
         if (!$this->getAuth()->isLogged())
             return null;
 
-        $model = null;
         if ($this->isSingleMode()) {
-            $model = $this->getById(params('default_location_id'));
+            $id = params('default_location_id');
         }
         else {
             $id = $this->getSession('id');
-            if ((!$id AND $this->hasRestriction()) OR !$this->isAttachedToAuth($id))
+            if (!$id AND $this->hasOneLocation())
                 $id = $this->getDefaultLocation();
-
-            if ($id) $model = $this->getById($id);
         }
+
+        $model = null;
+        if ($id AND $this->isAttachedToAuth($id))
+            $model = $this->getById($id);
 
         if ($model)
             $this->setCurrent($model);
