@@ -114,7 +114,6 @@ $config['form']['fields'] = [
         'span' => 'right',
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
-        'locationAware' => 'hide',
     ],
     'start_time' => [
         'label' => 'lang:admin::lang.mealtimes.label_start_time',

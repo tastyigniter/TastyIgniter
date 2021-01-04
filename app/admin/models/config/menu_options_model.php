@@ -9,7 +9,6 @@ $config['form']['fields'] = [
         'type' => 'relation',
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
-        'locationAware' => 'hide',
     ],
     'display_type' => [
         'label' => 'lang:admin::lang.menu_options.label_display_type',
