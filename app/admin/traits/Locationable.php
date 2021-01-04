@@ -66,16 +66,16 @@ trait Locationable
      * Apply the Location scope query.
      *
      * @param \Igniter\Flame\Database\Builder $builder
-     * @param \Igniter\Flame\Auth\Models\User $userLocation | array
+     * @param \Igniter\Flame\Database\Model|array|int $userLocation
      */
     protected function applyLocationScope($builder, $userLocation)
     {
-        if (!is_array($userLocation)) {
-            $locationId = !is_numeric($userLocation)
-                ? $userLocation->getKey() : $userLocation;
-        } else {
-            $locationId = [$userLocation];
-        }
+        $locationId = is_object($userLocation)
+            ? $userLocation->getKey()
+            : $userLocation;
+
+        if (!is_array($locationId))
+            $locationId = [$locationId];
 
         $relationName = $this->locationableRelationName();
         $relationObject = $this->getLocationableRelationObject();

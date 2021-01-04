@@ -2,7 +2,6 @@
 
 namespace Admin\Actions;
 
-use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminLocation;
 use Illuminate\Support\Facades\Event;
 use System\Classes\BaseController;
@@ -57,15 +56,10 @@ class LocationAwareController extends ControllerAction
         if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
             return;
 
-        if (!AdminLocation::check()) {
+        if (is_null($ids = AdminLocation::getIdOrAll()))
+            return;
 
-            if (AdminAuth::isSuperUser())
-                return;
-
-            $query->whereHasOrDoesntHaveLocations(AdminAuth::locations()->pluck('location_id')->toArray());
-        }
-
-        $query->whereHasOrDoesntHaveLocation($this->controller->getLocationId());
+        $query->whereHasLocation($ids);
     }
 
     protected function locationBindEvents()
