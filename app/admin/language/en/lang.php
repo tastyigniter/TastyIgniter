@@ -590,6 +590,7 @@ return [
         'label_option_value' => 'Option Value',
         'label_option_price' => 'Option Price',
         'label_option_id' => 'Option ID',
+        'label_update_related_menu_item' => 'Update option values of associated menu items',
     ],
 
     'menus' => [
