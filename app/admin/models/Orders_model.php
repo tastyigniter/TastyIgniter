@@ -69,6 +69,7 @@ class Orders_model extends Model
         'order_total' => 'float',
         'notify' => 'boolean',
         'processed' => 'boolean',
+        'order_time_is_asap' => 'boolean',
     ];
 
     public $relation = [

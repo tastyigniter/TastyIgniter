@@ -6,6 +6,8 @@ use Main\Classes\MediaLibrary;
 
 /**
  * MediaManager Class
+ *
+ * @deprecated replaced with \Main\Libraries\MediaLibrary
  */
 class MediaManager extends MediaLibrary
 {
