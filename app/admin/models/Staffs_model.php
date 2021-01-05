@@ -146,14 +146,9 @@ class Staffs_model extends Model
     {
         $userModel = $this->user()->firstOrNew(['staff_id' => $this->getKey()]);
 
-        if (isset($user['super_user']))
-            $userModel->super_user = $user['super_user'];
-
-        if (isset($user['username']))
-            $userModel->username = $user['username'];
-
-        if (isset($user['password']))
-            $userModel->password = $user['password'];
+        $userModel->super_user = array_get($user, 'super_user', FALSE);
+        $userModel->username = array_get($user, 'username', $userModel->username);
+        $userModel->password = array_get($user, 'password', $userModel->password);
 
         if (!$userModel->exists) {
             $userModel->is_activated = TRUE;

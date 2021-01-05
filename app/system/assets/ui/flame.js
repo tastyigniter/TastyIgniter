@@ -116,7 +116,8 @@ if (window.jQuery.request !== undefined)
 
 /*
  * TastyIgniter AJAX plugin..
- * Inspired by OctoberCMS AJAX plugin
+ *
+ * Adapted from OctoberCMS AJAX plugin
  *
  * $.request('handler', function() { })
  * $(form).request('handler', function() { })
@@ -1114,6 +1115,11 @@ if (window.jQuery.request !== undefined)
                 .prop('disabled', status)
                 .toggleClass('control-disabled', status)
                 .trigger('disable.ti.triggerapi', [status])
+        }
+        else if (action == 'check' && status) {
+            this.$el
+                .filter('input[type=checkbox]')
+                .prop('checked', true);
         }
         else if (action == 'empty' && status) {
             this.$el

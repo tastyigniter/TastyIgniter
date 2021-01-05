@@ -91,7 +91,9 @@ class Reservations extends \Admin\Classes\AdminController
 
     public function calendarGenerateEvents($startAt, $endAt)
     {
-        return Reservations_model::listCalendarEvents($startAt, $endAt);
+        return Reservations_model::listCalendarEvents(
+            $startAt, $endAt, $this->getLocationId()
+        );
     }
 
     public function calendarUpdateEvent($eventId, $startAt, $endAt)

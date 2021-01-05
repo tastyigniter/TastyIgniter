@@ -262,12 +262,17 @@ class Reservations_model extends Model
         return $result->pluck('tables')->flatten()->keyBy('table_id');
     }
 
-    public static function listCalendarEvents($startAt, $endAt)
+    public static function listCalendarEvents($startAt, $endAt, $locationId = null)
     {
-        $collection = self::whereBetween('reserve_date', [
+        $query = self::whereBetween('reserve_date', [
             date('Y-m-d H:i:s', strtotime($startAt)),
             date('Y-m-d H:i:s', strtotime($endAt)),
-        ])->get();
+        ]);
+
+        if (!is_null($locationId))
+            $query->whereHasLocation($locationId);
+
+        $collection = $query->get();
 
         $collection->transform(function ($reservation) {
             return $reservation->getEventDetails();

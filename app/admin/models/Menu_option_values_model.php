@@ -24,7 +24,7 @@ class Menu_option_values_model extends Model
      */
     protected $primaryKey = 'option_value_id';
 
-    protected $fillable = ['option_id', 'value', 'price', 'allergens'];
+    protected $fillable = ['option_id', 'value', 'price', 'allergens', 'priority'];
 
     protected $casts = [
         'option_value_id' => 'integer',
@@ -44,7 +44,7 @@ class Menu_option_values_model extends Model
 
     public $sortable = [
         'sortOrderColumn' => 'priority',
-        'sortWhenCreating' => FALSE,
+        'sortWhenCreating' => TRUE,
     ];
 
     public $rules = [

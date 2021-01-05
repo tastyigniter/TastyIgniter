@@ -322,18 +322,20 @@ class Assets
             $attributes = ['name' => $attributes];
 
         if ($type == 'js') {
-            $html = '<script'.Html::attributes(array_merge([
-                    'charset' => strtolower(setting('charset', 'UTF-8')),
-                    'type' => 'text/javascript',
-                    'src' => asset($file),
-                ], $attributes)).'></script>'.PHP_EOL;
+            $attributes = array_merge([
+                'charset' => strtolower(setting('charset', 'UTF-8')),
+                'type' => 'text/javascript',
+                'src' => asset($file),
+            ], $attributes);
+            $html = '<script'.Html::attributes($attributes).'></script>'.PHP_EOL;
         }
         else {
-            $html = '<link'.Html::attributes(array_merge([
-                    'rel' => 'stylesheet',
-                    'type' => 'text/css',
-                    'href' => asset($file),
-                ], $attributes)).'>'.PHP_EOL;
+            $attributes = array_merge([
+                'rel' => 'stylesheet',
+                'type' => 'text/css',
+                'href' => asset($file),
+            ], $attributes);
+            $html = '<link'.Html::attributes($attributes).'>'.PHP_EOL;
         }
 
         return $html;

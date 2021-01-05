@@ -5,6 +5,14 @@ $config['list']['filter'] = [
         'mode' => 'all', // or any, exact
     ],
     'scopes' => [
+        'location' => [
+            'label' => 'lang:admin::lang.text_filter_location',
+            'type' => 'select',
+            'scope' => 'whereHasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom' => 'location_name',
+            'locationAware' => 'hide',
+        ],
         'role' => [
             'label' => 'lang:admin::lang.staff.text_filter_role',
             'type' => 'select',
@@ -87,6 +95,7 @@ $config['list']['columns'] = [
         'relation' => 'locations',
         'select' => 'location_name',
         'searchable' => TRUE,
+        'locationAware' => 'hide',
     ],
     'last_login' => [
         'label' => 'lang:admin::lang.staff.column_last_login',

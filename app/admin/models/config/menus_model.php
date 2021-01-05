@@ -179,7 +179,6 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'valueFrom' => 'locations',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
         ],
         'minimum_qty' => [
             'label' => 'lang:admin::lang.menus.label_minimum_qty',
