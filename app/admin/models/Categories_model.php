@@ -37,7 +37,7 @@ class Categories_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'parent_id' => 'integer',
         'priority' => 'integer',
         'status' => 'boolean',

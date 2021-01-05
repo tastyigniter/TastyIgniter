@@ -25,7 +25,7 @@
                     {!! $this->makePartial($this->partial, ['item' => $item]) !!}
                 @else
                     <p class="card-title font-weight-bold">{{ $item->{$nameFrom} }}</p>
-                    <p class="card-subtitle mb-0">{{ $item->{$descriptionFrom} }}</p>
+                    <p class="card-subtitle mb-0">{!! $item->{$descriptionFrom} !!}</p>
                 @endif
             </div>
             @unless ($this->previewMode)

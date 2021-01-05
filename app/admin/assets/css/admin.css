@@ -11554,7 +11554,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
   color: #6F7B9C;
 }
 .custom-control-input[disabled] ~ .custom-control-label::before, .custom-control-input:disabled ~ .custom-control-label::before {
-  background-color: #D2D4DF;
+  background-color: #C0C2CE;
 }
 .custom-control-label {
   position: relative;
@@ -18724,6 +18724,12 @@ a:focus, a:hover {
 }
 .text-yellow {
   color: #ffc107;
+}
+.text-draggable {
+  -webkit-user-select: all;
+  /* for Safari */
+  user-select: all;
+  cursor: move;
 }
 .bg-white, .panel-white {
   background-color: #FFFFFF;

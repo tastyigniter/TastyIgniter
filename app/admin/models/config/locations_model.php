@@ -382,6 +382,12 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[auto_allocate_table]' => [
+            'label' => 'lang:admin::lang.locations.label_auto_allocate_table',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 1,
+            'type' => 'switch',
+        ],
 
         'opening_type' => [
             'label' => 'lang:admin::lang.locations.label_opening_type',

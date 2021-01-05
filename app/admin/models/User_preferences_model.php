@@ -15,7 +15,7 @@ class User_preferences_model extends Model
 
     public $timestamps = FALSE;
 
-    public $casts = [
+    protected $casts = [
         'user_id' => 'integer',
         'value' => 'json',
     ];

@@ -37,7 +37,7 @@ class Assignable_logs_model extends Model
         ],
     ];
 
-    public $casts = [
+    protected $casts = [
         'assignable_id' => 'integer',
         'assignee_group_id' => 'integer',
         'assignee_id' => 'integer',

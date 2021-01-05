@@ -58,7 +58,7 @@ class Orders_model extends Model
      */
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'customer_id' => 'integer',
         'location_id' => 'integer',
         'address_id' => 'integer',
@@ -69,6 +69,7 @@ class Orders_model extends Model
         'order_total' => 'float',
         'notify' => 'boolean',
         'processed' => 'boolean',
+        'order_time_is_asap' => 'boolean',
     ];
 
     public $relation = [

@@ -92,13 +92,9 @@ return [
     'alert_user_not_logged_in' => 'You must be logged in to access that page.',
     'alert_user_restricted' => 'Warning: You do not have the right permission to view this page, please contact the system administrator.',
     'alert_location_restricted' => 'Warning: You do not have the right permission to access context outside your location, please contact the system administrator.',
+    'alert_warning_locationable_delete' => 'Warning: You do not have the right permission to delete record(s) attached to multiple locations, please contact the system administrator.',
     'alert_form_error_message' => 'Sorry but form validation has failed, please check for errors.',
     'alert_error_set_default' => '"%s" is disabled and cannot be set as default.',
-    'access_denied' => [
-        'label' => 'Access denied',
-        'help' => "You don't have the required permissions to view this page.",
-        'cms_link' => 'Return to the back-end',
-    ],
     'text_settings_title' => 'Settings',
     'text_message_title' => 'Your messages',
     'text_activity_title' => 'Recent activities',
@@ -480,6 +476,7 @@ return [
         'label_offer_reservation' => 'Offer Reservations',
         'label_reservation_time_interval' => 'Reservation Time Interval',
         'label_reservation_lead_time' => 'Reservation Lead Time',
+        'label_auto_allocate_table' => 'Automatically Allocate Tables',
         'label_opening_type' => 'Opening Hours',
         'label_opening_days' => 'Days',
         'label_opening_hour' => 'Hours',
@@ -593,6 +590,7 @@ return [
         'label_option_value' => 'Option Value',
         'label_option_price' => 'Option Price',
         'label_option_id' => 'Option ID',
+        'label_update_related_menu_item' => 'Update option values of associated menu items',
     ],
 
     'menus' => [
@@ -716,6 +714,7 @@ return [
         'label_telephone' => 'Telephone',
         'label_delivery_address' => 'Delivery Address',
         'label_order_type' => 'Order Type',
+        'label_time_is_asap' => 'Order Time Is Asap',
         'label_order_time' => 'Delivery/Pick-up Time',
         'label_order_date' => 'Delivery/Pick-up Date',
         'label_date_added' => 'Date Added',

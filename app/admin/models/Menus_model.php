@@ -32,7 +32,7 @@ class Menus_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'menu_price' => 'float',
         'menu_category_id' => 'integer',
         'stock_qty' => 'integer',

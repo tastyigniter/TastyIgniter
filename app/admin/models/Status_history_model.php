@@ -27,7 +27,7 @@ class Status_history_model extends Model
 
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'object_id' => 'integer',
         'staff_id' => 'integer',
         'status_id' => 'integer',

@@ -23,17 +23,18 @@ class Location extends Manager
         if (!$this->getAuth()->isLogged())
             return null;
 
-        $model = null;
         if ($this->isSingleMode()) {
-            $model = $this->getById(params('default_location_id'));
+            $id = params('default_location_id');
         }
         else {
             $id = $this->getSession('id');
-            if ((!$id AND $this->hasRestriction()) OR !$this->isAttachedToAuth($id))
+            if (!$id AND $this->hasOneLocation())
                 $id = $this->getDefaultLocation();
-
-            if ($id) $model = $this->getById($id);
         }
+
+        $model = null;
+        if ($id AND $this->isAttachedToAuth($id))
+            $model = $this->getById($id);
 
         if ($model)
             $this->setCurrent($model);
@@ -72,6 +73,23 @@ class Location extends Manager
         return optional($this->getLocation())->getKey();
     }
 
+    public function getAll()
+    {
+        if ($this->getAuth()->isSuperUser())
+            return null;
+
+        return $this->getAuth()
+            ->locations()
+            ->where('location_status', TRUE)
+            ->pluck('location_id')
+            ->all();
+    }
+
+    public function getIdOrAll()
+    {
+        return $this->check() ? [$this->getId()] : $this->getAll();
+    }
+
     public function getLocation()
     {
         return $this->model;
@@ -79,15 +97,13 @@ class Location extends Manager
 
     public function listLocations()
     {
-        $locations = null;
-        if (!$this->getAuth()->isSuperUser()) {
-            $locations = $this->getAuth()->locations()->where('location_status', TRUE)->pluck(
-                'location_name', 'location_id'
-            );
-        }
+        if ($this->getAuth()->isSuperUser())
+            return $this->createLocationModel()->getDropdownOptions();
 
-        return ($locations AND $locations->isNotEmpty()) ?
-            $locations : $this->createLocationModel()->getDropdownOptions();
+        return $this->getAuth()
+            ->locations()
+            ->where('location_status', TRUE)
+            ->pluck('location_name', 'location_id');
     }
 
     public function getDefaultLocation()
@@ -96,6 +112,17 @@ class Location extends Manager
             return null;
 
         return $staffLocation->getKey();
+    }
+
+    public function hasOneLocation()
+    {
+        if ($this->isSingleMode())
+            return TRUE;
+
+        if ($this->getAuth()->isSuperUser())
+            return FALSE;
+
+        return $this->getAuth()->locations()->count() === 1;
     }
 
     /**

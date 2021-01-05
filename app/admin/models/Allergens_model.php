@@ -25,7 +25,7 @@ class Allergens_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'status' => 'boolean',
     ];
 

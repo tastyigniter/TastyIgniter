@@ -122,7 +122,7 @@ class Languages extends \Admin\Classes\AdminController
 
         $this->vars['totalStrings'] = $this->totalStrings;
         $this->vars['totalTranslated'] = $this->totalTranslated;
-        $this->vars['translatedProgress'] = $this->totalStrings ? round(($this->totalTranslated * 100) / $this->totalStrings) : 0;
+        $this->vars['translatedProgress'] = $this->totalStrings ? round(($this->totalTranslated * 100) / $this->totalStrings, 2) : 0;
     }
 
     protected function getFilterValue($key, $default = null)

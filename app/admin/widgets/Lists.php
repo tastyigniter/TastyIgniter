@@ -5,6 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ListColumn;
 use Admin\Facades\AdminAuth;
+use Admin\Traits\LocationAwareWidget;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -17,6 +18,8 @@ use Model;
 
 class Lists extends BaseWidget
 {
+    use LocationAwareWidget;
+
     /**
      * @var array List column configuration.
      */

@@ -17,7 +17,7 @@ trait LogsStatusHistory
                 'Admin\Models\Status_history_model', 'name' => 'object',
             ];
 
-            $model->casts = array_merge($model->casts, [
+            $model->addCasts([
                 'status_id' => 'integer',
                 'status_updated_at' => 'dateTime',
             ]);

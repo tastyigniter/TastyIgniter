@@ -4,7 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Facades\AdminLocation;
+use Admin\Traits\LocationAwareWidget;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
  */
 class Relation extends BaseFormWidget
 {
+    use LocationAwareWidget;
+
     //
     // Configurable properties
     //
@@ -216,17 +218,5 @@ class Relation extends BaseFormWidget
         }
 
         return $model->{$attribute}();
-    }
-
-    /**
-     * Apply location scope where required
-     */
-    protected function locationApplyScope($query)
-    {
-        if (
-            !AdminLocation::check() OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
-        ) return;
-
-        $query->whereHasOrDoesntHaveLocation(AdminLocation::getId());
     }
 }

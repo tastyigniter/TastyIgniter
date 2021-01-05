@@ -164,7 +164,6 @@ $config['form']['fields'] = [
         'type' => 'relation',
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
-        'locationAware' => 'hide',
     ],
     'extra_capacity' => [
         'label' => 'lang:admin::lang.tables.label_extra_capacity',

@@ -135,7 +135,6 @@ $config['form']['fields'] = [
         'span' => 'right',
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
-        'locationAware' => 'hide',
     ],
     'priority' => [
         'label' => 'lang:admin::lang.categories.label_priority',

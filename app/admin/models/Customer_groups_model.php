@@ -19,7 +19,7 @@ class Customer_groups_model extends Model
      */
     protected $primaryKey = 'customer_group_id';
 
-    public $casts = [
+    protected $casts = [
         'approval' => 'boolean',
     ];
 

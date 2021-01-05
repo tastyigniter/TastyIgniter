@@ -30,7 +30,7 @@ class Tables_model extends Model
      */
     protected $primaryKey = 'table_id';
 
-    public $casts = [
+    protected $casts = [
         'min_capacity' => 'integer',
         'max_capacity' => 'integer',
         'extra_capacity' => 'integer',

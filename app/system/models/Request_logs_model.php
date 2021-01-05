@@ -23,7 +23,7 @@ class Request_logs_model extends Model
      */
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'referrer' => 'json',
     ];
 

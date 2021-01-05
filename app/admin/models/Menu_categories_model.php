@@ -19,7 +19,7 @@ class Menu_categories_model extends Model
      */
     public $incrementing = FALSE;
 
-    public $casts = [
+    protected $casts = [
         'menu_id' => 'integer',
         'category_id' => 'integer',
     ];
