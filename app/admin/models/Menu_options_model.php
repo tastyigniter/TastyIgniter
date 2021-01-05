@@ -42,6 +42,14 @@ class Menu_options_model extends Model
             'menu_options' => ['Admin\Models\Menu_item_options_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
+        'hasManyThrough' => [
+            'menu_option_values' => [
+                'Admin\Models\Menu_item_option_values_model',
+                'through' => 'Admin\Models\Menu_item_options_model',
+                'throughKey' => 'menu_option_id',
+                'foreignKey' => 'option_id',
+            ],
+        ],
         'morphToMany' => [
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
@@ -82,10 +90,8 @@ class Menu_options_model extends Model
         if (array_key_exists('option_values', $this->attributes))
             $this->addOptionValues($this->attributes['option_values']);
 
-        $this->removeDeletedValuesFromMenuItems();
-
         if ($this->update_related_menu_item)
-            $this->updateRelatedMenuItem();
+            $this->updateRelatedMenuItemsOptionValues();
     }
 
     protected function beforeDelete()
@@ -143,23 +149,10 @@ class Menu_options_model extends Model
         $this->option_values()->where('option_id', $optionId)
             ->whereNotIn('option_value_id', $idsToKeep)->delete();
 
-        return count($idsToKeep);
-    }
+        $this->menu_option_values()
+            ->whereNotIn('option_value_id', $idsToKeep)->delete();
 
-    /**
-     * Remove any deleted values from menu items this option is attached to
-     *
-     * @return void
-     */
-    public function removeDeletedValuesFromMenuItems()
-    {
-        $validValues = collect($this->option_values)->pluck('option_value_id')->toArray();
-        $this->menu_options->each(function ($menuOption) use ($validValues) {
-            $menuOption->menu_option_values->each(function ($menuOptionValue) use ($validValues) {
-                if (!in_array($menuOptionValue->option_value_id, $validValues))
-                    $menuOptionValue->delete();
-            });
-        });
+        return count($idsToKeep);
     }
 
     /**
@@ -167,28 +160,20 @@ class Menu_options_model extends Model
      *
      * @return void
      */
-    public function updateRelatedMenuItem()
+    protected function updateRelatedMenuItemsOptionValues()
     {
-        $menuIds = $this->menu_options->pluck('menu_id')->toArray();
-        $selfId = $this->option_id;
-        $values = $this->option_values()->get()->map(function ($value) use ($selfId) {
+        $optionValues = $this->option_values()->get()->map(function ($optionValue) {
             return [
-                'menu_option_id' => $selfId,
-                'option_value_id' => $value->option_value_id,
-                'new_price' => $value->price,
+                'menu_option_id' => $this->option_id,
+                'option_value_id' => $optionValue->option_value_id,
+                'new_price' => $optionValue->price,
                 'quantity' => 0,
-                'priority' => $value->priority,
+                'priority' => $optionValue->priority,
             ];
-        })->toArray();
-        foreach ($menuIds as $menuId) {
-            $menuModel = Menus_model::find($menuId);
-            if ($menuModel) {
-                $option = $menuModel->menu_options()
-                    ->firstOrNew([
-                        'option_id' => $this->option_id,
-                    ])
-                    ->addMenuOptionValues($values);
-            }
-        }
+        })->all();
+
+        $this->menu_options->each(function ($menuOption) use ($optionValues) {
+            $menuOption->addMenuOptionValues($optionValues);
+        });
     }
 }
