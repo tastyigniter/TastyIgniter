@@ -5,6 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
 use Admin\Facades\AdminAuth;
+use Admin\Traits\LocationAwareWidget;
 use DB;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,8 @@ use Illuminate\Support\Collection;
  */
 class Filter extends BaseWidget
 {
+    use LocationAwareWidget;
+
     /**
      * @var array|string Search widget configuration or partial name, optional.
      */
@@ -253,6 +256,8 @@ class Filter extends BaseWidget
     {
         $model = $this->getScopeModel($scope->scopeName);
         $query = $model->newQuery();
+
+        $this->locationApplyScope($query);
 
         // Extensibility
         $this->fireSystemEvent('admin.filter.extendQuery', [$query, $scope]);

@@ -227,7 +227,6 @@ $config['form']['tabs'] = [
             'nameFrom' => 'location_name',
             'span' => 'right',
             'placeholder' => 'lang:admin::lang.text_please_select',
-            'locationAware' => 'hide',
         ],
         'guest_num' => [
             'label' => 'lang:admin::lang.reservations.label_guest',
