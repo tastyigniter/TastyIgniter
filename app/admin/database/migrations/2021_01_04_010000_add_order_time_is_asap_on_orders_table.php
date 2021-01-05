@@ -17,8 +17,5 @@ class AddOrderTimeIsAsapOnOrdersTable extends Migration
 
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('order_time_is_asap');
-        });
     }
 }

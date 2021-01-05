@@ -123,6 +123,7 @@ trait HasDeliveryAreas
         if (!is_array($deliveryAreas))
             return FALSE;
 
+        $idsToKeep = [];
         foreach ($deliveryAreas as $area) {
             $locationArea = $this->delivery_areas()->firstOrNew([
                 'area_id' => $area['area_id'] ?? null,

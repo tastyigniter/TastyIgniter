@@ -92,7 +92,7 @@ return [
     'alert_user_not_logged_in' => 'You must be logged in to access that page.',
     'alert_user_restricted' => 'Warning: You do not have the right permission to view this page, please contact the system administrator.',
     'alert_location_restricted' => 'Warning: You do not have the right permission to access context outside your location, please contact the system administrator.',
-    'alert_warning_locationable_delete' => 'Warning: Can not delete record(s) attached to multiple locations.',
+    'alert_warning_locationable_delete' => 'Warning: You do not have the right permission to delete record(s) attached to multiple locations, please contact the system administrator.',
     'alert_form_error_message' => 'Sorry but form validation has failed, please check for errors.',
     'alert_error_set_default' => '"%s" is disabled and cannot be set as default.',
     'text_settings_title' => 'Settings',

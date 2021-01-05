@@ -25,10 +25,6 @@ trait Locationable
      */
     public static function bootLocationable()
     {
-        static::creating(function (self $model) {
-            $model->setLocationableAttributes();
-        });
-
         static::deleting(function (self $model) {
             $model->detachLocationsOnDelete();
         });
@@ -96,25 +92,6 @@ trait Locationable
     //
     //
 
-    protected function setLocationableAttributes()
-    {
-        if (!$this->locationableScopeEnabled())
-            return;
-
-        if ($this->locationableRelationExists())
-            return;
-
-        if ($this->locationableIsSingleRelationType()) {
-            $relationObj = $this->getLocationableRelationObject();
-            $attributeName = $relationObj->getForeignKeyName();
-            $this->{$attributeName} = $this->locationableGetUserLocation();
-        }
-        else {
-            $relationName = $this->locationableRelationName();
-            $this->{$relationName} = [$this->locationableGetUserLocation()];
-        }
-    }
-
     protected function detachLocationsOnDelete()
     {
         if ($this->locationableIsSingleRelationType())
@@ -123,7 +100,7 @@ trait Locationable
         $locationable = $this->getLocationableRelationObject();
 
         if (!app('admin.auth')->isSuperUser() AND $locationable->count() > 1) {
-            throw new ApplicationException('admin::lang.alert_warning_locationable_delete');
+            throw new ApplicationException(lang('admin::lang.alert_warning_locationable_delete'));
         }
 
         $locationable->detach();
