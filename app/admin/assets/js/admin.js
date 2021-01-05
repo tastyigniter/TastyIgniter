@@ -116,7 +116,8 @@ if (window.jQuery.request !== undefined)
 
 /*
  * TastyIgniter AJAX plugin..
- * Inspired by OctoberCMS AJAX plugin
+ *
+ * Adapted from OctoberCMS AJAX plugin
  *
  * $.request('handler', function() { })
  * $(form).request('handler', function() { })
