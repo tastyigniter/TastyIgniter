@@ -713,6 +713,7 @@ return [
         'label_telephone' => 'Telephone',
         'label_delivery_address' => 'Delivery Address',
         'label_order_type' => 'Order Type',
+        'label_time_is_asap' => 'Order Time Is Asap',
         'label_order_time' => 'Delivery/Pick-up Time',
         'label_order_date' => 'Delivery/Pick-up Date',
         'label_date_added' => 'Date Added',
