@@ -580,7 +580,7 @@ class MainController extends BaseController
                 'thousand_sign' => $currencyModel->thousand_sign,
                 'decimal_sign' => $currencyModel->decimal_sign,
                 'decimal_precision' => $currencyModel->decimal_position,
-            ]
+            ],
         ]);
     }
 
