@@ -5,6 +5,7 @@ namespace Main\Classes;
 use AdminAuth;
 use App;
 use ApplicationException;
+use Assets;
 use Config;
 use Exception;
 use Igniter\Flame\Exception\AjaxException;
@@ -233,6 +234,9 @@ class MainController extends BaseController
 
         // Attach layout components matching the current URI segments
         $this->initializeComponents();
+
+        // add currency helper
+        $this->initCurrencyHelper();
 
         // Give the layout and page an opportunity to participate
         // after components are initialized and before AJAX is handled.
@@ -562,6 +566,22 @@ class MainController extends BaseController
 
         // Extensibility
         $this->fireSystemEvent('main.layout.initializeComponents', [$this->layoutObj]);
+    }
+
+    protected function initCurrencyHelper()
+    {
+        $this->addJs('assets/js/currency.js', 'currency-js');
+
+        $currencyModel = app('currency')->getDefault();
+        Assets::putJsVars([
+            'currency' => [
+                'symbol' => $currencyModel->currency_symbol,
+                'symbol_position' => $currencyModel->symbol_position,
+                'thousand_sign' => $currencyModel->thousand_sign,
+                'decimal_sign' => $currencyModel->decimal_sign,
+                'decimal_precision' => $currencyModel->decimal_position,
+            ]
+        ]);
     }
 
     //
