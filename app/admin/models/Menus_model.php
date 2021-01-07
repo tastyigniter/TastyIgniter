@@ -60,7 +60,7 @@ class Menus_model extends Model
         ],
     ];
 
-    protected $purgeable = ['menu_options'];
+    protected $purgeable = ['menu_options', 'special'];
 
     public $mediable = ['thumb'];
 
@@ -163,6 +163,9 @@ class Menus_model extends Model
 
         if (array_key_exists('menu_options', $this->attributes))
             $this->addMenuOption((array)$this->attributes['menu_options']);
+
+        if (array_key_exists('special', $this->attributes))
+            $this->addMenuSpecial((array)$this->attributes['special']);
     }
 
     protected function beforeDelete()
