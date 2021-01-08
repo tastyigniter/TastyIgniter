@@ -111,7 +111,7 @@ class Menus_model extends Model
 
         if (strlen($category)) {
             $query->whereHas('categories', function ($q) use ($category) {
-                $q->whereSlug($category);
+                $q->isEnabled()->whereSlug($category);
             });
         }
 
