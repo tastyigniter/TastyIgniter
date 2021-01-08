@@ -11,13 +11,17 @@ a){var d=a.pattern,c=a.negativePattern,h=a.symbol,k=a.separator,l=a.decimal;a=a.
 this.s;return e(this.intValue*b/(a.fromCents?1:Math.pow(10,a.precision)),a)},divide:function(b){var a=this.s;return e(this.intValue/g(b,a,!1),a)},distribute:function(b){var a=this.intValue,d=this.p,c=this.s,h=[],k=Math[0<=a?"floor":"ceil"](a/b),l=Math.abs(a-k*b);for(d=c.fromCents?1:d;0!==b;b--){var f=e(k/d,c);0<l--&&(f=f[0<=a?"add":"subtract"](1/d));h.push(f)}return h},dollars:function(){return~~this.value},cents:function(){return~~(this.intValue%this.p)},format:function(b){var a=this.s;return"function"===
 typeof b?b(this,a):a.format(this,Object.assign({},a,b))},toString:function(){var b=this.s,a=b.increment;return(Math.round(this.intValue/this.p/a)*a).toFixed(b.precision)},toJSON:function(){return this.value}};return e});
 
-// helper function to handle currency format
-app.currencyFormat = function(amount) {
-    return currency(amount, {
-        decimal: app.currency.decimal_sign,
-        precision: app.currency.decimal_precision,
-        separator: app.currency.thousand_sign,
-        symbol: app.currency.symbol,
-        pattern: app.currency.symbol_position ? '#!' : '!#',
-    }).format();
-};
+if (app && app.currency) {
+
+    // helper function to handle currency format
+    app.currencyFormat = function(amount) {
+        return currency(amount, {
+            decimal: app.currency.decimal_sign,
+            precision: app.currency.decimal_precision,
+            separator: app.currency.thousand_sign,
+            symbol: app.currency.symbol,
+            pattern: app.currency.symbol_position ? '#!' : '!#',
+        }).format();
+    };
+
+}

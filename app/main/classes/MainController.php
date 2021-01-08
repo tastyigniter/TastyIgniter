@@ -571,16 +571,8 @@ class MainController extends BaseController
     protected function initCurrencyHelper()
     {
         $this->addJs('assets/js/currency.js', 'currency-js');
-
-        $currencyModel = app('currency')->getDefault();
         Assets::putJsVars([
-            'currency' => [
-                'symbol' => $currencyModel->currency_symbol,
-                'symbol_position' => $currencyModel->symbol_position,
-                'thousand_sign' => $currencyModel->thousand_sign,
-                'decimal_sign' => $currencyModel->decimal_sign,
-                'decimal_precision' => $currencyModel->decimal_position,
-            ],
+            'currency' => app('currency')->getDefault()->getFrontEndVars(),
         ]);
     }
 

@@ -160,6 +160,17 @@ class Currencies_model extends Currency
             : $this->getSymbol().'1'.$format;
     }
 
+    public function getFrontEndVars()
+    {
+        return [
+            'symbol' => $this->currency_symbol,
+            'symbol_position' => $this->symbol_position,
+            'thousand_sign' => $this->thousand_sign,
+            'decimal_sign' => $this->decimal_sign,
+            'decimal_precision' => $this->decimal_position,
+        ];
+    }
+
     public function getRate()
     {
         return $this->currency_rate;
