@@ -11,7 +11,7 @@ class CustomerGroup extends FormRequest
         return [
             ['group_name', 'admin::lang.label_name', 'required|between:2,32'],
             ['approval', 'admin::lang.customer_groups.label_approval', 'required|boolean'],
-            ['description', 'admin::lang.label_description', 'between:2,512'],
+            ['description', 'admin::lang.label_description', 'between:2,500'],
         ];
     }
 }

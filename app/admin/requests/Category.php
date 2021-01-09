@@ -23,7 +23,7 @@ class Category extends FormRequest
     {
         return [
             'name' => 'required|between:2,128',
-            'description' => 'min:2',
+            'description' => 'min:2|max:5000',
             'permalink_slug' => 'alpha_dash|max:255',
             'parent_id' => 'nullable|integer',
             'priority' => 'nullable|integer',
