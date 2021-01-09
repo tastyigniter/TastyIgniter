@@ -6,7 +6,6 @@ use Admin\Classes\BaseDashboardWidget;
 use Admin\Models\Customers_model;
 use Admin\Models\Orders_model;
 use Admin\Models\Reservations_model;
-use Admin\Models\Reviews_model;
 use Admin\Traits\HasChartDatasets;
 
 /**
@@ -28,6 +27,8 @@ class Charts extends BaseDashboardWidget
         'backgroundColor' => null,
         'borderColor' => null,
     ];
+
+    public $contextDefinitions;
 
     public function initialize()
     {
@@ -54,7 +55,13 @@ class Charts extends BaseDashboardWidget
 
     public function listContext()
     {
-        return [
+        $this->contextDefinitions = [
+            'customer' => [
+                'label' => 'lang:admin::lang.dashboard.charts.text_customers',
+                'color' => '#4DB6AC',
+                'model' => Customers_model::class,
+                'column' => 'date_added',
+            ],
             'order' => [
                 'label' => 'lang:admin::lang.dashboard.charts.text_orders',
                 'color' => '#64B5F6',
@@ -67,19 +74,11 @@ class Charts extends BaseDashboardWidget
                 'model' => Reservations_model::class,
                 'column' => 'reserve_date',
             ],
-            'customer' => [
-                'label' => 'lang:admin::lang.dashboard.charts.text_customers',
-                'color' => '#4DB6AC',
-                'model' => Customers_model::class,
-                'column' => 'date_added',
-            ],
-            'review' => [
-                'label' => 'lang:admin::lang.dashboard.charts.text_reviews',
-                'color' => '#FFB74D',
-                'model' => Reviews_model::class,
-                'column' => 'date_added',
-            ],
         ];
+
+        $this->fireSystemEvent('admin.charts.extendDatasets');
+
+        return $this->contextDefinitions;
     }
 
     protected function getDatasets($start, $end)

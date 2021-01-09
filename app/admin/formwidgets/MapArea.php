@@ -18,6 +18,8 @@ class MapArea extends BaseFormWidget
 {
     use FormModelWidget;
 
+    const SORT_PREFIX = '___dragged_';
+
     //
     // Configurable properties
     //
@@ -35,6 +37,10 @@ class MapArea extends BaseFormWidget
     public $editLabel = 'Edit';
 
     public $deleteLabel = 'Delete';
+
+    public $sortColumnName = 'priority';
+
+    public $sortable = TRUE;
 
     //
     // Object properties
@@ -55,6 +61,8 @@ class MapArea extends BaseFormWidget
         'editable' => FALSE,
     ];
 
+    protected $sortableInputName;
+
     protected $formWidget;
 
     protected $mapAreas;
@@ -69,9 +77,13 @@ class MapArea extends BaseFormWidget
             'addLabel',
             'editLabel',
             'deleteLabel',
+            'sortable',
         ]);
 
         $this->areaColors = Location_areas_model::$areaColors;
+
+        $fieldName = $this->formField->getName(FALSE);
+        $this->sortableInputName = self::SORT_PREFIX.$fieldName;
     }
 
     public function loadAssets()
@@ -107,13 +119,33 @@ class MapArea extends BaseFormWidget
     {
         $this->vars['field'] = $this->formField;
         $this->vars['mapAreas'] = $this->getMapAreas();
+        $this->vars['sortable'] = $this->sortable;
+        $this->vars['sortableInputName'] = $this->sortableInputName;
 
         $this->vars['prompt'] = $this->prompt;
     }
 
     public function getSaveValue($value)
     {
-        return FormField::NO_SAVE_DATA;
+        if (!$this->sortable)
+            return FormField::NO_SAVE_DATA;
+
+        $items = $this->formField->value;
+        if (!$items instanceof Collection)
+            return $items;
+
+        $sortedIndexes = (array)post($this->sortableInputName);
+        $sortedIndexes = array_flip($sortedIndexes);
+
+        $value = [];
+        foreach ($items as $index => $item) {
+            $value[$index] = [
+                $item->getKeyName() => $item->getKey(),
+                $this->sortColumnName => $sortedIndexes[$item->getKey()],
+            ];
+        }
+
+        return $value;
     }
 
     public function onLoadRecord()
@@ -210,6 +242,10 @@ class MapArea extends BaseFormWidget
         $loadValue = $loadValue instanceof Collection
             ? $loadValue->toArray()
             : $loadValue;
+
+        if ($this->sortable) {
+            $loadValue = sort_array($loadValue, $this->sortColumnName);
+        }
 
         $result = [];
 

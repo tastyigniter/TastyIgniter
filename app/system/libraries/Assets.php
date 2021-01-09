@@ -51,7 +51,7 @@ class Assets
     /**
      * Set the default assets paths.
      *
-     * @param  string $path
+     * @param string $path
      *
      * @return void
      */
@@ -204,6 +204,15 @@ class Assets
         $this->assets['jsVars'] = array_merge($this->assets['jsVars'], $variables);
     }
 
+    public function mergeJsVars($key, $value)
+    {
+        $vars = array_get($this->assets['jsVars'], $key, []);
+
+        $value = array_merge($vars, $value);
+
+        array_set($this->assets['jsVars'], $key, $value);
+    }
+
     public function flush()
     {
         $this->assets = ['icon' => [], 'meta' => [], 'js' => [], 'css' => [], 'jsVars' => []];
@@ -313,18 +322,20 @@ class Assets
             $attributes = ['name' => $attributes];
 
         if ($type == 'js') {
-            $html = '<script'.Html::attributes(array_merge([
+            $attributes = array_merge([
                 'charset' => strtolower(setting('charset', 'UTF-8')),
                 'type' => 'text/javascript',
                 'src' => asset($file),
-            ], $attributes)).'></script>'.PHP_EOL;
+            ], $attributes);
+            $html = '<script'.Html::attributes($attributes).'></script>'.PHP_EOL;
         }
         else {
-            $html = '<link'.Html::attributes(array_merge([
+            $attributes = array_merge([
                 'rel' => 'stylesheet',
                 'type' => 'text/css',
                 'href' => asset($file),
-            ], $attributes)).'>'.PHP_EOL;
+            ], $attributes);
+            $html = '<link'.Html::attributes($attributes).'>'.PHP_EOL;
         }
 
         return $html;

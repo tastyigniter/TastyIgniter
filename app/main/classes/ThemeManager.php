@@ -63,9 +63,11 @@ class ThemeManager
     {
         $instance = self::instance();
         $theme = $instance->getActiveTheme();
-        $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
 
-        if ($theme->hasParent()) {
+        if (File::exists($theme->path.'/_meta/assets.json')) {
+            $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
+        }
+        elseif ($theme->hasParent()) {
             $parentTheme = $instance->findTheme($theme->getParentName());
             $manager->addFromManifest($parentTheme->publicPath.'/_meta/assets.json');
         }
@@ -332,9 +334,7 @@ class ThemeManager
 
     public function isLocked($themeCode)
     {
-        $theme = $this->findTheme($themeCode);
-
-        return (bool)$theme->locked;
+        return (bool)optional($this->findTheme($themeCode))->locked;
     }
 
     public function checkParent($themeCode)
@@ -345,6 +345,16 @@ class ThemeManager
         }
 
         return FALSE;
+    }
+
+    public function isLockedPath($path)
+    {
+        if (starts_with($path, App::themesPath().'/'))
+            $path = substr($path, strlen(App::themesPath().'/'));
+
+        $themeCode = str_before($path, '/');
+
+        return $this->isLocked($themeCode);
     }
 
     //
@@ -471,8 +481,11 @@ class ThemeManager
         [$dirName, $fileName] = $this->getFileNameParts($filePath, $theme);
         [$newDirName, $newFileName] = $this->getFileNameParts($newFilePath, $theme);
 
-        if (!$source = $theme->onTemplate($dirName)->find($fileName))
+        if (!$template = $theme->onTemplate($dirName)->find($fileName))
             throw new ApplicationException("Theme template file not found: $filePath");
+
+        if ($this->isLockedPath($template->getFilePath()))
+            throw new ApplicationException(lang('system::lang.themes.alert_theme_path_locked'));
 
         $oldFilePath = $theme->path.'/'.$dirName.'/'.$fileName;
         $newFilePath = $theme->path.'/'.$newDirName.'/'.$newFileName;
@@ -480,7 +493,7 @@ class ThemeManager
         if ($oldFilePath == $newFilePath)
             throw new ApplicationException("Theme template file already exists: $filePath");
 
-        return $source->update(['fileName' => $newFileName]);
+        return $template->update(['fileName' => $newFileName]);
     }
 
     /**
@@ -497,10 +510,13 @@ class ThemeManager
 
         [$dirName, $fileName] = $this->getFileNameParts($filePath, $theme);
 
-        if (!$source = $theme->onTemplate($dirName)->find($fileName))
+        if (!$template = $theme->onTemplate($dirName)->find($fileName))
             throw new ApplicationException("Theme template file not found: $filePath");
 
-        return $source->delete();
+        if ($this->isLockedPath($template->getFilePath()))
+            throw new ApplicationException(lang('system::lang.themes.alert_theme_path_locked'));
+
+        return $template->delete();
     }
 
     /**
@@ -564,6 +580,22 @@ class ThemeManager
         return TRUE;
     }
 
+    public function installTheme($code, $version = null)
+    {
+        $model = Themes_model::firstOrNew(['code' => $code]);
+
+        if (!$themeObj = $this->findTheme($model->code))
+            return FALSE;
+
+        $model->name = $themeObj->label ?? title_case($code);
+        $model->code = $code;
+        $model->version = $version ?? $model->version;
+        $model->description = $themeObj->description ?? '';
+        $model->save();
+
+        return TRUE;
+    }
+
     /**
      * @param \System\Models\Themes_model $model
      * @return \System\Models\Themes_model
@@ -584,7 +616,6 @@ class ThemeManager
         $themeConfig = [
             'name' => $parentTheme->label.' [child]',
             'code' => $childThemeCode,
-            'version' => $parentTheme->version ?? '1.0.0',
             'description' => $parentTheme->description,
         ];
 
@@ -626,7 +657,7 @@ class ThemeManager
         $dirName = $parts[0];
         $fileName = implode('/', array_splice($parts, 1));
 
-        $fileNameParts = $theme->newTemplate($dirName)->getFileNameParts($fileName);
+        $fileNameParts = $theme->onTemplate($dirName)->getFileNameParts($fileName);
 
         return [$dirName, implode('.', $fileNameParts)];
     }

@@ -14,6 +14,7 @@
             class="remove btn btn-light btn-sm pull-right"
             role="button"
             data-prompt="@lang('admin::lang.alert_confirm')"
+            title="@lang('main::lang.components.button_delete')"
         ><i class="fa fa-trash text-danger"></i></a>
     </div>
     <div

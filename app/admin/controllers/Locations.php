@@ -114,10 +114,16 @@ class Locations extends \Admin\Classes\AdminController
         return $attributes;
     }
 
+    public function listExtendQuery($query)
+    {
+        if (!is_null($ids = AdminLocation::getAll()))
+            $query->whereIn('location_id', $ids);
+    }
+
     public function formExtendQuery($query)
     {
-        if ($locationId = $this->getLocationId())
-            $query->where('location_id', $locationId);
+        if (!is_null($ids = AdminLocation::getAll()))
+            $query->whereIn('location_id', $ids);
     }
 
     public function formAfterSave($model)

@@ -117,6 +117,8 @@ if (window.jQuery.request !== undefined)
 /*
  * TastyIgniter AJAX plugin..
  *
+ * Adapted from OctoberCMS AJAX plugin
+ *
  * $.request('handler', function() { })
  * $(form).request('handler', function() { })
  */
@@ -259,6 +261,27 @@ if (window.jQuery.request !== undefined)
                 if (message) alert(message)
             },
 
+            handleValidationMessage: function(message, fields) {
+                $triggerEl.trigger('ajaxValidation', [context, message, fields])
+
+                var isFirstInvalidField = true
+                $.each(fields, function focusErrorField(fieldName, fieldMessages) {
+                    fieldName = fieldName.replace(/\.(\w+)/g, '[$1]')
+
+                    var fieldElement = $form.find('[name="'+fieldName+'"], [name="'+fieldName+'[]"], [name$="['+fieldName+']"], [name$="['+fieldName+'][]"]').filter(':enabled').first()
+                    if (fieldElement.length > 0) {
+
+                        var _event = jQuery.Event('ajaxInvalidField')
+                        $(window).trigger(_event, [fieldElement.get(0), fieldName, fieldMessages, isFirstInvalidField])
+
+                        if (isFirstInvalidField) {
+                            if (!_event.isDefaultPrevented()) fieldElement.focus()
+                            isFirstInvalidField = false
+                        }
+                    }
+                })
+            },
+
             // Custom function, redirect the browser to another location
             handleRedirectResponse: function (url) {
                 window.location.href = url
@@ -301,6 +324,9 @@ if (window.jQuery.request !== undefined)
 
                 if (isRedirect)
                     requestOptions.handleRedirectResponse(options.redirect)
+
+                if (data['X_IGNITER_ERROR_FIELDS'])
+                    requestOptions.handleValidationMessage(data['X_IGNITER_ERROR_MESSAGE'], data['X_IGNITER_ERROR_FIELDS'])
 
                 updatePromise.resolve()
 
@@ -439,6 +465,7 @@ if (window.jQuery.request !== undefined)
         })
     }
 }(window.jQuery);
+
 /*
  * The loading indicator.
  *
@@ -792,7 +819,7 @@ if (window.jQuery.request !== undefined)
         $element.attr('data-control', null)
 
         if (options.allowDismiss)
-            $element.append('<button type="button" class="close" aria-hidden="true">&times;</button>')
+            $element.prepend('<button type="button" class="close" aria-hidden="true">&times;</button>')
 
         $element.on('click', 'button', remove)
         if (options.interval > 0) $element.on('click', remove)
@@ -1088,6 +1115,11 @@ if (window.jQuery.request !== undefined)
                 .prop('disabled', status)
                 .toggleClass('control-disabled', status)
                 .trigger('disable.ti.triggerapi', [status])
+        }
+        else if (action == 'check' && status) {
+            this.$el
+                .filter('input[type=checkbox]')
+                .prop('checked', true);
         }
         else if (action == 'empty' && status) {
             this.$el
@@ -1392,8 +1424,11 @@ if (window.jQuery.request !== undefined)
     })
 
     $(window).on('ajaxErrorMessage', function (event, message) {
-        event.preventDefault()
+        if (!message) return
+
         $.ti.flashMessage({class: 'danger', text: message, allowDismiss: false})
+
+        event.preventDefault()
     })
 
     /*

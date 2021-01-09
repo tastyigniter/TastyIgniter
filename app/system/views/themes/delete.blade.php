@@ -24,7 +24,7 @@
             ? lang('system::lang.themes.text_files_data')
             : lang('system::lang.themes.text_files');
     @endphp
-    <p>{{ sprintf(lang('system::lang.themes.alert_delete_warning'), $deleteAction, $themeObj->label) }}</p>
+    <p>{!! sprintf(lang('system::lang.themes.alert_delete_warning'), $deleteAction, $themeObj->label) !!}</p>
     <p>{{ sprintf(lang('system::lang.themes.alert_delete_confirm'), $deleteAction) }}</p>
 
     @if ($themeData)

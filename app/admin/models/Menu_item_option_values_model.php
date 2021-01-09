@@ -13,6 +13,8 @@ class Menu_item_option_values_model extends Model
 {
     use Validation;
 
+    protected static $optionValuesCollection;
+
     /**
      * @var string The database table name
      */
@@ -27,7 +29,7 @@ class Menu_item_option_values_model extends Model
 
     public $appends = ['name', 'price'];
 
-    public $casts = [
+    protected $casts = [
         'menu_option_value_id' => 'integer',
         'menu_option_id' => 'integer',
         'option_value_id' => 'integer',
@@ -47,9 +49,24 @@ class Menu_item_option_values_model extends Model
     public $rules = [
         ['menu_option_id', 'admin::lang.column_id', 'required|integer'],
         ['option_value_id', 'admin::lang.menus.label_option_value', 'required|integer'],
-        ['new_price', 'admin::lang.menus.label_option_price', 'numeric'],
+        ['new_price', 'admin::lang.menus.label_option_price', 'numeric|min:0'],
         ['quantity', 'admin::lang.menus.label_option_qty', 'numeric'],
     ];
+
+    public function getOptionValueIdOptions()
+    {
+        if (!$optionId = optional($this->menu_option)->option_id)
+            return [];
+
+        if (!empty(self::$optionValuesCollection[$optionId]))
+            return self::$optionValuesCollection[$optionId];
+
+        $result = Menu_option_values_model::where('option_id', $optionId)->dropdown('value');
+
+        self::$optionValuesCollection[$optionId] = $result;
+
+        return $result;
+    }
 
     public function getNameAttribute()
     {
@@ -89,8 +106,8 @@ class Menu_item_option_values_model extends Model
 
         // Update using query to prevent model events from firing
         $this->newQuery()
-             ->where($this->getKeyName(), $this->getKey())
-             ->update(['quantity' => $stockQty]);
+            ->where($this->getKeyName(), $this->getKey())
+            ->update(['quantity' => $stockQty]);
 
         Event::fire('admin.menuOption.stockUpdated', [$this, $quantity, $subtract]);
 

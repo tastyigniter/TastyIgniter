@@ -1,6 +1,6 @@
 /*
  * Field Repeater plugin
- * 
+ *
  * Data attributes:
  * - data-control="repeater" - enables the plugin on an element
  */
@@ -62,6 +62,8 @@
             return false;
 
         $parent.remove()
+
+        $(window).trigger(jQuery.Event('repeaterItemRemoved'))
     }
 
     Repeater.prototype.addItem = function (event) {
@@ -83,7 +85,9 @@
         this.$appendTo.append($newTemplate[0].innerHTML.replace(find, replace).replace(secFind, replace))
         $template.data('replace', parseInt(replace) + 1)
 
-        $('select.form-control', document).select2();
+        $(document).trigger('render')
+
+        $(window).trigger(jQuery.Event('repeaterItemAdded'))
     }
 
     // FIELD REPEATER PLUGIN DEFINITION

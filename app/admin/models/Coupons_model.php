@@ -9,6 +9,7 @@ use Model;
 
 /**
  * Coupons Model Class
+ * @deprecated remove before v4. Added for backward compatibility, see Igniter\Coupons\Models\Coupons_model
  */
 class Coupons_model extends Model
 {
@@ -34,7 +35,7 @@ class Coupons_model extends Model
 
     public $timestamps = TRUE;
 
-    public $casts = [
+    protected $casts = [
         'discount' => 'float',
         'min_total' => 'float',
         'redemptions' => 'integer',
@@ -81,7 +82,7 @@ class Coupons_model extends Model
 
     public function getTypeNameAttribute($value)
     {
-        return ($this->type == 'P') ? lang('admin::lang.coupons.text_percentage') : lang('admin::lang.coupons.text_fixed_amount');
+        return ($this->type == 'P') ? lang('admin::lang.menus.text_percentage') : lang('admin::lang.menus.text_fixed_amount');
     }
 
     public function getFormattedDiscountAttribute($value)
@@ -182,6 +183,6 @@ class Coupons_model extends Model
     public function countCustomerRedemptions($id)
     {
         return $this->history()->isEnabled()
-                    ->where('customer_id', $id)->count();
+            ->where('customer_id', $id)->count();
     }
 }

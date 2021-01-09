@@ -18,7 +18,7 @@ trait Assignable
                 'Admin\Models\Assignable_logs_model', 'name' => 'assignable', 'delete' => TRUE,
             ];
 
-            $model->casts = array_merge($model->casts, [
+            $model->addCasts([
                 'assignee_id' => 'integer',
                 'assignee_group_id' => 'integer',
                 'assignee_updated_at' => 'dateTime',
@@ -81,7 +81,7 @@ trait Assignable
         if (!$log = Assignable_logs_model::createLog($this))
             return FALSE;
 
-        $this->fireSystemEvent('admin.assignable.assigned');
+        $this->fireSystemEvent('admin.assignable.assigned', [$log]);
 
         return $log;
     }

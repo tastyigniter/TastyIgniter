@@ -18,9 +18,11 @@ $config['form'] = [
         ],
         'allergens' => [
             'label' => 'lang:admin::lang.menus.label_allergens',
-            'type' => 'select',
+            'type' => 'relation',
             'span' => 'right',
-            'placeholder' => 'lang:admin::lang.text_please_select',
+            'attributes' => [
+                'data-number-displayed' => 1,
+            ],
         ],
         'priority' => [
             'label' => 'lang:admin::lang.menu_options.label_priority',

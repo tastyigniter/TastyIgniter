@@ -4,7 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Facades\AdminLocation;
+use Admin\Traits\LocationAwareWidget;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
  */
 class Relation extends BaseFormWidget
 {
+    use LocationAwareWidget;
+
     //
     // Configurable properties
     //
@@ -41,6 +43,16 @@ class Relation extends BaseFormWidget
      * @var string Empty value to use if the relation is singluar (belongsTo)
      */
     public $emptyOption;
+
+    /**
+     * @var string Use a custom scope method for the list query.
+     */
+    public $scope;
+
+    /**
+     * @var string Define the order of the list query.
+     */
+    public $order;
 
     //
     // Object properties
@@ -119,7 +131,6 @@ class Relation extends BaseFormWidget
     protected function makeFormField()
     {
         return $this->clonedFormField = RelationBase::noConstraints(function () {
-
             $field = clone $this->formField;
             $relationObject = $this->getRelationObject();
             $query = $relationObject->newQuery();
@@ -138,6 +149,13 @@ class Relation extends BaseFormWidget
                 $field->config['mode'] = 'radio';
             }
 
+            if ($this->order) {
+                $query->orderByRaw($this->order);
+            }
+            elseif (method_exists($this->relatedModel, 'scopeSorted')) {
+                $query->sorted();
+            }
+
             $field->value = $this->processFieldValue($this->getLoadValue(), $this->relatedModel);
             $field->placeholder = $field->placeholder ?: $this->emptyOption;
 
@@ -150,6 +168,10 @@ class Relation extends BaseFormWidget
             // Even though "no constraints" is applied, belongsToMany constrains the query
             // by joining its pivot table. Remove all joins from the query.
             $query->getQuery()->getQuery()->joins = [];
+
+            if ($scopeMethod = $this->scope) {
+                $query->$scopeMethod($model);
+            }
 
             // The "sqlSelect" config takes precedence over "nameFrom".
             // A virtual column called "selection" will contain the result.
@@ -196,17 +218,5 @@ class Relation extends BaseFormWidget
         }
 
         return $model->{$attribute}();
-    }
-
-    /**
-     * Apply location scope where required
-     */
-    protected function locationApplyScope($query)
-    {
-        if (
-            !AdminLocation::check() OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
-        ) return;
-
-        $query->whereHasOrDoesntHaveLocation(AdminLocation::getId());
     }
 }

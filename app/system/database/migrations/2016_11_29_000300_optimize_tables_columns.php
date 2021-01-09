@@ -72,16 +72,6 @@ class OptimizeTablesColumns extends Migration
         };
     }
 
-    protected function _optimize_coupons()
-    {
-        return function (Blueprint $table) {
-            $table->text('description')->nullable()->change();
-            $table->boolean('status')->nullable()->change();
-            $table->string('validity', 15)->nullable()->change();
-            $table->string('recurring_every', 35)->nullable()->change();
-        };
-    }
-
     protected function _optimize_countries()
     {
         return function (Blueprint $table) {
@@ -349,17 +339,6 @@ class OptimizeTablesColumns extends Migration
             $table->text('comment')->nullable()->change();
             $table->integer('assignee_id')->nullable()->change();
             $table->boolean('notify')->nullable()->change();
-        };
-    }
-
-    protected function _optimize_reviews()
-    {
-        return function (Blueprint $table) {
-            $table->integer('customer_id')->nullable()->change();
-//            $table->integer('sale_id')->nullable()->change(); @todo remove index before change
-//            $table->string('sale_type')->nullable()->change();
-            $table->string('author')->nullable()->change();
-            $table->text('review_text')->nullable()->change();
         };
     }
 

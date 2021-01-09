@@ -28,6 +28,12 @@ class RecordEditor extends BaseFormWidget
 
     public $formName = 'Record';
 
+    public $hideEditButton = FALSE;
+
+    public $hideDeleteButton = FALSE;
+
+    public $hideCreateButton = FALSE;
+
     public $addLabel = 'New';
 
     public $editLabel = 'Edit';
@@ -48,6 +54,9 @@ class RecordEditor extends BaseFormWidget
             'modelClass',
             'addonLeft',
             'addonRight',
+            'hideAddButton',
+            'hideEditButton',
+            'hideDeleteButton',
             'addLabel',
             'editLabel',
             'deleteLabel',
@@ -82,6 +91,9 @@ class RecordEditor extends BaseFormWidget
         $this->vars['addLabel'] = $this->addLabel;
         $this->vars['editLabel'] = $this->editLabel;
         $this->vars['deleteLabel'] = $this->deleteLabel;
+        $this->vars['showEditButton'] = !$this->hideEditButton;
+        $this->vars['showDeleteButton'] = !$this->hideDeleteButton;
+        $this->vars['showCreateButton'] = !$this->hideCreateButton;
     }
 
     public function onLoadRecord()
@@ -92,8 +104,8 @@ class RecordEditor extends BaseFormWidget
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
-            'formTitle'    => ($model->exists ? $this->editLabel : $this->addLabel).' '.lang($this->formName),
-            'formWidget'   => $this->makeRecordFormWidget($model),
+            'formTitle' => ($model->exists ? $this->editLabel : $this->addLabel).' '.lang($this->formName),
+            'formWidget' => $this->makeRecordFormWidget($model),
         ]);
     }
 
@@ -117,7 +129,7 @@ class RecordEditor extends BaseFormWidget
             lang($this->formName).' '.($form->context == 'create' ? 'created' : 'updated')))->now();
 
         return [
-            '#notification'               => $this->makePartial('flash'),
+            '#notification' => $this->makePartial('flash'),
             '#'.$this->formField->getId() => $form->renderField($this->formField, [
                 'useContainer' => FALSE,
             ]),
@@ -135,7 +147,7 @@ class RecordEditor extends BaseFormWidget
         flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName).' deleted'))->now();
 
         return [
-            '#notification'               => $this->makePartial('flash'),
+            '#notification' => $this->makePartial('flash'),
             '#'.$this->formField->getId() => $form->renderField($this->formField, [
                 'useContainer' => FALSE,
             ]),
@@ -171,8 +183,8 @@ class RecordEditor extends BaseFormWidget
             $config = [$config];
 
         $config = (object)array_merge([
-            'tag'        => 'span',
-            'label'      => 'Label',
+            'tag' => 'span',
+            'label' => 'Label',
             'attributes' => [],
         ], $config);
 

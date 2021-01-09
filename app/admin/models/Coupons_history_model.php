@@ -6,6 +6,8 @@ use Model;
 
 /**
  * Coupons History Model Class
+ *
+ * @deprecated remove before v4. Added for backward compatibility, see Igniter\Coupons\Models\Coupons_history_model
  */
 class Coupons_history_model extends Model
 {
@@ -27,7 +29,7 @@ class Coupons_history_model extends Model
 
     protected $appends = ['customer_name'];
 
-    public $casts = [
+    protected $casts = [
         'coupon_history_id' => 'integer',
         'coupon_id' => 'integer',
         'order_id' => 'integer',

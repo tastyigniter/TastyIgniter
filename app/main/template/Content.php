@@ -39,7 +39,7 @@ class Content extends Model
                 $result = htmlspecialchars($this->markup);
                 break;
             case 'md':
-                $result = (new Markdown)->parse($this->markup);
+                $result = Markdown::parse($this->markup)->toHtml();
                 break;
             default:
                 $result = $this->markup;

@@ -36,6 +36,7 @@ class Location extends FormRequest
             ['options.payments.*', 'admin::lang.locations.label_payments'],
             ['options.reservation_time_interval', 'admin::lang.locations.label_reservation_time_interval', 'integer'],
             ['options.reservation_lead_time', 'admin::lang.locations.label_reservation_lead_time', 'integer'],
+            ['options.auto_allocate_table', 'admin::lang.locations.label_auto_allocate_table', 'integer'],
             ['location_status', 'admin::lang.label_status', 'boolean'],
             ['permalink_slug', 'admin::lang.locations.label_permalink_slug', 'alpha_dash|max:255'],
             ['gallery.title', 'admin::lang.locations.label_gallery_title', 'max:128'],

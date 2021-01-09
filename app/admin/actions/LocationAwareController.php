@@ -53,12 +53,13 @@ class LocationAwareController extends ControllerAction
 
     public function locationApplyScope($query)
     {
-        if (
-            !AdminLocation::check()
-            OR !in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel()))
-        ) return;
+        if (!in_array(\Admin\Traits\Locationable::class, class_uses($query->getModel())))
+            return;
 
-        $query->whereHasOrDoesntHaveLocation($this->controller->getLocationId());
+        if (is_null($ids = AdminLocation::getIdOrAll()))
+            return;
+
+        $query->whereHasLocation($ids);
     }
 
     protected function locationBindEvents()

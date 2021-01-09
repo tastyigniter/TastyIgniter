@@ -22,7 +22,7 @@
                 <div class="text-muted">{{ $staffGroupNames }}</div>
             </div>
         </div>
-        @if(!AdminLocation::isSingleMode())
+        @if(!AdminLocation::hasOneLocation() AND $staffLocations)
             <div class="px-3 pb-3">
                 <form method="POST" accept-charset="UTF-8">
                     <div class="input-group">
@@ -36,7 +36,7 @@
                             class="form-control"
                             data-request="{{ $this->getEventHandler('onChooseLocation') }}"
                         >
-                            @if(AdminAuth::isSuperUser())
+                            @if(count($staffLocations) > 1)
                                 <option value="0">@lang('admin::lang.text_all_locations')</option>
                             @endif
                             @foreach($staffLocations as $key => $value)
@@ -56,8 +56,7 @@
             data-target="#editStaffStatusModal"
             role="button"
         >
-            <i class="fa fa-circle fa-fw text-{{ $staffState->getStatusColorName() }}"></i>
-            @lang('admin::lang.text_set_status')
+            <i class="fa fa-circle fa-fw text-{{ $staffState->getStatusColorName() }}"></i>@lang('admin::lang.text_set_status')
         </a>
         <a class="dropdown-item" href="{{ admin_url('staffs/account') }}">
             <i class="fa fa-user fa-fw"></i>@lang('admin::lang.text_edit_details')

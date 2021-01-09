@@ -77,6 +77,9 @@
             $dropdown = $toggle.closest('.dropdown'),
             $itemMenu = $dropdown.find('[data-request-options]')
 
+        if (window.matchMedia('(max-width: 600px)'))
+            $('.sidebar, .nav-sidebar').collapse('hide')
+
         if (!$itemMenu.length)
             return;
 

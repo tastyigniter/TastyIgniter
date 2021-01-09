@@ -28,6 +28,29 @@ return [
     'error' => [
     ],
 
+    'php' => [
+        'date_format' => 'd M Y',
+        'date_format_short' => 'd M',
+        'date_format_long' => 'l, jS F Y',
+        'time_format' => 'H:i',
+        'date_time_format' => 'd M Y H:i',
+        'date_time_format_short' => 'd M H:i',
+        'date_time_format_long' => 'l, jS F Y \a\t h:i a',
+    ],
+
+    'moment' => [
+        'date_format' => 'DD MMM YYYY',
+        'date_format_short' => 'DD MMM',
+        'date_format_long' => 'dddd, Do MMM YYYY',
+        'time_format' => 'hh:mm a',
+        'date_time_format' => 'DD MMMM YYYY HH:mm',
+        'date_time_format_short' => 'DD MMM \a\t HH:mm',
+        'date_time_format_long' => 'dddd, Do MMMM YYYY \a\t HH:mm a',
+        'day_format' => 'ddd DD',
+        'day_time_format' => 'ddd DD hh:mm a',
+        'day_time_format_short' => 'ddd hh:mm a',
+    ],
+
     'activities' => [
         'text_title' => 'Activities',
         'button_mark_as_read' => 'Mark all as read',
@@ -93,6 +116,7 @@ return [
         'text_files' => 'files',
         'text_files_data' => 'files and data',
         'text_settings' => 'Settings',
+        'text_author' => 'Author',
 
         'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more extensions',
         'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
@@ -326,13 +350,13 @@ return [
         'text_tab_title_date_time' => 'Date/Time',
         'text_tab_title_currency' => 'Currency',
         'text_tab_title_language' => 'Language',
-        'text_tab_title_reviews' => 'Reviews',
         'text_tab_title_taxation' => 'Taxation',
         'text_tab_title_invoice' => 'Invoicing',
         'text_tab_title_order' => 'Order',
         'text_tab_title_reservation' => 'Reservation',
         'text_tab_title_maintenance' => 'Maintenance',
         'text_tab_title_system_log' => 'Log Settings',
+        'text_tab_title_activity_log' => 'Activity Log Settings',
         'text_single' => 'Single',
         'text_multiple' => 'Multiple',
         'text_1_hour' => '1 Hours',
@@ -376,8 +400,6 @@ return [
         'label_site_url' => 'Restaurant URL',
         'label_site_logo' => 'Restaurant Logo',
         'label_timezone' => 'Default Timezone',
-        'label_date_format' => 'Date Format',
-        'label_time_format' => 'Time Format',
         'label_site_currency' => 'Default Currency',
         'label_currency_converter' => 'Default Currency Converter',
         'label_currency_converter_oer_api_key' => 'Currency Converter (Open Exchange Rates API) App ID',
@@ -396,8 +418,6 @@ return [
         'label_tax_percentage' => 'Tax Rate',
         'label_tax_menu_price' => 'Tax Menu Price',
         'label_tax_delivery_charge' => 'Tax Delivery Charge',
-        'label_allow_reviews' => 'Allow Reviews',
-        'label_approve_reviews' => 'Approve Reviews',
         'label_default_order_status' => 'Default Order Status',
         'label_processing_order_status' => 'Processing Order Status',
         'label_completed_order_status' => 'Completed Order Status',
@@ -443,8 +463,7 @@ return [
         'label_enable_request_log' => 'Log Bad Requests',
         'label_maintenance_mode' => 'Maintenance Mode',
         'label_maintenance_message' => 'Maintenance Message',
-        'label_cache_mode' => 'Cache Mode',
-        'label_cache_time' => 'Cache Time',
+        'label_activity_log_timeout' => 'Clean Up Activity Log Older Than',
 
         'alert_email_sending' => 'Sending email...',
         'alert_email_sent' => 'Email sent to %s',
@@ -467,11 +486,9 @@ return [
         'help_tax_percentage' => 'Enter the percentage to calculate taxes. Ex. 15',
         'help_tax_menu_price' => 'Set whether menu price already include taxes or taxes should be calculated on menu price',
         'help_tax_delivery_charge' => 'Set whether delivery charge is taxable',
-        'help_allow_reviews' => 'Enable or disable new customer review entry and display of reviews on storefront',
-        'help_approve_reviews' => 'Approve new review entry automatically or manually',
         'help_default_location' => 'Choose or add a new location to set as your main/default restaurant location.',
         'help_default_order_status' => 'Select the default order status when a new order is placed/received',
-        'help_processing_order_status' => 'Select the order status an order must reach before the order starts stock reduction and coupon redemption',
+        'help_processing_order_status' => 'Select the order status an order must reach before the order starts stock reduction',
         'help_completed_order_status' => 'Select the order status to mark an order as completed before the order invoice is created and a customer can leave review',
         'help_canceled_order_status' => 'Select the order status when an order is marked as canceled or suspected of fraudulent activity',
         'help_menus_page' => 'Choose a page to display your menu items',
@@ -496,6 +513,7 @@ return [
         'help_reservation_email' => 'Send a confirmation mail to the customer, admin and/or location email when a new reservation is received',
         'help_enable_request_log' => 'Whether to log bad browser requests, such as 404 errors.',
         'help_maintenance' => 'Enable to prevent customers from viewing your store. The maintenance message will be displayed to customers except logged admin.',
+        'help_activity_log_timeout' => 'Delete all recorded activities older than the specified number of days',
     ],
 
     'system_logs' => [
@@ -520,11 +538,12 @@ return [
         'text_select_file' => 'Select a [%s] template to edit',
         'text_is_default' => 'Activated',
         'text_set_default' => 'Activate',
-        'text_author' => 'Author',
+        'text_author' => 'by',
         'text_version' => 'Version',
         'text_theme_is_active' => '. You can not delete an active theme.',
         'text_files' => 'files',
         'text_files_data' => 'files and data',
+        'text_locked_child' => 'Locked theme: create a child theme',
 
         'label_code' => 'Code',
         'label_template' => 'Template',
@@ -556,7 +575,7 @@ return [
         'button_yes_copy' => 'Yes, copy',
         'button_return_to_list' => 'No, return to list',
 
-        'help_components' => 'Render the component on a layout or page by adding [<code>&#x3C;?= component(&#x27;componentAlias&#x27;); ?&#x3E;</code>] to the markup',
+        'help_components' => 'Render the component on a layout or page by adding <code>@component(&#x27;componentAlias&#x27;)</code> to the markup. Learn more <a href="https://tastyigniter.com/docs/master/customize/components">here</a>.',
 
         'error_config_no_found' => 'An error occurred, theme registration file could not be found',
         'error_theme_exists' => 'the theme already exists',
@@ -564,6 +583,7 @@ return [
         'alert_delete_warning' => 'You are about to delete the %s of theme <b>%s</b>',
         'alert_delete_confirm' => 'Are you sure you wish to delete the associated %s? This cannot be undone!',
         'alert_theme_locked' => 'This is a locked theme, changes are restricted, create a child theme to make changes.',
+        'alert_theme_path_locked' => 'This template belongs to a locked theme, such actions are restricted.',
         'alert_changes_confirm' => 'Conflicting versions, template file has changed. Reload the page to continue.',
     ],
 

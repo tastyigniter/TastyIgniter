@@ -10,6 +10,8 @@ use File;
 use Igniter\Flame\Mail\Markdown;
 use Main\Classes\ThemeManager;
 use Schema;
+use System\Models\Extensions_model;
+use System\Models\Themes_model;
 use ZipArchive;
 
 /**
@@ -70,7 +72,6 @@ class UpdateManager
         $this->hubManager = HubManager::instance();
         $this->extensionManager = ExtensionManager::instance();
         $this->themeManager = ThemeManager::instance();
-        $this->markdown = new Markdown;
 
         $this->tempDirectory = temp_path();
         $this->baseDirectory = base_path();
@@ -399,25 +400,22 @@ class UpdateManager
 
         $installedItems = [];
 
-        foreach ($this->extensionManager->listExtensions() as $extensionCode) {
-            $extensionObj = $this->extensionManager->findExtension($extensionCode);
-            if ($extensionObj AND $meta = $extensionObj->extensionMeta()) {
-                $installedItems['extensions'][] = [
-                    'name' => $extensionCode,
-                    'ver' => $meta['version'],
-                    'type' => 'extension',
-                ];
-            }
+        $extensionVersions = Extensions_model::pluck('version', 'name');
+        foreach ($extensionVersions as $code => $version) {
+            $installedItems['extensions'][] = [
+                'name' => $code,
+                'ver' => $version,
+                'type' => 'extension',
+            ];
         }
 
-        foreach ($this->themeManager->listThemes() as $themeCode) {
-            if ($theme = $this->themeManager->findTheme($themeCode)) {
-                $installedItems['themes'][] = [
-                    'name' => $theme->name,
-                    'ver' => $theme->version ?? null,
-                    'type' => 'theme',
-                ];
-            }
+        $themeVersions = Themes_model::pluck('version', 'code');
+        foreach ($themeVersions as $code => $version) {
+            $installedItems['themes'][] = [
+                'name' => $code,
+                'ver' => $version,
+                'type' => 'theme',
+            ];
         }
 
         if (!is_null($type))
@@ -550,7 +548,8 @@ class UpdateManager
     {
         $tags = array_get($update, 'tags.data', []);
         foreach ($tags as &$tag) {
-            $tag['description'] = $this->markdown->parse($tag['description']);
+            if (strlen($tag['description']))
+                $tag['description'] = Markdown::parse($tag['description'])->toHtml();
         }
 
         array_set($update, 'tags.data', $tags);

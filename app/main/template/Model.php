@@ -4,6 +4,7 @@ namespace Main\Template;
 
 use Config;
 use Igniter\Flame\Pagic\Contracts\TemplateSource;
+use Igniter\Flame\Support\Facades\File;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 
@@ -85,8 +86,8 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     public static function loadCached($theme, $fileName)
     {
         return static::on($theme->getDirName())
-                     ->remember(Config::get('system.parsedTemplateCacheTTL', now()->addDay()))
-                     ->find($fileName);
+            ->remember(Config::get('system.parsedTemplateCacheTTL', now()->addDay()))
+            ->find($fileName);
     }
 
     /**
@@ -127,7 +128,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
         $pages = is_null($theme) ? self::get() : self::listInTheme($theme, $skipCache);
         foreach ($pages as $page) {
-            $fileName = $page->getBaseFileName();
+            $fileName = str_before($page->getBaseFileName(), '.blade');
             $description = $page instanceof Page ? $page->title : $page->description;
             $description = strlen($description) ? lang($description) : $fileName;
             $result[$fileName] = $description.' ['.$fileName.']';
@@ -156,8 +157,11 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      * Returns the theme this object belongs to.
      * @return \Main\Classes\Theme
      */
-    public function getThemeAttribute()
+    public function getThemeAttribute($value = null)
     {
+        if (!is_null($value))
+            return $value;
+
         if ($this->themeCache !== null) {
             return $this->themeCache;
         }
@@ -171,7 +175,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Returns the local file path to the template.
      *
-     * @param  string $fileName
+     * @param string $fileName
      *
      * @return string
      */
@@ -181,7 +185,12 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
             $fileName = $this->fileName;
         }
 
-        return $this->theme->getPath().'/'.$this->getTypeDirName().'/'.$fileName;
+        $fileName = $this->getTypeDirName().'/'.$fileName;
+
+        if ($this->theme->hasParent() AND File::exists($this->theme->getParentPath().'/'.$fileName))
+            return $this->theme->getParentPath().'/'.$fileName;
+
+        return $this->theme->getPath().'/'.$fileName;
     }
 
     /**
@@ -260,8 +269,8 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Dynamically set attributes on the model.
      *
-     * @param  string $key
-     * @param  mixed $value
+     * @param string $key
+     * @param mixed $value
      * @return void
      */
     public function __set($key, $value)
@@ -276,7 +285,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Determine if an attribute exists on the object.
      *
-     * @param  string $key
+     * @param string $key
      * @return bool
      */
     public function __isset($key)

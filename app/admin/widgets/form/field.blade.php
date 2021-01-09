@@ -8,7 +8,7 @@
 
         @if ($field->comment AND $field->commentPosition == 'above')
             <p class="help-block before-field">
-                @if ($field->commentHtml) {!! $field->comment !!} @else @lang($field->comment) @endif
+                @if ($field->commentHtml) {!! lang($field->comment) !!} @else @lang($field->comment) @endif
             </p>
         @endif
 
@@ -16,7 +16,7 @@
 
         @if ($field->comment AND $field->commentPosition == 'below')
             <p class="help-block">
-                @if ($field->commentHtml) {!! $field->comment !!} @else @lang($field->comment) @endif
+                @if ($field->commentHtml) {!! lang($field->comment) !!} @else @lang($field->comment) @endif
             </p>
         @endif
 

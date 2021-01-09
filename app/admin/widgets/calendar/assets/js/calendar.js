@@ -41,6 +41,8 @@
 
         this.$calendar.fullCalendar('addEventSource', $.proxy(this.generateEvents, this))
 
+        this.$calendar.find('.fc-toolbar .btn').removeClass('btn-primary').addClass(this.options.toolbarButtonClass)
+
         this.calendar = this.$calendar.fullCalendar('getCalendar')
 
         this.calendar.on('eventRender', $.proxy(this.onRenderEvent, this))
@@ -114,6 +116,7 @@
 
     Calendar.DEFAULTS = {
         alias: undefined,
+        toolbarButtonClass: 'btn-light',
         aspectRatio: 2,
         editable: false,
         defaultDate: null,

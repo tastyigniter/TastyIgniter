@@ -63,12 +63,28 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.tables.column_capacity',
         'type' => 'number',
     ],
+    'extra_capacity' => [
+        'label' => 'lang:admin::lang.tables.column_extra_capacity',
+        'type' => 'number',
+        'invisible' => TRUE,
+    ],
+    'priority' => [
+        'label' => 'lang:admin::lang.tables.column_priority',
+        'type' => 'number',
+        'invisible' => TRUE,
+    ],
     'locations' => [
         'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
         'locationAware' => 'hide',
+    ],
+    'is_joinable' => [
+        'label' => 'lang:admin::lang.tables.label_joinable',
+        'type' => 'switch',
+        'onText' => 'lang:admin::lang.text_yes',
+        'offText' => 'lang:admin::lang.text_no',
     ],
     'table_status' => [
         'label' => 'lang:admin::lang.label_status',
@@ -112,26 +128,47 @@ $config['form']['fields'] = [
     'table_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
+        'span' => 'left',
+    ],
+    'priority' => [
+        'label' => 'lang:admin::lang.tables.label_priority',
+        'type' => 'number',
+        'span' => 'right',
     ],
     'min_capacity' => [
         'label' => 'lang:admin::lang.tables.label_min_capacity',
         'type' => 'number',
+        'span' => 'left',
     ],
     'max_capacity' => [
         'label' => 'lang:admin::lang.tables.label_capacity',
         'type' => 'number',
+        'span' => 'right',
+    ],
+    'table_status' => [
+        'label' => 'lang:admin::lang.label_status',
+        'type' => 'switch',
+        'span' => 'left',
+        'default' => 1,
+    ],
+    'is_joinable' => [
+        'label' => 'lang:admin::lang.tables.label_joinable',
+        'type' => 'switch',
+        'span' => 'right',
+        'default' => 1,
+        'on' => 'lang:admin::lang.text_yes',
+        'off' => 'lang:admin::lang.text_no',
     ],
     'locations' => [
         'label' => 'lang:admin::lang.label_location',
         'type' => 'relation',
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
-        'locationAware' => 'hide',
     ],
-    'table_status' => [
-        'label' => 'lang:admin::lang.label_status',
-        'type' => 'switch',
-        'default' => 1,
+    'extra_capacity' => [
+        'label' => 'lang:admin::lang.tables.label_extra_capacity',
+        'type' => 'number',
+        'comment' => 'lang:admin::lang.tables.help_extra_capacity',
     ],
 ];
 
