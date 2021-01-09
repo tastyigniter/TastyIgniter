@@ -13,8 +13,7 @@ class Theme extends FormRequest
 
     public function rules()
     {
-        $form = $this->controller->widgets['form'];
-        if ($form->context != 'source') {
+        if ($form = $this->getForm() AND $form->context != 'source') {
             $rules = [];
             $fieldsConfig = $this->controller->asExtension('FormController')->getFormModel()->getFieldsConfig();
             foreach ($fieldsConfig as $name => $field) {
