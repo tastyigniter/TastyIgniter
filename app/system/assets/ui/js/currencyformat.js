@@ -4,9 +4,12 @@
     // CURRENCY HELPER FUNCTION DEFINITION
     // ============================
 
-    $.fn.currencyFormat = function (amount) {
+    if (!app)
+        return;
 
-        if (!(app && app.currency))
+    app.currencyFormat = function (amount) {
+
+        if (!app.currency)
             throw 'Currency values not defined in app scope';
 
         return currency(amount, {
