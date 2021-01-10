@@ -105,14 +105,17 @@ class Menus_model extends Model
 
         $searchableFields = ['menu_name', 'menu_description'];
 
-        if (strlen($location) AND is_numeric($location)) {
+        $applyLocationLimit = strlen($location) AND is_numeric($location);
+        if ($applyLocationLimit) {
             $query->whereHasOrDoesntHaveLocation($location);
         }
 
-        if (strlen($category)) {
-            $query->whereHas('categories', function ($q) use ($category, $location) {
-                $q->isEnabled()->whereSlug($category);
-                if (strlen($location) AND is_numeric($location))
+        if (strlen($category) OR $applyLocationLimit) {
+            $query->whereHas('categories', function ($q) use ($category, $applyLocationLimit, $location) {
+                $q->isEnabled();
+                if (strlen($category))
+                    $q->whereSlug($category);
+                if ($applyLocationLimit)
                     $q->whereHasOrDoesntHaveLocation($location);
             });
         }
