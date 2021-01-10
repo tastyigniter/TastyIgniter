@@ -39,7 +39,7 @@ class AllergenTest extends TestCase
                 'passed' => FALSE,
                 'data' => [
                     'name' => $faker->word(),
-                    'description' => $faker->sentence(500),
+                    'description' => $faker->sentence(501),
                     'status' => $faker->boolean(),
                 ],
             ],
@@ -47,7 +47,7 @@ class AllergenTest extends TestCase
                 'passed' => FALSE,
                 'data' => [
                     'name' => $faker->word(),
-                    'description' => $faker->sentence(500),
+                    'description' => $faker->sentence(),
                     'status' => $faker->word(),
                 ],
             ],

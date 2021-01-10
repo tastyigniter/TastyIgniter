@@ -32,7 +32,7 @@ class CategoryTest extends TestCase
             'request_should_fail_when_name_has_more_than_128_characters' => [
                 'passed' => FALSE,
                 'data' => [
-                    'name' => $faker->paragraph(),
+                    'name' => $faker->sentence(129),
                 ],
             ],
             'request_should_fail_when_description_has_less_than_2_characters' => [
