@@ -18,7 +18,7 @@ class Customer extends FormRequest
             ['last_name', 'admin::lang.customers.label_last_name', 'required|between:1,48'],
             ['email', 'admin::lang.label_email', 'required|email:filter|max:96|unique:customers,email'],
             ['telephone', 'admin::lang.customers.label_telephone', 'sometimes'],
-            ['newsletter', 'admin::lang.customers.label_newsletter', 'sometimes|required|boolean'],
+            ['newsletter', 'admin::lang.customers.label_newsletter', 'required|boolean'],
             ['customer_group_id', 'admin::lang.customers.label_customer_group', 'required|integer'],
             ['status', 'admin::lang.label_status', 'required|boolean'],
             ['addresses.*.address_1', 'admin::lang.customers.label_address_1', 'required|min:3|max:128'],

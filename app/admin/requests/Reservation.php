@@ -14,7 +14,7 @@ class Reservation extends FormRequest
     public function rules()
     {
         return [
-            ['location_id', 'admin::lang.reservations.text_restaurant', 'sometimes|required|integer'],
+            ['location_id', 'admin::lang.reservations.text_restaurant', 'required|integer'],
             ['first_name', 'admin::lang.reservations.label_first_name', 'required|between:1,48'],
             ['last_name', 'admin::lang.reservations.label_last_name', 'required|between:1,48'],
             ['email', 'admin::lang.label_email', 'email:filter|max:96'],

@@ -19,9 +19,8 @@ class Allergen extends FormRequest
     {
         return [
             'name' => 'required|between:2,128',
-            'description' => 'min:2',
+            'description' => 'min:2|max:500',
             'status' => 'boolean',
-            'locations.*' => 'integer',
         ];
     }
 }
