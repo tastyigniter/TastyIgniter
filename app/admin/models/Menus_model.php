@@ -105,8 +105,7 @@ class Menus_model extends Model
 
         $searchableFields = ['menu_name', 'menu_description'];
 
-        $applyLocationLimit = strlen($location) AND is_numeric($location);
-        if ($applyLocationLimit) {
+        if (($applyLocationLimit = strlen($location) AND is_numeric($location))) {
             $query->whereHasOrDoesntHaveLocation($location);
         }
 
