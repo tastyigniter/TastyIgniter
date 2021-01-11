@@ -165,26 +165,9 @@ class ThemeManager
 
         foreach ($this->themes as $theme) {
             $theme->boot();
-
-            $this->bootThemeFile($theme);
         }
 
         $this->booted = TRUE;
-    }
-
-    protected function bootThemeFile($theme)
-    {
-        if (app()->runningInAdmin())
-            return;
-
-        if (!$theme->isActive())
-            return;
-
-        if (File::exists($path = $theme->getPath().'/theme.php'))
-            require $path;
-
-        if (File::exists($path = $theme->getParentPath().'/theme.php'))
-            require $path;
     }
 
     //
