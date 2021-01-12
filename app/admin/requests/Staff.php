@@ -27,7 +27,7 @@ class Staff extends FormRequest
                 ['groups', 'admin::lang.staff.label_group', 'required|array'],
                 ['locations', 'admin::lang.staff.label_location', 'nullable|array'],
                 ['groups.*', 'admin::lang.staff.label_group', 'integer'],
-                ['locations.*', 'admin::lang.staff.label_location', 'integer'],
+                ['locations.*', 'admin::lang.staff.label_location', 'required|integer'],
             ]);
         }
 
