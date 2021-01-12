@@ -116,7 +116,12 @@ class Reservations_model extends Model
             'sort' => 'address_id desc',
             'customer' => null,
             'location' => null,
+            'search' => '',
+            'from_epoch' => null,
+            'to_epoch' => null,
         ], $options));
+
+        $searchableFields = ['reservation_id', 'first_name', 'last_name', 'email', 'telephone'];
 
         $query->where('status_id', '>=', 1);
 
@@ -147,6 +152,15 @@ class Reservations_model extends Model
                 [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
             }
+        }
+
+        $search = trim($search);
+        if (strlen($search)) {
+            $query->search($search, $searchableFields);
+        }
+
+        if (strlen($from_epoch) AND strlen($to_epoch)) {
+            $query = $this->scopeWhereBetweenPeriod($query, date('Y-m-d H:i:s', $from_epoch), date('Y-m-d H:i:s', $to_epoch));
         }
 
         return $query->paginate($pageLimit, $page);
