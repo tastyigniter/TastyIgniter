@@ -28,8 +28,8 @@ class Category extends FormRequest
             'parent_id' => 'nullable|integer',
             'priority' => 'nullable|integer',
             'status' => 'boolean',
-            'locations.*' => 'integer',
             'locations' => 'required',
+            'locations.*' => 'integer',
         ];
     }
 }
