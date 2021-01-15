@@ -76,9 +76,11 @@ trait ManagesOrderItems
     public function getOrderMenusWithOptions()
     {
         $orderMenuOptions = $this->getOrderMenuOptions();
+
         return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions) {
             unset($menu->option_values);
             $menu->menu_options = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+
             return $menu;
         });
     }
