@@ -195,6 +195,7 @@ abstract class BaseComponent extends Extendable
         if (substr($method, 0, 5) == 'after') {
             $method = lcfirst(substr($method, 5));
             $this->afterHandlers[$method][] = $parameters[0];
+
             return $this;
         }
 
