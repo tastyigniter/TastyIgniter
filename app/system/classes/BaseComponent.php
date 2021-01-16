@@ -64,6 +64,11 @@ abstract class BaseComponent extends Extendable
     protected $page;
 
     /**
+     * @var array After handlers registered to extend responses
+     */
+    protected $afterHandlers;
+
+    /**
      * Class constructor
      *
      * @param \Igniter\Flame\Pagic\TemplateCode $page
@@ -134,6 +139,15 @@ abstract class BaseComponent extends Extendable
     {
         $result = $this->{$handler}();
 
+        if ($handlers = array_get($this->afterHandlers, $handler, [])) {
+            foreach ($handlers as $handler)
+            {
+                $handlerResult = $handler($result);
+                if (!is_null($handlerResult))
+                    $result = $handlerResult;
+            }
+        }
+
         return $result;
     }
 
@@ -176,6 +190,12 @@ abstract class BaseComponent extends Extendable
 
         if (method_exists($this->controller, $method)) {
             return call_user_func_array([$this->controller, $method], $parameters);
+        }
+
+        if (substr($method, 0, 5) == 'after') {
+            $method = lcfirst(substr($method, 5));
+            $this->afterHandlers[$method][] = $parameters[0];
+            return $this;
         }
 
         throw new BadMethodCallException(Lang::get('main::lang.not_found.method', [
