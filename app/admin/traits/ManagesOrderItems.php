@@ -69,6 +69,23 @@ trait ManagesOrderItems
     }
 
     /**
+     * Return all order menus merged with order menu options
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getOrderMenusWithOptions()
+    {
+        $orderMenuOptions = $this->getOrderMenuOptions();
+
+        return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions) {
+            unset($menu->option_values);
+            $menu->menu_options = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+
+            return $menu;
+        });
+    }
+
+    /**
      * Return all order totals by order_id
      *
      * @return \Illuminate\Support\Collection
