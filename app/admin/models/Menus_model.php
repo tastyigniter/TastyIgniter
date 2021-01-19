@@ -109,11 +109,11 @@ class Menus_model extends Model
             $query->whereHasOrDoesntHaveLocation($location);
         }
 
-        if (strlen($category)) {
+        if (strlen($category) OR strlen($location)) {
             $query->whereHas('categories', function ($q) use ($category, $location) {
-                $q->isEnabled()->whereSlug($category);
-                if (strlen($location) AND is_numeric($location))
-                    $q->whereHasOrDoesntHaveLocation($location);
+                $q->isEnabled();
+                if (strlen($category)) $q->whereSlug($category);
+                if (strlen($location)) $q->whereHasOrDoesntHaveLocation($location);
             });
         }
 
