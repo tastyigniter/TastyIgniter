@@ -16,6 +16,8 @@ class Table extends FormRequest
             ['priority', 'lang:admin::lang.tables.label_priority', 'required|integer'],
             ['is_joinable', 'lang:admin::lang.tables.label_joinable', 'required|boolean'],
             ['table_status', 'lang:admin::lang.label_status', 'required|boolean'],
+            ['locations', 'lang:admin::lang.label_location', 'required'],
+            ['locations.*', 'lang:admin::lang.label_location', 'integer'],
         ];
     }
 }
