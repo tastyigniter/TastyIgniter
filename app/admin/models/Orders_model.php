@@ -122,8 +122,7 @@ class Orders_model extends Model
             'location' => null,
             'sort' => 'address_id desc',
             'search' => '',
-            'from_epoch' => null,
-            'to_epoch' => null,
+            'dateTimeFilter' => [],
         ], $options));
 
         $searchableFields = ['order_id', 'first_name', 'last_name', 'email', 'telephone'];
@@ -164,14 +163,14 @@ class Orders_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if (strlen($from_epoch) AND strlen($to_epoch)) {
-            $query = $this->scopeWhereBetweenPeriod($query, date('Y-m-d H:i:s', $from_epoch), date('Y-m-d H:i:s', $to_epoch));
+        if (($startDateTime = array_get($dateTimeFilter, 'orderDateTime.start', false)) AND ($endDateTime = array_get($dateTimeFilter, 'orderDateTime.end', false))) {
+            $query = $this->scopeWhereBetweenPeriod($query, date('Y-m-d H:i:s', $startDateTime), date('Y-m-d H:i:s', $endDateTime));
         }
 
         return $query->paginate($pageLimit, $page);
     }
 
-    public function scopeWhereBetweenPeriod($query, $start, $end)
+    public function scopeWhereBetweenOrderDateTime($query, $start, $end)
     {
         $query->whereRaw('ADDTIME(order_date, order_time) between ? and ?', [$start, $end]);
 
