@@ -164,7 +164,7 @@ class Orders_model extends Model
         }
 
         if (($startDateTime = array_get($dateTimeFilter, 'orderDateTime.start', false)) AND ($endDateTime = array_get($dateTimeFilter, 'orderDateTime.end', false))) {
-            $query = $this->scopeWhereBetweenOrderDateTime($query, date('Y-m-d H:i:s', $startDateTime), date('Y-m-d H:i:s', $endDateTime));
+            $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 
         return $query->paginate($pageLimit, $page);

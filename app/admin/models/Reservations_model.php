@@ -159,7 +159,7 @@ class Reservations_model extends Model
         }
 
         if (($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.start', false)) AND ($endDateTime = array_get($dateTimeFilter, 'reservationDateTime.end', false))) {
-            $query = $this->scopeWhereBetweenReservationDateTime($query, date('Y-m-d H:i:s', $startDateTime), date('Y-m-d H:i:s', $endDateTime));
+            $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 
         return $query->paginate($pageLimit, $page);
