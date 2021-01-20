@@ -121,7 +121,11 @@ class Orders_model extends Model
             'customer' => null,
             'location' => null,
             'sort' => 'address_id desc',
+            'search' => '',
+            'dateTimeFilter' => [],
         ], $options));
+
+        $searchableFields = ['order_id', 'first_name', 'last_name', 'email', 'telephone'];
 
         $query->where('status_id', '>=', 1);
 
@@ -154,7 +158,23 @@ class Orders_model extends Model
             }
         }
 
+        $search = trim($search);
+        if (strlen($search)) {
+            $query->search($search, $searchableFields);
+        }
+
+        if ($startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', false) AND $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', false)) {
+            $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
+        }
+
         return $query->paginate($pageLimit, $page);
+    }
+
+    public function scopeWhereBetweenOrderDateTime($query, $start, $end)
+    {
+        $query->whereRaw('ADDTIME(order_date, order_time) between ? and ?', [$start, $end]);
+
+        return $query;
     }
 
     //
