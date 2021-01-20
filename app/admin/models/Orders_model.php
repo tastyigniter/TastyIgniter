@@ -163,7 +163,7 @@ class Orders_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if (($startDateTime = array_get($dateTimeFilter, 'orderDateTime.start', false)) AND ($endDateTime = array_get($dateTimeFilter, 'orderDateTime.end', false))) {
+        if ($startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', false) AND $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', false)) {
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 

@@ -158,7 +158,7 @@ class Reservations_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if (($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.start', false)) AND ($endDateTime = array_get($dateTimeFilter, 'reservationDateTime.end', false))) {
+        if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', false) AND $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', false)) {
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 
