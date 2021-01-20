@@ -103,7 +103,7 @@ class FormRequest extends BaseFormRequest
      */
     protected function getModel()
     {
-        return $this->getController()->getFormModel();
+        return optional($this->getController())->getFormModel();
     }
 
     /**
@@ -144,13 +144,15 @@ class FormRequest extends BaseFormRequest
      */
     public function validationData()
     {
-        switch ($this->getForm() AND $this->useDataFrom()) {
-            case static::DATA_TYPE_FORM:
-                return $this->getForm()->getSaveData();
-            case static::DATA_TYPE_POST:
-                return post($this->getInputKey(), []);
-            case static::DATA_TYPE_INPUT:
-                return $this->input($this->getInputKey(), []);
+        if ($this->getForm()) {
+            switch ($this->useDataFrom()) {
+                case static::DATA_TYPE_FORM:
+                    return $this->getForm()->getSaveData();
+                case static::DATA_TYPE_POST:
+                    return post($this->getInputKey(), []);
+                case static::DATA_TYPE_INPUT:
+                    return $this->input($this->getInputKey(), []);
+            }
         }
 
         return $this->all();
