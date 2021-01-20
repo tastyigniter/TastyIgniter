@@ -101,7 +101,6 @@ class Location extends Manager
 
         return $this->getAuth()
             ->locations()
-            ->where('location_status', TRUE)
             ->pluck('location_name', 'location_id');
     }
 
