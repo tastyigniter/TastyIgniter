@@ -28,6 +28,13 @@ return [
     'error' => [
     ],
 
+    'date' => [
+        'today' => 'Today',
+        'tomorrow' => 'Tomorrow',
+        'yesterday' => 'Yesterday',
+        'full' => '%s at %s',
+    ],
+
     'php' => [
         'date_format' => 'd M Y',
         'date_format_short' => 'd M',
