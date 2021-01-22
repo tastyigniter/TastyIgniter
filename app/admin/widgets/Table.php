@@ -5,6 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Widgets\Table\Source\DataSource;
 use Exception;
+use Igniter\Flame\Html\HtmlFacade;
 use Illuminate\Support\Facades\Request;
 
 class Table extends BaseWidget
@@ -40,7 +41,9 @@ class Table extends BaseWidget
 
     public $showPagination = TRUE;
 
-    public $pageLimit = 20;
+    public $useAjax = FALSE;
+
+    public $pageLimit = 10;
 
     /**
      * Initialize the widget, called by the constructor and free from its parameters.
@@ -49,7 +52,7 @@ class Table extends BaseWidget
     {
         $this->columns = $this->getConfig('columns', []);
         $this->fieldName = $this->getConfig('fieldName', $this->alias);
-        $this->recordsKeyFrom = $this->getConfig('keyFrom', 'id');
+        $this->recordsKeyFrom = $this->getConfig('keyFrom', 'rows');
 
         $dataSourceClass = $this->getConfig('dataSource');
         if (!strlen($dataSourceClass)) {
@@ -109,11 +112,12 @@ class Table extends BaseWidget
         $this->vars['columns'] = $this->prepareColumnsArray();
         $this->vars['recordsKeyFrom'] = $this->recordsKeyFrom;
 
-        $this->vars['showPagination'] = $this->showPagination;
+        $this->vars['showPagination'] = $this->getConfig('showPagination', $this->showPagination);
         $this->vars['pageLimit'] = $this->getConfig('pageLimit', $this->pageLimit);
         $this->vars['toolbar'] = $this->getConfig('toolbar', TRUE);
-        $this->vars['height'] = $this->getConfig('height', FALSE) ?: 'false';
-        $this->vars['dynamicHeight'] = $this->getConfig('dynamicHeight', FALSE) ?: 'false';
+        $this->vars['height'] = $this->getConfig('height', 'undefined');
+        $this->vars['dynamicHeight'] = $this->getConfig('dynamicHeight', FALSE);
+        $this->vars['useAjax'] = $this->getConfig('useAjax', FALSE);
 
         $isClientDataSource = $this->isClientDataSource();
         $this->vars['clientDataSourceClass'] = $isClientDataSource ? 'client' : 'server';
@@ -124,6 +128,7 @@ class Table extends BaseWidget
 
     public function loadAssets()
     {
+        $this->addCss('vendor/bootstrap-table/bootstrap-table.min.css', 'bootstrap-table-css');
         $this->addCss('css/table.css', 'table-css');
 
         $this->addJs('vendor/bootstrap-table/bootstrap-table.min.js', 'bootstrap-table-js');
@@ -150,9 +155,28 @@ class Table extends BaseWidget
         return $result;
     }
 
+    public function getAttributes()
+    {
+        return HtmlFacade::attributes($this->getConfig('attributes', []));
+    }
+
     protected function isClientDataSource()
     {
         return $this->dataSource instanceof DataSource;
+    }
+
+    public function onGetRecords()
+    {
+        $search = Request::post('search');
+        $offset = Request::post('offset');
+        $limit = Request::post('limit', $this->getConfig('pageLimit', $this->pageLimit));
+
+        $eventResults = $this->fireEvent('table.getRecords', [$offset, $limit, $search], TRUE);
+
+        return [
+            'rows' => $eventResults->getCollection()->toArray(),
+            'total' => $eventResults->total(),
+        ];
     }
 
     public function onGetDropdownOptions()
