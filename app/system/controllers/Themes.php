@@ -282,9 +282,9 @@ class Themes extends \Admin\Classes\AdminController
         if (!$loaded)
             return;
 
-        Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) {
+        Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) use ($theme) {
             ThemeManager::applyAssetVariablesOnCombinerFilters(
-                array_flatten($combiner->getFilters())
+                array_flatten($combiner->getFilters()), $theme
             );
         });
 
