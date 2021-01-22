@@ -163,7 +163,7 @@ class Orders_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if ($startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', false) AND $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', false)) {
+        if ($startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE)) {
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 
@@ -357,11 +357,10 @@ class Orders_model extends Model
             : lang('admin::lang.orders.text_no_payment');
 
         $data['order_menus'] = [];
-        $menus = $model->getOrderMenus();
-        $menuOptions = $model->getOrderMenuOptions();
+        $menus = $model->getOrderMenusWithOptions();
         foreach ($menus as $menu) {
             $optionData = [];
-            if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
+            if ($menuItemOptions = $menu->menu_options) {
                 foreach ($menuItemOptions as $menuItemOption) {
                     $optionData[] = $menuItemOption->quantity
                         .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'
