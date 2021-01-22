@@ -324,6 +324,7 @@ class ServiceProvider extends AppServiceProvider
             $app['config']->set('geocoder.providers.nominatim.region', $region);
 
             $app['config']->set('geocoder.providers.google.apiKey', setting('maps_api_key'));
+            $app['config']->set('geocoder.providers.google.appUrl', config('app.url'));
         });
 
         Event::listen(CommandStarting::class, function () {
