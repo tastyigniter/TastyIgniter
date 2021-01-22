@@ -5,6 +5,9 @@ namespace Admin\Models;
 use Carbon\Carbon;
 use Model;
 
+use Illuminate\Support\Facades\App;
+use Igniter\Flame\Location\Models\AbstractLocation;
+
 /**
  * Menu Specials Model Class
  */
@@ -34,6 +37,7 @@ class Menus_specials_model extends Model
         'recurring_from' => 'time',
         'recurring_to' => 'time',
         'recurring_every' => 'array',
+        'order_restriction' => 'integer',
     ];
 
     public static function getRecurringEveryOptions()
@@ -61,10 +65,14 @@ class Menus_specials_model extends Model
 
     public function active()
     {
-        if (!$this->special_status)
-            return FALSE;
+        $this->location = App::make('location');
+        if (!$this->hasRestriction($orderType = $this->location->orderType()))
+        {
+            if (!$this->special_status)
+                return FALSE;
 
-        return !($this->isExpired() === TRUE);
+            return !($this->isExpired() === TRUE);
+        }
     }
 
     public function daysRemaining()
@@ -111,5 +119,15 @@ class Menus_specials_model extends Model
             return $this->special_price;
 
         return $price - (($price / 100) * round($this->special_price));
+    }
+
+    public function hasRestriction($orderType)
+    {
+        if (empty($this->order_restriction))
+            return FALSE;
+
+        $orderTypes = [AbstractLocation::DELIVERY => 1, AbstractLocation::COLLECTION => 2];
+
+        return array_get($orderTypes, $orderType, $orderType) != $this->order_restriction;
     }
 }

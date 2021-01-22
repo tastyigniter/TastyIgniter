@@ -369,6 +369,18 @@ $config['form']['tabs'] = [
             'type' => 'switch',
             'comment' => 'lang:admin::lang.menus.help_specials',
         ],
+        'special[order_restriction]' => [
+            'label' => 'lang:admin::lang.menus.label_order_restriction',
+			'tab' => 'lang:admin::lang.menus.text_tab_special',
+            'type' => 'radiotoggle',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.menus.help_order_restriction',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.menus.text_delivery_only',
+                'lang:admin::lang.menus.text_collection_only',
+            ],
+        ],
     ],
 ];
 
