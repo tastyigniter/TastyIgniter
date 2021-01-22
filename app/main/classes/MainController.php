@@ -150,6 +150,8 @@ class MainController extends BaseController
 
         parent::__construct();
 
+        $this->theme->loadThemeFile();
+
         $this->router = new Router($this->theme);
 
         $this->initTemplateEnvironment();
