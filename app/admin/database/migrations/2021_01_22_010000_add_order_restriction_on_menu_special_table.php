@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Schema;
 
-class AddOrderTimeIsAsapOnOrdersTable extends Migration
+class AddOrderRestrictionOnMenuSpecialTable extends Migration
 {
     public function up()
     {
