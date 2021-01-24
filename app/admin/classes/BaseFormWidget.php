@@ -126,12 +126,12 @@ class BaseFormWidget extends BaseWidget
         }
 
         $defaultValue = !$this->model->exists
-            ? $this->formField->getDefaultFromData($this->data ?: $this->model)
+            ? $this->formField->getDefaultFromData($this->data ?: $this->model->fresh())
             : null;
 
         if ($value = post($this->formField->getName()))
             return $value;
 
-        return $this->formField->getValueFromData($this->data ?: $this->model, $defaultValue);
+        return $this->formField->getValueFromData($this->data ?: $this->model->fresh(), $defaultValue);
     }
 }
