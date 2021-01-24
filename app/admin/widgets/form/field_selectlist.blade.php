@@ -10,7 +10,7 @@
         data-control="selectlist"
         id="{{ $field->getId() }}"
         name="{!! $field->getName().($selectMultiple ? '[]' : '') !!}"
-        @if ($field->placeholder)data-non-selected-text="@lang($field->placeholder)" @endif
+        data-non-selected-text="@if ($field->placeholder)@lang($field->placeholder)@else Select none @endif" 
         {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
         {!! $selectMultiple ? 'multiple="multiple"' : '' !!}
         data-enable-filtering="{{ $enableFilter }}"
@@ -18,9 +18,7 @@
         {!! $field->getAttributes() !!}
     >
 
-        @if ($field->placeholder)
-            <option value="">@lang($field->placeholder)</option>
-        @endif
+        <option value="">@if ($field->placeholder)@lang($field->placeholder)@else Select none @endif</option>
 
         @foreach ($fieldOptions as $value => $option)
             @continue($field->disabled AND !in_array($value, $checkedValues))

@@ -19,6 +19,7 @@
         this.options.onInitialized = $.proxy(this.onInitialized, this)
         this.options.onDropdownShown = $.proxy(this.onDropdownShown, this)
         this.options.onDropdownHide = $.proxy(this.onDropdownHidden, this)
+        this.options.onChange = $.proxy(this.onChange, this)
 
         this.$el.multiselect(this.options)
     }
@@ -45,6 +46,15 @@
 
     SelectList.prototype.onDropdownHidden = function (event) {
         $(event.relatedTarget).tooltip('dispose')
+    }
+    
+    SelectList.prototype.onChange = function (option, checked, select) {
+        if (option.val() == '') {
+            this.$el.multiselect('deselectAll');
+            this.$el.multiselect('select', '');
+        } else {
+            this.$el.multiselect('deselect', '');
+        }
     }
 
     // MEDIA MANAGER PLUGIN DEFINITION
