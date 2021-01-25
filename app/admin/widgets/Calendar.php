@@ -56,8 +56,9 @@ class Calendar extends BaseWidget
         $this->addJs('~/app/system/assets/ui/js/vendor/mustache.js', 'mustache-js');
         $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
 
-        $this->addJs('vendor/fullcalendar/fullcalendar.min.js', 'fullcalendar-js');
-        $this->addCss('vendor/fullcalendar/fullcalendar.min.css', 'fullcalendar-css');
+        $this->addJs('vendor/fullcalendar/main.min.js', 'fullcalendar-js');
+        $this->addJs('vendor/fullcalendar/locales-all.min.js', 'fullcalendar-js');
+        $this->addCss('vendor/fullcalendar/main.min.css', 'fullcalendar-css');
 
         $this->addJs('js/calendar.js', 'calendar-js');
         $this->addCss('css/calendar.css', 'calendar-css');

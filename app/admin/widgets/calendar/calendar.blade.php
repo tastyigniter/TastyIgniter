@@ -6,7 +6,7 @@
     data-aspect-ratio="{{ $aspectRatio }}"
     data-editable="{{ $editable ? 'true' : 'false' }}"
     data-event-limit="{{ $eventLimit }}"
-    data-default-date="{{ $defaultDate }}"
+    data-initial-date="{{ $defaultDate }}"
 >
 
     @if($editable)
