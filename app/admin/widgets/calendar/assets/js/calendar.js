@@ -52,12 +52,15 @@
     Calendar.prototype.onClickEvent = function (eventObj) {
         if (!this.options.editable)
             return
+            
+        var renderProps = {...eventObj.event.extendedProps};
+        renderProps.id = eventObj.event.id;
         
         var $el = $(eventObj.el);
         $el.addClass('popover-dismissable')
         $el.popover({
             title: eventObj.event.title,
-            content: Mustache.render(this.$el.find('[data-calendar-popover-template]').html(), eventObj.event),
+            content: Mustache.render(this.$el.find('[data-calendar-popover-template]').html(), renderProps),
             trigger: 'click',
             placement: 'bottom',
             html: true,
