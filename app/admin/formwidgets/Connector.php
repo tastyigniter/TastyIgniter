@@ -150,6 +150,9 @@ class Connector extends BaseFormWidget
 
         flash()->success(sprintf(lang('admin::lang.alert_success'), 'Item updated'))->now();
 
+        $this->formField->value = null;
+        $this->model->reloadRelations();
+
         $this->prepareVars();
 
         return [
