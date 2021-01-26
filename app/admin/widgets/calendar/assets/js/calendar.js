@@ -45,6 +45,7 @@
         this.calendar.on('eventClick', $.proxy(this.onClickEvent, this))
         this.calendar.on('eventDrop', $.proxy(this.onUpdateEvent, this))
         this.calendar.on('eventResize', $.proxy(this.onUpdateEvent, this))
+        this.calendar.on('datesSet', $.proxy(this.hidePopovers, this))
         
         this.calendar.render();
     }
@@ -55,22 +56,21 @@
             
         var renderProps = {...eventObj.event.extendedProps};
         renderProps.id = eventObj.event.id;
-        
+
         var $el = $(eventObj.el);
         $el.addClass('popover-dismissable')
+
+        this.hidePopovers();
+
         $el.popover({
             title: eventObj.event.title,
             content: Mustache.render(this.$el.find('[data-calendar-popover-template]').html(), renderProps),
-            trigger: 'click',
+            trigger: 'click focus',
             placement: 'bottom',
             html: true,
             container: this.$el
         })
-        .popover('show')
-
-        $el.on('show.bs.popover', function () {
-            $('.popover-dismissable').not(this).popover('hide')
-        })
+        .popover('toggle')
     }
 
     Calendar.prototype.onUpdateEvent = function (eventObj) {
@@ -104,6 +104,10 @@
     Calendar.prototype.onPickerDateChanged = function (event) {
         this.$calendar.fullCalendar('gotoDate', event.date)
     }
+    
+    Calendar.prototype.hidePopovers = function() {
+        $('.popover.show').remove()
+    }
 
     Calendar.prototype.generateEvents = function (fetchInfo, callback, failure) {
         $.ti.loadingIndicator.show()
@@ -120,7 +124,6 @@
 
     Calendar.DEFAULTS = {
         alias: undefined,
-        toolbarButtonClass: 'btn-light',
         aspectRatio: 2,
         editable: false,
         initialDate: null,
@@ -133,8 +136,7 @@
             datePicker: {}
         },
         themeSystem: 'bootstrap4',
-        bootstrapGlyphicons: false,
-        eventLimit: 5,
+        dayMaxEventRows: 5,
         navLinks: true,
         initialView: 'dayGridMonth',
     }
