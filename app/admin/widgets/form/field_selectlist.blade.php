@@ -4,13 +4,14 @@
     $selectMultiple = $isCheckboxMode == 'checkbox';
     $checkedValues = (array)$field->value;
     $enableFilter = (count($fieldOptions) > 20);
+    $hasEmptyValue = false;
 @endphp
 <div class="control-selectlist">
     <select
         data-control="selectlist"
         id="{{ $field->getId() }}"
         name="{!! $field->getName().($selectMultiple ? '[]' : '') !!}"
-        data-non-selected-text="@if ($field->placeholder)@lang($field->placeholder)@else Select none @endif" 
+        @if ($field->placeholder)data-non-selected-text="@lang($field->placeholder)"@endif 
         {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
         {!! $selectMultiple ? 'multiple="multiple"' : '' !!}
         data-enable-filtering="{{ $enableFilter }}"
@@ -18,12 +19,13 @@
         {!! $field->getAttributes() !!}
     >
 
-        <option value="">@if ($field->placeholder)@lang($field->placeholder)@else Select none @endif</option>
+        @if ($field->placeholder)<option value="">@lang($field->placeholder)</option>@endif
 
         @foreach ($fieldOptions as $value => $option)
             @continue($field->disabled AND !in_array($value, $checkedValues))
             @php
                 if (!is_array($option)) $option = [$option];
+                if ($value == '') $hasEmptyValue = true;
             @endphp
             <option
                 {!! in_array($value, $checkedValues) ? 'selected="selected"' : '' !!}
@@ -35,4 +37,7 @@
             </option>
         @endforeach
     </select>
+    @if(!($field->placeholder OR $hasEmptyValue))
+    <input type="hidden" name="{!! $field->getName().($selectMultiple ? '[]' : '') !!}" value="" @if(count($checkedValues)) disabled @endif />
+    @endif
 </div>

@@ -57,20 +57,22 @@
     }
     
     SelectList.prototype.onChange = function (option, checked, select) {
-        if (option.val() == '') {
+        if (option.val() == '' || this.$el[0].selectedOptions.length == 0) {
             this.$el.multiselect('deselectAll');
             this.$el.multiselect('select', '');
+            this.$el.parent().next('input[type="hidden"]').attr('disabled', false);
         } else {
             this.$el.multiselect('deselect', '');
+            this.$el.parent().next('input[type="hidden"]').attr('disabled', true);
         }
     }
     
     SelectList.prototype.onDeselectAll = function () {
-        this.$el.multiselect('select', '');
+        this.$el.parent().next('input[type="hidden"]').attr('disabled', false);
     }
     
     SelectList.prototype.onSelectAll = function () {
-        this.$el.multiselect('deselect', '');
+        this.$el.parent().next('input[type="hidden"]').attr('disabled', true);
     }
 
     // MEDIA MANAGER PLUGIN DEFINITION
