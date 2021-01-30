@@ -5,6 +5,7 @@ namespace Admin\FormWidgets;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Traits\FormModelWidget;
+use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
 use ApplicationException;
 use DB;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Collection;
 class Connector extends BaseFormWidget
 {
     use FormModelWidget;
+    use ValidatesForm;
 
     const INDEX_SEARCH = '___index__';
 
@@ -140,7 +142,9 @@ class Connector extends BaseFormWidget
 
         $form = $this->makeItemFormWidget($model, 'edit');
 
-        $modelsToSave = $this->prepareModelsToSave($model, $form->getSaveData());
+        $this->validateFormWidget($form, $saveData = $form->getSaveData());
+
+        $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
