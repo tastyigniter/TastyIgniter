@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use AdminLocation;
 use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
@@ -58,7 +59,7 @@ class Menu_options_model extends Model
     public static function getRecordEditorOptions()
     {
         return self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name')
-            ->dropdown('display_name');
+            ->whereHasOrDoesntHaveLocation(AdminLocation::getIdOrAll())->dropdown('display_name');
     }
 
     public function getDisplayTypeOptions()
