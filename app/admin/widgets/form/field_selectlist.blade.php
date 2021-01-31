@@ -4,7 +4,6 @@
     $selectMultiple = $isCheckboxMode == 'checkbox';
     $checkedValues = (array)$field->value;
     $enableFilter = (count($fieldOptions) > 20);
-    $hasEmptyValue = false;
 @endphp
 <div class="control-selectlist">
     <select
@@ -25,7 +24,6 @@
             @continue($field->disabled AND !in_array($value, $checkedValues))
             @php
                 if (!is_array($option)) $option = [$option];
-                if ($value == '') $hasEmptyValue = true;
             @endphp
             <option
                 {!! in_array($value, $checkedValues) ? 'selected="selected"' : '' !!}
@@ -37,7 +35,4 @@
             </option>
         @endforeach
     </select>
-    @if(!($field->placeholder OR $hasEmptyValue))
-    <input type="hidden" name="{!! $field->getName().($selectMultiple ? '[]' : '') !!}" value="" @if(count($checkedValues)) disabled @endif />
-    @endif
 </div>

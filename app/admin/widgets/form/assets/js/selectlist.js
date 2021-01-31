@@ -20,8 +20,11 @@
         this.options.onDropdownShown = $.proxy(this.onDropdownShown, this)
         this.options.onDropdownHide = $.proxy(this.onDropdownHidden, this)
         this.options.onChange = $.proxy(this.onChange, this)
-        this.options.onDeselectAll = $.proxy(this.onDeselectAll, this)
-        this.options.onSelectAll = $.proxy(this.onSelectAll, this)
+
+        if (this.options.nonSelectedText) {
+            this.options.onDeselectAll = $.proxy(this.onDeselectAll, this)
+            this.options.onSelectAll = $.proxy(this.onSelectAll, this)
+        }
 
         this.$el.multiselect(this.options)
     }
@@ -35,14 +38,10 @@
         $options.each(function () {
             var $li = $(this),
                 $label = $li.find('label'),
-                classes = $label.attr('class'),
-                $input = $li.find('input')
+                classes = $label.attr('class')
 
             $label.attr('class', '')
             $label.parent('div').attr('class', classes)
-            
-            if ($input && $input.val() == '')
-                $li.addClass('multiselect-none');
         })
     }
 
@@ -60,19 +59,17 @@
         if (option.val() == '' || this.$el[0].selectedOptions.length == 0) {
             this.$el.multiselect('deselectAll');
             this.$el.multiselect('select', '');
-            this.$el.parent().next('input[type="hidden"]').attr('disabled', false);
         } else {
             this.$el.multiselect('deselect', '');
-            this.$el.parent().next('input[type="hidden"]').attr('disabled', true);
         }
     }
     
     SelectList.prototype.onDeselectAll = function () {
-        this.$el.parent().next('input[type="hidden"]').attr('disabled', false);
+        this.$el.multiselect('select', '');
     }
     
     SelectList.prototype.onSelectAll = function () {
-        this.$el.parent().next('input[type="hidden"]').attr('disabled', true);
+        this.$el.multiselect('deselect', '');
     }
 
     // MEDIA MANAGER PLUGIN DEFINITION
