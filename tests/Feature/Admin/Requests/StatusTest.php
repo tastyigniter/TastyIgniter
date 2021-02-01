@@ -38,55 +38,55 @@ class StatusTest extends TestCase
             'request_should_fail_when_name_has_more_than_32_characters' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->text(33),
+                    'status_name' => $faker->sentence(33),
                 ],
             ],
             'request_should_fail_when_for_is_not_provided' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->text(7),
+                    'status_name' => $faker->sentence(7),
                     'notify_customer' => true,
                 ],
             ],
             'request_should_fail_when_for_is_not_alphanumeric' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->text(7),
+                    'status_name' => $faker->sentence(7),
                     'status_for' => $faker->randomElements(['!', '#', '$', '%', '~', '.', ':', ':'], 4),
                 ],
             ],
             'request_should_fail_when_color_has_more_than_7_characters' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->text(7),
+                    'status_name' => $faker->sentence(7),
                     'status_for' => 'order',
-                    'status_color' => $faker->text(8),
+                    'status_color' => $faker->sentence(8),
                     'notify_customer' => true,
                 ],
             ],
             'request_should_fail_when_comment_has_more_than_1028_characters' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->text(7),
+                    'status_name' => $faker->sentence(7),
                     'status_for' => 'order',
-                    'status_color' => $faker->text(7),
-                    'status_comment' => $faker->text(1029),
+                    'status_color' => $faker->sentence(7),
+                    'status_comment' => $faker->sentence(1029),
                 ],
             ],
             'request_should_fail_when_notify_is_not_provided' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->text(7),
+                    'status_name' => $faker->sentence(7),
                     'status_for' => 'order',
-                    'status_color' => $faker->text(7),
+                    'status_color' => $faker->sentence(7),
                 ],
             ],
             'request_should_fail_when_notify_is_not_boolean' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->text(7),
+                    'status_name' => $faker->sentence(7),
                     'status_for' => 'order',
-                    'status_color' => $faker->text(7),
+                    'status_color' => $faker->sentence(7),
                     'notify_customer' => $faker->word(),
                 ],
             ],
@@ -94,9 +94,9 @@ class StatusTest extends TestCase
             'request_should_pass_when_data_is_provided' => [
                 'passed' => TRUE,
                 'data' => [
-                    'status_name' => $faker->text(7),
+                    'status_name' => $faker->sentence(7),
                     'status_for' => 'order',
-                    'status_color' => $faker->text(7),
+                    'status_color' => $faker->sentence(7),
                     'status_comment' => $faker->sentence(),
                     'notify_customer' => $faker->boolean(),
                 ],
