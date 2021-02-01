@@ -44,21 +44,21 @@ class StatusTest extends TestCase
             'request_should_fail_when_for_is_not_provided' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->word(),
+                    'status_name' => $faker->lexify('???'),
                     'notify_customer' => true,
                 ],
             ],
             'request_should_fail_when_for_is_not_alphanumeric' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->word(),
+                    'status_name' => $faker->lexify('???'),
                     'status_for' => $faker->randomElements(['!', '#', '$', '%', '~', '.', ':', ':'], 4),
                 ],
             ],
             'request_should_fail_when_color_has_more_than_7_characters' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->word(),
+                    'status_name' => $faker->lexify('???'),
                     'status_for' => 'order',
                     'status_color' => $faker->sentence(8),
                     'notify_customer' => true,
@@ -67,7 +67,7 @@ class StatusTest extends TestCase
             'request_should_fail_when_comment_has_more_than_1028_characters' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->word(),
+                    'status_name' => $faker->lexify('???'),
                     'status_for' => 'order',
                     'status_color' => $faker->hexcolor(),
                     'status_comment' => $faker->sentence(1029),
@@ -76,15 +76,15 @@ class StatusTest extends TestCase
             'request_should_fail_when_notify_is_not_provided' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->word(),
+                    'status_name' => $faker->lexify('???'),
                     'status_for' => 'order',
-                    'status_color' => $faker->sentence(7),
+                    'status_color' => $faker->hexcolor(),
                 ],
             ],
             'request_should_fail_when_notify_is_not_boolean' => [
                 'passed' => FALSE,
                 'data' => [
-                    'status_name' => $faker->word(),
+                    'status_name' => $faker->lexify('???'),
                     'status_for' => 'order',
                     'status_color' => $faker->hexcolor(),
                     'notify_customer' => $faker->word(),
@@ -94,7 +94,7 @@ class StatusTest extends TestCase
             'request_should_pass_when_data_is_provided' => [
                 'passed' => TRUE,
                 'data' => [
-                    'status_name' => $faker->word(),
+                    'status_name' => $faker->lexify('???'),
                     'status_for' => 'order',
                     'status_color' => $faker->hexcolor(),
                     'status_comment' => $faker->sentence(),
