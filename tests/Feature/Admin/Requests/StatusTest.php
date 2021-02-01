@@ -94,7 +94,7 @@ class StatusTest extends TestCase
             'request_should_pass_when_data_is_provided' => [
                 'passed' => TRUE,
                 'data' => [
-                    'status_color' => $faker->hexcolor(),
+                    'status_name' => $faker->word(),
                     'status_for' => 'order',
                     'status_color' => $faker->hexcolor(),
                     'status_comment' => $faker->sentence(),
