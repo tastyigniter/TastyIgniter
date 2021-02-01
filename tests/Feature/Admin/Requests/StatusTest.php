@@ -55,15 +55,6 @@ class StatusTest extends TestCase
                     'status_for' => $faker->randomElements(['!', '#', '$', '%', '~', '.', ':', ':'], 4),
                 ],
             ],
-            'request_should_fail_when_color_has_less_than_7_characters' => [
-                'passed' => FALSE,
-                'data' => [
-                    'status_name' => $faker->text(7),
-                    'status_for' => 'order',
-                    'status_color' => $faker->text(6),
-                    'notify_customer' => true,
-                ],
-            ],
             'request_should_fail_when_color_has_more_than_7_characters' => [
                 'passed' => FALSE,
                 'data' => [
