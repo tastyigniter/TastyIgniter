@@ -32,7 +32,7 @@ class StatusTest extends TestCase
             'request_should_fail_when_name_has_less_than_2_characters' => [
                 'passed' => FALSE,
                 'data' => [
-                    'name' => $faker->text(1),
+                    'name' => 'a',
                 ],
             ],
             'request_should_fail_when_name_has_more_than_32_characters' => [
