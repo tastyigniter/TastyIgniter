@@ -31,7 +31,7 @@ class TableTest extends TestCase
                     'extra_capacity' => 1,
                     'priority' => 1,
                     'is_joinable' => $faker->boolean(),
-                    'table_status' => $faker->boolean()
+                    'table_status' => $faker->boolean(),
                 ],
             ],
             'request_should_fail_when_no_min_capacity_is_provided' => [
@@ -42,7 +42,7 @@ class TableTest extends TestCase
                     'extra_capacity' => 1,
                     'priority' => 1,
                     'is_joinable' => $faker->boolean(),
-                    'table_status' => $faker->boolean()
+                    'table_status' => $faker->boolean(),
                 ],
             ],
             'request_should_fail_when_no_max_capacity_is_provided' => [
@@ -53,7 +53,7 @@ class TableTest extends TestCase
                     'extra_capacity' => 1,
                     'priority' => 1,
                     'is_joinable' => $faker->boolean(),
-                    'table_status' => $faker->boolean()
+                    'table_status' => $faker->boolean(),
                 ],
             ],
             'request_should_fail_when_no_extra_capacity_is_provided' => [
@@ -64,7 +64,7 @@ class TableTest extends TestCase
                     'max_capacity' => 2,
                     'priority' => 1,
                     'is_joinable' => $faker->boolean(),
-                    'table_status' => $faker->boolean()
+                    'table_status' => $faker->boolean(),
                 ],
             ],
             'request_should_fail_when_no_priority_is_provided' => [
@@ -75,7 +75,7 @@ class TableTest extends TestCase
                     'max_capacity' => 2,
                     'extra_capacity' => 1,
                     'is_joinable' => $faker->boolean(),
-                    'table_status' => $faker->boolean()
+                    'table_status' => $faker->boolean(),
                 ],
             ],
             'request_should_fail_when_no_joinable_is_provided' => [
@@ -86,7 +86,7 @@ class TableTest extends TestCase
                     'max_capacity' => 2,
                     'extra_capacity' => 1,
                     'priority' => 1,
-                    'table_status' => $faker->boolean()
+                    'table_status' => $faker->boolean(),
                 ],
             ],
             'request_should_fail_when_no_status_is_provided' => [
