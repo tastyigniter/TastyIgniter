@@ -4,6 +4,7 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use AdminLocation;
+use AdminAuth;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
 
