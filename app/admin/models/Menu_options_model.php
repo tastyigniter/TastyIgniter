@@ -61,8 +61,8 @@ class Menu_options_model extends Model
     {
         $query = self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name');
 
-        if (!AdminAuth::isSuperUser())
-            $query->whereHasLocation(AdminLocation::getIdOrAll());
+        if (!is_null($ids = AdminLocation::getIdOrAll()))
+            $query->whereHasLocation($ids);
 
         return $query->dropdown('display_name');
     }
