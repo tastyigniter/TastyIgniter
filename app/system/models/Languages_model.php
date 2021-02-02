@@ -182,14 +182,7 @@ class Languages_model extends Language
 
     public function getTranslations($group, $namespace = null)
     {
-        $query = $this->translations();
-        $query->where('locale', $this->code);
-        $query->where('group', $group);
-
-        if (!is_null($namespace))
-            $query->where('namespace', $namespace);
-
-        return $query->pluck('text', 'item')->all();
+        return $this->getLines($this->code, $group, $namespace);
     }
 
     public function addTranslations($translations)
