@@ -3,7 +3,6 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
-use AdminAuth;
 use AdminLocation;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Model;
