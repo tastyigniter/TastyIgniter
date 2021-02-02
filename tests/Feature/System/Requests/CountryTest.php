@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\System\Requests;
 
-use Admin\System\Country;
+use System\Requests\Country;
 use Faker\Factory;
 use Tests\TestCase;
 
-class CountryText extends TestCase
+class CountryTest extends TestCase
 {
     use ValidateRequest;
 
