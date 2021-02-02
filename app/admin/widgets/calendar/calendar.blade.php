@@ -5,8 +5,8 @@
     data-alias="{{ $this->alias }}"
     data-aspect-ratio="{{ $aspectRatio }}"
     data-editable="{{ $editable ? 'true' : 'false' }}"
-    data-event-limit="{{ $eventLimit }}"
-    data-default-date="{{ $defaultDate }}"
+    data-day-max-event-rows="{{ $eventLimit }}"
+    data-initial-date="{{ $defaultDate }}"
 >
 
     @if($editable)
