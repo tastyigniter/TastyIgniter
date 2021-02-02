@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\System\Requests;
 
-use System\Requests\Country;
 use Faker\Factory;
+use System\Requests\Country;
 use Tests\TestCase;
 
 class CountryTest extends TestCase
@@ -60,16 +60,6 @@ class CountryTest extends TestCase
                     'priority' => 1,
                     'iso_code_2' => 'GB',
                     'format' => 'en',
-                    'status' => $faker->boolean(),
-                ],
-            ],
-            'request_should_fail_when_no_format_is_provided' => [
-                'passed' => FALSE,
-                'data' => [
-                    'country_name' => $faker->word(),
-                    'priority' => 1,
-                    'iso_code_2' => 'GB',
-                    'iso_code_3' => 'GBR',
                     'status' => $faker->boolean(),
                 ],
             ],
