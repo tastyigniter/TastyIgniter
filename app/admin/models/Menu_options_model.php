@@ -59,14 +59,12 @@ class Menu_options_model extends Model
 
     public static function getRecordEditorOptions()
     {
-        {
-            $query = self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name');
+        $query = self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name');
 
-            if (!AdminAuth::isSuperUser())
-                $query->whereHasLocation(AdminLocation::getIdOrAll());
+        if (!AdminAuth::isSuperUser())
+            $query->whereHasLocation(AdminLocation::getIdOrAll());
 
-            return $query->dropdown('display_name');
-        }
+        return $query->dropdown('display_name');
     }
 
     public function getDisplayTypeOptions()
