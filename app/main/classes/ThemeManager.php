@@ -73,9 +73,9 @@ class ThemeManager
         }
     }
 
-    public static function applyAssetVariablesOnCombinerFilters(array $filters)
+    public static function applyAssetVariablesOnCombinerFilters(array $filters, Theme $theme = null)
     {
-        $theme = self::instance()->getActiveTheme();
+        $theme = !is_null($theme) ? $theme : self::instance()->getActiveTheme();
 
         if (!$theme OR !$theme->hasCustomData())
             return;

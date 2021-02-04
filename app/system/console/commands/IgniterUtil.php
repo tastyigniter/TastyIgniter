@@ -143,4 +143,16 @@ class IgniterUtil extends Command
 
         $this->comment('Removed '.$removeCount.' duplicate views...');
     }
+
+    protected function utilSetCarte()
+    {
+        $carteKey = $this->option('carteKey');
+        if (!strlen($carteKey)) {
+            $this->error("No carteKey defined, use --carteKey=<key> to set a Carte");
+
+            return;
+        }
+
+        UpdateManager::instance()->applySiteDetail($carteKey);
+    }
 }

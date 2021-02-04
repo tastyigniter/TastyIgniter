@@ -48,6 +48,11 @@ class Languages_model extends Language
      */
     protected static $defaultLanguage;
 
+    /**
+     * @var self Active language cache.
+     */
+    protected static $activeLanguage;
+
     public static function applySupportedLanguages()
     {
         setting()->set('supported_languages', self::getDropdownOptions()->keys()->toArray());
@@ -148,6 +153,19 @@ class Languages_model extends Language
         return $this->code == setting('default_language');
     }
 
+    public static function getActiveLocale()
+    {
+        if (self::$activeLanguage !== null) {
+            return self::$activeLanguage;
+        }
+
+        $activeLanguage = self::isEnabled()
+            ->where('code', app()->getLocale())
+            ->first();
+
+        return self::$activeLanguage = $activeLanguage;
+    }
+
     public static function listSupported()
     {
         if (self::$supportedLocalesCache) {
@@ -182,14 +200,7 @@ class Languages_model extends Language
 
     public function getTranslations($group, $namespace = null)
     {
-        $query = $this->translations();
-        $query->where('locale', $this->code);
-        $query->where('group', $group);
-
-        if (!is_null($namespace))
-            $query->where('namespace', $namespace);
-
-        return $query->pluck('text', 'item')->all();
+        return $this->getLines($this->code, $group, $namespace);
     }
 
     public function addTranslations($translations)

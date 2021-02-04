@@ -3,8 +3,8 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use AdminLocation;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Igniter\Flame\Database\Traits\Validation;
 use Model;
 
 /**
@@ -14,7 +14,6 @@ class Menu_options_model extends Model
 {
     use Locationable;
     use Purgeable;
-    use Validation;
 
     const LOCATIONABLE_RELATION = 'locations';
 
@@ -55,18 +54,16 @@ class Menu_options_model extends Model
         ],
     ];
 
-    public $rules = [
-        ['option_name', 'lang:admin::lang.menu_options.label_option_name', 'required|min:2|max:32'],
-        ['display_type', 'lang:admin::lang.menu_options.label_display_type', 'required|alpha'],
-        ['locations.*', 'lang:admin::lang.label_location', 'integer'],
-    ];
-
     protected $purgeable = ['option_values'];
 
     public static function getRecordEditorOptions()
     {
-        return self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name')
-            ->dropdown('display_name');
+        $query = self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name');
+
+        if (!is_null($ids = AdminLocation::getIdOrAll()))
+            $query->whereHasLocation($ids);
+
+        return $query->dropdown('display_name');
     }
 
     public function getDisplayTypeOptions()

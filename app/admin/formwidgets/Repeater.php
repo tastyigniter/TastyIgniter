@@ -262,6 +262,11 @@ class Repeater extends BaseFormWidget
             return $this->model;
         }
 
-        return $model->makeRelation($attribute);
+        $related = $model->makeRelation($attribute);
+
+        if (!$related->exists)
+            $related->{$this->model->getKeyName()} = $this->model->getKey();
+
+        return $related;
     }
 }
