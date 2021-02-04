@@ -61,6 +61,7 @@ class IgniterUtil extends Command
         return [
             ['admin', null, InputOption::VALUE_NONE, 'Compile admin registered bundles.'],
             ['minify', null, InputOption::VALUE_REQUIRED, 'Whether to minify the assets or not, default is 1.'],
+            ['carteKey', null, InputOption::VALUE_REQUIRED, 'Specify a carteKey for set carte.'],
         ];
     }
 
@@ -148,7 +149,7 @@ class IgniterUtil extends Command
     {
         $carteKey = $this->option('carteKey');
         if (!strlen($carteKey)) {
-            $this->error("No carteKey defined, use --carteKey=<key> to set a Carte");
+            $this->error('No carteKey defined, use --carteKey=<key> to set a Carte');
 
             return;
         }
