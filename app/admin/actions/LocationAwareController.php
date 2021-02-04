@@ -14,6 +14,7 @@ class LocationAwareController extends ControllerAction
      *  $locationConfig = [
      *      'applyScopeOnListQuery'  => true',
      *      'applyScopeOnFormQuery'  => true',
+     *      'addAbsenceConstraint'  => false',
      *  ];
      * @var array
      */
@@ -59,7 +60,9 @@ class LocationAwareController extends ControllerAction
         if (is_null($ids = AdminLocation::getIdOrAll()))
             return;
 
-        $query->whereHasLocation($ids);
+        (bool)$this->getConfig('addAbsenceConstraint', FALSE)
+            ? $query->whereHasOrDoesntHaveLocation($ids)
+            : $query->whereHasLocation($ids);
     }
 
     protected function locationBindEvents()
