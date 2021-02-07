@@ -46,14 +46,14 @@
         this.calendar.on('eventDrop', $.proxy(this.onUpdateEvent, this))
         this.calendar.on('eventResize', $.proxy(this.onUpdateEvent, this))
         this.calendar.on('datesSet', $.proxy(this.hidePopovers, this))
-        
+
         this.calendar.render();
     }
 
     Calendar.prototype.onClickEvent = function (eventObj) {
         if (!this.options.editable)
             return
-            
+
         var renderProps = {...eventObj.event.extendedProps};
         renderProps.id = eventObj.event.id;
 
@@ -104,7 +104,7 @@
     Calendar.prototype.onPickerDateChanged = function (event) {
         this.$calendar.fullCalendar('gotoDate', event.date)
     }
-    
+
     Calendar.prototype.hidePopovers = function() {
         $('.popover.show').remove()
     }
@@ -139,6 +139,7 @@
         dayMaxEventRows: 5,
         navLinks: true,
         initialView: 'dayGridMonth',
+        locale: 'en',
     }
 
     // FIELD CALENDAR PLUGIN DEFINITION
@@ -152,6 +153,7 @@
             var $this = $(this)
             var data = $this.data('ti.calendar')
             var options = $.extend({}, Calendar.DEFAULTS, $this.data(), typeof option == 'object' && option)
+            options.locale = options.locale.split('-').shift();
             if (!data) $this.data('ti.calendar', (data = new Calendar(this, options)))
             if (typeof option == 'string') result = data[option].apply(data, args)
             if (typeof result != 'undefined') return false
