@@ -176,7 +176,7 @@ class CurrencyTest extends TestCase
                     'currency_name' => $faker->word(),
                     'currency_code' => $faker->lexify('???'),
                     'currency_symbol' => '&pound;',
-                    'country_id' => $faker->boolean(),
+                    'country_id' => $faker->word(),
                     'symbol_position' => '0',
                     'currency_rate' => 1,
                     'thousand_sign' => ',',
