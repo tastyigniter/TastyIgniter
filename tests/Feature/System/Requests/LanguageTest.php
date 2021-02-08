@@ -6,7 +6,7 @@ use Faker\Factory;
 use System\Requests\Language;
 use Tests\TestCase;
 
-class CountryTest extends TestCase
+class LanguageTest extends TestCase
 {
     use ValidateRequest;
 
