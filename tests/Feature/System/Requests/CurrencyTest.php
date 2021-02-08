@@ -98,7 +98,7 @@ class CurrencyTest extends TestCase
             'request_should_fail_when_name_has_more_than_32_characters' => [
                 'passed' => FALSE,
                 'data' => [
-                    'currency_name' => $faker->sentence(32),
+                    'currency_name' => $faker->sentence(33),
                     'currency_code' => 'GBP',
                     'currency_symbol' => '&pound;',
                     'country_id' => 1,
