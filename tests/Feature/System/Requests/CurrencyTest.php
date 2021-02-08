@@ -3,7 +3,7 @@
 namespace Tests\Feature\System\Requests;
 
 use Faker\Factory;
-use System\Requests\Country;
+use System\Requests\Currency;
 use Tests\TestCase;
 
 class CurrencyTest extends TestCase
