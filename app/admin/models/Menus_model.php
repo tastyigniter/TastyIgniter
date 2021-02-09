@@ -107,7 +107,7 @@ class Menus_model extends Model
 
         if (strlen($location) AND is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
-            $query->where(function($query) use ($location) {
+            $query->where(function ($query) use ($location) {
                 $query->whereHas('categories', function ($q) use ($location) {
                     $q->whereHasOrDoesntHaveLocation($location);
                 })->orDoesntHave('categories');
