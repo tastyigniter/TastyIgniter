@@ -157,7 +157,7 @@
   {
     "sort": "config",
     "item": "protocol",
-    "value": "sendmail"
+    "value": "log"
   },
   {
     "sort": "config",

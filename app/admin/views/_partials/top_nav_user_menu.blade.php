@@ -5,7 +5,7 @@
     $staffGroupNames = implode(', ', AdminAuth::staff()->groups->pluck('staff_group_name')->all());
     $staffState = \Admin\Classes\UserState::forUser();
 @endphp
-<li class="nav-item dropdown">
+<li id="menuitem-account" class="nav-item dropdown">
     <a href="#" class="nav-link" data-toggle="dropdown">
         <img
             class="rounded-circle"
