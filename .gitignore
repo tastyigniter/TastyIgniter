@@ -8,3 +8,13 @@
 /vendor
 composer.lock
 node_modules
+
+/extensions
+/config
+/storage
+/themes
+
+example.htaccess
+Start_bash_here.bat
+Git_clone.bat
+composer.json
