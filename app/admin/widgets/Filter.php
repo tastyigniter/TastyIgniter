@@ -71,6 +71,12 @@ class Filter extends BaseWidget
 
         // date picker
         $this->addJs('js/datepicker.js', 'datepicker-js');
+
+        // selectlist
+        $this->addJs('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js', 'bootstrap-multiselect-js');
+        $this->addCss('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css', 'bootstrap-multiselect-css');
+        $this->addJs('~/app/admin/widgets/form/assets/js/selectlist.js', 'selectlist-js');
+        $this->addCss('~/app/admin/widgets/form/assets/css/selectlist.css', 'selectlist-css');
     }
 
     public function initialize()
@@ -151,6 +157,11 @@ class Filter extends BaseWidget
                     $this->setScopeValue($scope, $active);
                     break;
 
+                case 'selectlist':
+                    $active = $value;
+                    $this->setScopeValue($scope, $active);
+                    break;
+
                 case 'checkbox':
                     $checked = $value == '1' ? TRUE : FALSE;
                     $this->setScopeValue($scope, $checked);
@@ -212,6 +223,20 @@ class Filter extends BaseWidget
         return [
             'available' => $this->getAvailableOptions($scope),
             'active' => $activeKey,
+        ];
+    }
+
+    public function getSelectListOptions($scopeName)
+    {
+        $this->defineFilterScopes();
+
+        $scope = $this->getScope($scopeName);
+        $activeKeys = $scope->value ? $scope->value : [];
+        if (!is_array($activeKeys)) $activeKeys = [$activeKeys];
+
+        return [
+            'available' => $this->getAvailableOptions($scope),
+            'active' => $activeKeys,
         ];
     }
 
