@@ -23,7 +23,9 @@
         columns: [],
         data: [],
         classes: 'table table-striped',
-        iconsPrefix: 'fa'
+        iconsPrefix: 'fa',
+        paginationLoop: false,
+        useAjax: false,
     }
 
     Table.prototype.init = function () {
@@ -31,8 +33,20 @@
             id: this.$el.attr('id') + '-table',
         })
 
+        if (this.options.useAjax) {
+            this.options.ajax = $.proxy(this.onGetData, this);
+        }
+
         this.$el.append(this.$table)
         this.table = this.$table.bootstrapTable(this.options)
+    }
+
+    Table.prototype.onGetData = function (params) {
+        $.request(this.options.alias+'::onGetRecords', {
+            data: $.extend({}, params.data)
+        }).done(function (results) {
+            params.success(results)
+        })
     }
 
     // FIELD Table PLUGIN DEFINITION

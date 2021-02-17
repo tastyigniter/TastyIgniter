@@ -10,3 +10,18 @@
 	right: 15px;
 	top: 8px;
 }
+
+.fc .fc-button-primary {
+	background-color: var(--secondary);
+	border: 0;
+}
+
+.fc .fc-today-button {
+	background-color: var(--secondary);
+}
+
+.fc .fc-button-primary:not(:disabled):hover,
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+	background-color: var(--gray-700);
+}

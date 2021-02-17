@@ -4,6 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
+use Admin\Traits\FormModelWidget;
 use Admin\Widgets\Table;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class DataTable extends BaseFormWidget
 {
+    use FormModelWidget;
+
     //
     // Configurable properties
     //
@@ -26,9 +29,15 @@ class DataTable extends BaseFormWidget
     public $size = 'large';
 
     /**
-     * @var bool Allow rows to be sorted
+     * @var bool Default sort
      */
-    public $rowSorting = FALSE;
+    public $defaultSort = null;
+
+    public $searchableFields = [];
+
+    public $showRefreshButton = FALSE;
+
+    public $useAjax = FALSE;
 
     //
     // Object properties
@@ -45,8 +54,25 @@ class DataTable extends BaseFormWidget
     {
         $this->fillFromConfig([
             'size',
-            'rowSorting',
+            'defaultSort',
+            'searchableFields',
+            'showRefreshButton',
+            'attributes',
+            'useAjax',
         ]);
+
+        if ($this->searchableFields) {
+            $this->config['attributes']['data-search'] = array_get($this->config, 'attributes.data-search', 'true');
+        }
+
+        if ($this->showRefreshButton) {
+            $this->config['attributes']['data-show-refresh'] = 'true';
+        }
+
+        if ($this->useAjax) {
+            $this->config['attributes']['data-side-pagination'] = 'server';
+            $this->config['attributes']['data-silent-sort'] = 'false';
+        }
 
         $this->table = $this->makeTableWidget();
         $this->table->bindToController();
@@ -109,15 +135,35 @@ class DataTable extends BaseFormWidget
         $this->vars['table'] = $this->table;
         $this->vars['dataTableId'] = $this->getId();
         $this->vars['size'] = $this->size;
-        $this->vars['rowSorting'] = $this->rowSorting;
+    }
+
+    public function getDataTableRecords($offset, $limit, $search)
+    {
+        $relationObject = $this->getRelationObject();
+        $query = $relationObject->newQuery();
+
+        $this->locationApplyScope($query);
+
+        if (strlen($search)) {
+            $query->search($search, $this->searchableFields);
+        }
+
+        if (is_array($this->defaultSort)) {
+            [$sortColumn, $sortBy] = $this->defaultSort;
+            $query->orderBy($sortColumn, $sortBy);
+        }
+
+        $page = ($offset / $limit) + 1;
+
+        return $query->paginate($limit, $page);
     }
 
     /**
      * Looks at the model for getXXXDataTableOptions or getDataTableOptions methods
      * to obtain values for autocomplete field types.
      *
-     * @param  string $field Table field name
-     * @param  string $data Data for the entire table
+     * @param string $field Table field name
+     * @param string $data Data for the entire table
      *
      * @return array
      * @throws \Exception
@@ -151,7 +197,9 @@ class DataTable extends BaseFormWidget
     {
         $dataSource = $this->table->getDataSource();
 
-        $records = $this->getLoadValue() ?: [];
+        $records = [];
+        if (!$this->useAjax)
+            $records = $this->getLoadValue() ?: [];
 
         $dataSource->purge();
         $dataSource->initRecords($records);
@@ -167,6 +215,8 @@ class DataTable extends BaseFormWidget
 
         $table = new Table($this->getController(), $config);
 
+        $table->bindEvent('table.getRecords', [$this, 'getDataTableRecords']);
+        $table->bindEvent('table.searchRecords', [$this, 'searchDataTableRecords']);
         $table->bindEvent('table.getDropdownOptions', [$this, 'getDataTableOptions']);
 
         return $table;

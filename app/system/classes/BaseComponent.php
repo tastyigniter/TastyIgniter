@@ -134,6 +134,8 @@ abstract class BaseComponent extends Extendable
     {
         $result = $this->{$handler}();
 
+        $this->fireSystemEvent('main.component.afterRunEventHandler', [$handler, &$result]);
+
         return $result;
     }
 

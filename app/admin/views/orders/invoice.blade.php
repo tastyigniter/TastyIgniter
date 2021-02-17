@@ -80,10 +80,6 @@
         </div>
     </div>
 
-    @php
-        $menuItemsOptions = $model->getOrderMenuOptions();
-        $orderTotals = $model->getOrderTotals();
-    @endphp
     <div class="row">
         <div class="col">
             <div class="table-responsive">
@@ -99,11 +95,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($model->getOrderMenus() as $menuItem)
+                    @foreach($model->getOrderMenusWithOptions() as $menuItem)
                         <tr>
                             <td>{{ $menuItem->quantity }}x</td>
                             <td class="text-left">{{ $menuItem->name }}<br/>
-                                @if($menuItemOptions = $menuItemsOptions->get($menuItem->order_menu_id))
+                                @if($menuItemOptions = $menuItem->menu_options)
                                     <div>
                                         @foreach($menuItemOptions as $menuItemOption)
                                             <small>
@@ -127,7 +123,7 @@
                     @endforeach
                     </tbody>
                     <tfoot>
-                    @foreach($orderTotals as $total)
+                    @foreach($model->getOrderTotals() as $total)
                         @continue($model->isCollectionType() AND $total->code == 'delivery')
                         @php $thickLine = ($total->code == 'order_total' OR $total->code == 'total') @endphp
                         <tr>

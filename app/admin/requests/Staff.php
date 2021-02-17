@@ -8,7 +8,8 @@ class Staff extends FormRequest
 {
     public function rules()
     {
-        $passwordRule = $this->getForm()->context == 'create' ? 'required' : 'sometimes';
+        $passwordRule = optional($this->getForm())->context != 'create'
+            ? 'sometimes' : 'required';
 
         $rules = [
             ['staff_name', 'admin::lang.label_name', 'required|between:2,128'],
@@ -18,10 +19,10 @@ class Staff extends FormRequest
             ['user.password_confirm', 'admin::lang.staff.label_confirm_password'],
         ];
 
-        if ($this->getForm()->context != 'account') {
+        if (optional($this->getForm())->context != 'account') {
             $rules = array_merge($rules, [
                 ['staff_status', 'admin::lang.label_status', 'boolean'],
-                ['language_id', 'admin::lang.staff.', 'integer'],
+                ['language_id', 'admin::lang.staff.label_language_id', 'nullable|integer'],
                 ['staff_role_id', 'admin::lang.staff.label_role', 'required|integer'],
                 ['groups', 'admin::lang.staff.label_group', 'required|array'],
                 ['locations', 'admin::lang.staff.label_location', 'nullable|array'],

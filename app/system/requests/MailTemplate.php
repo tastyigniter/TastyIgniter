@@ -12,7 +12,7 @@ class MailTemplate extends FormRequest
         $rules[] = ['label', 'admin::lang.label_description', 'required'];
         $rules[] = ['subject', 'system::lang.mail_templates.label_code', 'required'];
 
-        if ($this->getForm()->context == 'create') {
+        if (optional($this->getForm())->context == 'create') {
             $rules[] = ['code', 'system::lang.mail_templates.label_code', 'required|min:2|max:32'];
         }
 

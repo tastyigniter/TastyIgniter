@@ -213,11 +213,6 @@ class ServiceProvider extends AppServiceProvider
                 'label' => 'Status Editor',
                 'code' => 'statuseditor',
             ]);
-
-            $manager->registerFormWidget('Admin\FormWidgets\StarRating', [
-                'label' => 'Star Rating',
-                'code' => 'starrating',
-            ]);
         });
     }
 

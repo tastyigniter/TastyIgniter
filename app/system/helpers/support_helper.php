@@ -241,20 +241,20 @@ if (!function_exists('day_elapsed')) {
     function day_elapsed($datetime, $full = TRUE)
     {
         $datetime = make_carbon($datetime);
-        $time = $datetime->format('H:i');
-        $date = $datetime->format('j M Y');
+        $time = $datetime->format(lang('system::lang.php.time_format'));
+        $date = $datetime->format(lang('system::lang.php.date_format'));
 
         if ($datetime->isToday()) {
-            $date = 'Today';
+            $date = lang('system::lang.date.today');
         }
         elseif ($datetime->isYesterday()) {
-            $date = 'Yesterday';
+            $date = lang('system::lang.date.yesterday');
         }
         elseif ($datetime->isTomorrow()) {
-            $date = 'Tomorrow';
+            $date = lang('system::lang.date.tomorrow');
         }
 
-        return $full ? $date.' at '.$time : $date;
+        return $full ? sprintf(lang('system::lang.date.full'), $date, $time) : $date;
     }
 }
 

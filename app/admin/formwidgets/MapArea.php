@@ -6,6 +6,7 @@ use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Models\Location_areas_model;
 use Admin\Traits\FormModelWidget;
+use Admin\Traits\ValidatesForm;
 use Html;
 use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 class MapArea extends BaseFormWidget
 {
     use FormModelWidget;
+    use ValidatesForm;
 
     const SORT_PREFIX = '___dragged_';
 
@@ -169,7 +171,9 @@ class MapArea extends BaseFormWidget
 
         $form = $this->makeAreaFormWidget($model, 'edit');
 
-        $modelsToSave = $this->prepareModelsToSave($model, $form->getSaveData());
+        $this->validateFormWidget($form, $saveData = $form->getSaveData());
+
+        $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {

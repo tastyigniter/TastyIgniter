@@ -60,7 +60,7 @@ class Menus_model extends Model
         ],
     ];
 
-    protected $purgeable = ['menu_options'];
+    protected $purgeable = ['menu_options', 'special'];
 
     public $mediable = ['thumb'];
 
@@ -107,10 +107,14 @@ class Menus_model extends Model
 
         if (strlen($location) AND is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
+            $query->whereHas('categories', function ($q) use ($location) {
+                $q->whereHasOrDoesntHaveLocation($location);
+            })->orDoesntHave('categories');
         }
 
         if (strlen($category)) {
             $query->whereHas('categories', function ($q) use ($category) {
+                $q->isEnabled();
                 $q->whereSlug($category);
             });
         }
@@ -163,6 +167,9 @@ class Menus_model extends Model
 
         if (array_key_exists('menu_options', $this->attributes))
             $this->addMenuOption((array)$this->attributes['menu_options']);
+
+        if (array_key_exists('special', $this->attributes))
+            $this->addMenuSpecial((array)$this->attributes['special']);
     }
 
     protected function beforeDelete()
