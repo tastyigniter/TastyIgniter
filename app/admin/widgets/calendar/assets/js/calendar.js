@@ -37,6 +37,7 @@
             click: $.proxy(this.onTogglePicker, this)
         }
 
+        this.options.locale = this.options.locale.split('-').shift();
         this.options.events = $.proxy(this.generateEvents, this);
         this.calendar = new FullCalendar.Calendar(this.$calendar[0], this.options);
 
@@ -153,7 +154,6 @@
             var $this = $(this)
             var data = $this.data('ti.calendar')
             var options = $.extend({}, Calendar.DEFAULTS, $this.data(), typeof option == 'object' && option)
-            options.locale = options.locale.split('-').shift();
             if (!data) $this.data('ti.calendar', (data = new Calendar(this, options)))
             if (typeof option == 'string') result = data[option].apply(data, args)
             if (typeof result != 'undefined') return false
