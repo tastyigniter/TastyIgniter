@@ -27,7 +27,8 @@
         templates: {
             leftArrow: '<i class="fa fa-long-arrow-left"></i>',
             rightArrow: '<i class="fa fa-long-arrow-right"></i>'
-        }
+        },
+        language: 'en',
     }
 
     DatePicker.prototype.bindPicker = function () {
