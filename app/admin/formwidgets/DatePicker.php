@@ -82,6 +82,8 @@ class DatePicker extends BaseFormWidget
             $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
             $this->addCss('vendor/datepicker/bootstrap-datepicker.min.css', 'bootstrap-datepicker-css');
             $this->addJs('vendor/datepicker/bootstrap-datepicker.min.js', 'bootstrap-datepicker-js');
+            if (setting('default_language') != 'en')
+                $this->addJs('vendor/datepicker/bootstrap-datepicker/locales/bootstrap-datepicker.'.strtolower(str_replace('_', '-', setting('default_language'))).'.min.js', 'bootstrap-datepicker-js');
             $this->addCss('css/datepicker.css', 'datepicker-css');
             $this->addJs('js/datepicker.js', 'datepicker-js');
         }
