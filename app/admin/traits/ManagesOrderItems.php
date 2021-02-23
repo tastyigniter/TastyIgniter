@@ -136,6 +136,7 @@ trait ManagesOrderItems
         }
 
         $this->total_items = $order_item_count;
+
         return $order_subtotal;
     }
 
