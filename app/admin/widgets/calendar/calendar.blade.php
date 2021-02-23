@@ -7,6 +7,7 @@
     data-editable="{{ $editable ? 'true' : 'false' }}"
     data-day-max-event-rows="{{ $eventLimit }}"
     data-initial-date="{{ $defaultDate }}"
+    data-locale={{ setting('default_language') }}
 >
 
     @if($editable)
