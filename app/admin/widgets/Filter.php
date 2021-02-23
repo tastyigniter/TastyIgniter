@@ -214,14 +214,7 @@ class Filter extends BaseWidget
         $this->defineFilterScopes();
 
         $scope = $this->getScope($scopeName);
-
-        if ($scope->type == 'selectlist') {
-            $activeKey = $scope->value ? $scope->value : [];
-            if (!is_array($activeKey))
-                $activeKey = [$activeKey];
-        } else {
-            $activeKey = $scope->value ? $scope->value : null;
-        }
+        $activeKey = $scope->value ? $scope->value : null;
 
         return [
             'available' => $this->getAvailableOptions($scope),
