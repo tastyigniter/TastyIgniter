@@ -153,10 +153,6 @@ class Filter extends BaseWidget
 
             switch ($scope->type) {
                 case 'select':
-                    $active = $value;
-                    $this->setScopeValue($scope, $active);
-                    break;
-
                 case 'selectlist':
                     $active = $value;
                     $this->setScopeValue($scope, $active);
@@ -218,25 +214,18 @@ class Filter extends BaseWidget
         $this->defineFilterScopes();
 
         $scope = $this->getScope($scopeName);
-        $activeKey = $scope->value ? $scope->value : null;
+
+        if ($scope->type == 'selectlist') {
+            $activeKey = $scope->value ? $scope->value : [];
+            if (!is_array($activeKey))
+                $activeKey = [$activeKey];
+        } else {
+            $activeKey = $scope->value ? $scope->value : null;
+        }
 
         return [
             'available' => $this->getAvailableOptions($scope),
             'active' => $activeKey,
-        ];
-    }
-
-    public function getSelectListOptions($scopeName)
-    {
-        $this->defineFilterScopes();
-
-        $scope = $this->getScope($scopeName);
-        $activeKeys = $scope->value ? $scope->value : [];
-        if (!is_array($activeKeys)) $activeKeys = [$activeKeys];
-
-        return [
-            'available' => $this->getAvailableOptions($scope),
-            'active' => $activeKeys,
         ];
     }
 
