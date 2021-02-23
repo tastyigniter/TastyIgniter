@@ -100,7 +100,7 @@ trait ManagesOrderItems
      *
      * @param array $content
      *
-     * @return bool
+     * @return float
      */
     public function addOrderMenus(array $content)
     {
@@ -111,6 +111,8 @@ trait ManagesOrderItems
         $this->orderMenusQuery()->where('order_id', $orderId)->delete();
         $this->orderMenuOptionsQuery()->where('order_id', $orderId)->delete();
 
+        $order_subtotal = 0;
+        $order_item_count = 0;
         foreach ($content as $rowId => $cartItem) {
             if ($rowId != $cartItem->rowId) continue;
 
@@ -128,7 +130,13 @@ trait ManagesOrderItems
             if ($orderMenuId AND count($cartItem->options)) {
                 $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
             }
+
+            $order_subtotal += $cartItem->subtotal;
+            $order_item_count += $cartItem->qty;
         }
+
+        $this->total_items = $order_item_count;
+        return $order_subtotal;
     }
 
     /**
@@ -178,6 +186,7 @@ trait ManagesOrderItems
 
         $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
 
+        $order_total = 0;
         foreach ($totals as $total) {
             $this->orderTotalsQuery()->insert([
                 'order_id' => $orderId,
@@ -186,7 +195,11 @@ trait ManagesOrderItems
                 'value' => $total['value'],
                 'priority' => $total['priority'],
             ]);
+
+            $order_total += $total['value'];
         }
+
+        $this->order_total = $order_total;
     }
 
     public function orderMenusQuery()
