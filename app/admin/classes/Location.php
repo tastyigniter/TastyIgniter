@@ -117,9 +117,6 @@ class Location extends Manager
         if ($this->isSingleMode())
             return TRUE;
 
-        if ($this->getAuth()->isSuperUser())
-            return FALSE;
-
         return $this->getAuth()->locations()->count() === 1;
     }
 
