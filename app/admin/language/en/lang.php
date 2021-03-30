@@ -492,6 +492,7 @@ return [
         'label_area_id' => 'Area ID',
         'label_area_name' => 'Area Name',
         'label_area_charge' => 'Charge',
+        'label_area_distance' => 'Distance',
         'label_address_component' => 'Address Component',
         'label_address_component_type' => 'Address Component Type',
         'label_address_component_value' => 'Address Component Value',
@@ -503,6 +504,7 @@ return [
         'label_gallery_image_name' => 'Filename',
         'label_gallery_image_alt' => 'Alt Text',
         'label_delivery_condition' => 'Delivery Condition',
+        'label_delivery_distance' => 'Distance Charges',
 
         'error_no_zero_total' => 'The %s can not be a value zero on conditions other than \'on all orders\'.',
         'alert_delivery_area' => 'To make this location searchable by your customers, please add delivery area(s) under the \'Delivery\' tab.',
@@ -524,6 +526,7 @@ return [
         'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least one delivery area to accept delivery orders.',
         'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
         'help_delivery_components' => 'All rules must be VALID to apply this delivery area, each rule is matched against the user\'s address component. Values can contain Regular Expressions.',
+        'help_delivery_distance' => 'Add additional distance charges per unit. These will be in addition to delivery condition charges.',
     ],
 
     'login' => [

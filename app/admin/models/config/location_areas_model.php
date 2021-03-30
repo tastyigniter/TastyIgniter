@@ -114,6 +114,27 @@ return [
                     ],
                 ],
             ],
+            'boundaries[distance]' => [
+                'label' => 'lang:admin::lang.locations.label_delivery_distance',
+                'type' => 'repeater',
+                'sortable' => TRUE,
+                'commentAbove' => 'lang:admin::lang.locations.help_delivery_distance',
+                'form' => [
+                    'fields' => [
+                        'priority' => [
+                            'type' => 'hidden',
+                        ],
+                        'distance' => [
+                            'label' => 'lang:admin::lang.locations.label_area_distance',
+                            'type' => 'text',
+                        ],
+                        'charge' => [
+                            'label' => 'lang:admin::lang.locations.label_area_charge',
+                            'type' => 'text',
+                        ],
+                    ],
+                ],
+            ],
             'location_id' => [
                 'type' => 'hidden',
             ],
