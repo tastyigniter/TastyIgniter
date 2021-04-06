@@ -19,7 +19,7 @@ The best place to learn TastyIgniter is by reading the [documentation](https://t
 Please read the [Installation Guide](https://tastyigniter.com/docs/installation) for more information.
 
 ### Questions
-For questions and support please use the [Community Forum](https://forum.tastyigniter.com) or [Join us on Slack](http://tastyigniter.com/slack). 
+For questions and support please use the [Community Forum](https://forum.tastyigniter.com) or [Join us on Discord](https://tastyigniter.com/discord). 
 
 ### Issues
 Please report bugs using the [GitHub issue tracker](https://github.com/tastyigniter/TastyIgniter/issues)

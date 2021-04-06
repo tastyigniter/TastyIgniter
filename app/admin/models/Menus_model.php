@@ -101,15 +101,18 @@ class Menus_model extends Model
             'location' => null,
             'category' => null,
             'search' => '',
+            'orderType' => 0,
         ], $options));
 
         $searchableFields = ['menu_name', 'menu_description'];
 
         if (strlen($location) AND is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
-            $query->whereHas('categories', function ($q) use ($location) {
-                $q->whereHasOrDoesntHaveLocation($location);
-            })->orDoesntHave('categories');
+            $query->where(function ($query) use ($location) {
+                $query->whereHas('categories', function ($q) use ($location) {
+                    $q->whereHasOrDoesntHaveLocation($location);
+                })->orDoesntHave('categories');
+            });
         }
 
         if (strlen($category)) {
@@ -147,6 +150,12 @@ class Menus_model extends Model
 
         if ($enabled) {
             $query->isEnabled();
+        }
+
+        if ($orderType) {
+            $query->where(function ($q) use ($orderType) {
+                $q->where('order_restriction', 0)->orWhere('order_restriction', (int)$orderType);
+            });
         }
 
         return $query->paginate($pageLimit, $page);
