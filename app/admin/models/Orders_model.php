@@ -49,7 +49,7 @@ class Orders_model extends Model
 
     protected $timeFormat = 'H:i';
 
-    public $guarded = ['ip_address', 'user_agent', 'hash'];
+    public $guarded = ['ip_address', 'user_agent', 'hash', 'total_items', 'order_total'];
 
     protected $hidden = ['cart'];
 

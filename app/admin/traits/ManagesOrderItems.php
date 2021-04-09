@@ -100,7 +100,7 @@ trait ManagesOrderItems
      *
      * @param array $content
      *
-     * @return bool
+     * @return float
      */
     public function addOrderMenus(array $content)
     {
@@ -187,6 +187,24 @@ trait ManagesOrderItems
                 'priority' => $total['priority'],
             ]);
         }
+
+        $this->calculateTotals();
+    }
+
+    public function calculateTotals()
+    {
+        $orderTotal = $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('value');
+
+        $totalItems = $this->orderMenusQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('quantity');
+
+        $this->newQuery()->where('order_id', $this->getKey())->update([
+            'total_items' => $totalItems,
+            'order_total' => $orderTotal,
+        ]);
     }
 
     public function orderMenusQuery()
