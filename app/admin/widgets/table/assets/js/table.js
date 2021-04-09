@@ -24,6 +24,7 @@
         data: [],
         classes: 'table table-striped',
         iconsPrefix: 'fa',
+        resizable: true,
         paginationLoop: false,
         useAjax: false,
     }
