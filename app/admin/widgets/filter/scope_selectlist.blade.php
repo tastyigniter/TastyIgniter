@@ -14,6 +14,7 @@
             {!! $selectMultiple ? 'multiple="multiple"' : '' !!}
             data-enable-filtering="{{ $enableFilter }}"
             data-enable-case-insensitive-filtering="{{ $enableFilter }}"
+            data-number-displayed="2"
         >
             @if ($scope->label)<option value="">@lang($scope->label)</option>@endif
             @foreach ($options['available'] as $key => $value)

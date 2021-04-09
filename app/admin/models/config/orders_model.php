@@ -352,7 +352,6 @@ $config['form']['tabs'] = [
             'type' => 'datatable',
             'useAjax' => TRUE,
             'defaultSort' => ['payment_log_id', 'desc'],
-            'actionButtons' => '$/igniter/payregister/views/partials/refund_button',
             'columns' => [
                 'date_added_since' => [
                     'title' => 'lang:admin::lang.orders.column_time_date',
