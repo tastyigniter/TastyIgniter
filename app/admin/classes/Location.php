@@ -120,6 +120,17 @@ class Location extends Manager
         return $this->getAuth()->locations()->count() === 1;
     }
 
+    public function hasLocations()
+    {
+        if ($this->isSingleMode())
+            return FALSE;
+
+        if ($this->getAuth()->isSuperUser())
+            return TRUE;
+
+        return $this->getAuth()->locations()->count() > 1;
+    }
+
     /**
      * @return \Admin\Classes\User
      */
