@@ -48,6 +48,7 @@
 
             this.$el.on('change.datetimepicker', $.proxy(this.onSelectDateTimePicker, this))
         } else {
+            this.options.language = this.options.language.replace('_', '-').split('-').shift();
             this.picker = this.$el.datepicker(this.options);
             this.parsePickerValue()
             this.$el.on('changeDate', $.proxy(this.onSelectDatePicker, this))

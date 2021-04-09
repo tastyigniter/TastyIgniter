@@ -37,7 +37,7 @@
             click: $.proxy(this.onTogglePicker, this)
         }
 
-        this.options.locale = this.options.locale.split('-').shift();
+        this.options.locale = this.options.locale.replace('_', '-').split('-').shift();
         this.options.events = $.proxy(this.generateEvents, this);
         this.calendar = new FullCalendar.Calendar(this.$calendar[0], this.options);
 

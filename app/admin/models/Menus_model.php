@@ -101,6 +101,7 @@ class Menus_model extends Model
             'location' => null,
             'category' => null,
             'search' => '',
+            'orderType' => 0,
         ], $options));
 
         $searchableFields = ['menu_name', 'menu_description'];
@@ -149,6 +150,12 @@ class Menus_model extends Model
 
         if ($enabled) {
             $query->isEnabled();
+        }
+
+        if ($orderType) {
+            $query->where(function ($q) use ($orderType) {
+                $q->where('order_restriction', 0)->orWhere('order_restriction', (int)$orderType);
+            });
         }
 
         return $query->paginate($pageLimit, $page);
