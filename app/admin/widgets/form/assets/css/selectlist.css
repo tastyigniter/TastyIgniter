@@ -60,6 +60,8 @@
 .multiselect-item .checkbox,
 .multiselect-item .radio {
 	margin: 0;
+	display: block;
+	padding-left: 1.25em;
 }
 .multiselect-item .checkbox label,
 .multiselect-item .radio label {

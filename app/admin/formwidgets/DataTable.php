@@ -155,7 +155,7 @@ class DataTable extends BaseFormWidget
 
         $page = ($offset / $limit) + 1;
 
-        return $query->paginate($limit, $page);
+        return $query->paginate($limit, ['*'], 'page', $page);
     }
 
     /**
