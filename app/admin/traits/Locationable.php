@@ -3,6 +3,7 @@
 namespace Admin\Traits;
 
 use AdminLocation;
+use Igniter\Flame\Exception\ApplicationException;
 
 trait Locationable
 {
@@ -24,10 +25,6 @@ trait Locationable
      */
     public static function bootLocationable()
     {
-        static::creating(function (self $model) {
-            $model->setLocationableAttributes();
-        });
-
         static::deleting(function (self $model) {
             $model->detachLocationsOnDelete();
         });
@@ -65,24 +62,28 @@ trait Locationable
      * Apply the Location scope query.
      *
      * @param \Igniter\Flame\Database\Builder $builder
-     * @param \Igniter\Flame\Auth\Models\User $userLocation
+     * @param \Igniter\Flame\Database\Model|array|int $userLocation
      */
     protected function applyLocationScope($builder, $userLocation)
     {
-        $locationId = !is_numeric($userLocation)
-            ? $userLocation->getKey() : $userLocation;
+        $locationId = is_object($userLocation)
+            ? $userLocation->getKey()
+            : $userLocation;
+
+        if (!is_array($locationId))
+            $locationId = [$locationId];
 
         $relationName = $this->locationableRelationName();
         $relationObject = $this->getLocationableRelationObject();
         $locationModel = $relationObject->getRelated();
 
         if ($this->locationableIsSingleRelationType()) {
-            $builder->where($locationModel->getKeyName(), $locationId);
+            $builder->whereIn($locationModel->getKeyName(), $locationId);
         }
         else {
             $qualifiedColumnName = $relationObject->getTable().'.'.$locationModel->getKeyName();
             $builder->whereHas($relationName, function ($query) use ($qualifiedColumnName, $locationId) {
-                $query->where($qualifiedColumnName, $locationId);
+                $query->whereIn($qualifiedColumnName, $locationId);
             });
         }
     }
@@ -91,31 +92,18 @@ trait Locationable
     //
     //
 
-    protected function setLocationableAttributes()
-    {
-        if (!$this->locationableScopeEnabled())
-            return;
-
-        if ($this->locationableRelationExists())
-            return;
-
-        if ($this->locationableIsSingleRelationType()) {
-            $relationObj = $this->getLocationableRelationObject();
-            $attributeName = $relationObj->getForeignKeyName();
-            $this->{$attributeName} = $this->locationableGetUserLocation();
-        }
-        else {
-            $relationName = $this->locationableRelationName();
-            $this->{$relationName} = [$this->locationableGetUserLocation()];
-        }
-    }
-
     protected function detachLocationsOnDelete()
     {
         if ($this->locationableIsSingleRelationType())
             return;
 
-        $this->getLocationableRelationObject()->detach();
+        $locationable = $this->getLocationableRelationObject();
+
+        if (!app('admin.auth')->isSuperUser() AND $locationable->count() > 1) {
+            throw new ApplicationException(lang('admin::lang.alert_warning_locationable_delete'));
+        }
+
+        $locationable->detach();
     }
 
     //

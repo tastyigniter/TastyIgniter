@@ -382,11 +382,30 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[reservation_stay_time]' => [
+            'label' => 'lang:admin::lang.locations.label_reservation_stay_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 45,
+            'type' => 'number',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_reservation_stay_time',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_reservation]',
+                'condition' => 'checked',
+            ],
+        ],
         'options[auto_allocate_table]' => [
             'label' => 'lang:admin::lang.locations.label_auto_allocate_table',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 1,
             'type' => 'switch',
+            'span' => 'right',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_reservation]',
+                'condition' => 'checked',
+            ],
         ],
 
         'opening_type' => [

@@ -4,6 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
+use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Attach\Media;
@@ -26,6 +27,8 @@ use SystemException;
  */
 class MediaFinder extends BaseFormWidget
 {
+    use ValidatesForm;
+
     //
     // Configurable properties
     //
@@ -169,13 +172,15 @@ class MediaFinder extends BaseFormWidget
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
             return;
 
-        $configData = post('media.custom_properties', []);
-
         $media = $this->model->findMedia($mediaId);
 
-        $media->setCustomProperty('title', array_get($configData, 'title'));
-        $media->setCustomProperty('description', array_get($configData, 'description'));
-        $media->setCustomProperty('extras', array_get($configData, 'extras', []));
+        $form = $this->makeAttachmentConfigFormWidget($media);
+
+        $this->validateFormWidget($form, $configData = $form->getSaveData());
+
+        $media->setCustomProperty('title', array_get($configData, 'custom_properties.title'));
+        $media->setCustomProperty('description', array_get($configData, 'custom_properties.description'));
+        $media->setCustomProperty('extras', array_get($configData, 'custom_properties.extras', []));
 
         $media->save();
 
@@ -294,6 +299,13 @@ class MediaFinder extends BaseFormWidget
                         ],
                     ],
                 ],
+            ],
+            'rules' => [
+                ['custom_properties.title', 'lang:main::lang.media_manager.label_attachment_title', 'string|max:128'],
+                ['custom_properties.description', 'lang:main::lang.media_manager.label_attachment_description', 'string|max:255'],
+                ['custom_properties.extras', 'lang:main::lang.media_manager.label_attachment_properties', 'array'],
+                ['custom_properties.extras.*.key', 'lang:main::lang.media_manager.label_attachment_property_key', 'string|max:128'],
+                ['custom_properties.extras.*.value', 'lang:main::lang.media_manager.label_attachment_property_value', 'string|max:128'],
             ],
         ];
     }

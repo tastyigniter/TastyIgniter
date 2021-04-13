@@ -48,6 +48,7 @@ $config['list']['toolbar'] = [
             'label' => 'lang:admin::lang.allergens.text_allergens',
             'class' => 'btn btn-default',
             'href' => 'allergens',
+            'permission' => 'Admin.Allergens',
         ],
     ],
 ];
@@ -179,7 +180,6 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'valueFrom' => 'locations',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
         ],
         'minimum_qty' => [
             'label' => 'lang:admin::lang.menus.label_minimum_qty',

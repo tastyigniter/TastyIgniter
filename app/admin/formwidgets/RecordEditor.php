@@ -4,6 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
+use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
 use ApplicationException;
 use DB;
@@ -15,6 +16,7 @@ use Html;
 class RecordEditor extends BaseFormWidget
 {
     use FormModelWidget;
+    use ValidatesForm;
 
     public $form;
 
@@ -27,6 +29,12 @@ class RecordEditor extends BaseFormWidget
     public $popupSize;
 
     public $formName = 'Record';
+
+    public $hideEditButton = FALSE;
+
+    public $hideDeleteButton = FALSE;
+
+    public $hideCreateButton = FALSE;
 
     public $addLabel = 'New';
 
@@ -48,6 +56,9 @@ class RecordEditor extends BaseFormWidget
             'modelClass',
             'addonLeft',
             'addonRight',
+            'hideAddButton',
+            'hideEditButton',
+            'hideDeleteButton',
             'addLabel',
             'editLabel',
             'deleteLabel',
@@ -82,6 +93,9 @@ class RecordEditor extends BaseFormWidget
         $this->vars['addLabel'] = $this->addLabel;
         $this->vars['editLabel'] = $this->editLabel;
         $this->vars['deleteLabel'] = $this->deleteLabel;
+        $this->vars['showEditButton'] = !$this->hideEditButton;
+        $this->vars['showDeleteButton'] = !$this->hideDeleteButton;
+        $this->vars['showCreateButton'] = !$this->hideCreateButton;
     }
 
     public function onLoadRecord()
@@ -105,7 +119,9 @@ class RecordEditor extends BaseFormWidget
 
         $form = $this->makeRecordFormWidget($model);
 
-        $modelsToSave = $this->prepareModelsToSave($model, $form->getSaveData());
+        $this->validateFormWidget($form, $saveData = $form->getSaveData());
+
+        $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {

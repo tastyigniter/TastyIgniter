@@ -2,6 +2,7 @@
 
 namespace System\Traits;
 
+use Event;
 use Mail;
 
 trait SendsMailTemplate
@@ -18,9 +19,12 @@ trait SendsMailTemplate
 
     public function mailSend($view, $recipientType = null)
     {
+        $extraData = [];
+        Event::fire('model.mail.beforeSend', [$this, &$extraData]);
+
         Mail::queue(
             $view,
-            $this->mailGetData(),
+            array_merge($extraData, $this->mailGetData()),
             is_callable($recipientType)
                 ? $recipientType
                 : $this->mailBuildMessage($recipientType)

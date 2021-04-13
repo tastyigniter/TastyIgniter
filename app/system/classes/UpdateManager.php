@@ -548,7 +548,8 @@ class UpdateManager
     {
         $tags = array_get($update, 'tags.data', []);
         foreach ($tags as &$tag) {
-            $tag['description'] = Markdown::parse($tag['description'])->toHtml();
+            if (strlen($tag['description']))
+                $tag['description'] = Markdown::parse($tag['description'])->toHtml();
         }
 
         array_set($update, 'tags.data', $tags);

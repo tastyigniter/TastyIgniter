@@ -6,6 +6,8 @@
         this.$form = this.$el.closest('form')
         this.$mapView = null
         this.options = options || {}
+        this.$sortable = null
+        this.$sortableContainer = $(this.options.sortableContainer, this.$el)
 
         this.init()
     }
@@ -15,6 +17,16 @@
 
         this.$el.on('click', '[data-control="load-area"]', $.proxy(this.onLoadArea, this))
         this.$el.on('click', '[data-control="remove-area"]', $.proxy(this.onRemoveArea, this))
+        
+        this.bindSorting()
+    }
+    
+    MapArea.prototype.bindSorting = function () {
+        var sortableOptions = {
+            handle: this.options.sortableHandle,
+        }
+
+        this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
     }
 
     MapArea.prototype.onModalShown = function (event, $modalEl) {
@@ -139,6 +151,8 @@
     MapArea.DEFAULTS = {
         alias: undefined,
         removeHandler: undefined,
+        sortableHandle: '.maparea-item-handle',
+        sortableContainer: '.field-maparea-items',
     }
 
     // PLUGIN DEFINITION

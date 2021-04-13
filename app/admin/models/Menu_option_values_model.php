@@ -3,7 +3,6 @@
 namespace Admin\Models;
 
 use Igniter\Flame\Database\Traits\Sortable;
-use Igniter\Flame\Database\Traits\Validation;
 use Model;
 
 /**
@@ -12,7 +11,6 @@ use Model;
 class Menu_option_values_model extends Model
 {
     use Sortable;
-    use Validation;
 
     /**
      * @var string The database table name
@@ -24,7 +22,7 @@ class Menu_option_values_model extends Model
      */
     protected $primaryKey = 'option_value_id';
 
-    protected $fillable = ['option_id', 'value', 'price', 'allergens'];
+    protected $fillable = ['option_id', 'value', 'price', 'allergens', 'priority'];
 
     protected $casts = [
         'option_value_id' => 'integer',
@@ -44,13 +42,7 @@ class Menu_option_values_model extends Model
 
     public $sortable = [
         'sortOrderColumn' => 'priority',
-        'sortWhenCreating' => FALSE,
-    ];
-
-    public $rules = [
-        ['option_id', 'lang:admin::lang.menu_options.label_option_id', 'required|integer'],
-        ['value', 'lang:admin::lang.menu_options.label_option_value', 'required|min:2|max:128'],
-        ['price', 'lang:admin::lang.menu_options.label_option_price', 'required|numeric|min:0'],
+        'sortWhenCreating' => TRUE,
     ];
 
     public static function getDropDownOptions()

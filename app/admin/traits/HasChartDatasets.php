@@ -10,6 +10,8 @@ use Illuminate\Support\Collection;
 
 trait HasChartDatasets
 {
+    use LocationAwareWidget;
+
     public function loadAssets()
     {
         $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
@@ -69,6 +71,7 @@ trait HasChartDatasets
         $query->whereBetween($dateColumnName, [$start, $end])->groupBy('x');
 
         $dateRanges = $this->getDatePeriod($start, $end);
+        $this->locationApplyScope($query);
 
         return $this->getPointsArray($dateRanges, $query->get());
     }
