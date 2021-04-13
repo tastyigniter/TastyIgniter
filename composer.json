@@ -51,14 +51,6 @@
       "dont-discover": [
         "*"
       ]
-    },
-    "merge-plugin": {
-      "include": [
-        "extensions/*/*/composer.json"
-      ],
-      "replace": false,
-      "recurse": true,
-      "merge-dev": false
     }
   }
 }
