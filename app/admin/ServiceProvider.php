@@ -689,9 +689,11 @@ class ServiceProvider extends AppServiceProvider
     {
         Event::listen('console.schedule', function (Schedule $schedule) {
             // Check for assignables to assign every minute
-            $schedule->call(function () {
-                Classes\Allocator::allocate();
-            })->name('Assignables Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
+            if (Classes\Allocator::isEnabled()) {
+                $schedule->call(function () {
+                    Classes\Allocator::allocate();
+                })->name('Assignables Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
+            }
         });
     }
 
