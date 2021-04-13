@@ -173,8 +173,10 @@ class Table extends BaseWidget
 
         $eventResults = $this->fireEvent('table.getRecords', [$offset, $limit, $search], TRUE);
 
+        $records = $eventResults->getCollection()->toArray();
+
         return [
-            'rows' => $eventResults->getCollection()->toArray(),
+            'rows' => $this->processRecords($records),
             'total' => $eventResults->total(),
         ];
     }
