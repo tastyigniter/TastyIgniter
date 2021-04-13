@@ -99,7 +99,6 @@ $config['form']['toolbar'] = [
             'menuItems' => [
                 'saveNew' => [
                     'label' => 'lang:admin::lang.text_save_new',
-                    'context' => ['edit'],
                     'class' => 'dropdown-item',
                     'data-request' => 'onSave',
                     'data-request-data' => 'new:1',
@@ -107,7 +106,6 @@ $config['form']['toolbar'] = [
                 ],
                 'saveClose' => [
                     'label' => 'lang:admin::lang.text_save_close',
-                    'context' => ['edit'],
                     'class' => 'dropdown-item',
                     'data-request' => 'onSave',
                     'data-request-data' => 'close:1',
