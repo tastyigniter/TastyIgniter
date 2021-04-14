@@ -86,18 +86,20 @@ trait ManagesOrderItems
             unset($menu->option_values);
             $menu->menu_options = $orderMenuOptions->get($menu->order_menu_id) ?: [];
 
-            $menuOptionModel = $orderMenus->get($menu->menu_id);
-            $menu->menu_options = $menu->menu_options->map(function ($menuOption) use ($menuOptionModel) {
-                $menuOption->order_option_category = '';
-                foreach ($menuOptionModel->menu_options as $option) {
-                    foreach ($option->menu_option_values as $optionValue) {
-                        if ($optionValue->menu_option_value_id == $menuOption->menu_option_value_id)
-                            $menuOption->order_option_category = $option->option_name;
+            if (count($menu->menu_options)) {
+                $menuOptionModel = $orderMenus->get($menu->menu_id);
+                $menu->menu_options = $menu->menu_options->map(function ($menuOption) use ($menuOptionModel) {
+                    $menuOption->order_option_category = '';
+                    foreach ($menuOptionModel->menu_options as $option) {
+                        foreach ($option->menu_option_values as $optionValue) {
+                            if ($optionValue->menu_option_value_id == $menuOption->menu_option_value_id)
+                                $menuOption->order_option_category = $option->option_name;
+                        }
                     }
-                }
 
-                return $menuOption;
-            });
+                    return $menuOption;
+                });
+            }
 
             return $menu;
         });
