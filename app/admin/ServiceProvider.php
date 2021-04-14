@@ -213,6 +213,11 @@ class ServiceProvider extends AppServiceProvider
                 'label' => 'Status Editor',
                 'code' => 'statuseditor',
             ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\ScheduleEditor', [
+                'label' => 'Schedule Editor',
+                'code' => 'scheduleeditor',
+            ]);
         });
     }
 
