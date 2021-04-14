@@ -177,6 +177,15 @@ class Theme
         return $this->active;
     }
 
+    public function loadThemeFile()
+    {
+        if (File::exists($path = $this->getPath().'/theme.php'))
+            require $path;
+
+        if (File::exists($path = $this->getParentPath().'/theme.php'))
+            require $path;
+    }
+
     //
     //
     //

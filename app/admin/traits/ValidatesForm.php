@@ -142,4 +142,12 @@ trait ValidatesForm
 
         return Session::flash($sessionKey, $errors);
     }
+
+    protected function validateFormWidget($form, $saveData)
+    {
+        if (!$rules = array_get($form->config, 'rules'))
+            return;
+
+        return $this->validate($saveData, $rules);
+    }
 }

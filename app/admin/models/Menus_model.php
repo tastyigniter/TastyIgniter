@@ -60,7 +60,7 @@ class Menus_model extends Model
         ],
     ];
 
-    protected $purgeable = ['menu_options'];
+    protected $purgeable = ['menu_options', 'special'];
 
     public $mediable = ['thumb'];
 
@@ -101,16 +101,23 @@ class Menus_model extends Model
             'location' => null,
             'category' => null,
             'search' => '',
+            'orderType' => 0,
         ], $options));
 
         $searchableFields = ['menu_name', 'menu_description'];
 
         if (strlen($location) AND is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
+            $query->where(function ($query) use ($location) {
+                $query->whereHas('categories', function ($q) use ($location) {
+                    $q->whereHasOrDoesntHaveLocation($location);
+                })->orDoesntHave('categories');
+            });
         }
 
         if (strlen($category)) {
             $query->whereHas('categories', function ($q) use ($category) {
+                $q->isEnabled();
                 $q->whereSlug($category);
             });
         }
@@ -145,6 +152,12 @@ class Menus_model extends Model
             $query->isEnabled();
         }
 
+        if ($orderType) {
+            $query->where(function ($q) use ($orderType) {
+                $q->where('order_restriction', 0)->orWhere('order_restriction', (int)$orderType);
+            });
+        }
+
         return $query->paginate($pageLimit, $page);
     }
 
@@ -163,6 +176,9 @@ class Menus_model extends Model
 
         if (array_key_exists('menu_options', $this->attributes))
             $this->addMenuOption((array)$this->attributes['menu_options']);
+
+        if (array_key_exists('special', $this->attributes))
+            $this->addMenuSpecial((array)$this->attributes['special']);
     }
 
     protected function beforeDelete()

@@ -227,7 +227,6 @@ $config['form']['tabs'] = [
             'nameFrom' => 'location_name',
             'span' => 'right',
             'placeholder' => 'lang:admin::lang.text_please_select',
-            'locationAware' => 'hide',
         ],
         'guest_num' => [
             'label' => 'lang:admin::lang.reservations.label_guest',
@@ -293,6 +292,8 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.reservations.text_status_history',
             'type' => 'datatable',
             'context' => ['edit', 'preview'],
+            'useAjax' => TRUE,
+            'defaultSort' => ['status_history_id', 'desc'],
             'columns' => [
                 'date_added_since' => [
                     'title' => 'lang:admin::lang.reservations.column_date_time',

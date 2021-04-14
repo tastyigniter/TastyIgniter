@@ -19,6 +19,11 @@ class Allocator
         });
     }
 
+    public static function isEnabled()
+    {
+        return (bool)params('allocator_is_enabled', FALSE);
+    }
+
     public static function addSlot($slot)
     {
         $slots = (array)params('allocator_slots', []);

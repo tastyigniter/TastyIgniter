@@ -49,7 +49,7 @@ class Orders_model extends Model
 
     protected $timeFormat = 'H:i';
 
-    public $guarded = ['ip_address', 'user_agent', 'hash'];
+    public $guarded = ['ip_address', 'user_agent', 'hash', 'total_items', 'order_total'];
 
     protected $hidden = ['cart'];
 
@@ -69,6 +69,7 @@ class Orders_model extends Model
         'order_total' => 'float',
         'notify' => 'boolean',
         'processed' => 'boolean',
+        'order_time_is_asap' => 'boolean',
     ];
 
     public $relation = [
@@ -120,7 +121,11 @@ class Orders_model extends Model
             'customer' => null,
             'location' => null,
             'sort' => 'address_id desc',
+            'search' => '',
+            'dateTimeFilter' => [],
         ], $options));
+
+        $searchableFields = ['order_id', 'first_name', 'last_name', 'email', 'telephone'];
 
         $query->where('status_id', '>=', 1);
 
@@ -153,7 +158,23 @@ class Orders_model extends Model
             }
         }
 
+        $search = trim($search);
+        if (strlen($search)) {
+            $query->search($search, $searchableFields);
+        }
+
+        if ($startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE)) {
+            $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
+        }
+
         return $query->paginate($pageLimit, $page);
+    }
+
+    public function scopeWhereBetweenOrderDateTime($query, $start, $end)
+    {
+        $query->whereRaw('ADDTIME(order_date, order_time) between ? and ?', [$start, $end]);
+
+        return $query;
     }
 
     //
@@ -336,11 +357,10 @@ class Orders_model extends Model
             : lang('admin::lang.orders.text_no_payment');
 
         $data['order_menus'] = [];
-        $menus = $model->getOrderMenus();
-        $menuOptions = $model->getOrderMenuOptions();
+        $menus = $model->getOrderMenusWithOptions();
         foreach ($menus as $menu) {
             $optionData = [];
-            if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
+            if ($menuItemOptions = $menu->menu_options) {
                 foreach ($menuItemOptions as $menuItemOption) {
                     $optionData[] = $menuItemOption->quantity
                         .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'

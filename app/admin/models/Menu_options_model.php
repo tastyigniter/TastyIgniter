@@ -3,8 +3,8 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use AdminLocation;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Igniter\Flame\Database\Traits\Validation;
 use Model;
 
 /**
@@ -14,7 +14,6 @@ class Menu_options_model extends Model
 {
     use Locationable;
     use Purgeable;
-    use Validation;
 
     const LOCATIONABLE_RELATION = 'locations';
 
@@ -30,7 +29,7 @@ class Menu_options_model extends Model
      */
     protected $primaryKey = 'option_id';
 
-    protected $fillable = ['option_id', 'option_name', 'display_type'];
+    protected $fillable = ['option_id', 'option_name', 'display_type', 'update_related_menu_item'];
 
     protected $casts = [
         'option_id' => 'integer',
@@ -42,23 +41,29 @@ class Menu_options_model extends Model
             'menu_options' => ['Admin\Models\Menu_item_options_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
+        'hasManyThrough' => [
+            'menu_option_values' => [
+                'Admin\Models\Menu_item_option_values_model',
+                'through' => 'Admin\Models\Menu_item_options_model',
+                'throughKey' => 'menu_option_id',
+                'foreignKey' => 'option_id',
+            ],
+        ],
         'morphToMany' => [
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
-    ];
-
-    public $rules = [
-        ['option_name', 'lang:admin::lang.menu_options.label_option_name', 'required|min:2|max:32'],
-        ['display_type', 'lang:admin::lang.menu_options.label_display_type', 'required|alpha'],
-        ['locations.*', 'lang:admin::lang.label_location', 'integer'],
     ];
 
     protected $purgeable = ['option_values'];
 
     public static function getRecordEditorOptions()
     {
-        return self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name')
-            ->dropdown('display_name');
+        $query = self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name');
+
+        if (!is_null($ids = AdminLocation::getIdOrAll()))
+            $query->whereHasLocation($ids);
+
+        return $query->dropdown('display_name');
     }
 
     public function getDisplayTypeOptions()
@@ -81,6 +86,9 @@ class Menu_options_model extends Model
 
         if (array_key_exists('option_values', $this->attributes))
             $this->addOptionValues($this->attributes['option_values']);
+
+        if ($this->update_related_menu_item)
+            $this->updateRelatedMenuItemsOptionValues();
     }
 
     protected function beforeDelete()
@@ -138,6 +146,31 @@ class Menu_options_model extends Model
         $this->option_values()->where('option_id', $optionId)
             ->whereNotIn('option_value_id', $idsToKeep)->delete();
 
+        $this->menu_option_values()
+            ->whereNotIn('option_value_id', $idsToKeep)->delete();
+
         return count($idsToKeep);
+    }
+
+    /**
+     * Overwrite any menu items this option is attached to
+     *
+     * @return void
+     */
+    protected function updateRelatedMenuItemsOptionValues()
+    {
+        $optionValues = $this->option_values()->get()->map(function ($optionValue) {
+            return [
+                'menu_option_id' => $this->option_id,
+                'option_value_id' => $optionValue->option_value_id,
+                'new_price' => $optionValue->price,
+                'quantity' => 0,
+                'priority' => $optionValue->priority,
+            ];
+        })->all();
+
+        $this->menu_options->each(function ($menuOption) use ($optionValues) {
+            $menuOption->addMenuOptionValues($optionValues);
+        });
     }
 }

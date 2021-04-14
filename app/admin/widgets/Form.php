@@ -8,12 +8,14 @@ use Admin\Classes\FormTabs;
 use Admin\Classes\Widgets;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\FormModelWidget;
+use Admin\Traits\LocationAwareWidget;
 use Exception;
 use Model;
 
 class Form extends BaseWidget
 {
     use FormModelWidget;
+    use LocationAwareWidget;
 
     //
     // Configurable properties
@@ -465,7 +467,6 @@ class Form extends BaseWidget
 
         // Simple field type
         if (is_string($config)) {
-
             if ($this->isFormWidget($config) !== FALSE) {
                 $field->displayAs('widget', ['widget' => $config]);
             }
@@ -474,7 +475,6 @@ class Form extends BaseWidget
             }
         } // Defined field type
         else {
-
             $fieldType = $config['type'] ?? null;
             if (!is_string($fieldType) AND !is_null($fieldType)) {
                 throw new Exception(sprintf(
@@ -501,7 +501,6 @@ class Form extends BaseWidget
 
         // Get field options from model
         if (in_array($field->type, $this->optionModelTypes, FALSE)) {
-
             // Defer the execution of option data collection
             $field->options(function () use ($field, $config) {
                 $fieldOptions = $config['options'] ?? null;
@@ -750,7 +749,6 @@ class Form extends BaseWidget
             // Handle HTML array, eg: item[key][another]
             $parts = name_to_array($field->fieldName);
             if (($value = $this->dataArrayGet($data, $parts)) !== null) {
-
                 // Number fields should be converted to integers
                 if ($field->type === 'number') {
                     $value = !strlen(trim($value)) ? null : (float)$value;

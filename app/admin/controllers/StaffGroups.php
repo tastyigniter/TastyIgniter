@@ -2,6 +2,7 @@
 
 namespace Admin\Controllers;
 
+use Admin\Models\Staff_groups_model;
 use AdminMenu;
 
 class StaffGroups extends \Admin\Classes\AdminController
@@ -52,5 +53,12 @@ class StaffGroups extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('staffs', 'users');
+    }
+
+    public function index()
+    {
+        Staff_groups_model::syncAutoAssignStatus();
+
+        $this->asExtension('ListController')->index();
     }
 }

@@ -3,12 +3,14 @@
     data-control="table"
     class="control-table"
     data-columns='@json($columns)'
+    data-alias="{{$tableAlias}}"
     data-data="{{$data}}"
     data-data-field="{{$recordsKeyFrom}}"
-    data-alias="{{$tableAlias}}"
+    data-dynamic-height="{{$dynamicHeight}}"
     data-field-name="{{$tableAlias}}"
     data-height="{{$height}}"
-    data-dynamic-height="{{$dynamicHeight}}"
     data-page-size="{{$pageLimit}}"
-    data-pagination="{{$showPagination}}"
+    data-pagination="{{$showPagination ? 'true' : 'false'}}"
+    data-use-ajax="{{$useAjax ? 'true' : 'false'}}"
+    {!! $this->getAttributes() !!}
 ></div>

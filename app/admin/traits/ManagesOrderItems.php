@@ -69,6 +69,23 @@ trait ManagesOrderItems
     }
 
     /**
+     * Return all order menus merged with order menu options
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getOrderMenusWithOptions()
+    {
+        $orderMenuOptions = $this->getOrderMenuOptions();
+
+        return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions) {
+            unset($menu->option_values);
+            $menu->menu_options = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+
+            return $menu;
+        });
+    }
+
+    /**
      * Return all order totals by order_id
      *
      * @return \Illuminate\Support\Collection
@@ -83,7 +100,7 @@ trait ManagesOrderItems
      *
      * @param array $content
      *
-     * @return bool
+     * @return float
      */
     public function addOrderMenus(array $content)
     {
@@ -170,6 +187,24 @@ trait ManagesOrderItems
                 'priority' => $total['priority'],
             ]);
         }
+
+        $this->calculateTotals();
+    }
+
+    public function calculateTotals()
+    {
+        $orderTotal = $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('value');
+
+        $totalItems = $this->orderMenusQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('quantity');
+
+        $this->newQuery()->where('order_id', $this->getKey())->update([
+            'total_items' => $totalItems,
+            'order_total' => $orderTotal,
+        ]);
     }
 
     public function orderMenusQuery()

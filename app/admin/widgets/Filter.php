@@ -5,6 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
 use Admin\Facades\AdminAuth;
+use Admin\Traits\LocationAwareWidget;
 use DB;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,8 @@ use Illuminate\Support\Collection;
  */
 class Filter extends BaseWidget
 {
+    use LocationAwareWidget;
+
     /**
      * @var array|string Search widget configuration or partial name, optional.
      */
@@ -68,6 +71,12 @@ class Filter extends BaseWidget
 
         // date picker
         $this->addJs('js/datepicker.js', 'datepicker-js');
+
+        // selectlist
+        $this->addJs('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js', 'bootstrap-multiselect-js');
+        $this->addCss('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css', 'bootstrap-multiselect-css');
+        $this->addJs('~/app/admin/widgets/form/assets/js/selectlist.js', 'selectlist-js');
+        $this->addCss('~/app/admin/widgets/form/assets/css/selectlist.css', 'selectlist-css');
     }
 
     public function initialize()
@@ -144,6 +153,7 @@ class Filter extends BaseWidget
 
             switch ($scope->type) {
                 case 'select':
+                case 'selectlist':
                     $active = $value;
                     $this->setScopeValue($scope, $active);
                     break;
@@ -253,6 +263,8 @@ class Filter extends BaseWidget
     {
         $model = $this->getScopeModel($scope->scopeName);
         $query = $model->newQuery();
+
+        $this->locationApplyScope($query);
 
         // Extensibility
         $this->fireSystemEvent('admin.filter.extendQuery', [$query, $scope]);

@@ -142,11 +142,15 @@ class MainController extends BaseController
         if (!$this->theme)
             throw new ApplicationException(Lang::get('main::lang.not_found.active_theme'));
 
+        $this->theme->loadThemeFile();
+
         $this->assetPath[] = $this->theme->getPath().'/assets';
         if ($this->theme->hasParent())
             $this->assetPath[] = $this->theme->getParentPath().'/assets';
 
         parent::__construct();
+
+        $this->theme->loadThemeFile();
 
         $this->router = new Router($this->theme);
 

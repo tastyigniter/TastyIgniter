@@ -25,8 +25,8 @@ $config['list']['filter'] = [
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
-            'type' => 'select',
-            'conditions' => 'status_id = :filtered',
+            'type' => 'selectlist',
+            'conditions' => 'status_id IN(:filtered)',
             'modelClass' => 'Admin\Models\Statuses_model',
             'options' => 'getDropdownOptionsForOrder',
         ],
@@ -98,6 +98,12 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_type',
         'type' => 'text',
         'sortable' => FALSE,
+    ],
+    'order_time_is_asap' => [
+        'label' => 'lang:admin::lang.orders.label_time_is_asap',
+        'type' => 'switch',
+        'onText' => 'lang:admin::lang.text_yes',
+        'offText' => 'lang:admin::lang.text_no',
     ],
     'order_time' => [
         'label' => 'lang:admin::lang.orders.column_time',
@@ -200,6 +206,17 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.orders.label_order_type',
             'type' => 'text',
             'span' => 'left',
+            'cssClass' => 'flex-width',
+            'disabled' => TRUE,
+            'context' => ['edit', 'preview'],
+        ],
+        'order_time_is_asap' => [
+            'label' => 'lang:admin::lang.orders.label_time_is_asap',
+            'type' => 'switch',
+            'span' => 'left',
+            'cssClass' => 'flex-width',
+            'on' => 'lang:admin::lang.text_yes',
+            'off' => 'lang:admin::lang.text_no',
             'disabled' => TRUE,
             'context' => ['edit', 'preview'],
         ],
@@ -310,6 +327,8 @@ $config['form']['tabs'] = [
         'status_history' => [
             'tab' => 'lang:admin::lang.orders.text_status_history',
             'type' => 'datatable',
+            'useAjax' => TRUE,
+            'defaultSort' => ['status_history_id', 'desc'],
             'columns' => [
                 'date_added_since' => [
                     'title' => 'lang:admin::lang.orders.column_time_date',
@@ -331,6 +350,8 @@ $config['form']['tabs'] = [
         'payment_logs' => [
             'tab' => 'lang:admin::lang.orders.text_payment_logs',
             'type' => 'datatable',
+            'useAjax' => TRUE,
+            'defaultSort' => ['payment_log_id', 'desc'],
             'columns' => [
                 'date_added_since' => [
                     'title' => 'lang:admin::lang.orders.column_time_date',

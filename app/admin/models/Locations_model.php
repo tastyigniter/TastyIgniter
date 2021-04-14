@@ -105,7 +105,6 @@ class Locations_model extends AbstractLocation
 
     protected function beforeDelete()
     {
-        $this->tables()->detach();
     }
 
     //

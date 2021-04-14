@@ -24,7 +24,8 @@
 .control-selectlist .multiselect-search {
 	box-shadow: unset;
 }
-.multiselect-all .checkbox label {
+.multiselect-all .checkbox label,
+.multiselect-none .checkbox label {
 	font-weight: 500;
 }
 .multiselect-container.dropdown-menu {
@@ -59,6 +60,8 @@
 .multiselect-item .checkbox,
 .multiselect-item .radio {
 	margin: 0;
+	display: block;
+	padding-left: 1.25em;
 }
 .multiselect-item .checkbox label,
 .multiselect-item .radio label {
