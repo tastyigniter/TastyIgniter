@@ -95,6 +95,7 @@ trait ManagesOrderItems
                             $menuOption->order_option_category = $option->option_name;
                     }
                 }
+
                 return $menuOption;
             });
 
