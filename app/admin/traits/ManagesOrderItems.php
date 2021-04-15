@@ -89,11 +89,11 @@ trait ManagesOrderItems
             if (count($menu->menu_options)) {
                 $menuOptionModel = $orderMenus->get($menu->menu_id);
                 $menu->menu_options = $menu->menu_options->map(function ($menuOption) use ($menuOptionModel) {
-                    $menuOption->order_option_category = '';
+                    $menuOption->order_option_group = '';
                     foreach ($menuOptionModel->menu_options as $option) {
                         foreach ($option->menu_option_values as $optionValue) {
                             if ($optionValue->menu_option_value_id == $menuOption->menu_option_value_id)
-                                $menuOption->order_option_category = $option->option_name;
+                                $menuOption->order_option_group = $option->option_name;
                         }
                     }
 

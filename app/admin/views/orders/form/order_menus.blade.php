@@ -15,10 +15,10 @@
                 <td><b>{{ $menuItem->name }}</b>
                     @if($menuItemOptions = $menuItem->menu_options)
                         <ul class="list-unstyled">
-                            @foreach($menuItemOptions->groupBy('order_option_category') as $menuItemOptionGroup)
+                            @foreach($menuItemOptions->groupBy('order_option_group') as $menuItemOptionGroup)
                                 @foreach($menuItemOptionGroup as $menuItemOption)
                                 <li>
-                                    @if ($loop->first AND $menuItemOption->order_option_category != ''){{ $menuItemOption->order_option_category }}:<br />@endif
+                                    @if ($loop->first AND $menuItemOption->order_option_group != ''){{ $menuItemOption->order_option_group }}:<br />@endif
                                     {{ $menuItemOption->quantity }}x
                                     {{ $menuItemOption->order_option_name }}&nbsp;
                                     @if($menuItemOption->order_option_price > 0)
