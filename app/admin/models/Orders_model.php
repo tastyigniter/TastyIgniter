@@ -361,12 +361,18 @@ class Orders_model extends Model
         foreach ($menus as $menu) {
             $optionData = [];
             if ($menuItemOptions = $menu->menu_options) {
-                foreach ($menuItemOptions as $menuItemOption) {
-                    $optionData[] = $menuItemOption->quantity
-                        .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'
-                        .$menuItemOption->order_option_name
-                        .lang('admin::lang.text_equals')
-                        .currency_format($menuItemOption->order_option_price);
+                foreach ($menuItemOptions->groupBy('order_option_group') as $menuItemOptionGroup) {
+                    $firstItem = true;
+                    foreach ($menuItemOptionGroup as $menuItemOption) {
+                        $optionData[] = ($firstItem && $menuItemOption->order_option_group != '' ? $menuItemOption->order_option_group.'<br />' : '')
+                            .$menuItemOption->quantity
+                            .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'
+                            .$menuItemOption->order_option_name
+                            .lang('admin::lang.text_equals')
+                            .currency_format($menuItemOption->order_option_price);
+
+                        $firstItem = false;
+                    }
                 }
             }
 
