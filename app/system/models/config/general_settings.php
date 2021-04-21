@@ -52,19 +52,6 @@ return [
                     'span' => 'right',
                     'options' => ['System\Models\Countries_model', 'getDropdownOptions'],
                 ],
-                'site_location_mode' => [
-                    'label' => 'lang:system::lang.settings.label_site_location_mode',
-                    'tab' => 'lang:system::lang.settings.text_tab_restaurant',
-                    'type' => 'radiotoggle',
-                    'span' => 'left',
-                    'default' => 'multiple',
-                    'options' => [
-                        'single' => 'lang:system::lang.settings.text_single',
-                        'multiple' => 'lang:system::lang.settings.text_multiple',
-                    ],
-                    'comment' => 'lang:system::lang.settings.help_site_location_mode',
-                    'commentAbove' => '<span class="text-danger">System</span>',
-                ],
                 'site_logo' => [
                     'label' => 'lang:system::lang.settings.label_site_logo',
                     'tab' => 'lang:system::lang.settings.text_tab_restaurant',
@@ -211,7 +198,6 @@ return [
             ['site_logo', 'lang:system::lang.settings.label_site_logo', 'required'],
             ['timezone', 'lang:system::lang.settings.label_timezone', 'required'],
             ['default_currency_code', 'lang:system::lang.settings.label_site_currency', 'required'],
-            ['site_location_mode', 'lang:system::lang.settings.label_site_location_mode', 'required|string'],
             ['detect_language', 'lang:system::lang.settings.label_detect_language', 'required|integer'],
             ['default_language', 'lang:system::lang.settings.label_site_language', 'required'],
             ['country_id', 'lang:system::lang.settings.label_country', 'required|integer'],
