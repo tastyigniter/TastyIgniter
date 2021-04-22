@@ -4,7 +4,6 @@ namespace Admin\Traits;
 
 use Geocoder;
 use Igniter\Flame\Location\Contracts\AreaInterface;
-use Model;
 
 trait HasDeliveryAreas
 {
@@ -15,8 +14,22 @@ trait HasDeliveryAreas
 
     public static function bootHasDeliveryAreas()
     {
-        static::saving(function (Model $model) {
+        static::fetched(function (self $model) {
+            $value = @unserialize($model->attributes['options']) ?: [];
+
+            $model->parseAreasFromOptions($value);
+
+            $model->attributes['options'] = @serialize($value);
+        });
+
+        static::saving(function (self $model) {
             $model->geocodeAddressOnSave();
+
+            $value = @unserialize($model->attributes['options']) ?: [];
+
+            $model->parseAreasFromOptions($value);
+
+            $model->attributes['options'] = @serialize($value);
         });
     }
 

@@ -53,11 +53,4 @@ class Currencies extends \Admin\Classes\AdminController
 
         AdminMenu::setContext('currencies', 'localisation');
     }
-
-    public function index()
-    {
-        app('currency')->updateRates();
-
-        $this->asExtension('ListController')->index();
-    }
 }

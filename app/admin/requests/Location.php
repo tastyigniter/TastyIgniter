@@ -41,15 +41,6 @@ class Location extends FormRequest
             ['permalink_slug', 'admin::lang.locations.label_permalink_slug', 'alpha_dash|max:255'],
             ['gallery.title', 'admin::lang.locations.label_gallery_title', 'max:128'],
             ['gallery.description', 'admin::lang.label_description', 'max:255'],
-
-            ['options.hours.*.type', 'admin::lang.locations.label_opening_type', 'alpha_dash|max:10'],
-            ['options.hours.*.days.*', 'admin::lang.locations.label_opening_days', 'integer'],
-            ['options.hours.*.open', 'admin::lang.locations.label_open_hour', 'sometimes|required_if:options.hours.*.type,daily|valid_time'],
-            ['options.hours.*.close', 'admin::lang.locations.label_close_hour', 'sometimes|required_if:options.hours.*.type,daily|valid_time'],
-            ['options.hours.*.flexible.*.day', 'admin::lang.locations.label_opening_days', 'sometimes|required_if:options.hours.*.type,flexible|numeric'],
-            ['options.hours.*.flexible.*.open', 'admin::lang.locations.label_open_hour', 'sometimes|required_if:options.hours.*.type,flexible|valid_time'],
-            ['options.hours.*.flexible.*.close', 'admin::lang.locations.label_close_hour', 'sometimes|required_if:options.hours.*.type,flexible|valid_time'],
-            ['options.hours.*.flexible.*.status', 'admin::lang.label_status', 'sometimes|required_if:options.hours.*.type,flexible|boolean'],
         ];
     }
 }

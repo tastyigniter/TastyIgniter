@@ -28,7 +28,7 @@ class Location extends Manager
         }
         else {
             $id = $this->getSession('id');
-            if (!$id AND $this->hasOneLocation())
+            if (!$id AND $this->hasOneLocation() AND !$this->getAuth()->isSuperUser())
                 $id = $this->getDefaultLocation();
         }
 
