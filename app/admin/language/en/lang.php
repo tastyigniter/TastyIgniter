@@ -222,6 +222,12 @@ return [
         'missing_id' => 'Form record ID has not been specified.',
         'not_found' => 'Form record with ID [%s] could not be found.',
         'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
+
+        'save_actions' => [
+            'continue' => 'Continue Editing',
+            'close' => 'Go to Listing',
+            'new' => 'Create New',
+        ],
     ],
 
     'allergens' => [

@@ -92,26 +92,10 @@ $config['form']['toolbar'] = [
         'save' => [
             'label' => 'lang:admin::lang.button_save',
             'context' => ['create', 'edit'],
-            'type' => 'dropdown',
+            'partial' => 'form/toolbar_button',
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
-            'menuItems' => [
-                'saveNew' => [
-                    'label' => 'lang:admin::lang.text_save_new',
-                    'class' => 'dropdown-item',
-                    'data-request' => 'onSave',
-                    'data-request-data' => 'new:1',
-                    'data-progress-indicator' => 'admin::lang.text_saving',
-                ],
-                'saveClose' => [
-                    'label' => 'lang:admin::lang.text_save_close',
-                    'class' => 'dropdown-item',
-                    'data-request' => 'onSave',
-                    'data-request-data' => 'close:1',
-                    'data-progress-indicator' => 'admin::lang.text_saving',
-                ],
-            ],
         ],
         'delete' => [
             'label' => 'lang:admin::lang.button_icon_delete',
