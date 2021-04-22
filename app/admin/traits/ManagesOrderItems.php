@@ -3,6 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Models\Menu_item_option_values_model;
+use Admin\Models\Menu_item_options_model;
 use Admin\Models\Menus_model;
 use DB;
 use Event;
@@ -77,29 +78,24 @@ trait ManagesOrderItems
     {
         $orderMenuOptions = $this->getOrderMenuOptions();
 
-        $orderMenus = Menus_model::with('menu_options')
-            ->whereIn('menu_id', $orderMenuOptions->collapse()->pluck('menu_id')->unique())
-            ->get()
-            ->keyBy('menu_id');
+        $menuItemOptionsIds = $orderMenuOptions->collapse()->pluck('order_menu_option_id')->unique();
 
-        return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions, $orderMenus) {
+        $menuItemOptions = Menu_item_options_model::with('option')
+            ->whereIn('menu_option_id', $menuItemOptionsIds)
+            ->get()->keyBy('menu_option_id');
+
+        return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions, $menuItemOptions) {
             unset($menu->option_values);
-            $menu->menu_options = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+            $menuOptions = $orderMenuOptions->get($menu->order_menu_id) ?: [];
 
-            if (count($menu->menu_options)) {
-                $menuOptionModel = $orderMenus->get($menu->menu_id);
-                $menu->menu_options = $menu->menu_options->map(function ($menuOption) use ($menuOptionModel) {
-                    $menuOption->order_option_group = '';
-                    foreach ($menuOptionModel->menu_options as $option) {
-                        foreach ($option->menu_option_values as $optionValue) {
-                            if ($optionValue->menu_option_value_id == $menuOption->menu_option_value_id)
-                                $menuOption->order_option_group = $option->option_name;
-                        }
-                    }
+            $menu->menu_options = collect($menuOptions)
+                ->map(function ($menuOption) use ($menuItemOptions) {
+                    $menuOption->order_option_category = optional($menuItemOptions->get(
+                        $menuOption->order_menu_option_id
+                    ))->option_name;
 
                     return $menuOption;
                 });
-            }
 
             return $menu;
         });

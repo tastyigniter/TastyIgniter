@@ -13,20 +13,23 @@
             <tr>
                 <td>{{ $menuItem->quantity }}x</td>
                 <td><b>{{ $menuItem->name }}</b>
-                    @if($menuItemOptions = $menuItem->menu_options)
+                    @if($menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category'))
                         <ul class="list-unstyled">
-                            @foreach($menuItemOptions->groupBy('order_option_group') as $menuItemOptionGroup)
-                                @foreach($menuItemOptionGroup as $menuItemOption)
+                            @foreach($menuItemOptionGroup as $menuItemOptionGroupName => $menuItemOptions)
                                 <li>
-                                    @if ($loop->first AND $menuItemOption->order_option_group != ''){{ $menuItemOption->order_option_group }}:<br />@endif
-                                    {{ $menuItemOption->quantity }}x
-                                    {{ $menuItemOption->order_option_name }}&nbsp;
-                                    @if($menuItemOption->order_option_price > 0)
-                                        ({{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }}
-                                        )
-                                    @endif
+                                    {{ $menuItemOptionGroupName }}:
+                                    <ul class="list-unstyled">
+                                        @foreach($menuItemOptions as $menuItemOption)
+                                            <li>
+                                                {{ $menuItemOption->quantity }}x
+                                                {{ $menuItemOption->order_option_name }}&nbsp;
+                                                @if($menuItemOption->order_option_price > 0)
+                                                    ({{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }})
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </li>
-                                @endforeach
                             @endforeach
                         </ul>
                     @endif
