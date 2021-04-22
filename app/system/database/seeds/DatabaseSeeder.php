@@ -16,8 +16,6 @@ class DatabaseSeeder extends Seeder
 
     public static $seedDemo = TRUE;
 
-    public static int $locationId;
-
     /**
      * Run the database seeds.
      * @return void
