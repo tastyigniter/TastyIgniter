@@ -32,7 +32,6 @@ class Orders extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'orders/edit/{order_id}',
             'redirectClose' => 'orders',
-            'redirectNew' => 'orders/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

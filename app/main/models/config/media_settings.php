@@ -7,12 +7,10 @@ return [
                 'back' => [
                     'label' => 'lang:admin::lang.button_icon_back',
                     'class' => 'btn btn-default',
-                    'href' => 'media_manager',
+                    'href' => 'settings',
                 ],
                 'save' => [
                     'label' => 'lang:admin::lang.button_save',
-                    'context' => ['create', 'edit'],
-                    'partial' => 'form/toolbar_button',
                     'class' => 'btn btn-primary',
                     'data-request' => 'onSave',
                     'data-progress-indicator' => 'admin::lang.text_saving',
