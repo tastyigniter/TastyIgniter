@@ -29,11 +29,13 @@ class Currencies extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'currencies/edit/{currency_id}',
             'redirectClose' => 'currencies',
+            'redirectNew' => 'currencies/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'currencies/edit/{currency_id}',
             'redirectClose' => 'currencies',
+            'redirectNew' => 'currencies/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

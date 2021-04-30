@@ -33,11 +33,13 @@ class Payments extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'payments/edit/{code}',
             'redirectClose' => 'payments',
+            'redirectNew' => 'payments/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'payments/edit/{code}',
             'redirectClose' => 'payments',
+            'redirectNew' => 'payments/create',
         ],
         'delete' => [
             'redirect' => 'payments',

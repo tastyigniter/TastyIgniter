@@ -36,11 +36,13 @@ class Languages extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
+            'redirectNew' => 'languages/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
+            'redirectNew' => 'languages/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
