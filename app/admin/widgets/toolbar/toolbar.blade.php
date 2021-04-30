@@ -2,10 +2,12 @@
     id="{{ $toolbarId }}"
     class="toolbar btn-toolbar {{ $cssClasses }}"
 >
-    @if (strlen($buttonsHtml))
+    @if ($availableButtons)
         <div class="toolbar-action">
             <div class="progress-indicator-container">
-                {!! $buttonsHtml !!}
+                @foreach ($availableButtons as $buttonObj)
+                    {!! $this->renderButtonMarkup($buttonObj) !!}
+                @endforeach
             </div>
         </div>
     @endif
