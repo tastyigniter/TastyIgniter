@@ -103,7 +103,7 @@
     }
 
     Calendar.prototype.onPickerDateChanged = function (event) {
-        this.$calendar.fullCalendar('gotoDate', event.date)
+        this.calendar.gotoDate(event.date)
     }
 
     Calendar.prototype.hidePopovers = function() {
@@ -121,6 +121,10 @@
         }).always(function () {
             $.ti.loadingIndicator.hide()
         })
+    }
+
+    Calendar.prototype.getCalendar = function () {
+        return this.calendar
     }
 
     Calendar.DEFAULTS = {
