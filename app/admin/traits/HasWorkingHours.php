@@ -11,13 +11,6 @@ use InvalidArgumentException;
 
 trait HasWorkingHours
 {
-    /**
-     * @var \Illuminate\Database\Eloquent\Collection
-     */
-    protected $workingHours;
-
-    protected $currentTime;
-
     public static function bootHasWorkingHours()
     {
         static::fetched(function (self $model) {
@@ -42,10 +35,7 @@ trait HasWorkingHours
      */
     public function getCurrentTime()
     {
-        if (!is_null($this->currentTime))
-            return $this->currentTime;
-
-        return $this->currentTime = Carbon::now();
+        traceLog('Deprecated function. No longer supported.');
     }
 
     public function availableWorkingTypes()
@@ -55,10 +45,7 @@ trait HasWorkingHours
 
     public function listWorkingHours()
     {
-        if (!$this->workingHours)
-            $this->workingHours = $this->loadWorkingHours();
-
-        return $this->workingHours;
+        traceLog('Deprecated function. Use getWorkingHours() instead.');
     }
 
     /**
@@ -112,6 +99,10 @@ trait HasWorkingHours
                 get_class($this)));
 
         return $this->working_hours()->get();
+
+    public function loadWorkingHours()
+    {
+        traceLog('Deprecated function. Use getWorkingHours() instead.');
     }
 
     public function newWorkingSchedule($type, $days = null)
@@ -131,7 +122,6 @@ trait HasWorkingHours
         );
 
         $schedule->setType($type);
-        $schedule->setNow($this->getCurrentTime());
 
         return $schedule;
     }
