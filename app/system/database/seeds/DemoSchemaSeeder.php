@@ -22,15 +22,14 @@ class DemoSchemaSeeder extends Seeder
         $this->seedMenuOptions();
 
         $this->seedMenuItems();
-
     }
 
-    protected function seedWorkingHours($locationId)
+    protected function seedWorkingHours()
     {
         foreach (['opening', 'delivery', 'collection'] as $type) {
             foreach (['0', '1', '2', '3', '4', '5', '6'] as $day) {
                 DB::table('working_hours')->insert([
-                    'location_id' => $locationId,
+                    'location_id' => DatabaseSeeder::$locationId,
                     'weekday' => $day,
                     'type' => $type,
                     'opening_time' => '00:00',
@@ -46,7 +45,13 @@ class DemoSchemaSeeder extends Seeder
         if (DB::table('categories')->count())
             return;
 
-        DB::table('categories')->insert($this->getSeedRecords('categories'));
+        foreach ($this->getSeedRecords('categories') as $record) {
+            DB::table('locationables')->insert([
+                'location_id' => DatabaseSeeder::$locationId,
+                'locationable_id' => DB::table('categories')->insertGetId($record),
+                'locationable_type' => 'categories',
+            ]);
+        }
     }
 
     protected function seedMenuOptions()
@@ -62,6 +67,12 @@ class DemoSchemaSeeder extends Seeder
                     'option_id' => $optionId,
                 ]));
             }
+
+            DB::table('locationables')->insert([
+                'location_id' => DatabaseSeeder::$locationId,
+                'locationable_id' => $optionId,
+                'locationable_type' => 'menu_options',
+            ]);
         }
     }
 
@@ -94,6 +105,12 @@ class DemoSchemaSeeder extends Seeder
                     ]);
                 }
             }
+
+            DB::table('locationables')->insert([
+                'location_id' => DatabaseSeeder::$locationId,
+                'locationable_id' => $menuId,
+                'locationable_type' => 'menus',
+            ]);
         }
     }
 

@@ -103,12 +103,12 @@ class InitialSchemaSeeder extends Seeder
             $location['delivery_areas'][0]['boundaries']['circle']
         );
 
-        $locationId = DB::table('locations')->insertGetId(array_except($location, ['delivery_areas']));
+        DatabaseSeeder::$locationId = DB::table('locations')->insertGetId(array_except($location, ['delivery_areas']));
 
-        $this->seedLocationTables($locationId);
+        $this->seedLocationTables();
     }
 
-    protected function seedLocationTables($locationId)
+    protected function seedLocationTables()
     {
         if (DB::table('tables')->count())
             return;
@@ -122,7 +122,7 @@ class InitialSchemaSeeder extends Seeder
             ]);
 
             DB::table('locationables')->insert([
-                'location_id' => $locationId,
+                'location_id' => DatabaseSeeder::$locationId,
                 'locationable_id' => $tableId,
                 'locationable_type' => 'tables',
             ]);
@@ -134,24 +134,36 @@ class InitialSchemaSeeder extends Seeder
         if (DB::table('mealtimes')->count())
             return;
 
-        DB::table('mealtimes')->insert([
+        DB::table('locationables')->insert([
             [
-                'mealtime_name' => 'Breakfast',
-                'start_time' => '07:00:00',
-                'end_time' => '10:00:00',
-                'mealtime_status' => TRUE,
+                'location_id' => DatabaseSeeder::$locationId,
+                'locationable_id' => DB::table('mealtimes')->insertGetId([
+                    'mealtime_name' => 'Breakfast',
+                    'start_time' => '07:00:00',
+                    'end_time' => '10:00:00',
+                    'mealtime_status' => TRUE,
+                ]),
+                'locationable_type' => 'mealtimes',
             ],
             [
-                'mealtime_name' => 'Lunch',
-                'start_time' => '12:00:00',
-                'end_time' => '14:30:00',
-                'mealtime_status' => TRUE,
+                'location_id' => DatabaseSeeder::$locationId,
+                'locationable_id' => DB::table('mealtimes')->insertGetId([
+                    'mealtime_name' => 'Lunch',
+                    'start_time' => '12:00:00',
+                    'end_time' => '14:30:00',
+                    'mealtime_status' => TRUE,
+                ]),
+                'locationable_type' => 'mealtimes',
             ],
             [
-                'mealtime_name' => 'Dinner',
-                'start_time' => '18:00:00',
-                'end_time' => '20:00:00',
-                'mealtime_status' => TRUE,
+                'location_id' => DatabaseSeeder::$locationId,
+                'locationable_id' => DB::table('mealtimes')->insertGetId([
+                    'mealtime_name' => 'Dinner',
+                    'start_time' => '18:00:00',
+                    'end_time' => '20:00:00',
+                    'mealtime_status' => TRUE,
+                ]),
+                'locationable_type' => 'mealtimes',
             ],
         ]);
     }

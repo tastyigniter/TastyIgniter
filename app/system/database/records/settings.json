@@ -1,10 +1,5 @@
 [
   {
-    "sort": "config",
-    "item": "site_location_mode",
-    "value": "multiple"
-  },
-  {
     "sort": "prefs",
     "item": "default_location_id",
     "value": "11"
