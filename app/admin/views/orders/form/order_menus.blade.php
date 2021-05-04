@@ -17,11 +17,13 @@
                         <ul class="list-unstyled">
                             @foreach($menuItemOptionGroup as $menuItemOptionGroupName => $menuItemOptions)
                                 <li>
-                                    {{ $menuItemOptionGroupName }}:
+                                    <u class="text-muted">{{ $menuItemOptionGroupName }}:</u>
                                     <ul class="list-unstyled">
                                         @foreach($menuItemOptions as $menuItemOption)
                                             <li>
-                                                {{ $menuItemOption->quantity }}x
+                                                @if ($menuItemOption->quantity > 1)
+                                                    {{ $menuItemOption->quantity }}x
+                                                @endif
                                                 {{ $menuItemOption->order_option_name }}&nbsp;
                                                 @if($menuItemOption->order_option_price > 0)
                                                     ({{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }})
