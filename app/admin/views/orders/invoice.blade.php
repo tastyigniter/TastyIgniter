@@ -99,7 +99,8 @@
                         <tr>
                             <td>{{ $menuItem->quantity }}x</td>
                             <td class="text-left"><b>{{ $menuItem->name }}</b><br/>
-                                @if($menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category'))
+                                @php $menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category') @endphp
+                                @if($menuItemOptionGroup->isNotEmpty())
                                     <ul class="list-unstyled">
                                         @foreach($menuItemOptionGroup as $menuItemOptionGroupName => $menuItemOptions)
                                             <li>

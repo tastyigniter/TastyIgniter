@@ -11,9 +11,10 @@
         <tbody>
         @foreach($model->getOrderMenusWithOptions() as $menuItem)
             <tr>
-                <td>{{ $menuItem->quantity }}x</td>
+                <td class="align-top">{{ $menuItem->quantity }}x</td>
                 <td><b>{{ $menuItem->name }}</b>
-                    @if($menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category'))
+                    @php $menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category') @endphp
+                    @if($menuItemOptionGroup->isNotEmpty())
                         <ul class="list-unstyled">
                             @foreach($menuItemOptionGroup as $menuItemOptionGroupName => $menuItemOptions)
                                 <li>
