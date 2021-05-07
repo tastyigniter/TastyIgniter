@@ -164,6 +164,9 @@ $config['form']['toolbar'] = [
         ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create'],
+            'partial' => 'form/toolbar_save_button',
+            'saveActions' => ['continue', 'close'],
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
