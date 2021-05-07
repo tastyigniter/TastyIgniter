@@ -11,13 +11,6 @@ use InvalidArgumentException;
 
 trait HasWorkingHours
 {
-    /**
-     * @var \Illuminate\Database\Eloquent\Collection
-     */
-    protected $workingHours;
-
-    protected $currentTime;
-
     public static function bootHasWorkingHours()
     {
         static::fetched(function (self $model) {
@@ -42,10 +35,7 @@ trait HasWorkingHours
      */
     public function getCurrentTime()
     {
-        if (!is_null($this->currentTime))
-            return $this->currentTime;
-
-        return $this->currentTime = Carbon::now();
+        traceLog('Deprecated function. No longer supported.');
     }
 
     public function availableWorkingTypes()
@@ -55,10 +45,7 @@ trait HasWorkingHours
 
     public function listWorkingHours()
     {
-        if (!$this->workingHours)
-            $this->workingHours = $this->loadWorkingHours();
-
-        return $this->workingHours;
+        traceLog('Deprecated function. Use getWorkingHours() instead.');
     }
 
     /**
@@ -73,26 +60,20 @@ trait HasWorkingHours
 
     public function getWorkingHoursByType($type)
     {
-        if (!$workingHours = $this->listWorkingHours())
-            return null;
-
-        return $workingHours->groupBy('type')->get($type);
+        return $this->getWorkingHours()->groupBy('type')->get($type);
     }
 
     public function getWorkingHoursByDay($weekday)
     {
-        if (!$workingHours = $this->listWorkingHours())
-            return null;
-
-        return $workingHours->groupBy('weekday')->get($weekday);
+        return $this->getWorkingHours()->groupBy('weekday')->get($weekday);
     }
 
     public function getWorkingHourByDayAndType($weekday, $type)
     {
-        if (!$workingHours = $this->getWorkingHoursByDay($weekday))
-            return null;
-
-        return $workingHours->groupBy('type')->get($type)->first();
+        return $this->getWorkingHoursByDay($weekday)
+            ->groupBy('type')
+            ->get($type)
+            ->first();
     }
 
     public function getWorkingHourByDateAndType($date, $type)
@@ -105,13 +86,22 @@ trait HasWorkingHours
         return $this->getWorkingHourByDayAndType($weekday, $type);
     }
 
-    public function loadWorkingHours()
+    public function getWorkingHours()
     {
         if (!$this->hasRelation('working_hours'))
             throw new Exception(sprintf("Model '%s' does not contain a definition for 'working_hours'.",
                 get_class($this)));
 
-        return $this->working_hours()->get();
+        if (!$this->working_hours OR $this->working_hours->isEmpty()) {
+            $this->createDefaultWorkingHours();
+        }
+
+        return $this->working_hours;
+    }
+
+    public function loadWorkingHours()
+    {
+        traceLog('Deprecated function. Use getWorkingHours() instead.');
     }
 
     public function newWorkingSchedule($type, $days = null)
@@ -131,7 +121,6 @@ trait HasWorkingHours
         );
 
         $schedule->setType($type);
-        $schedule->setNow($this->getCurrentTime());
 
         return $schedule;
     }
@@ -176,18 +165,18 @@ trait HasWorkingHours
         }
 
         if (is_null($type)) {
-            foreach (['opening', 'delivery', 'collection'] as $type) {
-                if (!is_array($scheduleData = array_get($data, $type)))
+            foreach (['opening', 'delivery', 'collection'] as $hourType) {
+                if (!is_array($scheduleData = array_get($data, $hourType)))
                     continue;
 
-                $this->addOpeningHours($type, $scheduleData);
+                $this->addOpeningHours($hourType, $scheduleData);
             }
         }
 
         $this->working_hours()->where('type', $type)->delete();
 
         $scheduleItem = new ScheduleItem($type, $data);
-        foreach ($scheduleItem->getHours() as $day => $hours) {
+        foreach ($scheduleItem->getHours() as $hours) {
             foreach ($hours as $hour) {
                 $this->working_hours()->create([
                     'location_id' => $this->getKey(),
@@ -236,5 +225,14 @@ trait HasWorkingHours
 
             unset($value['opening_hours']);
         }
+    }
+
+    protected function createDefaultWorkingHours()
+    {
+        foreach (['opening', 'delivery', 'collection'] as $hourType) {
+            $this->addOpeningHours($hourType, []);
+        }
+
+        $this->reloadRelations('working_hours');
     }
 }

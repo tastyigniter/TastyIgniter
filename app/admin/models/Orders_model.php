@@ -360,7 +360,8 @@ class Orders_model extends Model
         $menus = $model->getOrderMenusWithOptions();
         foreach ($menus as $menu) {
             $optionData = [];
-            if ($menuItemOptions = $menu->menu_options) {
+            foreach ($menu->menu_options->groupBy('order_option_group') as $menuItemOptionGroupName => $menuItemOptions) {
+                $optionData[] = $menuItemOptionGroupName;
                 foreach ($menuItemOptions as $menuItemOption) {
                     $optionData[] = $menuItemOption->quantity
                         .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'

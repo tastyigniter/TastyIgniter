@@ -30,26 +30,16 @@ return [
                     'label' => 'lang:system::lang.settings.label_site_name',
                     'tab' => 'lang:system::lang.settings.text_tab_restaurant',
                     'type' => 'text',
-                    'span' => 'left',
                 ],
                 'site_email' => [
                     'label' => 'lang:system::lang.settings.label_site_email',
                     'tab' => 'lang:system::lang.settings.text_tab_restaurant',
                     'type' => 'text',
-                    'span' => 'right',
-                ],
-                'site_url' => [
-                    'label' => 'lang:system::lang.settings.label_site_url',
-                    'tab' => 'lang:system::lang.settings.text_tab_restaurant',
-                    'type' => 'text',
-                    'span' => 'left',
-                    'default' => root_url(),
                 ],
                 'country_id' => [
                     'label' => 'lang:system::lang.settings.label_country',
                     'tab' => 'lang:system::lang.settings.text_tab_restaurant',
                     'type' => 'select',
-                    'span' => 'right',
                     'options' => ['System\Models\Countries_model', 'getDropdownOptions'],
                 ],
                 'site_logo' => [

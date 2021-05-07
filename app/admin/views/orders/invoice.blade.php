@@ -98,18 +98,29 @@
                     @foreach($model->getOrderMenusWithOptions() as $menuItem)
                         <tr>
                             <td>{{ $menuItem->quantity }}x</td>
-                            <td class="text-left">{{ $menuItem->name }}<br/>
-                                @if($menuItemOptions = $menuItem->menu_options)
-                                    <div>
-                                        @foreach($menuItemOptions as $menuItemOption)
-                                            <small>
-                                                {{ $menuItemOption->quantity }}x
-                                                {{ $menuItemOption->order_option_name }}
-                                                =
-                                                {{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }}
-                                            </small><br>
+                            <td class="text-left"><b>{{ $menuItem->name }}</b><br/>
+                                @php $menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category') @endphp
+                                @if($menuItemOptionGroup->isNotEmpty())
+                                    <ul class="list-unstyled">
+                                        @foreach($menuItemOptionGroup as $menuItemOptionGroupName => $menuItemOptions)
+                                            <li>
+                                                <u class="text-muted">{{ $menuItemOptionGroupName }}:</u>
+                                                <ul class="list-unstyled">
+                                                    @foreach($menuItemOptions as $menuItemOption)
+                                                        <li>
+                                                            @if ($menuItemOption->quantity > 1)
+                                                                {{ $menuItemOption->quantity }}&nbsp;&times;
+                                                            @endif
+                                                            {{ $menuItemOption->order_option_name }}&nbsp;
+                                                            @if ($menuItemOption->order_option_price > 0)
+                                                                ({{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }})
+                                                            @endif
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </li>
                                         @endforeach
-                                    </div>
+                                    </ul>
                                 @endif
                                 @if(!empty($menuItem->comment))
                                     <div>
