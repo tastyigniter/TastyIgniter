@@ -148,7 +148,6 @@ class IgniterInstall extends Command
         $staff->staff_name = DatabaseSeeder::$staffName;
         $staff->staff_role_id = \Admin\Models\Staff_roles_model::first()->staff_role_id;
         $staff->language_id = \System\Models\Languages_model::first()->language_id;
-        $staff->timezone = FALSE;
         $staff->staff_status = TRUE;
         $staff->save();
 

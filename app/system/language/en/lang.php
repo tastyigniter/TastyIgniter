@@ -404,7 +404,6 @@ return [
 
         'label_site_name' => 'Restaurant Name',
         'label_site_email' => 'Restaurant Email',
-        'label_site_url' => 'Restaurant URL',
         'label_site_logo' => 'Restaurant Logo',
         'label_timezone' => 'Default Timezone',
         'label_site_currency' => 'Default Currency',

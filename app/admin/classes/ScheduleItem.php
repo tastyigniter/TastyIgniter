@@ -25,7 +25,7 @@ class ScheduleItem
      */
     protected $data;
 
-    public function __construct($name, array $data)
+    public function __construct($name, array $data = [])
     {
         $this->name = $name;
         $this->type = array_get($data, 'type', '24_7');
