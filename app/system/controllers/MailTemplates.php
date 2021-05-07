@@ -32,11 +32,13 @@ class MailTemplates extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.mail_templates.text_new_template_title',
             'redirect' => 'mail_templates/edit/{template_id}',
             'redirectClose' => 'mail_templates',
+            'redirectNew' => 'mail_templates/create',
         ],
         'edit' => [
             'title' => 'lang:system::lang.mail_templates.text_edit_template_title',
             'redirect' => 'mail_templates/edit/{template_id}',
             'redirectClose' => 'mail_templates',
+            'redirectNew' => 'mail_templates/create',
         ],
         'preview' => [
             'title' => 'lang:system::lang.mail_templates.text_preview_template_title',

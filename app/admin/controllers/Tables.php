@@ -32,11 +32,13 @@ class Tables extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'tables/edit/{table_id}',
             'redirectClose' => 'tables',
+            'redirectNew' => 'tables/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'tables/edit/{table_id}',
             'redirectClose' => 'tables',
+            'redirectNew' => 'tables/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

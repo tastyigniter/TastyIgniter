@@ -30,11 +30,13 @@ class StaffGroups extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'staff_groups/edit/{staff_group_id}',
             'redirectClose' => 'staff_groups',
+            'redirectNew' => 'staff_groups/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'staff_groups/edit/{staff_group_id}',
             'redirectClose' => 'staff_groups',
+            'redirectNew' => 'staff_groups/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

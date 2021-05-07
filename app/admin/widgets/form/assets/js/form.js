@@ -19,7 +19,19 @@ $(function () {
         }
     })
 
-    $(document).render(function(){
+    $(document).render(function () {
         $('[data-control="inputmask"]').inputmask();
     });
+
+    $(document).on('click.bs.dropdown', '[data-control="form-save-actions"] .dropdown-menu', function (event) {
+        event.stopPropagation();
+    });
+
+    $(document).on('change', '[name="toolbar_save_action"]', function (event) {
+        var $el = $(event.currentTarget),
+            $selectedAction = $el.val()
+
+        $('[data-form-save-action]').attr('name', $selectedAction).attr('value', '1')
+        Cookies.set('ti_activeFormSaveAction', JSON.stringify($selectedAction))
+    })
 })

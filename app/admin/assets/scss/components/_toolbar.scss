@@ -40,6 +40,26 @@
     margin-left: $btn-spacer;
   }
 
+  .btn + .btn-group {
+    margin-left: $btn-spacer;
+  }
+
+  .btn-group {
+    .btn:not(:first-child) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .btn:not(:last-child):not(.dropdown-toggle) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .btn + .btn {
+      margin-left: 0;
+    }
+  }
+
   .btn-left {
     float: left;
   }
