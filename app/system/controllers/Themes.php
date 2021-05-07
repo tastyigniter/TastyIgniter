@@ -81,6 +81,13 @@ class Themes extends \Admin\Classes\AdminController
             'href' => admin_url('themes/source/'.$themeCode),
         ]);
 
+        if (ThemeManager::instance()->isLocked($themeCode)) {
+            Template::setButton(lang('system::lang.themes.button_child'), [
+                'class' => 'btn btn-default pull-right',
+                'data-request' => 'onCreateChild',
+            ]);
+        }
+
         $this->asExtension('FormController')->edit($context, $themeCode);
     }
 
@@ -170,7 +177,7 @@ class Themes extends \Admin\Classes\AdminController
         }
     }
 
-    public function source_onCreateChild($context, $themeCode = null)
+    public function onCreateChild($context, $themeCode = null)
     {
         $manager = ThemeManager::instance();
 
