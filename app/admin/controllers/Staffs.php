@@ -31,11 +31,13 @@ class Staffs extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'staffs/edit/{staff_id}',
             'redirectClose' => 'staffs',
+            'redirectNew' => 'staffs/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'staffs/edit/{staff_id}',
             'redirectClose' => 'staffs',
+            'redirectNew' => 'staffs/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

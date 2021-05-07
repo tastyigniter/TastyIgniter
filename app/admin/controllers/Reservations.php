@@ -44,11 +44,13 @@ class Reservations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'reservations/edit/{reservation_id}',
             'redirectClose' => 'reservations',
+            'redirectNew' => 'reservations/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'reservations/edit/{reservation_id}',
             'redirectClose' => 'reservations',
+            'redirectNew' => 'reservations/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

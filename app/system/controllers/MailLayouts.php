@@ -29,11 +29,13 @@ class MailLayouts extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'mail_layouts/edit/{layout_id}',
             'redirectClose' => 'mail_layouts',
+            'redirectNew' => 'mail_layouts/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'mail_layouts/edit/{layout_id}',
             'redirectClose' => 'mail_layouts',
+            'redirectNew' => 'mail_layouts/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
