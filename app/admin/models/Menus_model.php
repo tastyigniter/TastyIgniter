@@ -108,16 +108,14 @@ class Menus_model extends Model
 
         if (strlen($location) AND is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
-            $query->where(function ($query) use ($location) {
-                $query->whereHas('categories', function ($q) use ($location) {
-                    $q->whereHasOrDoesntHaveLocation($location);
-                })->orDoesntHave('categories');
-            });
+            $query->with(['categories' => function ($q) use ($location) {
+                $q->whereHasOrDoesntHaveLocation($location);
+                $q->isEnabled();
+            }]);
         }
 
         if (strlen($category)) {
             $query->whereHas('categories', function ($q) use ($category) {
-                $q->isEnabled();
                 $q->whereSlug($category);
             });
         }
