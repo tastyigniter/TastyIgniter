@@ -5,6 +5,7 @@ namespace System\Models;
 use Exception;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Support\Facades\Event;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 use Main\Template\Layout;
@@ -326,6 +327,8 @@ class Themes_model extends Model
 
         params()->set('default_themes.main', $theme->code);
         params()->save();
+
+        Event::fire('main.theme.activated', [$theme]);
 
         return $theme;
     }
