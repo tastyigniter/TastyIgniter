@@ -380,7 +380,7 @@ return [
             'help_locations' => 'Set your default delivery area and customise your opening hours.',
             'help_themes' => 'Activate and customize the front-end theme',
             'help_extensions' => 'Some extensions are recommended for your site to function properly.',
-            'help_payments' => 'Some extensions are required for your site to function properly.',
+            'help_payments' => 'Enable and configure a default payment method for your customers.',
             'help_menus' => 'Make your menu items available for your customers to order.',
             'help_mail' => 'Ensure order confirmation emails are sent to customers successfully.',
         ],
