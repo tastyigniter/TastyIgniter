@@ -68,6 +68,16 @@ class MapView extends BaseFormWidget
         $this->vars['previewMode'] = $this->previewMode;
     }
 
+    public function isConfigured()
+    {
+        return (bool)strlen(setting('maps_api_key'));
+    }
+
+    public function hasCenter()
+    {
+        return (bool)count(array_filter($this->getCenter() ?: []));
+    }
+
     protected function getCenter()
     {
         if ($this->center)
