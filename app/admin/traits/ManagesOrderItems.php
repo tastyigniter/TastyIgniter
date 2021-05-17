@@ -211,7 +211,7 @@ trait ManagesOrderItems
     {
         $orderTotal = $this->orderTotalsQuery()
             ->where([
-                'order_id', $this->getKey(),
+                ['order_id', $this->getKey()],
                 ['code', '<>', 'total'],
             ])
             ->sum('value');
