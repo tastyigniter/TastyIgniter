@@ -109,7 +109,7 @@ class TemplateEditor extends BaseFormWidget
     {
         $this->validate(post('Theme.source.template'), [
             ['type', 'Source Type', 'required|in:_pages,_partials,_layouts,_content'],
-            ['file', 'Source File', 'sometimes|present|string'],
+            ['file', 'Source File', 'sometimes|nullable|string'],
         ]);
 
         $this->controller->setTemplateValue('type', post('Theme.source.template.type'));

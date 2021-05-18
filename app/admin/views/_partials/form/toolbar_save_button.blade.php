@@ -1,5 +1,5 @@
 @php
-    $saveActions = array_get($button->config, 'saveActions', []);
+    $saveActions = array_get($button->config, 'saveActions', ['continue', 'close', 'new']);
     $selectedAction = @json_decode($d = array_get($_COOKIE, 'ti_activeFormSaveAction'), TRUE);
     $selectedAction = ($selectedAction AND in_array($selectedAction, $saveActions)) ? $selectedAction : 'continue';
 @endphp

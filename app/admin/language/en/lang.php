@@ -380,7 +380,7 @@ return [
             'help_locations' => 'Set your default delivery area and customise your opening hours.',
             'help_themes' => 'Activate and customize the front-end theme',
             'help_extensions' => 'Some extensions are recommended for your site to function properly.',
-            'help_payments' => 'Some extensions are required for your site to function properly.',
+            'help_payments' => 'Enable and configure a default payment method for your customers.',
             'help_menus' => 'Make your menu items available for your customers to order.',
             'help_mail' => 'Ensure order confirmation emails are sent to customers successfully.',
         ],
@@ -516,8 +516,10 @@ return [
         'label_delivery_condition' => 'Delivery Condition',
 
         'error_no_zero_total' => 'The %s can not be a value zero on conditions other than \'on all orders\'.',
-        'alert_delivery_area' => 'To make this location searchable by your customers, please add delivery area(s) under the \'Delivery\' tab.',
+        'alert_delivery_area' => 'To allow your customers to find this location, please add delivery area(s) under the \'Delivery\' tab.',
         'alert_set_default' => 'Location set as default',
+        'alert_missing_map_center' => 'Map is missing center coordinates, please enter an address then click save.',
+        'alert_missing_map_config' => 'Missing Google Maps Javascript Library, please provide your maps api key on the general system settings page.',
 
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
         'help_image' => 'Select a logo for this location.',

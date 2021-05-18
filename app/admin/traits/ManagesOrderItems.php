@@ -210,10 +210,8 @@ trait ManagesOrderItems
     public function calculateTotals()
     {
         $orderTotal = $this->orderTotalsQuery()
-            ->where([
-                'order_id', $this->getKey(),
-                ['code', '<>', 'total'],
-            ])
+            ->where('order_id', $this->getKey())
+            ->where('code', '<>', 'total')
             ->sum('value');
 
         $totalItems = $this->orderMenusQuery()

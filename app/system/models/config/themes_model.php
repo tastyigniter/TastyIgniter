@@ -65,7 +65,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-default ml-0',
             'href' => 'themes',
         ],
         'save' => [
