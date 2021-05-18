@@ -29,11 +29,13 @@ class MailPartials extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.mail_templates.text_new_partial_title',
             'redirect' => 'mail_partials/edit/{partial_id}',
             'redirectClose' => 'mail_partials',
+            'redirectNew' => 'mail_partials/create',
         ],
         'edit' => [
             'title' => 'lang:system::lang.mail_templates.text_edit_partial_title',
             'redirect' => 'mail_partials/edit/{partial_id}',
             'redirectClose' => 'mail_partials',
+            'redirectNew' => 'mail_partials/create',
         ],
         'preview' => [
             'title' => 'lang:system::lang.mail_templates.text_preview_partial_title',

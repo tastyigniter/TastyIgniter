@@ -3,6 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Models\Menu_item_option_values_model;
+use Admin\Models\Menu_item_options_model;
 use Admin\Models\Menus_model;
 use DB;
 use Event;
@@ -77,9 +78,24 @@ trait ManagesOrderItems
     {
         $orderMenuOptions = $this->getOrderMenuOptions();
 
-        return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions) {
+        $menuItemOptionsIds = $orderMenuOptions->collapse()->pluck('order_menu_option_id')->unique();
+
+        $menuItemOptions = Menu_item_options_model::with('option')
+            ->whereIn('menu_option_id', $menuItemOptionsIds)
+            ->get()->keyBy('menu_option_id');
+
+        return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions, $menuItemOptions) {
             unset($menu->option_values);
-            $menu->menu_options = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+            $menuOptions = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+
+            $menu->menu_options = collect($menuOptions)
+                ->map(function ($menuOption) use ($menuItemOptions) {
+                    $menuOption->order_option_category = optional($menuItemOptions->get(
+                        $menuOption->order_menu_option_id
+                    ))->option_name;
+
+                    return $menuOption;
+                });
 
             return $menu;
         });
@@ -100,7 +116,7 @@ trait ManagesOrderItems
      *
      * @param array $content
      *
-     * @return bool
+     * @return float
      */
     public function addOrderMenus(array $content)
     {
@@ -187,6 +203,25 @@ trait ManagesOrderItems
                 'priority' => $total['priority'],
             ]);
         }
+
+        $this->calculateTotals();
+    }
+
+    public function calculateTotals()
+    {
+        $orderTotal = $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('code', '<>', 'total')
+            ->sum('value');
+
+        $totalItems = $this->orderMenusQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('quantity');
+
+        $this->newQuery()->where('order_id', $this->getKey())->update([
+            'total_items' => $totalItems,
+            'order_total' => $orderTotal,
+        ]);
     }
 
     public function orderMenusQuery()

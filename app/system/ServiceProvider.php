@@ -324,10 +324,16 @@ class ServiceProvider extends AppServiceProvider
             $app['config']->set('geocoder.providers.nominatim.region', $region);
 
             $app['config']->set('geocoder.providers.google.apiKey', setting('maps_api_key'));
+            $app['config']->set('geocoder.precision', setting('geocoder_boundary_precision'));
         });
 
         Event::listen(CommandStarting::class, function () {
             config()->set('system.activityRecordsTTL', (int)setting('activity_log_timeout', 60));
+        });
+
+        $this->app->resolving('system.setting', function ($setting, $app) {
+            if (strlen($locationMode = setting('site_location_mode')))
+                $app['config']->set('system.locationMode', $locationMode);
         });
     }
 

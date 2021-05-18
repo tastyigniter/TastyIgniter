@@ -91,16 +91,8 @@ $config['form']['toolbar'] = [
         'save' => [
             'label' => 'lang:admin::lang.button_save',
             'class' => 'btn btn-primary',
-            'data-request' => 'onSave',
             'data-request-submit' => 'true',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
     ],

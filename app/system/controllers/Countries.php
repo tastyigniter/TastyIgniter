@@ -32,11 +32,13 @@ class Countries extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'countries/edit/{country_id}',
             'redirectClose' => 'countries',
+            'redirectNew' => 'countries/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'countries/edit/{country_id}',
             'redirectClose' => 'countries',
+            'redirectNew' => 'countries/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

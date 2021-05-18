@@ -18,13 +18,15 @@ class Working_hours_model extends AbstractWorkingHour
         'status' => 'boolean',
     ];
 
+    public static $weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
     public function getHoursByLocation($id)
     {
         $collection = [];
 
         foreach (self::where('location_id', $id)->get() as $row) {
             $row = $this->parseRecord($row);
-            $collection[$row['type']][$row['weekday']] = $this->parseRecord($row);
+            $collection[$row['type']][$row['weekday']] = $row;
         }
 
         return $collection;
@@ -43,5 +45,23 @@ class Working_hours_model extends AbstractWorkingHour
         ]);
 
         return $collection;
+    }
+
+    public function getWeekDaysOptions()
+    {
+        return self::$weekDays;
+    }
+
+    public function getTimesheetOptions($value, $data)
+    {
+        $result = new \stdClass();
+        $result->timesheet = $value ?? [];
+
+        $result->daysOfWeek = [];
+        foreach ($this->getWeekDaysOptions() as $key => $day) {
+            $result->daysOfWeek[$key] = ['name' => $day];
+        }
+
+        return $result;
     }
 }

@@ -64,6 +64,13 @@ class Staff_groups_model extends Model
     // Assignment
     //
 
+    public static function syncAutoAssignStatus()
+    {
+        params()->set('allocator_is_enabled',
+            self::query()->where('auto_assign', 1)->exists()
+        );
+    }
+
     public function getAutoAssignLimitAttribute($value)
     {
         return $this->attributes['auto_assign_limit'] ?? 20;

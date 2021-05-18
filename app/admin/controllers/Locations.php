@@ -33,11 +33,13 @@ class Locations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
+            'redirectNew' => 'locations/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
+            'redirectNew' => 'locations/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -124,6 +126,15 @@ class Locations extends \Admin\Classes\AdminController
     {
         if (!is_null($ids = AdminLocation::getAll()))
             $query->whereIn('location_id', $ids);
+    }
+
+    public function formExtendModel($model)
+    {
+        if ($model->delivery_areas->isEmpty())
+            flash()
+                ->warning(lang('admin::lang.locations.alert_delivery_area'))
+                ->now()
+                ->important();
     }
 
     public function formAfterSave($model)

@@ -29,11 +29,13 @@ class Statuses extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'statuses/edit/{status_id}',
             'redirectClose' => 'statuses',
+            'redirectNew' => 'statuses/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'statuses/edit/{status_id}',
             'redirectClose' => 'statuses',
+            'redirectNew' => 'statuses/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

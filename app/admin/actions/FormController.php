@@ -440,6 +440,10 @@ class FormController extends ControllerAction
     public function makeRedirect($context = null, $model = null)
     {
         $redirectUrl = null;
+        if (post('new') AND !ends_with($context, '-new')) {
+            $context .= '-new';
+        }
+
         if (post('close') AND !ends_with($context, '-close')) {
             $context .= '-close';
         }
@@ -468,7 +472,10 @@ class FormController extends ControllerAction
     protected function getRedirectUrl($context = null)
     {
         $redirectContext = explode('-', $context, 2)[0];
-        $redirectSource = ends_with($context, '-close') ? 'redirectClose' : 'redirect';
+        $redirectAction = explode('-', $context, 2)[1] ?? '';
+        $redirectSource = in_array($redirectAction, ['new', 'close'])
+            ? 'redirect'.studly_case($redirectAction)
+            : 'redirect';
 
         $redirects = [$context => $this->getConfig("{$redirectContext}[{$redirectSource}]", '')];
         $redirects['default'] = $this->getConfig('defaultRedirect', '');

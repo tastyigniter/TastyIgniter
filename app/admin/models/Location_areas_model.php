@@ -57,6 +57,9 @@ class Location_areas_model extends AbstractArea
         if (!$this->is_default)
             return;
 
-        $this->newQuery()->whereKeyNot($this->getKey())->update(['is_default' => 0]);
+        $this->newQuery()
+            ->where('location_id', $this->location_id)
+            ->whereKeyNot($this->getKey())
+            ->update(['is_default' => 0]);
     }
 }
