@@ -4,6 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
 use Admin\Models\Menu_options_model;
+use AdminLocation;
 use AdminMenu;
 use ApplicationException;
 
@@ -89,5 +90,11 @@ class Menus extends AdminController
                 'useContainer' => FALSE,
             ]),
         ];
+    }
+
+    public function formAfterCreate($model)
+    {
+        if (!count($model->locations) AND AdminLocation::getId())
+            $model->locations()->attach(AdminLocation::getId());
     }
 }
