@@ -128,15 +128,6 @@ class Locations extends \Admin\Classes\AdminController
             $query->whereIn('location_id', $ids);
     }
 
-    public function formExtendModel($model)
-    {
-        if ($model->delivery_areas->isEmpty())
-            flash()
-                ->warning(lang('admin::lang.locations.alert_delivery_area'))
-                ->now()
-                ->important();
-    }
-
     public function formAfterSave($model)
     {
         if (post('Location.options.auto_lat_lng')) {
