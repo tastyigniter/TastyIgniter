@@ -102,6 +102,7 @@ $config['list']['columns'] = [
     'order_time_is_asap' => [
         'label' => 'lang:admin::lang.orders.label_time_is_asap',
         'type' => 'switch',
+        'cssClass' => 'text-center',
         'onText' => 'lang:admin::lang.text_yes',
         'offText' => 'lang:admin::lang.text_no',
     ],
