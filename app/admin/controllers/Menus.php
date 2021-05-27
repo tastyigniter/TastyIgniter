@@ -94,7 +94,7 @@ class Menus extends AdminController
 
     public function formAfterCreate($model)
     {
-        if (!count($model->locations) AND AdminLocation::getId())
+        if (!count($model->locations) AND AdminLocation::hasOneLocation())
             $model->locations()->attach(AdminLocation::getId());
     }
 }
