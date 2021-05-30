@@ -915,7 +915,7 @@ return [
         'label_sale_permission' => 'Order and Reservation Scope',
 
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
-        'help_role' => 'Roles define staff permissions, which can be overridden on the user level, on the Permissions tab.',
+        'help_role' => 'Roles define staff permissions.',
         'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
         'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, and reservations attached to the selected location(s). Does not apply to super admins',
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
