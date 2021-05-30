@@ -3,8 +3,8 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
+use Admin\Classes\ToolbarButton;
 use Admin\Facades\AdminAuth;
-use Html;
 use Template;
 
 class Toolbar extends BaseWidget
@@ -22,10 +22,14 @@ class Toolbar extends BaseWidget
 
     public $buttons = [];
 
+    public $allButtons = [];
+
     /**
      * @var string
      */
     public $container;
+
+    protected $buttonsDefined;
 
     public function initialize()
     {
@@ -45,26 +49,61 @@ class Toolbar extends BaseWidget
 
     public function render()
     {
+        $this->prepareVars();
+
         if (!is_null($this->container))
             return $this->makePartial($this->container);
-
-        $this->prepareVars();
 
         return $this->makePartial('toolbar/toolbar');
     }
 
     public function prepareVars()
     {
-        $this->prepareButtons();
+        $this->defineButtons();
         $this->vars['toolbarId'] = $this->getId();
         $this->vars['cssClasses'] = implode(' ', $this->cssClasses);
-        $this->vars['buttonsHtml'] = implode(PHP_EOL, $this->getButtonList());
+        $this->vars['availableButtons'] = $this->allButtons;
+    }
+
+    protected function defineButtons()
+    {
+        if ($this->buttonsDefined) {
+            return;
+        }
+
+        if (!is_array($this->buttons)) {
+            $this->buttons = [];
+        }
+
+        $this->fireSystemEvent('admin.toolbar.extendButtonsBefore');
+
+        $this->prepareButtons();
+
+        $this->addButtons($this->buttons);
+
+        $this->fireSystemEvent('admin.toolbar.extendButtons', [$this->allButtons]);
+
+        $this->buttonsDefined = TRUE;
     }
 
     protected function prepareButtons()
     {
         if ($templateButtons = Template::getButtonList())
-            $this->buttons['templateButtons'] = $templateButtons;
+            $this->allButtons['templateButtons'] = $templateButtons;
+    }
+
+    public function renderButtonMarkup($buttonObj)
+    {
+        if (is_string($buttonObj))
+            return $buttonObj;
+
+        $partialName = array_get(
+            $buttonObj->config,
+            'partial',
+            'toolbar/button_'.$buttonObj->type
+        );
+
+        return $this->makePartial($partialName, ['button' => $buttonObj]);
     }
 
     public function getContext()
@@ -74,19 +113,21 @@ class Toolbar extends BaseWidget
 
     public function addButtons($buttons)
     {
-        foreach ($buttons as $name => $attributes) {
-            $this->addButton($name, $attributes);
+        $buttons = $this->makeButtons($buttons);
+
+        foreach ($buttons as $name => $buttonObj) {
+            $this->allButtons[$name] = $buttonObj;
         }
     }
 
     public function addButton($name, array $attributes = [])
     {
-        $this->buttons[$name] = $attributes;
+        $this->allButtons[$name] = $this->makeButton($name, $attributes);
     }
 
     public function removeButton($name)
     {
-        unset($this->buttons[$name]);
+        unset($this->allButtons[$name]);
     }
 
     public function mergeAttributes($name, array $attributes = [])
@@ -97,18 +138,17 @@ class Toolbar extends BaseWidget
     public function getButtonList()
     {
         $buttons = [];
-        if (!is_array($this->buttons)) {
-            return $buttons;
+        foreach ($this->allButtons as $buttonObj) {
+            $buttons[$buttonObj->name] = $this->renderButtonMarkup($buttonObj);
         }
 
-        $this->fireSystemEvent('admin.toolbar.extendButtons');
+        return $buttons;
+    }
 
-        foreach ($this->buttons as $name => $attributes) {
-            if (!is_array($attributes)) {
-                $buttons[$name] = $attributes;
-                continue;
-            }
-
+    protected function makeButtons($buttons)
+    {
+        $result = [];
+        foreach ($buttons as $name => $attributes) {
             $permission = array_get($attributes, 'permission');
             if ($permission AND !AdminAuth::user()->hasPermission($permission)) {
                 continue;
@@ -122,24 +162,30 @@ class Toolbar extends BaseWidget
                 }
             }
 
-            if (isset($attributes['partial'])) {
-                $buttons[$name] = $this->makePartial($attributes['partial']);
-            }
-            else {
-                foreach ($attributes as $key => $value) {
-                    if ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value)) {
-                        $attributes[$key] = $this->controller->pageUrl($value);
-                    }
-                    elseif (is_string($value)) {
-                        $attributes[$key] = lang($value);
-                    }
-                }
+            $buttonObj = $this->makeButton($name, $attributes);
 
-                $_attributes = Html::attributes(array_except($attributes, ['label', 'context', 'permission', 'partial']));
-                $buttons[$name] = '<a'.$_attributes.' tabindex="0">'.(isset($attributes['label']) ? $attributes['label'] : $name).'</a>';
+            if (array_key_exists('menuItems', $attributes)) {
+                $buttonObj->menuItems($this->makeButtons($attributes['menuItems']));
             }
+
+            $result[$name] = $buttonObj;
         }
 
-        return $buttons;
+        return $result;
+    }
+
+    /**
+     * @param string $name
+     * @param array $config
+     * @return mixed
+     */
+    protected function makeButton(string $name, array $config)
+    {
+        $buttonObj = new ToolbarButton($name);
+
+        $buttonType = array_get($config, 'type', 'link');
+        $buttonObj->displayAs($buttonType, $config);
+
+        return $buttonObj;
     }
 }

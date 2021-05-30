@@ -155,7 +155,7 @@ class DataTable extends BaseFormWidget
 
         $page = ($offset / $limit) + 1;
 
-        return $query->paginate($limit, $page);
+        return $query->paginate($limit, ['*'], 'page', $page);
     }
 
     /**
@@ -216,7 +216,6 @@ class DataTable extends BaseFormWidget
         $table = new Table($this->getController(), $config);
 
         $table->bindEvent('table.getRecords', [$this, 'getDataTableRecords']);
-        $table->bindEvent('table.searchRecords', [$this, 'searchDataTableRecords']);
         $table->bindEvent('table.getDropdownOptions', [$this, 'getDataTableOptions']);
 
         return $table;

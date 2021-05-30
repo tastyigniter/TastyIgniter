@@ -51,7 +51,7 @@ class Activities_model extends Activity
             'exceptUser' => null,
         ], $options));
 
-        $query->with(['subject', 'causer']);
+        $query->with(['subject']);
 
         if ($onlyUser) {
             $query->where('user_id', $onlyUser->getKey())
@@ -73,7 +73,6 @@ class Activities_model extends Activity
         }
 
         foreach ($sort as $_sort) {
-
             if (in_array($_sort, ['date_added asc', 'date_added desc', 'date_updated asc', 'date_updated desc'])) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {

@@ -17,10 +17,10 @@
 
         this.$el.on('click', '[data-control="load-area"]', $.proxy(this.onLoadArea, this))
         this.$el.on('click', '[data-control="remove-area"]', $.proxy(this.onRemoveArea, this))
-        
+
         this.bindSorting()
     }
-    
+
     MapArea.prototype.bindSorting = function () {
         var sortableOptions = {
             handle: this.options.sortableHandle,
@@ -36,7 +36,8 @@
 
         $typeInput.on('change', $.proxy(this.onShapeTypeToggle, this))
 
-        this.refreshMap();
+        if ($typeInput.val() === 'shape' || $typeInput.val() === 'circle')
+            this.refreshMap();
 
         this.$mapView.on('click.shape.ti.mapview', '.map-view', $.proxy(this.onShapeClicked, this))
     }

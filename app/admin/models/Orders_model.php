@@ -49,7 +49,7 @@ class Orders_model extends Model
 
     protected $timeFormat = 'H:i';
 
-    public $guarded = ['ip_address', 'user_agent', 'hash'];
+    public $guarded = ['ip_address', 'user_agent', 'hash', 'total_items', 'order_total'];
 
     protected $hidden = ['cart'];
 
@@ -269,7 +269,7 @@ class Orders_model extends Model
 
     public function updateOrderStatus($id, $options = [])
     {
-        $id = $id ?? $this->status_id ?? setting('default_order_status');
+        $id = $id ?: $this->status_id ?: setting('default_order_status');
 
         return $this->addStatusHistory(
             Statuses_model::find($id), $options
@@ -360,7 +360,8 @@ class Orders_model extends Model
         $menus = $model->getOrderMenusWithOptions();
         foreach ($menus as $menu) {
             $optionData = [];
-            if ($menuItemOptions = $menu->menu_options) {
+            foreach ($menu->menu_options->groupBy('order_option_group') as $menuItemOptionGroupName => $menuItemOptions) {
+                $optionData[] = $menuItemOptionGroupName;
                 foreach ($menuItemOptions as $menuItemOption) {
                     $optionData[] = $menuItemOption->quantity
                         .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'

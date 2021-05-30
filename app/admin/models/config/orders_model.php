@@ -25,8 +25,8 @@ $config['list']['filter'] = [
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
-            'type' => 'select',
-            'conditions' => 'status_id = :filtered',
+            'type' => 'selectlist',
+            'conditions' => 'status_id IN(:filtered)',
             'modelClass' => 'Admin\Models\Statuses_model',
             'options' => 'getDropdownOptionsForOrder',
         ],
@@ -102,6 +102,7 @@ $config['list']['columns'] = [
     'order_time_is_asap' => [
         'label' => 'lang:admin::lang.orders.label_time_is_asap',
         'type' => 'switch',
+        'cssClass' => 'text-center',
         'onText' => 'lang:admin::lang.text_yes',
         'offText' => 'lang:admin::lang.text_no',
     ],
@@ -157,20 +158,19 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'orders',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create'],
+            'partial' => 'form/toolbar_save_button',
+            'saveActions' => ['continue', 'close'],
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
-            'context' => ['create'],
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-            'context' => ['create'],
         ],
         'delete' => [
             'label' => 'lang:admin::lang.button_icon_delete',

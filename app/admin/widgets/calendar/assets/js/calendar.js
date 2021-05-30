@@ -37,6 +37,7 @@
             click: $.proxy(this.onTogglePicker, this)
         }
 
+        this.options.locale = this.options.locale.replace('_', '-').split('-').shift();
         this.options.events = $.proxy(this.generateEvents, this);
         this.calendar = new FullCalendar.Calendar(this.$calendar[0], this.options);
 
@@ -46,14 +47,14 @@
         this.calendar.on('eventDrop', $.proxy(this.onUpdateEvent, this))
         this.calendar.on('eventResize', $.proxy(this.onUpdateEvent, this))
         this.calendar.on('datesSet', $.proxy(this.hidePopovers, this))
-        
+
         this.calendar.render();
     }
 
     Calendar.prototype.onClickEvent = function (eventObj) {
         if (!this.options.editable)
             return
-            
+
         var renderProps = {...eventObj.event.extendedProps};
         renderProps.id = eventObj.event.id;
 
@@ -102,9 +103,9 @@
     }
 
     Calendar.prototype.onPickerDateChanged = function (event) {
-        this.$calendar.fullCalendar('gotoDate', event.date)
+        this.calendar.gotoDate(event.date)
     }
-    
+
     Calendar.prototype.hidePopovers = function() {
         $('.popover.show').remove()
     }
@@ -120,6 +121,10 @@
         }).always(function () {
             $.ti.loadingIndicator.hide()
         })
+    }
+
+    Calendar.prototype.getCalendar = function () {
+        return this.calendar
     }
 
     Calendar.DEFAULTS = {
@@ -139,6 +144,7 @@
         dayMaxEventRows: 5,
         navLinks: true,
         initialView: 'dayGridMonth',
+        locale: 'en',
     }
 
     // FIELD CALENDAR PLUGIN DEFINITION

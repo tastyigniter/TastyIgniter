@@ -103,7 +103,14 @@ class FormRequest extends BaseFormRequest
      */
     protected function getModel()
     {
-        return optional($this->getController())->getFormModel();
+        if (!$this->getController())
+            return null;
+
+        if ($this->getController()->methodExists('getFormModel'))
+            return $this->getController()->getFormModel();
+
+        if ($this->getController()->methodExists('getRestModel'))
+            return $this->getController()->getRestModel();
     }
 
     /**

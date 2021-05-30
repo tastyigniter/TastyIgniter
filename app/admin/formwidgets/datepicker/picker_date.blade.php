@@ -12,6 +12,7 @@
         @if ($endDate) data-end-date="{{ $endDate }}" @endif
         @if ($datesDisabled) data-dates-disabled="{{ $datesDisabled }}" @endif
         data-format="{{ $datePickerFormat }}"
+        data-language={{ setting('default_language') }}
     />
     <input
         type="hidden"

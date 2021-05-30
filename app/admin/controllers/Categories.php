@@ -32,11 +32,13 @@ class Categories extends AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'categories/edit/{category_id}',
             'redirectClose' => 'categories',
+            'redirectNew' => 'categories/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'categories/edit/{category_id}',
             'redirectClose' => 'categories',
+            'redirectNew' => 'categories/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
