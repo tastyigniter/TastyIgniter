@@ -15,6 +15,8 @@ class User extends Manager
 
     protected $isSuperUser = FALSE;
 
+    protected $requireApproval = TRUE;
+
     public function isLogged()
     {
         return $this->check();
