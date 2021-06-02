@@ -20,7 +20,7 @@
         aria-haspopup="true"
         aria-expanded="false"
     ><span class="sr-only">Toggle Dropdown</span></button>
-    <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-menu dropdown-menu-left">
         <h6 class="dropdown-header px-2">After saving</h6>
         @foreach (['continue', 'close', 'new'] as $action)
             @continue($saveActions AND !in_array($action, $saveActions))

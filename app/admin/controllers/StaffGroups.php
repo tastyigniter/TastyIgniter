@@ -57,10 +57,8 @@ class StaffGroups extends \Admin\Classes\AdminController
         AdminMenu::setContext('staffs', 'users');
     }
 
-    public function index()
+    public function formAfterSave()
     {
         Staff_groups_model::syncAutoAssignStatus();
-
-        $this->asExtension('ListController')->index();
     }
 }

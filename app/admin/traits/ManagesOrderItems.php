@@ -195,28 +195,46 @@ trait ManagesOrderItems
         $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
 
         foreach ($totals as $total) {
-            $this->orderTotalsQuery()->insert([
-                'order_id' => $orderId,
-                'code' => $total['code'],
-                'title' => $total['title'],
-                'value' => $total['value'],
-                'priority' => $total['priority'],
-            ]);
+            $this->addOrUpdateOrderTotal($total);
         }
 
         $this->calculateTotals();
     }
 
+    public function addOrUpdateOrderTotal(array $total)
+    {
+        return $this->orderTotalsQuery()->updateOrInsert([
+            'order_id' => $this->getKey(),
+            'code' => $total['code'],
+        ], array_except($total, ['order_id', 'code']));
+    }
+
     public function calculateTotals()
     {
-        $orderTotal = $this->orderTotalsQuery()
+        $subtotal = $this->orderMenusQuery()
             ->where('order_id', $this->getKey())
-            ->where('code', '<>', 'total')
+            ->sum('subtotal');
+
+        $total = $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('is_summable', TRUE)
             ->sum('value');
+
+        $orderTotal = $subtotal + $total;
 
         $totalItems = $this->orderMenusQuery()
             ->where('order_id', $this->getKey())
             ->sum('quantity');
+
+        $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('code', 'subtotal')
+            ->update(['value' => $subtotal]);
+
+        $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('code', 'total')
+            ->update(['value' => $orderTotal]);
 
         $this->newQuery()->where('order_id', $this->getKey())->update([
             'total_items' => $totalItems,
