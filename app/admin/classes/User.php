@@ -15,8 +15,6 @@ class User extends Manager
 
     protected $isSuperUser = FALSE;
 
-    protected $requireApproval = TRUE;
-
     public function isLogged()
     {
         return $this->check();
@@ -49,7 +47,11 @@ class User extends Manager
 
     public function extendUserQuery($query)
     {
-        $query->with(['staff', 'staff.role', 'staff.groups', 'staff.locations']);
+        $query
+            ->with(['staff', 'staff.role', 'staff.groups', 'staff.locations'])
+            ->whereHas('staff', function ($query) {
+                $query->where('staff_status', TRUE);
+            });
     }
 
     //
