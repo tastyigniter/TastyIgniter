@@ -139,10 +139,4 @@ trait Locationable
 
         return count($this->{$relationName});
     }
-
-    public function formAfterCreate($model)
-    {
-        if (!count($model->locations) AND AdminLocation::hasOneLocation())
-            $model->locations()->attach(AdminLocation::getId());
-    }
 }
