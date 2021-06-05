@@ -22,6 +22,8 @@ class Location extends FormRequest
             ['location_lat', 'admin::lang.locations.label_latitude', 'sometimes|required_if:options.auto_lat_lng,0|numeric'],
             ['location_lng', 'admin::lang.locations.label_longitude', 'sometimes|required_if:options.auto_lat_lng,0|numeric'],
             ['description', 'admin::lang.label_description', 'max:3028'],
+            ['options.limit_orders', 'admin::lang.locations.label_limit_orders', 'boolean'],
+            ['options.limit_orders_count', 'admin::lang.locations.label_limit_orders_count', 'integer|min:1'],
             ['options.offer_delivery', 'admin::lang.locations.label_offer_delivery', 'boolean'],
             ['options.offer_collection', 'admin::lang.locations.label_offer_collection', 'boolean'],
             ['options.offer_reservation', 'admin::lang.locations.label_offer_collection', 'boolean'],
