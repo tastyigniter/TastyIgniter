@@ -275,6 +275,23 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[delivery_time_restriction]' => [
+            'label' => 'lang:admin::lang.locations.label_delivery_time_restriction',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'radiotoggle',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_delivery_time_restriction',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.locations.text_asap_only',
+                'lang:admin::lang.locations.text_later_only',
+            ],
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_delivery]',
+                'condition' => 'checked',
+            ],
+        ],
 
         'options[offer_collection]' => [
             'label' => 'lang:admin::lang.locations.label_offer_collection',
@@ -342,6 +359,23 @@ $config['form']['tabs'] = [
             'trigger' => [
                 'action' => 'enable',
                 'field' => 'options[limit_orders]',
+                'condition' => 'checked',
+            ],
+        ],
+        'options[collection_time_restriction]' => [
+            'label' => 'lang:admin::lang.locations.label_collection_time_restriction',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'radiotoggle',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_collection_time_restriction',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.locations.text_asap_only',
+                'lang:admin::lang.locations.text_later_only',
+            ],
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_collection]',
                 'condition' => 'checked',
             ],
         ],
