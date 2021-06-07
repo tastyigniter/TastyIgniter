@@ -74,6 +74,7 @@ trait FormExtendable
      */
     public function formFindModelObject($recordId)
     {
+        $recordId = strip_tags($recordId); //remove html tags from url(reflective xss)
         if (!strlen($recordId)) {
             throw new Exception(lang('admin::lang.form.missing_id'));
         }
