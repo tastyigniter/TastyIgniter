@@ -65,6 +65,8 @@ class Login extends \Admin\Classes\AdminController
         if (!AdminAuth::authenticate($credentials, TRUE, TRUE))
             throw new ValidationException(['username' => lang('admin::lang.login.alert_username_not_found')]);
 
+        session()->regenerate();
+
         if ($redirectUrl = input('redirect'))
             return $this->redirect($redirectUrl);
 
