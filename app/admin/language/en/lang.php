@@ -528,6 +528,7 @@ return [
 
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
         'help_image' => 'Select a logo for this location.',
+        'help_limit_orders' => 'Enabling this disables ASAP delivery and pickup orders.',
         'help_limit_orders_interval' => 'Set the minutes between each limitation timeslot.',
         'help_delivery_time_restriction' => 'Whether your customers can only place ASAP delivery orders, schedule delivery orders for later or both.',
         'help_collection_time_restriction' => 'Whether your customers can only place ASAP pick-up orders, schedule pick-up orders for later or both.',
@@ -541,7 +542,7 @@ return [
         'help_payments' => 'Select the payment(s) available at this location. Leave blank to use all enabled payments',
         'help_no_payments' => 'No enabled payment was found.',
         'help_reservation_time_interval' => 'Set the number of minutes between each reservation time',
-        'help_reservation_lead_time' => 'Set in minutes you need to prepare a table',
+        'help_reservation_lead_time' => 'Set in minutes the average time it takes to prepare a table',
         'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table',
         'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least one delivery area to accept delivery orders.',
         'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
@@ -922,7 +923,7 @@ return [
         'label_sale_permission' => 'Order and Reservation Scope',
 
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
-        'help_role' => 'Roles define staff permissions, which can be overridden on the user level, on the Permissions tab.',
+        'help_role' => 'Roles define staff permissions.',
         'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
         'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, and reservations attached to the selected location(s). Does not apply to super admins',
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',

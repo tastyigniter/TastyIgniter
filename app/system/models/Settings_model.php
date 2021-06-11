@@ -230,7 +230,7 @@ class Settings_model extends Model
             'description' => null,
             'icon' => null,
             'url' => null,
-            'priority' => null,
+            'priority' => 99,
             'permissions' => [],
             'context' => 'settings',
             'model' => null,

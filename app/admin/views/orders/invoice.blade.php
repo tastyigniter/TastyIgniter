@@ -71,7 +71,7 @@
         <div class="col-3 text-right">
             <p>
                 <strong>@lang('admin::lang.orders.text_payment')</strong><br>
-                {{ $model->payment_method->name }}
+                {{ $model->payment_method ? $model->payment_method->name : '' }}
             </p>
             <p>
                 <strong>@lang('admin::lang.orders.text_order_date')</strong><br>
