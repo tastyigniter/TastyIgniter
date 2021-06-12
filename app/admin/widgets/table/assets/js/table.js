@@ -22,7 +22,7 @@
     Table.DEFAULTS = {
         columns: [],
         data: [],
-        classes: 'table table-striped',
+        classes: 'table table-hover',
         iconsPrefix: 'fa',
         resizable: true,
         paginationLoop: false,

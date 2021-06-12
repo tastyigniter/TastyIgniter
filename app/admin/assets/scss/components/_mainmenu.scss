@@ -91,7 +91,7 @@
   .dropdown-menu {
     left: auto;
     right: 25px;
-    padding: 0;
+    padding: .3rem;
     margin-top: -8px;
     line-height: $line-height-base;
     min-width: $mainmenu-dropdown-width;
@@ -99,6 +99,8 @@
     border: $border-width solid $border-color;
 
     .dropdown-item {
+      border-radius: 3px;
+
       .fa {
         margin-right: 14px;
       }
@@ -137,7 +139,8 @@
       }
 
       .menu-item {
-        border-bottom: $border-width solid $dropdown-border-color;
+        border-bottom: $border-width solid $gray-300;
+        border-radius: $input-border-radius;
       }
 
       .menu-item:hover {
@@ -162,6 +165,7 @@
 
     .menu-grid {
       max-height: unset;
+      padding: .3rem;
 
       .menu-item {
         border: 0 none;

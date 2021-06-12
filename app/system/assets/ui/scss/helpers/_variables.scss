@@ -50,7 +50,6 @@ $theme-colors: map-merge($theme-colors, (
 // Options
 //
 $icon-font-path: '../../../system/assets/ui/fonts/';
-$logo-font-path: $icon-font-path+'TastyIgniterLogos';
 $fa-font-path: $icon-font-path+'FontAwesome';
 // Body
 //
@@ -77,13 +76,14 @@ $label-padding-x: .75rem !default;
 //
 $table-cell-padding: .45rem !default;
 $table-cell-padding-sm: .1rem !default;
-$table-head-bg: $gray-200 !default;
+$table-head-bg: $gray-300 !default;
 $table-accent-bg: $light !default;
 $table-border-color: $gray-200 !default;
+$table-hover-bg: $gray-300 !default;
 
 // Buttons
 //
-$btn-border-radius: 2px !default;
+$btn-border-radius: 3px !default;
 $btn-font-weight: 500 !default;
 $btn-action-padding: 4px 8px !default;
 

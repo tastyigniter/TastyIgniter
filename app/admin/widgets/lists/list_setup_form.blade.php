@@ -13,7 +13,7 @@
                 </label>
                 <div
                     id="lists-setup-sortable"
-                    class="list-group list-group-flush"
+                    class="list-group"
                 >
                     @foreach ($columns as $column)
                         @if ($column->type == 'button')
@@ -24,7 +24,7 @@
                                 value="{{ $column->columnName }}"
                             />
                         @else
-                            <div class="list-group-item px-2">
+                            <div class="list-group-item bg-transparent px-2">
                                 <div class="btn btn-handle form-check-handle mr-2">
                                     <i class="fa fa-arrows-alt-v text-muted"></i>
                                 </div>
@@ -63,7 +63,7 @@
                         data-toggle="buttons"
                     >
                         @foreach ($perPageOptions as $optionValue)
-                             <label class="btn btn-light {{ $optionValue == $pageLimit ? 'active' : '' }}">
+                            <label class="btn btn-light {{ $optionValue == $pageLimit ? 'active' : '' }}">
                                 <input
                                     type="radio"
                                     id="checkbox_page_limit_{{ $optionValue }}"
@@ -80,7 +80,7 @@
         <div class="modal-footer progress-indicator-container">
             <button
                 type="button"
-                class="btn btn-link text-danger mr-sm-auto"
+                class="btn btn-link text-danger mr-auto"
                 data-request="{{ $this->getEventHandler('onResetSetup')}}"
                 data-progress-indicator="@lang('admin::lang.text_resetting')"
             >@lang('admin::lang.list.button_reset_setup')</button>

@@ -17,7 +17,7 @@
         </div>
     </div>
 </div>
-<div class="toolbar-action pt-3 px-0">
+<div class="toolbar-action pt-3">
     @if ($this->canManage)
         <button
             type="button"
@@ -25,9 +25,8 @@
             data-toggle="modal"
             data-target="#newWidgetModal"
             data-request="{{ $this->getEventHandler('onLoadAddPopup') }}"
-            title="@lang('admin::lang.dashboard.button_add_widget')"
             tabindex="-1"
-        ><i class="fa fa-plus"></i></button>
+        ><i class="fa fa-plus"></i>&nbsp;&nbsp;@lang('admin::lang.dashboard.button_add_widget')</button>
         <button
             type="button"
             class="btn btn-outline-danger"
@@ -41,12 +40,11 @@
     @if ($this->canSetDefault)
         <button
             type="button"
-            class="btn btn-outline-default"
+            class="btn btn-outline-default pull-right"
             data-request="{{ $this->getEventHandler('onSetAsDefault') }}"
             data-request-confirm="@lang('admin::lang.dashboard.alert_set_default_confirm')"
             data-attach-loading
-            title="@lang('admin::lang.dashboard.button_set_default')"
             tabindex="-1"
-        ><i class="fa fa-save"></i></button>
+        ><i class="fa fa-save"></i>&nbsp;&nbsp;@lang('admin::lang.dashboard.button_set_default')</button>
     @endif
 </div>
