@@ -190,7 +190,6 @@ trait FormExtendable
 
     public function formExtendConfig($formConfig)
     {
-
     }
 
     /**

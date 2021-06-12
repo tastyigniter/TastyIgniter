@@ -2,7 +2,6 @@
 
 namespace Admin\Models;
 
-use Carbon\Carbon;
 use Model;
 
 /**
@@ -101,7 +100,7 @@ class Staff_groups_model extends Model
     {
         $query = $this->assignable_logs()->newQuery();
 
-        $useLoadBalance = ($this->auto_assign_mode == self::AUTO_ASSIGN_LOAD_BALANCED);
+        $useLoadBalance = $this->auto_assign_mode == self::AUTO_ASSIGN_LOAD_BALANCED;
 
         $useLoadBalance
             ? $query->applyLoadBalancedScope($this->auto_assign_limit)
@@ -109,11 +108,8 @@ class Staff_groups_model extends Model
 
         $logs = $query->pluck('assign_value', 'assignee_id');
 
-        $assignees = $this->listAssignees()->map(function (Staffs_model $model) use ($useLoadBalance, $logs) {
-            $assignValue = $useLoadBalance ?
-                0 : Carbon::now()->addYear()->toDateTimeString();
-
-            $model->assign_value = $logs[$model->getKey()] ?? $assignValue;
+        $assignees = $this->listAssignees()->map(function (Staffs_model $model) use ($logs) {
+            $model->assign_value = $logs[$model->getKey()] ?? 0;
 
             return $model;
         });

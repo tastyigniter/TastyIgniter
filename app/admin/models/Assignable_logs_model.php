@@ -120,6 +120,7 @@ class Assignable_logs_model extends Model
             ->select('assignee_id')
             ->selectRaw('MAX(created_at) as assign_value')
             ->whereIn('status_id', setting('processing_order_status', []))
+            ->whereNotNull('assignee_id')
             ->groupBy('assignee_id')
             ->orderBy('assign_value', 'asc');
     }
@@ -135,6 +136,7 @@ class Assignable_logs_model extends Model
             ->select('assignee_id')
             ->selectRaw('COUNT(assignee_id)/'.DB::getPdo()->quote($limit).' as assign_value')
             ->whereIn('status_id', setting('processing_order_status', []))
+            ->whereNotNull('assignee_id')
             ->groupBy('assignee_id')
             ->orderBy('assign_value', 'desc')
             ->havingRaw('assign_value < 1');
