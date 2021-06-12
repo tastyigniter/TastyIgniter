@@ -4,11 +4,9 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Facades\AdminLocation;
 use Admin\Traits\LocationAwareWidget;
 use DB;
 use Exception;
-use Igniter\Flame\Location\Models\AbstractLocation;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
 
@@ -94,8 +92,6 @@ class Relation extends BaseFormWidget
         if ($this->formField->disabled OR $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
-
-        $value = $this->processSaveValue($value);
 
         if (is_string($value) && !strlen($value)) {
             return null;
@@ -222,23 +218,5 @@ class Relation extends BaseFormWidget
         }
 
         return $model->{$attribute}();
-    }
-
-    protected function processSaveValue($value)
-    {
-        if ($value)
-            return $value;
-
-        [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
-        $relatedModel = $model->makeRelation($attribute);
-
-        if (!$relatedModel instanceof AbstractLocation OR !AdminLocation::hasOneLocation())
-            return $value;
-
-        $relationType = $model->getRelationType($attribute);
-
-        return in_array($relationType, ['belongsTo', 'hasOne'])
-            ? AdminLocation::getId()
-            : [AdminLocation::getId()];
     }
 }
