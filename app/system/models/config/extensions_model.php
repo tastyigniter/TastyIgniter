@@ -4,13 +4,6 @@ $config['list']['filter'] = [
         'prompt' => 'lang:system::lang.extensions.text_filter_search',
         'mode' => 'all',
     ],
-    'scopes' => [
-        'status' => [
-            'label' => 'lang:admin::lang.text_filter_status',
-            'type' => 'switch',
-            'conditions' => 'status = :filtered',
-        ],
-    ],
 ];
 
 $config['list']['toolbar'] = [

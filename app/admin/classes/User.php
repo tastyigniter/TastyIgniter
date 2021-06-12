@@ -47,7 +47,11 @@ class User extends Manager
 
     public function extendUserQuery($query)
     {
-        $query->with(['staff', 'staff.role', 'staff.groups', 'staff.locations']);
+        $query
+            ->with(['staff', 'staff.role', 'staff.groups', 'staff.locations'])
+            ->whereHas('staff', function ($query) {
+                $query->where('staff_status', TRUE);
+            });
     }
 
     //
