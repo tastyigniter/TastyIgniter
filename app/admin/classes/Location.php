@@ -30,13 +30,12 @@ class Location extends Manager
             $id = $this->getSession('id');
             if (!$id AND $this->hasOneLocation() AND !$this->getAuth()->isSuperUser())
                 $id = $this->getDefaultLocation();
+
+            if ($id AND !$this->isAttachedToAuth($id))
+                $id = $this->getDefaultLocation();
         }
 
-        $model = null;
-        if ($id AND $this->isAttachedToAuth($id))
-            $model = $this->getById($id);
-
-        if ($model)
+        if ($id AND $model = $this->getById($id))
             $this->setCurrent($model);
 
         return $this->model;
@@ -91,7 +90,7 @@ class Location extends Manager
 
     public function getLocation()
     {
-        return $this->model;
+        return $this->current();
     }
 
     public function listLocations()

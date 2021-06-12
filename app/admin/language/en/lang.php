@@ -523,6 +523,7 @@ return [
 
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
         'help_image' => 'Select a logo for this location.',
+        'help_limit_orders' => 'Enabling this disables ASAP delivery and pickup orders.',
         'help_limit_orders_interval' => 'Set the minutes between each limitation timeslot.',
         'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
         'help_collection_time_interval' => 'Set the minutes between each pick-up order time available to your customer.',
@@ -534,7 +535,7 @@ return [
         'help_payments' => 'Select the payment(s) available at this location. Leave blank to use all enabled payments',
         'help_no_payments' => 'No enabled payment was found.',
         'help_reservation_time_interval' => 'Set the number of minutes between each reservation time',
-        'help_reservation_lead_time' => 'Set in minutes you need to prepare a table',
+        'help_reservation_lead_time' => 'Set in minutes the average time it takes to prepare a table',
         'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table',
         'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least one delivery area to accept delivery orders.',
         'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
