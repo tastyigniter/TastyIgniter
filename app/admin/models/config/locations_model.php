@@ -219,8 +219,30 @@ $config['form']['tabs'] = [
             'size' => 'small',
         ],
 
-        'order' => [
-            'label' => 'lang:admin::lang.locations.text_tab_order',
+        'options[limit_orders]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_orders',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'switch',
+            'comment' => 'lang:admin::lang.locations.help_limit_orders',
+            'span' => 'left',
+        ],
+        'options[limit_orders_count]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_orders_count',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 50,
+            'type' => 'number',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_limit_orders_interval',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[limit_orders]',
+                'condition' => 'checked',
+            ],
+        ],
+
+        'delivery_order' => [
+            'label' => 'lang:admin::lang.locations.text_tab_delivery_order',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'type' => 'section',
         ],
@@ -229,6 +251,18 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 1,
             'type' => 'switch',
+            'span' => 'left',
+        ],
+        'options[future_orders][enable_delivery]' => [
+            'label' => 'lang:admin::lang.locations.label_future_delivery_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'switch',
+            'span' => 'right',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_delivery]',
+                'condition' => 'checked',
+            ],
         ],
         'options[delivery_time_interval]' => [
             'label' => 'lang:admin::lang.locations.label_delivery_time_interval',
@@ -243,25 +277,6 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[delivery_lead_time]' => [
-            'label' => 'lang:admin::lang.locations.label_delivery_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 25,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_delivery_lead_time',
-            'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_delivery]',
-                'condition' => 'checked',
-            ],
-        ],
-        'options[future_orders][enable_delivery]' => [
-            'label' => 'lang:admin::lang.locations.label_future_delivery_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'switch',
-            'span' => 'left',
-        ],
         'options[future_orders][delivery_days]' => [
             'label' => 'lang:admin::lang.locations.label_future_delivery_days',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
@@ -275,12 +290,42 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[delivery_lead_time]' => [
+            'label' => 'lang:admin::lang.locations.label_delivery_lead_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 25,
+            'type' => 'number',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_delivery_lead_time',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_delivery]',
+                'condition' => 'checked',
+            ],
+        ],
 
+        'collection_order' => [
+            'label' => 'lang:admin::lang.locations.text_tab_collection_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'section',
+        ],
         'options[offer_collection]' => [
             'label' => 'lang:admin::lang.locations.label_offer_collection',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 1,
             'type' => 'switch',
+            'span' => 'left',
+        ],
+        'options[future_orders][enable_collection]' => [
+            'label' => 'lang:admin::lang.locations.label_future_collection_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'switch',
+            'span' => 'right',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_collection]',
+                'condition' => 'checked',
+            ],
         ],
         'options[collection_time_interval]' => [
             'label' => 'lang:admin::lang.locations.label_collection_time_interval',
@@ -295,25 +340,6 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[collection_lead_time]' => [
-            'label' => 'lang:admin::lang.locations.label_collection_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 25,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_collection_lead_time',
-            'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_collection]',
-                'condition' => 'checked',
-            ],
-        ],
-        'options[future_orders][enable_collection]' => [
-            'label' => 'lang:admin::lang.locations.label_future_collection_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'switch',
-            'span' => 'left',
-        ],
         'options[future_orders][collection_days]' => [
             'label' => 'lang:admin::lang.locations.label_future_collection_days',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
@@ -327,21 +353,16 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[limit_orders]' => [
-            'label' => 'lang:admin::lang.locations.label_limit_orders',
+        'options[collection_lead_time]' => [
+            'label' => 'lang:admin::lang.locations.label_collection_lead_time',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 0,
-            'type' => 'switch',
-        ],
-        'options[limit_orders_count]' => [
-            'label' => 'lang:admin::lang.locations.label_limit_orders_count',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 50,
+            'default' => 25,
             'type' => 'number',
             'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_collection_lead_time',
             'trigger' => [
                 'action' => 'enable',
-                'field' => 'options[limit_orders]',
+                'field' => 'options[offer_collection]',
                 'condition' => 'checked',
             ],
         ],
