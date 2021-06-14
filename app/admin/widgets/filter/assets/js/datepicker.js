@@ -41,8 +41,15 @@
                 'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
                 'Last 30 Days': [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
                 'This Month': [moment().startOf('month').startOf('day'), moment().endOf('month').endOf('day')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month').startOf('day'), moment().subtract(1, 'month').endOf('month').endOf('day')]
+                'Last Month': [moment().subtract(1, 'month').startOf('month').startOf('day'), moment().subtract(1, 'month').endOf('month').endOf('day')],
+                'Lifetime': ['', ''],
             }
+            
+            if (this.$el.find('[data-datepicker-range-start]').val() == '')
+                options.startDate = '';
+                
+            if (this.$el.find('[data-datepicker-range-end]').val() == '')
+                options.endDate = '';
         }
 
         $el.daterangepicker(options, $.proxy(this.onDateSelected, this))
@@ -52,8 +59,8 @@
         var format = this.options.timePicker ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'
 
         if (!this.options.singleDatePicker) {
-            this.$el.find('[data-datepicker-range-start]').val(start.format(format));
-            this.$el.find('[data-datepicker-range-end]').val(end.format(format));
+            this.$el.find('[data-datepicker-range-start]').val(start.isValid() ? start.format(format) : '');
+            this.$el.find('[data-datepicker-range-end]').val(end.isValid() ? end.format(format) : '');
         } else {
             this.$el.find('[data-datepicker-input]').val(start.format(format));
         }
