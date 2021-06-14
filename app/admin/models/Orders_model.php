@@ -35,8 +35,6 @@ class Orders_model extends Model
 
     const COLLECTION = 'collection';
 
-    protected static $orderTypes = [1 => self::DELIVERY, 2 => self::COLLECTION];
-
     /**
      * @var string The database table name
      */
@@ -186,17 +184,11 @@ class Orders_model extends Model
         return $this->first_name.' '.$this->last_name;
     }
 
-    public function getOrderTypeAttribute($value)
-    {
-        if (isset(self::$orderTypes[$value]))
-            return self::$orderTypes[$value];
-
-        return $value;
-    }
-
     public function getOrderTypeNameAttribute()
     {
-        return lang('admin::lang.orders.text_'.$this->order_type);
+        return optional(
+            $this->location->availableOrderTypes()->get($this->order_type)
+        )->getLabel();
     }
 
     public function getFormattedAddressAttribute($value)
