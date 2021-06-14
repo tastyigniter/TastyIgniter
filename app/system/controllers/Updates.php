@@ -62,7 +62,7 @@ class Updates extends \Admin\Classes\AdminController
 
             if (!empty($updates['items']) OR !empty($updates['ignoredItems'])) {
                 Template::setButton(lang('system::lang.updates.button_update'), [
-                    'class' => 'btn btn-primary pull-left mr-2',
+                    'class' => 'btn btn-primary pull-left mr-2 ml-0',
                     'id' => 'apply-updates', 'role' => 'button',
                 ]);
             }

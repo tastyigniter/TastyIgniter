@@ -8,12 +8,11 @@
 //
 .form-widget {
   > div > .form-fields {
-    border-top: 1px solid $border-color;
     margin-bottom: 0;
   }
 
   > div:not(:first-child) {
-    margin-top: 10px;
+    margin-top: 0;
   }
 }
 .form-fields {
@@ -86,11 +85,12 @@
 // Tabs
 //
 .form-nav {
+  padding-top: 10px;
   padding-left: 20px;
   padding-right: 20px;
 
   &.nav-tabs {
-    border-bottom: 1px solid $gray-400;
+    background-color: $gray-300;
 
     .nav-item {
     }
@@ -100,6 +100,7 @@
       border-color: transparent;
       color: $body-color;
       padding: $form-nav-link-padding-y $form-nav-link-padding-x;
+      font-weight: 500;
     }
 
     .nav-link:hover,
@@ -110,9 +111,8 @@
     .nav-link.active {
       border-width: 4px 2px 0;
       border-style: solid;
-      border-color: $gray-400;
+      border-color: $gray-300;
       background-color: $gray-200;
-      font-weight: $font-weight-base;
     }
   }
 }
@@ -153,7 +153,6 @@
 // Control label
 .control-label {
   color: $gray-800;
-  font-size: 0.9375rem;
 }
 .help-block {
   @extend .form-text;

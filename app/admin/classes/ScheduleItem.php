@@ -70,7 +70,7 @@ class ScheduleItem
         $result = [];
 
         $hours = $this->getHours();
-        foreach (Working_hours_model::$weekDays as $index => $day) {
+        foreach (Working_hours_model::make()->getWeekDaysOptions() as $index => $day) {
             $formattedHours = [];
             foreach (array_get($hours, $index, []) as $hour) {
                 if (!$hour['status'])

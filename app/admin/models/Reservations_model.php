@@ -158,7 +158,7 @@ class Reservations_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', false) AND $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', false)) {
+        if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE)) {
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 
@@ -267,6 +267,9 @@ class Reservations_model extends Model
     public static function findReservedTables($location, $dateTime)
     {
         $query = self::with('tables');
+        $query->whereHas('tables', function ($query) use ($location) {
+            $query->whereHasLocation($location->getKey());
+        });
         $query->whereLocationId($location->getKey());
         $query->whereBetweenDate($dateTime->toDateTimeString());
         $query->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);
