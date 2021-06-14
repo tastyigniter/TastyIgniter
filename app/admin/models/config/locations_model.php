@@ -315,8 +315,8 @@ $config['form']['tabs'] = [
                 'lang:admin::lang.locations.text_later_only',
             ],
             'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_delivery]',
+                'action' => 'disable',
+                'field' => 'options[future_orders][enable_delivery]',
                 'condition' => 'checked',
             ],
         ],
@@ -395,8 +395,8 @@ $config['form']['tabs'] = [
                 'lang:admin::lang.locations.text_later_only',
             ],
             'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_collection]',
+                'action' => 'disable',
+                'field' => 'options[future_orders][enable_collection]',
                 'condition' => 'checked',
             ],
         ],
