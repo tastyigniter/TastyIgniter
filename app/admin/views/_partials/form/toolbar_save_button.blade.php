@@ -43,4 +43,4 @@
         @endforeach
     </div>
 </div>
-<input type="hidden" data-form-save-action="">
+<input type="hidden" data-form-save-action="" name="{{$selectedAction}}" value="1">

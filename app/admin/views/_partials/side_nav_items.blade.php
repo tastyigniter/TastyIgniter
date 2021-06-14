@@ -9,7 +9,7 @@
         @endphp
         <li class="nav-item{{ ($isActive = $this->isActiveNavItem($code)) ? ' active' : '' }}">
             <a
-                class="nav-link{{ isset($menu['class']) ? ' '.$menu['class'] : '' }}{{ $hasChild ? ' has-arrow' : '' }}"
+                class="nav-link{{ isset($menu['class']) ? ' '.$menu['class'] : '' }}"
                 href="{{ $menu['href'] ?: '#' }}"
                 aria-expanded="{{ $isActive ? 'true' : 'false' }}"
             >

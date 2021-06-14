@@ -7,12 +7,12 @@ $gray-500: #9194A6 !default;
 $gray-600: #6F7B9C !default;
 $gray-700: #48557B !default;
 $gray-800: #2E3B61 !default;
-$gray-900: #152248 !default;
+$gray-900: #192957 !default;
 $black: #000329 !default;
 //
 // Colors
 //
-$primary: #217DC0 !default;
+$primary: #2170C0 !default;
 $secondary: $gray-600 !default;
 $success: #28A745 !default;
 $info: #5A67D8 !default;
@@ -23,6 +23,7 @@ $dark: $gray-900 !default;
 //
 // Options
 //
+$images-path: '../../../admin/assets/images/';
 $enable-shadows: true !default;
 $body-bg: $gray-200 !default;
 $body-color: $gray-800 !default;
@@ -51,6 +52,7 @@ $table-border-color: $gray-300 !default;
 $input-btn-padding-y: .5rem !default;
 $input-btn-padding-x: .75rem !default;
 $input-spacer: 6px !default;
+$input-font-size: 0.9375rem !default;
 //
 // Buttons
 //
@@ -95,7 +97,8 @@ $mainmenu-padding-y: 1rem !default;
 $sidenav-bg: $gray-900 !default;
 $sidenav-font-size: 15px !default;
 $sidenav-submenu-font-size: $font-size-base !default;
-$sidenav-font-weight: 400 !default;
+$sidenav-font-weight: 500 !default;
+$sidenav-font-size-bold: 600 !default;
 $sidenav-line-height: 50px !default;
 $sidenav-line-height-sm: 42px !default;
 $sidenav-padding-x: 0 !default;
