@@ -28,7 +28,8 @@
 Toolbar
 */
 .media-toolbar {
-	padding: 15px;
+	background-color: var(--gray-300);
+  padding: 20px;
 }
 /*
 Media list
@@ -109,7 +110,7 @@ Breadcrumb
 */
 
 .media-breadcrumb .breadcrumb {
-	background-color: var(--gray-300);
+	background-color: transparent;
 	margin-bottom: 0;
 	border-radius: 3px 3px 0 0;
 }
@@ -175,4 +176,8 @@ Folder Tree
   min-width: 250px;
   max-height: 460px;
   overflow: auto;
+}
+.folder-tree .list-group-item {
+  background-color: transparent;
+  border-radius: 3px;
 }

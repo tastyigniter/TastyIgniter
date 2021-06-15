@@ -18,6 +18,7 @@ class AddIsSummableOnOrderTotalsTable extends Migration
         DB::table('order_totals')
             ->where('code', '!=', 'subtotal')
             ->where('code', '!=', 'total')
+            ->where('title', 'not like', '%included%')
             ->update(['is_summable' => 1]);
     }
 

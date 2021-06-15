@@ -197,14 +197,11 @@ $config['form']['tabs'] = [
         ],
         'order_restriction' => [
             'label' => 'lang:admin::lang.menus.label_order_restriction',
-            'type' => 'radiotoggle',
+            'type' => 'select',
+            'multiOption' => TRUE,
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
-            'options' => [
-                'lang:admin::lang.text_none',
-                'lang:admin::lang.menus.text_delivery_only',
-                'lang:admin::lang.menus.text_collection_only',
-            ],
+            'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],
         ],
         'subtract_stock' => [
             'label' => 'lang:admin::lang.menus.label_subtract_stock',

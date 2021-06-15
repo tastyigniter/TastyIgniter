@@ -40,5 +40,6 @@
     padding-top: calc(#{$input-padding-y-lg} - 5px);
     padding-bottom: calc(#{$input-padding-y-lg} - 5px);
     border-radius: $input-border-radius !important;
+    font-size: $input-font-size;
   }
 }

@@ -38,7 +38,7 @@ class Menus_model extends Model
         'stock_qty' => 'integer',
         'minimum_qty' => 'integer',
         'subtract_stock' => 'boolean',
-        'order_restriction' => 'integer',
+        'order_restriction' => 'array',
         'menu_status' => 'boolean',
         'menu_priority' => 'integer',
     ];
@@ -101,7 +101,7 @@ class Menus_model extends Model
             'location' => null,
             'category' => null,
             'search' => '',
-            'orderType' => 0,
+            'orderType' => null,
         ], $options));
 
         $searchableFields = ['menu_name', 'menu_description'];
@@ -151,8 +151,9 @@ class Menus_model extends Model
         }
 
         if ($orderType) {
-            $query->where(function ($q) use ($orderType) {
-                $q->where('order_restriction', 0)->orWhere('order_restriction', (int)$orderType);
+            $query->where(function ($query) use ($orderType) {
+                $query->whereNull('order_restriction')
+                    ->orWhere('order_restriction', 'like', '%"'.$orderType.'"%');
             });
         }
 

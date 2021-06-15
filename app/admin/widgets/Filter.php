@@ -174,10 +174,10 @@ class Filter extends BaseWidget
 
                 case 'daterange':
                     $format = array_get($scope->config, 'showTimePicker', FALSE) ? 'Y-m-d H:i:s' : 'Y-m-d';
-                    $dateRange = (is_array($value) AND count($value) === 2) ? [
+                    $dateRange = (is_array($value) AND count($value) === 2 AND $value[0] != '') ? [
                         make_carbon($value[0])->format($format),
                         make_carbon($value[1])->format($format),
-                    ] : null;
+                    ] : NULL;
                     $this->setScopeValue($scope, $dateRange);
                     break;
             }

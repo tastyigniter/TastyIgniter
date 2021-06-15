@@ -30,7 +30,7 @@
 }
 .multiselect-container.dropdown-menu {
 	background-color: var(--white);
-	padding: 0;
+  padding: .3rem;
 }
 .multiselect-item {
 	display: block;
@@ -40,7 +40,8 @@
 	text-align: inherit;
 	white-space: nowrap;
 	background-color: transparent;
-	border: 0;
+  border-radius: 3px;
+  margin-bottom: .3rem;
 }
 .multiselect-container .multiselect-item > a {
 	padding: 0;

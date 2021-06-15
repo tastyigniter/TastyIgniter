@@ -1,6 +1,6 @@
 <div class="row">
     @foreach ($schedules as $schedule)
-        <div class="col-sm-4">
+        <div class="col-lg-4">
             <div
                 id="{{ $this->getId('item-'.$loop->iteration) }}"
                 class="card bg-light shadow-sm mb-2"

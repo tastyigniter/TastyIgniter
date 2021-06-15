@@ -17,7 +17,7 @@ class Menu extends FormRequest
             ['stock_qty', 'admin::lang.menus.label_stock_qty', 'nullable|integer'],
             ['minimum_qty', 'admin::lang.menus.label_minimum_qty', 'sometimes|required|integer|min:1'],
             ['subtract_stock', 'admin::lang.menus.label_subtract_stock', 'sometimes|required|boolean'],
-            ['order_restriction', 'admin::lang.menus.label_order_restriction', 'nullable|integer'],
+            ['order_restriction.*', 'admin::lang.menus.label_order_restriction', 'nullable|string'],
             ['menu_status', 'admin::lang.label_status', 'boolean'],
             ['mealtime_id', 'admin::lang.menus.label_mealtime', 'nullable|integer'],
             ['menu_priority', 'admin::lang.menus.label_menu_priority', 'nullable|integer'],

@@ -1,10 +1,9 @@
 .toolbar {
   .toolbar-action {
+    background-color: $gray-300;
     clear: both;
     width: 100%;
-    padding-left: $page-padding-x;
-    padding-right: $page-padding-x;
-    padding-bottom: 20px;
+    padding: $page-padding-x;
   }
 }
 .toolbar-action {
