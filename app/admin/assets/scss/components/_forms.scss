@@ -118,6 +118,7 @@
 }
 @include media-breakpoint-down(sm) {
   .form-widget .tab-heading {
+    background-color: $gray-300;
     width: 100%;
     overflow-x: auto;
     display: block;

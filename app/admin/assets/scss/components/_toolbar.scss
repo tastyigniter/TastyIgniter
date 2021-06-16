@@ -5,6 +5,14 @@
     width: 100%;
     padding: $page-padding-x;
   }
+
+  @include media-breakpoint-down(sm) {
+    .toolbar-action {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+  }
 }
 .toolbar-action {
   .btn-group {
