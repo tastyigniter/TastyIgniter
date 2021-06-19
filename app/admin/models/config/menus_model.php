@@ -310,7 +310,7 @@ $config['form']['tabs'] = [
                 'condition' => 'value[period]',
             ],
             'containerAttributes' => [
-                'style' => 'z-index:10'
+                'style' => 'z-index:10',
             ],
         ],
         'special[end_date]' => [
@@ -326,7 +326,7 @@ $config['form']['tabs'] = [
                 'condition' => 'value[period]',
             ],
             'containerAttributes' => [
-                'style' => 'z-index:10'
+                'style' => 'z-index:10',
             ],
         ],
         'special[recurring_every]' => [
