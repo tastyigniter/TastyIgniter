@@ -754,10 +754,6 @@ class Form extends BaseWidget
                     $value = !strlen(trim($value)) ? null : (float)$value;
                 }
 
-                if (in_array($field->type, ['select', 'selectlist']) AND is_string($value)) {
-                    $value = !strlen(trim($value)) ? null : $value;
-                }
-
                 $this->dataArraySet($result, $parts, $value);
             }
         }

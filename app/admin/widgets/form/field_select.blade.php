@@ -10,11 +10,6 @@
         class="form-control-static"
     >@isset($fieldOptions[$field->value])@lang($fieldOptions[$field->value])@endisset</div>
 @else
-    <input
-        type="hidden"
-        name="{!! $field->getName() !!}"
-        value="0"
-    >
     <select
         id="{{ $field->getId() }}"
         name="{!! $field->getName().($multiOption ? '[]' : '') !!}"
