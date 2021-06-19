@@ -6,7 +6,7 @@
                     <i class="logo-svg">
                         <svg
                             version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                            viewBox="0 0 500 500" width="100%" style="height:100%;">
+                            viewBox="0 0 500 500" width="100%" style="height:42px;width:42px;">
                             <g>
                                 <defs>
                                     <clipPath id="clip-path-id-viewbox-item-0">

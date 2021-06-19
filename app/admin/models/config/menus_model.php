@@ -197,8 +197,7 @@ $config['form']['tabs'] = [
         ],
         'order_restriction' => [
             'label' => 'lang:admin::lang.menus.label_order_restriction',
-            'type' => 'select',
-            'multiOption' => TRUE,
+            'type' => 'checkboxtoggle',
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
             'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],

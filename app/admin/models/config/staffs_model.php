@@ -133,6 +133,13 @@ $config['form']['toolbar'] = [
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
+        'save_account' => [
+            'label' => 'lang:admin::lang.button_save',
+            'context' => ['account'],
+            'class' => 'btn btn-primary',
+            'data-request' => 'onSave',
+            'data-progress-indicator' => 'admin::lang.text_saving',
+        ],
         'delete' => [
             'label' => 'lang:admin::lang.button_icon_delete',
             'class' => 'btn btn-danger',
