@@ -309,6 +309,9 @@ $config['form']['tabs'] = [
                 'field' => 'special[validity]',
                 'condition' => 'value[period]',
             ],
+            'containerAttributes' => [
+                'style' => 'z-index:10'
+            ],
         ],
         'special[end_date]' => [
             'label' => 'lang:admin::lang.menus.label_end_date',
@@ -321,6 +324,9 @@ $config['form']['tabs'] = [
                 'action' => 'show',
                 'field' => 'special[validity]',
                 'condition' => 'value[period]',
+            ],
+            'containerAttributes' => [
+                'style' => 'z-index:10'
             ],
         ],
         'special[recurring_every]' => [
