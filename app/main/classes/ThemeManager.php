@@ -62,7 +62,8 @@ class ThemeManager
     public static function addAssetsFromActiveThemeManifest(Assets $manager)
     {
         $instance = self::instance();
-        $theme = $instance->getActiveTheme();
+        if (!$theme = $instance->getActiveTheme())
+            return;
 
         if (File::exists($theme->path.'/_meta/assets.json')) {
             $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');

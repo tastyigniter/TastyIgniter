@@ -34,10 +34,8 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.orders.text_filter_order_type',
             'type' => 'select',
             'conditions' => 'order_type = :filtered',
-            'options' => [
-                '1' => 'lang:admin::lang.orders.text_delivery',
-                '2' => 'lang:admin::lang.orders.text_collection',
-            ],
+            'modelClass' => 'Admin\Models\Locations_model',
+            'options' => 'getOrderTypeOptions',
         ],
         'payment' => [
             'label' => 'lang:admin::lang.orders.text_filter_payment',
@@ -82,7 +80,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'searchable' => TRUE,
     ],
-    'location' => [
+    'location_name' => [
         'label' => 'lang:admin::lang.orders.column_location',
         'relation' => 'location',
         'select' => 'location_name',
@@ -102,6 +100,7 @@ $config['list']['columns'] = [
     'order_time_is_asap' => [
         'label' => 'lang:admin::lang.orders.label_time_is_asap',
         'type' => 'switch',
+        'cssClass' => 'text-center',
         'onText' => 'lang:admin::lang.text_yes',
         'offText' => 'lang:admin::lang.text_no',
     ],

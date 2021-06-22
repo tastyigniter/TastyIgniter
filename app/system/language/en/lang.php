@@ -53,6 +53,7 @@ return [
         'date_time_format' => 'DD MMMM YYYY HH:mm',
         'date_time_format_short' => 'DD MMM \a\t HH:mm',
         'date_time_format_long' => 'dddd, Do MMMM YYYY \a\t HH:mm a',
+        'weekday_format' => 'ddd',
         'day_format' => 'ddd DD',
         'day_time_format' => 'ddd DD hh:mm a',
         'day_time_format_short' => 'ddd hh:mm a',

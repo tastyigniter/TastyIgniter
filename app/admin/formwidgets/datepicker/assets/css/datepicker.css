@@ -24,7 +24,6 @@
 .datepicker table tr td,
 .datepicker table tr th {
 	padding: 0;
-	border-radius: 0;
 }
 .datepicker table tbody {
 	background-color: var(--light);

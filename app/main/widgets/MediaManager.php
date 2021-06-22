@@ -571,7 +571,7 @@ class MediaManager extends BaseWidget
             if (!$this->validateFileName($fileName))
                 throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_new_file_name'));
 
-            if (!$mediaLibrary->isAllowedExtension($extension))
+            if (!$mediaLibrary->isAllowedExtension($fileName))
                 throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
 
             if (!$uploadedFile->isValid())

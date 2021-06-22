@@ -185,7 +185,10 @@ class Themes extends \Admin\Classes\AdminController
 
         $childTheme = $manager->createChildTheme($model);
 
-        $manager->loadThemes();
+        ThemeManager::forgetInstance();
+        $manager = ThemeManager::instance();
+        $manager->bootThemes();
+
         Themes_model::syncAll();
         Themes_model::activateTheme($childTheme->code);
 

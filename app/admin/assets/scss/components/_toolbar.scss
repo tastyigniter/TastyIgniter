@@ -1,10 +1,17 @@
 .toolbar {
   .toolbar-action {
+    background-color: $gray-300;
     clear: both;
     width: 100%;
-    padding-left: $page-padding-x;
-    padding-right: $page-padding-x;
-    padding-bottom: 20px;
+    padding: $page-padding-x;
+  }
+
+  @include media-breakpoint-down(sm) {
+    .toolbar-action {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
   }
 }
 .toolbar-action {

@@ -748,7 +748,11 @@ class Form extends BaseWidget
 
             // Handle HTML array, eg: item[key][another]
             $parts = name_to_array($field->fieldName);
-            if (($value = $this->dataArrayGet($data, $parts)) !== null) {
+            $value = $this->dataArrayGet($data, $parts);
+            if (is_null($value) AND in_array($field->type, ['checkboxtoggle', 'radiotoggle'])) {
+                $this->dataArraySet($result, $parts, $value);
+            }
+            elseif ($value !== null) {
                 // Number fields should be converted to integers
                 if ($field->type === 'number') {
                     $value = !strlen(trim($value)) ? null : (float)$value;
@@ -761,6 +765,9 @@ class Form extends BaseWidget
         // Give widgets an opportunity to process the data.
         foreach ($this->formWidgets as $field => $widget) {
             $parts = name_to_array($field);
+
+            if (isset($widget->config->disabled) AND $widget->config->disabled)
+                continue;
 
             $widgetValue = $widget->getSaveValue($this->dataArrayGet($result, $parts));
             $this->dataArraySet($result, $parts, $widgetValue);

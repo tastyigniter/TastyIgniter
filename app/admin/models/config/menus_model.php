@@ -197,14 +197,10 @@ $config['form']['tabs'] = [
         ],
         'order_restriction' => [
             'label' => 'lang:admin::lang.menus.label_order_restriction',
-            'type' => 'radiotoggle',
+            'type' => 'checkboxtoggle',
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
-            'options' => [
-                'lang:admin::lang.text_none',
-                'lang:admin::lang.menus.text_delivery_only',
-                'lang:admin::lang.menus.text_collection_only',
-            ],
+            'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],
         ],
         'subtract_stock' => [
             'label' => 'lang:admin::lang.menus.label_subtract_stock',
@@ -312,6 +308,9 @@ $config['form']['tabs'] = [
                 'field' => 'special[validity]',
                 'condition' => 'value[period]',
             ],
+            'containerAttributes' => [
+                'style' => 'z-index:10',
+            ],
         ],
         'special[end_date]' => [
             'label' => 'lang:admin::lang.menus.label_end_date',
@@ -324,6 +323,9 @@ $config['form']['tabs'] = [
                 'action' => 'show',
                 'field' => 'special[validity]',
                 'condition' => 'value[period]',
+            ],
+            'containerAttributes' => [
+                'style' => 'z-index:10',
             ],
         ],
         'special[recurring_every]' => [

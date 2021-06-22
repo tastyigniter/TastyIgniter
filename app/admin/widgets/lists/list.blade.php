@@ -5,7 +5,7 @@
 ]) !!}
 
 <div class="list-table table-responsive">
-    <table class="table table-striped mb-0 border-bottom">
+    <table class="table table-hover mb-0 border-bottom">
         <thead>
         {!! $this->makePartial('lists/list_head') !!}
         </thead>
