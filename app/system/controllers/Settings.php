@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\View;
 use Mail;
 use Request;
 use Session;
+use System\Models\Mail_templates_model;
 use Template;
 
 class Settings extends \Admin\Classes\AdminController
@@ -48,6 +49,8 @@ class Settings extends \Admin\Classes\AdminController
 
     public function index()
     {
+        Mail_templates_model::syncAll();
+
         $this->validateSettingItems(TRUE);
 
         // For security reasons, delete setup files if still exists.
