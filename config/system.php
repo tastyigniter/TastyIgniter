@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'locationMode' => 'multiple',
+    'locationMode' => env('TASTYIGNITER_LOCATION_MODE', 'multiple'),
 
     /*
     |--------------------------------------------------------------------------
