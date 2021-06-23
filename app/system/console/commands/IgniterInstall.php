@@ -91,7 +91,7 @@ class IgniterInstall extends Command
     protected function rewriteConfigFiles()
     {
         $this->writeDatabaseConfig();
-        $this->replaceInFile('DB_'.strtoupper($config).'=', 'DB_'.strtoupper($config).'='.$value, cwd().'.env');
+        $this->replaceInFile('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey(), cwd().'.env');
     }
 
     protected function writeDatabaseConfig()
