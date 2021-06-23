@@ -17512,6 +17512,7 @@ body.dragging .dragged {
 }
 @media (max-width: 767.98px) {
   .form-widget .tab-heading {
+    background-color: #D2D4DF;
     width: 100%;
     overflow-x: auto;
     display: block;
@@ -18007,6 +18008,13 @@ body.dragging .dragged {
   clear: both;
   width: 100%;
   padding: 20px;
+}
+@media (max-width: 767.98px) {
+  .toolbar .toolbar-action {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
 }
 .toolbar-action .btn-group:not(:last-child) {
   margin-right: 8px;
