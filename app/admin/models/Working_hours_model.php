@@ -53,6 +53,7 @@ class Working_hours_model extends AbstractWorkingHour
         foreach (self::$weekDays as $index => $day) {
             $days[] = now()->setDay($index)->isoFormat(lang('system::lang.moment.weekday_format'));
         }
+
         return $days;
     }
 
