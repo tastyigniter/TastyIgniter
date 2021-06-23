@@ -60,6 +60,8 @@ class IgniterInstall extends Command
 
         $this->line('Enter a new value, or press ENTER for the default');
 
+        $this->moveExampleFile('env', 'example', null);
+
         $this->rewriteConfigFiles();
 
         $this->setSeederProperties();
@@ -89,7 +91,7 @@ class IgniterInstall extends Command
     protected function rewriteConfigFiles()
     {
         $this->writeDatabaseConfig();
-        $this->writeToConfig('app', ['key' => $this->generateEncryptionKey()]);
+        $this->replaceInFile('DB_'.strtoupper($config).'=', 'DB_'.strtoupper($config).'='.$value, cwd().'.env');
     }
 
     protected function writeDatabaseConfig()
@@ -103,10 +105,11 @@ class IgniterInstall extends Command
         $config['password'] = $this->ask('MySQL Password', Config::get("database.connections.{$name}.password") ?: FALSE) ?: '';
         $config['prefix'] = $this->ask('MySQL Table Prefix', Config::get("database.connections.{$name}.prefix") ?: FALSE) ?: '';
 
-        $this->writeToConfig('database', ['default' => $name]);
+        $env = cwd().'.env';
+        $this->replaceInFile('DB_CONNECTION=mysql', 'DB_CONNECTION='.$name, $env);
 
         foreach ($config as $config => $value) {
-            $this->writeToConfig('database', ['connections.'.$name.'.'.$config => $value]);
+            $this->replaceInFile('DB_'.strtoupper($config).'=', 'DB_'.strtoupper($config).'='.$value, $env);
         }
     }
 
@@ -125,11 +128,13 @@ class IgniterInstall extends Command
 
     protected function setSeederProperties()
     {
+        $env = cwd().'.env';
+
         $siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
-        $this->writeToConfig('app', ['name' => $siteName]);
+        $this->replaceInFile('APP_NAME=', 'APP_NAME='.$siteName, $env);
 
         $siteUrl = $this->ask('Site URL', Config::get('app.url'));
-        $this->writeToConfig('app', ['url' => $siteUrl]);
+        $this->replaceInFile('APP_URL=', 'APP_URL='.$siteUrl, $env);
 
         DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
 
@@ -220,5 +225,13 @@ class IgniterInstall extends Command
         if (file_exists(base_path().'/'.$old.'.'.$name)) {
             rename(base_path().'/'.$old.'.'.$name, base_path().'/'.$new.'.'.$name);
         }
+    }
+
+    protected function replaceInFile(string $search, string $replace, string $file)
+    {
+        file_put_contents(
+            $file,
+            str_replace($search, $replace, file_get_contents($file))
+        );
     }
 }
