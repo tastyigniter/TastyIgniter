@@ -49,9 +49,11 @@ class Working_hours_model extends AbstractWorkingHour
 
     public function getWeekDaysOptions()
     {
-        return array_map(function ($day) {
-            return now()->setDay($day)->isoFormat(lang('system::lang.moment.weekday_format'));
-        }, self::$weekDays);
+        $days = [];
+        foreach (self::$weekDays as $index => $day) {
+            $days[] = now()->setDay($index)->isoFormat(lang('system::lang.moment.weekday_format'));
+        }
+        return $days;
     }
 
     public function getTimesheetOptions($value, $data)
