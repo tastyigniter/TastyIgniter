@@ -1,0 +1,28 @@
+name: Feature request
+description: Request a feature
+title: "[Feature]: "
+labels: ["Type: Feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request a feature. We can't guarantee we will add it, and you should be prepared to help develop it if its something you really want to see.
+  - type: textarea
+    id: what
+    attributes:
+      label: What is the feature?
+      description: Give us as much detail as you can about the feature you want to see, including links and screenshots of other systems that do it already.
+      value: ""
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+      options:
+        - 3.0.4 (Stable)
+        - 3.0.4 (Beta)
+        - Other (please detail)
+    validations:
+      required: true

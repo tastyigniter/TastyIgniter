@@ -1,0 +1,52 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["Type: Bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report, we really appreciate your help in making TastyIgniter better!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      placeholder: Tell us what you saw including steps to reproduce the issue!
+      value: ""
+    validations:
+      required: true
+  - type: textarea
+    id: what-expected
+    attributes:
+      label: What did you expect to happen?
+      placeholder: Tell us what you didn't see!
+      value: ""
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+      options:
+        - 3.0.4 (Stable)
+        - 3.0.4 (Beta)
+        - Other (please detail)
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browser are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
