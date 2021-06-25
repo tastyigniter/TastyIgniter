@@ -73,6 +73,7 @@ class Relation extends BaseFormWidget
             'relationFrom',
             'nameFrom',
             'emptyOption',
+            'scope',
         ]);
 
         if (isset($this->config['select'])) {
