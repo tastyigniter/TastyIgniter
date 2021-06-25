@@ -74,7 +74,7 @@ class LocationAwareController extends ControllerAction
             });
 
             Event::listen('admin.filter.extendQuery', function ($filterWidget, $query, $scope) {
-                if (array_key_exists('locationAware', $scope->config)
+                if (array_get($scope->config, 'locationAware') === TRUE
                     AND (bool)$this->getConfig('applyScopeOnListQuery', TRUE)
                 ) $this->locationApplyScope($query);
             });
