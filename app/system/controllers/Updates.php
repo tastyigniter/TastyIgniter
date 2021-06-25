@@ -148,7 +148,7 @@ class Updates extends \Admin\Classes\AdminController
     {
         $items = post('items');
         if (!$items OR count($items) < 1)
-            throw new ApplicationException('Select item(s) to ignore.');
+            throw new ApplicationException(lang('system::lang.updates.alert_item_to_ignore'));
 
         $updateManager = UpdateManager::instance();
 
@@ -198,7 +198,7 @@ class Updates extends \Admin\Classes\AdminController
     {
         $carteKey = post('carte_key');
         if (!strlen($carteKey))
-            throw new ApplicationException('No carte key specified.');
+            throw new ApplicationException(lang('system::lang.updates.alert_no_carte_key'));
 
         $response = UpdateManager::instance()->applySiteDetail($carteKey);
 
@@ -218,7 +218,7 @@ class Updates extends \Admin\Classes\AdminController
 //            throw new ApplicationException(lang('system::lang.missing.carte_key'));
 
         if (!count($items))
-            throw new ApplicationException('No item(s) specified.');
+            throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
 
         $this->validateItems();
 
