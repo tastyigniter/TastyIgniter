@@ -60,7 +60,7 @@ class LocationAwareController extends ControllerAction
         if (is_null($ids = AdminLocation::getIdOrAll()))
             return;
 
-        (bool)$this->getConfig('addAbsenceConstraint', FALSE)
+        (bool)$this->getConfig('addAbsenceConstraint', TRUE)
             ? $query->whereHasOrDoesntHaveLocation($ids)
             : $query->whereHasLocation($ids);
     }
