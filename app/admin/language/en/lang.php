@@ -782,6 +782,9 @@ return [
         'alert_setting_missing_id' => 'Extension setting code has not been specified.',
         'alert_invalid_code' => 'Invalid payment gateway code selected.',
         'alert_code_not_found' => 'Unable to find payment gateway with code %s',
+        'alert_update_payment_profile' => 'The updatePaymentProfile() method is not supported by the payment gateway.',
+        'alert_delete_payment_profile' => 'The deletePaymentProfile() method is not supported by the payment gateway.',
+        'alert_pay_from_payment_profile' => 'The payFromPaymentProfile() method is not supported by the payment gateway.',
     ],
 
     'permissions' => [
