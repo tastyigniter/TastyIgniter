@@ -95,6 +95,7 @@ return [
     'alert_warning_locationable_delete' => 'Warning: You do not have the right permission to delete record(s) attached to multiple locations, please contact the system administrator.',
     'alert_form_error_message' => 'Sorry but form validation has failed, please check for errors.',
     'alert_error_set_default' => '"%s" is disabled and cannot be set as default.',
+    'admin::lang.alert_form_req_class_not_found' => 'Form Request class (%s) not found',
     'text_settings_title' => 'Settings',
     'text_message_title' => 'Your messages',
     'text_activity_title' => 'Recent activities',
@@ -614,6 +615,8 @@ return [
         'label_option_price' => 'Option Price',
         'label_option_id' => 'Option ID',
         'label_update_related_menu_item' => 'Update option values of associated menu items',
+
+        'alert_menu_option_not_attached' => 'Please select a menu option to attach.',
     ],
 
     'menus' => [
@@ -757,6 +760,8 @@ return [
         'activity_event_log_assigned_title' => 'Order assigned',
         'activity_event_log' => 'updated order (#:properties.order_id) status to <b>:properties.status_name</b>',
         'activity_event_log_assigned' => 'assigned order (#:properties.order_id) to',
+
+        'alert_invoice_not_generated' => 'Invoice has not yet been generated.',
     ],
 
     'payments' => [
@@ -772,6 +777,8 @@ return [
         'label_priority' => 'Priority',
 
         'alert_setting_missing_id' => 'Extension setting code has not been specified.',
+        'alert_invalid_code' => 'Invalid payment gateway code selected.',
+        'alert_code_not_found' => 'Unable to find payment gateway with code %s',
     ],
 
     'permissions' => [
@@ -855,6 +862,8 @@ return [
         'activity_event_log_assigned_title' => 'Reservation assigned',
         'activity_event_log' => 'updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
         'activity_event_log_assigned' => 'assigned reservation (#:properties.reservation_id) to',
+
+        'alert_no_reservation_found' => 'No matching reservation found.',
     ],
 
     'settings' => [

@@ -533,7 +533,7 @@ class FormController extends ControllerAction
             return;
 
         if (!class_exists($requestClass))
-            throw new ApplicationException("Form Request class ($requestClass) not found");
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_form_req_class_not_found'), $requestClass));
 
         $this->resolveFormRequest($requestClass);
     }
