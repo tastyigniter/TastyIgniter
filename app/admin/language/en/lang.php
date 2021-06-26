@@ -221,6 +221,9 @@ return [
         'missing_id' => 'Form record ID has not been specified.',
         'not_found' => 'Form record with ID [%s] could not be found.',
         'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
+        'invalid_ajax_handler_name' => "Invalid ajax handler name: %s",
+        'invalid_partial_name' => "Invalid partial name: %s",
+        'widget_not_bound_to_controller' => "A widget with class name '%s' has not been bound to the controller",
 
         'save_actions' => [
             'continue' => 'Continue Editing',
