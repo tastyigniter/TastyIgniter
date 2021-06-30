@@ -70,7 +70,7 @@ class MapView extends BaseFormWidget
 
     public function isConfigured()
     {
-        return (bool)strlen(setting('maps_api_key'));
+        return (bool)strlen(trim(setting('maps_api_key')));
     }
 
     public function hasCenter()

@@ -24,7 +24,7 @@
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.3",
     "tastyigniter/flame": "~1.0",
     "laravel/framework": "~6.0"
   },
