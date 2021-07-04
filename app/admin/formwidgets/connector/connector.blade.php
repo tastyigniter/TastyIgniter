@@ -5,6 +5,7 @@
     data-alias="{{ $this->alias }}"
     data-sortable-container="#{{ $this->getId('items') }}"
     data-sortable-handle=".{{ $this->getId('items') }}-handle"
+    data-editable="{{ $canEdit }}"
 >
     <div
         id="{{ $this->getId('items') }}"

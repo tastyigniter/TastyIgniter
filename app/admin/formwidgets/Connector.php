@@ -73,6 +73,7 @@ class Connector extends BaseFormWidget
             'descriptionFrom',
             'partial',
             'popupSize',
+            'canEdit',
         ]);
 
         $fieldName = $this->formField->getName(FALSE);
@@ -117,6 +118,7 @@ class Connector extends BaseFormWidget
         $this->vars['partial'] = $this->partial;
         $this->vars['descriptionFrom'] = $this->descriptionFrom;
         $this->vars['sortableInputName'] = $this->sortableInputName;
+        $this->vars['canEdit'] = $this->canEdit ?? true;
     }
 
     public function onLoadRecord()
