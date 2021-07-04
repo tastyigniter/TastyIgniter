@@ -349,6 +349,9 @@ class Menus_model extends Model
             }
         }
 
-        return $isAvailable AND ($this->fireSystemEvent('admin.menu.isAvailable') === false);
+        if (!is_null($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', TRUE)))
+            $isAvailable = (bool)$eventResults;
+
+        return $isAvailable;
     }
 }
