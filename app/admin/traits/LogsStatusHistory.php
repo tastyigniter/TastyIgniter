@@ -17,6 +17,8 @@ trait LogsStatusHistory
                 'Admin\Models\Status_history_model', 'name' => 'object', 'delete' => TRUE,
             ];
 
+            $model->appends[] = 'status_name';
+
             $model->addCasts([
                 'status_id' => 'integer',
                 'status_updated_at' => 'dateTime',
