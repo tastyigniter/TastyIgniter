@@ -79,9 +79,9 @@ trait HasChartDatasets
     protected function getDatePeriod($start, $end)
     {
         return new DatePeriod(
-            Carbon::parse($start),
+            Carbon::parse($start)->startOfDay(),
             new DateInterval('P1D'),
-            Carbon::parse($end)
+            Carbon::parse($end)->endOfDay()
         );
     }
 
