@@ -77,10 +77,7 @@ class Location extends Manager
         if ($this->getAuth()->isSuperUser())
             return null;
 
-        return $this->getAuth()
-            ->locations()
-            ->pluck('location_id')
-            ->all();
+        return $this->getLocations()->pluck('location_id')->all();
     }
 
     public function getIdOrAll()
@@ -98,14 +95,12 @@ class Location extends Manager
         if ($this->getAuth()->isSuperUser())
             return $this->createLocationModel()->getDropdownOptions();
 
-        return $this->getAuth()
-            ->locations()
-            ->pluck('location_name', 'location_id');
+        return $this->getLocations()->pluck('location_name', 'location_id');
     }
 
     public function getDefaultLocation()
     {
-        if (!$staffLocation = $this->getAuth()->locations()->first())
+        if (!$staffLocation = $this->getLocations()->first())
             return null;
 
         return $staffLocation->getKey();
@@ -116,7 +111,7 @@ class Location extends Manager
         if ($this->isSingleMode())
             return TRUE;
 
-        return $this->getAuth()->locations()->count() === 1;
+        return $this->getLocations()->count() === 1;
     }
 
     public function hasLocations()
@@ -127,7 +122,14 @@ class Location extends Manager
         if ($this->getAuth()->isSuperUser())
             return TRUE;
 
-        return $this->getAuth()->locations()->count() > 1;
+        return $this->getLocations()->count() > 1;
+    }
+
+    protected function getLocations()
+    {
+        return $this->getAuth()
+            ->locations()
+            ->where('location_status', TRUE);
     }
 
     /**
@@ -143,7 +145,7 @@ class Location extends Manager
         if ($this->getAuth()->isSuperUser())
             return TRUE;
 
-        return $this->getAuth()->locations()->contains(function ($model) use ($id) {
+        return $this->getLocations()->contains(function ($model) use ($id) {
             return $model->location_id === $id;
         });
     }
