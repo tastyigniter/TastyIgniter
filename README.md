@@ -31,7 +31,7 @@ Please report bugs using the [GitHub issue tracker](https://github.com/tastyigni
 - [Blog](https://tastyigniter.com/blog) for tips and latest developments in the food industry.
 
 ## Contributing
-We would love your help building TastyIgniter! Please read the [Contributing Guidelines](CONTRIBUTING.md) to learn how you can help.
+We would love your help building TastyIgniter! Please read the [Contributing Guidelines](.github/CONTRIBUTING.md) to learn how you can help.
 
 Thank you to all the people who already contributed to TastyIgniter!
 

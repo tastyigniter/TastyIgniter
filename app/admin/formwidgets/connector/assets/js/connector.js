@@ -21,7 +21,9 @@
     }
 
     Connector.prototype.init = function () {
-        this.$el.on('click', '[data-control="load-item"]', $.proxy(this.onLoadItem, this))
+        if (this.options.canEdit)
+            this.$el.on('click', '[data-control="load-item"]', $.proxy(this.onLoadItem, this))
+
         this.$el.on('click', '[data-control="delete-item"]', $.proxy(this.onDeleteItem, this))
 
         this.bindSorting()
