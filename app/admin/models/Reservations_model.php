@@ -78,6 +78,8 @@ class Reservations_model extends Model
 
     protected $purgeable = ['tables'];
 
+    public $appends = ['customer_name', 'duration', 'table_name'];
+
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',
         'reserve_date asc', 'reserve_date desc',

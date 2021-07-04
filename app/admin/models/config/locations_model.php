@@ -314,11 +314,6 @@ $config['form']['tabs'] = [
                 'lang:admin::lang.locations.text_asap_only',
                 'lang:admin::lang.locations.text_later_only',
             ],
-            'trigger' => [
-                'action' => 'disable',
-                'field' => 'options[future_orders][enable_delivery]',
-                'condition' => 'checked',
-            ],
         ],
 
         'collection_order' => [
@@ -393,11 +388,6 @@ $config['form']['tabs'] = [
                 'lang:admin::lang.text_none',
                 'lang:admin::lang.locations.text_asap_only',
                 'lang:admin::lang.locations.text_later_only',
-            ],
-            'trigger' => [
-                'action' => 'disable',
-                'field' => 'options[future_orders][enable_collection]',
-                'condition' => 'checked',
             ],
         ],
 
