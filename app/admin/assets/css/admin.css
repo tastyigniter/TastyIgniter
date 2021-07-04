@@ -17595,6 +17595,18 @@ body.dragging .dragged {
   padding-bottom: calc(0.5rem - 5px);
   border-radius: 3px !important;
   font-size: 0.9375rem;
+  box-shadow: none;
+  border: 1px solid transparent;
+}
+.btn-group-toggle .btn:focus, .btn-group-toggle .btn.focus {
+  background-color: transparent !important;
+  box-shadow: none;
+  border: 1px solid transparent;
+}
+.btn-group-toggle .btn:active, .btn-group-toggle .btn.active {
+  background-color: #E8E9EF !important;
+  border: 1px solid #D2D4DF !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075);
 }
 .form-group .select2-container {
   width: 100% !important;
@@ -17657,6 +17669,7 @@ body.dragging .dragged {
 }
 .select2-results__option {
   border-radius: 3px;
+  margin-bottom: 0.3rem;
 }
 .sidebar {
   position: fixed;

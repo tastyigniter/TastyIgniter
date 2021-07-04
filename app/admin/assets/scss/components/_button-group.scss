@@ -41,5 +41,21 @@
     padding-bottom: calc(#{$input-padding-y-lg} - 5px);
     border-radius: $input-border-radius !important;
     font-size: $input-font-size;
+    box-shadow: none;
+    border: 1px solid transparent;
+
+    &:focus,
+    &.focus {
+      background-color: transparent !important;
+      box-shadow: none;
+      border: 1px solid transparent;
+    }
+
+    &:active,
+    &.active {
+      background-color: $gray-200 !important;
+      border: 1px solid $input-border-color !important;
+      @include box-shadow($btn-box-shadow);
+    }
   }
 }
