@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -64,7 +64,7 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
         'invisible' => TRUE,
     ],
     'priority' => [
