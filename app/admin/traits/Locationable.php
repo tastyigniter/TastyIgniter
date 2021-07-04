@@ -117,19 +117,19 @@ trait Locationable
         return $this->{$relationName}();
     }
 
-    protected function locationableIsSingleRelationType()
+    public function locationableIsSingleRelationType()
     {
         $relationType = $this->getRelationType($this->locationableRelationName());
 
         return in_array($relationType, ['hasOne', 'belongsTo']);
     }
 
-    protected function locationableRelationName()
+    public function locationableRelationName()
     {
         return defined('static::LOCATIONABLE_RELATION') ? static::LOCATIONABLE_RELATION : 'location';
     }
 
-    protected function locationableRelationExists()
+    public function locationableRelationExists()
     {
         $relationName = $this->locationableRelationName();
 
