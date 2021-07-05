@@ -56,7 +56,7 @@ class Orders_model extends Model
      */
     public $timestamps = TRUE;
 
-    public $appends = ['customer_name', 'order_type_name', 'formatted_address'];
+    public $appends = ['customer_name', 'order_type_name', 'order_date_time', 'formatted_address'];
 
     protected $casts = [
         'customer_id' => 'integer',
@@ -188,9 +188,23 @@ class Orders_model extends Model
 
     public function getOrderTypeNameAttribute()
     {
+        if (!$this->location)
+            return $this->order_type;
+
         return optional(
             $this->location->availableOrderTypes()->get($this->order_type)
         )->getLabel();
+    }
+
+    public function getOrderDatetimeAttribute($value)
+    {
+        if (!isset($this->attributes['order_date'])
+            AND !isset($this->attributes['order_time'])
+        ) return null;
+
+        return Carbon::createFromTimeString(
+            "{$this->attributes['order_date']} {$this->attributes['order_time']}"
+        );
     }
 
     public function getFormattedAddressAttribute($value)

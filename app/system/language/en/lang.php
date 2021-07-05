@@ -349,7 +349,7 @@ return [
         'text_tab_mail' => 'Mail',
         'text_tab_server' => 'Advanced',
 
-        'text_tab_desc_general' => 'Change your restaurant name, email and url, default language, currency and date time formats, ...',
+        'text_tab_desc_general' => 'Change your restaurant name, email, default language, currency...',
         'text_tab_desc_mail' => 'Settings for sending out emails',
         'text_tab_desc_server' => 'Manage advanced system settings such as enabling/disabling maintenance.',
 
