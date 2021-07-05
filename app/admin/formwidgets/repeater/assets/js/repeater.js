@@ -45,7 +45,8 @@
             fallbackClass: "sortable-fallback",  // Class name for the cloned DOM Element when using forceFallback
         }
 
-        this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
+        if (this.$sortableContainer.get(0))
+            this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
     }
 
     Repeater.prototype.unbind = function () {
