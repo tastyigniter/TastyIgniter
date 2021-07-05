@@ -60,6 +60,11 @@ class Connector extends BaseFormWidget
      */
     public $sortable = FALSE;
 
+    /**
+     * @var bool Items can be edited.
+     */
+    public $editable = TRUE;
+
     public $popupSize;
 
     public function initialize()
@@ -68,12 +73,12 @@ class Connector extends BaseFormWidget
             'formName',
             'form',
             'prompt',
+            'editable',
             'sortable',
             'nameFrom',
             'descriptionFrom',
             'partial',
             'popupSize',
-            'canEdit',
         ]);
 
         $fieldName = $this->formField->getName(FALSE);
@@ -113,12 +118,12 @@ class Connector extends BaseFormWidget
         $this->vars['fieldItems'] = $this->processLoadValue() ?? [];
 
         $this->vars['prompt'] = $this->prompt;
+        $this->vars['editable'] = $this->editable;
         $this->vars['sortable'] = $this->sortable;
         $this->vars['nameFrom'] = $this->nameFrom;
         $this->vars['partial'] = $this->partial;
         $this->vars['descriptionFrom'] = $this->descriptionFrom;
         $this->vars['sortableInputName'] = $this->sortableInputName;
-        $this->vars['canEdit'] = $this->canEdit ?? true;
     }
 
     public function onLoadRecord()
@@ -213,15 +218,15 @@ class Connector extends BaseFormWidget
         $sortedIndexes = (array)post($this->sortableInputName);
         $sortedIndexes = array_flip($sortedIndexes);
 
-        $value = [];
+        $results = [];
         foreach ($items as $index => $item) {
-            $value[$index] = [
+            $results[$index] = [
                 $item->getKeyName() => $item->getKey(),
                 $this->sortColumnName => $sortedIndexes[$item->getKey()],
             ];
         }
 
-        return $value;
+        return $results;
     }
 
     protected function makeItemFormWidget($model, $context)
