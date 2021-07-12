@@ -89,8 +89,10 @@ trait HasWorkingHours
     public function getWorkingHours()
     {
         if (!$this->hasRelation('working_hours'))
-            throw new Exception(sprintf("Model '%s' does not contain a definition for 'working_hours'.",
-                get_class($this)));
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_definition_in_model'),
+                get_class($this),
+                'working_hours',
+            ));
 
         if (!$this->working_hours OR $this->working_hours->isEmpty()) {
             $this->createDefaultWorkingHours();
@@ -108,7 +110,7 @@ trait HasWorkingHours
     {
         $types = $this->availableWorkingTypes();
         if (is_null($type) OR !in_array($type, $types))
-            throw new InvalidArgumentException("Defined parameter '$type' is not a valid working type.");
+            throw new InvalidArgumentException(sprintf(lang('admin::lang.alert_invalid_type'), $type));
 
         if (is_null($days)) {
             $days = $this->hasFutureOrder($type)
@@ -132,7 +134,7 @@ trait HasWorkingHours
     public function createScheduleItem($type)
     {
         if (is_null($type) OR !in_array($type, $this->availableWorkingTypes()))
-            throw new InvalidArgumentException("Defined parameter '$type' is not a valid working type.");
+            throw new InvalidArgumentException(sprintf(lang('admin::lang.alert_invalid_type'), $type));
 
         $scheduleData = array_get($this->getOption('hours', []), $type, []);
 
