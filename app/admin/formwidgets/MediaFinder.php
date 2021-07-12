@@ -210,11 +210,11 @@ class MediaFinder extends BaseFormWidget
 
         $items = post('items');
         if (!is_array($items))
-            throw new ApplicationException('Select an item to attach');
+            throw new ApplicationException(lang('admin::lang.alert_select_item_to_attach'));
 
         $model = $this->model;
         if (!$model->exists)
-            throw new ApplicationException('You can only attach media to a saved form');
+            throw new ApplicationException(lang('admin::lang.alert_only_attach_to_saved'));
 
         $manager = MediaLibrary::instance();
         foreach ($items as &$item) {

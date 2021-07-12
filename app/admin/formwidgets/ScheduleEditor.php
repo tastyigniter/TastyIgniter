@@ -115,7 +115,7 @@ class ScheduleEditor extends BaseFormWidget
     protected function getSchedule($scheduleCode)
     {
         if (!$schedule = array_get($this->listSchedules(), $scheduleCode))
-            throw new ApplicationException('Schedule not loaded');
+            throw new ApplicationException(lang('admin::lang.alert_schedule_not_loaded'));
 
         return $schedule;
     }

@@ -215,7 +215,7 @@ class Relation extends BaseFormWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));
