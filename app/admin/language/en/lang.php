@@ -224,6 +224,7 @@ return [
         'invalid_ajax_handler_name' => "Invalid ajax handler name: %s",
         'invalid_partial_name' => "Invalid partial name: %s",
         'widget_not_bound_to_controller' => "A widget with class name '%s' has not been bound to the controller",
+        'record_not_found' => "Record not found.",
 
         'save_actions' => [
             'continue' => 'Continue Editing',
