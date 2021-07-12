@@ -102,8 +102,8 @@ class Customers_model extends AuthUserModel
         if ($this->is_activated OR $this->status)
             return;
 
-        throw new Exception(sprintf(
-            'Cannot login user "%s" until activated.', $this->email
+        throw new Exception(sprintf(lang('admin::lang.user_not_active')
+            , $this->email
         ));
     }
 
