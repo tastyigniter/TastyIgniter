@@ -206,6 +206,9 @@ return [
         'button_apply_setup' => 'Apply changes',
         'help_visible_columns' => 'Set which columns are visible and in what order to display them',
         'help_page_limit' => 'Limit how many records are shown per page',
+        'alert_relationship_morphTo_not_supported' => 'The relationship morphTo is not supported for list columns.',
+        'alert_list_used_has_no_list_columns' => 'List used in %s has no list columns defined.',
+        'alert_model_has_no_definition' => 'Model %s does not contain a definition for %s.',
     ],
 
     'calendar' => [
@@ -245,6 +248,7 @@ return [
         'widget_not_bound_to_controller' => "A widget with class name '%s' has not been bound to the controller",
         'record_not_found' => "Record not found.",
         'alert_invalid_area' => "Invalid area selected.",
+        'widget_class_name_not_registered' => "The Widget class name '%s' has not been registered.",
 
         'save_actions' => [
             'continue' => 'Continue Editing',
