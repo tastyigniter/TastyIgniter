@@ -108,6 +108,8 @@ return [
     'alert_schedule_not_loaded' => "Schedule not loaded.",
     'alert_invalid_action' => "Invalid action.",
     'alert_no_available_assignee' => "No available assignee.",
+    'model_must_define_method' => "The model class %s must define a method %s returning options for the '%s' filter.",
+    'alert_no_definition_for_scope' => "No definition for scope %s",
     'user_not_active' => "Cannot login user '%s' until activated.",
     'customer_payment_profile_not_found' => "Customer payment profile not found!",
     'user_not_logged' => "User is not logged in",
