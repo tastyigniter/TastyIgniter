@@ -389,6 +389,16 @@ return [
         'text_select_range' => 'Select date range',
         'text_last_version_check' => 'Your last <b>TastyIgniter core version check</b> was more than a week ago. <a href="%s"><b>Check for Updates</b></a>',
 
+        'alert_select_widget_to_update' => "Please select a widget to update.",
+        'alert_select_widget_to_add' => "Please select a widget to add.",
+        'alert_select_class_not_exist' => "The selected class does not exist.",
+        'alert_select_class_not_dashboard_widget' => "The selected class is not a dashboard widget.",
+        'alert_access_denied' => "Access denied.",
+        'alert_invalid_aliases' => "Invalid aliases string.",
+        'alert_invalid_priorities' => "'Invalid priorities string.'",
+        'alert_invalid_data_posted' => "Invalid data posted.",
+        'alert_widget_not_found' => "The specified widget is not found.",
+
         'onboarding' => [
             'title' => 'Getting started',
             'label_settings' => 'Complete required system settings',
