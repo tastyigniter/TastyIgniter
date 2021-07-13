@@ -180,7 +180,7 @@ class Menu extends BaseWidget
     public function getItem($item)
     {
         if (!isset($this->allItems[$item])) {
-            throw new ApplicationException('No definition for item '.$item);
+            throw new ApplicationException(sprintf(lang('admin::lang.menus.alert_no_definition_for_item'), $item));
         }
 
         return $this->allItems[$item];
@@ -206,12 +206,12 @@ class Menu extends BaseWidget
     public function onGetDropdownOptions()
     {
         if (!strlen($itemName = input('item')))
-            throw new ApplicationException('Invalid item specified');
+            throw new ApplicationException(lang('admin::lang.menus.alert_invalid_item_specified'));
 
         $this->defineMenuItems();
 
         if (!$item = $this->getItem($itemName))
-            throw new ApplicationException("No main menu item found matching {$itemName}");
+            throw new ApplicationException(sprintf(lang('admin::lang.menus.alert_main_menu_item_matching'), $itemName));
 
         $itemOptions = $item->options();
 
@@ -237,12 +237,12 @@ class Menu extends BaseWidget
     public function onMarkOptionsAsRead()
     {
         if (!strlen($itemName = post('item')))
-            throw new ApplicationException('Invalid item specified');
+            throw new ApplicationException(lang('admin::lang.menus.alert_invalid_item_specified'));
 
         $this->defineMenuItems();
 
         if (!$item = $this->getItem($itemName))
-            throw new ApplicationException("No main menu item found matching {$itemName}");
+            throw new ApplicationException(sprintf(lang('admin::lang.menus.alert_main_menu_item_matching'), $itemName));
 
         $this->resolveMarkAsReadFromModel($item);
     }
@@ -270,7 +270,7 @@ class Menu extends BaseWidget
         $clearAfterMinutes = (int)post('clear_after');
 
         if ($status < 1 AND !strlen($message))
-            throw new ApplicationException('Status message is required');
+            throw new ApplicationException(lang('admin::lang.menus.status_message_required'));
 
         $stateData['status'] = $status;
         $stateData['isAway'] = $status !== 1;

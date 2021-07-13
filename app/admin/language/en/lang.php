@@ -724,6 +724,10 @@ return [
         'help_max_selected' => 'Maximum items to select from these options, leave blank to ignore.',
         'help_option_required' => 'Select Enabled if a customer MUST choose this option. If this option is not required, select Disabled.',
         'help_specials' => 'Select disable to deactivate Special. Select Enable to activate Special and enter the Start Date, End Date and price of your Special item.',
+        'alert_no_definition_for_item' => 'No definition for item %s.',
+        'alert_invalid_item_specified' => 'Invalid item specified.',
+        'alert_main_menu_item_matching' => 'No main menu item found matching {%s}.',
+        'status_message_required' => 'Status message is required.',
     ],
 
     'orders' => [
@@ -1038,5 +1042,7 @@ return [
         'help_extra_capacity' => 'Used internally by the staff to determine table convenience/inconvenience.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
+        'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',
+        'error_table_widget_data_class_not_found' => 'The Table widget data source class "%s" could not be found.',
     ],
 ];
