@@ -507,12 +507,11 @@ class UpdateManager
         return $result;
     }
 
-    public function extractFile($fileCode, $directory = null)
+    public function extractFile($fileCode, $extractTo = null)
     {
         $filePath = $this->getFilePath($fileCode);
-        $extractTo = base_path();
-        if ($directory)
-            $extractTo .= '/'.$directory.str_replace('.', '/', $fileCode);
+        if ($extractTo)
+            $extractTo .= '/'.str_replace('.', '/', $fileCode);
 
         if (!file_exists($extractTo))
             mkdir($extractTo, 0777, TRUE);

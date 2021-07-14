@@ -26,7 +26,8 @@
             handle: this.options.sortableHandle,
         }
 
-        this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
+        if (this.$sortableContainer.get(0))
+            this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
     }
 
     MapArea.prototype.onModalShown = function (event, $modalEl) {

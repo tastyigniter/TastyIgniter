@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'category' => [
             'label' => 'lang:admin::lang.menus.text_filter_category',
@@ -78,7 +78,7 @@ $config['list']['columns'] = [
         'relation' => 'locations',
         'select' => 'location_name',
         'invisible' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'menu_price' => [
         'label' => 'lang:admin::lang.menus.column_price',
@@ -180,6 +180,7 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'valueFrom' => 'locations',
             'nameFrom' => 'location_name',
+            'scope' => 'isEnabled',
         ],
         'minimum_qty' => [
             'label' => 'lang:admin::lang.menus.label_minimum_qty',

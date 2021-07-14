@@ -91,7 +91,8 @@ class IgniterUpdate extends Command
 
             $this->output->writeln(sprintf('<info>Extracting %s files</info>', $addonName));
 
-            $updateManager->extractFile($addonCode, $addonType.'s/');
+            $extractTo = $addonType === 'theme' ? theme_path('/') : extension_path('/');
+            $updateManager->extractFile($addonCode, $extractTo);
         });
 
         // Run migrations

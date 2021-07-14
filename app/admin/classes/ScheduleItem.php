@@ -29,7 +29,7 @@ class ScheduleItem
     {
         $this->name = $name;
         $this->type = array_get($data, 'type', '24_7');
-        $this->days = array_get($data, 'days', []);
+        $this->days = array_get($data, 'days') ?: [];
         $this->open = array_get($data, 'open', '00:00');
         $this->close = array_get($data, 'close', '23:59');
         $this->timesheet = $this->timesheet(array_get($data, 'timesheet', []));

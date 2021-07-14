@@ -175,13 +175,18 @@ class BaseExtension extends ServiceProvider
 
         $className = get_class($this);
         $configPath = realpath(dirname(File::fromClass($className)));
-        $configFile = $configPath.'/extension.json';
 
-        if (!File::exists($configFile))
+        if (File::exists($configFile = $configPath.'/extension.json')) {
+            $config = json_decode(File::get($configFile), TRUE) ?? [];
+        }
+        elseif (File::exists($configFile = $configPath.'/composer.json')) {
+            $config = $this->getConfigFromComposerJson($configFile);
+        }
+        else {
             throw new SystemException("The configuration file for extension <b>{$className}</b> does not exist. ".
                 'Create the file or override extensionMeta() method in the extension class.');
+        }
 
-        $config = json_decode(File::get($configFile), TRUE) ?? [];
         foreach (['code', 'name', 'description', 'author', 'icon'] as $item) {
             if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
@@ -192,5 +197,21 @@ class BaseExtension extends ServiceProvider
         }
 
         return $this->config = $config;
+    }
+
+    protected function getConfigFromComposerJson($configFile)
+    {
+        $composer = json_decode(File::get($configFile), TRUE) ?? [];
+
+        if (!$config = array_get($composer, 'extra.tastyigniter-extension', []))
+            return $config;
+
+        if ($description = array_get($composer, 'description'))
+            $config['description'] = $description;
+
+        if ($author = array_get($composer, 'author'))
+            $config['author'] = $author;
+
+        return $config;
     }
 }
