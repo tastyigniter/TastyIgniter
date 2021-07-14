@@ -521,7 +521,7 @@ return [
         'label_delivery_condition' => 'Delivery Condition',
 
         'error_no_zero_total' => 'The %s can not be a value zero on conditions other than \'on all orders\'.',
-        'alert_delivery_area' => 'Add at least one delivery area to allow your customers to find this location.',
+        'alert_delivery_area' => 'Add at least one delivery area to allow your customers find this location.',
         'alert_set_default' => 'Location set as default',
         'alert_missing_map_center' => 'Map is missing center coordinates, please enter an address then click save.',
         'alert_missing_map_config' => 'Missing Google Maps Javascript Library, please provide your maps api key on the general system settings page.',

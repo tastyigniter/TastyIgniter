@@ -636,6 +636,7 @@ return [
         'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check Again',
         'button_updates' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
         'button_update' => '<i class="fa fa-check"></i>&nbsp;&nbsp;Update',
+        'button_marketplace' => 'Open TastyIgniter Marketplace&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
 
         'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
     ],
