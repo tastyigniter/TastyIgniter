@@ -4,20 +4,14 @@ namespace Admin\Traits;
 
 use Admin\Facades\AdminLocation;
 use Admin\Models\Locations_model;
-use Exception;
 
 trait LocationAwareWidget
 {
     protected function isLocationAware($config)
     {
-        $locationAware = $config['locationAware'] ?? 'skip';
-        if (!in_array($locationAware, ['skip', 'show', 'hide']))
-            throw new Exception(lang('admin::lang.alert_valid_values'));
+        $locationAware = $config['locationAware'] ?? FALSE;
 
-        if ($this->controller->getUserLocation())
-            return $locationAware == 'hide';
-
-        return $locationAware == 'show';
+        return $locationAware AND $this->controller->getUserLocation();
     }
 
     /**

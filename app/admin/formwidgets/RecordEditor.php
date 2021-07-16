@@ -56,7 +56,7 @@ class RecordEditor extends BaseFormWidget
             'modelClass',
             'addonLeft',
             'addonRight',
-            'hideAddButton',
+            'hideCreateButton',
             'hideEditButton',
             'hideDeleteButton',
             'addLabel',

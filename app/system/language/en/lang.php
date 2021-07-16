@@ -351,7 +351,7 @@ return [
         'text_tab_mail' => 'Mail',
         'text_tab_server' => 'Advanced',
 
-        'text_tab_desc_general' => 'Change your restaurant name, email and url, default language, currency and date time formats, ...',
+        'text_tab_desc_general' => 'Change your restaurant name, email, default language, currency...',
         'text_tab_desc_mail' => 'Settings for sending out emails',
         'text_tab_desc_server' => 'Manage advanced system settings such as enabling/disabling maintenance.',
 
@@ -638,6 +638,7 @@ return [
         'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check Again',
         'button_updates' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
         'button_update' => '<i class="fa fa-check"></i>&nbsp;&nbsp;Update',
+        'button_marketplace' => 'Open TastyIgniter Marketplace&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
 
         'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
         'alert_item_to_ignore' => 'Select item(s) to ignore.',
