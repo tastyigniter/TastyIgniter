@@ -10,7 +10,7 @@
             >
                 <div class="card-body">
                     <div class="flex-fill">
-                        <h5 class="card-title">{{ ucfirst(strtolower($schedule->name.' '.lang('admin::lang.locations.text_schedule'))) }}</h5>
+                        <h5 class="card-title">{{ lang('admin::lang.text_'.$schedule->name).' '.lang('admin::lang.locations.text_schedule') }}</h5>
                         <p class="card-text">{{ lang('admin::lang.locations.text_'.$schedule->type) }}</p>
                     </div>
 
