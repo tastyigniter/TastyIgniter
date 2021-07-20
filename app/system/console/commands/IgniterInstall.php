@@ -74,7 +74,7 @@ class IgniterInstall extends Command
         $this->moveExampleFile('env', null, 'backup');
         $this->moveExampleFile('env', 'example', null);
 
-        $this->writeConfig();
+        $this->rewriteEnvFile();
 
         $this->setSeederProperties();
 
@@ -102,7 +102,7 @@ class IgniterInstall extends Command
         ];
     }
 
-    protected function writeConfig()
+    protected function rewriteEnvFile()
     {
         $this->replaceInEnv('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey());
 
