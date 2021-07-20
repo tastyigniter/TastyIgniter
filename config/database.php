@@ -50,8 +50,12 @@ return [
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => 'ti_',
+            'prefix_indexes' => TRUE,
             'strict' => FALSE,
             'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
         ],
 
         'pgsql' => [
@@ -63,6 +67,7 @@ return [
             'password' => 'password',
             'charset' => 'utf8',
             'prefix' => '',
+            'prefix_indexes' => TRUE,
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
@@ -76,8 +81,7 @@ return [
             'password' => 'password',
             'charset' => 'utf8',
             'prefix' => '',
-            'odbc' => TRUE,
-            'odbc_datasource_name' => 'your-odbc-dsn',
+            'prefix_indexes' => TRUE,
         ],
 
     ],
