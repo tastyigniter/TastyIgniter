@@ -2,14 +2,25 @@
 
 namespace System\Console\Commands;
 
+use Admin\Models\Customer_groups_model;
+use Admin\Models\Locations_model;
+use Admin\Models\Staff_groups_model;
+use Admin\Models\Staff_roles_model;
+use Admin\Models\Staffs_model;
+use Admin\Models\Users_model;
 use App;
+use Carbon\Carbon;
 use Config;
 use DB;
+use Dotenv\Dotenv;
 use Igniter\Flame\Support\ConfigRewrite;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Env;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
+use System\Models\Languages_model;
 
 /**
  * Console command to install TastyIgniter.
@@ -32,7 +43,7 @@ class IgniterInstall extends Command
     /**
      * @var \Igniter\Flame\Support\ConfigRewrite
      */
-    protected $configWriter;
+    protected $configRewrite;
 
     /**
      * Create a new command instance.
@@ -60,11 +71,14 @@ class IgniterInstall extends Command
 
         $this->line('Enter a new value, or press ENTER for the default');
 
+        $this->moveExampleFile('env', null, 'backup');
         $this->moveExampleFile('env', 'example', null);
 
-        $this->rewriteConfigFiles();
+        $this->writeConfig();
 
         $this->setSeederProperties();
+
+        $this->loadEnvFile();
 
         $this->migrateDatabase();
 
@@ -88,10 +102,11 @@ class IgniterInstall extends Command
         ];
     }
 
-    protected function rewriteConfigFiles()
+    protected function writeConfig()
     {
+        $this->replaceInEnv('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey());
+
         $this->writeDatabaseConfig();
-        $this->replaceInFile('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey(), cwd().'.env');
     }
 
     protected function writeDatabaseConfig()
@@ -105,11 +120,10 @@ class IgniterInstall extends Command
         $config['password'] = $this->ask('MySQL Password', Config::get("database.connections.{$name}.password") ?: FALSE) ?: '';
         $config['prefix'] = $this->ask('MySQL Table Prefix', Config::get("database.connections.{$name}.prefix") ?: FALSE) ?: '';
 
-        $env = cwd().'.env';
-        $this->replaceInFile('DB_CONNECTION=mysql', 'DB_CONNECTION='.$name, $env);
+        $this->replaceInEnv('DB_CONNECTION=mysql', 'DB_CONNECTION='.$name);
 
-        foreach ($config as $config => $value) {
-            $this->replaceInFile('DB_'.strtoupper($config).'=', 'DB_'.strtoupper($config).'='.$value, $env);
+        foreach ($config as $key => $value) {
+            $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
         }
     }
 
@@ -128,13 +142,11 @@ class IgniterInstall extends Command
 
     protected function setSeederProperties()
     {
-        $env = cwd().'.env';
-
         $siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
-        $this->replaceInFile('APP_NAME=', 'APP_NAME='.$siteName, $env);
+        $this->replaceInEnv('APP_NAME=', 'APP_NAME='.$siteName);
 
         $siteUrl = $this->ask('Site URL', Config::get('app.url'));
-        $this->replaceInFile('APP_URL=', 'APP_URL='.$siteUrl, $env);
+        $this->replaceInEnv('APP_URL=', 'APP_URL='.$siteUrl);
 
         DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
 
@@ -149,22 +161,22 @@ class IgniterInstall extends Command
         $username = $this->ask('Admin Username', 'admin');
         $password = $this->ask('Admin Password', '123456');
 
-        $staff = \Admin\Models\Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
+        $staff = Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
         $staff->staff_name = DatabaseSeeder::$staffName;
-        $staff->staff_role_id = \Admin\Models\Staff_roles_model::first()->staff_role_id;
-        $staff->language_id = \System\Models\Languages_model::first()->language_id;
+        $staff->staff_role_id = Staff_roles_model::first()->staff_role_id;
+        $staff->language_id = Languages_model::first()->language_id;
         $staff->staff_status = TRUE;
         $staff->save();
 
-        $staff->groups()->attach(\Admin\Models\Staff_groups_model::first()->staff_group_id);
-        $staff->locations()->attach(\Admin\Models\Locations_model::first()->location_id);
+        $staff->groups()->attach(Staff_groups_model::first()->staff_group_id);
+        $staff->locations()->attach(Locations_model::first()->location_id);
 
-        $user = \Admin\Models\Users_model::firstOrNew(['username' => $username]);
+        $user = Users_model::firstOrNew(['username' => $username]);
         $user->staff_id = $staff->staff_id;
         $user->password = $password;
         $user->super_user = TRUE;
         $user->is_activated = TRUE;
-        $user->date_activated = \Carbon\Carbon::now();
+        $user->date_activated = Carbon::now();
         $user->save();
 
         $this->line('Admin user '.$username.' created!');
@@ -176,7 +188,7 @@ class IgniterInstall extends Command
 
         params()->set([
             'ti_setup' => 'installed',
-            'default_location_id' => \Admin\Models\Locations_model::first()->location_id,
+            'default_location_id' => Locations_model::first()->location_id,
         ]);
 
         params()->save();
@@ -186,7 +198,7 @@ class IgniterInstall extends Command
         setting()->set('site_email', DatabaseSeeder::$siteEmail);
         setting()->set('sender_name', DatabaseSeeder::$siteName);
         setting()->set('sender_email', DatabaseSeeder::$siteEmail);
-        setting()->set('customer_group_id', \Admin\Models\Customer_groups_model::first()->customer_group_id);
+        setting()->set('customer_group_id', Customer_groups_model::first()->customer_group_id);
         setting()->save();
 
         // These parameters are no longer in use
@@ -233,5 +245,21 @@ class IgniterInstall extends Command
             $file,
             str_replace($search, $replace, file_get_contents($file))
         );
+    }
+
+    protected function replaceInEnv(string $search, string $replace)
+    {
+        $this->replaceInFile($search, $replace, base_path().'/.env');
+    }
+
+    protected function loadEnvFile()
+    {
+        Dotenv::create(
+            app()->environmentPath(),
+            app()->environmentFile(),
+            Env::getFactory()
+        )->safeLoad();
+
+        Config::set('database', File::getRequire(base_path().'/config/database.php'));
     }
 }
