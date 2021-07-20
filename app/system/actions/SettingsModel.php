@@ -3,6 +3,7 @@
 namespace System\Actions;
 
 use File;
+use Igniter\Flame\Database\Casts\Serialize;
 use Model;
 
 /**
@@ -40,7 +41,7 @@ class SettingsModel extends ModelAction
 
         $this->model->setTable('extension_settings');
         $this->model->setKeyName('id');
-        $this->model->addCasts(['data' => 'serialize']);
+        $this->model->addCasts(['data' => Serialize::class]);
         $this->model->guard([]);
         $this->model->timestamps = FALSE;
 

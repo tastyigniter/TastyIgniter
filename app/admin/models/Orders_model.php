@@ -10,6 +10,7 @@ use Admin\Traits\ManagesOrderItems;
 use Carbon\Carbon;
 use Event;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Casts\Serialize;
 use Main\Classes\MainController;
 use Model;
 use Request;
@@ -63,7 +64,7 @@ class Orders_model extends Model
         'location_id' => 'integer',
         'address_id' => 'integer',
         'total_items' => 'integer',
-        'cart' => 'serialize',
+        'cart' => Serialize::class,
         'order_date' => 'date',
         'order_time' => 'time',
         'order_total' => 'float',
