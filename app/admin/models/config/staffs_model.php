@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'role' => [
             'label' => 'lang:admin::lang.staff.text_filter_role',
@@ -95,7 +95,7 @@ $config['list']['columns'] = [
         'relation' => 'locations',
         'select' => 'location_name',
         'searchable' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'last_login' => [
         'label' => 'lang:admin::lang.staff.column_last_login',
@@ -129,6 +129,13 @@ $config['form']['toolbar'] = [
             'label' => 'lang:admin::lang.button_save',
             'context' => ['create', 'edit'],
             'partial' => 'form/toolbar_save_button',
+            'class' => 'btn btn-primary',
+            'data-request' => 'onSave',
+            'data-progress-indicator' => 'admin::lang.text_saving',
+        ],
+        'save_account' => [
+            'label' => 'lang:admin::lang.button_save',
+            'context' => ['account'],
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',

@@ -325,11 +325,11 @@ class Updates extends \Admin\Classes\AdminController
                 break;
 
             case 'extractExtension':
-                $response = $updateManager->extractFile($meta['code'], 'extensions/');
+                $response = $updateManager->extractFile($meta['code'], extension_path('/'));
                 if ($response) $json['result'] = 'success';
                 break;
             case 'extractTheme':
-                $response = $updateManager->extractFile($meta['code'], 'themes/');
+                $response = $updateManager->extractFile($meta['code'], theme_path('/'));
                 if ($response) $json['result'] = 'success';
                 break;
 

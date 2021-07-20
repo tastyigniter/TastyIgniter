@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'category' => [
             'label' => 'lang:admin::lang.menus.text_filter_category',
@@ -78,7 +78,7 @@ $config['list']['columns'] = [
         'relation' => 'locations',
         'select' => 'location_name',
         'invisible' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'menu_price' => [
         'label' => 'lang:admin::lang.menus.column_price',
@@ -180,6 +180,7 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'valueFrom' => 'locations',
             'nameFrom' => 'location_name',
+            'scope' => 'isEnabled',
         ],
         'minimum_qty' => [
             'label' => 'lang:admin::lang.menus.label_minimum_qty',
@@ -197,8 +198,7 @@ $config['form']['tabs'] = [
         ],
         'order_restriction' => [
             'label' => 'lang:admin::lang.menus.label_order_restriction',
-            'type' => 'select',
-            'multiOption' => TRUE,
+            'type' => 'checkboxtoggle',
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
             'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],
@@ -309,6 +309,9 @@ $config['form']['tabs'] = [
                 'field' => 'special[validity]',
                 'condition' => 'value[period]',
             ],
+            'containerAttributes' => [
+                'style' => 'z-index:10',
+            ],
         ],
         'special[end_date]' => [
             'label' => 'lang:admin::lang.menus.label_end_date',
@@ -321,6 +324,9 @@ $config['form']['tabs'] = [
                 'action' => 'show',
                 'field' => 'special[validity]',
                 'condition' => 'value[period]',
+            ],
+            'containerAttributes' => [
+                'style' => 'z-index:10',
             ],
         ],
         'special[recurring_every]' => [

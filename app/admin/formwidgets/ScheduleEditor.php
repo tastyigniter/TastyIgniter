@@ -72,7 +72,7 @@ class ScheduleEditor extends BaseFormWidget
         $scheduleCode = post('recordId');
         $scheduleItem = $this->getSchedule($scheduleCode);
 
-        $formTitle = sprintf(lang($this->formTitle), $scheduleCode);
+        $formTitle = sprintf(lang($this->formTitle), lang('admin::lang.text_'.$scheduleCode));
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $scheduleCode,

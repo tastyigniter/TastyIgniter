@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Exception;
 use Igniter\Flame\Location\WorkingSchedule;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
 use InvalidArgumentException;
 
 trait HasWorkingHours
@@ -121,6 +122,8 @@ trait HasWorkingHours
         );
 
         $schedule->setType($type);
+
+        Event::fire('admin.workingSchedule.created', [$this, $schedule]);
 
         return $schedule;
     }

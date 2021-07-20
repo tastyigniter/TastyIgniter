@@ -313,12 +313,12 @@ class Menus_model extends Model
     public function addMenuSpecial(array $menuSpecial = [])
     {
         $menuId = $this->getKey();
-        if (!is_numeric($menuId) OR !isset($menuSpecial['special_id']))
+        if (!is_numeric($menuId))
             return FALSE;
 
         $menuSpecial['menu_id'] = $menuId;
         $this->special()->updateOrCreate([
-            'special_id' => $menuSpecial['special_id'],
+            'special_id' => $menuSpecial['special_id'] ?? null,
         ], array_except($menuSpecial, 'special_id'));
     }
 
@@ -348,6 +348,9 @@ class Menus_model extends Model
                 }
             }
         }
+
+        if (is_bool($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', [$datetime, $isAvailable], TRUE)))
+            $isAvailable = $eventResults;
 
         return $isAvailable;
     }

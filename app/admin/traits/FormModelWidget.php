@@ -34,6 +34,7 @@ trait FormModelWidget
      */
     public function findFormModel($recordId)
     {
+        $recordId = strip_tags($recordId);
         if (!strlen($recordId)) {
             throw new ApplicationException(lang('admin::lang.form.missing_id'));
         }

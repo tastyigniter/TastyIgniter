@@ -864,7 +864,7 @@ class Lists extends BaseWidget
      */
     protected function evalCurrencyTypeValue($record, $column, $value)
     {
-        return currency_format($value);
+        return currency_format((float)$value);
     }
 
     /**

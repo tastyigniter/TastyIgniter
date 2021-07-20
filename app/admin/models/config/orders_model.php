@@ -21,7 +21,7 @@ $config['list']['filter'] = [
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -85,7 +85,7 @@ $config['list']['columns'] = [
         'relation' => 'location',
         'select' => 'location_name',
         'searchable' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'full_name' => [
         'label' => 'lang:admin::lang.orders.column_customer_name',
