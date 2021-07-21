@@ -70,7 +70,7 @@ class IgniterInstall extends Command
         $this->line('Enter a new value, or press ENTER for the default');
 
         $this->moveExampleFile('env', null, 'backup');
-        $this->moveExampleFile('env', 'example', null);
+        $this->copyExampleFile('env', 'example', null);
 
         $this->rewriteEnvFile();
 
@@ -234,6 +234,18 @@ class IgniterInstall extends Command
         // /$old.$name => /$new.$name
         if (file_exists(base_path().'/'.$old.'.'.$name)) {
             rename(base_path().'/'.$old.'.'.$name, base_path().'/'.$new.'.'.$name);
+        }
+    }
+
+    protected function copyExampleFile($name, $old, $new)
+    {
+        // /$old.$name => /$new.$name
+        if (file_exists(base_path().'/'.$old.'.'.$name)) {
+
+            if (file_exists(base_path().'/'.$new.'.'.$name))
+                unlink(base_path().'/'.$new.'.'.$name);
+
+            copy(base_path().'/'.$old.'.'.$name, base_path().'/'.$new.'.'.$name);
         }
     }
 
