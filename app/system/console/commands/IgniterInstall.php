@@ -12,11 +12,9 @@ use App;
 use Carbon\Carbon;
 use Config;
 use DB;
-use Dotenv\Dotenv;
+use Igniter\Flame\Foundation\Http\Kernel;
 use Igniter\Flame\Support\ConfigRewrite;
-use Igniter\Flame\Support\Facades\File;
 use Illuminate\Console\Command;
-use Illuminate\Support\Env;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
@@ -78,8 +76,6 @@ class IgniterInstall extends Command
 
         $this->setSeederProperties();
 
-        $this->loadEnvFile();
-
         $this->migrateDatabase();
 
         $this->createSuperUser();
@@ -130,6 +126,8 @@ class IgniterInstall extends Command
     protected function migrateDatabase()
     {
         $this->line('Migrating application and extensions...');
+
+        resolve(Kernel::class)->bootstrap();
 
         DB::purge();
 
@@ -250,16 +248,5 @@ class IgniterInstall extends Command
     protected function replaceInEnv(string $search, string $replace)
     {
         $this->replaceInFile($search, $replace, base_path().'/.env');
-    }
-
-    protected function loadEnvFile()
-    {
-        Dotenv::create(
-            app()->environmentPath(),
-            app()->environmentFile(),
-            Env::getFactory()
-        )->safeLoad();
-
-        Config::set('database', File::getRequire(base_path().'/config/database.php'));
     }
 }
