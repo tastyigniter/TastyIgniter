@@ -276,9 +276,8 @@ class MainController extends BaseController
         // Render the layout
         $this->loader->setSource($this->layout);
         $template = $this->template->load($this->layout->getFilePath());
-        $result = $template->render($this->vars);
 
-        return $result;
+        return $template->render($this->vars);
     }
 
     /**
