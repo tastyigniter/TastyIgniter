@@ -6,6 +6,7 @@ use App;
 use ApplicationException;
 use Carbon\Carbon;
 use Config;
+use File;
 use Igniter\Flame\Mail\Markdown;
 use Main\Classes\ThemeManager;
 use Schema;
@@ -494,7 +495,16 @@ class UpdateManager
     {
         ini_set('max_execution_time', 3600);
 
-        return $this->extractFile($fileCode);
+        $configDir = base_path('/config');
+        $configBackup = base_path('/config-backup');
+        File::moveDirectory($configDir, $configBackup);
+
+        $result = $this->extractFile($fileCode);
+
+        File::copyDirectory($configBackup, $configDir);
+        File::deleteDirectory($configBackup);
+
+        return $result;
     }
 
     public function extractFile($fileCode, $extractTo = null)
