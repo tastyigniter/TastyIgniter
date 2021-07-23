@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'locationMode' => 'multiple',
+    'locationMode' => env('IGNITER_LOCATION_MODE', 'multiple'),
 
     /*
     |--------------------------------------------------------------------------
