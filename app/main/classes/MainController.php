@@ -34,6 +34,7 @@ use System\Helpers\ViewHelper;
 use System\Models\Request_logs_model;
 use System\Template\Extension\BladeExtension as SystemBladeExtension;
 use System\Traits\AssetMaker;
+use System\Traits\VerifiesCsrfToken;
 use URL;
 use View;
 
@@ -44,6 +45,7 @@ class MainController extends BaseController
 {
     use AssetMaker;
     use EventEmitter;
+    use VerifiesCsrfToken;
 
     /**
      * @var \Main\Classes\Theme The main theme processed by the controller.
@@ -352,6 +354,9 @@ class MainController extends BaseController
     protected function processHandlers()
     {
         if (!$handler = $this->getHandler())
+            return FALSE;
+
+        if (!$this->verifyCsrfToken())
             return FALSE;
 
         try {
