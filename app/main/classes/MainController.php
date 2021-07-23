@@ -468,7 +468,7 @@ class MainController extends BaseController
     /**
      * Returns an existing instance of the controller.
      * If the controller doesn't exists, returns null.
-     * @return mixed Returns the controller object or null.
+     * @return self Returns the controller object or null.
      */
     public static function getController()
     {

@@ -27,7 +27,7 @@ class Admin
      *
      * @param string $path
      * @param array $parameters
-     * @param  bool|null $secure
+     * @param bool|null $secure
      *
      * @return string
      */
