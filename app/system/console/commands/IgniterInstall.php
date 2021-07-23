@@ -2,11 +2,11 @@
 
 namespace System\Console\Commands;
 
-use App;
-use Config;
-use DB;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;

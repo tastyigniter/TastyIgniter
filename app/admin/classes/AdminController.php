@@ -2,15 +2,15 @@
 
 namespace Admin\Classes;
 
-use Admin;
+use Admin\Facades\Admin;
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminLocation;
+use Admin\Facades\AdminMenu;
 use Admin\Traits\HasAuthentication;
 use Admin\Traits\ValidatesForm;
 use Admin\Traits\WidgetMaker;
 use Admin\Widgets\Menu;
 use Admin\Widgets\Toolbar;
-use AdminAuth;
-use AdminLocation;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Exception\AjaxException;
 use Igniter\Flame\Exception\ApplicationException;
@@ -19,11 +19,11 @@ use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Flash\Facades\Flash;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Main\Widgets\MediaManager;
-use Redirect;
-use Request;
-use Response;
 use System\Classes\BaseController;
 use System\Classes\ErrorHandler;
 use System\Traits\AssetMaker;

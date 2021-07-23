@@ -2,7 +2,7 @@
 
 namespace Admin\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 
 class Mealtimes extends \Admin\Classes\AdminController
 {

@@ -2,9 +2,9 @@
 
 namespace System\Controllers;
 
-use AdminMenu;
-use ApplicationException;
-use Mail;
+use Admin\Facades\AdminMenu;
+use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Support\Facades\Mail;
 use System\Models\Mail_templates_model;
 
 class MailTemplates extends \Admin\Classes\AdminController

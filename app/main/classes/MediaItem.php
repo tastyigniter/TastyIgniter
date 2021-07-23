@@ -3,8 +3,8 @@
 namespace Main\classes;
 
 use Carbon\Carbon;
-use Config;
-use File;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Config;
 
 class MediaItem
 {

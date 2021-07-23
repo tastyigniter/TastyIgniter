@@ -2,8 +2,8 @@
 
 namespace System\Libraries;
 
-use File;
-use Html;
+use Igniter\Flame\Html\HtmlFacade as Html;
+use Igniter\Flame\Support\Facades\File;
 use JsonSerializable;
 use stdClass;
 use System\Traits\CombinesAssets;

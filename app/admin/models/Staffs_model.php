@@ -4,8 +4,8 @@ namespace Admin\Models;
 
 use Admin\Classes\UserState;
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Model;
 
 /**
  * Staffs Model Class

@@ -7,8 +7,8 @@ use Admin\Classes\FormField;
 use Admin\Models\Location_areas_model;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
-use Html;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Html\HtmlFacade as Html;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 

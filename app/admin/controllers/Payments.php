@@ -3,8 +3,8 @@
 namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Payments_model;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;

@@ -2,14 +2,14 @@
 
 namespace Main\Classes;
 
-use Cache;
-use Config;
-use File;
 use Igniter\Flame\Database\Attach\Manipulator;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
+use Igniter\Flame\Support\Str;
 use Igniter\Flame\Traits\Singleton;
-use Storage;
-use Str;
-use SystemException;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * MediaLibrary Class

@@ -3,7 +3,7 @@
 namespace System\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
-use AdminAuth;
+use Admin\Facades\AdminAuth;
 use System\Models\Activities_model;
 
 /**

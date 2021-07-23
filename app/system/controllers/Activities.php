@@ -2,7 +2,7 @@
 
 namespace System\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 
 class Activities extends \Admin\Classes\AdminController
 {

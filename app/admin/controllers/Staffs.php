@@ -2,8 +2,8 @@
 
 namespace Admin\Controllers;
 
-use AdminAuth;
-use AdminMenu;
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminMenu;
 
 class Staffs extends \Admin\Classes\AdminController
 {

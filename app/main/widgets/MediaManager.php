@@ -3,12 +3,12 @@
 namespace Main\Widgets;
 
 use Admin\Classes\BaseWidget;
-use ApplicationException;
 use Exception;
-use File;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 use Main\Classes\MediaLibrary;
-use Response;
 
 /**
  * Media Manager widget.

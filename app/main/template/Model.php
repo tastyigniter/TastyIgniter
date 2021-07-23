@@ -2,9 +2,9 @@
 
 namespace Main\Template;
 
-use Config;
 use Igniter\Flame\Pagic\Contracts\TemplateSource;
 use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Config;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 

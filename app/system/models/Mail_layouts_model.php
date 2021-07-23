@@ -2,12 +2,12 @@
 
 namespace System\Models;
 
-use ApplicationException;
-use File;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\MailParser;
-use Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\View;
 use System\Classes\MailManager;
-use View;
 
 /**
  * MailLayouts Model Class

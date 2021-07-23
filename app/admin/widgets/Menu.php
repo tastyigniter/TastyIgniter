@@ -5,8 +5,8 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\MenuItem;
 use Admin\Classes\UserState;
+use Admin\Facades\AdminLocation;
 use Admin\Models\Locations_model;
-use AdminLocation;
 use Carbon\Carbon;
 use Igniter\Flame\Exception\ApplicationException;
 

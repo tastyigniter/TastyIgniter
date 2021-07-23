@@ -2,8 +2,8 @@
 
 namespace Admin\Traits;
 
-use Event;
-use Model;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Event;
 
 trait ListExtendable
 {

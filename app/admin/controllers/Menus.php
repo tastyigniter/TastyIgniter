@@ -3,9 +3,9 @@
 namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Menu_options_model;
-use AdminMenu;
-use ApplicationException;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Menus extends AdminController
 {

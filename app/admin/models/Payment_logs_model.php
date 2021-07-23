@@ -3,9 +3,9 @@
 namespace Admin\Models;
 
 use Carbon\Carbon;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
-use Model;
 
 /**
  * Payment logs Model Class

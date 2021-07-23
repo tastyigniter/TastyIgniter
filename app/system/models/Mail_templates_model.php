@@ -2,11 +2,11 @@
 
 namespace System\Models;
 
-use File;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Mail\MailParser;
-use Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\View;
 use System\Classes\MailManager;
-use View;
 
 /**
  * Mail templates Model Class

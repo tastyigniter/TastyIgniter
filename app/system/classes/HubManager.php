@@ -2,13 +2,13 @@
 
 namespace System\Classes;
 
-use ApplicationException;
-use Cache;
 use Carbon\Carbon;
-use Config;
 use Exception;
-use Log;
-use Request;
+use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 
 /**
  * Hub Manager Class

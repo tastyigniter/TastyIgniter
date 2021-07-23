@@ -6,10 +6,10 @@ use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
-use Model;
-use Request;
 use System\Traits\SendsMailTemplate;
 
 /**

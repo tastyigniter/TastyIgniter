@@ -7,14 +7,14 @@ use Admin\Classes\ListColumn;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
 use Carbon\Carbon;
-use DB;
 use Exception;
-use Html;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Html\HtmlFacade as Html;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Model;
+use Illuminate\Support\Facades\DB;
 
 class Lists extends BaseWidget
 {

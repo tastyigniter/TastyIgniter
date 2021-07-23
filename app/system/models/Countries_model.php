@@ -2,8 +2,8 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
-use Model;
 
 /**
  * Countries Model Class

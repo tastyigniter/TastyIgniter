@@ -7,8 +7,8 @@ use Admin\Models\Locations_model;
 use Admin\Models\Menus_model;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use Log;
 use Main\Classes\MediaLibrary;
 
 class CreateMediaAttachmentsTable extends Migration

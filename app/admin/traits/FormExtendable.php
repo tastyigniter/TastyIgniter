@@ -2,8 +2,8 @@
 
 namespace Admin\Traits;
 
-use Event;
 use Exception;
+use Illuminate\Support\Facades\Event;
 
 trait FormExtendable
 {

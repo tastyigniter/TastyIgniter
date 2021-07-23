@@ -2,9 +2,9 @@
 
 namespace Admin\Models;
 
-use AdminAuth;
+use Admin\Facades\AdminAuth;
 use Exception;
-use Model;
+use Igniter\Flame\Database\Model;
 
 class User_preferences_model extends Model
 {

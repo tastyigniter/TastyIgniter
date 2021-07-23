@@ -5,7 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ToolbarButton;
 use Admin\Facades\AdminAuth;
-use Template;
+use Admin\Facades\Template;
 
 class Toolbar extends BaseWidget
 {

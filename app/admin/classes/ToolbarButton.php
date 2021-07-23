@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use Html;
+use Igniter\Flame\Html\HtmlFacade as Html;
 
 /**
  * Toolbar Button definition

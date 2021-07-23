@@ -2,10 +2,10 @@
 
 namespace System\Actions;
 
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Traits\ExtensionTrait;
-use Model;
 use System\Traits\ConfigMaker;
-use SystemException;
 
 /**
  * Model Action base Class
@@ -30,7 +30,7 @@ class ModelAction
      *
      * @param null $model
      *
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function __construct($model)
     {

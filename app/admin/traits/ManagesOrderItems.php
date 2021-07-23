@@ -5,8 +5,8 @@ namespace Admin\Traits;
 use Admin\Models\Menu_item_option_values_model;
 use Admin\Models\Menu_item_options_model;
 use Admin\Models\Menus_model;
-use DB;
-use Event;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 trait ManagesOrderItems
 {

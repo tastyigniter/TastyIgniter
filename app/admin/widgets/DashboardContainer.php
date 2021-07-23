@@ -5,7 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\Widgets;
 use Admin\Models\User_preferences_model;
-use ApplicationException;
+use Igniter\Flame\Exception\ApplicationException;
 
 class DashboardContainer extends BaseWidget
 {
@@ -229,7 +229,7 @@ class DashboardContainer extends BaseWidget
      * @param $size
      *
      * @return array
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function addWidget($widget, $size)
     {
