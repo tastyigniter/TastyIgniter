@@ -85,6 +85,8 @@ class IgniterInstall extends Command
         $this->moveExampleFile('htaccess', null, 'backup');
         $this->moveExampleFile('htaccess', 'example', null);
 
+        $this->deleteExampleFile('env');
+
         $this->alert('INSTALLATION COMPLETE');
     }
 
@@ -102,11 +104,6 @@ class IgniterInstall extends Command
     {
         $this->replaceInEnv('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey());
 
-        $this->writeDatabaseConfig();
-    }
-
-    protected function writeDatabaseConfig()
-    {
         $config = [];
         $name = Config::get('database.default');
         $config['host'] = $this->ask('MySQL Host', Config::get("database.connections.{$name}.host"));
@@ -241,11 +238,17 @@ class IgniterInstall extends Command
     {
         // /$old.$name => /$new.$name
         if (file_exists(base_path().'/'.$old.'.'.$name)) {
-
             if (file_exists(base_path().'/'.$new.'.'.$name))
                 unlink(base_path().'/'.$new.'.'.$name);
 
             copy(base_path().'/'.$old.'.'.$name, base_path().'/'.$new.'.'.$name);
+        }
+    }
+
+    protected function deleteExampleFile($name)
+    {
+        if (file_exists(base_path().'/example.'.$name)) {
+            unlink(base_path().'/example.'.$name);
         }
     }
 
