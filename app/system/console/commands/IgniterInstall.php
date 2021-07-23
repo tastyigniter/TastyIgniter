@@ -252,16 +252,13 @@ class IgniterInstall extends Command
         }
     }
 
-    protected function replaceInFile(string $search, string $replace, string $file)
+    protected function replaceInEnv(string $search, string $replace)
     {
+        $file = base_path().'/.env';
+
         file_put_contents(
             $file,
             str_replace($search, $replace, file_get_contents($file))
         );
-    }
-
-    protected function replaceInEnv(string $search, string $replace)
-    {
-        $this->replaceInFile($search, $replace, base_path().'/.env');
     }
 }
