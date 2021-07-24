@@ -43,6 +43,8 @@ class IgniterInstall extends Command
      */
     protected $configRewrite;
 
+    protected $dbConfig = [];
+
     /**
      * Create a new command instance.
      */
@@ -69,12 +71,9 @@ class IgniterInstall extends Command
 
         $this->line('Enter a new value, or press ENTER for the default');
 
-        $this->moveExampleFile('env', null, 'backup');
-        $this->copyExampleFile('env', 'example', null);
+        $this->setSeederProperties();
 
         $this->rewriteEnvFile();
-
-        $this->setSeederProperties();
 
         $this->migrateDatabase();
 
@@ -102,20 +101,20 @@ class IgniterInstall extends Command
 
     protected function rewriteEnvFile()
     {
+        if (file_exists(base_path().'/example.env')) {
+            $this->moveExampleFile('env', null, 'backup');
+            $this->moveExampleFile('env', 'example', null);
+        }
+
+        if (!file_exists(base_path().'/.env'))
+            return;
+
         $this->replaceInEnv('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey());
 
-        $config = [];
-        $name = Config::get('database.default');
-        $config['host'] = $this->ask('MySQL Host', Config::get("database.connections.{$name}.host"));
-        $config['port'] = $this->ask('MySQL Port', Config::get("database.connections.{$name}.port") ?: FALSE) ?: '';
-        $config['database'] = $this->ask('Database Name', Config::get("database.connections.{$name}.database"));
-        $config['username'] = $this->ask('MySQL Login', Config::get("database.connections.{$name}.username"));
-        $config['password'] = $this->ask('MySQL Password', Config::get("database.connections.{$name}.password") ?: FALSE) ?: '';
-        $config['prefix'] = $this->ask('MySQL Table Prefix', Config::get("database.connections.{$name}.prefix") ?: FALSE) ?: '';
+        $this->replaceInEnv('APP_NAME=', 'APP_NAME='.DatabaseSeeder::$siteName);
+        $this->replaceInEnv('APP_URL=', 'APP_URL='.DatabaseSeeder::$siteUrl);
 
-        $this->replaceInEnv('DB_CONNECTION=mysql', 'DB_CONNECTION='.$name);
-
-        foreach ($config as $key => $value) {
+        foreach ($this->dbConfig as $key => $value) {
             $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
         }
     }
@@ -137,16 +136,19 @@ class IgniterInstall extends Command
 
     protected function setSeederProperties()
     {
-        $siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
-        $this->replaceInEnv('APP_NAME=', 'APP_NAME='.$siteName);
+        $name = Config::get('database.default');
+        $this->dbConfig['host'] = $this->ask('MySQL Host', Config::get("database.connections.$name.host"));
+        $this->dbConfig['port'] = $this->ask('MySQL Port', Config::get("database.connections.$name.port") ?: FALSE) ?: '';
+        $this->dbConfig['database'] = $this->ask('MySQL Database', Config::get("database.connections.$name.database"));
+        $this->dbConfig['username'] = $this->ask('MySQL Username', Config::get("database.connections.$name.username"));
+        $this->dbConfig['password'] = $this->ask('MySQL Password', Config::get("database.connections.$name.password") ?: FALSE) ?: '';
+        $this->dbConfig['prefix'] = $this->ask('MySQL Table Prefix', Config::get("database.connections.$name.prefix") ?: FALSE) ?: '';
 
-        $siteUrl = $this->ask('Site URL', Config::get('app.url'));
-        $this->replaceInEnv('APP_URL=', 'APP_URL='.$siteUrl);
+        DatabaseSeeder::$siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
+        DatabaseSeeder::$siteUrl = $this->ask('Site URL', Config::get('app.url'));
 
         DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
 
-        DatabaseSeeder::$siteName = $siteName;
-        DatabaseSeeder::$siteUrl = $siteUrl;
         DatabaseSeeder::$siteEmail = $this->ask('Admin Email', DatabaseSeeder::$siteEmail);
         DatabaseSeeder::$staffName = $this->ask('Admin Name', DatabaseSeeder::$staffName);
     }
@@ -258,7 +260,7 @@ class IgniterInstall extends Command
 
         file_put_contents(
             $file,
-            str_replace($search, $replace, file_get_contents($file))
+            preg_replace('/^'.$search.'(.*)$/m', $replace, file_get_contents($file))
         );
     }
 }
