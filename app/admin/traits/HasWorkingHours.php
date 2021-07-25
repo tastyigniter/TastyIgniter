@@ -89,7 +89,7 @@ trait HasWorkingHours
     public function getWorkingHours()
     {
         if (!$this->hasRelation('working_hours'))
-            throw new Exception(sprintf(lang('admin::lang.alert_missing_definition_in_model'),
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_definition'),
                 get_class($this),
                 'working_hours',
             ));
@@ -110,7 +110,7 @@ trait HasWorkingHours
     {
         $types = $this->availableWorkingTypes();
         if (is_null($type) OR !in_array($type, $types))
-            throw new InvalidArgumentException(sprintf(lang('admin::lang.alert_invalid_type'), $type));
+            throw new InvalidArgumentException(sprintf(lang('admin::lang.locations.alert_invalid_schedule_type'), $type));
 
         if (is_null($days)) {
             $days = $this->hasFutureOrder($type)
@@ -134,7 +134,7 @@ trait HasWorkingHours
     public function createScheduleItem($type)
     {
         if (is_null($type) OR !in_array($type, $this->availableWorkingTypes()))
-            throw new InvalidArgumentException(sprintf(lang('admin::lang.alert_invalid_type'), $type));
+            throw new InvalidArgumentException(sprintf(lang('admin::lang.locations.alert_invalid_schedule_type'), $type));
 
         $scheduleData = array_get($this->getOption('hours', []), $type, []);
 

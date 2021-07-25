@@ -328,7 +328,7 @@ class Lists extends BaseWidget
             if (isset($column->relation)) {
                 $relationType = $this->model->getRelationType($column->relation);
                 if ($relationType == 'morphTo') {
-                    throw new Exception('admin::lang.list.alert_relationship_morphTo_not_supported');
+                    throw new Exception(sprintf(lang('admin::lang.list.alert_relationship_not_supported'), 'morphTo'));
                 }
 
                 $table = $this->model->makeRelation($column->relation)->getTable();
@@ -462,7 +462,7 @@ class Lists extends BaseWidget
     protected function defineListColumns()
     {
         if (!isset($this->columns) OR !is_array($this->columns) OR !count($this->columns)) {
-            throw new Exception(sprintf(lang('admin::lang.form.alert_list_used_has_no_list_columns'), get_class($this->controller)));
+            throw new Exception(sprintf(lang('admin::lang.list.missing_column'), get_class($this->controller)));
         }
 
         $this->addColumns($this->columns);
@@ -1159,7 +1159,7 @@ class Lists extends BaseWidget
         }
 
         if (!$this->model->hasRelation($column->relation)) {
-            throw new Exception(sprintf(lang('admin::lang.form.alert_model_has_no_definition'), get_class($this->model), $column->relation));
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_definition'), get_class($this->model), $column->relation));
         }
 
         if (!$multi) {

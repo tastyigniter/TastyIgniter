@@ -307,7 +307,7 @@ class AdminController extends BaseController
     protected function validateHandler($handler)
     {
         if (!preg_match('/^(?:\w+\:{2})?on[A-Z]{1}[\w+]*$/', $handler)) {
-            throw new SystemException(sprintf(lang('admin::lang.form.invalid_ajax_handler_name'), $handler));
+            throw new SystemException(sprintf(lang('admin::lang.alert_invalid_ajax_handler_name'), $handler));
         }
     }
 
@@ -320,7 +320,7 @@ class AdminController extends BaseController
 
         foreach ($partials as $partial) {
             if (!preg_match('/^(?:\w+\:{2}|@)?[a-z0-9\_\-\.\/]+$/i', $partial)) {
-                throw new SystemException(sprintf(lang('admin::lang.form.invalid_partial_name'), $partial));
+                throw new SystemException(sprintf(lang('admin::lang.alert_invalid_ajax_partial_name'), $partial));
             }
         }
 
@@ -385,7 +385,7 @@ class AdminController extends BaseController
             $this->pageAction();
 
             if (!isset($this->widgets[$widgetName])) {
-                throw new Exception(sprintf(lang('admin::lang.form.widget_not_bound_to_controller'), $widgetName));
+                throw new Exception(sprintf(lang('admin::lang.alert_widget_not_bound_to_controller'), $widgetName));
             }
 
             if (($widget = $this->widgets[$widgetName]) AND method_exists($widget, $handlerName)) {

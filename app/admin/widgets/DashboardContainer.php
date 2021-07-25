@@ -151,11 +151,11 @@ class DashboardContainer extends BaseWidget
             throw new ApplicationException(lang('admin::lang.dashboard.alert_select_widget_to_add'));
 
         if (!class_exists($className))
-            throw new ApplicationException(lang('admin::lang.dashboard.alert_select_class_not_exist'));
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_widget_class_not_found'));
 
         $widget = new $className($this->controller);
         if (!($widget instanceof \Admin\Classes\BaseDashboardWidget))
-            throw new ApplicationException(lang('admin::lang.dashboard.alert_select_class_not_dashboard_widget'));
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_invalid_widget'));
 
         $widgetInfo = $this->addWidget($widget, $size);
 

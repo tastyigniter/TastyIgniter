@@ -46,7 +46,7 @@ trait FormModelWidget
         $result = $query->find($recordId);
 
         if (!$result)
-            throw new Exception(sprintf(lang('admin::lang.alert_missing_record_id_in_model'), $recordId, get_class($model)));
+            throw new Exception(sprintf(lang('admin::lang.form.record_not_found_in_model'), $recordId, get_class($model)));
 
         return $result;
     }
@@ -83,7 +83,7 @@ trait FormModelWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_definition_in_model'),
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));
@@ -97,7 +97,7 @@ trait FormModelWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_definition_in_model'),
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));

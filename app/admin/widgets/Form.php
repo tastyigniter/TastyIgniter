@@ -543,7 +543,7 @@ class Form extends BaseWidget
 
         if (!class_exists($widgetClass)) {
             throw new Exception(sprintf(
-                lang('admin::lang.form.widget_class_name_not_registered'), gettype($fieldType)
+                lang('admin::lang.alert_widget_class_name'), gettype($fieldType)
             ));
         }
 

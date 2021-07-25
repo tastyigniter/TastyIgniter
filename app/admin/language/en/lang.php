@@ -95,25 +95,16 @@ return [
     'alert_warning_locationable_delete' => 'Warning: You do not have the right permission to delete record(s) attached to multiple locations, please contact the system administrator.',
     'alert_form_error_message' => 'Sorry but form validation has failed, please check for errors.',
     'alert_error_set_default' => '"%s" is disabled and cannot be set as default.',
-    'alert_select_item_to_attach' => "Select an item to attach.",
-    'alert_only_attach_to_saved' => "You can only attach media to a saved form.",
     'alert_missing_method' => "Missing method [%s] in %s.",
-    'alert_missing_record_id_in_model' => "Record ID [%s] not found in model %s.",
-    'alert_missing_definition_in_model' => "Model '%s' does not contain a definition for '%s'.",
-    'alert_invalid_type' => "Defined parameter '%s' is not a valid working type.",
+    'alert_missing_definition' => "Model '%s' does not contain a definition for '%s'.",
     'alert_valid_values' => "Valid values for [locationAware] property are (none,show,hide).",
     'alert_widget_class_name' => "The Widget class name '%s' has not been registered",
     'alert_missing_field_property' => "Missing form field property 'modelClass' in '%s'",
-    'alert_missing_definition' => "Model '%s' does not contain a definition for '%s'.",
-    'alert_schedule_not_loaded' => "Schedule not loaded.",
-    'alert_invalid_action' => "Invalid action.",
-    'alert_no_available_assignee' => "No available assignee.",
-    'model_must_define_method' => "The model class %s must define a method %s returning options for the '%s' filter.",
-    'alert_no_definition_for_scope' => "No definition for scope %s",
-    'user_not_active' => "Cannot login user '%s' until activated.",
-    'customer_payment_profile_not_found' => "Customer payment profile not found!",
-    'user_not_logged' => "User is not logged in",
-    'admin::lang.alert_form_req_class_not_found' => 'Form Request class (%s) not found',
+    'alert_invalid_ajax_handler_name' => "Invalid ajax handler name: %s",
+    'alert_invalid_ajax_partial_name' => "Invalid partial name: %s",
+    'alert_widget_not_bound_to_controller' => "A widget with class name '%s' has not been bound to the controller",
+    'alert_user_not_logged' => "User is not logged in",
+    'alert_widget_class_name' => "The Widget class name '%s' has not been registered.",
     'text_settings_title' => 'Settings',
     'text_message_title' => 'Your messages',
     'text_activity_title' => 'Recent activities',
@@ -187,6 +178,11 @@ return [
         'tool' => 'Tools',
         'media_manager' => 'Media Manager',
         'system' => 'System',
+
+        'alert_no_definition' => 'No definition for item %s.',
+        'alert_invalid_menu' => 'Invalid item specified.',
+        'alert_menu_not_found' => 'No main menu item found matching {%s}.',
+        'alert_invalid_status' => 'Status message is required.',
     ],
 
     'list' => [
@@ -195,6 +191,7 @@ return [
         'missing_column' => 'Missing columns in List definitions %s',
         'invalid_column_datetime' => 'Column value \'%s\' is not a DateTime object, are you missing a $dates reference in the Model?',
         'delete_empty' => 'Nothing selected to delete.',
+        'missing_column' => 'List used in %s has no list columns defined.',
         'text_empty' => 'Nothing found.',
         'text_setup' => 'Setup',
         'text_showing' => 'Showing %s-%s of %s records',
@@ -204,11 +201,11 @@ return [
         'button_reset_setup' => 'Reset',
         'button_cancel_setup' => 'Cancel',
         'button_apply_setup' => 'Apply changes',
+        'filter_missing_definitions' => "The model class %s must define a method %s returning options for the '%s' filter.",
+        'filter_missing_scope_definitions' => "No definition for scope %s",
         'help_visible_columns' => 'Set which columns are visible and in what order to display them',
         'help_page_limit' => 'Limit how many records are shown per page',
-        'alert_relationship_morphTo_not_supported' => 'The relationship morphTo is not supported for list columns.',
-        'alert_list_used_has_no_list_columns' => 'List used in %s has no list columns defined.',
-        'alert_model_has_no_definition' => 'Model %s does not contain a definition for %s.',
+        'alert_relationship_not_supported' => 'The relationship %s is not supported for list columns.',
     ],
 
     'calendar' => [
@@ -240,15 +237,11 @@ return [
         'options_method_not_exists' => 'The model class %s must define a method %s returning options for the [%s] form field.',
         'field_invalid_type' => 'Invalid field type used %s.',
         'missing_id' => 'Form record ID has not been specified.',
-        'status_id_not_found' => 'Status ID [%s] not found.',
         'not_found' => 'Form record with ID [%s] could not be found.',
         'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
-        'invalid_ajax_handler_name' => "Invalid ajax handler name: %s",
-        'invalid_partial_name' => "Invalid partial name: %s",
-        'widget_not_bound_to_controller' => "A widget with class name '%s' has not been bound to the controller",
         'record_not_found' => "Record not found.",
-        'alert_invalid_area' => "Invalid area selected.",
-        'widget_class_name_not_registered' => "The Widget class name '%s' has not been registered.",
+        'request_class_not_found' => 'Form Request class (%s) not found',
+        'record_not_found_in_model' => "Record ID [%s] not found in model %s.",
 
         'save_actions' => [
             'continue' => 'Continue Editing',
@@ -336,6 +329,8 @@ return [
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
         'alert_impersonate_confirm' => 'Are you sure you want to impersonate this customer? You can revert to your original state by logging out.',
         'alert_impersonate_success' => 'You are now impersonating customer: %s',
+        'alert_customer_not_active' => "Cannot login user '%s' until activated.",
+        'alert_customer_payment_profile_not_found' => "Customer payment profile not found!",
     ],
 
     'dashboard' => [
@@ -397,8 +392,8 @@ return [
 
         'alert_select_widget_to_update' => "Please select a widget to update.",
         'alert_select_widget_to_add' => "Please select a widget to add.",
-        'alert_select_class_not_exist' => "The selected class does not exist.",
-        'alert_select_class_not_dashboard_widget' => "The selected class is not a dashboard widget.",
+        'alert_widget_class_not_found' => "The selected class does not exist.",
+        'alert_invalid_widget' => "The selected class is not a dashboard widget.",
         'alert_access_denied' => "Access denied.",
         'alert_invalid_aliases' => "Invalid aliases string.",
         'alert_invalid_priorities' => "'Invalid priorities string.'",
@@ -564,6 +559,9 @@ return [
         'alert_set_default' => 'Location set as default',
         'alert_missing_map_center' => 'Map is missing center coordinates, please enter an address then click save.',
         'alert_missing_map_config' => 'Missing Google Maps Javascript Library, please provide your maps api key on the general system settings page.',
+        'alert_invalid_area' => "Invalid area selected.",
+        'alert_schedule_not_loaded' => "Schedule not loaded.",
+        'alert_invalid_schedule_type' => "Defined parameter '%s' is not a valid working type.",
 
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
         'help_image' => 'Select a logo for this location.',
@@ -653,8 +651,6 @@ return [
         'label_option_price' => 'Option Price',
         'label_option_id' => 'Option ID',
         'label_update_related_menu_item' => 'Update option values of associated menu items',
-
-        'alert_menu_option_not_attached' => 'Please select a menu option to attach.',
     ],
 
     'menus' => [
@@ -724,10 +720,7 @@ return [
         'help_max_selected' => 'Maximum items to select from these options, leave blank to ignore.',
         'help_option_required' => 'Select Enabled if a customer MUST choose this option. If this option is not required, select Disabled.',
         'help_specials' => 'Select disable to deactivate Special. Select Enable to activate Special and enter the Start Date, End Date and price of your Special item.',
-        'alert_no_definition_for_item' => 'No definition for item %s.',
-        'alert_invalid_item_specified' => 'Invalid item specified.',
-        'alert_main_menu_item_matching' => 'No main menu item found matching {%s}.',
-        'status_message_required' => 'Status message is required.',
+        'alert_menu_option_not_attached' => 'Please select a menu option to attach.',
     ],
 
     'orders' => [
@@ -933,6 +926,8 @@ return [
 
         'column_users' => '# Users',
 
+        'alert_no_available_assignee' => "No available assignee.",
+
         'help_auto_assign' => 'Allocate and control the number of orders assigned to staff in this group.',
         'help_round_robin' => 'Assign orders to the staff who are online in a circular fashion.',
         'help_load_balanced' => 'Limit the number of orders a staff can handle simultaneously.',
@@ -1018,6 +1013,8 @@ return [
         'help_assignee_group' => 'A notification is sent out to all the staff in the selected group',
 
         'alert_already_added' => 'The selected %s must be different from the current %s',
+        'alert_invalid_action' => "Invalid action.",
+        'alert_status_not_found' => 'Status ID [%s] not found.',
     ],
 
     'tables' => [
