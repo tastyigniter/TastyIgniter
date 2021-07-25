@@ -28,6 +28,7 @@ use System\Classes\BaseController;
 use System\Classes\ErrorHandler;
 use System\Traits\AssetMaker;
 use System\Traits\ConfigMaker;
+use System\Traits\VerifiesCsrfToken;
 use System\Traits\ViewMaker;
 
 class AdminController extends BaseController
@@ -38,6 +39,7 @@ class AdminController extends BaseController
     use WidgetMaker;
     use ValidatesForm;
     use HasAuthentication;
+    use VerifiesCsrfToken;
 
     /**
      * @var object Object used for storing a fatal error.
@@ -135,6 +137,10 @@ class AdminController extends BaseController
     {
         $this->action = $action;
         $this->params = $params;
+
+        if (!$this->verifyCsrfToken()) {
+            return Response::make(lang('admin::lang.alert_invalid_csrf_token'), 403);
+        }
 
         // Determine if this request is a public action or authentication is required
         $requireAuthentication = !(in_array($action, $this->publicActions) OR !$this->requireAuthentication);
