@@ -98,15 +98,15 @@ return [
     'alert_warning_locationable_delete' => 'Warning: You do not have the right permission to delete record(s) attached to multiple locations, please contact the system administrator.',
     'alert_form_error_message' => 'Sorry but form validation has failed, please check for errors.',
     'alert_error_set_default' => '"%s" is disabled and cannot be set as default.',
-    'alert_missing_method' => "Missing method [%s] in %s.",
+    'alert_missing_method' => 'Missing method [%s] in %s.',
     'alert_missing_definition' => "Model '%s' does not contain a definition for '%s'.",
-    'alert_valid_values' => "Valid values for [locationAware] property are (none,show,hide).",
+    'alert_valid_values' => 'Valid values for [locationAware] property are (none,show,hide).',
     'alert_widget_class_name' => "The Widget class name '%s' has not been registered",
     'alert_missing_field_property' => "Missing form field property 'modelClass' in '%s'",
-    'alert_invalid_ajax_handler_name' => "Invalid ajax handler name: %s",
-    'alert_invalid_ajax_partial_name' => "Invalid partial name: %s",
+    'alert_invalid_ajax_handler_name' => 'Invalid ajax handler name: %s',
+    'alert_invalid_ajax_partial_name' => 'Invalid partial name: %s',
     'alert_widget_not_bound_to_controller' => "A widget with class name '%s' has not been bound to the controller",
-    'alert_user_not_logged' => "User is not logged in",
+    'alert_user_not_logged' => 'User is not logged in',
     'alert_widget_class_name' => "The Widget class name '%s' has not been registered.",
     'alert_invalid_csrf_token' => 'Invalid security token, please reload the page and try again.',
     'text_settings_title' => 'Settings',
@@ -206,7 +206,7 @@ return [
         'button_cancel_setup' => 'Cancel',
         'button_apply_setup' => 'Apply changes',
         'filter_missing_definitions' => "The model class %s must define a method %s returning options for the '%s' filter.",
-        'filter_missing_scope_definitions' => "No definition for scope %s",
+        'filter_missing_scope_definitions' => 'No definition for scope %s',
         'help_visible_columns' => 'Set which columns are visible and in what order to display them',
         'help_page_limit' => 'Limit how many records are shown per page',
         'alert_relationship_not_supported' => 'The relationship %s is not supported for list columns.',
@@ -243,9 +243,9 @@ return [
         'missing_id' => 'Form record ID has not been specified.',
         'not_found' => 'Form record with ID [%s] could not be found.',
         'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
-        'record_not_found' => "Record not found.",
+        'record_not_found' => 'Record not found.',
         'request_class_not_found' => 'Form Request class (%s) not found',
-        'record_not_found_in_model' => "Record ID [%s] not found in model %s.",
+        'record_not_found_in_model' => 'Record ID [%s] not found in model %s.',
 
         'save_actions' => [
             'continue' => 'Continue Editing',
@@ -334,7 +334,7 @@ return [
         'alert_impersonate_confirm' => 'Are you sure you want to impersonate this customer? You can revert to your original state by logging out.',
         'alert_impersonate_success' => 'You are now impersonating customer: %s',
         'alert_customer_not_active' => "Cannot login user '%s' until activated.",
-        'alert_customer_payment_profile_not_found' => "Customer payment profile not found!",
+        'alert_customer_payment_profile_not_found' => 'Customer payment profile not found!',
     ],
 
     'dashboard' => [
@@ -394,15 +394,15 @@ return [
         'text_select_range' => 'Select date range',
         'text_last_version_check' => 'Your last <b>TastyIgniter core version check</b> was more than a week ago. <a href="%s"><b>Check for Updates</b></a>',
 
-        'alert_select_widget_to_update' => "Please select a widget to update.",
-        'alert_select_widget_to_add' => "Please select a widget to add.",
-        'alert_widget_class_not_found' => "The selected class does not exist.",
-        'alert_invalid_widget' => "The selected class is not a dashboard widget.",
-        'alert_access_denied' => "Access denied.",
-        'alert_invalid_aliases' => "Invalid aliases string.",
+        'alert_select_widget_to_update' => 'Please select a widget to update.',
+        'alert_select_widget_to_add' => 'Please select a widget to add.',
+        'alert_widget_class_not_found' => 'The selected class does not exist.',
+        'alert_invalid_widget' => 'The selected class is not a dashboard widget.',
+        'alert_access_denied' => 'Access denied.',
+        'alert_invalid_aliases' => 'Invalid aliases string.',
         'alert_invalid_priorities' => "'Invalid priorities string.'",
-        'alert_invalid_data_posted' => "Invalid data posted.",
-        'alert_widget_not_found' => "The specified widget is not found.",
+        'alert_invalid_data_posted' => 'Invalid data posted.',
+        'alert_widget_not_found' => 'The specified widget is not found.',
 
         'onboarding' => [
             'title' => 'Getting started',
@@ -561,8 +561,8 @@ return [
         'alert_set_default' => 'Location set as default',
         'alert_missing_map_center' => 'Map is missing center coordinates, please enter an address then click save.',
         'alert_missing_map_config' => 'Missing Google Maps Javascript Library, please provide your maps api key on the general system settings page.',
-        'alert_invalid_area' => "Invalid area selected.",
-        'alert_schedule_not_loaded' => "Schedule not loaded.",
+        'alert_invalid_area' => 'Invalid area selected.',
+        'alert_schedule_not_loaded' => 'Schedule not loaded.',
         'alert_invalid_schedule_type' => "Defined parameter '%s' is not a valid working type.",
 
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
@@ -928,7 +928,7 @@ return [
 
         'column_users' => '# Users',
 
-        'alert_no_available_assignee' => "No available assignee.",
+        'alert_no_available_assignee' => 'No available assignee.',
 
         'help_auto_assign' => 'Allocate and control the number of orders assigned to staff in this group.',
         'help_round_robin' => 'Assign orders to the staff who are online in a circular fashion.',
@@ -1015,7 +1015,7 @@ return [
         'help_assignee_group' => 'A notification is sent out to all the staff in the selected group',
 
         'alert_already_added' => 'The selected %s must be different from the current %s',
-        'alert_invalid_action' => "Invalid action.",
+        'alert_invalid_action' => 'Invalid action.',
         'alert_status_not_found' => 'Status ID [%s] not found.',
     ],
 
