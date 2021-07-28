@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'locationMode' => 'multiple',
+    'locationMode' => env('IGNITER_LOCATION_MODE', 'multiple'),
 
     /*
     |--------------------------------------------------------------------------
@@ -217,4 +217,16 @@ return [
 
     'filePermissions' => '777',
     'folderPermissions' => '777',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cross Site Request Forgery (CSRF) Protection
+    |--------------------------------------------------------------------------
+    |
+    | If the CSRF protection is enabled, all "postback" requests are checked
+    | for a valid security token.
+    |
+    */
+
+    'enableCsrfProtection' => TRUE,
 ];
