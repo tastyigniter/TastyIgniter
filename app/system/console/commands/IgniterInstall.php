@@ -15,6 +15,7 @@ use DB;
 use Igniter\Flame\Foundation\Http\Kernel;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
@@ -103,7 +104,7 @@ class IgniterInstall extends Command
     {
         if (file_exists(base_path().'/example.env')) {
             $this->moveExampleFile('env', null, 'backup');
-            $this->moveExampleFile('env', 'example', null);
+            $this->copyExampleFile('env', 'example', null);
         }
 
         if (!file_exists(base_path().'/.env'))
@@ -114,8 +115,10 @@ class IgniterInstall extends Command
         $this->replaceInEnv('APP_NAME=', 'APP_NAME='.DatabaseSeeder::$siteName);
         $this->replaceInEnv('APP_URL=', 'APP_URL='.DatabaseSeeder::$siteUrl);
 
+        $name = Config::get('database.default');
         foreach ($this->dbConfig as $key => $value) {
             $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
+            Config::set("database.connections.$name.".strtolower($key), $value);
         }
     }
 
@@ -262,5 +265,7 @@ class IgniterInstall extends Command
             $file,
             preg_replace('/^'.$search.'(.*)$/m', $replace, file_get_contents($file))
         );
+
+        putenv($replace);
     }
 }
