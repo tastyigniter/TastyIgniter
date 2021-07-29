@@ -112,7 +112,7 @@ class IgniterInstall extends Command
 
         $this->replaceInEnv('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey());
 
-        $this->replaceInEnv('APP_NAME=', 'APP_NAME='.DatabaseSeeder::$siteName);
+        $this->replaceInEnv('APP_NAME=', 'APP_NAME="'.DatabaseSeeder::$siteName.'"');
         $this->replaceInEnv('APP_URL=', 'APP_URL='.DatabaseSeeder::$siteUrl);
 
         $name = Config::get('database.default');
