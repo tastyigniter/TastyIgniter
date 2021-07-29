@@ -15,7 +15,6 @@ use DB;
 use Igniter\Flame\Foundation\Http\Kernel;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
