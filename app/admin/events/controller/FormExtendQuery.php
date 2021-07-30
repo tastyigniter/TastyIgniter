@@ -2,8 +2,14 @@
 
 namespace Admin\Events\Controller;
 
-class FormExtendQuery extends Event
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class FormExtendQuery
 {
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
     public $query;
 
     public function __construct($query)

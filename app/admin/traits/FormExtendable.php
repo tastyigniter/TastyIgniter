@@ -83,7 +83,7 @@ trait FormExtendable
 
         // Prepare query and find model record
         $query = $model->newQuery();
-        \Admin\Events\Controller\FormExtendQuery::dispatch($query);
+        event(new \Admin\Events\Controller\FormExtendQuery($query));
         $this->controller->formExtendQuery($query);
 
         $result = $query->find($recordId);
