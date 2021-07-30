@@ -2,22 +2,16 @@
 
 namespace Admin\Events\Controller;
 
-use Event;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
+use Igniter\Flame\Events\BaseEvent;
 
-class AfterConstructor
+class AfterConstructor extends BaseEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
-
     public $controller;
 
     public function __construct($controller)
     {
         $this->controller = $controller;
 
-        // deprecate on next major release
-        Event::fire('controller.afterContructor', [$this->controller]);
+        $this->fireBackwardsCompatibleEvent('controller.afterContructor', [$this->controller]);
     }
 }

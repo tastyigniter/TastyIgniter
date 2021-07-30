@@ -2,15 +2,10 @@
 
 namespace Admin\Events\Widgets\Calendar;
 
-use Event;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
+use Igniter\Flame\Events\BaseEvent;
 
-class UpdateEvent
+class UpdateEvent extends BaseEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
-
     public $eventId;
     public $startAt;
     public $endAt;
@@ -21,8 +16,6 @@ class UpdateEvent
         $this->startAt = $startAt;
         $this->endAt = $endAt;
 
-        // deprecate on next major release
-        Event::fire('calendar.updateEvent', [$eventId, $startAt, $endAt]);
-
+        $this->fireBackwardsCompatibleEvent('calendar.updateEvent', [$eventId, $startAt, $endAt]);
     }
 }

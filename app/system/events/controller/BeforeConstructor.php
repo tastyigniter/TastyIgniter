@@ -2,22 +2,16 @@
 
 namespace System\Events\Controller;
 
-use Event;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
+use Igniter\Flame\Events\BaseEvent;
 
-class BeforeConstructor
+class BeforeConstructor extends BaseEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
-
     public $controller;
 
     public function __construct($controller)
     {
         $this->controller = $controller;
 
-        // deprecate on next major release
-        Event::fire('controller.beforeConstructor', [$this->controller]);
+        $this->fireBackwardsCompatibleEvent('controller.beforeConstructor', [$this->controller]);
     }
 }

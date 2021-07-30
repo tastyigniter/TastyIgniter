@@ -2,18 +2,14 @@
 
 namespace Main\Events\Template;
 
-use Event;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
+use Igniter\Flame\Events\BaseEvent;
 
-class FillViewBagArray
+class FillViewBagArray extends BaseEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct()
     {
-        // deprecate on next major release
-        Event::fire('templateModel.fillViewBagArray');
+        $this->fireBackwardsCompatibleEvent('templateModel.fillViewBagArray');
     }
 }
