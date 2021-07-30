@@ -12,7 +12,6 @@ use App;
 use Carbon\Carbon;
 use Config;
 use DB;
-use Igniter\Flame\Foundation\Http\Kernel;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -103,7 +102,7 @@ class IgniterInstall extends Command
     {
         if (file_exists(base_path().'/example.env')) {
             $this->moveExampleFile('env', null, 'backup');
-            $this->copyExampleFile('env', 'example', null);
+            $this->moveExampleFile('env', 'example', null);
         }
 
         if (!file_exists(base_path().'/.env'))
@@ -124,8 +123,6 @@ class IgniterInstall extends Command
     protected function migrateDatabase()
     {
         $this->line('Migrating application and extensions...');
-
-        resolve(Kernel::class)->bootstrap();
 
         DB::purge();
 

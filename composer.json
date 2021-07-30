@@ -27,7 +27,6 @@
     "php": ">=7.3",
     "tastyigniter/flame": "~1.1",
     "laravel/framework": "~6.0",
-    "simplesoftwareio/simple-qrcode": "~4"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.0|^9.0",
