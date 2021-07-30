@@ -102,7 +102,7 @@ class Calendar extends BaseWidget
         $startAt = Request::get('start');
         $endAt = Request::get('end');
 
-        $this->fireEvent('calendar.updateEvent', [$eventId, $startAt, $endAt]);
+        event(new \Admin\Events\Widgets\Calendar\UpdateEvent($eventId, $startAt, $endAt));
     }
 
     public function renderPopoverPartial()
