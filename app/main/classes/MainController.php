@@ -158,7 +158,7 @@ class MainController extends BaseController
 
         $this->initTemplateEnvironment();
 
-        $this->fireEvent('controller.afterConstructor', [$this]);
+        event(new \Main\Events\Controller\AfterConstructor($this));
 
         self::$controller = $this;
     }

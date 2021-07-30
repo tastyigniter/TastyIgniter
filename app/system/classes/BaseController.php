@@ -66,7 +66,7 @@ class BaseController extends Extendable
 
         $this->extendableConstruct();
 
-        $this->fireEvent('controller.beforeConstructor', [$this]);
+        event(new \System\Events\Controller\BeforeConstructor($this));
     }
 
     public function getClass()

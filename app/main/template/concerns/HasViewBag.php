@@ -70,6 +70,6 @@ trait HasViewBag
             $this->viewBag[$name] = $value;
         }
 
-        $this->fireEvent('templateModel.fillViewBagArray');
+        event(new \Main\Events\Template\FillViewBagArray());
     }
 }
