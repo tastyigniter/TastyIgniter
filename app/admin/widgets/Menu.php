@@ -180,7 +180,7 @@ class Menu extends BaseWidget
     public function getItem($item)
     {
         if (!isset($this->allItems[$item])) {
-            throw new ApplicationException('No definition for item '.$item);
+            throw new ApplicationException(sprintf(lang('admin::lang.side_menu.alert_no_definition'), $item));
         }
 
         return $this->allItems[$item];
@@ -206,12 +206,12 @@ class Menu extends BaseWidget
     public function onGetDropdownOptions()
     {
         if (!strlen($itemName = input('item')))
-            throw new ApplicationException('Invalid item specified');
+            throw new ApplicationException(lang('admin::lang.side_menu.alert_invalid_menu'));
 
         $this->defineMenuItems();
 
         if (!$item = $this->getItem($itemName))
-            throw new ApplicationException("No main menu item found matching {$itemName}");
+            throw new ApplicationException(sprintf(lang('admin::lang.side_menu.alert_menu_not_found'), $itemName));
 
         $itemOptions = $item->options();
 
@@ -237,12 +237,12 @@ class Menu extends BaseWidget
     public function onMarkOptionsAsRead()
     {
         if (!strlen($itemName = post('item')))
-            throw new ApplicationException('Invalid item specified');
+            throw new ApplicationException(lang('admin::lang.side_menu.alert_invalid_menu'));
 
         $this->defineMenuItems();
 
         if (!$item = $this->getItem($itemName))
-            throw new ApplicationException("No main menu item found matching {$itemName}");
+            throw new ApplicationException(sprintf(lang('admin::lang.side_menu.alert_menu_not_found'), $itemName));
 
         $this->resolveMarkAsReadFromModel($item);
     }
@@ -270,7 +270,7 @@ class Menu extends BaseWidget
         $clearAfterMinutes = (int)post('clear_after');
 
         if ($status < 1 AND !strlen($message))
-            throw new ApplicationException('Status message is required');
+            throw new ApplicationException(lang('admin::lang.side_menu.alert_invalid_status'));
 
         $stateData['status'] = $status;
         $stateData['isAway'] = $status !== 1;

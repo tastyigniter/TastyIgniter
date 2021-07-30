@@ -30,7 +30,7 @@ class User extends Manager
      */
     public function staff()
     {
-        return $this->user()->staff;
+        return optional($this->user())->staff;
     }
 
     /**
@@ -38,7 +38,7 @@ class User extends Manager
      */
     public function locations()
     {
-        return $this->user()->staff->locations;
+        return optional($this->staff())->locations;
     }
 
     //

@@ -289,7 +289,7 @@ class Filter extends BaseWidget
             $methodName = $options;
 
             if (!$model->methodExists($methodName)) {
-                throw new Exception(sprintf("The model class %s must define a method %s returning options for the '%s' filter.",
+                throw new Exception(sprintf(lang('admin::lang.list.filter_missing_definitions'),
                     get_class($model), $methodName, $scope->scopeName
                 ));
             }
@@ -572,7 +572,9 @@ class Filter extends BaseWidget
     public function getScope($scope)
     {
         if (!isset($this->allScopes[$scope])) {
-            throw new Exception('No definition for scope '.$scope);
+            throw new Exception(sprintf(lang('admin::lang.list.filter_missing_scope_definitions'),
+                $scope
+            ));
         }
 
         return $this->allScopes[$scope];
