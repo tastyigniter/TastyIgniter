@@ -82,10 +82,10 @@ class MailTemplates extends \Admin\Classes\AdminController
     public function onTestTemplate($context, $recordId)
     {
         if (!strlen($recordId))
-            throw new ApplicationException('Template id not found');
+            throw new ApplicationException(lang('system::lang.mail_templates.alert_template_id_not_found'));
 
         if (!$model = $this->formFindModelObject($recordId))
-            throw new ApplicationException('Template not found');
+            throw new ApplicationException(lang('system::lang.mail_templates.alert_template_not_found'));
 
         $adminUser = $this->getUser()->staff;
 

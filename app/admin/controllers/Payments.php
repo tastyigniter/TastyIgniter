@@ -102,7 +102,7 @@ class Payments extends \Admin\Classes\AdminController
         }
 
         if (!$gateway = PaymentGateways::instance()->findGateway($code)) {
-            throw new Exception('Unable to find payment gateway with code '.$code);
+            throw new Exception(sprintf(lang('admin::lang.payments.alert_code_not_found'), $code));
         }
 
         return $this->gateway = $gateway;
@@ -133,7 +133,7 @@ class Payments extends \Admin\Classes\AdminController
     public function formBeforeCreate($model)
     {
         if (!strlen($code = post('Payment.payment')))
-            throw new ApplicationException('Invalid payment gateway code selected');
+            throw new ApplicationException(lang('admin::lang.payments.alert_invalid_code'));
 
         $paymentGateway = PaymentGateways::instance()->findGateway($code);
 
