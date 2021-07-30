@@ -1159,7 +1159,7 @@ class Lists extends BaseWidget
         }
 
         if (!$this->model->hasRelation($column->relation)) {
-            throw new Exception(sprintf(lang('admin::lang.alert_missing_definition'), get_class($this->model), $column->relation));
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_model_definition'), get_class($this->model), $column->relation));
         }
 
         if (!$multi) {

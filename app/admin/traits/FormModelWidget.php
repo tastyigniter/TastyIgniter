@@ -83,7 +83,7 @@ trait FormModelWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_definition'),
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));
@@ -97,7 +97,7 @@ trait FormModelWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_definition'),
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));

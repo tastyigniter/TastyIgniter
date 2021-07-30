@@ -90,7 +90,7 @@ trait HasWorkingHours
     public function getWorkingHours()
     {
         if (!$this->hasRelation('working_hours'))
-            throw new Exception(sprintf(lang('admin::lang.alert_missing_definition'),
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this),
                 'working_hours',
             ));

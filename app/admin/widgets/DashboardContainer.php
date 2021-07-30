@@ -171,7 +171,7 @@ class DashboardContainer extends BaseWidget
     public function onResetWidgets()
     {
         if (!$this->canManage) {
-            throw new ApplicationException(lang('admin::lang.dashboard.alert_access_denied'));
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $this->resetWidgets();
@@ -186,7 +186,7 @@ class DashboardContainer extends BaseWidget
     public function onSetAsDefault()
     {
         if (!$this->canSetDefault) {
-            throw new ApplicationException(lang('admin::lang.dashboard.alert_access_denied'));
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $widgets = $this->getWidgetsFromUserPreferences();
@@ -199,7 +199,7 @@ class DashboardContainer extends BaseWidget
     public function onUpdateWidget()
     {
         if (!$this->canManage) {
-            throw new ApplicationException(lang('admin::lang.dashboard.alert_access_denied'));
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $alias = post('alias');
@@ -234,7 +234,7 @@ class DashboardContainer extends BaseWidget
     public function addWidget($widget, $size)
     {
         if (!$this->canManage) {
-            throw new ApplicationException(lang('admin::lang.dashboard.alert_access_denied'));
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $widgets = $this->getWidgetsFromUserPreferences();
@@ -355,7 +355,7 @@ class DashboardContainer extends BaseWidget
     protected function removeWidget($alias)
     {
         if (!$this->canManage) {
-            throw new ApplicationException(lang('admin::lang.dashboard.alert_access_denied'));
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $widgets = $this->getWidgetsFromUserPreferences();
