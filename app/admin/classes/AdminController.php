@@ -98,7 +98,7 @@ class AdminController extends BaseController
             $manager->bindToController();
         }
 
-        $this->fireEvent('controller.afterConstructor', [$this]);
+        \Admin\Events\Controller\AfterConstructor::dispatch($this);
     }
 
     protected function definePaths()
