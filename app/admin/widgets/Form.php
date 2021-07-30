@@ -542,7 +542,9 @@ class Form extends BaseWidget
         $widgetClass = $this->widgetManager->resolveFormWidget($widgetName);
 
         if (!class_exists($widgetClass)) {
-            throw new Exception(sprintf("The Widget class name '%s' has not been registered", $widgetClass));
+            throw new Exception(sprintf(
+                lang('admin::lang.alert_widget_class_name'), gettype($fieldType)
+            ));
         }
 
         $widget = $this->makeFormWidget($widgetClass, $field, $widgetConfig);

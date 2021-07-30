@@ -301,7 +301,7 @@ class Payments_model extends Model
         $profile = $this->findPaymentProfile($customer);
 
         if (!$profile) {
-            throw new ApplicationException('Customer payment profile not found!');
+            throw new ApplicationException(lang('admin::lang.customers.alert_customer_payment_profile_not_found'));
         }
 
         $gatewayObj->deletePaymentProfile($customer, $profile);

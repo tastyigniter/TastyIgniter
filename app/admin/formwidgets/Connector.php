@@ -132,7 +132,7 @@ class Connector extends BaseFormWidget
         $model = $this->getRelationModel()->find($recordId);
 
         if (!$model)
-            throw new ApplicationException('Record not found');
+            throw new ApplicationException(lang('admin::lang.form.record_not_found'));
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
