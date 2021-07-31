@@ -64,7 +64,7 @@ class Menus extends AdminController
     {
         $menuOptionId = post('Menu._options');
         if (!$menuOption = Menu_options_model::find($menuOptionId))
-            throw new ApplicationException('Please select a menu option to attach');
+            throw new ApplicationException(lang('admin::lang.menus.alert_menu_option_not_attached'));
 
         $model = $this->asExtension('FormController')->formFindModelObject($recordId);
 

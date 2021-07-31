@@ -93,7 +93,7 @@ class ToolbarButton
         }
 
         if ($this->disabled)
-            $result['disabled'] = 'disabled';
+            $attributes['disabled'] = 'disabled';
 
         return $htmlBuild ? Html::attributes($attributes) : $attributes;
     }

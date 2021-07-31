@@ -201,7 +201,7 @@ class RecordEditor extends BaseFormWidget
         $methodName = 'get'.studly_case($this->fieldName).'RecordEditorOptions';
 
         if (!$model->methodExists($methodName) AND !$model->methodExists('getRecordEditorOptions')) {
-            throw new ApplicationException(sprintf('Missing method [%s] in %s', 'getRecordEditorOptions', get_class($model)));
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_method'), 'getRecordEditorOptions', get_class($model)));
         }
 
         if ($model->methodExists($methodName)) {

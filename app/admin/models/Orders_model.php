@@ -202,9 +202,8 @@ class Orders_model extends Model
             AND !isset($this->attributes['order_time'])
         ) return null;
 
-        return Carbon::createFromTimeString(
-            "{$this->attributes['order_date']} {$this->attributes['order_time']}"
-        );
+        return make_carbon($this->attributes['order_date'])
+            ->setTimeFromTimeString($this->attributes['order_time']);
     }
 
     public function getFormattedAddressAttribute($value)

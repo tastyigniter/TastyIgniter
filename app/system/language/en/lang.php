@@ -241,6 +241,8 @@ return [
         'help_variables' => 'Drag these variables into the content area:',
 
         'alert_test_message_sent' => 'Test message successfully sent to %s',
+        'alert_template_id_not_found' => 'Template id not found',
+        'alert_template_not_found' => ' Template not found',
     ],
 
     'mail_variables' => [
@@ -639,5 +641,9 @@ return [
         'button_marketplace' => 'Open TastyIgniter Marketplace&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
 
         'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
+        'alert_item_to_ignore' => 'Select item(s) to ignore.',
+        'alert_no_carte_key' => 'No carte key specified.',
+        'alert_no_items' => 'No item(s) specified.',
+
     ],
 ];

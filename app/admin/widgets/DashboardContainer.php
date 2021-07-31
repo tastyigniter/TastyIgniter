@@ -133,7 +133,7 @@ class DashboardContainer extends BaseWidget
         $widgetAlias = trim(post('widgetAlias'));
 
         if (!$widgetAlias)
-            throw new ApplicationException('Please select a widget to update.');
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_select_widget_to_update'));
 
         $this->vars['widgetAlias'] = $widgetAlias;
         $this->vars['widget'] = $widget = $this->findWidgetByAlias($widgetAlias);
@@ -148,14 +148,14 @@ class DashboardContainer extends BaseWidget
         $size = trim(post('size'));
 
         if (!$className)
-            throw new ApplicationException('Please select a widget to add.');
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_select_widget_to_add'));
 
         if (!class_exists($className))
-            throw new ApplicationException('The selected class does not exist.');
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_widget_class_not_found'));
 
         $widget = new $className($this->controller);
         if (!($widget instanceof \Admin\Classes\BaseDashboardWidget))
-            throw new ApplicationException('The selected class is not a dashboard widget.');
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_invalid_widget'));
 
         $widgetInfo = $this->addWidget($widget, $size);
 
@@ -171,7 +171,7 @@ class DashboardContainer extends BaseWidget
     public function onResetWidgets()
     {
         if (!$this->canManage) {
-            throw new ApplicationException('Access denied.');
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $this->resetWidgets();
@@ -186,7 +186,7 @@ class DashboardContainer extends BaseWidget
     public function onSetAsDefault()
     {
         if (!$this->canSetDefault) {
-            throw new ApplicationException('Access denied.');
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $widgets = $this->getWidgetsFromUserPreferences();
@@ -199,7 +199,7 @@ class DashboardContainer extends BaseWidget
     public function onUpdateWidget()
     {
         if (!$this->canManage) {
-            throw new ApplicationException('Access denied.');
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $alias = post('alias');
@@ -234,7 +234,7 @@ class DashboardContainer extends BaseWidget
     public function addWidget($widget, $size)
     {
         if (!$this->canManage) {
-            throw new ApplicationException('Access denied.');
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $widgets = $this->getWidgetsFromUserPreferences();
@@ -270,18 +270,18 @@ class DashboardContainer extends BaseWidget
         $priorities = trim(post('priorities'));
 
         if (!$aliases) {
-            throw new ApplicationException('Invalid aliases string.');
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_invalid_aliases'));
         }
 
         if (!$priorities) {
-            throw new ApplicationException('Invalid priorities string.');
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_invalid_priorities'));
         }
 
         $aliases = explode(',', $aliases);
         $priorities = explode(',', $priorities);
 
         if (count($aliases) != count($priorities)) {
-            throw new ApplicationException('Invalid data posted.');
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_invalid_data_posted'));
         }
 
         $widgets = $this->getWidgetsFromUserPreferences();
@@ -355,7 +355,7 @@ class DashboardContainer extends BaseWidget
     protected function removeWidget($alias)
     {
         if (!$this->canManage) {
-            throw new ApplicationException('Access denied.');
+            throw new ApplicationException(lang('admin::lang.alert_access_denied'));
         }
 
         $widgets = $this->getWidgetsFromUserPreferences();
@@ -389,7 +389,7 @@ class DashboardContainer extends BaseWidget
 
         $widgets = $this->dashboardWidgets;
         if (!isset($widgets[$alias])) {
-            throw new ApplicationException('The specified widget is not found.');
+            throw new ApplicationException(lang('admin::lang.dashboard.alert_widget_not_found'));
         }
 
         return $widgets[$alias]['widget'];

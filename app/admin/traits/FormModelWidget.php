@@ -19,7 +19,7 @@ trait FormModelWidget
     public function createFormModel()
     {
         if (!$this->modelClass) {
-            throw new ApplicationException(sprintf("Missing form field property 'modelClass' in '%s'", get_class($this)));
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_field_property'), get_class($this)));
         }
 
         $class = $this->modelClass;
@@ -46,7 +46,7 @@ trait FormModelWidget
         $result = $query->find($recordId);
 
         if (!$result)
-            throw new Exception('Record ID ['.$recordId.'] not found in model '.get_class($model));
+            throw new Exception(sprintf(lang('admin::lang.form.record_not_found_in_model'), $recordId, get_class($model)));
 
         return $result;
     }
@@ -83,7 +83,7 @@ trait FormModelWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));
@@ -97,7 +97,7 @@ trait FormModelWidget
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
         if (!$model OR !$model->hasRelation($attribute)) {
-            throw new ApplicationException(sprintf("Model '%s' does not contain a definition for '%s'.",
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));
