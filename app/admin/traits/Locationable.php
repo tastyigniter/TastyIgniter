@@ -2,7 +2,7 @@
 
 namespace Admin\Traits;
 
-use AdminLocation;
+use Admin\Facades\AdminLocation;
 use Igniter\Flame\Exception\ApplicationException;
 
 trait Locationable

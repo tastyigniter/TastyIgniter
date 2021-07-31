@@ -2,9 +2,9 @@
 
 namespace System\Traits;
 
-use File;
-use Lang;
-use SystemException;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 
 trait ConfigMaker
 {
@@ -41,7 +41,7 @@ trait ConfigMaker
      * @param array $requiredConfig
      *
      * @return array
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makeConfig($configFile, $requiredConfig = [])
     {

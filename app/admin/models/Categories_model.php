@@ -3,12 +3,12 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
-use DB;
 use Igniter\Flame\Database\Attach\HasMedia;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Sortable;
-use Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Categories Model Class

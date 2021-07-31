@@ -4,7 +4,7 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Mealtimes Model Class

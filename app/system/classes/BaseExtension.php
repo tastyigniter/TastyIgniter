@@ -2,10 +2,10 @@
 
 namespace System\Classes;
 
-use File;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\ServiceProvider;
-use Lang;
-use SystemException;
 
 /**
  * Base Extension Class

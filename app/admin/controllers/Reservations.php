@@ -2,8 +2,8 @@
 
 namespace Admin\Controllers;
 
+use Admin\Facades\AdminMenu;
 use Admin\Models\Reservations_model;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 

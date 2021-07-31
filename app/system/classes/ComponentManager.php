@@ -2,7 +2,7 @@
 
 namespace System\Classes;
 
-use SystemException;
+use Igniter\Flame\Exception\SystemException;
 
 /**
  * Components class for TastyIgniter.
@@ -227,7 +227,7 @@ class ComponentManager
      * @param array $params The properties set by the Page or Layout.
      *
      * @return \System\Classes\BaseComponent The component object.
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makeComponent($name, $page = null, $params = [])
     {

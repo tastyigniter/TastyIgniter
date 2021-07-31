@@ -2,7 +2,7 @@
 
 namespace Admin\Models;
 
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Coupons History Model Class

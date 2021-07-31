@@ -7,9 +7,9 @@ use Admin\Classes\FormField;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
-use ApplicationException;
-use DB;
+use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Form Relationship

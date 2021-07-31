@@ -2,7 +2,7 @@
 
 namespace Admin\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 use Igniter\Flame\Exception\ApplicationException;
 
 class Orders extends \Admin\Classes\AdminController

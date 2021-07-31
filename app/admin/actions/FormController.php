@@ -4,16 +4,16 @@ namespace Admin\Actions;
 
 use Admin\Classes\AdminController;
 use Admin\Classes\FormField;
+use Admin\Facades\Template;
 use Admin\Traits\FormExtendable;
 use Admin\Widgets\Toolbar;
-use DB;
 use Exception;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
-use Model;
-use Redirect;
-use Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use System\Classes\ControllerAction;
-use Template;
 
 /**
  * Form Controller Class

@@ -2,12 +2,13 @@
 
 namespace System\Controllers;
 
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Admin\Traits\WidgetMaker;
-use AdminMenu;
-use Event;
 use Exception;
 use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Main\Classes\ThemeManager;
 use System\Facades\Assets;
@@ -15,7 +16,6 @@ use System\Libraries\Assets as AssetsManager;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
 use System\Traits\SessionMaker;
-use Template;
 
 class Themes extends \Admin\Classes\AdminController
 {

@@ -2,10 +2,10 @@
 
 namespace Admin\Actions;
 
+use Admin\Facades\Template;
 use Admin\Traits\ListExtendable;
 use System\Classes\BaseController;
 use System\Classes\ControllerAction;
-use Template;
 
 /**
  * List Controller Class

@@ -5,8 +5,8 @@ namespace Admin\Traits;
 use Carbon\Carbon;
 use DateInterval;
 use DatePeriod;
-use DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 trait HasChartDatasets
 {

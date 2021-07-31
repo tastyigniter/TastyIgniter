@@ -2,7 +2,7 @@
 
 namespace Admin\Controllers;
 
-use AdminAuth;
+use Admin\Facades\AdminAuth;
 
 class Logout extends \Admin\Classes\AdminController
 {

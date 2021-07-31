@@ -2,11 +2,11 @@
 
 namespace Admin\Classes;
 
-use File;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\SystemException;
-use Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use System\Actions\ModelAction;
-use URL;
 
 /**
  * Base Payment Gateway Class

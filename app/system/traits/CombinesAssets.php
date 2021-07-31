@@ -2,19 +2,19 @@
 
 namespace System\Traits;
 
-use App;
-use ApplicationException;
-use Cache;
 use Carbon\Carbon;
-use Event;
-use File;
 use Igniter\Flame\Assetic\Asset\AssetCache;
 use Igniter\Flame\Assetic\Asset\AssetCollection;
 use Igniter\Flame\Assetic\Asset\FileAsset;
 use Igniter\Flame\Assetic\Asset\HttpAsset;
 use Igniter\Flame\Assetic\Cache\FilesystemCache;
-use Request;
-use Response;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 
 trait CombinesAssets
 {

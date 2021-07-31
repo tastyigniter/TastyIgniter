@@ -2,7 +2,7 @@
 
 namespace Admin\Traits;
 
-use Geocoder;
+use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Location\Contracts\AreaInterface;
 
 trait HasDeliveryAreas

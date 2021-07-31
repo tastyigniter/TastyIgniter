@@ -4,8 +4,8 @@ namespace System\Database\Seeds;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
-use DB;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Fill newly created permalink_slug column with values from permalinks table

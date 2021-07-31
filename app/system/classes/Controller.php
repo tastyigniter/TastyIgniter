@@ -2,17 +2,17 @@
 
 namespace System\Classes;
 
-use App;
-use Assets;
 use Closure;
 use Exception;
-use File;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\RouterHelper;
 use Igniter\Flame\Traits\ExtendableTrait;
 use Illuminate\Routing\Controller as IlluminateController;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
-use Response;
-use View;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
+use System\Facades\Assets;
 
 /**
  * This is the base controller for all pages.

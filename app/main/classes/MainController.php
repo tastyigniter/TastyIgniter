@@ -2,12 +2,10 @@
 
 namespace Main\Classes;
 
-use AdminAuth;
-use App;
-use ApplicationException;
-use Config;
+use Admin\Facades\AdminAuth;
 use Exception;
 use Igniter\Flame\Exception\AjaxException;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Flash\Facades\Flash;
@@ -16,7 +14,14 @@ use Igniter\Flame\Pagic\Environment;
 use Igniter\Flame\Pagic\Parsers\FileParser;
 use Igniter\Flame\Traits\EventEmitter;
 use Illuminate\Http\RedirectResponse;
-use Lang;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Main\Components\BlankComponent;
 use Main\Template\ComponentPartial;
 use Main\Template\Content;
@@ -24,9 +29,6 @@ use Main\Template\Extension\BladeExtension as MainBladeExtension;
 use Main\Template\Layout as LayoutTemplate;
 use Main\Template\Loader;
 use Main\Template\Partial;
-use Redirect;
-use Request;
-use Response;
 use System\Classes\BaseComponent;
 use System\Classes\BaseController;
 use System\Classes\ComponentManager;
@@ -35,8 +37,6 @@ use System\Models\Request_logs_model;
 use System\Template\Extension\BladeExtension as SystemBladeExtension;
 use System\Traits\AssetMaker;
 use System\Traits\VerifiesCsrfToken;
-use URL;
-use View;
 
 /**
  * Main Controller Class
@@ -136,7 +136,7 @@ class MainController extends BaseController
      *
      * @param null $theme
      *
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function __construct($theme = null)
     {
@@ -467,7 +467,7 @@ class MainController extends BaseController
     /**
      * Returns an existing instance of the controller.
      * If the controller doesn't exists, returns null.
-     * @return mixed Returns the controller object or null.
+     * @return self Returns the controller object or null.
      */
     public static function getController()
     {
@@ -641,7 +641,7 @@ class MainController extends BaseController
      * @param array $params Parameter variables to pass to the view.
      *
      * @return string
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function renderContent($name, array $params = [])
     {
@@ -686,7 +686,7 @@ class MainController extends BaseController
      * @param bool $throwException Throw an exception if the partial is not found.
      *
      * @return mixed Partial contents or false if not throwing an exception.
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function renderComponent($name, array $params = [], $throwException = TRUE)
     {

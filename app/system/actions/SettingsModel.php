@@ -2,8 +2,8 @@
 
 namespace System\Actions;
 
-use File;
-use Model;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Support\Facades\File;
 
 /**
  * Settings model extension

@@ -8,11 +8,11 @@ use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
 use Carbon\Carbon;
-use Event;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
-use Model;
-use Request;
 use System\Traits\SendsMailTemplate;
 
 /**
