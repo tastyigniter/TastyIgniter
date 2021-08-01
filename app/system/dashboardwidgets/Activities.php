@@ -45,7 +45,7 @@ class Activities extends BaseDashboardWidget
         $user = AdminAuth::getUser();
         $this->vars['activities'] = Activities_model::listRecent([
             'pageLimit' => $this->property('count'),
-            'exceptUser' => $user,
+            'onlyUser' => $user,
         ])->get();
     }
 }
