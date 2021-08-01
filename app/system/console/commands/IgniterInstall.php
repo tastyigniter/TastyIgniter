@@ -83,8 +83,6 @@ class IgniterInstall extends Command
         $this->moveExampleFile('htaccess', null, 'backup');
         $this->moveExampleFile('htaccess', 'example', null);
 
-        $this->deleteExampleFile('env');
-
         $this->alert('INSTALLATION COMPLETE');
     }
 
@@ -100,13 +98,8 @@ class IgniterInstall extends Command
 
     protected function rewriteEnvFile()
     {
-        if (file_exists(base_path().'/example.env')) {
-            $this->moveExampleFile('env', null, 'backup');
-            $this->moveExampleFile('env', 'example', null);
-        }
-
-        if (!file_exists(base_path().'/.env'))
-            return;
+        $this->moveExampleFile('env', null, 'backup');
+        $this->copyExampleFile('env', 'example', null);
 
         $this->replaceInEnv('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey());
 
@@ -115,8 +108,10 @@ class IgniterInstall extends Command
 
         $name = Config::get('database.default');
         foreach ($this->dbConfig as $key => $value) {
-            $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
             Config::set("database.connections.$name.".strtolower($key), $value);
+
+            if ($key === 'password') $value = '"'.$value.'"';
+            $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
         }
     }
 
@@ -243,13 +238,6 @@ class IgniterInstall extends Command
                 unlink(base_path().'/'.$new.'.'.$name);
 
             copy(base_path().'/'.$old.'.'.$name, base_path().'/'.$new.'.'.$name);
-        }
-    }
-
-    protected function deleteExampleFile($name)
-    {
-        if (file_exists(base_path().'/example.'.$name)) {
-            unlink(base_path().'/example.'.$name);
         }
     }
 
