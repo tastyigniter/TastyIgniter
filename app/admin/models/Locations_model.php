@@ -107,6 +107,11 @@ class Locations_model extends AbstractLocation
     {
     }
 
+    protected function afterSave()
+    {
+        $this->performAfterSave();
+    }
+
     //
     // Scopes
     //
