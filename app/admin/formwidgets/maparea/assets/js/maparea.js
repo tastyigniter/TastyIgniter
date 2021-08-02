@@ -31,13 +31,14 @@
     }
 
     MapArea.prototype.onModalShown = function (event, $modalEl) {
-        var $typeInput = $modalEl.find('[data-toggle="map-shape"]')
+        var $typeInput = $modalEl.find('[data-toggle="map-shape"]'),
+        $checkedTypeInput = $modalEl.find('[data-toggle="map-shape"]:checked')
 
         this.$mapView = $modalEl.find('[data-control="map-view"]')
 
         $typeInput.on('change', $.proxy(this.onShapeTypeToggle, this))
 
-        if ($typeInput.val() === 'shape' || $typeInput.val() === 'circle')
+        if ($checkedTypeInput.val() === 'polygon' || $checkedTypeInput.val() === 'circle')
             this.refreshMap();
 
         this.$mapView.on('click.shape.ti.mapview', '.map-view', $.proxy(this.onShapeClicked, this))

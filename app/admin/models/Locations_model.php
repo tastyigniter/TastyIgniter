@@ -156,7 +156,7 @@ class Locations_model extends AbstractLocation
             if (in_array($_sort, self::$allowedSortingColumns)) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
-                    array_push($parts, 'desc');
+                    $parts[] = 'desc';
                 }
                 [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
@@ -285,7 +285,7 @@ class Locations_model extends AbstractLocation
      *
      * @param string $locationId
      *
-     * @return bool|int
+     * @return bool|null
      */
     public static function updateDefault($locationId)
     {

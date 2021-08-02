@@ -209,8 +209,8 @@ class BaseExtension extends ServiceProvider
         if ($description = array_get($composer, 'description'))
             $config['description'] = $description;
 
-        if ($author = array_get($composer, 'author'))
-            $config['author'] = $author;
+        if ($authors = array_get($composer, 'authors'))
+            $config['author'] = $authors[0]['name'];
 
         return $config;
     }
