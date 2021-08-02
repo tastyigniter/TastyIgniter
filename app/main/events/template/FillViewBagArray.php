@@ -9,7 +9,7 @@ use System\Traits\DispatchesLegacyEvent;
 
 class FillViewBagArray
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, DispatchesLegacyEvent, InteractsWithSockets, SerializesModels;
 
     public function __construct()
     {
