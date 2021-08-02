@@ -18,6 +18,7 @@ use Igniter\Flame\Traits\EventEmitter;
 use Illuminate\Http\RedirectResponse;
 use Lang;
 use Main\Components\BlankComponent;
+use Main\Events\Controller\AfterConstructor;
 use Main\Template\ComponentPartial;
 use Main\Template\Content;
 use Main\Template\Extension\BladeExtension as MainBladeExtension;
@@ -158,7 +159,7 @@ class MainController extends BaseController
 
         $this->initTemplateEnvironment();
 
-        event(new \Main\Events\Controller\AfterConstructor($this));
+        event(new AfterConstructor($this));
 
         self::$controller = $this;
     }

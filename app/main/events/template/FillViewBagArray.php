@@ -2,9 +2,12 @@
 
 namespace Main\Events\Template;
 
-use Igniter\Flame\Events\BaseEvent;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+use System\Traits\DispatchesLegacyEvent;
 
-class FillViewBagArray extends BaseEvent
+class FillViewBagArray
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

@@ -3,6 +3,7 @@
 namespace Admin\Classes;
 
 use Admin;
+use Admin\Events\Controller\AfterConstructor;
 use Admin\Traits\HasAuthentication;
 use Admin\Traits\ValidatesForm;
 use Admin\Traits\WidgetMaker;
@@ -98,7 +99,7 @@ class AdminController extends BaseController
             $manager->bindToController();
         }
 
-        event(new \Admin\Events\Controller\AfterConstructor($this));
+        event(new AfterConstructor($this));
     }
 
     protected function definePaths()

@@ -2,10 +2,15 @@
 
 namespace Admin\Events\Widgets\Calendar;
 
-use Igniter\Flame\Events\BaseEvent;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+use System\Traits\DispatchesLegacyEvent;
 
-class UpdateEvent extends BaseEvent
+class UpdateEvent
 {
+    use Dispatchable, DispatchesLegacyEvent, InteractsWithSockets, SerializesModels;
+
     public $eventId;
     public $startAt;
     public $endAt;

@@ -2,10 +2,15 @@
 
 namespace Admin\Events\Controller;
 
-use Igniter\Flame\Events\BaseEvent;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+use System\Traits\DispatchesLegacyEvent;
 
-class AfterConstructor extends BaseEvent
+class AfterConstructor
 {
+    use Dispatchable, DispatchesLegacyEvent, InteractsWithSockets, SerializesModels;
+
     public $controller;
 
     public function __construct($controller)
