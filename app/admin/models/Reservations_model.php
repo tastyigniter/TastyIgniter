@@ -6,10 +6,10 @@ use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
-use Model;
-use Request;
 use System\Traits\SendsMailTemplate;
 
 /**
@@ -78,7 +78,7 @@ class Reservations_model extends Model
 
     protected $purgeable = ['tables'];
 
-    public $appends = ['customer_name', 'duration', 'table_name'];
+    public $appends = ['customer_name', 'duration', 'table_name', 'reservation_datetime', 'reservation_end_datetime'];
 
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',
@@ -222,17 +222,13 @@ class Reservations_model extends Model
             AND !isset($this->attributes['reserve_time'])
         ) return null;
 
-        return Carbon::createFromTimeString(
-            "{$this->attributes['reserve_date']} {$this->attributes['reserve_time']}"
-        );
+        return make_carbon($this->attributes['reserve_date'])
+            ->setTimeFromTimeString($this->attributes['reserve_time']);
     }
 
     public function getReservationEndDatetimeAttribute($value)
     {
-        if ($this->duration)
-            return $this->reservation_datetime->copy()->addMinutes($this->duration);
-
-        return $this->reservation_datetime->copy()->endOfDay();
+        return $this->reserve_end_time;
     }
 
     public function getOccasionAttribute()

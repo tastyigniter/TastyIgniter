@@ -2,8 +2,8 @@
 
 namespace Admin\Controllers;
 
-use AdminMenu;
-use Template;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 
 class MediaManager extends \Admin\Classes\AdminController
 {

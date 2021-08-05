@@ -2,13 +2,13 @@
 
 namespace Admin\Controllers;
 
+use Admin\Facades\AdminAuth;
+use Admin\Facades\Template;
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
 use Admin\Traits\ValidatesForm;
-use AdminAuth;
 use Igniter\Flame\Exception\ValidationException;
-use Mail;
-use Template;
+use Illuminate\Support\Facades\Mail;
 
 class Login extends \Admin\Classes\AdminController
 {

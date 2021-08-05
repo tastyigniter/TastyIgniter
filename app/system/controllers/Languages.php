@@ -2,8 +2,8 @@
 
 namespace System\Controllers;
 
+use Admin\Facades\AdminMenu;
 use Admin\Widgets\Form;
-use AdminMenu;
 use System\Classes\ExtensionManager;
 use System\Classes\LanguageManager;
 use System\Models\Languages_model;

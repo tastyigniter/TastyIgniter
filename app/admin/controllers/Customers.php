@@ -3,9 +3,9 @@
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminAuth;
-use AdminMenu;
-use Auth;
+use Admin\Facades\AdminMenu;
 use Igniter\Flame\Exception\ApplicationException;
+use Main\Facades\Auth;
 
 class Customers extends \Admin\Classes\AdminController
 {

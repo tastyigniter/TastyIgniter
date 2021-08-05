@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use Html;
+use Igniter\Flame\Html\HtmlFacade as Html;
 
 /**
  * Toolbar Button definition
@@ -93,7 +93,7 @@ class ToolbarButton
         }
 
         if ($this->disabled)
-            $result['disabled'] = 'disabled';
+            $attributes['disabled'] = 'disabled';
 
         return $htmlBuild ? Html::attributes($attributes) : $attributes;
     }

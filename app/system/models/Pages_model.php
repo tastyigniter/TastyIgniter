@@ -2,8 +2,8 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
-use Model;
 
 /**
  * Pages Model Class

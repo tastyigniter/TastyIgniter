@@ -4,13 +4,13 @@ namespace System\Models;
 
 use Exception;
 use Igniter\Flame\Database\Casts\Serialize;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Support\Facades\Event;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 use Main\Template\Layout;
-use Model;
 use System\Classes\ComponentManager;
 use System\Classes\ExtensionManager;
 

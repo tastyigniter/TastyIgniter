@@ -3,7 +3,7 @@
 namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 class DeleteStaleUnusedTable extends Migration
 {

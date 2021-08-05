@@ -2,15 +2,15 @@
 
 namespace Main\Classes;
 
-use App;
-use File;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 use System\Libraries\Assets;
 use System\Models\Themes_model;
-use SystemException;
 use ZipArchive;
 
 /**
@@ -120,7 +120,7 @@ class ThemeManager
     /**
      * Finds all available themes and loads them in to the $themes array.
      * @return array
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function loadThemes()
     {
@@ -138,7 +138,7 @@ class ThemeManager
      * @param string $path Ex: base_path().'directory_name';
      *
      * @return bool|object
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function loadTheme($themeCode, $path)
     {
@@ -526,7 +526,7 @@ class ThemeManager
      * @param string $zipPath The path to the zip folder
      *
      * @return bool
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function extractTheme($zipPath)
     {
@@ -635,7 +635,7 @@ class ThemeManager
      * @param string $themeCode
      *
      * @return array|null
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getMetaFromFile($themeCode)
@@ -670,7 +670,7 @@ class ThemeManager
      * @param $themeCode
      *
      * @return array|null
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function validateMetaFile($path, $themeCode)

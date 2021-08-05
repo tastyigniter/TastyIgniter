@@ -8,12 +8,12 @@ use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
 use Carbon\Carbon;
-use Event;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
 use Igniter\Flame\Database\Casts\Serialize;
 use Main\Classes\MainController;
-use Model;
-use Request;
 use System\Traits\SendsMailTemplate;
 
 /**
@@ -203,9 +203,8 @@ class Orders_model extends Model
             AND !isset($this->attributes['order_time'])
         ) return null;
 
-        return Carbon::createFromTimeString(
-            "{$this->attributes['order_date']} {$this->attributes['order_time']}"
-        );
+        return make_carbon($this->attributes['order_date'])
+            ->setTimeFromTimeString($this->attributes['order_time']);
     }
 
     public function getFormattedAddressAttribute($value)

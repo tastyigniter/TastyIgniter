@@ -3,9 +3,9 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
-use Model;
 
 /**
  * Tables Model Class

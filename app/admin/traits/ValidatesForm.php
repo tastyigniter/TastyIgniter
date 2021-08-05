@@ -2,13 +2,13 @@
 
 namespace Admin\Traits;
 
-use App;
 use Closure;
 use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Session;
 use System\Helpers\ValidationHelper;
 
 trait ValidatesForm

@@ -2,11 +2,11 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\Markdown;
 use Igniter\Flame\Support\Facades\File;
 use Main\Classes\ThemeManager;
-use Model;
 use System\Classes\ExtensionManager;
 
 /**

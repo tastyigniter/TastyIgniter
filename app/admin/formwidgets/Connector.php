@@ -7,9 +7,9 @@ use Admin\Classes\FormField;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
-use ApplicationException;
-use DB;
+use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Form Relationship
@@ -132,7 +132,7 @@ class Connector extends BaseFormWidget
         $model = $this->getRelationModel()->find($recordId);
 
         if (!$model)
-            throw new ApplicationException('Record not found');
+            throw new ApplicationException(lang('admin::lang.form.record_not_found'));
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,

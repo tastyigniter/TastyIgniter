@@ -4,8 +4,8 @@ namespace Admin\Models;
 
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Location\Models\AbstractLocation;
-use Model;
 
 /**
  * Coupons Model Class

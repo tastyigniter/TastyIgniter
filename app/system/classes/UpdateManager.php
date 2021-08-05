@@ -2,14 +2,14 @@
 
 namespace System\Classes;
 
-use App;
-use ApplicationException;
 use Carbon\Carbon;
-use Config;
-use File;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\Markdown;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use Main\Classes\ThemeManager;
-use Schema;
 use System\Models\Extensions_model;
 use System\Models\Themes_model;
 use ZipArchive;
@@ -512,6 +512,9 @@ class UpdateManager
         $filePath = $this->getFilePath($fileCode);
         if ($extractTo)
             $extractTo .= '/'.str_replace('.', '/', $fileCode);
+
+        if (is_null($extractTo))
+            $extractTo = base_path();
 
         if (!file_exists($extractTo))
             mkdir($extractTo, 0777, TRUE);

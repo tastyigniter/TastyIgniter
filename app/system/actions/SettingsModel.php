@@ -2,9 +2,9 @@
 
 namespace System\Actions;
 
-use File;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Database\Casts\Serialize;
-use Model;
 
 /**
  * Settings model extension

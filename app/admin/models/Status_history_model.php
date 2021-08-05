@@ -3,7 +3,7 @@
 namespace Admin\Models;
 
 use Carbon\Carbon;
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Status History Model Class

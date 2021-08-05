@@ -3,7 +3,7 @@
 namespace System\Models;
 
 use Igniter\Flame\ActivityLog\Models\Activity;
-use Model;
+use Igniter\Flame\Database\Model;
 use System\Classes\ExtensionManager;
 
 /**

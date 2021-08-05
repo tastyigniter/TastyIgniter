@@ -2,8 +2,8 @@
 
 namespace Admin\Controllers;
 
+use Admin\Facades\AdminMenu;
 use Admin\Models\Reservations_model;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 
@@ -101,7 +101,7 @@ class Reservations extends \Admin\Classes\AdminController
     public function calendarUpdateEvent($eventId, $startAt, $endAt)
     {
         if (!$reservation = Reservations_model::find($eventId))
-            throw new Exception('No matching reservation found');
+            throw new Exception(lang('admin::lang.reservations.alert_no_reservation_found'));
 
         $startAt = make_carbon($startAt);
         $endAt = make_carbon($endAt);

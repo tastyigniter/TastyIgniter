@@ -2,8 +2,8 @@
 
 namespace System\Traits;
 
-use Event;
-use Mail;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Mail;
 
 trait SendsMailTemplate
 {

@@ -7,8 +7,8 @@ use Admin\Classes\FormField;
 use Admin\Models\Location_areas_model;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
-use Html;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Html\HtmlFacade as Html;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -199,7 +199,7 @@ class MapArea extends BaseFormWidget
     public function onDeleteArea()
     {
         if (!strlen($areaId = post('areaId')))
-            throw new ApplicationException('Invalid area selected');
+            throw new ApplicationException(lang('admin::lang.locations.alert_invalid_area'));
 
         $model = $this->getRelationModel()->find($areaId);
         if (!$model)

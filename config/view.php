@@ -14,7 +14,9 @@ return [
     */
 
     'paths' => [
-        base_path('views'),
+        base_path('app/admin/views'),
+        base_path('app/main/views'),
+        base_path('app/system/views'),
     ],
 
     /*
@@ -28,6 +30,9 @@ return [
     |
     */
 
-    'compiled' => realpath(storage_path('framework/views')),
+    'compiled' => env(
+        'VIEW_COMPILED_PATH',
+        realpath(storage_path('framework/views'))
+    ),
 
 ];
