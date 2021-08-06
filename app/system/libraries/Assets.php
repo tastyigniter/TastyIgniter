@@ -62,7 +62,8 @@ class Assets
 
     public function addFromManifest($path)
     {
-        $assetsConfigPath = base_path().$this->getAssetPath($path);
+        $assetsConfigPath = base_path().$path;//$this->getAssetPath($path);
+
         if (!File::exists($assetsConfigPath))
             return;
 
