@@ -28,7 +28,7 @@ class ServiceProvider extends AppServiceProvider
     {
         $this->publishes([
             __DIR__.'/assets' => public_path('vendor/tastyigniter/admin/assets'),
-        ]);
+        ], 'public');
 
         parent::boot('admin');
 
