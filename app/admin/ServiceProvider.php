@@ -26,6 +26,10 @@ class ServiceProvider extends AppServiceProvider
      */
     public function boot()
     {
+        $this->publishes([
+            __DIR__.'/assets' => public_path('vendor/tastyigniter/admin/assets'),
+        ]);
+
         parent::boot('admin');
 
         $this->defineEloquentMorphMaps();
@@ -80,7 +84,7 @@ class ServiceProvider extends AppServiceProvider
             if ($this->app->runningInAdmin()) {
                 $manager->registerSourcePath(app_path('admin/assets'));
 
-                $manager->addFromManifest('~/app/admin/views/_meta/assets.json', 'admin');
+                $manager->addFromManifest('/app/admin/views/_meta/assets.json', 'admin');
             }
 
             // Admin asset bundles

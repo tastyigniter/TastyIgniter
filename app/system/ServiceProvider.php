@@ -48,6 +48,10 @@ class ServiceProvider extends AppServiceProvider
      */
     public function register()
     {
+        $this->app->bind('path.public', function() {
+            return base_path().'/public';
+        });
+
         $this->includeHelpers();
 
         parent::register('system');

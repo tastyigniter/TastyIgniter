@@ -57,7 +57,7 @@ return [
     |
     */
 
-    'assetsDir' => '/assets',
+    'assetsDir' => 'public/assets',
 
     /*
     |--------------------------------------------------------------------------
@@ -169,13 +169,13 @@ return [
         'media' => [
             'disk' => 'media',
             'folder' => 'uploads',
-            'path' => '/assets/media/uploads',
+            'path' => '/public/assets/media/uploads',
         ],
 
         'attachment' => [
             'disk' => 'media',
             'folder' => 'attachments',
-            'path' => '/assets/media/attachments',
+            'path' => '/public/assets/media/attachments',
         ],
     ],
 
