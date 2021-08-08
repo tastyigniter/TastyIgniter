@@ -32,7 +32,7 @@ class MediaLibrary
 
     protected $storageFolderNameLength;
 
-    protected $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico'];
+    protected $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico', 'webp'];
 
     protected $config = [];
 
