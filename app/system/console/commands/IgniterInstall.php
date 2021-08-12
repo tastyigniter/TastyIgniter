@@ -8,6 +8,7 @@ use Admin\Models\Staff_groups_model;
 use Admin\Models\Staff_roles_model;
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
+use Artisan;
 use Carbon\Carbon;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
@@ -82,6 +83,11 @@ class IgniterInstall extends Command
 
         $this->moveExampleFile('htaccess', null, 'backup');
         $this->moveExampleFile('htaccess', 'example', null);
+
+        if (env('IGNITER_MIRROR')) {
+            $this->line('Creating public folder and symlinking assets');
+            Artisan::call('igniter:mirror');
+        }
 
         $this->alert('INSTALLATION COMPLETE');
     }
