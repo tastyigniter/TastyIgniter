@@ -57,7 +57,7 @@ class ExtensionInstall extends Command
         ExtensionManager::instance()->installExtension($code, $version);
 
         if (env('IGNITER_MIRROR'))
-            Artisan::call('igniter:mirror');
+            Artisan::call('igniter:mirror', ['destination' => 'public/']);
     }
 
     /**

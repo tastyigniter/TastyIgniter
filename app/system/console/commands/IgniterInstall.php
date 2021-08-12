@@ -86,7 +86,7 @@ class IgniterInstall extends Command
 
         if (env('IGNITER_MIRROR')) {
             $this->line('Creating public folder and symlinking assets');
-            Artisan::call('igniter:mirror');
+            Artisan::call('igniter:mirror', ['destination' => 'public/']);
         }
 
         $this->alert('INSTALLATION COMPLETE');
