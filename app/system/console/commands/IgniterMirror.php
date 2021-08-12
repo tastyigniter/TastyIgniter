@@ -6,8 +6,8 @@ use Event;
 use File;
 use Illuminate\Console\Command;
 use StdClass;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Console command to implement a "public" folder - heavily borrowed from wintercms
