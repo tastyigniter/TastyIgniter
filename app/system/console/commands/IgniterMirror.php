@@ -2,10 +2,10 @@
 
 namespace System\Console\Commands;
 
-use File;
 use Event;
-use StdClass;
+use File;
 use Illuminate\Console\Command;
+use StdClass;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -14,11 +14,9 @@ use Symfony\Component\Console\Input\InputArgument;
  *
  * This command will create symbolic links to files and directories
  * that are commonly required to be publicly available.
- *
  */
 class IgniterMirror extends Command
 {
-
     /**
      * The console command name.
      */
@@ -77,7 +75,6 @@ class IgniterMirror extends Command
          *     Event::listen('system.console.mirror.extendPaths', function ($paths) {
          *          $paths->directories = array_merge($paths->directories, ['plugins/myauthor/myplugin/public']);
          *     });
-         *
          */
         Event::fire('system.console.mirror.extendPaths', [$paths]);
 
@@ -136,7 +133,7 @@ class IgniterMirror extends Command
             return $this->mirrorDirectory($wildcard);
         }
 
-        list($start, $end) = explode('*', $wildcard, 2);
+        [$start, $end] = explode('*', $wildcard, 2);
 
         $startDir = base_path().'/'.$start;
 
@@ -170,7 +167,7 @@ class IgniterMirror extends Command
 
         $destPath = $this->argument('destination');
         if (realpath($destPath) === false) {
-            $destPath = base_path() . '/' . $destPath;
+            $destPath = base_path().'/'.$destPath;
         }
 
         if (!File::isDirectory($destPath)) {
@@ -197,7 +194,7 @@ class IgniterMirror extends Command
             array_shift($file);
         }
 
-        return str_repeat('../', count($dir)) . implode('/', $file);
+        return str_repeat('../', count($dir)).implode('/', $file);
     }
 
     /**
