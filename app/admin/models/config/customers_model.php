@@ -37,6 +37,7 @@ $config['list']['toolbar'] = [
             'label' => 'lang:admin::lang.side_menu.customer_group',
             'class' => 'btn btn-default',
             'href' => 'customer_groups',
+            'permission' => 'Admin.CustomerGroups',
         ],
     ],
 ];
@@ -53,6 +54,7 @@ $config['list']['columns'] = [
     'impersonate' => [
         'type' => 'button',
         'iconCssClass' => 'fa fa-user',
+        'permissions' => 'Admin.ImpersonateCustomers',
         'attributes' => [
             'class' => 'btn btn-outline-secondary',
             'data-request' => 'onImpersonate',
@@ -120,6 +122,7 @@ $config['form']['toolbar'] = [
             'data-request' => 'onImpersonate',
             'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
             'context' => ['edit'],
+            'permission' => 'Admin.ImpersonateCustomers',
         ],
     ],
 ];
@@ -188,6 +191,7 @@ $config['form']['tabs'] = [
         'orders' => [
             'tab' => 'lang:admin::lang.customers.text_tab_orders',
             'type' => 'datatable',
+            'context' => ['edit', 'preview'],
             'useAjax' => TRUE,
             'defaultSort' => ['order_id', 'desc'],
             'columns' => [
@@ -217,6 +221,7 @@ $config['form']['tabs'] = [
         'reservations' => [
             'tab' => 'lang:admin::lang.customers.text_tab_reservations',
             'type' => 'datatable',
+            'context' => ['edit', 'preview'],
             'useAjax' => TRUE,
             'defaultSort' => ['reservation_id', 'desc'],
             'columns' => [

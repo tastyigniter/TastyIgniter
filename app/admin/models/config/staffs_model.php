@@ -51,6 +51,7 @@ $config['list']['toolbar'] = [
             'label' => 'lang:admin::lang.side_menu.staff_group',
             'class' => 'btn btn-default',
             'href' => 'staff_groups',
+            'permission' => 'Admin.StaffGroups',
         ],
         'roles' => [
             'label' => 'lang:admin::lang.side_menu.staff_role',
@@ -67,6 +68,17 @@ $config['list']['columns'] = [
         'attributes' => [
             'class' => 'btn btn-edit',
             'href' => 'staffs/edit/{staff_id}',
+        ],
+    ],
+    'impersonate' => [
+        'type' => 'button',
+        'iconCssClass' => 'fa fa-user',
+        'permissions' => 'Admin.Impersonate',
+        'attributes' => [
+            'class' => 'btn btn-outline-secondary',
+            'data-request' => 'onImpersonate',
+            'data-request-data' => 'recordId: \'{staff_id}\'',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
         ],
     ],
     'staff_name' => [
@@ -148,6 +160,14 @@ $config['form']['toolbar'] = [
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
             'data-progress-indicator' => 'admin::lang.text_deleting',
             'context' => ['edit'],
+        ],
+        'impersonate' => [
+            'label' => 'lang:admin::lang.customers.text_impersonate',
+            'class' => 'btn btn-default',
+            'data-request' => 'onImpersonate',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
+            'context' => ['edit'],
+            'permission' => 'Admin.ImpersonateCustomers',
         ],
     ],
 ];

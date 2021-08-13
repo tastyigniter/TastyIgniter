@@ -978,6 +978,10 @@ return [
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
         'help_sale_permission_groups' => 'Can view Orders and Reservations in their Group(s) and Orders and Reservations assigned to them',
         'help_sale_permission_restricted' => 'Can only view Orders and Reservations assigned to them',
+
+        'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a staff account</b>, please contact system administrator.',
+        'alert_impersonate_confirm' => 'Are you sure you want to impersonate this staff? You can revert to your original state by logging out.',
+        'alert_impersonate_success' => 'You are now impersonating staff: %s',
     ],
 
     'statuses' => [
