@@ -9,7 +9,7 @@ class Staff extends FormRequest
     public function rules()
     {
         $passwordRule = optional($this->getForm())->context != 'create'
-            ? 'sometimes' : 'required';
+            ? 'sometimes' : 'required_if:user.send_invite,0';
 
         $rules = [
             ['staff_name', 'admin::lang.label_name', 'required|between:2,128'],

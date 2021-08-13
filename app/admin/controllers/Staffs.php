@@ -4,6 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminMenu;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Staffs extends \Admin\Classes\AdminController
 {
@@ -80,6 +81,20 @@ class Staffs extends \Admin\Classes\AdminController
         }
 
         return $result;
+    }
+
+    public function onImpersonate($context, $recordId = null)
+    {
+        if (!AdminAuth::user()->hasPermission('Admin.ImpersonateCustomers')) {
+            throw new ApplicationException(lang('admin::lang.staff.alert_login_restricted'));
+        }
+
+        $id = post('recordId', $recordId);
+        if ($staff = $this->formFindModelObject((int)$id)) {
+            AdminAuth::stopImpersonate();
+            AdminAuth::impersonate($staff->user);
+            flash()->success(sprintf(lang('admin::lang.customers.alert_impersonate_success'), $staff->staff_name));
+        }
     }
 
     public function listExtendQuery($query)

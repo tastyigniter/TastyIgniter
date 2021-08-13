@@ -319,6 +319,7 @@ return [
         'label_confirm_password' => 'Confirm Password',
         'label_telephone' => 'Telephone',
         'label_newsletter' => 'Newsletter',
+        'label_send_invite' => 'Send Invitation Email',
         'label_customer_group' => 'Customer Group',
         'label_address_1' => 'Address 1',
         'label_address_2' => 'Address 2',
@@ -327,6 +328,7 @@ return [
         'label_postcode' => 'Postcode',
         'label_country' => 'Country',
 
+        'help_send_invite' => 'Sends an invitation message containing a link to set a password on their account.',
         'help_password' => 'Leave blank to leave password unchanged',
 
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
@@ -963,6 +965,7 @@ return [
 
         'label_super_staff' => 'Super Admin',
         'label_username' => 'Username',
+        'label_send_invite' => 'Send Invitation Email',
         'label_password' => 'Password',
         'label_confirm_password' => 'Password Confirm',
         'label_role' => 'Role',
@@ -971,6 +974,7 @@ return [
         'label_location' => 'Locations',
         'label_sale_permission' => 'Order and Reservation Scope',
 
+        'help_send_invite' => 'Sends an invitation message containing a link to set a password on their account.',
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
         'help_role' => 'Roles define staff permissions.',
         'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
@@ -978,6 +982,10 @@ return [
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
         'help_sale_permission_groups' => 'Can view Orders and Reservations in their Group(s) and Orders and Reservations assigned to them',
         'help_sale_permission_restricted' => 'Can only view Orders and Reservations assigned to them',
+
+        'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a staff account</b>, please contact system administrator.',
+        'alert_impersonate_confirm' => 'Are you sure you want to impersonate this staff? You can revert to your original state by logging out.',
+        'alert_impersonate_success' => 'You are now impersonating staff: %s',
     ],
 
     'statuses' => [

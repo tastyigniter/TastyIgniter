@@ -206,11 +206,11 @@ class BaseExtension extends ServiceProvider
         if (!$config = array_get($composer, 'extra.tastyigniter-extension', []))
             return $config;
 
-        if ($description = array_get($composer, 'description'))
-            $config['description'] = $description;
+        if (array_key_exists('description', $composer))
+            $config['description'] = $composer['description'];
 
-        if ($authors = array_get($composer, 'authors'))
-            $config['author'] = $authors[0]['name'];
+        if (array_key_exists('authors', $composer))
+            $config['author'] = $composer['authors'][0]['name'];
 
         return $config;
     }

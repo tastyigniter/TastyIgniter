@@ -82,4 +82,29 @@ class User extends Manager
     {
         return $this->staff()->staff_email;
     }
+
+    public function register(array $attributes, $activate = FALSE)
+    {
+        $model = $this->createModel();
+
+        $staff = $model->staff()->newInstance();
+        $staff->staff_email = $attributes['staff_email'];
+        $staff->staff_name = $attributes['staff_name'];
+        $staff->language_id = $attributes['language_id'] ?? null;
+        $staff->staff_role_id = $attributes['staff_role_id'] ?? null;
+        $staff->staff_status = $attributes['staff_status'] ?? TRUE;
+        $staff->user = [
+            'username' => $attributes['username'],
+            'password' => $attributes['password'],
+            'super_user' => FALSE,
+            'activate' => $activate,
+        ];
+
+        $staff->save();
+
+        if ($staff->groups->isEmpty())
+            $staff->groups()->attach($attributes['groups']);
+
+        return $model;
+    }
 }
