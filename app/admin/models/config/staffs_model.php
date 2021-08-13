@@ -196,15 +196,33 @@ $config['form']['fields'] = [
         'span' => 'right',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
+    'user[send_invite]' => [
+        'label' => 'lang:admin::lang.staff.label_send_invite',
+        'type' => 'checkbox',
+        'default' => TRUE,
+        'context' => 'create',
+        'options' => [],
+        'placeholder' => 'lang:admin::lang.staff.help_send_invite',
+    ],
     'user[password]' => [
         'label' => 'lang:admin::lang.staff.label_password',
         'type' => 'password',
         'span' => 'left',
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'user[send_invite]',
+            'condition' => 'unchecked',
+        ],
     ],
     'user[password_confirm]' => [
         'label' => 'lang:admin::lang.staff.label_confirm_password',
         'type' => 'password',
         'span' => 'right',
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'user[send_invite]',
+            'condition' => 'unchecked',
+        ],
     ],
     'locations' => [
         'label' => 'lang:admin::lang.staff.label_location',

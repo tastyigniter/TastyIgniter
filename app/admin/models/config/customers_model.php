@@ -150,16 +150,33 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'right',
         ],
+        'send_invite' => [
+            'label' => 'lang:admin::lang.customers.label_send_invite',
+            'type' => 'checkbox',
+            'context' => 'create',
+            'default' => TRUE,
+            'placeholder' => 'lang:admin::lang.customers.help_send_invite',
+        ],
         'password' => [
             'label' => 'lang:admin::lang.customers.label_password',
             'type' => 'password',
             'span' => 'left',
             'comment' => 'lang:admin::lang.customers.help_password',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'send_invite',
+                'condition' => 'unchecked',
+            ],
         ],
         '_confirm_password' => [
             'label' => 'lang:admin::lang.customers.label_confirm_password',
             'type' => 'password',
             'span' => 'right',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'send_invite',
+                'condition' => 'unchecked',
+            ],
         ],
         'customer_group_id' => [
             'label' => 'lang:admin::lang.customers.label_customer_group',
