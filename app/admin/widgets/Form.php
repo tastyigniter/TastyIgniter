@@ -10,7 +10,7 @@ use Admin\Facades\AdminAuth;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\LocationAwareWidget;
 use Exception;
-use Model;
+use Igniter\Flame\Database\Model;
 
 class Form extends BaseWidget
 {
@@ -467,7 +467,6 @@ class Form extends BaseWidget
 
         // Simple field type
         if (is_string($config)) {
-
             if ($this->isFormWidget($config) !== FALSE) {
                 $field->displayAs('widget', ['widget' => $config]);
             }
@@ -476,7 +475,6 @@ class Form extends BaseWidget
             }
         } // Defined field type
         else {
-
             $fieldType = $config['type'] ?? null;
             if (!is_string($fieldType) AND !is_null($fieldType)) {
                 throw new Exception(sprintf(
@@ -503,7 +501,6 @@ class Form extends BaseWidget
 
         // Get field options from model
         if (in_array($field->type, $this->optionModelTypes, FALSE)) {
-
             // Defer the execution of option data collection
             $field->options(function () use ($field, $config) {
                 $fieldOptions = $config['options'] ?? null;
@@ -545,7 +542,9 @@ class Form extends BaseWidget
         $widgetClass = $this->widgetManager->resolveFormWidget($widgetName);
 
         if (!class_exists($widgetClass)) {
-            throw new Exception(sprintf("The Widget class name '%s' has not been registered", $widgetClass));
+            throw new Exception(sprintf(
+                lang('admin::lang.alert_widget_class_name'), gettype($fieldType)
+            ));
         }
 
         $widget = $this->makeFormWidget($widgetClass, $field, $widgetConfig);
@@ -751,8 +750,11 @@ class Form extends BaseWidget
 
             // Handle HTML array, eg: item[key][another]
             $parts = name_to_array($field->fieldName);
-            if (($value = $this->dataArrayGet($data, $parts)) !== null) {
-
+            $value = $this->dataArrayGet($data, $parts);
+            if (is_null($value) AND in_array($field->type, ['checkboxtoggle', 'radiotoggle'])) {
+                $this->dataArraySet($result, $parts, $value);
+            }
+            elseif ($value !== null) {
                 // Number fields should be converted to integers
                 if ($field->type === 'number') {
                     $value = !strlen(trim($value)) ? null : (float)$value;
@@ -765,6 +767,9 @@ class Form extends BaseWidget
         // Give widgets an opportunity to process the data.
         foreach ($this->formWidgets as $field => $widget) {
             $parts = name_to_array($field);
+
+            if (isset($widget->config->disabled) AND $widget->config->disabled)
+                continue;
 
             $widgetValue = $widget->getSaveValue($this->dataArrayGet($result, $parts));
             $this->dataArraySet($result, $parts, $widgetValue);

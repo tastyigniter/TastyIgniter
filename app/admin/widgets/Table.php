@@ -56,13 +56,13 @@ class Table extends BaseWidget
 
         $dataSourceClass = $this->getConfig('dataSource');
         if (!strlen($dataSourceClass)) {
-            throw new Exception('The Table widget data source is not specified in the configuration.');
+            throw new Exception(lang('admin::lang.tables.error_table_widget_data_not_specified'));
         }
 
         $dataSourceClass = $this->dataSourceAliases;
 
         if (!class_exists($dataSourceClass)) {
-            throw new Exception(sprintf('The Table widget data source class "%s" could not be found.', $dataSourceClass));
+            throw new Exception(sprintf(lang('admin::lang.tables.error_table_widget_data_class_not_found'), $dataSourceClass));
         }
 
         $this->dataSource = new $dataSourceClass($this->recordsKeyFrom);
@@ -173,8 +173,10 @@ class Table extends BaseWidget
 
         $eventResults = $this->fireEvent('table.getRecords', [$offset, $limit, $search], TRUE);
 
+        $records = $eventResults->getCollection()->toArray();
+
         return [
-            'rows' => $eventResults->getCollection()->toArray(),
+            'rows' => $this->processRecords($records),
             'total' => $eventResults->total(),
         ];
     }

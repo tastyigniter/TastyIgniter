@@ -2,15 +2,15 @@
 
 namespace System\Traits;
 
+use Admin\Facades\Template;
 use Exception;
-use File;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
-use Lang;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
-use SystemException;
-use Template;
 use Throwable;
 
 trait ViewMaker
@@ -116,7 +116,7 @@ trait ViewMaker
      * @param bool $throwException Throw an exception if the layout is not found
      *
      * @return mixed The layout contents, or false.
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makeLayout($name = null, $vars = [], $throwException = TRUE)
     {
@@ -168,7 +168,7 @@ trait ViewMaker
      * @param bool $throwException Throw an exception if the partial is not found.
      *
      * @return mixed Partial contents or false if not throwing an exception.
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makePartial($partial, $vars = [], $throwException = TRUE)
     {

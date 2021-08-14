@@ -6,9 +6,9 @@ use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
-use ApplicationException;
-use DB;
-use Html;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Html\HtmlFacade as Html;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Record Editor
@@ -56,7 +56,7 @@ class RecordEditor extends BaseFormWidget
             'modelClass',
             'addonLeft',
             'addonRight',
-            'hideAddButton',
+            'hideCreateButton',
             'hideEditButton',
             'hideDeleteButton',
             'addLabel',
@@ -201,7 +201,7 @@ class RecordEditor extends BaseFormWidget
         $methodName = 'get'.studly_case($this->fieldName).'RecordEditorOptions';
 
         if (!$model->methodExists($methodName) AND !$model->methodExists('getRecordEditorOptions')) {
-            throw new ApplicationException(sprintf('Missing method [%s] in %s', 'getRecordEditorOptions', get_class($model)));
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_method'), 'getRecordEditorOptions', get_class($model)));
         }
 
         if ($model->methodExists($methodName)) {

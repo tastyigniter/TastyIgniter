@@ -21,12 +21,12 @@ $config['list']['filter'] = [
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
-            'type' => 'select',
-            'conditions' => 'status_id = :filtered',
+            'type' => 'selectlist',
+            'conditions' => 'status_id IN(:filtered)',
             'modelClass' => 'Admin\Models\Statuses_model',
             'options' => 'getDropdownOptionsForOrder',
         ],
@@ -34,10 +34,8 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.orders.text_filter_order_type',
             'type' => 'select',
             'conditions' => 'order_type = :filtered',
-            'options' => [
-                '1' => 'lang:admin::lang.orders.text_delivery',
-                '2' => 'lang:admin::lang.orders.text_collection',
-            ],
+            'modelClass' => 'Admin\Models\Locations_model',
+            'options' => 'getOrderTypeOptions',
         ],
         'payment' => [
             'label' => 'lang:admin::lang.orders.text_filter_payment',
@@ -82,12 +80,12 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'searchable' => TRUE,
     ],
-    'location' => [
+    'location_name' => [
         'label' => 'lang:admin::lang.orders.column_location',
         'relation' => 'location',
         'select' => 'location_name',
         'searchable' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'full_name' => [
         'label' => 'lang:admin::lang.orders.column_customer_name',
@@ -102,6 +100,7 @@ $config['list']['columns'] = [
     'order_time_is_asap' => [
         'label' => 'lang:admin::lang.orders.label_time_is_asap',
         'type' => 'switch',
+        'cssClass' => 'text-center',
         'onText' => 'lang:admin::lang.text_yes',
         'offText' => 'lang:admin::lang.text_no',
     ],
@@ -157,20 +156,19 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'orders',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create'],
+            'partial' => 'form/toolbar_save_button',
+            'saveActions' => ['continue', 'close'],
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
-            'context' => ['create'],
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-            'context' => ['create'],
         ],
         'delete' => [
             'label' => 'lang:admin::lang.button_icon_delete',

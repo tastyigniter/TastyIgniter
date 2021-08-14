@@ -13,16 +13,16 @@
 
     <div id="notification"></div>
 
-    <div id="{{ $this->getId('breadcrumb') }}" class="media-breadcrumb">
-        {!! $this->makePartial('mediamanager/breadcrumb') !!}
-    </div>
-
     <div class="media-container">
         <div class="row no-gutters">
             <div
                 class="col-9 border-right wrap-none wrap-left"
                 data-control="media-list"
             >
+                <div id="{{ $this->getId('breadcrumb') }}" class="media-breadcrumb">
+                    {!! $this->makePartial('mediamanager/breadcrumb') !!}
+                </div>
+
                 <div id="{{ $this->getId('item-list') }}" class="media-list-container">
                     @if ($this->getSetting('uploads'))
                         {!! $this->makePartial('mediamanager/uploader') !!}

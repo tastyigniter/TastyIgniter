@@ -2,16 +2,16 @@
 
 namespace System\Controllers;
 
-use AdminMenu;
-use ApplicationException;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Exception;
-use Flash;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\Flash;
 use Main\Classes\ThemeManager;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 use System\Models\Extensions_model;
 use System\Models\Themes_model;
-use Template;
 
 class Updates extends \Admin\Classes\AdminController
 {
@@ -62,7 +62,7 @@ class Updates extends \Admin\Classes\AdminController
 
             if (!empty($updates['items']) OR !empty($updates['ignoredItems'])) {
                 Template::setButton(lang('system::lang.updates.button_update'), [
-                    'class' => 'btn btn-primary pull-left mr-2',
+                    'class' => 'btn btn-primary pull-left mr-2 ml-0',
                     'id' => 'apply-updates', 'role' => 'button',
                 ]);
             }
@@ -148,7 +148,7 @@ class Updates extends \Admin\Classes\AdminController
     {
         $items = post('items');
         if (!$items OR count($items) < 1)
-            throw new ApplicationException('Select item(s) to ignore.');
+            throw new ApplicationException(lang('system::lang.updates.alert_item_to_ignore'));
 
         $updateManager = UpdateManager::instance();
 
@@ -198,7 +198,7 @@ class Updates extends \Admin\Classes\AdminController
     {
         $carteKey = post('carte_key');
         if (!strlen($carteKey))
-            throw new ApplicationException('No carte key specified.');
+            throw new ApplicationException(lang('system::lang.updates.alert_no_carte_key'));
 
         $response = UpdateManager::instance()->applySiteDetail($carteKey);
 
@@ -218,7 +218,7 @@ class Updates extends \Admin\Classes\AdminController
 //            throw new ApplicationException(lang('system::lang.missing.carte_key'));
 
         if (!count($items))
-            throw new ApplicationException('No item(s) specified.');
+            throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
 
         $this->validateItems();
 
@@ -325,11 +325,11 @@ class Updates extends \Admin\Classes\AdminController
                 break;
 
             case 'extractExtension':
-                $response = $updateManager->extractFile($meta['code'], 'extensions/');
+                $response = $updateManager->extractFile($meta['code'], extension_path('/'));
                 if ($response) $json['result'] = 'success';
                 break;
             case 'extractTheme':
-                $response = $updateManager->extractFile($meta['code'], 'themes/');
+                $response = $updateManager->extractFile($meta['code'], theme_path('/'));
                 if ($response) $json['result'] = 'success';
                 break;
 

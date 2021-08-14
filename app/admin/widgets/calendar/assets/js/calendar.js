@@ -37,7 +37,7 @@
             click: $.proxy(this.onTogglePicker, this)
         }
 
-        this.options.locale = this.options.locale.split('-').shift();
+        this.options.locale = this.options.locale.replace('_', '-').split('-').shift();
         this.options.events = $.proxy(this.generateEvents, this);
         this.calendar = new FullCalendar.Calendar(this.$calendar[0], this.options);
 
@@ -103,7 +103,7 @@
     }
 
     Calendar.prototype.onPickerDateChanged = function (event) {
-        this.$calendar.fullCalendar('gotoDate', event.date)
+        this.calendar.gotoDate(event.date)
     }
 
     Calendar.prototype.hidePopovers = function() {
@@ -121,6 +121,10 @@
         }).always(function () {
             $.ti.loadingIndicator.hide()
         })
+    }
+
+    Calendar.prototype.getCalendar = function () {
+        return this.calendar
     }
 
     Calendar.DEFAULTS = {

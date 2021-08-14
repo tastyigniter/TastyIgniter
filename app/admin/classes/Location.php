@@ -28,15 +28,14 @@ class Location extends Manager
         }
         else {
             $id = $this->getSession('id');
-            if (!$id AND $this->hasOneLocation())
+            if (!$id AND $this->hasOneLocation() AND !$this->getAuth()->isSuperUser())
+                $id = $this->getDefaultLocation();
+
+            if ($id AND !$this->isAttachedToAuth($id))
                 $id = $this->getDefaultLocation();
         }
 
-        $model = null;
-        if ($id AND $this->isAttachedToAuth($id))
-            $model = $this->getById($id);
-
-        if ($model)
+        if ($id AND $model = $this->getById($id))
             $this->setCurrent($model);
 
         return $this->model;
@@ -78,10 +77,7 @@ class Location extends Manager
         if ($this->getAuth()->isSuperUser())
             return null;
 
-        return $this->getAuth()
-            ->locations()
-            ->pluck('location_id')
-            ->all();
+        return $this->getLocations()->pluck('location_id')->all();
     }
 
     public function getIdOrAll()
@@ -91,7 +87,7 @@ class Location extends Manager
 
     public function getLocation()
     {
-        return $this->model;
+        return $this->current();
     }
 
     public function listLocations()
@@ -99,14 +95,12 @@ class Location extends Manager
         if ($this->getAuth()->isSuperUser())
             return $this->createLocationModel()->getDropdownOptions();
 
-        return $this->getAuth()
-            ->locations()
-            ->pluck('location_name', 'location_id');
+        return $this->getLocations()->pluck('location_name', 'location_id');
     }
 
     public function getDefaultLocation()
     {
-        if (!$staffLocation = $this->getAuth()->locations()->first())
+        if (!$staffLocation = $this->getLocations()->first())
             return null;
 
         return $staffLocation->getKey();
@@ -117,10 +111,25 @@ class Location extends Manager
         if ($this->isSingleMode())
             return TRUE;
 
-        if ($this->getAuth()->isSuperUser())
+        return $this->getLocations()->count() === 1;
+    }
+
+    public function hasLocations()
+    {
+        if ($this->isSingleMode())
             return FALSE;
 
-        return $this->getAuth()->locations()->count() === 1;
+        if ($this->getAuth()->isSuperUser())
+            return TRUE;
+
+        return $this->getLocations()->count() > 1;
+    }
+
+    protected function getLocations()
+    {
+        return $this->getAuth()
+            ->locations()
+            ->where('location_status', TRUE);
     }
 
     /**
@@ -136,7 +145,7 @@ class Location extends Manager
         if ($this->getAuth()->isSuperUser())
             return TRUE;
 
-        return $this->getAuth()->locations()->contains(function ($model) use ($id) {
+        return $this->getLocations()->contains(function ($model) use ($id) {
             return $model->location_id === $id;
         });
     }

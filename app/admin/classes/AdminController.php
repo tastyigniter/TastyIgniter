@@ -2,15 +2,15 @@
 
 namespace Admin\Classes;
 
-use Admin;
+use Admin\Facades\Admin;
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminLocation;
+use Admin\Facades\AdminMenu;
 use Admin\Traits\HasAuthentication;
 use Admin\Traits\ValidatesForm;
 use Admin\Traits\WidgetMaker;
 use Admin\Widgets\Menu;
 use Admin\Widgets\Toolbar;
-use AdminAuth;
-use AdminLocation;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Exception\AjaxException;
 use Igniter\Flame\Exception\ApplicationException;
@@ -19,15 +19,16 @@ use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Flash\Facades\Flash;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Main\Widgets\MediaManager;
-use Redirect;
-use Request;
-use Response;
 use System\Classes\BaseController;
 use System\Classes\ErrorHandler;
 use System\Traits\AssetMaker;
 use System\Traits\ConfigMaker;
+use System\Traits\VerifiesCsrfToken;
 use System\Traits\ViewMaker;
 
 class AdminController extends BaseController
@@ -38,6 +39,7 @@ class AdminController extends BaseController
     use WidgetMaker;
     use ValidatesForm;
     use HasAuthentication;
+    use VerifiesCsrfToken;
 
     /**
      * @var object Object used for storing a fatal error.
@@ -135,6 +137,10 @@ class AdminController extends BaseController
     {
         $this->action = $action;
         $this->params = $params;
+
+        if (!$this->verifyCsrfToken()) {
+            return Response::make(lang('admin::lang.alert_invalid_csrf_token'), 403);
+        }
 
         // Determine if this request is a public action or authentication is required
         $requireAuthentication = !(in_array($action, $this->publicActions) OR !$this->requireAuthentication);
@@ -307,7 +313,7 @@ class AdminController extends BaseController
     protected function validateHandler($handler)
     {
         if (!preg_match('/^(?:\w+\:{2})?on[A-Z]{1}[\w+]*$/', $handler)) {
-            throw new SystemException("Invalid ajax handler name: {$handler}");
+            throw new SystemException(sprintf(lang('admin::lang.alert_invalid_ajax_handler_name'), $handler));
         }
     }
 
@@ -320,7 +326,7 @@ class AdminController extends BaseController
 
         foreach ($partials as $partial) {
             if (!preg_match('/^(?:\w+\:{2}|@)?[a-z0-9\_\-\.\/]+$/i', $partial)) {
-                throw new SystemException("Invalid partial name: $partial");
+                throw new SystemException(sprintf(lang('admin::lang.alert_invalid_ajax_partial_name'), $partial));
             }
         }
 
@@ -385,10 +391,7 @@ class AdminController extends BaseController
             $this->pageAction();
 
             if (!isset($this->widgets[$widgetName])) {
-                throw new Exception(sprintf(
-                    "A widget with class name '%s' has not been bound to the controller",
-                    $widgetName
-                ));
+                throw new Exception(sprintf(lang('admin::lang.alert_widget_not_bound_to_controller'), $widgetName));
             }
 
             if (($widget = $this->widgets[$widgetName]) AND method_exists($widget, $handlerName)) {

@@ -2,16 +2,16 @@
 
 namespace System\Classes;
 
-use App;
-use ApplicationException;
-use Config;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\ErrorHandler as BaseErrorHandler;
-use Log;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 use Main\Classes\MainController;
 use Main\Classes\Router;
 use Main\Classes\ThemeManager;
 use Symfony\Component\HttpFoundation\Response;
-use View;
 
 /**
  * System Error Handler

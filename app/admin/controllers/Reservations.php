@@ -2,8 +2,8 @@
 
 namespace Admin\Controllers;
 
+use Admin\Facades\AdminMenu;
 use Admin\Models\Reservations_model;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 
@@ -44,11 +44,13 @@ class Reservations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'reservations/edit/{reservation_id}',
             'redirectClose' => 'reservations',
+            'redirectNew' => 'reservations/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'reservations/edit/{reservation_id}',
             'redirectClose' => 'reservations',
+            'redirectNew' => 'reservations/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -99,7 +101,7 @@ class Reservations extends \Admin\Classes\AdminController
     public function calendarUpdateEvent($eventId, $startAt, $endAt)
     {
         if (!$reservation = Reservations_model::find($eventId))
-            throw new Exception('No matching reservation found');
+            throw new Exception(lang('admin::lang.reservations.alert_no_reservation_found'));
 
         $startAt = make_carbon($startAt);
         $endAt = make_carbon($endAt);

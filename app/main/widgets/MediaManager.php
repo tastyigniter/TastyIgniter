@@ -3,12 +3,12 @@
 namespace Main\Widgets;
 
 use Admin\Classes\BaseWidget;
-use ApplicationException;
 use Exception;
-use File;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 use Main\Classes\MediaLibrary;
-use Response;
 
 /**
  * Media Manager widget.
@@ -571,7 +571,7 @@ class MediaManager extends BaseWidget
             if (!$this->validateFileName($fileName))
                 throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_new_file_name'));
 
-            if (!$mediaLibrary->isAllowedExtension($extension))
+            if (!$mediaLibrary->isAllowedExtension($fileName))
                 throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
 
             if (!$uploadedFile->isValid())

@@ -8,11 +8,11 @@ use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
 use Carbon\Carbon;
-use Event;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
-use Model;
-use Request;
 use System\Traits\SendsMailTemplate;
 
 /**
@@ -35,8 +35,6 @@ class Orders_model extends Model
 
     const COLLECTION = 'collection';
 
-    protected static $orderTypes = [1 => self::DELIVERY, 2 => self::COLLECTION];
-
     /**
      * @var string The database table name
      */
@@ -49,7 +47,7 @@ class Orders_model extends Model
 
     protected $timeFormat = 'H:i';
 
-    public $guarded = ['ip_address', 'user_agent', 'hash'];
+    public $guarded = ['ip_address', 'user_agent', 'hash', 'total_items', 'order_total'];
 
     protected $hidden = ['cart'];
 
@@ -57,6 +55,8 @@ class Orders_model extends Model
      * @var array The model table column to convert to dates on insert/update
      */
     public $timestamps = TRUE;
+
+    public $appends = ['customer_name', 'order_type_name', 'order_date_time', 'formatted_address'];
 
     protected $casts = [
         'customer_id' => 'integer',
@@ -186,17 +186,24 @@ class Orders_model extends Model
         return $this->first_name.' '.$this->last_name;
     }
 
-    public function getOrderTypeAttribute($value)
-    {
-        if (isset(self::$orderTypes[$value]))
-            return self::$orderTypes[$value];
-
-        return $value;
-    }
-
     public function getOrderTypeNameAttribute()
     {
-        return lang('admin::lang.orders.text_'.$this->order_type);
+        if (!$this->location)
+            return $this->order_type;
+
+        return optional(
+            $this->location->availableOrderTypes()->get($this->order_type)
+        )->getLabel();
+    }
+
+    public function getOrderDatetimeAttribute($value)
+    {
+        if (!isset($this->attributes['order_date'])
+            AND !isset($this->attributes['order_time'])
+        ) return null;
+
+        return make_carbon($this->attributes['order_date'])
+            ->setTimeFromTimeString($this->attributes['order_time']);
     }
 
     public function getFormattedAddressAttribute($value)
@@ -269,7 +276,7 @@ class Orders_model extends Model
 
     public function updateOrderStatus($id, $options = [])
     {
-        $id = $id ?? $this->status_id ?? setting('default_order_status');
+        $id = $id ?: $this->status_id ?: setting('default_order_status');
 
         return $this->addStatusHistory(
             Statuses_model::find($id), $options
@@ -360,7 +367,8 @@ class Orders_model extends Model
         $menus = $model->getOrderMenusWithOptions();
         foreach ($menus as $menu) {
             $optionData = [];
-            if ($menuItemOptions = $menu->menu_options) {
+            foreach ($menu->menu_options->groupBy('order_option_group') as $menuItemOptionGroupName => $menuItemOptions) {
+                $optionData[] = $menuItemOptionGroupName;
                 foreach ($menuItemOptions as $menuItemOption) {
                     $optionData[] = $menuItemOption->quantity
                         .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'

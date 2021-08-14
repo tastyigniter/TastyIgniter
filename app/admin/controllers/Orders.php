@@ -2,7 +2,7 @@
 
 namespace Admin\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 use Igniter\Flame\Exception\ApplicationException;
 
 class Orders extends \Admin\Classes\AdminController
@@ -77,7 +77,7 @@ class Orders extends \Admin\Classes\AdminController
         $model = $this->formFindModelObject($recordId);
 
         if (!$model->hasInvoice())
-            throw new ApplicationException('Invoice has not yet been generated');
+            throw new ApplicationException(lang('admin::lang.orders.alert_invoice_not_generated'));
 
         $this->vars['model'] = $model;
 

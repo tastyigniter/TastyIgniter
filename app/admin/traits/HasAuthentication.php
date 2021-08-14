@@ -2,8 +2,7 @@
 
 namespace Admin\Traits;
 
-use AdminAuth;
-use Model;
+use Admin\Facades\AdminAuth;
 
 /**
  * Has Authentication Trait Class

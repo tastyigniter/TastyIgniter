@@ -16,12 +16,15 @@
 
     Connector.DEFAULTS = {
         alias: undefined,
+        editable: true,
         sortableHandle: '.connector-item-handle',
         sortableContainer: '.field-connector-items',
     }
 
     Connector.prototype.init = function () {
-        this.$el.on('click', '[data-control="load-item"]', $.proxy(this.onLoadItem, this))
+        if (this.options.editable)
+            this.$el.on('click', '[data-control="load-item"]', $.proxy(this.onLoadItem, this))
+
         this.$el.on('click', '[data-control="delete-item"]', $.proxy(this.onDeleteItem, this))
 
         this.bindSorting()

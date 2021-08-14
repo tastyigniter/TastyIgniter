@@ -2,19 +2,20 @@
 
 namespace System\Controllers;
 
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Admin\Traits\FormExtendable;
 use Admin\Traits\WidgetMaker;
-use AdminAuth;
-use AdminMenu;
 use Exception;
-use File;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
-use Mail;
-use Request;
-use Session;
-use Template;
+use System\Models\Mail_templates_model;
 
 class Settings extends \Admin\Classes\AdminController
 {
@@ -48,6 +49,8 @@ class Settings extends \Admin\Classes\AdminController
 
     public function index()
     {
+        Mail_templates_model::syncAll();
+
         $this->validateSettingItems(TRUE);
 
         // For security reasons, delete setup files if still exists.

@@ -81,6 +81,11 @@ class FilterScope
     public $cssClass;
 
     /**
+     * @var string Filter scope mode.
+     */
+    public $mode;
+
+    /**
      * @var array Raw scope configuration.
      */
     public $config;
@@ -144,6 +149,9 @@ class FilterScope
 
         if (array_key_exists('disabled', $config))
             $this->disabled = $config['disabled'];
+
+        if (isset($config['mode']))
+            $this->mode = $config['mode'];
 
         return $config;
     }

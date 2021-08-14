@@ -70,10 +70,10 @@ class Customer extends \Igniter\Flame\Auth\Manager
      * @return \Admin\Models\Customers_model
      * @throws \Exception
      */
-    public function register(array $credentials, $activate = FALSE)
+    public function register(array $attributes, $activate = FALSE)
     {
         $model = $this->createModel();
-        $model->fill($credentials);
+        $model->fill($attributes);
         $model->save();
 
         if ($activate) {

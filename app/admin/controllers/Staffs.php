@@ -2,8 +2,9 @@
 
 namespace Admin\Controllers;
 
-use AdminAuth;
-use AdminMenu;
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminMenu;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Staffs extends \Admin\Classes\AdminController
 {
@@ -31,11 +32,13 @@ class Staffs extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'staffs/edit/{staff_id}',
             'redirectClose' => 'staffs',
+            'redirectNew' => 'staffs/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'staffs/edit/{staff_id}',
             'redirectClose' => 'staffs',
+            'redirectNew' => 'staffs/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -80,6 +83,20 @@ class Staffs extends \Admin\Classes\AdminController
         return $result;
     }
 
+    public function onImpersonate($context, $recordId = null)
+    {
+        if (!AdminAuth::user()->hasPermission('Admin.Impersonate')) {
+            throw new ApplicationException(lang('admin::lang.staff.alert_login_restricted'));
+        }
+
+        $id = post('recordId', $recordId);
+        if ($staff = $this->formFindModelObject((int)$id)) {
+            AdminAuth::stopImpersonate();
+            AdminAuth::impersonate($staff->user);
+            flash()->success(sprintf(lang('admin::lang.customers.alert_impersonate_success'), $staff->staff_name));
+        }
+    }
+
     public function listExtendQuery($query)
     {
         if (!AdminAuth::isSuperUser()) {
@@ -97,6 +114,8 @@ class Staffs extends \Admin\Classes\AdminController
     public function formExtendFields($form)
     {
         if (!AdminAuth::isSuperUser()) {
+            $form->removeField('staff_role_id');
+            $form->removeField('staff_status');
             $form->removeField('user[super_user]');
         }
     }

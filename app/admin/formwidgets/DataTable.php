@@ -173,7 +173,7 @@ class DataTable extends BaseFormWidget
         $methodName = 'get'.studly_case($this->fieldName).'DataTableOptions';
 
         if (!$this->model->methodExists($methodName) AND !$this->model->methodExists('getDataTableOptions')) {
-            throw new Exception(sprintf('Missing method [%s] in %s', 'getDataTableOptions', get_class($this->model)));
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_method'), 'getDataTableOptions', get_class($this->model)));
         }
 
         if ($this->model->methodExists($methodName)) {
@@ -216,7 +216,6 @@ class DataTable extends BaseFormWidget
         $table = new Table($this->getController(), $config);
 
         $table->bindEvent('table.getRecords', [$this, 'getDataTableRecords']);
-        $table->bindEvent('table.searchRecords', [$this, 'searchDataTableRecords']);
         $table->bindEvent('table.getDropdownOptions', [$this, 'getDataTableOptions']);
 
         return $table;

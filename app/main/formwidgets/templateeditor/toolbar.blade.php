@@ -1,5 +1,5 @@
 <div class="form-row">
-    <div class="col-sm-2">
+    <div class="col-md-2 pb-3 pb-md-0">
         <select
             id="{{ $field->getId('type') }}"
             name="{{ $field->getName() }}[type]"
@@ -16,7 +16,7 @@
             @endforeach
         </select>
     </div>
-    <div class="col-sm-10">
+    <div class="col-md-10">
         <div
             class="input-group"
         >

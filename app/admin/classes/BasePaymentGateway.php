@@ -2,11 +2,11 @@
 
 namespace Admin\Classes;
 
-use File;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\SystemException;
-use Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use System\Actions\ModelAction;
-use URL;
 
 /**
  * Base Payment Gateway Class
@@ -209,7 +209,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function updatePaymentProfile($customer, $data)
     {
-        throw new SystemException('The updatePaymentProfile() method is not supported by the payment gateway.');
+        throw new SystemException(lang('admin::lang.payments.alert_update_payment_profile'));
     }
 
     /**
@@ -219,7 +219,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function deletePaymentProfile($customer, $profile)
     {
-        throw new SystemException('The deletePaymentProfile() method is not supported by the payment gateway.');
+        throw new SystemException(lang('admin::lang.payments.alert_delete_payment_profile'));
     }
 
     /**
@@ -229,7 +229,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function payFromPaymentProfile($order, $data = [])
     {
-        throw new SystemException('The payFromPaymentProfile() method is not supported by the payment gateway.');
+        throw new SystemException(lang('admin::lang.payments.alert_pay_from_payment_profile'));
     }
 
     //

@@ -99,32 +99,17 @@ class Locations_model extends AbstractLocation
         self::$allowedSortingColumns = array_merge(self::$allowedSortingColumns, $newColumns);
     }
 
-    public function getWeekDaysOptions()
-    {
-        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    }
-
     //
     // Events
     //
 
-    protected function afterFetch()
+    protected function beforeDelete()
     {
-        $this->parseOptionsValue();
-    }
-
-    protected function beforeSave()
-    {
-        $this->parseOptionsValue();
     }
 
     protected function afterSave()
     {
         $this->performAfterSave();
-    }
-
-    protected function beforeDelete()
-    {
     }
 
     //
@@ -171,7 +156,7 @@ class Locations_model extends AbstractLocation
             if (in_array($_sort, self::$allowedSortingColumns)) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
-                    array_push($parts, 'desc');
+                    $parts[] = 'desc';
                 }
                 [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
@@ -260,17 +245,6 @@ class Locations_model extends AbstractLocation
         return $gallery;
     }
 
-    public function parseOptionsValue()
-    {
-        $value = @unserialize($this->attributes['options']) ?: [];
-
-        $this->parseHoursFromOptions($value);
-
-        $this->parseAreasFromOptions($value);
-
-        $this->attributes['options'] = @serialize($value);
-    }
-
     public function listAvailablePayments()
     {
         $result = [];
@@ -290,10 +264,6 @@ class Locations_model extends AbstractLocation
     public function performAfterSave()
     {
         $this->restorePurgedValues();
-
-        if (array_key_exists('hours', $this->options)) {
-            $this->addOpeningHours($this->options['hours']);
-        }
 
         if (array_key_exists('delivery_areas', $this->attributes))
             $this->addLocationAreas((array)$this->attributes['delivery_areas']);
@@ -315,7 +285,7 @@ class Locations_model extends AbstractLocation
      *
      * @param string $locationId
      *
-     * @return bool|int
+     * @return bool|null
      */
     public static function updateDefault($locationId)
     {

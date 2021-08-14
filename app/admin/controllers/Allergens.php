@@ -3,7 +3,7 @@
 namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 
 class Allergens extends AdminController
 {
@@ -31,11 +31,13 @@ class Allergens extends AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'allergens/edit/{allergen_id}',
             'redirectClose' => 'allergens',
+            'redirectNew' => 'allergens/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'allergens/edit/{allergen_id}',
             'redirectClose' => 'allergens',
+            'redirectNew' => 'allergens/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

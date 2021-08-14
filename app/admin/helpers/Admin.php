@@ -2,11 +2,11 @@
 
 namespace Admin\Helpers;
 
-use Config;
 use Igniter\Flame\Support\RouterHelper;
-use Redirect;
-use Request;
-use URL;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\URL;
 
 /**
  * Admin Helper
@@ -27,7 +27,7 @@ class Admin
      *
      * @param string $path
      * @param array $parameters
-     * @param  bool|null $secure
+     * @param bool|null $secure
      *
      * @return string
      */

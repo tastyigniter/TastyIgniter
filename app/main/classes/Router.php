@@ -2,13 +2,13 @@
 
 namespace Main\Classes;
 
-use Cache;
-use Config;
-use Event;
-use File;
 use Igniter\Flame\Router\Router as FlameRouter;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\RouterHelper;
-use Lang;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Lang;
 use Main\Template\Page as PageTemplate;
 
 /**

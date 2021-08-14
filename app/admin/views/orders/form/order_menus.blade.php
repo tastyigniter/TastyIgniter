@@ -11,18 +11,27 @@
         <tbody>
         @foreach($model->getOrderMenusWithOptions() as $menuItem)
             <tr>
-                <td>{{ $menuItem->quantity }}x</td>
+                <td class="align-top">{{ $menuItem->quantity }}x</td>
                 <td><b>{{ $menuItem->name }}</b>
-                    @if($menuItemOptions = $menuItem->menu_options)
+                    @php $menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category') @endphp
+                    @if($menuItemOptionGroup->isNotEmpty())
                         <ul class="list-unstyled">
-                            @foreach($menuItemOptions as $menuItemOption)
+                            @foreach($menuItemOptionGroup as $menuItemOptionGroupName => $menuItemOptions)
                                 <li>
-                                    {{ $menuItemOption->quantity }}x
-                                    {{ $menuItemOption->order_option_name }}&nbsp;
-                                    @if($menuItemOption->order_option_price > 0)
-                                        ({{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }}
-                                        )
-                                    @endif
+                                    <u class="text-muted">{{ $menuItemOptionGroupName }}:</u>
+                                    <ul class="list-unstyled">
+                                        @foreach($menuItemOptions as $menuItemOption)
+                                            <li>
+                                                @if ($menuItemOption->quantity > 1)
+                                                    {{ $menuItemOption->quantity }}x
+                                                @endif
+                                                {{ $menuItemOption->order_option_name }}&nbsp;
+                                                @if($menuItemOption->order_option_price > 0)
+                                                    ({{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }})
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </li>
                             @endforeach
                         </ul>

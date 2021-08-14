@@ -89,17 +89,18 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'locations',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit', 'settings'],
+            'partial' => 'form/toolbar_save_button',
+            'saveActions' => ['continue', 'close'],
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
@@ -218,8 +219,30 @@ $config['form']['tabs'] = [
             'size' => 'small',
         ],
 
-        'order' => [
-            'label' => 'lang:admin::lang.locations.text_tab_order',
+        'options[limit_orders]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_orders',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'switch',
+            'comment' => 'lang:admin::lang.locations.help_limit_orders',
+            'span' => 'left',
+        ],
+        'options[limit_orders_count]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_orders_count',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 50,
+            'type' => 'number',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_limit_orders_interval',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[limit_orders]',
+                'condition' => 'checked',
+            ],
+        ],
+
+        'delivery_order' => [
+            'label' => 'lang:admin::lang.locations.text_tab_delivery_order',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'type' => 'section',
         ],
@@ -228,6 +251,18 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 1,
             'type' => 'switch',
+            'span' => 'left',
+        ],
+        'options[future_orders][enable_delivery]' => [
+            'label' => 'lang:admin::lang.locations.label_future_delivery_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'switch',
+            'span' => 'right',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_delivery]',
+                'condition' => 'checked',
+            ],
         ],
         'options[delivery_time_interval]' => [
             'label' => 'lang:admin::lang.locations.label_delivery_time_interval',
@@ -242,25 +277,6 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[delivery_lead_time]' => [
-            'label' => 'lang:admin::lang.locations.label_delivery_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 25,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_delivery_lead_time',
-            'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_delivery]',
-                'condition' => 'checked',
-            ],
-        ],
-        'options[future_orders][enable_delivery]' => [
-            'label' => 'lang:admin::lang.locations.label_future_delivery_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'switch',
-            'span' => 'left',
-        ],
         'options[future_orders][delivery_days]' => [
             'label' => 'lang:admin::lang.locations.label_future_delivery_days',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
@@ -274,12 +290,54 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[delivery_lead_time]' => [
+            'label' => 'lang:admin::lang.locations.label_delivery_lead_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 25,
+            'type' => 'number',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_delivery_lead_time',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_delivery]',
+                'condition' => 'checked',
+            ],
+        ],
+        'options[delivery_time_restriction]' => [
+            'label' => 'lang:admin::lang.locations.label_delivery_time_restriction',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'radiotoggle',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_delivery_time_restriction',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.locations.text_asap_only',
+                'lang:admin::lang.locations.text_later_only',
+            ],
+        ],
 
+        'collection_order' => [
+            'label' => 'lang:admin::lang.locations.text_tab_collection_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'section',
+        ],
         'options[offer_collection]' => [
             'label' => 'lang:admin::lang.locations.label_offer_collection',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 1,
             'type' => 'switch',
+            'span' => 'left',
+        ],
+        'options[future_orders][enable_collection]' => [
+            'label' => 'lang:admin::lang.locations.label_future_collection_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'switch',
+            'span' => 'right',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_collection]',
+                'condition' => 'checked',
+            ],
         ],
         'options[collection_time_interval]' => [
             'label' => 'lang:admin::lang.locations.label_collection_time_interval',
@@ -294,25 +352,6 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[collection_lead_time]' => [
-            'label' => 'lang:admin::lang.locations.label_collection_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 25,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_collection_lead_time',
-            'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_collection]',
-                'condition' => 'checked',
-            ],
-        ],
-        'options[future_orders][enable_collection]' => [
-            'label' => 'lang:admin::lang.locations.label_future_collection_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'switch',
-            'span' => 'left',
-        ],
         'options[future_orders][collection_days]' => [
             'label' => 'lang:admin::lang.locations.label_future_collection_days',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
@@ -326,22 +365,29 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[limit_orders]' => [
-            'label' => 'lang:admin::lang.locations.label_limit_orders',
+        'options[collection_lead_time]' => [
+            'label' => 'lang:admin::lang.locations.label_collection_lead_time',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 0,
-            'type' => 'switch',
-        ],
-        'options[limit_orders_count]' => [
-            'label' => 'lang:admin::lang.locations.label_limit_orders_count',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 50,
+            'default' => 25,
             'type' => 'number',
             'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_collection_lead_time',
             'trigger' => [
                 'action' => 'enable',
-                'field' => 'options[limit_orders]',
+                'field' => 'options[offer_collection]',
                 'condition' => 'checked',
+            ],
+        ],
+        'options[collection_time_restriction]' => [
+            'label' => 'lang:admin::lang.locations.label_collection_time_restriction',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'type' => 'radiotoggle',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_collection_time_restriction',
+            'options' => [
+                'lang:admin::lang.text_none',
+                'lang:admin::lang.locations.text_asap_only',
+                'lang:admin::lang.locations.text_later_only',
             ],
         ],
 
@@ -382,212 +428,37 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[reservation_stay_time]' => [
+            'label' => 'lang:admin::lang.locations.label_reservation_stay_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 45,
+            'type' => 'number',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_reservation_stay_time',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_reservation]',
+                'condition' => 'checked',
+            ],
+        ],
         'options[auto_allocate_table]' => [
             'label' => 'lang:admin::lang.locations.label_auto_allocate_table',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 1,
             'type' => 'switch',
-        ],
-
-        'opening_type' => [
-            'label' => 'lang:admin::lang.locations.label_opening_type',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'section',
-        ],
-        'options[hours][opening][type]' => [
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'radiotoggle',
-            'default' => 'daily',
-            'options' => [
-                '24_7' => 'lang:admin::lang.locations.text_24_7',
-                'daily' => 'lang:admin::lang.locations.text_daily',
-                'flexible' => 'lang:admin::lang.locations.text_flexible',
-            ],
-        ],
-        'options[hours][opening][days]' => [
-            'label' => 'lang:admin::lang.locations.label_opening_days',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'checkboxtoggle',
-            'options' => 'getWeekDaysOptions',
-            'default' => [0, 1, 2, 3, 4, 5, 6],
+            'span' => 'right',
             'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][opening][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][opening][open]' => [
-            'label' => 'lang:admin::lang.locations.label_open_hour',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'datepicker',
-            'default' => '12:00 AM',
-            'mode' => 'time',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][opening][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][opening][close]' => [
-            'label' => 'lang:admin::lang.locations.label_close_hour',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'datepicker',
-            'default' => '11:59 PM',
-            'mode' => 'time',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][opening][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][opening][flexible]' => [
-            'label' => 'lang:admin::lang.locations.text_flexible',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'partial',
-            'path' => 'locations/flexible_hours',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][opening][type]',
-                'condition' => 'value[flexible]',
+                'action' => 'enable',
+                'field' => 'options[offer_reservation]',
+                'condition' => 'checked',
             ],
         ],
 
-        'delivery_type' => [
-            'label' => 'lang:admin::lang.locations.label_delivery_type',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'section',
-        ],
-        'options[hours][delivery][type]' => [
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'radiotoggle',
-            'default' => '24_7',
-            'options' => [
-                '24_7' => 'lang:admin::lang.locations.text_24_7',
-                'daily' => 'lang:admin::lang.locations.text_daily',
-                'flexible' => 'lang:admin::lang.locations.text_flexible',
-            ],
-        ],
-        'options[hours][delivery][days]' => [
-            'label' => 'lang:admin::lang.locations.label_opening_days',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'checkboxtoggle',
-            'options' => 'getWeekDaysOptions',
-            'default' => [0, 1, 2, 3, 4, 5, 6],
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][delivery][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][delivery][open]' => [
-            'label' => 'lang:admin::lang.locations.label_open_hour',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'datepicker',
-            'default' => '12:00 AM',
-            'mode' => 'time',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][delivery][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][delivery][close]' => [
-            'label' => 'lang:admin::lang.locations.label_close_hour',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'datepicker',
-            'default' => '11:59 PM',
-            'mode' => 'time',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][delivery][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][delivery][flexible]' => [
-            'label' => 'lang:admin::lang.locations.text_flexible',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'partial',
-            'path' => 'locations/flexible_hours',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][delivery][type]',
-                'condition' => 'value[flexible]',
-            ],
-        ],
-
-        'collection_type' => [
-            'label' => 'lang:admin::lang.locations.label_collection_type',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'section',
-        ],
-        'options[hours][collection][type]' => [
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'radiotoggle',
-            'default' => '24_7',
-            'options' => [
-                '24_7' => 'lang:admin::lang.locations.text_24_7',
-                'daily' => 'lang:admin::lang.locations.text_daily',
-                'flexible' => 'lang:admin::lang.locations.text_flexible',
-            ],
-        ],
-        'options[hours][collection][days]' => [
-            'label' => 'lang:admin::lang.locations.label_opening_days',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'checkboxtoggle',
-            'options' => 'getWeekDaysOptions',
-            'default' => [0, 1, 2, 3, 4, 5, 6],
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][collection][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][collection][open]' => [
-            'label' => 'lang:admin::lang.locations.label_open_hour',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'datepicker',
-            'default' => '12:00 AM',
-            'mode' => 'time',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][collection][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][collection][close]' => [
-            'label' => 'lang:admin::lang.locations.label_close_hour',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'datepicker',
-            'default' => '11:59 PM',
-            'mode' => 'time',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][collection][type]',
-                'condition' => 'value[daily]',
-            ],
-        ],
-        'options[hours][collection][flexible]' => [
-            'label' => 'lang:admin::lang.locations.text_flexible',
-            'tab' => 'lang:admin::lang.locations.text_tab_opening_hours',
-            'type' => 'partial',
-            'path' => 'locations/flexible_hours',
-            'trigger' => [
-                'action' => 'show',
-                'field' => 'options[hours][collection][type]',
-                'condition' => 'value[flexible]',
-            ],
+        'options[working_hours]' => [
+            'tab' => 'lang:admin::lang.locations.text_tab_schedules',
+            'type' => 'scheduleeditor',
+            'context' => ['edit'],
+            'form' => 'working_hours_model',
         ],
 
         'options[payments]' => [

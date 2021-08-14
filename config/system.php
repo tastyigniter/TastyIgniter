@@ -4,6 +4,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Site Location Mode.
+    |--------------------------------------------------------------------------
+    |
+    | Set whether to enable support for single or multiple restaurant locations.
+    |
+    | Supported: "single", "multiple"
+    |
+    */
+
+    'locationMode' => env('IGNITER_LOCATION_MODE', 'multiple'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Specifies the default themes.
     |--------------------------------------------------------------------------
     |
@@ -204,4 +217,16 @@ return [
 
     'filePermissions' => '777',
     'folderPermissions' => '777',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cross Site Request Forgery (CSRF) Protection
+    |--------------------------------------------------------------------------
+    |
+    | If the CSRF protection is enabled, all "postback" requests are checked
+    | for a valid security token.
+    |
+    */
+
+    'enableCsrfProtection' => TRUE,
 ];

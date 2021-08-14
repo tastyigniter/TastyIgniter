@@ -3,9 +3,9 @@
 namespace Admin\Models;
 
 use Carbon\Carbon;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
-use Model;
 
 /**
  * Payment logs Model Class
@@ -82,12 +82,14 @@ class Payment_logs_model extends Model
 
     public function markAsRefundProcessed()
     {
-        Event::fire('admin.paymentLog.beforeRefundProcessed', [$this]);
+        if (is_null($this->refunded_at)) {
+            Event::fire('admin.paymentLog.beforeRefundProcessed', [$this]);
 
-        $this->refunded_at = Carbon::now();
-        $this->save();
+            $this->refunded_at = Carbon::now();
+            $this->save();
 
-        Event::fire('admin.paymentLog.refundProcessed', [$this]);
+            Event::fire('admin.paymentLog.refundProcessed', [$this]);
+        }
 
         return TRUE;
     }

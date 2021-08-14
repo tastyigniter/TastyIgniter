@@ -4,12 +4,12 @@ namespace Main;
 
 use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
-use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Igniter\Flame\Setting\Facades\Setting;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Main\Classes\ThemeManager;
 use Main\Template\Page;
-use Setting;
 use System\Libraries\Assets;
 use System\Models\Settings_model;
 

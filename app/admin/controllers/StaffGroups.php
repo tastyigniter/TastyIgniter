@@ -2,7 +2,8 @@
 
 namespace Admin\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
+use Admin\Models\Staff_groups_model;
 
 class StaffGroups extends \Admin\Classes\AdminController
 {
@@ -29,11 +30,13 @@ class StaffGroups extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'staff_groups/edit/{staff_group_id}',
             'redirectClose' => 'staff_groups',
+            'redirectNew' => 'staff_groups/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'staff_groups/edit/{staff_group_id}',
             'redirectClose' => 'staff_groups',
+            'redirectNew' => 'staff_groups/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -52,5 +55,10 @@ class StaffGroups extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('staffs', 'users');
+    }
+
+    public function formAfterSave()
+    {
+        Staff_groups_model::syncAutoAssignStatus();
     }
 }

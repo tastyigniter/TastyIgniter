@@ -7,9 +7,9 @@ use Admin\Classes\FormField;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
-use ApplicationException;
-use DB;
+use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Form Relationship
@@ -60,6 +60,11 @@ class Connector extends BaseFormWidget
      */
     public $sortable = FALSE;
 
+    /**
+     * @var bool Items can be edited.
+     */
+    public $editable = TRUE;
+
     public $popupSize;
 
     public function initialize()
@@ -68,6 +73,7 @@ class Connector extends BaseFormWidget
             'formName',
             'form',
             'prompt',
+            'editable',
             'sortable',
             'nameFrom',
             'descriptionFrom',
@@ -112,6 +118,7 @@ class Connector extends BaseFormWidget
         $this->vars['fieldItems'] = $this->processLoadValue() ?? [];
 
         $this->vars['prompt'] = $this->prompt;
+        $this->vars['editable'] = $this->editable;
         $this->vars['sortable'] = $this->sortable;
         $this->vars['nameFrom'] = $this->nameFrom;
         $this->vars['partial'] = $this->partial;
@@ -125,7 +132,7 @@ class Connector extends BaseFormWidget
         $model = $this->getRelationModel()->find($recordId);
 
         if (!$model)
-            throw new ApplicationException('Record not found');
+            throw new ApplicationException(lang('admin::lang.form.record_not_found'));
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
@@ -211,15 +218,15 @@ class Connector extends BaseFormWidget
         $sortedIndexes = (array)post($this->sortableInputName);
         $sortedIndexes = array_flip($sortedIndexes);
 
-        $value = [];
+        $results = [];
         foreach ($items as $index => $item) {
-            $value[$index] = [
+            $results[$index] = [
                 $item->getKeyName() => $item->getKey(),
                 $this->sortColumnName => $sortedIndexes[$item->getKey()],
             ];
         }
 
-        return $value;
+        return $results;
     }
 
     protected function makeItemFormWidget($model, $context)

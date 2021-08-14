@@ -6,7 +6,7 @@ description: Default layout
 <head>
     @partial('head')
 </head>
-<body class="{{ $this->page->bodyClass }}">
+<body class="d-flex flex-column h-100 {{ $this->page->bodyClass }}">
     <header id="main-header">
         <div class="container">
             <div class="row">
@@ -23,7 +23,7 @@ description: Default layout
         @page
     </div>
 
-    <footer id="page-footer">
+    <footer id="page-footer mt-auto">
         @partial('footer')
     </footer>
     <script type="text/javascript" src="{{ asset('app/admin/assets/js/admin.js') }}" id="app-js"></script>

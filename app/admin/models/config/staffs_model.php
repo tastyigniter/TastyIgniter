@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'role' => [
             'label' => 'lang:admin::lang.staff.text_filter_role',
@@ -51,6 +51,7 @@ $config['list']['toolbar'] = [
             'label' => 'lang:admin::lang.side_menu.staff_group',
             'class' => 'btn btn-default',
             'href' => 'staff_groups',
+            'permission' => 'Admin.StaffGroups',
         ],
         'roles' => [
             'label' => 'lang:admin::lang.side_menu.staff_role',
@@ -67,6 +68,17 @@ $config['list']['columns'] = [
         'attributes' => [
             'class' => 'btn btn-edit',
             'href' => 'staffs/edit/{staff_id}',
+        ],
+    ],
+    'impersonate' => [
+        'type' => 'button',
+        'iconCssClass' => 'fa fa-user',
+        'permissions' => 'Admin.Impersonate',
+        'attributes' => [
+            'class' => 'btn btn-outline-secondary',
+            'data-request' => 'onImpersonate',
+            'data-request-data' => 'recordId: \'{staff_id}\'',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
         ],
     ],
     'staff_name' => [
@@ -95,7 +107,7 @@ $config['list']['columns'] = [
         'relation' => 'locations',
         'select' => 'location_name',
         'searchable' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'last_login' => [
         'label' => 'lang:admin::lang.staff.column_last_login',
@@ -120,17 +132,24 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'staffs',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
+        'save_account' => [
+            'label' => 'lang:admin::lang.button_save',
+            'context' => ['account'],
+            'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
@@ -141,6 +160,14 @@ $config['form']['toolbar'] = [
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
             'data-progress-indicator' => 'admin::lang.text_deleting',
             'context' => ['edit'],
+        ],
+        'impersonate' => [
+            'label' => 'lang:admin::lang.customers.text_impersonate',
+            'class' => 'btn btn-default',
+            'data-request' => 'onImpersonate',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
+            'context' => ['edit'],
+            'permission' => 'Admin.Impersonate',
         ],
     ],
 ];
@@ -169,15 +196,33 @@ $config['form']['fields'] = [
         'span' => 'right',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
+    'user[send_invite]' => [
+        'label' => 'lang:admin::lang.staff.label_send_invite',
+        'type' => 'checkbox',
+        'default' => TRUE,
+        'context' => 'create',
+        'options' => [],
+        'placeholder' => 'lang:admin::lang.staff.help_send_invite',
+    ],
     'user[password]' => [
         'label' => 'lang:admin::lang.staff.label_password',
         'type' => 'password',
         'span' => 'left',
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'user[send_invite]',
+            'condition' => 'unchecked',
+        ],
     ],
     'user[password_confirm]' => [
         'label' => 'lang:admin::lang.staff.label_confirm_password',
         'type' => 'password',
         'span' => 'right',
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'user[send_invite]',
+            'condition' => 'unchecked',
+        ],
     ],
     'locations' => [
         'label' => 'lang:admin::lang.staff.label_location',

@@ -34,7 +34,6 @@ $config['form']['fields'] = [
 $config['form']['rules'] = [
     ['option_name', 'lang:admin::lang.menu_options.label_option_name', 'required|min:2|max:32'],
     ['display_type', 'lang:admin::lang.menu_options.label_display_type', 'required|alpha'],
-    ['locations', 'lang:admin::lang.label_location', 'required'],
     ['locations.*', 'lang:admin::lang.label_location', 'integer'],
 ];
 

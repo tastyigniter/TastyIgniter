@@ -22,7 +22,7 @@
                 <div class="text-muted">{{ $staffGroupNames }}</div>
             </div>
         </div>
-        @if(!AdminLocation::hasOneLocation() AND $staffLocations)
+        @if(AdminLocation::hasLocations() AND $staffLocations)
             <div class="px-3 pb-3">
                 <form method="POST" accept-charset="UTF-8">
                     <div class="input-group">
@@ -65,13 +65,13 @@
             <i class="fa fa-power-off fa-fw"></i>@lang('admin::lang.text_logout')
         </a>
         <div role="separator" class="dropdown-divider"></div>
-        <a class="dropdown-item text-muted" href="https://tastyigniter.com/about" target="_blank">
+        <a class="dropdown-item text-black-50" href="https://tastyigniter.com/about" target="_blank">
             <i class="fa fa-info-circle fa-fw"></i>@lang('admin::lang.text_about_tastyigniter')
         </a>
-        <a class="dropdown-item text-muted" href="https://tastyigniter.com/docs" target="_blank">
+        <a class="dropdown-item text-black-50" href="https://tastyigniter.com/docs" target="_blank">
             <i class="fa fa-book fa-fw"></i>@lang('admin::lang.text_documentation')
         </a>
-        <a class="dropdown-item text-muted" href="https://forum.tastyigniter.com" target="_blank">
+        <a class="dropdown-item text-black-50" href="https://forum.tastyigniter.com" target="_blank">
             <i class="fa fa-users fa-fw"></i>@lang('admin::lang.text_community_support')
         </a>
     </div>

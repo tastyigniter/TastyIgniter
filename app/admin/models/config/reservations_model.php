@@ -21,7 +21,7 @@ $config['list']['filter'] = [
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -81,7 +81,7 @@ $config['list']['columns'] = [
         'relation' => 'location',
         'select' => 'location_name',
         'searchable' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'full_name' => [
         'label' => 'lang:admin::lang.label_name',
@@ -142,17 +142,17 @@ $config['calendar']['toolbar'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'reservations',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [

@@ -6,10 +6,10 @@ use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
-use Model;
-use Request;
 use System\Traits\SendsMailTemplate;
 
 /**
@@ -77,6 +77,8 @@ class Reservations_model extends Model
     ];
 
     protected $purgeable = ['tables'];
+
+    public $appends = ['customer_name', 'duration', 'table_name', 'reservation_datetime', 'reservation_end_datetime'];
 
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',
@@ -158,7 +160,7 @@ class Reservations_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', false) AND $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', false)) {
+        if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE)) {
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 
@@ -220,17 +222,13 @@ class Reservations_model extends Model
             AND !isset($this->attributes['reserve_time'])
         ) return null;
 
-        return Carbon::createFromTimeString(
-            "{$this->attributes['reserve_date']} {$this->attributes['reserve_time']}"
-        );
+        return make_carbon($this->attributes['reserve_date'])
+            ->setTimeFromTimeString($this->attributes['reserve_time']);
     }
 
     public function getReservationEndDatetimeAttribute($value)
     {
-        if ($this->duration)
-            return $this->reservation_datetime->copy()->addMinutes($this->duration);
-
-        return $this->reservation_datetime->copy()->endOfDay();
+        return $this->reserve_end_time;
     }
 
     public function getOccasionAttribute()
@@ -267,6 +265,9 @@ class Reservations_model extends Model
     public static function findReservedTables($location, $dateTime)
     {
         $query = self::with('tables');
+        $query->whereHas('tables', function ($query) use ($location) {
+            $query->whereHasLocation($location->getKey());
+        });
         $query->whereLocationId($location->getKey());
         $query->whereBetweenDate($dateTime->toDateTimeString());
         $query->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);

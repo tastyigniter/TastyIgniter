@@ -6,10 +6,10 @@ use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
-use DB;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Filter
@@ -71,6 +71,12 @@ class Filter extends BaseWidget
 
         // date picker
         $this->addJs('js/datepicker.js', 'datepicker-js');
+
+        // selectlist
+        $this->addJs('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js', 'bootstrap-multiselect-js');
+        $this->addCss('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css', 'bootstrap-multiselect-css');
+        $this->addJs('~/app/admin/widgets/form/assets/js/selectlist.js', 'selectlist-js');
+        $this->addCss('~/app/admin/widgets/form/assets/css/selectlist.css', 'selectlist-css');
     }
 
     public function initialize()
@@ -147,6 +153,7 @@ class Filter extends BaseWidget
 
             switch ($scope->type) {
                 case 'select':
+                case 'selectlist':
                     $active = $value;
                     $this->setScopeValue($scope, $active);
                     break;
@@ -167,10 +174,10 @@ class Filter extends BaseWidget
 
                 case 'daterange':
                     $format = array_get($scope->config, 'showTimePicker', FALSE) ? 'Y-m-d H:i:s' : 'Y-m-d';
-                    $dateRange = (is_array($value) AND count($value) === 2) ? [
+                    $dateRange = (is_array($value) AND count($value) === 2 AND $value[0] != '') ? [
                         make_carbon($value[0])->format($format),
                         make_carbon($value[1])->format($format),
-                    ] : null;
+                    ] : NULL;
                     $this->setScopeValue($scope, $dateRange);
                     break;
             }
@@ -282,7 +289,7 @@ class Filter extends BaseWidget
             $methodName = $options;
 
             if (!$model->methodExists($methodName)) {
-                throw new Exception(sprintf("The model class %s must define a method %s returning options for the '%s' filter.",
+                throw new Exception(sprintf(lang('admin::lang.list.filter_missing_definitions'),
                     get_class($model), $methodName, $scope->scopeName
                 ));
             }
@@ -565,7 +572,9 @@ class Filter extends BaseWidget
     public function getScope($scope)
     {
         if (!isset($this->allScopes[$scope])) {
-            throw new Exception('No definition for scope '.$scope);
+            throw new Exception(sprintf(lang('admin::lang.list.filter_missing_scope_definitions'),
+                $scope
+            ));
         }
 
         return $this->allScopes[$scope];

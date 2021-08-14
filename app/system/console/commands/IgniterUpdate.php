@@ -46,7 +46,7 @@ class IgniterUpdate extends Command
 
         $updatesCollection = collect($itemsToUpdate)->groupBy('type');
 
-        $coreUpdate = $updatesCollection->pull('core')->first();
+        $coreUpdate = optional($updatesCollection->pull('core'))->first();
         $coreCode = array_get($coreUpdate, 'code');
         $coreVersion = array_get($coreUpdate, 'version');
         $coreHash = array_get($coreUpdate, 'hash');
@@ -91,7 +91,8 @@ class IgniterUpdate extends Command
 
             $this->output->writeln(sprintf('<info>Extracting %s files</info>', $addonName));
 
-            $updateManager->extractFile($addonCode, $addonType.'s/');
+            $extractTo = $addonType === 'theme' ? theme_path('/') : extension_path('/');
+            $updateManager->extractFile($addonCode, $extractTo);
         });
 
         // Run migrations

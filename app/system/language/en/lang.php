@@ -53,6 +53,7 @@ return [
         'date_time_format' => 'DD MMMM YYYY HH:mm',
         'date_time_format_short' => 'DD MMM \a\t HH:mm',
         'date_time_format_long' => 'dddd, Do MMMM YYYY \a\t HH:mm a',
+        'weekday_format' => 'ddd',
         'day_format' => 'ddd DD',
         'day_time_format' => 'ddd DD hh:mm a',
         'day_time_format_short' => 'ddd hh:mm a',
@@ -240,6 +241,8 @@ return [
         'help_variables' => 'Drag these variables into the content area:',
 
         'alert_test_message_sent' => 'Test message successfully sent to %s',
+        'alert_template_id_not_found' => 'Template id not found',
+        'alert_template_not_found' => ' Template not found',
     ],
 
     'mail_variables' => [
@@ -348,7 +351,7 @@ return [
         'text_tab_mail' => 'Mail',
         'text_tab_server' => 'Advanced',
 
-        'text_tab_desc_general' => 'Change your restaurant name, email and url, default language, currency and date time formats, ...',
+        'text_tab_desc_general' => 'Change your restaurant name, email, default language, currency...',
         'text_tab_desc_mail' => 'Settings for sending out emails',
         'text_tab_desc_server' => 'Manage advanced system settings such as enabling/disabling maintenance.',
 
@@ -404,7 +407,6 @@ return [
 
         'label_site_name' => 'Restaurant Name',
         'label_site_email' => 'Restaurant Email',
-        'label_site_url' => 'Restaurant URL',
         'label_site_logo' => 'Restaurant Logo',
         'label_timezone' => 'Default Timezone',
         'label_site_currency' => 'Default Currency',
@@ -415,7 +417,6 @@ return [
         'label_detect_language' => 'Detect Browser Language',
         'label_site_language' => 'Default Language',
         'label_customer_group' => 'Customer Group',
-        'label_site_location_mode' => 'Location Mode',
         'label_country' => 'Country',
         'label_maps_api_key' => 'Google Maps API Key',
         'label_distance_unit' => 'Distance Unit',
@@ -430,6 +431,7 @@ return [
         'label_completed_order_status' => 'Completed Order Status',
         'label_canceled_order_status' => 'Cancellation Order Status',
         'label_menus_page' => 'Menu Items Page',
+        'label_reservation_page' => 'Reservation Page',
         'label_guest_order' => 'Allow Guest Orders',
         'label_location_order' => 'Reject Orders Outside Delivery Area',
         'label_invoice_prefix' => 'Invoice Prefix',
@@ -480,7 +482,6 @@ return [
         'alert_delete_setup_files' => '<b>SECURITY WARNING!</b> Delete the setup files to stop someone else from overwriting your site.',
 
         'help_timezone' => 'The default timezone. Choose a city in the same timezone as your restaurant.',
-        'help_site_location_mode' => 'Set whether to enable support for single or multiple restaurant locations.',
         'help_detect_language' => 'Enable or disable user browser language detection. If enabled your site will be translated to the browser language.',
         'help_maps_api_key' => 'An API Key is required to use Google Maps and/or Geocoding. <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key">Where can I find my Google Maps API Key?</a> Enable Google Maps Geocoding API and Google Maps JavaScript API in your Google Developer account',
         'help_default_geocoder' => 'Tell the system which geocoder service to use when geocoding addresses. \'Chain\' is a special geocoder that runs both google and open street maps geocoder and stops once it gets a valid response.',
@@ -499,6 +500,7 @@ return [
         'help_completed_order_status' => 'Select the order status to mark an order as completed before the order invoice is created and a customer can leave review',
         'help_canceled_order_status' => 'Select the order status when an order is marked as canceled or suspected of fraudulent activity',
         'help_menus_page' => 'Choose a page to display your menu items',
+        'help_reservation_page' => 'Choose a page to display your booking form',
         'help_guest_order' => 'Allow customer to place an order without creating an account.',
         'help_location_order' => 'If disabled, the customer will be allowed to order without entering their postcode/adddress.',
         'help_invoice_prefix' => 'Set the invoice prefix (e.g. <b>INV-2015-00</b>1123). Leave blank to use no prefix. The following macros are available: {year} {month} {day} {hour} {minute} {second}',
@@ -638,7 +640,12 @@ return [
         'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check Again',
         'button_updates' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
         'button_update' => '<i class="fa fa-check"></i>&nbsp;&nbsp;Update',
+        'button_marketplace' => 'Open TastyIgniter Marketplace&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
 
         'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
+        'alert_item_to_ignore' => 'Select item(s) to ignore.',
+        'alert_no_carte_key' => 'No carte key specified.',
+        'alert_no_items' => 'No item(s) specified.',
+
     ],
 ];

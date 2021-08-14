@@ -2,9 +2,9 @@
 
 namespace Admin\Actions;
 
+use Admin\Facades\Template;
 use System\Classes\BaseController;
 use System\Classes\ControllerAction;
-use Template;
 
 class CalendarController extends ControllerAction
 {
