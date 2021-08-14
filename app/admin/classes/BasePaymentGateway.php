@@ -26,6 +26,8 @@ class BasePaymentGateway extends ModelAction
 
     protected $configRules = [];
 
+    protected $requirePrecheckoutValidation = false;
+
     /**
      * Class constructor
      *
@@ -238,6 +240,14 @@ class BasePaymentGateway extends ModelAction
 
     public function processRefundForm($data, $order, $paymentLog)
     {
+    }
+
+    /**
+     * This method should return TRUE if the gateway requires pre-checkout validation of non payment fields
+     */
+    public function requirePrecheckoutValidation()
+    {
+        return $requirePrecheckoutValidation;
     }
 
     /**
