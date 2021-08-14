@@ -827,6 +827,7 @@ return [
         'categories' => 'Create, edit and delete menu categories',
         'customer_groups' => 'Manage customer groups',
         'customers' => 'Create, edit and delete customers',
+        'impersonate_staff' => 'Ability to impersonate staff',
         'impersonate_customers' => 'Ability to impersonate customers',
         'locations' => 'Create, edit and delete locations',
         'menus' => 'Create, edit and delete menu items',
