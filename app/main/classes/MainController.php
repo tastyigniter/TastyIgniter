@@ -893,7 +893,7 @@ class MainController extends BaseController
         if (!is_array($params))
             $params = [];
 
-        if ($path == setting('menus_page'))
+        if (in_array($path, [setting('reservation_page'), setting('menus_page')]))
             $params = $this->bindLocationRouteParameter($params);
 
         return $this->url($path, $params);
