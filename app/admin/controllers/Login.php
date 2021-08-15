@@ -30,7 +30,7 @@ class Login extends \Admin\Classes\AdminController
 
     public function reset()
     {
-        if (AdminAuth::islogged()) {
+        if (AdminAuth::isLogged()) {
             return $this->redirect('dashboard');
         }
 
@@ -53,7 +53,7 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            ['username', 'lang:admin::lang.login.label_username', 'required|exists:users,username'],
+            ['username', 'lang:admin::lang.login.label_username', 'required'],
             ['password', 'lang:admin::lang.login.label_password', 'required|min:6'],
         ]);
 
