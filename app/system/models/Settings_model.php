@@ -105,6 +105,13 @@ class Settings_model extends Model
         return Page::getDropdownOptions($theme, TRUE);
     }
 
+    public static function getReservationPageOptions()
+    {
+        $theme = ThemeManager::instance()->getActiveTheme();
+
+        return Page::getDropdownOptions($theme, TRUE);
+    }
+
     public static function onboardingIsComplete()
     {
         if (!Session::has('settings.errors'))
