@@ -624,7 +624,7 @@ class ExtensionManager
         $results = [];
         $extensions = $this->getExtensions();
         foreach ($extensions as $id => $extension) {
-            if (!method_exists($extension, $methodName)) {
+            if (!is_callable([$extension, $methodName])) {
                 continue;
             }
 
