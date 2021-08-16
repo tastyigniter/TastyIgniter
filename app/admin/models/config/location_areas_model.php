@@ -56,6 +56,37 @@ return [
                     ],
                 ],
             ],
+            'boundaries[distance]' => [
+                'label' => 'lang:admin::lang.locations.label_delivery_distance',
+                'type' => 'repeater',
+                'sortable' => TRUE,
+                'commentAbove' => 'lang:admin::lang.locations.help_delivery_distance',
+                'form' => [
+                    'fields' => [
+                        'priority' => [
+                            'type' => 'hidden',
+                        ],
+                        'type' => [
+                            'label' => 'lang:admin::lang.locations.label_charge_condition',
+                            'type' => 'select',
+                            'options' => [
+                                'greater' => 'greater than',
+                                'less' => 'less than',
+                                'equals_or_greater' => 'equals or greater than',
+                                'equals_or_less' => 'equals or less than',
+                            ],
+                        ],
+                        'distance' => [
+                            'label' => 'lang:admin::lang.locations.label_area_distance',
+                            'type' => 'text',
+                        ],
+                        'charge' => [
+                            'label' => 'lang:admin::lang.locations.label_area_charge',
+                            'type' => 'text',
+                        ],
+                    ],
+                ],
+            ],
             'type' => [
                 'label' => 'lang:admin::lang.locations.label_area_type',
                 'type' => 'radiotoggle',
