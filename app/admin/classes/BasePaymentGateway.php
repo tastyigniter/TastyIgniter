@@ -247,7 +247,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function requirePrecheckoutValidation()
     {
-        return $requirePrecheckoutValidation;
+        return $this->requirePrecheckoutValidation;
     }
 
     /**
