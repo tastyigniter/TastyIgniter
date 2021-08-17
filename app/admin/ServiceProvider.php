@@ -674,6 +674,9 @@ class ServiceProvider extends AppServiceProvider
                 'Admin.Customers' => [
                     'label' => 'admin::lang.permissions.customers', 'group' => 'admin::lang.permissions.name',
                 ],
+                'Admin.Impersonate' => [
+                    'label' => 'admin::lang.permissions.impersonate_staff', 'group' => 'admin::lang.permissions.name',
+                ],
                 'Admin.ImpersonateCustomers' => [
                     'label' => 'admin::lang.permissions.impersonate_customers', 'group' => 'admin::lang.permissions.name',
                 ],
