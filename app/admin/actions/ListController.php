@@ -169,7 +169,7 @@ class ListController extends ControllerAction
 
         // Switch records
         if (($count = $records->count()) && is_bool($records[0][$column])) {
-            $records->each(function($record) use ($column) {
+            $records->each(function ($record) use ($column) {
                 $record[$column] = !$record[$column];
                 $record->save();
             });
