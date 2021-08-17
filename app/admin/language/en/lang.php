@@ -27,6 +27,7 @@ return [
     'text_updated' => 'updated',
     'text_added' => 'added',
     'text_deleted' => 'deleted',
+    'text_switched' => 'switched',
     'text_default' => 'Default',
     'text_select_all' => 'Select All',
     'text_select_none' => 'Select None',
@@ -74,6 +75,7 @@ return [
 
     'button_new' => '<i class="fa fa-plus"></i>&nbsp;&nbsp;New',
     'button_delete' => '<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Delete',
+    'button_switch' => '<i class="fa fa-sync-alt"></i>&nbsp;&nbsp;ON/OFF',
     'button_add' => 'Add',
     'button_edit' => 'Edit',
     'button_continue' => 'Continue',
@@ -194,6 +196,7 @@ return [
         'missing_definitions' => 'List action used in %s does not have definitions.',
         'invalid_column_datetime' => 'Column value \'%s\' is not a DateTime object, are you missing a $dates reference in the Model?',
         'delete_empty' => 'Nothing selected to delete.',
+        'switch_empty' => 'Nothing selected to switch.',
         'missing_column' => 'List used in %s has no list columns defined.',
         'text_empty' => 'Nothing found.',
         'text_setup' => 'Setup',

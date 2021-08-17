@@ -50,6 +50,14 @@ $config['list']['toolbar'] = [
             'href' => 'allergens',
             'permission' => 'Admin.Allergens',
         ],
+        'switch' => [
+            'label' => 'lang:admin::lang.button_switch',
+            'class' => 'btn btn-primary',
+            'data-request' => 'onSwitch',
+            'data-request-form' => '#list-form',
+            'data-request-data' => "'column':'".'menu_status'."'",
+            'context' => ['edit'],
+        ]
     ],
 ];
 

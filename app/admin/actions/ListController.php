@@ -131,11 +131,53 @@ class ListController extends ControllerAction
                 $record->delete();
             }
 
-            $prefix = ($count > 1) ? ' records' : 'record';
+            $prefix = ($count > 1) ? ' records' : ' record';
             flash()->success(sprintf(lang('admin::lang.alert_success'), '['.$count.']'.$prefix.' '.lang('admin::lang.text_deleted')));
         }
         else {
             flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), lang('admin::lang.text_deleted')));
+        }
+
+        return $this->controller->refreshList($alias);
+    }
+
+    public function index_onSwitch()
+    {
+        $checkedIds = post('checked');
+        $column = post('column');
+
+        if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds)) {
+            flash()->success(lang('admin::lang.list.switch_empty'));
+
+            return $this->controller->refreshList();
+        }
+
+        if (!$alias = post('alias'))
+            $alias = $this->primaryAlias;
+
+        $listConfig = $this->makeConfig($this->listConfig[$alias], $this->requiredConfig);
+
+        $modelClass = $listConfig['model'];
+        $model = new $modelClass;
+        $model = $this->controller->listExtendModel($model, $alias);
+
+        $query = $model->newQuery();
+        $this->controller->listExtendQueryBefore($query, $alias);
+
+        $query->whereIn($model->getKeyName(), $checkedIds);
+        $records = $query->get();
+
+        // Switch records
+        if (($count = $records->count()) && is_bool($records[0][$column])) {
+            $records->each(function($record) use ($column){
+                $record[$column] = !$record[$column];
+                $record->save();
+            });
+            $prefix = ($count > 1) ? ' records' : ' record';
+            flash()->success(sprintf(lang('admin::lang.alert_success'), '['.$count.']'.$prefix.' '.lang('admin::lang.text_switched')));
+        }
+        else {
+            flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), lang('admin::lang.text_switched')));
         }
 
         return $this->controller->refreshList($alias);
