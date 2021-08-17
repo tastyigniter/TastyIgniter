@@ -138,6 +138,9 @@ class IgniterInstall extends Command
         $this->dbConfig['password'] = $this->ask('MySQL Password', Config::get("database.connections.$name.password") ?: FALSE) ?: '';
         $this->dbConfig['prefix'] = $this->ask('MySQL Table Prefix', Config::get("database.connections.$name.prefix") ?: FALSE) ?: '';
 
+        if ($this->dbConfig['prefix'] == '')
+            $this->dbConfig['prefix'] = 'ti_';
+
         DatabaseSeeder::$siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
         DatabaseSeeder::$siteUrl = $this->ask('Site URL', Config::get('app.url'));
 
