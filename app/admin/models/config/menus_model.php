@@ -56,7 +56,7 @@ $config['list']['toolbar'] = [
             'data-request' => 'onSwitch',
             'data-request-form' => '#list-form',
             'data-request-data' => "'column':'".'menu_status'."'",
-        ]
+        ],
     ],
 ];
 
