@@ -7,6 +7,7 @@ use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use RecursiveDirectoryIterator;
@@ -762,6 +763,9 @@ class ExtensionManager
         $model->save();
 
         $this->updateInstalledExtensions($model->name);
+
+        if (config('system.enablePublicFolderMirror'))
+            Artisan::call('igniter:mirror', ['destination' => 'public/']);
 
         return TRUE;
     }

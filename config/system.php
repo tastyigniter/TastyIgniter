@@ -229,4 +229,17 @@ return [
     */
 
     'enableCsrfProtection' => TRUE,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mirror public folder
+    |--------------------------------------------------------------------------
+    |
+    | If mirror public folder is enabled, all public files will be
+    | automatically created as a symlink under the public directory,
+    | on fresh installations.
+    |
+    */
+
+    'enablePublicFolderMirror' => env('IGNITER_MIRROR_PUBLIC', TRUE),
 ];

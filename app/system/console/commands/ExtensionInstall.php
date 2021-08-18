@@ -2,7 +2,6 @@
 
 namespace System\Console\Commands;
 
-use Artisan;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use System\Classes\ExtensionManager;
@@ -55,9 +54,6 @@ class ExtensionInstall extends Command
         $this->output->writeln(sprintf('<info>Installing %s extension</info>', $code));
         ExtensionManager::instance()->loadExtensions();
         ExtensionManager::instance()->installExtension($code, $version);
-
-        if (env('IGNITER_MIRROR'))
-            Artisan::call('igniter:mirror', ['destination' => 'public/']);
     }
 
     /**

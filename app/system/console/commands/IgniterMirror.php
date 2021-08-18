@@ -2,9 +2,9 @@
 
 namespace System\Console\Commands;
 
-use Event;
-use File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\File;
 use StdClass;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -40,10 +40,14 @@ class IgniterMirror extends Command
 
     protected $wildcards = [
         'app/*/assets',
+        'app/*/actions/*/assets',
         'app/*/dashboardwidgets/*/assets',
         'app/*/formwidgets/*/assets',
+        'app/*/widgets/*/assets',
 
         'extensions/*/*/assets',
+        'extensions/*/*/actions/*/assets',
+        'extensions/*/*/dashboardwidgets/*/assets',
         'extensions/*/*/formwidgets/*/assets',
         'extensions/*/*/widgets/*/assets',
 
@@ -64,18 +68,6 @@ class IgniterMirror extends Command
         $paths->directories = $this->directories;
         $paths->wildcards = $this->wildcards;
 
-        /**
-         * @event system.console.mirror.extendPaths
-         * Enables extending the `php artisan igniter:mirror` command
-         *
-         * You will have access to a $paths stdClass with `files`, `directories`, `wildcards` properties available for modifying.
-         *
-         * Example usage:
-         *
-         *     Event::listen('system.console.mirror.extendPaths', function ($paths) {
-         *          $paths->directories = array_merge($paths->directories, ['plugins/myauthor/myplugin/public']);
-         *     });
-         */
         Event::fire('system.console.mirror.extendPaths', [$paths]);
 
         foreach ($paths->files as $file) {
@@ -102,7 +94,7 @@ class IgniterMirror extends Command
         $dest = $this->getDestinationPath().'/'.$file;
 
         if (!File::isFile($src) || File::isFile($dest)) {
-            return false;
+            return FALSE;
         }
 
         $this->mirror($src, $dest);
@@ -117,11 +109,11 @@ class IgniterMirror extends Command
         $dest = $this->getDestinationPath().'/'.$directory;
 
         if (!File::isDirectory($src) || File::isDirectory($dest)) {
-            return false;
+            return FALSE;
         }
 
         if (!File::isDirectory(dirname($dest))) {
-            File::makeDirectory(dirname($dest), 0755, true);
+            File::makeDirectory(dirname($dest), 0755, TRUE);
         }
 
         $this->mirror($src, $dest);
@@ -129,7 +121,7 @@ class IgniterMirror extends Command
 
     protected function mirrorWildcard($wildcard)
     {
-        if (strpos($wildcard, '*') === false) {
+        if (strpos($wildcard, '*') === FALSE) {
             return $this->mirrorDirectory($wildcard);
         }
 
@@ -138,7 +130,7 @@ class IgniterMirror extends Command
         $startDir = base_path().'/'.$start;
 
         if (!File::isDirectory($startDir)) {
-            return false;
+            return FALSE;
         }
 
         foreach (File::directories($startDir) as $directory) {
@@ -166,12 +158,12 @@ class IgniterMirror extends Command
         }
 
         $destPath = $this->argument('destination');
-        if (realpath($destPath) === false) {
+        if (realpath($destPath) === FALSE) {
             $destPath = base_path().'/'.$destPath;
         }
 
         if (!File::isDirectory($destPath)) {
-            File::makeDirectory($destPath, 0755, true);
+            File::makeDirectory($destPath, 0755, TRUE);
         }
 
         $destPath = realpath($destPath);
