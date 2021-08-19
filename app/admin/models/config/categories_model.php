@@ -21,6 +21,15 @@ $config['list']['filter'] = [
     ],
 ];
 
+$config['list']['actions'] = [
+    'bulkdelete' => [
+        'label' => 'lang:admin::lang.button_delete',
+    ],
+    'bulkedit' => [
+        'label' => 'lang:admin::lang.button_edit',
+    ],
+];
+
 $config['list']['toolbar'] = [
     'buttons' => [
         'create' => [
