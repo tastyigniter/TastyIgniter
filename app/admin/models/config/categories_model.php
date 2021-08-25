@@ -21,15 +21,6 @@ $config['list']['filter'] = [
     ],
 ];
 
-$config['list']['actions'] = [
-    'bulkdelete' => [
-        'label' => 'lang:admin::lang.button_delete',
-    ],
-    'bulkedit' => [
-        'label' => 'lang:admin::lang.button_edit',
-    ],
-];
-
 $config['list']['toolbar'] = [
     'buttons' => [
         'create' => [
@@ -37,12 +28,22 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'categories/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.list.actions.label_status',
+        'cssClass' => 'btn btn-light',
+    ],
+    'edit' => [
+        'label' => 'lang:admin::lang.list.actions.label_edit',
+        'cssClass' => 'btn btn-light',
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'cssClass' => 'btn btn-light text-danger',
+        'attributes' => [
             'data-request-data' => "_method:'DELETE'",
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],

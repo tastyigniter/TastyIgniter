@@ -55,7 +55,7 @@ class ServiceProvider extends AppServiceProvider
             $this->registerSystemSettings();
             $this->registerPermissions();
             $this->registerDashboardWidgets();
-            $this->registerListWidgets();
+            $this->registerBulkActionWidgets();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
@@ -134,19 +134,19 @@ class ServiceProvider extends AppServiceProvider
         });
     }
 
-    public function registerListWidgets()
+    protected function registerBulkActionWidgets()
     {
-        Widgets::instance()->registerListWidgets(function (Widgets $manager) {
-            $manager->registerListWidget(\Admin\ListWidgets\BulkStatus::class, [
-                'code' => 'bulkstatus',
+        Widgets::instance()->registerBulkActionWidgets(function (Widgets $manager) {
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Status::class, [
+                'code' => 'status',
             ]);
 
-            $manager->registerListWidget(\Admin\ListWidgets\BulkEdit::class, [
-                'code' => 'bulkedit',
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Edit::class, [
+                'code' => 'edit',
             ]);
 
-            $manager->registerListWidget(\Admin\ListWidgets\BulkDelete::class, [
-                'code' => 'bulkdelete',
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Delete::class, [
+                'code' => 'delete',
             ]);
         });
     }

@@ -20,13 +20,31 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'countries/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.list.actions.label_status',
+        'attributes' => [
+            'class' => 'btn btn-light',
+            'type' => 'popup',
+        ],
+    ],
+    'edit' => [
+        'label' => 'lang:admin::lang.list.actions.label_edit',
+        'useFormFields' => ['*'],
+        'ignoreFormFields' => ['*'],
+        'attributes' => [
+            'class' => 'btn btn-light',
+            'type' => 'popup',
+        ],
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'attributes' => [
+            'class' => 'btn btn-light text-danger',
             'data-request-data' => "_method:'DELETE'",
-            'data-request-form' => '#list-form',
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
     ],
