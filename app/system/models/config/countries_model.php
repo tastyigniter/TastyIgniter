@@ -28,7 +28,6 @@ $config['list']['bulkActions'] = [
         'label' => 'lang:admin::lang.list.actions.label_status',
         'attributes' => [
             'class' => 'btn btn-light',
-            'type' => 'popup',
         ],
     ],
     'edit' => [
@@ -37,7 +36,6 @@ $config['list']['bulkActions'] = [
         'ignoreFormFields' => ['*'],
         'attributes' => [
             'class' => 'btn btn-light',
-            'type' => 'popup',
         ],
     ],
     'delete' => [
