@@ -85,4 +85,9 @@ class Customer extends \Igniter\Flame\Auth\Manager
 
         return $this->user = $model;
     }
+
+    public function extendUserQuery($query)
+    {
+        $query->isEnabled();
+    }
 }

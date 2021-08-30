@@ -212,7 +212,7 @@ class Router
             $pages = $this->theme->listPages();
             $map = [];
             foreach ($pages as $page) {
-                if (!$page->permalink)
+                if (!optional($page)->permalink)
                     continue;
 
                 $map[] = ['file' => $page->getFileName(), 'pattern' => $page->permalink];

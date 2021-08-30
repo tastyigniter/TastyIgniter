@@ -85,7 +85,7 @@ class Staffs extends \Admin\Classes\AdminController
 
     public function onImpersonate($context, $recordId = null)
     {
-        if (!AdminAuth::user()->hasPermission('Admin.ImpersonateCustomers')) {
+        if (!AdminAuth::user()->hasPermission('Admin.Impersonate')) {
             throw new ApplicationException(lang('admin::lang.staff.alert_login_restricted'));
         }
 

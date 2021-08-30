@@ -111,6 +111,11 @@
   },
   {
     "sort": "config",
+    "item": "reservation_page",
+    "value": "reservation/reservation"
+  },
+  {
+    "sort": "config",
     "item": "guest_order",
     "value": "1"
   },
