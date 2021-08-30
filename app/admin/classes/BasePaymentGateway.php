@@ -241,6 +241,14 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
+     * This method should return TRUE if the gateway requires pre-checkout validation of non payment fields
+     */
+    public function requiresPreCheckoutValidation()
+    {
+        return FALSE;
+    }
+
+    /**
      * Creates an instance of the order model
      */
     protected function createOrderModel()
