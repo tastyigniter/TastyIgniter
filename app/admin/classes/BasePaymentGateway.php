@@ -163,6 +163,15 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
+     * This method should return TRUE if the gateway completes the payment on the client's browsers.
+     * Allows the system to take extra steps during checkout before  completing the payment
+     */
+    public function completesPaymentOnClient()
+    {
+        return FALSE;
+    }
+
+    /**
      * Processes payment using passed data.
      *
      * @param array $data Posted payment form data.
@@ -238,14 +247,6 @@ class BasePaymentGateway extends ModelAction
 
     public function processRefundForm($data, $order, $paymentLog)
     {
-    }
-
-    /**
-     * This method should return TRUE if the gateway requires pre-checkout validation of non payment fields
-     */
-    public function requiresPreCheckoutValidation()
-    {
-        return FALSE;
     }
 
     /**
