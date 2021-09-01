@@ -1,11 +1,17 @@
 {!! form_open([
-    'id' => 'list-form',
+    'id' => $this->getId('form'),
     'role' => 'form',
     'method' => 'POST',
 ]) !!}
 
-<div class="list-table table-responsive">
-    <table class="table table-hover mb-0 border-bottom">
+<div
+    id="{{ $this->getId() }}"
+    class="list-table table-responsive"
+>
+    <table
+        id="{{ $this->getId('table') }}"
+        class="table table-hover mb-0 border-bottom"
+    >
         <thead>
         {!! $this->makePartial('lists/list_head') !!}
         </thead>
