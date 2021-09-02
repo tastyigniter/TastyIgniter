@@ -330,11 +330,6 @@ class ServiceProvider extends AppServiceProvider
         Event::listen(CommandStarting::class, function () {
             config()->set('system.activityRecordsTTL', (int)setting('activity_log_timeout', 60));
         });
-
-        $this->app->resolving('system.setting', function ($setting, $app) {
-            if (strlen($locationMode = setting('site_location_mode')))
-                $app['config']->set('system.locationMode', $locationMode);
-        });
     }
 
     protected function registerAssets()
