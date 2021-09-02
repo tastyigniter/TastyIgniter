@@ -313,6 +313,8 @@ return [
         'column_telephone' => 'Telephone',
         'column_date_added' => 'Date Registered',
 
+        'button_activate' => 'Manually Activate',
+
         'label_first_name' => 'First Name',
         'label_last_name' => 'Last Name',
         'label_password' => 'Password',
@@ -334,6 +336,7 @@ return [
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
         'alert_impersonate_confirm' => 'Are you sure you want to impersonate this customer? You can revert to your original state by logging out.',
         'alert_impersonate_success' => 'You are now impersonating customer: %s',
+        'alert_activation_success' => 'Customer activated successfully.',
         'alert_customer_not_active' => "Cannot login user '%s' until activated.",
         'alert_customer_payment_profile_not_found' => 'Customer payment profile not found!',
     ],

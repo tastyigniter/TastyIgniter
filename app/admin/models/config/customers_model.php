@@ -155,6 +155,7 @@ $config['form']['tabs'] = [
             'type' => 'checkbox',
             'context' => 'create',
             'default' => TRUE,
+            'options' => [],
             'placeholder' => 'lang:admin::lang.customers.help_send_invite',
         ],
         'password' => [

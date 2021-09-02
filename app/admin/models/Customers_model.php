@@ -102,10 +102,11 @@ class Customers_model extends AuthUserModel
         if (!$this->group OR !$this->group->requiresApproval())
             return;
 
-        if ($this->is_activated OR $this->status)
+        if ($this->is_activated AND $this->status)
             return;
 
-        throw new Exception(sprintf(lang('admin::lang.customers.alert_customer_not_active'), $this->email
+        throw new Exception(sprintf(
+            lang('admin::lang.customers.alert_customer_not_active'), $this->email
         ));
     }
 
