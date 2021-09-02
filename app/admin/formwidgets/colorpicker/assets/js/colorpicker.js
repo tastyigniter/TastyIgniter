@@ -47,11 +47,15 @@
     }
 
     ColorPicker.prototype.init = function () {
-        this.$el.find('input').on('focus', $.proxy(this.onInputFocused, this))
+        var $input = this.$el.find('input');
+        $input.on('focus', $.proxy(this.onInputFocused, this))
 
         this.options.extensions[0].options.colors = this.options.swatchesColors
 
         this.picker = this.$el.colorpicker(this.options)
+
+        if ($input.is(':readonly'))
+            this.$el.colorpicker('colorpicker').disable()
 
         // this.picker.on('create', $.proxy(this.watchComponent, this))
         // this.picker.on('changeColor', $.proxy(this.watchComponent, this))
