@@ -453,6 +453,26 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[limit_reservations]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_reservations',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'switch',
+            'span' => 'left',
+        ],
+        'options[limit_reservations_count]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_reservations_count',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 50,
+            'type' => 'number',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_limit_reservations_interval',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[limit_reservations]',
+                'condition' => 'checked',
+            ],
+        ],
 
         'options[working_hours]' => [
             'tab' => 'lang:admin::lang.locations.text_tab_schedules',
