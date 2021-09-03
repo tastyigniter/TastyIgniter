@@ -11,14 +11,15 @@ class MakeSerializeColumnsJson extends Migration
 {
     public function up()
     {
-        $this->updateLocationModels();
+        $this->updateLocations();
+        $this->updateLocationAreas();
     }
 
     public function down()
     {
     }
 
-    private function updateLocationModels()
+    private function updateLocations()
     {
         DB::table('locations')
             ->select(['location_id', 'options'])
@@ -35,6 +36,29 @@ class MakeSerializeColumnsJson extends Migration
 
         Schema::table('locations', function (Blueprint $table) {
             $table->json('options')->change();
+        });
+
+    }
+
+    private function updateLocationAreas()
+    {
+        DB::table('location_areas')
+            ->select(['area_id', 'boundaries', 'conditions'])
+            ->get()
+            ->each(function ($area) {
+
+                DB::table('location_areas')
+                    ->where('location_id', $area->area_id)
+                    ->update([
+                        'boundaries' => unserialize($area->boundaries) ?? [],
+                        'conditions' => unserialize($area->conditions) ?? [],
+                    ]);
+
+            });
+
+        Schema::table('location_areas', function (Blueprint $table) {
+            $table->json('boundaries')->change();
+            $table->json('conditions')->change();
         });
 
     }
