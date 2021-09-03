@@ -34,7 +34,7 @@ class Locations_model extends AbstractLocation
         'location_lat' => 'double',
         'location_lng' => 'double',
         'location_status' => 'boolean',
-        'options' => 'serialize',
+        'options' => 'array',
     ];
 
     public $relation = [
