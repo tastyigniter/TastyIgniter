@@ -20,25 +20,22 @@ class MakeSerializeColumnsJson extends Migration
 
     private function updateLocationModels()
     {
-        $location_options_cache = [];
-
         DB::table('locations')
             ->select(['location_id', 'options'])
             ->get()
-            ->each(function ($location) use (&$location_options_cache) {
-                $location_options_cache[$location->location_id] = unserialize($location->options) ?? [];
-            });
+            ->each(function ($location) {
 
-        DB::table('locations')->update(['options' => '{}']);
+                DB::table('locations')
+                    ->where('location_id', $location->location_id)
+                    ->update([
+                        'options' => unserialize($location->options) ?? [],
+                    ]);
+
+            });
 
         Schema::table('locations', function (Blueprint $table) {
             $table->json('options')->change();
         });
 
-        foreach ($location_options_cache as $location_id => $location_options) {
-            DB::table('locations')
-                ->where('location_id', $location_id)
-                ->update(['options' => $location_options]);
-        }
     }
 }
