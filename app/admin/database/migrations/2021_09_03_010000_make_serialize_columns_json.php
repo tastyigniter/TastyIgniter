@@ -2,7 +2,6 @@
 
 namespace Admin\Database\Migrations;
 
-use Admin\Models\Locations_model;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -22,10 +21,12 @@ class MakeSerializeColumnsJson extends Migration
     private function updateLocationModels()
     {
         $location_options_cache = [];
-        Locations_model::select(['location_id', 'options'])
+
+        DB::table('locations')
+            ->select(['location_id', 'options'])
             ->get()
             ->each(function ($location) use (&$location_options_cache) {
-                $location_options_cache[$location->location_id] = unserialize($location->getOriginal('options')) ?? [];
+                $location_options_cache[$location->location_id] = unserialize($location->options) ?? [];
             });
 
         DB::table('locations')->update(['options' => '{}']);
