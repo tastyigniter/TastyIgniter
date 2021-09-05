@@ -6,7 +6,6 @@ use Admin\Traits\Assignable;
 use Admin\Widgets\Form;
 use Admin\Widgets\Toolbar;
 use Illuminate\Support\Facades\Event;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
 
 class AssigneeController extends ControllerAction
@@ -31,7 +30,7 @@ class AssigneeController extends ControllerAction
     /**
      * Assignee Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
