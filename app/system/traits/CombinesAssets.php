@@ -57,7 +57,7 @@ trait CombinesAssets
         $this->cacheKeyPrefix = 'ti.combiner.';
         $this->useCache = config('system.enableAssetCache', TRUE);
         $this->useMinify = config('system.enableAssetMinify', null);
-        $this->combineAssets = config('system.enableAssetCombiner', FALSE);
+        $this->combineAssets = config('system.enableAssetCombiner', !config('app.debug', FALSE));
         $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
 

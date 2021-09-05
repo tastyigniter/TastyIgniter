@@ -204,6 +204,7 @@ return [
     |
     */
 
+    'enableAssetCombiner' => TRUE,
     'assetsCombinerUri' => '/_assets',
 
     /*
