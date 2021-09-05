@@ -2,6 +2,7 @@
 
 namespace System\Actions;
 
+use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Support\Facades\File;
 
@@ -32,7 +33,7 @@ class SettingsModel extends ModelAction
     /**
      * Constructor
      *
-     * @param \Model $model
+     * @param \Igniter\Flame\Database\Model $model
      */
     public function __construct(Model $model)
     {
@@ -40,7 +41,7 @@ class SettingsModel extends ModelAction
 
         $this->model->setTable('extension_settings');
         $this->model->setKeyName('id');
-        $this->model->addCasts(['data' => 'serialize']);
+        $this->model->addCasts(['data' => Serialize::class]);
         $this->model->guard([]);
         $this->model->timestamps = FALSE;
 

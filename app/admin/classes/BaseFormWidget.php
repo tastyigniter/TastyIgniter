@@ -17,7 +17,7 @@ class BaseFormWidget extends BaseWidget
     //
 
     /**
-     * @var \Model Form model object.
+     * @var \Igniter\Flame\Database\Model Form model object.
      */
     public $model;
 

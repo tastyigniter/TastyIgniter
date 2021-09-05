@@ -24,7 +24,7 @@ trait ListExtendable
      * @param Model $model
      * @param null $alias
      *
-     * @return \Model
+     * @return\Igniter\Flame\Database\Model
      */
     public function listExtendModel($model, $alias = null)
     {

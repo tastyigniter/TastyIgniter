@@ -9,6 +9,7 @@ use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
@@ -63,7 +64,7 @@ class Orders_model extends Model
         'location_id' => 'integer',
         'address_id' => 'integer',
         'total_items' => 'integer',
-        'cart' => 'serialize',
+        'cart' => Serialize::class,
         'order_date' => 'date',
         'order_time' => 'time',
         'order_total' => 'float',
