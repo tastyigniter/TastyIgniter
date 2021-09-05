@@ -3,8 +3,8 @@
 namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
-use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Casts\Serialize;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Exception\ApplicationException;

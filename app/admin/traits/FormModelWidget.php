@@ -124,7 +124,7 @@ trait FormModelWidget
     /**
      * Sets a data collection to a model attributes, relations will also be set.
      *
-     * @param \Model $model Model to save to
+     * @param \Igniter\Flame\Database\Model $model Model to save to
      *
      * @param array $saveData Data to save.
      *

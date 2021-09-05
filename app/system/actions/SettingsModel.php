@@ -2,9 +2,9 @@
 
 namespace System\Actions;
 
+use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Support\Facades\File;
-use Igniter\Flame\Database\Casts\Serialize;
 
 /**
  * Settings model extension
@@ -33,7 +33,7 @@ class SettingsModel extends ModelAction
     /**
      * Constructor
      *
-     * @param \Model $model
+     * @param \Igniter\Flame\Database\Model $model
      */
     public function __construct(Model $model)
     {
