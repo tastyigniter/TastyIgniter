@@ -150,7 +150,13 @@ class IgniterInstall extends Command
     protected function createSuperUser()
     {
         $username = $this->ask('Admin Username', 'admin');
-        $password = $this->ask('Admin Password', '123456');
+        $password = $this->output->ask('Admin Password', '123456', function ($answer) {
+            if (!is_string($answer) OR strlen($answer) < 6) {
+                throw new \RuntimeException('Please specify the administrator password, at least 6 characters');
+            }
+
+            return $answer;
+        });
 
         $staff = Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
         $staff->staff_name = DatabaseSeeder::$staffName;

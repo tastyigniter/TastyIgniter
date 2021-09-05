@@ -11,6 +11,7 @@
             id="{{ $this->getId('textarea') }}"
             rows="20"
             class="form-control"
+            {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
         >{!! $value !!}</textarea>
     </div>
 @endif

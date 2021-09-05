@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
+use System\Traits\SendsMailTemplate;
 
 /**
  * Customers Model Class
@@ -13,6 +14,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
 class Customers_model extends AuthUserModel
 {
     use Purgeable;
+    use SendsMailTemplate;
 
     const UPDATED_AT = null;
 
@@ -46,7 +48,7 @@ class Customers_model extends AuthUserModel
         ],
     ];
 
-    protected $purgeable = ['addresses'];
+    protected $purgeable = ['addresses', 'send_invite'];
 
     public $appends = ['full_name'];
 
@@ -58,6 +60,7 @@ class Customers_model extends AuthUserModel
         'status' => 'boolean',
         'is_activated' => 'boolean',
         'last_login' => 'datetime',
+        'date_invited' => 'datetime',
         'date_activated' => 'datetime',
         'reset_time' => 'datetime',
     ];
@@ -99,16 +102,23 @@ class Customers_model extends AuthUserModel
         if (!$this->group OR !$this->group->requiresApproval())
             return;
 
-        if ($this->is_activated OR $this->status)
+        if ($this->is_activated AND $this->status)
             return;
 
-        throw new Exception(sprintf(lang('admin::lang.customers.alert_customer_not_active'), $this->email
+        throw new Exception(sprintf(
+            lang('admin::lang.customers.alert_customer_not_active'), $this->email
         ));
     }
 
     protected function afterCreate()
     {
         $this->saveCustomerGuestOrder();
+
+        $this->restorePurgedValues();
+
+        if ($this->send_invite) {
+            $this->sendInvite();
+        }
     }
 
     protected function afterSave()
@@ -222,5 +232,35 @@ class Customers_model extends AuthUserModel
         }
 
         return $query;
+    }
+
+    protected function sendInvite()
+    {
+        $this->bindEventOnce('model.mailGetData', function ($view, $recipientType) {
+            if ($view === 'admin::_mail.invite_customer') {
+                $this->reset_code = $inviteCode = $this->generateResetCode();
+                $this->reset_time = now();
+                $this->save();
+
+                return ['invite_code' => $inviteCode];
+            }
+        });
+
+        $this->mailSend('admin::_mail.invite_customer');
+    }
+
+    public function mailGetRecipients($type)
+    {
+        return [
+            [$this->email, $this->full_name],
+        ];
+    }
+
+    public function mailGetData()
+    {
+        return [
+            'full_name' => $this->full_name,
+            'email' => $this->email,
+        ];
     }
 }

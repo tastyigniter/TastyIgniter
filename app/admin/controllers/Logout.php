@@ -10,7 +10,12 @@ class Logout extends \Admin\Classes\AdminController
 
     public function index()
     {
-        AdminAuth::logout();
+        if (AdminAuth::isImpersonator()) {
+            AdminAuth::stopImpersonate();
+        }
+        else {
+            AdminAuth::logout();
+        }
 
         flash()->success(lang('admin::lang.login.alert_success_logout'));
 

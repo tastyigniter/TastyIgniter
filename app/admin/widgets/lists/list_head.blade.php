@@ -15,13 +15,9 @@
     @endif
 
     @foreach ($columns as $key => $column)
-        @continue($column->type != 'button')
-        <th class="list-action {{ $column->cssClass }}"></th>
-    @endforeach
-    @foreach ($columns as $key => $column)
-        @continue($column->type == 'button')
-
-        @if ($showSorting AND $column->sortable)
+        @if ($column->type == 'button')
+            <th class="list-action {{ $column->cssClass }}"></th>
+        @elseif ($showSorting AND $column->sortable)
             <th
                 class="list-cell-name-{{ $column->getName() }} list-cell-type-{{ $column->type }} {{ $column->cssClass }}"
                 @if ($column->width) style="width: {{ $column->width }}" @endif>

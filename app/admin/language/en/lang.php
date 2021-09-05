@@ -313,12 +313,15 @@ return [
         'column_telephone' => 'Telephone',
         'column_date_added' => 'Date Registered',
 
+        'button_activate' => 'Manually Activate',
+
         'label_first_name' => 'First Name',
         'label_last_name' => 'Last Name',
         'label_password' => 'Password',
         'label_confirm_password' => 'Confirm Password',
         'label_telephone' => 'Telephone',
         'label_newsletter' => 'Newsletter',
+        'label_send_invite' => 'Send Invitation Email',
         'label_customer_group' => 'Customer Group',
         'label_address_1' => 'Address 1',
         'label_address_2' => 'Address 2',
@@ -327,11 +330,13 @@ return [
         'label_postcode' => 'Postcode',
         'label_country' => 'Country',
 
+        'help_send_invite' => 'Sends an invitation message containing a link to set a password on their account.',
         'help_password' => 'Leave blank to leave password unchanged',
 
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
         'alert_impersonate_confirm' => 'Are you sure you want to impersonate this customer? You can revert to your original state by logging out.',
         'alert_impersonate_success' => 'You are now impersonating customer: %s',
+        'alert_activation_success' => 'Customer activated successfully.',
         'alert_customer_not_active' => "Cannot login user '%s' until activated.",
         'alert_customer_payment_profile_not_found' => 'Customer payment profile not found!',
     ],
@@ -528,6 +533,8 @@ return [
         'label_reservation_lead_time' => 'Reservation Lead Time',
         'label_reservation_stay_time' => 'Reservation Stay Time',
         'label_auto_allocate_table' => 'Automatically Allocate Tables',
+        'label_limit_reservations' => 'Limit Reservation Count',
+        'label_limit_reservations_count' => 'Maximum Reservations Per Interval',
         'label_schedule_name' => 'Name',
         'label_schedule_type' => 'Type',
         'label_schedule_days' => 'Days',
@@ -542,6 +549,7 @@ return [
         'label_area_id' => 'Area ID',
         'label_area_name' => 'Area Name',
         'label_area_charge' => 'Charge',
+        'label_area_distance' => 'Distance (mile/kilometers)',
         'label_address_component' => 'Address Component',
         'label_address_component_type' => 'Address Component Type',
         'label_address_component_value' => 'Address Component Value',
@@ -553,6 +561,7 @@ return [
         'label_gallery_image_name' => 'Filename',
         'label_gallery_image_alt' => 'Alt Text',
         'label_delivery_condition' => 'Delivery Condition',
+        'label_delivery_distance' => 'Distance Based Delivery Condition',
 
         'error_no_zero_total' => 'The %s can not be a value zero on conditions other than \'on all orders\'.',
         'alert_delivery_area' => 'Add at least one delivery area to allow your customers find this location.',
@@ -566,7 +575,7 @@ return [
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
         'help_image' => 'Select a logo for this location.',
         'help_limit_orders' => 'Enabling this disables ASAP delivery and pickup orders.',
-        'help_limit_orders_interval' => 'Set the minutes between each limitation timeslot.',
+        'help_limit_orders_interval' => 'Set the number of orders that can be placed between each time slot.',
         'help_delivery_time_restriction' => 'Whether your customers can only place ASAP delivery orders, schedule delivery orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_collection_time_restriction' => 'Whether your customers can only place ASAP pick-up orders, schedule pick-up orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
@@ -581,9 +590,11 @@ return [
         'help_reservation_time_interval' => 'Set the number of minutes between each reservation time',
         'help_reservation_lead_time' => 'Set in minutes the average time it takes to prepare a table',
         'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table',
+        'help_limit_reservations_interval' => 'Set the number of reservations that can be booked between each time slot.',
         'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least one delivery area to accept delivery orders.',
         'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
         'help_delivery_components' => 'All rules must be VALID to apply this delivery area, each rule is matched against the user\'s address component. Values can contain Regular Expressions.',
+        'help_delivery_distance' => 'Add additional charges based on the delivery distance per unit. These will be in addition to delivery condition charges. Rules are applied in the order in which they appear.',
     ],
 
     'login' => [
@@ -825,6 +836,7 @@ return [
         'categories' => 'Create, edit and delete menu categories',
         'customer_groups' => 'Manage customer groups',
         'customers' => 'Create, edit and delete customers',
+        'impersonate_staff' => 'Ability to impersonate staff',
         'impersonate_customers' => 'Ability to impersonate customers',
         'locations' => 'Create, edit and delete locations',
         'menus' => 'Create, edit and delete menu items',
@@ -963,6 +975,7 @@ return [
 
         'label_super_staff' => 'Super Admin',
         'label_username' => 'Username',
+        'label_send_invite' => 'Send Invitation Email',
         'label_password' => 'Password',
         'label_confirm_password' => 'Password Confirm',
         'label_role' => 'Role',
@@ -971,6 +984,7 @@ return [
         'label_location' => 'Locations',
         'label_sale_permission' => 'Order and Reservation Scope',
 
+        'help_send_invite' => 'Sends an invitation message containing a link to set a password on their account.',
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
         'help_role' => 'Roles define staff permissions.',
         'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
@@ -978,6 +992,10 @@ return [
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
         'help_sale_permission_groups' => 'Can view Orders and Reservations in their Group(s) and Orders and Reservations assigned to them',
         'help_sale_permission_restricted' => 'Can only view Orders and Reservations assigned to them',
+
+        'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a staff account</b>, please contact system administrator.',
+        'alert_impersonate_confirm' => 'Are you sure you want to impersonate this staff? You can revert to your original state by logging out.',
+        'alert_impersonate_success' => 'You are now impersonating staff: %s',
     ],
 
     'statuses' => [

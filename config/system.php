@@ -215,8 +215,8 @@ return [
     |
     */
 
-    'filePermissions' => '777',
-    'folderPermissions' => '777',
+    'filePermissions' => '644',
+    'folderPermissions' => '755',
 
     /*
     |--------------------------------------------------------------------------
