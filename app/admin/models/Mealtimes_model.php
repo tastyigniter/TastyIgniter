@@ -37,6 +37,8 @@ class Mealtimes_model extends Model
         ],
     ];
 
+    public $timestamps = TRUE;
+
     public function getDropdownOptions()
     {
         $this->isEnabled()->dropdown('mealtime_name');

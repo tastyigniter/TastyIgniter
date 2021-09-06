@@ -65,6 +65,8 @@ class Categories_model extends Model
 
     public $mediable = ['thumb'];
 
+    public $timestamps = TRUE;
+
     public static function getDropdownOptions()
     {
         return self::pluck('name', 'category_id');
