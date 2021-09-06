@@ -42,10 +42,11 @@ class AddTimestampsToLocationables extends Migration
         });
 
         DB::table('categories')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
+        DB::table('customers')->update(['date_modified' => DB::raw('now()')]);
         DB::table('mealtimes')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
         DB::table('menus')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
         DB::table('menu_options')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
-        DB::table('staffs')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
+        DB::table('staffs')->update(['date_modified' => DB::raw('now()')]);
         DB::table('tables')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
     }
 
