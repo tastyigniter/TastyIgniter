@@ -15,6 +15,11 @@ class AddTimestampsToLocationables extends Migration
             $table->timestamps();
         });
 
+        Schema::table('customers', function (Blueprint $table) {
+            $table->timestamp('date_added')->change();
+            $table->timestamp('date_modified');
+        });
+
         Schema::table('mealtimes', function (Blueprint $table) {
             $table->timestamps();
         });
@@ -28,7 +33,8 @@ class AddTimestampsToLocationables extends Migration
         });
 
         Schema::table('staffs', function (Blueprint $table) {
-            $table->timestamps();
+            $table->timestamp('date_added')->change();
+            $table->timestamp('date_modified');
         });
 
         Schema::table('tables', function (Blueprint $table) {
