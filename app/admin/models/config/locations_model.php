@@ -453,20 +453,20 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[limit_reservations]' => [
-            'label' => 'lang:admin::lang.locations.label_limit_reservations',
+        'options[limit_guests]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_guests',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 0,
             'type' => 'switch',
             'span' => 'left',
         ],
-        'options[limit_reservations_count]' => [
-            'label' => 'lang:admin::lang.locations.label_limit_reservations_count',
+        'options[limit_guests_count]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_guests_count',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 50,
+            'default' => 20,
             'type' => 'number',
             'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_limit_reservations_interval',
+            'comment' => 'lang:admin::lang.locations.help_limit_guests_count',
             'trigger' => [
                 'action' => 'enable',
                 'field' => 'options[limit_reservations]',
