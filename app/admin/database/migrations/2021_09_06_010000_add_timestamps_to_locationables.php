@@ -17,7 +17,8 @@ class AddTimestampsToLocationables extends Migration
 
         Schema::table('customers', function (Blueprint $table) {
             $table->timestamp('date_added')->change();
-            $table->timestamp('date_modified');
+            $table->renameColumn('date_added', 'created_at');
+            $table->timestamp('updated_at');
         });
 
         Schema::table('mealtimes', function (Blueprint $table) {
@@ -34,7 +35,8 @@ class AddTimestampsToLocationables extends Migration
 
         Schema::table('staffs', function (Blueprint $table) {
             $table->timestamp('date_added')->change();
-            $table->timestamp('date_modified');
+            $table->renameColumn('date_added', 'created_at');
+            $table->timestamp('updated_at');
         });
 
         Schema::table('tables', function (Blueprint $table) {
@@ -42,11 +44,11 @@ class AddTimestampsToLocationables extends Migration
         });
 
         DB::table('categories')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
-        DB::table('customers')->update(['date_modified' => DB::raw('now()')]);
+        DB::table('customers')->update(['updated_at' => DB::raw('now()')]);
         DB::table('mealtimes')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
         DB::table('menus')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
         DB::table('menu_options')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
-        DB::table('staffs')->update(['date_modified' => DB::raw('now()')]);
+        DB::table('staffs')->update(['updated_at' => DB::raw('now()')]);
         DB::table('tables')->update(['created_at' => DB::raw('now()'), 'updated_at' => DB::raw('now()')]);
     }
 

@@ -15,10 +15,6 @@ class Staffs_model extends Model
     use Purgeable;
     use Locationable;
 
-    const UPDATED_AT = 'date_modified';
-
-    const CREATED_AT = 'date_added';
-
     const LOCATIONABLE_RELATION = 'locations';
 
     /**

@@ -16,10 +16,6 @@ class Customers_model extends AuthUserModel
     use Purgeable;
     use SendsMailTemplate;
 
-    const UPDATED_AT = 'date_modified';
-
-    const CREATED_AT = 'date_added';
-
     /**
      * @var string The database table name
      */
