@@ -39,7 +39,7 @@ class Location extends FormRequest
             ['options.collection_time_restriction', 'admin::lang.locations.label_collection_time_restriction', 'nullable|integer|max:2'],
             ['options.payments.*', 'admin::lang.locations.label_payments'],
             ['options.reservation_time_interval', 'admin::lang.locations.label_reservation_time_interval|min:5', 'integer'],
-            ['options.reservation_lead_time', 'admin::lang.locations.label_reservation_lead_time|min:5', 'integer'],
+            ['options.reservation_stay_time', 'admin::lang.locations.reservation_stay_time|min:5', 'integer'],
             ['options.auto_allocate_table', 'admin::lang.locations.label_auto_allocate_table', 'integer'],
             ['options.limit_guests', 'admin::lang.locations.label_limit_guests', 'boolean'],
             ['options.limit_guests_count', 'admin::lang.locations.label_limit_guests_count', 'integer|min:1|max:999'],

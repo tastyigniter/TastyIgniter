@@ -415,19 +415,6 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[reservation_lead_time]' => [
-            'label' => 'lang:admin::lang.locations.label_reservation_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 45,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_reservation_lead_time',
-            'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_reservation]',
-                'condition' => 'checked',
-            ],
-        ],
         'options[reservation_stay_time]' => [
             'label' => 'lang:admin::lang.locations.label_reservation_stay_time',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
