@@ -46,7 +46,7 @@ class LocationAwareController extends ControllerAction
             'locationApplyScope',
         ]);
 
-        $this->controller->bindEvent('controller.afterConstructor', function () {
+        $this->controller->bindEvent('controller.beforeRemap', function () {
             $this->locationBindEvents();
         });
     }

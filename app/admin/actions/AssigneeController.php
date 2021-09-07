@@ -47,8 +47,8 @@ class AssigneeController extends ControllerAction
             'assigneeApplyScope',
         ]);
 
-        $this->controller->bindEvent('controller.afterConstructor', function ($controller) {
-            if (!$controller->getUser())
+        $this->controller->bindEvent('controller.beforeRemap', function () {
+            if (!$this->controller->getUser())
                 return;
 
             $this->assigneeBindToolbarEvents();
