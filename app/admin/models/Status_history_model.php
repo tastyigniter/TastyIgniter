@@ -10,10 +10,6 @@ use Igniter\Flame\Database\Model;
  */
 class Status_history_model extends Model
 {
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
-
     /**
      * @var string The database table name
      */
@@ -43,6 +39,8 @@ class Status_history_model extends Model
             'object' => [],
         ],
     ];
+
+    public $timestamps = TRUE;
 
     public static function alreadyExists($model, $statusId)
     {

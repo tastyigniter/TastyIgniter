@@ -15,10 +15,6 @@ class Reviews_model extends Model
 {
     use Locationable;
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = null;
-
     /**
      * @var string The database table name
      */
