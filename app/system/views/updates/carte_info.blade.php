@@ -1,16 +1,21 @@
 @isset($carteInfo['owner'])
-    <div class="panel-body border-bottom">
+    <div class="card-body border-bottom">
         <div class="d-flex">
             <div class="media-right media-middle">
                 <i class="fa fa-globe fa-3x"></i>
             </div>
             <div class="media-body wrap-left">
-                <h3 class="no-margin-top">{{ $carteInfo['name'] }}</h3>
-                <p>{{ $carteInfo['description'] ?? '' }}</p>
-                <strong>Owner:</strong> {{ $carteInfo['owner'] }}<br/>
-                <span class="small">
-                    <strong>Updated:</strong> {{ mdate(lang('system::lang.php.date_time_format'), strtotime($carteInfo['updated_at'])) }}
-                </span>
+                <a
+                    class="btn border pull-right"
+                    onclick="$('.carte-body').slideToggle()"
+                ><i class="fa fa-pencil"></i></a>
+                <h3>{{ $carteInfo['name'] }}</h3>
+                <p class="mb-1">{{ $carteInfo['url'] }}</p>
+                <p class="mb-1">{{ $carteInfo['description'] ?? '' }}</p>
+                <p class="mb-1"><strong>Owner:</strong> {{ $carteInfo['owner'] }}</p>
+                @isset($carteInfo['items_count'])
+                    <p class="mb-1"><strong>Total Items:</strong> {{ $carteInfo['items_count'] }}</p>
+                @endisset
             </div>
         </div>
     </div>
