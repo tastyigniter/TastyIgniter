@@ -114,7 +114,7 @@ class Categories_model extends Model
         });
     }
 
-	 public function scopeListFrontEnd($query, $options = [])
+	public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
             'page' => 1,
@@ -126,11 +126,7 @@ class Categories_model extends Model
         ], $options));
 
         $searchableFields = ['name', 'description'];
-
-        if (strlen($location) AND is_numeric($location)) {
-            $query->whereHasOrDoesntHaveLocation($location);
-        }
-
+      
         if (strlen($location)) {
             $query->whereHas('locations', function ($q) use ($location) {
                 $q->whereSlug($location);
