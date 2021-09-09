@@ -106,14 +106,14 @@ class Categories_model extends Model
     {
         return $query->where('status', 1);
     }
-    
+
     public function scopeWhereHasLocation($query, $locationId)
     {
         $query->whereHas('locations', function ($q) use ($locationId) {
             $q->where('locations.location_id', $locationId);
         });
     }
-	
+
 	 public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
@@ -121,20 +121,14 @@ class Categories_model extends Model
             'pageLimit' => 20,
             'enabled' => TRUE,
             'sort' => 'id asc',
-            'group' => null,
-            'location' => null,            
+            'location' => null,
             'search' => '',
-            'orderType' => null,
         ], $options));
 
         $searchableFields = ['name', 'description'];
 
         if (strlen($location) AND is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
-            $query->with(['locations' => function ($q) use ($location) {
-                $q->whereHasOrDoesntHaveLocation($location);
-                $q->isEnabled();
-            }]);
         }
 
         if (strlen($location)) {
@@ -157,29 +151,16 @@ class Categories_model extends Model
                 $query->orderBy($sortField, $sortDirection);
             }
         }
-		
+
         $search = trim($search);
         if (strlen($search)) {
             $query->search($search, $searchableFields);
         }
 
-        if (strlen($group)) {
-            $query->whereHas('locations', function ($q) use ($group) {
-                $q->groupBy($group);
-            });
-        }
-
         if ($enabled) {
             $query->isEnabled();
         }
-
-        if ($orderType) {
-            $query->where(function ($query) use ($orderType) {
-                $query->whereNull('order_restriction')
-                    ->orWhere('order_restriction', 'like', '%"'.$orderType.'"%');
-            });
-        }
-
+        
         return $query->paginate($pageLimit, $page);
     }
 }
