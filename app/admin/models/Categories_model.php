@@ -64,6 +64,7 @@ class Categories_model extends Model
     ];
 
     public $mediable = ['thumb'];
+    public static $allowedSortingColumns = ['priority asc', 'priority desc'];
 
     public static function getDropdownOptions()
     {
@@ -104,5 +105,81 @@ class Categories_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('status', 1);
+    }
+    
+    public function scopeWhereHasLocation($query, $locationId)
+    {
+        $query->whereHas('locations', function ($q) use ($locationId) {
+            $q->where('locations.location_id', $locationId);
+        });
+    }
+	
+	 public function scopeListFrontEnd($query, $options = [])
+    {
+        extract(array_merge([
+            'page' => 1,
+            'pageLimit' => 20,
+            'enabled' => TRUE,
+            'sort' => 'id asc',
+            'group' => null,
+            'location' => null,            
+            'search' => '',
+            'orderType' => null,
+        ], $options));
+
+        $searchableFields = ['name', 'description'];
+
+        if (strlen($location) AND is_numeric($location)) {
+            $query->whereHasOrDoesntHaveLocation($location);
+            $query->with(['locations' => function ($q) use ($location) {
+                $q->whereHasOrDoesntHaveLocation($location);
+                $q->isEnabled();
+            }]);
+        }
+
+        if (strlen($location)) {
+            $query->whereHas('locations', function ($q) use ($location) {
+                $q->whereSlug($location);
+            });
+        }
+
+        if (!is_array($sort)) {
+            $sort = [$sort];
+        }
+
+        foreach ($sort as $_sort) {
+            if (in_array($_sort, self::$allowedSortingColumns)) {
+                $parts = explode(' ', $_sort);
+                if (count($parts) < 2) {
+                    $parts[] = 'desc';
+                }
+                [$sortField, $sortDirection] = $parts;
+                $query->orderBy($sortField, $sortDirection);
+            }
+        }
+		
+        $search = trim($search);
+        if (strlen($search)) {
+            $query->search($search, $searchableFields);
+        }
+
+        if (strlen($group)) {
+            $query->whereHas('locations', function ($q) use ($group) {
+                $q->groupBy($group);
+            });
+        }
+
+        if ($enabled) {
+            $query->isEnabled();
+        }
+
+        if ($orderType) {
+            $query->where(function ($query) use ($orderType) {
+                $query->whereNull('order_restriction')
+                    ->orWhere('order_restriction', 'like', '%"'.$orderType.'"%');
+            });
+        }
+
+        return $query->paginate($pageLimit, $page);
     }
 }
