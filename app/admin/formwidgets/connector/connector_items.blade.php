@@ -1,6 +1,8 @@
-@foreach ($fieldItems as $fieldItem)
+@forelse ($fieldItems as $fieldItem)
     {!! $this->makePartial('connector/connector_item', [
         'item' => $fieldItem,
         'index' => $loop->iteration,
     ]) !!}
-@endforeach
+@empty
+    @lang($emptyMessage)
+@endforelse

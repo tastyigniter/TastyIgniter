@@ -15,6 +15,10 @@ class Logout extends \Admin\Classes\AdminController
         }
         else {
             AdminAuth::logout();
+
+            session()->invalidate();
+
+            session()->regenerateToken();
         }
 
         flash()->success(lang('admin::lang.login.alert_success_logout'));

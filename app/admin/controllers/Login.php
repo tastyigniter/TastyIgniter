@@ -18,6 +18,13 @@ class Login extends \Admin\Classes\AdminController
 
     public $bodyClass = 'page-login';
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware('throttle:'.config('system.authRateLimiter', '6,1'));
+    }
+
     public function index()
     {
         if (AdminAuth::isLogged())

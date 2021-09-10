@@ -2,7 +2,10 @@
 
 namespace Admin\Controllers;
 
+use Admin\ActivityTypes\StatusUpdated;
 use Admin\Facades\AdminMenu;
+use Admin\Models\Orders_model;
+use Admin\Models\Statuses_model;
 use Igniter\Flame\Exception\ApplicationException;
 
 class Orders extends \Admin\Classes\AdminController
@@ -56,12 +59,34 @@ class Orders extends \Admin\Classes\AdminController
         AdminMenu::setContext('orders', 'sales');
     }
 
+    public function index()
+    {
+        $this->asExtension('ListController')->index();
+
+        $this->vars['statusesOptions'] = \Admin\Models\Statuses_model::getDropdownOptionsForOrder();
+    }
+
     public function index_onDelete()
     {
         if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
         return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
+    }
+
+    public function index_onUpdateStatus()
+    {
+        $model = Orders_model::find((int)post('recordId'));
+        $status = Statuses_model::find((int)post('statusId'));
+        if (!$model OR !$status)
+            return;
+
+        if ($record = $model->addStatusHistory($status))
+            StatusUpdated::log($record, $this->getUser());
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.statuses.text_form_name').' updated'))->now();
+
+        return $this->redirectBack();
     }
 
     public function edit_onDelete($context, $recordId)
