@@ -275,6 +275,8 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerPaginator()
     {
+        Paginator::useBootstrap();
+
         Paginator::defaultView('system::_partials/pagination/default');
         Paginator::defaultSimpleView('system::_partials/pagination/simple_default');
 

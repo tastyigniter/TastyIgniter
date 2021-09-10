@@ -158,6 +158,7 @@ class MainController extends BaseController
 
         $this->initTemplateEnvironment();
 
+        // @deprecated This event will be deprecated soon, use controller.beforeRemap
         $this->fireEvent('controller.afterConstructor', [$this]);
 
         self::$controller = $this;
@@ -165,6 +166,8 @@ class MainController extends BaseController
 
     public function remap($url = null)
     {
+        $this->fireSystemEvent('main.controller.beforeRemap');
+
         if ($url === null)
             $url = Request::path();
 

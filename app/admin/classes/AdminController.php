@@ -6,9 +6,6 @@ use Admin\Facades\Admin;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminLocation;
 use Admin\Facades\AdminMenu;
-use Admin\Traits\HasAuthentication;
-use Admin\Traits\ValidatesForm;
-use Admin\Traits\WidgetMaker;
 use Admin\Widgets\Menu;
 use Admin\Widgets\Toolbar;
 use Exception;
@@ -19,27 +16,31 @@ use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Flash\Facades\Flash;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Main\Widgets\MediaManager;
-use System\Classes\BaseController;
+use System\Classes\Controller;
 use System\Classes\ErrorHandler;
-use System\Traits\AssetMaker;
-use System\Traits\ConfigMaker;
-use System\Traits\VerifiesCsrfToken;
-use System\Traits\ViewMaker;
 
 class AdminController extends BaseController
 {
-    use AssetMaker;
-    use ViewMaker;
-    use ConfigMaker;
-    use WidgetMaker;
-    use ValidatesForm;
-    use HasAuthentication;
-    use VerifiesCsrfToken;
+    use \Admin\Traits\HasAuthentication;
+    use \Admin\Traits\ValidatesForm;
+    use \Admin\Traits\WidgetMaker;
+    use \System\Traits\AssetMaker;
+    use \System\Traits\ConfigMaker;
+    use \System\Traits\VerifiesCsrfToken;
+    use \System\Traits\ViewMaker;
+    use \Igniter\Flame\Traits\EventEmitter;
+    use \Igniter\Flame\Traits\ExtendableTrait;
+
+    /**
+     * A list of controller behavours/traits to be implemented
+     */
+    public $implement = [];
 
     /**
      * @var object Object used for storing a fatal error.
@@ -55,6 +56,36 @@ class AdminController extends BaseController
      * @var bool Prevents the automatic view display.
      */
     public $suppressView = FALSE;
+
+    /**
+     * @var string Page method name being called.
+     */
+    protected $action;
+
+    /**
+     * @var array Routed parameters.
+     */
+    protected $params;
+
+    /**
+     * @var array Default actions which cannot be called as actions.
+     */
+    public $hiddenActions = [
+        'checkAction',
+        'pageAction',
+        'execPageAction',
+        'handleError',
+    ];
+
+    /**
+     * @var array Array of actions available without authentication.
+     */
+    protected $publicActions = [];
+
+    /**
+     * @var array Controller specified methods which cannot be called as actions.
+     */
+    protected $guarded = [];
 
     /**
      * @var string Permission required to view this page.
@@ -77,32 +108,23 @@ class AdminController extends BaseController
      */
     public function __construct()
     {
-        // Define layout and view paths
-        $this->layout = $this->layout ?: 'default';
-        $this->configPath = [];
+        $this->action = Controller::$action;
+        $this->params = Controller::$segments;
 
+        // Apply $guarded methods to hidden actions
+        $this->hiddenActions = array_merge($this->hiddenActions, $this->guarded);
+
+        // Define layout and view paths
         $this->definePaths();
 
-        // Create a new instance of the admin user
-        $this->setUser(AdminAuth::user());
-
-        parent::__construct();
-
-        // Toolbar widget is available on all admin pages
-        $toolbar = new Toolbar($this, ['context' => $this->action]);
-        $toolbar->bindToController();
-
-        // Media Manager widget is available on all admin pages
-        if ($this->currentUser AND $this->currentUser->hasPermission('Admin.MediaManager')) {
-            $manager = new MediaManager($this, ['alias' => 'mediamanager']);
-            $manager->bindToController();
-        }
-
-        $this->fireEvent('controller.afterConstructor', [$this]);
+        $this->extendableConstruct();
     }
 
     protected function definePaths()
     {
+        $this->layout = $this->layout ?: 'default';
+        $this->configPath = [];
+
         $classPath = strtolower(str_replace('\\', '/', get_called_class()));
         $relativePath = dirname($classPath, 2);
         $className = basename($classPath);
@@ -133,10 +155,33 @@ class AdminController extends BaseController
         $this->assetPath = '~/app/'.$relativePath.'/assets';
     }
 
+    public function initialize()
+    {
+        // Set an instance of the admin user
+        $this->setUser(AdminAuth::user());
+
+        $this->fireSystemEvent('admin.controller.beforeInit');
+
+        // @deprecated This event will be deprecated soon, use controller.beforeInit
+        $this->fireEvent('controller.beforeConstructor', [$this]);
+
+        // Toolbar widget is available on all admin pages
+        $toolbar = new Toolbar($this, ['context' => $this->action]);
+        $toolbar->bindToController();
+
+        // Media Manager widget is available on all admin pages
+        if ($this->currentUser AND $this->currentUser->hasPermission('Admin.MediaManager')) {
+            $manager = new MediaManager($this, ['alias' => 'mediamanager']);
+            $manager->bindToController();
+        }
+
+        // @deprecated This event will be deprecated soon, use controller.beforeRemap
+        $this->fireEvent('controller.afterConstructor', [$this]);
+    }
+
     public function remap($action, $params)
     {
-        $this->action = $action;
-        $this->params = $params;
+        $this->fireSystemEvent('admin.controller.beforeRemap');
 
         if (!$this->verifyCsrfToken()) {
             return Response::make(lang('admin::lang.alert_invalid_csrf_token'), 403);
@@ -181,8 +226,24 @@ class AdminController extends BaseController
             return $response;
 
         // Return response
-        return is_string($response)
-            ? Response::make($response, $this->statusCode) : $response;
+        return Response::make()->setContent($response);
+    }
+
+    public function checkAction($action)
+    {
+        if (!$methodExists = $this->methodExists($action))
+            return FALSE;
+
+        if (in_array(strtolower($action), array_map('strtolower', $this->hiddenActions)))
+            return FALSE;
+
+        if (method_exists($this, $action)) {
+            $methodInfo = new \ReflectionMethod($this, $action);
+
+            return $methodInfo->isPublic();
+        }
+
+        return $methodExists;
     }
 
     public function pageAction()
@@ -227,7 +288,7 @@ class AdminController extends BaseController
         $config = [];
         $config['alias'] = 'mainmenu';
         $config['items'] = AdminMenu::getMainItems();
-        $config['context'] = $this->getClass();
+        $config['context'] = class_basename($this);
         $mainMenuWidget = new Menu($this, $config);
         $mainMenuWidget->bindToController();
     }
@@ -447,5 +508,34 @@ class AdminController extends BaseController
         $this->vars['fatalError'] = $errorMessage;
 
         flash()->error($errorMessage)->important();
+    }
+
+    //
+    // Extendable
+    //
+
+    public function __get($name)
+    {
+        return $this->extendableGet($name);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->extendableSet($name, $value);
+    }
+
+    public function __call($name, $params)
+    {
+        return $this->extendableCall($name, $params);
+    }
+
+    public static function __callStatic($name, $params)
+    {
+        return self::extendableCallStatic($name, $params);
+    }
+
+    public static function extend(callable $callback)
+    {
+        self::extendableExtendCallback($callback);
     }
 }

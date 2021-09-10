@@ -3,6 +3,7 @@
 namespace System\Models;
 
 use Exception;
+use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ApplicationException;
@@ -38,7 +39,7 @@ class Themes_model extends Model
     protected $fillable = ['theme_id', 'name', 'code', 'version', 'description', 'data', 'status'];
 
     protected $casts = [
-        'data' => 'serialize',
+        'data' => Serialize::class,
         'status' => 'boolean',
         'is_default' => 'boolean',
     ];

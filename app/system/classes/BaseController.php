@@ -41,6 +41,7 @@ class BaseController extends Extendable
      * @var array Default actions which cannot be called as actions.
      */
     public $hiddenActions = [
+        'checkAction',
         'execPageAction',
         'handleError',
     ];
@@ -66,7 +67,7 @@ class BaseController extends Extendable
 
         $this->extendableConstruct();
 
-        $this->fireEvent('controller.beforeConstructor', [$this]);
+        $this->fireSystemEvent('main.controller.beforeConstructor', [$this]);
     }
 
     public function getClass()

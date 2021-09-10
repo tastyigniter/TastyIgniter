@@ -50,10 +50,13 @@ class Connector extends BaseFormWidget
      */
     public $form;
 
-    /**
-     * @var string Prompt text for adding new items.
-     */
-    public $prompt = 'lang:admin::lang.text_please_select';
+    public $newRecordTitle = 'New %s';
+
+    public $editRecordTitle = 'Edit %s';
+
+    public $emptyMessage = 'admin::lang.list.text_empty';
+
+    public $confirmMessage = 'admin::lang.alert_warning_confirm';
 
     /**
      * @var bool Items can be sorted.
@@ -72,7 +75,10 @@ class Connector extends BaseFormWidget
         $this->fillFromConfig([
             'formName',
             'form',
-            'prompt',
+            'newRecordTitle',
+            'editRecordTitle',
+            'emptyMessage',
+            'confirmMessage',
             'editable',
             'sortable',
             'nameFrom',
@@ -121,39 +127,60 @@ class Connector extends BaseFormWidget
         $this->vars['formField'] = $this->formField;
         $this->vars['fieldItems'] = $this->processLoadValue() ?? [];
 
-        $this->vars['prompt'] = $this->prompt;
         $this->vars['editable'] = $this->editable;
         $this->vars['sortable'] = $this->sortable;
         $this->vars['nameFrom'] = $this->nameFrom;
         $this->vars['partial'] = $this->partial;
         $this->vars['descriptionFrom'] = $this->descriptionFrom;
         $this->vars['sortableInputName'] = $this->sortableInputName;
+
+        $this->vars['emptyMessage'] = $this->emptyMessage;
+        $this->vars['confirmMessage'] = $this->confirmMessage;
+    }
+
+    public function reload()
+    {
+        $this->formField->value = null;
+        $this->model->reloadRelations();
+
+        $this->prepareVars();
+
+        return [
+            '#notification' => $this->makePartial('flash'),
+            '#'.$this->getId('items') => $this->makePartial('connector/connector_items'),
+        ];
     }
 
     public function onLoadRecord()
     {
-        $recordId = post('recordId');
-        $model = $this->getRelationModel()->find($recordId);
+        $model = $this->getRelationModel();
 
-        if (!$model)
-            throw new ApplicationException(lang('admin::lang.form.record_not_found'));
+        $formTitle = lang($this->newRecordTitle);
+        if (strlen($recordId = post('recordId'))) {
+            $model = $model->find($recordId);
+            $formTitle = lang($this->editRecordTitle);
+        }
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
-            'formTitle' => 'Edit '.lang($this->formName),
+            'formTitle' => sprintf($formTitle, lang($this->formName)),
             'formWidget' => $this->makeItemFormWidget($model, 'edit'),
         ]);
     }
 
     public function onSaveRecord()
     {
-        $model = strlen($recordId = post('recordId'))
-            ? $this->getRelationModel()->find($recordId)
-            : $this->getRelationObject();
+        $model = $this->getRelationModel();
+
+        if (strlen($recordId = post('recordId')))
+            $model = $model->find($recordId);
 
         $form = $this->makeItemFormWidget($model, 'edit');
 
         $this->validateFormWidget($form, $saveData = $form->getSaveData());
+
+        if (!$model->exists)
+            $saveData[$this->model->getKeyName()] = $this->model->getKey();
 
         $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
@@ -165,15 +192,7 @@ class Connector extends BaseFormWidget
 
         flash()->success(sprintf(lang('admin::lang.alert_success'), 'Item updated'))->now();
 
-        $this->formField->value = null;
-        $this->model->reloadRelations();
-
-        $this->prepareVars();
-
-        return [
-            '#notification' => $this->makePartial('flash'),
-            '#'.$this->getId('items') => $this->makePartial('connector/connector_items'),
-        ];
+        return $this->reload();
     }
 
     public function onDeleteRecord()
@@ -203,11 +222,9 @@ class Connector extends BaseFormWidget
             return $value;
         }
 
-        $value = $value instanceof Collection
+        return $value instanceof Collection
             ? $value->sortBy($this->sortColumnName)
             : sort_array($value, $this->sortColumnName);
-
-        return $value;
     }
 
     protected function processSaveValue($value)
