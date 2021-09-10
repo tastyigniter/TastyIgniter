@@ -101,14 +101,13 @@ trait CombinesAssets
     {
         $assets = $this->prepareAssets($assets);
 
+        $combiner = $this->prepareCombiner($assets);
+        $lastMod = $combiner->getLastModified();
+
         $cacheKey = $this->getCacheKey($assets);
-        $cacheData = $this->useCache ? $this->getCache($cacheKey) : FALSE;
+        $cacheData = $this->useCache ? $this->getCache($cacheKey.$lastMod) : FALSE;
 
         if (!$cacheData) {
-            $combiner = $this->prepareCombiner($assets);
-
-            $lastMod = $combiner->getLastModified();
-
             $cacheData = [
                 'type' => $type,
                 'uri' => $cacheKey.'-'.$lastMod.'.'.$type,
