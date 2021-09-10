@@ -3,7 +3,6 @@
 namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
-use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
@@ -40,7 +39,7 @@ class Payments_model extends Model
     public $timestamps = TRUE;
 
     protected $casts = [
-        'data' => Serialize::class,
+        'data' => 'array',
         'status' => 'boolean',
         'is_default' => 'boolean',
         'priority' => 'integer',

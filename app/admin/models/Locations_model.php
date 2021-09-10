@@ -5,7 +5,6 @@ namespace Admin\Models;
 use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
-use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
@@ -35,7 +34,8 @@ class Locations_model extends AbstractLocation
         'location_lat' => 'double',
         'location_lng' => 'double',
         'location_status' => 'boolean',
-        'options' => Serialize::class,
+        'options' => 'array',
+
     ];
 
     public $relation = [
