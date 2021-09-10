@@ -204,8 +204,8 @@ class Locations_model extends AbstractLocation
     public function setOptionsAttribute($value)
     {
         if (is_array($value)) {
-            $options = @unserialize($this->attributes['options']) ?: [];
-            $this->attributes['options'] = @serialize(array_merge($options ?? [], $value));
+            $options = @json_decode($this->attributes['options'], TRUE) ?: [];
+            $this->attributes['options'] = @json_encode(array_merge($options ?? [], $value));
         }
     }
 
