@@ -258,7 +258,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.statuses.label_comment',
             'type' => 'textarea',
         ],
-        'date_added' => [
+        'created_at' => [
             'label' => 'lang:admin::lang.reservations.label_date_added',
             'type' => 'datepicker',
             'mode' => 'date',
@@ -273,7 +273,7 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
             'context' => ['edit', 'preview'],
         ],
-        'date_modified' => [
+        'updated_at' => [
             'label' => 'lang:admin::lang.reservations.label_date_modified',
             'type' => 'datepicker',
             'mode' => 'date',

@@ -66,6 +66,8 @@ class Menus_model extends Model
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
 
+    public $timestamps = TRUE;
+
     //
     // Scopes
     //

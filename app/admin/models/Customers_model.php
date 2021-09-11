@@ -16,10 +16,6 @@ class Customers_model extends AuthUserModel
     use Purgeable;
     use SendsMailTemplate;
 
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
-
     /**
      * @var string The database table name
      */
@@ -160,7 +156,7 @@ class Customers_model extends AuthUserModel
      */
     public function getCustomerDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     /**

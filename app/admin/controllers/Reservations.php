@@ -141,7 +141,7 @@ class Reservations extends \Admin\Classes\AdminController
     {
         $query->with([
             'status_history' => function ($q) {
-                $q->orderBy('date_added', 'desc');
+                $q->orderBy('created_at', 'desc');
             },
             'status_history.staff',
             'status_history.status',

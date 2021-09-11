@@ -41,7 +41,9 @@ class InitialSchemaSeeder extends Seeder
         if (DB::table('countries')->count())
             return;
 
-        DB::table('countries')->insert($this->getSeedRecords('countries'));
+        DB::table('countries')->insert($this->getSeedRecords('countries', TRUE));
+
+        DB::table('countries')->update(['updated_at' => now(), 'created_at' => now()]);
 
         DB::table('countries')->update([
             'format' => '{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}',
@@ -63,6 +65,8 @@ class InitialSchemaSeeder extends Seeder
                 DB::table('currencies')->insert($currency);
             }
         }
+
+        DB::table('currencies')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedCustomerGroups()
@@ -74,6 +78,8 @@ class InitialSchemaSeeder extends Seeder
             'group_name' => 'Default group',
             'approval' => FALSE,
         ]);
+
+        DB::table('customer_groups')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedLanguages()
@@ -88,6 +94,8 @@ class InitialSchemaSeeder extends Seeder
             'status' => TRUE,
             'can_delete' => FALSE,
         ]);
+
+        DB::table('languages')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedDefaultLocation()
@@ -98,12 +106,13 @@ class InitialSchemaSeeder extends Seeder
 
         $location = $this->getSeedRecords('location');
         $location['location_email'] = DatabaseSeeder::$siteEmail;
-        $location['options'] = serialize($location['options']);
+        $location['options'] = json_encode($location['options']);
         $location['delivery_areas'][0]['boundaries']['circle'] = json_encode(
             $location['delivery_areas'][0]['boundaries']['circle']
         );
 
         $locationId = DB::table('locations')->insertGetId(array_except($location, ['delivery_areas']));
+        DB::table('locations')->update(['updated_at' => now(), 'created_at' => now()]);
 
         $this->seedLocationTables($locationId);
     }
@@ -127,6 +136,8 @@ class InitialSchemaSeeder extends Seeder
                 'locationable_type' => 'tables',
             ]);
         }
+
+        DB::table('tables')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedMealtimes()
@@ -154,6 +165,8 @@ class InitialSchemaSeeder extends Seeder
                 'mealtime_status' => TRUE,
             ],
         ]);
+
+        DB::table('mealtimes')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedSettings()
@@ -188,6 +201,8 @@ class InitialSchemaSeeder extends Seeder
             'staff_group_name' => 'Delivery',
             'description' => 'Default group for delivery drivers.',
         ]);
+
+        DB::table('staff_groups')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedStaffRoles()
@@ -221,6 +236,8 @@ class InitialSchemaSeeder extends Seeder
             'description' => 'Default role for restaurant delivery.',
             'permissions' => 'a:3:{s:14:"Admin.Statuses";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";}',
         ]);
+
+        DB::table('staff_roles')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedStatuses()
@@ -229,6 +246,8 @@ class InitialSchemaSeeder extends Seeder
             return;
 
         DB::table('statuses')->insert($this->getSeedRecords('statuses'));
+
+        DB::table('statuses')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function getSeedRecords($name)
