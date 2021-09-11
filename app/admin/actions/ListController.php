@@ -4,7 +4,6 @@ namespace Admin\Actions;
 
 use Admin\Facades\Template;
 use Admin\Traits\ListExtendable;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
 
 /**
@@ -63,7 +62,7 @@ class ListController extends ControllerAction
     /**
      * List_Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */

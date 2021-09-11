@@ -54,7 +54,7 @@
 
         this.picker = this.$el.colorpicker(this.options)
 
-        if ($input.is(':readonly'))
+        if ($input.is(':read-only'))
             this.$el.colorpicker('colorpicker').disable()
 
         // this.picker.on('create', $.proxy(this.watchComponent, this))

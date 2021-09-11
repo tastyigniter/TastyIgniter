@@ -52,6 +52,12 @@
             this.picker = this.$el.datepicker(this.options);
             this.parsePickerValue()
             this.$el.on('changeDate', $.proxy(this.onSelectDatePicker, this))
+                // Stops bootstrap modal from closing when datepicker hide event is triggered
+                // https://github.com/uxsolutions/bootstrap-datepicker/issues/50#issuecomment-90855951
+                .on('hide', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                })
         }
     }
 

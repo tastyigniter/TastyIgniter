@@ -12,5 +12,6 @@
         class="form-control"
         value="{{ $value }}"
         {!! ($this->disabled OR $this->previewMode) ? 'disabled="disabled"' : '' !!}
-        {!! ($this->readOnly) ? 'readonly="readonly"' : '' !!}>
+        {!! ($this->readOnly) ? 'readonly="readonly"' : '' !!}
+    />
 </div>
