@@ -64,6 +64,7 @@ class Categories_model extends Model
     ];
 
     public $mediable = ['thumb'];
+
     public static $allowedSortingColumns = ['priority asc', 'priority desc'];
 
     public static function getDropdownOptions()
@@ -107,14 +108,7 @@ class Categories_model extends Model
         return $query->where('status', 1);
     }
 
-    public function scopeWhereHasLocation($query, $locationId)
-    {
-        $query->whereHas('locations', function ($q) use ($locationId) {
-            $q->where('locations.location_id', $locationId);
-        });
-    }
-
-	public function scopeListFrontEnd($query, $options = [])
+    public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
             'page' => 1,
@@ -126,11 +120,9 @@ class Categories_model extends Model
         ], $options));
 
         $searchableFields = ['name', 'description'];
-      
+
         if (strlen($location)) {
-            $query->whereHas('locations', function ($q) use ($location) {
-                $q->whereSlug($location);
-            });
+            $query->whereHasOrDoesntHaveLocation($location);
         }
 
         if (!is_array($sort)) {
@@ -156,7 +148,7 @@ class Categories_model extends Model
         if ($enabled) {
             $query->isEnabled();
         }
-        
+
         return $query->paginate($pageLimit, $page);
     }
 }
