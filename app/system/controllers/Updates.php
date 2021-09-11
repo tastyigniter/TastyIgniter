@@ -68,7 +68,7 @@ class Updates extends \Admin\Classes\AdminController
             }
         }
         catch (Exception $ex) {
-            Flash::warning($ex->getMessage())->now();
+            flash()->warning($ex->getMessage())->now();
         }
     }
 
