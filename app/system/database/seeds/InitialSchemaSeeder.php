@@ -106,7 +106,7 @@ class InitialSchemaSeeder extends Seeder
 
         $location = $this->getSeedRecords('location');
         $location['location_email'] = DatabaseSeeder::$siteEmail;
-        $location['options'] = serialize($location['options']);
+        $location['options'] = json_encode($location['options']);
         $location['delivery_areas'][0]['boundaries']['circle'] = json_encode(
             $location['delivery_areas'][0]['boundaries']['circle']
         );
