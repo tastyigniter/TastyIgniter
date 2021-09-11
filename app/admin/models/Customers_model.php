@@ -156,7 +156,7 @@ class Customers_model extends AuthUserModel
      */
     public function getCustomerDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     /**

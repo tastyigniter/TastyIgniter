@@ -8,7 +8,7 @@
                     <i class="{{ $activity['icon'] }} fa-fw bg-primary"></i>
                     <b>{{ $activity['causer']['staff_name'] ?? null }}</b>
                     {!! $activity['message'] !!}
-                    <em class="pull-right small">{{ time_elapsed($activity['date_added']) }}</em>
+                    <em class="pull-right small">{{ time_elapsed($activity['created_at']) }}</em>
                 </div>
             @empty
                 <div class="list-group-item bg-transparent">@lang('admin::lang.dashboard.text_no_activity')</div>

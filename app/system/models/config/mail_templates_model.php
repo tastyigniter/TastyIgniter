@@ -55,12 +55,12 @@ $config['list']['columns'] = [
         'valueFrom' => 'name',
         'sortable' => FALSE,
     ],
-    'date_updated' => [
+    'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'timetense',
         'searchable' => TRUE,
     ],
-    'date_added' => [
+    'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
         'searchable' => TRUE,

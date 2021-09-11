@@ -23,10 +23,6 @@ class Reservations_model extends Model
     use Locationable;
     use Assignable;
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_modified';
-
     /**
      * @var string The database table name
      */

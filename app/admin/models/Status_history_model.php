@@ -40,8 +40,6 @@ class Status_history_model extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
-
     public static function alreadyExists($model, $statusId)
     {
         return self::where('object_id', $model->getKey())
@@ -56,7 +54,7 @@ class Status_history_model extends Model
 
     public function getDateAddedSinceAttribute($value)
     {
-        return $this->date_added ? time_elapsed($this->date_added) : null;
+        return $this->created_at ? time_elapsed($this->created_at) : null;
     }
 
     public function getStatusNameAttribute($value)
@@ -119,6 +117,6 @@ class Status_history_model extends Model
 
     public function scopeWhereStatusIsLatest($query, $statusId)
     {
-        return $query->where('status_id', $statusId)->orderBy('date_added', 'desc');
+        return $query->where('status_id', $statusId)->orderBy('created_at', 'desc');
     }
 }

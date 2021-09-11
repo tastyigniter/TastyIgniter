@@ -135,7 +135,7 @@ class Staffs_model extends Model
      */
     public function getStaffDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     public function addStaffUser($user = [])
