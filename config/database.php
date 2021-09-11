@@ -142,4 +142,20 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | DBAL Mappings
+    |--------------------------------------------------------------------------
+    |
+    | If your migrations include ALTER commands then the library
+    | `doctrine/dbal` is used to make those changes.  That library supports
+    | Laravel specific data type(s).  This section maps those datatypes.
+    |
+    */
+
+    'dbal' => [
+        'types' => [
+            'timestamp' => \Illuminate\Database\DBAL\TimestampType::class,
+        ],
+    ],
 ];

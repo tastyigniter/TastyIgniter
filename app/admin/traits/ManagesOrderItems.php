@@ -192,8 +192,6 @@ trait ManagesOrderItems
         if (!is_numeric($orderId))
             return FALSE;
 
-        $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
-
         foreach ($totals as $total) {
             $this->addOrUpdateOrderTotal($total);
         }

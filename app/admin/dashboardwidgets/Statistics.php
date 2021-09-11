@@ -168,7 +168,7 @@ class Statistics extends BaseDashboardWidget
             $start = Carbon::now()->today();
         }
 
-        $query->whereBetween('date_added', [
+        $query->whereBetween('created_at', [
             $start,
             Carbon::now(),
         ]);

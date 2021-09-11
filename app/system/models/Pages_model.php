@@ -12,10 +12,6 @@ class Pages_model extends Model
 {
     use HasPermalink;
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
-
     /**
      * @var string The database table name
      */

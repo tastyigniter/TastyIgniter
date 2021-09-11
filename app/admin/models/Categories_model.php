@@ -67,6 +67,8 @@ class Categories_model extends Model
 
     public static $allowedSortingColumns = ['priority asc', 'priority desc'];
 
+    public $timestamps = TRUE;
+
     public static function getDropdownOptions()
     {
         return self::pluck('name', 'category_id');

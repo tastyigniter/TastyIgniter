@@ -26,7 +26,7 @@ $config['list']['filter'] = [
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month AND DAY(date_added) = :day',
+            'conditions' => 'YEAR(created_at) = :year AND MONTH(created_at) = :month AND DAY(created_at) = :day',
         ],
     ],
 ];
@@ -115,10 +115,6 @@ $config['list']['columns'] = [
         'relation' => 'user',
         'select' => 'last_login',
     ],
-    'date_added' => [
-        'label' => 'lang:admin::lang.column_date_added',
-        'type' => 'datesince',
-    ],
     'staff_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
@@ -127,6 +123,15 @@ $config['list']['columns'] = [
     'staff_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
+    ],
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
     ],
 ];
 
