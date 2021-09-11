@@ -216,6 +216,8 @@ return [
             'text_select' => 'Select an action to apply',
             'label_edit' => 'Edit',
             'label_status' => 'Enable/Disable',
+            'label_enable' => 'Enable',
+            'label_disable' => 'Disable',
             'text_select_all' => 'Select all %s records',
         ],
     ],

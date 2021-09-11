@@ -141,10 +141,6 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'status',
             ]);
 
-            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Edit::class, [
-                'code' => 'edit',
-            ]);
-
             $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Delete::class, [
                 'code' => 'delete',
             ]);

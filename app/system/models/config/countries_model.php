@@ -26,25 +26,27 @@ $config['list']['toolbar'] = [
 $config['list']['bulkActions'] = [
     'status' => [
         'label' => 'lang:admin::lang.list.actions.label_status',
-        'attributes' => [
-            'class' => 'btn btn-light',
-        ],
-    ],
-    'edit' => [
-        'label' => 'lang:admin::lang.list.actions.label_edit',
-        'useFormFields' => ['*'],
-        'ignoreFormFields' => ['*'],
-        'attributes' => [
-            'class' => 'btn btn-light',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:admin::lang.list.actions.label_enable',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:admin::lang.list.actions.label_disable',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
         ],
     ],
     'delete' => [
         'label' => 'lang:admin::lang.button_delete',
-        'attributes' => [
-            'class' => 'btn btn-light text-danger',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
+        'class' => 'btn btn-light text-danger',
+        'data-request-data' => "_method:'DELETE'",
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 

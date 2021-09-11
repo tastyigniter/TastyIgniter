@@ -5,6 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ListColumn;
 use Admin\Classes\ToolbarButton;
+use Admin\Classes\ToolbarDropdown;
 use Admin\Classes\Widgets;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
@@ -147,6 +148,8 @@ class Lists extends BaseWidget
      * @var string Sets the list sorting direction (asc, desc)
      */
     protected $sortDirection;
+
+    protected $allBulkActions;
 
     protected $availableBulkActions;
 
@@ -1158,32 +1161,28 @@ class Lists extends BaseWidget
 
     public function onBulkAction()
     {
-        if (!strlen($actionCode = post('code')))
+        $requestData = post();
+        if (!strlen($code = array_get($requestData, 'code')))
             throw new ApplicationException(lang('admin::lang.list.missing_action_code'));
 
+        $parts = explode('.', $code);
+        $actionCode = array_shift($parts);
         if (!$bulkAction = array_get($this->getAvailableBulkActions(), $actionCode))
             throw new ApplicationException(sprintf(lang('admin::lang.list.action_not_found'), $actionCode));
 
-        $checkedIds = post('checked');
+        $checkedIds = array_get($requestData, 'checked');
         if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds))
             throw new ApplicationException(lang('admin::lang.list.delete_empty'));
 
         $alias = post('alias') ?: $this->primaryAlias;
 
-        if ($bulkAction->hasPopup())
-            return $this->renderBulkActionPopup($bulkAction);
-
         $query = $this->prepareModel();
 
-        if (post('select_all') === '1') {
-            $records = $query->get();
-            $checkedIds = $records->pluck($this->model->getKeyName())->all();
-        }
-        else {
-            $records = $query->whereIn($this->model->getKeyName(), $checkedIds)->get();
-        }
+        $records = post('select_all') === '1'
+            ? $query->get()
+            : $query->whereIn($this->model->getKeyName(), $checkedIds)->get();
 
-        $bulkAction->handleAction($checkedIds, $records);
+        $bulkAction->handleAction($requestData, $records);
 
         return $this->controller->refreshList($alias);
     }
@@ -1196,7 +1195,7 @@ class Lists extends BaseWidget
         $partialName = array_get(
             $buttonObj->config,
             'partial',
-            'toolbar/button_'.$buttonObj->type
+            'lists/list_action_button'
         );
 
         return $this->makePartial($partialName, ['button' => $buttonObj]);
@@ -1204,9 +1203,25 @@ class Lists extends BaseWidget
 
     protected function getAvailableBulkActions()
     {
+        $this->fireSystemEvent('admin.list.extendBulkActions');
+
+        $allBulkActions = $this->makeBulkActionButtons($this->bulkActions);
         $bulkActions = [];
 
-        foreach ($this->bulkActions as $actionCode => $config) {
+        foreach ($allBulkActions as $actionCode => $buttonObj) {
+            $bulkActions[$actionCode] = $this->makeBulkActionWidget($buttonObj);
+        }
+
+        return $this->availableBulkActions = $bulkActions;
+    }
+
+    protected function makeBulkActionButtons($bulkActions, $parentActionCode = null)
+    {
+        $result = [];
+        foreach ($bulkActions as $actionCode => $config) {
+            if ($parentActionCode)
+                $actionCode = $parentActionCode.'.'.$actionCode;
+
             // Check if admin has permissions to show this column
             $permissions = array_get($config, 'permissions');
             if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE))
@@ -1215,43 +1230,32 @@ class Lists extends BaseWidget
             // Check that the filter scope matches the active location context
             if ($this->isLocationAware($config)) continue;
 
-            $buttonObj = $this->makeBulkActionButton($actionCode, $config);
+            $button = $this->makeBulkActionButton($actionCode, $config);
 
-            $bulkActions[$actionCode] = $this->makeBulkActionWidget($buttonObj);
+            $this->allBulkActions[$actionCode] = $result[$actionCode] = $button;
         }
 
-        return $this->availableBulkActions = $bulkActions;
+        return $result;
     }
 
     protected function makeBulkActionButton($actionCode, $config)
     {
-        $buttonConfig = [
-            'label' => $config['label'],
-            'class' => 'py-1 '.array_get($config, 'attributes.class'),
-            'data-control' => 'bulk-action',
-            'data-attach-loading' => '',
-            'data-request-data' => "code: '$actionCode'",
-            'data-request-form' => '#'.$this->getId('form'),
-        ];
+        $buttonType = array_get($config, 'type', 'link');
+        if ($buttonType !== 'dropdown') {
+            $buttonObj = new ToolbarButton($actionCode);
+            $buttonObj->displayAs($buttonType, $config);
 
-        $attributes = array_get($config, 'attributes', []);
-        $buttonConfig += $attributes;
-
-        if (!array_key_exists('data-request', $attributes))
-            $buttonConfig['data-request'] = $this->getEventHandler('onBulkAction');
-
-        if (array_key_exists('data-request-data', $attributes))
-            $buttonConfig['data-request-data'] .= ', '.$attributes['data-request-data'];
-
-        $buttonObj = new ToolbarButton($actionCode);
-        $buttonType = array_get($buttonConfig, 'type', 'link');
-        $buttonObj->displayAs($buttonType, $buttonConfig);
-
-        if (array_key_exists('menuItems', $config)) {
-            $buttonObj->menuItems($this->makeButtons($config['menuItems']));
+            return $buttonObj;
         }
 
-        return $buttonObj;
+        $dropdownObj = new ToolbarDropdown($actionCode);
+        $dropdownObj->displayAs($config);
+
+        if (array_key_exists('menuItems', $config)) {
+            $dropdownObj->menuItems($this->makeBulkActionButtons($config['menuItems'], $actionCode));
+        }
+
+        return $dropdownObj;
     }
 
     protected function makeBulkActionWidget($actionButton)

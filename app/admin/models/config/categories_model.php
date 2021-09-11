@@ -34,19 +34,27 @@ $config['list']['toolbar'] = [
 $config['list']['bulkActions'] = [
     'status' => [
         'label' => 'lang:admin::lang.list.actions.label_status',
-        'cssClass' => 'btn btn-light',
-    ],
-    'edit' => [
-        'label' => 'lang:admin::lang.list.actions.label_edit',
-        'cssClass' => 'btn btn-light',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:admin::lang.list.actions.label_enable',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:admin::lang.list.actions.label_disable',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
+        ],
     ],
     'delete' => [
         'label' => 'lang:admin::lang.button_delete',
-        'cssClass' => 'btn btn-light text-danger',
-        'attributes' => [
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
+        'class' => 'btn btn-light text-danger',
+        'data-request-data' => "_method:'DELETE'",
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 

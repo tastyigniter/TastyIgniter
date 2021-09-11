@@ -6,7 +6,7 @@ use Admin\Classes\BaseBulkActionWidget;
 
 class Delete extends BaseBulkActionWidget
 {
-    public function handleAction($checkedIds, $records)
+    public function handleAction($requestData, $records)
     {
         // Delete records
         if ($count = $records->count()) {

@@ -5,9 +5,9 @@ namespace Admin\Classes;
 use Igniter\Flame\Html\HtmlFacade as Html;
 
 /**
- * Toolbar Button definition
+ * Toolbar Dropdown definition
  */
-class ToolbarButton
+class ToolbarDropdown
 {
     /**
      * @var string Toolbar button name.
@@ -15,9 +15,9 @@ class ToolbarButton
     public $name;
 
     /**
-     * @var string Display mode. Link, Button
+     * @var string Display mode. Dropdown
      */
-    public $type = 'link';
+    public $type = 'dropdown';
 
     public $label;
 
@@ -36,6 +36,8 @@ class ToolbarButton
      * @var array Raw field configuration.
      */
     public $config;
+
+    protected $menuItems;
 
     /**
      * Constructor.
@@ -57,9 +59,8 @@ class ToolbarButton
      *
      * @return $this
      */
-    public function displayAs($type, $config)
+    public function displayAs($config)
     {
-        $this->type = strtolower($type) ?: $this->type;
         $this->config = $this->evalConfig($config);
 
         return $this;
@@ -94,6 +95,18 @@ class ToolbarButton
             $attributes['disabled'] = 'disabled';
 
         return $htmlBuild ? Html::attributes($attributes) : $attributes;
+    }
+
+    public function menuItems($value = null)
+    {
+        if (is_null($value)) {
+            return $this->menuItems ?? [];
+        }
+        else {
+            $this->menuItems = $value;
+        }
+
+        return $this;
     }
 
     protected function evalConfig($config)

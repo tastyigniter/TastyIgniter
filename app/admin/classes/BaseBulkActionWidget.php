@@ -14,13 +14,13 @@ class BaseBulkActionWidget extends BaseWidget
 
     public $type;
 
-    public $attributes;
-
     public $popupTitle;
 
     //
     // Object properties
     //
+
+    protected $defaultConfig = [];
 
     /**
      * @var \Admin\Widgets\Lists
@@ -31,20 +31,14 @@ class BaseBulkActionWidget extends BaseWidget
     {
         $this->actionButton = $actionButton;
 
-        $this->config = $this->makeConfig($config);
+        $this->config = $this->makeConfig(array_merge_recursive($this->defaultConfig, $config));
 
         $this->fillFromConfig([
             'label',
-            'attributes',
             'popupTitle',
         ]);
 
         parent::__construct($controller, $config);
-    }
-
-    public function hasPopup()
-    {
-        return FALSE;
     }
 
     /**
@@ -69,7 +63,7 @@ class BaseBulkActionWidget extends BaseWidget
         return $this->actionButton;
     }
 
-    public function handleAction($checkedIds, $records)
+    public function handleAction($requestData, $records)
     {
     }
 }
