@@ -3,7 +3,6 @@
 namespace Admin\Actions;
 
 use Admin\Facades\Template;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
 
 class CalendarController extends ControllerAction
@@ -50,7 +49,7 @@ class CalendarController extends ControllerAction
     /**
      * List_Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */

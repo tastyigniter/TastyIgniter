@@ -69,7 +69,7 @@ trait FormExtendable
      *
      * @param string $recordId
      *
-     * @return \Model
+     * @return\Igniter\Flame\Database\Model
      * @throws \Exception
      */
     public function formFindModelObject($recordId)
@@ -100,7 +100,7 @@ trait FormExtendable
     /**
      * Creates a new instance of a form model. This logic can be changed
      * by overriding it in the controller.
-     * @return \Model
+     * @return\Igniter\Flame\Database\Model
      */
     public function formCreateModelObject()
     {
@@ -169,9 +169,9 @@ trait FormExtendable
      * Extend supplied model used by create and edit actions, the model can
      * be altered by overriding it in the controller.
      *
-     * @param \Model $model
+     * @param \Igniter\Flame\Database\Model $model
      *
-     * @return \Model
+     * @return\Igniter\Flame\Database\Model
      */
     public function formExtendModel($model)
     {

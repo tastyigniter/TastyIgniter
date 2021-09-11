@@ -84,7 +84,16 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
 ];
 
 $config['form']['toolbar'] = [
@@ -401,6 +410,19 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 1,
             'type' => 'switch',
+            'span' => 'left',
+        ],
+        'options[auto_allocate_table]' => [
+            'label' => 'lang:admin::lang.locations.label_auto_allocate_table',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 1,
+            'type' => 'switch',
+            'span' => 'right',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_reservation]',
+                'condition' => 'checked',
+            ],
         ],
         'options[reservation_time_interval]' => [
             'label' => 'lang:admin::lang.locations.label_reservation_time_interval',
@@ -415,25 +437,12 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[reservation_lead_time]' => [
-            'label' => 'lang:admin::lang.locations.label_reservation_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 45,
-            'type' => 'number',
-            'span' => 'right',
-            'comment' => 'lang:admin::lang.locations.help_reservation_lead_time',
-            'trigger' => [
-                'action' => 'enable',
-                'field' => 'options[offer_reservation]',
-                'condition' => 'checked',
-            ],
-        ],
         'options[reservation_stay_time]' => [
             'label' => 'lang:admin::lang.locations.label_reservation_stay_time',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
             'default' => 45,
             'type' => 'number',
-            'span' => 'left',
+            'span' => 'right',
             'comment' => 'lang:admin::lang.locations.help_reservation_stay_time',
             'trigger' => [
                 'action' => 'enable',
@@ -441,15 +450,39 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-        'options[auto_allocate_table]' => [
-            'label' => 'lang:admin::lang.locations.label_auto_allocate_table',
+        'options[min_reservation_advance_time]' => [
+            'label' => 'lang:admin::lang.locations.label_min_reservation_advance_time',
             'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'default' => 1,
-            'type' => 'switch',
+            'default' => 2,
+            'type' => 'number',
+            'span' => 'left',
+            'comment' => 'lang:admin::lang.locations.help_min_reservation_advance_time',
+        ],
+        'options[max_reservation_advance_time]' => [
+            'label' => 'lang:admin::lang.locations.label_max_reservation_advance_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 30,
+            'type' => 'number',
             'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_max_reservation_advance_time',
+        ],
+        'options[limit_guests]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_guests',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 0,
+            'type' => 'switch',
+            'span' => 'left',
+        ],
+        'options[limit_guests_count]' => [
+            'label' => 'lang:admin::lang.locations.label_limit_guests_count',
+            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'default' => 20,
+            'type' => 'number',
+            'span' => 'right',
+            'comment' => 'lang:admin::lang.locations.help_limit_guests_count',
             'trigger' => [
                 'action' => 'enable',
-                'field' => 'options[offer_reservation]',
+                'field' => 'options[limit_reservations]',
                 'condition' => 'checked',
             ],
         ],

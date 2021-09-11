@@ -46,7 +46,7 @@ class Activities_model extends Activity
         extract(array_merge([
             'page' => 1,
             'pageLimit' => 20,
-            'sort' => 'date_added desc',
+            'sort' => 'created_at desc',
             'onlyUser' => null,
             'exceptUser' => null,
         ], $options));
@@ -73,7 +73,7 @@ class Activities_model extends Activity
         }
 
         foreach ($sort as $_sort) {
-            if (in_array($_sort, ['date_added asc', 'date_added desc', 'date_updated asc', 'date_updated desc'])) {
+            if (in_array($_sort, ['created_at asc', 'created_at desc', 'updated_at asc', 'updated_at desc'])) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
                     array_push($parts, 'desc');

@@ -28,6 +28,21 @@ class ColorPicker extends BaseFormWidget
         '#95a5a6', '#7f8c8d',
     ];
 
+    /**
+     * @var bool Show opacity slider
+     */
+    public $showAlpha = FALSE;
+
+    /**
+     * @var bool If true, the color picker is set to read-only mode
+     */
+    public $readOnly = FALSE;
+
+    /**
+     * @var bool If true, the color picker is set to disabled mode
+     */
+    public $disabled = FALSE;
+
     //
     // Object properties
     //
@@ -38,6 +53,9 @@ class ColorPicker extends BaseFormWidget
     {
         $this->fillFromConfig([
             'availableColors',
+            'showAlpha',
+            'readOnly',
+            'disabled',
         ]);
     }
 
@@ -56,6 +74,9 @@ class ColorPicker extends BaseFormWidget
         $this->vars['name'] = $this->formField->getName();
         $this->vars['value'] = $this->getLoadValue();
         $this->vars['availableColors'] = $this->availableColors();
+        $this->vars['showAlpha'] = $this->showAlpha;
+        $this->vars['readOnly'] = $this->readOnly;
+        $this->vars['disabled'] = $this->disabled;
     }
 
     public function loadAssets()

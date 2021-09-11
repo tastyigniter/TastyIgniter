@@ -16,10 +16,6 @@ class Customers_model extends AuthUserModel
     use Purgeable;
     use SendsMailTemplate;
 
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
-
     /**
      * @var string The database table name
      */
@@ -102,10 +98,11 @@ class Customers_model extends AuthUserModel
         if (!$this->group OR !$this->group->requiresApproval())
             return;
 
-        if ($this->is_activated OR $this->status)
+        if ($this->is_activated AND $this->status)
             return;
 
-        throw new Exception(sprintf(lang('admin::lang.customers.alert_customer_not_active'), $this->email
+        throw new Exception(sprintf(
+            lang('admin::lang.customers.alert_customer_not_active'), $this->email
         ));
     }
 
@@ -159,7 +156,7 @@ class Customers_model extends AuthUserModel
      */
     public function getCustomerDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     /**

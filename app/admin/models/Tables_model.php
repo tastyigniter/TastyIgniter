@@ -55,6 +55,8 @@ class Tables_model extends Model
         ['table_status', 'lang:admin::lang.label_status', 'required|boolean'],
     ];
 
+    public $timestamps = TRUE;
+
     public static function getDropdownOptions()
     {
         return self::selectRaw('table_id, concat(table_name, " (", min_capacity, " - ", max_capacity, ")") AS display_name')

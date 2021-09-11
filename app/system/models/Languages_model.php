@@ -27,6 +27,8 @@ class Languages_model extends Language
         ],
     ];
 
+    public $timestamps = TRUE;
+
     /**
      *  List of variables that cannot be mass assigned
      * @var array

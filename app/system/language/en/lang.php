@@ -642,7 +642,7 @@ return [
         'button_update' => '<i class="fa fa-check"></i>&nbsp;&nbsp;Update',
         'button_marketplace' => 'Open TastyIgniter Marketplace&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
 
-        'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
+        'help_carte_key' => 'A Carte key is required to add and update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already. For more information, see the <a href="%s" target="_blank">Carté Key Guide</a>',
         'alert_item_to_ignore' => 'Select item(s) to ignore.',
         'alert_no_carte_key' => 'No carte key specified.',
         'alert_no_items' => 'No item(s) specified.',

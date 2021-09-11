@@ -55,9 +55,9 @@ jobs:
         run: |
           git reset --hard HEAD
           rm -rf ./vendor/tastyigniter/flame
-          wget https://github.com/tastyigniter/flame/archive/develop.zip -O ./vendor/tastyigniter/develop.zip
-          unzip ./vendor/tastyigniter/develop.zip -d ./vendor/tastyigniter
-          mv ./vendor/tastyigniter/flame-develop ./vendor/tastyigniter/flame
+          wget https://github.com/tastyigniter/flame/archive/master.zip -O ./vendor/tastyigniter/master.zip
+          unzip ./vendor/tastyigniter/master.zip -d ./vendor/tastyigniter
+          mv ./vendor/tastyigniter/flame-master ./vendor/tastyigniter/flame
           composer dump-autoload
         env:
           DB_PORT: 13306

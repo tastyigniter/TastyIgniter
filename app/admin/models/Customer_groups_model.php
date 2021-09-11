@@ -29,6 +29,8 @@ class Customer_groups_model extends Model
         ],
     ];
 
+    public $timestamps = TRUE;
+
     protected static $defaultGroup;
 
     public static function getDropdownOptions()

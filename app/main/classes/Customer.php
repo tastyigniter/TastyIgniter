@@ -2,6 +2,8 @@
 
 namespace Main\Classes;
 
+use Admin\Models\Customer_groups_model;
+
 /**
  * Customer Class
  */
@@ -10,6 +12,11 @@ class Customer extends \Igniter\Flame\Auth\Manager
     protected $sessionKey = 'customer_auth';
 
     protected $model = 'Admin\Models\Customers_model';
+
+    public function __construct()
+    {
+        $this->requireApproval = optional(Customer_groups_model::getDefault())->requiresApproval() ?? $this->requireApproval;
+    }
 
     public function customer()
     {

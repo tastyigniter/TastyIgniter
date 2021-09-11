@@ -34,7 +34,8 @@ class Locations_model extends AbstractLocation
         'location_lat' => 'double',
         'location_lng' => 'double',
         'location_status' => 'boolean',
-        'options' => 'serialize',
+        'options' => 'array',
+
     ];
 
     public $relation = [
@@ -71,6 +72,8 @@ class Locations_model extends AbstractLocation
     ];
 
     public $url;
+
+    public $timestamps = TRUE;
 
     protected static $defaultLocation;
 
@@ -203,8 +206,8 @@ class Locations_model extends AbstractLocation
     public function setOptionsAttribute($value)
     {
         if (is_array($value)) {
-            $options = @unserialize($this->attributes['options']) ?: [];
-            $this->attributes['options'] = @serialize(array_merge($options ?? [], $value));
+            $options = @json_decode($this->attributes['options'], TRUE) ?: [];
+            $this->attributes['options'] = @json_encode(array_merge($options ?? [], $value));
         }
     }
 

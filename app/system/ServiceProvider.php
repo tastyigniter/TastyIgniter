@@ -275,6 +275,8 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerPaginator()
     {
+        Paginator::useBootstrap();
+
         Paginator::defaultView('system::_partials/pagination/default');
         Paginator::defaultSimpleView('system::_partials/pagination/simple_default');
 
@@ -329,11 +331,6 @@ class ServiceProvider extends AppServiceProvider
 
         Event::listen(CommandStarting::class, function () {
             config()->set('system.activityRecordsTTL', (int)setting('activity_log_timeout', 60));
-        });
-
-        $this->app->resolving('system.setting', function ($setting, $app) {
-            if (strlen($locationMode = setting('site_location_mode')))
-                $app['config']->set('system.locationMode', $locationMode);
         });
     }
 

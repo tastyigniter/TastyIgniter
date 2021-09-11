@@ -136,7 +136,7 @@ class FormController extends ControllerAction
     /**
      * Prepare the widgets used by this action
      *
-     * @param \Model $model
+     * @param \Igniter\Flame\Database\Model $model
      *
      * @param null $context
      * @return void
@@ -494,7 +494,7 @@ class FormController extends ControllerAction
     /**
      * Sets a data collection to a model attributes, relations will also be set.
      *
-     * @param \Model $model Model to save to
+     * @param \Igniter\Flame\Database\Model $model Model to save to
      *
      * @param array $saveData Data to save.
      *

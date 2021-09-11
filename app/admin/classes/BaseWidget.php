@@ -48,7 +48,7 @@ class BaseWidget extends Extendable
     /**
      * Constructor
      *
-     * @param \System\Classes\BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      * @param array $config
      */
     public function __construct($controller, $config = [])
