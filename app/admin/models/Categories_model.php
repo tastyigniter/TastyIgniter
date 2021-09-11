@@ -65,6 +65,8 @@ class Categories_model extends Model
 
     public $mediable = ['thumb'];
 
+    public static $allowedSortingColumns = ['priority asc', 'priority desc'];
+
     public $timestamps = TRUE;
 
     public static function getDropdownOptions()
@@ -106,5 +108,49 @@ class Categories_model extends Model
     public function scopeIsEnabled($query)
     {
         return $query->where('status', 1);
+    }
+
+    public function scopeListFrontEnd($query, $options = [])
+    {
+        extract(array_merge([
+            'page' => 1,
+            'pageLimit' => 20,
+            'enabled' => TRUE,
+            'sort' => 'id asc',
+            'location' => null,
+            'search' => '',
+        ], $options));
+
+        $searchableFields = ['name', 'description'];
+
+        if (strlen($location)) {
+            $query->whereHasOrDoesntHaveLocation($location);
+        }
+
+        if (!is_array($sort)) {
+            $sort = [$sort];
+        }
+
+        foreach ($sort as $_sort) {
+            if (in_array($_sort, self::$allowedSortingColumns)) {
+                $parts = explode(' ', $_sort);
+                if (count($parts) < 2) {
+                    $parts[] = 'desc';
+                }
+                [$sortField, $sortDirection] = $parts;
+                $query->orderBy($sortField, $sortDirection);
+            }
+        }
+
+        $search = trim($search);
+        if (strlen($search)) {
+            $query->search($search, $searchableFields);
+        }
+
+        if ($enabled) {
+            $query->isEnabled();
+        }
+
+        return $query->paginate($pageLimit, $page);
     }
 }
