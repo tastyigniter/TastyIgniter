@@ -8,8 +8,8 @@ $itemOptions = $itemOptions['items'] ?? $itemOptions;
                 <a href="{{ $activity['url'] }}" class="menu-link">
                     <div class="menu-item-meta">{!! $activity['message'] !!}</div>
                     <span class="small menu-item-meta text-muted">
-                        {{ mdate('%h:%i %A', strtotime($activity['date_added'])) }}&nbsp;-&nbsp;
-                        {{ time_elapsed($activity['date_added']) }}
+                        {{ mdate('%h:%i %A', strtotime($activity['created_at'])) }}&nbsp;-&nbsp;
+                        {{ time_elapsed($activity['created_at']) }}
                     </span>
                 </a>
             </li>

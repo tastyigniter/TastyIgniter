@@ -15,7 +15,7 @@ class Activities extends \Admin\Classes\AdminController
             'model' => 'System\Models\Activities_model',
             'title' => 'lang:system::lang.activities.text_title',
             'emptyMessage' => 'lang:system::lang.activities.text_empty',
-            'defaultSort' => ['date_updated', 'DESC'],
+            'defaultSort' => ['updated_at', 'DESC'],
             'configFile' => 'activities_model',
         ],
     ];

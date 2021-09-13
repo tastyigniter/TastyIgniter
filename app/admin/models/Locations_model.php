@@ -73,6 +73,8 @@ class Locations_model extends AbstractLocation
 
     public $url;
 
+    public $timestamps = TRUE;
+
     protected static $defaultLocation;
 
     public static function getDropdownOptions()

@@ -20,10 +20,6 @@ class Payments_model extends Model
 
     const SORT_ORDER = 'priority';
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
-
     /**
      * @var string The database table name
      */

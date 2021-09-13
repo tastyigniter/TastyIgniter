@@ -126,7 +126,7 @@ class Orders extends \Admin\Classes\AdminController
     {
         $query->with([
             'status_history' => function ($q) {
-                $q->orderBy('date_added', 'desc');
+                $q->orderBy('created_at', 'desc');
             },
         ]);
     }

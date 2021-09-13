@@ -56,6 +56,8 @@ class Menu_options_model extends Model
 
     protected $purgeable = ['option_values'];
 
+    public $timestamps = TRUE;
+
     public static function getRecordEditorOptions()
     {
         $query = self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name');

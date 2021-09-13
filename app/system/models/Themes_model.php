@@ -45,6 +45,8 @@ class Themes_model extends Model
 
     protected $purgeable = ['template', 'settings', 'markup', 'codeSection'];
 
+    public $timestamps = TRUE;
+
     /**
      * @var ThemeManager
      */

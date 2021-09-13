@@ -38,6 +38,8 @@ class Allergens_model extends Model
 
     public $mediable = ['thumb'];
 
+    public $timestamps = TRUE;
+
     //
     // Accessors & Mutators
     //

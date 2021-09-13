@@ -119,20 +119,6 @@ class OptimizeTablesColumns extends Migration
         };
     }
 
-    protected function _optimize_customers_online()
-    {
-        return function (Blueprint $table) {
-            $table->string('access_type')->nullable()->change();
-            $table->string('browser')->nullable()->change();
-            $table->string('ip_address', 40)->nullable()->change();
-            $table->string('country_code')->nullable()->change();
-            $table->text('request_uri')->nullable()->change();
-            $table->text('referrer_uri')->nullable()->change();
-            $table->boolean('status')->default(0)->change();
-            $table->text('user_agent')->nullable()->change();
-        };
-    }
-
     protected function _optimize_extensions()
     {
         return function (Blueprint $table) {
