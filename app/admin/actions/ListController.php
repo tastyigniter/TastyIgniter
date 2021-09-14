@@ -180,6 +180,7 @@ class ListController extends ControllerAction
         $configFile = $listConfig['configFile'];
         $modelConfig = $this->loadConfig($configFile, $requiredConfig, 'list');
 
+        $columnConfig['bulkActions'] = $modelConfig['bulkActions'] ?? [];
         $columnConfig['columns'] = $modelConfig['columns'];
         $columnConfig['model'] = $model;
         $columnConfig['alias'] = $alias;

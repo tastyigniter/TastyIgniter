@@ -209,6 +209,17 @@ return [
         'help_visible_columns' => 'Set which columns are visible and in what order to display them',
         'help_page_limit' => 'Limit how many records are shown per page',
         'alert_relationship_not_supported' => 'The relationship %s is not supported for list columns.',
+        'missing_action_code' => 'Invalid bulk action code specified.',
+        'action_not_found' => 'Bulk Action class (%s) not found',
+
+        'actions' => [
+            'text_select' => 'Select an action to apply',
+            'label_edit' => 'Edit',
+            'label_status' => 'Enable/Disable',
+            'label_enable' => 'Enable',
+            'label_disable' => 'Disable',
+            'text_select_all' => 'Select all %s records',
+        ],
     ],
 
     'calendar' => [

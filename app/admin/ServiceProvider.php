@@ -55,6 +55,7 @@ class ServiceProvider extends AppServiceProvider
             $this->registerSystemSettings();
             $this->registerPermissions();
             $this->registerDashboardWidgets();
+            $this->registerBulkActionWidgets();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
@@ -129,6 +130,19 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerDashboardWidget(\Admin\DashboardWidgets\Charts::class, [
                 'label' => 'Charts widget',
                 'context' => 'dashboard',
+            ]);
+        });
+    }
+
+    protected function registerBulkActionWidgets()
+    {
+        Widgets::instance()->registerBulkActionWidgets(function (Widgets $manager) {
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Status::class, [
+                'code' => 'status',
+            ]);
+
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Delete::class, [
+                'code' => 'delete',
             ]);
         });
     }

@@ -13,6 +13,9 @@
         class="table table-hover mb-0 border-bottom"
     >
         <thead>
+        @if ($showCheckboxes)
+            {!! $this->makePartial('lists/list_actions') !!}
+        @endif
         {!! $this->makePartial('lists/list_head') !!}
         </thead>
         <tbody>
