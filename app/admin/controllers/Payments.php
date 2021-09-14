@@ -3,8 +3,8 @@
 namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Payments_model;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
@@ -21,7 +21,7 @@ class Payments extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Payments_model',
             'title' => 'lang:admin::lang.payments.text_title',
             'emptyMessage' => 'lang:admin::lang.payments.text_empty',
-            'defaultSort' => ['date_updated', 'DESC'],
+            'defaultSort' => ['updated_at', 'DESC'],
             'configFile' => 'payments_model',
         ],
     ];

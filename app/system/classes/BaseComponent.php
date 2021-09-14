@@ -6,7 +6,7 @@ use BadMethodCallException;
 use Igniter\Flame\Pagic\TemplateCode;
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 use Main\Classes\MainController;
 use System\Traits\AssetMaker;
 use System\Traits\PropertyContainer;

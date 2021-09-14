@@ -60,7 +60,7 @@ $config['list']['columns'] = [
         'onText' => 'admin::lang.text_yes',
         'offText' => 'admin::lang.text_no',
     ],
-    'date_updated' => [
+    'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'timetense',
     ],

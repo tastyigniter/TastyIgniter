@@ -2,8 +2,8 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
-use Model;
 
 /**
  * Menu_option_values Model Class

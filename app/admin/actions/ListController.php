@@ -2,10 +2,9 @@
 
 namespace Admin\Actions;
 
+use Admin\Facades\Template;
 use Admin\Traits\ListExtendable;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
-use Template;
 
 /**
  * List Controller Class
@@ -63,7 +62,7 @@ class ListController extends ControllerAction
     /**
      * List_Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
@@ -181,6 +180,7 @@ class ListController extends ControllerAction
         $configFile = $listConfig['configFile'];
         $modelConfig = $this->loadConfig($configFile, $requiredConfig, 'list');
 
+        $columnConfig['bulkActions'] = $modelConfig['bulkActions'] ?? [];
         $columnConfig['columns'] = $modelConfig['columns'];
         $columnConfig['model'] = $model;
         $columnConfig['alias'] = $alias;

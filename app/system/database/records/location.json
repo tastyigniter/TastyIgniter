@@ -15,7 +15,7 @@
     "delivery_time_interval": 15,
     "collection_time_interval": 15,
     "reservation_time_interval": 15,
-    "reservation_lead_time": 45,
+    "reservation_stay_time": 45,
     "hours": {
       "opening": {
         "type": "24_7"

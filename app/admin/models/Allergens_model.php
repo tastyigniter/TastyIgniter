@@ -2,9 +2,9 @@
 
 namespace Admin\Models;
 
-use DB;
 use Igniter\Flame\Database\Attach\HasMedia;
-use Model;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Allergens Model Class
@@ -37,6 +37,8 @@ class Allergens_model extends Model
     ];
 
     public $mediable = ['thumb'];
+
+    public $timestamps = TRUE;
 
     //
     // Accessors & Mutators

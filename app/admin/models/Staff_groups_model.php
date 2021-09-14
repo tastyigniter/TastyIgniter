@@ -2,7 +2,7 @@
 
 namespace Admin\Models;
 
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * StaffGroups Model Class
@@ -38,6 +38,8 @@ class Staff_groups_model extends Model
         'auto_assign_limit' => 'integer',
         'auto_assign_availability' => 'boolean',
     ];
+
+    public $timestamps = TRUE;
 
     public static function getDropdownOptions()
     {

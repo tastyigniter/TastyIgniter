@@ -1,6 +1,6 @@
 <?php
 $config['list']['columns'] = [
-    'date_added' => [
+    'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'text',
         'searchable' => TRUE,

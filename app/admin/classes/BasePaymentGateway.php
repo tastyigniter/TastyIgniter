@@ -2,11 +2,11 @@
 
 namespace Admin\Classes;
 
-use File;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\SystemException;
-use Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use System\Actions\ModelAction;
-use URL;
 
 /**
  * Base Payment Gateway Class
@@ -160,6 +160,15 @@ class BasePaymentGateway extends ModelAction
         return ((int)$host->order_fee_type === 2)
             ? $host->order_fee.'%'
             : currency_format($host->order_fee);
+    }
+
+    /**
+     * This method should return TRUE if the gateway completes the payment on the client's browsers.
+     * Allows the system to take extra steps during checkout before  completing the payment
+     */
+    public function completesPaymentOnClient()
+    {
+        return FALSE;
     }
 
     /**

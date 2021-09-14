@@ -2,7 +2,7 @@
 
 namespace System\Traits;
 
-use Session;
+use Illuminate\Support\Facades\Session;
 
 trait SessionMaker
 {

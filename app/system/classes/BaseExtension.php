@@ -2,10 +2,10 @@
 
 namespace System\Classes;
 
-use File;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\ServiceProvider;
-use Lang;
-use SystemException;
 
 /**
  * Base Extension Class
@@ -206,11 +206,14 @@ class BaseExtension extends ServiceProvider
         if (!$config = array_get($composer, 'extra.tastyigniter-extension', []))
             return $config;
 
-        if ($description = array_get($composer, 'description'))
-            $config['description'] = $description;
+        if (array_key_exists('description', $composer))
+            $config['description'] = $composer['description'];
 
-        if ($author = array_get($composer, 'author'))
-            $config['author'] = $author;
+        if (array_key_exists('authors', $composer))
+            $config['author'] = $composer['authors'][0]['name'];
+
+        if (!array_key_exists('homepage', $config) AND array_key_exists('homepage', $composer))
+            $config['homepage'] = $composer['homepage'];
 
         return $config;
     }

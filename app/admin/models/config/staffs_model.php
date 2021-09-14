@@ -26,7 +26,7 @@ $config['list']['filter'] = [
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month AND DAY(date_added) = :day',
+            'conditions' => 'YEAR(created_at) = :year AND MONTH(created_at) = :month AND DAY(created_at) = :day',
         ],
     ],
 ];
@@ -51,6 +51,7 @@ $config['list']['toolbar'] = [
             'label' => 'lang:admin::lang.side_menu.staff_group',
             'class' => 'btn btn-default',
             'href' => 'staff_groups',
+            'permission' => 'Admin.StaffGroups',
         ],
         'roles' => [
             'label' => 'lang:admin::lang.side_menu.staff_role',
@@ -67,6 +68,17 @@ $config['list']['columns'] = [
         'attributes' => [
             'class' => 'btn btn-edit',
             'href' => 'staffs/edit/{staff_id}',
+        ],
+    ],
+    'impersonate' => [
+        'type' => 'button',
+        'iconCssClass' => 'fa fa-user',
+        'permissions' => 'Admin.Impersonate',
+        'attributes' => [
+            'class' => 'btn btn-outline-secondary',
+            'data-request' => 'onImpersonate',
+            'data-request-data' => 'recordId: \'{staff_id}\'',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
         ],
     ],
     'staff_name' => [
@@ -103,10 +115,6 @@ $config['list']['columns'] = [
         'relation' => 'user',
         'select' => 'last_login',
     ],
-    'date_added' => [
-        'label' => 'lang:admin::lang.column_date_added',
-        'type' => 'datesince',
-    ],
     'staff_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
@@ -115,6 +123,15 @@ $config['list']['columns'] = [
     'staff_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
+    ],
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
     ],
 ];
 
@@ -149,6 +166,14 @@ $config['form']['toolbar'] = [
             'data-progress-indicator' => 'admin::lang.text_deleting',
             'context' => ['edit'],
         ],
+        'impersonate' => [
+            'label' => 'lang:admin::lang.customers.text_impersonate',
+            'class' => 'btn btn-default',
+            'data-request' => 'onImpersonate',
+            'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
+            'context' => ['edit'],
+            'permission' => 'Admin.Impersonate',
+        ],
     ],
 ];
 
@@ -176,15 +201,33 @@ $config['form']['fields'] = [
         'span' => 'right',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
+    'user[send_invite]' => [
+        'label' => 'lang:admin::lang.staff.label_send_invite',
+        'type' => 'checkbox',
+        'default' => TRUE,
+        'context' => 'create',
+        'options' => [],
+        'placeholder' => 'lang:admin::lang.staff.help_send_invite',
+    ],
     'user[password]' => [
         'label' => 'lang:admin::lang.staff.label_password',
         'type' => 'password',
         'span' => 'left',
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'user[send_invite]',
+            'condition' => 'unchecked',
+        ],
     ],
     'user[password_confirm]' => [
         'label' => 'lang:admin::lang.staff.label_confirm_password',
         'type' => 'password',
         'span' => 'right',
+        'trigger' => [
+            'action' => 'show',
+            'field' => 'user[send_invite]',
+            'condition' => 'unchecked',
+        ],
     ],
     'locations' => [
         'label' => 'lang:admin::lang.staff.label_location',

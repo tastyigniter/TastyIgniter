@@ -6,9 +6,9 @@ use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
-use ApplicationException;
-use DB;
-use Html;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Html\HtmlFacade as Html;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Record Editor

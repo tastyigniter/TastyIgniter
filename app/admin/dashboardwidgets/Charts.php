@@ -60,7 +60,7 @@ class Charts extends BaseDashboardWidget
                 'label' => 'lang:admin::lang.dashboard.charts.text_customers',
                 'color' => '#4DB6AC',
                 'model' => Customers_model::class,
-                'column' => 'date_added',
+                'column' => 'created_at',
             ],
             'order' => [
                 'label' => 'lang:admin::lang.dashboard.charts.text_orders',

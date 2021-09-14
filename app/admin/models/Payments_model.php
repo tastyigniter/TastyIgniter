@@ -3,12 +3,12 @@
 namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\ValidationException;
-use Lang;
-use Model;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Payments Model Class
@@ -19,10 +19,6 @@ class Payments_model extends Model
     use Purgeable;
 
     const SORT_ORDER = 'priority';
-
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
 
     /**
      * @var string The database table name
@@ -39,7 +35,7 @@ class Payments_model extends Model
     public $timestamps = TRUE;
 
     protected $casts = [
-        'data' => 'serialize',
+        'data' => 'array',
         'status' => 'boolean',
         'is_default' => 'boolean',
         'priority' => 'integer',

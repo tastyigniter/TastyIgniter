@@ -2,16 +2,16 @@
 
 namespace System\Controllers;
 
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Admin\Traits\WidgetMaker;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
-use Request;
+use Igniter\Flame\Exception\SystemException;
+use Illuminate\Support\Facades\Request;
 use System\Classes\ExtensionManager;
 use System\Models\Extensions_model;
 use System\Models\Settings_model;
-use SystemException;
-use Template;
 
 class Extensions extends \Admin\Classes\AdminController
 {

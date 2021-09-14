@@ -2,10 +2,10 @@
 
 namespace System\Models;
 
-use Cache;
 use Exception;
-use File;
-use Model;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * MailThemes Model Class

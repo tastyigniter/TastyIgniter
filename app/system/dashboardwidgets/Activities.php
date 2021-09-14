@@ -3,7 +3,7 @@
 namespace System\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
-use AdminAuth;
+use Admin\Facades\AdminAuth;
 use System\Models\Activities_model;
 
 /**
@@ -45,7 +45,7 @@ class Activities extends BaseDashboardWidget
         $user = AdminAuth::getUser();
         $this->vars['activities'] = Activities_model::listRecent([
             'pageLimit' => $this->property('count'),
-            'exceptUser' => $user,
+            'onlyUser' => $user,
         ])->get();
     }
 }

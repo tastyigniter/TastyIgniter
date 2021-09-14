@@ -5,10 +5,10 @@ namespace Admin\FormWidgets;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Traits\LocationAwareWidget;
-use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Form Relationship

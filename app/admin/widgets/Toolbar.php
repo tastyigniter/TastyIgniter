@@ -5,7 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ToolbarButton;
 use Admin\Facades\AdminAuth;
-use Template;
+use Admin\Facades\Template;
 
 class Toolbar extends BaseWidget
 {
@@ -164,10 +164,6 @@ class Toolbar extends BaseWidget
 
             $buttonObj = $this->makeButton($name, $attributes);
 
-            if (array_key_exists('menuItems', $attributes)) {
-                $buttonObj->menuItems($this->makeButtons($attributes['menuItems']));
-            }
-
             $result[$name] = $buttonObj;
         }
 
@@ -181,10 +177,14 @@ class Toolbar extends BaseWidget
      */
     protected function makeButton(string $name, array $config)
     {
-        $buttonObj = new ToolbarButton($name);
-
         $buttonType = array_get($config, 'type', 'link');
+
+        $buttonObj = new ToolbarButton($name);
         $buttonObj->displayAs($buttonType, $config);
+
+        if ($buttonType === 'dropdown' AND array_key_exists('menuItems', $config)) {
+            $buttonObj->menuItems($this->makeButtons($config['menuItems']));
+        }
 
         return $buttonObj;
     }

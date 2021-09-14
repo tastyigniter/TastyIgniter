@@ -4,7 +4,7 @@ namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Create the initial tables:
@@ -174,24 +174,6 @@ class CreateTables extends Migration
             $table->dateTime('date_added');
             $table->boolean('status');
             $table->text('cart');
-        };
-    }
-
-    protected function _create_customers_online()
-    {
-        return function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->integer('activity_id', TRUE);
-            $table->integer('customer_id');
-            $table->string('access_type', 128);
-            $table->string('browser', 128);
-            $table->string('ip_address', 40);
-            $table->string('country_code', 2);
-            $table->text('request_uri');
-            $table->text('referrer_uri');
-            $table->dateTime('date_added');
-            $table->boolean('status');
-            $table->text('user_agent');
         };
     }
 

@@ -2,16 +2,15 @@
 
 namespace System\Controllers;
 
-use AdminMenu;
-use ApplicationException;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Exception;
-use Flash;
+use Igniter\Flame\Exception\ApplicationException;
 use Main\Classes\ThemeManager;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 use System\Models\Extensions_model;
 use System\Models\Themes_model;
-use Template;
 
 class Updates extends \Admin\Classes\AdminController
 {
@@ -68,7 +67,7 @@ class Updates extends \Admin\Classes\AdminController
             }
         }
         catch (Exception $ex) {
-            Flash::warning($ex->getMessage())->now();
+            flash()->warning($ex->getMessage())->now();
         }
     }
 

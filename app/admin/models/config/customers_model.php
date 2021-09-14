@@ -8,7 +8,7 @@ $config['list']['filter'] = [
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month AND DAY(date_added) = :day',
+            'conditions' => 'YEAR(created_at) = :year AND MONTH(created_at) = :month AND DAY(created_at) = :day',
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -37,6 +37,7 @@ $config['list']['toolbar'] = [
             'label' => 'lang:admin::lang.side_menu.customer_group',
             'class' => 'btn btn-default',
             'href' => 'customer_groups',
+            'permission' => 'Admin.CustomerGroups',
         ],
     ],
 ];
@@ -53,6 +54,7 @@ $config['list']['columns'] = [
     'impersonate' => [
         'type' => 'button',
         'iconCssClass' => 'fa fa-user',
+        'permissions' => 'Admin.ImpersonateCustomers',
         'attributes' => [
             'class' => 'btn btn-outline-secondary',
             'data-request' => 'onImpersonate',
@@ -75,10 +77,6 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.customers.column_telephone',
         'type' => 'text',
     ],
-    'date_added' => [
-        'label' => 'lang:admin::lang.customers.column_date_added',
-        'type' => 'timetense',
-    ],
     'status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
@@ -87,7 +85,16 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
 ];
 
 $config['form']['toolbar'] = [
@@ -120,6 +127,7 @@ $config['form']['toolbar'] = [
             'data-request' => 'onImpersonate',
             'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
             'context' => ['edit'],
+            'permission' => 'Admin.ImpersonateCustomers',
         ],
     ],
 ];
@@ -147,16 +155,34 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'right',
         ],
+        'send_invite' => [
+            'label' => 'lang:admin::lang.customers.label_send_invite',
+            'type' => 'checkbox',
+            'context' => 'create',
+            'default' => TRUE,
+            'options' => [],
+            'placeholder' => 'lang:admin::lang.customers.help_send_invite',
+        ],
         'password' => [
             'label' => 'lang:admin::lang.customers.label_password',
             'type' => 'password',
             'span' => 'left',
             'comment' => 'lang:admin::lang.customers.help_password',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'send_invite',
+                'condition' => 'unchecked',
+            ],
         ],
         '_confirm_password' => [
             'label' => 'lang:admin::lang.customers.label_confirm_password',
             'type' => 'password',
             'span' => 'right',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'send_invite',
+                'condition' => 'unchecked',
+            ],
         ],
         'customer_group_id' => [
             'label' => 'lang:admin::lang.customers.label_customer_group',
@@ -188,6 +214,7 @@ $config['form']['tabs'] = [
         'orders' => [
             'tab' => 'lang:admin::lang.customers.text_tab_orders',
             'type' => 'datatable',
+            'context' => ['edit', 'preview'],
             'useAjax' => TRUE,
             'defaultSort' => ['order_id', 'desc'],
             'columns' => [
@@ -217,6 +244,7 @@ $config['form']['tabs'] = [
         'reservations' => [
             'tab' => 'lang:admin::lang.customers.text_tab_reservations',
             'type' => 'datatable',
+            'context' => ['edit', 'preview'],
             'useAjax' => TRUE,
             'defaultSort' => ['reservation_id', 'desc'],
             'columns' => [

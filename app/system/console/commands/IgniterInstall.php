@@ -8,12 +8,12 @@ use Admin\Models\Staff_groups_model;
 use Admin\Models\Staff_roles_model;
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
-use App;
 use Carbon\Carbon;
-use Config;
-use DB;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
@@ -83,8 +83,6 @@ class IgniterInstall extends Command
         $this->moveExampleFile('htaccess', null, 'backup');
         $this->moveExampleFile('htaccess', 'example', null);
 
-        $this->deleteExampleFile('env');
-
         $this->alert('INSTALLATION COMPLETE');
     }
 
@@ -100,13 +98,8 @@ class IgniterInstall extends Command
 
     protected function rewriteEnvFile()
     {
-        if (file_exists(base_path().'/example.env')) {
-            $this->moveExampleFile('env', null, 'backup');
-            $this->moveExampleFile('env', 'example', null);
-        }
-
-        if (!file_exists(base_path().'/.env'))
-            return;
+        $this->moveExampleFile('env', null, 'backup');
+        $this->copyExampleFile('env', 'example', null);
 
         $this->replaceInEnv('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey());
 
@@ -115,8 +108,10 @@ class IgniterInstall extends Command
 
         $name = Config::get('database.default');
         foreach ($this->dbConfig as $key => $value) {
-            $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
             Config::set("database.connections.$name.".strtolower($key), $value);
+
+            if ($key === 'password') $value = '"'.$value.'"';
+            $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
         }
     }
 
@@ -155,7 +150,13 @@ class IgniterInstall extends Command
     protected function createSuperUser()
     {
         $username = $this->ask('Admin Username', 'admin');
-        $password = $this->ask('Admin Password', '123456');
+        $password = $this->output->ask('Admin Password', '123456', function ($answer) {
+            if (!is_string($answer) OR strlen($answer) < 6) {
+                throw new \RuntimeException('Please specify the administrator password, at least 6 characters');
+            }
+
+            return $answer;
+        });
 
         $staff = Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
         $staff->staff_name = DatabaseSeeder::$staffName;
@@ -243,13 +244,6 @@ class IgniterInstall extends Command
                 unlink(base_path().'/'.$new.'.'.$name);
 
             copy(base_path().'/'.$old.'.'.$name, base_path().'/'.$new.'.'.$name);
-        }
-    }
-
-    protected function deleteExampleFile($name)
-    {
-        if (file_exists(base_path().'/example.'.$name)) {
-            unlink(base_path().'/example.'.$name);
         }
     }
 

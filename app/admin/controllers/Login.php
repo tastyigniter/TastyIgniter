@@ -2,13 +2,13 @@
 
 namespace Admin\Controllers;
 
+use Admin\Facades\AdminAuth;
+use Admin\Facades\Template;
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
 use Admin\Traits\ValidatesForm;
-use AdminAuth;
 use Igniter\Flame\Exception\ValidationException;
-use Mail;
-use Template;
+use Illuminate\Support\Facades\Mail;
 
 class Login extends \Admin\Classes\AdminController
 {
@@ -17,6 +17,13 @@ class Login extends \Admin\Classes\AdminController
     protected $requireAuthentication = FALSE;
 
     public $bodyClass = 'page-login';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware('throttle:'.config('system.authRateLimiter', '6,1'));
+    }
 
     public function index()
     {
@@ -30,7 +37,7 @@ class Login extends \Admin\Classes\AdminController
 
     public function reset()
     {
-        if (AdminAuth::islogged()) {
+        if (AdminAuth::isLogged()) {
             return $this->redirect('dashboard');
         }
 
@@ -53,7 +60,7 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            ['username', 'lang:admin::lang.login.label_username', 'required|exists:users,username'],
+            ['username', 'lang:admin::lang.login.label_username', 'required'],
             ['password', 'lang:admin::lang.login.label_password', 'required|min:6'],
         ]);
 

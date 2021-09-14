@@ -147,7 +147,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.orders.column_total',
         'type' => 'currency',
     ],
-    'date_added' => [
+    'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timesince',
         'invisible' => TRUE,
@@ -287,7 +287,7 @@ $config['form']['tabs'] = [
             'type' => 'textarea',
             'disabled' => TRUE,
         ],
-        'date_added' => [
+        'created_at' => [
             'label' => 'lang:admin::lang.orders.label_date_added',
             'type' => 'datepicker',
             'mode' => 'date',
@@ -302,7 +302,7 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'context' => ['edit', 'preview'],
         ],
-        'date_modified' => [
+        'updated_at' => [
             'label' => 'lang:admin::lang.orders.label_date_modified',
             'type' => 'datepicker',
             'mode' => 'date',

@@ -2,10 +2,10 @@
 
 namespace System\Controllers;
 
-use AdminMenu;
-use File;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\LogViewer;
-use Template;
 
 class SystemLogs extends \Admin\Classes\AdminController
 {

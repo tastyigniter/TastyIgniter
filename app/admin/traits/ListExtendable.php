@@ -2,8 +2,8 @@
 
 namespace Admin\Traits;
 
-use Event;
-use Model;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Event;
 
 trait ListExtendable
 {
@@ -24,7 +24,7 @@ trait ListExtendable
      * @param Model $model
      * @param null $alias
      *
-     * @return \Model
+     * @return\Igniter\Flame\Database\Model
      */
     public function listExtendModel($model, $alias = null)
     {
@@ -88,9 +88,9 @@ trait ListExtendable
     /**
      * Replace a table column value (<td>...</td>)
      *
-     * @param  Model $record The populated model used for the column
-     * @param  string $column The column to override
-     * @param  string $alias List alias (optional)
+     * @param Model $record The populated model used for the column
+     * @param string $column The column to override
+     * @param string $alias List alias (optional)
      *
      * @return string HTML view
      */
@@ -101,8 +101,8 @@ trait ListExtendable
     /**
      * Replace the entire table header contents (<th>...</th>) with custom HTML
      *
-     * @param  string $columnName The column name to override
-     * @param  string $alias List alias (optional)
+     * @param string $columnName The column name to override
+     * @param string $alias List alias (optional)
      *
      * @return string HTML view
      */
@@ -113,7 +113,7 @@ trait ListExtendable
     /**
      * Static helper for extending list columns.
      *
-     * @param  callable $callback
+     * @param callable $callback
      *
      * @return void
      */

@@ -4,10 +4,10 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
-use Event;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Support\Facades\Event;
 
 /**
  * Menus Model Class
@@ -65,6 +65,8 @@ class Menus_model extends Model
     public $mediable = ['thumb'];
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
+
+    public $timestamps = TRUE;
 
     //
     // Scopes

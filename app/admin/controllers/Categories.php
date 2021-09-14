@@ -3,8 +3,8 @@
 namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Categories_model;
-use AdminMenu;
 
 class Categories extends AdminController
 {

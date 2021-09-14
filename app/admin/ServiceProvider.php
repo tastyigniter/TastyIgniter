@@ -6,9 +6,9 @@ use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
 use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
+use Admin\Facades\AdminLocation;
+use Admin\Facades\AdminMenu;
 use Admin\Middleware\LogUserLastSeen;
-use AdminLocation;
-use AdminMenu;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
@@ -55,6 +55,7 @@ class ServiceProvider extends AppServiceProvider
             $this->registerSystemSettings();
             $this->registerPermissions();
             $this->registerDashboardWidgets();
+            $this->registerBulkActionWidgets();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
@@ -129,6 +130,19 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerDashboardWidget(\Admin\DashboardWidgets\Charts::class, [
                 'label' => 'Charts widget',
                 'context' => 'dashboard',
+            ]);
+        });
+    }
+
+    protected function registerBulkActionWidgets()
+    {
+        Widgets::instance()->registerBulkActionWidgets(function (Widgets $manager) {
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Status::class, [
+                'code' => 'status',
+            ]);
+
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Delete::class, [
+                'code' => 'delete',
             ]);
         });
     }
@@ -673,6 +687,9 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.Customers' => [
                     'label' => 'admin::lang.permissions.customers', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Impersonate' => [
+                    'label' => 'admin::lang.permissions.impersonate_staff', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.ImpersonateCustomers' => [
                     'label' => 'admin::lang.permissions.impersonate_customers', 'group' => 'admin::lang.permissions.name',

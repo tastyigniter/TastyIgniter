@@ -1,5 +1,9 @@
 .list-table {
   .table {
+    thead {
+      position: relative;
+    }
+
     th:first-child,
     td:first-child {
       padding-left: $page-padding-x;
@@ -10,6 +14,22 @@
     td:last-child {
       padding-left: 0;
       padding-right: $page-padding-x;
+    }
+  }
+
+  .bulk-actions {
+    background: $gray-200;
+    position: absolute;
+    top: -3px;
+    left: 0;
+    right: 0;
+    bottom: 1px;
+    z-index: 10;
+
+    .btn-select-all {
+      &.active {
+        font-weight: $font-weight-bold;
+      }
     }
   }
 }

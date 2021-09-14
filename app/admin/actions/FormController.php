@@ -4,16 +4,16 @@ namespace Admin\Actions;
 
 use Admin\Classes\AdminController;
 use Admin\Classes\FormField;
+use Admin\Facades\Template;
 use Admin\Traits\FormExtendable;
 use Admin\Widgets\Toolbar;
-use DB;
 use Exception;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
-use Model;
-use Redirect;
-use Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use System\Classes\ControllerAction;
-use Template;
 
 /**
  * Form Controller Class
@@ -136,7 +136,7 @@ class FormController extends ControllerAction
     /**
      * Prepare the widgets used by this action
      *
-     * @param \Model $model
+     * @param \Igniter\Flame\Database\Model $model
      *
      * @param null $context
      * @return void
@@ -494,7 +494,7 @@ class FormController extends ControllerAction
     /**
      * Sets a data collection to a model attributes, relations will also be set.
      *
-     * @param \Model $model Model to save to
+     * @param \Igniter\Flame\Database\Model $model Model to save to
      *
      * @param array $saveData Data to save.
      *

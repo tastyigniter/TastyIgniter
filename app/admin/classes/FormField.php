@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use Html;
+use Igniter\Flame\Html\HtmlFacade as Html;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -93,6 +93,11 @@ class FormField
      * @var bool Specifies if this field is mandatory.
      */
     public $required = FALSE;
+
+    /**
+     * @var bool Specify if the field is read-only or not.
+     */
+    public $readOnly = FALSE;
 
     /**
      * @var bool Specify if the field is disabled or not.
@@ -453,7 +458,15 @@ class FormField
         $attributes = $this->filterPresetAttributes($attributes, $position);
 
         if ($position == 'field' AND $this->disabled) {
-            $attributes = $attributes + ['disabled' => 'disabled'];
+            $attributes += ['disabled' => 'disabled'];
+        }
+
+        if ($position == 'field' && $this->readOnly) {
+            $attributes += ['readonly' => 'readonly'];
+
+            if ($this->type == 'checkbox' OR $this->type == 'switch') {
+                $attributes += ['onclick' => 'return false;'];
+            }
         }
 
         return $attributes;
@@ -692,7 +705,6 @@ class FormField
         // To support relations only the last field should return th
         // relation value, all others will look up the relation object as normal.
         foreach ($keyParts as $key) {
-
             if ($result instanceof Model AND $result->hasRelation($key)) {
                 if ($key == $lastField) {
                     $result = $result->getRelationValue($key) ?: $default;

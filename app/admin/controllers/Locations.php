@@ -3,10 +3,10 @@
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminLocation;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Locations_model;
-use AdminMenu;
 use Exception;
-use Geocoder;
+use Igniter\Flame\Geolite\Facades\Geocoder;
 
 class Locations extends \Admin\Classes\AdminController
 {

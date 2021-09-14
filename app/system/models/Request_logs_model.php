@@ -2,9 +2,9 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
-use Model;
 
 /**
  * RequestLogs Model Class

@@ -2,9 +2,9 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
-use Model;
 
 /**
  * MenuOptions Model Class

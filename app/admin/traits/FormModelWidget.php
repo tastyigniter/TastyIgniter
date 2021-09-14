@@ -3,9 +3,9 @@
 namespace Admin\Traits;
 
 use Admin\Classes\FormField;
-use ApplicationException;
 use Exception;
-use Lang;
+use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Form Model Widget Trait
@@ -30,7 +30,7 @@ trait FormModelWidget
     /**
      * @param $recordId
      * @return \Igniter\Flame\Database\Model
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function findFormModel($recordId)
     {
@@ -124,7 +124,7 @@ trait FormModelWidget
     /**
      * Sets a data collection to a model attributes, relations will also be set.
      *
-     * @param \Model $model Model to save to
+     * @param \Igniter\Flame\Database\Model $model Model to save to
      *
      * @param array $saveData Data to save.
      *

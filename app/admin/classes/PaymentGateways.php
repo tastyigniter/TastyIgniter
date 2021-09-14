@@ -3,10 +3,10 @@
 namespace Admin\Classes;
 
 use Admin\Models\Payments_model;
-use File;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
+use Illuminate\Support\Facades\Response;
 use Main\Classes\ThemeManager;
-use Response;
 use System\Classes\ExtensionManager;
 
 /**

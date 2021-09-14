@@ -197,6 +197,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Determines if assets combiner is enabled
+    |--------------------------------------------------------------------------
+    |
+    | This works by serialising a collection of asset paths and storing them
+    | in the session with a unique ID. The ID is then used by the system controller
+    | to generate a URL to the /_assets route.
+    |
+    | The unique ID is used to serve up the assets — minified, compiled, or both —
+    | when the combine route is accessed. To prevent the compilation and transmission
+    | of unmodified cached assets, special E-Tags are used.
+    |
+    */
+
+    'enableAssetCombiner' => TRUE,
+
+    /*
+    |--------------------------------------------------------------------------
     | Assets combiner URI
     |--------------------------------------------------------------------------
     |
@@ -215,8 +232,8 @@ return [
     |
     */
 
-    'filePermissions' => '777',
-    'folderPermissions' => '777',
+    'filePermissions' => '644',
+    'folderPermissions' => '755',
 
     /*
     |--------------------------------------------------------------------------
