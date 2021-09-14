@@ -34,5 +34,4 @@ class Status extends BaseBulkActionWidget
             flash()->warning(sprintf(lang('admin::lang.alert_error_nothing'), strtolower(lang('admin::lang.text_'.$statusCode.'d'))));
         }
     }
-
 }
