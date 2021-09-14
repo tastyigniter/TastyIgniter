@@ -164,6 +164,8 @@ class Orders_model extends Model
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 
+        Event::fire('admin.model.extendListFrontEndQuery', [$this, $query]);
+
         return $query->paginate($pageLimit, $page);
     }
 

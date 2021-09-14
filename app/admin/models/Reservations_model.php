@@ -8,6 +8,7 @@ use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
 use System\Traits\SendsMailTemplate;
@@ -159,6 +160,8 @@ class Reservations_model extends Model
         if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE)) {
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
+
+        Event::fire('admin.model.extendListFrontEndQuery', [$this, $query]);
 
         return $query->paginate($pageLimit, $page);
     }

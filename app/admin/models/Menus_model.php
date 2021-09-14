@@ -159,6 +159,8 @@ class Menus_model extends Model
             });
         }
 
+        Event::fire('admin.model.extendListFrontEndQuery', [$this, $query]);
+
         return $query->paginate($pageLimit, $page);
     }
 

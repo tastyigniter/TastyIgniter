@@ -6,6 +6,7 @@ use Admin\Traits\Locationable;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Database\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Event;
 
 /**
  * Reviews Model Class
@@ -121,6 +122,8 @@ class Reviews_model extends Model
                 $query->orderBy($sortField, $sortDirection);
             }
         }
+
+        Event::fire('admin.model.extendListFrontEndQuery', [$this, $query]);
 
         return $query->paginate($pageLimit, $page);
     }

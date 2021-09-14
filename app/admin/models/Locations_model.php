@@ -9,6 +9,7 @@ use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
+use Illuminate\Support\Facades\Event;
 
 /**
  * Locations Model Class
@@ -170,6 +171,8 @@ class Locations_model extends AbstractLocation
         if (strlen($search)) {
             $query->search($search, $searchableFields);
         }
+
+        Event::fire('admin.model.extendListFrontEndQuery', [$this, $query]);
 
         return $query->paginate($pageLimit, $page);
     }
