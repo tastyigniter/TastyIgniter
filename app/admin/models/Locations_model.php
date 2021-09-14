@@ -172,7 +172,7 @@ class Locations_model extends AbstractLocation
             $query->search($search, $searchableFields);
         }
 
-        Event::fire('admin.model.extendListFrontEndQuery', [$this, $query]);
+        Event::fire('admin.model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

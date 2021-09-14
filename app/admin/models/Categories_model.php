@@ -152,7 +152,7 @@ class Categories_model extends Model
             $query->isEnabled();
         }
 
-        Event::fire('admin.model.extendListFrontEndQuery', [$this, $query]);
+        Event::fire('admin.model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

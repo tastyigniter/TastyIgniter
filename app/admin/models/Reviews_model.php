@@ -123,7 +123,7 @@ class Reviews_model extends Model
             }
         }
 
-        Event::fire('admin.model.extendListFrontEndQuery', [$this, $query]);
+        Event::fire('admin.model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }
