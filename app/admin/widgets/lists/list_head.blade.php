@@ -1,4 +1,6 @@
-<tr>
+<tr
+    class="list-header"
+>
     @if ($showDragHandle)
         <th class="list-action"></th>
     @endif
