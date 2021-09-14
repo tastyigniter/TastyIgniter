@@ -5,7 +5,6 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ListColumn;
 use Admin\Classes\ToolbarButton;
-use Admin\Classes\ToolbarDropdown;
 use Admin\Classes\Widgets;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
@@ -1241,21 +1240,15 @@ class Lists extends BaseWidget
     protected function makeBulkActionButton($actionCode, $config)
     {
         $buttonType = array_get($config, 'type', 'link');
-        if ($buttonType !== 'dropdown') {
-            $buttonObj = new ToolbarButton($actionCode);
-            $buttonObj->displayAs($buttonType, $config);
 
-            return $buttonObj;
+        $buttonObj = new ToolbarButton($actionCode);
+        $buttonObj->displayAs($buttonType, $config);
+
+        if ($buttonType === 'dropdown' AND array_key_exists('menuItems', $config)) {
+            $buttonObj->menuItems($this->makeBulkActionButtons($config['menuItems'], $actionCode));
         }
 
-        $dropdownObj = new ToolbarDropdown($actionCode);
-        $dropdownObj->displayAs($config);
-
-        if (array_key_exists('menuItems', $config)) {
-            $dropdownObj->menuItems($this->makeBulkActionButtons($config['menuItems'], $actionCode));
-        }
-
-        return $dropdownObj;
+        return $buttonObj;
     }
 
     protected function makeBulkActionWidget($actionButton)
@@ -1274,13 +1267,6 @@ class Lists extends BaseWidget
         $widget->code = $actionButton->name;
 
         return $this->bulkActionWidgets[$actionButton->name] = $widget;
-    }
-
-    protected function renderBulkActionPopup()
-    {
-        // Make form widget using existing model config
-
-        return ['#'.$this->getId().'-bulk-action-modal-content' => $this->makePartial('lists/list_action_form')];
     }
 
     //

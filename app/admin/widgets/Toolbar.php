@@ -4,7 +4,6 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ToolbarButton;
-use Admin\Classes\ToolbarDropdown;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\Template;
 
@@ -179,20 +178,14 @@ class Toolbar extends BaseWidget
     protected function makeButton(string $name, array $config)
     {
         $buttonType = array_get($config, 'type', 'link');
-        if ($buttonType !== 'dropdown') {
-            $buttonObj = new ToolbarButton($name);
-            $buttonObj->displayAs($buttonType, $config);
 
-            return $buttonObj;
+        $buttonObj = new ToolbarButton($name);
+        $buttonObj->displayAs($buttonType, $config);
+
+        if ($buttonType === 'dropdown' AND array_key_exists('menuItems', $config)) {
+            $buttonObj->menuItems($this->makeButtons($config['menuItems']));
         }
 
-        $dropdownObj = new ToolbarDropdown($name);
-        $dropdownObj->displayAs($config);
-
-        if (array_key_exists('menuItems', $config)) {
-            $dropdownObj->menuItems($this->makeButtons($config['menuItems']));
-        }
-
-        return $dropdownObj;
+        return $buttonObj;
     }
 }

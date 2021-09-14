@@ -15,7 +15,7 @@ class ToolbarButton
     public $name;
 
     /**
-     * @var string Display mode. Link, Button
+     * @var string Display mode. Link, Button or Dropdown
      */
     public $type = 'link';
 
@@ -36,6 +36,8 @@ class ToolbarButton
      * @var array Raw field configuration.
      */
     public $config;
+
+    protected $menuItems;
 
     /**
      * Constructor.
@@ -94,6 +96,18 @@ class ToolbarButton
             $attributes['disabled'] = 'disabled';
 
         return $htmlBuild ? Html::attributes($attributes) : $attributes;
+    }
+
+    public function menuItems($value = null)
+    {
+        if (is_null($value)) {
+            return $this->menuItems ?? [];
+        }
+        else {
+            $this->menuItems = $value;
+        }
+
+        return $this;
     }
 
     protected function evalConfig($config)
