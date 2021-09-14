@@ -10,7 +10,8 @@
 <a href="https://twitter.com/TastyIgniter"><img src="https://img.shields.io/twitter/follow/TastyIgniter.svg?label=Follow" alt="Twitter"></a>
 </p>
 
-[TastyIgniter](https://tastyigniter.com/) is an online food ordering and restaurant management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
+[TastyIgniter](https://tastyigniter.com/) provides a professional and reliable platform for restaurants wanting to offer
+online food ordering and table reservation to their customers.
 
 ![screenshot](https://tastyigniter.com/assets/ui/images/mockups/Menus-v2.png)
 

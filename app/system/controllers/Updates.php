@@ -6,7 +6,6 @@ use Admin\Facades\AdminMenu;
 use Admin\Facades\Template;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
-use Igniter\Flame\Support\Facades\Flash;
 use Main\Classes\ThemeManager;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
