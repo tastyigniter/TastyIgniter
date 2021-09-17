@@ -25,7 +25,7 @@
   },
   "require": {
     "php": ">=7.3",
-    "tastyigniter/flame": "~1.1",
+    "tastyigniter/flame": "1.1.2",
     "laravel/framework": "~6.0"
   },
   "require-dev": {
