@@ -9,7 +9,6 @@ use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Sortable;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Categories Model Class
@@ -152,7 +151,7 @@ class Categories_model extends Model
             $query->isEnabled();
         }
 
-        Event::fire('admin.model.extendListFrontEndQuery', [$query]);
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

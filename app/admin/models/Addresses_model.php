@@ -3,7 +3,6 @@
 namespace Admin\Models;
 
 use Igniter\Flame\Database\Model;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Addresses Model Class
@@ -81,7 +80,7 @@ class Addresses_model extends Model
             }
         }
 
-        Event::fire('admin.model.extendListFrontEndQuery', [$query]);
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

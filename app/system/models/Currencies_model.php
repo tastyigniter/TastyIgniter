@@ -4,7 +4,6 @@ namespace System\Models;
 
 use Igniter\Flame\Currency\Models\Currency;
 use Igniter\Flame\Exception\ValidationException;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Currencies Model Class
@@ -82,7 +81,7 @@ class Currencies_model extends Currency
             $query->isEnabled();
         }
 
-        Event::fire('system.model.extendListFrontEndQuery', [$this, $query]);
+        $this->fireEvent('model.extendListFrontEndQuery', [$this, $query]);
 
         return $query->paginate($pageLimit, $page);
     }
