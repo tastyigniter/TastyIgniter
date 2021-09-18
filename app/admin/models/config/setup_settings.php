@@ -23,14 +23,14 @@ return [
                     'label' => 'lang:system::lang.settings.label_menus_page',
                     'tab' => 'lang:system::lang.settings.text_tab_title_order',
                     'type' => 'select',
-                    'default' => 'local/menus',
+                    'default' => 'local'.DIRECTORY_SEPARATOR.'menus',
                     'comment' => 'lang:system::lang.settings.help_menus_page',
                 ],
                 'reservation_page' => [
                     'label' => 'lang:system::lang.settings.label_reservation_page',
                     'tab' => 'lang:system::lang.settings.text_tab_title_order',
                     'type' => 'select',
-                    'default' => 'reservation/reservation',
+                    'default' => 'reservation'.DIRECTORY_SEPARATOR.'reservation',
                     'comment' => 'lang:system::lang.settings.help_reservation_page',
                 ],
                 'guest_order' => [

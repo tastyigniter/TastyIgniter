@@ -66,6 +66,8 @@ class Menus_model extends Model
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
 
+    public $timestamps = TRUE;
+
     //
     // Scopes
     //
@@ -156,6 +158,8 @@ class Menus_model extends Model
                     ->orWhere('order_restriction', 'like', '%"'.$orderType.'"%');
             });
         }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

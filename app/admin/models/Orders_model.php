@@ -9,6 +9,7 @@ use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
@@ -26,10 +27,6 @@ class Orders_model extends Model
     use SendsMailTemplate;
     use Locationable;
     use Assignable;
-
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_modified';
 
     const DELIVERY = 'delivery';
 
@@ -63,7 +60,7 @@ class Orders_model extends Model
         'location_id' => 'integer',
         'address_id' => 'integer',
         'total_items' => 'integer',
-        'cart' => 'serialize',
+        'cart' => Serialize::class,
         'order_date' => 'date',
         'order_time' => 'time',
         'order_total' => 'float',
@@ -86,7 +83,7 @@ class Orders_model extends Model
 
     public static $allowedSortingColumns = [
         'order_id asc', 'order_id desc',
-        'date_added asc', 'date_added desc',
+        'created_at asc', 'created_at desc',
     ];
 
     public function listCustomerAddresses()
@@ -166,6 +163,8 @@ class Orders_model extends Model
         if ($startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE)) {
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }
@@ -254,7 +253,7 @@ class Orders_model extends Model
      */
     public function getOrderDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     public function markAsPaymentProcessed()
@@ -353,7 +352,7 @@ class Orders_model extends Model
         $data['order_type'] = $model->order_type_name;
         $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(lang('system::lang.php.time_format'));
         $data['order_date'] = $model->order_date->format(lang('system::lang.php.date_format'));
-        $data['order_added'] = $model->date_added->format(lang('system::lang.php.date_time_format'));
+        $data['order_added'] = $model->created_at->format(lang('system::lang.php.date_time_format'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;

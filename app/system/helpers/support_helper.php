@@ -363,7 +363,7 @@ if (!function_exists('is_single_location')) {
      */
     function is_single_location()
     {
-        return config('system.locationMode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
+        return config('system.locationMode', setting('site_location_mode')) === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
     }
 }
 

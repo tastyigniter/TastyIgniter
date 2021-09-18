@@ -47,11 +47,11 @@ $config['list']['columns'] = [
         'type' => 'text',
         'searchable' => TRUE,
     ],
-    'date_updated' => [
+    'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'timetense',
     ],
-    'date_added' => [
+    'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
     ],

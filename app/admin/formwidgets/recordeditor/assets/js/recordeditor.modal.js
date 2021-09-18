@@ -21,9 +21,6 @@
     }
 
     RecordEditorModal.prototype.init = function () {
-        if (this.options.alias === undefined)
-            throw new Error('Record editor modal option "alias" is not set.')
-
         this.$modalRootElement = $('<div/>', this.options.attributes)
 
         this.$modalRootElement.one('hide.bs.modal', $.proxy(this.onModalHidden, this))
@@ -89,7 +86,7 @@
         self.$modalElement = $(event.target)
 
         $.request(handler, {
-            data: {recordId: this.options.recordId},
+            data: this.options.recordData ? this.options.recordData : {recordId: this.options.recordId},
         }).done($.proxy(this.onRecordLoaded, this)).fail(function () {
             self.$modalElement.modal('hide')
         }).always(function () {
@@ -101,6 +98,7 @@
         alias: undefined,
         handler: undefined,
         recordId: undefined,
+        recordData: undefined,
         onLoad: undefined,
         onSubmit: undefined,
         onSave: undefined,
@@ -117,5 +115,18 @@
     }
 
     $.ti.recordEditor.modal = RecordEditorModal
+
+    $(document).on('click', '[data-toggle="record-editor"]', function (event) {
+        var $button = $(event.currentTarget),
+            options = $.extend({
+                onSave: function () {
+                    this.hide()
+                }
+            }, $button.data())
+
+        event.preventDefault()
+
+        new $.ti.recordEditor.modal(options)
+    })
 }(window.jQuery);
 

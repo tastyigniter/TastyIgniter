@@ -38,12 +38,14 @@ class Themes_model extends Model
     protected $fillable = ['theme_id', 'name', 'code', 'version', 'description', 'data', 'status'];
 
     protected $casts = [
-        'data' => 'serialize',
+        'data' => 'array',
         'status' => 'boolean',
         'is_default' => 'boolean',
     ];
 
     protected $purgeable = ['template', 'settings', 'markup', 'codeSection'];
+
+    public $timestamps = TRUE;
 
     /**
      * @var ThemeManager

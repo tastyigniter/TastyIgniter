@@ -1,3 +1,3 @@
 <div class="row-fluid">
-    {!! $this->widgets['manager']->render() !!}
+    {!! $this->widgets['mediamanager']->render() !!}
 </div>

@@ -14,10 +14,6 @@ class Payment_logs_model extends Model
 {
     use Validation;
 
-    const UPDATED_AT = 'date_updated';
-
-    const CREATED_AT = 'date_added';
-
     /**
      * @var string The database table name
      */
@@ -77,7 +73,7 @@ class Payment_logs_model extends Model
 
     public function getDateAddedSinceAttribute($value)
     {
-        return $this->date_added ? time_elapsed($this->date_added) : null;
+        return $this->created_at ? time_elapsed($this->created_at) : null;
     }
 
     public function markAsRefundProcessed()

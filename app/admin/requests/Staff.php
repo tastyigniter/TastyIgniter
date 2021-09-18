@@ -23,7 +23,7 @@ class Staff extends FormRequest
             $rules = array_merge($rules, [
                 ['staff_status', 'admin::lang.label_status', 'boolean'],
                 ['language_id', 'admin::lang.staff.label_language_id', 'nullable|integer'],
-                ['staff_role_id', 'admin::lang.staff.label_role', 'required|integer'],
+                ['staff_role_id', 'admin::lang.staff.label_role', 'sometimes|required|integer'],
                 ['groups', 'admin::lang.staff.label_group', 'required|array'],
                 ['locations', 'admin::lang.staff.label_location', 'nullable|array'],
                 ['groups.*', 'admin::lang.staff.label_group', 'integer'],

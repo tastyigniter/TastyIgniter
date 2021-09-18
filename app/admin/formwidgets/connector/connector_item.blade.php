@@ -36,7 +36,7 @@
                         data-control="delete-item"
                         data-item-id="{{ $item->getKey() }}"
                         data-item-selector="#{{ $this->getId('item-'.$index) }}"
-                        data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
+                        data-confirm-message="@lang($confirmMessage)"
                     ><i class="fa fa-trash-alt"></i></a>
                 </div>
             @endunless

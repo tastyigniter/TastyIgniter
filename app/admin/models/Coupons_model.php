@@ -15,10 +15,6 @@ class Coupons_model extends Model
 {
     use \Admin\Traits\Locationable;
 
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
-
     const LOCATIONABLE_RELATION = 'locations';
 
     /**

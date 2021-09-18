@@ -6,7 +6,6 @@ use Admin\Facades\AdminMenu;
 use Admin\Facades\Template;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
-use Igniter\Flame\Support\Facades\Flash;
 use Main\Classes\ThemeManager;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
@@ -68,7 +67,7 @@ class Updates extends \Admin\Classes\AdminController
             }
         }
         catch (Exception $ex) {
-            Flash::warning($ex->getMessage())->now();
+            flash()->warning($ex->getMessage())->now();
         }
     }
 

@@ -22,7 +22,6 @@ class DemoSchemaSeeder extends Seeder
         $this->seedMenuOptions();
 
         $this->seedMenuItems();
-
     }
 
     protected function seedWorkingHours($locationId)
@@ -47,6 +46,8 @@ class DemoSchemaSeeder extends Seeder
             return;
 
         DB::table('categories')->insert($this->getSeedRecords('categories'));
+
+        DB::table('categories')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedMenuOptions()
@@ -63,6 +64,8 @@ class DemoSchemaSeeder extends Seeder
                 ]));
             }
         }
+
+        DB::table('menu_options')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedMenuItems()
@@ -95,6 +98,10 @@ class DemoSchemaSeeder extends Seeder
                 }
             }
         }
+
+        DB::table('menus')->update(['updated_at' => now(), 'created_at' => now()]);
+        DB::table('menu_item_options')->update(['updated_at' => now(), 'created_at' => now()]);
+        DB::table('menu_item_option_values')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function getSeedRecords($name)
