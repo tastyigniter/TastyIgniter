@@ -81,7 +81,7 @@ class Currencies_model extends Currency
             $query->isEnabled();
         }
 
-        $this->fireEvent('model.extendListFrontEndQuery', [$this, $query]);
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }
