@@ -151,6 +151,8 @@ class Categories_model extends Model
             $query->isEnabled();
         }
 
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
         return $query->paginate($pageLimit, $page);
     }
 }

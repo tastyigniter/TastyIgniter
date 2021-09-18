@@ -171,6 +171,8 @@ class Locations_model extends AbstractLocation
             $query->search($search, $searchableFields);
         }
 
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
         return $query->paginate($pageLimit, $page);
     }
 
