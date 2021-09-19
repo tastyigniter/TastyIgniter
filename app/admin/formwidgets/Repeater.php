@@ -150,7 +150,7 @@ class Repeater extends BaseFormWidget
 
         $columns = [];
         foreach ($this->itemDefinitions['fields'] as $name => $field) {
-            if (isset($field['type']) AND $field['type'] == 'hidden')
+            if (isset($field['type']) && $field['type'] == 'hidden')
                 continue;
 
             $columns[$name] = $field['label'] ?? null;
@@ -168,13 +168,13 @@ class Repeater extends BaseFormWidget
 
     protected function processSaveValue($value)
     {
-        if (!is_array($value) OR !$value) return $value;
+        if (!is_array($value) || !$value) return $value;
 
         $sortedIndexes = (array)post($this->sortableInputName);
         $sortedIndexes = array_flip($sortedIndexes);
 
         foreach ($value as $index => &$data) {
-            if ($sortedIndexes AND $this->sortable)
+            if ($sortedIndexes && $this->sortable)
                 $data[$this->sortColumnName] = $sortedIndexes[$index];
 
             $items[$index] = $data;
@@ -258,7 +258,7 @@ class Repeater extends BaseFormWidget
     {
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
-        if (!$model instanceof Model OR !$model->hasRelation($attribute)) {
+        if (!$model instanceof Model || !$model->hasRelation($attribute)) {
             return $this->model;
         }
 

@@ -110,7 +110,7 @@ class ScheduleItem
         $result = [];
         foreach (Working_hours_model::$weekDays as $key => $weekDay) {
             $hour = array_get($data, $key, []);
-            if (isset($hour['open']) AND isset($hour['close'])) {
+            if (isset($hour['open']) && isset($hour['close'])) {
                 $hour['hours'] = sprintf('%s-%s', $hour['open'], $hour['close']);
                 unset($hour['open'], $hour['close']);
             }

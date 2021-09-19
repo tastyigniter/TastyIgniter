@@ -62,7 +62,7 @@ class IgniterInstall extends Command
         $this->alert('INSTALLATION');
 
         if (
-            App::hasDatabase() AND
+            App::hasDatabase() &&
             !$this->confirm('Application appears to be installed already. Continue anyway?', FALSE)
         ) {
             return;
@@ -151,7 +151,7 @@ class IgniterInstall extends Command
     {
         $username = $this->ask('Admin Username', 'admin');
         $password = $this->output->ask('Admin Password', '123456', function ($answer) {
-            if (!is_string($answer) OR strlen($answer) < 6) {
+            if (!is_string($answer) || strlen($answer) < 6) {
                 throw new \RuntimeException('Please specify the administrator password, at least 6 characters');
             }
 

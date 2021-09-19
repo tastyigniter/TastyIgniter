@@ -16,7 +16,7 @@ class ActivityMessage
         if (!$activity->causer instanceof Users_model)
             $prefix = '<b>'.lang('system::lang.activities.activity_system').'</b> ';
 
-        if ($activity->causer AND $activity->causer->user_id == AdminAuth::getId())
+        if ($activity->causer && $activity->causer->user_id == AdminAuth::getId())
             $prefix = '<b>'.ucfirst($self).'</b> ';
 
         return $prefix.lang($line);
@@ -30,11 +30,11 @@ class ActivityMessage
         if (!$activity->causer instanceof Users_model)
             $prefix = '<b>'.lang('system::lang.activities.activity_system').'</b> ';
 
-        if ($activity->causer AND $activity->causer->user_id == AdminAuth::getId())
+        if ($activity->causer && $activity->causer->user_id == AdminAuth::getId())
             $prefix = '<b>'.ucfirst($self).'</b> ';
 
         $assigneeId = $activity->properties->get('assignee_id');
-        if (!$assigneeId AND strlen($activity->properties->get('assignee_group_id'))) {
+        if (!$assigneeId && strlen($activity->properties->get('assignee_group_id'))) {
             $suffix = ' <b>:properties.assignee_group_name</b>';
         }
         elseif ($assigneeId == optional(AdminAuth::staff())->getKey()) {

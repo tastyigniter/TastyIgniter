@@ -59,7 +59,7 @@ class Updates extends \Admin\Classes\AdminController
                 'class' => 'btn disabled text-muted pull-right', 'role' => 'button',
             ]);
 
-            if (!empty($updates['items']) OR !empty($updates['ignoredItems'])) {
+            if (!empty($updates['items']) || !empty($updates['ignoredItems'])) {
                 Template::setButton(lang('system::lang.updates.button_update'), [
                     'class' => 'btn btn-primary pull-left mr-2 ml-0',
                     'id' => 'apply-updates', 'role' => 'button',
@@ -103,7 +103,7 @@ class Updates extends \Admin\Classes\AdminController
     {
         $json = [];
 
-        if ($filter = input('filter') AND is_array($filter)) {
+        if ($filter = input('filter') && is_array($filter)) {
             $itemType = $filter['type'] ?? 'extension';
             $searchQuery = isset($filter['search']) ? strtolower($filter['search']) : '';
 
@@ -146,7 +146,7 @@ class Updates extends \Admin\Classes\AdminController
     public function index_onIgnoreUpdate()
     {
         $items = post('items');
-        if (!$items OR count($items) < 1)
+        if (!$items || count($items) < 1)
             throw new ApplicationException(lang('system::lang.updates.alert_item_to_ignore'));
 
         $updateManager = UpdateManager::instance();

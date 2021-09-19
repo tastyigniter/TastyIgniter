@@ -254,7 +254,7 @@ class MapArea extends BaseFormWidget
         $result = [];
 
         foreach ($loadValue as $key => $area) {
-            if (!isset($area['color']) OR !strlen($area['color'])) {
+            if (!isset($area['color']) || !strlen($area['color'])) {
                 $index = min($key, count($this->areaColors));
                 $area['color'] = $this->areaColors[$index] ?? $this->areaColors[0];
             }

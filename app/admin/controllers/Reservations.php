@@ -96,7 +96,7 @@ class Reservations extends \Admin\Classes\AdminController
     {
         $model = Reservations_model::find((int)post('recordId'));
         $status = Statuses_model::find((int)post('statusId'));
-        if (!$model OR !$status)
+        if (!$model || !$status)
             return;
 
         if ($record = $model->addStatusHistory($status))

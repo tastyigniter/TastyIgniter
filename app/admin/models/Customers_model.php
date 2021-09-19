@@ -95,10 +95,10 @@ class Customers_model extends AuthUserModel
 
     public function beforeLogin()
     {
-        if (!$this->group OR !$this->group->requiresApproval())
+        if (!$this->group || !$this->group->requiresApproval())
             return;
 
-        if ($this->is_activated AND $this->status)
+        if ($this->is_activated && $this->status)
             return;
 
         throw new Exception(sprintf(
@@ -206,7 +206,7 @@ class Customers_model extends AuthUserModel
     {
         $query = FALSE;
 
-        if (is_numeric($this->customer_id) AND !empty($this->email)) {
+        if (is_numeric($this->customer_id) && !empty($this->email)) {
             $customer_id = $this->customer_id;
             $customer_email = $this->email;
             $update = ['customer_id' => $customer_id];
@@ -216,7 +216,7 @@ class Customers_model extends AuthUserModel
                 foreach ($orders as $row) {
                     if (empty($row['order_id'])) continue;
 
-                    if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
+                    if ($row['order_type'] == '1' && !empty($row['address_id'])) {
                         Addresses_model::where('address_id', $row['address_id'])->update($update);
                     }
                 }

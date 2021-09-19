@@ -148,7 +148,7 @@ class MediaFinder extends BaseFormWidget
 
     public function onLoadAttachmentConfig()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
@@ -166,7 +166,7 @@ class MediaFinder extends BaseFormWidget
 
     public function onSaveAttachmentConfig()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
@@ -191,7 +191,7 @@ class MediaFinder extends BaseFormWidget
 
     public function onRemoveAttachment()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
@@ -235,7 +235,7 @@ class MediaFinder extends BaseFormWidget
     public function getLoadValue()
     {
         $value = parent::getLoadValue();
-        if (!is_array($value) AND !$value instanceof Collection)
+        if (!is_array($value) && !$value instanceof Collection)
             $value = [$value];
 
         if (is_array($value))
@@ -250,7 +250,7 @@ class MediaFinder extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->useAttachment OR $this->formField->disabled OR $this->formField->hidden) {
+        if ($this->useAttachment || $this->formField->disabled || $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 

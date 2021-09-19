@@ -156,7 +156,7 @@ class Reservations_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE)) {
+        if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE) && $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE)) {
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
         }
 
@@ -217,7 +217,7 @@ class Reservations_model extends Model
     public function getReservationDatetimeAttribute($value)
     {
         if (!isset($this->attributes['reserve_date'])
-            AND !isset($this->attributes['reserve_time'])
+            && !isset($this->attributes['reserve_time'])
         ) return null;
 
         return make_carbon($this->attributes['reserve_date'])
@@ -324,7 +324,7 @@ class Reservations_model extends Model
     {
         $diffInMinutes = $this->reservation_datetime->diffInMinutes($this->reservation_end_datetime);
 
-        return $diffInMinutes >= (60 * 23) OR $diffInMinutes == 0;
+        return $diffInMinutes >= (60 * 23) || $diffInMinutes == 0;
     }
 
     public function getOccasionOptions()
@@ -392,7 +392,7 @@ class Reservations_model extends Model
     public function mailGetRecipients($type)
     {
         $emailSetting = setting('reservation_email', []);
-        is_array($emailSetting) OR $emailSetting = [];
+        is_array($emailSetting) || $emailSetting = [];
 
         $recipients = [];
         if (in_array($type, $emailSetting)) {

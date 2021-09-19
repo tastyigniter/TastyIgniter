@@ -199,7 +199,7 @@ class SettingsModel extends ModelAction
     protected function isKeyAllowed($key)
     {
         // core columns
-        if ($key == 'id' OR $key == 'item' OR $key == 'data') {
+        if ($key == 'id' || $key == 'item' || $key == 'data') {
             return TRUE;
         }
 

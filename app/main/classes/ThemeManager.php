@@ -78,7 +78,7 @@ class ThemeManager
     {
         $theme = !is_null($theme) ? $theme : self::instance()->getActiveTheme();
 
-        if (!$theme OR !$theme->hasCustomData())
+        if (!$theme || !$theme->hasCustomData())
             return;
 
         $assetVars = $theme->getAssetVariables();
@@ -112,7 +112,7 @@ class ThemeManager
      */
     public function loadInstalled()
     {
-        if (($installedThemes = setting('installed_themes')) AND is_array($installedThemes)) {
+        if (($installedThemes = setting('installed_themes')) && is_array($installedThemes)) {
             $this->installedThemes = $installedThemes;
         }
     }
@@ -289,7 +289,7 @@ class ThemeManager
     {
         traceLog('Deprecated. Use $instance::isActive($themeCode) instead');
 
-        return !$this->checkName($name) OR !array_get($this->installedThemes, $name, FALSE);
+        return !$this->checkName($name) || !array_get($this->installedThemes, $name, FALSE);
     }
 
     /**
@@ -304,7 +304,7 @@ class ThemeManager
         if ($themeCode == 'errors')
             return null;
 
-        return (strpos($themeCode, '_') === 0 OR preg_match('/\s/', $themeCode)) ? null : $themeCode;
+        return (strpos($themeCode, '_') === 0 || preg_match('/\s/', $themeCode)) ? null : $themeCode;
     }
 
     /**
@@ -341,7 +341,7 @@ class ThemeManager
     public function checkParent($themeCode)
     {
         foreach ($this->themes as $code => $theme) {
-            if ($theme->hasParent() AND $theme->getParentName() == $themeCode)
+            if ($theme->hasParent() && $theme->getParentName() == $themeCode)
                 return TRUE;
         }
 
@@ -546,11 +546,11 @@ class ThemeManager
             }
 
             $meta = @json_decode($zip->getFromName($themeDir.'theme.json'));
-            if (!$meta OR !strlen($meta->code))
+            if (!$meta || !strlen($meta->code))
                 throw new SystemException(lang('system::lang.themes.error_config_no_found'));
 
             $themeCode = $meta->code;
-            if (!$this->checkName($themeDir) OR !$this->checkName($themeCode))
+            if (!$this->checkName($themeDir) || !$this->checkName($themeCode))
                 throw new SystemException('Theme directory name can not have spaces.');
 
             $extractToPath = $themesFolder.'/'.$themeCode;
