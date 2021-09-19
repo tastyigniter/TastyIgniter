@@ -8,9 +8,7 @@ use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
-use Igniter\Flame\Geolite\Model\Coordinates;
 use Igniter\Flame\Location\Models\AbstractLocation;
-use Illuminate\Pagination\Paginator;
 
 /**
  * Locations Model Class
@@ -133,15 +131,17 @@ class Locations_model extends AbstractLocation
 
     public function scopeListFrontEnd($query, array $options = [])
     {
-        extract(array_merge([
-            'orderTypes' => [],
+        extract($options = array_merge([
             'page' => 1,
             'pageLimit' => 20,
             'sort' => null,
             'search' => null,
-            'searchDeliveryAreas' => false,
+            'enabled' => null,
             'latitude' => null,
             'longitude' => null,
+            'paginate' => TRUE,
+            'hasDelivery' => null,
+            'hasCollection' => null,
         ], $options));
 
         if ($latitude AND $longitude) {
@@ -175,32 +175,21 @@ class Locations_model extends AbstractLocation
             $query->search($search, $searchableFields);
         }
 
+        if (!is_null($enabled))
+            $query->where('location_status', $enabled);
+
+        if (!is_null($hasDelivery))
+            $query->where('options->offer_delivery', $hasDelivery);
+
+        if (!is_null($hasCollection))
+            $query->where('options->offer_collection', $hasCollection);
+
         $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
-        $list = $query->get();
+        if (is_null($pageLimit))
+            return $query;
 
-        if ($searchDeliveryAreas AND $latitude AND $longitude) {
-            $coordinates = new Coordinates($latitude, $longitude);
-            $list = $list->filter(function ($location) use ($coordinates) {
-                if ($area = $location->searchDeliveryArea($coordinates))
-                    return true;
-
-                return false;
-            });
-        }
-
-        if ($orderTypes) {
-
-            if (!is_array($orderTypes))
-                $orderTypes = explode(',', $orderTypes);
-
-            $list = $list->filter(function ($location) use ($orderTypes) {
-               return count(array_intersect($location->getOrderTypeOptions()->keys()->toArray(), $orderTypes));
-            });
-
-        }
-
-        return new Paginator($list->forPage($page, $pageLimit), $pageLimit, $page);
+        return $query->paginate($pageLimit, $page);
     }
 
     //
