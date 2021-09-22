@@ -615,7 +615,7 @@ return [
         'text_update_ignored' => '%s update(s) ignored',
         'text_item_update_summary' => 'Update from version %s to <b>%s</b>',
 
-        'text_maintenance_mode' => 'While your site is being updated, maintenance mode will be enabled then disabled as soon as your updates are complete.',
+        'text_core_update' => '<i class="fa fa-exclamation-triangle fa-fw"></i>&nbsp;&nbsp;After the core has been updated, other updates will be available.',
 
         'progress_download' => '<i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Downloading %s&#8230;',
         'progress_extract' => '<i class="fa fa-file-archive-o fa-fw"></i>&nbsp;&nbsp;&nbsp;Extracting %s&#8230;',
