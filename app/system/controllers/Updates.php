@@ -208,13 +208,7 @@ class Updates extends \Admin\Classes\AdminController
 
     protected function applyInstallOrUpdate($context)
     {
-        $error = null;
-
         $items = input('items') ?? [];
-
-// Uncomment this block to require carte key
-//        if (!params()->has('carte_key'))
-//            throw new ApplicationException(lang('system::lang.missing.carte_key'));
 
         if (!count($items))
             throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
