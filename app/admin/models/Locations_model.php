@@ -131,13 +131,17 @@ class Locations_model extends AbstractLocation
 
     public function scopeListFrontEnd($query, array $options = [])
     {
-        extract(array_merge([
+        extract($options = array_merge([
             'page' => 1,
             'pageLimit' => 20,
             'sort' => null,
             'search' => null,
+            'enabled' => null,
             'latitude' => null,
             'longitude' => null,
+            'paginate' => TRUE,
+            'hasDelivery' => null,
+            'hasCollection' => null,
         ], $options));
 
         if ($latitude AND $longitude) {
@@ -171,7 +175,19 @@ class Locations_model extends AbstractLocation
             $query->search($search, $searchableFields);
         }
 
+        if (!is_null($enabled))
+            $query->where('location_status', $enabled);
+
+        if (!is_null($hasDelivery))
+            $query->where('options->offer_delivery', $hasDelivery);
+
+        if (!is_null($hasCollection))
+            $query->where('options->offer_collection', $hasCollection);
+
         $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
+        if (is_null($pageLimit))
+            return $query;
 
         return $query->paginate($pageLimit, $page);
     }
