@@ -256,6 +256,16 @@ class AdminController extends BaseController
         $this->execPageAction($this->action, $this->params);
     }
 
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
+    }
+
     protected function execPageAction($action, $params)
     {
         $result = null;
