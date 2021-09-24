@@ -85,24 +85,21 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            ['email', 'lang:admin::lang.label_email', 'required|email:filter|max:96|exists:staffs,staff_email'],
+            ['email', 'lang:admin::lang.label_email', 'required|email:filter|max:96'],
         ]);
 
         $staff = Staffs_model::whereStaffEmail(post('email'))->first();
-        if (!$staff OR !$user = $staff->user)
-            throw new ValidationException(['email' => lang('admin::lang.login.alert_email_not_sent')]);
-
-        if (!$user->resetPassword())
-            throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);
-
-        $data = [
-            'staff_name' => $staff->staff_name,
-            'reset_link' => admin_url('login/reset?code='.$user->reset_code),
-        ];
-
-        Mail::queue('admin::_mail.password_reset_request', $data, function ($message) use ($staff) {
-            $message->to($staff->staff_email, $staff->staff_name);
-        });
+        if ($staff AND $user = $staff->user) {
+            if (!$user->resetPassword())
+                throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);
+            $data = [
+                'staff_name' => $staff->staff_name,
+                'reset_link' => admin_url('login/reset?code='.$user->reset_code),
+            ];
+            Mail::queue('admin::_mail.password_reset_request', $data, function ($message) use ($staff) {
+                $message->to($staff->staff_email, $staff->staff_name);
+            });
+        }
 
         flash()->success(lang('admin::lang.login.alert_email_sent'));
 
