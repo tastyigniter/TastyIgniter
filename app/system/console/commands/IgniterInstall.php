@@ -2,13 +2,13 @@
 
 namespace System\Console\Commands;
 
+use Admin\Facades\AdminAuth;
 use Admin\Models\Customer_groups_model;
 use Admin\Models\Locations_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staff_roles_model;
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
-use Carbon\Carbon;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -149,7 +149,22 @@ class IgniterInstall extends Command
 
     protected function createSuperUser()
     {
-        $username = $this->ask('Admin Username', 'admin');
+        $email = $this->output->ask('Admin Email', DatabaseSeeder::$siteEmail, function ($answer) {
+            if (Staffs_model::whereStaffEmail($answer)->first()) {
+                throw new \RuntimeException('An administrator with that email already exists, please choose a different email.');
+            }
+
+            return $answer;
+        });
+
+        $username = $this->output->ask('Admin Username', 'admin', function ($answer) {
+            if (Users_model::whereUsername($answer)->first()) {
+                throw new \RuntimeException('An administrator with that username already exists, please choose a different username.');
+            }
+
+            return $answer;
+        });
+
         $password = $this->output->ask('Admin Password', '123456', function ($answer) {
             if (!is_string($answer) OR strlen($answer) < 6) {
                 throw new \RuntimeException('Please specify the administrator password, at least 6 characters');
@@ -158,25 +173,19 @@ class IgniterInstall extends Command
             return $answer;
         });
 
-        $staff = Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
-        $staff->staff_name = DatabaseSeeder::$staffName;
-        $staff->staff_role_id = Staff_roles_model::first()->staff_role_id;
-        $staff->language_id = Languages_model::first()->language_id;
-        $staff->staff_status = TRUE;
-        $staff->save();
+        $user = AdminAuth::register([
+            'staff_email' => $email,
+            'staff_name' => DatabaseSeeder::$staffName,
+            'language_id' => Languages_model::first()->language_id,
+            'staff_role_id' => Staff_roles_model::first()->staff_role_id,
+            'staff_status' => TRUE,
+            'username' => $username,
+            'password' => $password,
+            'groups' => [Staff_groups_model::first()->staff_group_id],
+            'locations' => [Locations_model::first()->location_id],
+        ]);
 
-        $staff->groups()->attach(Staff_groups_model::first()->staff_group_id);
-        $staff->locations()->attach(Locations_model::first()->location_id);
-
-        $user = Users_model::firstOrNew(['username' => $username]);
-        $user->staff_id = $staff->staff_id;
-        $user->password = $password;
-        $user->super_user = TRUE;
-        $user->is_activated = TRUE;
-        $user->date_activated = Carbon::now();
-        $user->save();
-
-        $this->line('Admin user '.$username.' created!');
+        $this->line('Admin user '.$user->username.' created!');
     }
 
     protected function addSystemValues()
