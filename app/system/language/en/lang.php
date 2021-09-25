@@ -592,6 +592,7 @@ return [
         'alert_theme_locked' => 'This is a locked theme, changes are restricted, create a child theme to make changes.',
         'alert_theme_path_locked' => 'This template belongs to a locked theme, such actions are restricted.',
         'alert_changes_confirm' => 'Conflicting versions, template file has changed. Reload the page to continue.',
+        'alert_customize_not_active' => 'You can only customize an active theme.',
     ],
 
     'updates' => [

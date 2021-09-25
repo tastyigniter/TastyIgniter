@@ -6,6 +6,7 @@ use Admin\Facades\AdminMenu;
 use Admin\Facades\Template;
 use Admin\Traits\WidgetMaker;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
@@ -80,6 +81,9 @@ class Themes extends \Admin\Classes\AdminController
 
     public function edit($context, $themeCode = null)
     {
+        if (!ThemeManager::instance()->isActive($themeCode))
+            throw new ApplicationException(lang('system::lang.themes.alert_customize_not_active'));
+
         if (ThemeManager::instance()->isLocked($themeCode)) {
             Template::setButton(lang('system::lang.themes.button_child'), [
                 'class' => 'btn btn-default pull-right',
@@ -104,10 +108,13 @@ class Themes extends \Admin\Classes\AdminController
             ]);
         }
 
-        Template::setButton(lang('system::lang.themes.button_customize'), [
-            'class' => 'btn btn-default pull-right mr-3',
-            'href' => admin_url('themes/edit/'.$themeCode),
-        ]);
+        $theme = ThemeManager::instance()->findTheme($themeCode);
+        if ($theme AND $theme->hasCustomData()) {
+            Template::setButton(lang('system::lang.themes.button_customize'), [
+                'class' => 'btn btn-default pull-right mr-3',
+                'href' => admin_url('themes/edit/'.$themeCode),
+            ]);
+        }
 
         $this->asExtension('FormController')->edit($context, $themeCode);
     }
