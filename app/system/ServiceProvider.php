@@ -189,6 +189,7 @@ class ServiceProvider extends AppServiceProvider
                 'igniter.down' => Console\Commands\IgniterDown::class,
                 'igniter.install' => Console\Commands\IgniterInstall::class,
                 'igniter.update' => Console\Commands\IgniterUpdate::class,
+                'igniter.passwd' => Console\Commands\IgniterPasswd::class,
                 'extension.install' => Console\Commands\ExtensionInstall::class,
                 'extension.refresh' => Console\Commands\ExtensionRefresh::class,
                 'extension.remove' => Console\Commands\ExtensionRemove::class,

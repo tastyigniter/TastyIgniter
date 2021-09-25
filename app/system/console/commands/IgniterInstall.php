@@ -98,6 +98,9 @@ class IgniterInstall extends Command
 
     protected function rewriteEnvFile()
     {
+        if (file_exists(base_path().'/.env') AND !$this->confirm('Rewrite environment file?', FALSE))
+            return;
+
         $this->moveExampleFile('env', null, 'backup');
         $this->copyExampleFile('env', 'example', null);
 
