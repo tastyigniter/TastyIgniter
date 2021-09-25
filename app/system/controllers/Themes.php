@@ -15,6 +15,7 @@ use System\Facades\Assets;
 use System\Libraries\Assets as AssetsManager;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
+use System\Traits\ManagesUpdates;
 use System\Traits\SessionMaker;
 
 class Themes extends \Admin\Classes\AdminController
@@ -22,6 +23,7 @@ class Themes extends \Admin\Classes\AdminController
     use WidgetMaker;
     use ConfigMaker;
     use SessionMaker;
+    use ManagesUpdates;
 
     public $implement = [
         'Admin\Actions\ListController',
@@ -70,6 +72,8 @@ class Themes extends \Admin\Classes\AdminController
     public function index()
     {
         Themes_model::syncAll();
+
+        $this->initUpdate('theme');
 
         $this->asExtension('ListController')->index();
     }

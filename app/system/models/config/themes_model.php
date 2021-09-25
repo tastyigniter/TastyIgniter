@@ -4,10 +4,11 @@ $config['list']['toolbar'] = [
         'browse' => [
             'label' => 'lang:system::lang.themes.button_browse',
             'class' => 'btn btn-primary',
-            'href' => 'updates/browse/themes',
+            'href' => 'https://tastyigniter.com/marketplace',
+            'target' => '_blank',
         ],
         'check' => [
-            'label' => 'lang:system::lang.themes.button_check',
+            'label' => 'lang:system::lang.updates.button_check',
             'class' => 'btn btn-success',
             'href' => 'updates',
         ],

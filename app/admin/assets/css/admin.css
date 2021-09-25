@@ -1,8 +1,8 @@
+@charset "UTF-8";
 /*!
  * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
-@charset "UTF-8";
 .fa, .fas, .far, .fa-star-o, .fal, .fad, .fab {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
@@ -10755,12 +10755,12 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-info:hover {
   color: #FFFFFF;
-  background-color: #3b4bd1;
+  background-color: #3b4ad1;
   border-color: #3141ce;
 }
 .btn-info:focus, .btn-info.focus {
   color: #FFFFFF;
-  background-color: #3b4bd1;
+  background-color: #3b4ad1;
   border-color: #3141ce;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(115, 126, 222, 0.5);
 }
@@ -16561,7 +16561,7 @@ a.text-success:hover, a.panel-success:hover, a.text-success:focus, a.panel-succe
   color: #5A67D8 !important;
 }
 a.text-info:hover, a.panel-info:hover, a.text-info:focus, a.panel-info:focus {
-  color: #2c3bba !important;
+  color: #2c3aba !important;
 }
 .text-warning, .panel-warning {
   color: #FD7E14 !important;
@@ -18317,12 +18317,12 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-info:hover {
   color: #FFFFFF;
-  background-color: #3b4bd1;
+  background-color: #3b4ad1;
   border-color: #3141ce;
 }
 .toolbar-action .btn-info:focus, .toolbar-action .btn-info.focus {
   color: #FFFFFF;
-  background-color: #3b4bd1;
+  background-color: #3b4ad1;
   border-color: #3141ce;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
@@ -18734,6 +18734,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-outline-white:not(:disabled):not(.disabled):active:focus, .toolbar-action .btn-outline-white:not(:disabled):not(.disabled).active:focus, .show > .toolbar-action .btn-outline-white.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(111, 123, 156, 0.5);
+}
+.toolbar-search {
+  background-color: #D2D4DF;
 }
 .list-table .table thead, .list-table .markdown table thead, .markdown .list-table table thead {
   position: relative;
