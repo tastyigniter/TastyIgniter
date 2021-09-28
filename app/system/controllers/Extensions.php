@@ -9,10 +9,10 @@ use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\SystemException;
 use Illuminate\Support\Facades\Request;
-use System\Traits\ManagesUpdates;
 use System\Classes\ExtensionManager;
 use System\Models\Extensions_model;
 use System\Models\Settings_model;
+use System\Traits\ManagesUpdates;
 
 class Extensions extends \Admin\Classes\AdminController
 {
