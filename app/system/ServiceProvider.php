@@ -97,8 +97,6 @@ class ServiceProvider extends AppServiceProvider
         $this->extendValidator();
         $this->addTranslationDriver();
         $this->defineQueryMacro();
-
-        $this->app['router']->pushMiddlewareToGroup('web', 'currency');
     }
 
     /*
