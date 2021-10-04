@@ -278,7 +278,7 @@ trait ManagesUpdates
     {
         $rules = [
             ['items.*.name', 'lang:system::lang.updates.label_meta_code', 'required'],
-            ['items.*.type', 'lang:system::lang.updates.label_meta_type', 'required|in:extension,theme,language'],
+            ['items.*.type', 'lang:system::lang.updates.label_meta_type', 'required|in:core,extension,theme'],
             ['items.*.ver', 'lang:system::lang.updates.label_meta_version', 'required'],
             ['items.*.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'],
         ];
@@ -291,7 +291,7 @@ trait ManagesUpdates
         $rules = [];
         if (post('step') != 'complete') {
             $rules[] = ['meta.code', 'lang:system::lang.updates.label_meta_code', 'required'];
-            $rules[] = ['meta.type', 'lang:system::lang.updates.label_meta_type', 'required'];
+            $rules[] = ['meta.type', 'lang:system::lang.updates.label_meta_type', 'required|in:core,extension,theme'];
             $rules[] = ['meta.version', 'lang:system::lang.updates.label_meta_version', 'required'];
             $rules[] = ['meta.hash', 'lang:system::lang.updates.label_meta_hash', 'required'];
             $rules[] = ['meta.description', 'lang:system::lang.updates.label_meta_description', 'sometimes'];

@@ -362,9 +362,8 @@ class UpdateManager
 
         $installedItems = collect($installedItems)->keyBy('name')->all();
 
-        $coreUpdate = collect(array_get($updates, 'data', []))->firstWhere('type', 'core');
-
         $updateCount = 0;
+        $hasCoreUpdate = FALSE;
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
             $update['installedVer'] = array_get(array_get($installedItems, $update['code'], []), 'ver');
@@ -375,11 +374,14 @@ class UpdateManager
                 $update['installedVer'] = params('ti_version');
                 if ($this->disableCoreUpdates)
                     continue;
-            }
 
-            if ((array_get($update, 'type') !== 'core' AND $coreUpdate) OR $this->isMarkedAsIgnored($update['code'])) {
-                $ignoredItems[] = $update;
-                continue;
+                $hasCoreUpdate = TRUE;
+            }
+            else {
+                if ($hasCoreUpdate OR $this->isMarkedAsIgnored($update['code'])) {
+                    $ignoredItems[] = $update;
+                    continue;
+                }
             }
 
             $update['icon'] = generate_extension_icon($update['icon'] ?? []);
