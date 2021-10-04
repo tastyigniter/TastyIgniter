@@ -89,6 +89,15 @@ class SettingsModel extends ModelAction
     }
 
     /**
+     * Checks if the model has been set up previously, intended as a static method
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        return app()->hasDatabase() && $this->getSettingsRecord() !== null;
+    }
+
+    /**
      * Returns the raw Model record that stores the settings.
      * @return Model
      */
