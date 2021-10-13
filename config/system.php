@@ -246,15 +246,4 @@ return [
     */
 
     'enableCsrfProtection' => TRUE,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Geocoder service precision
-    |--------------------------------------------------------------------------
-    |
-    | How precise the geocoder should be when evaluating shapes and circles (number of decimals)
-    |
-    */
-
-    'geocoderPrecision' => 8,
 ];
