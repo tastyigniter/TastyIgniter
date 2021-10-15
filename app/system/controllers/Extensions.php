@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Request;
 use System\Classes\ExtensionManager;
 use System\Models\Extensions_model;
 use System\Models\Settings_model;
+use System\Traits\ManagesUpdates;
 
 class Extensions extends \Admin\Classes\AdminController
 {
     use WidgetMaker;
+    use ManagesUpdates;
 
     public $implement = [
         'Admin\Actions\ListController',
@@ -58,6 +60,8 @@ class Extensions extends \Admin\Classes\AdminController
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
 
         Extensions_model::syncAll();
+
+        $this->initUpdate('extension');
 
         $this->asExtension('ListController')->index();
     }

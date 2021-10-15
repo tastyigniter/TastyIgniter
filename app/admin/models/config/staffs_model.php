@@ -167,7 +167,7 @@ $config['form']['toolbar'] = [
             'context' => ['edit'],
         ],
         'impersonate' => [
-            'label' => 'lang:admin::lang.customers.text_impersonate',
+            'label' => 'lang:admin::lang.staff.text_impersonate',
             'class' => 'btn btn-default',
             'data-request' => 'onImpersonate',
             'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',

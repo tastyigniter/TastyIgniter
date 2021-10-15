@@ -97,8 +97,6 @@ class ServiceProvider extends AppServiceProvider
         $this->extendValidator();
         $this->addTranslationDriver();
         $this->defineQueryMacro();
-
-        $this->app['router']->pushMiddlewareToGroup('web', 'currency');
     }
 
     /*
@@ -189,6 +187,7 @@ class ServiceProvider extends AppServiceProvider
                 'igniter.down' => Console\Commands\IgniterDown::class,
                 'igniter.install' => Console\Commands\IgniterInstall::class,
                 'igniter.update' => Console\Commands\IgniterUpdate::class,
+                'igniter.passwd' => Console\Commands\IgniterPasswd::class,
                 'extension.install' => Console\Commands\ExtensionInstall::class,
                 'extension.refresh' => Console\Commands\ExtensionRefresh::class,
                 'extension.remove' => Console\Commands\ExtensionRemove::class,
@@ -326,7 +325,7 @@ class ServiceProvider extends AppServiceProvider
             $app['config']->set('geocoder.providers.nominatim.region', $region);
 
             $app['config']->set('geocoder.providers.google.apiKey', setting('maps_api_key'));
-            $app['config']->set('geocoder.precision', setting('geocoder_boundary_precision'));
+            $app['config']->set('geocoder.precision', setting('geocoder_boundary_precision', 8));
         });
 
         Event::listen(CommandStarting::class, function () {

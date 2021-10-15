@@ -1,5 +1,5 @@
 {!! form_open([
-    'id' => $this->getId('form'),
+    'id' => 'list-form',
     'role' => 'form',
     'method' => 'POST',
 ]) !!}

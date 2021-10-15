@@ -40,6 +40,8 @@
 
         $(document).on('click', '#update-carte', $.proxy(this.onUpdateCarteClick, this))
 
+        $(document).on('click', '[data-control="apply-recommended"]', $.proxy(this.onApplyRecommended, this))
+
         $(document).on('click', '#apply-updates', $.proxy(this.onApplyUpdateClick, this))
 
         $(document).on('click', '[data-control="apply-install"]', $.proxy(this.onApplyInstallClick, this))
@@ -65,7 +67,7 @@
                 requestChain.push(function () {
                     var deferred = $.Deferred()
 
-                    $.request('onProcess', {
+                    $.request('onProcessItems', {
                         data: {step: group, meta: step},
                         beforeSend: self.setProgressBar(step.label, 'primary'),
                         success: function (json) {
@@ -257,7 +259,7 @@
 
         $button.attr('disable', true).addClass('disabled')
 
-        $.request('onApply', {
+        $.request('onApplyItems', {
             data: {items: this.options.itemsToApply}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')
@@ -290,7 +292,7 @@
             })
         })
 
-        $.request('onApply', {
+        $.request('onApplyUpdate', {
             data: {items: this.options.itemsToApply}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')
@@ -321,6 +323,22 @@
             data: {items: itemsToIgnore}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')
+        })
+    }
+
+    Updates.prototype.onApplyRecommended = function (event) {
+        var self = this,
+            $button = $(event.currentTarget),
+            $modal = $button.closest('.modal'),
+            $form = $button.closest('form')
+
+        $button.attr('disabled', true)
+
+        $form.request('onApplyItems').always(function () {
+            $modal.modal('hide')
+        }).done(function (json) {
+            if (json['steps'])
+                self.executeSteps(json['steps'])
         })
     }
 
@@ -491,7 +509,7 @@
     $.fn.updates.Constructor = Updates
 
     $(document).render(function () {
-        $('#list-items').updates()
+        $('.page-content').updates()
     })
 
 }(jQuery)

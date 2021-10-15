@@ -1,3 +1,7 @@
 <div class="row-fluid">
-    {!! $this->renderList() !!}
+    {!! $this->widgets['toolbar']->render() !!}
+
+    {!! $this->makePartial('updates/search', ['itemType' => 'theme']) !!}
+
+    {!! $this->widgets['list']->render() !!}
 </div>

@@ -228,9 +228,16 @@ $config['form']['tabs'] = [
             'size' => 'small',
         ],
 
+        'options[working_hours]' => [
+            'tab' => 'lang:admin::lang.locations.text_tab_schedules',
+            'type' => 'scheduleeditor',
+            'context' => ['edit'],
+            'form' => 'working_hours_model',
+        ],
+
         'options[limit_orders]' => [
             'label' => 'lang:admin::lang.locations.label_limit_orders',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'default' => 0,
             'type' => 'switch',
             'comment' => 'lang:admin::lang.locations.help_limit_orders',
@@ -238,7 +245,7 @@ $config['form']['tabs'] = [
         ],
         'options[limit_orders_count]' => [
             'label' => 'lang:admin::lang.locations.label_limit_orders_count',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'default' => 50,
             'type' => 'number',
             'span' => 'right',
@@ -252,19 +259,19 @@ $config['form']['tabs'] = [
 
         'delivery_order' => [
             'label' => 'lang:admin::lang.locations.text_tab_delivery_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'type' => 'section',
         ],
         'options[offer_delivery]' => [
             'label' => 'lang:admin::lang.locations.label_offer_delivery',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'default' => 1,
             'type' => 'switch',
             'span' => 'left',
         ],
         'options[future_orders][enable_delivery]' => [
             'label' => 'lang:admin::lang.locations.label_future_delivery_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'type' => 'switch',
             'span' => 'right',
             'trigger' => [
@@ -275,7 +282,7 @@ $config['form']['tabs'] = [
         ],
         'options[delivery_time_interval]' => [
             'label' => 'lang:admin::lang.locations.label_delivery_time_interval',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'default' => 15,
             'type' => 'number',
             'span' => 'left',
@@ -288,7 +295,7 @@ $config['form']['tabs'] = [
         ],
         'options[future_orders][delivery_days]' => [
             'label' => 'lang:admin::lang.locations.label_future_delivery_days',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'type' => 'number',
             'default' => 5,
             'span' => 'right',
@@ -301,7 +308,7 @@ $config['form']['tabs'] = [
         ],
         'options[delivery_lead_time]' => [
             'label' => 'lang:admin::lang.locations.label_delivery_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'default' => 25,
             'type' => 'number',
             'span' => 'left',
@@ -314,7 +321,7 @@ $config['form']['tabs'] = [
         ],
         'options[delivery_time_restriction]' => [
             'label' => 'lang:admin::lang.locations.label_delivery_time_restriction',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'type' => 'radiotoggle',
             'span' => 'right',
             'comment' => 'lang:admin::lang.locations.help_delivery_time_restriction',
@@ -324,22 +331,30 @@ $config['form']['tabs'] = [
                 'lang:admin::lang.locations.text_later_only',
             ],
         ],
+        'options[delivery_cancellation_timeout]' => [
+            'label' => 'lang:admin::lang.locations.label_delivery_cancellation_timeout',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
+            'type' => 'number',
+            'span' => 'left',
+            'default' => 0,
+            'comment' => 'lang:admin::lang.locations.help_delivery_cancellation_timeout',
+        ],
 
         'collection_order' => [
             'label' => 'lang:admin::lang.locations.text_tab_collection_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'type' => 'section',
         ],
         'options[offer_collection]' => [
             'label' => 'lang:admin::lang.locations.label_offer_collection',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'default' => 1,
             'type' => 'switch',
             'span' => 'left',
         ],
         'options[future_orders][enable_collection]' => [
             'label' => 'lang:admin::lang.locations.label_future_collection_order',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'type' => 'switch',
             'span' => 'right',
             'trigger' => [
@@ -350,7 +365,7 @@ $config['form']['tabs'] = [
         ],
         'options[collection_time_interval]' => [
             'label' => 'lang:admin::lang.locations.label_collection_time_interval',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'default' => 15,
             'type' => 'number',
             'span' => 'left',
@@ -363,7 +378,7 @@ $config['form']['tabs'] = [
         ],
         'options[future_orders][collection_days]' => [
             'label' => 'lang:admin::lang.locations.label_future_collection_days',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'type' => 'number',
             'default' => 5,
             'span' => 'right',
@@ -376,7 +391,7 @@ $config['form']['tabs'] = [
         ],
         'options[collection_lead_time]' => [
             'label' => 'lang:admin::lang.locations.label_collection_lead_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'default' => 25,
             'type' => 'number',
             'span' => 'left',
@@ -389,7 +404,7 @@ $config['form']['tabs'] = [
         ],
         'options[collection_time_restriction]' => [
             'label' => 'lang:admin::lang.locations.label_collection_time_restriction',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
             'type' => 'radiotoggle',
             'span' => 'right',
             'comment' => 'lang:admin::lang.locations.help_collection_time_restriction',
@@ -399,22 +414,25 @@ $config['form']['tabs'] = [
                 'lang:admin::lang.locations.text_later_only',
             ],
         ],
-
-        'reservation' => [
-            'label' => 'lang:admin::lang.locations.text_tab_reservation',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
-            'type' => 'section',
+        'options[collection_cancellation_timeout]' => [
+            'label' => 'lang:admin::lang.locations.label_collection_cancellation_timeout',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
+            'type' => 'number',
+            'span' => 'left',
+            'default' => 0,
+            'comment' => 'lang:admin::lang.locations.help_collection_cancellation_timeout',
         ],
+
         'options[offer_reservation]' => [
             'label' => 'lang:admin::lang.locations.label_offer_reservation',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 1,
             'type' => 'switch',
             'span' => 'left',
         ],
         'options[auto_allocate_table]' => [
             'label' => 'lang:admin::lang.locations.label_auto_allocate_table',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 1,
             'type' => 'switch',
             'span' => 'right',
@@ -426,7 +444,7 @@ $config['form']['tabs'] = [
         ],
         'options[reservation_time_interval]' => [
             'label' => 'lang:admin::lang.locations.label_reservation_time_interval',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 15,
             'type' => 'number',
             'span' => 'left',
@@ -439,7 +457,7 @@ $config['form']['tabs'] = [
         ],
         'options[reservation_stay_time]' => [
             'label' => 'lang:admin::lang.locations.label_reservation_stay_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 45,
             'type' => 'number',
             'span' => 'right',
@@ -452,30 +470,40 @@ $config['form']['tabs'] = [
         ],
         'options[min_reservation_advance_time]' => [
             'label' => 'lang:admin::lang.locations.label_min_reservation_advance_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 2,
             'type' => 'number',
             'span' => 'left',
             'comment' => 'lang:admin::lang.locations.help_min_reservation_advance_time',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_reservation]',
+                'condition' => 'checked',
+            ],
         ],
         'options[max_reservation_advance_time]' => [
             'label' => 'lang:admin::lang.locations.label_max_reservation_advance_time',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 30,
             'type' => 'number',
             'span' => 'right',
             'comment' => 'lang:admin::lang.locations.help_max_reservation_advance_time',
+            'trigger' => [
+                'action' => 'enable',
+                'field' => 'options[offer_reservation]',
+                'condition' => 'checked',
+            ],
         ],
         'options[limit_guests]' => [
             'label' => 'lang:admin::lang.locations.label_limit_guests',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 0,
             'type' => 'switch',
             'span' => 'left',
         ],
         'options[limit_guests_count]' => [
             'label' => 'lang:admin::lang.locations.label_limit_guests_count',
-            'tab' => 'lang:admin::lang.locations.text_tab_data',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
             'default' => 20,
             'type' => 'number',
             'span' => 'right',
@@ -486,12 +514,13 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
-
-        'options[working_hours]' => [
-            'tab' => 'lang:admin::lang.locations.text_tab_schedules',
-            'type' => 'scheduleeditor',
-            'context' => ['edit'],
-            'form' => 'working_hours_model',
+        'options[reservation_cancellation_timeout]' => [
+            'label' => 'lang:admin::lang.locations.label_reservation_cancellation_timeout',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
+            'type' => 'number',
+            'span' => 'left',
+            'default' => 0,
+            'comment' => 'lang:admin::lang.locations.help_reservation_cancellation_timeout',
         ],
 
         'options[payments]' => [

@@ -45,6 +45,9 @@ $(function ($) {
         $bulkActionsContainer = $('[data-control="bulk-actions"]'),
         $selectAllRecordsButton = $('[data-control="check-total-records"]')
 
+    if (!$bulkActionsContainer.length)
+        return;
+
     $(document).on('change', '.list-table input[name*=checked]', function (event) {
         onChangeListCheckboxes($(this))
     })
