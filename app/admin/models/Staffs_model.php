@@ -75,6 +75,11 @@ class Staffs_model extends Model
         return $this->staff_email;
     }
 
+    public function getAvatarUrlAttribute()
+    {
+        return '//www.gravatar.com/avatar/'.md5(strtolower(trim($this->staff_email))).'.png?d=mm';
+    }
+
     public static function getDropdownOptions()
     {
         return static::isEnabled()->dropdown('staff_name');

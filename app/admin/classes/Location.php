@@ -72,6 +72,11 @@ class Location extends Manager
         return optional($this->getLocation())->getKey();
     }
 
+    public function getName()
+    {
+        return optional($this->getLocation())->location_name;
+    }
+
     public function getAll()
     {
         if ($this->getAuth()->isSuperUser())
