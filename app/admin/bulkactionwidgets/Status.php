@@ -3,6 +3,7 @@
 namespace Admin\BulkActionWidgets;
 
 use Admin\Classes\BaseBulkActionWidget;
+use Illuminate\Support\Facades\DB;
 
 class Status extends BaseBulkActionWidget
 {
@@ -19,11 +20,15 @@ class Status extends BaseBulkActionWidget
     {
         $code = array_get($requestData, 'code');
         [$actionCode, $statusCode] = explode('.', $code, 2);
+        $statusColumn = $this->statusColumn;
 
         if ($count = $records->count()) {
-            foreach ($records as $record) {
-                $record->update([$this->statusColumn => ($statusCode === 'enable')]);
-            }
+            DB::transaction(function () use ($records, $statusColumn, $statusCode) {
+                foreach ($records as $record) {
+                    $record->$statusColumn = ($statusCode === 'enable');
+                    $record->save();
+                }
+            });
 
             $prefix = ($count > 1) ? ' records' : 'record';
             flash()->success(sprintf(lang('admin::lang.alert_success'),

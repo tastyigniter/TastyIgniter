@@ -3,6 +3,7 @@
 namespace Admin\BulkActionWidgets;
 
 use Admin\Classes\BaseBulkActionWidget;
+use Illuminate\Support\Facades\DB;
 
 class Delete extends BaseBulkActionWidget
 {
@@ -10,9 +11,11 @@ class Delete extends BaseBulkActionWidget
     {
         // Delete records
         if ($count = $records->count()) {
-            foreach ($records as $record) {
-                $record->delete();
-            }
+            DB::transaction(function () use ($records) {
+                foreach ($records as $record) {
+                    $record->delete();
+                }
+            });
 
             $prefix = ($count > 1) ? ' records' : 'record';
             flash()->success(sprintf(lang('admin::lang.alert_success'), '['.$count.']'.$prefix.' '.lang('admin::lang.text_deleted')));

@@ -1259,7 +1259,8 @@ class Lists extends BaseWidget
         $widgetConfig = $this->makeConfig($actionButton->config);
         $widgetConfig['alias'] = $this->alias.studly_case('bulk_action_'.$actionButton->name);
 
-        $widgetClass = Widgets::instance()->resolveBulkActionWidget($actionButton->name);
+        $actionCode = array_get($actionButton->config, 'code', $actionButton->name);
+        $widgetClass = Widgets::instance()->resolveBulkActionWidget($actionCode);
         if (!class_exists($widgetClass))
             throw new Exception(sprintf(lang('admin::lang.alert_widget_class_name'), $widgetClass));
 
