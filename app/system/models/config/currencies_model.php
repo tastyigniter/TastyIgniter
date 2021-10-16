@@ -20,15 +20,32 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'currencies/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.list.actions.label_status',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'currency_status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:admin::lang.list.actions.label_enable',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:admin::lang.list.actions.label_disable',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
         ],
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 

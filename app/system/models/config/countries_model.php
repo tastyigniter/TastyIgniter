@@ -45,7 +45,6 @@ $config['list']['bulkActions'] = [
     'delete' => [
         'label' => 'lang:admin::lang.button_delete',
         'class' => 'btn btn-light text-danger',
-        'data-request-data' => "_method:'DELETE'",
         'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
