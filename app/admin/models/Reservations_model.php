@@ -175,7 +175,7 @@ class Reservations_model extends Model
     public function scopeWhereBetweenDate($query, $dateTime)
     {
         $query->whereRaw(
-            '? between ADDTIME(reserve_date, reserve_time)'.
+            '? between DATE_SUB(ADDTIME(reserve_date, reserve_time), INTERVAL (duration - 2) MINUTE)'.
             ' and DATE_ADD(ADDTIME(reserve_date, reserve_time), INTERVAL duration MINUTE)',
             [$dateTime]
         );
