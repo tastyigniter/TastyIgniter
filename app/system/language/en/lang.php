@@ -267,6 +267,7 @@ return [
         'text_reset_link' => 'Password reset url',
 
         'text_group_order' => 'Order variables',
+        'text_order_object' => 'Order model object',
         'text_order_number' => 'Order number',
         'text_customer_name' => 'Customer full name',
         'text_order_type' => 'Order type ex. delivery/pick-up',
@@ -282,6 +283,7 @@ return [
         'text_location_name' => 'Location name',
         'text_location_email' => 'Location email',
         'text_location_address' => 'Location address',
+        'text_location_telephone' => 'Location telephone',
         'text_order_view_url' => 'Order view URL',
         'text_order_totals' => 'Array of order totals',
         'text_menu_name' => 'Order menu name',
@@ -295,6 +297,7 @@ return [
         'text_priority' => 'Order total priority',
 
         'text_group_reservation' => 'Reservation variables',
+        'text_reservation_object' => 'Reservation model object',
         'text_reservation_number' => 'Reservation number',
         'text_reservation_date' => 'Reservation date',
         'text_reservation_time' => 'Reservation time',

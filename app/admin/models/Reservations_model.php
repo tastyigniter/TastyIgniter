@@ -422,6 +422,7 @@ class Reservations_model extends Model
         $data = [];
 
         $model = $this->fresh();
+        $data['reservation'] = $model;
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;
         $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->format(lang('system::lang.php.time_format'));
@@ -436,6 +437,7 @@ class Reservations_model extends Model
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
+            $data['location_telephone'] = $model->location->location_telephone;
         }
 
         $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();

@@ -340,6 +340,7 @@ class Orders_model extends Model
         $data = [];
 
         $model = $this->fresh();
+        $data['order'] = $model;
         $data['order_number'] = $model->order_id;
         $data['order_id'] = $model->order_id;
         $data['first_name'] = $model->first_name;
@@ -404,6 +405,7 @@ class Orders_model extends Model
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
+            $data['location_telephone'] = $model->location->location_telephone;
             $data['location_address'] = format_address($model->location->getAddress());
         }
 
