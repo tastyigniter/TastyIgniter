@@ -6,7 +6,6 @@ use Admin\Facades\AdminMenu;
 use Admin\Facades\Template;
 use Admin\Traits\WidgetMaker;
 use Exception;
-use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
@@ -81,8 +80,11 @@ class Themes extends \Admin\Classes\AdminController
 
     public function edit($context, $themeCode = null)
     {
-        if (!ThemeManager::instance()->isActive($themeCode))
-            throw new ApplicationException(lang('system::lang.themes.alert_customize_not_active'));
+        if (!ThemeManager::instance()->isActive($themeCode)) {
+            flash()->error(lang('system::lang.themes.alert_customize_not_active'));
+
+            return $this->redirectBack();
+        }
 
         if (ThemeManager::instance()->isLocked($themeCode)) {
             Template::setButton(lang('system::lang.themes.button_child'), [

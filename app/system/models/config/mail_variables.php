@@ -39,6 +39,7 @@ return [
         '{{ $order_comment }}' => 'system::lang.mail_variables.text_order_comment',
         '{{ $location_name }}' => 'system::lang.mail_variables.text_location_name',
         '{{ $location_email }}' => 'system::lang.mail_variables.text_location_email',
+        '{{ $location_telephone }}' => 'system::lang.mail_variables.text_location_telephone',
         '{{ $location_address }}' => 'system::lang.mail_variables.text_location_address',
         '{{ $status_name }}' => 'system::lang.mail_variables.text_status_name',
         '{{ $status_comment }}' => 'system::lang.mail_variables.text_status_comment',
@@ -54,6 +55,7 @@ return [
         '{{ $order_total[\'order_total_title\'] }}' => 'system::lang.mail_variables.text_order_total_title',
         '{{ $order_total[\'order_total_value\'] }}' => 'system::lang.mail_variables.text_order_total_value',
         '{{ $order_total[\'priority\'] }}' => 'system::lang.mail_variables.text_priority',
+        '{{ $order }}' => 'system::lang.mail_variables.text_order_object',
     ],
     'system::lang.mail_variables.text_group_reservation' => [
         '{{ $reservation_number }}' => 'system::lang.mail_variables.text_reservation_number',
@@ -68,9 +70,11 @@ return [
         '{{ $location_name }}' => 'system::lang.mail_variables.text_location_name',
         '{{ $location_email }}' => 'system::lang.mail_variables.text_location_email',
         '{{ $location_address }}' => 'system::lang.mail_variables.text_location_address',
+        '{{ $location_telephone }}' => 'system::lang.mail_variables.text_location_telephone',
         '{{ $status_name }}' => 'system::lang.mail_variables.text_status_name',
         '{{ $status_comment }}' => 'system::lang.mail_variables.text_status_comment',
         '{{ $reservation_view_url }}' => 'system::lang.mail_variables.text_reservation_view_url',
+        '{{ $reservation }}' => 'system::lang.mail_variables.text_reservation_object',
     ],
     'system::lang.mail_variables.text_group_contact' => [
         '{{ $full_name }}' => 'system::lang.mail_variables.text_full_name',

@@ -254,9 +254,12 @@ class Customers_model extends AuthUserModel
 
     public function mailGetData()
     {
+        $model = $this->fresh();
+
         return [
-            'full_name' => $this->full_name,
-            'email' => $this->email,
+            'customer' => $model,
+            'full_name' => $model->full_name,
+            'email' => $model->email,
         ];
     }
 }
