@@ -29,16 +29,30 @@ trait ManagesUpdates
         return $json;
     }
 
-    public function onApplyItems()
+    public function onApplyRecommended()
     {
-        $items = post('items') ?? [];
         $itemsCodes = post('install_items') ?? [];
-        if (!count($items) OR !count($itemsCodes))
+        $items = collect(post('items') ?? [])->whereIn('name', $itemsCodes);
+        if ($items->isEmpty())
             throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
 
         $this->validateItems();
 
-        $items = collect($items)->whereIn('name', $itemsCodes)->all();
+        $response = UpdateManager::instance()->requestApplyItems($items->all());
+        $response = array_get($response, 'data', []);
+
+        return [
+            'steps' => $this->buildProcessSteps($response, $items),
+        ];
+    }
+
+    public function onApplyItems()
+    {
+        $items = post('items') ?? [];
+        if (!count($items))
+            throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
+
+        $this->validateItems();
 
         $response = UpdateManager::instance()->requestApplyItems($items);
         $response = array_get($response, 'data', []);
