@@ -33,12 +33,16 @@ trait ManagesUpdates
     {
         $items = post('items') ?? [];
         $itemsCodes = post('install_items') ?? [];
-        if (!count($items) OR !count($itemsCodes))
+        if (!count($items))
             throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
 
         $this->validateItems();
 
-        $items = collect($items)->whereIn('name', $itemsCodes)->all();
+        $items = collect($items);
+        if (count($itemsCodes))
+            $items->whereIn('name', $itemsCodes);
+
+        $items = $items->all();
 
         $response = UpdateManager::instance()->requestApplyItems($items);
         $response = array_get($response, 'data', []);
