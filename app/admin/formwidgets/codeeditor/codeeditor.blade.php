@@ -15,6 +15,6 @@
             id="{{ $this->getId('textarea') }}"
             rows="20"
             class="form-control"
-        >{!! trim($value) !!}</textarea>
+        >{{ trim($value) }}</textarea>
     </div>
 @endif
