@@ -116,6 +116,9 @@ class Connector extends BaseFormWidget
 
     public function getSaveValue($value)
     {
+        if (!$this->sortable)
+            return FormField::NO_SAVE_DATA;
+
         return (array)$this->processSaveValue($value);
     }
 
@@ -229,9 +232,6 @@ class Connector extends BaseFormWidget
 
     protected function processSaveValue($value)
     {
-        if (!$this->sortable)
-            return FormField::NO_SAVE_DATA;
-
         $items = $this->formField->value;
         if (!$items instanceof Collection)
             return $items;
