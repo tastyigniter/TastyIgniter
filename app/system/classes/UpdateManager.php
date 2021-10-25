@@ -465,9 +465,10 @@ class UpdateManager
 
     public function isMarkedAsIgnored($code)
     {
-        $ignoredUpdates = $this->getIgnoredUpdates();
+        if (!array_key_exists($code, $this->getInstalledItems()))
+            return FALSE;
 
-        return array_get($ignoredUpdates, $code, FALSE);
+        return array_get($this->getIgnoredUpdates(), $code, FALSE);
     }
 
     public function setSecurityKey($key, $info)
