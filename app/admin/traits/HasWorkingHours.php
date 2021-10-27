@@ -5,6 +5,7 @@ namespace Admin\Traits;
 use Admin\Classes\ScheduleItem;
 use Carbon\Carbon;
 use Exception;
+use Igniter\Flame\Location\OrderTypes;
 use Igniter\Flame\Location\WorkingSchedule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
@@ -41,7 +42,9 @@ trait HasWorkingHours
 
     public function availableWorkingTypes()
     {
-        return [static::OPENING, static::DELIVERY, static::COLLECTION];
+        return array_merge([
+            static::OPENING,
+        ], collect(OrderTypes::instance()->listOrderTypes())->keys()->all());
     }
 
     public function listWorkingHours()
