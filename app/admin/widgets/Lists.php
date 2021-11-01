@@ -253,7 +253,7 @@ class Lists extends BaseWidget
      */
     protected function parseTableName($sql, $table)
     {
-        return str_replace('@', $table.'.', $sql);
+        return str_replace('@', DB::getTablePrefix().$table.'.', $sql);
     }
 
     /**
