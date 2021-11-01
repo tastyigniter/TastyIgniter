@@ -184,6 +184,7 @@ class IgniterInstall extends Command
             'staff_status' => TRUE,
             'username' => $username,
             'password' => $password,
+            'super_user' => TRUE,
             'groups' => [Staff_groups_model::first()->staff_group_id],
             'locations' => [Locations_model::first()->location_id],
         ]);
