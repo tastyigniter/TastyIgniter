@@ -138,7 +138,7 @@ class UpdateManager
         }
 
         // Rollback app
-        $modules = Config::get('system.modules', []);
+        $modules = array_reverse(Config::get('system.modules', []));
         foreach ($modules as $module) {
             $path = $this->getMigrationPath($module);
             $this->migrator->rollbackAll([$module => $path]);
@@ -465,9 +465,10 @@ class UpdateManager
 
     public function isMarkedAsIgnored($code)
     {
-        $ignoredUpdates = $this->getIgnoredUpdates();
+        if (!array_key_exists($code, $this->getInstalledItems()))
+            return FALSE;
 
-        return array_get($ignoredUpdates, $code, FALSE);
+        return array_get($this->getIgnoredUpdates(), $code, FALSE);
     }
 
     public function setSecurityKey($key, $info)

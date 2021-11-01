@@ -334,7 +334,7 @@
 
         $button.attr('disabled', true)
 
-        $form.request('onApplyItems').always(function () {
+        $form.request('onApplyRecommended').always(function () {
             $modal.modal('hide')
         }).done(function (json) {
             if (json['steps'])

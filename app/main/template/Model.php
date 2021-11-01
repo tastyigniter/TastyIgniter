@@ -143,14 +143,14 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Returns the unique id of this object.
-     * ex. account/login.php => account-login
-     * @return \Main\Classes\Theme
+     * ex. account/login.blade.php => account-login
+     * @return string
      */
     public function getId()
     {
         $fileName = $this->getBaseFileName();
 
-        return str_replace('/', '-', $fileName);
+        return str_replace('/', '-', str_before($fileName, '.blade'));
     }
 
     /**
