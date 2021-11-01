@@ -241,8 +241,8 @@ if (!function_exists('day_elapsed')) {
     function day_elapsed($datetime, $full = TRUE)
     {
         $datetime = make_carbon($datetime);
-        $time = $datetime->format(lang('system::lang.php.time_format'));
-        $date = $datetime->format(lang('system::lang.php.date_format'));
+        $time = $datetime->isoFormat(lang('system::lang.moment.time_format'));
+        $date = $datetime->isoFormat(lang('system::lang.moment.date_format'));
 
         if ($datetime->isToday()) {
             $date = lang('system::lang.date.today');
