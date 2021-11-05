@@ -424,7 +424,7 @@ class MainController extends BaseController
         else {
             $pageHandler = $this->action.'_'.$handler;
             if ($this->methodExists($pageHandler)) {
-                $result = call_user_func_array([$this, $pageHandler], $this->params);
+                $result = call_user_func_array([$this, $pageHandler], array_values($this->params));
 
                 return $result ?: TRUE;
             }

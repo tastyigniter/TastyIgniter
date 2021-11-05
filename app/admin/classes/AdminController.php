@@ -280,7 +280,7 @@ class AdminController extends BaseController
         array_unshift($params, $action);
 
         // Execute the action
-        $result = call_user_func_array([$this, $action], $params);
+        $result = call_user_func_array([$this, $action], array_values($params));
 
         // Render the controller view if not already loaded
         if (is_null($result) AND !$this->suppressView) {
@@ -466,7 +466,7 @@ class AdminController extends BaseController
             }
 
             if (($widget = $this->widgets[$widgetName]) AND method_exists($widget, $handlerName)) {
-                $result = call_user_func_array([$widget, $handlerName], $params);
+                $result = call_user_func_array([$widget, $handlerName], array_values($params));
 
                 return $result ?: TRUE;
             }
@@ -476,14 +476,14 @@ class AdminController extends BaseController
             $pageHandler = $this->action.'_'.$handler;
 
             if ($this->methodExists($pageHandler)) {
-                $result = call_user_func_array([$this, $pageHandler], $params);
+                $result = call_user_func_array([$this, $pageHandler], array_values($params));
 
                 return $result ?: TRUE;
             }
 
             // Process page global handler (onSomething)
             if ($this->methodExists($handler)) {
-                $result = call_user_func_array([$this, $handler], $params);
+                $result = call_user_func_array([$this, $handler], array_values($params));
 
                 return $result ?: TRUE;
             }
@@ -494,7 +494,7 @@ class AdminController extends BaseController
 
             foreach ((array)$this->widgets as $widget) {
                 if ($widget->methodExists($handler)) {
-                    $result = call_user_func_array([$widget, $handler], $params);
+                    $result = call_user_func_array([$widget, $handler], array_values($params));
 
                     return $result ?: TRUE;
                 }
