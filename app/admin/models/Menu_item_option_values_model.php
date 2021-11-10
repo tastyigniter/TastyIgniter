@@ -53,6 +53,8 @@ class Menu_item_option_values_model extends Model
         ['quantity', 'admin::lang.menus.label_option_qty', 'numeric'],
     ];
 
+    public $timestamps = TRUE;
+
     public function getOptionValueIdOptions()
     {
         if (!$optionId = optional($this->menu_option)->option_id)
