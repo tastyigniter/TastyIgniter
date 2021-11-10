@@ -207,6 +207,9 @@ trait CombinesAssets
             if (!file_exists($path))
                 $path = File::symbolizePath($path, null) ?? $path;
 
+            if (!file_exists($path))
+                continue;
+
             $asset = starts_with($path, ['//', 'http://', 'https://'])
                 ? new HttpAsset($path, $filters)
                 : new FileAsset($path, $filters, public_path());
