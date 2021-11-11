@@ -160,9 +160,10 @@ class Orders_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if ($startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE) && $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE)) {
+        $startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE);
+        $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE);
+        if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
-        }
 
         $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 

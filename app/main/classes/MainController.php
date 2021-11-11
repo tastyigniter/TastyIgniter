@@ -257,7 +257,7 @@ class MainController extends BaseController
         }
 
         // Execute post handler and AJAX event
-        if ($ajaxResponse = $this->processHandlers() && $ajaxResponse !== TRUE) {
+        if (($ajaxResponse = $this->processHandlers()) && $ajaxResponse !== TRUE) {
             return $ajaxResponse;
         }
 

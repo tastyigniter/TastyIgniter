@@ -215,7 +215,7 @@ class AdminController extends BaseController
         }
 
         // Execute post handler and AJAX event
-        if ($handlerResponse = $this->processHandlers() && $handlerResponse !== TRUE) {
+        if (($handlerResponse = $this->processHandlers()) && $handlerResponse !== TRUE) {
             return $handlerResponse;
         }
 
