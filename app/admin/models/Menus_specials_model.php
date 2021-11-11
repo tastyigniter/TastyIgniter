@@ -43,7 +43,7 @@ class Menus_specials_model extends Model
 
     public function getPrettyEndDateAttribute()
     {
-        if ($this->isRecurring() OR !$this->end_date)
+        if ($this->isRecurring() || !$this->end_date)
             return null;
 
         return $this->end_date->format(lang('system::lang.php.date_time_format'));
@@ -69,7 +69,7 @@ class Menus_specials_model extends Model
 
     public function daysRemaining()
     {
-        if ($this->validity != 'period' OR !$this->end_date->greaterThan(Carbon::now()))
+        if ($this->validity != 'period' || !$this->end_date->greaterThan(Carbon::now()))
             return 0;
 
         return $this->end_date->diffForHumans();

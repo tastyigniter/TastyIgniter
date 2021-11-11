@@ -340,7 +340,7 @@ class UpdateManager
         $this->setSecurityKey($key, $info);
 
         $result = $this->getHubManager()->getDetail('site');
-        if (isset($result['data']) AND is_array($result['data']))
+        if (isset($result['data']) && is_array($result['data']))
             $info = $result['data'];
 
         $this->setSecurityKey($key, $info);
@@ -378,7 +378,7 @@ class UpdateManager
                 $hasCoreUpdate = TRUE;
             }
             else {
-                if ($hasCoreUpdate OR $this->isMarkedAsIgnored($update['code'])) {
+                if ($hasCoreUpdate || $this->isMarkedAsIgnored($update['code'])) {
                     $ignoredItems[] = $update;
                     continue;
                 }
@@ -398,7 +398,7 @@ class UpdateManager
     public function getInstalledItems($type = null)
     {
         if ($this->installedItems)
-            return ($type AND isset($this->installedItems[$type]))
+            return ($type && isset($this->installedItems[$type]))
                 ? $this->installedItems[$type] : $this->installedItems;
 
         $installedItems = [];
@@ -432,8 +432,8 @@ class UpdateManager
         $applies = $this->getHubManager()->applyItems($names);
 
         if (isset($applies['data'])) foreach ($applies['data'] as $index => $item) {
-            $filterCore = array_get($item, 'type') == 'core' AND $this->disableCoreUpdates;
-            if ($filterCore OR $this->isMarkedAsIgnored($item['code']))
+            $filterCore = array_get($item, 'type') == 'core' && $this->disableCoreUpdates;
+            if ($filterCore || $this->isMarkedAsIgnored($item['code']))
                 unset($applies['data'][$index]);
         }
 
@@ -475,7 +475,7 @@ class UpdateManager
     {
         params()->set('carte_key', $key ?: '');
 
-        if ($info AND is_array($info))
+        if ($info && is_array($info))
             params()->set('carte_info', $info);
 
         params()->save();

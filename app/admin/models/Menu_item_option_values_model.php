@@ -77,7 +77,7 @@ class Menu_item_option_values_model extends Model
 
     public function getPriceAttribute()
     {
-        if (is_null($this->new_price) AND $this->option_value)
+        if (is_null($this->new_price) && $this->option_value)
             return $this->option_value->price;
 
         return $this->new_price;

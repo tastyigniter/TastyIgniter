@@ -62,7 +62,7 @@ class IgniterInstall extends Command
         $this->alert('INSTALLATION');
 
         if (
-            App::hasDatabase() AND
+            App::hasDatabase() &&
             !$this->confirm('Application appears to be installed already. Continue anyway?', FALSE)
         ) {
             return;
@@ -98,7 +98,7 @@ class IgniterInstall extends Command
 
     protected function rewriteEnvFile()
     {
-        if (file_exists(base_path().'/.env') AND !$this->confirm('Rewrite environment file?', FALSE))
+        if (file_exists(base_path().'/.env') && !$this->confirm('Rewrite environment file?', FALSE))
             return;
 
         $this->moveExampleFile('env', null, 'backup');
@@ -169,7 +169,7 @@ class IgniterInstall extends Command
         });
 
         $password = $this->output->ask('Admin Password', '123456', function ($answer) {
-            if (!is_string($answer) OR strlen($answer) < 6) {
+            if (!is_string($answer) || strlen($answer) < 6) {
                 throw new \RuntimeException('Please specify the administrator password, at least 6 characters');
             }
 

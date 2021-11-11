@@ -6,7 +6,7 @@
             <label for="{{ $field->getId() }}" class="control-label">@lang($field->label)</label>
         @endif
 
-        @if ($field->comment AND $field->commentPosition == 'above')
+        @if ($field->comment && $field->commentPosition == 'above')
             <p class="help-block before-field">
                 @if ($field->commentHtml) {!! lang($field->comment) !!} @else @lang($field->comment) @endif
             </p>
@@ -14,7 +14,7 @@
 
         {!! $this->renderFieldElement($field) !!}
 
-        @if ($field->comment AND $field->commentPosition == 'below')
+        @if ($field->comment && $field->commentPosition == 'below')
             <p class="help-block">
                 @if ($field->commentHtml) {!! lang($field->comment) !!} @else @lang($field->comment) @endif
             </p>

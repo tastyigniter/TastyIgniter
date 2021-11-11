@@ -124,7 +124,7 @@ class AssigneeController extends ControllerAction
                     return;
 
                 $assignable = $widget->model;
-                if (!$assignable->hasAssignToGroup() OR $assignable->hasAssignTo())
+                if (!$assignable->hasAssignToGroup() || $assignable->hasAssignTo())
                     return;
 
                 // Let the allocator handle assignment when auto assign is enabled

@@ -33,7 +33,7 @@
         @endforeach
     </div>
 
-@elseif (!$this->previewMode AND count($fieldOptions))
+@elseif (!$this->previewMode && count($fieldOptions))
 
     <div class="field-checkboxlist {{ $isScrollable ? 'is-scrollable' : '' }}">
         @if ($isScrollable)
@@ -64,7 +64,7 @@
                                 class="custom-control-input"
                                 name="{{ $field->getName() }}[]"
                                 value="{{ $value }}"
-                            {!! in_array($value, $checkedValues) ? 'checked="checked"' : '' !!}>
+                                {!! in_array($value, $checkedValues) ? 'checked="checked"' : '' !!}>
 
                             <label class="custom-control-label" for="{{ $checkboxId }}">
                                 {{ isset($option[0]) ? lang($option[0]) : '&nbsp;' }}

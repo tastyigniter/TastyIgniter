@@ -91,10 +91,10 @@ class Locations_model extends AbstractLocation
             return FALSE;
 
         return isset($model->getAddress()['location_lat'])
-            AND isset($model->getAddress()['location_lng'])
-            AND ($model->hasDelivery() OR $model->hasCollection())
-            AND isset($model->options['hours'])
-            AND $model->delivery_areas->where('is_default', 1)->count() > 0;
+            && isset($model->getAddress()['location_lng'])
+            && ($model->hasDelivery() || $model->hasCollection())
+            && isset($model->options['hours'])
+            && $model->delivery_areas->where('is_default', 1)->count() > 0;
     }
 
     public static function addSortingColumns($newColumns)
@@ -144,7 +144,7 @@ class Locations_model extends AbstractLocation
             'hasCollection' => null,
         ], $options));
 
-        if ($latitude AND $longitude) {
+        if ($latitude && $longitude) {
             $query->selectDistance($latitude, $longitude);
         }
 
@@ -274,7 +274,7 @@ class Locations_model extends AbstractLocation
         $paymentGateways = Payments_model::listPayments();
 
         foreach ($paymentGateways as $payment) {
-            if ($payments AND !in_array($payment->code, $payments)) continue;
+            if ($payments && !in_array($payment->code, $payments)) continue;
 
             $result[$payment->code] = $payment;
         }

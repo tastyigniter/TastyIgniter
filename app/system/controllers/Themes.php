@@ -111,7 +111,7 @@ class Themes extends \Admin\Classes\AdminController
         }
 
         $theme = ThemeManager::instance()->findTheme($themeCode);
-        if ($theme AND $theme->hasCustomData()) {
+        if ($theme && $theme->hasCustomData()) {
             Template::setButton(lang('system::lang.themes.button_customize'), [
                 'class' => 'btn btn-default pull-right mr-3',
                 'href' => admin_url('themes/edit/'.$themeCode),
@@ -134,7 +134,7 @@ class Themes extends \Admin\Classes\AdminController
             $activeThemeCode = params()->get('default_themes.main');
 
             // Theme must be disabled before it can be deleted
-            if ($model AND $model->code == $activeThemeCode) {
+            if ($model && $model->code == $activeThemeCode) {
                 flash()->warning(sprintf(
                     lang('admin::lang.alert_error_nothing'),
                     lang('admin::lang.text_deleted').lang('system::lang.themes.text_theme_is_active')
@@ -224,13 +224,13 @@ class Themes extends \Admin\Classes\AdminController
 
     public function listOverrideColumnValue($record, $column, $alias = null)
     {
-        if ($column->type != 'button' OR $column->columnName != 'default')
+        if ($column->type != 'button' || $column->columnName != 'default')
             return null;
 
         $attributes = $column->attributes;
 
         $column->iconCssClass = 'fa fa-star-o';
-        if ($record->getTheme() AND $record->getTheme()->isActive()) {
+        if ($record->getTheme() && $record->getTheme()->isActive()) {
             $column->iconCssClass = 'fa fa-star';
             $attributes['title'] = 'lang:system::lang.themes.text_is_default';
             $attributes['data-request'] = null;
@@ -297,7 +297,7 @@ class Themes extends \Admin\Classes\AdminController
             $loaded = TRUE;
         }
 
-        if ($theme->hasParent() AND File::exists($path = $theme->getParent()->path.$file)) {
+        if ($theme->hasParent() && File::exists($path = $theme->getParent()->path.$file)) {
             Assets::addFromManifest($theme->getParent()->publicPath.$file);
             $loaded = TRUE;
         }

@@ -14,7 +14,7 @@ trait ManagesUpdates
     {
         $json = [];
 
-        if ($filter = input('filter') AND is_array($filter)) {
+        if (($filter = input('filter')) && is_array($filter)) {
             $itemType = $filter['type'] ?? 'extension';
             $searchQuery = isset($filter['search']) ? strtolower($filter['search']) : '';
 
@@ -102,7 +102,7 @@ trait ManagesUpdates
     public function onIgnoreUpdate()
     {
         $items = post('items');
-        if (!$items OR count($items) < 1)
+        if (!$items || count($items) < 1)
             throw new ApplicationException(lang('system::lang.updates.alert_item_to_ignore'));
 
         $updateManager = UpdateManager::instance();

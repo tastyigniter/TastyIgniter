@@ -78,7 +78,7 @@ class Orders extends \Admin\Classes\AdminController
     {
         $model = Orders_model::find((int)post('recordId'));
         $status = Statuses_model::find((int)post('statusId'));
-        if (!$model OR !$status)
+        if (!$model || !$status)
             return;
 
         if ($record = $model->addStatusHistory($status))

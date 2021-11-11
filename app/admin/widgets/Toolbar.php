@@ -150,7 +150,7 @@ class Toolbar extends BaseWidget
         $result = [];
         foreach ($buttons as $name => $attributes) {
             $permission = array_get($attributes, 'permission');
-            if ($permission AND !AdminAuth::user()->hasPermission($permission)) {
+            if ($permission && !AdminAuth::user()->hasPermission($permission)) {
                 continue;
             }
 
@@ -182,7 +182,7 @@ class Toolbar extends BaseWidget
         $buttonObj = new ToolbarButton($name);
         $buttonObj->displayAs($buttonType, $config);
 
-        if ($buttonType === 'dropdown' AND array_key_exists('menuItems', $config)) {
+        if ($buttonType === 'dropdown' && array_key_exists('menuItems', $config)) {
             $buttonObj->menuItems($this->makeButtons($config['menuItems']));
         }
 

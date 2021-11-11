@@ -42,7 +42,7 @@ class Login extends \Admin\Classes\AdminController
         }
 
         $code = input('code');
-        if (strlen($code) AND !Users_model::whereResetCode(input('code'))->first()) {
+        if (strlen($code) && !Users_model::whereResetCode(input('code'))->first()) {
             flash()->error(lang('admin::lang.login.alert_failed_reset'));
 
             return $this->redirect('login');
@@ -89,7 +89,7 @@ class Login extends \Admin\Classes\AdminController
         ]);
 
         $staff = Staffs_model::whereStaffEmail(post('email'))->first();
-        if ($staff AND $user = $staff->user) {
+        if ($staff && $user = $staff->user) {
             if (!$user->resetPassword())
                 throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);
             $data = [
@@ -119,7 +119,7 @@ class Login extends \Admin\Classes\AdminController
         $code = array_get($data, 'code');
         $user = Users_model::whereResetCode($code)->first();
 
-        if (!$user OR !$user->completeResetPassword($code, post('password')))
+        if (!$user || !$user->completeResetPassword($code, post('password')))
             throw new ValidationException(['password' => lang('admin::lang.login.alert_failed_reset')]);
 
         $data = [

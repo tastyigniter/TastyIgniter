@@ -74,7 +74,7 @@ trait ConfigMaker
 
         // Validate required configuration
         foreach ($requiredConfig as $property) {
-            if (!is_array($config) OR !array_key_exists($property, $config)) {
+            if (!is_array($config) || !array_key_exists($property, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.required.config'),
                     get_called_class(), $property
@@ -125,7 +125,7 @@ trait ConfigMaker
 
         $fileName = File::symbolizePath($fileName);
 
-        if (File::isLocalPath($fileName) OR realpath($fileName) !== FALSE) {
+        if (File::isLocalPath($fileName) || realpath($fileName) !== FALSE) {
             return $fileName;
         }
 

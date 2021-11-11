@@ -214,7 +214,7 @@ class Languages_model extends Language
         foreach ($translations as $key => $translation) {
             preg_match('/^(.+)::(?:(.+?))\.(.+)+$/', $key, $matches);
 
-            if (!$matches OR count($matches) !== 4)
+            if (!$matches || count($matches) !== 4)
                 continue;
 
             [$code, $namespace, $group, $item] = $matches;

@@ -13,7 +13,7 @@
                 data-media-item-dimension="{{ isset($item->thumb['dimension']) ? $item['thumb']['dimension'] : '--' }}"
                 data-media-item-folder="{{ $currentFolder }}"
                 data-media-item-data='@json($item)'
-                @if ($item->name == $selectItem OR $loop->iteration == 0) data-media-item-marked=""@endif
+                @if ($item->name == $selectItem || $loop->iteration == 0) data-media-item-marked=""@endif
             >
                 <a>
                     <img

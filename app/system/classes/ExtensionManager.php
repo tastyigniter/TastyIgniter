@@ -91,7 +91,7 @@ class ExtensionManager
             if (File::isDirectory("{$extensionFolder}/{$extension}")) {
                 // If $folder was specified and exists, return it.
                 if (!is_null($folder)
-                    AND File::isDirectory("{$extensionFolder}/{$extension}/{$folder}")
+                    && File::isDirectory("{$extensionFolder}/{$extension}/{$folder}")
                 ) {
                     return "{$extensionFolder}/{$extension}/{$folder}";
                 }
@@ -233,12 +233,12 @@ class ExtensionManager
             $disable = FALSE;
             foreach ($required as $require) {
                 $extensionObj = $this->findExtension($require);
-                if (!$extensionObj OR $extensionObj->disabled)
+                if (!$extensionObj || $extensionObj->disabled)
                     $disable = TRUE;
             }
 
             // Only disable extension with missing dependencies.
-            if ($disable AND !$extension->disabled)
+            if ($disable && !$extension->disabled)
                 $this->updateInstalledExtensions($code, FALSE);
         }
     }
@@ -252,7 +252,7 @@ class ExtensionManager
      */
     public function getDependencies($extension)
     {
-        if (is_string($extension) AND (!$extension = $this->findExtension($extension)))
+        if (is_string($extension) && (!$extension = $this->findExtension($extension)))
             return FALSE;
 
         if (!$require = array_get($extension->extensionMeta(), 'require'))
@@ -327,7 +327,7 @@ class ExtensionManager
         $it->rewind();
 
         while ($it->valid()) {
-            if (($it->getDepth() > 1) AND $it->isFile() AND (strtolower($it->getFilename()) == 'extension.php')) {
+            if (($it->getDepth() > 1) && $it->isFile() && (strtolower($it->getFilename()) == 'extension.php')) {
                 $filePath = dirname($it->getPathname());
                 $extensionName = basename($filePath);
                 $extensionVendor = basename(dirname($filePath));
@@ -548,7 +548,7 @@ class ExtensionManager
      */
     public function checkName($name)
     {
-        return (strpos($name, '_') === 0 OR preg_match('/\s/', $name)) ? null : $name;
+        return (strpos($name, '_') === 0 || preg_match('/\s/', $name)) ? null : $name;
     }
 
     public function getIdentifier($name)
@@ -607,7 +607,7 @@ class ExtensionManager
      */
     public function isDisabled($name)
     {
-        return !$this->checkName($name) OR !array_get($this->installedExtensions, $name, FALSE);
+        return !$this->checkName($name) || !array_get($this->installedExtensions, $name, FALSE);
     }
 
     /**
@@ -664,7 +664,7 @@ class ExtensionManager
         // Write the installed extensions to a meta file.
         File::put($this->metaFile, json_encode($this->installedExtensions), TRUE);
 
-        if ($enable === FALSE AND $extension = $this->findExtension($code)) {
+        if ($enable === FALSE && $extension = $this->findExtension($code)) {
             $extension->disabled = TRUE;
         }
 
@@ -689,7 +689,7 @@ class ExtensionManager
         $vendorPath = dirname($extensionPath);
 
         // Delete the specified extension vendor folder if it has no extension.
-        if (File::isDirectory($vendorPath) AND
+        if (File::isDirectory($vendorPath) &&
             !count(File::directories($vendorPath))
         )
             File::deleteDirectory($vendorPath);
@@ -721,7 +721,7 @@ class ExtensionManager
                 throw new SystemException('Extension registration class was not found.');
 
             $meta = @json_decode($zip->getFromName($extensionDir.'extension.json'));
-            if (!$meta OR !strlen($meta->code))
+            if (!$meta || !strlen($meta->code))
                 throw new SystemException(lang('system::lang.extensions.error_config_no_found'));
 
             $extensionCode = $meta->code;

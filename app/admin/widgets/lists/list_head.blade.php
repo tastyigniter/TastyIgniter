@@ -19,7 +19,7 @@
     @foreach ($columns as $key => $column)
         @if ($column->type == 'button')
             <th class="list-action {{ $column->cssClass }}"></th>
-        @elseif ($showSorting AND $column->sortable)
+        @elseif ($showSorting && $column->sortable)
             <th
                 class="list-cell-name-{{ $column->getName() }} list-cell-type-{{ $column->type }} {{ $column->cssClass }}"
                 @if ($column->width) style="width: {{ $column->width }}" @endif>

@@ -170,7 +170,7 @@ class AdminController extends BaseController
         $toolbar->bindToController();
 
         // Media Manager widget is available on all admin pages
-        if ($this->currentUser AND $this->currentUser->hasPermission('Admin.MediaManager')) {
+        if ($this->currentUser && $this->currentUser->hasPermission('Admin.MediaManager')) {
             $manager = new MediaManager($this, ['alias' => 'mediamanager']);
             $manager->bindToController();
         }
@@ -188,7 +188,7 @@ class AdminController extends BaseController
         }
 
         // Determine if this request is a public action or authentication is required
-        $requireAuthentication = !(in_array($action, $this->publicActions) OR !$this->requireAuthentication);
+        $requireAuthentication = !(in_array($action, $this->publicActions) || !$this->requireAuthentication);
 
         // Ensures that a user is logged in, if required
         if ($requireAuthentication) {
@@ -199,7 +199,7 @@ class AdminController extends BaseController
             }
 
             // Check that user has permission to view this page
-            if ($this->requiredPermissions AND !$this->getUser()->hasAnyPermission($this->requiredPermissions)) {
+            if ($this->requiredPermissions && !$this->getUser()->hasAnyPermission($this->requiredPermissions)) {
                 return Response::make(Request::ajax()
                     ? lang('admin::lang.alert_user_restricted')
                     : View::make('admin::access_denied'), 403
@@ -215,7 +215,7 @@ class AdminController extends BaseController
         }
 
         // Execute post handler and AJAX event
-        if ($handlerResponse = $this->processHandlers() AND $handlerResponse !== TRUE) {
+        if (($handlerResponse = $this->processHandlers()) && $handlerResponse !== TRUE) {
             return $handlerResponse;
         }
 
@@ -283,7 +283,7 @@ class AdminController extends BaseController
         $result = call_user_func_array([$this, $action], array_values($params));
 
         // Render the controller view if not already loaded
-        if (is_null($result) AND !$this->suppressView) {
+        if (is_null($result) && !$this->suppressView) {
             return $this->makeView($this->fatalError ? 'admin::error' : $action);
         }
 
@@ -313,7 +313,7 @@ class AdminController extends BaseController
      */
     public function getHandler()
     {
-        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+        if (Request::ajax() && $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
             return trim($handler);
 
         if ($handler = post('_handler'))
@@ -465,7 +465,7 @@ class AdminController extends BaseController
                 throw new Exception(sprintf(lang('admin::lang.alert_widget_not_bound_to_controller'), $widgetName));
             }
 
-            if (($widget = $this->widgets[$widgetName]) AND method_exists($widget, $handlerName)) {
+            if (($widget = $this->widgets[$widgetName]) && method_exists($widget, $handlerName)) {
                 $result = call_user_func_array([$widget, $handlerName], array_values($params));
 
                 return $result ?: TRUE;

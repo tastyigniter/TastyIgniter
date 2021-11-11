@@ -47,7 +47,7 @@ class SystemLogs extends \Admin\Classes\AdminController
     public function index_onEmptyLog()
     {
         $logFile = storage_path('logs/system.log');
-        if (File::exists($logFile) AND File::isWritable($logFile)) {
+        if (File::exists($logFile) && File::isWritable($logFile)) {
             File::put(storage_path('logs/system.log'), '');
 
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Logs Emptied '));
