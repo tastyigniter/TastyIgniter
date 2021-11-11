@@ -19,7 +19,7 @@
             </tr>
             </thead>
             <tbody>
-            @if ($field->options AND $field->options->count())
+            @if ($field->options && $field->options->count())
                 @foreach ($field->options as $key => $value)
                     <tr>
                         <td>
