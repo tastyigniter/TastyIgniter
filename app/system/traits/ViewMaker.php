@@ -151,7 +151,7 @@ trait ViewMaker
         $viewPath = $this->getViewPath(strtolower($view));
         $contents = $this->makeFileContent($viewPath);
 
-        if ($this->suppressLayout OR $this->layout === '')
+        if ($this->suppressLayout || $this->layout === '')
             return $contents;
 
         // Append content to the body template
@@ -200,7 +200,7 @@ trait ViewMaker
      */
     public function makeFileContent($filePath, $extraParams = [])
     {
-        if (!strlen($filePath) OR $filePath == 'index.php' OR !File::isFile($filePath)) {
+        if (!strlen($filePath) || $filePath == 'index.php' || !File::isFile($filePath)) {
             return '';
         }
 

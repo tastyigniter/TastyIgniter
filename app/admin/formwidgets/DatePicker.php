@@ -147,7 +147,7 @@ class DatePicker extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->formField->disabled OR $this->formField->hidden) {
+        if ($this->formField->disabled || $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 

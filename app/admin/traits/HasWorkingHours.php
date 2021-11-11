@@ -98,7 +98,7 @@ trait HasWorkingHours
                 'working_hours',
             ));
 
-        if (!$this->working_hours OR $this->working_hours->isEmpty()) {
+        if (!$this->working_hours || $this->working_hours->isEmpty()) {
             $this->createDefaultWorkingHours();
         }
 
@@ -113,7 +113,7 @@ trait HasWorkingHours
     public function newWorkingSchedule($type, $days = null)
     {
         $types = $this->availableWorkingTypes();
-        if (is_null($type) OR !in_array($type, $types))
+        if (is_null($type) || !in_array($type, $types))
             throw new InvalidArgumentException(sprintf(lang('admin::lang.locations.alert_invalid_schedule_type'), $type));
 
         if (is_null($days)) {
@@ -139,7 +139,7 @@ trait HasWorkingHours
 
     public function createScheduleItem($type)
     {
-        if (is_null($type) OR !in_array($type, $this->availableWorkingTypes()))
+        if (is_null($type) || !in_array($type, $this->availableWorkingTypes()))
             throw new InvalidArgumentException(sprintf(lang('admin::lang.locations.alert_invalid_schedule_type'), $type));
 
         $scheduleData = array_get($this->getOption('hours', []), $type, []);
@@ -225,7 +225,7 @@ trait HasWorkingHours
                 }
             }
 
-            if (isset($hours['flexible_hours']) AND is_array($hours['flexible_hours'])) {
+            if (isset($hours['flexible_hours']) && is_array($hours['flexible_hours'])) {
                 foreach (['opening', 'delivery', 'collection'] as $type) {
                     $value['hours'][$type]['flexible'] = $hours['flexible_hours'];
                 }

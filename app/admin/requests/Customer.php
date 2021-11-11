@@ -28,7 +28,7 @@ class Customer extends FormRequest
             ['addresses.*.country_id', 'admin::lang.customers.label_country', 'required|integer'],
         ];
 
-        if (!optional($this->getModel())->exists OR $this->inputWith('password')) {
+        if (!optional($this->getModel())->exists || $this->inputWith('password')) {
             $rules[] = ['password', 'lang:admin::lang.customers.label_password', 'required_if:send_invite,0|min:8|max:40|same:_confirm_password'];
             $rules[] = ['_confirm_password', 'lang:admin::lang.customers.label_confirm_password'];
         }

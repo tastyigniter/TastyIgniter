@@ -40,7 +40,7 @@ class UpdateRecordsSeeder extends Seeder
 
         DB::table('status_history')->get()->each(function ($model) use ($morphs) {
             $status = DB::table('statuses')->where('status_id', $model->status_id)->first();
-            if (!$status OR !isset($morphs[$status->status_for]))
+            if (!$status || !isset($morphs[$status->status_for]))
                 return FALSE;
 
             DB::table('status_history')->where('status_history_id', $model->status_history_id)->update([

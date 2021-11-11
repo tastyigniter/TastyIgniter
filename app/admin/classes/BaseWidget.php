@@ -202,7 +202,7 @@ class BaseWidget extends Extendable
         $result = isset($this->config[$fieldName]) ? $this->config[$fieldName] : $default;
 
         foreach ($nameArray as $key) {
-            if (!is_array($result) OR !array_key_exists($key, $result))
+            if (!is_array($result) || !array_key_exists($key, $result))
                 return $default;
 
             $result = $result[$key];

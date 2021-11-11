@@ -128,7 +128,7 @@ if (!function_exists('mdate')) {
      */
     function mdate($format = null, $time = null)
     {
-        if (is_null($time) AND $format) {
+        if (is_null($time) && $format) {
             $time = $format;
             $format = null;
         }
@@ -272,7 +272,7 @@ if (!function_exists('time_range')) {
      */
     function time_range($unix_start, $unix_end, $interval, $time_format = '%H:%i')
     {
-        if ($unix_start == '' OR $unix_end == '' OR $interval == '') {
+        if ($unix_start == '' || $unix_end == '' || $interval == '') {
             return null;
         }
 

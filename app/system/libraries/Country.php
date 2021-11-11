@@ -63,7 +63,7 @@ class Country
         if (!$countryModel = $this->countriesCollection->where('country_id', $id)->first())
             return null;
 
-        return (is_null($codeType) OR $codeType == static::ISO_CODE_2)
+        return (is_null($codeType) || $codeType == static::ISO_CODE_2)
             ? $countryModel->iso_code_2 : $countryModel->iso_code_3;
     }
 
@@ -99,7 +99,7 @@ class Country
 
     protected function evalAddress($address)
     {
-        if (isset($address['country_id']) AND !isset($address['country']))
+        if (isset($address['country_id']) && !isset($address['country']))
             $address['country'] = $address['country_id'];
 
         $result = [];
@@ -121,7 +121,7 @@ class Country
         if (is_numeric($country)) {
             return $this->getCountryNameById($country);
         }
-        elseif (!is_string($country) AND isset($country['country_name'])) {
+        elseif (!is_string($country) && isset($country['country_name'])) {
             return $country['country_name'];
         }
 

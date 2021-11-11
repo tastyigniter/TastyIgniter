@@ -309,7 +309,7 @@ class Themes_model extends Model
      */
     public static function activateTheme($code)
     {
-        if (empty($code) OR !$theme = self::whereCode($code)->first())
+        if (empty($code) || !$theme = self::whereCode($code)->first())
             return FALSE;
 
         $extensionManager = ExtensionManager::instance();
@@ -347,7 +347,7 @@ class Themes_model extends Model
     {
         $themeModel = self::where('code', $themeCode)->first();
 
-        if ($themeModel AND ($deleteData OR !$themeModel->data)) {
+        if ($themeModel && ($deleteData || !$themeModel->data)) {
             $themeModel->delete();
         }
 
