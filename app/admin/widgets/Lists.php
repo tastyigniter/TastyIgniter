@@ -694,6 +694,11 @@ class Lists extends BaseWidget
             }
         }
 
+        if (isset($result['url'])) {
+            $result['href'] = $result['url'];
+            unset($result['url']);
+        }
+
         $data = $record->getOriginal();
         $data += [$record->getKeyName() => $record->getKey()];
 

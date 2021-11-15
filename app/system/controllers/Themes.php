@@ -83,7 +83,7 @@ class Themes extends \Admin\Classes\AdminController
         if (!ThemeManager::instance()->isActive($themeCode)) {
             flash()->error(lang('system::lang.themes.alert_customize_not_active'));
 
-            return $this->redirectBack();
+            return $this->redirect('themes');
         }
 
         if (ThemeManager::instance()->isLocked($themeCode)) {
