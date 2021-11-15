@@ -103,6 +103,11 @@ class UserPanel
         return $this->user->staff->groups->pluck('staff_group_name')->all();
     }
 
+    public function getRoleName()
+    {
+        return optional($this->user->staff->role)->name;
+    }
+
     public function listLocations()
     {
         return AdminLocation::listLocations()->map(function ($value, $key) {
