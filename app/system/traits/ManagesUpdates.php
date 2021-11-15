@@ -55,7 +55,9 @@ trait ManagesUpdates
         $this->validateItems();
 
         $response = UpdateManager::instance()->requestApplyItems($items);
-        $response = array_get($response, 'data', []);
+        $response = collect(array_get($response, 'data', []))
+            ->whereIn('code', collect($items)->pluck('name')->all())
+            ->all();
 
         return [
             'steps' => $this->buildProcessSteps($response, $items),
