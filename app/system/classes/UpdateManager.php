@@ -259,6 +259,22 @@ class UpdateManager
         return $this;
     }
 
+    public function rollbackExtension($name, array $options = [])
+    {
+        if (!$this->extensionManager->findExtension($name)) {
+            $this->log('<error>Unable to find:</error> '.$name);
+
+            return FALSE;
+        }
+
+        $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
+        $this->migrator->rollbackAll([$name => $path], $options);
+
+        $this->log("<info>Rolled back extension $name</info>");
+
+        return $this;
+    }
+
     /**
      * Get migration directory path.
      *
