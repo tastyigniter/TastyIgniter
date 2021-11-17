@@ -76,7 +76,7 @@ trait CombinesAssets
 
         if ($this->useMinify) {
             $this->registerFilter('js', new \Igniter\Flame\Assetic\Filter\JSMinFilter);
-            $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssMinFilter);
+            $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\StylesheetMinify);
         }
     }
 
