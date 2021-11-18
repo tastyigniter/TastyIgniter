@@ -143,14 +143,14 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Returns the unique id of this object.
-     * ex. account/login.php => account-login
-     * @return \Main\Classes\Theme
+     * ex. account/login.blade.php => account-login
+     * @return string
      */
     public function getId()
     {
         $fileName = $this->getBaseFileName();
 
-        return str_replace('/', '-', $fileName);
+        return str_replace('/', '-', str_before($fileName, '.blade'));
     }
 
     /**
@@ -187,7 +187,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
         $fileName = $this->getTypeDirName().'/'.$fileName;
 
-        if ($this->theme->hasParent() AND File::exists($this->theme->getParentPath().'/'.$fileName))
+        if ($this->theme->hasParent() && File::exists($this->theme->getParentPath().'/'.$fileName))
             return $this->theme->getParentPath().'/'.$fileName;
 
         return $this->theme->getPath().'/'.$fileName;
@@ -259,7 +259,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      */
     public function __get($name)
     {
-        if (is_array($this->settings) AND array_key_exists($name, $this->settings)) {
+        if (is_array($this->settings) && array_key_exists($name, $this->settings)) {
             return $this->settings[$name];
         }
 

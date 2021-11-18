@@ -106,7 +106,7 @@ class Router
                     $fileName = $router->matchedRoute();
 
                     if ($cacheable) {
-                        if (!$urlList OR !is_array($urlList))
+                        if (!$urlList || !is_array($urlList))
                             $urlList = [];
 
                         $urlList[$url] = !empty($this->parameters)
@@ -207,7 +207,7 @@ class Router
         $cacheable = Config::get('system.enableRoutesCache');
         $cached = $cacheable ? Cache::get($this->getUrlMapCacheKey(), FALSE) : FALSE;
 
-        if (!$cached OR ($unSerialized = @unserialize(@base64_decode($cached))) === FALSE) {
+        if (!$cached || ($unSerialized = @unserialize(@base64_decode($cached))) === FALSE) {
             // The item doesn't exist in the cache, create the map
             $pages = $this->theme->listPages();
             $map = [];
@@ -284,7 +284,7 @@ class Router
      */
     public function getParameter($name, $default = null)
     {
-        if (isset($this->parameters[$name]) AND !empty($this->parameters[$name])) {
+        if (isset($this->parameters[$name]) && !empty($this->parameters[$name])) {
             return $this->parameters[$name];
         }
 
@@ -335,8 +335,8 @@ class Router
         $urlList = Cache::get($key, FALSE);
 
         if (
-            $urlList AND
-            ($urlList = @unserialize(@base64_decode($urlList))) AND
+            $urlList &&
+            ($urlList = @unserialize(@base64_decode($urlList))) &&
             is_array($urlList)
         ) {
             if (array_key_exists($url, $urlList)) {

@@ -1,7 +1,7 @@
 <div class="d-flex w-100 align-items-center">
     <div
         class="flex-grow-1"
-        @if ($record->class AND strlen($record->readme))
+        @if ($record->class && strlen($record->readme))
         href="#"
         data-toggle="modal"
         data-target="#extension-modal-{{ $record->extension_id }}"
@@ -19,7 +19,7 @@
         {{ $record->meta['author'] ?? '' }}
     </div>
 </div>
-@if ($record->class AND strlen($record->readme))
+@if ($record->class && strlen($record->readme))
     <div
         id="extension-modal-{{ $record->extension_id }}"
         class="modal show"

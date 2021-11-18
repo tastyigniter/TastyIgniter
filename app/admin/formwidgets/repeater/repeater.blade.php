@@ -11,10 +11,10 @@
                 class="table {{ ($sortable) ? 'is-sortable' : '' }} mb-0">
                 <thead>
                 <tr>
-                    @if (!$this->previewMode AND $sortable)
+                    @if (!$this->previewMode && $sortable)
                         <th class="list-action"></th>
                     @endif
-                    @if (!$this->previewMode AND $showRemoveButton)
+                    @if (!$this->previewMode && $showRemoveButton)
                         <th class="list-action"></th>
                     @endif
                     @foreach ($this->getVisibleColumns() as $label)
@@ -34,7 +34,7 @@
                     </tr>
                 @endforelse
                 </tbody>
-                @if ($showAddButton AND !$this->previewMode)
+                @if ($showAddButton && !$this->previewMode)
                     <tfoot>
                     <tr>
                         <th colspan="99">

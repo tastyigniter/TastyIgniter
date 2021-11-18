@@ -325,7 +325,7 @@ class ComponentManager
                 'showExternalParam' => array_get($params, 'showExternalParam', FALSE),
             ];
 
-            if (!in_array($propertyType, ['text', 'number']) AND !array_key_exists('options', $params)) {
+            if (!in_array($propertyType, ['text', 'number']) && !array_key_exists('options', $params)) {
                 $methodName = 'get'.studly_case($name).'Options';
                 $property['options'] = [get_class($component), $methodName];
             }

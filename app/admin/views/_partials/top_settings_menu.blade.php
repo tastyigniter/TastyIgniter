@@ -23,7 +23,7 @@
                 </div>
             @endforeach
         </div>
-        @if(!$hasSettingsError AND $updatesCount)
+        @if(!$hasSettingsError && $updatesCount)
             <a
                 class="dropdown-item border-top text-center alert-warning"
                 href="{{ admin_url('updates') }}"

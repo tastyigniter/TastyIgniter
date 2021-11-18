@@ -57,7 +57,7 @@ class HubManager
     {
         $cacheKey = $this->getCacheKey('updates', $itemNames);
 
-        if ($force OR !$response = Cache::get($cacheKey)) {
+        if ($force || !$response = Cache::get($cacheKey)) {
             $response = $this->requestRemoteData('core/apply', [
                 'items' => $itemNames,
                 'include' => 'tags',
@@ -87,8 +87,8 @@ class HubManager
         if (isset($response['items'])) {
             $extensions = [];
             foreach ($response['items'] as $item) {
-                if ($item['type'] == 'extension' AND
-                    (!ExtensionManager::instance()->findExtension($item['type']) OR ExtensionManager::instance()->isDisabled($item['code']))
+                if ($item['type'] == 'extension' &&
+                    (!ExtensionManager::instance()->findExtension($item['type']) || ExtensionManager::instance()->isDisabled($item['code']))
                 ) {
                     if (isset($item['tags']))
                         arsort($item['tags']);
@@ -158,7 +158,7 @@ class HubManager
         catch (Exception $ex) {
         }
 
-        if (isset($response['message']) AND !in_array($httpCode, [200, 201])) {
+        if (isset($response['message']) && !in_array($httpCode, [200, 201])) {
             if (isset($response['errors']))
                 Log::debug('Server validation errors: '.print_r($response['errors'], TRUE));
 

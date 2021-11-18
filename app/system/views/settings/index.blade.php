@@ -15,7 +15,7 @@
                             <div class="card-body d-flex align-items-center">
                                 <div class="pr-3">
                                     <h5>
-                                        @if ($item == 'core' AND count(array_get($settingItemErrors, $category->code, [])))
+                                        @if ($item == 'core' && count(array_get($settingItemErrors, $category->code, [])))
                                             <i
                                                 class="text-danger fa fa-exclamation-triangle fa-fw"
                                                 title="@lang('system::lang.settings.alert_settings_errors')"

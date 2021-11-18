@@ -50,7 +50,7 @@ trait HasDeliveryAreas
         $address = format_address($this->getAddress(), FALSE);
 
         $geoLocation = Geocoder::geocode($address)->first();
-        if ($geoLocation AND $geoLocation->hasCoordinates()) {
+        if ($geoLocation && $geoLocation->hasCoordinates()) {
             $this->location_lat = $geoLocation->getCoordinates()->getLatitude();
             $this->location_lng = $geoLocation->getCoordinates()->getLongitude();
         }

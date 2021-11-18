@@ -159,7 +159,7 @@ class StatusEditor extends BaseFormWidget
 
         try {
             $this->validateAfter(function ($validator) use ($context, $recordId, $keyFrom) {
-                if ($this->isStatusMode AND $recordId == $this->model->{$keyFrom}) {
+                if ($this->isStatusMode && $recordId == $this->model->{$keyFrom}) {
                     $validator->errors()->add($keyFrom, sprintf(
                         lang('admin::lang.statuses.alert_already_added'),
                         $context, $context

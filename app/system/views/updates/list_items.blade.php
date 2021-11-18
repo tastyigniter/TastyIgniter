@@ -36,7 +36,7 @@
                 <p>{{ $item['version'] }}</p>
             </div>
             <div class="description col col-sm-7">
-                @if (isset($item['tags']['data'][0]) AND $tag = $item['tags']['data'][0])
+                @if (isset($item['tags']['data'][0]) && $tag = $item['tags']['data'][0])
                     {!! $tag['description'] !!}
                 @endif
             </div>

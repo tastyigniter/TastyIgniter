@@ -160,9 +160,10 @@ class Orders_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if ($startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE)) {
+        $startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE);
+        $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE);
+        if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
-        }
 
         $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
@@ -198,7 +199,7 @@ class Orders_model extends Model
     public function getOrderDatetimeAttribute($value)
     {
         if (!isset($this->attributes['order_date'])
-            AND !isset($this->attributes['order_time'])
+            && !isset($this->attributes['order_time'])
         ) return null;
 
         return make_carbon($this->attributes['order_date'])
@@ -233,7 +234,7 @@ class Orders_model extends Model
      */
     public function isPaymentProcessed()
     {
-        return $this->processed AND !empty($this->status_id);
+        return $this->processed && !empty($this->status_id);
     }
 
     public function isDeliveryType()
@@ -310,7 +311,7 @@ class Orders_model extends Model
     public function mailGetRecipients($type)
     {
         $emailSetting = setting('order_email');
-        is_array($emailSetting) OR $emailSetting = [];
+        is_array($emailSetting) || $emailSetting = [];
 
         $recipients = [];
         if (in_array($type, $emailSetting)) {

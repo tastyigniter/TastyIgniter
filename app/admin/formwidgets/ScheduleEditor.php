@@ -126,7 +126,7 @@ class ScheduleEditor extends BaseFormWidget
             return $this->schedulesCache;
 
         $schedules = [];
-        foreach ($this->availableSchedules as $scheduleCode) {
+        foreach ($this->model->availableWorkingTypes() as $scheduleCode) {
             $schedules[$scheduleCode] = $this->model->createScheduleItem($scheduleCode);
         }
 

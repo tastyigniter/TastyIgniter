@@ -208,7 +208,7 @@ class TemplateEditor extends BaseFormWidget
 
     protected function getTemplateEditorOptions()
     {
-        if (!$themeObject = $this->model->getTheme() OR !$themeObject instanceof Theme)
+        if (!($themeObject = $this->model->getTheme()) || !$themeObject instanceof Theme)
             throw new ApplicationException('Missing theme object on '.get_class($this->model));
 
         $type = $this->templateType ?? '_pages';

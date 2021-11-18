@@ -23,7 +23,7 @@
         @endif
 
         @foreach ($fieldOptions as $value => $option)
-            @continue($field->disabled AND !in_array($value, $checkedValues))
+            @continue($field->disabled && !in_array($value, $checkedValues))
             @php
                 if (!is_array($option)) $option = [$option];
             @endphp

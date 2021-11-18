@@ -152,7 +152,7 @@ class Payments extends \Admin\Classes\AdminController
             ['status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
 
-        if ($form->model->exists AND ($mergeRules = $form->model->getConfigRules()))
+        if ($form->model->exists && ($mergeRules = $form->model->getConfigRules()))
             array_push($rules, ...$mergeRules);
 
         return $this->validatePasses($form->getSaveData(), $rules);

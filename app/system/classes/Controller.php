@@ -171,18 +171,18 @@ class Controller extends IlluminateController
      */
     protected function locateControllerInPath($controller, $modules, $inPath)
     {
-        is_array($modules) OR $modules = [$modules];
+        is_array($modules) || $modules = [$modules];
 
         $controllerClass = null;
         $matchPath = $inPath.'/%s/controllers/%s.php';
         foreach ($modules as $module => $namespace) {
             $controller = strtolower(str_replace(['\\', '_'], ['/', ''], $controller));
             $controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller));
-            if ($controllerFile AND !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller))
+            if ($controllerFile && !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller))
                 include_once $controllerFile;
         }
 
-        if (!$controllerClass OR !class_exists($controllerClass))
+        if (!$controllerClass || !class_exists($controllerClass))
             return null;
 
         $controllerObj = App::make($controllerClass);

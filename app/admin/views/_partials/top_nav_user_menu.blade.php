@@ -15,7 +15,7 @@
             </div>
             <div class="pb-3 text-center">
                 <div class="text-uppercase">{{ $userPanel->getUserName() }}</div>
-                <div class="text-muted">{{ implode(', ', $userPanel->listGroupNames()) }}</div>
+                <div class="text-muted">{{ $userPanel->getRoleName() }}</div>
             </div>
         </div>
         <div class="px-3 pb-3">

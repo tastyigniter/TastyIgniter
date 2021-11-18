@@ -5,7 +5,7 @@
 >
     <div class="card-body">
         <div class="d-flex w-100 justify-content-between">
-            @if (!$this->previewMode AND $sortable)
+            @if (!$this->previewMode && $sortable)
                 <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $item->getKey() }}">
                 <div class="align-self-center">
                     <a

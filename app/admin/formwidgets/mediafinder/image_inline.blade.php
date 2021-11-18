@@ -13,7 +13,7 @@
             </i>
         </div>
         <span
-            class="form-control{{ (!is_null($mediaItem) AND $useAttachment) ? ' find-config-button' : '' }}"
+            class="form-control{{ (!is_null($mediaItem) && $useAttachment) ? ' find-config-button' : '' }}"
             data-find-name>{{ $this->getMediaName($mediaItem) }}</span>
         <input
             id="{{ $field->getId() }}"

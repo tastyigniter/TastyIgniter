@@ -11,7 +11,7 @@ trait LocationAwareWidget
     {
         $locationAware = $config['locationAware'] ?? FALSE;
 
-        return $locationAware AND $this->controller->getUserLocation();
+        return $locationAware && $this->controller->getUserLocation();
     }
 
     /**

@@ -52,7 +52,7 @@ class Extensions_model extends Model
         $requiredExtensions = (array)$activeTheme->requires;
         foreach ($requiredExtensions as $name => $constraint) {
             $extension = ExtensionManager::instance()->findExtension($name);
-            if (!$extension OR $extension->disabled)
+            if (!$extension || $extension->disabled)
                 return FALSE;
         }
 
@@ -85,7 +85,7 @@ class Extensions_model extends Model
 
     public function getStatusAttribute()
     {
-        return $this->class AND !$this->class->disabled;
+        return $this->class && !$this->class->disabled;
     }
 
     public function getIconAttribute()
@@ -171,7 +171,7 @@ class Extensions_model extends Model
 
             $model = self::firstOrNew(['name' => $code]);
 
-            $enableExtension = ($model->exists AND !$extension->disabled);
+            $enableExtension = ($model->exists && !$extension->disabled);
 
             $model->save();
 

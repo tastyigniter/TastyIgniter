@@ -18,15 +18,16 @@
                 </div>
                 <a class="{{ $useAttachment ? 'find-config-button' : '' }}">
                     <div class="img-cover">
-                        <img data-find-image
-                             src="{{ $this->getMediaThumb($mediaItem) }}"
-                             class="img-responsive">
+                        <img
+                            data-find-image
+                            src="{{ $this->getMediaThumb($mediaItem) }}"
+                            class="img-responsive">
                     </div>
                 </a>
             @endif
             <input
                 type="hidden"
-                {!! (!is_null($mediaItem) AND !$useAttachment) ? 'name="'.$fieldName.'"' : '' !!}
+                {!! (!is_null($mediaItem) && !$useAttachment) ? 'name="'.$fieldName.'"' : '' !!}
                 value="{{ $this->getMediaPath($mediaItem) }}"
                 data-find-value
             />

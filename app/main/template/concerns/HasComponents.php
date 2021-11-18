@@ -112,7 +112,7 @@ trait HasComponents
         $attributes = $this->attributes;
 
         $newAlias = array_get($properties, 'alias');
-        if ($newAlias AND $newAlias !== $alias) {
+        if ($newAlias && $newAlias !== $alias) {
             $attributes = array_replace_key($attributes, $alias, $newAlias);
             $alias = $newAlias;
         }

@@ -153,7 +153,7 @@ class Reviews_model extends Model
     public function getSaleTypeModel($saleType)
     {
         $model = self::$relatedSaleTypes[$saleType] ?? null;
-        if (!$model OR !class_exists($model))
+        if (!$model || !class_exists($model))
             throw new ModelNotFoundException;
 
         return new $model();

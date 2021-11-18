@@ -85,7 +85,7 @@ class ToolbarButton
         foreach ($config as $key => $value) {
             if (!is_string($value)) continue;
 
-            $value = ($key == 'href' AND !preg_match('#^(\w+:)?//#i', $value))
+            $value = ($key == 'href' && !preg_match('#^(\w+:)?//#i', $value))
                 ? admin_url($value)
                 : $value;
 

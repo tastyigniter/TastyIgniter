@@ -145,6 +145,11 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.orders.column_total',
         'type' => 'currency',
     ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'type' => 'datesince',
+        'invisible' => TRUE,
+    ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timesince',

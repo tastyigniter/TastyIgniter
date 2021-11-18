@@ -91,7 +91,7 @@ class Staff_groups_model extends Model
     public function listAssignees()
     {
         return $this->staffs->filter(function (Staffs_model $staff) {
-            return $staff->isEnabled() AND $staff->canAssignTo();
+            return $staff->isEnabled() && $staff->canAssignTo();
         })->values();
     }
 
