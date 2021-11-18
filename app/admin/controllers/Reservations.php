@@ -147,4 +147,11 @@ class Reservations extends \Admin\Classes\AdminController
             'status_history.status',
         ]);
     }
+
+    public function formAfterSave($model)
+    {
+        if (is_null($model->duration)) {
+            $model->duration = $model->location()->first()->getOption('reservation_stay_time');
+        }
+    }
 }
