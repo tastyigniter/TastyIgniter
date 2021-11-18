@@ -235,6 +235,8 @@ class UpdateManager
             return FALSE;
         }
 
+        $this->log("<info>Migrating extension $name</info>");
+
         $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
         $this->migrator->run([$name => $path]);
 
