@@ -266,8 +266,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => 'Admin.Activities',
                     'attributes' => [
                         'class' => 'nav-link',
-                        'href' => '',
-                        'data-toggle' => 'dropdown',
+                        'data-bs-toggle' => 'dropdown',
                     ],
                 ],
                 'settings' => [
@@ -291,8 +290,8 @@ class ServiceProvider extends AppServiceProvider
                 'label' => 'admin::lang.text_set_status',
                 'iconCssClass' => 'fa fa-circle fa-fw text-'.UserState::forUser()->getStatusColorName(),
                 'attributes' => [
-                    'data-toggle' => 'modal',
-                    'data-target' => '#editStaffStatusModal',
+                    'data-bs-toggle' => 'modal',
+                    'data-bs-target' => '#editStaffStatusModal',
                     'role' => 'button',
                 ],
             ]);

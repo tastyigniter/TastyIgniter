@@ -30,8 +30,8 @@
     }
 
     li.nav-item > a img {
-      max-width: 32px;
-      max-height: 32px;
+      width: 32px;
+      height: 32px;
     }
 
     .nav-link > .fa {
@@ -250,7 +250,7 @@
 
   .logo {
     display: block;
-    padding-left: 10px;
+    padding-left: 5px;
     line-height: $logo-line-height;
     font-size: $logo-font-size;
     color: $gray-800;

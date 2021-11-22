@@ -3,12 +3,12 @@
     $hasSettingsError = count(array_filter(Session::get('settings.errors', [])))
 @endphp
 <li class="nav-item dropdown">
-    <a class="nav-link" href="" data-toggle="dropdown">
+    <a class="nav-link" href="" data-bs-toggle="dropdown">
         <i class="fa fa-gears" role="button"></i>
         @if($hasSettingsError)
-            <span class="badge badge-danger"><i class="fa fa-exclamation text-white"></i></span>
+            <span class="badge bg-danger"><i class="fa fa-exclamation text-white"></i></span>
         @elseif($updatesCount)
-            <span class="badge badge-danger">&nbsp;</span>
+            <span class="badge bg-danger">&nbsp;</span>
         @endif
     </a>
 

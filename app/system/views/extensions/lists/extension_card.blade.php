@@ -3,8 +3,8 @@
         class="flex-grow-1"
         @if ($record->class && strlen($record->readme))
         href="#"
-        data-toggle="modal"
-        data-target="#extension-modal-{{ $record->extension_id }}"
+        data-bs-toggle="modal"
+        data-bs-target="#extension-modal-{{ $record->extension_id }}"
         role="button"
         @endif
     >

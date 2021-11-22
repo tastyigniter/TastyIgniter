@@ -221,18 +221,18 @@ $startVal: 28%;
 $start: 0;
 @mixin infinite-class($index, $val, $count) {
   @if $index == 0 {
-    $tmpSelector: "#{index}%";
-    #{tmpSelector} {
-      width: 0;
-    }
+    //$tmpSelector: "#{index}%";
+    //#{tmpSelector} {
+    //  width: 0;
+    //}
     @include infinite-class($index + 10, $val + ($val / ($count * 2)), $count + 1);
   }
 
   @if ($index < 101) and ($index > 9) {
-    $tmpSelector: "#{index}%";
-    #{tmpSelector} {
-      width: $val;
-    }
+    //$tmpSelector: "#{index}%";
+    //#{tmpSelector} {
+    //  width: $val;
+    //}
     @include infinite-class($index + 10, $val + ($val / $count), $count * 2);
   }
 }

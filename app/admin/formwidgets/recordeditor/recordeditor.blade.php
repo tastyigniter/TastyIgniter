@@ -6,8 +6,8 @@
         data-alias="{{ $this->alias }}"
     >
         <div
-            class="input-group" data-toggle="modal"
-            data-target="#{{ $this->getId('form-modal') }}"
+            class="input-group" data-bs-toggle="modal"
+            data-bs-target="#{{ $this->getId('form-modal') }}"
         >
             @if ($addonLeft)
                 <div class="input-group-prepend">{{ $addonLeft }}</div>

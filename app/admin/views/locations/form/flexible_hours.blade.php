@@ -54,14 +54,14 @@
                                 type="checkbox"
                                 name="{{ $field->getName().'['.$loop->index.'][status]' }}"
                                 id="{{ $field->getId($loop->index.'status') }}"
-                                class="custom-control-input"
+                                class="form-check-input"
                                 value="1"
                                 {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
                                 {!! $hour['status'] == 1 ? 'checked="checked"' : '' !!}
                                 {!! $field->getAttributes() !!}
                             />
                             <label
-                                class="custom-control-label"
+                                class="form-check-label"
                                 for="{{ $field->getId($loop->index.'status') }}"
                             ></label>
                         </div>

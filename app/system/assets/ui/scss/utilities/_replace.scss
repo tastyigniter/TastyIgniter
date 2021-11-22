@@ -7,14 +7,14 @@
   @extend .list-inline-item;
 }
 .navbar-btn,
-.nav navbar > li {
+.nav .navbar > li {
   @extend .nav-item;
 }
-.nav navbar > li > a {
+.nav .navbar > li > a {
   @extend .nav-link;
 }
 .navbar-right {
-  @extend .ml-auto;
+  @extend .float-end;
 }
 .navbar-fixed-top {
   @extend .fixed-top;
@@ -67,10 +67,10 @@
   @extend .carousel-item;
 }
 .pull-right {
-  @extend .float-right;
+  @extend .float-end;
 }
 .pull-left {
-  @extend .float-left;
+  @extend .float-start;
 }
 .center-block {
   @extend .mx-auto;
@@ -113,6 +113,28 @@
 }
 @each $color, $value in $theme-colors {
   .label-#{$color} {
-    @extend .badge-#{$color};
+    @extend .bg-#{$color};
   }
+}
+.no-gutters {
+  @extend .g-0;
+}
+.badge-primary {
+  @extend .bg-primary;
+}
+.badge-pill {
+  @extend .rounded-pill;
+}
+.form-group {
+  @extend .mb-3;
+}
+.form-row {
+  @extend .row;
+}
+.sr-only {
+  @extend .visually-hidden;
+}
+.btn-block {
+  @extend .d-block;
+  @extend .w-100;
 }

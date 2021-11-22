@@ -49,7 +49,7 @@
                         data-item-version="{{ $item['version'] }}"
                     ></div>
                 @else
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
                         @if ($ignored)
                             <button
                                 class="btn btn-light"

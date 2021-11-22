@@ -6,7 +6,7 @@
         <div
             id="{{ $field->getId() }}"
             class="btn-group btn-group-toggle bg-light"
-            data-toggle="buttons">
+            data-bs-toggle="buttons">
             @foreach ($fieldOptions as $key => $value)
                 <label
                     class="btn btn-light text-nowrap {{ ($field->value == $key ? 'active' : '').($this->previewMode ? 'disabled' : '') }}">

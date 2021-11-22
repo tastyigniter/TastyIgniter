@@ -17,13 +17,13 @@
                 <input
                     type="radio"
                     id="{{ $radioId }}"
-                    class="custom-control-input"
+                    class="form-check-input"
                     name="{{ $field->getName() }}"
                     value="{{ $value }}"
                     disabled="disabled"
                     checked="checked"
                 >
-                <label class="custom-control-label" for="{{ $radioId }}">
+                <label class="form-check-label" for="{{ $radioId }}">
                     {{ is_lang_key($option[0]) ? lang($option[0]) : $option[0] }}
                     @isset($option[1])
                         <p class="help-block font-weight-normal">{{ is_lang_key($option[1]) ? lang($option[1]) : $option[1] }}</p>
@@ -56,13 +56,13 @@
                             <input
                                 type="radio"
                                 id="{{ $radioId }}"
-                                class="custom-control-input"
+                                class="form-check-input"
                                 name="{{ $field->getName() }}"
                                 value="{{ $value }}"
                                 {!! in_array($value, $checkedValues) ? 'checked="checked"' : '' !!}
                             />
 
-                            <label class="custom-control-label" for="{{ $radioId }}">
+                            <label class="form-check-label" for="{{ $radioId }}">
                                 {{ isset($option[0]) ? lang($option[0]) : '&nbsp;' }}
                                 @isset($option[1])
                                     <p class="help-block font-weight-normal">@lang($option[1])</p>

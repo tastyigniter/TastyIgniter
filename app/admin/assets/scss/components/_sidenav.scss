@@ -2,32 +2,15 @@
   position: fixed;
   top: $page-top;
   bottom: 0;
-  width: $page-margin-left;
   z-index: 1030;
+
+  aside {
+    padding-top: $page-top;
+  }
 }
 .nav-sidebar {
-  background-color: $sidenav-bg;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  table-layout: fixed;
-  position: relative;
-  display: block;
-  height: 100%;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding-top: 20px;
-
   &::-webkit-scrollbar {
     display: none;
-  }
-
-  > .nav {
-    @include flex-direction(column);
-    padding-bottom: 35px;
-    @-moz-document url-prefix() {
-      margin-right: -15px;
-    }
   }
 
   .nav {
@@ -35,47 +18,39 @@
       width: 100%;
     }
 
+    .nav-link {
+      span {
+        vertical-align: middle;
+      }
+    }
+
     > li > a {
       display: block;
-      color: rgba($white, .8);
-      line-height: $sidenav-line-height;
-      padding: $sidenav-padding-x $sidenav-padding-y;
       font-weight: $sidenav-font-weight;
-      font-size: $sidenav-font-size;
+      position: relative;
+      -webkit-transition: all .4s;
+      transition: all .4s;
     }
 
     > li > a:focus,
     > li > a:hover {
-      color: $white;
     }
 
     li.active > a,
     .nav li.active > a,
     .nav li > a.active {
-      background-color: transparent;
-      color: $white;
-      font-weight: $sidenav-font-size-bold;
+      color: $primary;
     }
 
     .nav {
-      background-color: lighten($sidenav-bg, 1%);
-
       &.show {
         display: block;
       }
 
       a {
-        padding-left: 48px;
-        line-height: $sidenav-line-height-sm;
-        text-transform: none;
-        font-weight: $font-weight-normal;
         font-size: $sidenav-submenu-font-size;
-        color: rgba($white, .75);
-      }
-
-      li > a:hover,
-      li > a:focus {
-        background-color: transparent;
+        padding-left: 54px;
+        text-transform: none;
       }
     }
 
@@ -84,10 +59,39 @@
     }
 
     .fa-fw {
-      width: 1.8em;
       text-align: left;
-      font-size: 17px;
     }
+  }
+
+  .menu-arrow {
+    -webkit-transition: -webkit-transform .15s;
+    transition: -webkit-transform .15s;
+    transition: transform .15s;
+    transition: transform .15s, -webkit-transform .15s;
+    position: absolute;
+    right: 30px;
+    display: inline-block;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1.5rem;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: 1.1rem;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+
+    &::before {
+      content: "\f105";
+    }
+  }
+
+  a[aria-expanded="true"] > span.menu-arrow {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
   }
 
   .has-arrow {
@@ -102,19 +106,19 @@
       border-style: solid;
       border-color: initial;
       right: 0.5em;
-      -webkit-transform: rotate(-45deg) translate(0, -50%);
-      transform: rotate(-45deg) translate(0, -50%);
-      -webkit-transform-origin: top;
-      transform-origin: top;
+      -webkit-transform: translateY(-50%) rotate(225deg);
+      transform: translateY(-50%) rotate(225deg);
+      -webkit-transform-origin: center;
+      transform-origin: center;
       top: 50%;
-      transition: all .3s ease-out;
+      transition: all .2s ease-in-out;
     }
   }
 
   .active > .has-arrow::after,
   .has-arrow[aria-expanded="true"]::after {
-    -webkit-transform: rotate(-135deg) translate(0, -50%);
-    transform: rotate(-135deg) translate(0, -50%);
+    -webkit-transform: translateY(-50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
   }
 }
 @include media-breakpoint-down(sm) {

@@ -15,7 +15,7 @@
     <button
         type="button"
         class="{{ $button->cssClass }} dropdown-toggle dropdown-toggle-split"
-        data-toggle="dropdown"
+        data-bs-toggle="dropdown"
         data-display="static"
         aria-haspopup="true"
         aria-expanded="false"
@@ -29,13 +29,13 @@
                     <input
                         type="radio"
                         id="toolbar-button-save-action-{{$action}}"
-                        class="custom-control-input"
+                        class="form-check-input"
                         name="toolbar_save_action"
                         value="{{$action}}"
                         {!! $selectedAction === $action ? 'checked="checked"' : ''; !!}
                     />
                     <label
-                        class="custom-control-label"
+                        class="form-check-label"
                         for="toolbar-button-save-action-{{$action}}"
                     >@lang('admin::lang.form.save_actions.'.$action)</label>
                 </div>

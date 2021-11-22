@@ -1,0 +1,62 @@
+$utilities: map-merge(
+    $utilities,
+    (
+      "overflow-y": (
+        property: overflow-y,
+        values: auto hidden visible scroll,
+      ),
+      "overflow-x": (
+        property: overflow-x,
+        values: auto hidden visible scroll,
+      ),
+      "width": map-merge(
+          map-get($utilities, "width"),
+          (
+            values: map-merge(
+                map-get(map-get($utilities, "width"), "values"),
+                (
+                  1: 0.25rem,
+                  20: 5rem,
+                  24: 6rem,
+                  28: 7rem,
+                  32: 8rem,
+                  36: 9rem,
+                  40: 10rem,
+                  44: 11rem,
+                  48: 12rem,
+                  52: 13rem,
+                  56: 14rem,
+                  60: 15rem,
+                  64: 16rem,
+                  72: 18rem,
+                  80: 20rem,
+                  96: 24rem,
+                ),
+            ),
+          ),
+      ),
+      "font-size": map-merge(
+          map-get($utilities, "font-size"),
+          (
+            values: map-merge(
+                map-get(map-get($utilities, "font-size"), "values"),
+                (
+                  100: 0.25rem
+                ),
+            ),
+          ),
+      ),
+      "text-align": map-merge(
+          map-get($utilities, "text-align"),
+          (
+            values: map-merge(
+                map-get(map-get($utilities, "text-align"), "values"),
+                (
+                  left: left,
+                  right: right,
+                ),
+            ),
+          ),
+      ),
+    )
+);

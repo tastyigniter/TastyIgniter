@@ -9,7 +9,7 @@
                     <button
                         type="button"
                         class="btn btn-default dropdown-toggle"
-                        data-toggle="dropdown"
+                        data-bs-toggle="dropdown"
                     ><i class="fa fa-ellipsis-h"></i></button>
                     <div
                         id="{{ $this->getId('folder-tree') }}"
@@ -64,7 +64,7 @@
             <div class="input-group">
                 <div class="input-group-prepend">
                     <div class="dropdown mr-2">
-                        <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Sort">
+                        <a class="btn btn-default dropdown-toggle" role="button" data-bs-toggle="dropdown" title="Sort">
                             @if (isset($sortBy[1]) && $sortBy[1] === 'ascending')
                                 <i class="fa fa-sort-amount-asc"></i> <i class="caret"></i>
                             @else

@@ -10,7 +10,7 @@
             <input
                 type="radio"
                 id="{{ $field->getId($loop->iteration) }}"
-                class="custom-control-input"
+                class="form-check-input"
                 name="{{ $field->getName() }}"
                 value="{{ $key }}"
                 {!! $field->value == $key ? 'checked="checked"' : '' !!}
@@ -18,7 +18,7 @@
                 {!! $field->getAttributes() !!}
             />
             <label
-                class="custom-control-label"
+                class="form-check-label"
                 for="{{ $field->getId($loop->iteration) }}"
             >{{ is_lang_key($value) ? lang($value) : $value }}</label>
         </div>

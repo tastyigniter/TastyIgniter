@@ -12,7 +12,7 @@ $activeTab = $activeTab ? $activeTab : '#'.$type.'tab-1';
                 <a
                     class="nav-link{{ ($tabName == $activeTab) ? ' active' : '' }}"
                     href="{{ $tabName }}"
-                    data-toggle="tab"
+                    data-bs-toggle="tab"
                 >@lang($name)</a>
             </li>
         @endforeach

@@ -84,13 +84,19 @@
 }
 // Tabs
 //
+.card {
+  .form-nav {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+}
 .form-nav {
   padding-top: 10px;
   padding-left: 20px;
   padding-right: 20px;
 
   &.nav-tabs {
-    background-color: $gray-300;
+    background-color: $gray-100;
 
     .nav-item {
     }
@@ -100,7 +106,7 @@
       border-color: transparent;
       color: $body-color;
       padding: $form-nav-link-padding-y $form-nav-link-padding-x;
-      font-weight: 500;
+      font-weight: $font-weight-bold;
     }
 
     .nav-link:hover,
@@ -111,14 +117,14 @@
     .nav-link.active {
       border-width: 4px 2px 0;
       border-style: solid;
-      border-color: $gray-300;
-      background-color: $gray-200;
+      border-color: $input-border-color;
+      background-color: $white;
     }
   }
 }
 @include media-breakpoint-down(sm) {
   .form-widget .tab-heading {
-    background-color: $gray-300;
+    background-color: $gray-100;
     width: 100%;
     overflow-x: auto;
     display: block;
@@ -154,13 +160,20 @@
 // Control label
 .control-label {
   color: $gray-800;
+  font-weight: $font-weight-bold;
 }
 .help-block {
   @extend .form-text;
-  color: $gray-600;
+  color: $gray-700;
   margin: 0;
 
   &.before-field {
     margin-bottom: 10px;
+  }
+}
+.record-modal {
+  .modal-body,
+  .modal-footer {
+    background-color: $gray-200;
   }
 }

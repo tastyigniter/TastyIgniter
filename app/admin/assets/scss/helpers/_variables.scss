@@ -1,23 +1,23 @@
 $white: #FFFFFF !default;
-$gray-100: #FCFDFF !default;
-$gray-200: #E8E9EF !default;
-$gray-300: #D2D4DF !default;
-$gray-400: #C0C2CE !default;
-$gray-500: #9194A6 !default;
-$gray-600: #6F7B9C !default;
-$gray-700: #48557B !default;
-$gray-800: #2E3B61 !default;
-$gray-900: #192957 !default;
-$black: #000329 !default;
+$gray-100: #F8FAFC !default;
+$gray-200: #E2E8F0 !default;
+$gray-300: #CBD5E1 !default;
+$gray-400: #94A3B8 !default;
+$gray-500: #94A3B8 !default;
+$gray-600: #64748B !default;
+$gray-700: #475569 !default;
+$gray-800: #334155 !default;
+$gray-900: #1E293B !default;
+$black: #0F172A !default;
 //
 // Colors
 //
 $primary: #2170C0 !default;
 $secondary: $gray-600 !default;
-$success: #28A745 !default;
-$info: #5A67D8 !default;
-$warning: #FD7E14 !default;
-$danger: #DC3545 !default;
+$success: #047857 !default;
+$info: #4338CA !default;
+$warning: #F59E0B !default;
+$danger: #DC2626 !default;
 $light: $gray-100 !default;
 $dark: $gray-900 !default;
 //
@@ -30,21 +30,13 @@ $body-color: $gray-800 !default;
 //
 // Typography
 //
-$text-muted: $gray-500 !default;
+$text-muted: $gray-600 !default;
 //
 // Fonts
 //
-$font-size-base: 0.875rem !default;
-$font-size-lg: $font-size-base * 1.25 !default;
-$font-size-sm: $font-size-base * .875 !default;
-//
-// Tables
-//
-$table-cell-padding: .45rem !default;
-$table-cell-padding-sm: .1rem !default;
-$table-head-bg: $gray-300 !default;
-$table-accent-bg: $gray-200 !default;
-$table-border-color: $gray-300 !default;
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-size-base: 1rem !default;
 //
 // Buttons + Forms
 //
@@ -52,7 +44,7 @@ $table-border-color: $gray-300 !default;
 $input-btn-padding-y: .5rem !default;
 $input-btn-padding-x: .75rem !default;
 $input-spacer: 6px !default;
-$input-font-size: 0.9375rem !default;
+//$input-font-size: 0.9375rem !default;
 //
 // Buttons
 //
@@ -79,7 +71,7 @@ $page-padding-y: 30px !default;
 $page-top: 64px !default;
 $page-top-line-height: 48px !default;
 $page-bottom: 0 !default;
-$page-margin-left: 230px !default;
+$page-margin-left: 256px !default;
 $logo-font-size: 3rem !default;
 $logo-line-height: 32px !default;
 //
@@ -94,11 +86,9 @@ $mainmenu-padding-y: 1rem !default;
 //
 // Side nav
 //
-$sidenav-bg: $gray-900 !default;
-$sidenav-font-size: 15px !default;
-$sidenav-submenu-font-size: $font-size-base !default;
+$nav-link-color: $gray-700;
+$sidenav-submenu-font-size: .875rem !default;
 $sidenav-font-weight: 500 !default;
-$sidenav-font-size-bold: 600 !default;
 $sidenav-line-height: 50px !default;
 $sidenav-line-height-sm: 42px !default;
 $sidenav-padding-x: 0 !default;

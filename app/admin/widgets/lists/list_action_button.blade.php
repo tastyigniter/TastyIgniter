@@ -3,8 +3,8 @@
         <button
             type="button"
             tabindex="0"
-            class="py-1 {{ $button->cssClass }} dropdown-toggle"
-            data-toggle="dropdown"
+            class="btn-sm {{ $button->cssClass }} dropdown-toggle"
+            data-bs-toggle="dropdown"
             {!! $button->getAttributes() !!}
         >{!! $button->label ?: $button->name !!}</button>
         @if ($buttonMenuItems = $button->menuItems())
@@ -18,7 +18,7 @@
 @else
     <button
         type="button"
-        class="py-1 {{ $button->cssClass }}"
+        class="btn-sm {{ $button->cssClass }}"
         {!! $button->getAttributes() !!}
         data-control="bulk-action"
         data-attach-loading=""

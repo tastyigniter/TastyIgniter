@@ -1,36 +1,36 @@
 .panel {
-    @extend .card;
-	border: 0 none;
-	margin-bottom: 10px;
+  @extend .card;
+  border: 0 none;
+  margin-bottom: 10px;
 }
 .panel:before,
 .panel:after {
-	content: "";
-	display: table;
+  content: "";
+  display: table;
 }
 .panel:after {
-	clear: both;
+  clear: both;
 }
 .panel-title {
-	@extend .card-title;
-	margin-bottom: 0;
+  @extend .card-title;
+  margin-bottom: 0;
 }
 .panel-header,
 .panel-heading {
-	@extend .card-header;
+  @extend .card-header;
 }
 .panel-body {
-	@extend .card-body;
+  @extend .card-body;
 }
 .panel-footer {
-	@extend .card-footer;
+  @extend .card-footer;
 }
 @each $color, $value in $theme-colors {
-	.panel-#{$color} {
-		@extend .bg-#{$color};
+  .panel-#{$color} {
+    @include bg-variant(".bg-#{$color}", $value);
 
-		@if not ($color == light or $color == default) {
-			@extend .text-#{$color};
-		}
-	}
+    @if not ($color == light or $color == default) {
+      @extend .text-#{$color};
+    }
+  }
 }

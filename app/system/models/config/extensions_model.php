@@ -22,7 +22,7 @@ $config['list']['toolbar'] = [
         'filter' => [
             'label' => 'lang:admin::lang.button_icon_filter',
             'class' => 'btn btn-default btn-filter pull-right',
-            'data-toggle' => 'list-filter',
+            'data-bs-toggle' => 'list-filter',
             'data-target' => '.list-filter',
         ],
         'setting' => [

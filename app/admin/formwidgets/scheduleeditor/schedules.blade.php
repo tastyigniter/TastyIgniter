@@ -3,14 +3,14 @@
         <div class="col-lg-4">
             <div
                 id="{{ $this->getId('item-'.$loop->iteration) }}"
-                class="card bg-light shadow-sm mb-2"
+                class="card shadow-sm mb-2"
                 data-editor-control="load-schedule"
                 data-schedule-code="{{ $schedule->name }}"
                 role="button"
             >
                 <div class="card-body">
                     <div class="flex-fill">
-                        <h5 class="card-title">{{ lang('admin::lang.text_'.$schedule->name).' '.lang('admin::lang.locations.text_schedule') }}</h5>
+                        <h6 class="card-title">{{ lang('admin::lang.text_'.$schedule->name).' '.lang('admin::lang.locations.text_schedule') }}</h6>
                         <p class="card-text">{{ lang('admin::lang.locations.text_'.$schedule->type) }}</p>
                     </div>
 

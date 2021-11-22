@@ -14,14 +14,15 @@
 @each $color, $value in $theme-colors {
   .btn-#{$color} {
     &:not([href]) {
-      color: color-yiq($value);
-      @include hover-focus {
-        color: color-yiq(darken($value, 7.5%));
+      color: color-contrast($value);
+
+      &:hover, &:focus {
+        color: color-contrast(shift-color($value, 7.5%));
       }
 
       &.disabled,
       &:disabled {
-        color: color-yiq($value);
+        color: color-contrast($value);
       }
     }
   }
@@ -30,7 +31,7 @@
       color: $value;
 
       &:hover {
-        color: color-yiq($value);
+        color: color-contrast($value);
       }
 
       &.disabled,

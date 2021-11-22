@@ -37,7 +37,7 @@ class Updates extends \Admin\Classes\AdminController
         Template::setHeading($pageTitle);
 
         Template::setButton(lang('system::lang.updates.button_check'), ['class' => 'btn btn-success', 'data-request' => 'onCheckUpdates']);
-        Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-target' => '#carte-modal', 'data-toggle' => 'modal']);
+        Template::setButton(lang('system::lang.updates.button_carte'), ['class' => 'btn btn-default pull-right', 'role' => 'button', 'data-bs-target' => '#carte-modal', 'data-bs-toggle' => 'modal']);
 
         Template::setButton(sprintf(lang('system::lang.version'), params('ti_version')), [
             'class' => 'btn disabled text-muted pull-right', 'role' => 'button',

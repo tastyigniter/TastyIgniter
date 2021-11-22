@@ -1,10 +1,5 @@
 .toolbar {
-  .toolbar-action {
-    background-color: $gray-300;
-    clear: both;
-    width: 100%;
-    padding: $page-padding-x;
-  }
+  background-color: $light;
 
   @include media-breakpoint-down(sm) {
     .toolbar-action {
@@ -77,14 +72,16 @@
 
   .btn-primary {
     color: #FFFFFF;
-    @include hover() {
+
+    &:hover {
       color: #FFFFFF;
     }
   }
 
   .btn-outline-primary {
     color: $primary;
-    @include hover() {
+
+    &:hover {
       color: #FFFFFF;
     }
   }
@@ -92,14 +89,14 @@
   @each $color, $value in $theme-colors {
     @if not ($color == "primary") {
       .btn-#{$color} {
-        @include button-variant($secondary, $secondary, darken($value, 7.5%), darken($value, 10%), darken($value, 10%), darken($value, 12.5%));
+        @include button-variant($secondary, $secondary, color-contrast($secondary), darken($value, 10%), darken($value, 10%), $white, darken($value, 12.5%));
       }
     }
   }
   @each $color, $value in $theme-colors {
     @if not ($color == "primary") {
       .btn-outline-#{$color} {
-        @include button-outline-variant($secondary, color-yiq($value), $value, $value);
+        @include button-outline-variant($secondary, color-contrast($value), $value, color-contrast($value));
       }
     }
   }

@@ -390,7 +390,7 @@
         var $folderTreeDropdown = this.$el.find('[data-control="folder-tree-dropdown"]'),
             $folderTree = this.$folderTreeElement.find('.folder-tree')
 
-        $folderTreeDropdown.find('[data-toggle="dropdown"]').dropdown('hide')
+        $folderTreeDropdown.find('[data-bs-toggle="dropdown"]').dropdown('hide')
 
         var treeOptions = {
             data: $folderTree[0].getAttribute('data-tree-data'),

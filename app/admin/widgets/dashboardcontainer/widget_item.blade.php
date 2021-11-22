@@ -1,7 +1,7 @@
 <div
     class="col col-sm-{{ $widget->property('width') }} my-3"
 >
-    <div class="widget-item card {{ $widget->property('cssClass', 'bg-light') }} p-3 shadow-sm">
+    <div class="widget-item card {{ $widget->property('cssClass') }} p-3 shadow-sm">
         <div class="widget-item-action">
             <a class="btn handle pull-left"><i class="fa fa-arrows-alt"></i></a>
             @if ($this->canManage)
@@ -14,8 +14,8 @@
             <a
                 class="btn pull-right"
                 data-control="edit-widget"
-                data-toggle="modal"
-                data-target="#{{ $widgetAlias }}-modal"
+                data-bs-toggle="modal"
+                data-bs-target="#{{ $widgetAlias }}-modal"
                 data-handler="{{ $this->getEventHandler('onLoadUpdatePopup') }}"
             ><i class="fa fa-cog"></i></a>
         </div>

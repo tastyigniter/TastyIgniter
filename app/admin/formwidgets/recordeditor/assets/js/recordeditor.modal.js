@@ -34,7 +34,8 @@
             +'</div></div></div></div>'
         );
 
-        this.$modalRootElement.modal({backdrop: 'static', keyboard: false})
+        var myModal = new bootstrap.Modal(this.$modalRootElement, {backdrop: 'static', keyboard: false})
+        myModal.show()
     }
 
     RecordEditorModal.prototype.hide = function () {
@@ -106,7 +107,7 @@
         onClose: undefined,
         attributes: {
             id: 'record-editor-modal',
-            class: 'record-modal modal fade',
+            class: 'record-modal modal slideInDown show',
             role: 'dialog',
             tabindex: -1,
             ariaLabelled: '#record-editor-modal',

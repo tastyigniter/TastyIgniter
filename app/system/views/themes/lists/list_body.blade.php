@@ -9,8 +9,8 @@
                 @else
                     <a
                         class="media-left mr-4 preview-thumb"
-                        data-toggle="modal"
-                        data-target="#theme-preview-{{ $theme->code }}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#theme-preview-{{ $theme->code }}"
                         data-img-src="{{ URL::asset($theme->screenshot) }}"
                         style="width:200px;">
                         <img

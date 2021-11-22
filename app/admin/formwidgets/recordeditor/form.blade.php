@@ -6,30 +6,27 @@
         'data-request' => $this->alias.'::onSaveRecord',
         'class' => 'w-100',
     ]) !!}
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title">@lang($formTitle)</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
+    <x-modal.content>
+        <x-slot name="title">@lang($formTitle)</x-slot>
+
         <input type="hidden" name="recordId" value="{{ $formRecordId }}">
-        <div class="modal-body">
-            <div class="form-fields p-0">
-                @foreach ($formWidget->getFields() as $field)
-                    {!! $formWidget->renderField($field) !!}
-                @endforeach
-            </div>
+        <div class="form-fields p-0">
+            @foreach ($formWidget->getFields() as $field)
+                {!! $formWidget->renderField($field) !!}
+            @endforeach
         </div>
-        <div class="modal-footer text-right">
+
+        <x-slot name="footer">
             <button
                 type="button"
                 class="btn btn-link"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
             >@lang('admin::lang.button_close')</button>
             <button
                 type="submit"
                 class="btn btn-primary"
             >@lang('admin::lang.button_save')</button>
-        </div>
-    </div>
+        </x-slot>
+    </x-modal.content>
     {!! form_close() !!}
 </div>

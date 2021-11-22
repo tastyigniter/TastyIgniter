@@ -45,11 +45,11 @@
                         type="checkbox"
                         name="delete_data"
                         id="delete-data"
-                        class="custom-control-input"
+                        class="form-check-input"
                         value="1"
                     />
                     <label
-                        class="custom-control-label"
+                        class="form-check-label"
                         for="delete-data"
                     >@lang('admin::lang.text_no')/@lang('admin::lang.text_yes')</label>
                 </div>

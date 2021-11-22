@@ -6,17 +6,17 @@
 >
     <div
         id="{{ $this->getId('container-toolbar') }}"
-        class="toolbar dashboard-toolbar btn-toolbar"
+        class="toolbar card shadow-none mb-4 dashboard-toolbar btn-toolbar"
         data-container-toolbar>
         {!! $this->makePartial('widget_toolbar') !!}
     </div>
 
-    <div id="{{ $this->getId('container') }}" class="dashboard-widgets page-x-spacer">
+    <div id="{{ $this->getId('container') }}" class="dashboard-widgets">
         <div class="progress-indicator vh-100 d-flex flex-column">
             <div class="align-self-center text-center m-auto">
                 <i class="d-block" style="width: 256px;height: 256px;">
                     <svg
-                        version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        version="1.1" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 500 500" width="100%" style="height:100%;">
                         <g>
                             <defs>

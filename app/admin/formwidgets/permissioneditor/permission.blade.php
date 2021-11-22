@@ -5,10 +5,10 @@
         <span>{{ $permission->description }}</span>
     </td>
     <td class="text-center">
-        <div class="custom-control custom-checkbox d-inline-block">
+        <div class="form-check d-inline-block">
             <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 id="checkbox-{{ str_replace('.', '-', $permission->code) }}"
                 value="1"
                 name="{{ $field->getName() }}[{{ $permission->code }}]"
@@ -16,7 +16,7 @@
                 @if ($checkedValue == 1) checked="checked" @endif
                 @if ($this->previewMode) disabled="disabled" @endif
             />
-            <label class="custom-control-label" for="checkbox-{{ str_replace('.', '-', $permission->code) }}"></label>
+            <label class="form-check-label" for="checkbox-{{ str_replace('.', '-', $permission->code) }}"></label>
         </div>
     </td>
 </tr>

@@ -1,4 +1,4 @@
-.widget-item-onboarding {
-  max-height: 420px;
+.onboarding-container {
+  max-height: 380px;
   overflow-y: scroll;
 }

@@ -28,11 +28,11 @@
                                 <div class="btn btn-handle form-check-handle mr-2">
                                     <i class="fa fa-arrows-alt-v text-muted"></i>
                                 </div>
-                                <div class="custom-control custom-checkbox custom-control-inline">
+                                <div class="form-check custom-control-inline">
                                     <input
                                         type="checkbox"
                                         id="list-setup-{{ $column->columnName }}"
-                                        class="custom-control-input"
+                                        class="form-check-input"
                                         name="visible_columns[]"
                                         value="{{ $column->columnName }}"
                                         {!! $column->invisible ? '' : 'checked="checked"' !!}
@@ -43,7 +43,7 @@
                                         value="{{ $column->columnName }}"
                                     />
                                     <label
-                                        class="custom-control-label"
+                                        class="form-check-label"
                                         for="list-setup-{{ $column->columnName }}"
                                     ><b>@lang($column->label)</b></label>
                                 </div>
@@ -60,7 +60,7 @@
                     </label>
                     <div
                         class="btn-group btn-group-toggle"
-                        data-toggle="buttons"
+                        data-bs-toggle="buttons"
                     >
                         @foreach ($perPageOptions as $optionValue)
                             <label class="btn btn-light {{ $optionValue == $pageLimit ? 'active' : '' }}">

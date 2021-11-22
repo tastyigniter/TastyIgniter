@@ -62,9 +62,9 @@
     MainMenu.prototype.updateBadgeCount = function (itemName, count) {
         var $itemMenu = this.$el.find('[data-request-options='+itemName+']'),
             $dropdown = $itemMenu.closest('.dropdown'),
-            $dropdownBadge = $dropdown.find('[data-toggle="dropdown"] .badge'),
+            $dropdownBadge = $dropdown.find('[data-bs-toggle="dropdown"] .badge'),
             prevBadgeCount = parseInt($dropdownBadge.html()),
-            badgeCount = (isNaN(prevBadgeCount) ? 0 : prevBadgeCount) + parseInt(count)
+            badgeCount = (isNaN(prevBadgeCount) ? 0 : prevBadgeCount)+parseInt(count)
 
         $dropdownBadge.html(badgeCount < 100 ? badgeCount : '+99')
     }
@@ -89,8 +89,8 @@
     MainMenu.prototype.onMarkOptionsAsRead = function (event) {
         var $toggle = $(event.target),
             $dropdown = $toggle.closest('.dropdown'),
-            $itemMenu =  $dropdown.find('[data-request-options]'),
-            $dropdownBadge = $dropdown.find('[data-toggle="dropdown"] .badge'),
+            $itemMenu = $dropdown.find('[data-request-options]'),
+            $dropdownBadge = $dropdown.find('[data-bs-toggle="dropdown"] .badge'),
             itemName = $itemMenu.data('requestOptions')
 
         if (!$itemMenu.length)

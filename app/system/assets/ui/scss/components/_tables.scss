@@ -1,16 +1,21 @@
 .table {
+
+  > :not(caption) > * > * {
+    box-shadow: none;
+  }
+
   .sort-col {
     cursor: pointer;
     display: block;
     position: relative;
-    color: $table-head-color;
+    color: $table-color;
     text-decoration: none;
 
     .fa {
       visibility: hidden;
       position: absolute;
-      right: 1px;
-      top: 6px;
+      right: 0;
+      top: 3px;
     }
 
     &:hover,
@@ -38,11 +43,11 @@
 
 .table-striped {
   thead th {
-    background-color: $table-head-bg;
+    background-color: $table-bg;
   }
 
   tbody tr {
-    background-color: $table-head-bg;
+    background-color: $table-bg;
   }
 }
 
@@ -61,11 +66,7 @@
 }
 
 .table > thead > tr > th {
-  font-weight: $font-weight-normal;
-  font-size: $font-size-sm;
-  text-transform: uppercase;
-  line-height: 2;
-  color: $table-head-color;
+  font-weight: $font-weight-bold;
 }
 
 .table .list-action,

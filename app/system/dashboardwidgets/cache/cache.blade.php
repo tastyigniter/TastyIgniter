@@ -7,7 +7,7 @@
             <div
                 class="progress-bar progress-bar-animated p-2"
                 role="progressbar"
-                data-toggle="tooltip"
+                data-bs-toggle="tooltip"
                 data-placement="top"
                 title="{{ $cacheInfo->label }}"
                 aria-valuenow="{{ $cacheInfo->size }}"

@@ -15,11 +15,6 @@ class Onboarding extends BaseDashboardWidget
      */
     protected $defaultAlias = 'onboarding';
 
-    public function initialize()
-    {
-        $this->setProperty('cssClass', 'bg-light widget-item-onboarding');
-    }
-
     public function defineProperties()
     {
         return [

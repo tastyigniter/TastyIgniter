@@ -1,25 +1,28 @@
 {
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watche": "npm run dev -- --watch",
-    "prod": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "dev": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "mix --production"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@popperjs/core": "^2.10.2",
     "animate.css": "^4.1.1",
-    "bootstrap": "^5.1.0",
+    "bootstrap": "^5.1.3",
     "bootstrap-colorpicker": "^3.4.0",
     "cross-env": "^7.0.3",
     "jquery": "^3.5.1",
     "jquery-sortablejs": "^1.0.1",
-    "js-cookie": "^2.2.0",
-    "laravel-mix": "^6.0.27",
-    "metismenu": "3.0.7",
-    "@popperjs/core": "^2.9.3",
+    "js-cookie": "^3.0.1",
+    "laravel-mix": "^6.0.39",
+    "metismenu": "2.7.7",
+    "sass": "^1.43.4",
+    "sass-loader": "^8.0.2",
     "select2": "4.0.13",
-    "select2-bootstrap-5-theme": "^1.1.1",
+    "select2-bootstrap-5-theme": "^1.2.0",
     "sortablejs": "^1.14.0",
     "sweetalert": "^2.1.2"
   }
