@@ -2,7 +2,7 @@
 
     {!! $this->widgets['toolbar']->render() !!}
 
-    @if (!empty($updates['items']) OR !empty($updates['ignoredItems']))
+    @if (!empty($updates['items']) || !empty($updates['ignoredItems']))
         <div id="updates">
             {!! $this->makePartial('updates/list') !!}
         </div>

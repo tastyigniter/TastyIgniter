@@ -66,6 +66,8 @@ class Menu_item_options_model extends Model
 
     public $with = ['option'];
 
+    public $timestamps = TRUE;
+
     public function getOptionNameAttribute()
     {
         return optional($this->option)->option_name;

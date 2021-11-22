@@ -13,7 +13,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
         </div>
         <div class="modal-body">
-            @if (isset($items) AND count($items))
+            @if (isset($items) && count($items))
                 @foreach ($items['data'] as $index => $item)
                     <div class="card card-body {{ empty($item['installed']) ? 'bg-white' : '' }} mb-3">
                         <div class="d-flex align-items-center">
@@ -34,7 +34,7 @@
                                     class="custom-control-input"
                                     name="install_items[{{ $index }}]"
                                     value="{{ $item['code'] }}"
-                                    {{ ($itemType != 'theme' OR $loop->first) ? 'checked="checked"' : '' }}
+                                    {{ ($itemType != 'theme' || $loop->first) ? 'checked="checked"' : '' }}
                                     {!! empty($item['installed']) ? '' : 'disabled="disabled"' !!}
                                 />
                                 <label

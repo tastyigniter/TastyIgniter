@@ -141,7 +141,7 @@ trait ManagesOrderItems
                 'option_values' => serialize($cartItem->options),
             ]);
 
-            if ($orderMenuId AND count($cartItem->options)) {
+            if ($orderMenuId && count($cartItem->options)) {
                 $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
             }
         }

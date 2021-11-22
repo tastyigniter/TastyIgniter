@@ -90,7 +90,7 @@ class Connector extends BaseFormWidget
         $fieldName = $this->formField->getName(FALSE);
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
 
-        if ($this->formField->disabled OR $this->formField->readOnly) {
+        if ($this->formField->disabled || $this->formField->readOnly) {
             $this->previewMode = TRUE;
         }
     }

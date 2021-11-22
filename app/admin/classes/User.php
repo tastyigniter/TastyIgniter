@@ -96,7 +96,7 @@ class User extends Manager
         $staff->user = [
             'username' => $attributes['username'],
             'password' => $attributes['password'],
-            'super_user' => FALSE,
+            'super_user' => $attributes['super_user'] ?? FALSE,
             'activate' => $activate,
         ];
 

@@ -74,10 +74,9 @@ $config['list']['columns'] = [
     'reservation_id' => [
         'label' => 'lang:admin::lang.column_id',
     ],
-    'location' => [
+    'location_name' => [
         'label' => 'lang:admin::lang.reservations.column_location',
         'relation' => 'location',
-        'select' => 'location_name',
         'searchable' => TRUE,
         'locationAware' => TRUE,
     ],

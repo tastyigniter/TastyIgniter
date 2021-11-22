@@ -277,7 +277,7 @@ class MediaManager extends BaseWidget
         if (!$mediaLibrary->isAllowedExtension($name))
             throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
 
-        if (!$this->validateFileName($name) OR !$this->validateFileName($oldName))
+        if (!$this->validateFileName($name) || !$this->validateFileName($oldName))
             throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
 
         $newPath = $path.'/'.$name;
@@ -336,7 +336,7 @@ class MediaManager extends BaseWidget
             throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
         $files = post('files');
-        if (empty($files) OR !is_array($files)) {
+        if (empty($files) || !is_array($files)) {
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_delete_file'));
         }
 
@@ -374,7 +374,7 @@ class MediaManager extends BaseWidget
             throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
         $files = post('files');
-        if (empty($files) OR !is_array($files))
+        if (empty($files) || !is_array($files))
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_move_file'));
 
         foreach ($files as $file) {
@@ -411,7 +411,7 @@ class MediaManager extends BaseWidget
             throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
         $files = post('files');
-        if (empty($files) OR !is_array($files))
+        if (empty($files) || !is_array($files))
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_copy_file'));
 
         foreach ($files as $file) {
@@ -530,7 +530,7 @@ class MediaManager extends BaseWidget
     {
         $sort = $this->getSortBy();
         $direction = 'descending';
-        if ($sort AND in_array($direction, $sort))
+        if ($sort && in_array($direction, $sort))
             $direction = 'ascending';
 
         $sortBy = [$sortBy, $direction];
@@ -545,7 +545,7 @@ class MediaManager extends BaseWidget
 
     protected function checkUploadHandler()
     {
-        if (!($uniqueId = Request::header('X-IGNITER-FILEUPLOAD')) OR $uniqueId != $this->getId())
+        if (!($uniqueId = Request::header('X-IGNITER-FILEUPLOAD')) || $uniqueId != $this->getId())
             return;
 
         $mediaLibrary = $this->getMediaLibrary();
@@ -637,7 +637,7 @@ class MediaManager extends BaseWidget
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
         $u = 0;
-        while ((round($size / 1024) > 0) AND ($u < 4)) {
+        while ((round($size / 1024) > 0) && ($u < 4)) {
             $size = $size / 1024;
             $u++;
         }

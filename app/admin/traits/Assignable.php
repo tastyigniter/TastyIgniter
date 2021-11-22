@@ -34,7 +34,7 @@ trait Assignable
     {
         if (
             $this->wasChanged('status_id')
-            AND strlen($this->assignee_group_id)
+            && strlen($this->assignee_group_id)
         ) Assignable_logs_model::createLog($this);
     }
 

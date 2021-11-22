@@ -1,11 +1,11 @@
 <ul {!! isset($navAttributes) ? Html::attributes($navAttributes) : '' !!}>
     @foreach($navItems as $code => $menu)
-        @if(isset($menu['child']) AND empty($menu['child']))
+        @if(isset($menu['child']) && empty($menu['child']))
             @continue;
         @endif
         @php
             // Don't display items filtered by user permissions
-            $hasChild = isset($menu['child']) AND count($menu['child'])
+            $hasChild = isset($menu['child']) && count($menu['child'])
         @endphp
         <li class="nav-item{{ ($isActive = $this->isActiveNavItem($code)) ? ' active' : '' }}">
             <a

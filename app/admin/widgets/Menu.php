@@ -89,7 +89,7 @@ class Menu extends BaseWidget
         if ($this->itemsDefined)
             return;
 
-        if (!isset($this->items) OR !is_array($this->items)) {
+        if (!isset($this->items) || !is_array($this->items)) {
             $this->items = [];
         }
 
@@ -253,7 +253,7 @@ class Menu extends BaseWidget
         if (is_numeric($locationId = post('location')))
             $location = Locations_model::find($locationId);
 
-        if ($location AND AdminLocation::hasAccess($location)) {
+        if ($location && AdminLocation::hasAccess($location)) {
             AdminLocation::setCurrent($location);
         }
         else {
@@ -269,7 +269,7 @@ class Menu extends BaseWidget
         $message = (string)post('message');
         $clearAfterMinutes = (int)post('clear_after');
 
-        if ($status < 1 AND !strlen($message))
+        if ($status < 1 && !strlen($message))
             throw new ApplicationException(lang('admin::lang.side_menu.alert_invalid_status'));
 
         $stateData['status'] = $status;
@@ -292,7 +292,7 @@ class Menu extends BaseWidget
 
     protected function getOptionsFromModel($item, $itemOptions)
     {
-        if (is_array($itemOptions) AND is_callable($itemOptions)) {
+        if (is_array($itemOptions) && is_callable($itemOptions)) {
             $user = $this->getLoggedUser();
             $itemOptions = call_user_func($itemOptions, $this, $item, $user);
         }
@@ -302,7 +302,7 @@ class Menu extends BaseWidget
 
     protected function getUnreadCountFromModel($item, $itemBadgeCount)
     {
-        if (is_array($itemBadgeCount) AND is_callable($itemBadgeCount)) {
+        if (is_array($itemBadgeCount) && is_callable($itemBadgeCount)) {
             $user = $this->getLoggedUser();
             $itemBadgeCount = $itemBadgeCount($this, $item, $user);
         }
@@ -313,7 +313,7 @@ class Menu extends BaseWidget
     protected function resolveMarkAsReadFromModel($item)
     {
         $callback = array_get($item->config, 'markAsRead');
-        if (is_array($callback) AND is_callable($callback)) {
+        if (is_array($callback) && is_callable($callback)) {
             $user = $this->getLoggedUser();
             $callback($this, $item, $user);
         }

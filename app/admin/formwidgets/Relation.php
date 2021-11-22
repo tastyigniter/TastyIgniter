@@ -90,7 +90,7 @@ class Relation extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->formField->disabled OR $this->formField->hidden) {
+        if ($this->formField->disabled || $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 
@@ -211,7 +211,7 @@ class Relation extends BaseFormWidget
     {
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
-        if (!$model OR !$model->hasRelation($attribute)) {
+        if (!$model || !$model->hasRelation($attribute)) {
             throw new Exception(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom

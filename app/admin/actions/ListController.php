@@ -103,7 +103,7 @@ class ListController extends ControllerAction
     public function index_onDelete()
     {
         $checkedIds = post('checked');
-        if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds)) {
+        if (!$checkedIds || !is_array($checkedIds) || !count($checkedIds)) {
             flash()->success(lang('admin::lang.list.delete_empty'));
 
             return $this->controller->refreshList();
@@ -165,7 +165,7 @@ class ListController extends ControllerAction
      */
     public function makeList($alias)
     {
-        if (!$alias OR !isset($this->listConfig[$alias]))
+        if (!$alias || !isset($this->listConfig[$alias]))
             $alias = $this->primaryAlias;
 
         $listConfig = $this->controller->getListConfig($alias);
@@ -210,7 +210,7 @@ class ListController extends ControllerAction
         $widget->bindToController();
 
         // Prep the optional toolbar widget
-        if (isset($this->controller->widgets['toolbar']) AND (isset($listConfig['toolbar']) OR isset($modelConfig['toolbar']))) {
+        if (isset($this->controller->widgets['toolbar']) && (isset($listConfig['toolbar']) || isset($modelConfig['toolbar']))) {
             $this->toolbarWidget = $this->controller->widgets['toolbar'];
             if ($this->toolbarWidget instanceof \Admin\Widgets\Toolbar)
                 $this->toolbarWidget->reInitialize($listConfig['toolbar'] ?? $modelConfig['toolbar']);
@@ -266,7 +266,7 @@ class ListController extends ControllerAction
 
     public function renderList($alias = null)
     {
-        if (is_null($alias) OR !isset($this->listConfig[$alias]))
+        if (is_null($alias) || !isset($this->listConfig[$alias]))
             $alias = $this->primaryAlias;
 
         $list = [];
@@ -290,7 +290,7 @@ class ListController extends ControllerAction
             $this->makeLists();
         }
 
-        if (!$alias OR !isset($this->listConfig[$alias])) {
+        if (!$alias || !isset($this->listConfig[$alias])) {
             $alias = $this->primaryAlias;
         }
 

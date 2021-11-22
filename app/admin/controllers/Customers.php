@@ -86,7 +86,7 @@ class Customers extends \Admin\Classes\AdminController
 
     public function formExtendModel($model)
     {
-        if ($model->exists AND !$model->is_activated) {
+        if ($model->exists && !$model->is_activated) {
             Template::setButton(lang('admin::lang.customers.button_activate'), [
                 'class' => 'btn btn-success pull-right',
                 'data-request' => 'onActivate',
@@ -96,10 +96,10 @@ class Customers extends \Admin\Classes\AdminController
 
     public function formAfterSave($model)
     {
-        if (!$model->group OR $model->group->requiresApproval())
+        if (!$model->group || $model->group->requiresApproval())
             return;
 
-        if ($this->status AND !$this->is_activated)
+        if ($this->status && !$this->is_activated)
             $model->completeActivation($model->getActivationCode());
     }
 }

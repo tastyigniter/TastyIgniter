@@ -21,7 +21,7 @@ trait SendsMailTemplate
         $vars = $this->mailGetData();
 
         $result = $this->fireEvent('model.mailGetData', [$view, $recipientType]);
-        if ($result AND is_array($result))
+        if ($result && is_array($result))
             $vars = array_merge(...$result) + $vars;
 
         Mail::queue($view, $vars, $this->mailBuildMessage($recipientType));

@@ -148,7 +148,7 @@ class Users_model extends AuthUserModel
         $role = $this->staff->role;
 
         $permissions = [];
-        if ($role AND is_array($role->permissions)) {
+        if ($role && is_array($role->permissions)) {
             $permissions = $role->permissions;
         }
 

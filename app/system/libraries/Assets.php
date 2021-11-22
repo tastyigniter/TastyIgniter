@@ -356,7 +356,7 @@ class Assets
 
     protected function transformJsObjectVar($value)
     {
-        if ($value instanceof JsonSerializable OR $value instanceof StdClass)
+        if ($value instanceof JsonSerializable || $value instanceof StdClass)
             return json_encode($value);
 
         // If a toJson() method exists, the object can cast itself automatically.

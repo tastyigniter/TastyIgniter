@@ -76,7 +76,7 @@ trait CombinesAssets
 
         if ($this->useMinify) {
             $this->registerFilter('js', new \Igniter\Flame\Assetic\Filter\JSMinFilter);
-            $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssMinFilter);
+            $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\StylesheetMinify);
         }
     }
 
@@ -206,6 +206,9 @@ trait CombinesAssets
 
             if (!file_exists($path))
                 $path = File::symbolizePath($path, null) ?? $path;
+
+            if (!file_exists($path))
+                continue;
 
             $asset = starts_with($path, ['//', 'http://', 'https://'])
                 ? new HttpAsset($path, $filters)

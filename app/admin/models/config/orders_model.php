@@ -81,7 +81,6 @@ $config['list']['columns'] = [
     'location_name' => [
         'label' => 'lang:admin::lang.orders.column_location',
         'relation' => 'location',
-        'select' => 'location_name',
         'searchable' => TRUE,
         'locationAware' => TRUE,
     ],
@@ -144,6 +143,11 @@ $config['list']['columns'] = [
     'order_total' => [
         'label' => 'lang:admin::lang.orders.column_total',
         'type' => 'currency',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'type' => 'datesince',
+        'invisible' => TRUE,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',

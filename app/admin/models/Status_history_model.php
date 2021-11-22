@@ -49,7 +49,7 @@ class Status_history_model extends Model
 
     public function getStaffNameAttribute($value)
     {
-        return ($this->staff AND $this->staff->exists) ? $this->staff->staff_name : $value;
+        return ($this->staff && $this->staff->exists) ? $this->staff->staff_name : $value;
     }
 
     public function getDateAddedSinceAttribute($value)
@@ -59,7 +59,7 @@ class Status_history_model extends Model
 
     public function getStatusNameAttribute($value)
     {
-        return ($this->status AND $this->status->exists) ? $this->status->status_name : $value;
+        return ($this->status && $this->status->exists) ? $this->status->status_name : $value;
     }
 
     public function getNotifiedAttribute()

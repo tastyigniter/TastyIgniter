@@ -145,7 +145,7 @@ class Payments_model extends Model
             $class = null;
         }
 
-        if ($class AND !$this->isClassExtendedWith($class)) {
+        if ($class && !$this->isClassExtendedWith($class)) {
             $this->extendClassWith($class);
         }
 
