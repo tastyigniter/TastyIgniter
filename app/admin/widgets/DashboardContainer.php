@@ -123,7 +123,9 @@ class DashboardContainer extends BaseWidget
     public function onLoadAddPopup()
     {
         $this->vars['gridColumns'] = $this->getWidgetPropertyWidthOptions();
-        $this->vars['widgets'] = Widgets::instance()->listDashboardWidgets();
+        $this->vars['widgets'] = collect(Widgets::instance()->listDashboardWidgets())->mapWithKeys(function ($widgetInfo, $className) {
+            return [$className => isset($widgetInfo['label']) ? lang($widgetInfo['label']) : $className];
+        })->all();
 
         return ['#'.$this->getId('new-widget-modal-content') => $this->makePartial('new_widget_popup')];
     }

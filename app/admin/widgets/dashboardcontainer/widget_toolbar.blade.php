@@ -1,46 +1,31 @@
-<div
-    class="modal slideInDown fade"
+<x-modal.loading
     id="newWidgetModal"
-    tabindex="-1"
-    role="dialog"
     aria-labelledby="newWidgetModalTitle"
-    aria-hidden="true"
->
-    <div class="modal-dialog" role="document">
-        <div id="{{ $this->getId('new-widget-modal-content') }}" class="modal-content">
-            <div class="modal-body">
-                <div class="progress-indicator">
-                    <span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>
-                    @lang('admin::lang.text_loading')
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="toolbar-action pt-3">
+    :modalContentId="$this->getId('new-widget-modal-content')"
+/>
+<div class="toolbar-action card-body">
     @if ($this->canManage)
         <button
             type="button"
-            class="btn btn-outline-primary"
-            data-toggle="modal"
-            data-target="#newWidgetModal"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#newWidgetModal"
             data-request="{{ $this->getEventHandler('onLoadAddPopup') }}"
             tabindex="-1"
         ><i class="fa fa-plus"></i>&nbsp;&nbsp;@lang('admin::lang.dashboard.button_add_widget')</button>
         <button
             type="button"
-            class="btn btn-outline-danger"
+            class="btn btn-danger pull-right"
             data-request="{{ $this->getEventHandler('onResetWidgets') }}"
             data-request-confirm="@lang('admin::lang.alert_warning_confirm')"
             data-attach-loading
-            title="@lang('admin::lang.dashboard.button_reset_widgets')"
             tabindex="-1"
-        ><i class="fa fa-refresh"></i></button>
+        ><i class="fa fa-refresh"></i>&nbsp;&nbsp;@lang('admin::lang.dashboard.button_reset_widgets')</button>
     @endif
     @if ($this->canSetDefault)
         <button
             type="button"
-            class="btn btn-outline-default pull-right"
+            class="btn btn-default pull-right"
             data-request="{{ $this->getEventHandler('onSetAsDefault') }}"
             data-request-confirm="@lang('admin::lang.dashboard.alert_set_default_confirm')"
             data-attach-loading

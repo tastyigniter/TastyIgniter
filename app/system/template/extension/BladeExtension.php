@@ -3,6 +3,7 @@
 namespace System\Template\Extension;
 
 use Igniter\Flame\Pagic\Extension\AbstractExtension;
+use Illuminate\Support\Str;
 use System\Classes\ExtensionManager;
 
 class BladeExtension extends AbstractExtension
@@ -29,7 +30,22 @@ class BladeExtension extends AbstractExtension
 
     public function getDirectives()
     {
-        return $this->listDirectives();
+        return array_merge([
+            'styles' => [$this, 'compilesStyles'],
+            'scripts' => [$this, 'compilesScripts'],
+
+            'auth' => [$this, 'compilesAuth'],
+            'elseauth' => [$this, 'compileElseAuth'],
+            'guest' => [$this, 'compilesGuest'],
+            'elseguest' => [$this, 'compilesElseGuest'],
+
+            'page' => [$this, 'compilesPage'],
+            'partial' => [$this, 'compilesPartial'],
+            'partialIf' => [$this, 'compilesPartialIf'],
+            'partialWhen' => [$this, 'compilesPartialWhen'],
+            'partialUnless' => [$this, 'compilesPartialUnless'],
+            'partialFirst' => [$this, 'compilesPartialFirst'],
+        ], $this->listDirectives());
     }
 
     /**
@@ -72,5 +88,139 @@ class BladeExtension extends AbstractExtension
         foreach ($bundles as $extensionCode => $definitions) {
             $this->registerDirectives($definitions);
         }
+    }
+
+    //
+    //
+    //
+
+    public function compilesStyles($expression)
+    {
+        return "<?php echo Assets::getCss(); ?>\n".
+            "<?php echo \$__env->yieldPushContent('styles'); ?>";
+    }
+
+    public function compilesScripts($expression)
+    {
+        return "<?php echo Assets::getJs(); ?>\n".
+            "<?php echo \$__env->yieldPushContent('scripts'); ?>";
+    }
+
+    public function compilesAuth($guard)
+    {
+        $guard = $this->stripQuotes($guard);
+
+        return $guard === 'admin'
+            ? '<?php if(AdminAuth::check()): ?>'
+            : '<?php if(Auth::check()): ?>';
+    }
+
+    public function compileElseAuth($guard = null)
+    {
+        $guard = $this->stripQuotes($guard);
+
+        return $guard === 'admin'
+            ? '<?php elseif(AdminAuth::check()): ?>'
+            : '<?php elseif(Auth::check()): ?>';
+    }
+
+    public function compilesGuest($guard = null)
+    {
+        $guard = $this->stripQuotes($guard);
+
+        return $guard === 'admin'
+            ? '<?php if (!AdminAuth::check()): ?>'
+            : '<?php if (!Auth::check()): ?>';
+    }
+
+    public function compilesElseGuest($guard = null)
+    {
+        $guard = $this->stripQuotes($guard);
+
+        return $guard === 'admin'
+            ? '<?php elseif (!AdminAuth::check()): ?>'
+            : '<?php elseif (!Auth::check()): ?>';
+    }
+
+    public function compilesPage($expression)
+    {
+        return '<?php echo Template::getBlock("body"); ?>';
+    }
+
+    public function compilesPartial($expression)
+    {
+        $expression = $this->stripParentheses($expression);
+        [$partial, $data] = strpos($expression, ',') !== FALSE
+            ? array_map('trim', explode(',', trim($expression, '()'), 2)) + ['', '[]']
+            : [trim($expression, '()'), '[]'];
+
+        $partial = $this->stripQuotes($partial);
+
+        $expression = sprintf('%s, %s', '"_partials.'.$partial.'"', $data);
+
+        return "<?php echo \$__env->make({$expression}, \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>";
+    }
+
+    public function compilesPartialIf($expression)
+    {
+        $expression = $this->stripParentheses($expression);
+        [$partial, $data] = strpos($expression, ',') !== FALSE
+            ? array_map('trim', explode(',', trim($expression, '()'), 2)) + ['', '[]']
+            : [trim($expression, '()'), '[]'];
+
+        $partial = $this->stripQuotes($partial);
+
+        $expression = sprintf('%s, %s', '"_partials.'.$partial.'"', $data);
+
+        return "<?php if (\$__env->exists({$expression})) echo \$__env->make({$expression}, \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>";
+    }
+
+    public function compilesPartialWhen($expression)
+    {
+        $expression = $this->stripParentheses($expression);
+        $expression = $this->appendPartialPath($expression);
+
+        return "<?php echo \$__env->renderWhen($expression, \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path'])); ?>";
+    }
+
+    public function compilesPartialUnless($expression)
+    {
+        $expression = $this->stripParentheses($expression);
+        $expression = $this->appendPartialPath($expression);
+
+        return "<?php echo \$__env->renderWhen(! $expression, \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path'])); ?>";
+    }
+
+    public function compilesPartialFirst($expression)
+    {
+        $expression = $this->stripParentheses($expression);
+        $expression = $this->appendPartialPath($expression);
+
+        return "<?php echo \$__env->first({$expression}, \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>";
+    }
+
+    public function stripQuotes($string)
+    {
+        return preg_replace("/[\"\']/", '', $string);
+    }
+
+    public function stripParentheses($expression)
+    {
+        if (Str::startsWith($expression, '(')) {
+            $expression = substr($expression, 1, -1);
+        }
+
+        return $expression;
+    }
+
+    public function appendPartialPath($expression)
+    {
+        [$condition, $partial, $data] = strpos($expression, ',') !== FALSE
+            ? array_map('trim', explode(',', trim($expression, '()'), 2)) + ['', '', '[]']
+            : [trim($expression, '()'), '', '[]'];
+
+        $partial = $this->stripQuotes($partial);
+
+        return sprintf('%s, %s, %s', $condition, "'_partials.".$partial."'", $data);
     }
 }

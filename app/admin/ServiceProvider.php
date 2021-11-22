@@ -90,7 +90,7 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss', null, 'admin');
             $manager->registerBundle('js', [
                 '~/app/system/assets/ui/flame.js',
-                '~/app/admin/assets/node_modules/js-cookie/src/js.cookie.js',
+                '~/app/admin/assets/node_modules/js-cookie/dist/js.cookie.js',
                 '~/app/admin/assets/node_modules/select2/dist/js/select2.min.js',
                 '~/app/admin/assets/node_modules/metismenu/dist/metisMenu.min.js',
                 '~/app/admin/assets/js/src/app.js',

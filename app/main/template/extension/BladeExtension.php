@@ -26,14 +26,6 @@ class BladeExtension extends AbstractExtension
             'page' => [$this, 'compilesPage'],
             'partial' => [$this, 'compilesPartial'],
             'partialIf' => [$this, 'compilesPartialIf'],
-
-            'styles' => [$this, 'compilesStyles'],
-            'scripts' => [$this, 'compilesScripts'],
-
-            'auth' => [$this, 'compilesAuth'],
-            'elseauth' => [$this, 'compileElseAuth'],
-            'guest' => [$this, 'compilesGuest'],
-            'elseguest' => [$this, 'compilesElseGuest'],
         ];
     }
 
@@ -65,54 +57,6 @@ class BladeExtension extends AbstractExtension
     public function compilesPartialIf($expression)
     {
         return "<?php if (controller()->hasComponent({$expression})) echo controller()->renderPartial({$expression}); ?>";
-    }
-
-    public function compilesStyles($expression)
-    {
-        return "<?php echo Assets::getCss(); ?>\n".
-            "<?php echo \$__env->yieldPushContent('styles'); ?>";
-    }
-
-    public function compilesScripts($expression)
-    {
-        return "<?php echo Assets::getJs(); ?>\n".
-            "<?php echo \$__env->yieldPushContent('scripts'); ?>";
-    }
-
-    public function compilesAuth($guard)
-    {
-        $guard = $this->stripQuotes($guard);
-
-        return $guard === 'admin'
-            ? '<?php if(AdminAuth::check()): ?>'
-            : '<?php if(Auth::check()): ?>';
-    }
-
-    public function compileElseAuth($guard = null)
-    {
-        $guard = $this->stripQuotes($guard);
-
-        return $guard === 'admin'
-            ? '<?php elseif(AdminAuth::check()): ?>'
-            : '<?php elseif(Auth::check()): ?>';
-    }
-
-    public function compilesGuest($guard = null)
-    {
-        $guard = $this->stripQuotes($guard);
-
-        return $guard === 'admin'
-            ? '<?php if (!AdminAuth::check()): ?>'
-            : '<?php if (!Auth::check()): ?>';
-    }
-
-    public function compileElseGuest($guard = null)
-    {
-        $guard = $this->stripQuotes($guard);
-
-        return $guard === 'admin'
-            ? '<?php elseif (!AdminAuth::check()): ?>'
-            : '<?php elseif (!Auth::check()): ?>';
     }
 
     protected function stripQuotes($guard)

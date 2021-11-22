@@ -5,28 +5,24 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {!! get_favicon() !!}
     <title>{{ sprintf(lang('admin::lang.site_title'), Template::getTitle(), setting('site_name')) }}</title>
-    {!! get_style_tags() !!}
+    @styles
 </head>
 <body class="page {{ $this->bodyClass }}">
-    @if(AdminAuth::isLogged())
-
-        {!! $this->makePartial('top_nav') !!}
-
-        {!! AdminMenu::render('side_nav') !!}
-
-    @endif
-
-    <div class="page-wrapper">
-        <div class="page-content">
-            {!! Template::getBlock('body') !!}
-        </div>
+<x-header>
+    {!! $this->widgets['mainmenu']->render() !!}
+</x-header>
+<div class="sidebar">
+    <x-aside :navItems="AdminMenu::getVisibleNavItems()"/>
+</div>
+<div class="page-wrapper flex-grow-1 overflow-hidden">
+    <div class="page-content overflow-y-scroll overflow-y-lg-auto px-3 py-4 h-100">
+        {!! Template::getBlock('body') !!}
     </div>
-
-    <div id="notification">
-        {!! $this->makePartial('flash') !!}
-    </div>
-    {!! $this->makePartial('set_status_form') !!}
-    {!! Assets::getJsVars() !!}
-    {!! get_script_tags() !!}
+</div>
+<div id="notification">
+    <x-alert/>
+</div>
+@partial('set_status_form')
+@scripts
 </body>
 </html>

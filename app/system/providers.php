@@ -15,7 +15,6 @@ return [
     Illuminate\Queue\QueueServiceProvider::class,
     Illuminate\Redis\RedisServiceProvider::class,
     Illuminate\Session\SessionServiceProvider::class,
-    Illuminate\View\ViewServiceProvider::class,
     Laravel\Tinker\TinkerServiceProvider::class,
 
     // TastyIgniter flame providers
@@ -29,4 +28,5 @@ return [
     Igniter\Flame\Setting\SettingServiceProvider::class,
     Igniter\Flame\Html\UrlServiceProvider::class, // force https -- url policy
     Igniter\Flame\Validation\ValidationServiceProvider::class,
+    Igniter\Flame\View\ViewServiceProvider::class,
 ];

@@ -11,7 +11,7 @@
     <div class="dropdown-menu">
         <div class="d-flex flex-column w-100 align-items-center">
             <div class="pt-4 px-4 pb-2">
-                <img class="rounded-circle" src="{{ $userPanel->getAvatarUrl().'&s=64' }}">
+                <img class="rounded-circle" src="{{ $userPanel->getAvatarUrl().'&s=64' }}" alt=""/>
             </div>
             <div class="pb-3 text-center">
                 <div class="text-uppercase">{{ $userPanel->getUserName() }}</div>
