@@ -87,7 +87,7 @@ class User extends Manager
     {
         $model = $this->createModel();
 
-        $staff = $model->staff()->newInstance();
+        $staff = $model->staff()->getModel()->newInstance();
         $staff->staff_email = $attributes['staff_email'];
         $staff->staff_name = $attributes['staff_name'];
         $staff->language_id = $attributes['language_id'] ?? null;
@@ -96,15 +96,17 @@ class User extends Manager
         $staff->user = [
             'username' => $attributes['username'],
             'password' => $attributes['password'],
-            'super_user' => FALSE,
+            'super_user' => $attributes['super_user'] ?? FALSE,
             'activate' => $activate,
         ];
 
         $staff->save();
 
-        if ($staff->groups->isEmpty())
-            $staff->groups()->attach($attributes['groups']);
+        $staff->groups()->attach($attributes['groups']);
 
-        return $model;
+        if (array_key_exists('locations', $attributes))
+            $staff->locations()->attach($attributes['locations']);
+
+        return $staff->reload()->user;
     }
 }

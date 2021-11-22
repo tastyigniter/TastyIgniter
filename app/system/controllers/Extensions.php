@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Request;
 use System\Classes\ExtensionManager;
 use System\Models\Extensions_model;
 use System\Models\Settings_model;
+use System\Traits\ManagesUpdates;
 
 class Extensions extends \Admin\Classes\AdminController
 {
     use WidgetMaker;
+    use ManagesUpdates;
 
     public $implement = [
         'Admin\Actions\ListController',
@@ -59,6 +61,8 @@ class Extensions extends \Admin\Classes\AdminController
 
         Extensions_model::syncAll();
 
+        $this->initUpdate('extension');
+
         $this->asExtension('ListController')->index();
     }
 
@@ -70,7 +74,7 @@ class Extensions extends \Admin\Classes\AdminController
         AdminMenu::setContext('settings', 'system');
 
         try {
-            if (!strlen($vendor) OR !strlen($extension)) {
+            if (!strlen($vendor) || !strlen($extension)) {
                 throw new SystemException(lang('system::lang.extensions.alert_setting_missing_id'));
             }
 
@@ -79,7 +83,7 @@ class Extensions extends \Admin\Classes\AdminController
                 throw new SystemException(lang('system::lang.extensions.alert_setting_not_found'));
             }
 
-            if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions))
+            if ($settingItem->permissions && !$this->getUser()->hasPermission($settingItem->permissions))
                 throw new SystemException(lang('admin::lang.alert_user_restricted'));
 
             $pageTitle = lang($settingItem->label ?: 'text_edit_title');
@@ -179,7 +183,7 @@ class Extensions extends \Admin\Classes\AdminController
 
     public function edit_onSave($action, $vendor = null, $extension = null, $context = null)
     {
-        if (!strlen($vendor) OR !strlen($extension)) {
+        if (!strlen($vendor) || !strlen($extension)) {
             throw new SystemException(lang('system::lang.extensions.alert_setting_missing_id'));
         }
 
@@ -188,7 +192,7 @@ class Extensions extends \Admin\Classes\AdminController
             throw new SystemException(lang('system::lang.extensions.alert_setting_not_found'));
         }
 
-        if ($settingItem->permissions AND !$this->getUser()->hasPermission($settingItem->permissions))
+        if ($settingItem->permissions && !$this->getUser()->hasPermission($settingItem->permissions))
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
 
         $model = $this->formFindModelObject($settingItem);
@@ -238,10 +242,10 @@ class Extensions extends \Admin\Classes\AdminController
 
         $attributes = $column->attributes;
 
-        if ($column->columnName == 'delete' AND $record->status)
+        if ($column->columnName == 'delete' && $record->status)
             $attributes['class'] = $attributes['class'].' disabled';
 
-        if ($column->columnName != 'delete' AND !$record->class)
+        if ($column->columnName != 'delete' && !$record->class)
             $attributes['class'] = $attributes['class'].' disabled';
 
         return $attributes;
@@ -261,7 +265,7 @@ class Extensions extends \Admin\Classes\AdminController
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget
-        if (isset($config['toolbar']) AND isset($this->widgets['toolbar'])) {
+        if (isset($config['toolbar']) && isset($this->widgets['toolbar'])) {
             $this->toolbarWidget = $this->widgets['toolbar'];
             $this->toolbarWidget->reInitialize($config['toolbar']);
         }

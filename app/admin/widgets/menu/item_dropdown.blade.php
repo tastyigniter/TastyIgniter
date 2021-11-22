@@ -1,6 +1,6 @@
 @php
-$itemOptions = (isset($hasPartial) AND $hasPartial) ? [] : $item->options();
-is_array($itemOptions) OR $itemOptions = [];
+    $itemOptions = (isset($hasPartial) && $hasPartial) ? [] : $item->options();
+    is_array($itemOptions) || $itemOptions = [];
 @endphp
 <li
     id="{{ $item->getId()}}"

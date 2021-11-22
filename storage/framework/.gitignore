@@ -4,6 +4,7 @@ schedule-*
 compiled.php
 classes.php
 packages.php
+maintenance
 services.php
 services.json
 events.scanned.php

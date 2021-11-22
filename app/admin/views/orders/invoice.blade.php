@@ -135,13 +135,13 @@
                     </tbody>
                     <tfoot>
                     @foreach($model->getOrderTotals() as $total)
-                        @continue($model->isCollectionType() AND $total->code == 'delivery')
-                        @php $thickLine = ($total->code == 'order_total' OR $total->code == 'total') @endphp
+                        @continue($model->isCollectionType() && $total->code == 'delivery')
+                        @php $thickLine = ($total->code == 'order_total' || $total->code == 'total') @endphp
                         <tr>
-                            <td class="{{ ($loop->iteration === 1 OR $thickLine) ? 'thick' : 'no' }}-line" width="1"></td>
-                            <td class="{{ ($loop->iteration === 1 OR $thickLine) ? 'thick' : 'no' }}-line"></td>
-                            <td class="{{ ($loop->iteration === 1 OR $thickLine) ? 'thick' : 'no' }}-line text-left">{{ $total->title }}</td>
-                            <td class="{{ ($loop->iteration === 1 OR $thickLine) ? 'thick' : 'no' }}-line text-right">{{ currency_format($total->value) }}</td>
+                            <td class="{{ ($loop->iteration === 1 || $thickLine) ? 'thick' : 'no' }}-line" width="1"></td>
+                            <td class="{{ ($loop->iteration === 1 || $thickLine) ? 'thick' : 'no' }}-line"></td>
+                            <td class="{{ ($loop->iteration === 1 || $thickLine) ? 'thick' : 'no' }}-line text-left">{{ $total->title }}</td>
+                            <td class="{{ ($loop->iteration === 1 || $thickLine) ? 'thick' : 'no' }}-line text-right">{{ currency_format($total->value) }}</td>
                         </tr>
                     @endforeach
                     </tfoot>

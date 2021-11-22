@@ -4,10 +4,11 @@ $config['list']['toolbar'] = [
         'browse' => [
             'label' => 'lang:system::lang.themes.button_browse',
             'class' => 'btn btn-primary',
-            'href' => 'updates/browse/themes',
+            'href' => 'https://tastyigniter.com/marketplace',
+            'target' => '_blank',
         ],
         'check' => [
-            'label' => 'lang:system::lang.themes.button_check',
+            'label' => 'lang:system::lang.updates.button_check',
             'class' => 'btn btn-success',
             'href' => 'updates',
         ],
@@ -58,6 +59,16 @@ $config['list']['columns'] = [
     'theme_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
+    ],
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
     ],
 ];
 

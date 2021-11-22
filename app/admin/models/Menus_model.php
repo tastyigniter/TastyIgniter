@@ -66,6 +66,8 @@ class Menus_model extends Model
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
 
+    public $timestamps = TRUE;
+
     //
     // Scopes
     //
@@ -106,7 +108,7 @@ class Menus_model extends Model
 
         $searchableFields = ['menu_name', 'menu_description'];
 
-        if (strlen($location) AND is_numeric($location)) {
+        if (strlen($location) && is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
             $query->with(['categories' => function ($q) use ($location) {
                 $q->whereHasOrDoesntHaveLocation($location);
@@ -156,6 +158,8 @@ class Menus_model extends Model
                     ->orWhere('order_restriction', 'like', '%"'.$orderType.'"%');
             });
         }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

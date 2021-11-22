@@ -150,7 +150,7 @@ class Toolbar extends BaseWidget
         $result = [];
         foreach ($buttons as $name => $attributes) {
             $permission = array_get($attributes, 'permission');
-            if ($permission AND !AdminAuth::user()->hasPermission($permission)) {
+            if ($permission && !AdminAuth::user()->hasPermission($permission)) {
                 continue;
             }
 
@@ -163,10 +163,6 @@ class Toolbar extends BaseWidget
             }
 
             $buttonObj = $this->makeButton($name, $attributes);
-
-            if (array_key_exists('menuItems', $attributes)) {
-                $buttonObj->menuItems($this->makeButtons($attributes['menuItems']));
-            }
 
             $result[$name] = $buttonObj;
         }
@@ -181,10 +177,14 @@ class Toolbar extends BaseWidget
      */
     protected function makeButton(string $name, array $config)
     {
-        $buttonObj = new ToolbarButton($name);
-
         $buttonType = array_get($config, 'type', 'link');
+
+        $buttonObj = new ToolbarButton($name);
         $buttonObj->displayAs($buttonType, $config);
+
+        if ($buttonType === 'dropdown' && array_key_exists('menuItems', $config)) {
+            $buttonObj->menuItems($this->makeButtons($config['menuItems']));
+        }
 
         return $buttonObj;
     }

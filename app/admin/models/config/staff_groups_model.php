@@ -11,15 +11,14 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'staff_groups/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -51,7 +50,16 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
 ];
 
 $config['form']['toolbar'] = [
@@ -89,48 +97,6 @@ $config['form']['fields'] = [
     'description' => [
         'label' => 'lang:admin::lang.label_description',
         'type' => 'textarea',
-    ],
-    'auto_assign' => [
-        'label' => 'lang:admin::lang.staff_groups.label_auto_assign',
-        'type' => 'switch',
-        'comment' => 'lang:admin::lang.staff_groups.help_auto_assign',
-    ],
-    'auto_assign_mode' => [
-        'label' => 'lang:admin::lang.staff_groups.label_assignment_mode',
-        'type' => 'radiolist',
-        'span' => 'left',
-        'default' => 1,
-        'options' => [
-            1 => ['admin::lang.staff_groups.text_round_robin', 'admin::lang.staff_groups.help_round_robin'],
-            2 => ['admin::lang.staff_groups.text_load_balanced', 'admin::lang.staff_groups.help_load_balanced'],
-        ],
-        'trigger' => [
-            'action' => 'show',
-            'field' => 'auto_assign',
-            'condition' => 'checked',
-        ],
-    ],
-    'auto_assign_limit' => [
-        'label' => 'lang:admin::lang.staff_groups.label_load_balanced_limit',
-        'type' => 'number',
-        'default' => 20,
-        'comment' => 'lang:admin::lang.staff_groups.help_load_balanced_limit',
-        'trigger' => [
-            'action' => 'show',
-            'field' => 'auto_assign',
-            'condition' => 'checked',
-        ],
-    ],
-    'auto_assign_availability' => [
-        'label' => 'lang:admin::lang.staff_groups.label_assignment_availability',
-        'type' => 'switch',
-        'default' => TRUE,
-        'comment' => 'lang:admin::lang.staff_groups.help_assignment_availability',
-        'trigger' => [
-            'action' => 'show',
-            'field' => 'auto_assign',
-            'condition' => 'checked',
-        ],
     ],
     'auto_assign' => [
         'label' => 'lang:admin::lang.staff_groups.label_auto_assign',

@@ -128,7 +128,7 @@ if (!function_exists('mdate')) {
      */
     function mdate($format = null, $time = null)
     {
-        if (is_null($time) AND $format) {
+        if (is_null($time) && $format) {
             $time = $format;
             $format = null;
         }
@@ -241,8 +241,8 @@ if (!function_exists('day_elapsed')) {
     function day_elapsed($datetime, $full = TRUE)
     {
         $datetime = make_carbon($datetime);
-        $time = $datetime->format(lang('system::lang.php.time_format'));
-        $date = $datetime->format(lang('system::lang.php.date_format'));
+        $time = $datetime->isoFormat(lang('system::lang.moment.time_format'));
+        $date = $datetime->isoFormat(lang('system::lang.moment.date_format'));
 
         if ($datetime->isToday()) {
             $date = lang('system::lang.date.today');
@@ -272,7 +272,7 @@ if (!function_exists('time_range')) {
      */
     function time_range($unix_start, $unix_end, $interval, $time_format = '%H:%i')
     {
-        if ($unix_start == '' OR $unix_end == '' OR $interval == '') {
+        if ($unix_start == '' || $unix_end == '' || $interval == '') {
             return null;
         }
 
@@ -363,7 +363,7 @@ if (!function_exists('is_single_location')) {
      */
     function is_single_location()
     {
-        return config('system.locationMode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
+        return config('system.locationMode', setting('site_location_mode')) === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
     }
 }
 

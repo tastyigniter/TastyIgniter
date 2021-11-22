@@ -136,7 +136,7 @@ class FormController extends ControllerAction
     /**
      * Prepare the widgets used by this action
      *
-     * @param \Model $model
+     * @param \Igniter\Flame\Database\Model $model
      *
      * @param null $context
      * @return void
@@ -199,7 +199,7 @@ class FormController extends ControllerAction
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget
-        if (isset($modelConfig['toolbar']) AND isset($this->controller->widgets['toolbar'])) {
+        if (isset($modelConfig['toolbar']) && isset($this->controller->widgets['toolbar'])) {
             $this->toolbarWidget = $this->controller->widgets['toolbar'];
             if ($this->toolbarWidget instanceof Toolbar) {
                 $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
@@ -440,11 +440,11 @@ class FormController extends ControllerAction
     public function makeRedirect($context = null, $model = null)
     {
         $redirectUrl = null;
-        if (post('new') AND !ends_with($context, '-new')) {
+        if (post('new') && !ends_with($context, '-new')) {
             $context .= '-new';
         }
 
-        if (post('close') AND !ends_with($context, '-close')) {
+        if (post('close') && !ends_with($context, '-close')) {
             $context .= '-close';
         }
 
@@ -454,7 +454,7 @@ class FormController extends ControllerAction
 
         $redirectUrl = $this->getRedirectUrl($context);
 
-        if ($model AND $redirectUrl) {
+        if ($model && $redirectUrl) {
             $redirectUrl = parse_values($model->getAttributes(), $redirectUrl);
         }
 
@@ -494,7 +494,7 @@ class FormController extends ControllerAction
     /**
      * Sets a data collection to a model attributes, relations will also be set.
      *
-     * @param \Model $model Model to save to
+     * @param \Igniter\Flame\Database\Model $model Model to save to
      *
      * @param array $saveData Data to save.
      *
@@ -502,7 +502,7 @@ class FormController extends ControllerAction
      */
     protected function setModelAttributes($model, $saveData)
     {
-        if (!is_array($saveData) OR !$model) {
+        if (!is_array($saveData) || !$model) {
             return;
         }
 
@@ -510,12 +510,12 @@ class FormController extends ControllerAction
 
         $singularTypes = ['belongsTo', 'hasOne', 'morphOne'];
         foreach ($saveData as $attribute => $value) {
-            $isNested = ($attribute == 'pivot' OR (
-                    $model->hasRelation($attribute) AND
+            $isNested = ($attribute == 'pivot' || (
+                    $model->hasRelation($attribute) &&
                     in_array($model->getRelationType($attribute), $singularTypes)
                 ));
 
-            if ($isNested AND is_array($value) AND $model->{$attribute}) {
+            if ($isNested && is_array($value) && $model->{$attribute}) {
                 $this->setModelAttributes($model->{$attribute}, $value);
             }
             elseif ($value !== FormField::NO_SAVE_DATA) {

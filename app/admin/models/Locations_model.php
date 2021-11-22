@@ -34,7 +34,8 @@ class Locations_model extends AbstractLocation
         'location_lat' => 'double',
         'location_lng' => 'double',
         'location_status' => 'boolean',
-        'options' => 'serialize',
+        'options' => 'array',
+
     ];
 
     public $relation = [
@@ -72,6 +73,8 @@ class Locations_model extends AbstractLocation
 
     public $url;
 
+    public $timestamps = TRUE;
+
     protected static $defaultLocation;
 
     public static function getDropdownOptions()
@@ -88,10 +91,10 @@ class Locations_model extends AbstractLocation
             return FALSE;
 
         return isset($model->getAddress()['location_lat'])
-            AND isset($model->getAddress()['location_lng'])
-            AND ($model->hasDelivery() OR $model->hasCollection())
-            AND isset($model->options['hours'])
-            AND $model->delivery_areas->where('is_default', 1)->count() > 0;
+            && isset($model->getAddress()['location_lng'])
+            && ($model->hasDelivery() || $model->hasCollection())
+            && isset($model->options['hours'])
+            && $model->delivery_areas->where('is_default', 1)->count() > 0;
     }
 
     public static function addSortingColumns($newColumns)
@@ -128,16 +131,20 @@ class Locations_model extends AbstractLocation
 
     public function scopeListFrontEnd($query, array $options = [])
     {
-        extract(array_merge([
+        extract($options = array_merge([
             'page' => 1,
             'pageLimit' => 20,
             'sort' => null,
             'search' => null,
+            'enabled' => null,
             'latitude' => null,
             'longitude' => null,
+            'paginate' => TRUE,
+            'hasDelivery' => null,
+            'hasCollection' => null,
         ], $options));
 
-        if ($latitude AND $longitude) {
+        if ($latitude && $longitude) {
             $query->selectDistance($latitude, $longitude);
         }
 
@@ -167,6 +174,20 @@ class Locations_model extends AbstractLocation
         if (strlen($search)) {
             $query->search($search, $searchableFields);
         }
+
+        if (!is_null($enabled))
+            $query->where('location_status', $enabled);
+
+        if (!is_null($hasDelivery))
+            $query->where('options->offer_delivery', $hasDelivery);
+
+        if (!is_null($hasCollection))
+            $query->where('options->offer_collection', $hasCollection);
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
+        if (is_null($pageLimit))
+            return $query;
 
         return $query->paginate($pageLimit, $page);
     }
@@ -203,8 +224,8 @@ class Locations_model extends AbstractLocation
     public function setOptionsAttribute($value)
     {
         if (is_array($value)) {
-            $options = @unserialize($this->attributes['options']) ?: [];
-            $this->attributes['options'] = @serialize(array_merge($options ?? [], $value));
+            $options = @json_decode($this->attributes['options'], TRUE) ?: [];
+            $this->attributes['options'] = @json_encode(array_merge($options ?? [], $value));
         }
     }
 
@@ -253,7 +274,7 @@ class Locations_model extends AbstractLocation
         $paymentGateways = Payments_model::listPayments();
 
         foreach ($paymentGateways as $payment) {
-            if ($payments AND !in_array($payment->code, $payments)) continue;
+            if ($payments && !in_array($payment->code, $payments)) continue;
 
             $result[$payment->code] = $payment;
         }

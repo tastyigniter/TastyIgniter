@@ -23,10 +23,6 @@ class Reservations_model extends Model
     use Locationable;
     use Assignable;
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_modified';
-
     /**
      * @var string The database table name
      */
@@ -160,9 +156,12 @@ class Reservations_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        if ($startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE) AND $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE)) {
+        $startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE);
+        $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE);
+        if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
-        }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }
@@ -177,7 +176,7 @@ class Reservations_model extends Model
     public function scopeWhereBetweenDate($query, $dateTime)
     {
         $query->whereRaw(
-            '? between ADDTIME(reserve_date, reserve_time)'.
+            '? between DATE_SUB(ADDTIME(reserve_date, reserve_time), INTERVAL (duration - 2) MINUTE)'.
             ' and DATE_ADD(ADDTIME(reserve_date, reserve_time), INTERVAL duration MINUTE)',
             [$dateTime]
         );
@@ -202,7 +201,7 @@ class Reservations_model extends Model
         if (!$location = $this->location)
             return $value;
 
-        return $location->getOption('reservation_lead_time');
+        return $location->getReservationStayTime();
     }
 
     public function getReserveEndTimeAttribute($value)
@@ -219,7 +218,7 @@ class Reservations_model extends Model
     public function getReservationDatetimeAttribute($value)
     {
         if (!isset($this->attributes['reserve_date'])
-            AND !isset($this->attributes['reserve_time'])
+            && !isset($this->attributes['reserve_time'])
         ) return null;
 
         return make_carbon($this->attributes['reserve_date'])
@@ -246,7 +245,7 @@ class Reservations_model extends Model
     public function setDurationAttribute($value)
     {
         if (empty($value))
-            $value = ($location = $this->location) ? $location->getOption('reservation_lead_time') : $value;
+            $value = optional($this->location()->first())->getReservationStayTime();
 
         $this->attributes['duration'] = $value;
     }
@@ -326,7 +325,7 @@ class Reservations_model extends Model
     {
         $diffInMinutes = $this->reservation_datetime->diffInMinutes($this->reservation_end_datetime);
 
-        return $diffInMinutes >= (60 * 23) OR $diffInMinutes == 0;
+        return $diffInMinutes >= (60 * 23) || $diffInMinutes == 0;
     }
 
     public function getOccasionOptions()
@@ -394,7 +393,7 @@ class Reservations_model extends Model
     public function mailGetRecipients($type)
     {
         $emailSetting = setting('reservation_email', []);
-        is_array($emailSetting) OR $emailSetting = [];
+        is_array($emailSetting) || $emailSetting = [];
 
         $recipients = [];
         if (in_array($type, $emailSetting)) {
@@ -424,6 +423,7 @@ class Reservations_model extends Model
         $data = [];
 
         $model = $this->fresh();
+        $data['reservation'] = $model;
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;
         $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->format(lang('system::lang.php.time_format'));
@@ -438,6 +438,7 @@ class Reservations_model extends Model
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
+            $data['location_telephone'] = $model->location->location_telephone;
         }
 
         $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();

@@ -15,21 +15,21 @@ trait HasDeliveryAreas
     public static function bootHasDeliveryAreas()
     {
         static::fetched(function (self $model) {
-            $value = @unserialize($model->attributes['options']) ?: [];
+            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
 
             $model->parseAreasFromOptions($value);
 
-            $model->attributes['options'] = @serialize($value);
+            $model->attributes['options'] = @json_encode($value);
         });
 
         static::saving(function (self $model) {
             $model->geocodeAddressOnSave();
 
-            $value = @unserialize($model->attributes['options']) ?: [];
+            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
 
             $model->parseAreasFromOptions($value);
 
-            $model->attributes['options'] = @serialize($value);
+            $model->attributes['options'] = @json_encode($value);
         });
     }
 
@@ -50,7 +50,7 @@ trait HasDeliveryAreas
         $address = format_address($this->getAddress(), FALSE);
 
         $geoLocation = Geocoder::geocode($address)->first();
-        if ($geoLocation AND $geoLocation->hasCoordinates()) {
+        if ($geoLocation && $geoLocation->hasCoordinates()) {
             $this->location_lat = $geoLocation->getCoordinates()->getLatitude();
             $this->location_lng = $geoLocation->getCoordinates()->getLongitude();
         }

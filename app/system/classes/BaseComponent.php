@@ -115,8 +115,8 @@ abstract class BaseComponent extends Extendable
 
     /**
      * Renders a requested partial in context of this component,
-     * @see \Main\Classes\MainController::renderPartial for usage.
      * @return mixed
+     * @see \Main\Classes\MainController::renderPartial for usage.
      */
     public function renderPartial()
     {
@@ -150,7 +150,8 @@ abstract class BaseComponent extends Extendable
 
     public function param($name, $default = null)
     {
-        if (is_null($segment = $this->controller->param($name, $default)))
+        $segment = $this->controller->param($name);
+        if (is_null($segment))
             $segment = input($name);
 
         return is_null($segment) ? $default : $segment;

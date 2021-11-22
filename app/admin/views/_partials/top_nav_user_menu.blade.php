@@ -1,69 +1,61 @@
 @php
-    $staffLocationId = AdminLocation::getId();
-    $staffAvatar = '//www.gravatar.com/avatar/'.md5(strtolower(trim(AdminAuth::getStaffEmail()))).'.png?s=64&d=mm';
-    $staffLocations = AdminLocation::listLocations()->all();
-    $staffGroupNames = implode(', ', AdminAuth::staff()->groups->pluck('staff_group_name')->all());
-    $staffState = \Admin\Classes\UserState::forUser();
+    $userPanel = \Admin\Classes\UserPanel::forUser();
 @endphp
 <li class="nav-item dropdown">
     <a href="#" class="nav-link" data-toggle="dropdown">
         <img
             class="rounded-circle"
-            src="{{ $staffAvatar }}"
+            src="{{ $userPanel->getAvatarUrl().'&s=64' }}"
         >
     </a>
     <div class="dropdown-menu">
         <div class="d-flex flex-column w-100 align-items-center">
             <div class="pt-4 px-4 pb-2">
-                <img class="rounded-circle" src="{{ $staffAvatar }}">
+                <img class="rounded-circle" src="{{ $userPanel->getAvatarUrl().'&s=64' }}">
             </div>
             <div class="pb-3 text-center">
-                <div class="text-uppercase">{{ AdminAuth::getStaffName() }}</div>
-                <div class="text-muted">{{ $staffGroupNames }}</div>
+                <div class="text-uppercase">{{ $userPanel->getUserName() }}</div>
+                <div class="text-muted">{{ $userPanel->getRoleName() }}</div>
             </div>
         </div>
-        @if(AdminLocation::hasLocations() AND $staffLocations)
-            <div class="px-3 pb-3">
-                <form method="POST" accept-charset="UTF-8">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text{{ $staffLocationId ? ' text-info' : ' text-muted' }}">
-                                <i class="fa fa-map-marker fa-fw"></i>
-                            </div>
+        <div class="px-3 pb-3">
+            <form method="POST" accept-charset="UTF-8">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text{{ $userPanel->hasActiveLocation() ? ' text-info' : ' text-muted' }}">
+                            <i class="fa fa-map-marker fa-fw"></i>
                         </div>
+                    </div>
+                    @if(count($userPanel->listLocations()) <= 1)
+                        <input
+                            type="text"
+                            class="form-control-static"
+                            value="{{ $userPanel->getLocationName() }}"
+                        />
+                    @else
                         <select
                             name="location"
                             class="form-control"
                             data-request="{{ $this->getEventHandler('onChooseLocation') }}"
                         >
-                            @if(count($staffLocations) > 1)
-                                <option value="0">@lang('admin::lang.text_all_locations')</option>
-                            @endif
-                            @foreach($staffLocations as $key => $value)
+                            <option value="0">@lang('admin::lang.text_all_locations')</option>
+                            @foreach($userPanel->listLocations() as $location)
                                 <option
-                                    value="{{ $key }}"
-                                    {{ $key == $staffLocationId ? 'selected="selected"' : '' }}
-                                >{{ $value }}</option>
+                                    value="{{ $location->id }}"
+                                    {{ $location->active ? 'selected="selected"' : '' }}
+                                >{{ $location->name }}</option>
                             @endforeach
                         </select>
-                    </div>
-                </form>
-            </div>
-        @endif
-        <a
-            class="dropdown-item"
-            data-toggle="modal"
-            data-target="#editStaffStatusModal"
-            role="button"
-        >
-            <i class="fa fa-circle fa-fw text-{{ $staffState->getStatusColorName() }}"></i>@lang('admin::lang.text_set_status')
-        </a>
-        <a class="dropdown-item" href="{{ admin_url('staffs/account') }}">
-            <i class="fa fa-user fa-fw"></i>@lang('admin::lang.text_edit_details')
-        </a>
-        <a class="dropdown-item text-danger" href="{{ admin_url('logout') }}">
-            <i class="fa fa-power-off fa-fw"></i>@lang('admin::lang.text_logout')
-        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
+        <div role="separator" class="dropdown-divider"></div>
+        @foreach ($item->options() as $item)
+            <a class="dropdown-item {{ $item->cssClass }}" {!! Html::attributes($item->attributes) !!}>
+                <i class="{{ $item->iconCssClass }}"></i><span>@lang($item->label)</span>
+            </a>
+        @endforeach
         <div role="separator" class="dropdown-divider"></div>
         <a class="dropdown-item text-black-50" href="https://tastyigniter.com/about" target="_blank">
             <i class="fa fa-info-circle fa-fw"></i>@lang('admin::lang.text_about_tastyigniter')

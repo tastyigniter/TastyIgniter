@@ -37,6 +37,8 @@ class Countries_model extends Model
         ],
     ];
 
+    public $timestamps = TRUE;
+
     public static function getDropdownOptions()
     {
         return static::isEnabled()->dropdown('country_name');

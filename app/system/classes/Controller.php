@@ -50,13 +50,25 @@ class Controller extends IlluminateController
     /**
      * Stores the requested controller so that the constructor is only run once
      *
-     * @var \Admin\Classes\AdminController
+     * @var array|null
      */
-    protected $requestedController;
+    protected $requestedCache;
 
     public function __construct()
     {
         $this->extendableConstruct();
+    }
+
+    /**
+     * Get the middleware assigned to the controller.
+     *
+     * @return array
+     */
+    public function getMiddleware()
+    {
+        $this->pushRequestedControllerMiddleware();
+
+        return $this->middleware;
     }
 
     /**
@@ -95,20 +107,14 @@ class Controller extends IlluminateController
      */
     public function runAdmin($url = '/')
     {
-        $segments = RouterHelper::segmentizeUrl($url);
-
         if (!App::hasDatabase()) {
             return Response::make(View::make('system::no_database'));
         }
 
-        // Look for a controller within the /app directory
-        if ($controllerObj = $this->locateControllerInApp($segments)) {
-            return $controllerObj->remap(self::$action, self::$segments);
-        }
+        if ($result = $this->locateController($url)) {
+            $result['controller']->initialize();
 
-        // Look for a controller within the /extensions directory
-        if ($controllerObj = $this->locateControllerInExtensions($segments)) {
-            return $controllerObj->remap(self::$action, self::$segments);
+            return $result['controller']->remap($result['action'], $result['segments']);
         }
 
         return Response::make(View::make('main::404'), 404);
@@ -136,6 +142,22 @@ class Controller extends IlluminateController
         }
     }
 
+    protected function locateController($url)
+    {
+        if (isset($this->requestedCache))
+            return $this->requestedCache;
+
+        $segments = RouterHelper::segmentizeUrl($url);
+
+        // Look for a controller within the /app directory
+        if (!$result = $this->locateControllerInApp($segments)) {
+            // Look for a controller within the /extensions directory
+            $result = $this->locateControllerInExtensions($segments);
+        }
+
+        return $this->requestedCache = $result;
+    }
+
     /**
      * This method is used internally.
      * Finds a controller with a callable action method.
@@ -147,29 +169,26 @@ class Controller extends IlluminateController
      * @return bool|\Admin\Classes\AdminController|\Main\Classes\MainController
      * Returns the backend controller object
      */
-    protected function locateController($controller, $modules, $inPath)
+    protected function locateControllerInPath($controller, $modules, $inPath)
     {
-        if (isset($this->requestedController))
-            return $this->requestedController;
-
-        is_array($modules) OR $modules = [$modules];
+        is_array($modules) || $modules = [$modules];
 
         $controllerClass = null;
         $matchPath = $inPath.'/%s/controllers/%s.php';
         foreach ($modules as $module => $namespace) {
             $controller = strtolower(str_replace(['\\', '_'], ['/', ''], $controller));
             $controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller));
-            if ($controllerFile AND !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller))
+            if ($controllerFile && !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller))
                 include_once $controllerFile;
         }
 
-        if (!$controllerClass OR !class_exists($controllerClass))
-            return $this->requestedController = null;
+        if (!$controllerClass || !class_exists($controllerClass))
+            return null;
 
         $controllerObj = App::make($controllerClass);
 
         if ($controllerObj->checkAction(self::$action)) {
-            return $this->requestedController = $controllerObj;
+            return $controllerObj;
         }
 
         return FALSE;
@@ -178,7 +197,7 @@ class Controller extends IlluminateController
     /**
      * Process the action name, since dashes are not supported in PHP methods.
      *
-     * @param  string $actionName
+     * @param string $actionName
      *
      * @return string
      */
@@ -199,10 +218,14 @@ class Controller extends IlluminateController
         }
 
         $controller = $segments[0] ?? 'dashboard';
-        self::$action = isset($segments[1]) ? $this->processAction($segments[1]) : 'index';
-        self::$segments = array_slice($segments, 2);
-        if ($controllerObj = $this->locateController($controller, $modules, app_path())) {
-            return $controllerObj;
+        self::$action = $action = isset($segments[1]) ? $this->processAction($segments[1]) : 'index';
+        self::$segments = $segments = array_slice($segments, 2);
+        if ($controllerObj = $this->locateControllerInPath($controller, $modules, app_path())) {
+            return [
+                'controller' => $controllerObj,
+                'action' => $action,
+                'segments' => $segments,
+            ];
         }
     }
 
@@ -210,20 +233,42 @@ class Controller extends IlluminateController
     {
         if (count($segments) >= 3) {
             [$author, $extension, $controller] = $segments;
-            self::$action = isset($segments[3]) ? $this->processAction($segments[3]) : 'index';
-            self::$segments = array_slice($segments, 4);
+            self::$action = $action = isset($segments[3]) ? $this->processAction($segments[3]) : 'index';
+            self::$segments = $segments = array_slice($segments, 4);
 
             $extensionCode = sprintf('%s.%s', $author, $extension);
             if (ExtensionManager::instance()->isDisabled($extensionCode))
                 return;
 
-            if ($controllerObj = $this->locateController(
+            if ($controllerObj = $this->locateControllerInPath(
                 $controller,
                 ["{$author}/{$extension}" => "{$author}\\{$extension}"],
                 extension_path()
             )) {
-                return $controllerObj;
+                return [
+                    'controller' => $controllerObj,
+                    'action' => $action,
+                    'segments' => $segments,
+                ];
             }
+        }
+    }
+
+    protected function pushRequestedControllerMiddleware()
+    {
+        if (!App::runningInAdmin())
+            return;
+
+        $pathParts = explode('/', request()->path());
+        if (Config::get('system.adminUri', 'admin'))
+            array_shift($pathParts);
+
+        $path = implode('/', $pathParts);
+        if ($result = $this->locateController($path)) {
+            // Collect controller middleware and insert middleware into pipeline
+            collect($result['controller']->getMiddleware())->each(function ($data) {
+                $this->middleware($data['middleware'], $data['options']);
+            });
         }
     }
 }

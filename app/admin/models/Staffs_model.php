@@ -15,10 +15,6 @@ class Staffs_model extends Model
     use Purgeable;
     use Locationable;
 
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
-
     const LOCATIONABLE_RELATION = 'locations';
 
     /**
@@ -77,6 +73,11 @@ class Staffs_model extends Model
     public function getEmailAttribute()
     {
         return $this->staff_email;
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return '//www.gravatar.com/avatar/'.md5(strtolower(trim($this->staff_email))).'.png?d=mm';
     }
 
     public static function getDropdownOptions()
@@ -139,7 +140,7 @@ class Staffs_model extends Model
      */
     public function getStaffDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     public function addStaffUser($user = [])

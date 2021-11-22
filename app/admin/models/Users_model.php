@@ -148,7 +148,7 @@ class Users_model extends AuthUserModel
         $role = $this->staff->role;
 
         $permissions = [];
-        if ($role AND is_array($role->permissions)) {
+        if ($role && is_array($role->permissions)) {
             $permissions = $role->permissions;
         }
 
@@ -175,10 +175,13 @@ class Users_model extends AuthUserModel
 
     public function mailGetData()
     {
+        $model = $this->fresh();
+
         return [
-            'staff_name' => $this->staff_name,
-            'staff_email' => $this->staff->staff_email,
-            'username' => $this->username,
+            'staff' => $model,
+            'staff_name' => $model->staff_name,
+            'staff_email' => $model->staff->staff_email,
+            'username' => $model->username,
         ];
     }
 }

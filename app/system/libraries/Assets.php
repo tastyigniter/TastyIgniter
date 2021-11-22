@@ -230,9 +230,12 @@ class Assets
             return null;
 
         if ($this->combineAssets) {
-            $path = $this->combine($type, $this->getPathsFromAssets($assets));
+            $assetsToCombine = $this->filterAssetsToCombine($assets);
 
-            return $this->buildAssetUrl($type, $path);
+            $assets[] = [
+                'path' => $this->combine($type, $assetsToCombine),
+                'attributes' => null,
+            ];
         }
 
         return $this->buildAssetUrls($type, $assets);
@@ -254,11 +257,16 @@ class Assets
         return $name;
     }
 
-    protected function getPathsFromAssets($assets)
+    protected function filterAssetsToCombine(&$assets)
     {
         $result = [];
-        foreach ($assets as $asset) {
-            $result[] = array_get($asset, 'path');
+        foreach ($assets as $key => $asset) {
+            $path = array_get($asset, 'path');
+            if (starts_with($path, ['//', 'http://', 'https://']))
+                continue;
+
+            $result[] = $path;
+            unset($assets[$key]);
         }
 
         return $result;
@@ -348,7 +356,7 @@ class Assets
 
     protected function transformJsObjectVar($value)
     {
-        if ($value instanceof JsonSerializable OR $value instanceof StdClass)
+        if ($value instanceof JsonSerializable || $value instanceof StdClass)
             return json_encode($value);
 
         // If a toJson() method exists, the object can cast itself automatically.

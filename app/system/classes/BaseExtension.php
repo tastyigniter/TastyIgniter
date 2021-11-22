@@ -212,6 +212,9 @@ class BaseExtension extends ServiceProvider
         if (array_key_exists('authors', $composer))
             $config['author'] = $composer['authors'][0]['name'];
 
+        if (!array_key_exists('homepage', $config) && array_key_exists('homepage', $composer))
+            $config['homepage'] = $composer['homepage'];
+
         return $config;
     }
 }

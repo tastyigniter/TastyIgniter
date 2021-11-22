@@ -20,10 +20,6 @@ class Payments_model extends Model
 
     const SORT_ORDER = 'priority';
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
-
     /**
      * @var string The database table name
      */
@@ -39,7 +35,7 @@ class Payments_model extends Model
     public $timestamps = TRUE;
 
     protected $casts = [
-        'data' => 'serialize',
+        'data' => 'array',
         'status' => 'boolean',
         'is_default' => 'boolean',
         'priority' => 'integer',
@@ -149,7 +145,7 @@ class Payments_model extends Model
             $class = null;
         }
 
-        if ($class AND !$this->isClassExtendedWith($class)) {
+        if ($class && !$this->isClassExtendedWith($class)) {
             $this->extendClassWith($class);
         }
 

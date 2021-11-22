@@ -46,7 +46,7 @@ trait WidgetMaker
      */
     public function makeFormWidget($class, $fieldConfig = [], $widgetConfig = [])
     {
-        $controller = (property_exists($this, 'controller') AND $this->controller)
+        $controller = (property_exists($this, 'controller') && $this->controller)
             ? $this->controller
             : $this;
 

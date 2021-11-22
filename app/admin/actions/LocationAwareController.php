@@ -4,7 +4,6 @@ namespace Admin\Actions;
 
 use Admin\Facades\AdminLocation;
 use Illuminate\Support\Facades\Event;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
 
 class LocationAwareController extends ControllerAction
@@ -30,7 +29,7 @@ class LocationAwareController extends ControllerAction
     /**
      * List_Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
@@ -47,7 +46,7 @@ class LocationAwareController extends ControllerAction
             'locationApplyScope',
         ]);
 
-        $this->controller->bindEvent('controller.afterConstructor', function () {
+        $this->controller->bindEvent('controller.beforeRemap', function () {
             $this->locationBindEvents();
         });
     }
@@ -75,7 +74,7 @@ class LocationAwareController extends ControllerAction
 
             Event::listen('admin.filter.extendQuery', function ($filterWidget, $query, $scope) {
                 if (array_get($scope->config, 'locationAware') === TRUE
-                    AND (bool)$this->getConfig('applyScopeOnListQuery', TRUE)
+                    && (bool)$this->getConfig('applyScopeOnListQuery', TRUE)
                 ) $this->locationApplyScope($query);
             });
         }

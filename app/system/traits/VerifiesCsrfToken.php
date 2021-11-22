@@ -36,7 +36,7 @@ trait VerifiesCsrfToken
 
     protected function verifyCsrfToken()
     {
-        if (!config('system.enableCsrfProtection', TRUE) OR !$this->enableCsrfProtection)
+        if (!config('system.enableCsrfProtection', TRUE) || !$this->enableCsrfProtection)
             return TRUE;
 
         if (in_array(Request::method(), ['HEAD', 'GET', 'OPTIONS']))
@@ -46,8 +46,8 @@ trait VerifiesCsrfToken
             return FALSE;
 
         return is_string(Request::session()->token())
-            AND is_string($token)
-            AND hash_equals(Request::session()->token(), $token);
+            && is_string($token)
+            && hash_equals(Request::session()->token(), $token);
     }
 
     /**

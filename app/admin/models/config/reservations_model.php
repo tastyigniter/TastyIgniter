@@ -45,22 +45,20 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'reservations/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'context' => 'index',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
         'calendar' => [
             'label' => 'lang:admin::lang.reservations.text_switch_to_calendar',
             'class' => 'btn btn-default',
             'href' => 'reservations/calendar',
             'context' => 'index',
         ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -258,7 +256,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.statuses.label_comment',
             'type' => 'textarea',
         ],
-        'date_added' => [
+        'created_at' => [
             'label' => 'lang:admin::lang.reservations.label_date_added',
             'type' => 'datepicker',
             'mode' => 'date',
@@ -273,7 +271,7 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
             'context' => ['edit', 'preview'],
         ],
-        'date_modified' => [
+        'updated_at' => [
             'label' => 'lang:admin::lang.reservations.label_date_modified',
             'type' => 'datepicker',
             'mode' => 'date',

@@ -54,7 +54,7 @@ class Settings extends \Admin\Classes\AdminController
         $this->validateSettingItems(TRUE);
 
         // For security reasons, delete setup files if still exists.
-        if (File::isFile(base_path('setup.php')) OR File::isDirectory(base_path('setup'))) {
+        if (File::isFile(base_path('setup.php')) || File::isDirectory(base_path('setup'))) {
             flash()->danger(lang('system::lang.settings.alert_delete_setup_files'))->important()->now();
         }
 
@@ -74,7 +74,7 @@ class Settings extends \Admin\Classes\AdminController
                 throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
             }
 
-            if ($definition->permission AND !AdminAuth::user()->hasPermission($definition->permission))
+            if ($definition->permission && !AdminAuth::user()->hasPermission($definition->permission))
                 return Response::make(View::make('admin::access_denied'), 403);
 
             $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition->label));
@@ -99,7 +99,7 @@ class Settings extends \Admin\Classes\AdminController
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
 
-        if ($definition->permission AND !AdminAuth::user()->hasPermission($definition->permission))
+        if ($definition->permission && !AdminAuth::user()->hasPermission($definition->permission))
             return Response::make(View::make('admin::access_denied'), 403);
 
         $this->initWidgets($model, $definition);
@@ -171,7 +171,7 @@ class Settings extends \Admin\Classes\AdminController
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget
-        if (isset($modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
+        if (isset($modelConfig['toolbar']) && isset($this->widgets['toolbar'])) {
             $this->toolbarWidget = $this->widgets['toolbar'];
             $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
         }
@@ -192,7 +192,7 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function createModel()
     {
-        if (!isset($this->modelClass) OR !strlen($this->modelClass)) {
+        if (!isset($this->modelClass) || !strlen($this->modelClass)) {
             throw new Exception(lang('system::lang.settings.alert_settings_missing_model'));
         }
 
@@ -216,7 +216,7 @@ class Settings extends \Admin\Classes\AdminController
     {
         $settingItemErrors = Session::get('settings.errors', []);
 
-        if ($skipSession OR !$settingItemErrors) {
+        if ($skipSession || !$settingItemErrors) {
             $model = $this->createModel();
             $settingItems = array_get($model->listSettingItems(), 'core');
             $settingValues = array_undot($model->getFieldValues());

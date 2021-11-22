@@ -2,8 +2,6 @@
 
 namespace Admin\Classes;
 
-use System\Classes\BaseController;
-
 /**
  * Form Widget base class
  * Widgets used specifically for forms
@@ -17,7 +15,7 @@ class BaseFormWidget extends BaseWidget
     //
 
     /**
-     * @var \Model Form model object.
+     * @var \Igniter\Flame\Database\Model Form model object.
      */
     public $model;
 
@@ -63,7 +61,7 @@ class BaseFormWidget extends BaseWidget
     /**
      * Constructor
      *
-     * @param $controller BaseController Active controller object.
+     * @param $controller \Illuminate\Routing\Controller Active controller object.
      * @param $formField \Admin\Classes\FormField Object containing general form field information.
      * @param $configuration array Configuration the relates to this widget.
      */

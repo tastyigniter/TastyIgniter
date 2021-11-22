@@ -21,7 +21,7 @@ class Payments extends \Admin\Classes\AdminController
             'model' => 'Admin\Models\Payments_model',
             'title' => 'lang:admin::lang.payments.text_title',
             'emptyMessage' => 'lang:admin::lang.payments.text_empty',
-            'defaultSort' => ['date_updated', 'DESC'],
+            'defaultSort' => ['updated_at', 'DESC'],
             'configFile' => 'payments_model',
         ],
     ];
@@ -152,7 +152,7 @@ class Payments extends \Admin\Classes\AdminController
             ['status', 'lang:admin::lang.label_status', 'required|integer'],
         ];
 
-        if ($form->model->exists AND ($mergeRules = $form->model->getConfigRules()))
+        if ($form->model->exists && ($mergeRules = $form->model->getConfigRules()))
             array_push($rules, ...$mergeRules);
 
         return $this->validatePasses($form->getSaveData(), $rules);

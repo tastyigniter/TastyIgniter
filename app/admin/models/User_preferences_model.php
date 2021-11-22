@@ -13,8 +13,6 @@ class User_preferences_model extends Model
      */
     protected $table = 'user_preferences';
 
-    public $timestamps = FALSE;
-
     protected $casts = [
         'user_id' => 'integer',
         'value' => 'json',

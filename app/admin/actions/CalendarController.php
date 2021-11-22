@@ -3,7 +3,6 @@
 namespace Admin\Actions;
 
 use Admin\Facades\Template;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
 
 class CalendarController extends ControllerAction
@@ -50,7 +49,7 @@ class CalendarController extends ControllerAction
     /**
      * List_Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
@@ -129,7 +128,7 @@ class CalendarController extends ControllerAction
         $widget->bindToController();
 
         // Prep the optional toolbar widget
-        if (isset($modelConfig['toolbar']) AND isset($this->controller->widgets['toolbar'])) {
+        if (isset($modelConfig['toolbar']) && isset($this->controller->widgets['toolbar'])) {
             $this->toolbarWidget = $this->controller->widgets['toolbar'];
             if ($this->toolbarWidget instanceof \Admin\Widgets\Toolbar)
                 $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
@@ -140,7 +139,7 @@ class CalendarController extends ControllerAction
 
     public function renderCalendar($alias = null)
     {
-        if (is_null($alias) OR !isset($this->listConfig[$alias]))
+        if (is_null($alias) || !isset($this->listConfig[$alias]))
             $alias = $this->primaryAlias;
 
         $list = [];

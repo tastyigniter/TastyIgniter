@@ -141,7 +141,7 @@ trait ManagesOrderItems
                 'option_values' => serialize($cartItem->options),
             ]);
 
-            if ($orderMenuId AND count($cartItem->options)) {
+            if ($orderMenuId && count($cartItem->options)) {
                 $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
             }
         }
@@ -191,8 +191,6 @@ trait ManagesOrderItems
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
             return FALSE;
-
-        $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
 
         foreach ($totals as $total) {
             $this->addOrUpdateOrderTotal($total);

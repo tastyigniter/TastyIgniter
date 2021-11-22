@@ -6,7 +6,7 @@
     ]
 ) !!}
 
-<div class="list-extensions page-x-spacer page-y-spacer">
+<div class="list-extensions pt-3 px-3 pb-0">
     @if (count($records))
         {!! $this->makePartial('lists/list_body') !!}
     @else
@@ -19,3 +19,5 @@
 {!! form_close() !!}
 
 {!! $this->makePartial('lists/list_pagination') !!}
+
+{!! $this->makePartial('updates/recommended', ['itemType' => 'extension']) !!}

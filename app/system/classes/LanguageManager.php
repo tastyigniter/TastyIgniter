@@ -70,13 +70,13 @@ class LanguageManager
         foreach ($sourceLines as $key => $sourceLine) {
             $translationLine = array_get($translationLines, $key, $sourceLine);
 
-            if ($stringFilter === 'changed' AND !array_has($translationLines, $key)) continue;
+            if ($stringFilter === 'changed' && !array_has($translationLines, $key)) continue;
 
-            if ($stringFilter === 'unchanged' AND array_has($translationLines, $key)) continue;
+            if ($stringFilter === 'unchanged' && array_has($translationLines, $key)) continue;
 
-            if ((!is_null($sourceLine) AND !is_string($sourceLine))) continue;
+            if ((!is_null($sourceLine) && !is_string($sourceLine))) continue;
 
-            if ((!is_null($translationLine) AND !is_string($translationLine))) continue;
+            if ((!is_null($translationLine) && !is_string($translationLine))) continue;
 
             $namespacedKey = sprintf('%s::%s.%s', $file['namespace'], $file['group'], $key);
 
@@ -99,8 +99,8 @@ class LanguageManager
         foreach ($translations as $key => $value) {
             if (strlen($term)) {
                 if (stripos(strtolower(array_get($value, 'source')), $term) !== FALSE
-                    OR stripos(strtolower(array_get($value, 'translation')), $term) !== FALSE
-                    OR stripos(strtolower($key), $term) !== FALSE) {
+                    || stripos(strtolower(array_get($value, 'translation')), $term) !== FALSE
+                    || stripos(strtolower($key), $term) !== FALSE) {
                     $result[$key] = $value;
                 }
             }

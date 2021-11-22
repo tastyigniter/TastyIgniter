@@ -82,7 +82,7 @@ trait FormModelWidget
     {
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
-        if (!$model OR !$model->hasRelation($attribute)) {
+        if (!$model || !$model->hasRelation($attribute)) {
             throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom
@@ -96,7 +96,7 @@ trait FormModelWidget
     {
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
-        if (!$model OR !$model->hasRelation($attribute)) {
+        if (!$model || !$model->hasRelation($attribute)) {
             throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom
@@ -124,7 +124,7 @@ trait FormModelWidget
     /**
      * Sets a data collection to a model attributes, relations will also be set.
      *
-     * @param \Model $model Model to save to
+     * @param \Igniter\Flame\Database\Model $model Model to save to
      *
      * @param array $saveData Data to save.
      *
@@ -132,7 +132,7 @@ trait FormModelWidget
      */
     protected function setModelAttributes($model, $saveData)
     {
-        if (!is_array($saveData) OR !$model) {
+        if (!is_array($saveData) || !$model) {
             return;
         }
 
@@ -140,12 +140,12 @@ trait FormModelWidget
 
         $singularTypes = ['belongsTo', 'hasOne', 'morphTo', 'morphOne'];
         foreach ($saveData as $attribute => $value) {
-            $isNested = ($attribute == 'pivot' OR (
-                    $model->hasRelation($attribute) AND
+            $isNested = ($attribute == 'pivot' || (
+                    $model->hasRelation($attribute) &&
                     in_array($model->getRelationType($attribute), $singularTypes)
                 ));
 
-            if ($isNested AND is_array($value)) {
+            if ($isNested && is_array($value)) {
                 $this->setModelAttributes($model->{$attribute}, $value);
             }
             elseif ($value !== FormField::NO_SAVE_DATA) {

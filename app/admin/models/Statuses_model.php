@@ -29,6 +29,8 @@ class Statuses_model extends Model
         ],
     ];
 
+    public $timestamps = TRUE;
+
     /**
      * Return status_for attribute as lang text, used by
      *

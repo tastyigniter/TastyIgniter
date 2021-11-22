@@ -45,7 +45,7 @@ class ErrorHandler extends BaseErrorHandler
         $router = new Router($theme);
 
         // Use the default view if no "/error" URL is found.
-        if (!$router OR !$router->findByUrl('/error')) {
+        if (!$router || !$router->findByUrl('/error')) {
             return View::make('main::error');
         }
 

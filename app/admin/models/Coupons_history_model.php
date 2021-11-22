@@ -11,10 +11,6 @@ use Igniter\Flame\Database\Model;
  */
 class Coupons_history_model extends Model
 {
-    const CREATED_AT = 'date_used';
-
-    const UPDATED_AT = null;
-
     /**
      * @var string The database table name
      */
@@ -51,7 +47,7 @@ class Coupons_history_model extends Model
 
     public function getCustomerNameAttribute($value)
     {
-        return ($this->customer AND $this->customer->exists) ? $this->customer->full_name : $value;
+        return ($this->customer && $this->customer->exists) ? $this->customer->full_name : $value;
     }
 
     public function scopeIsEnabled($query)

@@ -85,14 +85,14 @@ class PermissionManager
         $matched = FALSE;
         foreach ($checkPermissions as $permission) {
             if ($this->checkPermissionStartsWith($permission, $permissions)
-                OR $this->checkPermissionEndsWith($permission, $permissions)
-                OR $this->checkPermissionMatches($permission, $permissions)
+                || $this->checkPermissionEndsWith($permission, $permissions)
+                || $this->checkPermissionMatches($permission, $permissions)
             ) $matched = TRUE;
 
-            if ($checkAll === FALSE AND $matched === TRUE)
+            if ($checkAll === FALSE && $matched === TRUE)
                 return TRUE;
 
-            if ($checkAll === TRUE AND $matched === FALSE)
+            if ($checkAll === TRUE && $matched === FALSE)
                 return FALSE;
         }
 
@@ -101,14 +101,14 @@ class PermissionManager
 
     protected function checkPermissionStartsWith($permission, $permissions)
     {
-        if (strlen($permission) > 1 AND ends_with($permission, '*')) {
+        if (strlen($permission) > 1 && ends_with($permission, '*')) {
             $checkPermission = substr($permission, 0, -1);
 
             foreach ($permissions as $groupPermission => $permitted) {
                 // Let's make sure the available permission starts with our permission
                 if ($checkPermission != $groupPermission
-                    AND starts_with($groupPermission, $checkPermission)
-                    AND $permitted == 1
+                    && starts_with($groupPermission, $checkPermission)
+                    && $permitted == 1
                 ) return TRUE;
             }
         }
@@ -116,14 +116,14 @@ class PermissionManager
 
     protected function checkPermissionEndsWith($permission, $permissions)
     {
-        if (strlen($permission) > 1 AND starts_with($permission, '*')) {
+        if (strlen($permission) > 1 && starts_with($permission, '*')) {
             $checkPermission = substr($permission, 1);
 
             foreach ($permissions as $groupPermission => $permitted) {
                 // Let's make sure the available permission ends with our permission
                 if ($checkPermission != $groupPermission
-                    AND ends_with($groupPermission, $checkPermission)
-                    AND $permitted == 1
+                    && ends_with($groupPermission, $checkPermission)
+                    && $permitted == 1
                 ) return TRUE;
             }
         }
@@ -132,17 +132,17 @@ class PermissionManager
     protected function checkPermissionMatches($permission, $permissions)
     {
         foreach ($permissions as $groupPermission => $permitted) {
-            if ((strlen($groupPermission) > 1) AND ends_with($groupPermission, '*')) {
+            if ((strlen($groupPermission) > 1) && ends_with($groupPermission, '*')) {
                 $checkMergedPermission = substr($groupPermission, 0, -1);
 
                 // Let's make sure the our permission starts with available permission
                 if ($checkMergedPermission != $permission
-                    AND starts_with($permission, $checkMergedPermission)
-                    AND $permitted == 1
+                    && starts_with($permission, $checkMergedPermission)
+                    && $permitted == 1
                 ) return TRUE;
             }
             // Match permissions explicitly.
-            elseif ($permission == $groupPermission AND $permitted == 1) {
+            elseif ($permission == $groupPermission && $permitted == 1) {
                 return TRUE;
             }
         }
@@ -159,7 +159,7 @@ class PermissionManager
         }
 
         foreach ($definitions as $code => $definition) {
-            if (!isset($definition['label']) AND isset($definition['description'])) {
+            if (!isset($definition['label']) && isset($definition['description'])) {
                 $definition['label'] = $definition['description'];
                 unset($definition['description']);
             }

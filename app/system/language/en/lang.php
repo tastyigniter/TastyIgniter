@@ -126,8 +126,7 @@ return [
         'text_settings' => 'Settings',
         'text_author' => 'Author',
 
-        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more extensions',
-        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
+        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more extensions&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
         'button_delete' => 'Delete',
         'button_payments' => 'Manage Payments',
         'button_settings' => 'Manage Settings',
@@ -268,6 +267,7 @@ return [
         'text_reset_link' => 'Password reset url',
 
         'text_group_order' => 'Order variables',
+        'text_order_object' => 'Order model object',
         'text_order_number' => 'Order number',
         'text_customer_name' => 'Customer full name',
         'text_order_type' => 'Order type ex. delivery/pick-up',
@@ -283,6 +283,7 @@ return [
         'text_location_name' => 'Location name',
         'text_location_email' => 'Location email',
         'text_location_address' => 'Location address',
+        'text_location_telephone' => 'Location telephone',
         'text_order_view_url' => 'Order view URL',
         'text_order_totals' => 'Array of order totals',
         'text_menu_name' => 'Order menu name',
@@ -296,6 +297,7 @@ return [
         'text_priority' => 'Order total priority',
 
         'text_group_reservation' => 'Reservation variables',
+        'text_reservation_object' => 'Reservation model object',
         'text_reservation_number' => 'Reservation number',
         'text_reservation_date' => 'Reservation date',
         'text_reservation_time' => 'Reservation time',
@@ -570,9 +572,8 @@ return [
         'label_type_layout' => 'Layouts',
         'label_type_content' => 'Contents',
 
-        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more themes',
+        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more themes&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
         'button_source' => '<i class="fa fa-file"></i>&nbsp;&nbsp;Edit template files',
-        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
         'button_customize' => '<i class="fa fa-paint-brush"></i>&nbsp;&nbsp;Customize',
         'button_child' => '<i class="fa fa-child"></i>&nbsp;&nbsp;Create child theme',
         'button_choose' => 'Choose',
@@ -594,6 +595,7 @@ return [
         'alert_theme_locked' => 'This is a locked theme, changes are restricted, create a child theme to make changes.',
         'alert_theme_path_locked' => 'This template belongs to a locked theme, such actions are restricted.',
         'alert_changes_confirm' => 'Conflicting versions, template file has changed. Reload the page to continue.',
+        'alert_customize_not_active' => 'You can only customize an active theme.',
     ],
 
     'updates' => [
@@ -605,7 +607,7 @@ return [
         'text_tab_title_extensions' => 'Extensions',
         'text_tab_title_themes' => 'Themes',
         'text_ignore' => 'Ignore',
-        'text_search' => 'Search the marketplace for %s to install',
+        'text_search' => 'Search the TastyIgniter marketplace for %s to install',
         'text_popular_title' => 'Recommended %s',
         'text_last_checked' => '<b>Last checked:</b> %s',
 
@@ -615,7 +617,7 @@ return [
         'text_update_ignored' => '%s update(s) ignored',
         'text_item_update_summary' => 'Update from version %s to <b>%s</b>',
 
-        'text_maintenance_mode' => 'While your site is being updated, maintenance mode will be enabled then disabled as soon as your updates are complete.',
+        'text_core_update' => '<i class="fa fa-exclamation-triangle fa-fw"></i>&nbsp;&nbsp;After the core has been updated, other updates will be available.',
 
         'progress_download' => '<i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Downloading %s&#8230;',
         'progress_extract' => '<i class="fa fa-file-archive-o fa-fw"></i>&nbsp;&nbsp;&nbsp;Extracting %s&#8230;',
@@ -636,13 +638,15 @@ return [
         'progress_disable_maintenance' => 'Restoring/Disabling Maintenance mode&#8230;',
 
         'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse %s',
-        'button_carte' => '<i class="fa fa-key"></i>&nbsp;&nbsp;Carté',
-        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check Again',
+        'button_carte' => '<i class="fa fa-key"></i>&nbsp;&nbsp;Attach Carté Key',
+        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check Updates',
         'button_updates' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
         'button_update' => '<i class="fa fa-check"></i>&nbsp;&nbsp;Update',
-        'button_marketplace' => 'Open TastyIgniter Marketplace&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
+        'button_recommended_extension' => 'Install recommended extensions...',
+        'button_recommended_theme' => 'Install a recommended theme...',
+        'button_install' => 'Install Selected...',
 
-        'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
+        'help_carte_key' => 'A Carte key is required to add and update item from the TastyIgniter Marketplace. <br>Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already. For more information, see the <a href="%s" target="_blank">Carté Key Guide</a>',
         'alert_item_to_ignore' => 'Select item(s) to ignore.',
         'alert_no_carte_key' => 'No carte key specified.',
         'alert_no_items' => 'No item(s) specified.',

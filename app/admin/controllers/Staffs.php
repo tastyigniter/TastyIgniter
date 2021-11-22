@@ -75,7 +75,7 @@ class Staffs extends \Admin\Classes\AdminController
         $usernameChanged = $this->currentUser->username != post('Staff[user][username]');
         $passwordChanged = strlen(post('Staff[user][password]'));
         $languageChanged = $this->currentUser->language != post('Staff[language_id]');
-        if ($usernameChanged OR $passwordChanged OR $languageChanged) {
+        if ($usernameChanged || $passwordChanged || $languageChanged) {
             $this->currentUser->reload()->reloadRelations();
             AdminAuth::login($this->currentUser, TRUE);
         }

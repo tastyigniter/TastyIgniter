@@ -39,7 +39,7 @@ class ExtensionRemove extends Command
             return $this->error(sprintf('Unable to find a registered extension called "%s"', $extensionName));
         }
 
-        if (!$forceDelete AND !$this->confirmToProceed(sprintf(
+        if (!$forceDelete && !$this->confirmToProceed(sprintf(
                 'This will DELETE extension "%s" from the filesystem and database.',
                 $extensionName
             ))) {

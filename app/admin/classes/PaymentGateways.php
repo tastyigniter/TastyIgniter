@@ -190,7 +190,7 @@ class PaymentGateways
         foreach ($paymentMethods as $paymentMethod) {
             $class = $paymentMethod->getGatewayClass();
 
-            if (!$class OR get_parent_class($class) != BasePaymentGateway::class)
+            if (!$class || get_parent_class($class) != BasePaymentGateway::class)
                 continue;
 
             $partialName = 'payregister/'.strtolower(class_basename($class));

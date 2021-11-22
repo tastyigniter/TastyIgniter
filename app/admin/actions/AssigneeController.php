@@ -6,7 +6,6 @@ use Admin\Traits\Assignable;
 use Admin\Widgets\Form;
 use Admin\Widgets\Toolbar;
 use Illuminate\Support\Facades\Event;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
 
 class AssigneeController extends ControllerAction
@@ -31,7 +30,7 @@ class AssigneeController extends ControllerAction
     /**
      * Assignee Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
@@ -48,8 +47,8 @@ class AssigneeController extends ControllerAction
             'assigneeApplyScope',
         ]);
 
-        $this->controller->bindEvent('controller.afterConstructor', function ($controller) {
-            if (!$controller->getUser())
+        $this->controller->bindEvent('controller.beforeRemap', function () {
+            if (!$this->controller->getUser())
                 return;
 
             $this->assigneeBindToolbarEvents();
@@ -125,7 +124,7 @@ class AssigneeController extends ControllerAction
                     return;
 
                 $assignable = $widget->model;
-                if (!$assignable->hasAssignToGroup() OR $assignable->hasAssignTo())
+                if (!$assignable->hasAssignToGroup() || $assignable->hasAssignTo())
                     return;
 
                 // Let the allocator handle assignment when auto assign is enabled

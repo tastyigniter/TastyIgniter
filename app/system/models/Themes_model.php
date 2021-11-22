@@ -38,12 +38,14 @@ class Themes_model extends Model
     protected $fillable = ['theme_id', 'name', 'code', 'version', 'description', 'data', 'status'];
 
     protected $casts = [
-        'data' => 'serialize',
+        'data' => 'array',
         'status' => 'boolean',
         'is_default' => 'boolean',
     ];
 
     protected $purgeable = ['template', 'settings', 'markup', 'codeSection'];
+
+    public $timestamps = TRUE;
 
     /**
      * @var ThemeManager
@@ -307,7 +309,7 @@ class Themes_model extends Model
      */
     public static function activateTheme($code)
     {
-        if (empty($code) OR !$theme = self::whereCode($code)->first())
+        if (empty($code) || !$theme = self::whereCode($code)->first())
             return FALSE;
 
         $extensionManager = ExtensionManager::instance();
@@ -345,7 +347,7 @@ class Themes_model extends Model
     {
         $themeModel = self::where('code', $themeCode)->first();
 
-        if ($themeModel AND ($deleteData OR !$themeModel->data)) {
+        if ($themeModel && ($deleteData || !$themeModel->data)) {
             $themeModel->delete();
         }
 

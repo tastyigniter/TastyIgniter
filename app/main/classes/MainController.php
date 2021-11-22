@@ -158,6 +158,7 @@ class MainController extends BaseController
 
         $this->initTemplateEnvironment();
 
+        // @deprecated This event will be deprecated soon, use controller.beforeRemap
         $this->fireEvent('controller.afterConstructor', [$this]);
 
         self::$controller = $this;
@@ -165,6 +166,8 @@ class MainController extends BaseController
 
     public function remap($url = null)
     {
+        $this->fireSystemEvent('main.controller.beforeRemap');
+
         if ($url === null)
             $url = Request::path();
 
@@ -174,7 +177,7 @@ class MainController extends BaseController
         $page = $this->router->findByUrl($url);
 
         // Show maintenance message if maintenance is enabled
-        if (setting('maintenance_mode') == 1 AND !AdminAuth::isLogged())
+        if (setting('maintenance_mode') == 1 && !AdminAuth::isLogged())
             return Response::make(
                 View::make('main::maintenance', ['message' => setting('maintenance_message')]),
                 $this->statusCode
@@ -182,7 +185,7 @@ class MainController extends BaseController
 
         // If the page was not found,
         // render the 404 page - either provided by the theme or the built-in one.
-        if (!$page OR $url === '404') {
+        if (!$page || $url === '404') {
             if (!Request::ajax())
                 $this->setStatusCode(404);
 
@@ -254,7 +257,7 @@ class MainController extends BaseController
         }
 
         // Execute post handler and AJAX event
-        if ($ajaxResponse = $this->processHandlers() AND $ajaxResponse !== TRUE) {
+        if (($ajaxResponse = $this->processHandlers()) && $ajaxResponse !== TRUE) {
             return $ajaxResponse;
         }
 
@@ -298,7 +301,7 @@ class MainController extends BaseController
         if ($this->layoutObj) {
             // Let the layout do stuff after components are initialized and before AJAX is handled.
             $response = (
-                ($result = $this->layoutObj->onStart()) OR
+                ($result = $this->layoutObj->onStart()) ||
                 ($result = $this->layout->runComponents())
             ) ? $result : null;
 
@@ -309,8 +312,8 @@ class MainController extends BaseController
 
         // Run page functions
         $response = (
-            ($result = $this->pageObj->onStart()) OR
-            ($result = $this->page->runComponents()) OR
+            ($result = $this->pageObj->onStart()) ||
+            ($result = $this->page->runComponents()) ||
             ($result = $this->pageObj->onEnd())
         ) ? $result : null;
 
@@ -341,7 +344,7 @@ class MainController extends BaseController
      */
     public function getHandler()
     {
-        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+        if (Request::ajax() && $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
             return trim($handler);
 
         if ($handler = post('_handler'))
@@ -378,7 +381,7 @@ class MainController extends BaseController
                 $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
                 $result = null;
             }
-            elseif (Request::header('X-IGNITER-REQUEST-FLASH') AND Flash::messages()->isNotEmpty()) {
+            elseif (Request::header('X-IGNITER-REQUEST-FLASH') && Flash::messages()->isNotEmpty()) {
                 $response['X_IGNITER_FLASH_MESSAGES'] = Flash::all();
             }
 
@@ -411,7 +414,7 @@ class MainController extends BaseController
 
             $componentObj = $this->findComponentByAlias($componentName);
 
-            if ($componentObj AND $componentObj->methodExists($handlerName)) {
+            if ($componentObj && $componentObj->methodExists($handlerName)) {
                 $this->componentContext = $componentObj;
                 $result = $componentObj->runEventHandler($handlerName);
 
@@ -421,7 +424,7 @@ class MainController extends BaseController
         else {
             $pageHandler = $this->action.'_'.$handler;
             if ($this->methodExists($pageHandler)) {
-                $result = call_user_func_array([$this, $pageHandler], $this->params);
+                $result = call_user_func_array([$this, $pageHandler], array_values($this->params));
 
                 return $result ?: TRUE;
             }

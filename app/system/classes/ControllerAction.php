@@ -19,7 +19,7 @@ class ControllerAction
     use ExtensionTrait;
 
     /**
-     * @var BaseController Reference to the controller associated to this action
+     * @var \Illuminate\Routing\Controller Reference to the controller associated to this action
      */
     protected $controller;
 
@@ -36,7 +36,7 @@ class ControllerAction
     /**
      * ControllerAction constructor.
      *
-     * @param \System\Classes\BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
@@ -86,7 +86,7 @@ class ControllerAction
         $result = isset($this->config[$fieldName]) ? $this->config[$fieldName] : $default;
 
         foreach ($nameArray as $key) {
-            if (!is_array($result) OR !array_key_exists($key, $result))
+            if (!is_array($result) || !array_key_exists($key, $result))
                 return $default;
 
             $result = $result[$key];

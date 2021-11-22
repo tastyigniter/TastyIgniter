@@ -14,10 +14,6 @@ use System\Classes\MailManager;
  */
 class Mail_layouts_model extends Model
 {
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
-
     protected static $codeCache;
 
     /**

@@ -26,7 +26,7 @@ $config['list']['filter'] = [
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month AND DAY(date_added) = :day',
+            'conditions' => 'YEAR(created_at) = :year AND MONTH(created_at) = :month AND DAY(created_at) = :day',
         ],
     ],
 ];
@@ -37,15 +37,6 @@ $config['list']['toolbar'] = [
             'label' => 'lang:admin::lang.button_new',
             'class' => 'btn btn-primary',
             'href' => 'staffs/create',
-        ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
         ],
         'groups' => [
             'label' => 'lang:admin::lang.side_menu.staff_group',
@@ -58,6 +49,32 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-default',
             'href' => 'staff_roles',
         ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.list.actions.label_status',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'staff_status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:admin::lang.list.actions.label_enable',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:admin::lang.list.actions.label_disable',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
+        ],
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -115,10 +132,6 @@ $config['list']['columns'] = [
         'relation' => 'user',
         'select' => 'last_login',
     ],
-    'date_added' => [
-        'label' => 'lang:admin::lang.column_date_added',
-        'type' => 'datesince',
-    ],
     'staff_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
@@ -127,6 +140,15 @@ $config['list']['columns'] = [
     'staff_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
+    ],
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
     ],
 ];
 
@@ -162,7 +184,7 @@ $config['form']['toolbar'] = [
             'context' => ['edit'],
         ],
         'impersonate' => [
-            'label' => 'lang:admin::lang.customers.text_impersonate',
+            'label' => 'lang:admin::lang.staff.text_impersonate',
             'class' => 'btn btn-default',
             'data-request' => 'onImpersonate',
             'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',

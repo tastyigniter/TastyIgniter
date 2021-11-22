@@ -13,7 +13,7 @@ trait HasInvoice
         });
 
         static::saved(function (self $model) {
-            if ($model->isPaymentProcessed() AND !$model->hasInvoice())
+            if ($model->isPaymentProcessed() && !$model->hasInvoice())
                 $model->generateInvoice();
         });
     }
