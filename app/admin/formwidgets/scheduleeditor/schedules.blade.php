@@ -1,9 +1,9 @@
 <div class="row">
     @foreach ($schedules as $schedule)
-        <div class="col-lg-4">
+        <div class="col-lg-4 py-3">
             <div
                 id="{{ $this->getId('item-'.$loop->iteration) }}"
-                class="card bg-light shadow-sm mb-2"
+                class="card bg-light shadow-sm mb-0"
                 data-editor-control="load-schedule"
                 data-schedule-code="{{ $schedule->name }}"
                 role="button"
