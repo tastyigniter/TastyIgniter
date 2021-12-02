@@ -165,7 +165,7 @@ class RecordEditor extends BaseFormWidget
 
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'record-editor';
+        $widgetConfig['alias'] = $this->alias.'RecordEditor';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[recordData]';
         $widgetConfig['context'] = $context;
         $widget = $this->makeWidget(Form::class, $widgetConfig);

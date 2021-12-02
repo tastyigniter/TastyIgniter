@@ -254,7 +254,7 @@ class Connector extends BaseFormWidget
     {
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'Form'.'connector';
+        $widgetConfig['alias'] = $this->alias.'FormConnector';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[connectorData]';
         $widgetConfig['context'] = $context;
         $widget = $this->makeWidget(Form::class, $widgetConfig);

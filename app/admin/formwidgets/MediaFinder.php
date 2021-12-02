@@ -261,7 +261,7 @@ class MediaFinder extends BaseFormWidget
     {
         $widgetConfig = $this->getAttachmentFieldsConfig();
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'attachment-config';
+        $widgetConfig['alias'] = $this->alias.'AttachmentConfig';
         $widgetConfig['arrayName'] = 'media';
         $widget = $this->makeWidget(Form::class, $widgetConfig);
 

@@ -261,7 +261,7 @@ class StatusEditor extends BaseFormWidget
             ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
 
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'status-editor';
+        $widgetConfig['alias'] = $this->alias.'StatusEditor';
         $widgetConfig['context'] = $this->isStatusMode ? 'status' : 'assignee';
         $widgetConfig['arrayName'] = $this->getModeConfig('arrayName');
         $widget = $this->makeWidget(Form::class, $widgetConfig);
