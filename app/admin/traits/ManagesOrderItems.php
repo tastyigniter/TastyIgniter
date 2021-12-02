@@ -34,17 +34,20 @@ trait ManagesOrderItems
             if (!$menu = Menus_model::find($orderMenu->menu_id))
                 return TRUE;
 
-            if ($menu->subtract_stock)
-                $menu->updateStock($orderMenu->quantity);
+            optional($menu->getStockByLocation($this->location))->updateStockSold($orderMenu->quantity);
 
             $orderMenuOptions
                 ->where('order_menu_id', $orderMenu->order_menu_id)
                 ->each(function ($orderMenuOption) {
-                    if (!$menuOptionValue = Menu_item_option_values_model::find(
+                    if (!$menuItemOptionValue = Menu_item_option_values_model::find(
                         $orderMenuOption->menu_option_value_id
                     )) return TRUE;
 
-                    $menuOptionValue->updateStock($orderMenuOption->quantity);
+                    if (!$menuOptionValue = $menuItemOptionValue->option_value)
+                        return TRUE;
+
+                    optional($menuOptionValue->getStockByLocation($this->location))
+                        ->updateStockSold($orderMenuOption->quantity);
                 });
         });
     }

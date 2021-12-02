@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Admin\Traits\Stockable;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 
@@ -11,6 +12,7 @@ use Igniter\Flame\Database\Traits\Sortable;
 class Menu_option_values_model extends Model
 {
     use Sortable;
+    use Stockable;
 
     /**
      * @var string The database table name

@@ -234,6 +234,11 @@ class ServiceProvider extends AppServiceProvider
                 'label' => 'Schedule Editor',
                 'code' => 'scheduleeditor',
             ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\StockEditor', [
+                'label' => 'Stock Editor',
+                'code' => 'stockeditor',
+            ]);
         });
     }
 
@@ -567,6 +572,8 @@ class ServiceProvider extends AppServiceProvider
             'staffs' => 'Admin\Models\Staffs_model',
             'status_history' => 'Admin\Models\Status_history_model',
             'statuses' => 'Admin\Models\Statuses_model',
+            'stocks' => 'Admin\Models\Stocks_model',
+            'stock_history' => 'Admin\Models\Stock_history_model',
             'tables' => 'Admin\Models\Tables_model',
             'users' => 'Admin\Models\Users_model',
             'working_hours' => 'Admin\Models\Working_hours_model',

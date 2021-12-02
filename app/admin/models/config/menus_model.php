@@ -217,7 +217,7 @@ $config['form']['tabs'] = [
         ],
         'stock_qty' => [
             'label' => 'lang:admin::lang.menus.label_stock_qty',
-            'type' => 'number',
+            'type' => 'stockeditor',
             'span' => 'right',
             'default' => 0,
             'comment' => 'lang:admin::lang.menus.help_stock_qty',
@@ -229,11 +229,11 @@ $config['form']['tabs'] = [
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
             'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],
         ],
-        'subtract_stock' => [
-            'label' => 'lang:admin::lang.menus.label_subtract_stock',
+        'menu_status' => [
+            'label' => 'lang:admin::lang.label_status',
             'type' => 'switch',
+            'default' => 1,
             'span' => 'right',
-            'comment' => 'lang:admin::lang.menus.help_subtract_stock',
         ],
         'menu_description' => [
             'label' => 'lang:admin::lang.label_description',
@@ -250,12 +250,6 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'useAttachment' => TRUE,
         ],
-        'menu_status' => [
-            'label' => 'lang:admin::lang.label_status',
-            'type' => 'switch',
-            'default' => 1,
-            'span' => 'left',
-        ],
 
         '_options' => [
             'label' => 'lang:admin::lang.menus.label_option',
@@ -266,6 +260,7 @@ $config['form']['tabs'] = [
             'modelClass' => 'Admin\Models\Menu_options_model',
             'placeholder' => 'lang:admin::lang.menus.help_menu_option',
             'formName' => 'lang:admin::lang.menu_options.text_option',
+            'popupSize' => 'modal-lg',
             'addonRight' => [
                 'label' => '<i class="fa fa-long-arrow-down"></i> Add to Menu',
                 'tag' => 'button',
