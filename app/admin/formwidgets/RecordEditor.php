@@ -64,6 +64,8 @@ class RecordEditor extends BaseFormWidget
             'deleteLabel',
             'popupSize',
         ]);
+
+        $this->makeRecordFormWidgetFromRequest();
     }
 
     public function render()
@@ -142,7 +144,7 @@ class RecordEditor extends BaseFormWidget
 
     public function onDeleteRecord()
     {
-        $model = $this->findFormModel($recordId = post('recordId'));
+        $model = $this->findFormModel(post('recordId'));
 
         $form = $this->makeRecordFormWidget($model);
 
@@ -158,10 +160,9 @@ class RecordEditor extends BaseFormWidget
         ];
     }
 
-    protected function makeRecordFormWidget($model, $context = null)
+    protected function makeRecordFormWidget($model)
     {
-        if (is_null($context))
-            $context = $model->exists ? 'edit' : 'create';
+        $context = $model->exists ? 'edit' : 'create';
 
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = $model;
@@ -212,5 +213,21 @@ class RecordEditor extends BaseFormWidget
         }
 
         return $result;
+    }
+
+    protected function makeRecordFormWidgetFromRequest()
+    {
+        if (post('recordId'))
+            return;
+
+        if (!strlen($requestData = request()->header('X-IGNITER-RECORD-EDITOR-REQUEST-DATA')))
+            return;
+
+        if (!strlen($recordId = array_get(json_decode($requestData, TRUE), $this->alias.'.recordId')))
+            return;
+
+        $model = $this->findFormModel($recordId);
+
+        $this->makeRecordFormWidget($model);
     }
 }

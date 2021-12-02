@@ -18,6 +18,7 @@
         this.$modalRootElement.remove()
         this.$modalElement = null
         this.$modalRootElement = null
+        delete RecordEditorModal.DEFAULTS.recordDataCache[this.options.alias]
     }
 
     RecordEditorModal.prototype.init = function () {
@@ -81,12 +82,16 @@
 
     RecordEditorModal.prototype.onModalShown = function (event) {
         var self = this,
-            handler = this.options.handler ? this.options.handler : this.options.alias + '::onLoadRecord'
+            handler = this.options.handler ? this.options.handler : this.options.alias + '::onLoadRecord',
+            recordData = this.options.recordData ? this.options.recordData : {recordId: this.options.recordId}
 
         self.$modalElement = $(event.target)
 
+        if (this.options.alias)
+            RecordEditorModal.DEFAULTS.recordDataCache[this.options.alias] = recordData
+
         $.request(handler, {
-            data: this.options.recordData ? this.options.recordData : {recordId: this.options.recordId},
+            data: recordData,
         }).done($.proxy(this.onRecordLoaded, this)).fail(function () {
             self.$modalElement.modal('hide')
         }).always(function () {
@@ -111,7 +116,8 @@
             tabindex: -1,
             ariaLabelled: '#record-editor-modal',
             ariaHidden: true,
-        }
+        },
+        recordDataCache: {}
     }
 
     $.ti.recordEditor.modal = RecordEditorModal
@@ -127,6 +133,13 @@
         event.preventDefault()
 
         new $.ti.recordEditor.modal(options)
+    })
+
+    $.ajaxPrefilter(function(options) {
+        if (!$.isEmptyObject(RecordEditorModal.DEFAULTS.recordDataCache)) {
+            if (!options.headers) options.headers = {}
+            options.headers['X-IGNITER-RECORD-EDITOR-REQUEST-DATA'] = JSON.stringify(RecordEditorModal.DEFAULTS.recordDataCache)
+        }
     })
 }(window.jQuery);
 
