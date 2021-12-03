@@ -3,6 +3,7 @@
 namespace System\Traits;
 
 use Admin\Facades\Template;
+use ErrorException;
 use Exception;
 use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Support\Facades\File;
@@ -10,7 +11,6 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
 trait ViewMaker
@@ -230,7 +230,7 @@ trait ViewMaker
             $this->handleViewException($e, $obLevel);
         }
         catch (Throwable $e) {
-            $this->handleViewException(new FatalThrowableError($e), $obLevel);
+            $this->handleViewException(new ErrorException($e), $obLevel);
         }
 
         return ob_get_clean();
