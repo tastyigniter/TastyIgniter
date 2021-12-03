@@ -483,7 +483,7 @@ class UpdateManager
 
     public function isMarkedAsIgnored($code)
     {
-        if (!array_key_exists($code, $this->getInstalledItems()))
+        if (!collect($this->getInstalledItems())->firstWhere('name', $code))
             return FALSE;
 
         return array_get($this->getIgnoredUpdates(), $code, FALSE);
