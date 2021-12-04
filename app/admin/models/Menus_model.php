@@ -42,9 +42,11 @@ class Menus_model extends Model
         'menu_priority' => 'integer',
     ];
 
+    protected $appends = ['menu_options'];
+
     public $relation = [
         'hasMany' => [
-            'menu_options' => ['Admin\Models\Menu_item_options_model', 'delete' => TRUE],
+            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'delete' => TRUE],
         ],
         'hasOne' => [
             'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
@@ -59,13 +61,21 @@ class Menus_model extends Model
         ],
     ];
 
-    protected $purgeable = ['menu_options', 'special'];
+    protected $purgeable = ['menu_option_values', 'special'];
 
     public $mediable = ['thumb'];
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
 
     public $timestamps = TRUE;
+
+    public function getMenuOptionsAttribute($value)
+    {
+        if (isset($this->relations['menu_options']))
+            return $this->relations['menu_options'];
+
+        return $this->relations['menu_options'] = $this->getOptions();
+    }
 
     //
     // Scopes
@@ -176,8 +186,8 @@ class Menus_model extends Model
     {
         $this->restorePurgedValues();
 
-        if (array_key_exists('menu_options', $this->attributes))
-            $this->addMenuOption((array)$this->attributes['menu_options']);
+        if (array_key_exists('menu_option_values', $this->attributes))
+            $this->addMenuOptionValues((array)$this->attributes['menu_option_values']);
 
         if (array_key_exists('special', $this->attributes))
             $this->addMenuSpecial((array)$this->attributes['special']);
@@ -198,6 +208,24 @@ class Menus_model extends Model
     public function hasOptions()
     {
         return count($this->menu_options);
+    }
+
+    public function getOptions()
+    {
+        $optionIds = $this->menu_option_values->pluck('option_id')->unique();
+
+        $options = Menu_options_model::whereIn('option_id', $optionIds)->get();
+
+        return $this->menu_option_values
+            ->groupBy('option_id')
+            ->map(function ($optionValues, $optionId) use ($options) {
+                $option = $options->firstWhere('option_id', $optionId);
+
+                $option->menu_option_values = $optionValues;
+
+                return $option;
+            })
+            ->sortBy('priority');
     }
 
     /**
@@ -266,22 +294,40 @@ class Menus_model extends Model
      */
     public function addMenuOption(array $menuOptions = [])
     {
+        traceLog('Deprecated Menus_model::addMenuOption function. Use addMenuOptionValues() instead.');
+    }
+
+    /**
+     * Create new or update existing menu option values
+     *
+     * @param array $menuOptionValues if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuOptionValues(array $menuOptionValues = [])
+    {
         $menuId = $this->getKey();
         if (!is_numeric($menuId))
             return FALSE;
 
         $idsToKeep = [];
-        foreach ($menuOptions as $option) {
-            $option['menu_id'] = $menuId;
-            $menuOption = $this->menu_options()->firstOrNew([
-                'menu_option_id' => array_get($option, 'menu_option_id'),
-            ])->fill(array_except($option, ['menu_option_id']));
+        foreach ($menuOptionValues as $optionId => $optionValues) {
+            foreach ($optionValues as $optionValue) {
+                $optionValue['menu_id'] = $menuId;
+                $optionValue['option_id'] = $optionId;
 
-            $menuOption->saveOrFail();
-            $idsToKeep[] = $menuOption->getKey();
+                $menuOptionValue = $this->menu_option_values()->firstOrNew([
+                    'menu_option_value_id' => array_get($optionValue, 'menu_option_value_id'),
+                ])->fill(array_except($optionValue, ['menu_option_value_id']));
+
+                $menuOptionValue->saveOrFail();
+                $idsToKeep[] = $menuOptionValue->getKey();
+            }
+
+            $this->menu_option_values()
+                ->where('option_id', $optionId)
+                ->whereNotIn('menu_option_value_id', $idsToKeep)->delete();
         }
-
-        $this->menu_options()->whereNotIn('menu_option_id', $idsToKeep)->delete();
 
         return count($idsToKeep);
     }

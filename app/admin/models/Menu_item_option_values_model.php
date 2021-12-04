@@ -39,15 +39,17 @@ class Menu_item_option_values_model extends Model
 
     public $relation = [
         'belongsTo' => [
+            'menu' => ['Admin\Models\Menus_model'],
+            'option' => ['Admin\Models\Menu_options_model'],
             'option_value' => ['Admin\Models\Menu_option_values_model'],
-            'menu_option' => ['Admin\Models\Menu_item_options_model'],
         ],
     ];
 
     public $rules = [
-        ['menu_option_id', 'admin::lang.column_id', 'required|integer'],
-        ['option_value_id', 'admin::lang.menus.label_option_value', 'required|integer'],
-        ['new_price', 'admin::lang.menus.label_option_price', 'numeric|min:0'],
+        ['option_id', 'admin::lang.menu_options.label_option_value_id', 'required|integer'],
+        ['option_value_id', 'admin::lang.menu_options.label_option_value', 'required|integer'],
+        ['new_price', 'admin::lang.menu_options.label_option_price', 'numeric|min:0'],
+        ['quantity', 'admin::lang.menu_options.label_option_qty', 'numeric'],
     ];
 
     public $timestamps = TRUE;

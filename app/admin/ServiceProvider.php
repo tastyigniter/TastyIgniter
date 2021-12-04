@@ -200,6 +200,11 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'mediafinder',
             ]);
 
+            $manager->registerFormWidget('Admin\FormWidgets\MenuOptionEditor', [
+                'label' => 'Menu Option Editor',
+                'code' => 'menuoptioneditor',
+            ]);
+
             $manager->registerFormWidget('Admin\FormWidgets\PermissionEditor', [
                 'label' => 'Permission Editor',
                 'code' => 'permissioneditor',
@@ -559,7 +564,6 @@ class ServiceProvider extends AppServiceProvider
             'mealtimes' => 'Admin\Models\Mealtimes_model',
             'menu_categories' => 'Admin\Models\Menu_categories_model',
             'menu_item_option_values' => 'Admin\Models\Menu_item_option_values_model',
-            'menu_item_options' => 'Admin\Models\Menu_item_options_model',
             'menu_option_values' => 'Admin\Models\Menu_option_values_model',
             'menu_options' => 'Admin\Models\Menu_options_model',
             'menus' => 'Admin\Models\Menus_model',
