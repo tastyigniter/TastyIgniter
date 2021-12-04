@@ -3,11 +3,11 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Admin\Traits\Stockable;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Menus Model Class
@@ -17,6 +17,7 @@ class Menus_model extends Model
     use Purgeable;
     use Locationable;
     use HasMedia;
+    use Stockable;
 
     const LOCATIONABLE_RELATION = 'locations';
 
@@ -35,9 +36,7 @@ class Menus_model extends Model
     protected $casts = [
         'menu_price' => 'float',
         'menu_category_id' => 'integer',
-        'stock_qty' => 'integer',
         'minimum_qty' => 'integer',
-        'subtract_stock' => 'boolean',
         'order_restriction' => 'array',
         'menu_status' => 'boolean',
         'menu_priority' => 'integer',
@@ -210,26 +209,7 @@ class Menus_model extends Model
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        if (!$this->subtract_stock)
-            return FALSE;
-
-        if ($this->stock_qty == 0)
-            return FALSE;
-
-        $stockQty = ($subtract === TRUE)
-            ? $this->stock_qty - $quantity
-            : $this->stock_qty + $quantity;
-
-        $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
-
-        // Update using query to prevent model events from firing
-        $this->newQuery()
-            ->where($this->getKeyName(), $this->getKey())
-            ->update(['stock_qty' => $stockQty]);
-
-        Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
-
-        return TRUE;
+        traceLog('Menus_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
     }
 
     /**

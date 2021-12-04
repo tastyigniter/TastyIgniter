@@ -710,7 +710,6 @@ return [
         'label_image' => 'Image',
         'label_stock_qty' => 'Stock Quantity',
         'label_minimum_qty' => 'Minimum Quantity',
-        'label_subtract_stock' => 'Subtract Stock',
         'label_mealtime' => 'Mealtime',
         'label_order_restriction' => 'Order Restriction',
         'label_menu_priority' => 'Priority',
@@ -741,9 +740,8 @@ return [
 
         'help_image' => 'Select a file to update menu image, otherwise leave blank.',
         'help_mealtime' => 'Set what time of day your customers can order this menu. Mealtimes can be managed under Kitchen > Mealtimes',
-        'help_stock_qty' => 'Enter the amount of stock available. This amount can be set to zero to represent unlimited stock quantity or a negative number to represent out of stock.',
+        'help_stock_qty' => 'Total stock available for this menu at all locations.',
         'help_minimum_qty' => 'Enter the minimum quantity that can be ordered by customers.',
-        'help_subtract_stock' => 'Select Yes for the ordered menu and options quantity to be subtracted from their original stock quantity.',
         'help_menu_option' => 'Choose from the dropdown to add an option to this menu item.',
         'help_order_restriction' => 'Whether to restrict the menu to a specific order type.',
         'help_min_selected' => 'Minimum items to select from these options, leave blank to ignore.',
@@ -1053,6 +1051,35 @@ return [
         'alert_already_added' => 'The selected %s must be different from the current %s',
         'alert_invalid_action' => 'Invalid action.',
         'alert_status_not_found' => 'Status ID [%s] not found.',
+    ],
+
+    'stocks' => [
+        'text_title' => 'Stocks',
+        'text_form_name' => 'Stock',
+        'text_title_manage_stock' => 'Manage Stock',
+        'text_stock_description' => 'Managing stock for <b>%s</b> at %s location(s)',
+        'text_empty' => 'There are no locations available.',
+
+        'button_manage_stock' => 'Manage Stock',
+        'button_stock_history' => 'Stock History',
+
+        'text_action_none' => 'Select reason',
+        'text_action_in_stock' => 'Stock Received',
+        'text_action_restock' => 'Restock',
+        'text_action_recount' => 'Stock Re-count',
+        'text_action_sold' => 'Sold',
+        'text_action_returned' => 'Returned',
+        'text_action_waste' => 'Waste',
+
+        'label_is_tracked' => 'Track Stock',
+        'label_quantity' => 'Stock Quantity',
+        'label_stock_action' => 'Stock Action',
+        'label_stock_quantity' => 'Add, remove or recount stock',
+        'label_low_stock_alert' => 'Low Stock Alerts',
+        'label_low_stock_threshold' => 'Low Stock Threshold',
+
+        'help_is_tracked' => 'When enabled, ordered menu and/or options quantities are automatically subtracted.',
+        'help_low_stock_alert' => 'Enable automated low stock alerts so that you receive emails when the stock quantity falls below or equals the specified threshold.',
     ],
 
     'tables' => [

@@ -16,6 +16,11 @@ $config['form'] = [
             'label' => 'lang:admin::lang.menu_options.label_option_price',
             'type' => 'currency',
         ],
+        'stock_qty' => [
+            'label' => 'lang:admin::lang.menu_options.label_stock_qty',
+            'type' => 'stockeditor',
+            'span' => 'right',
+        ],
         'allergens' => [
             'label' => 'lang:admin::lang.menus.label_allergens',
             'type' => 'relation',
