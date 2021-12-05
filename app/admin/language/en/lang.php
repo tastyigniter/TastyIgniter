@@ -1057,6 +1057,7 @@ return [
         'text_title' => 'Stocks',
         'text_form_name' => 'Stock',
         'text_title_manage_stock' => 'Manage Stock',
+        'text_title_stock_history' => 'Stock History',
         'text_stock_description' => 'Managing stock for <b>%s</b> at %s location(s)',
         'text_empty' => 'There are no locations available.',
 
@@ -1064,12 +1065,12 @@ return [
         'button_stock_history' => 'Stock History',
 
         'text_action_none' => 'Select reason',
-        'text_action_in_stock' => 'Stock Received',
-        'text_action_restock' => 'Restock',
-        'text_action_recount' => 'Stock Re-count',
-        'text_action_sold' => 'Sold',
-        'text_action_returned' => 'Returned',
-        'text_action_waste' => 'Waste',
+        'text_action_in_stock' => '[+] Stock Received',
+        'text_action_restock' => '[+] Restock',
+        'text_action_recount' => '[=] Stock Re-count',
+        'text_action_sold' => '[-] Sold',
+        'text_action_returned' => '[-] Returned',
+        'text_action_waste' => '[-] Waste',
 
         'label_is_tracked' => 'Track Stock',
         'label_quantity' => 'Stock Quantity',
@@ -1077,6 +1078,10 @@ return [
         'label_stock_quantity' => 'Add, remove or recount stock',
         'label_low_stock_alert' => 'Low Stock Alerts',
         'label_low_stock_threshold' => 'Low Stock Threshold',
+
+        'column_staff_name' => 'Staff Name',
+        'column_quantity' => 'Quantity',
+        'column_created_at' => 'Calculated At',
 
         'help_is_tracked' => 'When enabled, ordered menu and/or options quantities are automatically subtracted.',
         'help_low_stock_alert' => 'Enable automated low stock alerts so that you receive emails when the stock quantity falls below or equals the specified threshold.',

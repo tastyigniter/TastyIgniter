@@ -94,9 +94,11 @@ class Stocks_model extends Model
         return TRUE;
     }
 
-    public function updateStockSold(int $quantity, array $options = [])
+    public function updateStockSold(int $orderId, int $quantity)
     {
-        return $this->updateStock($quantity, self::STATE_SOLD, $options);
+        return $this->updateStock($quantity, self::STATE_SOLD, [
+            'order_id' => $orderId,
+        ]);
     }
 
     public function checkStock(int $quantity)
