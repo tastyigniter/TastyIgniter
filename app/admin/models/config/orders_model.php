@@ -274,7 +274,6 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
             'span' => 'right',
             'context' => ['edit', 'preview'],
-            'addonCssClass' => ['input-addon-btn'],
             'addonRight' => [
                 'tag' => 'a',
                 'label' => 'admin::lang.orders.button_print_invoice',

@@ -177,7 +177,7 @@ class Filter extends BaseWidget
                     $dateRange = (is_array($value) && count($value) === 2 && $value[0] != '') ? [
                         make_carbon($value[0])->format($format),
                         make_carbon($value[1])->format($format),
-                    ] : NULL;
+                    ] : null;
                     $this->setScopeValue($scope, $dateRange);
                     break;
             }
@@ -295,6 +295,9 @@ class Filter extends BaseWidget
             }
 
             $options = $model->$methodName();
+        }
+        elseif (is_callable($options)) {
+            return $options();
         }
         elseif (!is_array($options)) {
             $options = [];

@@ -279,6 +279,8 @@ trait ManagesUpdates
             }
         }
 
+        UpdateManager::instance()->requestUpdateList(TRUE);
+
         return TRUE;
     }
 

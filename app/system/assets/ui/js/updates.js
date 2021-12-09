@@ -25,17 +25,10 @@
         updateSteps: [],
         itemInModal: null,
         itemsToApply: [],
-        fetchItems: null,
         installedItems: []
     }
 
     Updates.prototype.init = function () {
-        if (this.options.fetchItems) {
-            $.request('onFetchItems', {
-                data: {type: this.options.fetchItems}
-            })
-        }
-
         this.bindSearch(this.options.searchInput)
 
         $(document).on('click', '#update-carte', $.proxy(this.onUpdateCarteClick, this))
