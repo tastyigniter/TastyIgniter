@@ -374,7 +374,7 @@ class DashboardContainer extends BaseWidget
         $formConfig['model'] = User_preferences_model::onUser();
         $formConfig['data'] = $this->getWidgetPropertyValues($widget);
         $formConfig['previewMode'] = $this->previewMode;
-        $formConfig['alias'] = $this->alias.'Form'.'-'.$alias;
+        $formConfig['alias'] = $this->alias.studly_case('Form_'.$alias);
         $formConfig['arrayName'] = $alias.'_fields';
 
         $formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);

@@ -5,10 +5,7 @@
         data-control="record-editor"
         data-alias="{{ $this->alias }}"
     >
-        <div
-            class="input-group" data-toggle="modal"
-            data-target="#{{ $this->getId('form-modal') }}"
-        >
+        <div class="input-group">
             @if ($addonLeft)
                 <div class="input-group-prepend">{{ $addonLeft }}</div>
             @endif
