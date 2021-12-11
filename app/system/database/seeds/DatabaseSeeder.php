@@ -14,10 +14,15 @@ class DatabaseSeeder extends Seeder
 
     public static $staffName = 'Chef Admin';
 
-    public static $seedDemo = TRUE;
+    public static $staffUsername = 'admin';
+
+    public static $staffPassword = '123456';
+
+    public static $seedDemo = true;
 
     /**
      * Run the database seeds.
+     *
      * @return void
      */
     public function run()
