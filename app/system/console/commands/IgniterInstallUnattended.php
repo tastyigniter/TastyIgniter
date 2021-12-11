@@ -321,7 +321,8 @@ class IgniterInstallUnattended extends Command
 
     protected function getConfigFile($name = 'app')
     {
-        $env  = $this->option('env') ? $this->option('env').'/' : '';
+        $env = $this->option('env') ? $this->option('env').'/' : '';
+
         $path = $this->laravel['path.config']."/{$env}{$name}.php";
 
         return $path;
