@@ -139,7 +139,8 @@ class IgniterInstallUnattended extends Command
      */
     public function handle()
     {
-        $this->alert('INSTALLATION');
+        $this->newLine();
+        $this->alert('Checking Options');
 
         if (App::hasDatabase() && !$this->option('force')) {
             $this->error('Application appears to be installed already. Please use -f|--force to override this.');
@@ -147,9 +148,9 @@ class IgniterInstallUnattended extends Command
             return;
         }
 
-        $this->line('Enter a new value, or press ENTER for the default');
-
         $this->setSeederProperties();
+
+        $this->alert('Installing');
 
         $this->rewriteEnvFile();
 
@@ -162,7 +163,8 @@ class IgniterInstallUnattended extends Command
         $this->moveExampleFile('htaccess', null, 'backup');
         $this->moveExampleFile('htaccess', 'example', null);
 
-        $this->alert('INSTALLATION COMPLETE');
+        $this->newLine();
+        $this->alert('Installation Complete');
     }
 
     protected function rewriteEnvFile()
@@ -207,22 +209,48 @@ class IgniterInstallUnattended extends Command
 
     protected function setSeederProperties()
     {
-        $this->dbConfig['host']     = $this->option('mysql-host');
-        $this->dbConfig['port']     = $this->option('mysql-port');
-        $this->dbConfig['database'] = $this->option('mysql-database');
-        $this->dbConfig['username'] = $this->option('mysql-username');
-        $this->dbConfig['password'] = $this->option('mysql-password');
-        $this->dbConfig['prefix']   = $this->option('mysql-table-prefix');
-
-        DatabaseSeeder::$siteName = $this->option('site-name');
-        DatabaseSeeder::$siteUrl  = $this->option('site-url');
-
-        DatabaseSeeder::$siteEmail     = $this->option('admin-email');
-        DatabaseSeeder::$staffName     = $this->option('admin-name');
-        DatabaseSeeder::$staffUsername = $this->option('admin-username');
-        DatabaseSeeder::$staffPassword = $this->option('admin-password');
+        $this->info('Passed force flag: '.($this->option('force') ? 'Yes' : 'No'));
 
         DatabaseSeeder::$seedDemo = $this->option('with-demo-data');
+        $this->info('Passed demo seed data flag: '.(DatabaseSeeder::$seedDemo ? 'Yes' : 'No'));
+
+        DatabaseSeeder::$siteName = $this->option('site-name');
+        $this->info('Passed site name: '.DatabaseSeeder::$siteName);
+
+        DatabaseSeeder::$siteUrl = $this->option('site-url');
+        $this->info('Passed site URL: '.DatabaseSeeder::$siteUrl);
+
+        DatabaseSeeder::$siteEmail = $this->option('admin-email');
+        $this->info('Passed admin email: '.DatabaseSeeder::$siteEmail);
+
+        DatabaseSeeder::$staffName = $this->option('admin-name');
+        $this->info('Passed admin name: '.DatabaseSeeder::$staffName);
+
+        DatabaseSeeder::$staffUsername = $this->option('admin-username');
+        $this->info('Passed admin username: '.DatabaseSeeder::$staffUsername);
+
+        DatabaseSeeder::$staffPassword = $this->option('admin-password');
+        $this->info('Passed admin password: *');
+
+        $this->dbConfig['host'] = $this->option('mysql-host');
+        $this->info('Passed MySQL host: '.$this->dbConfig['host']);
+
+        $this->dbConfig['port'] = $this->option('mysql-port');
+        $this->info('Passed MySQL port: '.$this->dbConfig['port']);
+
+        $this->dbConfig['database'] = $this->option('mysql-database');
+        $this->info('Passed MySQL database: '.$this->dbConfig['database']);
+
+        $this->dbConfig['username'] = $this->option('mysql-username');
+        $this->info('Passed MySQL username: '.$this->dbConfig['username']);
+
+        $this->dbConfig['password'] = $this->option('mysql-password');
+        $this->info('Passed MySQL password: *');
+
+        $this->dbConfig['prefix'] = $this->option('mysql-table-prefix');
+        $this->info('Passed MySQL prefix: '.$this->dbConfig['prefix']);
+
+        $this->newLine();
     }
 
     protected function createSuperUser()
