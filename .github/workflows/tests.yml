@@ -42,7 +42,7 @@ jobs:
       - name: Create MySQL Database
         run: |
           sudo systemctl start mysql
-          mysql -uroot -proot -e 'CREATE DATABASE ti_test;' --port 13306
+          mysql -u${{ env.DB_USERNAME }} -p${{ env.DB_PASSWORD }} -e 'CREATE DATABASE ${{ env.DB_PREFIX }}${{ env.DB_DATABASE }};' --port ${{ env.DB_PORT }}
 
       - name: Install PHP
         uses: shivammathur/setup-php@master
@@ -51,7 +51,7 @@ jobs:
           extensions: mbstring, intl, gd, xml, sqlite
 
       - name: Install composer dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress --no-suggest --no-scripts
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
 
       - name: Reset TastyIgniter library
         run: |
