@@ -20,11 +20,11 @@ jobs:
         db: ['mysql:5.7', 'mysql:8.0', mariadb]
         include:
           - db: 'mysql:5.7'
-            dbName: MySQL
+            dbName: 'MySQL 5.7'
           - db: 'mysql:8.0'
-            dbName: MySQL8
+            dbName: 'MySQL 8'
           - db: mariadb
-            dbName: MariaDB
+            dbName: 'MariaDB'
       fail-fast: false
 
     services:
