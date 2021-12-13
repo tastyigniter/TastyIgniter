@@ -77,5 +77,5 @@ jobs:
       DB_DATABASE: test
       DB_USERNAME: root
       DB_PASSWORD: root
-      DB_PREFIX: 'ti_'
+      DB_PREFIX: ''
       IGNITER_LOCATION_MODE: multiple
