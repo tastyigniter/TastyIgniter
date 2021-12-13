@@ -66,12 +66,6 @@ jobs:
           unzip ./vendor/tastyigniter/master.zip -d ./vendor/tastyigniter
           mv ./vendor/tastyigniter/flame-master ./vendor/tastyigniter/flame
           composer dump-autoload
-        env:
-          DB_PORT: 13306
-          DB_USERNAME: forge
-          DB_PASSWORD: ''
-          DB_PREFIX: ${{ matrix.prefix }}
-          IGNITER_LOCATION_MODE: multiple
 
       - name: Run composer post-update scripts
         run: |
@@ -82,3 +76,10 @@ jobs:
 
       - name: Run PHPUnit Test Suite
         run: ./vendor/bin/phpunit
+
+    env:
+      DB_PORT: 13306
+      DB_USERNAME: forge
+      DB_PASSWORD: ''
+      DB_PREFIX: ${{ matrix.prefix }}
+      IGNITER_LOCATION_MODE: multiple
