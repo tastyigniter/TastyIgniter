@@ -3,7 +3,7 @@
 namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 
 class Allergens extends AdminController
 {

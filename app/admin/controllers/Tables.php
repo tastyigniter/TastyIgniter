@@ -2,7 +2,7 @@
 
 namespace Admin\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 
 /**
  * Admin Controller Class Tables

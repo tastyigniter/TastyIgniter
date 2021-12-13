@@ -4,7 +4,7 @@
 @endphp
 
 <div class="field-checkbox">
-    @if ($this->previewMode AND $field->value)
+    @if ($this->previewMode && $field->value)
         <div
             id="{{ $field->getId() }}"
             class="btn-group btn-group-toggle bg-light"
@@ -28,7 +28,7 @@
                 </label>
             @endforeach
         </div>
-    @elseif (!$this->previewMode AND count($fieldOptions))
+    @elseif (!$this->previewMode && count($fieldOptions))
         <div
             id="{{ $field->getId() }}"
             class="btn-group btn-group-toggle bg-light"

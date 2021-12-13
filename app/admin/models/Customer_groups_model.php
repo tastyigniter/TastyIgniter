@@ -2,7 +2,7 @@
 
 namespace Admin\Models;
 
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * CustomerGroups Model Class
@@ -28,6 +28,8 @@ class Customer_groups_model extends Model
             'customers' => 'Admin\Models\Customers_model',
         ],
     ];
+
+    public $timestamps = TRUE;
 
     protected static $defaultGroup;
 

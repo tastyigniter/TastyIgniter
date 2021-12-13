@@ -5,8 +5,8 @@ namespace Admin\Traits;
 use Admin\Models\Menu_item_option_values_model;
 use Admin\Models\Menu_item_options_model;
 use Admin\Models\Menus_model;
-use DB;
-use Event;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 trait ManagesOrderItems
 {
@@ -141,7 +141,7 @@ trait ManagesOrderItems
                 'option_values' => serialize($cartItem->options),
             ]);
 
-            if ($orderMenuId AND count($cartItem->options)) {
+            if ($orderMenuId && count($cartItem->options)) {
                 $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
             }
         }
@@ -191,8 +191,6 @@ trait ManagesOrderItems
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
             return FALSE;
-
-        $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
 
         foreach ($totals as $total) {
             $this->addOrUpdateOrderTotal($total);

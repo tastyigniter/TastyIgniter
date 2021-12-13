@@ -5,8 +5,10 @@ namespace Admin\Traits;
 use Admin\Classes\ScheduleItem;
 use Carbon\Carbon;
 use Exception;
+use Igniter\Flame\Location\OrderTypes;
 use Igniter\Flame\Location\WorkingSchedule;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
 use InvalidArgumentException;
 
 trait HasWorkingHours
@@ -14,19 +16,19 @@ trait HasWorkingHours
     public static function bootHasWorkingHours()
     {
         static::fetched(function (self $model) {
-            $value = @unserialize($model->attributes['options']) ?: [];
+            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
 
             $model->parseHoursFromOptions($value);
 
-            $model->attributes['options'] = @serialize($value);
+            $model->attributes['options'] = @json_encode($value);
         });
 
         static::saving(function (self $model) {
-            $value = @unserialize($model->attributes['options']) ?: [];
+            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
 
             $model->parseHoursFromOptions($value);
 
-            $model->attributes['options'] = @serialize($value);
+            $model->attributes['options'] = @json_encode($value);
         });
     }
 
@@ -40,7 +42,9 @@ trait HasWorkingHours
 
     public function availableWorkingTypes()
     {
-        return [static::OPENING, static::DELIVERY, static::COLLECTION];
+        return array_merge([
+            static::OPENING,
+        ], collect(OrderTypes::instance()->listOrderTypes())->keys()->all());
     }
 
     public function listWorkingHours()
@@ -89,10 +93,12 @@ trait HasWorkingHours
     public function getWorkingHours()
     {
         if (!$this->hasRelation('working_hours'))
-            throw new Exception(sprintf("Model '%s' does not contain a definition for 'working_hours'.",
-                get_class($this)));
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_model_definition'),
+                get_class($this),
+                'working_hours',
+            ));
 
-        if (!$this->working_hours OR $this->working_hours->isEmpty()) {
+        if (!$this->working_hours || $this->working_hours->isEmpty()) {
             $this->createDefaultWorkingHours();
         }
 
@@ -107,8 +113,8 @@ trait HasWorkingHours
     public function newWorkingSchedule($type, $days = null)
     {
         $types = $this->availableWorkingTypes();
-        if (is_null($type) OR !in_array($type, $types))
-            throw new InvalidArgumentException("Defined parameter '$type' is not a valid working type.");
+        if (is_null($type) || !in_array($type, $types))
+            throw new InvalidArgumentException(sprintf(lang('admin::lang.locations.alert_invalid_schedule_type'), $type));
 
         if (is_null($days)) {
             $days = $this->hasFutureOrder($type)
@@ -122,6 +128,8 @@ trait HasWorkingHours
 
         $schedule->setType($type);
 
+        Event::fire('admin.workingSchedule.created', [$this, $schedule]);
+
         return $schedule;
     }
 
@@ -131,8 +139,8 @@ trait HasWorkingHours
 
     public function createScheduleItem($type)
     {
-        if (is_null($type) OR !in_array($type, $this->availableWorkingTypes()))
-            throw new InvalidArgumentException("Defined parameter '$type' is not a valid working type.");
+        if (is_null($type) || !in_array($type, $this->availableWorkingTypes()))
+            throw new InvalidArgumentException(sprintf(lang('admin::lang.locations.alert_invalid_schedule_type'), $type));
 
         $scheduleData = array_get($this->getOption('hours', []), $type, []);
 
@@ -217,7 +225,7 @@ trait HasWorkingHours
                 }
             }
 
-            if (isset($hours['flexible_hours']) AND is_array($hours['flexible_hours'])) {
+            if (isset($hours['flexible_hours']) && is_array($hours['flexible_hours'])) {
                 foreach (['opening', 'delivery', 'collection'] as $type) {
                     $value['hours'][$type]['flexible'] = $hours['flexible_hours'];
                 }

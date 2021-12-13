@@ -2,9 +2,9 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Validation;
-use Model;
 
 /**
  * MenuOptions Model Class
@@ -65,6 +65,8 @@ class Menu_item_options_model extends Model
     protected $purgeable = ['menu_option_values'];
 
     public $with = ['option'];
+
+    public $timestamps = TRUE;
 
     public function getOptionNameAttribute()
     {

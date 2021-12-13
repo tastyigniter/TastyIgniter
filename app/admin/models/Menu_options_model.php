@@ -2,10 +2,10 @@
 
 namespace Admin\Models;
 
+use Admin\Facades\AdminLocation;
 use Admin\Traits\Locationable;
-use AdminLocation;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Model;
 
 /**
  * MenuOptions Model Class
@@ -55,6 +55,8 @@ class Menu_options_model extends Model
     ];
 
     protected $purgeable = ['option_values'];
+
+    public $timestamps = TRUE;
 
     public static function getRecordEditorOptions()
     {

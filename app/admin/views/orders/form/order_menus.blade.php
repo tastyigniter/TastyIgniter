@@ -48,20 +48,20 @@
             <td class="border-top p-0" colspan="99999"></td>
         </tr>
         @foreach($model->getOrderTotals() as $total)
-            @continue($model->isCollectionType() AND $total->code == 'delivery')
-            @php $thickLine = ($total->code == 'order_total' OR $total->code == 'total') @endphp
+            @continue($model->isCollectionType() && $total->code == 'delivery')
+            @php $thickLine = ($total->code == 'order_total' || $total->code == 'total') @endphp
             <tr>
                 <td
-                    class="{{ ($loop->iteration === 1 OR $thickLine) ? 'lead font-weight-bold' : 'text-muted' }}" width="1"
+                    class="{{ ($loop->iteration === 1 || $thickLine) ? 'lead font-weight-bold' : 'text-muted' }}" width="1"
                 ></td>
                 <td
-                    class="{{ ($loop->iteration === 1 OR $thickLine) ? 'lead font-weight-bold' : 'text-muted' }}"
+                    class="{{ ($loop->iteration === 1 || $thickLine) ? 'lead font-weight-bold' : 'text-muted' }}"
                 ></td>
                 <td
-                    class="{{ ($loop->iteration === 1 OR $thickLine) ? 'lead font-weight-bold' : 'text-muted' }} text-left"
+                    class="{{ ($loop->iteration === 1 || $thickLine) ? 'lead font-weight-bold' : 'text-muted' }} text-left"
                 >{{ $total->title }}</td>
                 <td
-                    class="{{ ($loop->iteration === 1 OR $thickLine) ? 'lead font-weight-bold' : '' }} text-right"
+                    class="{{ ($loop->iteration === 1 || $thickLine) ? 'lead font-weight-bold' : '' }} text-right"
                 >{{ currency_format($total->value) }}</td>
             </tr>
         @endforeach

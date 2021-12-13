@@ -2,8 +2,8 @@
 
 namespace Main\Models;
 
+use Igniter\Flame\Database\Model;
 use Main\Classes\MediaLibrary;
-use Model;
 
 /**
  * Image_tool Model Class

@@ -15,6 +15,16 @@ class Widgets
     use Singleton;
 
     /**
+     * @var array An array of list action widgets.
+     */
+    protected $bulkActionWidgets;
+
+    /**
+     * @var array Cache of list action widget registration callbacks.
+     */
+    protected $bulkActionWidgetCallbacks = [];
+
+    /**
      * @var array An array of form widgets.
      */
     protected $formWidgets;
@@ -50,6 +60,77 @@ class Widgets
     protected function initialize()
     {
         $this->extensionManager = ExtensionManager::instance();
+    }
+
+    //
+    // List Action Widgets
+    //
+
+    public function listBulkActionWidgets()
+    {
+        if ($this->bulkActionWidgets === null) {
+            $this->bulkActionWidgets = [];
+
+            // Load app widgets
+            foreach ($this->bulkActionWidgetCallbacks as $callback) {
+                $callback($this->instance());
+            }
+
+            // Load extension widgets
+            $bundles = $this->extensionManager->getRegistrationMethodValues('registerListActionWidgets');
+            foreach ($bundles as $widgets) {
+                foreach ($widgets as $className => $widgetInfo) {
+                    $this->registerBulkActionWidget($className, $widgetInfo);
+                }
+            }
+        }
+
+        return $this->bulkActionWidgets;
+    }
+
+    public function registerBulkActionWidget($className, $widgetInfo)
+    {
+        $widgetCode = $widgetInfo['code'] ?? null;
+
+        if (!$widgetCode) {
+            $widgetCode = get_class_id($className);
+        }
+
+        $this->bulkActionWidgets[$className] = $widgetInfo;
+        $this->bulkActionWidgetHints[$widgetCode] = $className;
+    }
+
+    public function registerBulkActionWidgets(callable $definitions)
+    {
+        $this->bulkActionWidgetCallbacks[] = $definitions;
+    }
+
+    /**
+     * Returns a class name from a list action widget code
+     * Normalizes a class name or converts an code to it's class name.
+     *
+     * @param string $name Class name or form widget code.
+     *
+     * @return string The class name resolved, or the original name.
+     */
+    public function resolveBulkActionWidget($name)
+    {
+        if ($this->bulkActionWidgets === null) {
+            $this->listBulkActionWidgets();
+        }
+
+        $hints = $this->bulkActionWidgetHints;
+
+        if (isset($hints[$name])) {
+            return $hints[$name];
+        }
+
+        $_name = normalize_class_name($name);
+        if (isset($this->bulkActionWidgets[$_name])) {
+            return $_name;
+        }
+
+        return $name;
     }
 
     //

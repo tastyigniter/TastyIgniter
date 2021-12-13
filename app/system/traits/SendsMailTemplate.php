@@ -2,8 +2,7 @@
 
 namespace System\Traits;
 
-use Event;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 trait SendsMailTemplate
 {
@@ -19,20 +18,20 @@ trait SendsMailTemplate
 
     public function mailSend($view, $recipientType = null)
     {
-        $extraData = [];
-        Event::fire('model.mail.beforeSend', [$this, &$extraData]);
+        $vars = $this->mailGetData();
 
-        Mail::queue(
-            $view,
-            array_merge($extraData, $this->mailGetData()),
-            is_callable($recipientType)
-                ? $recipientType
-                : $this->mailBuildMessage($recipientType)
-        );
+        $result = $this->fireEvent('model.mailGetData', [$view, $recipientType]);
+        if ($result && is_array($result))
+            $vars = array_merge(...$result) + $vars;
+
+        Mail::queue($view, $vars, $this->mailBuildMessage($recipientType));
     }
 
     protected function mailBuildMessage($recipientType = null)
     {
+        if (is_callable($recipientType))
+            return $recipientType;
+
         $recipients = $this->mailGetRecipients($recipientType);
 
         return function ($message) use ($recipients) {

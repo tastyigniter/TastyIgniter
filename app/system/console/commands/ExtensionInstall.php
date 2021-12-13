@@ -49,7 +49,7 @@ class ExtensionInstall extends Command
         ]);
 
         $this->output->writeln(sprintf('<info>Extracting extension %s files</info>', $code));
-        $manager->extractFile($code, 'extensions/');
+        $manager->extractFile($code, extension_path('/'));
 
         $this->output->writeln(sprintf('<info>Installing %s extension</info>', $code));
         ExtensionManager::instance()->loadExtensions();

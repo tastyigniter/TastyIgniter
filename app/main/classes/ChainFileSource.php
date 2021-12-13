@@ -60,7 +60,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
             $cacheKey = $source->getPathsCacheKey();
 
             // Remove any existing cache data
-            if ($refresh AND $this->allowCacheRefreshes)
+            if ($refresh && $this->allowCacheRefreshes)
                 Cache::forget($cacheKey);
 
             // Load the cache
@@ -202,7 +202,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
 
         // Ensure that files that are being renamed have their old names marked as deleted prior to inserting the renamed file
         // Also ensure that the cache only gets updated at the end of this operation instead of twice, once here and again at the end
-        if ($searchFileName !== $fileName OR $searchExt !== $extension) {
+        if ($searchFileName !== $fileName || $searchExt !== $extension) {
             $this->allowCacheRefreshes = FALSE;
             $this->delete($dirName, $searchFileName, $searchExt);
             $this->allowCacheRefreshes = TRUE;

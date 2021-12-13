@@ -38,7 +38,7 @@ class AssigneeUpdated implements ActivityInterface
 
         $recipients = [];
         foreach ($assignableLog->assignable->listGroupAssignees() as $assignee) {
-            if ($user AND $assignee->getKey() === $user->staff->getKey()) continue;
+            if ($user && $assignee->getKey() === $user->staff->getKey()) continue;
             $recipients[] = $assignee->user;
         }
 

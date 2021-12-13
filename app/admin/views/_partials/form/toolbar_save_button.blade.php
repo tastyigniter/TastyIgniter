@@ -1,7 +1,7 @@
 @php
     $saveActions = array_get($button->config, 'saveActions', ['continue', 'close', 'new']);
     $selectedAction = @json_decode($d = array_get($_COOKIE, 'ti_activeFormSaveAction'), TRUE);
-    $selectedAction = ($selectedAction AND in_array($selectedAction, $saveActions)) ? $selectedAction : 'continue';
+    $selectedAction = ($selectedAction && in_array($selectedAction, $saveActions)) ? $selectedAction : 'continue';
 @endphp
 <div
     class="btn-group"
@@ -23,7 +23,7 @@
     <div class="dropdown-menu dropdown-menu-left">
         <h6 class="dropdown-header px-2">After saving</h6>
         @foreach (['continue', 'close', 'new'] as $action)
-            @continue($saveActions AND !in_array($action, $saveActions))
+            @continue($saveActions && !in_array($action, $saveActions))
             <div class="dropdown-item px-2">
                 <div class="custom-control custom-radio">
                     <input

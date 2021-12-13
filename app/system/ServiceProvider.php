@@ -8,9 +8,6 @@ use Admin\Classes\PermissionManager;
 use Admin\Classes\Template;
 use Admin\Classes\User;
 use Admin\Helpers\Admin as AdminHelper;
-use App;
-use Config;
-use Event;
 use Igniter\Flame\ActivityLog\ActivityLogServiceProvider;
 use Igniter\Flame\Currency\CurrencyServiceProvider;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
@@ -20,6 +17,7 @@ use Igniter\Flame\Pagic\Environment;
 use Igniter\Flame\Pagic\Loader;
 use Igniter\Flame\Pagic\PagicServiceProvider;
 use Igniter\Flame\Pagic\Parsers\FileParser;
+use Igniter\Flame\Setting\Facades\Setting;
 use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
@@ -28,10 +26,12 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Main\Classes\Customer;
-use Request;
-use Setting;
 use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
@@ -97,8 +97,6 @@ class ServiceProvider extends AppServiceProvider
         $this->extendValidator();
         $this->addTranslationDriver();
         $this->defineQueryMacro();
-
-        $this->app['router']->pushMiddlewareToGroup('web', 'currency');
     }
 
     /*
@@ -189,6 +187,7 @@ class ServiceProvider extends AppServiceProvider
                 'igniter.down' => Console\Commands\IgniterDown::class,
                 'igniter.install' => Console\Commands\IgniterInstall::class,
                 'igniter.update' => Console\Commands\IgniterUpdate::class,
+                'igniter.passwd' => Console\Commands\IgniterPasswd::class,
                 'extension.install' => Console\Commands\ExtensionInstall::class,
                 'extension.refresh' => Console\Commands\ExtensionRefresh::class,
                 'extension.remove' => Console\Commands\ExtensionRemove::class,
@@ -223,12 +222,12 @@ class ServiceProvider extends AppServiceProvider
 
         Validator::extend('valid_date', function ($attribute, $value, $parameters, $validator) {
             return !(!preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $value)
-                AND !preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value));
+                && !preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value));
         });
 
         Validator::extend('valid_time', function ($attribute, $value, $parameters, $validator) {
             return !(!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
-                AND !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value));
+                && !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value));
         });
 
         Event::listen('validator.beforeMake', function ($args) {
@@ -275,6 +274,8 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerPaginator()
     {
+        Paginator::useBootstrap();
+
         Paginator::defaultView('system::_partials/pagination/default');
         Paginator::defaultSimpleView('system::_partials/pagination/simple_default');
 
@@ -324,16 +325,11 @@ class ServiceProvider extends AppServiceProvider
             $app['config']->set('geocoder.providers.nominatim.region', $region);
 
             $app['config']->set('geocoder.providers.google.apiKey', setting('maps_api_key'));
-            $app['config']->set('geocoder.precision', setting('geocoder_boundary_precision'));
+            $app['config']->set('geocoder.precision', setting('geocoder_boundary_precision', 8));
         });
 
         Event::listen(CommandStarting::class, function () {
             config()->set('system.activityRecordsTTL', (int)setting('activity_log_timeout', 60));
-        });
-
-        $this->app->resolving('system.setting', function ($setting, $app) {
-            if (strlen($locationMode = setting('site_location_mode')))
-                $app['config']->set('system.locationMode', $locationMode);
         });
     }
 

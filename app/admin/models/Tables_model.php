@@ -3,9 +3,9 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
-use Model;
 
 /**
  * Tables Model Class
@@ -54,6 +54,8 @@ class Tables_model extends Model
         ['is_joinable', 'lang:admin::lang.tables.label_joinable', 'required|boolean'],
         ['table_status', 'lang:admin::lang.label_status', 'required|boolean'],
     ];
+
+    public $timestamps = TRUE;
 
     public static function getDropdownOptions()
     {

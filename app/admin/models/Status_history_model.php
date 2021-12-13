@@ -3,17 +3,13 @@
 namespace Admin\Models;
 
 use Carbon\Carbon;
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Status History Model Class
  */
 class Status_history_model extends Model
 {
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
-
     /**
      * @var string The database table name
      */
@@ -53,17 +49,17 @@ class Status_history_model extends Model
 
     public function getStaffNameAttribute($value)
     {
-        return ($this->staff AND $this->staff->exists) ? $this->staff->staff_name : $value;
+        return ($this->staff && $this->staff->exists) ? $this->staff->staff_name : $value;
     }
 
     public function getDateAddedSinceAttribute($value)
     {
-        return $this->date_added ? time_elapsed($this->date_added) : null;
+        return $this->created_at ? time_elapsed($this->created_at) : null;
     }
 
     public function getStatusNameAttribute($value)
     {
-        return ($this->status AND $this->status->exists) ? $this->status->status_name : $value;
+        return ($this->status && $this->status->exists) ? $this->status->status_name : $value;
     }
 
     public function getNotifiedAttribute()
@@ -121,6 +117,6 @@ class Status_history_model extends Model
 
     public function scopeWhereStatusIsLatest($query, $statusId)
     {
-        return $query->where('status_id', $statusId)->orderBy('date_added', 'desc');
+        return $query->where('status_id', $statusId)->orderBy('created_at', 'desc');
     }
 }

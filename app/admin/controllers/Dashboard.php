@@ -3,10 +3,10 @@
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Admin\Widgets\DashboardContainer;
-use AdminMenu;
-use Request;
-use Template;
+use Illuminate\Support\Facades\Request;
 
 class Dashboard extends \Admin\Classes\AdminController
 {

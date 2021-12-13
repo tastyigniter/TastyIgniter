@@ -2,8 +2,8 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
-use Model;
 
 /**
  * Pages Model Class
@@ -11,10 +11,6 @@ use Model;
 class Pages_model extends Model
 {
     use HasPermalink;
-
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
 
     /**
      * @var string The database table name

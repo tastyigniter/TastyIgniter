@@ -72,9 +72,9 @@
         </li>
         <li class="file-permission">
             <span>@lang('main::lang.media_manager.label_permission') :</span>
-            @if ($file['perms'] === '04' OR $file['perms'] === '05')
+            @if ($file['perms'] === '04' || $file['perms'] === '05')
                 @lang('main::lang.media_manager.text_read_only')
-            @elseif ($file['perms'] === '06' OR $file['perms'] === '07')
+            @elseif ($file['perms'] === '06' || $file['perms'] === '07')
                 @lang('main::lang.media_manager.text_read_write')
             @else
                 @lang('main::lang.media_manager.text_no_access')

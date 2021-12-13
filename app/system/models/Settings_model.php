@@ -6,10 +6,10 @@ use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Session;
 use Main\Classes\ThemeManager;
 use Main\Template\Page;
-use Model;
-use Session;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 use System\Traits\ConfigMaker;
@@ -99,6 +99,13 @@ class Settings_model extends Model
     }
 
     public static function getMenusPageOptions()
+    {
+        $theme = ThemeManager::instance()->getActiveTheme();
+
+        return Page::getDropdownOptions($theme, TRUE);
+    }
+
+    public static function getReservationPageOptions()
     {
         $theme = ThemeManager::instance()->getActiveTheme();
 

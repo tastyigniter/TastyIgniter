@@ -33,7 +33,7 @@
         @endforeach
     </div>
 
-@elseif (!$this->previewMode AND count($fieldOptions))
+@elseif (!$this->previewMode && count($fieldOptions))
 
     <div class="field-radiolist {{ $isScrollable ? 'is-scrollable' : '' }}">
         @if ($isScrollable)

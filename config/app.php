@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => 'TastyIgniter',
+    'name' => env('APP_NAME', 'TastyIgniter'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => FALSE,
+    'debug' => (bool)env('APP_DEBUG', FALSE),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,9 @@ return [
     |
     */
 
-    'url' => 'http://localhost/',
+    'url' => env('APP_URL', 'http://localhost/'),
+
+    'asset_url' => env('ASSET_URL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -95,6 +97,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Faker Locale
+    |--------------------------------------------------------------------------
+    |
+    | This locale will be used by the Faker PHP library when generating fake
+    | data for your database seeds. For example, this will be used to get
+    | localized telephone numbers, street address information and more.
+    |
+    */
+
+    'faker_locale' => 'en_US',
+
+    /*
+    |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------
     |
@@ -104,7 +119,7 @@ return [
     |
     */
 
-    'key' => 'CHANGE!!!!!!!!!!!!!!!!!!!!!!!!!',
+    'key' => env('APP_KEY', 'CHANGE!!!!!!!!!!!!!!!!!!!!!!!!!'),
 
     'cipher' => 'AES-256-CBC',
 

@@ -48,7 +48,7 @@ class ThemeInstall extends Command
         ]);
 
         $this->output->writeln(sprintf('<info>Extracting theme %s files</info>', $code));
-        $manager->extractFile($code, 'themes/');
+        $manager->extractFile($code, theme_path('/'));
 
         $this->output->writeln(sprintf('<info>Installing %s theme</info>', $code));
         ThemeManager::instance()->loadThemes();

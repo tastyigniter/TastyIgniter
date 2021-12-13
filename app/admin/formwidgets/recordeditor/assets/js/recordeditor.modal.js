@@ -18,12 +18,10 @@
         this.$modalRootElement.remove()
         this.$modalElement = null
         this.$modalRootElement = null
+        delete RecordEditorModal.DEFAULTS.recordDataCache[this.options.alias]
     }
 
     RecordEditorModal.prototype.init = function () {
-        if (this.options.alias === undefined)
-            throw new Error('Record editor modal option "alias" is not set.')
-
         this.$modalRootElement = $('<div/>', this.options.attributes)
 
         this.$modalRootElement.one('hide.bs.modal', $.proxy(this.onModalHidden, this))
@@ -84,12 +82,16 @@
 
     RecordEditorModal.prototype.onModalShown = function (event) {
         var self = this,
-            handler = this.options.handler ? this.options.handler : this.options.alias + '::onLoadRecord'
+            handler = this.options.handler ? this.options.handler : this.options.alias + '::onLoadRecord',
+            recordData = this.options.recordData ? this.options.recordData : {recordId: this.options.recordId}
 
         self.$modalElement = $(event.target)
 
+        if (this.options.alias)
+            RecordEditorModal.DEFAULTS.recordDataCache[this.options.alias] = recordData
+
         $.request(handler, {
-            data: {recordId: this.options.recordId},
+            data: recordData,
         }).done($.proxy(this.onRecordLoaded, this)).fail(function () {
             self.$modalElement.modal('hide')
         }).always(function () {
@@ -101,6 +103,7 @@
         alias: undefined,
         handler: undefined,
         recordId: undefined,
+        recordData: undefined,
         onLoad: undefined,
         onSubmit: undefined,
         onSave: undefined,
@@ -113,9 +116,30 @@
             tabindex: -1,
             ariaLabelled: '#record-editor-modal',
             ariaHidden: true,
-        }
+        },
+        recordDataCache: {}
     }
 
     $.ti.recordEditor.modal = RecordEditorModal
+
+    $(document).on('click', '[data-toggle="record-editor"]', function (event) {
+        var $button = $(event.currentTarget),
+            options = $.extend({
+                onSave: function () {
+                    this.hide()
+                }
+            }, $button.data())
+
+        event.preventDefault()
+
+        new $.ti.recordEditor.modal(options)
+    })
+
+    $.ajaxPrefilter(function(options) {
+        if (!$.isEmptyObject(RecordEditorModal.DEFAULTS.recordDataCache)) {
+            if (!options.headers) options.headers = {}
+            options.headers['X-IGNITER-RECORD-EDITOR-REQUEST-DATA'] = JSON.stringify(RecordEditorModal.DEFAULTS.recordDataCache)
+        }
+    })
 }(window.jQuery);
 

@@ -14,4 +14,6 @@
     {!! form_close() !!}
 
     {!! $this->makePartial('lists/list_pagination') !!}
+
+    {!! $this->makePartial('updates/recommended', ['itemType' => 'theme']) !!}
 </div>

@@ -9,9 +9,9 @@ use Admin\Widgets\Form;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\SystemException;
 use Illuminate\Support\Collection;
 use Main\Classes\MediaLibrary;
-use SystemException;
 
 /**
  * Media Finder
@@ -148,7 +148,7 @@ class MediaFinder extends BaseFormWidget
 
     public function onLoadAttachmentConfig()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
@@ -166,7 +166,7 @@ class MediaFinder extends BaseFormWidget
 
     public function onSaveAttachmentConfig()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
@@ -191,7 +191,7 @@ class MediaFinder extends BaseFormWidget
 
     public function onRemoveAttachment()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
@@ -210,11 +210,11 @@ class MediaFinder extends BaseFormWidget
 
         $items = post('items');
         if (!is_array($items))
-            throw new ApplicationException('Select an item to attach');
+            throw new ApplicationException(lang('main::lang.media_manager.alert_select_item_to_attach'));
 
         $model = $this->model;
         if (!$model->exists)
-            throw new ApplicationException('You can only attach media to a saved form');
+            throw new ApplicationException(lang('main::lang.media_manager.alert_only_attach_to_saved'));
 
         $manager = MediaLibrary::instance();
         foreach ($items as &$item) {
@@ -235,7 +235,7 @@ class MediaFinder extends BaseFormWidget
     public function getLoadValue()
     {
         $value = parent::getLoadValue();
-        if (!is_array($value) AND !$value instanceof Collection)
+        if (!is_array($value) && !$value instanceof Collection)
             $value = [$value];
 
         if (is_array($value))
@@ -250,7 +250,7 @@ class MediaFinder extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->useAttachment OR $this->formField->disabled OR $this->formField->hidden) {
+        if ($this->useAttachment || $this->formField->disabled || $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 
@@ -261,7 +261,7 @@ class MediaFinder extends BaseFormWidget
     {
         $widgetConfig = $this->getAttachmentFieldsConfig();
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'attachment-config';
+        $widgetConfig['alias'] = $this->alias.'AttachmentConfig';
         $widgetConfig['arrayName'] = 'media';
         $widget = $this->makeWidget(Form::class, $widgetConfig);
 

@@ -3,10 +3,10 @@
 namespace Admin\Classes;
 
 use Admin\Models\Payments_model;
-use File;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
+use Illuminate\Support\Facades\Response;
 use Main\Classes\ThemeManager;
-use Response;
 use System\Classes\ExtensionManager;
 
 /**
@@ -190,7 +190,7 @@ class PaymentGateways
         foreach ($paymentMethods as $paymentMethod) {
             $class = $paymentMethod->getGatewayClass();
 
-            if (!$class OR get_parent_class($class) != BasePaymentGateway::class)
+            if (!$class || get_parent_class($class) != BasePaymentGateway::class)
                 continue;
 
             $partialName = 'payregister/'.strtolower(class_basename($class));

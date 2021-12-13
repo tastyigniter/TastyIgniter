@@ -11,8 +11,6 @@
             </b>
         </div>
 
-        <div class="p-3 border-bottom">@lang('system::lang.updates.text_maintenance_mode')</div>
-
         {!! $this->makePartial('updates/list_items', ['items' => $updates['items'], 'ignored' => FALSE]) !!}
     @endif
 

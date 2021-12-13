@@ -28,7 +28,7 @@ trait WidgetMaker
             : $this;
 
         if (!class_exists($class)) {
-            throw new Exception(sprintf("The Widget class name '%s' has not been registered", $class));
+            throw new Exception(sprintf(lang('admin::lang.alert_widget_class_name'), $class));
         }
 
         return new $class($controller, $widgetConfig);
@@ -46,12 +46,12 @@ trait WidgetMaker
      */
     public function makeFormWidget($class, $fieldConfig = [], $widgetConfig = [])
     {
-        $controller = (property_exists($this, 'controller') AND $this->controller)
+        $controller = (property_exists($this, 'controller') && $this->controller)
             ? $this->controller
             : $this;
 
         if (!class_exists($class)) {
-            throw new Exception(sprintf("The Widget class name '%s' has not been registered", $class));
+            throw new Exception(sprintf(lang('admin::lang.alert_widget_class_name'), $class));
         }
 
         if (is_string($fieldConfig)) {

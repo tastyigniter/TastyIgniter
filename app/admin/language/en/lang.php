@@ -49,6 +49,9 @@ return [
     'text_help' => 'Click for Help',
     'text_no_title' => 'No Title',
     'text_allow' => 'Allow',
+    'text_opening' => 'Opening',
+    'text_delivery' => 'Delivery',
+    'text_collection' => 'Pick-up',
 
     'label_code' => 'Code',
     'label_name' => 'Name',
@@ -95,6 +98,17 @@ return [
     'alert_warning_locationable_delete' => 'Warning: You do not have the right permission to delete record(s) attached to multiple locations, please contact the system administrator.',
     'alert_form_error_message' => 'Sorry but form validation has failed, please check for errors.',
     'alert_error_set_default' => '"%s" is disabled and cannot be set as default.',
+    'alert_missing_method' => 'Missing method [%s] in %s.',
+    'alert_missing_model_definition' => "Model '%s' does not contain a definition for '%s'.",
+    'alert_valid_values' => 'Valid values for [locationAware] property are (none,show,hide).',
+    'alert_widget_class_name' => "The Widget class name '%s' has not been registered",
+    'alert_missing_field_property' => "Missing form field property 'modelClass' in '%s'",
+    'alert_invalid_ajax_handler_name' => 'Invalid ajax handler name: %s',
+    'alert_invalid_ajax_partial_name' => 'Invalid partial name: %s',
+    'alert_widget_not_bound_to_controller' => "A widget with class name '%s' has not been bound to the controller",
+    'alert_user_not_logged' => 'User is not logged in',
+    'alert_access_denied' => 'Access denied.',
+    'alert_invalid_csrf_token' => 'Invalid security token, please reload the page and try again.',
     'text_settings_title' => 'Settings',
     'text_message_title' => 'Your messages',
     'text_activity_title' => 'Recent activities',
@@ -168,14 +182,19 @@ return [
         'tool' => 'Tools',
         'media_manager' => 'Media Manager',
         'system' => 'System',
+
+        'alert_no_definition' => 'No definition for item %s.',
+        'alert_invalid_menu' => 'Invalid item specified.',
+        'alert_menu_not_found' => 'No main menu item found matching {%s}.',
+        'alert_invalid_status' => 'Status message is required.',
     ],
 
     'list' => [
         'missing_model' => 'List action used in %s does not have a model defined.',
         'missing_definitions' => 'List action used in %s does not have definitions.',
-        'missing_column' => 'Missing columns in List definitions %s',
         'invalid_column_datetime' => 'Column value \'%s\' is not a DateTime object, are you missing a $dates reference in the Model?',
         'delete_empty' => 'Nothing selected to delete.',
+        'missing_column' => 'List used in %s has no list columns defined.',
         'text_empty' => 'Nothing found.',
         'text_setup' => 'Setup',
         'text_showing' => 'Showing %s-%s of %s records',
@@ -185,8 +204,22 @@ return [
         'button_reset_setup' => 'Reset',
         'button_cancel_setup' => 'Cancel',
         'button_apply_setup' => 'Apply changes',
+        'filter_missing_definitions' => "The model class %s must define a method %s returning options for the '%s' filter.",
+        'filter_missing_scope_definitions' => 'No definition for scope %s',
         'help_visible_columns' => 'Set which columns are visible and in what order to display them',
         'help_page_limit' => 'Limit how many records are shown per page',
+        'alert_relationship_not_supported' => 'The relationship %s is not supported for list columns.',
+        'missing_action_code' => 'Invalid bulk action code specified.',
+        'action_not_found' => 'Bulk Action class (%s) not found',
+
+        'actions' => [
+            'text_select' => 'Select an action to apply',
+            'label_edit' => 'Edit',
+            'label_status' => 'Enable/Disable',
+            'label_enable' => 'Enable',
+            'label_disable' => 'Disable',
+            'text_select_all' => 'Select all %s records',
+        ],
     ],
 
     'calendar' => [
@@ -220,6 +253,9 @@ return [
         'missing_id' => 'Form record ID has not been specified.',
         'not_found' => 'Form record with ID [%s] could not be found.',
         'mass_assignment_failed' => "Mass assignment failed for Model attribute ':attribute'.",
+        'record_not_found' => 'Record not found.',
+        'request_class_not_found' => 'Form Request class (%s) not found',
+        'record_not_found_in_model' => 'Record ID [%s] not found in model %s.',
 
         'save_actions' => [
             'continue' => 'Continue Editing',
@@ -265,7 +301,7 @@ return [
 
         'label_approval' => 'Approval',
 
-        'alert_set_default' => 'Location set as default',
+        'alert_set_default' => 'Customer group set as default',
 
         'help_approval' => 'New customers must be approved before they can login.',
     ],
@@ -288,12 +324,15 @@ return [
         'column_telephone' => 'Telephone',
         'column_date_added' => 'Date Registered',
 
+        'button_activate' => 'Manually Activate',
+
         'label_first_name' => 'First Name',
         'label_last_name' => 'Last Name',
         'label_password' => 'Password',
         'label_confirm_password' => 'Confirm Password',
         'label_telephone' => 'Telephone',
         'label_newsletter' => 'Newsletter',
+        'label_send_invite' => 'Send Invitation Email',
         'label_customer_group' => 'Customer Group',
         'label_address_1' => 'Address 1',
         'label_address_2' => 'Address 2',
@@ -302,11 +341,15 @@ return [
         'label_postcode' => 'Postcode',
         'label_country' => 'Country',
 
+        'help_send_invite' => 'Sends an invitation message containing a link to set a password on their account.',
         'help_password' => 'Leave blank to leave password unchanged',
 
         'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a customer account</b>, please contact system administrator.',
         'alert_impersonate_confirm' => 'Are you sure you want to impersonate this customer? You can revert to your original state by logging out.',
         'alert_impersonate_success' => 'You are now impersonating customer: %s',
+        'alert_activation_success' => 'Customer activated successfully.',
+        'alert_customer_not_active' => "Cannot login user '%s' until activated.",
+        'alert_customer_payment_profile_not_found' => 'Customer payment profile not found!',
     ],
 
     'dashboard' => [
@@ -366,6 +409,15 @@ return [
         'text_select_range' => 'Select date range',
         'text_last_version_check' => 'Your last <b>TastyIgniter core version check</b> was more than a week ago. <a href="%s"><b>Check for Updates</b></a>',
 
+        'alert_select_widget_to_update' => 'Please select a widget to update.',
+        'alert_select_widget_to_add' => 'Please select a widget to add.',
+        'alert_widget_class_not_found' => 'The selected class does not exist.',
+        'alert_invalid_widget' => 'The selected class is not a dashboard widget.',
+        'alert_invalid_aliases' => 'Invalid aliases string.',
+        'alert_invalid_priorities' => "'Invalid priorities string.'",
+        'alert_invalid_data_posted' => 'Invalid data posted.',
+        'alert_widget_not_found' => 'The specified widget is not found.',
+
         'onboarding' => [
             'title' => 'Getting started',
             'label_settings' => 'Complete required system settings',
@@ -417,12 +469,12 @@ return [
         'text_title' => 'Locations',
         'text_form_name' => 'Location',
         'text_tab_general' => 'Location',
-        'text_tab_data' => 'Settings',
         'text_tab_schedules' => 'Schedules',
         'text_tab_delivery_order' => 'Accepting Delivery Orders',
         'text_tab_collection_order' => 'Accepting Pick-up Orders',
-        'text_tab_reservation' => 'Accepting Reservations',
-        'text_tab_delivery' => 'Delivery',
+        'text_tab_orders' => 'Orders',
+        'text_tab_reservation' => 'Reservations',
+        'text_tab_delivery' => 'Delivery Areas',
         'text_tab_gallery' => 'Gallery',
         'text_tab_title_address' => 'Address',
         'text_filter_search' => 'Search by name, city or state.',
@@ -486,20 +538,24 @@ return [
         'label_future_collection_order' => 'Allow Pre-order for Pick-up',
         'label_future_delivery_days' => 'Delivery Pre-order Days In Advance',
         'label_future_collection_days' => 'Pick-up Pre-order Days In Advance',
+        'label_delivery_cancellation_timeout' => 'Deliver Order Cancellation Timeout',
+        'label_collection_cancellation_timeout' => 'Pick-up Order Cancellation Timeout',
         'label_payments' => 'Payments',
         'label_offer_reservation' => 'Offer Reservations',
         'label_reservation_time_interval' => 'Reservation Time Interval',
-        'label_reservation_lead_time' => 'Reservation Lead Time',
         'label_reservation_stay_time' => 'Reservation Stay Time',
+        'label_min_reservation_advance_time' => 'Min. Advance Reservation Time',
+        'label_max_reservation_advance_time' => 'Max. Advance Reservation Time',
         'label_auto_allocate_table' => 'Automatically Allocate Tables',
+        'label_limit_guests' => 'Limit Reservation Guests Count',
+        'label_limit_guests_count' => 'Maximum Guests Per Interval',
+        'label_reservation_cancellation_timeout' => 'Reservation Cancellation Timeout',
         'label_schedule_name' => 'Name',
         'label_schedule_type' => 'Type',
         'label_schedule_days' => 'Days',
         'label_schedule_hours' => 'Hours',
         'label_schedule_open' => 'Start Time',
         'label_schedule_close' => 'End Time',
-        'label_delivery_type' => 'Delivery Hours',
-        'label_collection_type' => 'Pick-up Hours',
         'label_area_shape' => 'Area Shape',
         'label_area_circle' => 'Area Circle',
         'label_area_vertices' => 'Area Vertices',
@@ -508,6 +564,7 @@ return [
         'label_area_id' => 'Area ID',
         'label_area_name' => 'Area Name',
         'label_area_charge' => 'Charge',
+        'label_area_distance' => 'Distance (mile/kilometers)',
         'label_address_component' => 'Address Component',
         'label_address_component_type' => 'Address Component Type',
         'label_address_component_value' => 'Address Component Value',
@@ -519,34 +576,44 @@ return [
         'label_gallery_image_name' => 'Filename',
         'label_gallery_image_alt' => 'Alt Text',
         'label_delivery_condition' => 'Delivery Condition',
+        'label_delivery_distance' => 'Distance Based Delivery Condition',
 
         'error_no_zero_total' => 'The %s can not be a value zero on conditions other than \'on all orders\'.',
-        'alert_delivery_area' => 'Add at least one delivery area to allow your customers to find this location.',
+        'alert_delivery_area' => 'Add at least one delivery area to allow your customers find this location.',
         'alert_set_default' => 'Location set as default',
         'alert_missing_map_center' => 'Map is missing center coordinates, please enter an address then click save.',
         'alert_missing_map_config' => 'Missing Google Maps Javascript Library, please provide your maps api key on the general system settings page.',
+        'alert_invalid_area' => 'Invalid area selected.',
+        'alert_schedule_not_loaded' => 'Schedule not loaded.',
+        'alert_invalid_schedule_type' => "Defined parameter '%s' is not a valid working type.",
 
         'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
         'help_image' => 'Select a logo for this location.',
         'help_limit_orders' => 'Enabling this disables ASAP delivery and pickup orders.',
-        'help_limit_orders_interval' => 'Set the minutes between each limitation timeslot.',
+        'help_limit_orders_interval' => 'Set the number of orders that can be placed between each time slot.',
         'help_delivery_time_restriction' => 'Whether your customers can only place ASAP delivery orders, schedule delivery orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_collection_time_restriction' => 'Whether your customers can only place ASAP pick-up orders, schedule pick-up orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
         'help_collection_time_interval' => 'Set the minutes between each pick-up order time available to your customer.',
         'help_delivery_lead_time' => 'Set in minutes the average time it takes an order to be delivered after being placed',
         'help_collection_lead_time' => 'Set in minutes the average time it takes an order to be ready for pick-up after being placed',
+        'help_delivery_cancellation_timeout' => 'Set when a customer can no longer cancel a delivery order. Number of minutes before delivery time. Leave as 0, to disable customer delivery order cancellation.',
+        'help_collection_cancellation_timeout' => 'Set when a customer can no longer cancel a pick-up order. Number of minutes before pick-up time. Leave as 0, to disable customer pick-up order cancellation.',
         'help_future_delivery_days' => 'Set the number of days a customer can order for delivery in advance.',
         'help_future_collection_days' => 'Set the number of days a customer can order for pick-up in advance.',
         'help_flexible_hours' => 'Start typing to set the opening hours, such as 09:00-01:00 or 09:00-10:00,19:00-01:00',
         'help_payments' => 'Select the payment(s) available at this location. Leave blank to use all enabled payments',
         'help_no_payments' => 'No enabled payment was found.',
         'help_reservation_time_interval' => 'Set the number of minutes between each reservation time',
-        'help_reservation_lead_time' => 'Set in minutes the average time it takes to prepare a table',
         'help_reservation_stay_time' => 'Set in minutes the average time a guest will stay at a table',
+        'help_min_reservation_advance_time' => 'Set in days the minimum time before reservation that a guest can book a table',
+        'help_max_reservation_advance_time' => 'Set in days the maximum time before reservation that a guest can book a table',
+        'help_limit_guests_count' => 'Set the number of guests that can be booked between each time slot.',
+        'help_reservation_cancellation_timeout' => 'Set when a customer can no longer cancel a booking. Number of minutes before booking time. Leave as 0, to disable customer booking cancellation.',
         'help_delivery_areas' => 'Set delivery conditions to specific geographical area/boundaries. Delivery areas are applied in the order in which they appear. Every location must have at least one delivery area to accept delivery orders.',
         'help_delivery_condition' => 'Use the table below to set different delivery charge conditions. Conditions/Rules are applied in the order in which they appear. For free delivery set charge to 0 or -1 to make delivery unavailable. When an \'all\' rule is present, no other condition will be applied.',
         'help_delivery_components' => 'All rules must be VALID to apply this delivery area, each rule is matched against the user\'s address component. Values can contain Regular Expressions.',
+        'help_delivery_distance' => 'Add additional charges based on the delivery distance per unit. These will be in addition to delivery condition charges. Rules are applied in the order in which they appear.',
     ],
 
     'login' => [
@@ -683,6 +750,7 @@ return [
         'help_max_selected' => 'Maximum items to select from these options, leave blank to ignore.',
         'help_option_required' => 'Select Enabled if a customer MUST choose this option. If this option is not required, select Disabled.',
         'help_specials' => 'Select disable to deactivate Special. Select Enable to activate Special and enter the Start Date, End Date and price of your Special item.',
+        'alert_menu_option_not_attached' => 'Please select a menu option to attach.',
     ],
 
     'orders' => [
@@ -757,6 +825,8 @@ return [
         'activity_event_log_assigned_title' => 'Order assigned',
         'activity_event_log' => 'updated order (#:properties.order_id) status to <b>:properties.status_name</b>',
         'activity_event_log_assigned' => 'assigned order (#:properties.order_id) to',
+
+        'alert_invoice_not_generated' => 'Invoice has not yet been generated.',
     ],
 
     'payments' => [
@@ -772,6 +842,11 @@ return [
         'label_priority' => 'Priority',
 
         'alert_setting_missing_id' => 'Extension setting code has not been specified.',
+        'alert_invalid_code' => 'Invalid payment gateway code selected.',
+        'alert_code_not_found' => 'Unable to find payment gateway with code %s',
+        'alert_update_payment_profile' => 'The updatePaymentProfile() method is not supported by the payment gateway.',
+        'alert_delete_payment_profile' => 'The deletePaymentProfile() method is not supported by the payment gateway.',
+        'alert_pay_from_payment_profile' => 'The payFromPaymentProfile() method is not supported by the payment gateway.',
     ],
 
     'permissions' => [
@@ -780,6 +855,7 @@ return [
         'categories' => 'Create, edit and delete menu categories',
         'customer_groups' => 'Manage customer groups',
         'customers' => 'Create, edit and delete customers',
+        'impersonate_staff' => 'Ability to impersonate staff',
         'impersonate_customers' => 'Ability to impersonate customers',
         'locations' => 'Create, edit and delete locations',
         'menus' => 'Create, edit and delete menu items',
@@ -855,6 +931,8 @@ return [
         'activity_event_log_assigned_title' => 'Reservation assigned',
         'activity_event_log' => 'updated reservation (#:properties.reservation_id) status to <b>:properties.status_name</b>',
         'activity_event_log_assigned' => 'assigned reservation (#:properties.reservation_id) to',
+
+        'alert_no_reservation_found' => 'No matching reservation found.',
     ],
 
     'settings' => [
@@ -878,6 +956,8 @@ return [
         'label_load_balanced_limit' => 'Load Balanced Limit',
 
         'column_users' => '# Users',
+
+        'alert_no_available_assignee' => 'No available assignee.',
 
         'help_auto_assign' => 'Allocate and control the number of orders assigned to staff in this group.',
         'help_round_robin' => 'Assign orders to the staff who are online in a circular fashion.',
@@ -906,6 +986,7 @@ return [
         'text_sale_permission_global_access' => 'Global Access',
         'text_sale_permission_groups' => 'Groups',
         'text_sale_permission_restricted' => 'Restricted Access',
+        'text_impersonate' => 'Impersonate Staff',
 
         'column_group' => 'Staff Groups',
         'column_role' => 'Staff Roles',
@@ -914,6 +995,7 @@ return [
 
         'label_super_staff' => 'Super Admin',
         'label_username' => 'Username',
+        'label_send_invite' => 'Send Invitation Email',
         'label_password' => 'Password',
         'label_confirm_password' => 'Password Confirm',
         'label_role' => 'Role',
@@ -922,6 +1004,7 @@ return [
         'label_location' => 'Locations',
         'label_sale_permission' => 'Order and Reservation Scope',
 
+        'help_send_invite' => 'Sends an invitation message containing a link to set a password on their account.',
         'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
         'help_role' => 'Roles define staff permissions.',
         'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
@@ -929,6 +1012,10 @@ return [
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
         'help_sale_permission_groups' => 'Can view Orders and Reservations in their Group(s) and Orders and Reservations assigned to them',
         'help_sale_permission_restricted' => 'Can only view Orders and Reservations assigned to them',
+
+        'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a staff account</b>, please contact system administrator.',
+        'alert_impersonate_confirm' => 'Are you sure you want to impersonate this staff? You can revert to your original state by logging out.',
+        'alert_impersonate_success' => 'You are now impersonating staff: %s',
     ],
 
     'statuses' => [
@@ -964,6 +1051,8 @@ return [
         'help_assignee_group' => 'A notification is sent out to all the staff in the selected group',
 
         'alert_already_added' => 'The selected %s must be different from the current %s',
+        'alert_invalid_action' => 'Invalid action.',
+        'alert_status_not_found' => 'Status ID [%s] not found.',
     ],
 
     'tables' => [
@@ -988,5 +1077,7 @@ return [
         'help_extra_capacity' => 'Used internally by the staff to determine table convenience/inconvenience.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
+        'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',
+        'error_table_widget_data_class_not_found' => 'The Table widget data source class "%s" could not be found.',
     ],
 ];

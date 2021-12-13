@@ -2,8 +2,8 @@
 
 namespace Admin\Controllers;
 
+use Admin\Facades\AdminMenu;
 use Admin\Models\Staff_groups_model;
-use AdminMenu;
 
 class StaffGroups extends \Admin\Classes\AdminController
 {

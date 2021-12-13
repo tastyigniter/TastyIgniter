@@ -2,13 +2,13 @@
 
 namespace Admin\Controllers;
 
+use Admin\Facades\AdminAuth;
+use Admin\Facades\Template;
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
 use Admin\Traits\ValidatesForm;
-use AdminAuth;
 use Igniter\Flame\Exception\ValidationException;
-use Mail;
-use Template;
+use Illuminate\Support\Facades\Mail;
 
 class Login extends \Admin\Classes\AdminController
 {
@@ -17,6 +17,13 @@ class Login extends \Admin\Classes\AdminController
     protected $requireAuthentication = FALSE;
 
     public $bodyClass = 'page-login';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware('throttle:'.config('system.authRateLimiter', '6,1'));
+    }
 
     public function index()
     {
@@ -30,12 +37,12 @@ class Login extends \Admin\Classes\AdminController
 
     public function reset()
     {
-        if (AdminAuth::islogged()) {
+        if (AdminAuth::isLogged()) {
             return $this->redirect('dashboard');
         }
 
         $code = input('code');
-        if (strlen($code) AND !Users_model::whereResetCode(input('code'))->first()) {
+        if (strlen($code) && !Users_model::whereResetCode(input('code'))->first()) {
             flash()->error(lang('admin::lang.login.alert_failed_reset'));
 
             return $this->redirect('login');
@@ -53,7 +60,7 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            ['username', 'lang:admin::lang.login.label_username', 'required|exists:users,username'],
+            ['username', 'lang:admin::lang.login.label_username', 'required'],
             ['password', 'lang:admin::lang.login.label_password', 'required|min:6'],
         ]);
 
@@ -78,24 +85,21 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            ['email', 'lang:admin::lang.label_email', 'required|email:filter|max:96|exists:staffs,staff_email'],
+            ['email', 'lang:admin::lang.label_email', 'required|email:filter|max:96'],
         ]);
 
         $staff = Staffs_model::whereStaffEmail(post('email'))->first();
-        if (!$staff OR !$user = $staff->user)
-            throw new ValidationException(['email' => lang('admin::lang.login.alert_email_not_sent')]);
-
-        if (!$user->resetPassword())
-            throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);
-
-        $data = [
-            'staff_name' => $staff->staff_name,
-            'reset_link' => admin_url('login/reset?code='.$user->reset_code),
-        ];
-
-        Mail::queue('admin::_mail.password_reset_request', $data, function ($message) use ($staff) {
-            $message->to($staff->staff_email, $staff->staff_name);
-        });
+        if ($staff && $user = $staff->user) {
+            if (!$user->resetPassword())
+                throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);
+            $data = [
+                'staff_name' => $staff->staff_name,
+                'reset_link' => admin_url('login/reset?code='.$user->reset_code),
+            ];
+            Mail::queue('admin::_mail.password_reset_request', $data, function ($message) use ($staff) {
+                $message->to($staff->staff_email, $staff->staff_name);
+            });
+        }
 
         flash()->success(lang('admin::lang.login.alert_email_sent'));
 
@@ -115,7 +119,7 @@ class Login extends \Admin\Classes\AdminController
         $code = array_get($data, 'code');
         $user = Users_model::whereResetCode($code)->first();
 
-        if (!$user OR !$user->completeResetPassword($code, post('password')))
+        if (!$user || !$user->completeResetPassword($code, post('password')))
             throw new ValidationException(['password' => lang('admin::lang.login.alert_failed_reset')]);
 
         $data = [

@@ -2,9 +2,9 @@
 
 namespace System\Traits;
 
-use File;
-use Lang;
-use SystemException;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 
 trait ConfigMaker
 {
@@ -41,7 +41,7 @@ trait ConfigMaker
      * @param array $requiredConfig
      *
      * @return array
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makeConfig($configFile, $requiredConfig = [])
     {
@@ -74,7 +74,7 @@ trait ConfigMaker
 
         // Validate required configuration
         foreach ($requiredConfig as $property) {
-            if (!is_array($config) OR !array_key_exists($property, $config)) {
+            if (!is_array($config) || !array_key_exists($property, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.required.config'),
                     get_called_class(), $property
@@ -125,7 +125,7 @@ trait ConfigMaker
 
         $fileName = File::symbolizePath($fileName);
 
-        if (File::isLocalPath($fileName) OR realpath($fileName) !== FALSE) {
+        if (File::isLocalPath($fileName) || realpath($fileName) !== FALSE) {
             return $fileName;
         }
 

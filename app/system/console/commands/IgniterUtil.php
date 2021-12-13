@@ -2,13 +2,13 @@
 
 namespace System\Console\Commands;
 
-use Assets;
-use File;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
+use System\Facades\Assets;
 use System\Models\Extensions_model;
 use System\Models\Themes_model;
 

@@ -6,10 +6,10 @@ use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
-use DB;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Filter
@@ -89,7 +89,7 @@ class Filter extends BaseWidget
 
         if (isset($this->search)) {
             $searchConfig = $this->search;
-            $searchConfig['alias'] = $this->alias.'_search';
+            $searchConfig['alias'] = $this->alias.'Search';
             $this->searchWidget = $this->makeWidget('Admin\Widgets\SearchBox', $searchConfig);
             $this->searchWidget->bindToController();
         }
@@ -174,10 +174,10 @@ class Filter extends BaseWidget
 
                 case 'daterange':
                     $format = array_get($scope->config, 'showTimePicker', FALSE) ? 'Y-m-d H:i:s' : 'Y-m-d';
-                    $dateRange = (is_array($value) AND count($value) === 2 AND $value[0] != '') ? [
+                    $dateRange = (is_array($value) && count($value) === 2 && $value[0] != '') ? [
                         make_carbon($value[0])->format($format),
                         make_carbon($value[1])->format($format),
-                    ] : NULL;
+                    ] : null;
                     $this->setScopeValue($scope, $dateRange);
                     break;
             }
@@ -289,12 +289,15 @@ class Filter extends BaseWidget
             $methodName = $options;
 
             if (!$model->methodExists($methodName)) {
-                throw new Exception(sprintf("The model class %s must define a method %s returning options for the '%s' filter.",
+                throw new Exception(sprintf(lang('admin::lang.list.filter_missing_definitions'),
                     get_class($model), $methodName, $scope->scopeName
                 ));
             }
 
             $options = $model->$methodName();
+        }
+        elseif (is_callable($options)) {
+            return $options();
         }
         elseif (!is_array($options)) {
             $options = [];
@@ -313,7 +316,7 @@ class Filter extends BaseWidget
 
         $this->fireSystemEvent('admin.filter.extendScopesBefore');
 
-        if (!isset($this->scopes) OR !is_array($this->scopes)) {
+        if (!isset($this->scopes) || !is_array($this->scopes)) {
             $this->scopes = [];
         }
 
@@ -336,7 +339,7 @@ class Filter extends BaseWidget
 
             // Check if admin has permissions to show this column
             $permissions = array_get($config, 'permissions');
-            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+            if (!empty($permissions) && !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
                 continue;
             }
 
@@ -426,7 +429,7 @@ class Filter extends BaseWidget
             $scope = $this->getScope($scope);
         }
 
-        if ($scope->disabled OR ($scope->value !== '0' AND !$scope->value)) {
+        if ($scope->disabled || ($scope->value !== '0' && !$scope->value)) {
             return;
         }
 
@@ -572,7 +575,9 @@ class Filter extends BaseWidget
     public function getScope($scope)
     {
         if (!isset($this->allScopes[$scope])) {
-            throw new Exception('No definition for scope '.$scope);
+            throw new Exception(sprintf(lang('admin::lang.list.filter_missing_scope_definitions'),
+                $scope
+            ));
         }
 
         return $this->allScopes[$scope];

@@ -4,10 +4,10 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
-use Event;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Support\Facades\Event;
 
 /**
  * Menus Model Class
@@ -66,6 +66,8 @@ class Menus_model extends Model
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
 
+    public $timestamps = TRUE;
+
     //
     // Scopes
     //
@@ -106,7 +108,7 @@ class Menus_model extends Model
 
         $searchableFields = ['menu_name', 'menu_description'];
 
-        if (strlen($location) AND is_numeric($location)) {
+        if (strlen($location) && is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
             $query->with(['categories' => function ($q) use ($location) {
                 $q->whereHasOrDoesntHaveLocation($location);
@@ -156,6 +158,8 @@ class Menus_model extends Model
                     ->orWhere('order_restriction', 'like', '%"'.$orderType.'"%');
             });
         }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }
@@ -349,8 +353,8 @@ class Menus_model extends Model
             }
         }
 
-        if (!is_null($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', [$datetime, $isAvailable], TRUE)))
-            $isAvailable = (bool)$eventResults;
+        if (is_bool($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', [$datetime, $isAvailable], TRUE)))
+            $isAvailable = $eventResults;
 
         return $isAvailable;
     }

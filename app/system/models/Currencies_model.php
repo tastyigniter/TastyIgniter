@@ -10,10 +10,6 @@ use Igniter\Flame\Exception\ValidationException;
  */
 class Currencies_model extends Currency
 {
-    const CREATED_AT = null;
-
-    const UPDATED_AT = 'date_modified';
-
     /**
      * @var string The database table name
      */
@@ -84,6 +80,8 @@ class Currencies_model extends Currency
         if ($enabled) {
             $query->isEnabled();
         }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }
