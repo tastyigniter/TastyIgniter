@@ -31,7 +31,7 @@ jobs:
       mysql:
         image: ${{ matrix.db }}
         ports:
-          - 13306:3306
+          - 3306
 
     name: 'PHPUnit Tests ${{ matrix.php }} / ${{ matrix.dbName }}'
 
@@ -73,9 +73,9 @@ jobs:
         run: ./vendor/bin/phpunit
 
     env:
-      DB_PORT: 13306
+      DB_PORT: 3306
       DB_DATABASE: test
       DB_USERNAME: root
       DB_PASSWORD: root
-      DB_PREFIX: ${{ matrix.prefix }}
+      DB_PREFIX: 'ti_'
       IGNITER_LOCATION_MODE: multiple
