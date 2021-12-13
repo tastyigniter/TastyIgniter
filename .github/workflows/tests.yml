@@ -32,6 +32,11 @@ jobs:
         image: ${{ matrix.db }}
         ports:
           - 13306:3306
+        env:
+          MYSQL_DATABASE: ti_test
+          MYSQL_USER: forge
+          MYSQL_PASSWORD: ''
+          MYSQL_ROOT_PASSWORD: rootpassword
 
     name: 'PHPUnit Tests ${{ matrix.php }} / ${{ matrix.dbName }}'
 
@@ -61,16 +66,20 @@ jobs:
           unzip ./vendor/tastyigniter/master.zip -d ./vendor/tastyigniter
           mv ./vendor/tastyigniter/flame-master ./vendor/tastyigniter/flame
           composer dump-autoload
-        env:
-          DB_PORT: 13306
-          DB_PASSWORD: root
-          DB_PREFIX: ${{ matrix.prefix }}
 
       - name: Run composer post-update scripts
         run: |
           php artisan key:generate --force
+          php artisan igniter:install --no-interaction
           php artisan igniter:util set version
           php artisan package:discover
 
       - name: Run PHPUnit Test Suite
         run: ./vendor/bin/phpunit
+
+    env:
+      DB_PORT: 13306
+      DB_USERNAME: forge
+      DB_PASSWORD: ''
+      DB_PREFIX: ${{ matrix.prefix }}
+      IGNITER_LOCATION_MODE: multiple
