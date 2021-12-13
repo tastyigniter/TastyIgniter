@@ -43,6 +43,13 @@ jobs:
         run: |
           sudo systemctl start mysql
           mysql -uroot -proot -e 'CREATE DATABASE ti_test;' --port 13306
+        ports:
+          - 13306:3306  
+        env:
+          MYSQL_DATABASE: ti_test
+          MYSQL_USER: forge
+          MYSQL_PASSWORD: ''
+          MYSQL_ROOT_PASSWORD: rootpassword
 
       - name: Install PHP
         uses: shivammathur/setup-php@master
@@ -63,8 +70,8 @@ jobs:
           composer dump-autoload
         env:
           DB_PORT: 13306
-          DB_USERNAME: root
-          DB_PASSWORD: root
+          DB_USERNAME: forge
+          DB_PASSWORD: ''
           DB_PREFIX: ${{ matrix.prefix }}
           IGNITER_LOCATION_MODE: multiple
 
