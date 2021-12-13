@@ -23,9 +23,17 @@ jobs:
             dbName: 'MySQL 5.7'
           - db: 'mysql:8.0'
             dbName: 'MySQL 8'
-          - db: mariadb
-            dbName: 'MariaDB'
-      fail-fast: false
+          - db: 'mariadb:10.1'
+            dbName: 'MariaDB 10.1'
+          - db: 'mariadb:10.2'
+            dbName: 'MariaDB 10.2'
+          - db: 'mariadb:10.3'
+            dbName: 'MariaDB 10.3'
+          - db: 'mariadb:10.4'
+            dbName: 'MariaDB 10.4'
+          - db: 'mariadb:10.5'
+            dbName: 'MariaDB 10.5'
+        fail-fast: false
 
     services:
       mysql:
