@@ -63,12 +63,15 @@ jobs:
           composer dump-autoload
         env:
           DB_PORT: 13306
+          DB_USERNAME: root
           DB_PASSWORD: root
           DB_PREFIX: ${{ matrix.prefix }}
+          IGNITER_LOCATION_MODE: multiple
 
       - name: Run composer post-update scripts
         run: |
           php artisan key:generate --force
+          php artisan igniter:install --no-interaction
           php artisan igniter:util set version
           php artisan package:discover
 
