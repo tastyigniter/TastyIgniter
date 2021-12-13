@@ -17,7 +17,7 @@ jobs:
       matrix:
 #        os: [ubuntu-latest, windows-latest]
         php: ['7.4', '8.0']
-        db: ['mysql:5.7', 'mysql:8.0', 'mariadb:10.2', 'mariadb:10.3', 'mariadb:10.4', 'mariadb:10.5']
+        db: ['mysql:5.7', 'mysql:8.0', 'mariadb:10.2', 'mariadb:10.6']
         include:
           - db: 'mysql:5.7'
             dbName: 'MySQL 5.7'
@@ -25,12 +25,8 @@ jobs:
             dbName: 'MySQL 8'
           - db: 'mariadb:10.2'
             dbName: 'MariaDB 10.2'
-          - db: 'mariadb:10.3'
-            dbName: 'MariaDB 10.3'
-          - db: 'mariadb:10.4'
-            dbName: 'MariaDB 10.4'
-          - db: 'mariadb:10.5'
-            dbName: 'MariaDB 10.5'
+          - db: 'mariadb:10.6'
+            dbName: 'MariaDB 10.6'
       fail-fast: false
 
     services:
