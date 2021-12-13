@@ -33,7 +33,7 @@ jobs:
             dbName: 'MariaDB 10.4'
           - db: 'mariadb:10.5'
             dbName: 'MariaDB 10.5'
-        fail-fast: false
+      fail-fast: false
 
     services:
       mysql:
