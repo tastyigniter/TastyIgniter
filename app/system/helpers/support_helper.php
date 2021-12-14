@@ -384,6 +384,26 @@ if (!function_exists('log_message')) {
     }
 }
 
+if (!function_exists('traceLog')) {
+    function traceLog()
+    {
+        $messages = func_get_args();
+
+        foreach ($messages as $message) {
+            $level = 'info';
+
+            if ($message instanceof Exception) {
+                $level = 'error';
+            }
+            elseif (is_array($message) || is_object($message)) {
+                $message = print_r($message, TRUE);
+            }
+
+            Log::$level($message);
+        }
+    }
+}
+
 if (!function_exists('sort_array')) {
     /**
      * Sort an array by key

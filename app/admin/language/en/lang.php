@@ -301,7 +301,7 @@ return [
 
         'label_approval' => 'Approval',
 
-        'alert_set_default' => 'Location set as default',
+        'alert_set_default' => 'Customer group set as default',
 
         'help_approval' => 'New customers must be approved before they can login.',
     ],
