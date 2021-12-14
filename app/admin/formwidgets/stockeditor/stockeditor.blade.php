@@ -17,12 +17,12 @@
 
     <div class="input-group-prepend">
         <a
-            class="btn btn-outline-default"
+            class="btn btn-outline-default {{ $previewMode ? 'disabled' : '' }}"
             data-toggle="record-editor"
             data-handler="{{ $this->getEventHandler('onLoadRecord') }}"
         >@lang('admin::lang.stocks.button_manage_stock')</a>
         <a
-            class="btn btn-outline-default"
+            class="btn btn-outline-default {{ $previewMode ? 'disabled' : '' }}"
             data-toggle="record-editor"
             data-handler="{{ $this->getEventHandler('onLoadHistory') }}"
         >@lang('admin::lang.stocks.button_stock_history')</a>

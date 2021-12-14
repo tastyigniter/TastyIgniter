@@ -4,6 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
+use Admin\Models\Locations_model;
 use Admin\Models\Menu_option_values_model;
 use Admin\Models\Stock_history_model;
 use Admin\Widgets\Form;
@@ -45,6 +46,7 @@ class StockEditor extends BaseFormWidget
     {
         $this->vars['field'] = $this->formField;
         $this->vars['value'] = $this->model->{$this->quantityKeyFrom};
+        $this->vars['previewMode'] = $this->controller->getAction() == 'create';
     }
 
     public function getSaveValue($value)
@@ -106,10 +108,14 @@ class StockEditor extends BaseFormWidget
 
     protected function getAvailableLocations()
     {
-        if ($this->model instanceof Menu_option_values_model)
-            return $this->model->option->locations;
+        $locations = $this->model instanceof Menu_option_values_model
+            ? $this->model->option->locations
+            : $this->model->locations;
 
-        return $this->model->locations;
+        if (!$locations || $locations->isEmpty())
+            $locations = Locations_model::isEnabled()->get();
+
+        return $locations;
     }
 
     protected function getStockableName()
