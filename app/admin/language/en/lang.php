@@ -940,7 +940,7 @@ return [
         'text_tab_user' => 'User',
 
         'text_tab_desc_user' => 'Configure registration email confirmation, default customer group, ...',
-        'text_tab_desc_setup' => 'Configure order and reservation related settings',
+        'text_tab_desc_setup' => 'Configure order, reservation, invoicing and taxation settings',
     ],
 
     'staff_groups' => [

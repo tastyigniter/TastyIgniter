@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col">
             <div class="invoice-title">
-                <h3 class="pull-right">@lang('admin::lang.orders.label_order_id'){{$model->order_id}}</h3>
+                <h3 class="pull-right">@lang('admin::lang.orders.label_order_id')&nbsp;#{{$model->order_id}}</h3>
                 <h2>@lang('admin::lang.orders.text_invoice')</h2>
             </div>
         </div>
@@ -35,7 +35,7 @@
             <address>{!! format_address($model->location->getAddress(), TRUE) !!}</address>
         </div>
         <div class="col-6 text-right">
-            <img class="img-responsive" src="{{ uploads_url(setting('site_logo')) }}" alt="" style="max-height:120px;"/>
+            <img class="img-responsive" src="{{ uploads_url(setting('invoice_logo') ?: setting('site_logo')) }}" alt="" style="max-height:120px;"/>
         </div>
     </div>
 
