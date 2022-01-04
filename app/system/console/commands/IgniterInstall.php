@@ -143,6 +143,8 @@ class IgniterInstall extends Command
 
         DatabaseSeeder::$siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
         DatabaseSeeder::$siteUrl = $this->ask('Site URL', Config::get('app.url'));
+        DatabaseSeeder::$siteLanguage = $this->ask('Site Language', DatabaseSeeder::$siteLanguage);
+        DatabaseSeeder::$siteTimezone = $this->ask('Site Timezone', DatabaseSeeder::$siteTimezone);
 
         DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
 
