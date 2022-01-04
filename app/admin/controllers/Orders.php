@@ -109,19 +109,6 @@ class Orders extends \Admin\Classes\AdminController
         $this->suppressLayout = TRUE;
     }
 
-    public function formExtendFieldsBefore($form)
-    {
-        if (!array_key_exists('invoice_number', $form->tabs['fields']))
-            return;
-
-        if (!$form->model->hasInvoice()) {
-            array_pull($form->tabs['fields']['invoice_number'], 'addonRight');
-        }
-        else {
-            $form->tabs['fields']['invoice_number']['addonRight']['attributes']['href'] = admin_url('orders/invoice/'.$form->model->getKey());
-        }
-    }
-
     public function formExtendQuery($query)
     {
         $query->with([

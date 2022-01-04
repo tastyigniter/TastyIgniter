@@ -129,7 +129,16 @@ return [
                     'label' => 'lang:system::lang.settings.label_invoice_prefix',
                     'tab' => 'lang:system::lang.settings.text_tab_title_invoice',
                     'type' => 'text',
+                    'span' => 'left',
                     'comment' => 'lang:system::lang.settings.help_invoice_prefix',
+                ],
+                'invoice_logo' => [
+                    'label' => 'lang:system::lang.settings.label_invoice_logo',
+                    'tab' => 'lang:system::lang.settings.text_tab_title_invoice',
+                    'type' => 'mediafinder',
+                    'span' => 'right',
+                    'mode' => 'inline',
+                    'comment' => 'lang:system::lang.settings.help_invoice_logo',
                 ],
 
                 'tax_mode' => [
@@ -184,6 +193,7 @@ return [
             ['guest_order', 'lang:system::lang.settings.label_guest_order', 'required|integer'],
             ['location_order', 'lang:system::lang.settings.label_location_order', 'required|integer'],
             ['invoice_prefix', 'lang:system::lang.settings.label_invoice_prefix'],
+            ['invoice_logo', 'lang:system::lang.settings.label_invoice_logo', 'string'],
         ],
     ],
 ];
