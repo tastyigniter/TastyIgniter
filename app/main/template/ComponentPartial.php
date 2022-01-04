@@ -174,7 +174,7 @@ class ComponentPartial extends Extendable implements TemplateSource
         $component = $this->component;
         $componentPath = $component->getPath();
 
-        foreach (['.blade.', '.'] as $part) {
+        foreach (['.blade.'] as $part) {
             $basename = $fileName;
             if (!strlen(File::extension($basename)))
                 $basename .= $part.$this->defaultExtension;
