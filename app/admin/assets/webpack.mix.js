@@ -18,38 +18,44 @@ mix.setPublicPath('./').options({
 //
 // Copy fonts from node_modules
 //
-mix.copyDirectory(
-    'node_modules/@fortawesome/fontawesome-free/webfonts',
-    '../../system/assets/ui/fonts/FontAwesome'
-)
-.copy(
-    'node_modules/animate.css/animate.min.css',
-    '../../admin/assets/scss/vendor/_animate.scss'
-)
-.copy(
-    'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css',
-    '../formwidgets/colorpicker/assets/vendor/colorpicker/css/bootstrap-colorpicker.min.css'
-)
-.copy(
-    'node_modules/sortablejs/Sortable.min.js',
-    '../formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js'
-)
-.copy(
-    'node_modules/jquery-sortablejs/jquery-sortable.js',
-    '../formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js'
-)
-.copy(
-    'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
-    '../formwidgets/colorpicker/assets/vendor/colorpicker/js/bootstrap-colorpicker.min.js'
-)
-.copy(
-    'node_modules/metismenu/dist/metisMenu.min.js.map',
-    'js/metisMenu.min.js.map'
-);
+// mix.copyDirectory(
+//     'node_modules/@fortawesome/fontawesome-free/webfonts',
+//     '../../system/assets/ui/fonts/FontAwesome'
+// )
+// .copy(
+//     'node_modules/animate.css/animate.min.css',
+//     '../../admin/assets/scss/vendor/_animate.scss'
+// )
+// .copy(
+//     'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css',
+//     '../formwidgets/colorpicker/assets/vendor/colorpicker/css/bootstrap-colorpicker.min.css'
+// )
+// .copy(
+//     'node_modules/sortablejs/Sortable.min.js',
+//     '../formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js'
+// )
+// .copy(
+//     'node_modules/jquery-sortablejs/jquery-sortable.js',
+//     '../formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js'
+// )
+// .copy(
+//     'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
+//     '../formwidgets/colorpicker/assets/vendor/colorpicker/js/bootstrap-colorpicker.min.js'
+// )
+// .copy(
+//     'node_modules/metismenu/dist/metisMenu.min.js.map',
+//     'js/metisMenu.min.js.map'
+// );
 
 //
 //  Build Admin SCSS
 //
+mix.js('src/js/app.js', 'js/admin.js')
+
+mix.postCss('src/css/app.css', 'css/admin.css', [
+    require('tailwindcss'),
+]);
+
 // mix.sass('scss/admin.scss', 'css')
 
 //
