@@ -420,9 +420,9 @@ class Reservations_model extends Model
      */
     public function mailGetData()
     {
-        $data = [];
-
         $model = $this->fresh();
+
+        $data = $model->toArray();
         $data['reservation'] = $model;
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;
