@@ -47,16 +47,11 @@ class AddForeignKeyConstraintsToTables extends Migration
 
             $blueprint->change();
 
-            $blueprint = $table->foreign($foreignKey)->references($parentKey)->on($foreignTableName);
-
-            if (array_get($options, 'nullOnDelete'))
-                $blueprint->nullOnDelete();
-
-            if (array_get($options, 'cascadeOnDelete'))
-                $blueprint->nullOnDelete();
-
-            if (array_get($options, 'cascadeOnUpdate', TRUE))
-                $blueprint->cascadeOnUpdate();
+            $table->foreign($foreignKey)
+                ->references($parentKey)
+                ->on($foreignTableName)
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
         });
     }
 
