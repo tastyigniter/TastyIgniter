@@ -35,6 +35,7 @@ class MergeMenuItemOptionsTables extends Migration
         $this->updateOrderMenuOptionsOptionIdColumn();
 
         Schema::table('menu_item_option_values', function (Blueprint $table) {
+            $table->dropForeign(['menu_option_id']);
             $table->dropColumn('menu_option_id');
         });
 
