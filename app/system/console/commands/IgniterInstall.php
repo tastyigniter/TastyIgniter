@@ -210,6 +210,8 @@ class IgniterInstall extends Command
         setting()->set('site_email', DatabaseSeeder::$siteEmail);
         setting()->set('sender_name', DatabaseSeeder::$siteName);
         setting()->set('sender_email', DatabaseSeeder::$siteEmail);
+        setting()->set('timezone', DatabaseSeeder::$siteTimezone);
+        setting()->set('default_language', DatabaseSeeder::$siteLanguage);
         setting()->set('customer_group_id', Customer_groups_model::first()->customer_group_id);
         setting()->save();
 
