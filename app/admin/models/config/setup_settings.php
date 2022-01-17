@@ -33,14 +33,6 @@ return [
                     'default' => 'reservation'.DIRECTORY_SEPARATOR.'reservation',
                     'comment' => 'lang:system::lang.settings.help_reservation_page',
                 ],
-                'guest_order' => [
-                    'label' => 'lang:system::lang.settings.label_guest_order',
-                    'tab' => 'lang:system::lang.settings.text_tab_title_order',
-                    'type' => 'switch',
-                    'on' => 'lang:admin::lang.text_yes',
-                    'off' => 'lang:admin::lang.text_no',
-                    'comment' => 'lang:system::lang.settings.help_guest_order',
-                ],
                 'location_order' => [
                     'label' => 'lang:system::lang.settings.label_location_order',
                     'tab' => 'lang:system::lang.settings.text_tab_title_order',

@@ -273,6 +273,15 @@ $config['form']['tabs'] = [
                 'condition' => 'checked',
             ],
         ],
+        'options[guest_order]' => [
+            'label' => 'lang:system::lang.settings.label_guest_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
+            'type' => 'switch',
+            'on' => 'lang:admin::lang.text_yes',
+            'off' => 'lang:admin::lang.text_no',
+            'comment' => 'lang:system::lang.settings.help_guest_order',
+            'default' => setting('guest_order', false),
+        ],
 
         'delivery_order' => [
             'label' => 'lang:admin::lang.locations.text_tab_delivery_order',
