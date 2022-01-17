@@ -281,8 +281,8 @@ $config['form']['tabs'] = [
             'default' => -1,
             'options' => [
                 -1 => 'lang:admin::lang.text_use_default',
-                0 => 'lang:admin::lang.text_yes',
-                1 => 'lang:admin::lang.text_no',
+                0 => 'lang:admin::lang.text_no',
+                1 => 'lang:admin::lang.text_yes',
             ],
         ],
 

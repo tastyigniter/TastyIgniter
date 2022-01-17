@@ -269,7 +269,7 @@ class Locations_model extends AbstractLocation
     public function allowGuestOrder()
     {
         if (($allowGuestOrder = (int)$this->getOption('guest_order', -1)) === -1)
-            $allowGuestOrder = (int)setting('guest_order', 0);
+            $allowGuestOrder = (int)setting('guest_order', 1);
 
         return (bool)$allowGuestOrder;
     }
