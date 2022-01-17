@@ -591,6 +591,7 @@ return [
         'help_image' => 'Select a logo for this location.',
         'help_limit_orders' => 'Enabling this disables ASAP delivery and pickup orders.',
         'help_limit_orders_interval' => 'Set the number of orders that can be placed between each time slot.',
+        'help_guest_order' => 'Allow customer to place an order without creating an account, or use the default system settings.',
         'help_delivery_time_restriction' => 'Whether your customers can only place ASAP delivery orders, schedule delivery orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_collection_time_restriction' => 'Whether your customers can only place ASAP pick-up orders, schedule pick-up orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
