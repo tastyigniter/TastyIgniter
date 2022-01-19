@@ -24,6 +24,8 @@ class BasePaymentGateway extends ModelAction
 
     protected $configFields = [];
 
+    protected $configMessages = [];
+
     protected $configRules = [];
 
     /**
@@ -92,6 +94,14 @@ class BasePaymentGateway extends ModelAction
     public function getConfigRules()
     {
         return $this->configRules;
+    }
+
+    /**
+     * Returns the form messages used by this model.
+     */
+    public function getConfigMessages()
+    {
+        return $this->configMessages;
     }
 
     /**
