@@ -10,7 +10,7 @@ class MailTemplate extends FormRequest
     {
         return [
             'layout_id' => lang('system::lang.mail_templates.label_layout'),
-            'label' => lang('admin::lang.label_description');
+            'label' => lang('admin::lang.label_description'),
             'subject' => lang('system::lang.mail_templates.label_code'),
             'code' => lang('system::lang.mail_templates.label_code'),
         ];

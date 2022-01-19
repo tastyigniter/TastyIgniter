@@ -163,10 +163,10 @@ class Payments extends \Admin\Classes\AdminController
         ];
 
         if ($form->model->exists) {
-            if ($mergeRules = $form->model->getConfigRules())) {
+            if ($mergeRules = $form->model->getConfigRules()) {
                 array_push($rules, ...$mergeRules);
             }
-            if ($mergeMessages = $form->model->getConfigMessages())) {
+            if ($mergeMessages = $form->model->getConfigMessages()) {
                 array_push($messages, ...$mergeMessages);
             }
         }
