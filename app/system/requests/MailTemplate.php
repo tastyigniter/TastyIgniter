@@ -21,7 +21,7 @@ class MailTemplate extends FormRequest
         $rules = [
             'layout_id' => ['integer'],
             'label' => ['required'],
-            'subject' => ['required']
+            'subject' => ['required'],
         ];
 
         if (optional($this->getForm())->context == 'create') {

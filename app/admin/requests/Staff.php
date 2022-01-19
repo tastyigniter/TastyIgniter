@@ -9,19 +9,19 @@ class Staff extends FormRequest
     public function attributes()
     {
        return [
-            'staff_name' => lang('admin::lang.label_name'),
-            'staff_email' => lang('admin::lang.label_email'),
-            'user.username' => lang('admin::lang.staff.label_username'),
-            'user.password' => lang('admin::lang.staff.label_password'),
-            'user.password_confirm' => lang('admin::lang.staff.label_confirm_password'),
-            'staff_status' => lang('admin::lang.label_status'),
-            'language_id' => lang('admin::lang.staff.label_language_id'),
-            'staff_role_id' => lang('admin::lang.staff.label_role'),
-            'groups' => lang('admin::lang.staff.label_group'),
-            'locations' => lang('admin::lang.staff.label_location'),
-            'groups.*' => lang('admin::lang.staff.label_group'),
-            'locations.*' => lang('admin::lang.staff.label_location'),
-        ];
+           'staff_name' => lang('admin::lang.label_name'),
+           'staff_email' => lang('admin::lang.label_email'),
+           'user.username' => lang('admin::lang.staff.label_username'),
+           'user.password' => lang('admin::lang.staff.label_password'),
+           'user.password_confirm' => lang('admin::lang.staff.label_confirm_password'),
+           'staff_status' => lang('admin::lang.label_status'),
+           'language_id' => lang('admin::lang.staff.label_language_id'),
+           'staff_role_id' => lang('admin::lang.staff.label_role'),
+           'groups' => lang('admin::lang.staff.label_group'),
+           'locations' => lang('admin::lang.staff.label_location'),
+           'groups.*' => lang('admin::lang.staff.label_group'),
+           'locations.*' => lang('admin::lang.staff.label_location'),
+       ];
     }
 
     public function rules()
