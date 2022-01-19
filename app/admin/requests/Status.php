@@ -11,7 +11,7 @@ class Status extends FormRequest
         return [
             'status_name' => lang('admin::lang.label_name'),
             'status_for' => lang('admin::lang.statuses.label_for'),
-            'status_color' => lang('admin::lang.statuses.label_color')
+            'status_color' => lang('admin::lang.statuses.label_color'),
             'status_comment' => lang('admin::lang.statuses.label_comment'),
             'notify_customer' => lang('admin::lang.statuses.label_notify'),
         ];

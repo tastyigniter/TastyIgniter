@@ -19,8 +19,8 @@ class MailTemplate extends FormRequest
     public function rules()
     {
         $rules = [
-            'layout_id' => ['integer'];
-            'label' => ['required'];
+            'layout_id' => ['integer'],
+            'label' => ['required'],
             'subject' => ['required']
         ];
 
