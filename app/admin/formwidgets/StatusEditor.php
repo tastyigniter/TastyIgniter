@@ -166,7 +166,9 @@ class StatusEditor extends BaseFormWidget
                     ));
                 }
             });
-            $this->validate($saveData, $this->getFormRules());
+
+            $this->validateFormWidget($form, $saveData);
+
         }
         catch (ValidationException $ex) {
             throw new ApplicationException($ex->getMessage());
@@ -320,14 +322,6 @@ class StatusEditor extends BaseFormWidget
 
     protected function formExtendFields($form, $fields)
     {
-    }
-
-    protected function getFormRules()
-    {
-        $widgetConfig = is_string($this->form)
-            ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-
-        return array_get($widgetConfig, 'rules', []);
     }
 
     protected function checkAssigneePermission()
