@@ -14,6 +14,6 @@ class FileUploaded extends BaseEvent
         $this->path = $filePath;
         $this->upload = $uploadedFile;
 
-        $this->fireBackwardsCompatibleEvent('media.file.upload', [$this->path , $this->upload]);
+        $this->fireBackwardsCompatibleEvent('media.file.upload', [$this->path, $this->upload]);
     }
 }
