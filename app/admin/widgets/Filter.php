@@ -4,6 +4,9 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
+use Admin\Events\Widgets\Filter\ExtendQuery;
+use Admin\Events\Widgets\Filter\ExtendScopes;
+use Admin\Events\Widgets\Filter\ExtendScopesBefore;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
 use Exception;
@@ -267,7 +270,7 @@ class Filter extends BaseWidget
         $this->locationApplyScope($query);
 
         // Extensibility
-        $this->fireSystemEvent('admin.filter.extendQuery', [$query, $scope]);
+        event(new ExtendQuery($this, $query, $scope);
 
         return $query->get();
     }
@@ -314,7 +317,7 @@ class Filter extends BaseWidget
         if ($this->scopesDefined)
             return;
 
-        $this->fireSystemEvent('admin.filter.extendScopesBefore');
+        event(new ExtendScopesBefore($this);
 
         if (!isset($this->scopes) || !is_array($this->scopes)) {
             $this->scopes = [];
@@ -322,7 +325,7 @@ class Filter extends BaseWidget
 
         $this->addScopes($this->scopes);
 
-        $this->fireSystemEvent('admin.filter.extendScopes', [$this->scopes]);
+        event(new ExtendScopes($this, $this->scopes);
 
         $this->scopesDefined = TRUE;
     }
