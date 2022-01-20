@@ -149,7 +149,7 @@ trait ValidatesForm
         $rules = false;
 
         // for backwards support, first of all try and use a FormRequest class
-        if (!($requestClass = $form->config['request'])) {
+        if ($requestClass = array_get($form->config, 'request', false)) {
 
             if (!class_exists($requestClass))
                 throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
