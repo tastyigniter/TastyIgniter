@@ -2,12 +2,10 @@
 
 namespace Main\Classes;
 
-use AdminAuth;
-use App;
-use ApplicationException;
-use Config;
+use Admin\Facades\AdminAuth;
 use Exception;
 use Igniter\Flame\Exception\AjaxException;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Flash\Facades\Flash;
@@ -16,7 +14,14 @@ use Igniter\Flame\Pagic\Environment;
 use Igniter\Flame\Pagic\Parsers\FileParser;
 use Igniter\Flame\Traits\EventEmitter;
 use Illuminate\Http\RedirectResponse;
-use Lang;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Main\Components\BlankComponent;
 use Main\Events\Controller\AfterConstructor;
 use Main\Template\ComponentPartial;
@@ -25,9 +30,6 @@ use Main\Template\Extension\BladeExtension as MainBladeExtension;
 use Main\Template\Layout as LayoutTemplate;
 use Main\Template\Loader;
 use Main\Template\Partial;
-use Redirect;
-use Request;
-use Response;
 use System\Classes\BaseComponent;
 use System\Classes\BaseController;
 use System\Classes\ComponentManager;
@@ -36,8 +38,6 @@ use System\Models\Request_logs_model;
 use System\Template\Extension\BladeExtension as SystemBladeExtension;
 use System\Traits\AssetMaker;
 use System\Traits\VerifiesCsrfToken;
-use URL;
-use View;
 
 /**
  * Main Controller Class
@@ -137,7 +137,7 @@ class MainController extends BaseController
      *
      * @param null $theme
      *
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function __construct($theme = null)
     {
@@ -166,6 +166,8 @@ class MainController extends BaseController
 
     public function remap($url = null)
     {
+        $this->fireSystemEvent('main.controller.beforeRemap');
+
         if ($url === null)
             $url = Request::path();
 
@@ -175,7 +177,7 @@ class MainController extends BaseController
         $page = $this->router->findByUrl($url);
 
         // Show maintenance message if maintenance is enabled
-        if (setting('maintenance_mode') == 1 AND !AdminAuth::isLogged())
+        if (setting('maintenance_mode') == 1 && !AdminAuth::isLogged())
             return Response::make(
                 View::make('main::maintenance', ['message' => setting('maintenance_message')]),
                 $this->statusCode
@@ -183,7 +185,7 @@ class MainController extends BaseController
 
         // If the page was not found,
         // render the 404 page - either provided by the theme or the built-in one.
-        if (!$page OR $url === '404') {
+        if (!$page || $url === '404') {
             if (!Request::ajax())
                 $this->setStatusCode(404);
 
@@ -255,7 +257,7 @@ class MainController extends BaseController
         }
 
         // Execute post handler and AJAX event
-        if ($ajaxResponse = $this->processHandlers() AND $ajaxResponse !== TRUE) {
+        if (($ajaxResponse = $this->processHandlers()) && $ajaxResponse !== TRUE) {
             return $ajaxResponse;
         }
 
@@ -299,7 +301,7 @@ class MainController extends BaseController
         if ($this->layoutObj) {
             // Let the layout do stuff after components are initialized and before AJAX is handled.
             $response = (
-                ($result = $this->layoutObj->onStart()) OR
+                ($result = $this->layoutObj->onStart()) ||
                 ($result = $this->layout->runComponents())
             ) ? $result : null;
 
@@ -310,8 +312,8 @@ class MainController extends BaseController
 
         // Run page functions
         $response = (
-            ($result = $this->pageObj->onStart()) OR
-            ($result = $this->page->runComponents()) OR
+            ($result = $this->pageObj->onStart()) ||
+            ($result = $this->page->runComponents()) ||
             ($result = $this->pageObj->onEnd())
         ) ? $result : null;
 
@@ -342,7 +344,7 @@ class MainController extends BaseController
      */
     public function getHandler()
     {
-        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+        if (Request::ajax() && $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
             return trim($handler);
 
         if ($handler = post('_handler'))
@@ -379,7 +381,7 @@ class MainController extends BaseController
                 $response['X_IGNITER_REDIRECT'] = $result->getTargetUrl();
                 $result = null;
             }
-            elseif (Request::header('X-IGNITER-REQUEST-FLASH') AND Flash::messages()->isNotEmpty()) {
+            elseif (Request::header('X-IGNITER-REQUEST-FLASH') && Flash::messages()->isNotEmpty()) {
                 $response['X_IGNITER_FLASH_MESSAGES'] = Flash::all();
             }
 
@@ -412,7 +414,7 @@ class MainController extends BaseController
 
             $componentObj = $this->findComponentByAlias($componentName);
 
-            if ($componentObj AND $componentObj->methodExists($handlerName)) {
+            if ($componentObj && $componentObj->methodExists($handlerName)) {
                 $this->componentContext = $componentObj;
                 $result = $componentObj->runEventHandler($handlerName);
 
@@ -422,7 +424,7 @@ class MainController extends BaseController
         else {
             $pageHandler = $this->action.'_'.$handler;
             if ($this->methodExists($pageHandler)) {
-                $result = call_user_func_array([$this, $pageHandler], $this->params);
+                $result = call_user_func_array([$this, $pageHandler], array_values($this->params));
 
                 return $result ?: TRUE;
             }
@@ -468,7 +470,7 @@ class MainController extends BaseController
     /**
      * Returns an existing instance of the controller.
      * If the controller doesn't exists, returns null.
-     * @return mixed Returns the controller object or null.
+     * @return self Returns the controller object or null.
      */
     public static function getController()
     {
@@ -642,7 +644,7 @@ class MainController extends BaseController
      * @param array $params Parameter variables to pass to the view.
      *
      * @return string
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function renderContent($name, array $params = [])
     {
@@ -687,7 +689,7 @@ class MainController extends BaseController
      * @param bool $throwException Throw an exception if the partial is not found.
      *
      * @return mixed Partial contents or false if not throwing an exception.
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function renderComponent($name, array $params = [], $throwException = TRUE)
     {
@@ -894,7 +896,7 @@ class MainController extends BaseController
         if (!is_array($params))
             $params = [];
 
-        if ($path == setting('menus_page'))
+        if (in_array($path, [setting('reservation_page'), setting('menus_page')]))
             $params = $this->bindLocationRouteParameter($params);
 
         return $this->url($path, $params);

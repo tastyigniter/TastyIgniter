@@ -2,10 +2,10 @@
 
 namespace System\Controllers;
 
-use AdminMenu;
-use File;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\LogViewer;
-use Template;
 
 class SystemLogs extends \Admin\Classes\AdminController
 {
@@ -47,7 +47,7 @@ class SystemLogs extends \Admin\Classes\AdminController
     public function index_onEmptyLog()
     {
         $logFile = storage_path('logs/system.log');
-        if (File::exists($logFile) AND File::isWritable($logFile)) {
+        if (File::exists($logFile) && File::isWritable($logFile)) {
             File::put(storage_path('logs/system.log'), '');
 
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Logs Emptied '));

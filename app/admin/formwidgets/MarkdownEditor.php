@@ -31,6 +31,10 @@ class MarkdownEditor extends BaseFormWidget
         $this->fillFromConfig([
             'mode',
         ]);
+
+        if ($this->formField->disabled || $this->formField->readOnly) {
+            $this->previewMode = TRUE;
+        }
     }
 
     public function render()

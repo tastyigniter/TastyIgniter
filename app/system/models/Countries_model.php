@@ -2,8 +2,8 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
-use Model;
 
 /**
  * Countries Model Class
@@ -36,6 +36,8 @@ class Countries_model extends Model
             'currency' => 'System\Models\Currencies_model',
         ],
     ];
+
+    public $timestamps = TRUE;
 
     public static function getDropdownOptions()
     {

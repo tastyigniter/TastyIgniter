@@ -1,4 +1,4 @@
-@if ($formModel->referrer AND count($formModel->referrer))
+@if ($formModel->referrer && count($formModel->referrer))
     <div class="form-control-static">
         <ul class="list-unstyled">
             @foreach ($formModel->referrer as $referrer)

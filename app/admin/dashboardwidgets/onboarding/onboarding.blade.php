@@ -3,7 +3,7 @@
     <div class="row">
         <div class="list-group list-group-flush w-100">
             @foreach($onboarding->listSteps() as $step)
-                @if($completed = $step->completed AND $completed())
+                @if(($completed = $step->completed) && $completed())
                     <div class="list-group-item bg-transparent">
                         <i class="fa fa-check-circle-o fa-2x text-success float-left mr-3 my-2"></i>
                         <s class="d-block text-truncate">@lang($step->label)</s>
@@ -19,7 +19,7 @@
                         <span class="text-muted d-block text-truncate">@lang($step->description)</span>
                     </a>
                 @endif
-                @endforeach
+            @endforeach
         </div>
     </div>
 </div>

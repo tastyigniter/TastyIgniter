@@ -2,7 +2,7 @@
 
 namespace Admin\Models;
 
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Statuses Model Class
@@ -28,6 +28,8 @@ class Statuses_model extends Model
             'status_history' => 'Admin\Models\Status_history_model',
         ],
     ];
+
+    public $timestamps = TRUE;
 
     /**
      * Return status_for attribute as lang text, used by

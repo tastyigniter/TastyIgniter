@@ -115,7 +115,7 @@ class ScheduleEditor extends BaseFormWidget
     protected function getSchedule($scheduleCode)
     {
         if (!$schedule = array_get($this->listSchedules(), $scheduleCode))
-            throw new ApplicationException('Schedule not loaded');
+            throw new ApplicationException(lang('admin::lang.locations.alert_schedule_not_loaded'));
 
         return $schedule;
     }
@@ -126,7 +126,7 @@ class ScheduleEditor extends BaseFormWidget
             return $this->schedulesCache;
 
         $schedules = [];
-        foreach ($this->availableSchedules as $scheduleCode) {
+        foreach ($this->model->availableWorkingTypes() as $scheduleCode) {
             $schedules[$scheduleCode] = $this->model->createScheduleItem($scheduleCode);
         }
 
@@ -138,7 +138,7 @@ class ScheduleEditor extends BaseFormWidget
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = Working_hours_model::make();
         $widgetConfig['data'] = $scheduleItem;
-        $widgetConfig['alias'] = $this->alias.'Form'.'schedule-editor';
+        $widgetConfig['alias'] = $this->alias.'FormScheduleEditor';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[scheduleData]';
         $widgetConfig['context'] = 'edit';
         $widget = $this->makeWidget(Form::class, $widgetConfig);

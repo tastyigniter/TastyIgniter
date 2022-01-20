@@ -11,7 +11,7 @@
         id="{{ $this->getId('area-header-'.$area->area_id) }}"
     >
         <div class="d-flex w-100 justify-content-between">
-            @if (!$this->previewMode AND $sortable)
+            @if (!$this->previewMode && $sortable)
                 <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $area->area_id }}">
                 <div class="align-self-center">
                     <a

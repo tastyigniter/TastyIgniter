@@ -2,8 +2,8 @@
 
 namespace System\Actions;
 
-use File;
-use Model;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Support\Facades\File;
 
 /**
  * Settings model extension
@@ -32,7 +32,7 @@ class SettingsModel extends ModelAction
     /**
      * Constructor
      *
-     * @param \Model $model
+     * @param \Igniter\Flame\Database\Model $model
      */
     public function __construct(Model $model)
     {
@@ -40,7 +40,7 @@ class SettingsModel extends ModelAction
 
         $this->model->setTable('extension_settings');
         $this->model->setKeyName('id');
-        $this->model->addCasts(['data' => 'serialize']);
+        $this->model->addCasts(['data' => 'array']);
         $this->model->guard([]);
         $this->model->timestamps = FALSE;
 
@@ -86,6 +86,15 @@ class SettingsModel extends ModelAction
             $record->delete();
             unset(self::$instances[$this->recordCode]);
         }
+    }
+
+    /**
+     * Checks if the model has been set up previously, intended as a static method
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        return app()->hasDatabase() && $this->getSettingsRecord() !== null;
     }
 
     /**
@@ -199,7 +208,7 @@ class SettingsModel extends ModelAction
     protected function isKeyAllowed($key)
     {
         // core columns
-        if ($key == 'id' OR $key == 'item' OR $key == 'data') {
+        if ($key == 'id' || $key == 'item' || $key == 'data') {
             return TRUE;
         }
 

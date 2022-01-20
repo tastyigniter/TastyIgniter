@@ -11,16 +11,17 @@ $config['list']['toolbar'] = [
         'browse' => [
             'label' => 'lang:system::lang.extensions.button_browse',
             'class' => 'btn btn-primary',
-            'href' => 'updates/browse/extensions',
+            'href' => 'https://tastyigniter.com/marketplace',
+            'target' => '_blank',
         ],
         'check' => [
-            'label' => 'lang:system::lang.extensions.button_check',
+            'label' => 'lang:system::lang.updates.button_check',
             'class' => 'btn btn-success',
             'href' => 'updates',
         ],
         'filter' => [
             'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
+            'class' => 'btn btn-default btn-filter pull-right',
             'data-toggle' => 'list-filter',
             'data-target' => '.list-filter',
         ],

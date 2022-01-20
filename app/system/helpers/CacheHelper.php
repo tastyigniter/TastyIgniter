@@ -2,9 +2,9 @@
 
 namespace System\Helpers;
 
-use App;
-use Cache;
-use File;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 
 class CacheHelper
 {

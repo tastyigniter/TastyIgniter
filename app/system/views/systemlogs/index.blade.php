@@ -46,7 +46,7 @@
 
                         @if ($log['stack'])
                             <div class="collapse" id="stack-{{ $key }}">
-                                {!! nl2br(trim($log['stack'])) !!}
+                                {!! nl2br(trim(e($log['stack']))) !!}
                             </div>
                         @endif
                     </td>

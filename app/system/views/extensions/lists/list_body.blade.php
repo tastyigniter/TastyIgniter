@@ -11,7 +11,7 @@
                 <div class="list-action mr-3">
                     @foreach ($columns as $key => $column)
                         @continue($column->type != 'button')
-                        @continue(($key == 'install' AND $record->status) OR ($key == 'uninstall' AND !$record->status))
+                        @continue(($key == 'install' && $record->status) || ($key == 'uninstall' && !$record->status))
                         {!! $this->makePartial('lists/list_button', ['record' => $record, 'column' => $column]) !!}
                     @endforeach
                 </div>

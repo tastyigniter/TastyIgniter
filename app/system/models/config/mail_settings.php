@@ -32,6 +32,7 @@ return [
                 'label' => 'lang:system::lang.settings.label_protocol',
                 'type' => 'select',
                 'default' => 'sendmail',
+                'span' => 'left',
                 'options' => [
                     'log' => 'lang:system::lang.settings.text_log_file',
                     'sendmail' => 'lang:system::lang.settings.text_sendmail',
@@ -40,6 +41,13 @@ return [
                     'postmark' => 'lang:system::lang.settings.text_postmark',
                     'ses' => 'lang:system::lang.settings.text_ses',
                 ],
+            ],
+            'mail_logo' => [
+                'label' => 'lang:system::lang.settings.label_mail_logo',
+                'type' => 'mediafinder',
+                'span' => 'right',
+                'mode' => 'inline',
+                'comment' => 'lang:system::lang.settings.help_mail_logo',
             ],
 
             'sendmail_path' => [
@@ -180,6 +188,7 @@ return [
             ['sender_email', 'lang:system::lang.settings.label_sender_email', 'required'],
             ['protocol', 'lang:system::lang.settings.label_protocol', 'required'],
 
+            ['mail_logo', 'lang:system::lang.settings.label_mail_logo', 'string'],
             ['sendmail_path', 'lang:system::lang.settings.label_sendmail_path', 'required_if:protocol,sendmail|string'],
 
             ['smtp_host', 'lang:system::lang.settings.label_smtp_host', 'string'],

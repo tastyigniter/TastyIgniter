@@ -3,8 +3,8 @@
 namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Categories_model;
-use AdminMenu;
 
 class Categories extends AdminController
 {
@@ -61,7 +61,7 @@ class Categories extends AdminController
 
     public function formBeforeSave($model)
     {
-        if (!$model->getRgt() OR !$model->getLft())
+        if (!$model->getRgt() || !$model->getLft())
             $model->fixTree();
 
         if (Categories_model::isBroken())

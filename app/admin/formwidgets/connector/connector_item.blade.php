@@ -5,7 +5,7 @@
 >
     <div class="card-body">
         <div class="d-flex w-100 justify-content-between">
-            @if (!$this->previewMode AND $sortable)
+            @if (!$this->previewMode && $sortable)
                 <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $item->getKey() }}">
                 <div class="align-self-center">
                     <a
@@ -36,7 +36,7 @@
                         data-control="delete-item"
                         data-item-id="{{ $item->getKey() }}"
                         data-item-selector="#{{ $this->getId('item-'.$index) }}"
-                        data-confirm-message="@lang('admin::lang.alert_warning_confirm')"
+                        data-confirm-message="@lang($confirmMessage)"
                     ><i class="fa fa-trash-alt"></i></a>
                 </div>
             @endunless

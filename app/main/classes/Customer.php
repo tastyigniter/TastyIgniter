@@ -2,6 +2,8 @@
 
 namespace Main\Classes;
 
+use Admin\Models\Customer_groups_model;
+
 /**
  * Customer Class
  */
@@ -10,6 +12,11 @@ class Customer extends \Igniter\Flame\Auth\Manager
     protected $sessionKey = 'customer_auth';
 
     protected $model = 'Admin\Models\Customers_model';
+
+    public function __construct()
+    {
+        $this->requireApproval = optional(Customer_groups_model::getDefault())->requiresApproval() ?? $this->requireApproval;
+    }
 
     public function customer()
     {
@@ -70,10 +77,10 @@ class Customer extends \Igniter\Flame\Auth\Manager
      * @return \Admin\Models\Customers_model
      * @throws \Exception
      */
-    public function register(array $credentials, $activate = FALSE)
+    public function register(array $attributes, $activate = FALSE)
     {
         $model = $this->createModel();
-        $model->fill($credentials);
+        $model->fill($attributes);
         $model->save();
 
         if ($activate) {
@@ -84,5 +91,10 @@ class Customer extends \Igniter\Flame\Auth\Manager
         $model->password = null;
 
         return $this->user = $model;
+    }
+
+    public function extendUserQuery($query)
+    {
+        $query->isEnabled();
     }
 }

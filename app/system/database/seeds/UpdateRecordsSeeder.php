@@ -4,8 +4,8 @@ namespace System\Database\Seeds;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
-use DB;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Fill newly created permalink_slug column with values from permalinks table
@@ -40,7 +40,7 @@ class UpdateRecordsSeeder extends Seeder
 
         DB::table('status_history')->get()->each(function ($model) use ($morphs) {
             $status = DB::table('statuses')->where('status_id', $model->status_id)->first();
-            if (!$status OR !isset($morphs[$status->status_for]))
+            if (!$status || !isset($morphs[$status->status_for]))
                 return FALSE;
 
             DB::table('status_history')->where('status_history_id', $model->status_history_id)->update([
@@ -66,7 +66,7 @@ class UpdateRecordsSeeder extends Seeder
             return;
 
         collect(DB::table('locations')->pluck('options', 'location_id'))->each(function ($options, $id) {
-            $options = is_string($options) ? unserialize($options) : [];
+            $options = is_string($options) ? json_decode($options, TRUE) : [];
 
             if (!isset($options['delivery_areas']))
                 return TRUE;
@@ -82,8 +82,8 @@ class UpdateRecordsSeeder extends Seeder
                     'location_id' => $id,
                     'name' => $option['name'],
                     'type' => $option['type'] == 'shape' ? 'polygon' : $option['type'],
-                    'boundaries' => serialize($boundaries),
-                    'conditions' => serialize($option['conditions'] ?? $option['charge']),
+                    'boundaries' => json_encode($boundaries),
+                    'conditions' => json_encode($option['conditions'] ?? $option['charge']),
                 ]);
             }
         });

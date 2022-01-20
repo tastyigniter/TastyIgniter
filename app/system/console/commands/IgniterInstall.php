@@ -2,19 +2,18 @@
 
 namespace System\Console\Commands;
 
+use Admin\Facades\AdminAuth;
 use Admin\Models\Customer_groups_model;
 use Admin\Models\Locations_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staff_roles_model;
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
-use App;
-use Carbon\Carbon;
-use Config;
-use DB;
-use Igniter\Flame\Foundation\Http\Kernel;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
@@ -63,7 +62,7 @@ class IgniterInstall extends Command
         $this->alert('INSTALLATION');
 
         if (
-            App::hasDatabase() AND
+            App::hasDatabase() &&
             !$this->confirm('Application appears to be installed already. Continue anyway?', FALSE)
         ) {
             return;
@@ -84,8 +83,6 @@ class IgniterInstall extends Command
         $this->moveExampleFile('htaccess', null, 'backup');
         $this->moveExampleFile('htaccess', 'example', null);
 
-        $this->deleteExampleFile('env');
-
         $this->alert('INSTALLATION COMPLETE');
     }
 
@@ -101,20 +98,22 @@ class IgniterInstall extends Command
 
     protected function rewriteEnvFile()
     {
-        if (file_exists(base_path().'/example.env')) {
-            $this->moveExampleFile('env', null, 'backup');
-            $this->moveExampleFile('env', 'example', null);
-        }
-
-        if (!file_exists(base_path().'/.env'))
+        if (file_exists(base_path().'/.env') && !$this->confirm('Rewrite environment file?', FALSE))
             return;
+
+        $this->moveExampleFile('env', null, 'backup');
+        $this->copyExampleFile('env', 'example', null);
 
         $this->replaceInEnv('APP_KEY=', 'APP_KEY='.$this->generateEncryptionKey());
 
-        $this->replaceInEnv('APP_NAME=', 'APP_NAME='.DatabaseSeeder::$siteName);
+        $this->replaceInEnv('APP_NAME=', 'APP_NAME="'.DatabaseSeeder::$siteName.'"');
         $this->replaceInEnv('APP_URL=', 'APP_URL='.DatabaseSeeder::$siteUrl);
 
+        $name = Config::get('database.default');
         foreach ($this->dbConfig as $key => $value) {
+            Config::set("database.connections.$name.".strtolower($key), $value);
+
+            if ($key === 'password') $value = '"'.$value.'"';
             $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
         }
     }
@@ -122,8 +121,6 @@ class IgniterInstall extends Command
     protected function migrateDatabase()
     {
         $this->line('Migrating application and extensions...');
-
-        resolve(Kernel::class)->bootstrap();
 
         DB::purge();
 
@@ -155,28 +152,44 @@ class IgniterInstall extends Command
 
     protected function createSuperUser()
     {
-        $username = $this->ask('Admin Username', 'admin');
-        $password = $this->ask('Admin Password', '123456');
+        $email = $this->output->ask('Admin Email', DatabaseSeeder::$siteEmail, function ($answer) {
+            if (Staffs_model::whereStaffEmail($answer)->first()) {
+                throw new \RuntimeException('An administrator with that email already exists, please choose a different email.');
+            }
 
-        $staff = Staffs_model::firstOrNew(['staff_email' => DatabaseSeeder::$siteEmail]);
-        $staff->staff_name = DatabaseSeeder::$staffName;
-        $staff->staff_role_id = Staff_roles_model::first()->staff_role_id;
-        $staff->language_id = Languages_model::first()->language_id;
-        $staff->staff_status = TRUE;
-        $staff->save();
+            return $answer;
+        });
 
-        $staff->groups()->attach(Staff_groups_model::first()->staff_group_id);
-        $staff->locations()->attach(Locations_model::first()->location_id);
+        $username = $this->output->ask('Admin Username', 'admin', function ($answer) {
+            if (Users_model::whereUsername($answer)->first()) {
+                throw new \RuntimeException('An administrator with that username already exists, please choose a different username.');
+            }
 
-        $user = Users_model::firstOrNew(['username' => $username]);
-        $user->staff_id = $staff->staff_id;
-        $user->password = $password;
-        $user->super_user = TRUE;
-        $user->is_activated = TRUE;
-        $user->date_activated = Carbon::now();
-        $user->save();
+            return $answer;
+        });
 
-        $this->line('Admin user '.$username.' created!');
+        $password = $this->output->ask('Admin Password', '123456', function ($answer) {
+            if (!is_string($answer) || strlen($answer) < 6) {
+                throw new \RuntimeException('Please specify the administrator password, at least 6 characters');
+            }
+
+            return $answer;
+        });
+
+        $user = AdminAuth::register([
+            'staff_email' => $email,
+            'staff_name' => DatabaseSeeder::$staffName,
+            'language_id' => Languages_model::first()->language_id,
+            'staff_role_id' => Staff_roles_model::first()->staff_role_id,
+            'staff_status' => TRUE,
+            'username' => $username,
+            'password' => $password,
+            'super_user' => TRUE,
+            'groups' => [Staff_groups_model::first()->staff_group_id],
+            'locations' => [Locations_model::first()->location_id],
+        ]);
+
+        $this->line('Admin user '.$user->username.' created!');
     }
 
     protected function addSystemValues()
@@ -247,13 +260,6 @@ class IgniterInstall extends Command
         }
     }
 
-    protected function deleteExampleFile($name)
-    {
-        if (file_exists(base_path().'/example.'.$name)) {
-            unlink(base_path().'/example.'.$name);
-        }
-    }
-
     protected function replaceInEnv(string $search, string $replace)
     {
         $file = base_path().'/.env';
@@ -262,5 +268,7 @@ class IgniterInstall extends Command
             $file,
             preg_replace('/^'.$search.'(.*)$/m', $replace, file_get_contents($file))
         );
+
+        putenv($replace);
     }
 }

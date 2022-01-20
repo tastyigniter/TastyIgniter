@@ -54,16 +54,14 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'context' => 'index',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -83,7 +81,6 @@ $config['list']['columns'] = [
     'location_name' => [
         'label' => 'lang:admin::lang.orders.column_location',
         'relation' => 'location',
-        'select' => 'location_name',
         'searchable' => TRUE,
         'locationAware' => TRUE,
     ],
@@ -147,7 +144,12 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.orders.column_total',
         'type' => 'currency',
     ],
-    'date_added' => [
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'type' => 'datesince',
+        'invisible' => TRUE,
+    ],
+    'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timesince',
         'invisible' => TRUE,
@@ -188,6 +190,7 @@ $config['form']['fields'] = [
         'disabled' => TRUE,
         'path' => 'orders/form/info',
         'span' => 'left',
+        'cssClass' => 'left',
         'context' => ['edit', 'preview'],
     ],
     'status_id' => [
@@ -200,128 +203,25 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::lang.orders.text_tab_general',
     'fields' => [
-        'order_type_name' => [
-            'label' => 'lang:admin::lang.orders.label_order_type',
-            'type' => 'text',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'disabled' => TRUE,
-            'context' => ['edit', 'preview'],
-        ],
-        'order_time_is_asap' => [
-            'label' => 'lang:admin::lang.orders.label_time_is_asap',
-            'type' => 'switch',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'on' => 'lang:admin::lang.text_yes',
-            'off' => 'lang:admin::lang.text_no',
-            'disabled' => TRUE,
-            'context' => ['edit', 'preview'],
-        ],
-        'location[location_name]' => [
-            'label' => 'lang:admin::lang.orders.text_restaurant',
-            'type' => 'location',
-            'disabled' => TRUE,
-            'span' => 'right',
-            'placeholder' => 'lang:admin::lang.text_please_select',
-        ],
-        'order_date' => [
-            'label' => 'lang:admin::lang.orders.label_order_date',
-            'type' => 'datepicker',
-            'disabled' => TRUE,
-            'mode' => 'date',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-        ],
-        'order_time' => [
-            'label' => 'lang:admin::lang.orders.label_order_time',
-            'type' => 'datepicker',
-            'disabled' => TRUE,
-            'mode' => 'time',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-        ],
-        'customer[full_name]' => [
-            'label' => 'lang:admin::lang.orders.text_customer',
-            'type' => 'customer',
-            'disabled' => TRUE,
-            'span' => 'right',
-        ],
-        'delivery_address' => [
-            'label' => 'lang:admin::lang.orders.label_delivery_address',
-            'span' => 'left',
-            'valueFrom' => 'formatted_address',
-            'disabled' => TRUE,
-        ],
-        'telephone' => [
-            'label' => 'lang:admin::lang.orders.label_telephone',
-            'type' => 'text',
-            'disabled' => TRUE,
-            'span' => 'right',
-            'context' => ['edit', 'preview'],
-        ],
-        'payment_method[name]' => [
-            'label' => 'lang:admin::lang.orders.label_payment_method',
-            'span' => 'left',
-            'type' => 'text',
-            'disabled' => TRUE,
-        ],
-        'invoice_number' => [
-            'label' => 'lang:admin::lang.orders.label_invoice',
-            'type' => 'addon',
-            'disabled' => TRUE,
-            'span' => 'right',
-            'context' => ['edit', 'preview'],
-            'addonCssClass' => ['input-addon-btn'],
-            'addonRight' => [
-                'tag' => 'a',
-                'label' => 'admin::lang.orders.button_print_invoice',
-                'attributes' => [
-                    'class' => 'btn btn-outline-default',
-                    'target' => '_blank',
-                ],
-            ],
-        ],
-        'comment' => [
-            'label' => 'lang:admin::lang.orders.label_comment',
-            'type' => 'textarea',
-            'disabled' => TRUE,
-        ],
-        'date_added' => [
-            'label' => 'lang:admin::lang.orders.label_date_added',
-            'type' => 'datepicker',
-            'mode' => 'date',
-            'disabled' => TRUE,
-            'span' => 'left',
-            'context' => ['edit', 'preview'],
-        ],
-        'ip_address' => [
-            'label' => 'lang:admin::lang.orders.label_ip_address',
-            'type' => 'text',
-            'disabled' => TRUE,
-            'span' => 'right',
-            'context' => ['edit', 'preview'],
-        ],
-        'date_modified' => [
-            'label' => 'lang:admin::lang.orders.label_date_modified',
-            'type' => 'datepicker',
-            'mode' => 'date',
-            'span' => 'left',
-            'disabled' => TRUE,
-            'context' => ['edit', 'preview'],
-        ],
-        'user_agent' => [
-            'label' => 'lang:admin::lang.orders.label_user_agent',
-            'disabled' => TRUE,
-            'type' => 'text',
-            'span' => 'right',
-            'context' => ['edit', 'preview'],
-        ],
         'order_menus' => [
-            'tab' => 'lang:admin::lang.orders.text_tab_menu',
             'type' => 'partial',
             'path' => 'orders/form/order_menus',
         ],
+        'customer' => [
+            'label' => 'lang:admin::lang.orders.text_customer',
+            'type' => 'partial',
+            'path' => 'orders/form/field_customer',
+        ],
+        'location' => [
+            'label' => 'lang:admin::lang.orders.text_restaurant',
+            'type' => 'partial',
+            'path' => 'orders/form/field_location',
+        ],
+        'order_details' => [
+            'type' => 'partial',
+            'path' => 'orders/form/order_details',
+        ],
+
         'status_history' => [
             'tab' => 'lang:admin::lang.orders.text_status_history',
             'type' => 'datatable',

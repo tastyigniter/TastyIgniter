@@ -3,9 +3,9 @@
 namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Menu_options_model;
-use AdminMenu;
-use ApplicationException;
+use Igniter\Flame\Exception\ApplicationException;
 
 class Menus extends AdminController
 {
@@ -64,7 +64,7 @@ class Menus extends AdminController
     {
         $menuOptionId = post('Menu._options');
         if (!$menuOption = Menu_options_model::find($menuOptionId))
-            throw new ApplicationException('Please select a menu option to attach');
+            throw new ApplicationException(lang('admin::lang.menus.alert_menu_option_not_attached'));
 
         $model = $this->asExtension('FormController')->formFindModelObject($recordId);
 

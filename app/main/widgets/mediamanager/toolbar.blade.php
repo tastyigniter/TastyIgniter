@@ -65,7 +65,7 @@
                 <div class="input-group-prepend">
                     <div class="dropdown mr-2">
                         <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Sort">
-                            @if (isset($sortBy[1]) AND $sortBy[1] === 'ascending')
+                            @if (isset($sortBy[1]) && $sortBy[1] === 'ascending')
                                 <i class="fa fa-sort-amount-asc"></i> <i class="caret"></i>
                             @else
                                 <i class="fa fa-sort-amount-desc"></i> <i class="caret"></i>

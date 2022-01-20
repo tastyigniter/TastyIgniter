@@ -2,7 +2,7 @@
 
 namespace System\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 
 class Currencies extends \Admin\Classes\AdminController
 {

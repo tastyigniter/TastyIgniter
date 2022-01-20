@@ -28,14 +28,14 @@ class Location extends Manager
         }
         else {
             $id = $this->getSession('id');
-            if (!$id AND $this->hasOneLocation() AND !$this->getAuth()->isSuperUser())
+            if (!$id && $this->hasOneLocation() && !$this->getAuth()->isSuperUser())
                 $id = $this->getDefaultLocation();
 
-            if ($id AND !$this->isAttachedToAuth($id))
+            if ($id && !$this->isAttachedToAuth($id))
                 $id = $this->getDefaultLocation();
         }
 
-        if ($id AND $model = $this->getById($id))
+        if ($id && $model = $this->getById($id))
             $this->setCurrent($model);
 
         return $this->model;
@@ -70,6 +70,11 @@ class Location extends Manager
     public function getId()
     {
         return optional($this->getLocation())->getKey();
+    }
+
+    public function getName()
+    {
+        return optional($this->getLocation())->location_name;
     }
 
     public function getAll()

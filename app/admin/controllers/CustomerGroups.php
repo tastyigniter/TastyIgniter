@@ -2,8 +2,8 @@
 
 namespace Admin\Controllers;
 
+use Admin\Facades\AdminMenu;
 use Admin\Models\Customer_groups_model;
-use AdminMenu;
 
 class CustomerGroups extends \Admin\Classes\AdminController
 {

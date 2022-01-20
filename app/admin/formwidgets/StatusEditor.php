@@ -129,7 +129,7 @@ class StatusEditor extends BaseFormWidget
     {
         $context = post('recordId');
         if (!in_array($context, ['load-status', 'load-assignee']))
-            throw new ApplicationException('Invalid action');
+            throw new ApplicationException(lang('admin::lang.statuses.alert_invalid_action'));
 
         $this->setMode(str_after($context, 'load-'));
 
@@ -159,7 +159,7 @@ class StatusEditor extends BaseFormWidget
 
         try {
             $this->validateAfter(function ($validator) use ($context, $recordId, $keyFrom) {
-                if ($this->isStatusMode AND $recordId == $this->model->{$keyFrom}) {
+                if ($this->isStatusMode && $recordId == $this->model->{$keyFrom}) {
                     $validator->errors()->add($keyFrom, sprintf(
                         lang('admin::lang.statuses.alert_already_added'),
                         $context, $context
@@ -193,7 +193,7 @@ class StatusEditor extends BaseFormWidget
             throw new ApplicationException(lang('admin::lang.form.missing_id'));
 
         if (!$status = Statuses_model::find($statusId))
-            throw new Exception('Status ID ['.$statusId.'] not found.');
+            throw new Exception(sprintf(lang('admin::lang.statuses.alert_status_not_found'), $statusId));
 
         return $status->toArray();
     }
@@ -261,7 +261,7 @@ class StatusEditor extends BaseFormWidget
             ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
 
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'status-editor';
+        $widgetConfig['alias'] = $this->alias.'StatusEditor';
         $widgetConfig['context'] = $this->isStatusMode ? 'status' : 'assignee';
         $widgetConfig['arrayName'] = $this->getModeConfig('arrayName');
         $widget = $this->makeWidget(Form::class, $widgetConfig);
