@@ -5,6 +5,7 @@ namespace Admin\Classes;
 use Admin\Events\Controller\AfterConstructor;
 use Admin\Events\Controller\BeforeInitialize;
 use Admin\Events\Controller\BeforeRemap;
+use Admin\Events\Controller\BeforeResponse;
 use Admin\Facades\Admin;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminLocation;
