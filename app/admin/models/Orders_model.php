@@ -14,7 +14,6 @@ use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
 use System\Traits\SendsMailTemplate;

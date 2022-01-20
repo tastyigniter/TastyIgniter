@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Menus Model Class

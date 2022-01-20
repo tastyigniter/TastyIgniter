@@ -7,7 +7,6 @@ use Admin\Events\Order\RefundProcessed;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Validation;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Payment logs Model Class

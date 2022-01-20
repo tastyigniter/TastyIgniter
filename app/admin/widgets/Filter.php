@@ -7,7 +7,6 @@ use Admin\Classes\FilterScope;
 use Admin\Events\Widgets\Filter\ExtendQuery;
 use Admin\Events\Widgets\Filter\ExtendScopes;
 use Admin\Events\Widgets\Filter\ExtendScopesBefore;
-use Admin\Events\Widgets\Filter\FilterSubmixt;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
 use Exception;

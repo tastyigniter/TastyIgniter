@@ -5,7 +5,6 @@ namespace Admin\Classes;
 use Admin\Events\Navigation\ExtendUserMenuLinks;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminLocation;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Admin User Panel

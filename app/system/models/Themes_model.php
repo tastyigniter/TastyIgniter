@@ -6,7 +6,6 @@ use Exception;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ApplicationException;
-use Illuminate\Support\Facades\Event;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 use Main\Events\Theme\ThemeActivated;

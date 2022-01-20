@@ -9,7 +9,6 @@ use Exception;
 use Igniter\Flame\Location\OrderTypes;
 use Igniter\Flame\Location\WorkingSchedule;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Event;
 use InvalidArgumentException;
 
 trait HasWorkingHours
