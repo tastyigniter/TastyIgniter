@@ -4,6 +4,8 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ToolbarButton;
+use Admin\Events\Widgets\Toolbar\ExtendButtonsBefore;
+use Admin\Events\Widgets\Toolbar\ExtendButtons;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\Template;
 

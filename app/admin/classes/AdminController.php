@@ -178,7 +178,7 @@ class AdminController extends BaseController
             $manager->bindToController();
         }
 
-        event(new AfterContructor($this));
+        event(new AfterConstructor($this));
     }
 
     public function remap($action, $params)
