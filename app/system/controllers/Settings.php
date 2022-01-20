@@ -8,6 +8,7 @@ use Admin\Facades\Template;
 use Admin\Traits\FormExtendable;
 use Admin\Traits\WidgetMaker;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Support\Facades\File;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Mail;
@@ -104,7 +105,9 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->initWidgets($model, $definition);
 
-        if ($this->formValidate($this->formWidget) === FALSE)
+        $this->validateFormRequest($model);
+
+        if ($this->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         $this->formBeforeSave($model);
@@ -132,7 +135,9 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->initWidgets($model, $definition);
 
-        if ($this->formValidate($this->formWidget) === FALSE)
+        $this->validateFormRequest($model);
+
+        if ($this->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
 
         setting()->set($this->formWidget->getSaveData());
@@ -162,7 +167,7 @@ class Settings extends \Admin\Classes\AdminController
         $formConfig = array_except($modelConfig, 'toolbar');
         $formConfig['model'] = $model;
         $formConfig['data'] = array_undot($model->getFieldValues());
-        $formConfig['alias'] = 'form-'.$this->settingCode;
+        $formConfig['alias'] = 'form';
         $formConfig['arrayName'] = str_singular(strip_class_basename($model, '_model'));
         $formConfig['context'] = 'edit';
 
@@ -204,14 +209,6 @@ class Settings extends \Admin\Classes\AdminController
         $this->validateSettingItems(TRUE);
     }
 
-    protected function formValidate($form)
-    {
-        if (!isset($form->config['rules']))
-            return null;
-
-        return $this->validatePasses($form->getSaveData(), $form->config['rules']);
-    }
-
     protected function validateSettingItems($skipSession = FALSE)
     {
         $settingItemErrors = Session::get('settings.errors', []);
@@ -237,5 +234,30 @@ class Settings extends \Admin\Classes\AdminController
         }
 
         return $this->settingItemErrors = $settingItemErrors;
+    }
+
+    protected function validateFormRequest($model)
+    {
+        $requestClass = $this->formWidget->config['request'] ?? false;
+
+        if ($requestClass === FALSE)
+            return;
+
+        if (!class_exists($requestClass))
+            throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
+
+        $this->resolveFormRequest($requestClass);
+    }
+
+    protected function resolveFormRequest($requestClass)
+    {
+        app()->resolving($requestClass, function ($request, $app) {
+            if (method_exists($request, 'setController'))
+                $request->setController($this);
+
+            $request->setInputKey('Setting');
+        });
+
+        return app()->make($requestClass);
     }
 }
