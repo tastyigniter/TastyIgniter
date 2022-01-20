@@ -2,15 +2,10 @@
 
 namespace Admin\Events\Controller;
 
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
-use System\Traits\DispatchesLegacyEvent;
+use System\Classes\BaseEvent;
 
-class FormExtendQuery
+class FormExtendQuery extends BaseEvent
 {
-    use Dispatchable, DispatchesLegacyEvent, InteractsWithSockets, SerializesModels;
-
     public $query;
 
     public function __construct($query)

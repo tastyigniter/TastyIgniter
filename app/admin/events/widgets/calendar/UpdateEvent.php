@@ -2,15 +2,10 @@
 
 namespace Admin\Events\Widgets\Calendar;
 
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
-use System\Traits\DispatchesLegacyEvent;
+use System\Classes\BaseEvent;
 
-class UpdateEvent
+class UpdateEvent extends BaseEvent
 {
-    use Dispatchable, DispatchesLegacyEvent, InteractsWithSockets, SerializesModels;
-
     public $eventId;
     public $startAt;
     public $endAt;

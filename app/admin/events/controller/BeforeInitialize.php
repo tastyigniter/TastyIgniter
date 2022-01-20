@@ -4,7 +4,7 @@ namespace Admin\Events\Controller;
 
 use System\Classes\BaseEvent;
 
-class AfterConstructor extends BaseEvent
+class BeforeInitialize extends BaseEvent
 {
     public $controller;
 
@@ -12,6 +12,6 @@ class AfterConstructor extends BaseEvent
     {
         $this->controller = $controller;
 
-        $this->fireBackwardsCompatibleEvent('controller.afterContructor', [$this->controller]);
+        $this->fireBackwardsCompatibleEvent('admin.controller.beforeInit', [$this->controller]);
     }
 }

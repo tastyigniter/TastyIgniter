@@ -2,15 +2,10 @@
 
 namespace System\Events\Controller;
 
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
-use System\Traits\DispatchesLegacyEvent;
+use System\Classes\BaseEvent;
 
-class BeforeConstructor
+class BeforeConstructor extends BaseEvent
 {
-    use Dispatchable, DispatchesLegacyEvent, InteractsWithSockets, SerializesModels;
-
     public $controller;
 
     public function __construct($controller)

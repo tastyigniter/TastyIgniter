@@ -3,6 +3,7 @@
 namespace Admin\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
+use Admin\Events\DashboardWidgets\Charts\ExtendDatasets;
 use Admin\Models\Customers_model;
 use Admin\Models\Orders_model;
 use Admin\Models\Reservations_model;
@@ -76,7 +77,7 @@ class Charts extends BaseDashboardWidget
             ],
         ];
 
-        $this->fireSystemEvent('admin.charts.extendDatasets');
+        event(new ExtendDatasets($this));
 
         return $this->contextDefinitions;
     }

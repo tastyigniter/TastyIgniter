@@ -2,8 +2,9 @@
 
 namespace Admin\Classes;
 
-
 use Admin\Events\Controller\AfterConstructor;
+use Admin\Events\Controller\BeforeInitialize;
+use Admin\Events\Controller\BeforeRemap;
 use Admin\Facades\Admin;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminLocation;
@@ -164,10 +165,7 @@ class AdminController extends BaseController
         // Set an instance of the admin user
         $this->setUser(AdminAuth::user());
 
-        $this->fireSystemEvent('admin.controller.beforeInit');
-
-        // @deprecated This event will be deprecated soon, use controller.beforeInit
-        $this->fireEvent('controller.beforeConstructor', [$this]);
+        event(new BeforeInitialize($this));
 
         // Toolbar widget is available on all admin pages
         $toolbar = new Toolbar($this, ['context' => $this->action]);
@@ -179,13 +177,12 @@ class AdminController extends BaseController
             $manager->bindToController();
         }
 
-        // @deprecated This event will be deprecated soon, use controller.beforeRemap
-        $this->fireEvent('controller.afterConstructor', [$this]);
+        event(new AfterContructor($this));
     }
 
     public function remap($action, $params)
     {
-        $this->fireSystemEvent('admin.controller.beforeRemap');
+        event(new BeforeRemap($this));
 
         if (!$this->verifyCsrfToken()) {
             return Response::make(lang('admin::lang.alert_invalid_csrf_token'), 403);
@@ -214,7 +211,9 @@ class AdminController extends BaseController
         // Top menu widget is available on all admin pages
         $this->makeMainMenuWidget();
 
-        if ($event = $this->fireSystemEvent('admin.controller.beforeResponse', [$action, $params])) {
+        $eventResponse = false;
+        event(new BeforeResponse($this, $action, $params, $eventResponse));
+        if ($eventResponse !== false) {
             return $event;
         }
 

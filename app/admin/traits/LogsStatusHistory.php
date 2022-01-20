@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Events\StatusHistory\HistoryAdded;
 use Admin\Models\Reservations_model;
 use Admin\Models\Status_history_model;
 
@@ -62,7 +63,7 @@ trait LogsStatusHistory
             $this->mailSend($mailView, 'customer');
         }
 
-        $this->fireSystemEvent('admin.statusHistory.added', [$history]);
+        event(new HistoryAdded($this, $history));
 
         return $history;
     }

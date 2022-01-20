@@ -2,6 +2,8 @@
 
 namespace Admin\Traits;
 
+use Admin\Events\Assignable\AssignedTo;
+use Admin\Events\Assignable\BeforeAssignTo;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Assignable_logs_model;
 use Admin\Models\Staff_groups_model;
@@ -74,14 +76,14 @@ trait Assignable
         if (!is_null($assignee))
             $this->assignee()->associate($assignee);
 
-        $this->fireSystemEvent('admin.assignable.beforeAssignTo', [$group, $assignee, $oldAssignee]);
+        event(new BeforeAssignTo($this, $group, $assignee, $oldAssignee));
 
         $this->save();
 
         if (!$log = Assignable_logs_model::createLog($this))
             return FALSE;
 
-        $this->fireSystemEvent('admin.assignable.assigned', [$log]);
+        event(new AssignedTo($this, $log));
 
         return $log;
     }
