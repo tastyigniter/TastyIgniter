@@ -3,6 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Classes\ScheduleItem;
+use Admin\Events\WorkingSchedule\ScheduleCreated;
 use Carbon\Carbon;
 use Exception;
 use Igniter\Flame\Location\OrderTypes;
@@ -128,7 +129,7 @@ trait HasWorkingHours
 
         $schedule->setType($type);
 
-        Event::fire('admin.workingSchedule.created', [$this, $schedule]);
+        event(new ScheduleCreated($this, $schedule));
 
         return $schedule;
     }

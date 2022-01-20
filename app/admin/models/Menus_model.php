@@ -2,6 +2,8 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Menu\StockUpdated;
+use Admin\Events\Model\ExtendListFrontEndQuery;
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Attach\HasMedia;
@@ -159,7 +161,7 @@ class Menus_model extends Model
             });
         }
 
-        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+        event(new ExtendListFrontEndQuery($this, $query));
 
         return $query->paginate($pageLimit, $page);
     }
@@ -227,7 +229,7 @@ class Menus_model extends Model
             ->where($this->getKeyName(), $this->getKey())
             ->update(['stock_qty' => $stockQty]);
 
-        Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
+        event(new StockUpdated($this, $quantity, $subtract));
 
         return TRUE;
     }

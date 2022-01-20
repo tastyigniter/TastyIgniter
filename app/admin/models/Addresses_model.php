@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Model\ExtendListFrontEndQuery;
 use Igniter\Flame\Database\Model;
 
 /**
@@ -80,7 +81,7 @@ class Addresses_model extends Model
             }
         }
 
-        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+        event(new ExtendListFrontEndQuery($this, $query));
 
         return $query->paginate($pageLimit, $page);
     }

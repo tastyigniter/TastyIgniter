@@ -7,6 +7,7 @@ use Admin\Classes\FilterScope;
 use Admin\Events\Widgets\Filter\ExtendQuery;
 use Admin\Events\Widgets\Filter\ExtendScopes;
 use Admin\Events\Widgets\Filter\ExtendScopesBefore;
+use Admin\Events\Widgets\Filter\FilterSubmixt;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
 use Exception;
@@ -188,9 +189,10 @@ class Filter extends BaseWidget
 
         // Trigger class event, merge results as viewable array
         $params = func_get_args();
-        $result = $this->fireEvent('filter.submit', [$params]);
-        if ($result && is_array($result)) {
-            [$redirect] = $result;
+        $result = false;
+        event(new FilterSubmit($this, $params, $result));
+        if ($result !== false) {
+            $redirect = $result;
 
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
@@ -204,9 +206,10 @@ class Filter extends BaseWidget
         $this->searchWidget->resetSession();
 
         $params = func_get_args();
-        $result = $this->fireEvent('filter.submit', [$params]);
-        if ($result && is_array($result)) {
-            [$redirect] = $result;
+        $result = false;
+        event(new FilterSubmit($this, $params, $result));
+        if ($result !== false) {
+            $redirect = $result;
 
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }

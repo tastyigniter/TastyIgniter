@@ -2,6 +2,9 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Model\ExtendListFrontEndQuery;
+use Admin\Events\Order\BeforePaymentProcessed;
+use Admin\Events\Order\PaymentProcessed;
 use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
@@ -165,7 +168,7 @@ class Orders_model extends Model
         if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
 
-        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+        event(new ExtendListFrontEndQuery($this, $query));
 
         return $query->paginate($pageLimit, $page);
     }
@@ -259,12 +262,12 @@ class Orders_model extends Model
 
     public function markAsPaymentProcessed()
     {
-        Event::fire('admin.order.beforePaymentProcessed', [$this]);
+        event(new BeforePaymentProcessed($this));
 
         $this->processed = 1;
         $this->save();
 
-        Event::fire('admin.order.paymentProcessed', [$this]);
+        event(new PaymentProcessed($this));
 
         return $this->processed;
     }

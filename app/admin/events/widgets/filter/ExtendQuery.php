@@ -4,7 +4,7 @@ namespace Admin\Events\Widgets\Filter;
 
 use System\Classes\BaseEvent;
 
-class UpdateEvent extends BaseEvent
+class ExtendQuery extends BaseEvent
 {
     public $filter;
     public $query;

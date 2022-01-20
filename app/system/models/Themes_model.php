@@ -9,6 +9,7 @@ use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Support\Facades\Event;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
+use Main\Events\Theme\ThemeActivated;
 use Main\Template\Layout;
 use System\Classes\ComponentManager;
 use System\Classes\ExtensionManager;
@@ -330,7 +331,7 @@ class Themes_model extends Model
         params()->set('default_themes.main', $theme->code);
         params()->save();
 
-        Event::fire('main.theme.activated', [$theme]);
+        event(new ThemeActivated($theme));
 
         return $theme;
     }

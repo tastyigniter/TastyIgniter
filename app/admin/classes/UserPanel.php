@@ -2,6 +2,7 @@
 
 namespace Admin\Classes;
 
+use Admin\Events\Navigation\ExtendUserMenuLinks;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminLocation;
 use Illuminate\Support\Facades\Event;
@@ -46,7 +47,7 @@ class UserPanel
             ],
         ]);
 
-        Event::fire('admin.menu.extendUserMenuLinks', [$items]);
+        event(new ExtendUserMenuLinks($items));
 
         $instance = self::forUser();
 

@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Model\ExtendListFrontEndQuery;
 use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
@@ -151,7 +152,7 @@ class Categories_model extends Model
             $query->isEnabled();
         }
 
-        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+        event(new ExtendListFrontEndQuery($this, $query));
 
         return $query->paginate($pageLimit, $page);
     }

@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Model\ExtendListFrontEndQuery;
 use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
@@ -161,7 +162,7 @@ class Reservations_model extends Model
         if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
 
-        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+        event(new ExtendListFrontEndQuery($this, $query));
 
         return $query->paginate($pageLimit, $page);
     }

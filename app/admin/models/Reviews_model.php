@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Model\ExtendListFrontEndQuery;
 use Admin\Traits\Locationable;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Database\Model;
@@ -122,7 +123,7 @@ class Reviews_model extends Model
             }
         }
 
-        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+        event(new ExtendListFrontEndQuery($this, $query));
 
         return $query->paginate($pageLimit, $page);
     }

@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Model\ExtendListFrontEndQuery;
 use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
@@ -184,7 +185,7 @@ class Locations_model extends AbstractLocation
         if (!is_null($hasCollection))
             $query->where('options->offer_collection', $hasCollection);
 
-        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+        event(new ExtendListFrontEndQuery($this, $query));
 
         if (is_null($pageLimit))
             return $query;
