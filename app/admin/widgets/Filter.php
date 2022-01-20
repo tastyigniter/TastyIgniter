@@ -270,7 +270,7 @@ class Filter extends BaseWidget
         $this->locationApplyScope($query);
 
         // Extensibility
-        event(new ExtendQuery($this, $query, $scope);
+        event(new ExtendQuery($this, $query, $scope));
 
         return $query->get();
     }
@@ -317,7 +317,7 @@ class Filter extends BaseWidget
         if ($this->scopesDefined)
             return;
 
-        event(new ExtendScopesBefore($this);
+        event(new ExtendScopesBefore($this));
 
         if (!isset($this->scopes) || !is_array($this->scopes)) {
             $this->scopes = [];
@@ -325,7 +325,7 @@ class Filter extends BaseWidget
 
         $this->addScopes($this->scopes);
 
-        event(new ExtendScopes($this, $this->scopes);
+        event(new ExtendScopes($this, $this->scopes));
 
         $this->scopesDefined = TRUE;
     }
