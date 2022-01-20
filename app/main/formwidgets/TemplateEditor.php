@@ -171,7 +171,8 @@ class TemplateEditor extends BaseFormWidget
         });
 
         $this->validate($data,
-            array_get($this->templateWidget->config ?? [], 'rules', [])
+            array_get($this->templateWidget->config ?? [], 'rules', []),
+            array_get($this->templateWidget->config ?? [], 'messages', [])
         );
 
         $this->manager->writeFile($fileName,
