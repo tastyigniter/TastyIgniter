@@ -4,7 +4,7 @@ namespace Main\Events\Controller;
 
 use System\Classes\BaseEvent;
 
-class AfterConstructor extends BaseEvent;
+class AfterConstructor extends BaseEvent
 {
     public $controller;
 
