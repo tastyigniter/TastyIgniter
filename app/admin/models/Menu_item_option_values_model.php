@@ -3,7 +3,6 @@
 namespace Admin\Models;
 
 use Igniter\Flame\Database\Model;
-use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
 
 /**
@@ -11,8 +10,6 @@ use Illuminate\Support\Facades\Event;
  */
 class Menu_item_option_values_model extends Model
 {
-    use Validation;
-
     protected static $optionValuesCollection;
 
     /**

@@ -4,7 +4,6 @@ namespace Admin\Models;
 
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Igniter\Flame\Database\Traits\Validation;
 
 /**
  * MenuOptions Model Class
@@ -12,7 +11,6 @@ use Igniter\Flame\Database\Traits\Validation;
 class Menu_item_options_model extends Model
 {
     use Purgeable;
-    use Validation;
 
     /**
      * @var string The database table name
