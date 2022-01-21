@@ -7,6 +7,7 @@ use Igniter\Flame\Pagic\Source\FileSource;
 use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
+use Main\Events\Theme\ExtendFormConfig;
 use Main\Template\Content as ContentTemplate;
 use Main\Template\Layout as LayoutTemplate;
 use Main\Template\Page as PageTemplate;
@@ -222,7 +223,7 @@ class Theme
     {
         $config = $this->getConfigValue('form', []);
 
-        Event::fire('main.theme.extendFormConfig', [$this->getDirName(), &$config]);
+        event(new ExtendFormConfig($this->getDirName(), $config));
 
         return $config;
     }
