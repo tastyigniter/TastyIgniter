@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
+use Main\Events\Router\BeforeRoute;
 use Main\Template\Page as PageTemplate;
 
 /**
@@ -81,7 +82,8 @@ class Router
         $this->url = $url;
         $url = RouterHelper::normalizeUrl($url);
 
-        $apiResult = Event::fire('router.beforeRoute', [$url, $this], TRUE);
+        $apiResult = null;
+        event(new BeforeRoute($this, $url, $apiResult));
         if ($apiResult !== null)
             return $apiResult;
 
