@@ -250,6 +250,7 @@ $config['form']['tabs'] = [
             'type' => 'scheduleeditor',
             'context' => ['edit'],
             'form' => 'working_hours_model',
+            'request' => 'Admin\Requests\WorkingHours',
         ],
 
         'options[limit_orders]' => [
@@ -567,6 +568,7 @@ $config['form']['tabs'] = [
             'type' => 'maparea',
             'context' => ['edit'],
             'form' => 'location_areas_model',
+            'request' => 'Admin\Requests\LocationAreas',
             'commentAbove' => 'lang:admin::lang.locations.help_delivery_areas',
         ],
 
