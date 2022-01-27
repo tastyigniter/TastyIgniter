@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Main\Classes\ThemeManager;
 use Main\Template\Page;
@@ -297,4 +298,61 @@ class Settings_model extends Model
 
         return $timezone_list;
     }
+
+
+    //
+    // File Definitions
+    //
+
+    /**
+     * Extensions typically used as images.
+     * This list can be customized with config:
+     * - system.assets.media.defaultExtensions
+     */
+    public static function defaultExtensions()
+    {
+        return Config::get('system.assets.media.defaultExtensions', [
+            'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico', 'webp',
+            'doc', 'docx', 'ppt', 'pptx', 'pdf', 'txt', 'xls', 'xlsx',
+            'mp4', 'avi', 'mov', 'mpg', 'mpeg', 'mkv', 'webm', 'ogg',
+            'mp3', 'wav', 'wma', 'm4a',
+        ]);
+    }
+
+    /**
+     * Extensions typically used as images.
+     * This list can be customized with config:
+     * - system.assets.media.imageExtensions
+     */
+    public static function imageExtensions()
+    {
+        return Config::get('system.assets.media.imageExtensions', [
+            'jpg', 'jpeg', 'bmp', 'png', 'webp', 'gif', 'svg',
+        ]);
+    }
+
+    /**
+     * Extensions typically used as video files.
+     * This list can be customized with config:
+     * - system.assets.media.videoExtensions
+     */
+    public static function videoExtensions()
+    {
+        return Config::get('system.assets.media.videoExtensions', [
+            'mp4', 'avi', 'mov', 'mpg', 'mpeg', 'mkv', 'webm', 'ogv',
+        ]);
+    }
+
+    /**
+     * Extensions typically used as audio files.
+     * This list can be customized with config:
+     * - system.assets.media.audioExtensions
+     */
+    public static function audioExtensions()
+    {
+        return Config::get('system.assets.media.audioExtensions', [
+            'mp3', 'wav', 'wma', 'm4a', 'ogg', 'oga',
+        ]);
+    }
+
 }
