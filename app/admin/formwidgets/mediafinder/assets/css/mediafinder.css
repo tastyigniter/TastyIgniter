@@ -19,13 +19,19 @@
 	height: 100%;
 }
 .media-finder .grid img {
-	transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
+
+.media-finder .grid .media-icon {
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
 .media-finder .grid .blank-cover {
-	position: relative;
-	overflow: hidden;
-	padding-top: 100%;
-	display: block;
+  position: relative;
+  overflow: hidden;
+  padding-top: 100%;
+  display: block;
 }
 .media-finder .grid .blank-cover i {
 	position: absolute;
