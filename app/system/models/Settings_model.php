@@ -299,7 +299,6 @@ class Settings_model extends Model
         return $timezone_list;
     }
 
-
     //
     // File Definitions
     //
@@ -354,5 +353,4 @@ class Settings_model extends Model
             'mp3', 'wav', 'wma', 'm4a', 'ogg', 'oga',
         ]);
     }
-
 }
