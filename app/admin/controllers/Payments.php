@@ -152,7 +152,7 @@ class Payments extends \Admin\Classes\AdminController
             'status' => ['required', 'integer'],
         ];
 
-        $messages = [
+        $attributes = [
             'payment' => lang('admin::lang.payments.label_payments'),
             'name' => lang('admin::lang.label_name'),
             'code' => lang('admin::lang.payments.label_code'),
@@ -163,14 +163,13 @@ class Payments extends \Admin\Classes\AdminController
         ];
 
         if ($form->model->exists) {
-            if ($mergeRules = $form->model->getConfigRules()) {
+            if ($mergeRules = $form->model->getConfigRules())
                 array_push($rules, ...$mergeRules);
-            }
-            if ($mergeMessages = $form->model->getConfigMessages()) {
-                array_push($messages, ...$mergeMessages);
-            }
+
+            if ($mergeAttributes = $form->model->getConfigAttributes())
+                array_push($attributes, ...$mergeAttributes);
         }
 
-        return $this->validatePasses($form->getSaveData(), $rules, $messages);
+        return $this->validatePasses($form->getSaveData(), $rules, [], $attributes);
     }
 }

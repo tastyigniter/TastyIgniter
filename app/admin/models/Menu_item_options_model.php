@@ -4,6 +4,7 @@ namespace Admin\Models;
 
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Flame\Database\Traits\Validation;
 
 /**
  * MenuOptions Model Class
@@ -11,6 +12,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
 class Menu_item_options_model extends Model
 {
     use Purgeable;
+    use Validation;
 
     /**
      * @var string The database table name
@@ -50,6 +52,15 @@ class Menu_item_options_model extends Model
     ];
 
     public $appends = ['option_name', 'display_type'];
+
+    public $rules = [
+        ['menu_id', 'admin::lang.menus.label_option', 'required|integer'],
+        ['option_id', 'admin::lang.menus.label_option_id', 'required|integer'],
+        ['priority', 'admin::lang.menus.label_option', 'integer'],
+        ['required', 'admin::lang.menus.label_option_required', 'boolean'],
+        ['min_selected', 'admin::lang.menus.label_min_selected', 'integer|lte:max_selected'],
+        ['max_selected', 'admin::lang.menus.label_max_selected', 'integer|gte:min_selected'],
+    ];
 
     protected $purgeable = ['menu_option_values'];
 

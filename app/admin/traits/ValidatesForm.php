@@ -149,8 +149,8 @@ trait ValidatesForm
         // for backwards support, first of all try and use a rules in the config if we have them
         if ($rules = array_get($form->config, 'rules')) {
             return $this->validate($saveData, $rules,
-                array_get($form->config, 'messages', []),
-                array_get($form->config, 'attributes', [])
+                array_get($form->config, 'validationMessages', []),
+                array_get($form->config, 'validationAttributes', [])
             );
         }
 

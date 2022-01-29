@@ -73,7 +73,7 @@ return [
             'settings.layout' => ['string'],
             'settings.permalink' => ['required', 'string'],
         ],
-        'attributes' => [
+        'validationAttributes' => [
             'markup' => lang('system::lang.themes.text_tab_markup'),
             'codeSection' => lang('system::lang.themes.text_tab_php_section'),
             'settings.components.*' => lang('system::lang.themes.label_component_alias'),

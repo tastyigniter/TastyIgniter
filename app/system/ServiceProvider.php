@@ -233,7 +233,7 @@ class ServiceProvider extends AppServiceProvider
         Event::listen('validator.beforeMake', function ($args) {
             $rules = ValidationHelper::prepareRules($args->rules);
             $args->rules = Arr::get($rules, 'rules', $args->rules);
-            $args->customAttributes = Arr::get($rules, 'attributes', $args->customAttributes);
+            $args->customAttributes = Arr::get($rules, 'validationAttributes', $args->customAttributes);
         });
     }
 

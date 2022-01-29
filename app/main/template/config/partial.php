@@ -20,7 +20,7 @@ return [
             'markup' => ['string'],
             'settings.description' => ['max:255'],
         ],
-        'attributes' => [
+        'validationAttributes' => [
             'markup' => lang('system::lang.themes.text_tab_markup'),
             'settings.description' => lang('admin::lang.label_description'),
         ],

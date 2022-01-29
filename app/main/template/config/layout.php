@@ -52,7 +52,7 @@ return [
             'settings.components.*.alias' => ['sometimes', 'required', 'regex:/^[a-zA-Z\s]+$/'],
             'settings.description' => ['sometimes', 'max:255'],
         ],
-        'attributes' => [
+        'validationAttributes' => [
             'markup' => lang('system::lang.themes.text_tab_markup'),
             'codeSection' => lang('system::lang.themes.text_tab_php_section'),
             'settings.components.*.alias' => lang('system::lang.themes.label_component_alias'),

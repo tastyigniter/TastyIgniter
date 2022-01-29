@@ -49,4 +49,9 @@ class LocationAreas extends FormRequest
             'conditions.*.total' => ['sometimes', 'required', 'numeric'],
         ];
     }
+
+    protected function useDataFrom()
+    {
+        return static::DATA_TYPE_POST;
+    }
 }
