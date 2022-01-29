@@ -73,7 +73,7 @@ return [
             'settings.layout' => ['string'],
             'settings.permalink' => ['required', 'string'],
         ],
-        'messages' => [
+        'attributes' => [
             'markup' => lang('system::lang.themes.text_tab_markup'),
             'codeSection' => lang('system::lang.themes.text_tab_php_section'),
             'settings.components.*' => lang('system::lang.themes.label_component_alias'),
@@ -82,6 +82,5 @@ return [
             'settings.layout' => lang('system::lang.themes.label_layout'),
             'settings.permalink' => lang('system::lang.themes.label_permalink'),
         ],
-
     ],
 ];

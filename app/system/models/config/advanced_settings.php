@@ -58,6 +58,5 @@ return [
                 'comment' => 'lang:system::lang.settings.help_activity_log_timeout',
             ],
         ],
-        'request' => 'System\Requests\AdvancedSettings',
     ],
 ];

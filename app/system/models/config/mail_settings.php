@@ -183,6 +183,5 @@ return [
                 'span' => 'left',
             ],
         ],
-        'request' => 'System\Requests\MailSettings',
     ],
 ];

@@ -37,7 +37,7 @@ class MailSettings extends FormRequest
     {
         return [
             'sender_name' => ['required'],
-            'sender_email' => ['required'],
+            'sender_email' => ['required', 'email:filter',],
             'protocol' => ['required'],
 
             'mail_logo' => ['string'],

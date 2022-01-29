@@ -33,9 +33,4 @@ class Reservation extends FormRequest
             'guest_num' => ['required', 'integer'],
         ];
     }
-
-    protected function useDataFrom()
-    {
-        return static::DATA_TYPE_POST;
-    }
 }

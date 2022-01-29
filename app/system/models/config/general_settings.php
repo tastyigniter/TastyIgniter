@@ -175,6 +175,5 @@ return [
                 ],
             ],
         ],
-        'request' => 'System\Requests\GeneralSettings',
     ],
 ];

@@ -397,6 +397,7 @@ return [
         'text_mail_no_encryption' => 'No encryption',
         'text_mail_tls_encryption' => 'TLS',
         'text_mail_ssl_encryption' => 'SSL',
+        'text_test_email_message' => 'This is a test email. If you\'ve received this, it means emails are working in TastyIgniter.',
         'text_to_customer' => 'To customer',
         'text_to_admin' => 'To restaurant',
         'text_to_location' => 'To location',

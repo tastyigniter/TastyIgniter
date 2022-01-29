@@ -67,6 +67,5 @@ return [
                 'comment' => 'lang:system::lang.settings.help_media_delete',
             ],
         ],
-        'request' => 'Main\Requests\MediaSettings',
     ],
 ];

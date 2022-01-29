@@ -175,6 +175,5 @@ return [
                 ],
             ],
         ],
-        'request' => 'Admin\Requests\SetupSettings',
     ],
 ];

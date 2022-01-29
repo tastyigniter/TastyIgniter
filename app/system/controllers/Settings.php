@@ -105,7 +105,7 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->initWidgets($model, $definition);
 
-        $this->validateFormRequest($model);
+        $this->validateFormRequest($model, $definition);
 
         if ($this->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
@@ -135,7 +135,7 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->initWidgets($model, $definition);
 
-        $this->validateFormRequest($model);
+        $this->validateFormRequest($model, $definition);
 
         if ($this->formValidate($model, $this->formWidget) === FALSE)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
@@ -144,10 +144,9 @@ class Settings extends \Admin\Classes\AdminController
 
         $name = AdminAuth::getStaffName();
         $email = AdminAuth::getStaffEmail();
-        $text = 'This is a test email. If you\'ve received this, it means emails are working in TastyIgniter.';
 
         try {
-            Mail::raw($text, function (Message $message) use ($name, $email) {
+            Mail::raw(lang('system::lang.settings.text_test_email_message'), function (Message $message) use ($name, $email) {
                 $message->to($email, $name)->subject('This a test email');
             });
 
@@ -236,21 +235,14 @@ class Settings extends \Admin\Classes\AdminController
         return $this->settingItemErrors = $settingItemErrors;
     }
 
-    protected function validateFormRequest($model)
+    protected function validateFormRequest($model, $definition)
     {
-        $requestClass = $this->formWidget->config['request'] ?? false;
-
-        if ($requestClass === FALSE)
+        if (!strlen($requestClass = $definition->request))
             return;
 
         if (!class_exists($requestClass))
             throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
 
-        $this->resolveFormRequest($requestClass);
-    }
-
-    protected function resolveFormRequest($requestClass)
-    {
         app()->resolving($requestClass, function ($request, $app) {
             if (method_exists($request, 'setController'))
                 $request->setController($this);

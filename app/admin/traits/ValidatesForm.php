@@ -146,29 +146,28 @@ trait ValidatesForm
 
     protected function validateFormWidget($form, $saveData)
     {
-        $rules = false;
+        // for backwards support, first of all try and use a rules in the config if we have them
+        if ($rules = array_get($form->config, 'rules')) {
+            return $this->validate($saveData, $rules,
+                array_get($form->config, 'messages', []),
+                array_get($form->config, 'attributes', [])
+            );
+        }
 
-        // for backwards support, first of all try and use a FormRequest class
-        if ($requestClass = array_get($form->config, 'request', false)) {
-
+        // if we dont have in config then fallback to a FormRequest class
+        if ($requestClass = array_get($this->config, 'request')) {
             if (!class_exists($requestClass))
                 throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
 
-            $requestClass = app()->make($requestClass);
+            app()->resolving($requestClass, function ($request, $app) use ($form) {
+                if (method_exists($request, 'setController'))
+                    $request->setController($this->controller);
 
-            $rules = $requestClass->rules();
-            $messages = $requestClass->messages();
-            $attributes = $requestClass->attributes();
+                if (method_exists($request, 'setInputKey'))
+                    $request->setInputKey($form->arrayName);
+            });
+
+            app()->make($requestClass);
         }
-
-        // if we dont have one then fallback to rules in the config if we have them
-        if (!$rules) {
-
-            if (!$rules = array_get($form->config, 'rules'))
-                return;
-
-        }
-
-        return $this->validate($saveData, $rules, $messages ?? [], $attributes ?? []);
     }
 }

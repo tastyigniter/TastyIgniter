@@ -19,7 +19,7 @@ class Menu extends FormRequest
             'subtract_stock' => lang('admin::lang.menus.label_subtract_stock'),
             'order_restriction.*' => lang('admin::lang.menus.label_order_restriction'),
             'menu_status' => lang('admin::lang.label_status'),
-            'mealtime_id' => lang('dmin::lang.menus.label_mealtime'),
+            'mealtime_id' => lang('admin::lang.menus.label_mealtime'),
             'menu_priority' => lang('admin::lang.menus.label_menu_priority'),
         ];
     }

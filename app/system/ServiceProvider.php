@@ -456,6 +456,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/general'),
                     'form' => '~/app/system/models/config/general_settings',
+                    'request' => 'System\Requests\GeneralSettings',
                 ],
                 'mail' => [
                     'label' => 'lang:system::lang.settings.text_tab_mail',
@@ -465,6 +466,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/mail'),
                     'form' => '~/app/system/models/config/mail_settings',
+                    'request' => 'System\Requests\MailSettings',
                 ],
                 'advanced' => [
                     'label' => 'lang:system::lang.settings.text_tab_server',
@@ -474,6 +476,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/advanced'),
                     'form' => '~/app/system/models/config/advanced_settings',
+                    'request' => 'System\Requests\AdvancedSettings',
                 ],
             ]);
         });

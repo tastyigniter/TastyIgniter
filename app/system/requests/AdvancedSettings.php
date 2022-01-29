@@ -21,7 +21,7 @@ class AdvancedSettings extends FormRequest
         return [
             'enable_request_log' => ['required', 'integer'],
             'maintenance_mode' => ['required', 'integer'],
-            'maintenance_message' => ['required'],
+            'maintenance_message' => ['required_if:maintenance_mode,1'],
             'activity_log_timeout' => ['required', 'integer'],
         ];
     }

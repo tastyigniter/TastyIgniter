@@ -8,7 +8,7 @@ class Customer extends FormRequest
 {
     public function attributes()
     {
-        $rules = [
+        return [
             'first_name' => lang('admin::lang.customers.label_first_name'),
             'last_name' => lang('admin::lang.customers.label_last_name'),
             'email' => lang('admin::lang.label_email'),
@@ -24,8 +24,6 @@ class Customer extends FormRequest
             'password' => lang('admin::lang.customers.label_password'),
             '_confirm_password' => lang('admin::lang.customers.label_confirm_password'),
         ];
-
-        return $rules;
     }
 
     public function rules()

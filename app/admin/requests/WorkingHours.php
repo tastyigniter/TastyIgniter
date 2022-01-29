@@ -33,4 +33,9 @@ class WorkingHours extends FormRequest
             'flexible.*.status' => ['sometimes', 'required_if:type,flexible', 'boolean'],
         ];
     }
+
+    protected function useDataFrom()
+    {
+        return static::DATA_TYPE_POST;
+    }
 }

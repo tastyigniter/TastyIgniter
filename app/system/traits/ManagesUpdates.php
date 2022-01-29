@@ -310,10 +310,9 @@ trait ManagesUpdates
     protected function validateProcess()
     {
         $rules = [];
-        $messages = [];
+        $attributes = [];
 
         if (post('step') != 'complete') {
-
             $rules = array_merge($rules, [
                 'meta.code' => ['required'],
                 'meta.type' => ['required', 'in:core,extension,theme'],
@@ -331,16 +330,15 @@ trait ManagesUpdates
                 'meta.description' => lang('system::lang.updates.label_meta_description'),
                 'meta.action' => lang('system::lang.updates.label_meta_action'),
             ]);
-
         }
         else {
             $rules['meta.items'] = ['required', 'array'];
-            $messages['meta.items'] = lang('system::lang.updates.label_meta_items');
+            $attributes['meta.items'] = lang('system::lang.updates.label_meta_items');
         }
 
         $rules['step'] = ['required', 'in:download,extract,complete'];
-        $messages['step'] = lang('system::lang.updates.label_meta_step');
+        $attributes['step'] = lang('system::lang.updates.label_meta_step');
 
-        return $this->validate(post(), $rules, $messages);
+        return $this->validate(post(), $rules, $attributes);
     }
 }

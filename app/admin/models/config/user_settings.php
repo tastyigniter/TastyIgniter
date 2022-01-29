@@ -34,6 +34,5 @@ return [
                 'comment' => 'lang:system::lang.settings.help_registration_email',
             ],
         ],
-        'request' => 'Admin\Requests\UserSettings',
     ],
 ];

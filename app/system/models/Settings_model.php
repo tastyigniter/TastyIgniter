@@ -243,6 +243,7 @@ class Settings_model extends Model
             'context' => 'settings',
             'model' => null,
             'form' => null,
+            'request' => null,
         ];
 
         foreach ($definitions as $code => $definition) {

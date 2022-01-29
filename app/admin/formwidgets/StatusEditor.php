@@ -158,17 +158,10 @@ class StatusEditor extends BaseFormWidget
         $saveData = $this->mergeSaveData($form->getSaveData());
 
         try {
-            $this->validateAfter(function ($validator) use ($context, $recordId, $keyFrom) {
-                if ($this->isStatusMode && $recordId == $this->model->{$keyFrom}) {
-                    $validator->errors()->add($keyFrom, sprintf(
-                        lang('admin::lang.statuses.alert_already_added'),
-                        $context, $context
-                    ));
-                }
-            });
+            if ($this->isStatusMode && $recordId == $this->model->{$keyFrom})
+                throw new ApplicationException(sprintf(lang('admin::lang.statuses.alert_already_added'), $context, $context));
 
             $this->validateFormWidget($form, $saveData);
-
         }
         catch (ValidationException $ex) {
             throw new ApplicationException($ex->getMessage());
