@@ -571,7 +571,7 @@ return [
         'label_charge_condition' => 'Rule',
         'label_area_min_amount' => 'Total',
         'label_gallery_title' => 'Title',
-        'label_gallery_add_image' => 'Add Image',
+        'label_gallery_add_image' => 'Add Media',
         'label_gallery_image_thumbnail' => 'Thumbnail',
         'label_gallery_image_name' => 'Filename',
         'label_gallery_image_alt' => 'Alt Text',

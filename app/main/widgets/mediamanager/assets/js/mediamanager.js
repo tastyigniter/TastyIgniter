@@ -74,7 +74,7 @@
             statusbarHeight = this.$el.find('[data-control="media-statusbar"]').outerHeight() || 0,
             modalHeaderHeight = this.$el.closest('.modal').find('.modal-header').outerHeight() || 0
 
-        var listHeight = Math.max(0, windowHeight - listTopOffset - parseInt(modalHeaderHeight) - parseInt(statusbarHeight))
+        var listHeight = Math.max(0, windowHeight-listTopOffset-parseInt(modalHeaderHeight)-parseInt(statusbarHeight))
 
         if (listHeight < 1)
             return
@@ -158,7 +158,7 @@
 
         var currentScroll = $itemElement.scrollTop()
         $mediaList.animate({
-            scrollTop: currentScroll + $itemElement.position().top - 30
+            scrollTop: currentScroll+$itemElement.position().top-30
         }, 0)
     }
 
@@ -233,7 +233,7 @@
         }
 
         $.ti.loadingIndicator.show()
-        this.navigationAjax = element.request(this.options.alias + '::' + handler, {
+        this.navigationAjax = element.request(this.options.alias+'::'+handler, {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -378,7 +378,7 @@
     MediaManager.prototype.uploadQueueComplete = function () {
         var status = false;
 
-        $.each(this.dropzone.getAcceptedFiles(), function() {
+        $.each(this.dropzone.getAcceptedFiles(), function () {
             if (this.status === 'success')
                 status = true
         })
@@ -637,7 +637,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onCreateFolder', {
+        this.$form.request(this.options.alias+'::onCreateFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -656,7 +656,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onRenameFolder', {
+        this.$form.request(this.options.alias+'::onRenameFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -673,7 +673,7 @@
         event.preventDefault()
 
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onDeleteFolder', {
+        this.$form.request(this.options.alias+'::onDeleteFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -696,7 +696,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onRenameFile', {
+        this.$form.request(this.options.alias+'::onRenameFile', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -727,7 +727,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onMoveFiles', {
+        this.$form.request(this.options.alias+'::onMoveFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -758,7 +758,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onCopyFiles', {
+        this.$form.request(this.options.alias+'::onCopyFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -787,7 +787,7 @@
         event.preventDefault()
 
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onDeleteFiles', {
+        this.$form.request(this.options.alias+'::onDeleteFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
