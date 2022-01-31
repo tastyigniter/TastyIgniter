@@ -4,7 +4,7 @@ namespace Admin\Requests;
 
 use System\Classes\FormRequest;
 
-class LocationAreas extends FormRequest
+class LocationArea extends FormRequest
 {
     public function attributes()
     {

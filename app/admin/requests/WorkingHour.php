@@ -4,7 +4,7 @@ namespace Admin\Requests;
 
 use System\Classes\FormRequest;
 
-class WorkingHours extends FormRequest
+class WorkingHour extends FormRequest
 {
     public function attributes()
     {
