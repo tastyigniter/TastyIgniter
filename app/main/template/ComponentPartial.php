@@ -174,19 +174,17 @@ class ComponentPartial extends Extendable implements TemplateSource
         $component = $this->component;
         $componentPath = $component->getPath();
 
-        foreach (['.blade.', '.'] as $part) {
-            $basename = $fileName;
-            if (!strlen(File::extension($basename)))
-                $basename .= $part.$this->defaultExtension;
+        $basename = $fileName;
+        if (!strlen(File::extension($basename)))
+            $basename .= '.blade.'.$this->defaultExtension;
 
-            if (File::isFile($path = $componentPath.'/'.$basename))
-                return $path;
+        if (File::isFile($path = $componentPath.'/'.$basename))
+            return $path;
 
-            // Check the shared "/partials" directory for the partial
-            $sharedPath = dirname($componentPath).'/partials/'.$basename;
-            if (File::isFile($sharedPath)) {
-                return $sharedPath;
-            }
+        // Check the shared "/partials" directory for the partial
+        $sharedPath = dirname($componentPath).'/partials/'.$basename;
+        if (File::isFile($sharedPath)) {
+            return $sharedPath;
         }
 
         return $componentPath.'/'.$fileName;
