@@ -183,28 +183,5 @@ return [
                 'span' => 'left',
             ],
         ],
-        'rules' => [
-            ['sender_name', 'lang:system::lang.settings.label_sender_name', 'required'],
-            ['sender_email', 'lang:system::lang.settings.label_sender_email', 'required'],
-            ['protocol', 'lang:system::lang.settings.label_protocol', 'required'],
-
-            ['mail_logo', 'lang:system::lang.settings.label_mail_logo', 'string'],
-            ['sendmail_path', 'lang:system::lang.settings.label_sendmail_path', 'required_if:protocol,sendmail|string'],
-
-            ['smtp_host', 'lang:system::lang.settings.label_smtp_host', 'string'],
-            ['smtp_port', 'lang:system::lang.settings.label_smtp_port', 'string'],
-            ['smtp_encryption', 'lang:system::lang.settings.label_smtp_encryption'],
-            ['smtp_user', 'lang:system::lang.settings.label_smtp_user', 'string'],
-            ['smtp_pass', 'lang:system::lang.settings.label_smtp_pass', 'string'],
-
-            ['mailgun_domain', 'lang:system::lang.settings.label_mailgun_domain', 'required_if:protocol,mailgun|string'],
-            ['mailgun_secret', 'lang:system::lang.settings.label_mailgun_secret', 'required_if:protocol,mailgun|string'],
-
-            ['postmark_token', 'lang:system::lang.settings.label_postmark_token', 'required_if:protocol,postmark|string'],
-
-            ['ses_key', 'lang:system::lang.settings.label_ses_key', 'required_if:protocol,ses|string'],
-            ['ses_secret', 'lang:system::lang.settings.label_ses_secret', 'required_if:protocol,ses|string'],
-            ['ses_region', 'lang:system::lang.settings.label_ses_region', 'required_if:protocol,ses|string'],
-        ],
     ],
 ];

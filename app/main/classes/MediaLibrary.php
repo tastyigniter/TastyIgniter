@@ -10,6 +10,7 @@ use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use System\Models\Settings_model;
 
 /**
  * MediaLibrary Class
@@ -31,8 +32,6 @@ class MediaLibrary
     protected $ignorePatterns;
 
     protected $storageFolderNameLength;
-
-    protected $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico', 'webp'];
 
     protected $config = [];
 
@@ -117,8 +116,11 @@ class MediaLibrary
         return $result;
     }
 
-    public function fetchFiles($path, $sortBy = [], $search = null)
+    public function fetchFiles($path, $sortBy = [], $options = null)
     {
+        if (is_string($options))
+            $options = ['search' => $options, 'filter' => 'all'];
+
         $path = $this->validatePath($path);
 
         $fullPath = $this->getMediaPath($path);
@@ -127,7 +129,9 @@ class MediaLibrary
 
         $this->sortFiles($files, $sortBy);
 
-        $this->searchFiles($files, $search);
+        $this->searchFiles($files, array_get($options, 'search'));
+
+        $this->filterFiles($files, array_get($options, 'filter'));
 
         return $files;
     }
@@ -317,7 +321,7 @@ class MediaLibrary
 
     public function getAllowedExtensions()
     {
-        return $this->allowedExtensions;
+        return Settings_model::defaultExtensions();
     }
 
     public function isAllowedExtension($filename)
@@ -409,6 +413,22 @@ class MediaLibrary
 
         if ($direction == 'descending')
             $files = array_reverse($files);
+    }
+
+    protected function filterFiles(&$files, $filterBy)
+    {
+        if (!$filterBy || $filterBy === 'all') {
+            return;
+        }
+
+        $result = [];
+        foreach ($files as $item) {
+            if ($item->getFileType() === $filterBy) {
+                $result[] = $item;
+            }
+        }
+
+        $files = $result;
     }
 
     protected function searchFiles(&$files, $filter)

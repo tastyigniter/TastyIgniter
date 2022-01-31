@@ -17,8 +17,12 @@ return [
             ],
         ],
         'rules' => [
-            ['markup', 'lang:system::lang.themes.text_tab_markup', 'sometimes'],
-            ['settings.description', 'lang:admin::lang.label_description', 'sometimes|max:255'],
+            'markup' => ['string'],
+            'settings.description' => ['max:255'],
+        ],
+        'validationAttributes' => [
+            'markup' => lang('system::lang.themes.text_tab_markup'),
+            'settings.description' => lang('admin::lang.label_description'),
         ],
     ],
 ];

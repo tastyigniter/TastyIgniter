@@ -19,7 +19,7 @@
                 class="col-9 border-right wrap-none wrap-left"
                 data-control="media-list"
             >
-                <div id="{{ $this->getId('breadcrumb') }}" class="media-breadcrumb">
+                <div id="{{ $this->getId('breadcrumb') }}" class="media-breadcrumb border-bottom">
                     {!! $this->makePartial('mediamanager/breadcrumb') !!}
                 </div>
 

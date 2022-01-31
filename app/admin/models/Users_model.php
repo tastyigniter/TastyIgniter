@@ -177,11 +177,11 @@ class Users_model extends AuthUserModel
     {
         $model = $this->fresh();
 
-        return [
+        return array_merge($model->toArray(), [
             'staff' => $model,
             'staff_name' => $model->staff_name,
             'staff_email' => $model->staff->staff_email,
             'username' => $model->username,
-        ];
+        ]);
     }
 }

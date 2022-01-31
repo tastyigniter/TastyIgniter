@@ -177,6 +177,7 @@ $config['form']['fields'] = [
         'span' => 'right',
         'context' => ['edit', 'preview'],
         'form' => 'reservation_status_model',
+        'request' => 'Admin\Requests\ReservationStatus',
     ],
 ];
 
