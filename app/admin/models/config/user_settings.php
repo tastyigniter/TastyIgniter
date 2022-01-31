@@ -34,9 +34,5 @@ return [
                 'comment' => 'lang:system::lang.settings.help_registration_email',
             ],
         ],
-        'rules' => [
-            ['allow_registration', 'lang:system::lang.settings.label_allow_registration', 'required|integer'],
-            ['registration_email.*', 'lang:system::lang.settings.label_registration_email', 'required|alpha'],
-        ],
     ],
 ];
