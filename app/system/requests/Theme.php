@@ -13,27 +13,26 @@ class Theme extends FormRequest
 
     public function attributes()
     {
+        $attributes = [];
+
         if (($form = $this->getForm()) && $form->context != 'source') {
-            $rules = [];
             $fieldsConfig = $this->controller->asExtension('FormController')->getFormModel()->getFieldsConfig();
             foreach ($fieldsConfig as $name => $field) {
                 if (!array_key_exists('rules', $field))
                     continue;
 
                 $dottedName = implode('.', name_to_array($name));
-                $rules[$dottedName] = $field['label'];
+                $attributes[$dottedName] = $field['label'];
             }
-
-            return $rules;
         }
 
-        return [];
+        return $attributes;
     }
 
     public function rules()
     {
+        $rules = [];
         if (($form = $this->getForm()) && $form->context != 'source') {
-            $rules = [];
             $fieldsConfig = $this->controller->asExtension('FormController')->getFormModel()->getFieldsConfig();
             foreach ($fieldsConfig as $name => $field) {
                 if (!array_key_exists('rules', $field))
@@ -42,11 +41,9 @@ class Theme extends FormRequest
                 $dottedName = implode('.', name_to_array($name));
                 $rules[$dottedName] = $field['rules'];
             }
-
-            return $rules;
         }
 
-        return [];
+        return $rules;
     }
 
     public function validationData()
