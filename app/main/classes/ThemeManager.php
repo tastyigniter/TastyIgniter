@@ -187,7 +187,7 @@ class ThemeManager
         $activeTheme = trim(params('default_themes.main', config('system.defaultTheme')), '/');
 
         $apiResult = null;
-        event(new GetActiveTheme($this, $url, $apiResult));
+        event(new GetActiveTheme($this, $activeTheme, $apiResult));
         if ($apiResult !== null) {
             $activeTheme = $apiResult;
         }
