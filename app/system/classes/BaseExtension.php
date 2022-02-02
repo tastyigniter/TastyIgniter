@@ -203,7 +203,7 @@ class BaseExtension extends ServiceProvider
     {
         $composer = json_decode(File::get($configFile), TRUE) ?? [];
 
-        if (!$config = array_get($composer, 'extra.tastyigniter-extension', []))
+        if (!$config = array_get($composer, 'extra.tastyigniter-extension', array_get($composer, 'extra.tastyigniter-theme', [])))
             return $config;
 
         if (array_key_exists('description', $composer))

@@ -11,23 +11,39 @@ class Theme extends FormRequest
      */
     protected $controller;
 
-    public function rules()
+    public function attributes()
     {
+        $attributes = [];
+
         if (($form = $this->getForm()) && $form->context != 'source') {
-            $rules = [];
             $fieldsConfig = $this->controller->asExtension('FormController')->getFormModel()->getFieldsConfig();
             foreach ($fieldsConfig as $name => $field) {
                 if (!array_key_exists('rules', $field))
                     continue;
 
                 $dottedName = implode('.', name_to_array($name));
-                $rules[] = [$dottedName, $field['label'], $field['rules']];
+                $attributes[$dottedName] = $field['label'];
             }
-
-            return $rules;
         }
 
-        return [];
+        return $attributes;
+    }
+
+    public function rules()
+    {
+        $rules = [];
+        if (($form = $this->getForm()) && $form->context != 'source') {
+            $fieldsConfig = $this->controller->asExtension('FormController')->getFormModel()->getFieldsConfig();
+            foreach ($fieldsConfig as $name => $field) {
+                if (!array_key_exists('rules', $field))
+                    continue;
+
+                $dottedName = implode('.', name_to_array($name));
+                $rules[$dottedName] = $field['rules'];
+            }
+        }
+
+        return $rules;
     }
 
     public function validationData()

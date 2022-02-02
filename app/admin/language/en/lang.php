@@ -591,6 +591,7 @@ return [
         'help_image' => 'Select a logo for this location.',
         'help_limit_orders' => 'Enabling this disables ASAP delivery and pickup orders.',
         'help_limit_orders_interval' => 'Set the number of orders that can be placed between each time slot.',
+        'help_guest_order' => 'Allow customer to place an order without creating an account, or use the default system settings.',
         'help_delivery_time_restriction' => 'Whether your customers can only place ASAP delivery orders, schedule delivery orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_collection_time_restriction' => 'Whether your customers can only place ASAP pick-up orders, schedule pick-up orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
@@ -774,6 +775,7 @@ return [
         'text_invoice_date' => 'Invoice Date',
         'text_order_date' => 'Order Date',
         'text_deliver_to' => 'Deliver to',
+        'text_asap' => 'ASAP',
         'text_invoice_thank_you' => 'Thank you for your order',
         'text_collection_order_type' => 'This is a pick-up order',
         'text_no_payment' => 'No payment method selected',
@@ -797,6 +799,7 @@ return [
         'column_notify' => 'Customer Notified',
         'column_name_option' => 'Name/Options',
         'column_price' => 'Price',
+        'column_quantity' => 'Qty',
 
         'label_order_id' => 'Order ID',
         'label_customer_name' => 'Customer Name',
@@ -806,9 +809,10 @@ return [
         'label_time_is_asap' => 'Order Time Is Asap',
         'label_order_time' => 'Delivery/Pick-up Time',
         'label_order_date' => 'Delivery/Pick-up Date',
+        'label_order_date_time' => 'Delivery/Pick-up Date Time',
         'label_date_added' => 'Date Added',
         'label_order_total' => 'Order Total',
-        'label_comment' => 'Order Comment',
+        'label_comment' => 'Notes',
         'label_date_modified' => 'Date Modified',
         'label_user_agent' => 'User Agent',
         'label_ip_address' => 'IP Address',
@@ -938,7 +942,7 @@ return [
         'text_tab_user' => 'User',
 
         'text_tab_desc_user' => 'Configure registration email confirmation, default customer group, ...',
-        'text_tab_desc_setup' => 'Configure order and reservation related settings',
+        'text_tab_desc_setup' => 'Configure order, reservation, invoicing and taxation settings',
     ],
 
     'staff_groups' => [

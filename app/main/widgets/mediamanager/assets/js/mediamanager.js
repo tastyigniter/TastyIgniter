@@ -55,6 +55,7 @@
         this.$el.on('click', '[data-media-control]', $.proxy(this.onControlClick, this))
 
         this.$el.on('click', '[data-media-sort]', $.proxy(this.onSortingChanged, this))
+        this.$el.on('click', '[data-media-filter]', $.proxy(this.onFilterChanged, this))
         this.$el.on('keyup', '[data-media-control="search"]', $.proxy(this.onSearchChanged, this))
 
         $(window).bind("load resize", $.proxy(this.initScroll, this));
@@ -254,11 +255,28 @@
     MediaManager.prototype.updateSidebar = function (items) {
         var container = this.$el[0],
             previewContainer = container.querySelector('[data-media-preview-container]'),
-            template = ''
+            template, previewTemplate
 
         // Single selection
         if (items.length == 1) {
-            var item = items[0].querySelector('[data-media-item]')
+            var item = items[0].querySelector('[data-media-item]'),
+                previewSelector = '[data-media-file-selection-template]',
+                itemFileType = item.getAttribute('data-media-item-file-type')
+
+            if (itemFileType === 'video')
+                previewSelector = '[data-media-video-selection-template]'
+
+            if (itemFileType === 'audio')
+                previewSelector = '[data-media-audio-selection-template]'
+
+            if (itemFileType === 'image')
+                previewSelector = '[data-media-image-selection-template]'
+
+            previewTemplate = container.querySelector(previewSelector).innerHTML
+                .replace('{fileType}', itemFileType)
+                .replace('{src}', item.getAttribute('data-media-item-url'))
+                .replace('{url}', item.getAttribute('data-media-item-url'))
+
             template = container.querySelector('[data-media-single-selection-template]').innerHTML
             previewContainer.innerHTML = template
                 .replace('{name}', item.getAttribute('data-media-item-name'))
@@ -268,6 +286,7 @@
                 .replace('{url}', item.getAttribute('data-media-item-url'))
                 .replace('{path}', item.getAttribute('data-media-item-path'))
                 .replace('{modified}', item.getAttribute('data-media-item-modified'))
+                .replace('<div data-media-preview-placeholder></div>', previewTemplate)
         }
         // No selection
         else if (items.length == 0) {
@@ -587,6 +606,12 @@
         }
 
         this.execNavigationRequest('onSetSorting', data)
+    }
+
+    MediaManager.prototype.onFilterChanged = function (event) {
+        this.execNavigationRequest('onSetFilter', {
+            filterBy: $(event.target).data('mediaFilter')
+        })
     }
 
     MediaManager.prototype.onSearchChanged = function (event) {

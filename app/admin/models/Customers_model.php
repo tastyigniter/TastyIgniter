@@ -256,10 +256,10 @@ class Customers_model extends AuthUserModel
     {
         $model = $this->fresh();
 
-        return [
+        return array_merge($model->toArray(), [
             'customer' => $model,
             'full_name' => $model->full_name,
             'email' => $model->email,
-        ];
+        ]);
     }
 }

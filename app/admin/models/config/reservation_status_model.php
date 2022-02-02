@@ -56,13 +56,5 @@ return [
                 ],
             ],
         ],
-        'rules' => [
-            ['status_id', 'admin::lang.label_status', 'sometimes|required|integer|exists:statuses'],
-            ['comment', 'admin::lang.statuses.label_comment', 'max:1500'],
-            ['notify', 'admin::lang.statuses.label_notify', 'sometimes|required|boolean'],
-
-            ['assignee_group_id', 'admin::lang.statuses.label_assignee_group', 'sometimes|required|integer|exists:staff_groups,staff_group_id'],
-            ['assignee_id', 'admin::lang.statuses.label_assignee', 'integer|exists:staffs,staff_id'],
-        ],
     ],
 ];

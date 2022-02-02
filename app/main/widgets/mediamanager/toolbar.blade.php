@@ -64,6 +64,13 @@
             <div class="input-group">
                 <div class="input-group-prepend">
                     <div class="dropdown mr-2">
+                        <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Filter">
+                            <i class="fa fa-filter"></i> <i class="caret"></i>
+                        </a>
+                        {!! $this->makePartial('mediamanager/filters', ['filterBy', $filterBy]) !!}
+                    </div>
+
+                    <div class="dropdown mr-2">
                         <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Sort">
                             @if (isset($sortBy[1]) && $sortBy[1] === 'ascending')
                                 <i class="fa fa-sort-amount-asc"></i> <i class="caret"></i>

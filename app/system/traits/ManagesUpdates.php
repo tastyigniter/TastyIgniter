@@ -294,33 +294,51 @@ trait ManagesUpdates
 
     protected function validateItems()
     {
-        $rules = [
-            ['items.*.name', 'lang:system::lang.updates.label_meta_code', 'required'],
-            ['items.*.type', 'lang:system::lang.updates.label_meta_type', 'required|in:core,extension,theme'],
-            ['items.*.ver', 'lang:system::lang.updates.label_meta_version', 'required'],
-            ['items.*.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'],
-        ];
-
-        return $this->validate(post(), $rules);
+        return $this->validate(post(), [
+            'items.*.name' => ['required'],
+            'items.*.type' => ['required', 'in:core,extension,theme'],
+            'items.*.ver' => ['required'],
+            'items.*.action' => ['required', 'in:install,update'],
+        ], [
+            'items.*.name' => lang('system::lang.updates.label_meta_code'),
+            'items.*.type' => lang('system::lang.updates.label_meta_type'),
+            'items.*.ver' => lang('system::lang.updates.label_meta_version'),
+            'items.*.action' => lang('system::lang.updates.label_meta_action'),
+        ]);
     }
 
     protected function validateProcess()
     {
         $rules = [];
+        $attributes = [];
+
         if (post('step') != 'complete') {
-            $rules[] = ['meta.code', 'lang:system::lang.updates.label_meta_code', 'required'];
-            $rules[] = ['meta.type', 'lang:system::lang.updates.label_meta_type', 'required|in:core,extension,theme'];
-            $rules[] = ['meta.version', 'lang:system::lang.updates.label_meta_version', 'required'];
-            $rules[] = ['meta.hash', 'lang:system::lang.updates.label_meta_hash', 'required'];
-            $rules[] = ['meta.description', 'lang:system::lang.updates.label_meta_description', 'sometimes'];
-            $rules[] = ['meta.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'];
+            $rules = array_merge($rules, [
+                'meta.code' => ['required'],
+                'meta.type' => ['required', 'in:core,extension,theme'],
+                'meta.version' => ['required'],
+                'meta.hash' => ['required'],
+                'meta.description' => ['sometimes'],
+                'meta.action' => ['required', 'in:install,update'],
+            ]);
+
+            $rules = array_merge($rules, [
+                'meta.code' => lang('system::lang.updates.label_meta_code'),
+                'meta.type' => lang('system::lang.updates.label_meta_type'),
+                'meta.version' => lang('system::lang.updates.label_meta_version'),
+                'meta.hash' => lang('system::lang.updates.label_meta_hash'),
+                'meta.description' => lang('system::lang.updates.label_meta_description'),
+                'meta.action' => lang('system::lang.updates.label_meta_action'),
+            ]);
         }
         else {
-            $rules[] = ['meta.items', 'lang:system::lang.updates.label_meta_items', 'required|array'];
+            $rules['meta.items'] = ['required', 'array'];
+            $attributes['meta.items'] = lang('system::lang.updates.label_meta_items');
         }
 
-        $rules[] = ['step', 'lang:system::lang.updates.label_meta_step', 'required|in:download,extract,complete'];
+        $rules['step'] = ['required', 'in:download,extract,complete'];
+        $attributes['step'] = lang('system::lang.updates.label_meta_step');
 
-        return $this->validate(post(), $rules);
+        return $this->validate(post(), $rules, $attributes);
     }
 }
