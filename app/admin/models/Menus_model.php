@@ -362,7 +362,7 @@ class Menus_model extends Model
 
         if (count($this->ingredients) > 0) {
             foreach ($this->ingredients as $ingredient) {
-                if (! $ingredient->status) {
+                if (!$ingredient->status) {
                     $isAvailable = FALSE;
                 }
             }
