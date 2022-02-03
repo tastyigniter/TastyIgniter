@@ -35,11 +35,11 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'menus/create',
         ],
-        'allergens' => [
-            'label' => 'lang:admin::lang.allergens.text_allergens',
+        'ingredients' => [
+            'label' => 'lang:admin::lang.ingredients.text_ingredients',
             'class' => 'btn btn-default',
-            'href' => 'allergens',
-            'permission' => 'Admin.Allergens',
+            'href' => 'ingredients',
+            'permission' => 'Admin.Ingredients',
         ],
     ],
 ];
@@ -188,8 +188,8 @@ $config['form']['tabs'] = [
             'type' => 'relation',
             'span' => 'left',
         ],
-        'allergens' => [
-            'label' => 'lang:admin::lang.menus.label_allergens',
+        'ingredients' => [
+            'label' => 'lang:admin::lang.menus.label_ingredients',
             'type' => 'relation',
             'span' => 'right',
         ],

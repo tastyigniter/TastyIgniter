@@ -55,7 +55,7 @@ class Menus_model extends Model
             'mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
+            'ingredients' => ['Admin\Models\Ingredients_model', 'name' => 'ingredientable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
@@ -71,17 +71,24 @@ class Menus_model extends Model
     //
     // Scopes
     //
+
+    // @deprecated
     public function scopeWhereHasAllergen($query, $allergenId)
     {
-        $query->whereHas('allergens', function ($q) use ($allergenId) {
-            $q->where('allergens.allergen_id', $allergenId);
-        });
+        return $this->scopeWhereHasIngredient($query, $allergenId);
     }
 
     public function scopeWhereHasCategory($query, $categoryId)
     {
         $query->whereHas('categories', function ($q) use ($categoryId) {
             $q->where('categories.category_id', $categoryId);
+        });
+    }
+
+    public function scopeWhereHasIngredient($query, $ingredientId)
+    {
+        $query->whereHas('ingredients', function ($q) use ($ingredientId) {
+            $q->where('ingredients.ingredient_id', $ingredientId);
         });
     }
 
@@ -188,7 +195,7 @@ class Menus_model extends Model
     {
         $this->categories()->detach();
         $this->mealtimes()->detach();
-        $this->allergens()->detach();
+        $this->ingredients()->detach();
         $this->locations()->detach();
     }
 
@@ -233,21 +240,6 @@ class Menus_model extends Model
     }
 
     /**
-     * Create new or update existing menu allergens
-     *
-     * @param array $allergenIds if empty all existing records will be deleted
-     *
-     * @return bool
-     */
-    public function addMenuAllergens(array $allergenIds = [])
-    {
-        if (!$this->exists)
-            return FALSE;
-
-        $this->allergens()->sync($allergenIds);
-    }
-
-    /**
      * Create new or update existing menu categories
      *
      * @param array $categoryIds if empty all existing records will be deleted
@@ -260,6 +252,21 @@ class Menus_model extends Model
             return FALSE;
 
         $this->categories()->sync($categoryIds);
+    }
+
+    /**
+     * Create new or update existing menu ingredients
+     *
+     * @param array $ingredientIds if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuIngredients(array $ingredientIds = [])
+    {
+        if (!$this->exists)
+            return FALSE;
+
+        $this->ingredients()->sync($ingredientIds);
     }
 
     /**
@@ -349,6 +356,14 @@ class Menus_model extends Model
             foreach ($this->mealtimes as $mealtime) {
                 if ($mealtime->mealtime_status) {
                     $isAvailable = $isAvailable || $mealtime->isAvailable($datetime);
+                }
+            }
+        }
+
+        if (count($this->ingredients) > 0) {
+            foreach ($this->ingredients as $ingredient) {
+                if (! $ingredient->status) {
+                    $isAvailable = FALSE;
                 }
             }
         }

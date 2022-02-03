@@ -1,7 +1,7 @@
 <?php
 $config['list']['filter'] = [
     'search' => [
-        'prompt' => 'lang:admin::lang.allergens.text_filter_search',
+        'prompt' => 'lang:admin::lang.ingredients.text_filter_search',
         'mode' => 'all',
     ],
     'scopes' => [
@@ -18,7 +18,7 @@ $config['list']['toolbar'] = [
         'create' => [
             'label' => 'lang:admin::lang.button_new',
             'class' => 'btn btn-primary',
-            'href' => 'allergens/create',
+            'href' => 'ingredients/create',
         ],
     ],
 ];
@@ -55,7 +55,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'allergens/edit/{allergen_id}',
+            'href' => 'ingredients/edit/{ingredient_id}',
         ],
     ],
     'name' => [
@@ -66,7 +66,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
-    'allergen_id' => [
+    'ingredient_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
@@ -87,7 +87,7 @@ $config['form']['toolbar'] = [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
-            'href' => 'allergens',
+            'href' => 'ingredients',
         ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
@@ -129,11 +129,17 @@ $config['form']['fields'] = [
         ],
     ],
     'thumb' => [
-        'label' => 'lang:admin::lang.allergens.label_image',
+        'label' => 'lang:admin::lang.ingredients.label_image',
         'type' => 'mediafinder',
         'useAttachment' => TRUE,
         'span' => 'right',
-        'comment' => 'lang:admin::lang.allergens.help_photo',
+        'comment' => 'lang:admin::lang.ingredients.help_photo',
+    ],
+    'is_allergen' => [
+        'label' => 'lang:admin::lang.ingredients.label_allergen',
+        'type' => 'switch',
+        'span' => 'left',
+        'default' => 0,
     ],
 ];
 
