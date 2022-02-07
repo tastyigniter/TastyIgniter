@@ -55,6 +55,7 @@
         this.$el.on('click', '[data-media-control]', $.proxy(this.onControlClick, this))
 
         this.$el.on('click', '[data-media-sort]', $.proxy(this.onSortingChanged, this))
+        this.$el.on('click', '[data-media-filter]', $.proxy(this.onFilterChanged, this))
         this.$el.on('keyup', '[data-media-control="search"]', $.proxy(this.onSearchChanged, this))
 
         $(window).bind("load resize", $.proxy(this.initScroll, this));
@@ -73,7 +74,7 @@
             statusbarHeight = this.$el.find('[data-control="media-statusbar"]').outerHeight() || 0,
             modalHeaderHeight = this.$el.closest('.modal').find('.modal-header').outerHeight() || 0
 
-        var listHeight = Math.max(0, windowHeight - listTopOffset - parseInt(modalHeaderHeight) - parseInt(statusbarHeight))
+        var listHeight = Math.max(0, windowHeight-listTopOffset-parseInt(modalHeaderHeight)-parseInt(statusbarHeight))
 
         if (listHeight < 1)
             return
@@ -157,7 +158,7 @@
 
         var currentScroll = $itemElement.scrollTop()
         $mediaList.animate({
-            scrollTop: currentScroll + $itemElement.position().top - 30
+            scrollTop: currentScroll+$itemElement.position().top-30
         }, 0)
     }
 
@@ -232,7 +233,7 @@
         }
 
         $.ti.loadingIndicator.show()
-        this.navigationAjax = element.request(this.options.alias + '::' + handler, {
+        this.navigationAjax = element.request(this.options.alias+'::'+handler, {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -254,11 +255,28 @@
     MediaManager.prototype.updateSidebar = function (items) {
         var container = this.$el[0],
             previewContainer = container.querySelector('[data-media-preview-container]'),
-            template = ''
+            template, previewTemplate
 
         // Single selection
         if (items.length == 1) {
-            var item = items[0].querySelector('[data-media-item]')
+            var item = items[0].querySelector('[data-media-item]'),
+                previewSelector = '[data-media-file-selection-template]',
+                itemFileType = item.getAttribute('data-media-item-file-type')
+
+            if (itemFileType === 'video')
+                previewSelector = '[data-media-video-selection-template]'
+
+            if (itemFileType === 'audio')
+                previewSelector = '[data-media-audio-selection-template]'
+
+            if (itemFileType === 'image')
+                previewSelector = '[data-media-image-selection-template]'
+
+            previewTemplate = container.querySelector(previewSelector).innerHTML
+                .replace('{fileType}', itemFileType)
+                .replace('{src}', item.getAttribute('data-media-item-url'))
+                .replace('{url}', item.getAttribute('data-media-item-url'))
+
             template = container.querySelector('[data-media-single-selection-template]').innerHTML
             previewContainer.innerHTML = template
                 .replace('{name}', item.getAttribute('data-media-item-name'))
@@ -268,6 +286,7 @@
                 .replace('{url}', item.getAttribute('data-media-item-url'))
                 .replace('{path}', item.getAttribute('data-media-item-path'))
                 .replace('{modified}', item.getAttribute('data-media-item-modified'))
+                .replace('<div data-media-preview-placeholder></div>', previewTemplate)
         }
         // No selection
         else if (items.length == 0) {
@@ -359,7 +378,7 @@
     MediaManager.prototype.uploadQueueComplete = function () {
         var status = false;
 
-        $.each(this.dropzone.getAcceptedFiles(), function() {
+        $.each(this.dropzone.getAcceptedFiles(), function () {
             if (this.status === 'success')
                 status = true
         })
@@ -589,6 +608,12 @@
         this.execNavigationRequest('onSetSorting', data)
     }
 
+    MediaManager.prototype.onFilterChanged = function (event) {
+        this.execNavigationRequest('onSetFilter', {
+            filterBy: $(event.target).data('mediaFilter')
+        })
+    }
+
     MediaManager.prototype.onSearchChanged = function (event) {
         var self = this,
             data = {
@@ -612,7 +637,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onCreateFolder', {
+        this.$form.request(this.options.alias+'::onCreateFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -631,7 +656,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onRenameFolder', {
+        this.$form.request(this.options.alias+'::onRenameFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -648,7 +673,7 @@
         event.preventDefault()
 
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onDeleteFolder', {
+        this.$form.request(this.options.alias+'::onDeleteFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -671,7 +696,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onRenameFile', {
+        this.$form.request(this.options.alias+'::onRenameFile', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -702,7 +727,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onMoveFiles', {
+        this.$form.request(this.options.alias+'::onMoveFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -733,7 +758,7 @@
 
         this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onCopyFiles', {
+        this.$form.request(this.options.alias+'::onCopyFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -762,7 +787,7 @@
         event.preventDefault()
 
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onDeleteFiles', {
+        this.$form.request(this.options.alias+'::onDeleteFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()

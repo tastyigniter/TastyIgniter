@@ -300,11 +300,14 @@ class Extensions extends \Admin\Classes\AdminController
 
     protected function formValidate($model, $form)
     {
-        $rules = [];
-        if (isset($form->config['rules']))
-            $rules = $form->config['rules'];
+        if (!isset($form->config['rules']))
+            return;
 
-        return $this->validatePasses($form->getSaveData(), $rules);
+        return $this->validatePasses($form->getSaveData(),
+            $form->config['rules'],
+            array_get($form->config, 'validationMessages', []),
+            array_get($form->config, 'validationAttributes', [])
+        );
     }
 
     protected function checkDependencies($extension)

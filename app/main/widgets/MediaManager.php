@@ -67,16 +67,18 @@ class MediaManager extends BaseWidget
     {
         $folder = $this->getCurrentFolder();
         $sortBy = $this->getSortBy();
+        $filterBy = $this->getFilterBy();
         $searchTerm = $this->getSearchTerm();
 
         $this->vars['currentFolder'] = $folder;
         $this->vars['isRootFolder'] = $folder == static::ROOT_FOLDER;
-        $this->vars['items'] = $items = $this->listFolderItems($folder, $sortBy, $searchTerm);
+        $this->vars['items'] = $items = $this->listFolderItems($folder, $sortBy, ['search' => $searchTerm, 'filter' => $filterBy]);
         $this->vars['folderSize'] = $this->getCurrentFolderSize();
         $this->vars['totalItems'] = count($items);
         $this->vars['folderList'] = $this->getFolderList();
         $this->vars['folderTree'] = $this->getFolderTreeNodes();
         $this->vars['sortBy'] = $sortBy;
+        $this->vars['filterBy'] = $filterBy;
         $this->vars['searchTerm'] = $searchTerm;
         $this->vars['isPopup'] = $this->popupLoaded;
         $this->vars['selectMode'] = $this->selectMode;
@@ -118,6 +120,20 @@ class MediaManager extends BaseWidget
 
         $this->setSortBy($sortBy);
         $this->setCurrentFolder($path);
+
+        $this->prepareVars();
+
+        return [
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('toolbar') => $this->makePartial('mediamanager/toolbar'),
+        ];
+    }
+
+    public function onSetFilter()
+    {
+        $filterBy = input('filterBy');
+
+        $this->setFilterBy($filterBy);
 
         $this->prepareVars();
 
@@ -475,7 +491,6 @@ class MediaManager extends BaseWidget
         $mediaLibrary = $this->getMediaLibrary();
 
         $folderTree = function ($path) use (&$folderTree, $mediaLibrary, $result) {
-
             if (!($folders = $mediaLibrary->listFolders($path)))
                 return null;
 
@@ -541,6 +556,16 @@ class MediaManager extends BaseWidget
     protected function getSortBy()
     {
         return $this->getSession('media_sort_by', null);
+    }
+
+    protected function setFilterBy($filterBy)
+    {
+        return $this->putSession('media_filter_by', $filterBy);
+    }
+
+    protected function getFilterBy()
+    {
+        return $this->getSession('media_filter_by', 'all');
     }
 
     protected function checkUploadHandler()

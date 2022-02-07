@@ -347,9 +347,9 @@ class Orders_model extends Model
      */
     public function mailGetData()
     {
-        $data = [];
-
         $model = $this->fresh();
+
+        $data = $model->toArray();
         $data['order'] = $model;
         $data['order_number'] = $model->order_id;
         $data['order_id'] = $model->order_id;

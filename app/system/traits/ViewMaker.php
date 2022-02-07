@@ -45,7 +45,7 @@ trait ViewMaker
      */
     public $suppressLayout = FALSE;
 
-    protected $viewFileExtension = ['.blade.php', '.php'];
+    protected $viewFileExtension = ['.blade.php'];
 
     public function getViewPath($view, $viewPath = null)
     {

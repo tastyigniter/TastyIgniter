@@ -60,8 +60,11 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            ['username', 'lang:admin::lang.login.label_username', 'required'],
-            ['password', 'lang:admin::lang.login.label_password', 'required|min:6'],
+            'username' => ['required'],
+            'password' => ['required', 'min:6'],
+        ], [
+            'username' => lang('admin::lang.login.label_username'),
+            'password' => lang('admin::lang.login.label_password'),
         ]);
 
         $credentials = [
@@ -85,7 +88,9 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            ['email', 'lang:admin::lang.label_email', 'required|email:filter|max:96'],
+            'email' => ['required', 'email:filter', 'max:96'],
+        ], [
+            'email' => lang('admin::lang.label_email'),
         ]);
 
         $staff = Staffs_model::whereStaffEmail(post('email'))->first();
@@ -111,9 +116,13 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            ['code', 'lang:admin::lang.login.label_reset_code', 'required'],
-            ['password', 'lang:admin::lang.login.label_password', 'required|min:6|max:32|same:password_confirm'],
-            ['password_confirm', 'lang:admin::lang.login.label_password_confirm', 'required'],
+            'code' => ['required'],
+            'password' => ['required', 'min:6', 'max:32', 'same:password_confirm'],
+            'password_confirm' => ['required'],
+        ], [
+            'code' => lang('admin::lang.login.label_reset_code'),
+            'password' => lang('admin::lang.login.label_password'),
+            'password_confirm' => lang('admin::lang.login.label_password_confirm'),
         ]);
 
         $code = array_get($data, 'code');

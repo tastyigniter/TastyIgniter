@@ -4,17 +4,16 @@ namespace Main\classes;
 
 use Carbon\Carbon;
 use Igniter\Flame\Support\Facades\File;
-use Illuminate\Support\Facades\Config;
+use System\Models\Settings_model;
 
 class MediaItem
 {
     const TYPE_FILE = 'file';
-
     const TYPE_FOLDER = 'folder';
-
     const FILE_TYPE_IMAGE = 'image';
-
     const FILE_TYPE_DOCUMENT = 'document';
+    const FILE_TYPE_VIDEO = 'video';
+    const FILE_TYPE_AUDIO = 'audio';
 
     /**
      * @var string The item basename.
@@ -37,9 +36,14 @@ class MediaItem
     public $lastModified;
 
     /**
-     * @var string The item type.
+     * @var string The item type. ex. file or folder
      */
     public $type;
+
+    /**
+     * @var string The item file type. ex. image, audio, video
+     */
+    public $fileType;
 
     /**
      * @var string Specifies the public URL of the item.
@@ -47,10 +51,22 @@ class MediaItem
     public $publicUrl;
 
     /**
-     * @var array Contains a default list of image files and directories to ignore.
-     * Override with config: cms.storage.media.imageExtensions
+     * @var array Contains a default list of image files.
+     * Override with config: system.assets.media.imageExtensions
      */
     protected static $imageExtensions;
+
+    /**
+     * @var array Contains a default list of video files.
+     * Override with config: system.assets.media.videoExtensions
+     */
+    protected static $videoExtensions;
+
+    /**
+     * @var array Contains a default list of audio files.
+     * Override with config: system.assets.media.audioExtensions
+     */
+    protected static $audioExtensions;
 
     /**
      * @param string $path
@@ -67,6 +83,7 @@ class MediaItem
         $this->lastModified = $lastModified;
         $this->type = $type;
         $this->publicUrl = $publicUrl;
+        $this->fileType = $this->getFileType();
     }
 
     /**
@@ -83,18 +100,27 @@ class MediaItem
             return null;
         }
 
-        if (!self::$imageExtensions) {
-            self::$imageExtensions = Config::get('system.assets.media.imageExtensions', ['jpg', 'jpeg', 'png']);
-        }
+        if (!self::$imageExtensions)
+            self::$imageExtensions = array_map('strtolower', Settings_model::imageExtensions());
+
+        if (!self::$audioExtensions)
+            self::$audioExtensions = array_map('strtolower', Settings_model::audioExtensions());
+
+        if (!self::$videoExtensions)
+            self::$videoExtensions = array_map('strtolower', Settings_model::videoExtensions());
 
         $extension = pathinfo($this->path, PATHINFO_EXTENSION);
-        if (!strlen($extension)) {
+        if (!strlen($extension))
             return self::FILE_TYPE_DOCUMENT;
-        }
 
-        if (in_array($extension, self::$imageExtensions)) {
+        if (in_array($extension, self::$imageExtensions))
             return self::FILE_TYPE_IMAGE;
-        }
+
+        if (in_array($extension, self::$audioExtensions))
+            return self::FILE_TYPE_AUDIO;
+
+        if (in_array($extension, self::$videoExtensions))
+            return self::FILE_TYPE_VIDEO;
 
         return self::FILE_TYPE_DOCUMENT;
     }
