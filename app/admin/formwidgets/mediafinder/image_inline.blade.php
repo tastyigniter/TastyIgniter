@@ -1,16 +1,25 @@
 <div class="media-finder">
     <div class="input-group">
         <div class="input-group-prepend">
-            <i class="input-group-icon" style="width: 50px;">
+            <div class="input-group-icon" style="width: 50px;">
                 @if (!is_null($mediaItem))
-                    <img
-                        data-find-image
-                        src="{{ $this->getMediaThumb($mediaItem) }}"
-                        class="img-responsive"
-                        width="24px"
-                    >
+                    @if(($mediaFileType = $this->getMediaFileType($mediaItem)) === 'image')
+                        <img
+                            data-find-image
+                            src="{{ $this->getMediaThumb($mediaItem) }}"
+                            class="img-responsive"
+                            width="24px"
+                        >
+                    @else
+                        <div class="media-icon w-100">
+                            <i
+                                data-find-file
+                                class="fa fa-{{ $mediaFileType }} text-muted"
+                            ></i>
+                        </div>
+                    @endif
                 @endif
-            </i>
+            </div>
         </div>
         <span
             class="form-control{{ (!is_null($mediaItem) && $useAttachment) ? ' find-config-button' : '' }}"
