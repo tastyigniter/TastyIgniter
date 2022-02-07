@@ -118,21 +118,21 @@ class Orders_model extends Model
             'location' => null,
             'sort' => 'address_id desc',
             'search' => '',
-            'status' => '',
+            'status' => null,
             'page' => 1,
             'pageLimit' => 20,
         ], $options));
 
         $searchableFields = ['order_id', 'first_name', 'last_name', 'email', 'telephone'];
 
-        if ($status == '') {
+        if (is_null($status)) {
             $query->where('status_id', '>=', 1);
-        } else {
-            if (!is_array($status)) {
-                $query->where('status_id', $status);
-            } else {
-                $query->whereIn('status_id', $status);
-            }
+        }
+        else {
+            if (!is_array($status))
+                $status = [$status];
+
+            $query->whereIn('status_id', $status);
         }
 
         if ($location instanceof Locations_model) {
