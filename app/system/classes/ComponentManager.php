@@ -382,19 +382,15 @@ class ComponentManager
     {
         $properties = $component->defineProperties();
 
-        $rules = [];
+        $rules = $attributes = [];
         foreach ($properties as $name => $params) {
-            if (strlen($rule = array_get($params, 'validationRule', '')))
-                $rules[] = [$name, array_get($params, 'label', $name), $rule];
+            if (strlen($rule = array_get($params, 'validationRule', ''))) {
+                $rules[$name] = $rule;
+                $attributes[$name] = array_get($params, 'label', $name);
+            }
         }
 
-        $messages = [];
-        foreach ($properties as $name => $params) {
-            if (strlen($message = array_get($params, 'validationMessage', '')))
-                $messages[$name] = $message;
-        }
-
-        return [$rules, $messages];
+        return [$rules, $attributes];
     }
 
     protected function checkComponentPropertyType($type)

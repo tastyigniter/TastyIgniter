@@ -286,8 +286,8 @@ class Components extends BaseFormWidget
             return $template->update(['settings' => [$alias => $properties]]);
         }
 
-        [$rules, $messages] = $this->manager->getComponentPropertyRules($componentObj);
-        $this->validate($properties, $rules, $messages);
+        [$rules, $attributes] = $this->manager->getComponentPropertyRules($componentObj);
+        $this->validate($properties, $rules, [], $attributes);
 
         $alias = sprintf('[%s]', $codeAlias);
         $template->updateComponent($alias, $properties);
