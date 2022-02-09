@@ -114,13 +114,22 @@ class Reservations_model extends Model
             'sort' => 'address_id desc',
             'customer' => null,
             'location' => null,
+            'status' => null,
             'search' => '',
             'dateTimeFilter' => [],
         ], $options));
 
         $searchableFields = ['reservation_id', 'first_name', 'last_name', 'email', 'telephone'];
 
-        $query->where('status_id', '>=', 1);
+        if (is_null($status)) {
+            $query->where('status_id', '>=', 1);
+        }
+        else {
+            if (!is_array($status))
+                $status = [$status];
+
+            $query->whereIn('status_id', $status);
+        }
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());

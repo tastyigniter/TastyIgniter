@@ -48,6 +48,7 @@ class Locations_model extends AbstractLocation
         ],
         'morphedByMany' => [
             'staffs' => ['Admin\Models\Staffs_model', 'name' => 'locationable'],
+            'tables' => ['Admin\Models\Tables_model', 'name' => 'locationable'],
         ],
     ];
 
