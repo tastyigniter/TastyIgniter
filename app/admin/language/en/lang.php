@@ -571,7 +571,7 @@ return [
         'label_charge_condition' => 'Rule',
         'label_area_min_amount' => 'Total',
         'label_gallery_title' => 'Title',
-        'label_gallery_add_image' => 'Add Image',
+        'label_gallery_add_image' => 'Add Media',
         'label_gallery_image_thumbnail' => 'Thumbnail',
         'label_gallery_image_name' => 'Filename',
         'label_gallery_image_alt' => 'Alt Text',
@@ -591,6 +591,7 @@ return [
         'help_image' => 'Select a logo for this location.',
         'help_limit_orders' => 'Enabling this disables ASAP delivery and pickup orders.',
         'help_limit_orders_interval' => 'Set the number of orders that can be placed between each time slot.',
+        'help_guest_order' => 'Allow customer to place an order without creating an account, or use the default system settings.',
         'help_delivery_time_restriction' => 'Whether your customers can only place ASAP delivery orders, schedule delivery orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_collection_time_restriction' => 'Whether your customers can only place ASAP pick-up orders, schedule pick-up orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
         'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
@@ -656,12 +657,11 @@ return [
 
     'menu_options' => [
         'text_title' => 'Menu Options',
-        'text_options' => 'Menu Options',
         'text_form_name' => 'Menu Option',
         'text_tab_general' => 'General',
         'text_tab_values' => 'Option Values',
         'text_empty' => 'There are no menu options available.',
-        'text_filter_search' => 'Search by name.',
+        'text_filter_search' => 'Search by name or price.',
         'text_filter_display_type' => 'View all display types',
         'text_select' => 'Select',
         'text_radio' => 'Radio',
@@ -670,6 +670,7 @@ return [
         'is_required' => 'is required',
         'is_not_required' => 'is not required',
         'text_option' => 'Option',
+        'text_options' => 'Options',
         'text_option_summary' => 'Display as a %s HTML element',
 
         'button_assign' => 'Assign to Menu',
@@ -1062,6 +1063,7 @@ return [
         'text_title' => 'Stocks',
         'text_form_name' => 'Stock',
         'text_title_manage_stock' => 'Manage Stock',
+        'text_title_stock_history' => 'Stock History',
         'text_stock_description' => 'Managing stock for <b>%s</b> at %s location(s)',
         'text_empty' => 'There are no locations available.',
 
@@ -1069,12 +1071,12 @@ return [
         'button_stock_history' => 'Stock History',
 
         'text_action_none' => 'Select reason',
-        'text_action_in_stock' => 'Stock Received',
-        'text_action_restock' => 'Restock',
-        'text_action_recount' => 'Stock Re-count',
-        'text_action_sold' => 'Sold',
-        'text_action_returned' => 'Returned',
-        'text_action_waste' => 'Waste',
+        'text_action_in_stock' => '[+] Stock Received',
+        'text_action_restock' => '[+] Restock',
+        'text_action_recount' => '[=] Stock Re-count',
+        'text_action_sold' => '[-] Sold',
+        'text_action_returned' => '[-] Returned',
+        'text_action_waste' => '[-] Waste',
 
         'label_is_tracked' => 'Track Stock',
         'label_quantity' => 'Stock Quantity',
@@ -1082,6 +1084,10 @@ return [
         'label_stock_quantity' => 'Add, remove or recount stock',
         'label_low_stock_alert' => 'Low Stock Alerts',
         'label_low_stock_threshold' => 'Low Stock Threshold',
+
+        'column_staff_name' => 'Staff Name',
+        'column_quantity' => 'Quantity',
+        'column_created_at' => 'Calculated At',
 
         'help_is_tracked' => 'When enabled, ordered menu and/or options quantities are automatically subtracted.',
         'help_low_stock_alert' => 'Enable automated low stock alerts so that you receive emails when the stock quantity falls below or equals the specified threshold.',

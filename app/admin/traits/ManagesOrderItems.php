@@ -34,7 +34,8 @@ trait ManagesOrderItems
             if (!$menu = Menus_model::find($orderMenu->menu_id))
                 return TRUE;
 
-            optional($menu->getStockByLocation($this->location))->updateStockSold($orderMenu->quantity);
+            optional($menu->getStockByLocation($this->location))
+                ->updateStockSold($this->getKey(), $orderMenu->quantity);
 
             $orderMenuOptions
                 ->where('order_menu_id', $orderMenu->order_menu_id)
@@ -47,7 +48,7 @@ trait ManagesOrderItems
                         return TRUE;
 
                     optional($menuOptionValue->getStockByLocation($this->location))
-                        ->updateStockSold($orderMenuOption->quantity);
+                        ->updateStockSold($this->getKey(), $orderMenuOption->quantity);
                 });
         });
     }

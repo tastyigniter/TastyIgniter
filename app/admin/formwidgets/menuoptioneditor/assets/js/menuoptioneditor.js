@@ -31,7 +31,7 @@
     // ============================
 
     MenuOptionEditor.prototype.onAssignItem = function (event) {
-        var handler = this.options.alias + '::onAssignRecord',
+        var handler = this.options.alias+'::onAssignRecord',
             $button = $(event.currentTarget)
 
         $.request(handler, {
@@ -52,7 +52,7 @@
     }
 
     MenuOptionEditor.prototype.onDeleteItem = function (event) {
-        var handler = this.options.alias + '::onDeleteRecord',
+        var handler = this.options.alias+'::onDeleteRecord',
             $button = $(event.currentTarget),
             itemSelector = $button.data('itemSelector'),
             confirmMsg = $button.data('confirmMessage')

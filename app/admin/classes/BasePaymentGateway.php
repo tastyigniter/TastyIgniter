@@ -24,6 +24,10 @@ class BasePaymentGateway extends ModelAction
 
     protected $configFields = [];
 
+    protected $configValidationAttributes = [];
+
+    protected $configValidationMessages = [];
+
     protected $configRules = [];
 
     /**
@@ -41,7 +45,9 @@ class BasePaymentGateway extends ModelAction
 
         $formConfig = $this->loadConfig($this->defineFieldsConfig(), ['fields']);
         $this->configFields = array_get($formConfig, 'fields');
-        $this->configRules = array_get($formConfig, 'rules');
+        $this->configRules = array_get($formConfig, 'rules', []);
+        $this->configValidationAttributes = array_get($formConfig, 'validationAttributes', []);
+        $this->configValidationMessages = array_get($formConfig, 'validationMessages', []);
 
         if (!$model)
             return;
@@ -79,7 +85,7 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * Returns the form configuration used by this model.
+     * Returns the form configuration used by this payment type.
      */
     public function getConfigFields()
     {
@@ -87,11 +93,27 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * Returns the form configuration used by this model.
+     * Returns the form validation rules used by this payment type.
      */
     public function getConfigRules()
     {
         return $this->configRules;
+    }
+
+    /**
+     * Returns the form validation attributes used by this model.
+     */
+    public function getConfigValidationAttributes()
+    {
+        return $this->configValidationAttributes;
+    }
+
+    /**
+     * Returns the form validation messages used by this model.
+     */
+    public function getConfigValidationMessages()
+    {
+        return $this->configValidationMessages;
     }
 
     /**

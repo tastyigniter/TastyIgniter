@@ -3,7 +3,10 @@
 namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
+use Admin\Classes\FormField;
+use Admin\Models\Locations_model;
 use Admin\Models\Menu_option_values_model;
+use Admin\Models\Stock_history_model;
 use Admin\Widgets\Form;
 
 /**
@@ -19,6 +22,7 @@ class StockEditor extends BaseFormWidget
     {
         $this->fillFromConfig([
             'form',
+            'quantityKeyFrom',
         ]);
     }
 
@@ -29,10 +33,25 @@ class StockEditor extends BaseFormWidget
         return $this->makePartial('stockeditor/stockeditor');
     }
 
+    public function loadAssets()
+    {
+        $this->addCss('~/app/admin/widgets/table/assets/vendor/bootstrap-table/bootstrap-table.min.css', 'bootstrap-table-css');
+        $this->addCss('~/app/admin/widgets/table/assets/css/table.css', 'table-css');
+
+        $this->addJs('~/app/admin/widgets/table/assets/vendor/bootstrap-table/bootstrap-table.min.js', 'bootstrap-table-js');
+        $this->addJs('~/app/admin/widgets/table/assets/js/table.js', 'table-js');
+    }
+
     public function prepareVars()
     {
         $this->vars['field'] = $this->formField;
         $this->vars['value'] = $this->model->{$this->quantityKeyFrom};
+        $this->vars['previewMode'] = $this->controller->getAction() == 'create';
+    }
+
+    public function getSaveValue($value)
+    {
+        return FormField::NO_SAVE_DATA;
     }
 
     public function onLoadRecord()
@@ -79,12 +98,31 @@ class StockEditor extends BaseFormWidget
         ];
     }
 
+    public function onLoadHistory()
+    {
+        return $this->makePartial('stockeditor/history', [
+            'formTitle' => sprintf(lang('admin::lang.stocks.text_title_stock_history'), ''),
+            'formWidget' => $this->makeHistoryFormWidget(),
+        ]);
+    }
+
     protected function getAvailableLocations()
     {
-        if ($this->model instanceof Menu_option_values_model)
-            return $this->model->option->locations;
+        $locations = $this->model instanceof Menu_option_values_model
+            ? $this->model->option->locations
+            : $this->model->locations;
 
-        return $this->model->locations;
+        if (!$locations || $locations->isEmpty())
+            $locations = Locations_model::isEnabled()->get();
+
+        return $locations;
+    }
+
+    protected function getStockableName()
+    {
+        return $this->model instanceof Menu_option_values_model
+            ? $this->model->value
+            : $this->model->menu_name;
     }
 
     protected function makeStockFormWidget($location)
@@ -104,10 +142,41 @@ class StockEditor extends BaseFormWidget
         return $widget;
     }
 
-    protected function getStockableName()
+    protected function makeHistoryFormWidget()
     {
-        return $this->model instanceof Menu_option_values_model
-            ? $this->model->value
-            : $this->model->menu_name;
+        $field = clone $this->formField;
+
+        $stockIds = $this->model->stocks->pluck('id')->all();
+        $field->value = Stock_history_model::whereIn('stock_id', $stockIds)->get();
+
+        $widgetConfig = [
+            'columns' => [
+                'staff_name' => [
+                    'title' => 'lang:admin::lang.stocks.column_staff_name',
+                ],
+                'order_id' => [
+                    'title' => 'lang:admin::lang.orders.label_order_id',
+                ],
+                'state_text' => [
+                    'title' => 'lang:admin::lang.stocks.label_stock_action',
+                ],
+                'quantity' => [
+                    'title' => 'lang:admin::lang.stocks.column_quantity',
+                ],
+                'created_at_since' => [
+                    'title' => 'lang:admin::lang.stocks.column_created_at',
+                ],
+            ],
+        ];
+        $widgetConfig['model'] = $this->model;
+        $widgetConfig['data'] = [];
+        $widgetConfig['alias'] = $this->alias.'FormStockHistory';
+        $widgetConfig['arrayName'] = $this->formField->arrayName.'[stockHistory]';
+
+        $widget = $this->makeFormWidget('Admin\FormWidgets\DataTable', $field, $widgetConfig);
+        $widget->bindToController();
+        $widget->previewMode = $this->previewMode;
+
+        return $widget;
     }
 }

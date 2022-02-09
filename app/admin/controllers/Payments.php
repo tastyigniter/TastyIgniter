@@ -143,18 +143,33 @@ class Payments extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['payment', 'lang:admin::lang.payments.label_payments', 'sometimes|required|alpha_dash'],
-            ['name', 'lang:admin::lang.label_name', 'required|min:2|max:128'],
-            ['code', 'lang:admin::lang.payments.label_code', 'sometimes|required|alpha_dash|unique:payments,code'],
-            ['priority', 'lang:admin::lang.payments.label_priority', 'required|integer'],
-            ['description', 'lang:admin::lang.label_description', 'max:255'],
-            ['is_default', 'lang:admin::lang.payments.label_default', 'required|integer'],
-            ['status', 'lang:admin::lang.label_status', 'required|integer'],
+            'payment' => ['sometimes', 'required', 'alpha_dash'],
+            'name' => ['required', 'min:2', 'max:128'],
+            'code' => ['sometimes', 'required', 'alpha_dash', 'unique:payments,code'],
+            'priority' => ['required', 'integer'],
+            'description' => ['max:255'],
+            'is_default' => ['required', 'integer'],
+            'status' => ['required', 'integer'],
         ];
 
-        if ($form->model->exists && ($mergeRules = $form->model->getConfigRules()))
-            array_push($rules, ...$mergeRules);
+        $attributes = [
+            'payment' => lang('admin::lang.payments.label_payments'),
+            'name' => lang('admin::lang.label_name'),
+            'code' => lang('admin::lang.payments.label_code'),
+            'priority' => lang('admin::lang.payments.label_priority'),
+            'description' => lang('admin::lang.label_description'),
+            'is_default' => lang('admin::lang.payments.label_default'),
+            'status' => lang('lang:admin::lang.label_status'),
+        ];
 
-        return $this->validatePasses($form->getSaveData(), $rules);
+        if ($form->model->exists) {
+            if ($mergeRules = $form->model->getConfigRules())
+                array_push($rules, ...$mergeRules);
+
+            if ($mergeAttributes = $form->model->getConfigAttributes())
+                array_push($attributes, ...$mergeAttributes);
+        }
+
+        return $this->validatePasses($form->getSaveData(), $rules, [], $attributes);
     }
 }

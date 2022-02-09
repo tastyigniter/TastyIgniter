@@ -49,7 +49,6 @@ class Menu_item_option_values_model extends Model
         ['option_id', 'admin::lang.menu_options.label_option_value_id', 'required|integer'],
         ['option_value_id', 'admin::lang.menu_options.label_option_value', 'required|integer'],
         ['new_price', 'admin::lang.menu_options.label_option_price', 'numeric|min:0'],
-        ['quantity', 'admin::lang.menu_options.label_option_qty', 'numeric'],
     ];
 
     public $timestamps = TRUE;

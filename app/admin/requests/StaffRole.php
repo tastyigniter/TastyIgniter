@@ -6,13 +6,23 @@ use System\Classes\FormRequest;
 
 class StaffRole extends FormRequest
 {
+    public function attributes()
+    {
+        return [
+            'code' => lang('admin::lang.label_code'),
+            'name' => lang('admin::lang.label_name'),
+            'permissions' => lang('admin::lang.staff_roles.label_permissions'),
+            'permissions.*' => lang('admin::lang.staff_roles.label_permissions'),
+        ];
+    }
+
     public function rules()
     {
         return [
-            ['code', 'admin::lang.label_code', 'between:2,32'],
-            ['name', 'admin::lang.label_name', 'required|between:2,128'],
-            ['permissions', 'admin::lang.staff_roles.label_permissions', 'required|array'],
-            ['permissions.*', 'admin::lang.staff_roles.label_permissions', 'required|integer'],
+            'code' => ['between:2,32'],
+            'name' => ['required', 'between:2,128'],
+            'permissions' => ['required', 'array'],
+            'permissions.*' => ['required', 'integer'],
         ];
     }
 }

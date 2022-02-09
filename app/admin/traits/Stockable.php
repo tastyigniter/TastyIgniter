@@ -17,6 +17,10 @@ trait Stockable
                 'stock_qty' => 'integer',
             ]);
         });
+
+        self::saved(function (self $model) {
+            $model->deleteDetachedStocks();
+        });
     }
 
     public function getStockQtyAttribute()
@@ -63,5 +67,16 @@ trait Stockable
             $stocks = $stocks->where('location_id', is_numeric($location) ? $location : $location->getKey());
 
         return $stocks->sum('quantity') >= $quantity;
+    }
+
+    public function deleteDetachedStocks()
+    {
+        $idsToKeep = $this->hasRelation('locations')
+            ? $this->locations()->get()->pluck('location_id')->all()
+            : $this->option->locations()->get()->pluck('location_id')->all();
+
+        $this->stocks()
+            ->whereNotIn('location_id', $idsToKeep)
+            ->delete();
     }
 }

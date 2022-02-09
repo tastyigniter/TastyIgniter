@@ -3,6 +3,7 @@
 namespace Admin\Traits;
 
 use Closure;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Support\Arr;
@@ -145,9 +146,28 @@ trait ValidatesForm
 
     protected function validateFormWidget($form, $saveData)
     {
-        if (!$rules = array_get($form->config, 'rules'))
-            return;
+        // for backwards support, first of all try and use a rules in the config if we have them
+        if ($rules = array_get($form->config, 'rules')) {
+            return $this->validate($saveData, $rules,
+                array_get($form->config, 'validationMessages', []),
+                array_get($form->config, 'validationAttributes', [])
+            );
+        }
 
-        return $this->validate($saveData, $rules);
+        // if we dont have in config then fallback to a FormRequest class
+        if ($requestClass = array_get($this->config, 'request')) {
+            if (!class_exists($requestClass))
+                throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
+
+            app()->resolving($requestClass, function ($request, $app) use ($form) {
+                if (method_exists($request, 'setController'))
+                    $request->setController($this->controller);
+
+                if (method_exists($request, 'setInputKey'))
+                    $request->setInputKey($form->arrayName);
+            });
+
+            app()->make($requestClass);
+        }
     }
 }

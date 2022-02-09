@@ -114,13 +114,22 @@ class Reservations_model extends Model
             'sort' => 'address_id desc',
             'customer' => null,
             'location' => null,
+            'status' => null,
             'search' => '',
             'dateTimeFilter' => [],
         ], $options));
 
         $searchableFields = ['reservation_id', 'first_name', 'last_name', 'email', 'telephone'];
 
-        $query->where('status_id', '>=', 1);
+        if (is_null($status)) {
+            $query->where('status_id', '>=', 1);
+        }
+        else {
+            if (!is_array($status))
+                $status = [$status];
+
+            $query->whereIn('status_id', $status);
+        }
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
@@ -420,9 +429,9 @@ class Reservations_model extends Model
      */
     public function mailGetData()
     {
-        $data = [];
-
         $model = $this->fresh();
+
+        $data = $model->toArray();
         $data['reservation'] = $model;
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;

@@ -6,10 +6,17 @@ use System\Classes\FormRequest;
 
 class MailLayout extends FormRequest
 {
+    public function attributes()
+    {
+        return [
+            'name' => lang('admin::lang.label_name'),
+        ];
+    }
+
     public function rules()
     {
         return [
-            ['name', 'admin::lang.label_name', 'required|between:2,32'],
+            'name' => ['required', 'between:2,32'],
         ];
     }
 }

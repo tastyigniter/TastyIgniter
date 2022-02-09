@@ -304,7 +304,7 @@ class ComponentManager
                 'label' => '',
                 'type' => 'text',
                 'comment' => '',
-                'validationRule' => 'required|regex:^[a-zA-Z]+$',
+                'validationRule' => ['required', 'regex:^[a-zA-Z]+$'],
                 'validationMessage' => '',
                 'required' => TRUE,
                 'showExternalParam' => FALSE,

@@ -25,6 +25,8 @@ class Stock_history_model extends Model
 
     protected $guarded = [];
 
+    protected $appends = ['staff_name', 'state_text', 'created_at_since'];
+
     public $relation = [
         'belongsTo' => [
             'stock' => 'Admin\Models\Stocks_model',
@@ -46,5 +48,20 @@ class Stock_history_model extends Model
         $model->save();
 
         return $model;
+    }
+
+    public function getStaffNameAttribute()
+    {
+        return ($this->staff && $this->staff->exists) ? $this->staff->staff_name : null;
+    }
+
+    public function getStateTextAttribute()
+    {
+        return lang('admin::lang.stocks.text_action_'.$this->state);
+    }
+
+    public function getCreatedAtSinceAttribute()
+    {
+        return $this->created_at ? time_elapsed($this->created_at) : null;
     }
 }

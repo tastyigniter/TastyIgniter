@@ -250,6 +250,7 @@ $config['form']['tabs'] = [
             'type' => 'scheduleeditor',
             'context' => ['edit'],
             'form' => 'working_hours_model',
+            'request' => 'Admin\Requests\WorkingHour',
         ],
 
         'options[limit_orders]' => [
@@ -271,6 +272,18 @@ $config['form']['tabs'] = [
                 'action' => 'enable',
                 'field' => 'options[limit_orders]',
                 'condition' => 'checked',
+            ],
+        ],
+        'options[guest_order]' => [
+            'label' => 'lang:system::lang.settings.label_guest_order',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
+            'type' => 'radiotoggle',
+            'comment' => 'lang:admin::lang.locations.help_guest_order',
+            'default' => -1,
+            'options' => [
+                -1 => 'lang:admin::lang.text_use_default',
+                0 => 'lang:admin::lang.text_no',
+                1 => 'lang:admin::lang.text_yes',
             ],
         ],
 
@@ -555,6 +568,7 @@ $config['form']['tabs'] = [
             'type' => 'maparea',
             'context' => ['edit'],
             'form' => 'location_areas_model',
+            'request' => 'Admin\Requests\LocationArea',
             'commentAbove' => 'lang:admin::lang.locations.help_delivery_areas',
         ],
 

@@ -757,6 +757,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/setup'),
                     'form' => '~/app/admin/models/config/setup_settings',
+                    'request' => 'Admin\Requests\SetupSettings',
                 ],
                 'user' => [
                     'label' => 'lang:admin::lang.settings.text_tab_user',
@@ -766,6 +767,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/user'),
                     'form' => '~/app/admin/models/config/user_settings',
+                    'request' => 'Admin\Requests\UserSettings',
                 ],
             ]);
         });
