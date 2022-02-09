@@ -670,8 +670,12 @@ return [
         'is_required' => 'is required',
         'is_not_required' => 'is not required',
         'text_option' => 'Option',
+        'text_options' => 'Options',
         'text_option_summary' => 'Display as a %s HTML element',
 
+        'button_assign' => 'Assign to Menu',
+
+        'column_name' => 'Option Name',
         'column_display_type' => 'Display Type',
 
         'label_option_name' => 'Option Name',
@@ -682,6 +686,21 @@ return [
         'label_option_price' => 'Option Price',
         'label_option_id' => 'Option ID',
         'label_update_related_menu_item' => 'Update option values of associated menu items',
+        'label_option_display_type' => 'Option Display Type',
+        'label_option_priority' => 'Option Priority',
+        'label_option_default_value' => 'Pre-selected',
+        'label_option_value_id' => 'Option Value ID',
+        'label_option_required' => 'Is Required?',
+        'label_min_selected' => 'Min Selected',
+        'label_max_selected' => 'Max Selected',
+        'label_new_price' => 'Override Price',
+
+        'help_min_selected' => 'Minimum items to select from these options, leave blank to ignore.',
+        'help_max_selected' => 'Maximum items to select from these options, leave blank to ignore.',
+        'help_menu_option' => 'Choose from the dropdown to assign a menu option to this menu item.',
+
+        'alert_menu_option_not_attached' => 'Please select a menu option to assign.',
+        'alert_menu_option_already_attached' => 'Can not assign, the selected menu option has already been assigned.',
     ],
 
     'menus' => [
@@ -717,18 +736,6 @@ return [
         'label_special_status' => 'Special Status',
         'label_option' => 'Option',
         'label_menu_option' => 'Menu Option',
-        'label_option_id' => 'Option ID',
-        'label_option_name' => 'Option Name',
-        'label_option_display_type' => 'Option Display Type',
-        'label_option_priority' => 'Option Priority',
-        'label_option_required' => 'Option Required',
-        'label_option_value' => 'Option Value',
-        'label_option_price' => 'Option Price',
-        'label_option_qty' => 'Stock Quantity',
-        'label_option_default_value' => 'Default',
-        'label_option_value_id' => 'ID',
-        'label_min_selected' => 'Min Selected',
-        'label_max_selected' => 'Max Selected',
         'label_start_date' => 'Start Date',
         'label_end_date' => 'End Date',
         'label_special_price' => 'Special Price',
@@ -743,13 +750,8 @@ return [
         'help_mealtime' => 'Set what time of day your customers can order this menu. Mealtimes can be managed under Kitchen > Mealtimes',
         'help_stock_qty' => 'Total stock available for this menu at all locations.',
         'help_minimum_qty' => 'Enter the minimum quantity that can be ordered by customers.',
-        'help_menu_option' => 'Choose from the dropdown to add an option to this menu item.',
         'help_order_restriction' => 'Whether to restrict the menu to a specific order type.',
-        'help_min_selected' => 'Minimum items to select from these options, leave blank to ignore.',
-        'help_max_selected' => 'Maximum items to select from these options, leave blank to ignore.',
-        'help_option_required' => 'Select Enabled if a customer MUST choose this option. If this option is not required, select Disabled.',
         'help_specials' => 'Select disable to deactivate Special. Select Enable to activate Special and enter the Start Date, End Date and price of your Special item.',
-        'alert_menu_option_not_attached' => 'Please select a menu option to attach.',
     ],
 
     'orders' => [
