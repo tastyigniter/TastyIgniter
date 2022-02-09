@@ -4,6 +4,7 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Stocks Model Class
@@ -32,6 +33,7 @@ class Stocks_model extends Model
         'related_id' => 'integer',
         'quantity' => 'integer',
         'low_stock_alert' => 'boolean',
+        'low_stock_alert_sent' => 'boolean',
         'low_stock_threshold' => 'integer',
         'is_tracked' => 'boolean',
     ];
@@ -83,10 +85,20 @@ class Stocks_model extends Model
 
             $history = Stock_history_model::createHistory($this, $quantity, $state, $options);
 
-            // Update using query to prevent model events from firing
-            $this->newQuery()
-                ->where($this->getKeyName(), $this->getKey())
-                ->update(['quantity' => $stockQty]);
+            if (in_array($state, [self::STATE_IN_STOCK, self::STATE_RESTOCK, self::STATE_RECOUNT]))
+                $this->low_stock_alert_sent = FALSE;
+
+            $this->quantity = $stockQty;
+            $this->saveQuietly();
+
+            if ($this->hasLowStock() && $this->shouldAlertOnLowStock($state)) {
+                Mail::queue('admin::_mail.low_stock_alert', ['stock' => $this], function ($message) {
+                    $message->to($this->location->location_email, $this->location->location_name);
+                });
+
+                // Prevent duplicate low stock alerts
+                $this->updateQuietly(['low_stock_alert_sent' => TRUE]);
+            }
 
             $this->fireSystemEvent('admin.stock.updated', [$history, $stockQty]);
         }
@@ -112,6 +124,11 @@ class Stocks_model extends Model
     public function outOfStock()
     {
         return $this->is_tracked && $this->quantity <= 0;
+    }
+
+    public function hasLowStock()
+    {
+        return $this->low_stock_threshold && $this->low_stock_threshold >= $this->quantity;
     }
 
     protected function shouldUpdateStock($state)
@@ -141,5 +158,13 @@ class Stocks_model extends Model
         }
 
         return max($stockQty, 0);
+    }
+
+    protected function shouldAlertOnLowStock()
+    {
+        if (!$this->low_stock_alert)
+            return FALSE;
+
+        return !$this->low_stock_alert_sent;
     }
 }
