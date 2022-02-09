@@ -299,7 +299,7 @@ trait ManagesUpdates
             'items.*.type' => ['required', 'in:core,extension,theme'],
             'items.*.ver' => ['required'],
             'items.*.action' => ['required', 'in:install,update'],
-        ], [
+        ], [], [
             'items.*.name' => lang('system::lang.updates.label_meta_code'),
             'items.*.type' => lang('system::lang.updates.label_meta_type'),
             'items.*.ver' => lang('system::lang.updates.label_meta_version'),
@@ -309,36 +309,33 @@ trait ManagesUpdates
 
     protected function validateProcess()
     {
-        $rules = [];
-        $attributes = [];
-
         if (post('step') != 'complete') {
-            $rules = array_merge($rules, [
+            $rules = [
                 'meta.code' => ['required'],
                 'meta.type' => ['required', 'in:core,extension,theme'],
                 'meta.version' => ['required'],
                 'meta.hash' => ['required'],
                 'meta.description' => ['sometimes'],
                 'meta.action' => ['required', 'in:install,update'],
-            ]);
+            ];
 
-            $rules = array_merge($rules, [
+            $attributes = [
                 'meta.code' => lang('system::lang.updates.label_meta_code'),
                 'meta.type' => lang('system::lang.updates.label_meta_type'),
                 'meta.version' => lang('system::lang.updates.label_meta_version'),
                 'meta.hash' => lang('system::lang.updates.label_meta_hash'),
                 'meta.description' => lang('system::lang.updates.label_meta_description'),
                 'meta.action' => lang('system::lang.updates.label_meta_action'),
-            ]);
+            ];
         }
         else {
-            $rules['meta.items'] = ['required', 'array'];
-            $attributes['meta.items'] = lang('system::lang.updates.label_meta_items');
+            $rules = ['meta.items' => ['required', 'array']];
+            $attributes = ['meta.items' => lang('system::lang.updates.label_meta_items')];
         }
 
         $rules['step'] = ['required', 'in:download,extract,complete'];
         $attributes['step'] = lang('system::lang.updates.label_meta_step');
 
-        return $this->validate(post(), $rules, $attributes);
+        return $this->validate(post(), $rules, [], $attributes);
     }
 }
