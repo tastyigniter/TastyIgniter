@@ -5,7 +5,6 @@ namespace Admin\Traits;
 use Admin\Classes\FormField;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
-use Illuminate\Support\Facades\Lang;
 
 /**
  * Form Model Widget Trait
@@ -66,10 +65,10 @@ trait FormModelWidget
             return $this->formField->resolveModelAttribute($this->model, $attribute);
         }
         catch (Exception $ex) {
-            throw new ApplicationException(Lang::get('backend::lang.model.missing_relation', [
-                'class' => get_class($this->model),
-                'relation' => $attribute,
-            ]));
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_model_definition'),
+                get_class($this->model),
+                $attribute
+            ));
         }
     }
 

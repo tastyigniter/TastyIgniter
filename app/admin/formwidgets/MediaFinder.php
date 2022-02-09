@@ -11,7 +11,9 @@ use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\SystemException;
 use Illuminate\Support\Collection;
+use Main\classes\MediaItem;
 use Main\Classes\MediaLibrary;
+use System\Models\Settings_model;
 
 /**
  * Media Finder
@@ -39,7 +41,7 @@ class MediaFinder extends BaseFormWidget
     public $prompt = 'lang:admin::lang.text_empty';
 
     /**
-     * @var string Display mode for the selection. Values: picker, inline.
+     * @var string Display mode. Values: grid, inline.
      */
     public $mode = 'grid';
 
@@ -144,6 +146,28 @@ class MediaFinder extends BaseFormWidget
             return $path;
 
         return MediaLibrary::instance()->getMediaThumb($path, $this->thumbOptions);
+    }
+
+    public function getMediaFileType($media)
+    {
+        $path = trim($media, '/');
+        if ($media instanceof Media)
+            $path = $media->getFilename();
+
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        if (!strlen($extension))
+            return MediaItem::FILE_TYPE_DOCUMENT;
+
+        if (in_array($extension, Settings_model::imageExtensions()))
+            return MediaItem::FILE_TYPE_IMAGE;
+
+        if (in_array($extension, Settings_model::audioExtensions()))
+            return MediaItem::FILE_TYPE_AUDIO;
+
+        if (in_array($extension, Settings_model::videoExtensions()))
+            return MediaItem::FILE_TYPE_VIDEO;
+
+        return MediaItem::FILE_TYPE_DOCUMENT;
     }
 
     public function onLoadAttachmentConfig()

@@ -6,28 +6,45 @@ use System\Classes\FormRequest;
 
 class Staff extends FormRequest
 {
+    public function attributes()
+    {
+       return [
+           'staff_name' => lang('admin::lang.label_name'),
+           'staff_email' => lang('admin::lang.label_email'),
+           'user.username' => lang('admin::lang.staff.label_username'),
+           'user.password' => lang('admin::lang.staff.label_password'),
+           'user.password_confirm' => lang('admin::lang.staff.label_confirm_password'),
+           'staff_status' => lang('admin::lang.label_status'),
+           'language_id' => lang('admin::lang.staff.label_language_id'),
+           'staff_role_id' => lang('admin::lang.staff.label_role'),
+           'groups' => lang('admin::lang.staff.label_group'),
+           'locations' => lang('admin::lang.staff.label_location'),
+           'groups.*' => lang('admin::lang.staff.label_group'),
+           'locations.*' => lang('admin::lang.staff.label_location'),
+       ];
+    }
+
     public function rules()
     {
         $passwordRule = optional($this->getForm())->context != 'create'
             ? 'sometimes' : 'required_if:user.send_invite,0';
 
         $rules = [
-            ['staff_name', 'admin::lang.label_name', 'required|between:2,128'],
-            ['staff_email', 'admin::lang.label_email', 'required|max:96|email:filter|unique:staffs,staff_email'],
-            ['user.username', 'admin::lang.staff.label_username', 'required|alpha_dash|between:2,32|unique:users,username'],
-            ['user.password', 'admin::lang.staff.label_password', $passwordRule.'|between:6,32|same:user.password_confirm'],
-            ['user.password_confirm', 'admin::lang.staff.label_confirm_password'],
+            'staff_name' => ['required', 'between:2,128'],
+            'staff_email' => ['required', 'max:96', 'email:filter', 'unique:staffs,staff_email'],
+            'user.username' => ['required', 'alpha_dash', 'between:2,32', 'unique:users,username'],
+            'user.password' => [$passwordRule, 'between:6,32', 'same:user.password_confirm'],
         ];
 
         if (optional($this->getForm())->context != 'account') {
             $rules = array_merge($rules, [
-                ['staff_status', 'admin::lang.label_status', 'boolean'],
-                ['language_id', 'admin::lang.staff.label_language_id', 'nullable|integer'],
-                ['staff_role_id', 'admin::lang.staff.label_role', 'sometimes|required|integer'],
-                ['groups', 'admin::lang.staff.label_group', 'required|array'],
-                ['locations', 'admin::lang.staff.label_location', 'nullable|array'],
-                ['groups.*', 'admin::lang.staff.label_group', 'integer'],
-                ['locations.*', 'admin::lang.staff.label_location', 'integer'],
+                'staff_status' => ['boolean'],
+                'language_id' => ['nullable', 'integer'],
+                'staff_role_id' => ['sometimes', 'required', 'integer'],
+                'groups' => ['required', 'array'],
+                'locations' => ['nullable', 'array'],
+                'groups.*' => ['integer'],
+                'locations.*' => ['integer'],
             ]);
         }
 
