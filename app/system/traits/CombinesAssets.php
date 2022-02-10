@@ -201,8 +201,8 @@ trait CombinesAssets
         foreach ($assets as $path) {
             $filters = $this->getFilters(File::extension($path)) ?: [];
 
-            if (file_exists($publicPath = public_path($path)))
-                $path = $publicPath;
+            if (file_exists($basePath = base_path($path)))
+                $path = $basePath;
 
             if (!file_exists($path))
                 $path = File::symbolizePath($path, null) ?? $path;
@@ -212,7 +212,7 @@ trait CombinesAssets
 
             $asset = starts_with($path, ['//', 'http://', 'https://'])
                 ? new HttpAsset($path, $filters)
-                : new FileAsset($path, $filters, public_path());
+                : new FileAsset($path, $filters, base_path());
 
             $files[] = $asset;
         }

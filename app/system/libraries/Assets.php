@@ -34,7 +34,7 @@ class Assets
 
     public function initialize()
     {
-        static::$registeredPaths[] = base_path();
+        static::$registeredPaths[] = public_path();
 
         $this->initCombiner();
 
