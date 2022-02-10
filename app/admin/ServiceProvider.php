@@ -200,6 +200,11 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'mediafinder',
             ]);
 
+            $manager->registerFormWidget('Admin\FormWidgets\MenuOptionEditor', [
+                'label' => 'Menu Option Editor',
+                'code' => 'menuoptioneditor',
+            ]);
+
             $manager->registerFormWidget('Admin\FormWidgets\PermissionEditor', [
                 'label' => 'Permission Editor',
                 'code' => 'permissioneditor',
@@ -233,6 +238,11 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerFormWidget('Admin\FormWidgets\ScheduleEditor', [
                 'label' => 'Schedule Editor',
                 'code' => 'scheduleeditor',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\StockEditor', [
+                'label' => 'Stock Editor',
+                'code' => 'stockeditor',
             ]);
         });
     }
@@ -554,7 +564,6 @@ class ServiceProvider extends AppServiceProvider
             'mealtimes' => 'Admin\Models\Mealtimes_model',
             'menu_categories' => 'Admin\Models\Menu_categories_model',
             'menu_item_option_values' => 'Admin\Models\Menu_item_option_values_model',
-            'menu_item_options' => 'Admin\Models\Menu_item_options_model',
             'menu_option_values' => 'Admin\Models\Menu_option_values_model',
             'menu_options' => 'Admin\Models\Menu_options_model',
             'menus' => 'Admin\Models\Menus_model',
@@ -567,6 +576,8 @@ class ServiceProvider extends AppServiceProvider
             'staffs' => 'Admin\Models\Staffs_model',
             'status_history' => 'Admin\Models\Status_history_model',
             'statuses' => 'Admin\Models\Statuses_model',
+            'stocks' => 'Admin\Models\Stocks_model',
+            'stock_history' => 'Admin\Models\Stock_history_model',
             'tables' => 'Admin\Models\Tables_model',
             'users' => 'Admin\Models\Users_model',
             'working_hours' => 'Admin\Models\Working_hours_model',
@@ -746,6 +757,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/setup'),
                     'form' => '~/app/admin/models/config/setup_settings',
+                    'request' => 'Admin\Requests\SetupSettings',
                 ],
                 'user' => [
                     'label' => 'lang:admin::lang.settings.text_tab_user',
@@ -755,6 +767,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/user'),
                     'form' => '~/app/admin/models/config/user_settings',
+                    'request' => 'Admin\Requests\UserSettings',
                 ],
             ]);
         });

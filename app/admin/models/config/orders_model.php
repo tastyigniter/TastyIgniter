@@ -197,6 +197,7 @@ $config['form']['fields'] = [
         'type' => 'statuseditor',
         'span' => 'right',
         'form' => 'order_status_model',
+        'request' => 'Admin\Requests\OrderStatus',
     ],
 ];
 

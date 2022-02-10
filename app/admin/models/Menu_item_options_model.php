@@ -8,6 +8,8 @@ use Igniter\Flame\Database\Traits\Validation;
 
 /**
  * MenuOptions Model Class
+ *
+ * @deprecated remove before v4. Added for backward compatibility
  */
 class Menu_item_options_model extends Model
 {

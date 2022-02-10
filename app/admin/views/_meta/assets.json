@@ -1,6 +1,6 @@
 {
   "doctype": "html5",
-  "favicon": "/app/admin/assets/images/favicon.svg",
+  "favicon": "/favicon.svg",
   "meta": [
     {
       "name": "Content-type",

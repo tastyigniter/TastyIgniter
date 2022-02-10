@@ -1,6 +1,6 @@
 <div
     id="{{ $this->getId() }}"
-    class="mediafinder {{ $mode }}-mode{{ $isMulti ? ' is-multi' : '' }}{{ $mode == 'picker' ? ' is-picker' : '' }}{{ $value ? ' is-populated' : '' }}"
+    class="mediafinder {{ $mode }}-mode{{ $isMulti ? ' is-multi' : '' }}{{ $value ? ' is-populated' : '' }}"
     data-control="mediafinder"
     data-alias="{{ $this->alias }}"
     data-mode="{{ $mode }}"

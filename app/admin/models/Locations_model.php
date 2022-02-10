@@ -48,6 +48,7 @@ class Locations_model extends AbstractLocation
         ],
         'morphedByMany' => [
             'staffs' => ['Admin\Models\Staffs_model', 'name' => 'locationable'],
+            'tables' => ['Admin\Models\Tables_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -264,6 +265,14 @@ class Locations_model extends AbstractLocation
         $gallery['images'] = $this->getMedia('gallery');
 
         return $gallery;
+    }
+
+    public function allowGuestOrder()
+    {
+        if (($allowGuestOrder = (int)$this->getOption('guest_order', -1)) === -1)
+            $allowGuestOrder = (int)setting('guest_order', 1);
+
+        return (bool)$allowGuestOrder;
     }
 
     public function listAvailablePayments()

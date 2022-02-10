@@ -89,7 +89,7 @@ class ScheduleEditor extends BaseFormWidget
         $form = $this->makeScheduleFormWidget($scheduleItem);
         $saveData = $form->getSaveData();
 
-        $this->validate($saveData, $form->getConfig('rules', []));
+        $this->validateFormWidget($form, $saveData);
 
         DB::transaction(function () use ($scheduleCode, $saveData) {
             $this->model->updateSchedule($scheduleCode, $saveData);

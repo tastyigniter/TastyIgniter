@@ -25,7 +25,6 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
@@ -35,7 +34,6 @@ use Main\Classes\Customer;
 use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
-use System\Helpers\ValidationHelper;
 use System\Libraries\Assets;
 use System\Models\Settings_model;
 use System\Template\Extension\BladeExtension;
@@ -228,12 +226,6 @@ class ServiceProvider extends AppServiceProvider
         Validator::extend('valid_time', function ($attribute, $value, $parameters, $validator) {
             return !(!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
                 && !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value));
-        });
-
-        Event::listen('validator.beforeMake', function ($args) {
-            $rules = ValidationHelper::prepareRules($args->rules);
-            $args->rules = Arr::get($rules, 'rules', $args->rules);
-            $args->customAttributes = Arr::get($rules, 'attributes', $args->customAttributes);
         });
     }
 
@@ -456,6 +448,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/general'),
                     'form' => '~/app/system/models/config/general_settings',
+                    'request' => 'System\Requests\GeneralSettings',
                 ],
                 'mail' => [
                     'label' => 'lang:system::lang.settings.text_tab_mail',
@@ -465,6 +458,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/mail'),
                     'form' => '~/app/system/models/config/mail_settings',
+                    'request' => 'System\Requests\MailSettings',
                 ],
                 'advanced' => [
                     'label' => 'lang:system::lang.settings.text_tab_server',
@@ -474,6 +468,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/advanced'),
                     'form' => '~/app/system/models/config/advanced_settings',
+                    'request' => 'System\Requests\AdvancedSettings',
                 ],
             ]);
         });

@@ -158,15 +158,10 @@ class StatusEditor extends BaseFormWidget
         $saveData = $this->mergeSaveData($form->getSaveData());
 
         try {
-            $this->validateAfter(function ($validator) use ($context, $recordId, $keyFrom) {
-                if ($this->isStatusMode && $recordId == $this->model->{$keyFrom}) {
-                    $validator->errors()->add($keyFrom, sprintf(
-                        lang('admin::lang.statuses.alert_already_added'),
-                        $context, $context
-                    ));
-                }
-            });
-            $this->validate($saveData, $this->getFormRules());
+            if ($this->isStatusMode && $recordId == $this->model->{$keyFrom})
+                throw new ApplicationException(sprintf(lang('admin::lang.statuses.alert_already_added'), $context, $context));
+
+            $this->validateFormWidget($form, $saveData);
         }
         catch (ValidationException $ex) {
             throw new ApplicationException($ex->getMessage());
@@ -320,14 +315,6 @@ class StatusEditor extends BaseFormWidget
 
     protected function formExtendFields($form, $fields)
     {
-    }
-
-    protected function getFormRules()
-    {
-        $widgetConfig = is_string($this->form)
-            ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-
-        return array_get($widgetConfig, 'rules', []);
     }
 
     protected function checkAssigneePermission()
