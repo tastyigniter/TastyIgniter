@@ -166,7 +166,7 @@ class Payments extends \Admin\Classes\AdminController
             if ($mergeRules = $form->model->getConfigRules())
                 array_push($rules, ...$mergeRules);
 
-            if ($mergeAttributes = $form->model->getConfigAttributes())
+            if ($mergeAttributes = $form->model->getConfigValidationAttributes())
                 array_push($attributes, ...$mergeAttributes);
         }
 
