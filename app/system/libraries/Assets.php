@@ -229,14 +229,12 @@ class Assets
         if (!$assets)
             return null;
 
-        if ($this->combineAssets) {
-            $assetsToCombine = $this->filterAssetsToCombine($assets);
+        $assetsToCombine = $this->filterAssetsToCombine($assets);
 
-            $assets[] = [
-                'path' => $this->combine($type, $assetsToCombine),
-                'attributes' => null,
-            ];
-        }
+        $assets[] = [
+            'path' => $this->combine($type, $assetsToCombine),
+            'attributes' => null,
+        ];
 
         return $this->buildAssetUrls($type, $assets);
     }
