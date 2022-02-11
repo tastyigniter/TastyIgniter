@@ -4552,15 +4552,15 @@ readers do not read off random characters that represent icons */
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 @font-face {
-  font-family: 'Font Awesome 5 Brands';
+  font-family: "Font Awesome 5 Brands";
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("../../../system/assets/ui/fonts/FontAwesome/fa-brands-400.eot");
-  src: url("../../../system/assets/ui/fonts/FontAwesome/fa-brands-400.eot?#iefix") format('embedded-opentype'), url("../../../system/assets/ui/fonts/FontAwesome/fa-brands-400.woff2") format('woff2'), url("../../../system/assets/ui/fonts/FontAwesome/fa-brands-400.woff") format('woff'), url("../../../system/assets/ui/fonts/FontAwesome/fa-brands-400.ttf") format('truetype'), url("../../../system/assets/ui/fonts/FontAwesome/fa-brands-400.svg#fontawesome") format('svg');
+  src: url("/assets/fonts/FontAwesome/fa-brands-400.eot");
+  src: url("/assets/fonts/FontAwesome/fa-brands-400.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/FontAwesome/fa-brands-400.woff2") format("woff2"), url("/assets/fonts/FontAwesome/fa-brands-400.woff") format("woff"), url("/assets/fonts/FontAwesome/fa-brands-400.ttf") format("truetype"), url("/assets/fonts/FontAwesome/fa-brands-400.svg#fontawesome") format("svg");
 }
 .fab {
-  font-family: 'Font Awesome 5 Brands';
+  font-family: "Font Awesome 5 Brands";
   font-weight: 400;
 }
 /*!
@@ -4568,15 +4568,15 @@ readers do not read off random characters that represent icons */
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 @font-face {
-  font-family: 'Font Awesome 5 Free';
+  font-family: "Font Awesome 5 Free";
   font-style: normal;
   font-weight: 900;
   font-display: block;
-  src: url("../../../system/assets/ui/fonts/FontAwesome/fa-solid-900.eot");
-  src: url("../../../system/assets/ui/fonts/FontAwesome/fa-solid-900.eot?#iefix") format('embedded-opentype'), url("../../../system/assets/ui/fonts/FontAwesome/fa-solid-900.woff2") format('woff2'), url("../../../system/assets/ui/fonts/FontAwesome/fa-solid-900.woff") format('woff'), url("../../../system/assets/ui/fonts/FontAwesome/fa-solid-900.ttf") format('truetype'), url("../../../system/assets/ui/fonts/FontAwesome/fa-solid-900.svg#fontawesome") format('svg');
+  src: url("/assets/fonts/FontAwesome/fa-solid-900.eot");
+  src: url("/assets/fonts/FontAwesome/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/FontAwesome/fa-solid-900.woff2") format("woff2"), url("/assets/fonts/FontAwesome/fa-solid-900.woff") format("woff"), url("/assets/fonts/FontAwesome/fa-solid-900.ttf") format("truetype"), url("/assets/fonts/FontAwesome/fa-solid-900.svg#fontawesome") format("svg");
 }
 .fa, .fas {
-  font-family: 'Font Awesome 5 Free';
+  font-family: "Font Awesome 5 Free";
   font-weight: 900;
 }
 /*!
@@ -4584,15 +4584,15 @@ readers do not read off random characters that represent icons */
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 @font-face {
-  font-family: 'Font Awesome 5 Free';
+  font-family: "Font Awesome 5 Free";
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("../../../system/assets/ui/fonts/FontAwesome/fa-regular-400.eot");
-  src: url("../../../system/assets/ui/fonts/FontAwesome/fa-regular-400.eot?#iefix") format('embedded-opentype'), url("../../../system/assets/ui/fonts/FontAwesome/fa-regular-400.woff2") format('woff2'), url("../../../system/assets/ui/fonts/FontAwesome/fa-regular-400.woff") format('woff'), url("../../../system/assets/ui/fonts/FontAwesome/fa-regular-400.ttf") format('truetype'), url("../../../system/assets/ui/fonts/FontAwesome/fa-regular-400.svg#fontawesome") format('svg');
+  src: url("/assets/fonts/FontAwesome/fa-regular-400.eot");
+  src: url("/assets/fonts/FontAwesome/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("/assets/fonts/FontAwesome/fa-regular-400.woff2") format("woff2"), url("/assets/fonts/FontAwesome/fa-regular-400.woff") format("woff"), url("/assets/fonts/FontAwesome/fa-regular-400.ttf") format("truetype"), url("/assets/fonts/FontAwesome/fa-regular-400.svg#fontawesome") format("svg");
 }
 .far, .fa-star-o {
-  font-family: 'Font Awesome 5 Free';
+  font-family: "Font Awesome 5 Free";
   font-weight: 400;
 }
 /*!
@@ -7871,15 +7871,15 @@ readers do not read off random characters that represent icons */
   padding: 6px;
 }
 .select2-container--classic .select2-selection--single {
-  background-color: #f7f7f7;
+  background-color: #F7F7F7;
   border: 1px solid #D2D4DF;
   border-radius: 0.25rem;
   outline: 0;
-  background-image: -webkit-linear-gradient(top, white 50%, #eeeeee 100%);
-  background-image: -o-linear-gradient(top, white 50%, #eeeeee 100%);
-  background-image: linear-gradient(to bottom, white 50%, #eeeeee 100%);
+  background-image: -webkit-linear-gradient(top, white 50%, #EEEEEE 100%);
+  background-image: -o-linear-gradient(top, white 50%, #EEEEEE 100%);
+  background-image: linear-gradient(to bottom, white 50%, #EEEEEE 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#FFFFFFFF", endColorstr="#FFEEEEEE", GradientType=0);
 }
 .select2-container--classic .select2-selection--single:focus {
   border: 1px solid #5897fb;
@@ -7908,11 +7908,11 @@ readers do not read off random characters that represent icons */
   top: 1px;
   right: 1px;
   width: 20px;
-  background-image: -webkit-linear-gradient(top, #eeeeee 50%, #cccccc 100%);
-  background-image: -o-linear-gradient(top, #eeeeee 50%, #cccccc 100%);
-  background-image: linear-gradient(to bottom, #eeeeee 50%, #cccccc 100%);
+  background-image: -webkit-linear-gradient(top, #EEEEEE 50%, #CCCCCC 100%);
+  background-image: -o-linear-gradient(top, #EEEEEE 50%, #CCCCCC 100%);
+  background-image: linear-gradient(to bottom, #EEEEEE 50%, #CCCCCC 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFCCCCCC', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#FFEEEEEE", endColorstr="#FFCCCCCC", GradientType=0);
 }
 .select2-container--classic .select2-selection--single .select2-selection__arrow b {
   border-color: #888 transparent transparent transparent;
@@ -7953,21 +7953,21 @@ readers do not read off random characters that represent icons */
   border-top: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background-image: -webkit-linear-gradient(top, white 0%, #eeeeee 50%);
-  background-image: -o-linear-gradient(top, white 0%, #eeeeee 50%);
-  background-image: linear-gradient(to bottom, white 0%, #eeeeee 50%);
+  background-image: -webkit-linear-gradient(top, white 0%, #EEEEEE 50%);
+  background-image: -o-linear-gradient(top, white 0%, #EEEEEE 50%);
+  background-image: linear-gradient(to bottom, white 0%, #EEEEEE 50%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#FFFFFFFF", endColorstr="#FFEEEEEE", GradientType=0);
 }
 .select2-container--classic.select2-container--open.select2-container--below .select2-selection--single {
   border-bottom: none;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  background-image: -webkit-linear-gradient(top, #eeeeee 50%, white 100%);
-  background-image: -o-linear-gradient(top, #eeeeee 50%, white 100%);
-  background-image: linear-gradient(to bottom, #eeeeee 50%, white 100%);
+  background-image: -webkit-linear-gradient(top, #EEEEEE 50%, white 100%);
+  background-image: -o-linear-gradient(top, #EEEEEE 50%, white 100%);
+  background-image: linear-gradient(to bottom, #EEEEEE 50%, white 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFFFFFFF', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#FFEEEEEE", endColorstr="#FFFFFFFF", GradientType=0);
 }
 .select2-container--classic .select2-selection--multiple {
   background-color: white;
@@ -10279,16 +10279,13 @@ pre code {
   background-color: #D2D4DF;
   opacity: 1;
 }
-
 input[type="date"].form-control, input[type="time"].form-control, input[type="datetime-local"].form-control, input[type="month"].form-control {
   appearance: none;
 }
-
 select.form-control:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #192957;
 }
-
 select.form-control:focus::-ms-value {
   color: #192957;
   background-color: #FFFFFF;
@@ -10433,17 +10430,14 @@ textarea.form-control {
   background-position: right calc(0.375em + 0.25rem) center;
   background-size: calc(0.75em + 0.5rem) calc(0.75em + 0.5rem);
 }
-
 .was-validated .form-control:valid:focus, .form-control.is-valid:focus {
   border-color: #28A745;
   box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
 }
-
 .was-validated select.form-control:valid, select.form-control.is-valid {
   padding-right: 3rem !important;
   background-position: right 1.5rem center;
 }
-
 .was-validated textarea.form-control:valid, textarea.form-control.is-valid {
   padding-right: calc(1.5em + 1rem);
   background-position: top calc(0.375em + 0.25rem) right calc(0.375em + 0.25rem);
@@ -10522,17 +10516,14 @@ textarea.form-control {
   background-position: right calc(0.375em + 0.25rem) center;
   background-size: calc(0.75em + 0.5rem) calc(0.75em + 0.5rem);
 }
-
 .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus, .has-error .form-control:focus {
   border-color: #DC3545;
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
 }
-
 .was-validated select.form-control:invalid, select.form-control.is-invalid, .has-error select.form-control {
   padding-right: 3rem !important;
   background-position: right 1.5rem center;
 }
-
 .was-validated textarea.form-control:invalid, textarea.form-control.is-invalid, .has-error textarea.form-control {
   padding-right: calc(1.5em + 1rem);
   background-position: top calc(0.375em + 0.25rem) right calc(0.375em + 0.25rem);
@@ -10687,9 +10678,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-primary:focus, .swal-button--confirm:focus, .btn-primary.focus, .focus.swal-button--confirm {
   color: #FFFFFF;
-  background-color: #1b5d9f;
-  border-color: #1a5794;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(66, 133, 201, 0.5);
+  background-color: #1B5D9F;
+  border-color: #1A5794;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(66, 133, 201, 0.5);
 }
 .btn-primary.disabled, .disabled.swal-button--confirm, .btn-primary:disabled, .swal-button--confirm:disabled {
   color: #FFFFFF;
@@ -10717,9 +10708,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-secondary:focus, .btn-default:focus, .btn-secondary.focus, .focus.btn-default {
   color: #FFFFFF;
-  background-color: #5d6888;
+  background-color: #5D6888;
   border-color: #586380;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .btn-secondary.disabled, .disabled.btn-default, .btn-secondary:disabled, .btn-default:disabled {
   color: #FFFFFF;
@@ -10748,8 +10739,8 @@ a.btn.disabled, fieldset:disabled a.btn {
 .btn-success:focus, .btn-success.focus {
   color: #FFFFFF;
   background-color: #218838;
-  border-color: #1e7e34;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(72, 180, 97, 0.5);
+  border-color: #1E7E34;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(72, 180, 97, 0.5);
 }
 .btn-success.disabled, .btn-success:disabled {
   color: #FFFFFF;
@@ -10777,9 +10768,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-info:focus, .btn-info.focus {
   color: #FFFFFF;
-  background-color: #3b4ad1;
-  border-color: #3141ce;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(115, 126, 222, 0.5);
+  background-color: #3B4AD1;
+  border-color: #3141CE;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(115, 126, 222, 0.5);
 }
 .btn-info.disabled, .btn-info:disabled {
   color: #FFFFFF;
@@ -10807,9 +10798,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-warning:focus, .btn-warning.focus {
   color: #FFFFFF;
-  background-color: #e96b02;
-  border-color: #dc6502;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(219, 113, 30, 0.5);
+  background-color: #E96B02;
+  border-color: #DC6502;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(219, 113, 30, 0.5);
 }
 .btn-warning.disabled, .btn-warning:disabled {
   color: #192957;
@@ -10837,9 +10828,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-danger:focus, .btn-danger.focus {
   color: #FFFFFF;
-  background-color: #c82333;
-  border-color: #bd2130;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(225, 83, 97, 0.5);
+  background-color: #C82333;
+  border-color: #BD2130;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(225, 83, 97, 0.5);
 }
 .btn-danger.disabled, .btn-danger:disabled {
   color: #FFFFFF;
@@ -10867,9 +10858,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-light:focus, .swal-button--cancel:focus, .btn-light.focus, .focus.swal-button--cancel {
   color: #192957;
-  background-color: #d6e4ff;
-  border-color: #c9dbff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(218, 221, 230, 0.5);
+  background-color: #D6E4FF;
+  border-color: #C9DBFF;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(218, 221, 230, 0.5);
 }
 .btn-light.disabled, .disabled.swal-button--cancel, .btn-light:disabled, .swal-button--cancel:disabled {
   color: #192957;
@@ -10897,9 +10888,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-dark:focus, .btn-dark.focus {
   color: #FFFFFF;
-  background-color: #101b39;
-  border-color: #0e162f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(60, 73, 112, 0.5);
+  background-color: #101B39;
+  border-color: #0E162F;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(60, 73, 112, 0.5);
 }
 .btn-dark.disabled, .btn-dark:disabled {
   color: #FFFFFF;
@@ -10927,9 +10918,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-default:focus, .btn-default.focus {
   color: #FFFFFF;
-  background-color: #5d6888;
+  background-color: #5D6888;
   border-color: #586380;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .btn-default.disabled, .btn-default:disabled {
   color: #FFFFFF;
@@ -10957,9 +10948,9 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 .btn-white:focus, .btn-white.focus {
   color: #192957;
-  background-color: #ececec;
-  border-color: #e6e6e6;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(221, 223, 230, 0.5);
+  background-color: #ECECEC;
+  border-color: #E6E6E6;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(221, 223, 230, 0.5);
 }
 .btn-white.disabled, .btn-white:disabled {
   color: #192957;
@@ -11598,37 +11589,30 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 .input-group > .custom-file .custom-file-input:focus {
   z-index: 4;
 }
-
 .input-group > .form-control:not(:first-child), .input-group > .custom-select:not(:first-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-
 .input-group > .custom-file {
   display: flex;
   align-items: center;
 }
-
 .input-group > .custom-file:not(:last-child) .custom-file-label, .input-group > .custom-file:not(:last-child) .custom-file-label::after {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-
 .input-group > .custom-file:not(:first-child) .custom-file-label {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-
 .input-group:not(.has-validation) > .form-control:not(:last-child), .input-group:not(.has-validation) > .custom-select:not(:last-child), .input-group:not(.has-validation) > .custom-file:not(:last-child) .custom-file-label, .input-group:not(.has-validation) > .custom-file:not(:last-child) .custom-file-label::after {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-
 .input-group.has-validation > .form-control:nth-last-child(n + 3), .input-group.has-validation > .custom-select:nth-last-child(n + 3), .input-group.has-validation > .custom-file:nth-last-child(n + 3) .custom-file-label, .input-group.has-validation > .custom-file:nth-last-child(n + 3) .custom-file-label::after {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-
 .input-group-prepend, .input-group-append, .input-group-btn, .input-group-addon {
   display: flex;
 }
@@ -11840,9 +11824,9 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
   appearance: none;
 }
 .custom-select:focus {
-  border-color: #79b0e8;
+  border-color: #79B0E8;
   outline: 0;
-  box-shadow: inset 0 1px 2px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(33, 112, 192, 0.25);
+  box-shadow: inset 0 1px 2px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(33, 112, 192, 0.25);
 }
 .custom-select:focus::-ms-value {
   color: #192957;
@@ -16857,7 +16841,7 @@ html.cssanimations .progress-indicator > span {
   display: none;
 }
 a.ti-loading:before, button.ti-loading:before, span.ti-loading:before {
-  content: '';
+  content: "";
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.4em;
@@ -17949,7 +17933,7 @@ body.dragging .dragged {
 }
 .nav-sidebar .has-arrow::after {
   position: absolute;
-  content: '';
+  content: "";
   width: 0.5em;
   height: 0.5em;
   border-width: 1px 0 0 1px;
@@ -18290,9 +18274,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-secondary:focus, .toolbar-action .btn-default:focus, .toolbar-action .btn-secondary.focus, .toolbar-action .focus.btn-default {
   color: #FFFFFF;
-  background-color: #5d6888;
+  background-color: #5D6888;
   border-color: #586380;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-secondary.disabled, .toolbar-action .disabled.btn-default, .toolbar-action .btn-secondary:disabled, .toolbar-action .btn-default:disabled {
   color: #FFFFFF;
@@ -18321,8 +18305,8 @@ body.dragging .dragged {
 .toolbar-action .btn-success:focus, .toolbar-action .btn-success.focus {
   color: #FFFFFF;
   background-color: #218838;
-  border-color: #1e7e34;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  border-color: #1E7E34;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-success.disabled, .toolbar-action .btn-success:disabled {
   color: #FFFFFF;
@@ -18350,9 +18334,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-info:focus, .toolbar-action .btn-info.focus {
   color: #FFFFFF;
-  background-color: #3b4ad1;
-  border-color: #3141ce;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  background-color: #3B4AD1;
+  border-color: #3141CE;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-info.disabled, .toolbar-action .btn-info:disabled {
   color: #FFFFFF;
@@ -18380,9 +18364,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-warning:focus, .toolbar-action .btn-warning.focus {
   color: #FFFFFF;
-  background-color: #e96b02;
-  border-color: #dc6502;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  background-color: #E96B02;
+  border-color: #DC6502;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-warning.disabled, .toolbar-action .btn-warning:disabled {
   color: #FFFFFF;
@@ -18410,9 +18394,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-danger:focus, .toolbar-action .btn-danger.focus {
   color: #FFFFFF;
-  background-color: #c82333;
-  border-color: #bd2130;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  background-color: #C82333;
+  border-color: #BD2130;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-danger.disabled, .toolbar-action .btn-danger:disabled {
   color: #FFFFFF;
@@ -18440,9 +18424,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-light:focus, .toolbar-action .swal-button--cancel:focus, .toolbar-action .btn-light.focus, .toolbar-action .focus.swal-button--cancel {
   color: #192957;
-  background-color: #d6e4ff;
-  border-color: #c9dbff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  background-color: #D6E4FF;
+  border-color: #C9DBFF;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-light.disabled, .toolbar-action .disabled.swal-button--cancel, .toolbar-action .btn-light:disabled, .toolbar-action .swal-button--cancel:disabled {
   color: #FFFFFF;
@@ -18470,9 +18454,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-dark:focus, .toolbar-action .btn-dark.focus {
   color: #FFFFFF;
-  background-color: #101b39;
-  border-color: #0e162f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  background-color: #101B39;
+  border-color: #0E162F;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-dark.disabled, .toolbar-action .btn-dark:disabled {
   color: #FFFFFF;
@@ -18500,9 +18484,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-default:focus, .toolbar-action .btn-default.focus {
   color: #FFFFFF;
-  background-color: #5d6888;
+  background-color: #5D6888;
   border-color: #586380;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-default.disabled, .toolbar-action .btn-default:disabled {
   color: #FFFFFF;
@@ -18530,9 +18514,9 @@ body.dragging .dragged {
 }
 .toolbar-action .btn-white:focus, .toolbar-action .btn-white.focus {
   color: #192957;
-  background-color: #ececec;
-  border-color: #e6e6e6;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075) 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
+  background-color: #ECECEC;
+  border-color: #E6E6E6;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 3, 41, 0.075), 0 0 0 0.2rem rgba(133, 143, 171, 0.5);
 }
 .toolbar-action .btn-white.disabled, .toolbar-action .btn-white:disabled {
   color: #FFFFFF;

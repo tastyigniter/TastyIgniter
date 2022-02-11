@@ -20,7 +20,7 @@ mix.setPublicPath('./').options({
 //
 mix.copyDirectory(
     'node_modules/@fortawesome/fontawesome-free/webfonts',
-    '../../system/assets/ui/fonts/FontAwesome'
+    '../../../public/assets/fonts/FontAwesome'
 )
 .copy(
     'node_modules/animate.css/animate.min.css',

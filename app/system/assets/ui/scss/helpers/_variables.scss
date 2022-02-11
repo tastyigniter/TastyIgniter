@@ -49,7 +49,7 @@ $theme-colors: map-merge($theme-colors, (
 ));
 // Options
 //
-$icon-font-path: '../../../system/assets/ui/fonts/';
+$icon-font-path: '/assets/fonts/';
 $fa-font-path: $icon-font-path+'FontAwesome';
 // Body
 //
