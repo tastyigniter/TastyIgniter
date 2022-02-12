@@ -3,6 +3,7 @@
 .htaccess
 .env
 .phpunit.result.cache
+phpunit.dusk.xml
 
 # Ignore all vendor files included by composer and the lock file
 /vendor

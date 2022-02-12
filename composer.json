@@ -31,7 +31,8 @@
     "wikimedia/composer-merge-plugin": "dev-feature/composer-v2 as 1.4"
   },
   "require-dev": {
-    "phpunit/phpunit": "^8.0|^9.0",
+    "phpunit/phpunit": "^8.4|^9.3.3",
+    "mockery/mockery": "^1.4.2",
     "fzaninotto/faker": "~1.9",
     "squizlabs/php_codesniffer": "3.*",
     "jakub-onderka/php-parallel-lint": "^1.0",
@@ -49,6 +50,7 @@
     }
   },
   "scripts": {
+    "test": "vendor/bin/phpunit",
     "post-create-project-cmd": [
       "php artisan key:generate"
     ]

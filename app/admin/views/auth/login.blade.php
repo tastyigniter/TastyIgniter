@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="form-group">
-                    <p class="text-right">
+                    <p class="reset-password text-right">
                         <a href="{{ admin_url('login/reset') }}">
                             @lang('admin::lang.login.text_forgot_password')
                         </a>

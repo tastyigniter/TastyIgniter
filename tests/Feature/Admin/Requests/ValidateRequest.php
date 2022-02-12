@@ -32,8 +32,6 @@ trait ValidateRequest
             return TRUE;
         }
         catch (ValidationException $ex) {
-//            dump($ex->getErrors());
-
             return FALSE;
         }
     }
