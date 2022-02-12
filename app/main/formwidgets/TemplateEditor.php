@@ -110,7 +110,7 @@ class TemplateEditor extends BaseFormWidget
         $this->validate(post('Theme.source.template'), [
             'type' => ['required', 'in:_pages,_partials,_layouts,_content'],
             'file' => ['sometimes', 'nullable', 'string'],
-        ], [
+        ], [], [
             'type' => 'Source Type',
             'file' => 'Source File',
         ]);
@@ -129,7 +129,7 @@ class TemplateEditor extends BaseFormWidget
         $this->validate(post(), [
             'action' => ['required', 'in:delete,rename,new'],
             'name' => ['present', 'regex:/^[a-zA-Z-_\/]+$/'],
-        ], [
+        ], [], [
             'action' => 'Source Action',
             'name' => 'Source Name',
         ]);
