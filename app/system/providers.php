@@ -17,6 +17,7 @@ return [
     Illuminate\Session\SessionServiceProvider::class,
     Illuminate\View\ViewServiceProvider::class,
     Laravel\Tinker\TinkerServiceProvider::class,
+    Livewire\LivewirServiceProvider::class,
 
     // TastyIgniter flame providers
     Igniter\Flame\Foundation\Providers\ConsoleSupportServiceProvider::class,
