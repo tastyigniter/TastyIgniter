@@ -6,6 +6,7 @@
     {!! get_favicon() !!}
     <title>{{ sprintf(lang('admin::lang.site_title'), Template::getTitle(), setting('site_name')) }}</title>
     {!! get_style_tags() !!}
+    <livewire:styles />
 </head>
 <body class="page {{ $this->bodyClass }}">
     @if(AdminAuth::isLogged())
@@ -28,5 +29,6 @@
     {!! $this->makePartial('set_status_form') !!}
     {!! Assets::getJsVars() !!}
     {!! get_script_tags() !!}
+    <livewire:scripts />
 </body>
 </html>
