@@ -242,7 +242,7 @@ class LocationTest extends TestCase
             'location_lat' => $faker->latitude(),
             'location_lng' => $faker->longitude(),
             'options' => [
-                'auto_lat_lng' => FALSE,
+                'auto_lat_lng' => 0,
             ],
         ];
     }
