@@ -180,6 +180,7 @@ class ServiceProvider extends AppServiceProvider
 
         foreach (
             [
+                'db.wipe' => \Illuminate\Database\Console\WipeCommand::class,
                 'igniter.util' => Console\Commands\IgniterUtil::class,
                 'igniter.up' => Console\Commands\IgniterUp::class,
                 'igniter.down' => Console\Commands\IgniterDown::class,
@@ -189,6 +190,8 @@ class ServiceProvider extends AppServiceProvider
                 'extension.install' => Console\Commands\ExtensionInstall::class,
                 'extension.refresh' => Console\Commands\ExtensionRefresh::class,
                 'extension.remove' => Console\Commands\ExtensionRemove::class,
+                'migrate' => Console\Commands\Migrate::class,
+                'migrate.fresh' => \Illuminate\Database\Console\Migrations\FreshCommand::class,
                 'theme.install' => Console\Commands\ThemeInstall::class,
                 'theme.remove' => Console\Commands\ThemeRemove::class,
             ] as $command => $class
