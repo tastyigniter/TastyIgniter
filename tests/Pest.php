@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 Factory::guessFactoryNamesUsing(function (string $modelName) {
     $modelName = str_replace('\\Models\\', '\\Database\\Factories\\', $modelName);
     $modelName = str_replace('_model', '', $modelName);
+
     return $modelName.'Factory';
 });
 
