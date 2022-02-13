@@ -15,10 +15,18 @@ it('can create a category and assign it to a location', function () {
 });
 
 it('shouldnt create a category when no name is provided', function () {
-    $category = Categories_model::factory()->make();
-    $category->name = NULL;
-    $category->save();
-    $this->assertFalse($categoryModel->exists());
+
+    try {
+
+        $category = Categories_model::factory()->make();
+        $category->name = NULL;
+        $category->save();
+        $this->assertFalse(true);
+
+    } catch (\Exception $e) {
+        $this->assertFalse(false);
+    }
+
 });
 
 
