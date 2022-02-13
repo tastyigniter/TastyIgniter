@@ -17,6 +17,16 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
+        $kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
+
+        $response = $kernel->handle(
+            $request = \Illuminate\Http\Request::capture()
+        );
+
+        $response->send();
+
+        $kernel->terminate($request, $response);
+
         $app['cache']->setDefaultDriver('array');
         $app->setLocale('en');
 

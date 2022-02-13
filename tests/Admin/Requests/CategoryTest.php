@@ -8,7 +8,7 @@ uses(TestCase::class);
 
 it('can create a category through the admin panel', function() {
     actingAsSuperuser()
-        ->get('/admin/categories/create', [
+        ->post('/admin/categories/create', [
             'description' => 'description',
         ])
         ->assertStatus(200);
