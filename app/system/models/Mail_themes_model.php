@@ -127,7 +127,7 @@ class Mail_themes_model extends Model
 
     public static function compileCss()
     {
-        $basePath = app_path('system/views/_mail/themes');
+        $basePath = app_path('System/views/_mail/themes');
 
         return File::get($basePath.'/default.css');
     }

@@ -134,7 +134,7 @@ return [
     |
     */
 
-    'providers' => array_merge(include(app_path('system/providers.php')), [
+    'providers' => array_merge(include(app_path('System/providers.php')), [
         System\ServiceProvider::class,
     ]),
 
