@@ -6,14 +6,16 @@ use Admin\Classes\UserState;
 use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Staffs Model Class
  */
 class Staffs_model extends Model
 {
-    use Purgeable;
+    use HasFactory;
     use Locationable;
+    use Purgeable;
 
     const LOCATIONABLE_RELATION = 'locations';
 

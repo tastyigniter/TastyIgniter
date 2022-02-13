@@ -52,8 +52,7 @@ uses(Tests\CreatesApplication::class, RefreshDatabase::class)
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
-
-// function something()
-// {
-//     // ..
-// }
+function actingAs($user)
+{
+    return test()->actingAs($user, null);
+}

@@ -1,25 +1,26 @@
 <?php
 
+namespace Tests\Admin\Models;
+
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
-use Admin\Models\Staffs_model;
-use Admin\Models\Users_model;
-use Illuminate\Foundation\Testing\TestCase;
 
-uses(TestCase::class);
+it('can create a category and assign it to a location', function () {
+    $location = Locations_model::factory()->create();
+    $category = Categories_model::factory()->make();
+    $category->locations = [$location->getKey()];
+    $categoryModel = $category->create();
 
-it('can create a category through the admin panel', function() {
-    $staff = Staffs_model::factory()->create();
-    $user = Users_model::factory()->make();
-    $user->staff_id = $staff->staff_id;
-    $user->save();
-
-    actingAs($user)
-        ->post('/admin/categories/create', [
-            'description' => 'test-description',
-        ])
-        ->assertStatus(200);
+    $this->assertTrue($categoryModel->exists());
 });
+
+it('shouldnt create a category when no name is provided', function () {
+    $category = Categories_model::factory()->make();
+    $category->name = NULL;
+    $category->save();
+    $this->assertFalse($categoryModel->exists());
+});
+
 
             // 'request_should_fail_when_no_name_is_provided' => [
             //     'passed' => FALSE,
