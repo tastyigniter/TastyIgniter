@@ -17,6 +17,7 @@ return [
     Illuminate\Session\SessionServiceProvider::class,
     Illuminate\View\ViewServiceProvider::class,
     Laravel\Tinker\TinkerServiceProvider::class,
+    Pest\Laravel\PestServiceProvider::class,
 
     // TastyIgniter flame providers
     Igniter\Flame\Foundation\Providers\ConsoleSupportServiceProvider::class,

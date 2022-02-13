@@ -8,6 +8,7 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Sortable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -15,11 +16,12 @@ use Illuminate\Support\Facades\DB;
  */
 class Categories_model extends Model
 {
-    use Sortable;
-    use HasPermalink;
-    use NestedTree;
-    use Locationable;
+    use HasFactory;
     use HasMedia;
+    use HasPermalink;
+    use Locationable;
+    use NestedTree;
+    use Sortable;
 
     const SORT_ORDER = 'priority';
 
