@@ -13,6 +13,7 @@ class UsersFactory extends Factory
     {
         return [
             'username' => $this->faker->text(32),
+            'date_activated' => time(),
             'is_activated' => true,
             'super_user' => true,
         ];

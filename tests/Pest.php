@@ -1,5 +1,7 @@
 <?php
 
+use Admin\Models\Staffs_model;
+use Admin\Models\Users_model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -24,7 +26,6 @@ Factory::guessFactoryNamesUsing(function (string $modelName) {
 
 uses(Tests\CreatesApplication::class, RefreshDatabase::class)
     ->beforeEach(fn () => $this->createApplication())
-    //->afterEach(fn () => $this->refreshDatabase())
     ->in(__DIR__);
 
 /*
@@ -52,7 +53,14 @@ uses(Tests\CreatesApplication::class, RefreshDatabase::class)
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
-function actingAs($user)
+function actingAsSuperuser()
 {
-    return test()->actingAs($user, null);
+    $staff = Staffs_model::factory()->create();
+    $user = Users_model::factory()->make();
+    $user->staff_id = $staff->staff_id;
+    $user->save();
+
+	app('auth')->loginUsingId($user->id);
+
+    return test();
 }

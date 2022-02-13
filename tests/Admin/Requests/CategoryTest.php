@@ -2,21 +2,14 @@
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
-use Admin\Models\Staffs_model;
-use Admin\Models\Users_model;
 use Illuminate\Foundation\Testing\TestCase;
 
 uses(TestCase::class);
 
 it('can create a category through the admin panel', function() {
-    $staff = Staffs_model::factory()->create();
-    $user = Users_model::factory()->make();
-    $user->staff_id = $staff->staff_id;
-    $user->save();
-
-    actingAs($user)
-        ->post('/admin/categories/create', [
-            'description' => 'test-description',
+    actingAsSuperuser()
+        ->get('/admin/categories/create', [
+            'description' => 'description',
         ])
         ->assertStatus(200);
 });
