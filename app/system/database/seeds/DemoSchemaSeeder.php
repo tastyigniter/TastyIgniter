@@ -94,7 +94,6 @@ class DemoSchemaSeeder extends Seeder
         }
 
         DB::table('menus')->update(['updated_at' => now(), 'created_at' => now()]);
-        DB::table('menu_item_options')->update(['updated_at' => now(), 'created_at' => now()]);
         DB::table('menu_item_option_values')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
