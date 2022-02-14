@@ -2,15 +2,16 @@
 
 namespace Tests\Browser;
 
-use Admin\Models\Staffs_model;
-use Admin\Models\Users_model;
+use Admin\Models\Categories_model;
 use Laravel\Dusk\Browser;
 
 it('can create a category', function () {
     $this->browse(function (Browser $browser) {
+        $factory = Categories_model::factory()->make();
+
         createSuperuserAndLogin($browser)
             ->visit('/admin/categories/create')
-            ->type('Category[name]', 'Some name')
+            ->type('Category[name]', $factory->name)
             ->press('Save')
             ->waitForReload()
             ->assertPathBeginsWith('/admin/categories/edit/');
