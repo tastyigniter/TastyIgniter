@@ -12,7 +12,7 @@ class UsersFactory extends Factory
     public function definition(): array
     {
         return [
-            'username' => $this->faker->text(32),
+            'username' => $this->faker->userName,
             'date_activated' => time(),
             'is_activated' => true,
             'super_user' => true,

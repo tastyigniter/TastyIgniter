@@ -12,7 +12,7 @@ class StaffsFactory extends Factory
     public function definition(): array
     {
         return [
-            'staff_name' => $this->faker->text(32),
+            'staff_name' => $this->faker->name,
             'staff_email' => $this->faker->email,
             'staff_status' => true,
         ];
