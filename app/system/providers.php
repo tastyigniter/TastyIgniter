@@ -1,6 +1,6 @@
 <?php
 
-return [
+return array_merge([
 
     // Laravel providers
     Illuminate\Broadcasting\BroadcastServiceProvider::class,
@@ -17,7 +17,6 @@ return [
     Illuminate\Session\SessionServiceProvider::class,
     Illuminate\View\ViewServiceProvider::class,
     Laravel\Tinker\TinkerServiceProvider::class,
-    Pest\Laravel\PestServiceProvider::class,
 
     // TastyIgniter flame providers
     Igniter\Flame\Foundation\Providers\ConsoleSupportServiceProvider::class,
@@ -30,4 +29,7 @@ return [
     Igniter\Flame\Setting\SettingServiceProvider::class,
     Igniter\Flame\Html\UrlServiceProvider::class, // force https -- url policy
     Igniter\Flame\Validation\ValidationServiceProvider::class,
-];
+], config('app.env', 'local') == 'testing' ? [
+    Laravel\Dusk\DuskServiceProvider::class,
+    Pest\Laravel\PestServiceProvider::class
+] : []);
