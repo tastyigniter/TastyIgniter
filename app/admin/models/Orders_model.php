@@ -113,18 +113,27 @@ class Orders_model extends Model
     public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
-            'page' => 1,
-            'pageLimit' => 20,
             'customer' => null,
+            'dateTimeFilter' => [],
             'location' => null,
             'sort' => 'address_id desc',
             'search' => '',
-            'dateTimeFilter' => [],
+            'status' => null,
+            'page' => 1,
+            'pageLimit' => 20,
         ], $options));
 
         $searchableFields = ['order_id', 'first_name', 'last_name', 'email', 'telephone'];
 
-        $query->where('status_id', '>=', 1);
+        if (is_null($status)) {
+            $query->where('status_id', '>=', 1);
+        }
+        else {
+            if (!is_array($status))
+                $status = [$status];
+
+            $query->whereIn('status_id', $status);
+        }
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());

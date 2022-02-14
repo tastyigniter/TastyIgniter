@@ -34,20 +34,13 @@ class Menu_options_model extends Model
     protected $casts = [
         'option_id' => 'integer',
         'priority' => 'integer',
+        'is_required' => 'boolean',
     ];
 
     public $relation = [
         'hasMany' => [
-            'menu_options' => ['Admin\Models\Menu_item_options_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
-        ],
-        'hasManyThrough' => [
-            'menu_option_values' => [
-                'Admin\Models\Menu_item_option_values_model',
-                'through' => 'Admin\Models\Menu_item_options_model',
-                'throughKey' => 'menu_option_id',
-                'foreignKey' => 'option_id',
-            ],
+            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
         'morphToMany' => [
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
@@ -68,7 +61,7 @@ class Menu_options_model extends Model
         return $query->dropdown('display_name');
     }
 
-    public function getDisplayTypeOptions()
+    public static function getDisplayTypeOptions()
     {
         return [
             'radio' => 'lang:admin::lang.menu_options.text_radio',
@@ -101,6 +94,11 @@ class Menu_options_model extends Model
     //
     // Helpers
     //
+
+    public function isRequired()
+    {
+        return $this->is_required;
+    }
 
     /**
      * Return all option values by option_id

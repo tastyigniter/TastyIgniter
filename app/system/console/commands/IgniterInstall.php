@@ -187,7 +187,7 @@ class IgniterInstall extends Command
             'super_user' => TRUE,
             'groups' => [Staff_groups_model::first()->staff_group_id],
             'locations' => [Locations_model::first()->location_id],
-        ]);
+        ], TRUE);
 
         $this->line('Admin user '.$user->username.' created!');
     }

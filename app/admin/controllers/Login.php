@@ -62,7 +62,7 @@ class Login extends \Admin\Classes\AdminController
         $this->validate($data, [
             'username' => ['required'],
             'password' => ['required', 'min:6'],
-        ], [
+        ], [], [
             'username' => lang('admin::lang.login.label_username'),
             'password' => lang('admin::lang.login.label_password'),
         ]);
@@ -89,7 +89,7 @@ class Login extends \Admin\Classes\AdminController
 
         $this->validate($data, [
             'email' => ['required', 'email:filter', 'max:96'],
-        ], [
+        ], [], [
             'email' => lang('admin::lang.label_email'),
         ]);
 
@@ -119,7 +119,7 @@ class Login extends \Admin\Classes\AdminController
             'code' => ['required'],
             'password' => ['required', 'min:6', 'max:32', 'same:password_confirm'],
             'password_confirm' => ['required'],
-        ], [
+        ], [], [
             'code' => lang('admin::lang.login.label_reset_code'),
             'password' => lang('admin::lang.login.label_password'),
             'password_confirm' => lang('admin::lang.login.label_password_confirm'),
