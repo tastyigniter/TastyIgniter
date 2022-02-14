@@ -17,8 +17,6 @@ class Menu_options_model extends Model
 
     const LOCATIONABLE_RELATION = 'locations';
 
-    protected static $allergensOptionsCache;
-
     /**
      * @var string The database table name
      */

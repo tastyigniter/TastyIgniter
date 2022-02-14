@@ -14,6 +14,8 @@ class Menu_option_values_model extends Model
     use Sortable;
     use Stockable;
 
+    protected static $ingredientOptionsCache;
+
     /**
      * @var string The database table name
      */
@@ -24,7 +26,7 @@ class Menu_option_values_model extends Model
      */
     protected $primaryKey = 'option_value_id';
 
-    protected $fillable = ['option_id', 'value', 'price', 'allergens', 'priority'];
+    protected $fillable = ['option_id', 'value', 'price', 'ingredients', 'priority'];
 
     protected $casts = [
         'option_value_id' => 'integer',
@@ -38,7 +40,7 @@ class Menu_option_values_model extends Model
             'option' => ['Admin\Models\Menu_options_model'],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
+            'ingredients' => ['Admin\Models\Ingredients_model', 'name' => 'ingredientable'],
         ],
     ];
 
@@ -54,10 +56,15 @@ class Menu_option_values_model extends Model
 
     public function getAllergensOptions()
     {
-        if (self::$allergensOptionsCache)
-            return self::$allergensOptionsCache;
+        return $this->getIngredientsOptions();
+    }
 
-        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
+    public function getIngredientsOptions()
+    {
+        if (self::$ingredientOptionsCache)
+            return self::$ingredientOptionsCache;
+
+        return self::$ingredientOptionsCache = Ingredients_model::dropdown('name')->all();
     }
 
     //
