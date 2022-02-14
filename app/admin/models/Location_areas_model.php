@@ -5,14 +5,16 @@ namespace Admin\Models;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
 use Igniter\Flame\Location\Models\AbstractArea;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Location areas Model Class
  */
 class Location_areas_model extends AbstractArea
 {
-    use Validation;
+    use HasFactory;
     use Sortable;
+    use Validation;
 
     const SORT_ORDER = 'priority';
 
