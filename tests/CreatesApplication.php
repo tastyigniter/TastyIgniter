@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
 
 trait CreatesApplication
 {
@@ -16,16 +17,7 @@ trait CreatesApplication
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
-
-        $kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
-
-        $response = $kernel->handle(
-            $request = \Illuminate\Http\Request::capture()
-        );
-
-        $response->send();
-
-        $kernel->terminate($request, $response);
+        $app->make(HttpKernel::class)->bootstrap();
 
         $app['cache']->setDefaultDriver('array');
         $app->setLocale('en');
