@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 
 class Lists extends BaseWidget
 {
+    use HasPipeline;
     use LocationAwareWidget;
 
     /**
