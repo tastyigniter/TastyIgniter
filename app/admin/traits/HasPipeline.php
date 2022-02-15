@@ -12,7 +12,7 @@ trait HasPipeline
     /**
      * @var array of registered pipelines
      */
-    protected $registeredPipelines = [];
+    protected static $registeredPipelines = [];
 
     public function callPipeline($callingContext, $payload)
     {
@@ -33,7 +33,8 @@ trait HasPipeline
                         });
                     })
                     ->filter()
-                    ->flatten()->values();
+                    ->flatten()
+                    ->values();
 
         if (empty($pipes)) {
             return $payload;
