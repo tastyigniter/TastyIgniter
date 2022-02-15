@@ -25,7 +25,7 @@ trait HasPipeline
                         }
 
                         return $contexts->filter(function ($pipelines, $pipelineContext) use ($callingContext) {
-                            if ( in_array($pipelineContext, ['*', $callingContext])) {
+                            if (! in_array($pipelineContext, ['*', $callingContext])) {
                                 return [];
                             }
 
