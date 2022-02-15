@@ -4,6 +4,7 @@ use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 
 /*
@@ -22,7 +23,7 @@ Factory::guessFactoryNamesUsing(function (string $modelName) {
     $modelName = str_replace('\\Models\\', '\\Database\\Factories\\', $modelName);
     $modelName = str_replace('_model', '', $modelName);
 
-    return $modelName.'Factory';
+    return Str::singular($modelName).'Factory';
 });
 
 uses(Tests\CreatesApplication::class, RefreshDatabase::class)

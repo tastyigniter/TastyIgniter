@@ -5,7 +5,7 @@ namespace Admin\Database\Factories;
 use Admin\Models\Users_model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UsersFactory extends Factory
+class UserFactory extends Factory
 {
     protected $model = Users_model::class;
 

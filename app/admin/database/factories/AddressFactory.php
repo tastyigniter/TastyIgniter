@@ -5,7 +5,7 @@ namespace Admin\Database\Factories;
 use Admin\Models\Addresses_model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AddressesFactory extends Factory
+class AddressFactory extends Factory
 {
     protected $model = Addresses_model::class;
 

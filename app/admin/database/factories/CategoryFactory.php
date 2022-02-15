@@ -5,7 +5,7 @@ namespace Admin\Database\Factories;
 use Admin\Models\Categories_model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CategoriesFactory extends Factory
+class CategoryFactory extends Factory
 {
     protected $model = Categories_model::class;
 
