@@ -7,6 +7,7 @@ use Admin\Classes\ListColumn;
 use Admin\Classes\ToolbarButton;
 use Admin\Classes\Widgets;
 use Admin\Facades\AdminAuth;
+use Admin\Traits\HasPipeline;
 use Admin\Traits\LocationAwareWidget;
 use Carbon\Carbon;
 use Exception;
@@ -268,7 +269,7 @@ class Lists extends BaseWidget
         $withs = [];
 
         // Extensibility
-        $this->fireSystemEvent('admin.list.extendQueryBefore', [$query]);
+        $query = $this->callPipeline('extendQueryBefore', $query);
 
         // Prepare searchable column names
         $primarySearchable = [];
@@ -385,9 +386,7 @@ class Lists extends BaseWidget
         $query->select($selects);
 
         // Extensibility
-        if ($event = $this->fireSystemEvent('admin.list.extendQuery', [$query], TRUE)) {
-            return $event;
-        }
+        $query = $this->callPipeline('extendQuery', $query);
 
         return $query;
     }
