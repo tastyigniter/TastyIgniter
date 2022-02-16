@@ -3,7 +3,7 @@
 namespace Admin\Classes;
 
 use Admin\Facades\AdminAuth;
-use Admin\Models\User_preferences_model;
+use Admin\Models\UserPreference;
 use Carbon\Carbon;
 
 /**
@@ -122,7 +122,7 @@ class UserState
     {
         $state = array_merge($this->defaultStateConfig, $state);
 
-        User_preferences_model::onUser()->set(self::USER_PREFERENCE_KEY, $state);
+        UserPreference::onUser()->set(self::USER_PREFERENCE_KEY, $state);
 
         $this->stateConfigCache = null;
     }
@@ -144,6 +144,6 @@ class UserState
         if (!$this->user)
             return [];
 
-        return User_preferences_model::onUser($this->user)->get(self::USER_PREFERENCE_KEY, []);
+        return UserPreference::onUser($this->user)->get(self::USER_PREFERENCE_KEY, []);
     }
 }

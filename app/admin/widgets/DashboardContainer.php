@@ -4,7 +4,7 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\Widgets;
-use Admin\Models\User_preferences_model;
+use Admin\Models\UserPreference;
 use Igniter\Flame\Exception\ApplicationException;
 
 class DashboardContainer extends BaseWidget
@@ -371,7 +371,7 @@ class DashboardContainer extends BaseWidget
     {
         $formConfig['fields'] = $this->getWidgetPropertyConfig($widget);
 
-        $formConfig['model'] = User_preferences_model::onUser();
+        $formConfig['model'] = UserPreference::onUser();
         $formConfig['data'] = $this->getWidgetPropertyValues($widget);
         $formConfig['previewMode'] = $this->previewMode;
         $formConfig['alias'] = $this->alias.studly_case('Form_'.$alias);
@@ -499,7 +499,7 @@ class DashboardContainer extends BaseWidget
     {
         $defaultWidgets = params()->get($this->getSystemParametersKey(), $this->defaultWidgets);
 
-        $widgets = User_preferences_model::onUser()
+        $widgets = UserPreference::onUser()
             ->get($this->getUserPreferencesKey(), $defaultWidgets);
 
         if (!is_array($widgets)) {
@@ -511,12 +511,12 @@ class DashboardContainer extends BaseWidget
 
     protected function setWidgetsToUserPreferences($widgets)
     {
-        User_preferences_model::onUser()->set($this->getUserPreferencesKey(), $widgets);
+        UserPreference::onUser()->set($this->getUserPreferencesKey(), $widgets);
     }
 
     protected function resetWidgetsUserPreferences()
     {
-        User_preferences_model::onUser()->reset($this->getUserPreferencesKey());
+        UserPreference::onUser()->reset($this->getUserPreferencesKey());
     }
 
     protected function saveWidgetProperties($alias, $properties)

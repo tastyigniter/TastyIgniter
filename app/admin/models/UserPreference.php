@@ -6,7 +6,7 @@ use Admin\Facades\AdminAuth;
 use Exception;
 use Igniter\Flame\Database\Model;
 
-class User_preferences_model extends Model
+class UserPreference extends Model
 {
     /**
      * @var string The database table used by the model.
