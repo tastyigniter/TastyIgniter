@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Model;
 /**
  * Status History Model Class
  */
-class Status_history_model extends Model
+class StatusHistory extends Model
 {
     /**
      * @var string The database table name

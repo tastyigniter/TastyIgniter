@@ -574,7 +574,7 @@ class ServiceProvider extends AppServiceProvider
             'reservations' => 'Admin\Models\Reservation',
             'staff_groups' => 'Admin\Models\Staff_groups_model',
             'staffs' => 'Admin\Models\Staffs_model',
-            'status_history' => 'Admin\Models\Status_history_model',
+            'status_history' => 'Admin\Models\StatusHistory',
             'statuses' => 'Admin\Models\Status',
             'stocks' => 'Admin\Models\Stock',
             'stock_history' => 'Admin\Models\StockHistory',

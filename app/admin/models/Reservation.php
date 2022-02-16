@@ -450,7 +450,7 @@ class Reservation extends Model
             $data['location_telephone'] = $model->location->location_telephone;
         }
 
-        $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();
+        $statusHistory = StatusHistory::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();
         $data['status_name'] = $statusHistory ? optional($statusHistory->status)->status_name : null;
         $data['status_comment'] = $statusHistory ? $statusHistory->comment : null;
 

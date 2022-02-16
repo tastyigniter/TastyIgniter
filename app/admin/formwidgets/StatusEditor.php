@@ -59,7 +59,7 @@ class StatusEditor extends BaseFormWidget
 
     public $statusRelationFrom = 'status';
 
-    public $statusModelClass = 'Admin\Models\Status_history_model';
+    public $statusModelClass = 'Admin\Models\StatusHistory';
 
     /**
      * @var string Text to display for the title of the popup list form

@@ -25,7 +25,7 @@ class Status extends Model
 
     public $relation = [
         'hasMany' => [
-            'status_history' => 'Admin\Models\Status_history_model',
+            'status_history' => 'Admin\Models\StatusHistory',
         ],
     ];
 

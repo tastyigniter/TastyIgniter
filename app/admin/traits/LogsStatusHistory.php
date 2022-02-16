@@ -3,7 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Models\Reservation;
-use Admin\Models\Status_history_model;
+use Admin\Models\StatusHistory;
 
 trait LogsStatusHistory
 {
@@ -14,7 +14,7 @@ trait LogsStatusHistory
         self::extend(function (self $model) {
             $model->relation['belongsTo']['status'] = ['Admin\Models\Status'];
             $model->relation['morphMany']['status_history'] = [
-                'Admin\Models\Status_history_model', 'name' => 'object', 'delete' => TRUE,
+                'Admin\Models\StatusHistory', 'name' => 'object', 'delete' => TRUE,
             ];
 
             $model->appends[] = 'status_name';
@@ -48,7 +48,7 @@ trait LogsStatusHistory
 
         $this->status()->associate($status);
 
-        if (!$history = Status_history_model::createHistory($status, $this, $statusData))
+        if (!$history = StatusHistory::createHistory($status, $this, $statusData))
             return FALSE;
 
         $this->save();
