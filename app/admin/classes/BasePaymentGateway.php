@@ -14,7 +14,7 @@ use System\Actions\ModelAction;
 class BasePaymentGateway extends ModelAction
 {
     /**
-     * @var \Admin\Models\Payments_model|Model Reference to the controller associated to this action
+     * @var \Admin\Models\Payment|Model Reference to the controller associated to this action
      */
     protected $model;
 
@@ -212,7 +212,7 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * @return \Admin\Models\Payments_model
+     * @return \Admin\Models\Payment
      */
     public function getHostObject()
     {

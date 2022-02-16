@@ -557,7 +557,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.locations.label_payments',
             'tab' => 'lang:admin::lang.locations.label_payments',
             'type' => 'checkboxlist',
-            'options' => ['Admin\Models\Payments_model', 'listDropdownOptions'],
+            'options' => ['Admin\Models\Payment', 'listDropdownOptions'],
             'commentAbove' => 'lang:admin::lang.locations.help_payments',
             'placeholder' => 'lang:admin::lang.locations.help_no_payments',
         ],

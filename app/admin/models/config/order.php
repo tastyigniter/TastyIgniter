@@ -41,7 +41,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.orders.text_filter_payment',
             'type' => 'select',
             'conditions' => 'payment = :filtered',
-            'modelClass' => 'Admin\Models\Payments_model',
+            'modelClass' => 'Admin\Models\Payment',
             'options' => 'getDropdownOptions',
         ],
         'date' => [

@@ -280,7 +280,7 @@ class Locations_model extends AbstractLocation
         $result = [];
 
         $payments = array_get($this->options, 'payments', []);
-        $paymentGateways = Payments_model::listPayments();
+        $paymentGateways = Payment::listPayments();
 
         foreach ($paymentGateways as $payment) {
             if ($payments && !in_array($payment->code, $payments)) continue;

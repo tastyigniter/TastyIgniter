@@ -570,7 +570,7 @@ class ServiceProvider extends AppServiceProvider
             'menus_specials' => 'Admin\Models\Menus_specials_model',
             'orders' => 'Admin\Models\Order',
             'payment_logs' => 'Admin\Models\PaymentLog',
-            'payments' => 'Admin\Models\Payments_model',
+            'payments' => 'Admin\Models\Payment',
             'reservations' => 'Admin\Models\Reservations_model',
             'staff_groups' => 'Admin\Models\Staff_groups_model',
             'staffs' => 'Admin\Models\Staffs_model',
@@ -628,7 +628,7 @@ class ServiceProvider extends AppServiceProvider
                     'description' => 'admin::lang.dashboard.onboarding.help_payments',
                     'icon' => 'fa-credit-card',
                     'url' => admin_url('payments'),
-                    'complete' => ['Admin\Models\Payments_model', 'onboardingIsComplete'],
+                    'complete' => ['Admin\Models\Payment', 'onboardingIsComplete'],
                 ],
                 'admin::menus' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_menus',

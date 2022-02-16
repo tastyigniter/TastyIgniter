@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Lang;
 /**
  * Payments Model Class
  */
-class Payments_model extends Model
+class Payment extends Model
 {
     use Sortable;
     use Purgeable;
