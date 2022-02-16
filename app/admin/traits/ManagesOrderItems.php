@@ -3,7 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Models\Menu_item_option_values_model;
-use Admin\Models\Menu_options_model;
+use Admin\Models\MenuOption;
 use Admin\Models\Menu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -84,7 +84,7 @@ trait ManagesOrderItems
 
         $menuOptionsIds = $orderMenuOptions->collapse()->pluck('option_id')->unique();
 
-        $menuOptions = Menu_options_model::whereIn('option_id', $menuOptionsIds)->get()
+        $menuOptions = MenuOption::whereIn('option_id', $menuOptionsIds)->get()
             ->keyBy('option_id');
 
         return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions, $menuOptions) {

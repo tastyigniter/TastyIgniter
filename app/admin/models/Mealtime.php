@@ -9,7 +9,7 @@ use Igniter\Flame\Database\Model;
 /**
  * Mealtimes Model Class
  */
-class Mealtimes_model extends Model
+class Mealtime extends Model
 {
     use Locationable;
 

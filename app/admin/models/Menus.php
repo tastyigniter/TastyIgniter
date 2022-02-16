@@ -53,7 +53,7 @@ class Menu extends Model
         ],
         'belongsToMany' => [
             'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
-            'mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes'],
+            'mealtimes' => ['Admin\Models\Mealtime', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
             'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
@@ -214,7 +214,7 @@ class Menu extends Model
     {
         $optionIds = $this->menu_option_values->pluck('option_id')->unique();
 
-        $options = Menu_options_model::whereIn('option_id', $optionIds)->get();
+        $options = MenuOption::whereIn('option_id', $optionIds)->get();
 
         return $this->menu_option_values
             ->groupBy('option_id')

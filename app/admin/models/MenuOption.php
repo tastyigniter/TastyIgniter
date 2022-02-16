@@ -10,7 +10,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
 /**
  * MenuOptions Model Class
  */
-class Menu_options_model extends Model
+class MenuOption extends Model
 {
     use Locationable;
     use Purgeable;

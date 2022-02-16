@@ -260,7 +260,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_menu_option',
             'tab' => 'lang:admin::lang.menus.text_tab_menu_option',
             'type' => 'menuoptioneditor',
-            'options' => [Admin\Models\Menu_options_model::class, 'getRecordEditorOptions'],
+            'options' => [Admin\Models\MenuOption::class, 'getRecordEditorOptions'],
             'form' => 'menu_item_options_model',
             'context' => ['edit', 'preview'],
         ],

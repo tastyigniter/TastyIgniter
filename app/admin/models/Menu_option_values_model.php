@@ -35,7 +35,7 @@ class Menu_option_values_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'option' => ['Admin\Models\Menu_options_model'],
+            'option' => ['Admin\Models\MenuOption'],
         ],
         'morphToMany' => [
             'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
