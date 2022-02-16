@@ -256,14 +256,14 @@ class Payments_model extends Model
     /**
      * Finds and returns a customer payment profile for this payment method.
      * @param \Admin\Models\Customers_model $customer Specifies customer to find a profile for.
-     * @return \Admin\Models\Payment_profiles_model|object Returns the payment profile object or NULL if the payment profile doesn't exist.
+     * @return \Admin\Models\PaymentProfile|object Returns the payment profile object or NULL if the payment profile doesn't exist.
      */
     public function findPaymentProfile($customer)
     {
         if (!$customer)
             return null;
 
-        $query = Payment_profiles_model::query();
+        $query = PaymentProfile::query();
 
         return $query->where('customer_id', $customer->customer_id)
             ->where('payment_id', $this->payment_id)
@@ -274,11 +274,11 @@ class Payments_model extends Model
      * Initializes a new empty customer payment profile.
      * This method should be used by payment methods internally.
      * @param \Admin\Models\Customers_model $customer Specifies customer to initialize a profile for.
-     * @return \Admin\Models\Payment_profiles_model Returns the payment profile object or NULL if the payment profile doesn't exist.
+     * @return \Admin\Models\PaymentProfile Returns the payment profile object or NULL if the payment profile doesn't exist.
      */
     public function initPaymentProfile($customer)
     {
-        $profile = new Payment_profiles_model();
+        $profile = new PaymentProfile();
         $profile->customer_id = $customer->customer_id;
         $profile->payment_id = $this->payment_id;
 

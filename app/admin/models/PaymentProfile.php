@@ -4,7 +4,7 @@ namespace Admin\Models;
 
 use Igniter\Flame\Database\Model;
 
-class Payment_profiles_model extends Model
+class PaymentProfile extends Model
 {
     public $timestamps = TRUE;
 

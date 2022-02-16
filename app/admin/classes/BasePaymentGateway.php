@@ -236,7 +236,7 @@ class BasePaymentGateway extends ModelAction
      * Creates a customer profile on the payment gateway or update if the profile already exists.
      * @param \Admin\Models\Customers_model $customer Customer model to create a profile for
      * @param array $data Posted payment form data
-     * @return \Admin\Models\Payment_profiles_model|object Returns the customer payment profile model
+     * @return \Admin\Models\PaymentProfile|object Returns the customer payment profile model
      */
     public function updatePaymentProfile($customer, $data)
     {
@@ -246,7 +246,7 @@ class BasePaymentGateway extends ModelAction
     /**
      * Deletes a customer payment profile from the payment gateway.
      * @param \Admin\Models\Customers_model $customer Customer model
-     * @param \Admin\Models\Payment_profiles_model $profile Payment profile model
+     * @param \Admin\Models\PaymentProfile $profile Payment profile model
      */
     public function deletePaymentProfile($customer, $profile)
     {
