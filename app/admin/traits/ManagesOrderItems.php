@@ -2,9 +2,9 @@
 
 namespace Admin\Traits;
 
+use Admin\Models\Menu;
 use Admin\Models\MenuItemOptionValue;
 use Admin\Models\MenuOption;
-use Admin\Models\Menu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
