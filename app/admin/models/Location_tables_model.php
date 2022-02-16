@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Model;
  * Location tables Model Class
  * @deprecated remove before v4. Added for backward compatibility, see Locationable
  */
-class Location_tables_model extends Model
+class Location_Table extends Model
 {
     /**
      * @var string The database table name
@@ -26,7 +26,7 @@ class Location_tables_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'tables' => ['Admin\Models\Tables_model'],
+            'tables' => ['Admin\Models\Table'],
         ],
     ];
 }

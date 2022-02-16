@@ -17,17 +17,17 @@ class Tables extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Tables_model',
+            'model' => 'Admin\Models\Table',
             'title' => 'lang:admin::lang.tables.text_title',
             'emptyMessage' => 'lang:admin::lang.tables.text_empty',
             'defaultSort' => ['table_id', 'DESC'],
-            'configFile' => 'tables_model',
+            'configFile' => 'table',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.tables.text_form_name',
-        'model' => 'Admin\Models\Tables_model',
+        'model' => 'Admin\Models\Table',
         'request' => 'Admin\Requests\Table',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -48,7 +48,7 @@ class Tables extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'tables',
         ],
-        'configFile' => 'tables_model',
+        'configFile' => 'table',
     ];
 
     protected $requiredPermissions = 'Admin.Tables';

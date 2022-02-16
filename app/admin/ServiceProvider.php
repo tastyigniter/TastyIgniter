@@ -578,8 +578,8 @@ class ServiceProvider extends AppServiceProvider
             'statuses' => 'Admin\Models\Statuses_model',
             'stocks' => 'Admin\Models\Stocks_model',
             'stock_history' => 'Admin\Models\Stock_history_model',
-            'tables' => 'Admin\Models\Tables_model',
-            'users' => 'Admin\Models\Users_model',
+            'tables' => 'Admin\Models\Table',
+            'users' => 'Admin\Models\User',
             'working_hours' => 'Admin\Models\Working_hours_model',
         ]);
     }

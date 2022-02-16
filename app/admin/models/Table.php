@@ -9,7 +9,7 @@ use Igniter\Flame\Database\Traits\Sortable;
 /**
  * Tables Model Class
  */
-class Tables_model extends Model
+class Table extends Model
 {
     use Locationable;
     use Sortable;
