@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Traits\Sortable;
 /**
  * Countries Model Class
  */
-class Countries_model extends Model
+class Country extends Model
 {
     use Sortable;
 

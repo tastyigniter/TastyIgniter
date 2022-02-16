@@ -26,7 +26,7 @@ $config['form']['fields'] = [
     'country_id' => [
         'label' => 'admin::lang.customers.label_country',
         'type' => 'select',
-        'options' => [\System\Models\Countries_model::class, 'getDropdownOptions'],
+        'options' => [\System\Models\Country::class, 'getDropdownOptions'],
     ],
 ];
 

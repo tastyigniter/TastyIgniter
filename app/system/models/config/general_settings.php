@@ -33,7 +33,7 @@ return [
                     'label' => 'lang:system::lang.settings.label_country',
                     'tab' => 'lang:system::lang.settings.text_tab_restaurant',
                     'type' => 'select',
-                    'options' => ['System\Models\Countries_model', 'getDropdownOptions'],
+                    'options' => ['System\Models\Country', 'getDropdownOptions'],
                 ],
                 'site_logo' => [
                     'label' => 'lang:system::lang.settings.label_site_logo',

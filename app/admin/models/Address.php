@@ -24,7 +24,7 @@ class Address extends Model
     public $relation = [
         'belongsTo' => [
             'customer' => 'Admin\Models\Customer',
-            'country' => 'System\Models\Countries_model',
+            'country' => 'System\Models\Country',
         ],
     ];
 

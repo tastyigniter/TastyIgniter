@@ -34,7 +34,7 @@ class Currencies_model extends Currency
 
     public $relation = [
         'belongsTo' => [
-            'country' => 'System\Models\Countries_model',
+            'country' => 'System\Models\Country',
         ],
     ];
 

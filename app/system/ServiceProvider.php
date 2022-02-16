@@ -353,7 +353,7 @@ class ServiceProvider extends AppServiceProvider
     {
         Relation::morphMap([
             'activities' => 'System\Models\Activity',
-            'countries' => 'System\Models\Countries_model',
+            'countries' => 'System\Models\Country',
             'currencies' => 'System\Models\Currencies_model',
             'extensions' => 'System\Models\Extensions_model',
             'languages' => 'System\Models\Languages_model',

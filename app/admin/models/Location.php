@@ -44,7 +44,7 @@ class Location extends AbstractLocation
             'delivery_areas' => ['Admin\Models\LocationArea', 'delete' => TRUE],
         ],
         'belongsTo' => [
-            'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
+            'country' => ['System\Models\Country', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
         'morphedByMany' => [
             'staffs' => ['Admin\Models\Staff', 'name' => 'locationable'],
