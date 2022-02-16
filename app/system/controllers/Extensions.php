@@ -10,7 +10,7 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\SystemException;
 use Illuminate\Support\Facades\Request;
 use System\Classes\ExtensionManager;
-use System\Models\Extensions_model;
+use System\Models\Extension;
 use System\Models\Settings_model;
 use System\Traits\ManagesUpdates;
 
@@ -25,13 +25,13 @@ class Extensions extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Extensions_model',
+            'model' => 'System\Models\Extension',
             'title' => 'lang:system::lang.extensions.text_title',
             'emptyMessage' => 'lang:system::lang.extensions.text_empty',
             'pageLimit' => 50,
             'defaultSort' => ['name', 'ASC'],
             'showCheckboxes' => FALSE,
-            'configFile' => 'extensions_model',
+            'configFile' => 'Extension',
         ],
     ];
 
@@ -59,7 +59,7 @@ class Extensions extends \Admin\Classes\AdminController
         if (!$this->getUser()->hasPermission('Admin.Extensions'))
             throw new SystemException(lang('admin::lang.alert_user_restricted'));
 
-        Extensions_model::syncAll();
+        Extension::syncAll();
 
         $this->initUpdate('extension');
 
@@ -131,7 +131,7 @@ class Extensions extends \Admin\Classes\AdminController
             // Lets display a delete confirmation screen
             // with list of files to be deleted
             $meta = $extensionClass->extensionMeta();
-            $this->vars['extensionModel'] = Extensions_model::where('name', $extensionCode)->first();
+            $this->vars['extensionModel'] = Extension::where('name', $extensionCode)->first();
             $this->vars['extensionMeta'] = $meta;
             $this->vars['extensionName'] = $meta['name'] ?? '';
             $this->vars['extensionData'] = $this->extensionHasMigrations($extensionCode);

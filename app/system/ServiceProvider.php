@@ -355,7 +355,7 @@ class ServiceProvider extends AppServiceProvider
             'activities' => 'System\Models\Activity',
             'countries' => 'System\Models\Country',
             'currencies' => 'System\Models\Currency',
-            'extensions' => 'System\Models\Extensions_model',
+            'extensions' => 'System\Models\Extension',
             'languages' => 'System\Models\Languages_model',
             'mail_layouts' => 'System\Models\Mail_layouts_model',
             'mail_templates' => 'System\Models\Mail_templates_model',

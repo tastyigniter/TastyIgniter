@@ -621,7 +621,7 @@ class ServiceProvider extends AppServiceProvider
                     'description' => 'admin::lang.dashboard.onboarding.help_extensions',
                     'icon' => 'fa-plug',
                     'url' => admin_url('extensions'),
-                    'complete' => ['System\Models\Extensions_model', 'onboardingIsComplete'],
+                    'complete' => ['System\Models\Extension', 'onboardingIsComplete'],
                 ],
                 'admin::payments' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_payments',

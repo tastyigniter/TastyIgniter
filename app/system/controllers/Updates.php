@@ -6,7 +6,7 @@ use Admin\Facades\AdminMenu;
 use Admin\Facades\Template;
 use Exception;
 use System\Classes\UpdateManager;
-use System\Models\Extensions_model;
+use System\Models\Extension;
 use System\Models\Themes_model;
 use System\Traits\ManagesUpdates;
 
@@ -29,7 +29,7 @@ class Updates extends \Admin\Classes\AdminController
 
     public function index()
     {
-        Extensions_model::syncAll();
+        Extension::syncAll();
         Themes_model::syncAll();
 
         $pageTitle = lang('system::lang.updates.text_title');

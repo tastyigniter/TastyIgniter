@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Facades\Assets;
-use System\Models\Extensions_model;
+use System\Models\Extension;
 use System\Models\Themes_model;
 
 class IgniterUtil extends Command
@@ -173,7 +173,7 @@ class IgniterUtil extends Command
             })
             ->each(function ($update) {
                 if ($update['type'] === 'extension') {
-                    Extensions_model::where('name', $update['code'])->update([
+                    Extension::where('name', $update['code'])->update([
                         'version' => $update['version'],
                     ]);
                 }
