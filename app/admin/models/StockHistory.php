@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Model;
 /**
  * Stock History Model Class
  */
-class Stock_history_model extends Model
+class StockHistory extends Model
 {
     /**
      * @var string The database table name

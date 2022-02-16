@@ -43,7 +43,7 @@ class Stock extends Model
             'location' => 'Admin\Models\Locations_model',
         ],
         'hasMany' => [
-            'history' => 'Admin\Models\Stock_history_model',
+            'history' => 'Admin\Models\StockHistory',
         ],
         'morphTo' => [
             'stockable' => [],
@@ -83,7 +83,7 @@ class Stock extends Model
         if ($this->shouldUpdateStock($state)) {
             $stockQty = $this->computeStockQuantity($state, $quantity);
 
-            $history = Stock_history_model::createHistory($this, $quantity, $state, $options);
+            $history = StockHistory::createHistory($this, $quantity, $state, $options);
 
             if (in_array($state, [self::STATE_IN_STOCK, self::STATE_RESTOCK, self::STATE_RECOUNT]))
                 $this->low_stock_alert_sent = FALSE;

@@ -577,7 +577,7 @@ class ServiceProvider extends AppServiceProvider
             'status_history' => 'Admin\Models\Status_history_model',
             'statuses' => 'Admin\Models\Statuses_model',
             'stocks' => 'Admin\Models\Stock',
-            'stock_history' => 'Admin\Models\Stock_history_model',
+            'stock_history' => 'Admin\Models\StockHistory',
             'tables' => 'Admin\Models\Table',
             'users' => 'Admin\Models\User',
             'working_hours' => 'Admin\Models\Working_hours_model',
