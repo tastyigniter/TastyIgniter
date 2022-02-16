@@ -26,7 +26,7 @@ class DeleteUnusedColumnsFromActivitiesTable extends Migration
             $table->softDeletes();
         });
 
-        \System\Models\Activities_model::truncate();
+        \System\Models\Activity::truncate();
     }
 
     public function down()

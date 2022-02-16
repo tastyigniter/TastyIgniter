@@ -352,7 +352,7 @@ class ServiceProvider extends AppServiceProvider
     protected function defineEloquentMorphMaps()
     {
         Relation::morphMap([
-            'activities' => 'System\Models\Activities_model',
+            'activities' => 'System\Models\Activity',
             'countries' => 'System\Models\Countries_model',
             'currencies' => 'System\Models\Currencies_model',
             'extensions' => 'System\Models\Extensions_model',

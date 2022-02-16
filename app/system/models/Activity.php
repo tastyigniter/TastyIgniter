@@ -9,7 +9,7 @@ use System\Classes\ExtensionManager;
 /**
  * Activities Model Class
  */
-class Activities_model extends Activity
+class Activity extends Activity
 {
     public static function unreadCount($menu, $item, Model $user)
     {
