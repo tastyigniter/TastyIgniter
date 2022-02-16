@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Mail;
 /**
  * Stocks Model Class
  */
-class Stocks_model extends Model
+class Stock extends Model
 {
     use Locationable;
 

@@ -237,7 +237,7 @@ class Menus_model extends Model
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        traceLog('Menus_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
+        traceLog('Menus_model::updateStock() has been deprecated, use Stock::updateStock() instead.');
     }
 
     /**

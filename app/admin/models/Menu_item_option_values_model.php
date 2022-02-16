@@ -95,6 +95,6 @@ class Menu_item_option_values_model extends Model
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        traceLog('Menu_item_option_values_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
+        traceLog('Menu_item_option_values_model::updateStock() has been deprecated, use Stock::updateStock() instead.');
     }
 }

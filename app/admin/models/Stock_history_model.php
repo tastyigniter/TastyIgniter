@@ -29,7 +29,7 @@ class Stock_history_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'stock' => 'Admin\Models\Stocks_model',
+            'stock' => 'Admin\Models\Stock',
             'staff' => 'Admin\Models\Staffs_model',
             'order' => 'Admin\Models\Order',
         ],
@@ -37,7 +37,7 @@ class Stock_history_model extends Model
 
     public $timestamps = TRUE;
 
-    public static function createHistory(Stocks_model $stock, int $quantity, $state, array $options = [])
+    public static function createHistory(Stock $stock, int $quantity, $state, array $options = [])
     {
         $model = new static;
         $model->stock_id = $stock->getKey();

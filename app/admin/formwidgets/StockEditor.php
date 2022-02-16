@@ -14,7 +14,7 @@ use Admin\Widgets\Form;
  */
 class StockEditor extends BaseFormWidget
 {
-    public $form = 'stocks_model';
+    public $form = 'stock';
 
     public $quantityKeyFrom = 'stock_qty';
 
