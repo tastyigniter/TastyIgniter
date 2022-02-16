@@ -4,7 +4,7 @@ namespace System\Database\Migrations;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
-use Admin\Models\Menus_model;
+use Admin\Models\Menu;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Log;
@@ -46,7 +46,7 @@ class CreateMediaAttachmentsTable extends Migration
 
     protected function seedAttachmentsFromExistingModels()
     {
-        Menus_model::select('menu_photo', 'menu_id')->get()->each(function ($model) {
+        Menu::select('menu_photo', 'menu_id')->get()->each(function ($model) {
             if (!empty($model->menu_photo))
                 $this->createMediaAttachment($model->menu_photo, $model, 'thumb');
         });

@@ -50,7 +50,7 @@ class Categories_model extends Model
             'parent_cat' => ['Admin\Models\Categories_model', 'foreignKey' => 'parent_id', 'otherKey' => 'category_id'],
         ],
         'belongsToMany' => [
-            'menus' => ['Admin\Models\Menus_model', 'table' => 'menu_categories'],
+            'menus' => ['Admin\Models\Menu', 'table' => 'menu_categories'],
         ],
         'morphToMany' => [
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],

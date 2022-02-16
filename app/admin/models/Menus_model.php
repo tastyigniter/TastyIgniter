@@ -12,7 +12,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
 /**
  * Menus Model Class
  */
-class Menus_model extends Model
+class Menu extends Model
 {
     use Purgeable;
     use Locationable;
@@ -237,7 +237,7 @@ class Menus_model extends Model
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        traceLog('Menus_model::updateStock() has been deprecated, use Stock::updateStock() instead.');
+        traceLog('Menu::updateStock() has been deprecated, use Stock::updateStock() instead.');
     }
 
     /**
@@ -294,7 +294,7 @@ class Menus_model extends Model
      */
     public function addMenuOption(array $menuOptions = [])
     {
-        traceLog('Deprecated Menus_model::addMenuOption function. Use addMenuOptionValues() instead.');
+        traceLog('Deprecated Menu::addMenuOption function. Use addMenuOptionValues() instead.');
     }
 
     /**

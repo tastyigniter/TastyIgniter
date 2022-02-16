@@ -4,7 +4,7 @@ namespace Admin\Traits;
 
 use Admin\Models\Menu_item_option_values_model;
 use Admin\Models\Menu_options_model;
-use Admin\Models\Menus_model;
+use Admin\Models\Menu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
@@ -31,7 +31,7 @@ trait ManagesOrderItems
     {
         $orderMenuOptions = $this->getOrderMenuOptions();
         $this->getOrderMenus()->each(function ($orderMenu) use ($orderMenuOptions) {
-            if (!$menu = Menus_model::find($orderMenu->menu_id))
+            if (!$menu = Menu::find($orderMenu->menu_id))
                 return TRUE;
 
             optional($menu->getStockByLocation($this->location))

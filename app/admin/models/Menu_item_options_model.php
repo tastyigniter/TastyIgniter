@@ -48,7 +48,7 @@ class Menu_item_options_model extends Model
             ],
         ],
         'belongsTo' => [
-            'menu' => ['Admin\Models\Menus_model'],
+            'menu' => ['Admin\Models\Menu'],
             'option' => ['Admin\Models\Menu_options_model'],
         ],
     ];

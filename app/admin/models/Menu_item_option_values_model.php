@@ -39,7 +39,7 @@ class Menu_item_option_values_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'menu' => ['Admin\Models\Menus_model'],
+            'menu' => ['Admin\Models\Menu'],
             'option' => ['Admin\Models\Menu_options_model'],
             'option_value' => ['Admin\Models\Menu_option_values_model'],
         ],
