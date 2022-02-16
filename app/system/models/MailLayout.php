@@ -12,7 +12,7 @@ use System\Classes\MailManager;
 /**
  * MailLayouts Model Class
  */
-class Mail_layouts_model extends Model
+class MailLayout extends Model
 {
     protected static $codeCache;
 
@@ -41,7 +41,7 @@ class Mail_layouts_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'templates' => ['System\Models\Mail_templates_model', 'foreignKey' => 'layout_id'],
+            'templates' => ['System\Models\MailTemplate', 'foreignKey' => 'layout_id'],
         ],
         'belongsTo' => [
             'language' => 'System\Models\Language',

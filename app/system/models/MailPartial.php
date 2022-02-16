@@ -13,7 +13,7 @@ use System\Classes\MailManager;
 /**
  * MailPartials Model Class
  */
-class Mail_partials_model extends Model
+class MailPartial extends Model
 {
     protected static $codeCache;
 

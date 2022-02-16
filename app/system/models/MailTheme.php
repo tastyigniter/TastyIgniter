@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
  * @method static instance()
  * @method static get($var, $default)
  */
-class Mail_themes_model extends Model
+class MailTheme extends Model
 {
     const WHITE_COLOR = '#fff';
     const BODY_BG = '#f5f8fa';

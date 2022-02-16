@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use System\Helpers\ViewHelper;
-use System\Models\Mail_partials_model;
-use System\Models\Mail_templates_model;
-use System\Models\Mail_themes_model;
+use System\Models\MailPartial;
+use System\Models\MailTemplate;
+use System\Models\MailTheme;
 
 class MailManager
 {
@@ -73,7 +73,7 @@ class MailManager
             $template = $this->templateCache[$code];
         }
         else {
-            $this->templateCache[$code] = $template = Mail_templates_model::findOrMakeTemplate($code);
+            $this->templateCache[$code] = $template = MailTemplate::findOrMakeTemplate($code);
         }
 
         if (!$template)
@@ -84,7 +84,7 @@ class MailManager
 
     public function addRawContentToMailer($message, $content, $data)
     {
-        $template = new Mail_templates_model();
+        $template = new MailTemplate();
 
         $template->fillFromContent($content);
 
@@ -219,7 +219,7 @@ class MailManager
                 [
                     'body' => $html,
                     'layout_css' => $template->layout->layout_css,
-                    'custom_css' => Mail_themes_model::renderCss(),
+                    'custom_css' => MailTheme::renderCss(),
                 ] + (array)$data
             );
         }
@@ -272,7 +272,7 @@ class MailManager
         $this->isRenderingHtml = TRUE;
 
         $code = array_pop($this->partialStack);
-        if (!$partial = Mail_partials_model::findOrMakePartial($code))
+        if (!$partial = MailPartial::findOrMakePartial($code))
             return '<!-- Missing partial: '.$code.' -->';
 
         $currentPartial = count($this->partialStack);

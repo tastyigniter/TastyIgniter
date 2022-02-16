@@ -11,7 +11,7 @@ use System\Classes\MailManager;
 /**
  * Mail templates Model Class
  */
-class Mail_templates_model extends Model
+class MailTemplate extends Model
 {
     /**
      * @var string The database table name
@@ -28,7 +28,7 @@ class Mail_templates_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'layout' => ['System\Models\Mail_layouts_model', 'foreignKey' => 'layout_id'],
+            'layout' => ['System\Models\MailLayout', 'foreignKey' => 'layout_id'],
         ],
     ];
 
@@ -83,7 +83,7 @@ class Mail_templates_model extends Model
         $this->plain_body = array_get($sections, 'text');
 
         $layoutCode = array_get($sections, 'settings.layout', 'default');
-        $this->layout_id = Mail_layouts_model::getIdFromCode($layoutCode);
+        $this->layout_id = MailLayout::getIdFromCode($layoutCode);
     }
 
     /**
@@ -92,8 +92,8 @@ class Mail_templates_model extends Model
      */
     public static function syncAll()
     {
-        Mail_layouts_model::createLayouts();
-        Mail_partials_model::createPartials();
+        MailLayout::createLayouts();
+        MailPartial::createPartials();
 
         $templates = (array)MailManager::instance()->listRegisteredTemplates();
         $dbTemplates = self::lists('is_custom', 'code')->all();
@@ -117,7 +117,7 @@ class Mail_templates_model extends Model
             $templateModel->code = $name;
             $templateModel->label = $label;
             $templateModel->is_custom = 0;
-            $templateModel->layout_id = Mail_layouts_model::getIdFromCode($layoutCode);
+            $templateModel->layout_id = MailLayout::getIdFromCode($layoutCode);
             $templateModel->save();
         }
     }
@@ -158,7 +158,7 @@ class Mail_templates_model extends Model
      */
     public static function registerCallback(callable $callback)
     {
-        traceLog('Mail_templates_model::registerCallback is deprecated, use '.MailManager::class.'::registerCallback instead');
+        traceLog('MailTemplate::registerCallback is deprecated, use '.MailManager::class.'::registerCallback instead');
         MailManager::instance()->registerCallback($callback);
     }
 }
