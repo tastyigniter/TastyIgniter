@@ -4,7 +4,7 @@ namespace Admin\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use Admin\Models\Customers_model;
-use Admin\Models\Orders_model;
+use Admin\Models\Order;
 use Admin\Models\Reservations_model;
 use Admin\Traits\LocationAwareWidget;
 use Carbon\Carbon;
@@ -183,7 +183,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalSaleSum($range)
     {
-        $query = Orders_model::query();
+        $query = Order::query();
         $query->where('status_id', '>', '0')
             ->where('status_id', '!=', setting('canceled_order_status'));
 
@@ -201,7 +201,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalLostSaleSum($range)
     {
-        $query = Orders_model::query();
+        $query = Order::query();
         $query->where(function ($query) {
             $query->where('status_id', '<=', '0');
             $query->orWhere('status_id', setting('canceled_order_status'));
@@ -221,7 +221,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalCashPaymentSum($range)
     {
-        $query = Orders_model::query();
+        $query = Order::query();
         $query->where(function ($query) {
             $query->where('status_id', '>', '0');
             $query->where('status_id', '!=', setting('canceled_order_status'));
@@ -255,7 +255,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalOrderSum($range)
     {
-        $query = Orders_model::query();
+        $query = Order::query();
         $this->applyRangeQuery($query, $range);
         $this->locationApplyScope($query);
 
@@ -270,7 +270,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalCompletedOrderSum($range)
     {
-        $query = Orders_model::query();
+        $query = Order::query();
         $query->whereIn('status_id', setting('completed_order_status') ?? []);
 
         $this->applyRangeQuery($query, $range);
@@ -288,7 +288,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalDeliveryOrderSum($range)
     {
-        $query = Orders_model::query();
+        $query = Order::query();
         $query->where(function ($query) {
             $query->where('order_type', '1');
             $query->orWhere('order_type', 'delivery');
@@ -308,7 +308,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalCollectionOrderSum($range)
     {
-        $query = Orders_model::query();
+        $query = Order::query();
         $query->where(function ($query) {
             $query->where('order_type', '2');
             $query->orWhere('order_type', 'collection');

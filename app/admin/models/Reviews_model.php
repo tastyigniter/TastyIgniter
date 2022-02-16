@@ -55,7 +55,7 @@ class Reviews_model extends Model
     public static $allowedSortingColumns = ['created_at asc', 'created_at desc'];
 
     public static $relatedSaleTypes = [
-        'orders' => 'Admin\Models\Orders_model',
+        'orders' => 'Admin\Models\Order',
         'reservations' => 'Admin\Models\Reservations_model',
     ];
 

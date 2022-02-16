@@ -4,7 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\ActivityTypes\StatusUpdated;
 use Admin\Facades\AdminMenu;
-use Admin\Models\Orders_model;
+use Admin\Models\Order;
 use Admin\Models\Statuses_model;
 use Igniter\Flame\Exception\ApplicationException;
 
@@ -19,17 +19,17 @@ class Orders extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Orders_model',
+            'model' => 'Admin\Models\Order',
             'title' => 'lang:admin::lang.orders.text_title',
             'emptyMessage' => 'lang:admin::lang.orders.text_empty',
             'defaultSort' => ['order_id', 'DESC'],
-            'configFile' => 'orders_model',
+            'configFile' => 'order',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.orders.text_form_name',
-        'model' => 'Admin\Models\Orders_model',
+        'model' => 'Admin\Models\Order',
         'request' => 'Admin\Requests\Order',
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
@@ -43,7 +43,7 @@ class Orders extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'orders',
         ],
-        'configFile' => 'orders_model',
+        'configFile' => 'order',
     ];
 
     protected $requiredPermissions = [
@@ -76,7 +76,7 @@ class Orders extends \Admin\Classes\AdminController
 
     public function index_onUpdateStatus()
     {
-        $model = Orders_model::find((int)post('recordId'));
+        $model = Order::find((int)post('recordId'));
         $status = Statuses_model::find((int)post('statusId'));
         if (!$model || !$status)
             return;

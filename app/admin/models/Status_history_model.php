@@ -102,7 +102,7 @@ class Status_history_model extends Model
 
     public function isForOrder()
     {
-        return $this->object_type === Orders_model::make()->getMorphClass();
+        return $this->object_type === Order::make()->getMorphClass();
     }
 
     //

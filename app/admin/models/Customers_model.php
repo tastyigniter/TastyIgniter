@@ -35,7 +35,7 @@ class Customers_model extends AuthUserModel
     public $relation = [
         'hasMany' => [
             'addresses' => ['Admin\Models\Addresses_model', 'delete' => TRUE],
-            'orders' => ['Admin\Models\Orders_model'],
+            'orders' => ['Admin\Models\Order'],
             'reservations' => ['Admin\Models\Reservations_model'],
         ],
         'belongsTo' => [
@@ -211,8 +211,8 @@ class Customers_model extends AuthUserModel
             $customer_email = $this->email;
             $update = ['customer_id' => $customer_id];
 
-            Orders_model::where('email', $customer_email)->update($update);
-            if ($orders = Orders_model::where('email', $customer_email)->get()) {
+            Order::where('email', $customer_email)->update($update);
+            if ($orders = Order::where('email', $customer_email)->get()) {
                 foreach ($orders as $row) {
                     if (empty($row['order_id'])) continue;
 

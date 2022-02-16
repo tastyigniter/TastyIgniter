@@ -31,7 +31,7 @@ class Stock_history_model extends Model
         'belongsTo' => [
             'stock' => 'Admin\Models\Stocks_model',
             'staff' => 'Admin\Models\Staffs_model',
-            'order' => 'Admin\Models\Orders_model',
+            'order' => 'Admin\Models\Order',
         ],
     ];
 

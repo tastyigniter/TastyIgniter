@@ -7,7 +7,7 @@ use Admin\ActivityTypes\StatusUpdated;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Facades\AdminAuth;
-use Admin\Models\Orders_model;
+use Admin\Models\Order;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staffs_model;
 use Admin\Models\Statuses_model;
@@ -27,7 +27,7 @@ class StatusEditor extends BaseFormWidget
     use ValidatesForm;
 
     /**
-     * @var Orders_model|\Admin\Models\Reservations_model Form model object.
+     * @var Order|\Admin\Models\Reservations_model Form model object.
      */
     public $model;
 
@@ -319,7 +319,7 @@ class StatusEditor extends BaseFormWidget
 
     protected function checkAssigneePermission()
     {
-        $saleType = $this->model instanceof Orders_model
+        $saleType = $this->model instanceof Order
             ? 'orderPermission' : 'reservationPermission';
 
         $permission = $this->getModeConfig($saleType);

@@ -91,7 +91,7 @@ class Assignable_logs_model extends Model
 
     public function isForOrder()
     {
-        return $this->assignable_type === Orders_model::make()->getMorphClass();
+        return $this->assignable_type === Order::make()->getMorphClass();
     }
 
     //

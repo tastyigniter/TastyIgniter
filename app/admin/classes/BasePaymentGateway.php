@@ -18,7 +18,7 @@ class BasePaymentGateway extends ModelAction
      */
     protected $model;
 
-    protected $orderModel = 'Admin\Models\Orders_model';
+    protected $orderModel = 'Admin\Models\Order';
 
     protected $orderStatusModel = 'Admin\Models\Statuses_model';
 
@@ -255,7 +255,7 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Creates a payment transaction from an existing payment profile.
-     * @param \Admin\Models\Orders_model $order An order object to pay
+     * @param \Admin\Models\Order $order An order object to pay
      * @param array $data
      */
     public function payFromPaymentProfile($order, $data = [])

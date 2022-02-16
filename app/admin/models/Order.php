@@ -19,7 +19,7 @@ use System\Traits\SendsMailTemplate;
 /**
  * Orders Model Class
  */
-class Orders_model extends Model
+class Order extends Model
 {
     use HasInvoice;
     use ManagesOrderItems;
