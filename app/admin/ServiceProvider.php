@@ -569,7 +569,7 @@ class ServiceProvider extends AppServiceProvider
             'menus' => 'Admin\Models\Menus_model',
             'menus_specials' => 'Admin\Models\Menus_specials_model',
             'orders' => 'Admin\Models\Order',
-            'payment_logs' => 'Admin\Models\Payment_logs_model',
+            'payment_logs' => 'Admin\Models\PaymentLog',
             'payments' => 'Admin\Models\Payments_model',
             'reservations' => 'Admin\Models\Reservations_model',
             'staff_groups' => 'Admin\Models\Staff_groups_model',

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 /**
  * Payment logs Model Class
  */
-class Payment_logs_model extends Model
+class PaymentLog extends Model
 {
     use Validation;
 

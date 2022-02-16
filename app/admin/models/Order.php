@@ -77,7 +77,7 @@ class Order extends Model
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
         ],
         'hasMany' => [
-            'payment_logs' => 'Admin\Models\Payment_logs_model',
+            'payment_logs' => 'Admin\Models\PaymentLog',
         ],
     ];
 
@@ -280,7 +280,7 @@ class Order extends Model
 
     public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [], $isRefundable = FALSE)
     {
-        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response, $isRefundable);
+        PaymentLog::logAttempt($this, $message, $isSuccess, $request, $response, $isRefundable);
     }
 
     public function updateOrderStatus($id, $options = [])
