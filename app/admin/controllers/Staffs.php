@@ -20,7 +20,7 @@ class Staffs extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.staff.text_title',
             'emptyMessage' => 'lang:admin::lang.staff.text_empty',
             'defaultSort' => ['staff_id', 'DESC'],
-            'configFile' => 'staff',
+            'configFile' => 'Staff',
         ],
     ];
 
@@ -47,7 +47,7 @@ class Staffs extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'staffs',
         ],
-        'configFile' => 'staff',
+        'configFile' => 'Staff',
     ];
 
     protected $requiredPermissions = 'Admin.Staffs';

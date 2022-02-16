@@ -23,7 +23,7 @@ class Orders extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.orders.text_title',
             'emptyMessage' => 'lang:admin::lang.orders.text_empty',
             'defaultSort' => ['order_id', 'DESC'],
-            'configFile' => 'order',
+            'configFile' => 'Order',
         ],
     ];
 
@@ -43,7 +43,7 @@ class Orders extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'orders',
         ],
-        'configFile' => 'order',
+        'configFile' => 'Order',
     ];
 
     protected $requiredPermissions = [

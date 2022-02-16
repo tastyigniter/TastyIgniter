@@ -17,7 +17,7 @@ class StaffRoles extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.staff_roles.text_title',
             'emptyMessage' => 'lang:admin::lang.staff_roles.text_empty',
             'defaultSort' => ['staff_role_id', 'DESC'],
-            'configFile' => 'staffrole',
+            'configFile' => 'StaffRole',
         ],
     ];
 
@@ -44,7 +44,7 @@ class StaffRoles extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'staff_roles',
         ],
-        'configFile' => 'staffrole',
+        'configFile' => 'StaffRole',
     ];
 
     protected $requiredPermissions = 'Admin.Staffs';

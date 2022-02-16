@@ -17,7 +17,7 @@ class Statuses extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.statuses.text_title',
             'emptyMessage' => 'lang:admin::lang.statuses.text_empty',
             'defaultSort' => ['status_id', 'DESC'],
-            'configFile' => 'status',
+            'configFile' => 'Status',
         ],
     ];
 
@@ -44,7 +44,7 @@ class Statuses extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'statuses',
         ],
-        'configFile' => 'status',
+        'configFile' => 'Status',
     ];
 
     protected $requiredPermissions = 'Admin.Statuses';

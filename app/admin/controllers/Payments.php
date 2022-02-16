@@ -24,7 +24,7 @@ class Payments extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.payments.text_title',
             'emptyMessage' => 'lang:admin::lang.payments.text_empty',
             'defaultSort' => ['updated_at', 'DESC'],
-            'configFile' => 'payment',
+            'configFile' => 'Payment',
         ],
     ];
 
@@ -46,7 +46,7 @@ class Payments extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'payments',
         ],
-        'configFile' => 'payment',
+        'configFile' => 'Payment',
     ];
 
     protected $requiredPermissions = 'Admin.Payments';
