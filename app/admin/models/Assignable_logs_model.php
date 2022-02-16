@@ -30,7 +30,7 @@ class Assignable_logs_model extends Model
         'belongsTo' => [
             'assignee' => 'Admin\Models\Staffs_model',
             'assignee_group' => 'Admin\Models\Staff_groups_model',
-            'status' => 'Admin\Models\Statuses_model',
+            'status' => 'Admin\Models\Status',
         ],
         'morphTo' => [
             'assignable' => [],

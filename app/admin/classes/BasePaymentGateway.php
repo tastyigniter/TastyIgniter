@@ -20,7 +20,7 @@ class BasePaymentGateway extends ModelAction
 
     protected $orderModel = 'Admin\Models\Order';
 
-    protected $orderStatusModel = 'Admin\Models\Statuses_model';
+    protected $orderStatusModel = 'Admin\Models\Status';
 
     protected $configFields = [];
 

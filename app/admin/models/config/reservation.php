@@ -27,7 +27,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'select',
             'conditions' => 'status_id = :filtered',
-            'modelClass' => 'Admin\Models\Statuses_model',
+            'modelClass' => 'Admin\Models\Status',
             'options' => 'getDropdownOptionsForReservation',
         ],
         'date' => [

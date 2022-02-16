@@ -10,7 +10,7 @@ use Admin\Facades\AdminAuth;
 use Admin\Models\Order;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staffs_model;
-use Admin\Models\Statuses_model;
+use Admin\Models\Status;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
@@ -187,7 +187,7 @@ class StatusEditor extends BaseFormWidget
         if (!strlen($statusId = post('statusId')))
             throw new ApplicationException(lang('admin::lang.form.missing_id'));
 
-        if (!$status = Statuses_model::find($statusId))
+        if (!$status = Status::find($statusId))
             throw new Exception(sprintf(lang('admin::lang.statuses.alert_status_not_found'), $statusId));
 
         return $status->toArray();
@@ -337,7 +337,7 @@ class StatusEditor extends BaseFormWidget
                 AssigneeUpdated::log($record, $this->getController()->getUser());
         }
         else {
-            $status = Statuses_model::find(array_get($saveData, $keyFrom));
+            $status = Status::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->addStatusHistory($status, $saveData))
                 StatusUpdated::log($record, $this->getController()->getUser());
         }

@@ -7,7 +7,7 @@ return [
                 'context' => 'status',
                 'label' => 'lang:admin::lang.label_status',
                 'type' => 'select',
-                'options' => ['Admin\Models\Statuses_model', 'getDropdownOptionsForReservation'],
+                'options' => ['Admin\Models\Status', 'getDropdownOptionsForReservation'],
                 'placeholder' => 'lang:admin::lang.text_please_select',
                 'attributes' => [
                     'data-status-value' => '',

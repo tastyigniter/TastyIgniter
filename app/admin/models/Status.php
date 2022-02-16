@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Model;
 /**
  * Statuses Model Class
  */
-class Statuses_model extends Model
+class Status extends Model
 {
     /**
      * @var string The database table name

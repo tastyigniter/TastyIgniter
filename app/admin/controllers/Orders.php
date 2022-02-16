@@ -5,7 +5,7 @@ namespace Admin\Controllers;
 use Admin\ActivityTypes\StatusUpdated;
 use Admin\Facades\AdminMenu;
 use Admin\Models\Order;
-use Admin\Models\Statuses_model;
+use Admin\Models\Status;
 use Igniter\Flame\Exception\ApplicationException;
 
 class Orders extends \Admin\Classes\AdminController
@@ -63,7 +63,7 @@ class Orders extends \Admin\Classes\AdminController
     {
         $this->asExtension('ListController')->index();
 
-        $this->vars['statusesOptions'] = \Admin\Models\Statuses_model::getDropdownOptionsForOrder();
+        $this->vars['statusesOptions'] = \Admin\Models\Status::getDropdownOptionsForOrder();
     }
 
     public function index_onDelete()
@@ -77,7 +77,7 @@ class Orders extends \Admin\Classes\AdminController
     public function index_onUpdateStatus()
     {
         $model = Order::find((int)post('recordId'));
-        $status = Statuses_model::find((int)post('statusId'));
+        $status = Status::find((int)post('statusId'));
         if (!$model || !$status)
             return;
 

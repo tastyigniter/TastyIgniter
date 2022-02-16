@@ -288,7 +288,7 @@ class Order extends Model
         $id = $id ?: $this->status_id ?: setting('default_order_status');
 
         return $this->addStatusHistory(
-            Statuses_model::find($id), $options
+            Status::find($id), $options
         );
     }
 
