@@ -12,7 +12,7 @@ trait Assignable
     public static function bootAssignable()
     {
         static::extend(function (self $model) {
-            $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staffs_model'];
+            $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staff'];
             $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\Staff_groups_model'];
             $model->relation['morphMany']['assignable_logs'] = [
                 'Admin\Models\Assignable_logs_model', 'name' => 'assignable', 'delete' => TRUE,
@@ -43,7 +43,7 @@ trait Assignable
     //
 
     /**
-     * @param \Admin\Models\Staffs_model $assignee
+     * @param \Admin\Models\Staff $assignee
      * @return bool
      */
     public function assignTo($assignee)

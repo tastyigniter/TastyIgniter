@@ -7,7 +7,7 @@ use Admin\Models\Customer_groups_model;
 use Admin\Models\Locations_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staff_roles_model;
-use Admin\Models\Staffs_model;
+use Admin\Models\Staff;
 use Admin\Models\User;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
@@ -153,7 +153,7 @@ class IgniterInstall extends Command
     protected function createSuperUser()
     {
         $email = $this->output->ask('Admin Email', DatabaseSeeder::$siteEmail, function ($answer) {
-            if (Staffs_model::whereStaffEmail($answer)->first()) {
+            if (Staff::whereStaffEmail($answer)->first()) {
                 throw new \RuntimeException('An administrator with that email already exists, please choose a different email.');
             }
 

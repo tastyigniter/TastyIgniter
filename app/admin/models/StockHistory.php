@@ -30,7 +30,7 @@ class StockHistory extends Model
     public $relation = [
         'belongsTo' => [
             'stock' => 'Admin\Models\Stock',
-            'staff' => 'Admin\Models\Staffs_model',
+            'staff' => 'Admin\Models\Staff',
             'order' => 'Admin\Models\Order',
         ],
     ];

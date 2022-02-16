@@ -25,7 +25,7 @@ class Staff_roles_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'staffs' => ['Admin\Models\Staffs_model', 'foreignKey' => 'staff_role_id', 'otherKey' => 'staff_role_id'],
+            'staffs' => ['Admin\Models\Staff', 'foreignKey' => 'staff_role_id', 'otherKey' => 'staff_role_id'],
         ],
     ];
 

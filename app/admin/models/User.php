@@ -41,7 +41,7 @@ class User extends AuthUserModel
 
     public $relation = [
         'belongsTo' => [
-            'staff' => ['Admin\Models\Staffs_model', 'foreignKey' => 'staff_id'],
+            'staff' => ['Admin\Models\Staff', 'foreignKey' => 'staff_id'],
         ],
     ];
 

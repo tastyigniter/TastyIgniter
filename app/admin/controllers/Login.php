@@ -4,7 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Facades\AdminAuth;
 use Admin\Facades\Template;
-use Admin\Models\Staffs_model;
+use Admin\Models\Staff;
 use Admin\Models\User;
 use Admin\Traits\ValidatesForm;
 use Igniter\Flame\Exception\ValidationException;
@@ -93,7 +93,7 @@ class Login extends \Admin\Classes\AdminController
             'email' => lang('admin::lang.label_email'),
         ]);
 
-        $staff = Staffs_model::whereStaffEmail(post('email'))->first();
+        $staff = Staff::whereStaffEmail(post('email'))->first();
         if ($staff && $user = $staff->user) {
             if (!$user->resetPassword())
                 throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);

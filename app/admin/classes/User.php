@@ -26,7 +26,7 @@ class User extends Manager
     }
 
     /**
-     * @return \Admin\Models\Staffs_model
+     * @return \Admin\Models\Staff
      */
     public function staff()
     {

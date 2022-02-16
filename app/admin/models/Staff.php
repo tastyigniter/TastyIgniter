@@ -10,7 +10,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
 /**
  * Staffs Model Class
  */
-class Staffs_model extends Model
+class Staff extends Model
 {
     use Purgeable;
     use Locationable;

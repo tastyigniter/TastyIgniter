@@ -9,7 +9,7 @@ use Admin\Classes\FormField;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Order;
 use Admin\Models\Staff_groups_model;
-use Admin\Models\Staffs_model;
+use Admin\Models\Staff;
 use Admin\Models\Status;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
@@ -236,7 +236,7 @@ class StatusEditor extends BaseFormWidget
         if (!strlen($groupId = post('groupId', $form->getField('assignee_group_id')->value)))
             return [];
 
-        return Staffs_model::whereHas('groups', function ($query) use ($groupId) {
+        return Staff::whereHas('groups', function ($query) use ($groupId) {
             $query->where('staff_groups.staff_group_id', $groupId);
         })->isEnabled()->dropdown('staff_name');
     }
@@ -332,7 +332,7 @@ class StatusEditor extends BaseFormWidget
     {
         if (!$this->isStatusMode) {
             $group = Staff_groups_model::find(array_get($saveData, $this->assigneeGroupKeyFrom));
-            $staff = Staffs_model::find(array_get($saveData, $keyFrom));
+            $staff = Staff::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->updateAssignTo($group, $staff))
                 AssigneeUpdated::log($record, $this->getController()->getUser());
         }

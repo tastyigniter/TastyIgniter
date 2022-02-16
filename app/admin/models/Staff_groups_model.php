@@ -28,7 +28,7 @@ class Staff_groups_model extends Model
             'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_group_id'],
         ],
         'belongsToMany' => [
-            'staffs' => ['Admin\Models\Staffs_model', 'table' => 'staffs_groups'],
+            'staffs' => ['Admin\Models\Staff', 'table' => 'staffs_groups'],
         ],
     ];
 
@@ -90,13 +90,13 @@ class Staff_groups_model extends Model
      */
     public function listAssignees()
     {
-        return $this->staffs->filter(function (Staffs_model $staff) {
+        return $this->staffs->filter(function (Staff $staff) {
             return $staff->isEnabled() && $staff->canAssignTo();
         })->values();
     }
 
     /**
-     * @return \Admin\Models\Staffs_model|object
+     * @return \Admin\Models\Staff|object
      */
     public function findAvailableAssignee()
     {
@@ -110,7 +110,7 @@ class Staff_groups_model extends Model
 
         $logs = $query->pluck('assign_value', 'assignee_id');
 
-        $assignees = $this->listAssignees()->map(function (Staffs_model $model) use ($logs) {
+        $assignees = $this->listAssignees()->map(function (Staff $model) use ($logs) {
             $model->assign_value = $logs[$model->getKey()] ?? 0;
 
             return $model;
