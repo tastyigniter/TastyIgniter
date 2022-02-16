@@ -44,7 +44,7 @@ class Mail_layouts_model extends Model
             'templates' => ['System\Models\Mail_templates_model', 'foreignKey' => 'layout_id'],
         ],
         'belongsTo' => [
-            'language' => 'System\Models\Languages_model',
+            'language' => 'System\Models\Language',
         ],
     ];
 

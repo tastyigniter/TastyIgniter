@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Lang;
 /**
  * Languages Model Class
  */
-class Languages_model extends Language
+class Language extends Language
 {
     use Purgeable;
 
@@ -188,7 +188,7 @@ class Languages_model extends Language
 
     public function listAllFiles()
     {
-        traceLog('Method Languages_model::listAllFiles() has been deprecated. Use Translator loader instead.');
+        traceLog('Method Language::listAllFiles() has been deprecated. Use Translator loader instead.');
     }
 
     public function getLines($locale, $group, $namespace = null)

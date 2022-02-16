@@ -51,7 +51,7 @@ class Staff extends Model
         ],
         'belongsTo' => [
             'role' => ['Admin\Models\StaffRole', 'foreignKey' => 'staff_role_id'],
-            'language' => ['System\Models\Languages_model'],
+            'language' => ['System\Models\Language'],
         ],
         'belongsToMany' => [
             'groups' => ['Admin\Models\StaffGroup', 'table' => 'staffs_groups'],

@@ -89,7 +89,7 @@ return [
                     'type' => 'select',
                     'default' => 'en',
                     'span' => 'left',
-                    'options' => ['System\Models\Languages_model', 'getDropdownOptions'],
+                    'options' => ['System\Models\Language', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::lang.text_please_select',
                 ],
                 'detect_language' => [

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
-use System\Models\Languages_model;
+use System\Models\Language;
 
 /**
  * Console command to install TastyIgniter.
@@ -179,7 +179,7 @@ class IgniterInstall extends Command
         $user = AdminAuth::register([
             'staff_email' => $email,
             'staff_name' => DatabaseSeeder::$staffName,
-            'language_id' => Languages_model::first()->language_id,
+            'language_id' => Language::first()->language_id,
             'staff_role_id' => StaffRole::first()->staff_role_id,
             'staff_status' => TRUE,
             'username' => $username,
