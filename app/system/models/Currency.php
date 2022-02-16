@@ -8,7 +8,7 @@ use Igniter\Flame\Exception\ValidationException;
 /**
  * Currencies Model Class
  */
-class Currencies_model extends Currency
+class Currency extends Currency
 {
     /**
      * @var string The database table name

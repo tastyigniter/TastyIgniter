@@ -110,7 +110,7 @@ return [
                     'span' => 'left',
                     'type' => 'select',
                     'default' => 'GBP',
-                    'options' => ['System\Models\Currencies_model', 'getDropdownOptions'],
+                    'options' => ['System\Models\Currency', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::lang.text_please_select',
                     'comment' => 'lang:system::lang.settings.help_site_currency',
                 ],
@@ -120,7 +120,7 @@ return [
                     'span' => 'right',
                     'type' => 'select',
                     'default' => 'openexchangerates',
-                    'options' => ['System\Models\Currencies_model', 'getConverterDropdownOptions'],
+                    'options' => ['System\Models\Currency', 'getConverterDropdownOptions'],
                 ],
                 'currency_converter[oer][apiKey]' => [
                     'label' => 'lang:system::lang.settings.label_currency_converter_oer_api_key',

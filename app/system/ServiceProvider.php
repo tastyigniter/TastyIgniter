@@ -300,7 +300,7 @@ class ServiceProvider extends AppServiceProvider
             app('config')->set('currency.converters.openexchangerates.apiKey', setting('currency_converter.oer.apiKey'));
             app('config')->set('currency.converters.fixerio.apiKey', setting('currency_converter.fixerio.apiKey'));
             app('config')->set('currency.ratesCacheDuration', setting('currency_converter.refreshInterval'));
-            app('config')->set('currency.model', \System\Models\Currencies_model::class);
+            app('config')->set('currency.model', \System\Models\Currency::class);
         });
 
         $this->app->resolving('translator.localization', function ($localization, $app) {
@@ -354,7 +354,7 @@ class ServiceProvider extends AppServiceProvider
         Relation::morphMap([
             'activities' => 'System\Models\Activity',
             'countries' => 'System\Models\Country',
-            'currencies' => 'System\Models\Currencies_model',
+            'currencies' => 'System\Models\Currency',
             'extensions' => 'System\Models\Extensions_model',
             'languages' => 'System\Models\Languages_model',
             'mail_layouts' => 'System\Models\Mail_layouts_model',
