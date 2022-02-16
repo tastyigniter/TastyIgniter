@@ -49,7 +49,7 @@ class Menus_model extends Model
             'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'delete' => TRUE],
         ],
         'hasOne' => [
-            'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
+            'special' => ['Admin\Models\MenuSpecial', 'delete' => TRUE],
         ],
         'belongsToMany' => [
             'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],

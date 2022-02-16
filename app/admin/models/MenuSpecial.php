@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Model;
 /**
  * Menu Specials Model Class
  */
-class Menus_specials_model extends Model
+class MenuSpecial extends Model
 {
     /**
      * @var string The database table name

@@ -567,7 +567,7 @@ class ServiceProvider extends AppServiceProvider
             'menu_option_values' => 'Admin\Models\Menu_option_values_model',
             'menu_options' => 'Admin\Models\Menu_options_model',
             'menus' => 'Admin\Models\Menus_model',
-            'menus_specials' => 'Admin\Models\Menus_specials_model',
+            'menus_specials' => 'Admin\Models\MenuSpecial',
             'orders' => 'Admin\Models\Order',
             'payment_logs' => 'Admin\Models\PaymentLog',
             'payments' => 'Admin\Models\Payment',
