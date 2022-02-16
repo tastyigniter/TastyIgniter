@@ -17,7 +17,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.staff.text_filter_role',
             'type' => 'select',
             'conditions' => 'staff_role_id = :filtered',
-            'modelClass' => 'Admin\Models\Staff_roles_model',
+            'modelClass' => 'Admin\Models\StaffRole',
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -268,7 +268,7 @@ $config['form']['fields'] = [
         'type' => 'radiolist',
         'span' => 'left',
         'context' => ['create', 'edit'],
-        'options' => ['Admin\Models\Staff_roles_model', 'listDropdownOptions'],
+        'options' => ['Admin\Models\StaffRole', 'listDropdownOptions'],
         'commentAbove' => 'lang:admin::lang.staff.help_role',
     ],
     'user[super_user]' => [

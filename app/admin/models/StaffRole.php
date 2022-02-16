@@ -6,7 +6,7 @@ use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use InvalidArgumentException;
 
-class Staff_roles_model extends Model
+class StaffRole extends Model
 {
     /**
      * @var string The database table name

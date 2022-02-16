@@ -50,7 +50,7 @@ class Staff extends Model
             'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_id'],
         ],
         'belongsTo' => [
-            'role' => ['Admin\Models\Staff_roles_model', 'foreignKey' => 'staff_role_id'],
+            'role' => ['Admin\Models\StaffRole', 'foreignKey' => 'staff_role_id'],
             'language' => ['System\Models\Languages_model'],
         ],
         'belongsToMany' => [
