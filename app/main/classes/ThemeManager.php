@@ -7,7 +7,6 @@ use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
 use Main\Events\Theme\GetActiveTheme;
 use System\Libraries\Assets;

@@ -7,7 +7,6 @@ use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\RouterHelper;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
 use Main\Events\Router\BeforeRoute;
 use Main\Template\Page as PageTemplate;
