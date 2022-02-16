@@ -11,7 +11,7 @@ use System\Traits\SendsMailTemplate;
 /**
  * Users Model Class
  */
-class Users_model extends AuthUserModel
+class User extends AuthUserModel
 {
     use Purgeable;
     use SendsMailTemplate;

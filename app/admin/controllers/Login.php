@@ -5,7 +5,7 @@ namespace Admin\Controllers;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\Template;
 use Admin\Models\Staffs_model;
-use Admin\Models\Users_model;
+use Admin\Models\User;
 use Admin\Traits\ValidatesForm;
 use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Support\Facades\Mail;
@@ -42,7 +42,7 @@ class Login extends \Admin\Classes\AdminController
         }
 
         $code = input('code');
-        if (strlen($code) && !Users_model::whereResetCode(input('code'))->first()) {
+        if (strlen($code) && !User::whereResetCode(input('code'))->first()) {
             flash()->error(lang('admin::lang.login.alert_failed_reset'));
 
             return $this->redirect('login');
@@ -126,7 +126,7 @@ class Login extends \Admin\Classes\AdminController
         ]);
 
         $code = array_get($data, 'code');
-        $user = Users_model::whereResetCode($code)->first();
+        $user = User::whereResetCode($code)->first();
 
         if (!$user || !$user->completeResetPassword($code, post('password')))
             throw new ValidationException(['password' => lang('admin::lang.login.alert_failed_reset')]);

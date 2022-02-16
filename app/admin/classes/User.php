@@ -11,7 +11,7 @@ class User extends Manager
 {
     protected $sessionKey = 'admin_auth';
 
-    protected $model = 'Admin\Models\Users_model';
+    protected $model = 'Admin\Models\User';
 
     protected $isSuperUser = FALSE;
 

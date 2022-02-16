@@ -8,7 +8,7 @@ use Admin\Models\Locations_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staff_roles_model;
 use Admin\Models\Staffs_model;
-use Admin\Models\Users_model;
+use Admin\Models\User;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -161,7 +161,7 @@ class IgniterInstall extends Command
         });
 
         $username = $this->output->ask('Admin Username', 'admin', function ($answer) {
-            if (Users_model::whereUsername($answer)->first()) {
+            if (User::whereUsername($answer)->first()) {
                 throw new \RuntimeException('An administrator with that username already exists, please choose a different username.');
             }
 

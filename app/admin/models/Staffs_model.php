@@ -44,7 +44,7 @@ class Staffs_model extends Model
 
     public $relation = [
         'hasOne' => [
-            'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id', 'delete' => TRUE],
+            'user' => ['Admin\Models\User', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id', 'delete' => TRUE],
         ],
         'hasMany' => [
             'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_id'],
