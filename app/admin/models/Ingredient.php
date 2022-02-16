@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Ingredients Model Class
  */
-class Ingredients_model extends Model
+class Ingredient extends Model
 {
     use HasMedia;
 

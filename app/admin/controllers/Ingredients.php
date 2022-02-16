@@ -15,17 +15,17 @@ class Ingredients extends AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Ingredients_model',
+            'model' => 'Admin\Models\Ingredient',
             'title' => 'lang:admin::lang.ingredients.text_title',
             'emptyMessage' => 'lang:admin::lang.ingredients.text_empty',
             'defaultSort' => ['ingredient_id', 'DESC'],
-            'configFile' => 'ingredients_model',
+            'configFile' => 'Ingredient',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.ingredients.text_form_name',
-        'model' => 'Admin\Models\Ingredients_model',
+        'model' => 'Admin\Models\Ingredient',
         'request' => 'Admin\Requests\Ingredient',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -46,7 +46,7 @@ class Ingredients extends AdminController
         'delete' => [
             'redirect' => 'ingredients',
         ],
-        'configFile' => 'ingredients_model',
+        'configFile' => 'Ingredient',
     ];
 
     protected $requiredPermissions = 'Admin.Ingredients';

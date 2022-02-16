@@ -56,7 +56,7 @@ class Menus_model extends Model
             'mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
-            'ingredients' => ['Admin\Models\Ingredients_model', 'name' => 'ingredientable'],
+            'ingredients' => ['Admin\Models\Ingredient', 'name' => 'ingredientable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];

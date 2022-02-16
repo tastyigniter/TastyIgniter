@@ -40,7 +40,7 @@ class Menu_option_values_model extends Model
             'option' => ['Admin\Models\Menu_options_model'],
         ],
         'morphToMany' => [
-            'ingredients' => ['Admin\Models\Ingredients_model', 'name' => 'ingredientable'],
+            'ingredients' => ['Admin\Models\Ingredient', 'name' => 'ingredientable'],
         ],
     ];
 
@@ -64,7 +64,7 @@ class Menu_option_values_model extends Model
         if (self::$ingredientOptionsCache)
             return self::$ingredientOptionsCache;
 
-        return self::$ingredientOptionsCache = Ingredients_model::dropdown('name')->all();
+        return self::$ingredientOptionsCache = Ingredient::dropdown('name')->all();
     }
 
     //
