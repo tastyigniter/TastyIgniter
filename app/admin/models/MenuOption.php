@@ -43,7 +43,7 @@ class MenuOption extends Model
             'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
         'morphToMany' => [
-            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];
 

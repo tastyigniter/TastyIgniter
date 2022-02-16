@@ -19,7 +19,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'conditions' => 'location_id = :filtered',
-            'modelClass' => 'Admin\Models\Locations_model',
+            'modelClass' => 'Admin\Models\Location',
             'nameFrom' => 'location_name',
             'locationAware' => TRUE,
         ],
@@ -34,7 +34,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.orders.text_filter_order_type',
             'type' => 'select',
             'conditions' => 'order_type = :filtered',
-            'modelClass' => 'Admin\Models\Locations_model',
+            'modelClass' => 'Admin\Models\Location',
             'options' => 'getOrderTypeOptions',
         ],
         'payment' => [

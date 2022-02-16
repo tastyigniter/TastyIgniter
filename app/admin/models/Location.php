@@ -13,7 +13,7 @@ use Igniter\Flame\Location\Models\AbstractLocation;
 /**
  * Locations Model Class
  */
-class Locations_model extends AbstractLocation
+class Location extends AbstractLocation
 {
     use HasWorkingHours;
     use HasDeliveryAreas;
@@ -41,7 +41,7 @@ class Locations_model extends AbstractLocation
     public $relation = [
         'hasMany' => [
             'working_hours' => ['Admin\Models\WorkingHours', 'delete' => TRUE],
-            'delivery_areas' => ['Admin\Models\Location_areas_model', 'delete' => TRUE],
+            'delivery_areas' => ['Admin\Models\LocationArea', 'delete' => TRUE],
         ],
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],

@@ -567,7 +567,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.locations.text_delivery_area',
             'type' => 'maparea',
             'context' => ['edit'],
-            'form' => 'location_areas_model',
+            'form' => 'LocationArea',
             'request' => 'Admin\Requests\LocationArea',
             'commentAbove' => 'lang:admin::lang.locations.help_delivery_areas',
         ],

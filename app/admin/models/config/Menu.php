@@ -9,7 +9,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'scope' => 'whereHasLocation',
-            'modelClass' => 'Admin\Models\Locations_model',
+            'modelClass' => 'Admin\Models\Location',
             'nameFrom' => 'location_name',
             'locationAware' => TRUE,
         ],
@@ -232,7 +232,7 @@ $config['form']['tabs'] = [
             'type' => 'checkboxtoggle',
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
-            'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],
+            'options' => ['Admin\Models\Location', 'getOrderTypeOptions'],
         ],
         'menu_status' => [
             'label' => 'lang:admin::lang.label_status',

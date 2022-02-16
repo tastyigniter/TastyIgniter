@@ -40,7 +40,7 @@ class Stock extends Model
 
     public $relation = [
         'belongsTo' => [
-            'location' => 'Admin\Models\Locations_model',
+            'location' => 'Admin\Models\Location',
         ],
         'hasMany' => [
             'history' => 'Admin\Models\StockHistory',

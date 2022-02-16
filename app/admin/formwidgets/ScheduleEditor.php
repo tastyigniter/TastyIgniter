@@ -15,7 +15,7 @@ class ScheduleEditor extends BaseFormWidget
     use ValidatesForm;
 
     /**
-     * @var \Admin\Models\Locations_model Form model object.
+     * @var \Admin\Models\Location Form model object.
      */
     public $model;
 

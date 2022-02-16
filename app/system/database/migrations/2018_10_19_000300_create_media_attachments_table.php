@@ -3,7 +3,7 @@
 namespace System\Database\Migrations;
 
 use Admin\Models\Categories_model;
-use Admin\Models\Locations_model;
+use Admin\Models\Location;
 use Admin\Models\Menu;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -56,7 +56,7 @@ class CreateMediaAttachmentsTable extends Migration
                 $this->createMediaAttachment($model->image, $model, 'thumb');
         });
 
-        Locations_model::select('location_image', 'options', 'location_id')->get()->each(function ($model) {
+        Location::select('location_image', 'options', 'location_id')->get()->each(function ($model) {
             if (!empty($model->location_image)) {
                 $this->createMediaAttachment($model->location_image, $model, 'thumb');
             }

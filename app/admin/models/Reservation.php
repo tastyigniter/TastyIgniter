@@ -65,7 +65,7 @@ class Reservation extends Model
     public $relation = [
         'belongsTo' => [
             'related_table' => ['Admin\Models\Table', 'foreignKey' => 'table_id'],
-            'location' => 'Admin\Models\Locations_model',
+            'location' => 'Admin\Models\Location',
         ],
         'belongsToMany' => [
             'tables' => ['Admin\Models\Table', 'table' => 'reservation_tables'],
@@ -131,7 +131,7 @@ class Reservation extends Model
             $query->whereIn('status_id', $status);
         }
 
-        if ($location instanceof Locations_model) {
+        if ($location instanceof Location) {
             $query->where('location_id', $location->getKey());
         }
         elseif (strlen($location)) {

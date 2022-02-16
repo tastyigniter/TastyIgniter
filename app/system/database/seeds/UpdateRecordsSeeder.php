@@ -3,7 +3,7 @@
 namespace System\Database\Seeds;
 
 use Admin\Models\Categories_model;
-use Admin\Models\Locations_model;
+use Admin\Models\Location;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -55,7 +55,7 @@ class UpdateRecordsSeeder extends Seeder
             $model->save();
         });
 
-        Locations_model::all()->each(function (Locations_model $model) {
+        Location::all()->each(function (Location $model) {
             $model->save();
         });
     }

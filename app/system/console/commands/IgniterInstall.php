@@ -4,7 +4,7 @@ namespace System\Console\Commands;
 
 use Admin\Facades\AdminAuth;
 use Admin\Models\Customer_groups_model;
-use Admin\Models\Locations_model;
+use Admin\Models\Location;
 use Admin\Models\StaffGroup;
 use Admin\Models\StaffRole;
 use Admin\Models\Staff;
@@ -186,7 +186,7 @@ class IgniterInstall extends Command
             'password' => $password,
             'super_user' => TRUE,
             'groups' => [StaffGroup::first()->staff_group_id],
-            'locations' => [Locations_model::first()->location_id],
+            'locations' => [Location::first()->location_id],
         ], TRUE);
 
         $this->line('Admin user '.$user->username.' created!');
@@ -198,7 +198,7 @@ class IgniterInstall extends Command
 
         params()->set([
             'ti_setup' => 'installed',
-            'default_location_id' => Locations_model::first()->location_id,
+            'default_location_id' => Location::first()->location_id,
         ]);
 
         params()->save();

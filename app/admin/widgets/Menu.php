@@ -6,7 +6,7 @@ use Admin\Classes\BaseWidget;
 use Admin\Classes\MenuItem;
 use Admin\Classes\UserState;
 use Admin\Facades\AdminLocation;
-use Admin\Models\Locations_model;
+use Admin\Models\Location;
 use Carbon\Carbon;
 use Igniter\Flame\Exception\ApplicationException;
 
@@ -251,7 +251,7 @@ class Menu extends BaseWidget
     {
         $location = null;
         if (is_numeric($locationId = post('location')))
-            $location = Locations_model::find($locationId);
+            $location = Location::find($locationId);
 
         if ($location && AdminLocation::hasAccess($location)) {
             AdminLocation::setCurrent($location);

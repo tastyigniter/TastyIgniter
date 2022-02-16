@@ -53,7 +53,7 @@ class Categories_model extends Model
             'menus' => ['Admin\Models\Menu', 'table' => 'menu_categories'],
         ],
         'morphToMany' => [
-            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];
 

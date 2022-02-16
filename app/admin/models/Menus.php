@@ -57,7 +57,7 @@ class Menu extends Model
         ],
         'morphToMany' => [
             'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
-            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];
 

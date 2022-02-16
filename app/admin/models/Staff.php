@@ -57,7 +57,7 @@ class Staff extends Model
             'groups' => ['Admin\Models\StaffGroup', 'table' => 'staffs_groups'],
         ],
         'morphToMany' => [
-            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];
 

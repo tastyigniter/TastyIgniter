@@ -9,7 +9,7 @@ use Igniter\Flame\Location\Models\AbstractArea;
 /**
  * Location areas Model Class
  */
-class Location_areas_model extends AbstractArea
+class LocationArea extends AbstractArea
 {
     use Validation;
     use Sortable;

@@ -52,7 +52,7 @@ class Coupons_model extends Model
             'history' => 'Admin\Models\Coupons_history_model',
         ],
         'morphToMany' => [
-            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];
 

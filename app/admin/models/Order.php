@@ -72,7 +72,7 @@ class Order extends Model
     public $relation = [
         'belongsTo' => [
             'customer' => 'Admin\Models\Customers_model',
-            'location' => 'Admin\Models\Locations_model',
+            'location' => 'Admin\Models\Location',
             'address' => 'Admin\Models\Addresses_model',
             'payment_method' => ['Admin\Models\Payment', 'foreignKey' => 'payment', 'otherKey' => 'code'],
         ],
@@ -135,7 +135,7 @@ class Order extends Model
             $query->whereIn('status_id', $status);
         }
 
-        if ($location instanceof Locations_model) {
+        if ($location instanceof Location) {
             $query->where('location_id', $location->getKey());
         }
         elseif (strlen($location)) {

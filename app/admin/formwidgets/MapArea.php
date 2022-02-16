@@ -4,7 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Models\Location_areas_model;
+use Admin\Models\LocationArea;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Igniter\Flame\Exception\ApplicationException;
@@ -28,7 +28,7 @@ class MapArea extends BaseFormWidget
 
     public $form;
 
-    public $modelClass = Location_areas_model::class;
+    public $modelClass = LocationArea::class;
 
     public $prompt = 'lang:admin::lang.locations.text_add_new_area';
 
@@ -82,7 +82,7 @@ class MapArea extends BaseFormWidget
             'sortable',
         ]);
 
-        $this->areaColors = Location_areas_model::$areaColors;
+        $this->areaColors = LocationArea::$areaColors;
 
         $fieldName = $this->formField->getName(FALSE);
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
