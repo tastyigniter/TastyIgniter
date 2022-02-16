@@ -25,7 +25,7 @@ class Settings extends \Admin\Classes\AdminController
 
     protected $requiredPermissions = 'Site.Settings';
 
-    protected $modelClass = 'System\Models\Settings_model';
+    protected $modelClass = 'System\Models\Settings';
 
     /**
      * @var \Admin\Widgets\Form

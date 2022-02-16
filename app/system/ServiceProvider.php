@@ -35,7 +35,7 @@ use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
-use System\Models\Settings_model;
+use System\Models\Settings;
 use System\Template\Extension\BladeExtension;
 
 class ServiceProvider extends AppServiceProvider
@@ -247,7 +247,7 @@ class ServiceProvider extends AppServiceProvider
             ]);
 
             $manager->registerMailVariables(
-                File::getRequire(__DIR__.'/models/config/mail_variables.php')
+                File::getRequire(__DIR__.'/models/config/MailVariables.php')
             );
         });
 
@@ -359,10 +359,10 @@ class ServiceProvider extends AppServiceProvider
             'languages' => 'System\Models\Language',
             'mail_layouts' => 'System\Models\MailLayout',
             'mail_templates' => 'System\Models\MailTemplate',
-            'pages' => 'System\Models\Pages_model',
+            'pages' => 'System\Models\Page',
             'permissions' => 'System\Models\Permissions_model',
-            'settings' => 'System\Models\Settings_model',
-            'themes' => 'System\Models\Themes_model',
+            'settings' => 'System\Models\Settings',
+            'themes' => 'System\Models\Theme',
         ]);
     }
 
@@ -438,7 +438,7 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerSystemSettings()
     {
-        Settings_model::registerCallback(function (Settings_model $manager) {
+        Settings::registerCallback(function (Settings $manager) {
             $manager->registerSettingItems('core', [
                 'general' => [
                     'label' => 'system::lang.settings.text_tab_general',
@@ -447,7 +447,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 0,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/general'),
-                    'form' => '~/app/system/models/config/general_settings',
+                    'form' => '~/app/system/models/config/GeneralSettings',
                     'request' => 'System\Requests\GeneralSettings',
                 ],
                 'mail' => [
@@ -457,7 +457,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 5,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/mail'),
-                    'form' => '~/app/system/models/config/mail_settings',
+                    'form' => '~/app/system/models/config/MailSettings',
                     'request' => 'System\Requests\MailSettings',
                 ],
                 'advanced' => [
@@ -467,7 +467,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 6,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/advanced'),
-                    'form' => '~/app/system/models/config/advanced_settings',
+                    'form' => '~/app/system/models/config/AdvancedSettings',
                     'request' => 'System\Requests\AdvancedSettings',
                 ],
             ]);

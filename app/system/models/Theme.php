@@ -16,7 +16,7 @@ use System\Classes\ExtensionManager;
 /**
  * Themes Model Class
  */
-class Themes_model extends Model
+class Theme extends Model
 {
     use Purgeable;
 

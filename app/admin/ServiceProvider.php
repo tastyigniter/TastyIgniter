@@ -18,7 +18,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
-use System\Models\Settings_model;
+use System\Models\Settings;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -283,8 +283,8 @@ class ServiceProvider extends AppServiceProvider
                 'settings' => [
                     'type' => 'partial',
                     'path' => 'top_settings_menu',
-                    'badgeCount' => ['System\Models\Settings_model', 'updatesCount'],
-                    'options' => ['System\Models\Settings_model', 'listMenuSettingItems'],
+                    'badgeCount' => ['System\Models\Settings', 'updatesCount'],
+                    'options' => ['System\Models\Settings', 'listMenuSettingItems'],
                     'permission' => 'Site.Settings',
                 ],
                 'user' => [
@@ -600,7 +600,7 @@ class ServiceProvider extends AppServiceProvider
                     'description' => 'admin::lang.dashboard.onboarding.help_settings',
                     'icon' => 'fa-gears',
                     'url' => admin_url('settings'),
-                    'complete' => ['System\Models\Settings_model', 'onboardingIsComplete'],
+                    'complete' => ['System\Models\Settings', 'onboardingIsComplete'],
                 ],
                 'admin::locations' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_locations',
@@ -614,7 +614,7 @@ class ServiceProvider extends AppServiceProvider
                     'description' => 'admin::lang.dashboard.onboarding.help_themes',
                     'icon' => 'fa-paint-brush',
                     'url' => admin_url('themes'),
-                    'complete' => ['System\Models\Themes_model', 'onboardingIsComplete'],
+                    'complete' => ['System\Models\Theme', 'onboardingIsComplete'],
                 ],
                 'admin::extensions' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_extensions',
@@ -747,7 +747,7 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerSystemSettings()
     {
-        Settings_model::registerCallback(function (Settings_model $manager) {
+        Settings::registerCallback(function (Settings $manager) {
             $manager->registerSettingItems('core', [
                 'setup' => [
                     'label' => 'lang:admin::lang.settings.text_tab_setup',

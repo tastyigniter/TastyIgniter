@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Traits\HasPermalink;
 /**
  * Pages Model Class
  */
-class Pages_model extends Model
+class Page extends Model
 {
     use HasPermalink;
 

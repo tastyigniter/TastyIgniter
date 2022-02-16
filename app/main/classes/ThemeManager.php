@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
 use System\Libraries\Assets;
-use System\Models\Themes_model;
+use System\Models\Theme;
 use ZipArchive;
 
 /**
@@ -20,7 +20,7 @@ class ThemeManager
 {
     use Singleton;
 
-    protected $themeModel = 'System\Models\Themes_model';
+    protected $themeModel = 'System\Models\Theme';
 
     /**
      * @var array of disabled themes.
@@ -583,7 +583,7 @@ class ThemeManager
 
     public function installTheme($code, $version = null)
     {
-        $model = Themes_model::firstOrNew(['code' => $code]);
+        $model = Theme::firstOrNew(['code' => $code]);
 
         if (!$themeObj = $this->findTheme($model->code))
             return FALSE;
@@ -598,8 +598,8 @@ class ThemeManager
     }
 
     /**
-     * @param \System\Models\Themes_model $model
-     * @return \System\Models\Themes_model
+     * @param \System\Models\Theme $model
+     * @return \System\Models\Theme
      * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function createChildTheme($model)
@@ -611,7 +611,7 @@ class ThemeManager
         if ($parentTheme->hasParent())
             throw new ApplicationException('Can not create a child theme from another child theme');
 
-        $childThemeCode = Themes_model::generateUniqueCode($model->code);
+        $childThemeCode = Theme::generateUniqueCode($model->code);
         $childThemePath = dirname($parentTheme->getPath()).'/'.$childThemeCode;
 
         $themeConfig = [
@@ -626,7 +626,7 @@ class ThemeManager
 
         $themeConfig['data'] = $model->data ?? [];
 
-        return Themes_model::create($themeConfig);
+        return Theme::create($themeConfig);
     }
 
     /**

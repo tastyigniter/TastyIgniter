@@ -12,7 +12,7 @@ use Igniter\Flame\Support\Facades\File;
  * In the model class definition:
  *   public $implement = ['System\Actions\SettingsModel'];
  *   public $settingsCode = 'owner_extension_settings';
- *   public $settingsFieldsConfig = 'settings_model';
+ *   public $settingsFieldsConfig = 'Settings';
  */
 class SettingsModel extends ModelAction
 {

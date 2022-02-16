@@ -11,7 +11,7 @@ use Igniter\Flame\Exception\SystemException;
 use Illuminate\Support\Facades\Request;
 use System\Classes\ExtensionManager;
 use System\Models\Extension;
-use System\Models\Settings_model;
+use System\Models\Settings;
 use System\Traits\ManagesUpdates;
 
 class Extensions extends \Admin\Classes\AdminController
@@ -79,7 +79,7 @@ class Extensions extends \Admin\Classes\AdminController
             }
 
             $extensionCode = $vendor.'.'.$extension.'.'.$context;
-            if (!$settingItem = Settings_model::make()->getSettingItem($extensionCode)) {
+            if (!$settingItem = Settings::make()->getSettingItem($extensionCode)) {
                 throw new SystemException(lang('system::lang.extensions.alert_setting_not_found'));
             }
 
@@ -188,7 +188,7 @@ class Extensions extends \Admin\Classes\AdminController
         }
 
         $extensionCode = $vendor.'.'.$extension.'.'.$context;
-        if (!$settingItem = Settings_model::make()->getSettingItem($extensionCode)) {
+        if (!$settingItem = Settings::make()->getSettingItem($extensionCode)) {
             throw new SystemException(lang('system::lang.extensions.alert_setting_not_found'));
         }
 

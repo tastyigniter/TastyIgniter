@@ -23,7 +23,7 @@ class Language extends Language
 
     public $relation = [
         'hasMany' => [
-            'translations' => ['System\Models\Translations_model', 'foreignKey' => 'locale', 'otherKey' => 'code', 'delete' => TRUE],
+            'translations' => ['System\Models\Translation', 'foreignKey' => 'locale', 'otherKey' => 'code', 'delete' => TRUE],
         ],
     ];
 

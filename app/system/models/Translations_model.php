@@ -4,7 +4,7 @@ namespace System\Models;
 
 use Igniter\Flame\Translation\Models\Translation;
 
-class Translations_model extends Translation
+class Translation extends Translation
 {
     /**
      * Update and lock translation.

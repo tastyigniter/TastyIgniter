@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Main\Classes\ThemeManager;
 use System\Models\Extension;
-use System\Models\Themes_model;
+use System\Models\Theme;
 use ZipArchive;
 
 /**
@@ -430,7 +430,7 @@ class UpdateManager
             ];
         }
 
-        $themeVersions = Themes_model::pluck('version', 'code');
+        $themeVersions = Theme::pluck('version', 'code');
         foreach ($themeVersions as $code => $version) {
             $installedItems['themes'][] = [
                 'name' => $code,

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Request;
 /**
  * RequestLogs Model Class
  */
-class Request_logs_model extends Model
+class RequestLog extends Model
 {
     /**
      * @var string The database table name

@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Facades\Assets;
 use System\Models\Extension;
-use System\Models\Themes_model;
+use System\Models\Theme;
 
 class IgniterUtil extends Command
 {
@@ -179,7 +179,7 @@ class IgniterUtil extends Command
                 }
 
                 if ($update['type'] === 'theme') {
-                    Themes_model::where('code', $update['code'])->update([
+                    Theme::where('code', $update['code'])->update([
                         'version' => $update['version'],
                     ]);
                 }
