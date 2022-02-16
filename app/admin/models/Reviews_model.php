@@ -56,7 +56,7 @@ class Reviews_model extends Model
 
     public static $relatedSaleTypes = [
         'orders' => 'Admin\Models\Order',
-        'reservations' => 'Admin\Models\Reservations_model',
+        'reservations' => 'Admin\Models\Reservation',
     ];
 
     public static function getSaleTypeOptions()

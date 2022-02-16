@@ -5,7 +5,7 @@ namespace Admin\DashboardWidgets;
 use Admin\Classes\BaseDashboardWidget;
 use Admin\Models\Customers_model;
 use Admin\Models\Order;
-use Admin\Models\Reservations_model;
+use Admin\Models\Reservation;
 use Admin\Traits\LocationAwareWidget;
 use Carbon\Carbon;
 
@@ -328,7 +328,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalReservedTableSum($range)
     {
-        $query = Reservations_model::with('tables');
+        $query = Reservation::with('tables');
         $query->where('status_id', setting('confirmed_reservation_status'));
         $this->applyRangeQuery($query, $range);
         $this->locationApplyScope($query);
@@ -347,7 +347,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalReservedGuestSum($range)
     {
-        $query = Reservations_model::query();
+        $query = Reservation::query();
         $query->where('status_id', setting('confirmed_reservation_status'));
 
         $this->applyRangeQuery($query, $range);
@@ -364,7 +364,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalReservationSum($range)
     {
-        $query = Reservations_model::query();
+        $query = Reservation::query();
         $query->where('status_id', '!=', setting('canceled_reservation_status'));
 
         $this->applyRangeQuery($query, $range);
@@ -381,7 +381,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalCompletedReservationSum($range)
     {
-        $query = Reservations_model::query();
+        $query = Reservation::query();
         $query->where('status_id', setting('confirmed_reservation_status'));
 
         $this->applyRangeQuery($query, $range);

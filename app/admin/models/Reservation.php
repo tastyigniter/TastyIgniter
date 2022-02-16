@@ -15,7 +15,7 @@ use System\Traits\SendsMailTemplate;
 /**
  * Reservations Model Class
  */
-class Reservations_model extends Model
+class Reservation extends Model
 {
     use Purgeable;
     use LogsStatusHistory;

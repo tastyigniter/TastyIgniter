@@ -35,7 +35,7 @@ class UpdateRecordsSeeder extends Seeder
 
         $morphs = [
             'order' => 'Admin\Models\Order',
-            'reserve' => 'Admin\Models\Reservations_model',
+            'reserve' => 'Admin\Models\Reservation',
         ];
 
         DB::table('status_history')->get()->each(function ($model) use ($morphs) {

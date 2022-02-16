@@ -5,7 +5,7 @@ namespace Admin\DashboardWidgets;
 use Admin\Classes\BaseDashboardWidget;
 use Admin\Models\Customers_model;
 use Admin\Models\Order;
-use Admin\Models\Reservations_model;
+use Admin\Models\Reservation;
 use Admin\Traits\HasChartDatasets;
 
 /**
@@ -71,7 +71,7 @@ class Charts extends BaseDashboardWidget
             'reservation' => [
                 'label' => 'lang:admin::lang.dashboard.charts.text_reservations',
                 'color' => '#BA68C8',
-                'model' => Reservations_model::class,
+                'model' => Reservation::class,
                 'column' => 'reserve_date',
             ],
         ];

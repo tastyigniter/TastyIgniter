@@ -36,7 +36,7 @@ class Customers_model extends AuthUserModel
         'hasMany' => [
             'addresses' => ['Admin\Models\Addresses_model', 'delete' => TRUE],
             'orders' => ['Admin\Models\Order'],
-            'reservations' => ['Admin\Models\Reservations_model'],
+            'reservations' => ['Admin\Models\Reservation'],
         ],
         'belongsTo' => [
             'group' => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
@@ -222,7 +222,7 @@ class Customers_model extends AuthUserModel
                 }
             }
 
-            Reservations_model::where('email', $customer_email)->update($update);
+            Reservation::where('email', $customer_email)->update($update);
 
             $query = TRUE;
         }
