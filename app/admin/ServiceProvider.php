@@ -580,7 +580,7 @@ class ServiceProvider extends AppServiceProvider
             'stock_history' => 'Admin\Models\StockHistory',
             'tables' => 'Admin\Models\Table',
             'users' => 'Admin\Models\User',
-            'working_hours' => 'Admin\Models\Working_hours_model',
+            'working_hours' => 'Admin\Models\WorkingHours',
         ]);
     }
 

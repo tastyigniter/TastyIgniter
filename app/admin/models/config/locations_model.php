@@ -249,7 +249,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.locations.text_tab_schedules',
             'type' => 'scheduleeditor',
             'context' => ['edit'],
-            'form' => 'working_hours_model',
+            'form' => 'workinghours',
             'request' => 'Admin\Requests\WorkingHour',
         ],
 
