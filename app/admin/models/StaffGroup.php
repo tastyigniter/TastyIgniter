@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Model;
 /**
  * StaffGroups Model Class
  */
-class Staff_groups_model extends Model
+class StaffGroup extends Model
 {
     public const AUTO_ASSIGN_ROUND_ROBIN = 1;
 

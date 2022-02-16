@@ -29,7 +29,7 @@ class Assignable_logs_model extends Model
     public $relation = [
         'belongsTo' => [
             'assignee' => 'Admin\Models\Staff',
-            'assignee_group' => 'Admin\Models\Staff_groups_model',
+            'assignee_group' => 'Admin\Models\StaffGroup',
             'status' => 'Admin\Models\Status',
         ],
         'morphTo' => [

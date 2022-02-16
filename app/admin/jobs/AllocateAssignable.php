@@ -4,7 +4,7 @@ namespace Admin\Jobs;
 
 use Admin\Classes\Allocator;
 use Admin\Models\Assignable_logs_model;
-use Admin\Models\Staff_groups_model;
+use Admin\Models\StaffGroup;
 use Admin\Traits\Assignable;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -43,7 +43,7 @@ class AllocateAssignable implements ShouldQueue
             if (!in_array(Assignable::class, class_uses_recursive(get_class($this->assignableLog->assignable))))
                 return;
 
-            if (!$this->assignableLog->assignee_group instanceof Staff_groups_model)
+            if (!$this->assignableLog->assignee_group instanceof StaffGroup)
                 return;
 
             Allocator::addSlot($this->assignableLog->getKey());

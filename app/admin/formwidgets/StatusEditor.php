@@ -8,7 +8,7 @@ use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Order;
-use Admin\Models\Staff_groups_model;
+use Admin\Models\StaffGroup;
 use Admin\Models\Staff;
 use Admin\Models\Status;
 use Admin\Traits\FormModelWidget;
@@ -244,7 +244,7 @@ class StatusEditor extends BaseFormWidget
     public static function getAssigneeGroupOptions()
     {
         if (AdminAuth::isSuperUser()) {
-            return Staff_groups_model::getDropdownOptions();
+            return StaffGroup::getDropdownOptions();
         }
 
         return AdminAuth::staff()->groups->pluck('staff_group_name', 'staff_group_id');
@@ -331,7 +331,7 @@ class StatusEditor extends BaseFormWidget
     protected function saveRecord(array $saveData, string $keyFrom)
     {
         if (!$this->isStatusMode) {
-            $group = Staff_groups_model::find(array_get($saveData, $this->assigneeGroupKeyFrom));
+            $group = StaffGroup::find(array_get($saveData, $this->assigneeGroupKeyFrom));
             $staff = Staff::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->updateAssignTo($group, $staff))
                 AssigneeUpdated::log($record, $this->getController()->getUser());

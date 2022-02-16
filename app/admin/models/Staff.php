@@ -54,7 +54,7 @@ class Staff extends Model
             'language' => ['System\Models\Languages_model'],
         ],
         'belongsToMany' => [
-            'groups' => ['Admin\Models\Staff_groups_model', 'table' => 'staffs_groups'],
+            'groups' => ['Admin\Models\StaffGroup', 'table' => 'staffs_groups'],
         ],
         'morphToMany' => [
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],

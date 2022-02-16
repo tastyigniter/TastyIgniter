@@ -572,7 +572,7 @@ class ServiceProvider extends AppServiceProvider
             'payment_logs' => 'Admin\Models\PaymentLog',
             'payments' => 'Admin\Models\Payment',
             'reservations' => 'Admin\Models\Reservation',
-            'staff_groups' => 'Admin\Models\Staff_groups_model',
+            'staff_groups' => 'Admin\Models\StaffGroup',
             'staffs' => 'Admin\Models\Staff',
             'status_history' => 'Admin\Models\StatusHistory',
             'statuses' => 'Admin\Models\Status',

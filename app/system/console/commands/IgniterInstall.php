@@ -5,7 +5,7 @@ namespace System\Console\Commands;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Customer_groups_model;
 use Admin\Models\Locations_model;
-use Admin\Models\Staff_groups_model;
+use Admin\Models\StaffGroup;
 use Admin\Models\StaffRole;
 use Admin\Models\Staff;
 use Admin\Models\User;
@@ -185,7 +185,7 @@ class IgniterInstall extends Command
             'username' => $username,
             'password' => $password,
             'super_user' => TRUE,
-            'groups' => [Staff_groups_model::first()->staff_group_id],
+            'groups' => [StaffGroup::first()->staff_group_id],
             'locations' => [Locations_model::first()->location_id],
         ], TRUE);
 
