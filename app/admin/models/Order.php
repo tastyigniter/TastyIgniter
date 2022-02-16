@@ -73,7 +73,7 @@ class Order extends Model
         'belongsTo' => [
             'customer' => 'Admin\Models\Customer',
             'location' => 'Admin\Models\Location',
-            'address' => 'Admin\Models\Addresses_model',
+            'address' => 'Admin\Models\Address',
             'payment_method' => ['Admin\Models\Payment', 'foreignKey' => 'payment', 'otherKey' => 'code'],
         ],
         'hasMany' => [

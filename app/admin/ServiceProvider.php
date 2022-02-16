@@ -553,7 +553,7 @@ class ServiceProvider extends AppServiceProvider
     protected function defineEloquentMorphMaps()
     {
         Relation::morphMap([
-            'addresses' => 'Admin\Models\Addresses_model',
+            'addresses' => 'Admin\Models\Address',
             'allergens' => 'Admin\Models\Allergens_model',
             'assignable_logs' => 'Admin\Models\AssignableLog',
             'categories' => 'Admin\Models\Category',

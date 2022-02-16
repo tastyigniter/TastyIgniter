@@ -34,13 +34,13 @@ class Customer extends AuthUserModel
 
     public $relation = [
         'hasMany' => [
-            'addresses' => ['Admin\Models\Addresses_model', 'delete' => TRUE],
+            'addresses' => ['Admin\Models\Address', 'delete' => TRUE],
             'orders' => ['Admin\Models\Order'],
             'reservations' => ['Admin\Models\Reservation'],
         ],
         'belongsTo' => [
             'group' => ['Admin\Models\CustomerGroup', 'foreignKey' => 'customer_group_id'],
-            'address' => 'Admin\Models\Addresses_model',
+            'address' => 'Admin\Models\Address',
         ],
     ];
 
@@ -217,7 +217,7 @@ class Customer extends AuthUserModel
                     if (empty($row['order_id'])) continue;
 
                     if ($row['order_type'] == '1' && !empty($row['address_id'])) {
-                        Addresses_model::where('address_id', $row['address_id'])->update($update);
+                        Address::where('address_id', $row['address_id'])->update($update);
                     }
                 }
             }

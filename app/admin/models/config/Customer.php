@@ -226,7 +226,7 @@ $config['form']['tabs'] = [
         'addresses' => [
             'tab' => 'lang:admin::lang.customers.text_tab_address',
             'type' => 'repeater',
-            'form' => 'addresses_model',
+            'form' => 'Address',
         ],
         'orders' => [
             'tab' => 'lang:admin::lang.customers.text_tab_orders',

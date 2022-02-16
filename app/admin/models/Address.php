@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Model;
 /**
  * Addresses Model Class
  */
-class Addresses_model extends Model
+class Address extends Model
 {
     /**
      * @var string The database table name
