@@ -11,7 +11,7 @@ use System\Traits\SendsMailTemplate;
 /**
  * Customers Model Class
  */
-class Customers_model extends AuthUserModel
+class Customer extends AuthUserModel
 {
     use Purgeable;
     use SendsMailTemplate;
@@ -39,7 +39,7 @@ class Customers_model extends AuthUserModel
             'reservations' => ['Admin\Models\Reservation'],
         ],
         'belongsTo' => [
-            'group' => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
+            'group' => ['Admin\Models\CustomerGroup', 'foreignKey' => 'customer_group_id'],
             'address' => 'Admin\Models\Addresses_model',
         ],
     ];

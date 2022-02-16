@@ -255,7 +255,7 @@ class Payment extends Model
 
     /**
      * Finds and returns a customer payment profile for this payment method.
-     * @param \Admin\Models\Customers_model $customer Specifies customer to find a profile for.
+     * @param \Admin\Models\Customer $customer Specifies customer to find a profile for.
      * @return \Admin\Models\PaymentProfile|object Returns the payment profile object or NULL if the payment profile doesn't exist.
      */
     public function findPaymentProfile($customer)
@@ -273,7 +273,7 @@ class Payment extends Model
     /**
      * Initializes a new empty customer payment profile.
      * This method should be used by payment methods internally.
-     * @param \Admin\Models\Customers_model $customer Specifies customer to initialize a profile for.
+     * @param \Admin\Models\Customer $customer Specifies customer to initialize a profile for.
      * @return \Admin\Models\PaymentProfile Returns the payment profile object or NULL if the payment profile doesn't exist.
      */
     public function initPaymentProfile($customer)

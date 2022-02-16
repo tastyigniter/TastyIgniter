@@ -138,7 +138,7 @@ class Reservation extends Model
             $query->where('location_id', $location);
         }
 
-        if ($customer instanceof Customers_model) {
+        if ($customer instanceof Customer) {
             $query->where('customer_id', $customer->getKey());
         }
         elseif (strlen($customer)) {

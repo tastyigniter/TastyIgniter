@@ -3,7 +3,7 @@
 namespace System\Console\Commands;
 
 use Admin\Facades\AdminAuth;
-use Admin\Models\Customer_groups_model;
+use Admin\Models\CustomerGroup;
 use Admin\Models\Location;
 use Admin\Models\StaffGroup;
 use Admin\Models\StaffRole;
@@ -208,7 +208,7 @@ class IgniterInstall extends Command
         setting()->set('site_email', DatabaseSeeder::$siteEmail);
         setting()->set('sender_name', DatabaseSeeder::$siteName);
         setting()->set('sender_email', DatabaseSeeder::$siteEmail);
-        setting()->set('customer_group_id', Customer_groups_model::first()->customer_group_id);
+        setting()->set('customer_group_id', CustomerGroup::first()->customer_group_id);
         setting()->save();
 
         // These parameters are no longer in use

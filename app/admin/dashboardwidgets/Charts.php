@@ -3,7 +3,7 @@
 namespace Admin\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
-use Admin\Models\Customers_model;
+use Admin\Models\Customer;
 use Admin\Models\Order;
 use Admin\Models\Reservation;
 use Admin\Traits\HasChartDatasets;
@@ -59,7 +59,7 @@ class Charts extends BaseDashboardWidget
             'customer' => [
                 'label' => 'lang:admin::lang.dashboard.charts.text_customers',
                 'color' => '#4DB6AC',
-                'model' => Customers_model::class,
+                'model' => Customer::class,
                 'column' => 'created_at',
             ],
             'order' => [

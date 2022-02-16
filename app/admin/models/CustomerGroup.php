@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Model;
 /**
  * CustomerGroups Model Class
  */
-class Customer_groups_model extends Model
+class CustomerGroup extends Model
 {
     /**
      * @var string The database table name
@@ -25,7 +25,7 @@ class Customer_groups_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'customers' => 'Admin\Models\Customers_model',
+            'customers' => 'Admin\Models\Customer',
         ],
     ];
 

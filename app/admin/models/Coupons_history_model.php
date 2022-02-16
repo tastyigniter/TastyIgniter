@@ -37,7 +37,7 @@ class Coupons_history_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'customer' => 'Admin\Models\Customers_model',
+            'customer' => 'Admin\Models\Customer',
             'order' => 'Admin\Models\Order',
             'coupon' => 'Admin\Models\Coupons_model',
         ],
@@ -66,7 +66,7 @@ class Coupons_history_model extends Model
      * @param \Admin\Models\Order $order
      * @param \Igniter\Flame\Cart\CartCondition $couponCondition
      * @param \Admin\Models\Order $order
-     * @param \Admin\Models\Customers_model $customer
+     * @param \Admin\Models\Customer $customer
      * @return \Admin\Models\Coupons_history_model|bool
      */
     public static function createHistory($couponCondition, $order, $customer)

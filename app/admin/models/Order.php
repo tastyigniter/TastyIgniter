@@ -71,7 +71,7 @@ class Order extends Model
 
     public $relation = [
         'belongsTo' => [
-            'customer' => 'Admin\Models\Customers_model',
+            'customer' => 'Admin\Models\Customer',
             'location' => 'Admin\Models\Location',
             'address' => 'Admin\Models\Addresses_model',
             'payment_method' => ['Admin\Models\Payment', 'foreignKey' => 'payment', 'otherKey' => 'code'],

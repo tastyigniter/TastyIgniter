@@ -23,7 +23,7 @@ class Addresses_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'customer' => 'Admin\Models\Customers_model',
+            'customer' => 'Admin\Models\Customer',
             'country' => 'System\Models\Countries_model',
         ],
     ];
@@ -58,7 +58,7 @@ class Addresses_model extends Model
             'sort' => 'address_id desc',
         ], $options));
 
-        if ($customer instanceof Customers_model) {
+        if ($customer instanceof Customer) {
             $query->where('customer_id', $customer->getKey());
         }
         elseif (strlen($customer)) {

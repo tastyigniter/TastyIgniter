@@ -3,7 +3,7 @@
 namespace Admin\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
-use Admin\Models\Customers_model;
+use Admin\Models\Customer;
 use Admin\Models\Order;
 use Admin\Models\Reservation;
 use Admin\Traits\LocationAwareWidget;
@@ -241,7 +241,7 @@ class Statistics extends BaseDashboardWidget
      */
     protected function getTotalCustomerSum($range)
     {
-        $query = Customers_model::query();
+        $query = Customer::query();
         $this->applyRangeQuery($query, $range);
 
         return $query->count();
