@@ -9,7 +9,7 @@ use Igniter\Flame\Database\Traits\Sortable;
 /**
  * Menu_option_values Model Class
  */
-class Menu_option_values_model extends Model
+class MenuOptionValue extends Model
 {
     use Sortable;
     use Stockable;

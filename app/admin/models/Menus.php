@@ -46,7 +46,7 @@ class Menu extends Model
 
     public $relation = [
         'hasMany' => [
-            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'delete' => TRUE],
+            'menu_option_values' => ['Admin\Models\MenuItemOptionValue', 'delete' => TRUE],
         ],
         'hasOne' => [
             'special' => ['Admin\Models\MenuSpecial', 'delete' => TRUE],

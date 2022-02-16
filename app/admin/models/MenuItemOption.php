@@ -11,7 +11,7 @@ use Igniter\Flame\Database\Traits\Validation;
  *
  * @deprecated remove before v4. Added for backward compatibility
  */
-class Menu_item_options_model extends Model
+class MenuItemOption extends Model
 {
     use Purgeable;
     use Validation;
@@ -40,9 +40,9 @@ class Menu_item_options_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
+            'option_values' => ['Admin\Models\MenuOptionValue', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
             'menu_option_values' => [
-                'Admin\Models\Menu_item_option_values_model',
+                'Admin\Models\MenuItemOptionValue',
                 'foreignKey' => 'menu_option_id',
                 'delete' => TRUE,
             ],

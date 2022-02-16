@@ -39,8 +39,8 @@ class MenuOption extends Model
 
     public $relation = [
         'hasMany' => [
-            'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
-            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
+            'option_values' => ['Admin\Models\MenuOptionValue', 'foreignKey' => 'option_id', 'delete' => TRUE],
+            'menu_option_values' => ['Admin\Models\MenuItemOptionValue', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
         'morphToMany' => [
             'locations' => ['Admin\Models\Location', 'name' => 'locationable'],

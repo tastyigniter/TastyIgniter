@@ -2,7 +2,7 @@
 
 namespace Admin\Traits;
 
-use Admin\Models\Menu_item_option_values_model;
+use Admin\Models\MenuItemOptionValue;
 use Admin\Models\MenuOption;
 use Admin\Models\Menu;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +40,7 @@ trait ManagesOrderItems
             $orderMenuOptions
                 ->where('order_menu_id', $orderMenu->order_menu_id)
                 ->each(function ($orderMenuOption) {
-                    if (!$menuItemOptionValue = Menu_item_option_values_model::find(
+                    if (!$menuItemOptionValue = MenuItemOptionValue::find(
                         $orderMenuOption->menu_option_value_id
                     )) return TRUE;
 

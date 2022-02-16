@@ -5,7 +5,7 @@ namespace Admin\FormWidgets;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Models\Location;
-use Admin\Models\Menu_option_values_model;
+use Admin\Models\MenuOptionValue;
 use Admin\Models\StockHistory;
 use Admin\Widgets\Form;
 
@@ -108,7 +108,7 @@ class StockEditor extends BaseFormWidget
 
     protected function getAvailableLocations()
     {
-        $locations = $this->model instanceof Menu_option_values_model
+        $locations = $this->model instanceof MenuOptionValue
             ? $this->model->option->locations
             : $this->model->locations;
 
@@ -120,7 +120,7 @@ class StockEditor extends BaseFormWidget
 
     protected function getStockableName()
     {
-        return $this->model instanceof Menu_option_values_model
+        return $this->model instanceof MenuOptionValue
             ? $this->model->value
             : $this->model->menu_name;
     }

@@ -563,8 +563,8 @@ class ServiceProvider extends AppServiceProvider
             'locations' => 'Admin\Models\Location',
             'mealtimes' => 'Admin\Models\Mealtime',
             'menu_categories' => 'Admin\Models\Menu_Category',
-            'menu_item_option_values' => 'Admin\Models\Menu_item_option_values_model',
-            'menu_option_values' => 'Admin\Models\Menu_option_values_model',
+            'menu_item_option_values' => 'Admin\Models\MenuItemOptionValue',
+            'menu_option_values' => 'Admin\Models\MenuOptionValue',
             'menu_options' => 'Admin\Models\MenuOption',
             'menus' => 'Admin\Models\Menu',
             'menus_specials' => 'Admin\Models\MenuSpecial',
@@ -756,7 +756,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 1,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/setup'),
-                    'form' => '~/app/admin/models/config/setup_settings',
+                    'form' => '~/app/admin/models/config/SetupSettings',
                     'request' => 'Admin\Requests\SetupSettings',
                 ],
                 'user' => [
@@ -766,7 +766,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 3,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/user'),
-                    'form' => '~/app/admin/models/config/user_settings',
+                    'form' => '~/app/admin/models/config/UserSettings',
                     'request' => 'Admin\Requests\UserSettings',
                 ],
             ]);

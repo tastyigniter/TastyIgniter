@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Traits\Validation;
 /**
  * MenuOptions Model Class
  */
-class Menu_item_option_values_model extends Model
+class MenuItemOptionValue extends Model
 {
     use Validation;
 
@@ -41,7 +41,7 @@ class Menu_item_option_values_model extends Model
         'belongsTo' => [
             'menu' => ['Admin\Models\Menu'],
             'option' => ['Admin\Models\MenuOption'],
-            'option_value' => ['Admin\Models\Menu_option_values_model'],
+            'option_value' => ['Admin\Models\MenuOptionValue'],
         ],
     ];
 
@@ -61,7 +61,7 @@ class Menu_item_option_values_model extends Model
         if (!empty(self::$optionValuesCollection[$optionId]))
             return self::$optionValuesCollection[$optionId];
 
-        $result = Menu_option_values_model::where('option_id', $optionId)->dropdown('value');
+        $result = MenuOptionValue::where('option_id', $optionId)->dropdown('value');
 
         self::$optionValuesCollection[$optionId] = $result;
 
@@ -95,6 +95,6 @@ class Menu_item_option_values_model extends Model
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        traceLog('Menu_item_option_values_model::updateStock() has been deprecated, use Stock::updateStock() instead.');
+        traceLog('MenuItemOptionValue::updateStock() has been deprecated, use Stock::updateStock() instead.');
     }
 }

@@ -33,7 +33,7 @@ $config['form']['fields'] = [
     ],
     'menu_option_values' => [
         'type' => 'repeater',
-        'form' => 'menu_item_option_values_model',
+        'form' => 'MenuItemOptionValue',
         'sortable' => TRUE,
         'showRemoveButton' => FALSE,
         'showAddButton' => FALSE,

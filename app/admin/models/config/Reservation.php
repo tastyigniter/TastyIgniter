@@ -176,7 +176,7 @@ $config['form']['fields'] = [
         'type' => 'statuseditor',
         'span' => 'right',
         'context' => ['edit', 'preview'],
-        'form' => 'reservation_status_model',
+        'form' => 'ReservationStatusModel',
         'request' => 'Admin\Requests\ReservationStatus',
     ],
 ];
