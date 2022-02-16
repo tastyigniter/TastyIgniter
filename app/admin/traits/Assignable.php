@@ -3,7 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Facades\AdminAuth;
-use Admin\Models\Assignable_logs_model;
+use Admin\Models\AssignableLog;
 use Admin\Models\StaffGroup;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -15,7 +15,7 @@ trait Assignable
             $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staff'];
             $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\StaffGroup'];
             $model->relation['morphMany']['assignable_logs'] = [
-                'Admin\Models\Assignable_logs_model', 'name' => 'assignable', 'delete' => TRUE,
+                'Admin\Models\AssignableLog', 'name' => 'assignable', 'delete' => TRUE,
             ];
 
             $model->addCasts([
@@ -35,7 +35,7 @@ trait Assignable
         if (
             $this->wasChanged('status_id')
             && strlen($this->assignee_group_id)
-        ) Assignable_logs_model::createLog($this);
+        ) AssignableLog::createLog($this);
     }
 
     //
@@ -78,7 +78,7 @@ trait Assignable
 
         $this->save();
 
-        if (!$log = Assignable_logs_model::createLog($this))
+        if (!$log = AssignableLog::createLog($this))
             return FALSE;
 
         $this->fireSystemEvent('admin.assignable.assigned', [$log]);

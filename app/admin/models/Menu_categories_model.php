@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Model;
 /**
  * Menu categories Model Class
  */
-class Menu_categories_model extends Model
+class Menu_Category extends Model
 {
     /**
      * @var string The database table name
@@ -27,7 +27,7 @@ class Menu_categories_model extends Model
     public $relation = [
         'belongsTo' => [
             'menu' => ['Admin\Models\Menu'],
-            'category' => ['Admin\Models\Categories_model'],
+            'category' => ['Admin\Models\Category'],
         ],
     ];
 }

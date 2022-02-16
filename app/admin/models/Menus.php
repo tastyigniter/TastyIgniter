@@ -52,7 +52,7 @@ class Menu extends Model
             'special' => ['Admin\Models\MenuSpecial', 'delete' => TRUE],
         ],
         'belongsToMany' => [
-            'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
+            'categories' => ['Admin\Models\Category', 'table' => 'menu_categories'],
             'mealtimes' => ['Admin\Models\Mealtime', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [

@@ -3,7 +3,7 @@
 namespace Admin\ActivityTypes;
 
 use Admin\Helpers\ActivityMessage;
-use Admin\Models\Assignable_logs_model;
+use Admin\Models\AssignableLog;
 use Igniter\Flame\ActivityLog\Contracts\ActivityInterface;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Auth\Models\User;
@@ -29,10 +29,10 @@ class AssigneeUpdated implements ActivityInterface
     }
 
     /**
-     * @param \Admin\Models\Assignable_logs_model $assignableLog
+     * @param \Admin\Models\AssignableLog $assignableLog
      * @param \Igniter\Flame\Auth\Models\User|null $user
      */
-    public static function log(Assignable_logs_model $assignableLog, User $user = null)
+    public static function log(AssignableLog $assignableLog, User $user = null)
     {
         $type = $assignableLog->isForOrder() ? self::ORDER_ASSIGNED_TYPE : self::RESERVATION_ASSIGNED_TYPE;
 

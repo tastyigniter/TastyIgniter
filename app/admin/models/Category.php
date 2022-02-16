@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Categories Model Class
  */
-class Categories_model extends Model
+class Category extends Model
 {
     use Sortable;
     use HasPermalink;
@@ -47,7 +47,7 @@ class Categories_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'parent_cat' => ['Admin\Models\Categories_model', 'foreignKey' => 'parent_id', 'otherKey' => 'category_id'],
+            'parent_cat' => ['Admin\Models\Category', 'foreignKey' => 'parent_id', 'otherKey' => 'category_id'],
         ],
         'belongsToMany' => [
             'menus' => ['Admin\Models\Menu', 'table' => 'menu_categories'],

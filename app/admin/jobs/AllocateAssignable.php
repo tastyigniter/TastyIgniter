@@ -3,7 +3,7 @@
 namespace Admin\Jobs;
 
 use Admin\Classes\Allocator;
-use Admin\Models\Assignable_logs_model;
+use Admin\Models\AssignableLog;
 use Admin\Models\StaffGroup;
 use Admin\Traits\Assignable;
 use Exception;
@@ -18,7 +18,7 @@ class AllocateAssignable implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * @var \Admin\Models\Assignable_logs_model
+     * @var \Admin\Models\AssignableLog
      */
     public $assignableLog;
 
@@ -27,7 +27,7 @@ class AllocateAssignable implements ShouldQueue
      */
     public $tries = 3;
 
-    public function __construct(Assignable_logs_model $assignableLog)
+    public function __construct(AssignableLog $assignableLog)
     {
         $this->assignableLog = $assignableLog->withoutRelations();
     }

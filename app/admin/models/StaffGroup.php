@@ -25,7 +25,7 @@ class StaffGroup extends Model
 
     public $relation = [
         'hasMany' => [
-            'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_group_id'],
+            'assignable_logs' => ['Admin\Models\AssignableLog', 'foreignKey' => 'assignee_group_id'],
         ],
         'belongsToMany' => [
             'staffs' => ['Admin\Models\Staff', 'table' => 'staffs_groups'],

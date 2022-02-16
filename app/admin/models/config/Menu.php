@@ -17,7 +17,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.menus.text_filter_category',
             'type' => 'select',
             'scope' => 'whereHasCategory',
-            'modelClass' => 'Admin\Models\Categories_model',
+            'modelClass' => 'Admin\Models\Category',
             'nameFrom' => 'name',
         ],
         'menu_status' => [

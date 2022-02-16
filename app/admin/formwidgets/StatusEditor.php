@@ -81,7 +81,7 @@ class StatusEditor extends BaseFormWidget
 
     public $assigneeRelationFrom = 'assignee';
 
-    public $assigneeModelClass = 'Admin\Models\Assignable_logs_model';
+    public $assigneeModelClass = 'Admin\Models\AssignableLog';
 
     public $assigneeOrderPermission = 'Admin.AssignOrders';
 

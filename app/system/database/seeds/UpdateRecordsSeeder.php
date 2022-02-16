@@ -2,7 +2,7 @@
 
 namespace System\Database\Seeds;
 
-use Admin\Models\Categories_model;
+use Admin\Models\Category;
 use Admin\Models\Location;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -51,7 +51,7 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function fixPermalinkSlugColumns()
     {
-        Categories_model::all()->each(function (Categories_model $model) {
+        Category::all()->each(function (Category $model) {
             $model->save();
         });
 

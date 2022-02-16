@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Assignable logs Model Class
  */
-class Assignable_logs_model extends Model
+class AssignableLog extends Model
 {
     /**
      * @var string The database table name

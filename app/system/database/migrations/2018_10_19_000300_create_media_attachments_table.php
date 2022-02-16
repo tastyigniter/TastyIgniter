@@ -2,7 +2,7 @@
 
 namespace System\Database\Migrations;
 
-use Admin\Models\Categories_model;
+use Admin\Models\Category;
 use Admin\Models\Location;
 use Admin\Models\Menu;
 use Illuminate\Database\Migrations\Migration;
@@ -51,7 +51,7 @@ class CreateMediaAttachmentsTable extends Migration
                 $this->createMediaAttachment($model->menu_photo, $model, 'thumb');
         });
 
-        Categories_model::pluck('image', 'category_id')->each(function ($model) {
+        Category::pluck('image', 'category_id')->each(function ($model) {
             if (!empty($model->image))
                 $this->createMediaAttachment($model->image, $model, 'thumb');
         });

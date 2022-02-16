@@ -47,7 +47,7 @@ class Staff extends Model
             'user' => ['Admin\Models\User', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id', 'delete' => TRUE],
         ],
         'hasMany' => [
-            'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_id'],
+            'assignable_logs' => ['Admin\Models\AssignableLog', 'foreignKey' => 'assignee_id'],
         ],
         'belongsTo' => [
             'role' => ['Admin\Models\StaffRole', 'foreignKey' => 'staff_role_id'],
