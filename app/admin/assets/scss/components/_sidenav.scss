@@ -37,8 +37,7 @@
 
     > li > a {
       display: block;
-      color: $white;
-      opacity: 0.75;
+      color: rgba($white, .8);
       line-height: $sidenav-line-height;
       padding: $sidenav-padding-x $sidenav-padding-y;
       font-weight: $sidenav-font-weight;
@@ -47,18 +46,19 @@
 
     > li > a:focus,
     > li > a:hover {
-      opacity: 1;
+      color: $white;
     }
 
     li.active > a,
     .nav li.active > a,
     .nav li > a.active {
       background-color: transparent;
-      opacity: 1;
+      color: $white;
+      font-weight: $sidenav-font-size-bold;
     }
 
     .nav {
-      background-color: lighten($sidenav-bg, 3%);
+      background-color: lighten($sidenav-bg, 1%);
 
       &.show {
         display: block;
@@ -70,6 +70,7 @@
         text-transform: none;
         font-weight: $font-weight-normal;
         font-size: $sidenav-submenu-font-size;
+        color: rgba($white, .75);
       }
 
       li > a:hover,
@@ -85,6 +86,7 @@
     .fa-fw {
       width: 1.8em;
       text-align: left;
+      font-size: 17px;
     }
   }
 
@@ -99,7 +101,7 @@
       border-width: 1px 0 0 1px;
       border-style: solid;
       border-color: initial;
-      right: 1em;
+      right: 0.5em;
       -webkit-transform: rotate(-45deg) translate(0, -50%);
       transform: rotate(-45deg) translate(0, -50%);
       -webkit-transform-origin: top;

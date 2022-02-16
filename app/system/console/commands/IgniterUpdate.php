@@ -46,14 +46,14 @@ class IgniterUpdate extends Command
 
         $updatesCollection = collect($itemsToUpdate)->groupBy('type');
 
-        $coreUpdate = $updatesCollection->pull('core')->first();
+        $coreUpdate = optional($updatesCollection->pull('core'))->first();
         $coreCode = array_get($coreUpdate, 'code');
         $coreVersion = array_get($coreUpdate, 'version');
         $coreHash = array_get($coreUpdate, 'hash');
 
         $addonUpdates = $updatesCollection->flatten(1);
 
-        if ($coreCode AND $coreHash) {
+        if ($coreCode && $coreHash) {
             $this->output->writeln('<info>Downloading application files</info>');
             $updateManager->downloadFile($coreCode, $coreHash, [
                 'name' => $coreCode,
@@ -78,7 +78,7 @@ class IgniterUpdate extends Command
             ]);
         });
 
-        if ($coreCode AND $coreHash) {
+        if ($coreCode && $coreHash) {
             $this->output->writeln('<info>Extracting application files</info>');
             $updateManager->extractCore($coreCode);
             $updateManager->setCoreVersion($coreVersion, $coreHash);
@@ -91,7 +91,8 @@ class IgniterUpdate extends Command
 
             $this->output->writeln(sprintf('<info>Extracting %s files</info>', $addonName));
 
-            $updateManager->extractFile($addonCode, $addonType.'s/');
+            $extractTo = $addonType === 'theme' ? theme_path('/') : extension_path('/');
+            $updateManager->extractFile($addonCode, $extractTo);
         });
 
         // Run migrations

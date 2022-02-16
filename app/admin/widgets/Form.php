@@ -10,7 +10,7 @@ use Admin\Facades\AdminAuth;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\LocationAwareWidget;
 use Exception;
-use Model;
+use Igniter\Flame\Database\Model;
 
 class Form extends BaseWidget
 {
@@ -369,7 +369,7 @@ class Form extends BaseWidget
         foreach ($fields as $name => $config) {
             // Check if admin has permissions to show this field
             $permissions = array_get($config, 'permissions');
-            if (!empty($permissions) AND !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+            if (!empty($permissions) && !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
                 continue;
             }
 
@@ -467,7 +467,6 @@ class Form extends BaseWidget
 
         // Simple field type
         if (is_string($config)) {
-
             if ($this->isFormWidget($config) !== FALSE) {
                 $field->displayAs('widget', ['widget' => $config]);
             }
@@ -476,9 +475,8 @@ class Form extends BaseWidget
             }
         } // Defined field type
         else {
-
             $fieldType = $config['type'] ?? null;
-            if (!is_string($fieldType) AND !is_null($fieldType)) {
+            if (!is_string($fieldType) && !is_null($fieldType)) {
                 throw new Exception(sprintf(
                     lang('admin::lang.form.field_invalid_type'), gettype($fieldType)
                 ));
@@ -503,7 +501,6 @@ class Form extends BaseWidget
 
         // Get field options from model
         if (in_array($field->type, $this->optionModelTypes, FALSE)) {
-
             // Defer the execution of option data collection
             $field->options(function () use ($field, $config) {
                 $fieldOptions = $config['options'] ?? null;
@@ -545,7 +542,7 @@ class Form extends BaseWidget
         $widgetClass = $this->widgetManager->resolveFormWidget($widgetName);
 
         if (!class_exists($widgetClass)) {
-            throw new Exception(sprintf("The Widget class name '%s' has not been registered", $widgetClass));
+            throw new Exception(sprintf(lang('admin::lang.alert_widget_class_name'), $widgetClass));
         }
 
         $widget = $this->makeFormWidget($widgetClass, $field, $widgetConfig);
@@ -745,14 +742,17 @@ class Form extends BaseWidget
         // Spin over each field and extract the postback value
         foreach ($this->allFields as $field) {
             // Disabled and hidden should be omitted from data set
-            if ($field->disabled OR $field->hidden OR starts_with($field->fieldName, '_')) {
+            if ($field->disabled || $field->hidden || starts_with($field->fieldName, '_')) {
                 continue;
             }
 
             // Handle HTML array, eg: item[key][another]
             $parts = name_to_array($field->fieldName);
-            if (($value = $this->dataArrayGet($data, $parts)) !== null) {
-
+            $value = $this->dataArrayGet($data, $parts);
+            if (is_null($value) && in_array($field->type, ['checkboxtoggle', 'radiotoggle'])) {
+                $this->dataArraySet($result, $parts, $value);
+            }
+            elseif ($value !== null) {
                 // Number fields should be converted to integers
                 if ($field->type === 'number') {
                     $value = !strlen(trim($value)) ? null : (float)$value;
@@ -765,6 +765,9 @@ class Form extends BaseWidget
         // Give widgets an opportunity to process the data.
         foreach ($this->formWidgets as $field => $widget) {
             $parts = name_to_array($field);
+
+            if (isset($widget->config->disabled) && $widget->config->disabled)
+                continue;
 
             $widgetValue = $widget->getSaveValue($this->dataArrayGet($result, $parts));
             $this->dataArraySet($result, $parts, $widgetValue);
@@ -861,7 +864,7 @@ class Form extends BaseWidget
         $this->fireSystemEvent('admin.form.extendFieldsBefore');
 
         // Outside fields
-        if (!isset($this->fields) OR !is_array($this->fields)) {
+        if (!isset($this->fields) || !is_array($this->fields)) {
             $this->fields = [];
         }
 
@@ -869,7 +872,7 @@ class Form extends BaseWidget
         $this->addFields($this->fields);
 
         // Primary Tabs + Fields
-        if (!isset($this->tabs['fields']) OR !is_array($this->tabs['fields'])) {
+        if (!isset($this->tabs['fields']) || !is_array($this->tabs['fields'])) {
             $this->tabs['fields'] = [];
         }
 
@@ -897,7 +900,7 @@ class Form extends BaseWidget
         // At least one tab section should stretch
         if (
             $this->allTabs->primary->stretch === null
-            AND $this->allTabs->outside->stretch === null
+            && $this->allTabs->outside->stretch === null
         ) {
             if ($this->allTabs->primary->hasFields()) {
                 $this->allTabs->primary->stretch = TRUE;
@@ -998,17 +1001,17 @@ class Form extends BaseWidget
     protected function getOptionsFromModel($field, $fieldOptions)
     {
         // Advanced usage, supplied options are callable
-        if (is_array($fieldOptions) AND is_callable($fieldOptions)) {
+        if (is_array($fieldOptions) && is_callable($fieldOptions)) {
             $fieldOptions = $fieldOptions($this, $field);
         }
 
         // Refer to the model method or any of its behaviors
-        if (!is_array($fieldOptions) AND !$fieldOptions) {
+        if (!is_array($fieldOptions) && !$fieldOptions) {
             [$model, $attribute] = $field->resolveModelAttribute($this->model, $field->fieldName);
 
             $methodName = 'get'.studly_case($attribute).'Options';
             if (
-                !$this->objectMethodExists($model, $methodName) AND
+                !$this->objectMethodExists($model, $methodName) &&
                 !$this->objectMethodExists($model, 'getDropdownOptions')
             ) {
                 throw new Exception(sprintf(lang('admin::lang.form.options_method_not_exists'),
@@ -1075,7 +1078,7 @@ class Form extends BaseWidget
         }
 
         foreach ($parts as $segment) {
-            if (!is_array($array) OR !array_key_exists($segment, $array)) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
                 return $default;
             }
 
@@ -1103,7 +1106,7 @@ class Form extends BaseWidget
         while (count($parts) > 1) {
             $key = array_shift($parts);
 
-            if (!isset($array[$key]) OR !is_array($array[$key])) {
+            if (!isset($array[$key]) || !is_array($array[$key])) {
                 $array[$key] = [];
             }
 

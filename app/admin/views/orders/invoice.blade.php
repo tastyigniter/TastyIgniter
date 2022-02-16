@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col">
             <div class="invoice-title">
-                <h3 class="pull-right">@lang('admin::lang.orders.label_order_id'){{$model->order_id}}</h3>
+                <h3 class="pull-right">@lang('admin::lang.orders.label_order_id')&nbsp;#{{$model->order_id}}</h3>
                 <h2>@lang('admin::lang.orders.text_invoice')</h2>
             </div>
         </div>
@@ -35,7 +35,7 @@
             <address>{!! format_address($model->location->getAddress(), TRUE) !!}</address>
         </div>
         <div class="col-6 text-right">
-            <img class="img-responsive" src="{{ uploads_url(setting('site_logo')) }}" alt="" style="max-height:120px;"/>
+            <img class="img-responsive" src="{{ uploads_url(setting('invoice_logo') ?: setting('site_logo')) }}" alt="" style="max-height:120px;"/>
         </div>
     </div>
 
@@ -71,7 +71,7 @@
         <div class="col-3 text-right">
             <p>
                 <strong>@lang('admin::lang.orders.text_payment')</strong><br>
-                {{ $model->payment_method->name }}
+                {{ $model->payment_method ? $model->payment_method->name : '' }}
             </p>
             <p>
                 <strong>@lang('admin::lang.orders.text_order_date')</strong><br>
@@ -80,10 +80,6 @@
         </div>
     </div>
 
-    @php
-        $menuItemsOptions = $model->getOrderMenuOptions();
-        $orderTotals = $model->getOrderTotals();
-    @endphp
     <div class="row">
         <div class="col">
             <div class="table-responsive">
@@ -99,21 +95,32 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($model->getOrderMenus() as $menuItem)
+                    @foreach($model->getOrderMenusWithOptions() as $menuItem)
                         <tr>
                             <td>{{ $menuItem->quantity }}x</td>
-                            <td class="text-left">{{ $menuItem->name }}<br/>
-                                @if($menuItemOptions = $menuItemsOptions->get($menuItem->order_menu_id))
-                                    <div>
-                                        @foreach($menuItemOptions as $menuItemOption)
-                                            <small>
-                                                {{ $menuItemOption->quantity }}x
-                                                {{ $menuItemOption->order_option_name }}
-                                                =
-                                                {{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }}
-                                            </small><br>
+                            <td class="text-left"><b>{{ $menuItem->name }}</b><br/>
+                                @php $menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category') @endphp
+                                @if($menuItemOptionGroup->isNotEmpty())
+                                    <ul class="list-unstyled">
+                                        @foreach($menuItemOptionGroup as $menuItemOptionGroupName => $menuItemOptions)
+                                            <li>
+                                                <u class="text-muted">{{ $menuItemOptionGroupName }}:</u>
+                                                <ul class="list-unstyled">
+                                                    @foreach($menuItemOptions as $menuItemOption)
+                                                        <li>
+                                                            @if ($menuItemOption->quantity > 1)
+                                                                {{ $menuItemOption->quantity }}&nbsp;&times;
+                                                            @endif
+                                                            {{ $menuItemOption->order_option_name }}&nbsp;
+                                                            @if ($menuItemOption->order_option_price > 0)
+                                                                ({{ currency_format($menuItemOption->quantity * $menuItemOption->order_option_price) }})
+                                                            @endif
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </li>
                                         @endforeach
-                                    </div>
+                                    </ul>
                                 @endif
                                 @if(!empty($menuItem->comment))
                                     <div>
@@ -127,14 +134,14 @@
                     @endforeach
                     </tbody>
                     <tfoot>
-                    @foreach($orderTotals as $total)
-                        @continue($model->isCollectionType() AND $total->code == 'delivery')
-                        @php $thickLine = ($total->code == 'order_total' OR $total->code == 'total') @endphp
+                    @foreach($model->getOrderTotals() as $total)
+                        @continue($model->isCollectionType() && $total->code == 'delivery')
+                        @php $thickLine = ($total->code == 'order_total' || $total->code == 'total') @endphp
                         <tr>
-                            <td class="{{ ($loop->iteration === 1 OR $thickLine) ? 'thick' : 'no' }}-line" width="1"></td>
-                            <td class="{{ ($loop->iteration === 1 OR $thickLine) ? 'thick' : 'no' }}-line"></td>
-                            <td class="{{ ($loop->iteration === 1 OR $thickLine) ? 'thick' : 'no' }}-line text-left">{{ $total->title }}</td>
-                            <td class="{{ ($loop->iteration === 1 OR $thickLine) ? 'thick' : 'no' }}-line text-right">{{ currency_format($total->value) }}</td>
+                            <td class="{{ ($loop->iteration === 1 || $thickLine) ? 'thick' : 'no' }}-line" width="1"></td>
+                            <td class="{{ ($loop->iteration === 1 || $thickLine) ? 'thick' : 'no' }}-line"></td>
+                            <td class="{{ ($loop->iteration === 1 || $thickLine) ? 'thick' : 'no' }}-line text-left">{{ $total->title }}</td>
+                            <td class="{{ ($loop->iteration === 1 || $thickLine) ? 'thick' : 'no' }}-line text-right">{{ currency_format($total->value) }}</td>
                         </tr>
                     @endforeach
                     </tfoot>

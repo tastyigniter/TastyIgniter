@@ -95,24 +95,24 @@ class MailManager
     {
         $config = App::make('config');
         $settings = App::make('system.setting');
-        $config->set('mail.driver', $settings->get('protocol'));
+        $config->set('mail.default', $settings->get('protocol'));
         $config->set('mail.from.name', $settings->get('sender_name'));
         $config->set('mail.from.address', $settings->get('sender_email'));
 
         switch ($settings->get('protocol')) {
             case 'sendmail':
-                $config->set('mail.sendmail', $settings->get('sendmail_path'));
+                $config->set('mail.mailers.sendmail.path', $settings->get('sendmail_path'));
                 break;
             case 'smtp':
-                $config->set('mail.host', $settings->get('smtp_host'));
-                $config->set('mail.port', $settings->get('smtp_port'));
-                $config->set('mail.encryption', strlen($settings->get('smtp_encryption'))
+                $config->set('mail.mailers.smtp.host', $settings->get('smtp_host'));
+                $config->set('mail.mailers.smtp.port', $settings->get('smtp_port'));
+                $config->set('mail.mailers.smtp.encryption', strlen($settings->get('smtp_encryption'))
                     ? $settings->get('smtp_encryption') : null
                 );
-                $config->set('mail.username', strlen($settings->get('smtp_user'))
+                $config->set('mail.mailers.smtp.username', strlen($settings->get('smtp_user'))
                     ? $settings->get('smtp_user') : null
                 );
-                $config->set('mail.password', strlen($settings->get('smtp_pass'))
+                $config->set('mail.mailers.smtp.password', strlen($settings->get('smtp_pass'))
                     ? $settings->get('smtp_pass') : null
                 );
                 break;

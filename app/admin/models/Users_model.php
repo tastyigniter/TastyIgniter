@@ -6,6 +6,7 @@ use Admin\Classes\PermissionManager;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
+use System\Traits\SendsMailTemplate;
 
 /**
  * Users Model Class
@@ -13,6 +14,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
 class Users_model extends AuthUserModel
 {
     use Purgeable;
+    use SendsMailTemplate;
 
     /**
      * @var string The database table name
@@ -32,6 +34,7 @@ class Users_model extends AuthUserModel
         'super_user' => 'boolean',
         'is_activated' => 'boolean',
         'reset_time' => 'datetime',
+        'date_invited' => 'datetime',
         'date_activated' => 'datetime',
         'last_login' => 'datetime',
     ];
@@ -44,7 +47,31 @@ class Users_model extends AuthUserModel
 
     protected $with = ['staff'];
 
-    protected $purgeable = ['password_confirm'];
+    protected $purgeable = ['password_confirm', 'send_invite'];
+
+    protected function afterCreate()
+    {
+        $this->restorePurgedValues();
+
+        if ($this->send_invite) {
+            $this->sendInvite();
+        }
+    }
+
+    protected function sendInvite()
+    {
+        $this->bindEventOnce('model.mailGetData', function ($view, $recipientType) {
+            if ($view === 'admin::_mail.invite') {
+                $this->reset_code = $inviteCode = $this->generateResetCode();
+                $this->reset_time = now();
+                $this->save();
+
+                return ['invite_code' => $inviteCode];
+            }
+        });
+
+        $this->mailSend('admin::_mail.invite');
+    }
 
     public function beforeLogin()
     {
@@ -86,7 +113,7 @@ class Users_model extends AuthUserModel
 
     public function getReminderEmail()
     {
-        return $this->staff_email;
+        return $this->staff->staff_email;
     }
 
     //
@@ -121,7 +148,7 @@ class Users_model extends AuthUserModel
         $role = $this->staff->role;
 
         $permissions = [];
-        if ($role AND is_array($role->permissions)) {
+        if ($role && is_array($role->permissions)) {
             $permissions = $role->permissions;
         }
 
@@ -137,5 +164,24 @@ class Users_model extends AuthUserModel
         return $this->staff->locations->contains(function ($model) use ($location) {
             return $model->location_id === $location->location_id;
         });
+    }
+
+    public function mailGetRecipients($type)
+    {
+        return [
+            [$this->staff->staff_email, $this->staff_name],
+        ];
+    }
+
+    public function mailGetData()
+    {
+        $model = $this->fresh();
+
+        return array_merge($model->toArray(), [
+            'staff' => $model,
+            'staff_name' => $model->staff_name,
+            'staff_email' => $model->staff->staff_email,
+            'username' => $model->username,
+        ]);
     }
 }

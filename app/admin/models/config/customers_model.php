@@ -8,7 +8,7 @@ $config['list']['filter'] = [
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month AND DAY(date_added) = :day',
+            'conditions' => 'YEAR(created_at) = :year AND MONTH(created_at) = :month AND DAY(created_at) = :day',
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -24,20 +24,38 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'customers/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
         'groups' => [
             'label' => 'lang:admin::lang.side_menu.customer_group',
             'class' => 'btn btn-default',
             'href' => 'customer_groups',
+            'permission' => 'Admin.CustomerGroups',
         ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.list.actions.label_status',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:admin::lang.list.actions.label_enable',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:admin::lang.list.actions.label_disable',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
+        ],
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -53,6 +71,7 @@ $config['list']['columns'] = [
     'impersonate' => [
         'type' => 'button',
         'iconCssClass' => 'fa fa-user',
+        'permissions' => 'Admin.ImpersonateCustomers',
         'attributes' => [
             'class' => 'btn btn-outline-secondary',
             'data-request' => 'onImpersonate',
@@ -75,10 +94,6 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.customers.column_telephone',
         'type' => 'text',
     ],
-    'date_added' => [
-        'label' => 'lang:admin::lang.customers.column_date_added',
-        'type' => 'timetense',
-    ],
     'status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
@@ -87,22 +102,31 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
 ];
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'customers',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
@@ -120,6 +144,7 @@ $config['form']['toolbar'] = [
             'data-request' => 'onImpersonate',
             'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
             'context' => ['edit'],
+            'permission' => 'Admin.ImpersonateCustomers',
         ],
     ],
 ];
@@ -147,16 +172,34 @@ $config['form']['tabs'] = [
             'type' => 'text',
             'span' => 'right',
         ],
+        'send_invite' => [
+            'label' => 'lang:admin::lang.customers.label_send_invite',
+            'type' => 'checkbox',
+            'context' => 'create',
+            'default' => TRUE,
+            'options' => [],
+            'placeholder' => 'lang:admin::lang.customers.help_send_invite',
+        ],
         'password' => [
             'label' => 'lang:admin::lang.customers.label_password',
             'type' => 'password',
             'span' => 'left',
             'comment' => 'lang:admin::lang.customers.help_password',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'send_invite',
+                'condition' => 'unchecked',
+            ],
         ],
         '_confirm_password' => [
             'label' => 'lang:admin::lang.customers.label_confirm_password',
             'type' => 'password',
             'span' => 'right',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'send_invite',
+                'condition' => 'unchecked',
+            ],
         ],
         'customer_group_id' => [
             'label' => 'lang:admin::lang.customers.label_customer_group',
@@ -188,6 +231,9 @@ $config['form']['tabs'] = [
         'orders' => [
             'tab' => 'lang:admin::lang.customers.text_tab_orders',
             'type' => 'datatable',
+            'context' => ['edit', 'preview'],
+            'useAjax' => TRUE,
+            'defaultSort' => ['order_id', 'desc'],
             'columns' => [
                 'order_id' => [
                     'title' => 'lang:admin::lang.column_id',
@@ -215,6 +261,9 @@ $config['form']['tabs'] = [
         'reservations' => [
             'tab' => 'lang:admin::lang.customers.text_tab_reservations',
             'type' => 'datatable',
+            'context' => ['edit', 'preview'],
+            'useAjax' => TRUE,
+            'defaultSort' => ['reservation_id', 'desc'],
             'columns' => [
                 'reservation_id' => [
                     'title' => 'lang:admin::lang.column_id',

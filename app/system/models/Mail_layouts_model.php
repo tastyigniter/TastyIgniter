@@ -2,22 +2,18 @@
 
 namespace System\Models;
 
-use ApplicationException;
-use File;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\MailParser;
-use Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\View;
 use System\Classes\MailManager;
-use View;
 
 /**
  * MailLayouts Model Class
  */
 class Mail_layouts_model extends Model
 {
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
-
     protected static $codeCache;
 
     /**

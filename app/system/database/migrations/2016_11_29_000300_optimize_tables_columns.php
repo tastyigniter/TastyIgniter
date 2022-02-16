@@ -4,7 +4,7 @@ namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Fix nullable and other constraints on columns
@@ -116,20 +116,6 @@ class OptimizeTablesColumns extends Migration
     {
         return function (Blueprint $table) {
             $table->text('description')->nullable()->change();
-        };
-    }
-
-    protected function _optimize_customers_online()
-    {
-        return function (Blueprint $table) {
-            $table->string('access_type')->nullable()->change();
-            $table->string('browser')->nullable()->change();
-            $table->string('ip_address', 40)->nullable()->change();
-            $table->string('country_code')->nullable()->change();
-            $table->text('request_uri')->nullable()->change();
-            $table->text('referrer_uri')->nullable()->change();
-            $table->boolean('status')->default(0)->change();
-            $table->text('user_agent')->nullable()->change();
         };
     }
 

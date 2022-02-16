@@ -6,7 +6,7 @@ use BadMethodCallException;
 use Igniter\Flame\Pagic\TemplateCode;
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 use Main\Classes\MainController;
 use System\Traits\AssetMaker;
 use System\Traits\PropertyContainer;
@@ -115,8 +115,8 @@ abstract class BaseComponent extends Extendable
 
     /**
      * Renders a requested partial in context of this component,
-     * @see \Main\Classes\MainController::renderPartial for usage.
      * @return mixed
+     * @see \Main\Classes\MainController::renderPartial for usage.
      */
     public function renderPartial()
     {
@@ -134,6 +134,8 @@ abstract class BaseComponent extends Extendable
     {
         $result = $this->{$handler}();
 
+        $this->fireSystemEvent('main.component.afterRunEventHandler', [$handler, &$result]);
+
         return $result;
     }
 
@@ -148,7 +150,8 @@ abstract class BaseComponent extends Extendable
 
     public function param($name, $default = null)
     {
-        if (is_null($segment = $this->controller->param($name, $default)))
+        $segment = $this->controller->param($name);
+        if (is_null($segment))
             $segment = input($name);
 
         return is_null($segment) ? $default : $segment;

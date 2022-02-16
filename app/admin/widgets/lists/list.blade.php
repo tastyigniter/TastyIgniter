@@ -4,9 +4,18 @@
     'method' => 'POST',
 ]) !!}
 
-<div class="list-table table-responsive">
-    <table class="table table-striped mb-0 border-bottom">
+<div
+    id="{{ $this->getId() }}"
+    class="list-table table-responsive"
+>
+    <table
+        id="{{ $this->getId('table') }}"
+        class="table table-hover mb-0 border-bottom"
+    >
         <thead>
+        @if ($showCheckboxes)
+            {!! $this->makePartial('lists/list_actions') !!}
+        @endif
         {!! $this->makePartial('lists/list_head') !!}
         </thead>
         <tbody>

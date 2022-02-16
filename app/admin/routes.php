@@ -15,8 +15,7 @@ App::before(function () {
 
         // Other pages
         Route::any('{slug}', 'System\Classes\Controller@runAdmin')
-            ->where('slug', '(.*)?')
-            ->middleware(\Igniter\Flame\Foundation\Http\Middleware\VerifyCsrfToken::class);
+            ->where('slug', '(.*)?');
     });
 
     // Admin entry point

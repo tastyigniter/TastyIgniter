@@ -3,9 +3,9 @@
 namespace Admin\Models;
 
 use Carbon\Carbon;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
-use Model;
 
 /**
  * Payment logs Model Class
@@ -13,10 +13,6 @@ use Model;
 class Payment_logs_model extends Model
 {
     use Validation;
-
-    const UPDATED_AT = 'date_updated';
-
-    const CREATED_AT = 'date_added';
 
     /**
      * @var string The database table name
@@ -77,17 +73,19 @@ class Payment_logs_model extends Model
 
     public function getDateAddedSinceAttribute($value)
     {
-        return $this->date_added ? time_elapsed($this->date_added) : null;
+        return $this->created_at ? time_elapsed($this->created_at) : null;
     }
 
     public function markAsRefundProcessed()
     {
-        Event::fire('admin.paymentLog.beforeRefundProcessed', [$this]);
+        if (is_null($this->refunded_at)) {
+            Event::fire('admin.paymentLog.beforeRefundProcessed', [$this]);
 
-        $this->refunded_at = Carbon::now();
-        $this->save();
+            $this->refunded_at = Carbon::now();
+            $this->save();
 
-        Event::fire('admin.paymentLog.refundProcessed', [$this]);
+            Event::fire('admin.paymentLog.refundProcessed', [$this]);
+        }
 
         return TRUE;
     }

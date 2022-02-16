@@ -17,26 +17,29 @@
 
         this.$el.on('click', '[data-control="load-area"]', $.proxy(this.onLoadArea, this))
         this.$el.on('click', '[data-control="remove-area"]', $.proxy(this.onRemoveArea, this))
-        
+
         this.bindSorting()
     }
-    
+
     MapArea.prototype.bindSorting = function () {
         var sortableOptions = {
             handle: this.options.sortableHandle,
         }
 
-        this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
+        if (this.$sortableContainer.get(0))
+            this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
     }
 
     MapArea.prototype.onModalShown = function (event, $modalEl) {
-        var $typeInput = $modalEl.find('[data-toggle="map-shape"]')
+        var $typeInput = $modalEl.find('[data-toggle="map-shape"]'),
+        $checkedTypeInput = $modalEl.find('[data-toggle="map-shape"]:checked')
 
         this.$mapView = $modalEl.find('[data-control="map-view"]')
 
         $typeInput.on('change', $.proxy(this.onShapeTypeToggle, this))
 
-        this.refreshMap();
+        if ($checkedTypeInput.val() === 'polygon' || $checkedTypeInput.val() === 'circle')
+            this.refreshMap();
 
         this.$mapView.on('click.shape.ti.mapview', '.map-view', $.proxy(this.onShapeClicked, this))
     }

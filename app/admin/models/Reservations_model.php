@@ -6,10 +6,10 @@ use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
-use Model;
-use Request;
 use System\Traits\SendsMailTemplate;
 
 /**
@@ -22,10 +22,6 @@ class Reservations_model extends Model
     use SendsMailTemplate;
     use Locationable;
     use Assignable;
-
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_modified';
 
     /**
      * @var string The database table name
@@ -78,6 +74,8 @@ class Reservations_model extends Model
 
     protected $purgeable = ['tables'];
 
+    public $appends = ['customer_name', 'duration', 'table_name', 'reservation_datetime', 'reservation_end_datetime'];
+
     public static $allowedSortingColumns = [
         'reservation_id asc', 'reservation_id desc',
         'reserve_date asc', 'reserve_date desc',
@@ -116,9 +114,22 @@ class Reservations_model extends Model
             'sort' => 'address_id desc',
             'customer' => null,
             'location' => null,
+            'status' => null,
+            'search' => '',
+            'dateTimeFilter' => [],
         ], $options));
 
-        $query->where('status_id', '>=', 1);
+        $searchableFields = ['reservation_id', 'first_name', 'last_name', 'email', 'telephone'];
+
+        if (is_null($status)) {
+            $query->where('status_id', '>=', 1);
+        }
+        else {
+            if (!is_array($status))
+                $status = [$status];
+
+            $query->whereIn('status_id', $status);
+        }
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
@@ -149,10 +160,22 @@ class Reservations_model extends Model
             }
         }
 
+        $search = trim($search);
+        if (strlen($search)) {
+            $query->search($search, $searchableFields);
+        }
+
+        $startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE);
+        $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE);
+        if ($startDateTime && $endDateTime)
+            $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
         return $query->paginate($pageLimit, $page);
     }
 
-    public function scopeWhereBetweenPeriod($query, $start, $end)
+    public function scopeWhereBetweenReservationDateTime($query, $start, $end)
     {
         $query->whereRaw('ADDTIME(reserve_date, reserve_time) between ? and ?', [$start, $end]);
 
@@ -162,7 +185,7 @@ class Reservations_model extends Model
     public function scopeWhereBetweenDate($query, $dateTime)
     {
         $query->whereRaw(
-            '? between ADDTIME(reserve_date, reserve_time)'.
+            '? between DATE_SUB(ADDTIME(reserve_date, reserve_time), INTERVAL (duration - 2) MINUTE)'.
             ' and DATE_ADD(ADDTIME(reserve_date, reserve_time), INTERVAL duration MINUTE)',
             [$dateTime]
         );
@@ -187,7 +210,7 @@ class Reservations_model extends Model
         if (!$location = $this->location)
             return $value;
 
-        return $location->getOption('reservation_lead_time');
+        return $location->getReservationStayTime();
     }
 
     public function getReserveEndTimeAttribute($value)
@@ -204,20 +227,16 @@ class Reservations_model extends Model
     public function getReservationDatetimeAttribute($value)
     {
         if (!isset($this->attributes['reserve_date'])
-            AND !isset($this->attributes['reserve_time'])
+            && !isset($this->attributes['reserve_time'])
         ) return null;
 
-        return Carbon::createFromTimeString(
-            "{$this->attributes['reserve_date']} {$this->attributes['reserve_time']}"
-        );
+        return make_carbon($this->attributes['reserve_date'])
+            ->setTimeFromTimeString($this->attributes['reserve_time']);
     }
 
     public function getReservationEndDatetimeAttribute($value)
     {
-        if ($this->duration)
-            return $this->reservation_datetime->copy()->addMinutes($this->duration);
-
-        return $this->reservation_datetime->copy()->endOfDay();
+        return $this->reserve_end_time;
     }
 
     public function getOccasionAttribute()
@@ -235,7 +254,7 @@ class Reservations_model extends Model
     public function setDurationAttribute($value)
     {
         if (empty($value))
-            $value = ($location = $this->location) ? $location->getOption('reservation_lead_time') : $value;
+            $value = optional($this->location()->first())->getReservationStayTime();
 
         $this->attributes['duration'] = $value;
     }
@@ -254,6 +273,9 @@ class Reservations_model extends Model
     public static function findReservedTables($location, $dateTime)
     {
         $query = self::with('tables');
+        $query->whereHas('tables', function ($query) use ($location) {
+            $query->whereHasLocation($location->getKey());
+        });
         $query->whereLocationId($location->getKey());
         $query->whereBetweenDate($dateTime->toDateTimeString());
         $query->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);
@@ -312,7 +334,7 @@ class Reservations_model extends Model
     {
         $diffInMinutes = $this->reservation_datetime->diffInMinutes($this->reservation_end_datetime);
 
-        return $diffInMinutes >= (60 * 23) OR $diffInMinutes == 0;
+        return $diffInMinutes >= (60 * 23) || $diffInMinutes == 0;
     }
 
     public function getOccasionOptions()
@@ -380,7 +402,7 @@ class Reservations_model extends Model
     public function mailGetRecipients($type)
     {
         $emailSetting = setting('reservation_email', []);
-        is_array($emailSetting) OR $emailSetting = [];
+        is_array($emailSetting) || $emailSetting = [];
 
         $recipients = [];
         if (in_array($type, $emailSetting)) {
@@ -407,9 +429,10 @@ class Reservations_model extends Model
      */
     public function mailGetData()
     {
-        $data = [];
-
         $model = $this->fresh();
+
+        $data = $model->toArray();
+        $data['reservation'] = $model;
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;
         $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->format(lang('system::lang.php.time_format'));
@@ -424,6 +447,7 @@ class Reservations_model extends Model
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
+            $data['location_telephone'] = $model->location->location_telephone;
         }
 
         $statusHistory = Status_history_model::applyRelated($model)->whereStatusIsLatest($model->status_id)->first();

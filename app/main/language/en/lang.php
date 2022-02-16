@@ -59,6 +59,7 @@ return [
         'text_choose' => 'Choose',
         'text_attach' => 'Attach',
         'text_sort_by' => 'Sort By',
+        'text_filter_by' => 'Filter By',
         'text_filter_search' => 'Search files and folders...',
         'text_new_folder' => 'New Folder',
         'text_rename_folder' => 'Rename Folder',
@@ -87,6 +88,11 @@ return [
         'label_modified_date' => 'Modified Date',
         'label_extension' => 'Extension',
         'label_permission' => 'Permission',
+        'label_filter_all' => 'Everything',
+        'label_filter_image' => 'Images',
+        'label_filter_video' => 'Videos',
+        'label_filter_audio' => 'Audios',
+        'label_filter_document' => 'Documents',
 
         'label_attachment_title' => 'Title',
         'label_attachment_description' => 'Description',
@@ -124,6 +130,8 @@ return [
         'alert_delete_disabled' => 'Deleting file/folder is disabled, check image/media manager settings.',
         'alert_select_delete_file' => 'Please select the file/folder you wish to delete.',
         'alert_success_delete' => 'File (s) deleted successfully',
+        'alert_select_item_to_attach' => 'Select an item to attach.',
+        'alert_only_attach_to_saved' => 'You can only attach media to a saved form.',
     ],
 
     'home' => [

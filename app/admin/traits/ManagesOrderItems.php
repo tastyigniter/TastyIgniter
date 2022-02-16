@@ -3,9 +3,10 @@
 namespace Admin\Traits;
 
 use Admin\Models\Menu_item_option_values_model;
+use Admin\Models\Menu_item_options_model;
 use Admin\Models\Menus_model;
-use DB;
-use Event;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 trait ManagesOrderItems
 {
@@ -33,17 +34,21 @@ trait ManagesOrderItems
             if (!$menu = Menus_model::find($orderMenu->menu_id))
                 return TRUE;
 
-            if ($menu->subtract_stock)
-                $menu->updateStock($orderMenu->quantity);
+            optional($menu->getStockByLocation($this->location))
+                ->updateStockSold($this->getKey(), $orderMenu->quantity);
 
             $orderMenuOptions
                 ->where('order_menu_id', $orderMenu->order_menu_id)
                 ->each(function ($orderMenuOption) {
-                    if (!$menuOptionValue = Menu_item_option_values_model::find(
+                    if (!$menuItemOptionValue = Menu_item_option_values_model::find(
                         $orderMenuOption->menu_option_value_id
                     )) return TRUE;
 
-                    $menuOptionValue->updateStock($orderMenuOption->quantity);
+                    if (!$menuOptionValue = $menuItemOptionValue->option_value)
+                        return TRUE;
+
+                    optional($menuOptionValue->getStockByLocation($this->location))
+                        ->updateStockSold($this->getKey(), $orderMenuOption->quantity);
                 });
         });
     }
@@ -69,6 +74,38 @@ trait ManagesOrderItems
     }
 
     /**
+     * Return all order menus merged with order menu options
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getOrderMenusWithOptions()
+    {
+        $orderMenuOptions = $this->getOrderMenuOptions();
+
+        $menuItemOptionsIds = $orderMenuOptions->collapse()->pluck('order_menu_option_id')->unique();
+
+        $menuItemOptions = Menu_item_options_model::with('option')
+            ->whereIn('menu_option_id', $menuItemOptionsIds)
+            ->get()->keyBy('menu_option_id');
+
+        return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions, $menuItemOptions) {
+            unset($menu->option_values);
+            $menuOptions = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+
+            $menu->menu_options = collect($menuOptions)
+                ->map(function ($menuOption) use ($menuItemOptions) {
+                    $menuOption->order_option_category = optional($menuItemOptions->get(
+                        $menuOption->order_menu_option_id
+                    ))->option_name;
+
+                    return $menuOption;
+                });
+
+            return $menu;
+        });
+    }
+
+    /**
      * Return all order totals by order_id
      *
      * @return \Illuminate\Support\Collection
@@ -83,7 +120,7 @@ trait ManagesOrderItems
      *
      * @param array $content
      *
-     * @return bool
+     * @return float
      */
     public function addOrderMenus(array $content)
     {
@@ -108,7 +145,7 @@ trait ManagesOrderItems
                 'option_values' => serialize($cartItem->options),
             ]);
 
-            if ($orderMenuId AND count($cartItem->options)) {
+            if ($orderMenuId && count($cartItem->options)) {
                 $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
             }
         }
@@ -159,17 +196,52 @@ trait ManagesOrderItems
         if (!is_numeric($orderId))
             return FALSE;
 
-        $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
-
         foreach ($totals as $total) {
-            $this->orderTotalsQuery()->insert([
-                'order_id' => $orderId,
-                'code' => $total['code'],
-                'title' => $total['title'],
-                'value' => $total['value'],
-                'priority' => $total['priority'],
-            ]);
+            $this->addOrUpdateOrderTotal($total);
         }
+
+        $this->calculateTotals();
+    }
+
+    public function addOrUpdateOrderTotal(array $total)
+    {
+        return $this->orderTotalsQuery()->updateOrInsert([
+            'order_id' => $this->getKey(),
+            'code' => $total['code'],
+        ], array_except($total, ['order_id', 'code']));
+    }
+
+    public function calculateTotals()
+    {
+        $subtotal = $this->orderMenusQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('subtotal');
+
+        $total = $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('is_summable', TRUE)
+            ->sum('value');
+
+        $orderTotal = $subtotal + $total;
+
+        $totalItems = $this->orderMenusQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('quantity');
+
+        $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('code', 'subtotal')
+            ->update(['value' => $subtotal]);
+
+        $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('code', 'total')
+            ->update(['value' => $orderTotal]);
+
+        $this->newQuery()->where('order_id', $this->getKey())->update([
+            'total_items' => $totalItems,
+            'order_total' => $orderTotal,
+        ]);
     }
 
     public function orderMenusQuery()

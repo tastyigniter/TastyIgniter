@@ -4,13 +4,6 @@ $config['list']['filter'] = [
         'prompt' => 'lang:system::lang.extensions.text_filter_search',
         'mode' => 'all',
     ],
-    'scopes' => [
-        'status' => [
-            'label' => 'lang:admin::lang.text_filter_status',
-            'type' => 'switch',
-            'conditions' => 'status = :filtered',
-        ],
-    ],
 ];
 
 $config['list']['toolbar'] = [
@@ -18,16 +11,17 @@ $config['list']['toolbar'] = [
         'browse' => [
             'label' => 'lang:system::lang.extensions.button_browse',
             'class' => 'btn btn-primary',
-            'href' => 'updates/browse/extensions',
+            'href' => 'https://tastyigniter.com/marketplace',
+            'target' => '_blank',
         ],
         'check' => [
-            'label' => 'lang:system::lang.extensions.button_check',
+            'label' => 'lang:system::lang.updates.button_check',
             'class' => 'btn btn-success',
             'href' => 'updates',
         ],
         'filter' => [
             'label' => 'lang:admin::lang.button_icon_filter',
-            'class' => 'btn btn-default btn-filter',
+            'class' => 'btn btn-default btn-filter pull-right',
             'data-toggle' => 'list-filter',
             'data-target' => '.list-filter',
         ],
@@ -91,16 +85,8 @@ $config['form']['toolbar'] = [
         'save' => [
             'label' => 'lang:admin::lang.button_save',
             'class' => 'btn btn-primary',
-            'data-request' => 'onSave',
             'data-request-submit' => 'true',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
     ],

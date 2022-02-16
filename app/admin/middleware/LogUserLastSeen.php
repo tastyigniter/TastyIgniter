@@ -13,7 +13,7 @@ class LogUserLastSeen
 {
     public function handle($request, Closure $next)
     {
-        if (App::hasDatabase() AND AdminAuth::check()) {
+        if (App::hasDatabase() && AdminAuth::check()) {
             $cacheKey = 'is-online-user-'.AdminAuth::getId();
             $expireAt = Carbon::now()->addMinutes(2);
             Cache::remember($cacheKey, $expireAt, function () {

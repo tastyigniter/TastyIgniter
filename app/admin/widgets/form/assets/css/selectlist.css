@@ -24,12 +24,13 @@
 .control-selectlist .multiselect-search {
 	box-shadow: unset;
 }
-.multiselect-all .checkbox label {
+.multiselect-all .checkbox label,
+.multiselect-none .checkbox label {
 	font-weight: 500;
 }
 .multiselect-container.dropdown-menu {
 	background-color: var(--white);
-	padding: 0;
+  padding: .3rem;
 }
 .multiselect-item {
 	display: block;
@@ -39,7 +40,8 @@
 	text-align: inherit;
 	white-space: nowrap;
 	background-color: transparent;
-	border: 0;
+  border-radius: 3px;
+  margin-bottom: .3rem;
 }
 .multiselect-container .multiselect-item > a {
 	padding: 0;
@@ -59,6 +61,8 @@
 .multiselect-item .checkbox,
 .multiselect-item .radio {
 	margin: 0;
+	display: block;
+	padding-left: 1.25em;
 }
 .multiselect-item .checkbox label,
 .multiselect-item .radio label {

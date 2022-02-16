@@ -90,8 +90,10 @@
             $button = $(event.target),
             $findValue = $('[data-find-value]', $button.closest('.media-finder'))
 
-        if ($.ti.mediaManager === undefined)
-            throw new Error('Media manager widget is not loaded')
+        if ($.ti.mediaManager === undefined) {
+            $.ti.flashMessage({text: 'Media manager widget is not loaded', class:'danger'})
+            return
+        }
 
         new $.ti.mediaManager.modal({
             alias: 'mediamanager',
@@ -182,11 +184,13 @@
         var $findIdentifier = $template.find('[data-find-identifier]'),
             $findName = $template.find('[data-find-name]'),
             $findImage = $template.find('[data-find-image]'),
+            $findFile = $template.find('[data-find-file]'),
             $findValue = $template.find('[data-find-value]')
 
         if ($findIdentifier.length) $findIdentifier.val(item.identifier)
         if ($findName.length) $findName.text(item.path)
         if ($findImage.length) $findImage.attr('src', item.publicUrl)
+        if ($findFile.length) $findFile.removeClass('fa-file').addClass('fa-'+item.fileType)
         if ($findValue.length) $findValue.val(item.path)
     }
 

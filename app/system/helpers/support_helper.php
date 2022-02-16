@@ -128,7 +128,7 @@ if (!function_exists('mdate')) {
      */
     function mdate($format = null, $time = null)
     {
-        if (is_null($time) AND $format) {
+        if (is_null($time) && $format) {
             $time = $format;
             $format = null;
         }
@@ -241,20 +241,20 @@ if (!function_exists('day_elapsed')) {
     function day_elapsed($datetime, $full = TRUE)
     {
         $datetime = make_carbon($datetime);
-        $time = $datetime->format('H:i');
-        $date = $datetime->format('j M Y');
+        $time = $datetime->isoFormat(lang('system::lang.moment.time_format'));
+        $date = $datetime->isoFormat(lang('system::lang.moment.date_format'));
 
         if ($datetime->isToday()) {
-            $date = 'Today';
+            $date = lang('system::lang.date.today');
         }
         elseif ($datetime->isYesterday()) {
-            $date = 'Yesterday';
+            $date = lang('system::lang.date.yesterday');
         }
         elseif ($datetime->isTomorrow()) {
-            $date = 'Tomorrow';
+            $date = lang('system::lang.date.tomorrow');
         }
 
-        return $full ? $date.' at '.$time : $date;
+        return $full ? sprintf(lang('system::lang.date.full'), $date, $time) : $date;
     }
 }
 
@@ -272,7 +272,7 @@ if (!function_exists('time_range')) {
      */
     function time_range($unix_start, $unix_end, $interval, $time_format = '%H:%i')
     {
-        if ($unix_start == '' OR $unix_end == '' OR $interval == '') {
+        if ($unix_start == '' || $unix_end == '' || $interval == '') {
             return null;
         }
 
@@ -363,7 +363,7 @@ if (!function_exists('is_single_location')) {
      */
     function is_single_location()
     {
-        return setting('site_location_mode') === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
+        return config('system.locationMode', setting('site_location_mode')) === \Admin\Models\Locations_model::LOCATION_CONTEXT_SINGLE;
     }
 }
 
@@ -381,6 +381,26 @@ if (!function_exists('log_message')) {
     function log_message($level, $message)
     {
         Log::$level($message);
+    }
+}
+
+if (!function_exists('traceLog')) {
+    function traceLog()
+    {
+        $messages = func_get_args();
+
+        foreach ($messages as $message) {
+            $level = 'info';
+
+            if ($message instanceof Exception) {
+                $level = 'error';
+            }
+            elseif (is_array($message) || is_object($message)) {
+                $message = print_r($message, TRUE);
+            }
+
+            Log::$level($message);
+        }
     }
 }
 

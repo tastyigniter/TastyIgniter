@@ -28,6 +28,9 @@ class Location_areas_model extends AbstractArea
         ['boundaries.polygon', 'admin::lang.locations.label_area_shape', 'sometimes|required_if:type,polygon'],
         ['boundaries.circle', 'admin::lang.locations.label_area_circle', 'sometimes|required_if:type,circle|json'],
         ['boundaries.vertices', 'admin::lang.locations.label_area_vertices', 'sometimes|required_unless:type,address|json'],
+        ['boundaries.distance.*.type', 'admin::lang.locations.label_area_distance', 'sometimes|required|string'],
+        ['boundaries.distance.*.distance', 'admin::lang.locations.label_area_distance', 'sometimes|required|numeric'],
+        ['boundaries.distance.*.charge', 'admin::lang.locations.label_area_charge', 'sometimes|required|numeric'],
         ['conditions', 'admin::lang.locations.label_delivery_condition', 'sometimes|required'],
         ['conditions.*.amount', 'admin::lang.locations.label_area_charge', 'sometimes|required|numeric'],
         ['conditions.*.type', 'admin::lang.locations.label_charge_condition', 'sometimes|required|alpha_dash'],
@@ -39,7 +42,7 @@ class Location_areas_model extends AbstractArea
     public function getConditionsAttribute($value)
     {
         // backward compatibility v2.0
-        if (!is_array($conditions = unserialize($value)))
+        if (!is_array($conditions = json_decode($value, TRUE)))
             $conditions = [];
 
         foreach ($conditions as $key => &$item) {
@@ -57,6 +60,9 @@ class Location_areas_model extends AbstractArea
         if (!$this->is_default)
             return;
 
-        $this->newQuery()->whereKeyNot($this->getKey())->update(['is_default' => 0]);
+        $this->newQuery()
+            ->where('location_id', $this->location_id)
+            ->whereKeyNot($this->getKey())
+            ->update(['is_default' => 0]);
     }
 }

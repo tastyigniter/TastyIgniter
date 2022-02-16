@@ -1,6 +1,6 @@
 <?php
 $config['list']['columns'] = [
-    'date_added' => [
+    'created_at' => [
         'label' => 'lang:admin::lang.statuses.column_time_date',
         'type' => 'timetense',
     ],
@@ -19,6 +19,11 @@ $config['list']['columns'] = [
     ],
     'notified' => [
         'label' => 'lang:admin::lang.statuses.column_notify',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
     ],
 ];
 

@@ -4,7 +4,7 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Mealtimes Model Class
@@ -36,6 +36,8 @@ class Mealtimes_model extends Model
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
+
+    public $timestamps = TRUE;
 
     public function getDropdownOptions()
     {

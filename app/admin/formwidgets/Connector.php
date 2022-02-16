@@ -5,10 +5,11 @@ namespace Admin\FormWidgets;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Traits\FormModelWidget;
+use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
-use ApplicationException;
-use DB;
+use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Form Relationship
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Collection;
 class Connector extends BaseFormWidget
 {
     use FormModelWidget;
+    use ValidatesForm;
 
     const INDEX_SEARCH = '___index__';
 
@@ -48,15 +50,23 @@ class Connector extends BaseFormWidget
      */
     public $form;
 
-    /**
-     * @var string Prompt text for adding new items.
-     */
-    public $prompt = 'lang:admin::lang.text_please_select';
+    public $newRecordTitle = 'New %s';
+
+    public $editRecordTitle = 'Edit %s';
+
+    public $emptyMessage = 'admin::lang.list.text_empty';
+
+    public $confirmMessage = 'admin::lang.alert_warning_confirm';
 
     /**
      * @var bool Items can be sorted.
      */
     public $sortable = FALSE;
+
+    /**
+     * @var bool Items can be edited.
+     */
+    public $editable = TRUE;
 
     public $popupSize;
 
@@ -65,7 +75,11 @@ class Connector extends BaseFormWidget
         $this->fillFromConfig([
             'formName',
             'form',
-            'prompt',
+            'newRecordTitle',
+            'editRecordTitle',
+            'emptyMessage',
+            'confirmMessage',
+            'editable',
             'sortable',
             'nameFrom',
             'descriptionFrom',
@@ -75,6 +89,10 @@ class Connector extends BaseFormWidget
 
         $fieldName = $this->formField->getName(FALSE);
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
+
+        if ($this->formField->disabled || $this->formField->readOnly) {
+            $this->previewMode = TRUE;
+        }
     }
 
     public function render()
@@ -98,6 +116,9 @@ class Connector extends BaseFormWidget
 
     public function getSaveValue($value)
     {
+        if (!$this->sortable)
+            return FormField::NO_SAVE_DATA;
+
         return (array)$this->processSaveValue($value);
     }
 
@@ -109,38 +130,62 @@ class Connector extends BaseFormWidget
         $this->vars['formField'] = $this->formField;
         $this->vars['fieldItems'] = $this->processLoadValue() ?? [];
 
-        $this->vars['prompt'] = $this->prompt;
+        $this->vars['editable'] = $this->editable;
         $this->vars['sortable'] = $this->sortable;
         $this->vars['nameFrom'] = $this->nameFrom;
         $this->vars['partial'] = $this->partial;
         $this->vars['descriptionFrom'] = $this->descriptionFrom;
         $this->vars['sortableInputName'] = $this->sortableInputName;
+
+        $this->vars['emptyMessage'] = $this->emptyMessage;
+        $this->vars['confirmMessage'] = $this->confirmMessage;
+    }
+
+    public function reload()
+    {
+        $this->formField->value = null;
+        $this->model->reloadRelations();
+
+        $this->prepareVars();
+
+        return [
+            '#notification' => $this->makePartial('flash'),
+            '#'.$this->getId('items') => $this->makePartial('connector/connector_items'),
+        ];
     }
 
     public function onLoadRecord()
     {
-        $recordId = post('recordId');
-        $model = $this->getRelationModel()->find($recordId);
+        $model = $this->getRelationModel();
 
-        if (!$model)
-            throw new ApplicationException('Record not found');
+        $formTitle = lang($this->newRecordTitle);
+        if (strlen($recordId = post('recordId'))) {
+            $model = $model->find($recordId);
+            $formTitle = lang($this->editRecordTitle);
+        }
 
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
-            'formTitle' => 'Edit '.lang($this->formName),
+            'formTitle' => sprintf($formTitle, lang($this->formName)),
             'formWidget' => $this->makeItemFormWidget($model, 'edit'),
         ]);
     }
 
     public function onSaveRecord()
     {
-        $model = strlen($recordId = post('recordId'))
-            ? $this->getRelationModel()->find($recordId)
-            : $this->getRelationObject();
+        $model = $this->getRelationModel();
+
+        if (strlen($recordId = post('recordId')))
+            $model = $model->find($recordId);
 
         $form = $this->makeItemFormWidget($model, 'edit');
 
-        $modelsToSave = $this->prepareModelsToSave($model, $form->getSaveData());
+        $this->validateFormWidget($form, $saveData = $form->getSaveData());
+
+        if (!$model->exists)
+            $saveData[$this->model->getKeyName()] = $this->model->getKey();
+
+        $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
@@ -150,12 +195,7 @@ class Connector extends BaseFormWidget
 
         flash()->success(sprintf(lang('admin::lang.alert_success'), 'Item updated'))->now();
 
-        $this->prepareVars();
-
-        return [
-            '#notification' => $this->makePartial('flash'),
-            '#'.$this->getId('items') => $this->makePartial('connector/connector_items'),
-        ];
+        return $this->reload();
     }
 
     public function onDeleteRecord()
@@ -185,18 +225,13 @@ class Connector extends BaseFormWidget
             return $value;
         }
 
-        $value = $value instanceof Collection
+        return $value instanceof Collection
             ? $value->sortBy($this->sortColumnName)
             : sort_array($value, $this->sortColumnName);
-
-        return $value;
     }
 
     protected function processSaveValue($value)
     {
-        if (!$this->sortable)
-            return FormField::NO_SAVE_DATA;
-
         $items = $this->formField->value;
         if (!$items instanceof Collection)
             return $items;
@@ -204,22 +239,22 @@ class Connector extends BaseFormWidget
         $sortedIndexes = (array)post($this->sortableInputName);
         $sortedIndexes = array_flip($sortedIndexes);
 
-        $value = [];
+        $results = [];
         foreach ($items as $index => $item) {
-            $value[$index] = [
+            $results[$index] = [
                 $item->getKeyName() => $item->getKey(),
                 $this->sortColumnName => $sortedIndexes[$item->getKey()],
             ];
         }
 
-        return $value;
+        return $results;
     }
 
     protected function makeItemFormWidget($model, $context)
     {
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'Form'.'connector';
+        $widgetConfig['alias'] = $this->alias.'FormConnector';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[connectorData]';
         $widgetConfig['context'] = $context;
         $widget = $this->makeWidget(Form::class, $widgetConfig);

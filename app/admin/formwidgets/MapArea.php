@@ -6,8 +6,9 @@ use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Models\Location_areas_model;
 use Admin\Traits\FormModelWidget;
-use Html;
+use Admin\Traits\ValidatesForm;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Html\HtmlFacade as Html;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 class MapArea extends BaseFormWidget
 {
     use FormModelWidget;
+    use ValidatesForm;
 
     const SORT_PREFIX = '___dragged_';
 
@@ -169,7 +171,9 @@ class MapArea extends BaseFormWidget
 
         $form = $this->makeAreaFormWidget($model, 'edit');
 
-        $modelsToSave = $this->prepareModelsToSave($model, $form->getSaveData());
+        $this->validateFormWidget($form, $saveData = $form->getSaveData());
+
+        $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
@@ -195,7 +199,7 @@ class MapArea extends BaseFormWidget
     public function onDeleteArea()
     {
         if (!strlen($areaId = post('areaId')))
-            throw new ApplicationException('Invalid area selected');
+            throw new ApplicationException(lang('admin::lang.locations.alert_invalid_area'));
 
         $model = $this->getRelationModel()->find($areaId);
         if (!$model)
@@ -250,7 +254,7 @@ class MapArea extends BaseFormWidget
         $result = [];
 
         foreach ($loadValue as $key => $area) {
-            if (!isset($area['color']) OR !strlen($area['color'])) {
+            if (!isset($area['color']) || !strlen($area['color'])) {
                 $index = min($key, count($this->areaColors));
                 $area['color'] = $this->areaColors[$index] ?? $this->areaColors[0];
             }

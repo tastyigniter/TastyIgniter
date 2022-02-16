@@ -2,15 +2,15 @@
 
 namespace System\Traits;
 
+use Admin\Facades\Template;
+use ErrorException;
 use Exception;
-use File;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
-use Lang;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
-use SystemException;
-use Template;
 use Throwable;
 
 trait ViewMaker
@@ -45,7 +45,7 @@ trait ViewMaker
      */
     public $suppressLayout = FALSE;
 
-    protected $viewFileExtension = ['.blade.php', '.php'];
+    protected $viewFileExtension = ['.blade.php'];
 
     public function getViewPath($view, $viewPath = null)
     {
@@ -116,7 +116,7 @@ trait ViewMaker
      * @param bool $throwException Throw an exception if the layout is not found
      *
      * @return mixed The layout contents, or false.
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makeLayout($name = null, $vars = [], $throwException = TRUE)
     {
@@ -151,7 +151,7 @@ trait ViewMaker
         $viewPath = $this->getViewPath(strtolower($view));
         $contents = $this->makeFileContent($viewPath);
 
-        if ($this->suppressLayout OR $this->layout === '')
+        if ($this->suppressLayout || $this->layout === '')
             return $contents;
 
         // Append content to the body template
@@ -168,7 +168,7 @@ trait ViewMaker
      * @param bool $throwException Throw an exception if the partial is not found.
      *
      * @return mixed Partial contents or false if not throwing an exception.
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makePartial($partial, $vars = [], $throwException = TRUE)
     {
@@ -200,7 +200,7 @@ trait ViewMaker
      */
     public function makeFileContent($filePath, $extraParams = [])
     {
-        if (!strlen($filePath) OR $filePath == 'index.php' OR !File::isFile($filePath)) {
+        if (!strlen($filePath) || $filePath == 'index.php' || !File::isFile($filePath)) {
             return '';
         }
 
@@ -230,7 +230,7 @@ trait ViewMaker
             $this->handleViewException($e, $obLevel);
         }
         catch (Throwable $e) {
-            $this->handleViewException(new FatalThrowableError($e), $obLevel);
+            $this->handleViewException(new ErrorException($e), $obLevel);
         }
 
         return ob_get_clean();

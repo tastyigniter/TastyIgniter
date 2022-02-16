@@ -2,13 +2,13 @@
 
 namespace Main\Classes;
 
-use Cache;
-use Config;
-use Event;
-use File;
 use Igniter\Flame\Router\Router as FlameRouter;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\RouterHelper;
-use Lang;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Lang;
 use Main\Template\Page as PageTemplate;
 
 /**
@@ -106,7 +106,7 @@ class Router
                     $fileName = $router->matchedRoute();
 
                     if ($cacheable) {
-                        if (!$urlList OR !is_array($urlList))
+                        if (!$urlList || !is_array($urlList))
                             $urlList = [];
 
                         $urlList[$url] = !empty($this->parameters)
@@ -207,12 +207,12 @@ class Router
         $cacheable = Config::get('system.enableRoutesCache');
         $cached = $cacheable ? Cache::get($this->getUrlMapCacheKey(), FALSE) : FALSE;
 
-        if (!$cached OR ($unSerialized = @unserialize(@base64_decode($cached))) === FALSE) {
+        if (!$cached || ($unSerialized = @unserialize(@base64_decode($cached))) === FALSE) {
             // The item doesn't exist in the cache, create the map
             $pages = $this->theme->listPages();
             $map = [];
             foreach ($pages as $page) {
-                if (!$page->permalink)
+                if (!optional($page)->permalink)
                     continue;
 
                 $map[] = ['file' => $page->getFileName(), 'pattern' => $page->permalink];
@@ -284,7 +284,7 @@ class Router
      */
     public function getParameter($name, $default = null)
     {
-        if (isset($this->parameters[$name]) AND !empty($this->parameters[$name])) {
+        if (isset($this->parameters[$name]) && !empty($this->parameters[$name])) {
             return $this->parameters[$name];
         }
 
@@ -335,8 +335,8 @@ class Router
         $urlList = Cache::get($key, FALSE);
 
         if (
-            $urlList AND
-            ($urlList = @unserialize(@base64_decode($urlList))) AND
+            $urlList &&
+            ($urlList = @unserialize(@base64_decode($urlList))) &&
             is_array($urlList)
         ) {
             if (array_key_exists($url, $urlList)) {

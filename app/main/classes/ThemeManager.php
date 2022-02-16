@@ -2,15 +2,15 @@
 
 namespace Main\Classes;
 
-use App;
-use File;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 use System\Libraries\Assets;
 use System\Models\Themes_model;
-use SystemException;
 use ZipArchive;
 
 /**
@@ -62,7 +62,8 @@ class ThemeManager
     public static function addAssetsFromActiveThemeManifest(Assets $manager)
     {
         $instance = self::instance();
-        $theme = $instance->getActiveTheme();
+        if (!$theme = $instance->getActiveTheme())
+            return;
 
         if (File::exists($theme->path.'/_meta/assets.json')) {
             $manager->addFromManifest($theme->publicPath.'/_meta/assets.json');
@@ -73,11 +74,11 @@ class ThemeManager
         }
     }
 
-    public static function applyAssetVariablesOnCombinerFilters(array $filters)
+    public static function applyAssetVariablesOnCombinerFilters(array $filters, Theme $theme = null)
     {
-        $theme = self::instance()->getActiveTheme();
+        $theme = !is_null($theme) ? $theme : self::instance()->getActiveTheme();
 
-        if (!$theme OR !$theme->hasCustomData())
+        if (!$theme || !$theme->hasCustomData())
             return;
 
         $assetVars = $theme->getAssetVariables();
@@ -111,7 +112,7 @@ class ThemeManager
      */
     public function loadInstalled()
     {
-        if (($installedThemes = setting('installed_themes')) AND is_array($installedThemes)) {
+        if (($installedThemes = setting('installed_themes')) && is_array($installedThemes)) {
             $this->installedThemes = $installedThemes;
         }
     }
@@ -119,7 +120,7 @@ class ThemeManager
     /**
      * Finds all available themes and loads them in to the $themes array.
      * @return array
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function loadThemes()
     {
@@ -137,7 +138,7 @@ class ThemeManager
      * @param string $path Ex: base_path().'directory_name';
      *
      * @return bool|object
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function loadTheme($themeCode, $path)
     {
@@ -288,7 +289,7 @@ class ThemeManager
     {
         traceLog('Deprecated. Use $instance::isActive($themeCode) instead');
 
-        return !$this->checkName($name) OR !array_get($this->installedThemes, $name, FALSE);
+        return !$this->checkName($name) || !array_get($this->installedThemes, $name, FALSE);
     }
 
     /**
@@ -303,7 +304,7 @@ class ThemeManager
         if ($themeCode == 'errors')
             return null;
 
-        return (strpos($themeCode, '_') === 0 OR preg_match('/\s/', $themeCode)) ? null : $themeCode;
+        return (strpos($themeCode, '_') === 0 || preg_match('/\s/', $themeCode)) ? null : $themeCode;
     }
 
     /**
@@ -340,7 +341,7 @@ class ThemeManager
     public function checkParent($themeCode)
     {
         foreach ($this->themes as $code => $theme) {
-            if ($theme->hasParent() AND $theme->getParentName() == $themeCode)
+            if ($theme->hasParent() && $theme->getParentName() == $themeCode)
                 return TRUE;
         }
 
@@ -525,7 +526,7 @@ class ThemeManager
      * @param string $zipPath The path to the zip folder
      *
      * @return bool
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function extractTheme($zipPath)
     {
@@ -545,11 +546,11 @@ class ThemeManager
             }
 
             $meta = @json_decode($zip->getFromName($themeDir.'theme.json'));
-            if (!$meta OR !strlen($meta->code))
+            if (!$meta || !strlen($meta->code))
                 throw new SystemException(lang('system::lang.themes.error_config_no_found'));
 
             $themeCode = $meta->code;
-            if (!$this->checkName($themeDir) OR !$this->checkName($themeCode))
+            if (!$this->checkName($themeDir) || !$this->checkName($themeCode))
                 throw new SystemException('Theme directory name can not have spaces.');
 
             $extractToPath = $themesFolder.'/'.$themeCode;
@@ -634,7 +635,7 @@ class ThemeManager
      * @param string $themeCode
      *
      * @return array|null
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getMetaFromFile($themeCode)
@@ -669,7 +670,7 @@ class ThemeManager
      * @param $themeCode
      *
      * @return array|null
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function validateMetaFile($path, $themeCode)

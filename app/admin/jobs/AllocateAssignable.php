@@ -49,7 +49,7 @@ class AllocateAssignable implements ShouldQueue
             Allocator::addSlot($this->assignableLog->getKey());
 
             if (!$assignee = $this->assignableLog->assignee_group->findAvailableAssignee())
-                throw new Exception('No available assignee');
+                throw new Exception(lang('admin::lang.staff_groups.alert_no_available_assignee'));
 
             $this->assignableLog->assignable->assignTo($assignee);
 

@@ -17,6 +17,10 @@
   ##
   # RewriteBase /
 
+  # Handle Authorization Header
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
   ## Redirect index.php from url to prevent duplicate urls
   ##
   RewriteCond %{THE_REQUEST} /index\.php [NC]

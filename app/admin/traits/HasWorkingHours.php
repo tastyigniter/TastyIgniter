@@ -2,48 +2,54 @@
 
 namespace Admin\Traits;
 
+use Admin\Classes\ScheduleItem;
 use Carbon\Carbon;
 use Exception;
+use Igniter\Flame\Location\OrderTypes;
 use Igniter\Flame\Location\WorkingSchedule;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
 use InvalidArgumentException;
 
 trait HasWorkingHours
 {
-    /**
-     * @var \Illuminate\Database\Eloquent\Collection
-     */
-    protected $workingHours;
+    public static function bootHasWorkingHours()
+    {
+        static::fetched(function (self $model) {
+            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
 
-    /**
-     * @var WorkingSchedule
-     */
-    protected $workingSchedules;
+            $model->parseHoursFromOptions($value);
 
-    protected $currentTime;
+            $model->attributes['options'] = @json_encode($value);
+        });
+
+        static::saving(function (self $model) {
+            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
+
+            $model->parseHoursFromOptions($value);
+
+            $model->attributes['options'] = @json_encode($value);
+        });
+    }
 
     /**
      * @return Carbon
      */
     public function getCurrentTime()
     {
-        if (!is_null($this->currentTime))
-            return $this->currentTime;
-
-        return $this->currentTime = Carbon::now();
+        traceLog('Deprecated function. No longer supported.');
     }
 
     public function availableWorkingTypes()
     {
-        return [static::OPENING, static::DELIVERY, static::COLLECTION];
+        return array_merge([
+            static::OPENING,
+        ], collect(OrderTypes::instance()->listOrderTypes())->keys()->all());
     }
 
     public function listWorkingHours()
     {
-        if (!$this->workingHours)
-            $this->workingHours = $this->loadWorkingHours();
-
-        return $this->workingHours;
+        traceLog('Deprecated function. Use getWorkingHours() instead.');
     }
 
     /**
@@ -58,26 +64,20 @@ trait HasWorkingHours
 
     public function getWorkingHoursByType($type)
     {
-        if (!$workingHours = $this->listWorkingHours())
-            return null;
-
-        return $workingHours->groupBy('type')->get($type);
+        return $this->getWorkingHours()->groupBy('type')->get($type);
     }
 
     public function getWorkingHoursByDay($weekday)
     {
-        if (!$workingHours = $this->listWorkingHours())
-            return null;
-
-        return $workingHours->groupBy('weekday')->get($weekday);
+        return $this->getWorkingHours()->groupBy('weekday')->get($weekday);
     }
 
     public function getWorkingHourByDayAndType($weekday, $type)
     {
-        if (!$workingHours = $this->getWorkingHoursByDay($weekday))
-            return null;
-
-        return $workingHours->groupBy('type')->get($type)->first();
+        return $this->getWorkingHoursByDay($weekday)
+            ->groupBy('type')
+            ->get($type)
+            ->first();
     }
 
     public function getWorkingHourByDateAndType($date, $type)
@@ -90,20 +90,31 @@ trait HasWorkingHours
         return $this->getWorkingHourByDayAndType($weekday, $type);
     }
 
-    public function loadWorkingHours()
+    public function getWorkingHours()
     {
         if (!$this->hasRelation('working_hours'))
-            throw new Exception(sprintf("Model '%s' does not contain a definition for 'working_hours'.",
-                get_class($this)));
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_model_definition'),
+                get_class($this),
+                'working_hours',
+            ));
 
-        return $this->working_hours()->get();
+        if (!$this->working_hours || $this->working_hours->isEmpty()) {
+            $this->createDefaultWorkingHours();
+        }
+
+        return $this->working_hours;
+    }
+
+    public function loadWorkingHours()
+    {
+        traceLog('Deprecated function. Use getWorkingHours() instead.');
     }
 
     public function newWorkingSchedule($type, $days = null)
     {
         $types = $this->availableWorkingTypes();
-        if (is_null($type) OR !in_array($type, $types))
-            throw new InvalidArgumentException("Defined parameter '$type' is not a valid working type.");
+        if (is_null($type) || !in_array($type, $types))
+            throw new InvalidArgumentException(sprintf(lang('admin::lang.locations.alert_invalid_schedule_type'), $type));
 
         if (is_null($days)) {
             $days = $this->hasFutureOrder($type)
@@ -116,7 +127,8 @@ trait HasWorkingHours
         );
 
         $schedule->setType($type);
-        $schedule->setNow($this->getCurrentTime());
+
+        Event::fire('admin.workingSchedule.created', [$this, $schedule]);
 
         return $schedule;
     }
@@ -125,6 +137,27 @@ trait HasWorkingHours
     //
     //
 
+    public function createScheduleItem($type)
+    {
+        if (is_null($type) || !in_array($type, $this->availableWorkingTypes()))
+            throw new InvalidArgumentException(sprintf(lang('admin::lang.locations.alert_invalid_schedule_type'), $type));
+
+        $scheduleData = array_get($this->getOption('hours', []), $type, []);
+
+        return new ScheduleItem($type, $scheduleData);
+    }
+
+    public function updateSchedule($type, $scheduleData)
+    {
+        $this->addOpeningHours($type, $scheduleData);
+
+        $locationHours = $this->getOption('hours');
+        array_set($locationHours, $type, $scheduleData);
+        $this->setOption('hours', $locationHours);
+
+        $this->save();
+    }
+
     /**
      * Create a new or update existing location working hours
      *
@@ -132,63 +165,39 @@ trait HasWorkingHours
      *
      * @return bool
      */
-    public function addOpeningHours($data = [])
+    public function addOpeningHours($type, $data = [])
     {
-        $created = FALSE;
+        if (is_array($type)) {
+            $data = $type;
+            $type = null;
+        }
 
-        $this->working_hours()->delete();
+        if (is_null($type)) {
+            foreach (['opening', 'delivery', 'collection'] as $hourType) {
+                if (!is_array($scheduleData = array_get($data, $hourType)))
+                    continue;
 
-        if (!$data OR !isset($data['opening']))
-            return FALSE;
+                $this->addOpeningHours($hourType, $scheduleData);
+            }
+        }
 
-        foreach ($data as $type => $hours) {
-            $hourType = $hours['type'] ?? '24_7';
-            $hoursArray = $this->createWorkingHoursArray($hourType, $hours);
+        $this->working_hours()->where('type', $type)->delete();
 
-            foreach ($hoursArray as $hourValue) {
-                $created = $this->working_hours()->create([
+        $scheduleItem = new ScheduleItem($type, $data);
+        foreach ($scheduleItem->getHours() as $hours) {
+            foreach ($hours as $hour) {
+                $this->working_hours()->create([
                     'location_id' => $this->getKey(),
-                    'weekday' => $hourValue['day'],
+                    'weekday' => $hour['day'],
                     'type' => $type,
-                    'opening_time' => mdate('%H:%i', strtotime($hourValue['open'])),
-                    'closing_time' => mdate('%H:%i', strtotime($hourValue['close'])),
-                    'status' => $hourValue['status'],
+                    'opening_time' => mdate('%H:%i', strtotime($hour['open'])),
+                    'closing_time' => mdate('%H:%i', strtotime($hour['close'])),
+                    'status' => $hour['status'],
                 ]);
             }
         }
 
-        return $created;
-    }
-
-    /**
-     * Build working hours array
-     *
-     * @param $type
-     * @param $data
-     *
-     * @return array
-     */
-    public function createWorkingHoursArray($type, $data)
-    {
-        $hours = ['open' => '00:00', 'close' => '23:59', 'status' => 1];
-        if ($type != '24_7')
-            $hours = ['open' => $data['open'], 'close' => $data['close']];
-
-        $days = $data['days'] ?? [];
-
-        $workingHours = [];
-        for ($day = 0; $day <= 6; $day++) {
-            $_hours = ($type == 'flexible' AND isset($data['flexible'][$day])) ? $data['flexible'][$day] : $hours;
-            $workingHours[] = [
-                'day' => $day,
-                'type' => $type,
-                'open' => $_hours['open'],
-                'close' => $_hours['close'],
-                'status' => $_hours['status'] ?? (int)in_array($day, $days),
-            ];
-        }
-
-        return $workingHours;
+        return TRUE;
     }
 
     protected function parseHoursFromOptions(&$value)
@@ -216,7 +225,7 @@ trait HasWorkingHours
                 }
             }
 
-            if (isset($hours['flexible_hours']) AND is_array($hours['flexible_hours'])) {
+            if (isset($hours['flexible_hours']) && is_array($hours['flexible_hours'])) {
                 foreach (['opening', 'delivery', 'collection'] as $type) {
                     $value['hours'][$type]['flexible'] = $hours['flexible_hours'];
                 }
@@ -224,11 +233,14 @@ trait HasWorkingHours
 
             unset($value['opening_hours']);
         }
+    }
 
-        // Ensures form checkbox is unchecked when value is empty
-        foreach (['opening', 'delivery', 'collection'] as $type) {
-            if (!isset($value['hours'][$type]['days']))
-                $value['hours'][$type]['days'] = [];
+    protected function createDefaultWorkingHours()
+    {
+        foreach (['opening', 'delivery', 'collection'] as $hourType) {
+            $this->addOpeningHours($hourType, []);
         }
+
+        $this->reloadRelations('working_hours');
     }
 }

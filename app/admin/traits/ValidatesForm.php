@@ -2,13 +2,14 @@
 
 namespace Admin\Traits;
 
-use App;
 use Closure;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Session;
 use System\Helpers\ValidationHelper;
 
 trait ValidatesForm
@@ -141,5 +142,32 @@ trait ValidatesForm
             $sessionKey = 'admin_errors';
 
         return Session::flash($sessionKey, $errors);
+    }
+
+    protected function validateFormWidget($form, $saveData)
+    {
+        // for backwards support, first of all try and use a rules in the config if we have them
+        if ($rules = array_get($form->config, 'rules')) {
+            return $this->validate($saveData, $rules,
+                array_get($form->config, 'validationMessages', []),
+                array_get($form->config, 'validationAttributes', [])
+            );
+        }
+
+        // if we dont have in config then fallback to a FormRequest class
+        if ($requestClass = array_get($this->config, 'request')) {
+            if (!class_exists($requestClass))
+                throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
+
+            app()->resolving($requestClass, function ($request, $app) use ($form) {
+                if (method_exists($request, 'setController'))
+                    $request->setController($this->controller);
+
+                if (method_exists($request, 'setInputKey'))
+                    $request->setInputKey($form->arrayName);
+            });
+
+            app()->make($requestClass);
+        }
     }
 }

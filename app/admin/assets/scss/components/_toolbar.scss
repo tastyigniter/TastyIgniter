@@ -1,10 +1,17 @@
 .toolbar {
   .toolbar-action {
+    background-color: $gray-300;
     clear: both;
     width: 100%;
-    padding-left: $page-padding-x;
-    padding-right: $page-padding-x;
-    padding-bottom: 20px;
+    padding: $page-padding-x;
+  }
+
+  @include media-breakpoint-down(sm) {
+    .toolbar-action {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
   }
 }
 .toolbar-action {
@@ -38,6 +45,26 @@
 
   .btn + .btn {
     margin-left: $btn-spacer;
+  }
+
+  .btn + .btn-group {
+    margin-left: $btn-spacer;
+  }
+
+  .btn-group {
+    .btn:not(:first-child) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .btn:not(:last-child):not(.dropdown-toggle) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .btn + .btn {
+      margin-left: 0;
+    }
   }
 
   .btn-left {
@@ -76,4 +103,7 @@
       }
     }
   }
+}
+.toolbar-search {
+  background-color: $gray-300;
 }

@@ -4,10 +4,11 @@ $config['list']['toolbar'] = [
         'browse' => [
             'label' => 'lang:system::lang.themes.button_browse',
             'class' => 'btn btn-primary',
-            'href' => 'updates/browse/themes',
+            'href' => 'https://tastyigniter.com/marketplace',
+            'target' => '_blank',
         ],
         'check' => [
-            'label' => 'lang:system::lang.themes.button_check',
+            'label' => 'lang:system::lang.updates.button_check',
             'class' => 'btn btn-success',
             'href' => 'updates',
         ],
@@ -59,21 +60,29 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
 ];
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default ml-0',
+            'href' => 'themes',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
     ],

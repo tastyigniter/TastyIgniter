@@ -4,13 +4,16 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
+use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\SystemException;
 use Illuminate\Support\Collection;
+use Main\classes\MediaItem;
 use Main\Classes\MediaLibrary;
-use SystemException;
+use System\Models\Settings_model;
 
 /**
  * Media Finder
@@ -26,6 +29,8 @@ use SystemException;
  */
 class MediaFinder extends BaseFormWidget
 {
+    use ValidatesForm;
+
     //
     // Configurable properties
     //
@@ -36,7 +41,7 @@ class MediaFinder extends BaseFormWidget
     public $prompt = 'lang:admin::lang.text_empty';
 
     /**
-     * @var string Display mode for the selection. Values: picker, inline.
+     * @var string Display mode. Values: grid, inline.
      */
     public $mode = 'grid';
 
@@ -143,9 +148,31 @@ class MediaFinder extends BaseFormWidget
         return MediaLibrary::instance()->getMediaThumb($path, $this->thumbOptions);
     }
 
+    public function getMediaFileType($media)
+    {
+        $path = trim($media, '/');
+        if ($media instanceof Media)
+            $path = $media->getFilename();
+
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        if (!strlen($extension))
+            return MediaItem::FILE_TYPE_DOCUMENT;
+
+        if (in_array($extension, Settings_model::imageExtensions()))
+            return MediaItem::FILE_TYPE_IMAGE;
+
+        if (in_array($extension, Settings_model::audioExtensions()))
+            return MediaItem::FILE_TYPE_AUDIO;
+
+        if (in_array($extension, Settings_model::videoExtensions()))
+            return MediaItem::FILE_TYPE_VIDEO;
+
+        return MediaItem::FILE_TYPE_DOCUMENT;
+    }
+
     public function onLoadAttachmentConfig()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
@@ -163,19 +190,21 @@ class MediaFinder extends BaseFormWidget
 
     public function onSaveAttachmentConfig()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
             return;
 
-        $configData = post('media.custom_properties', []);
-
         $media = $this->model->findMedia($mediaId);
 
-        $media->setCustomProperty('title', array_get($configData, 'title'));
-        $media->setCustomProperty('description', array_get($configData, 'description'));
-        $media->setCustomProperty('extras', array_get($configData, 'extras', []));
+        $form = $this->makeAttachmentConfigFormWidget($media);
+
+        $this->validateFormWidget($form, $configData = $form->getSaveData());
+
+        $media->setCustomProperty('title', array_get($configData, 'custom_properties.title'));
+        $media->setCustomProperty('description', array_get($configData, 'custom_properties.description'));
+        $media->setCustomProperty('extras', array_get($configData, 'custom_properties.extras', []));
 
         $media->save();
 
@@ -186,7 +215,7 @@ class MediaFinder extends BaseFormWidget
 
     public function onRemoveAttachment()
     {
-        if (!$this->useAttachment OR !$mediaId = post('media_id'))
+        if (!$this->useAttachment || !$mediaId = post('media_id'))
             return;
 
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
@@ -205,11 +234,11 @@ class MediaFinder extends BaseFormWidget
 
         $items = post('items');
         if (!is_array($items))
-            throw new ApplicationException('Select an item to attach');
+            throw new ApplicationException(lang('main::lang.media_manager.alert_select_item_to_attach'));
 
         $model = $this->model;
         if (!$model->exists)
-            throw new ApplicationException('You can only attach media to a saved form');
+            throw new ApplicationException(lang('main::lang.media_manager.alert_only_attach_to_saved'));
 
         $manager = MediaLibrary::instance();
         foreach ($items as &$item) {
@@ -230,7 +259,7 @@ class MediaFinder extends BaseFormWidget
     public function getLoadValue()
     {
         $value = parent::getLoadValue();
-        if (!is_array($value) AND !$value instanceof Collection)
+        if (!is_array($value) && !$value instanceof Collection)
             $value = [$value];
 
         if (is_array($value))
@@ -245,7 +274,7 @@ class MediaFinder extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->useAttachment OR $this->formField->disabled OR $this->formField->hidden) {
+        if ($this->useAttachment || $this->formField->disabled || $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 
@@ -256,7 +285,7 @@ class MediaFinder extends BaseFormWidget
     {
         $widgetConfig = $this->getAttachmentFieldsConfig();
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'attachment-config';
+        $widgetConfig['alias'] = $this->alias.'AttachmentConfig';
         $widgetConfig['arrayName'] = 'media';
         $widget = $this->makeWidget(Form::class, $widgetConfig);
 
@@ -294,6 +323,13 @@ class MediaFinder extends BaseFormWidget
                         ],
                     ],
                 ],
+            ],
+            'rules' => [
+                ['custom_properties.title', 'lang:main::lang.media_manager.label_attachment_title', 'string|max:128'],
+                ['custom_properties.description', 'lang:main::lang.media_manager.label_attachment_description', 'string|max:255'],
+                ['custom_properties.extras', 'lang:main::lang.media_manager.label_attachment_properties', 'array'],
+                ['custom_properties.extras.*.key', 'lang:main::lang.media_manager.label_attachment_property_key', 'string|max:128'],
+                ['custom_properties.extras.*.value', 'lang:main::lang.media_manager.label_attachment_property_value', 'string|max:128'],
             ],
         ];
     }

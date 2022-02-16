@@ -4,7 +4,6 @@ namespace Admin\Actions;
 
 use Admin\Facades\AdminLocation;
 use Illuminate\Support\Facades\Event;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
 
 class LocationAwareController extends ControllerAction
@@ -14,6 +13,7 @@ class LocationAwareController extends ControllerAction
      *  $locationConfig = [
      *      'applyScopeOnListQuery'  => true',
      *      'applyScopeOnFormQuery'  => true',
+     *      'addAbsenceConstraint'  => false',
      *  ];
      * @var array
      */
@@ -29,7 +29,7 @@ class LocationAwareController extends ControllerAction
     /**
      * List_Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
@@ -46,7 +46,7 @@ class LocationAwareController extends ControllerAction
             'locationApplyScope',
         ]);
 
-        $this->controller->bindEvent('controller.afterConstructor', function () {
+        $this->controller->bindEvent('controller.beforeRemap', function () {
             $this->locationBindEvents();
         });
     }
@@ -59,7 +59,9 @@ class LocationAwareController extends ControllerAction
         if (is_null($ids = AdminLocation::getIdOrAll()))
             return;
 
-        $query->whereHasLocation($ids);
+        (bool)$this->getConfig('addAbsenceConstraint', TRUE)
+            ? $query->whereHasOrDoesntHaveLocation($ids)
+            : $query->whereHasLocation($ids);
     }
 
     protected function locationBindEvents()
@@ -71,8 +73,8 @@ class LocationAwareController extends ControllerAction
             });
 
             Event::listen('admin.filter.extendQuery', function ($filterWidget, $query, $scope) {
-                if (array_key_exists('locationAware', $scope->config)
-                    AND (bool)$this->getConfig('applyScopeOnListQuery', TRUE)
+                if (array_get($scope->config, 'locationAware') === TRUE
+                    && (bool)$this->getConfig('applyScopeOnListQuery', TRUE)
                 ) $this->locationApplyScope($query);
             });
         }

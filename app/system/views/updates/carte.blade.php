@@ -6,41 +6,44 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body wrap-none">
-                <div class="panel panel-light panel-carte">
+                <div class="card">
                     <div id="carte-details">
                         {!! $this->makePartial('updates/carte_info', ['carteInfo' => $carteInfo]) !!}
                     </div>
-                    <div class="panel-footer">
-                        {!! form_open(current_url(),
-                            [
-                                'id' => 'carte-form',
-                                'role' => 'form',
-                                'method' => 'POST',
-                            ]
-                        ) !!}
+                    <div
+                        class="card-body carte-body"
+                        style="display: {{ $carteInfo ? 'none' : 'block' }};"
+                    >
+                        {!! form_open(current_url(), [
+                            'id' => 'carte-form',
+                            'role' => 'form',
+                            'method' => 'POST',
+                        ]) !!}
                         <div class="input-group">
-                            <input type="text"
-                                   class="form-control"
-                                   name="carte_key"
-                                   placeholder="Enter your carte key...">
-                            <span class="input-group-btn">
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="carte_key"
+                                placeholder="Enter your carte key..."
+                                autocomplete="off"
+                            />
+                            <div class="input-group-btn">
                                 <a
                                     class="btn btn-outline-default btn-carte-help"
                                     onclick="$('#carte-help').slideToggle()"
-                                >
-                                    <i class="fa fa-question-circle"></i>
-                                </a>
+                                ><i class="fa fa-question-circle"></i></a>
                                 <button
                                     id="update-carte"
                                     class="btn btn-primary"
-                                    type="button"><i class="fa fa-arrow-right"></i></button>
-                            </span>
+                                    type="button"
+                                ><i class="fa fa-arrow-right"></i></button>
+                            </div>
                         </div>
                         {!! form_close() !!}
                         <div
                             id="carte-help"
                             class="wrap-horizontal"
-                            style="display: {{ $carteInfo ? 'none' : 'block' }};">{!! sprintf(lang('system::lang.updates.help_carte_key'), 'https://tastyigniter.com/signin') !!}
+                        >{!! sprintf(lang('system::lang.updates.help_carte_key'), 'https://tastyigniter.com/signin', 'https://tastyigniter.com/support/articles/carte-key') !!}
                         </div>
                     </div>
                 </div>

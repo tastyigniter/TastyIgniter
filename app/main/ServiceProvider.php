@@ -4,12 +4,12 @@ namespace Main;
 
 use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
-use Event;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Igniter\Flame\Setting\Facades\Setting;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Main\Classes\ThemeManager;
 use Main\Template\Page;
-use Setting;
 use System\Libraries\Assets;
 use System\Models\Settings_model;
 
@@ -152,6 +152,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/media'),
                     'form' => '~/app/main/models/config/media_settings',
+                    'request' => 'Main\Requests\MediaSettings',
                 ],
             ]);
         });

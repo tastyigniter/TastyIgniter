@@ -5,8 +5,8 @@ namespace Admin\Traits;
 use Carbon\Carbon;
 use DateInterval;
 use DatePeriod;
-use DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 trait HasChartDatasets
 {
@@ -79,9 +79,9 @@ trait HasChartDatasets
     protected function getDatePeriod($start, $end)
     {
         return new DatePeriod(
-            Carbon::parse($start),
+            Carbon::parse($start)->startOfDay(),
             new DateInterval('P1D'),
-            Carbon::parse($end)
+            Carbon::parse($end)->endOfDay()
         );
     }
 

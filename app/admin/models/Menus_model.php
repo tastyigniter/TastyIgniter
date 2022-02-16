@@ -3,8 +3,8 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Admin\Traits\Stockable;
 use Carbon\Carbon;
-use Event;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -17,6 +17,7 @@ class Menus_model extends Model
     use Purgeable;
     use Locationable;
     use HasMedia;
+    use Stockable;
 
     const LOCATIONABLE_RELATION = 'locations';
 
@@ -35,10 +36,8 @@ class Menus_model extends Model
     protected $casts = [
         'menu_price' => 'float',
         'menu_category_id' => 'integer',
-        'stock_qty' => 'integer',
         'minimum_qty' => 'integer',
-        'subtract_stock' => 'boolean',
-        'order_restriction' => 'integer',
+        'order_restriction' => 'array',
         'menu_status' => 'boolean',
         'menu_priority' => 'integer',
     ];
@@ -65,6 +64,8 @@ class Menus_model extends Model
     public $mediable = ['thumb'];
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
+
+    public $timestamps = TRUE;
 
     //
     // Scopes
@@ -101,19 +102,22 @@ class Menus_model extends Model
             'location' => null,
             'category' => null,
             'search' => '',
+            'orderType' => null,
         ], $options));
 
         $searchableFields = ['menu_name', 'menu_description'];
 
-        if (strlen($location) AND is_numeric($location)) {
+        if (strlen($location) && is_numeric($location)) {
             $query->whereHasOrDoesntHaveLocation($location);
+            $query->with(['categories' => function ($q) use ($location) {
+                $q->whereHasOrDoesntHaveLocation($location);
+                $q->isEnabled();
+            }]);
         }
 
         if (strlen($category)) {
-            $query->whereHas('categories', function ($q) use ($category, $location) {
-                $q->isEnabled()->whereSlug($category);
-                if (strlen($location) AND is_numeric($location))
-                    $q->whereHasOrDoesntHaveLocation($location);
+            $query->whereHas('categories', function ($q) use ($category) {
+                $q->whereSlug($category);
             });
         }
 
@@ -146,6 +150,15 @@ class Menus_model extends Model
         if ($enabled) {
             $query->isEnabled();
         }
+
+        if ($orderType) {
+            $query->where(function ($query) use ($orderType) {
+                $query->whereNull('order_restriction')
+                    ->orWhere('order_restriction', 'like', '%"'.$orderType.'"%');
+            });
+        }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }
@@ -196,26 +209,7 @@ class Menus_model extends Model
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        if (!$this->subtract_stock)
-            return FALSE;
-
-        if ($this->stock_qty == 0)
-            return FALSE;
-
-        $stockQty = ($subtract === TRUE)
-            ? $this->stock_qty - $quantity
-            : $this->stock_qty + $quantity;
-
-        $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
-
-        // Update using query to prevent model events from firing
-        $this->newQuery()
-            ->where($this->getKeyName(), $this->getKey())
-            ->update(['stock_qty' => $stockQty]);
-
-        Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
-
-        return TRUE;
+        traceLog('Menus_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
     }
 
     /**
@@ -303,12 +297,12 @@ class Menus_model extends Model
     public function addMenuSpecial(array $menuSpecial = [])
     {
         $menuId = $this->getKey();
-        if (!is_numeric($menuId) OR !isset($menuSpecial['special_id']))
+        if (!is_numeric($menuId))
             return FALSE;
 
         $menuSpecial['menu_id'] = $menuId;
         $this->special()->updateOrCreate([
-            'special_id' => $menuSpecial['special_id'],
+            'special_id' => $menuSpecial['special_id'] ?? null,
         ], array_except($menuSpecial, 'special_id'));
     }
 
@@ -338,6 +332,9 @@ class Menus_model extends Model
                 }
             }
         }
+
+        if (is_bool($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', [$datetime, $isAvailable], TRUE)))
+            $isAvailable = $eventResults;
 
         return $isAvailable;
     }

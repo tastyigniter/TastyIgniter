@@ -2,13 +2,15 @@
 
 namespace System\Console\Commands;
 
-use Assets;
-use File;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
+use System\Facades\Assets;
+use System\Models\Extensions_model;
+use System\Models\Themes_model;
 
 class IgniterUtil extends Command
 {
@@ -61,6 +63,8 @@ class IgniterUtil extends Command
         return [
             ['admin', null, InputOption::VALUE_NONE, 'Compile admin registered bundles.'],
             ['minify', null, InputOption::VALUE_REQUIRED, 'Whether to minify the assets or not, default is 1.'],
+            ['carteKey', null, InputOption::VALUE_REQUIRED, 'Specify a carteKey for set carte.'],
+            ['extensions', null, InputOption::VALUE_NONE, 'Set the version number of all extensions to the latest available.'],
         ];
     }
 
@@ -77,6 +81,9 @@ class IgniterUtil extends Command
         UpdateManager::instance()->setCoreVersion();
 
         $this->comment('*** TastyIgniter sets latest version: '.params('ti_version'));
+
+        if ($this->option('extensions'))
+            $this->setItemsVersion();
 
         $this->comment('-');
         sleep(1);
@@ -142,5 +149,42 @@ class IgniterUtil extends Command
         }
 
         $this->comment('Removed '.$removeCount.' duplicate views...');
+    }
+
+    protected function utilSetCarte()
+    {
+        $carteKey = $this->option('carteKey');
+        if (!strlen($carteKey)) {
+            $this->error('No carteKey defined, use --carteKey=<key> to set a Carte');
+
+            return;
+        }
+
+        UpdateManager::instance()->applySiteDetail($carteKey);
+    }
+
+    protected function setItemsVersion()
+    {
+        $updates = UpdateManager::instance()->requestUpdateList(TRUE);
+
+        collect(array_get($updates, 'items', []))
+            ->filter(function ($update) {
+                return in_array($update['type'], ['extension', 'theme']);
+            })
+            ->each(function ($update) {
+                if ($update['type'] === 'extension') {
+                    Extensions_model::where('name', $update['code'])->update([
+                        'version' => $update['version'],
+                    ]);
+                }
+
+                if ($update['type'] === 'theme') {
+                    Themes_model::where('code', $update['code'])->update([
+                        'version' => $update['version'],
+                    ]);
+                }
+
+                $this->comment('*** '.$update['code'].' sets latest version: '.$update['version']);
+            });
     }
 }

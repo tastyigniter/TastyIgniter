@@ -28,6 +28,13 @@ return [
     'error' => [
     ],
 
+    'date' => [
+        'today' => 'Today',
+        'tomorrow' => 'Tomorrow',
+        'yesterday' => 'Yesterday',
+        'full' => '%s at %s',
+    ],
+
     'php' => [
         'date_format' => 'd M Y',
         'date_format_short' => 'd M',
@@ -46,6 +53,7 @@ return [
         'date_time_format' => 'DD MMMM YYYY HH:mm',
         'date_time_format_short' => 'DD MMM \a\t HH:mm',
         'date_time_format_long' => 'dddd, Do MMMM YYYY \a\t HH:mm a',
+        'weekday_format' => 'ddd',
         'day_format' => 'ddd DD',
         'day_time_format' => 'ddd DD hh:mm a',
         'day_time_format_short' => 'ddd hh:mm a',
@@ -118,8 +126,7 @@ return [
         'text_settings' => 'Settings',
         'text_author' => 'Author',
 
-        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more extensions',
-        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
+        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more extensions&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
         'button_delete' => 'Delete',
         'button_payments' => 'Manage Payments',
         'button_settings' => 'Manage Settings',
@@ -233,6 +240,8 @@ return [
         'help_variables' => 'Drag these variables into the content area:',
 
         'alert_test_message_sent' => 'Test message successfully sent to %s',
+        'alert_template_id_not_found' => 'Template id not found',
+        'alert_template_not_found' => ' Template not found',
     ],
 
     'mail_variables' => [
@@ -258,6 +267,7 @@ return [
         'text_reset_link' => 'Password reset url',
 
         'text_group_order' => 'Order variables',
+        'text_order_object' => 'Order model object',
         'text_order_number' => 'Order number',
         'text_customer_name' => 'Customer full name',
         'text_order_type' => 'Order type ex. delivery/pick-up',
@@ -273,6 +283,7 @@ return [
         'text_location_name' => 'Location name',
         'text_location_email' => 'Location email',
         'text_location_address' => 'Location address',
+        'text_location_telephone' => 'Location telephone',
         'text_order_view_url' => 'Order view URL',
         'text_order_totals' => 'Array of order totals',
         'text_menu_name' => 'Order menu name',
@@ -286,6 +297,7 @@ return [
         'text_priority' => 'Order total priority',
 
         'text_group_reservation' => 'Reservation variables',
+        'text_reservation_object' => 'Reservation model object',
         'text_reservation_number' => 'Reservation number',
         'text_reservation_date' => 'Reservation date',
         'text_reservation_time' => 'Reservation time',
@@ -341,7 +353,7 @@ return [
         'text_tab_mail' => 'Mail',
         'text_tab_server' => 'Advanced',
 
-        'text_tab_desc_general' => 'Change your restaurant name, email and url, default language, currency and date time formats, ...',
+        'text_tab_desc_general' => 'Change your restaurant name, email, default language, currency...',
         'text_tab_desc_mail' => 'Settings for sending out emails',
         'text_tab_desc_server' => 'Manage advanced system settings such as enabling/disabling maintenance.',
 
@@ -385,6 +397,7 @@ return [
         'text_mail_no_encryption' => 'No encryption',
         'text_mail_tls_encryption' => 'TLS',
         'text_mail_ssl_encryption' => 'SSL',
+        'text_test_email_message' => 'This is a test email. If you\'ve received this, it means emails are working in TastyIgniter.',
         'text_to_customer' => 'To customer',
         'text_to_admin' => 'To restaurant',
         'text_to_location' => 'To location',
@@ -397,7 +410,6 @@ return [
 
         'label_site_name' => 'Restaurant Name',
         'label_site_email' => 'Restaurant Email',
-        'label_site_url' => 'Restaurant URL',
         'label_site_logo' => 'Restaurant Logo',
         'label_timezone' => 'Default Timezone',
         'label_site_currency' => 'Default Currency',
@@ -408,7 +420,6 @@ return [
         'label_detect_language' => 'Detect Browser Language',
         'label_site_language' => 'Default Language',
         'label_customer_group' => 'Customer Group',
-        'label_site_location_mode' => 'Location Mode',
         'label_country' => 'Country',
         'label_maps_api_key' => 'Google Maps API Key',
         'label_distance_unit' => 'Distance Unit',
@@ -423,15 +434,19 @@ return [
         'label_completed_order_status' => 'Completed Order Status',
         'label_canceled_order_status' => 'Cancellation Order Status',
         'label_menus_page' => 'Menu Items Page',
+        'label_reservation_page' => 'Reservation Page',
         'label_guest_order' => 'Allow Guest Orders',
         'label_location_order' => 'Reject Orders Outside Delivery Area',
         'label_invoice_prefix' => 'Invoice Prefix',
+        'label_invoice_logo' => 'Logo',
+        'help_invoice_logo' => 'Upload a logo to display on invoices',
         'label_default_reservation_status' => 'Default Reservation Status',
         'label_confirmed_reservation_status' => 'Confirmed Reservation Status',
         'label_canceled_reservation_status' => 'Canceled Reservation Status',
         'label_media_max_size' => 'Maximum File Size',
         'label_media_thumb_height' => 'Thumbnail Height',
         'label_media_thumb_width' => 'Thumbnail Width',
+        'label_media_extensions' => 'Allowed File Extensions',
         'label_media_uploads' => 'Uploads',
         'label_media_new_folder' => 'New Folder',
         'label_media_copy' => 'Copy',
@@ -443,6 +458,7 @@ return [
         'label_registration_email' => 'Send Registration Email',
         'label_order_email' => 'Send Order Confirmation/Alert Email',
         'label_reservation_email' => 'Send Reservation Confirmation/Alert Email',
+        'label_mail_logo' => 'Logo',
         'label_sender_name' => 'Sender Name',
         'label_sender_email' => 'Sender Email',
         'label_protocol' => 'Mail Protocol',
@@ -473,7 +489,6 @@ return [
         'alert_delete_setup_files' => '<b>SECURITY WARNING!</b> Delete the setup files to stop someone else from overwriting your site.',
 
         'help_timezone' => 'The default timezone. Choose a city in the same timezone as your restaurant.',
-        'help_site_location_mode' => 'Set whether to enable support for single or multiple restaurant locations.',
         'help_detect_language' => 'Enable or disable user browser language detection. If enabled your site will be translated to the browser language.',
         'help_maps_api_key' => 'An API Key is required to use Google Maps and/or Geocoding. <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key">Where can I find my Google Maps API Key?</a> Enable Google Maps Geocoding API and Google Maps JavaScript API in your Google Developer account',
         'help_default_geocoder' => 'Tell the system which geocoder service to use when geocoding addresses. \'Chain\' is a special geocoder that runs both google and open street maps geocoder and stops once it gets a valid response.',
@@ -492,6 +507,7 @@ return [
         'help_completed_order_status' => 'Select the order status to mark an order as completed before the order invoice is created and a customer can leave review',
         'help_canceled_order_status' => 'Select the order status when an order is marked as canceled or suspected of fraudulent activity',
         'help_menus_page' => 'Choose a page to display your menu items',
+        'help_reservation_page' => 'Choose a page to display your booking form',
         'help_guest_order' => 'Allow customer to place an order without creating an account.',
         'help_location_order' => 'If disabled, the customer will be allowed to order without entering their postcode/adddress.',
         'help_invoice_prefix' => 'Set the invoice prefix (e.g. <b>INV-2015-00</b>1123). Leave blank to use no prefix. The following macros are available: {year} {month} {day} {hour} {minute} {second}',
@@ -500,6 +516,7 @@ return [
         'help_confirmed_reservation_status' => 'Select the reservation status to mark a reservation as confirmed before table is reserved',
         'help_delete_thumbs' => 'This will delete all created thumbs. Note thumbs are automatically created.',
         'help_media_max_size' => 'The maximum size (in kilobytes) limit for file when uploading.',
+        'help_media_extensions' => 'The allowed file extensions for uploaded files. Multiple extensions can be separated by commas.',
         'help_media_upload' => 'Enable or disable file uploading',
         'help_media_new_folder' => 'Enable or disable folder creation',
         'help_media_copy' => 'Enable or disable file/folder copy',
@@ -507,6 +524,7 @@ return [
         'help_media_rename' => 'Enable or disable file/folder rename',
         'help_media_delete' => 'Enable or disable deleting file/folder',
         'help_sendmail_path' => 'Please specify the sendmail path.',
+        'help_mail_logo' => 'Upload logo to display in emails',
         'help_allow_registration' => 'If this is disabled customers can only be created by administrators.',
         'help_registration_email' => 'Send a confirmation mail to the customer and/or admin email after successfully account registration',
         'help_order_email' => 'Send a confirmation mail to the customer, admin and/or location email after a new order has been created',
@@ -561,9 +579,8 @@ return [
         'label_type_layout' => 'Layouts',
         'label_type_content' => 'Contents',
 
-        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more themes',
+        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more themes&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
         'button_source' => '<i class="fa fa-file"></i>&nbsp;&nbsp;Edit template files',
-        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
         'button_customize' => '<i class="fa fa-paint-brush"></i>&nbsp;&nbsp;Customize',
         'button_child' => '<i class="fa fa-child"></i>&nbsp;&nbsp;Create child theme',
         'button_choose' => 'Choose',
@@ -585,6 +602,7 @@ return [
         'alert_theme_locked' => 'This is a locked theme, changes are restricted, create a child theme to make changes.',
         'alert_theme_path_locked' => 'This template belongs to a locked theme, such actions are restricted.',
         'alert_changes_confirm' => 'Conflicting versions, template file has changed. Reload the page to continue.',
+        'alert_customize_not_active' => 'You can only customize an active theme.',
     ],
 
     'updates' => [
@@ -596,7 +614,7 @@ return [
         'text_tab_title_extensions' => 'Extensions',
         'text_tab_title_themes' => 'Themes',
         'text_ignore' => 'Ignore',
-        'text_search' => 'Search the marketplace for %s to install',
+        'text_search' => 'Search the TastyIgniter marketplace for %s to install',
         'text_popular_title' => 'Recommended %s',
         'text_last_checked' => '<b>Last checked:</b> %s',
 
@@ -606,7 +624,7 @@ return [
         'text_update_ignored' => '%s update(s) ignored',
         'text_item_update_summary' => 'Update from version %s to <b>%s</b>',
 
-        'text_maintenance_mode' => 'While your site is being updated, maintenance mode will be enabled then disabled as soon as your updates are complete.',
+        'text_core_update' => '<i class="fa fa-exclamation-triangle fa-fw"></i>&nbsp;&nbsp;After the core has been updated, other updates will be available.',
 
         'progress_download' => '<i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Downloading %s&#8230;',
         'progress_extract' => '<i class="fa fa-file-archive-o fa-fw"></i>&nbsp;&nbsp;&nbsp;Extracting %s&#8230;',
@@ -627,11 +645,18 @@ return [
         'progress_disable_maintenance' => 'Restoring/Disabling Maintenance mode&#8230;',
 
         'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse %s',
-        'button_carte' => '<i class="fa fa-key"></i>&nbsp;&nbsp;Carté',
-        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check Again',
+        'button_carte' => '<i class="fa fa-key"></i>&nbsp;&nbsp;Attach Carté Key',
+        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check Updates',
         'button_updates' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Updates',
         'button_update' => '<i class="fa fa-check"></i>&nbsp;&nbsp;Update',
+        'button_recommended_extension' => 'Install recommended extensions...',
+        'button_recommended_theme' => 'Install a recommended theme...',
+        'button_install' => 'Install Selected...',
 
-        'help_carte_key' => 'A Carte key is required to add/update item from the TastyIgniter Marketplace. Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already.',
+        'help_carte_key' => 'A Carte key is required to add and update item from the TastyIgniter Marketplace. <br>Get one by creating a site from your <a href="%s" target="_blank">TastyIgniter Account</a>, if you haven\'t already. For more information, see the <a href="%s" target="_blank">Carté Key Guide</a>',
+        'alert_item_to_ignore' => 'Select item(s) to ignore.',
+        'alert_no_carte_key' => 'No carte key specified.',
+        'alert_no_items' => 'No item(s) specified.',
+
     ],
 ];

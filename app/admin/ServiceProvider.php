@@ -5,14 +5,16 @@ namespace Admin;
 use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
 use Admin\Classes\PermissionManager;
+use Admin\Classes\UserState;
 use Admin\Classes\Widgets;
+use Admin\Facades\AdminLocation;
+use Admin\Facades\AdminMenu;
 use Admin\Middleware\LogUserLastSeen;
-use AdminLocation;
-use AdminMenu;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
@@ -55,6 +57,7 @@ class ServiceProvider extends AppServiceProvider
             $this->registerSystemSettings();
             $this->registerPermissions();
             $this->registerDashboardWidgets();
+            $this->registerBulkActionWidgets();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
@@ -129,6 +132,19 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerDashboardWidget(\Admin\DashboardWidgets\Charts::class, [
                 'label' => 'Charts widget',
                 'context' => 'dashboard',
+            ]);
+        });
+    }
+
+    protected function registerBulkActionWidgets()
+    {
+        Widgets::instance()->registerBulkActionWidgets(function (Widgets $manager) {
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Status::class, [
+                'code' => 'status',
+            ]);
+
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Delete::class, [
+                'code' => 'delete',
             ]);
         });
     }
@@ -214,9 +230,14 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'statuseditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\StarRating', [
-                'label' => 'Star Rating',
-                'code' => 'starrating',
+            $manager->registerFormWidget('Admin\FormWidgets\ScheduleEditor', [
+                'label' => 'Schedule Editor',
+                'code' => 'scheduleeditor',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\StockEditor', [
+                'label' => 'Stock Editor',
+                'code' => 'stockeditor',
             ]);
         });
     }
@@ -264,7 +285,20 @@ class ServiceProvider extends AppServiceProvider
                 'user' => [
                     'type' => 'partial',
                     'path' => 'top_nav_user_menu',
-                    'markAsRead' => ['Admin\Classes\Location', 'setStaffCurrent'],
+                    'options' => ['Admin\Classes\UserPanel', 'listMenuLinks'],
+                ],
+            ]);
+        });
+
+        Event::listen('admin.menu.extendUserMenuLinks', function (Collection $items) {
+            $items->put('userState', [
+                'priority' => 10,
+                'label' => 'admin::lang.text_set_status',
+                'iconCssClass' => 'fa fa-circle fa-fw text-'.UserState::forUser()->getStatusColorName(),
+                'attributes' => [
+                    'data-toggle' => 'modal',
+                    'data-target' => '#editStaffStatusModal',
+                    'role' => 'button',
                 ],
             ]);
         });
@@ -538,6 +572,8 @@ class ServiceProvider extends AppServiceProvider
             'staffs' => 'Admin\Models\Staffs_model',
             'status_history' => 'Admin\Models\Status_history_model',
             'statuses' => 'Admin\Models\Statuses_model',
+            'stocks' => 'Admin\Models\Stocks_model',
+            'stock_history' => 'Admin\Models\Stock_history_model',
             'tables' => 'Admin\Models\Tables_model',
             'users' => 'Admin\Models\Users_model',
             'working_hours' => 'Admin\Models\Working_hours_model',
@@ -674,6 +710,9 @@ class ServiceProvider extends AppServiceProvider
                 'Admin.Customers' => [
                     'label' => 'admin::lang.permissions.customers', 'group' => 'admin::lang.permissions.name',
                 ],
+                'Admin.Impersonate' => [
+                    'label' => 'admin::lang.permissions.impersonate_staff', 'group' => 'admin::lang.permissions.name',
+                ],
                 'Admin.ImpersonateCustomers' => [
                     'label' => 'admin::lang.permissions.impersonate_customers', 'group' => 'admin::lang.permissions.name',
                 ],
@@ -694,9 +733,11 @@ class ServiceProvider extends AppServiceProvider
     {
         Event::listen('console.schedule', function (Schedule $schedule) {
             // Check for assignables to assign every minute
-            $schedule->call(function () {
-                Classes\Allocator::allocate();
-            })->name('Assignables Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
+            if (Classes\Allocator::isEnabled()) {
+                $schedule->call(function () {
+                    Classes\Allocator::allocate();
+                })->name('Assignables Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
+            }
         });
     }
 
@@ -712,6 +753,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/setup'),
                     'form' => '~/app/admin/models/config/setup_settings',
+                    'request' => 'Admin\Requests\SetupSettings',
                 ],
                 'user' => [
                     'label' => 'lang:admin::lang.settings.text_tab_user',
@@ -721,6 +763,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/user'),
                     'form' => '~/app/admin/models/config/user_settings',
+                    'request' => 'Admin\Requests\UserSettings',
                 ],
             ]);
         });

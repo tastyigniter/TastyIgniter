@@ -3,9 +3,10 @@
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminAuth;
-use AdminMenu;
-use Auth;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Igniter\Flame\Exception\ApplicationException;
+use Main\Facades\Auth;
 
 class Customers extends \Admin\Classes\AdminController
 {
@@ -32,11 +33,13 @@ class Customers extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'customers/edit/{customer_id}',
             'redirectClose' => 'customers',
+            'redirectNew' => 'customers/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'customers/edit/{customer_id}',
             'redirectClose' => 'customers',
+            'redirectNew' => 'customers/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -69,5 +72,34 @@ class Customers extends \Admin\Classes\AdminController
             Auth::impersonate($customer);
             flash()->success(sprintf(lang('admin::lang.customers.alert_impersonate_success'), $customer->full_name));
         }
+    }
+
+    public function edit_onActivate($context, $recordId = null)
+    {
+        if ($customer = $this->formFindModelObject((int)$recordId)) {
+            $customer->completeActivation($customer->getActivationCode());
+            flash()->success(sprintf(lang('admin::lang.customers.alert_activation_success'), $customer->full_name));
+        }
+
+        return $this->redirectBack();
+    }
+
+    public function formExtendModel($model)
+    {
+        if ($model->exists && !$model->is_activated) {
+            Template::setButton(lang('admin::lang.customers.button_activate'), [
+                'class' => 'btn btn-success pull-right',
+                'data-request' => 'onActivate',
+            ]);
+        }
+    }
+
+    public function formAfterSave($model)
+    {
+        if (!$model->group || $model->group->requiresApproval())
+            return;
+
+        if ($this->status && !$this->is_activated)
+            $model->completeActivation($model->getActivationCode());
     }
 }

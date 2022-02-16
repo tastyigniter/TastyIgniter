@@ -2,7 +2,7 @@
 
 namespace Admin\Controllers;
 
-use AdminAuth;
+use Admin\Facades\AdminAuth;
 
 class Logout extends \Admin\Classes\AdminController
 {
@@ -10,7 +10,16 @@ class Logout extends \Admin\Classes\AdminController
 
     public function index()
     {
-        AdminAuth::logout();
+        if (AdminAuth::isImpersonator()) {
+            AdminAuth::stopImpersonate();
+        }
+        else {
+            AdminAuth::logout();
+
+            session()->invalidate();
+
+            session()->regenerateToken();
+        }
 
         flash()->success(lang('admin::lang.login.alert_success_logout'));
 

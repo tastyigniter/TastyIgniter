@@ -1,6 +1,6 @@
 <div class="btn-toolbar" role="toolbar">
-    <div class="toolbar-action flex-fill d-sm-flex justify-content-between">
-        <div class="toolbar-item">
+    <div class="toolbar-action flex-fill d-lg-flex justify-content-between">
+        <div class="toolbar-item pb-3 pb-lg-0">
             <div class="btn-group">
                 <div
                     class="dropdown mr-2"
@@ -49,14 +49,14 @@
                         data-media-control="rename-folder">
                         <i class="fa fa-pencil"></i>
                     </button>
-                    @endif
+                @endif
                 @if ($this->getSetting('delete'))
                     <button
                         class="btn btn-danger" title="@lang('main::lang.media_manager.text_delete_folder')"
                         data-media-control="delete-folder">
                         <i class="fa fa-trash"></i>
                     </button>
-                    @endif
+                @endif
             </div>
         </div>
 
@@ -64,8 +64,15 @@
             <div class="input-group">
                 <div class="input-group-prepend">
                     <div class="dropdown mr-2">
+                        <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Filter">
+                            <i class="fa fa-filter"></i> <i class="caret"></i>
+                        </a>
+                        {!! $this->makePartial('mediamanager/filters', ['filterBy', $filterBy]) !!}
+                    </div>
+
+                    <div class="dropdown mr-2">
                         <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Sort">
-                            @if (isset($sortBy[1]) AND $sortBy[1] === 'ascending')
+                            @if (isset($sortBy[1]) && $sortBy[1] === 'ascending')
                                 <i class="fa fa-sort-amount-asc"></i> <i class="caret"></i>
                             @else
                                 <i class="fa fa-sort-amount-desc"></i> <i class="caret"></i>

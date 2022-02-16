@@ -2,26 +2,28 @@
 
 namespace System\Controllers;
 
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Admin\Traits\WidgetMaker;
-use AdminMenu;
-use Event;
 use Exception;
 use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Main\Classes\ThemeManager;
 use System\Facades\Assets;
 use System\Libraries\Assets as AssetsManager;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
+use System\Traits\ManagesUpdates;
 use System\Traits\SessionMaker;
-use Template;
 
 class Themes extends \Admin\Classes\AdminController
 {
     use WidgetMaker;
     use ConfigMaker;
     use SessionMaker;
+    use ManagesUpdates;
 
     public $implement = [
         'Admin\Actions\ListController',
@@ -71,13 +73,28 @@ class Themes extends \Admin\Classes\AdminController
     {
         Themes_model::syncAll();
 
+        $this->initUpdate('theme');
+
         $this->asExtension('ListController')->index();
     }
 
     public function edit($context, $themeCode = null)
     {
+        if (!ThemeManager::instance()->isActive($themeCode)) {
+            flash()->error(lang('system::lang.themes.alert_customize_not_active'));
+
+            return $this->redirect('themes');
+        }
+
+        if (ThemeManager::instance()->isLocked($themeCode)) {
+            Template::setButton(lang('system::lang.themes.button_child'), [
+                'class' => 'btn btn-default pull-right',
+                'data-request' => 'onCreateChild',
+            ]);
+        }
+
         Template::setButton(lang('system::lang.themes.button_source'), [
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-default pull-right mr-3',
             'href' => admin_url('themes/source/'.$themeCode),
         ]);
 
@@ -86,15 +103,18 @@ class Themes extends \Admin\Classes\AdminController
 
     public function source($context, $themeCode = null)
     {
-        Template::setButton(lang('system::lang.themes.button_customize'), [
-            'class' => 'btn btn-default',
-            'href' => admin_url('themes/edit/'.$themeCode),
-        ]);
-
         if (ThemeManager::instance()->isLocked($themeCode)) {
             Template::setButton(lang('system::lang.themes.button_child'), [
                 'class' => 'btn btn-default pull-right',
                 'data-request' => 'onCreateChild',
+            ]);
+        }
+
+        $theme = ThemeManager::instance()->findTheme($themeCode);
+        if ($theme && $theme->hasCustomData()) {
+            Template::setButton(lang('system::lang.themes.button_customize'), [
+                'class' => 'btn btn-default pull-right mr-3',
+                'href' => admin_url('themes/edit/'.$themeCode),
             ]);
         }
 
@@ -114,7 +134,7 @@ class Themes extends \Admin\Classes\AdminController
             $activeThemeCode = params()->get('default_themes.main');
 
             // Theme must be disabled before it can be deleted
-            if ($model AND $model->code == $activeThemeCode) {
+            if ($model && $model->code == $activeThemeCode) {
                 flash()->warning(sprintf(
                     lang('admin::lang.alert_error_nothing'),
                     lang('admin::lang.text_deleted').lang('system::lang.themes.text_theme_is_active')
@@ -170,7 +190,7 @@ class Themes extends \Admin\Classes\AdminController
         }
     }
 
-    public function source_onCreateChild($context, $themeCode = null)
+    public function onCreateChild($context, $themeCode = null)
     {
         $manager = ThemeManager::instance();
 
@@ -178,7 +198,10 @@ class Themes extends \Admin\Classes\AdminController
 
         $childTheme = $manager->createChildTheme($model);
 
-        $manager->loadThemes();
+        ThemeManager::forgetInstance();
+        $manager = ThemeManager::instance();
+        $manager->bootThemes();
+
         Themes_model::syncAll();
         Themes_model::activateTheme($childTheme->code);
 
@@ -201,13 +224,13 @@ class Themes extends \Admin\Classes\AdminController
 
     public function listOverrideColumnValue($record, $column, $alias = null)
     {
-        if ($column->type != 'button' OR $column->columnName != 'default')
+        if ($column->type != 'button' || $column->columnName != 'default')
             return null;
 
         $attributes = $column->attributes;
 
         $column->iconCssClass = 'fa fa-star-o';
-        if ($record->getTheme() AND $record->getTheme()->isActive()) {
+        if ($record->getTheme() && $record->getTheme()->isActive()) {
             $column->iconCssClass = 'fa fa-star';
             $attributes['title'] = 'lang:system::lang.themes.text_is_default';
             $attributes['data-request'] = null;
@@ -274,7 +297,7 @@ class Themes extends \Admin\Classes\AdminController
             $loaded = TRUE;
         }
 
-        if ($theme->hasParent() AND File::exists($path = $theme->getParent()->path.$file)) {
+        if ($theme->hasParent() && File::exists($path = $theme->getParent()->path.$file)) {
             Assets::addFromManifest($theme->getParent()->publicPath.$file);
             $loaded = TRUE;
         }
@@ -282,9 +305,9 @@ class Themes extends \Admin\Classes\AdminController
         if (!$loaded)
             return;
 
-        Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) {
+        Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) use ($theme) {
             ThemeManager::applyAssetVariablesOnCombinerFilters(
-                array_flatten($combiner->getFilters())
+                array_flatten($combiner->getFilters()), $theme
             );
         });
 

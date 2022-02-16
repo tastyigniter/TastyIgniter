@@ -2,8 +2,8 @@
 
 namespace System\Controllers;
 
+use Admin\Facades\AdminMenu;
 use Admin\Widgets\Form;
-use AdminMenu;
 use System\Classes\ExtensionManager;
 use System\Classes\LanguageManager;
 use System\Models\Languages_model;
@@ -36,11 +36,13 @@ class Languages extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
+            'redirectNew' => 'languages/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
+            'redirectNew' => 'languages/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -88,13 +90,13 @@ class Languages extends \Admin\Classes\AdminController
         $this->asExtension('FormController')->initForm($model, $context);
 
         $file = post('Language._file');
-        $this->setFilterValue('file', (!strlen($file) OR strpos($file, '::') == FALSE) ? null : $file);
+        $this->setFilterValue('file', (!strlen($file) || strpos($file, '::') == FALSE) ? null : $file);
 
         $term = post('Language._search');
-        $this->setFilterValue('search', (!strlen($term) OR !is_string($term)) ? null : $term);
+        $this->setFilterValue('search', (!strlen($term) || !is_string($term)) ? null : $term);
 
         $stringFilter = post('Language._string_filter');
-        $this->setFilterValue('string_filter', (!strlen($stringFilter) OR !is_string($stringFilter)) ? null : $stringFilter);
+        $this->setFilterValue('string_filter', (!strlen($stringFilter) || !is_string($stringFilter)) ? null : $stringFilter);
 
         return $this->asExtension('FormController')->makeRedirect('edit', $model);
     }
@@ -145,7 +147,7 @@ class Languages extends \Admin\Classes\AdminController
             $name = sprintf('%s::%s', $file['namespace'], $file['group']);
 
             if (!array_get($file, 'system', FALSE)
-                AND ($extension = $extensionManager->findExtension($file['namespace']))) {
+                && ($extension = $extensionManager->findExtension($file['namespace']))) {
                 $result[$name] = array_get($extension->extensionMeta(), 'name').' - '.$name;
             }
             else {
@@ -164,7 +166,7 @@ class Languages extends \Admin\Classes\AdminController
         $files = collect($this->localeFiles);
 
         $file = $this->getFilterValue('file');
-        if (strlen($file) AND strpos($file, '::')) {
+        if (strlen($file) && strpos($file, '::')) {
             [$namespace, $group] = explode('::', $file);
             $files = $files->where('group', $group)->where('namespace', $namespace);
         }

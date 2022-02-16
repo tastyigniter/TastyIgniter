@@ -37,52 +37,57 @@
             click: $.proxy(this.onTogglePicker, this)
         }
 
-        this.$calendar.fullCalendar(this.options)
-
-        this.$calendar.fullCalendar('addEventSource', $.proxy(this.generateEvents, this))
+        this.options.locale = this.options.locale.replace('_', '-').split('-').shift();
+        this.options.events = $.proxy(this.generateEvents, this);
+        this.calendar = new FullCalendar.Calendar(this.$calendar[0], this.options);
 
         this.$calendar.find('.fc-toolbar .btn').removeClass('btn-primary').addClass(this.options.toolbarButtonClass)
 
-        this.calendar = this.$calendar.fullCalendar('getCalendar')
-
-        this.calendar.on('eventRender', $.proxy(this.onRenderEvent, this))
+        this.calendar.on('eventClick', $.proxy(this.onClickEvent, this))
         this.calendar.on('eventDrop', $.proxy(this.onUpdateEvent, this))
         this.calendar.on('eventResize', $.proxy(this.onUpdateEvent, this))
+        this.calendar.on('datesSet', $.proxy(this.hidePopovers, this))
+
+        this.calendar.render();
     }
 
-    Calendar.prototype.onRenderEvent = function (eventObj, $el) {
+    Calendar.prototype.onClickEvent = function (eventObj) {
         if (!this.options.editable)
             return
 
+        var renderProps = {...eventObj.event.extendedProps};
+        renderProps.id = eventObj.event.id;
+
+        var $el = $(eventObj.el);
         $el.addClass('popover-dismissable')
+
+        this.hidePopovers();
+
         $el.popover({
-            title: eventObj.title,
-            content: Mustache.render(this.$el.find('[data-calendar-popover-template]').html(), eventObj),
-            trigger: 'click',
+            title: eventObj.event.title,
+            content: Mustache.render(this.$el.find('[data-calendar-popover-template]').html(), renderProps),
+            trigger: 'click focus',
             placement: 'bottom',
             html: true,
             container: this.$el
         })
-
-        $el.on('show.bs.popover', function () {
-            $('.popover-dismissable').not(this).popover('hide')
-        })
+        .popover('toggle')
     }
 
-    Calendar.prototype.onUpdateEvent = function (eventObj, delta, revertFunc, event) {
-        var calendar = this.$calendar
+    Calendar.prototype.onUpdateEvent = function (eventObj) {
+        var calendar = this.calendar
 
         this.$form.request(this.options.alias + '::onUpdateEvent', {
             data: {
-                eventId: eventObj.id,
-                start: eventObj.start.toISOString(),
-                end: eventObj.end ? eventObj.end.toISOString() : eventObj.start.clone().endOf('day').toISOString()
+                eventId: eventObj.event.id,
+                start: eventObj.event.start.toISOString(),
+                end: eventObj.event.end ? eventObj.event.end.toISOString() : eventObj.event.start.clone().endOf('day').toISOString()
             }
         }).done(function () {
-            calendar.fullCalendar('refetchEvents')
+            calendar.refetchEvents()
         }).fail(function (xhr) {
             $.ti.flashMessage({class: 'danger', text: xhr.responseText})
-            revertFunc()
+            eventObj.revert()
         })
     }
 
@@ -98,13 +103,17 @@
     }
 
     Calendar.prototype.onPickerDateChanged = function (event) {
-        this.$calendar.fullCalendar('gotoDate', event.date)
+        this.calendar.gotoDate(event.date)
     }
 
-    Calendar.prototype.generateEvents = function (start, end, timezone, callback) {
+    Calendar.prototype.hidePopovers = function() {
+        $('.popover.show').remove()
+    }
+
+    Calendar.prototype.generateEvents = function (fetchInfo, callback, failure) {
         $.ti.loadingIndicator.show()
         var promise = this.$form.request(this.options.alias + '::onGenerateEvents', {
-            data: {start: start.toISOString(), end: end.toISOString()}
+            data: {start: fetchInfo.start.toISOString(), end: fetchInfo.end.toISOString()}
         })
 
         promise.done(function (json) {
@@ -114,24 +123,28 @@
         })
     }
 
+    Calendar.prototype.getCalendar = function () {
+        return this.calendar
+    }
+
     Calendar.DEFAULTS = {
         alias: undefined,
-        toolbarButtonClass: 'btn-light',
         aspectRatio: 2,
         editable: false,
-        defaultDate: null,
-        header: {
+        initialDate: null,
+        headerToolbar: {
             left: 'today prev,datePicker,next',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay',
         },
         customButtons: {
             datePicker: {}
         },
         themeSystem: 'bootstrap4',
-        bootstrapGlyphicons: false,
-        eventLimit: 5,
+        dayMaxEventRows: 5,
         navLinks: true,
+        initialView: 'dayGridMonth',
+        locale: 'en',
     }
 
     // FIELD CALENDAR PLUGIN DEFINITION

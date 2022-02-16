@@ -6,6 +6,7 @@
 }
 .select2-container--bootstrap .select2-selection {
   width: 100%;
+  font-size: $input-font-size;
 }
 .select2-container--bootstrap .select2-selection--single .select2-selection__rendered {
   color: $input-color;
@@ -55,4 +56,11 @@
 }
 .select2-dropdown {
   font-size: $font-size-base;
+}
+.select2-results__options {
+  padding: .3rem;
+}
+.select2-results__option {
+  border-radius: $input-border-radius;
+  margin-bottom: .3rem;
 }

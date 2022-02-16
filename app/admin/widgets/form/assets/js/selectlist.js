@@ -41,10 +41,12 @@
 
     SelectList.prototype.onDropdownShown = function (event) {
         $(event.relatedTarget).tooltip('dispose')
+        this.$el.parents('.form-group').css({ zIndex: 1000 });
     }
 
     SelectList.prototype.onDropdownHidden = function (event) {
         $(event.relatedTarget).tooltip('dispose')
+        this.$el.parents('.form-group').css({ zIndex: '' });
     }
 
     // MEDIA MANAGER PLUGIN DEFINITION
@@ -57,6 +59,7 @@
         maxHeight: 200,
         enableFiltering: false,
         enableCaseInsensitiveFiltering: true,
+        selectAllText: 'Select all/none',
         buttonClass: 'btn btn-light btn-block',
         optionClass: function (element) {
             return 'dropdown-item multiselect-item'

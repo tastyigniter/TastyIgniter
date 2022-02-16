@@ -8,11 +8,12 @@ use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Admin\Traits\ManagesOrderItems;
 use Carbon\Carbon;
-use Event;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Casts\Serialize;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
-use Model;
-use Request;
 use System\Traits\SendsMailTemplate;
 
 /**
@@ -27,15 +28,9 @@ class Orders_model extends Model
     use Locationable;
     use Assignable;
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_modified';
-
     const DELIVERY = 'delivery';
 
     const COLLECTION = 'collection';
-
-    protected static $orderTypes = [1 => self::DELIVERY, 2 => self::COLLECTION];
 
     /**
      * @var string The database table name
@@ -49,7 +44,7 @@ class Orders_model extends Model
 
     protected $timeFormat = 'H:i';
 
-    public $guarded = ['ip_address', 'user_agent', 'hash'];
+    public $guarded = ['ip_address', 'user_agent', 'hash', 'total_items', 'order_total'];
 
     protected $hidden = ['cart'];
 
@@ -58,12 +53,14 @@ class Orders_model extends Model
      */
     public $timestamps = TRUE;
 
+    public $appends = ['customer_name', 'order_type_name', 'order_date_time', 'formatted_address'];
+
     protected $casts = [
         'customer_id' => 'integer',
         'location_id' => 'integer',
         'address_id' => 'integer',
         'total_items' => 'integer',
-        'cart' => 'serialize',
+        'cart' => Serialize::class,
         'order_date' => 'date',
         'order_time' => 'time',
         'order_total' => 'float',
@@ -86,7 +83,7 @@ class Orders_model extends Model
 
     public static $allowedSortingColumns = [
         'order_id asc', 'order_id desc',
-        'date_added asc', 'date_added desc',
+        'created_at asc', 'created_at desc',
     ];
 
     public function listCustomerAddresses()
@@ -116,14 +113,27 @@ class Orders_model extends Model
     public function scopeListFrontEnd($query, $options = [])
     {
         extract(array_merge([
-            'page' => 1,
-            'pageLimit' => 20,
             'customer' => null,
+            'dateTimeFilter' => [],
             'location' => null,
             'sort' => 'address_id desc',
+            'search' => '',
+            'status' => null,
+            'page' => 1,
+            'pageLimit' => 20,
         ], $options));
 
-        $query->where('status_id', '>=', 1);
+        $searchableFields = ['order_id', 'first_name', 'last_name', 'email', 'telephone'];
+
+        if (is_null($status)) {
+            $query->where('status_id', '>=', 1);
+        }
+        else {
+            if (!is_array($status))
+                $status = [$status];
+
+            $query->whereIn('status_id', $status);
+        }
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
@@ -154,7 +164,26 @@ class Orders_model extends Model
             }
         }
 
+        $search = trim($search);
+        if (strlen($search)) {
+            $query->search($search, $searchableFields);
+        }
+
+        $startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE);
+        $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE);
+        if ($startDateTime && $endDateTime)
+            $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
         return $query->paginate($pageLimit, $page);
+    }
+
+    public function scopeWhereBetweenOrderDateTime($query, $start, $end)
+    {
+        $query->whereRaw('ADDTIME(order_date, order_time) between ? and ?', [$start, $end]);
+
+        return $query;
     }
 
     //
@@ -166,17 +195,24 @@ class Orders_model extends Model
         return $this->first_name.' '.$this->last_name;
     }
 
-    public function getOrderTypeAttribute($value)
-    {
-        if (isset(self::$orderTypes[$value]))
-            return self::$orderTypes[$value];
-
-        return $value;
-    }
-
     public function getOrderTypeNameAttribute()
     {
-        return lang('admin::lang.orders.text_'.$this->order_type);
+        if (!$this->location)
+            return $this->order_type;
+
+        return optional(
+            $this->location->availableOrderTypes()->get($this->order_type)
+        )->getLabel();
+    }
+
+    public function getOrderDatetimeAttribute($value)
+    {
+        if (!isset($this->attributes['order_date'])
+            && !isset($this->attributes['order_time'])
+        ) return null;
+
+        return make_carbon($this->attributes['order_date'])
+            ->setTimeFromTimeString($this->attributes['order_time']);
     }
 
     public function getFormattedAddressAttribute($value)
@@ -207,7 +243,7 @@ class Orders_model extends Model
      */
     public function isPaymentProcessed()
     {
-        return $this->processed AND !empty($this->status_id);
+        return $this->processed && !empty($this->status_id);
     }
 
     public function isDeliveryType()
@@ -227,7 +263,7 @@ class Orders_model extends Model
      */
     public function getOrderDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     public function markAsPaymentProcessed()
@@ -249,7 +285,7 @@ class Orders_model extends Model
 
     public function updateOrderStatus($id, $options = [])
     {
-        $id = $id ?? $this->status_id ?? setting('default_order_status');
+        $id = $id ?: $this->status_id ?: setting('default_order_status');
 
         return $this->addStatusHistory(
             Statuses_model::find($id), $options
@@ -284,7 +320,7 @@ class Orders_model extends Model
     public function mailGetRecipients($type)
     {
         $emailSetting = setting('order_email');
-        is_array($emailSetting) OR $emailSetting = [];
+        is_array($emailSetting) || $emailSetting = [];
 
         $recipients = [];
         if (in_array($type, $emailSetting)) {
@@ -311,9 +347,10 @@ class Orders_model extends Model
      */
     public function mailGetData()
     {
-        $data = [];
-
         $model = $this->fresh();
+
+        $data = $model->toArray();
+        $data['order'] = $model;
         $data['order_number'] = $model->order_id;
         $data['order_id'] = $model->order_id;
         $data['first_name'] = $model->first_name;
@@ -326,7 +363,7 @@ class Orders_model extends Model
         $data['order_type'] = $model->order_type_name;
         $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(lang('system::lang.php.time_format'));
         $data['order_date'] = $model->order_date->format(lang('system::lang.php.date_format'));
-        $data['order_added'] = $model->date_added->format(lang('system::lang.php.date_time_format'));
+        $data['order_added'] = $model->created_at->format(lang('system::lang.php.date_time_format'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;
@@ -337,11 +374,11 @@ class Orders_model extends Model
             : lang('admin::lang.orders.text_no_payment');
 
         $data['order_menus'] = [];
-        $menus = $model->getOrderMenus();
-        $menuOptions = $model->getOrderMenuOptions();
+        $menus = $model->getOrderMenusWithOptions();
         foreach ($menus as $menu) {
             $optionData = [];
-            if ($menuItemOptions = $menuOptions->get($menu->order_menu_id)) {
+            foreach ($menu->menu_options->groupBy('order_option_group') as $menuItemOptionGroupName => $menuItemOptions) {
+                $optionData[] = $menuItemOptionGroupName;
                 foreach ($menuItemOptions as $menuItemOption) {
                     $optionData[] = $menuItemOption->quantity
                         .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'
@@ -378,6 +415,7 @@ class Orders_model extends Model
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
+            $data['location_telephone'] = $model->location->location_telephone;
             $data['location_address'] = format_address($model->location->getAddress());
         }
 

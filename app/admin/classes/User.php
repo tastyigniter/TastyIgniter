@@ -30,7 +30,7 @@ class User extends Manager
      */
     public function staff()
     {
-        return $this->user()->staff;
+        return optional($this->user())->staff;
     }
 
     /**
@@ -38,7 +38,7 @@ class User extends Manager
      */
     public function locations()
     {
-        return $this->user()->staff->locations;
+        return optional($this->staff())->locations;
     }
 
     //
@@ -47,7 +47,11 @@ class User extends Manager
 
     public function extendUserQuery($query)
     {
-        $query->with(['staff', 'staff.role', 'staff.groups', 'staff.locations']);
+        $query
+            ->with(['staff', 'staff.role', 'staff.groups', 'staff.locations'])
+            ->whereHas('staff', function ($query) {
+                $query->where('staff_status', TRUE);
+            });
     }
 
     //
@@ -77,5 +81,32 @@ class User extends Manager
     public function getStaffEmail()
     {
         return $this->staff()->staff_email;
+    }
+
+    public function register(array $attributes, $activate = FALSE)
+    {
+        $model = $this->createModel();
+
+        $staff = $model->staff()->getModel()->newInstance();
+        $staff->staff_email = $attributes['staff_email'];
+        $staff->staff_name = $attributes['staff_name'];
+        $staff->language_id = $attributes['language_id'] ?? null;
+        $staff->staff_role_id = $attributes['staff_role_id'] ?? null;
+        $staff->staff_status = $attributes['staff_status'] ?? TRUE;
+        $staff->user = [
+            'username' => $attributes['username'],
+            'password' => $attributes['password'],
+            'super_user' => $attributes['super_user'] ?? FALSE,
+            'activate' => $activate,
+        ];
+
+        $staff->save();
+
+        $staff->groups()->attach($attributes['groups']);
+
+        if (array_key_exists('locations', $attributes))
+            $staff->locations()->attach($attributes['locations']);
+
+        return $staff->reload()->user;
     }
 }

@@ -15,13 +15,6 @@ return [
                     'data-request' => 'onSave',
                     'data-progress-indicator' => 'admin::lang.text_saving',
                 ],
-                'saveClose' => [
-                    'label' => 'lang:admin::lang.button_save_close',
-                    'class' => 'btn btn-default',
-                    'data-request' => 'onSave',
-                    'data-request-data' => 'close:1',
-                    'data-progress-indicator' => 'admin::lang.text_saving',
-                ],
             ],
         ],
         'fields' => [
@@ -40,10 +33,6 @@ return [
                 ],
                 'comment' => 'lang:system::lang.settings.help_registration_email',
             ],
-        ],
-        'rules' => [
-            ['allow_registration', 'lang:system::lang.settings.label_allow_registration', 'required|integer'],
-            ['registration_email.*', 'lang:system::lang.settings.label_registration_email', 'required|alpha'],
         ],
     ],
 ];

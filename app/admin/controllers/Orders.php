@@ -2,7 +2,10 @@
 
 namespace Admin\Controllers;
 
-use AdminMenu;
+use Admin\ActivityTypes\StatusUpdated;
+use Admin\Facades\AdminMenu;
+use Admin\Models\Orders_model;
+use Admin\Models\Statuses_model;
 use Igniter\Flame\Exception\ApplicationException;
 
 class Orders extends \Admin\Classes\AdminController
@@ -56,12 +59,34 @@ class Orders extends \Admin\Classes\AdminController
         AdminMenu::setContext('orders', 'sales');
     }
 
+    public function index()
+    {
+        $this->asExtension('ListController')->index();
+
+        $this->vars['statusesOptions'] = \Admin\Models\Statuses_model::getDropdownOptionsForOrder();
+    }
+
     public function index_onDelete()
     {
         if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
         return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
+    }
+
+    public function index_onUpdateStatus()
+    {
+        $model = Orders_model::find((int)post('recordId'));
+        $status = Statuses_model::find((int)post('statusId'));
+        if (!$model || !$status)
+            return;
+
+        if ($record = $model->addStatusHistory($status))
+            StatusUpdated::log($record, $this->getUser());
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.statuses.text_form_name').' updated'))->now();
+
+        return $this->redirectBack();
     }
 
     public function edit_onDelete($context, $recordId)
@@ -77,31 +102,18 @@ class Orders extends \Admin\Classes\AdminController
         $model = $this->formFindModelObject($recordId);
 
         if (!$model->hasInvoice())
-            throw new ApplicationException('Invoice has not yet been generated');
+            throw new ApplicationException(lang('admin::lang.orders.alert_invoice_not_generated'));
 
         $this->vars['model'] = $model;
 
         $this->suppressLayout = TRUE;
     }
 
-    public function formExtendFieldsBefore($form)
-    {
-        if (!array_key_exists('invoice_number', $form->tabs['fields']))
-            return;
-
-        if (!$form->model->hasInvoice()) {
-            array_pull($form->tabs['fields']['invoice_number'], 'addonRight');
-        }
-        else {
-            $form->tabs['fields']['invoice_number']['addonRight']['attributes']['href'] = admin_url('orders/invoice/'.$form->model->getKey());
-        }
-    }
-
     public function formExtendQuery($query)
     {
         $query->with([
             'status_history' => function ($q) {
-                $q->orderBy('date_added', 'desc');
+                $q->orderBy('created_at', 'desc');
             },
         ]);
     }

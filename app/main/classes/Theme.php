@@ -2,10 +2,10 @@
 
 namespace Main\Classes;
 
-use App;
 use Exception;
-use File;
 use Igniter\Flame\Pagic\Source\FileSource;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
 use Main\Template\Content as ContentTemplate;
 use Main\Template\Layout as LayoutTemplate;
@@ -175,6 +175,15 @@ class Theme
     public function isActive()
     {
         return $this->active;
+    }
+
+    public function loadThemeFile()
+    {
+        if (File::exists($path = $this->getPath().'/theme.php'))
+            require $path;
+
+        if (File::exists($path = $this->getParentPath().'/theme.php'))
+            require $path;
     }
 
     //

@@ -2,7 +2,7 @@
 
 namespace Admin\Models;
 
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Addresses Model Class
@@ -79,6 +79,8 @@ class Addresses_model extends Model
                 $query->orderBy($sortField, $sortDirection);
             }
         }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

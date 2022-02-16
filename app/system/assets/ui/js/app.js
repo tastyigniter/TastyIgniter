@@ -219,6 +219,8 @@ if (window.jQuery.request !== undefined)
                             $(selector.substring(1)).append(dataArray[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])
                         } else if (jQuery.type(selector) == 'string' && selector.charAt(0) == '^') {
                             $(selector.substring(1)).prepend(dataArray[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])
+                        } else if (jQuery.type(selector) == 'string' && selector.charAt(0) == '~') {
+                            $(selector.substring(1)).replaceWith(data[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])
                         } else {
                             $(selector).trigger('ajaxBeforeReplace')
                             $(selector).html(dataArray[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])

@@ -5,10 +5,10 @@ namespace Admin\FormWidgets;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Traits\LocationAwareWidget;
-use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Form Relationship
@@ -73,6 +73,7 @@ class Relation extends BaseFormWidget
             'relationFrom',
             'nameFrom',
             'emptyOption',
+            'scope',
         ]);
 
         if (isset($this->config['select'])) {
@@ -89,7 +90,7 @@ class Relation extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->formField->disabled OR $this->formField->hidden) {
+        if ($this->formField->disabled || $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 
@@ -210,8 +211,8 @@ class Relation extends BaseFormWidget
     {
         [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
-        if (!$model OR !$model->hasRelation($attribute)) {
-            throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",
+        if (!$model || !$model->hasRelation($attribute)) {
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));

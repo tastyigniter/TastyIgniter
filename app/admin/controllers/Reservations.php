@@ -2,8 +2,10 @@
 
 namespace Admin\Controllers;
 
+use Admin\ActivityTypes\StatusUpdated;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Reservations_model;
-use AdminMenu;
+use Admin\Models\Statuses_model;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 
@@ -44,11 +46,13 @@ class Reservations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'reservations/edit/{reservation_id}',
             'redirectClose' => 'reservations',
+            'redirectNew' => 'reservations/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'reservations/edit/{reservation_id}',
             'redirectClose' => 'reservations',
+            'redirectNew' => 'reservations/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -73,12 +77,34 @@ class Reservations extends \Admin\Classes\AdminController
         AdminMenu::setContext('reservations', 'sales');
     }
 
+    public function index()
+    {
+        $this->asExtension('ListController')->index();
+
+        $this->vars['statusesOptions'] = \Admin\Models\Statuses_model::getDropdownOptionsForReservation();
+    }
+
     public function index_onDelete()
     {
         if (!$this->getUser()->hasPermission('Admin.DeleteReservations'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
         return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
+    }
+
+    public function index_onUpdateStatus()
+    {
+        $model = Reservations_model::find((int)post('recordId'));
+        $status = Statuses_model::find((int)post('statusId'));
+        if (!$model || !$status)
+            return;
+
+        if ($record = $model->addStatusHistory($status))
+            StatusUpdated::log($record, $this->getUser());
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.statuses.text_form_name').' updated'))->now();
+
+        return $this->redirectBack();
     }
 
     public function edit_onDelete()
@@ -99,7 +125,7 @@ class Reservations extends \Admin\Classes\AdminController
     public function calendarUpdateEvent($eventId, $startAt, $endAt)
     {
         if (!$reservation = Reservations_model::find($eventId))
-            throw new Exception('No matching reservation found');
+            throw new Exception(lang('admin::lang.reservations.alert_no_reservation_found'));
 
         $startAt = make_carbon($startAt);
         $endAt = make_carbon($endAt);
@@ -115,7 +141,7 @@ class Reservations extends \Admin\Classes\AdminController
     {
         $query->with([
             'status_history' => function ($q) {
-                $q->orderBy('date_added', 'desc');
+                $q->orderBy('created_at', 'desc');
             },
             'status_history.staff',
             'status_history.status',

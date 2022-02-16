@@ -27,7 +27,8 @@
         templates: {
             leftArrow: '<i class="fa fa-long-arrow-left"></i>',
             rightArrow: '<i class="fa fa-long-arrow-right"></i>'
-        }
+        },
+        language: 'en',
     }
 
     DatePicker.prototype.bindPicker = function () {
@@ -47,9 +48,16 @@
 
             this.$el.on('change.datetimepicker', $.proxy(this.onSelectDateTimePicker, this))
         } else {
+            this.options.language = this.options.language.replace('_', '-').split('-').shift();
             this.picker = this.$el.datepicker(this.options);
             this.parsePickerValue()
             this.$el.on('changeDate', $.proxy(this.onSelectDatePicker, this))
+                // Stops bootstrap modal from closing when datepicker hide event is triggered
+                // https://github.com/uxsolutions/bootstrap-datepicker/issues/50#issuecomment-90855951
+                .on('hide', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                })
         }
     }
 

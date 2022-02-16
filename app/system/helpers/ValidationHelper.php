@@ -21,7 +21,7 @@ class ValidationHelper
         foreach ($rules as $key => $value) {
             $name = $value[0] ?? '';
             if (isset($value[2]))
-                $result['rules'][$name] = $value[2];
+                $result['rules'][$name] = explode('|', $value[2]);
 
             if (isset($value[1]))
                 $result['attributes'][$name] = is_lang_key($value[1]) ? lang($value[1]) : $value[1];

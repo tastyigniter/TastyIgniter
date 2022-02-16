@@ -4,10 +4,11 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
+use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
-use ApplicationException;
-use DB;
-use Html;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Html\HtmlFacade as Html;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Record Editor
@@ -15,6 +16,7 @@ use Html;
 class RecordEditor extends BaseFormWidget
 {
     use FormModelWidget;
+    use ValidatesForm;
 
     public $form;
 
@@ -54,7 +56,7 @@ class RecordEditor extends BaseFormWidget
             'modelClass',
             'addonLeft',
             'addonRight',
-            'hideAddButton',
+            'hideCreateButton',
             'hideEditButton',
             'hideDeleteButton',
             'addLabel',
@@ -62,6 +64,8 @@ class RecordEditor extends BaseFormWidget
             'deleteLabel',
             'popupSize',
         ]);
+
+        $this->makeRecordFormWidgetFromRequest();
     }
 
     public function render()
@@ -117,7 +121,9 @@ class RecordEditor extends BaseFormWidget
 
         $form = $this->makeRecordFormWidget($model);
 
-        $modelsToSave = $this->prepareModelsToSave($model, $form->getSaveData());
+        $this->validateFormWidget($form, $saveData = $form->getSaveData());
+
+        $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
@@ -138,7 +144,7 @@ class RecordEditor extends BaseFormWidget
 
     public function onDeleteRecord()
     {
-        $model = $this->findFormModel($recordId = post('recordId'));
+        $model = $this->findFormModel(post('recordId'));
 
         $form = $this->makeRecordFormWidget($model);
 
@@ -154,14 +160,13 @@ class RecordEditor extends BaseFormWidget
         ];
     }
 
-    protected function makeRecordFormWidget($model, $context = null)
+    protected function makeRecordFormWidget($model)
     {
-        if (is_null($context))
-            $context = $model->exists ? 'edit' : 'create';
+        $context = $model->exists ? 'edit' : 'create';
 
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = $model;
-        $widgetConfig['alias'] = $this->alias.'record-editor';
+        $widgetConfig['alias'] = $this->alias.'RecordEditor';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[recordData]';
         $widgetConfig['context'] = $context;
         $widget = $this->makeWidget(Form::class, $widgetConfig);
@@ -196,8 +201,8 @@ class RecordEditor extends BaseFormWidget
         $model = $this->createFormModel();
         $methodName = 'get'.studly_case($this->fieldName).'RecordEditorOptions';
 
-        if (!$model->methodExists($methodName) AND !$model->methodExists('getRecordEditorOptions')) {
-            throw new ApplicationException(sprintf('Missing method [%s] in %s', 'getRecordEditorOptions', get_class($model)));
+        if (!$model->methodExists($methodName) && !$model->methodExists('getRecordEditorOptions')) {
+            throw new ApplicationException(sprintf(lang('admin::lang.alert_missing_method'), 'getRecordEditorOptions', get_class($model)));
         }
 
         if ($model->methodExists($methodName)) {
@@ -208,5 +213,21 @@ class RecordEditor extends BaseFormWidget
         }
 
         return $result;
+    }
+
+    protected function makeRecordFormWidgetFromRequest()
+    {
+        if (post('recordId'))
+            return;
+
+        if (!strlen($requestData = request()->header('X-IGNITER-RECORD-EDITOR-REQUEST-DATA')))
+            return;
+
+        if (!strlen($recordId = array_get(json_decode($requestData, TRUE), $this->alias.'.recordId')))
+            return;
+
+        $model = $this->findFormModel($recordId);
+
+        $this->makeRecordFormWidget($model);
     }
 }

@@ -2,7 +2,8 @@
 
 namespace Admin\Traits;
 
-use AdminLocation;
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminLocation;
 use Igniter\Flame\Exception\ApplicationException;
 
 trait Locationable
@@ -99,7 +100,7 @@ trait Locationable
 
         $locationable = $this->getLocationableRelationObject();
 
-        if (!app('admin.auth')->isSuperUser() AND $locationable->count() > 1) {
+        if (app()->runningInAdmin() && !AdminAuth::isSuperUser() && $locationable->count() > 1) {
             throw new ApplicationException(lang('admin::lang.alert_warning_locationable_delete'));
         }
 
@@ -117,19 +118,19 @@ trait Locationable
         return $this->{$relationName}();
     }
 
-    protected function locationableIsSingleRelationType()
+    public function locationableIsSingleRelationType()
     {
         $relationType = $this->getRelationType($this->locationableRelationName());
 
         return in_array($relationType, ['hasOne', 'belongsTo']);
     }
 
-    protected function locationableRelationName()
+    public function locationableRelationName()
     {
         return defined('static::LOCATIONABLE_RELATION') ? static::LOCATIONABLE_RELATION : 'location';
     }
 
-    protected function locationableRelationExists()
+    public function locationableRelationExists()
     {
         $relationName = $this->locationableRelationName();
 
@@ -137,6 +138,6 @@ trait Locationable
             return !is_null($this->{$relationName});
         }
 
-        return count($this->{$relationName});
+        return count($this->{$relationName}) > 0;
     }
 }

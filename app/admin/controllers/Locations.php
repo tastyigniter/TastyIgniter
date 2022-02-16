@@ -3,10 +3,10 @@
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminLocation;
+use Admin\Facades\AdminMenu;
 use Admin\Models\Locations_model;
-use AdminMenu;
 use Exception;
-use Geocoder;
+use Igniter\Flame\Geolite\Facades\Geocoder;
 
 class Locations extends \Admin\Classes\AdminController
 {
@@ -33,11 +33,13 @@ class Locations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
+            'redirectNew' => 'locations/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
+            'redirectNew' => 'locations/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -60,7 +62,7 @@ class Locations extends \Admin\Classes\AdminController
 
     public function remap($action, $params)
     {
-        if ($action != 'settings' AND AdminLocation::check())
+        if ($action != 'settings' && AdminLocation::check())
             return $this->redirect('locations/settings');
 
         return parent::remap($action, $params);

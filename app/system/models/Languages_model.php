@@ -27,6 +27,8 @@ class Languages_model extends Language
         ],
     ];
 
+    public $timestamps = TRUE;
+
     /**
      *  List of variables that cannot be mass assigned
      * @var array
@@ -47,6 +49,11 @@ class Languages_model extends Language
      * @var self Default language cache.
      */
     protected static $defaultLanguage;
+
+    /**
+     * @var self Active language cache.
+     */
+    protected static $activeLanguage;
 
     public static function applySupportedLanguages()
     {
@@ -148,6 +155,19 @@ class Languages_model extends Language
         return $this->code == setting('default_language');
     }
 
+    public static function getActiveLocale()
+    {
+        if (self::$activeLanguage !== null) {
+            return self::$activeLanguage;
+        }
+
+        $activeLanguage = self::isEnabled()
+            ->where('code', app()->getLocale())
+            ->first();
+
+        return self::$activeLanguage = $activeLanguage;
+    }
+
     public static function listSupported()
     {
         if (self::$supportedLocalesCache) {
@@ -182,14 +202,7 @@ class Languages_model extends Language
 
     public function getTranslations($group, $namespace = null)
     {
-        $query = $this->translations();
-        $query->where('locale', $this->code);
-        $query->where('group', $group);
-
-        if (!is_null($namespace))
-            $query->where('namespace', $namespace);
-
-        return $query->pluck('text', 'item')->all();
+        return $this->getLines($this->code, $group, $namespace);
     }
 
     public function addTranslations($translations)
@@ -201,7 +214,7 @@ class Languages_model extends Language
         foreach ($translations as $key => $translation) {
             preg_match('/^(.+)::(?:(.+?))\.(.+)+$/', $key, $matches);
 
-            if (!$matches OR count($matches) !== 4)
+            if (!$matches || count($matches) !== 4)
                 continue;
 
             [$code, $namespace, $group, $item] = $matches;

@@ -1,10 +1,5 @@
 [
   {
-    "sort": "config",
-    "item": "site_location_mode",
-    "value": "multiple"
-  },
-  {
     "sort": "prefs",
     "item": "default_location_id",
     "value": "11"
@@ -113,6 +108,11 @@
     "sort": "config",
     "item": "menus_page",
     "value": "local/menus"
+  },
+  {
+    "sort": "config",
+    "item": "reservation_page",
+    "value": "reservation/reservation"
   },
   {
     "sort": "config",

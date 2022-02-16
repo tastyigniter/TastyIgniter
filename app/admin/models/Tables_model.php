@@ -3,9 +3,8 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
-use Igniter\Flame\Database\Traits\Validation;
-use Model;
 
 /**
  * Tables Model Class
@@ -13,7 +12,6 @@ use Model;
 class Tables_model extends Model
 {
     use Locationable;
-    use Validation;
     use Sortable;
 
     const LOCATIONABLE_RELATION = 'locations';
@@ -45,15 +43,7 @@ class Tables_model extends Model
         ],
     ];
 
-    public $rules = [
-        ['table_name', 'lang:admin::lang.label_name', 'required|min:2|max:255'],
-        ['min_capacity', 'lang:admin::lang.tables.label_min_capacity', 'required|integer|min:1|lte:max_capacity'],
-        ['max_capacity', 'lang:admin::lang.tables.label_capacity', 'required|integer|min:1|gte:min_capacity'],
-        ['extra_capacity', 'lang:admin::lang.tables.label_extra_capacity', 'required|integer'],
-        ['priority', 'lang:admin::lang.tables.label_priority', 'required|integer'],
-        ['is_joinable', 'lang:admin::lang.tables.label_joinable', 'required|boolean'],
-        ['table_status', 'lang:admin::lang.label_status', 'required|boolean'],
-    ];
+    public $timestamps = TRUE;
 
     public static function getDropdownOptions()
     {

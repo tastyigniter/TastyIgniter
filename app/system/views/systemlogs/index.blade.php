@@ -10,7 +10,7 @@
     {!! $this->widgets['toolbar']->render() !!}
 
     <div class="list-table table-responsive">
-        <table class="table table-striped border-bottom">
+        <table class="table table-hover border-bottom">
             <thead>
             <tr>
                 <th width="10%">Level</th>
@@ -31,11 +31,11 @@
                     <td
                         class="text"
                         @if ($log['stack'])
-                            role="button"
-                            data-toggle="collapse"
-                            data-target="#stack-{{ $key }}"
-                            aria-expanded="false"
-                            aria-controls="stack{{ $key }}"
+                        role="button"
+                        data-toggle="collapse"
+                        data-target="#stack-{{ $key }}"
+                        aria-expanded="false"
+                        aria-controls="stack{{ $key }}"
                         @endif
                     >
                         {{ $log['text'] }}
@@ -46,7 +46,7 @@
 
                         @if ($log['stack'])
                             <div class="collapse" id="stack-{{ $key }}">
-                                {!! nl2br(trim($log['stack'])) !!}
+                                {!! nl2br(trim(e($log['stack']))) !!}
                             </div>
                         @endif
                     </td>

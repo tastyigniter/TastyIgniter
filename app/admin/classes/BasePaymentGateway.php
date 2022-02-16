@@ -2,11 +2,11 @@
 
 namespace Admin\Classes;
 
-use File;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\SystemException;
-use Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use System\Actions\ModelAction;
-use URL;
 
 /**
  * Base Payment Gateway Class
@@ -23,6 +23,10 @@ class BasePaymentGateway extends ModelAction
     protected $orderStatusModel = 'Admin\Models\Statuses_model';
 
     protected $configFields = [];
+
+    protected $configValidationAttributes = [];
+
+    protected $configValidationMessages = [];
 
     protected $configRules = [];
 
@@ -41,7 +45,9 @@ class BasePaymentGateway extends ModelAction
 
         $formConfig = $this->loadConfig($this->defineFieldsConfig(), ['fields']);
         $this->configFields = array_get($formConfig, 'fields');
-        $this->configRules = array_get($formConfig, 'rules');
+        $this->configRules = array_get($formConfig, 'rules', []);
+        $this->configValidationAttributes = array_get($formConfig, 'validationAttributes', []);
+        $this->configValidationMessages = array_get($formConfig, 'validationMessages', []);
 
         if (!$model)
             return;
@@ -79,7 +85,7 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * Returns the form configuration used by this model.
+     * Returns the form configuration used by this payment type.
      */
     public function getConfigFields()
     {
@@ -87,11 +93,27 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * Returns the form configuration used by this model.
+     * Returns the form validation rules used by this payment type.
      */
     public function getConfigRules()
     {
         return $this->configRules;
+    }
+
+    /**
+     * Returns the form validation attributes used by this model.
+     */
+    public function getConfigValidationAttributes()
+    {
+        return $this->configValidationAttributes;
+    }
+
+    /**
+     * Returns the form validation messages used by this model.
+     */
+    public function getConfigValidationMessages()
+    {
+        return $this->configValidationMessages;
     }
 
     /**
@@ -163,6 +185,15 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
+     * This method should return TRUE if the gateway completes the payment on the client's browsers.
+     * Allows the system to take extra steps during checkout before  completing the payment
+     */
+    public function completesPaymentOnClient()
+    {
+        return FALSE;
+    }
+
+    /**
      * Processes payment using passed data.
      *
      * @param array $data Posted payment form data.
@@ -209,7 +240,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function updatePaymentProfile($customer, $data)
     {
-        throw new SystemException('The updatePaymentProfile() method is not supported by the payment gateway.');
+        throw new SystemException(lang('admin::lang.payments.alert_update_payment_profile'));
     }
 
     /**
@@ -219,7 +250,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function deletePaymentProfile($customer, $profile)
     {
-        throw new SystemException('The deletePaymentProfile() method is not supported by the payment gateway.');
+        throw new SystemException(lang('admin::lang.payments.alert_delete_payment_profile'));
     }
 
     /**
@@ -229,7 +260,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function payFromPaymentProfile($order, $data = [])
     {
-        throw new SystemException('The payFromPaymentProfile() method is not supported by the payment gateway.');
+        throw new SystemException(lang('admin::lang.payments.alert_pay_from_payment_profile'));
     }
 
     //

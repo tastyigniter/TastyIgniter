@@ -6,8 +6,8 @@ use Admin\Classes\BaseFormWidget;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
-use ApplicationException;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Contracts\Validation\Validator;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
@@ -108,8 +108,11 @@ class TemplateEditor extends BaseFormWidget
     public function onChooseFile()
     {
         $this->validate(post('Theme.source.template'), [
-            ['type', 'Source Type', 'required|in:_pages,_partials,_layouts,_content'],
-            ['file', 'Source File', 'sometimes|present|string'],
+            'type' => ['required', 'in:_pages,_partials,_layouts,_content'],
+            'file' => ['sometimes', 'nullable', 'string'],
+        ], [], [
+            'type' => 'Source Type',
+            'file' => 'Source File',
         ]);
 
         $this->controller->setTemplateValue('type', post('Theme.source.template.type'));
@@ -124,8 +127,11 @@ class TemplateEditor extends BaseFormWidget
             throw new ApplicationException(lang('system::lang.themes.alert_theme_locked'));
 
         $this->validate(post(), [
-            ['action', 'Source Action', 'required|in:delete,rename,new'],
-            ['name', 'Source Name', 'present|regex:/^[a-zA-Z-_\/]+$/'],
+            'action' => ['required', 'in:delete,rename,new'],
+            'name' => ['present', 'regex:/^[a-zA-Z-_\/]+$/'],
+        ], [], [
+            'action' => 'Source Action',
+            'name' => 'Source Name',
         ]);
 
         $fileAction = post('action');
@@ -165,7 +171,9 @@ class TemplateEditor extends BaseFormWidget
         });
 
         $this->validate($data,
-            array_get($this->templateWidget->config ?? [], 'rules', [])
+            array_get($this->templateWidget->config ?? [], 'rules', []),
+            array_get($this->templateWidget->config ?? [], 'validationMessages', []),
+            array_get($this->templateWidget->config ?? [], 'validationAttributes', [])
         );
 
         $this->manager->writeFile($fileName,
@@ -208,7 +216,7 @@ class TemplateEditor extends BaseFormWidget
 
     protected function getTemplateEditorOptions()
     {
-        if (!$themeObject = $this->model->getTheme() OR !$themeObject instanceof Theme)
+        if (!($themeObject = $this->model->getTheme()) || !$themeObject instanceof Theme)
             throw new ApplicationException('Missing theme object on '.get_class($this->model));
 
         $type = $this->templateType ?? '_pages';

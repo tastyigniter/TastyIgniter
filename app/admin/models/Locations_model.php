@@ -34,7 +34,8 @@ class Locations_model extends AbstractLocation
         'location_lat' => 'double',
         'location_lng' => 'double',
         'location_status' => 'boolean',
-        'options' => 'serialize',
+        'options' => 'array',
+
     ];
 
     public $relation = [
@@ -47,6 +48,7 @@ class Locations_model extends AbstractLocation
         ],
         'morphedByMany' => [
             'staffs' => ['Admin\Models\Staffs_model', 'name' => 'locationable'],
+            'tables' => ['Admin\Models\Tables_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -72,6 +74,8 @@ class Locations_model extends AbstractLocation
 
     public $url;
 
+    public $timestamps = TRUE;
+
     protected static $defaultLocation;
 
     public static function getDropdownOptions()
@@ -88,10 +92,10 @@ class Locations_model extends AbstractLocation
             return FALSE;
 
         return isset($model->getAddress()['location_lat'])
-            AND isset($model->getAddress()['location_lng'])
-            AND ($model->hasDelivery() OR $model->hasCollection())
-            AND isset($model->options['hours'])
-            AND $model->delivery_areas->where('is_default', 1)->count() > 0;
+            && isset($model->getAddress()['location_lng'])
+            && ($model->hasDelivery() || $model->hasCollection())
+            && isset($model->options['hours'])
+            && $model->delivery_areas->where('is_default', 1)->count() > 0;
     }
 
     public static function addSortingColumns($newColumns)
@@ -99,32 +103,17 @@ class Locations_model extends AbstractLocation
         self::$allowedSortingColumns = array_merge(self::$allowedSortingColumns, $newColumns);
     }
 
-    public function getWeekDaysOptions()
-    {
-        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    }
-
     //
     // Events
     //
 
-    protected function afterFetch()
+    protected function beforeDelete()
     {
-        $this->parseOptionsValue();
-    }
-
-    protected function beforeSave()
-    {
-        $this->parseOptionsValue();
     }
 
     protected function afterSave()
     {
         $this->performAfterSave();
-    }
-
-    protected function beforeDelete()
-    {
     }
 
     //
@@ -143,16 +132,20 @@ class Locations_model extends AbstractLocation
 
     public function scopeListFrontEnd($query, array $options = [])
     {
-        extract(array_merge([
+        extract($options = array_merge([
             'page' => 1,
             'pageLimit' => 20,
             'sort' => null,
             'search' => null,
+            'enabled' => null,
             'latitude' => null,
             'longitude' => null,
+            'paginate' => TRUE,
+            'hasDelivery' => null,
+            'hasCollection' => null,
         ], $options));
 
-        if ($latitude AND $longitude) {
+        if ($latitude && $longitude) {
             $query->selectDistance($latitude, $longitude);
         }
 
@@ -171,7 +164,7 @@ class Locations_model extends AbstractLocation
             if (in_array($_sort, self::$allowedSortingColumns)) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
-                    array_push($parts, 'desc');
+                    $parts[] = 'desc';
                 }
                 [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
@@ -182,6 +175,20 @@ class Locations_model extends AbstractLocation
         if (strlen($search)) {
             $query->search($search, $searchableFields);
         }
+
+        if (!is_null($enabled))
+            $query->where('location_status', $enabled);
+
+        if (!is_null($hasDelivery))
+            $query->where('options->offer_delivery', $hasDelivery);
+
+        if (!is_null($hasCollection))
+            $query->where('options->offer_collection', $hasCollection);
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
+        if (is_null($pageLimit))
+            return $query;
 
         return $query->paginate($pageLimit, $page);
     }
@@ -218,8 +225,8 @@ class Locations_model extends AbstractLocation
     public function setOptionsAttribute($value)
     {
         if (is_array($value)) {
-            $options = @unserialize($this->attributes['options']) ?: [];
-            $this->attributes['options'] = @serialize(array_merge($options ?? [], $value));
+            $options = @json_decode($this->attributes['options'], TRUE) ?: [];
+            $this->attributes['options'] = @json_encode(array_merge($options ?? [], $value));
         }
     }
 
@@ -260,15 +267,12 @@ class Locations_model extends AbstractLocation
         return $gallery;
     }
 
-    public function parseOptionsValue()
+    public function allowGuestOrder()
     {
-        $value = @unserialize($this->attributes['options']) ?: [];
+        if (($allowGuestOrder = (int)$this->getOption('guest_order', -1)) === -1)
+            $allowGuestOrder = (int)setting('guest_order', 1);
 
-        $this->parseHoursFromOptions($value);
-
-        $this->parseAreasFromOptions($value);
-
-        $this->attributes['options'] = @serialize($value);
+        return (bool)$allowGuestOrder;
     }
 
     public function listAvailablePayments()
@@ -279,7 +283,7 @@ class Locations_model extends AbstractLocation
         $paymentGateways = Payments_model::listPayments();
 
         foreach ($paymentGateways as $payment) {
-            if ($payments AND !in_array($payment->code, $payments)) continue;
+            if ($payments && !in_array($payment->code, $payments)) continue;
 
             $result[$payment->code] = $payment;
         }
@@ -290,10 +294,6 @@ class Locations_model extends AbstractLocation
     public function performAfterSave()
     {
         $this->restorePurgedValues();
-
-        if (array_key_exists('hours', $this->options)) {
-            $this->addOpeningHours($this->options['hours']);
-        }
 
         if (array_key_exists('delivery_areas', $this->attributes))
             $this->addLocationAreas((array)$this->attributes['delivery_areas']);
@@ -315,7 +315,7 @@ class Locations_model extends AbstractLocation
      *
      * @param string $locationId
      *
-     * @return bool|int
+     * @return bool|null
      */
     public static function updateDefault($locationId)
     {

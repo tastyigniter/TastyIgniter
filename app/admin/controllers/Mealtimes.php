@@ -2,7 +2,7 @@
 
 namespace Admin\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 
 class Mealtimes extends \Admin\Classes\AdminController
 {
@@ -30,11 +30,13 @@ class Mealtimes extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'mealtimes/edit/{mealtime_id}',
             'redirectClose' => 'mealtimes',
+            'redirectNew' => 'mealtimes/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'mealtimes/edit/{mealtime_id}',
             'redirectClose' => 'mealtimes',
+            'redirectNew' => 'mealtimes/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',

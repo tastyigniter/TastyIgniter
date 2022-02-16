@@ -21,7 +21,7 @@ $config['list']['filter'] = [
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -45,22 +45,20 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'reservations/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'context' => 'index',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
         'calendar' => [
             'label' => 'lang:admin::lang.reservations.text_switch_to_calendar',
             'class' => 'btn btn-default',
             'href' => 'reservations/calendar',
             'context' => 'index',
         ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -76,12 +74,11 @@ $config['list']['columns'] = [
     'reservation_id' => [
         'label' => 'lang:admin::lang.column_id',
     ],
-    'location' => [
+    'location_name' => [
         'label' => 'lang:admin::lang.reservations.column_location',
         'relation' => 'location',
-        'select' => 'location_name',
         'searchable' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'full_name' => [
         'label' => 'lang:admin::lang.label_name',
@@ -142,17 +139,17 @@ $config['calendar']['toolbar'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'reservations',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
@@ -180,6 +177,7 @@ $config['form']['fields'] = [
         'span' => 'right',
         'context' => ['edit', 'preview'],
         'form' => 'reservation_status_model',
+        'request' => 'Admin\Requests\ReservationStatus',
     ],
 ];
 
@@ -258,7 +256,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.statuses.label_comment',
             'type' => 'textarea',
         ],
-        'date_added' => [
+        'created_at' => [
             'label' => 'lang:admin::lang.reservations.label_date_added',
             'type' => 'datepicker',
             'mode' => 'date',
@@ -273,7 +271,7 @@ $config['form']['tabs'] = [
             'disabled' => TRUE,
             'context' => ['edit', 'preview'],
         ],
-        'date_modified' => [
+        'updated_at' => [
             'label' => 'lang:admin::lang.reservations.label_date_modified',
             'type' => 'datepicker',
             'mode' => 'date',
@@ -292,6 +290,8 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.reservations.text_status_history',
             'type' => 'datatable',
             'context' => ['edit', 'preview'],
+            'useAjax' => TRUE,
+            'defaultSort' => ['status_history_id', 'desc'],
             'columns' => [
                 'date_added_since' => [
                     'title' => 'lang:admin::lang.reservations.column_date_time',

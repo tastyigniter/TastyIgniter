@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use AdminAuth;
+use Admin\Facades\AdminAuth;
 use Igniter\Flame\Traits\EventEmitter;
 use System\Classes\BaseExtension;
 use System\Classes\ExtensionManager;
@@ -60,7 +60,7 @@ class Navigation
         $navItems = $this->filterPermittedNavItems($navItems);
 
         foreach ($navItems as $code => &$navItem) {
-            if (!isset($navItem['child']) OR !count($navItem['child'])) {
+            if (!isset($navItem['child']) || !count($navItem['child'])) {
                 continue;
             }
 
@@ -216,7 +216,7 @@ class Navigation
         }
 
         foreach ($definitions as $name => $definition) {
-            if (isset($definition['child']) AND count($definition['child'])) {
+            if (isset($definition['child']) && count($definition['child'])) {
                 $this->registerNavItems($definition['child'], $name);
             }
 

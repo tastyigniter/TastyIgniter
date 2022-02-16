@@ -150,7 +150,7 @@ class Statistics extends BaseDashboardWidget
         if (method_exists($this, $contextMethod))
             $count = $this->$contextMethod($this->property('range'));
 
-        return $count;
+        return empty($count) ? 0 : $count;
     }
 
     protected function applyRangeQuery($query, $range)
@@ -168,7 +168,7 @@ class Statistics extends BaseDashboardWidget
             $start = Carbon::now()->today();
         }
 
-        $query->whereBetween('date_added', [
+        $query->whereBetween('created_at', [
             $start,
             Carbon::now(),
         ]);

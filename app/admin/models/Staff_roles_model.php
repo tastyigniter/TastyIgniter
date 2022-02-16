@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use InvalidArgumentException;
 
@@ -29,7 +30,7 @@ class Staff_roles_model extends Model
     ];
 
     protected $casts = [
-        'permissions' => 'serialize',
+        'permissions' => Serialize::class,
     ];
 
     public static function getDropdownOptions()

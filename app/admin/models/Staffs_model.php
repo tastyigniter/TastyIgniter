@@ -4,8 +4,8 @@ namespace Admin\Models;
 
 use Admin\Classes\UserState;
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Model;
 
 /**
  * Staffs Model Class
@@ -14,10 +14,6 @@ class Staffs_model extends Model
 {
     use Purgeable;
     use Locationable;
-
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
 
     const LOCATIONABLE_RELATION = 'locations';
 
@@ -77,6 +73,11 @@ class Staffs_model extends Model
     public function getEmailAttribute()
     {
         return $this->staff_email;
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return '//www.gravatar.com/avatar/'.md5(strtolower(trim($this->staff_email))).'.png?d=mm';
     }
 
     public static function getDropdownOptions()
@@ -139,23 +140,32 @@ class Staffs_model extends Model
      */
     public function getStaffDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     public function addStaffUser($user = [])
     {
         $userModel = $this->user()->firstOrNew(['staff_id' => $this->getKey()]);
 
-        $userModel->super_user = array_get($user, 'super_user', FALSE);
         $userModel->username = array_get($user, 'username', $userModel->username);
-        $userModel->password = array_get($user, 'password', $userModel->password);
+        $userModel->super_user = array_get($user, 'super_user', $userModel->super_user);
 
-        if (!$userModel->exists) {
+        if ($password = array_get($user, 'password'))
+            $userModel->password = $password;
+
+        if (array_get($user, 'activate', TRUE)) {
             $userModel->is_activated = TRUE;
             $userModel->date_activated = date('Y-m-d');
         }
 
+        if ($sendInvite = array_get($user, 'send_invite', FALSE))
+            $userModel->send_invite = $sendInvite;
+
         $userModel->save();
+
+        $userModel->password = null;
+
+        return $userModel;
     }
 
     /**
@@ -180,20 +190,6 @@ class Staffs_model extends Model
     public function addStaffGroups($groups = [])
     {
         return $this->groups()->sync($groups);
-    }
-
-    /**
-     * Send email to staff
-     *
-     * @param string $email
-     * @param array $template
-     * @param array $data
-     *
-     * @return bool
-     */
-    public function sendMail($email, $template, $data = [])
-    {
-        return Users_model::sendMail($email, $template, $data);
     }
 
     //

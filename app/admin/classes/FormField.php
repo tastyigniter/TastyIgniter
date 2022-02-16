@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use Html;
+use Igniter\Flame\Html\HtmlFacade as Html;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -93,6 +93,11 @@ class FormField
      * @var bool Specifies if this field is mandatory.
      */
     public $required = FALSE;
+
+    /**
+     * @var bool Specify if the field is read-only or not.
+     */
+    public $readOnly = FALSE;
 
     /**
      * @var bool Specify if the field is disabled or not.
@@ -452,8 +457,16 @@ class FormField
         $attributes = $this->filterTriggerAttributes($attributes, $position);
         $attributes = $this->filterPresetAttributes($attributes, $position);
 
-        if ($position == 'field' AND $this->disabled) {
-            $attributes = $attributes + ['disabled' => 'disabled'];
+        if ($position == 'field' && $this->disabled) {
+            $attributes += ['disabled' => 'disabled'];
+        }
+
+        if ($position == 'field' && $this->readOnly) {
+            $attributes += ['readonly' => 'readonly'];
+
+            if ($this->type == 'checkbox' || $this->type == 'switch') {
+                $attributes += ['onclick' => 'return false;'];
+            }
         }
 
         return $attributes;
@@ -469,7 +482,7 @@ class FormField
      */
     protected function filterTriggerAttributes($attributes, $position = 'field')
     {
-        if (!$this->trigger OR !is_array($this->trigger)) {
+        if (!$this->trigger || !is_array($this->trigger)) {
             return $attributes;
         }
 
@@ -478,12 +491,12 @@ class FormField
         $triggerCondition = array_get($this->trigger, 'condition');
 
         // Apply these to container
-        if (in_array($triggerAction, ['hide', 'show']) AND $position != 'container') {
+        if (in_array($triggerAction, ['hide', 'show']) && $position != 'container') {
             return $attributes;
         }
 
         // Apply these to field/input
-        if (in_array($triggerAction, ['enable', 'disable', 'empty']) AND $position != 'field') {
+        if (in_array($triggerAction, ['enable', 'disable', 'empty']) && $position != 'field') {
             return $attributes;
         }
 
@@ -516,7 +529,7 @@ class FormField
      */
     protected function filterPresetAttributes($attributes, $position = 'field')
     {
-        if (!$this->preset OR $position != 'field') {
+        if (!$this->preset || $position != 'field') {
             return $attributes;
         }
 
@@ -692,8 +705,7 @@ class FormField
         // To support relations only the last field should return th
         // relation value, all others will look up the relation object as normal.
         foreach ($keyParts as $key) {
-
-            if ($result instanceof Model AND $result->hasRelation($key)) {
+            if ($result instanceof Model && $result->hasRelation($key)) {
                 if ($key == $lastField) {
                     $result = $result->getRelationValue($key) ?: $default;
                 }

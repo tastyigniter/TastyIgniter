@@ -2,7 +2,7 @@
 
 namespace System\Classes;
 
-use SystemException;
+use Igniter\Flame\Exception\SystemException;
 
 /**
  * Components class for TastyIgniter.
@@ -227,7 +227,7 @@ class ComponentManager
      * @param array $params The properties set by the Page or Layout.
      *
      * @return \System\Classes\BaseComponent The component object.
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makeComponent($name, $page = null, $params = [])
     {
@@ -304,7 +304,7 @@ class ComponentManager
                 'label' => '',
                 'type' => 'text',
                 'comment' => '',
-                'validationRule' => 'required|regex:^[a-zA-Z]+$',
+                'validationRule' => ['required', 'regex:^[a-zA-Z]+$'],
                 'validationMessage' => '',
                 'required' => TRUE,
                 'showExternalParam' => FALSE,
@@ -325,7 +325,7 @@ class ComponentManager
                 'showExternalParam' => array_get($params, 'showExternalParam', FALSE),
             ];
 
-            if (!in_array($propertyType, ['text', 'number']) AND !array_key_exists('options', $params)) {
+            if (!in_array($propertyType, ['text', 'number']) && !array_key_exists('options', $params)) {
                 $methodName = 'get'.studly_case($name).'Options';
                 $property['options'] = [get_class($component), $methodName];
             }
@@ -382,19 +382,15 @@ class ComponentManager
     {
         $properties = $component->defineProperties();
 
-        $rules = [];
+        $rules = $attributes = [];
         foreach ($properties as $name => $params) {
-            if (strlen($rule = array_get($params, 'validationRule', '')))
-                $rules[] = [$name, array_get($params, 'label', $name), $rule];
+            if (strlen($rule = array_get($params, 'validationRule', ''))) {
+                $rules[$name] = $rule;
+                $attributes[$name] = array_get($params, 'label', $name);
+            }
         }
 
-        $messages = [];
-        foreach ($properties as $name => $params) {
-            if (strlen($message = array_get($params, 'validationMessage', '')))
-                $messages[$name] = $message;
-        }
-
-        return [$rules, $messages];
+        return [$rules, $attributes];
     }
 
     protected function checkComponentPropertyType($type)

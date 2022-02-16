@@ -3,12 +3,12 @@
 namespace Main\Widgets;
 
 use Admin\Classes\BaseWidget;
-use ApplicationException;
 use Exception;
-use File;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 use Main\Classes\MediaLibrary;
-use Response;
 
 /**
  * Media Manager widget.
@@ -67,16 +67,18 @@ class MediaManager extends BaseWidget
     {
         $folder = $this->getCurrentFolder();
         $sortBy = $this->getSortBy();
+        $filterBy = $this->getFilterBy();
         $searchTerm = $this->getSearchTerm();
 
         $this->vars['currentFolder'] = $folder;
         $this->vars['isRootFolder'] = $folder == static::ROOT_FOLDER;
-        $this->vars['items'] = $items = $this->listFolderItems($folder, $sortBy, $searchTerm);
+        $this->vars['items'] = $items = $this->listFolderItems($folder, $sortBy, ['search' => $searchTerm, 'filter' => $filterBy]);
         $this->vars['folderSize'] = $this->getCurrentFolderSize();
         $this->vars['totalItems'] = count($items);
         $this->vars['folderList'] = $this->getFolderList();
         $this->vars['folderTree'] = $this->getFolderTreeNodes();
         $this->vars['sortBy'] = $sortBy;
+        $this->vars['filterBy'] = $filterBy;
         $this->vars['searchTerm'] = $searchTerm;
         $this->vars['isPopup'] = $this->popupLoaded;
         $this->vars['selectMode'] = $this->selectMode;
@@ -118,6 +120,20 @@ class MediaManager extends BaseWidget
 
         $this->setSortBy($sortBy);
         $this->setCurrentFolder($path);
+
+        $this->prepareVars();
+
+        return [
+            '#'.$this->getId('item-list') => $this->makePartial('mediamanager/item_list'),
+            '#'.$this->getId('toolbar') => $this->makePartial('mediamanager/toolbar'),
+        ];
+    }
+
+    public function onSetFilter()
+    {
+        $filterBy = input('filterBy');
+
+        $this->setFilterBy($filterBy);
 
         $this->prepareVars();
 
@@ -277,7 +293,7 @@ class MediaManager extends BaseWidget
         if (!$mediaLibrary->isAllowedExtension($name))
             throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
 
-        if (!$this->validateFileName($name) OR !$this->validateFileName($oldName))
+        if (!$this->validateFileName($name) || !$this->validateFileName($oldName))
             throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_file_name'));
 
         $newPath = $path.'/'.$name;
@@ -336,7 +352,7 @@ class MediaManager extends BaseWidget
             throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
         $files = post('files');
-        if (empty($files) OR !is_array($files)) {
+        if (empty($files) || !is_array($files)) {
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_delete_file'));
         }
 
@@ -374,7 +390,7 @@ class MediaManager extends BaseWidget
             throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
         $files = post('files');
-        if (empty($files) OR !is_array($files))
+        if (empty($files) || !is_array($files))
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_move_file'));
 
         foreach ($files as $file) {
@@ -411,7 +427,7 @@ class MediaManager extends BaseWidget
             throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_path'));
 
         $files = post('files');
-        if (empty($files) OR !is_array($files))
+        if (empty($files) || !is_array($files))
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_copy_file'));
 
         foreach ($files as $file) {
@@ -475,7 +491,6 @@ class MediaManager extends BaseWidget
         $mediaLibrary = $this->getMediaLibrary();
 
         $folderTree = function ($path) use (&$folderTree, $mediaLibrary, $result) {
-
             if (!($folders = $mediaLibrary->listFolders($path)))
                 return null;
 
@@ -530,7 +545,7 @@ class MediaManager extends BaseWidget
     {
         $sort = $this->getSortBy();
         $direction = 'descending';
-        if ($sort AND in_array($direction, $sort))
+        if ($sort && in_array($direction, $sort))
             $direction = 'ascending';
 
         $sortBy = [$sortBy, $direction];
@@ -543,9 +558,19 @@ class MediaManager extends BaseWidget
         return $this->getSession('media_sort_by', null);
     }
 
+    protected function setFilterBy($filterBy)
+    {
+        return $this->putSession('media_filter_by', $filterBy);
+    }
+
+    protected function getFilterBy()
+    {
+        return $this->getSession('media_filter_by', 'all');
+    }
+
     protected function checkUploadHandler()
     {
-        if (!($uniqueId = Request::header('X-IGNITER-FILEUPLOAD')) OR $uniqueId != $this->getId())
+        if (!($uniqueId = Request::header('X-IGNITER-FILEUPLOAD')) || $uniqueId != $this->getId())
             return;
 
         $mediaLibrary = $this->getMediaLibrary();
@@ -571,7 +596,7 @@ class MediaManager extends BaseWidget
             if (!$this->validateFileName($fileName))
                 throw new ApplicationException(lang('main::lang.media_manager.alert_invalid_new_file_name'));
 
-            if (!$mediaLibrary->isAllowedExtension($extension))
+            if (!$mediaLibrary->isAllowedExtension($fileName))
                 throw new ApplicationException(lang('main::lang.media_manager.alert_extension_not_allowed'));
 
             if (!$uploadedFile->isValid())
@@ -637,7 +662,7 @@ class MediaManager extends BaseWidget
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
         $u = 0;
-        while ((round($size / 1024) > 0) AND ($u < 4)) {
+        while ((round($size / 1024) > 0) && ($u < 4)) {
             $size = $size / 1024;
             $u++;
         }

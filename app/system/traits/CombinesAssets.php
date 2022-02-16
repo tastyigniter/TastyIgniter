@@ -2,19 +2,19 @@
 
 namespace System\Traits;
 
-use App;
-use ApplicationException;
-use Cache;
 use Carbon\Carbon;
-use Event;
-use File;
 use Igniter\Flame\Assetic\Asset\AssetCache;
 use Igniter\Flame\Assetic\Asset\AssetCollection;
 use Igniter\Flame\Assetic\Asset\FileAsset;
 use Igniter\Flame\Assetic\Asset\HttpAsset;
 use Igniter\Flame\Assetic\Cache\FilesystemCache;
-use Request;
-use Response;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 
 trait CombinesAssets
 {
@@ -57,7 +57,7 @@ trait CombinesAssets
         $this->cacheKeyPrefix = 'ti.combiner.';
         $this->useCache = config('system.enableAssetCache', TRUE);
         $this->useMinify = config('system.enableAssetMinify', null);
-        $this->combineAssets = config('system.enableAssetCombiner', FALSE);
+        $this->combineAssets = config('system.enableAssetCombiner', !config('app.debug', FALSE));
         $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
 
@@ -76,7 +76,7 @@ trait CombinesAssets
 
         if ($this->useMinify) {
             $this->registerFilter('js', new \Igniter\Flame\Assetic\Filter\JSMinFilter);
-            $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssMinFilter);
+            $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\StylesheetMinify);
         }
     }
 
@@ -101,14 +101,13 @@ trait CombinesAssets
     {
         $assets = $this->prepareAssets($assets);
 
+        $combiner = $this->prepareCombiner($assets);
+        $lastMod = $combiner->getLastModified();
+
         $cacheKey = $this->getCacheKey($assets);
-        $cacheData = $this->useCache ? $this->getCache($cacheKey) : FALSE;
+        $cacheData = $this->useCache ? $this->getCache($cacheKey.$lastMod) : FALSE;
 
         if (!$cacheData) {
-            $combiner = $this->prepareCombiner($assets);
-
-            $lastMod = $combiner->getLastModified();
-
             $cacheData = [
                 'type' => $type,
                 'uri' => $cacheKey.'-'.$lastMod.'.'.$type,
@@ -207,6 +206,9 @@ trait CombinesAssets
 
             if (!file_exists($path))
                 $path = File::symbolizePath($path, null) ?? $path;
+
+            if (!file_exists($path))
+                continue;
 
             $asset = starts_with($path, ['//', 'http://', 'https://'])
                 ? new HttpAsset($path, $filters)

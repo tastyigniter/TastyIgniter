@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => 'hide',
+            'locationAware' => TRUE,
         ],
         'category' => [
             'label' => 'lang:admin::lang.menus.text_filter_category',
@@ -35,21 +35,38 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'menus/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
-        ],
         'allergens' => [
             'label' => 'lang:admin::lang.allergens.text_allergens',
             'class' => 'btn btn-default',
             'href' => 'allergens',
             'permission' => 'Admin.Allergens',
         ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.list.actions.label_status',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'menu_status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:admin::lang.list.actions.label_enable',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:admin::lang.list.actions.label_disable',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
+        ],
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -78,7 +95,7 @@ $config['list']['columns'] = [
         'relation' => 'locations',
         'select' => 'location_name',
         'invisible' => TRUE,
-        'locationAware' => 'hide',
+        'locationAware' => TRUE,
     ],
     'menu_price' => [
         'label' => 'lang:admin::lang.menus.column_price',
@@ -88,7 +105,6 @@ $config['list']['columns'] = [
     'stock_qty' => [
         'label' => 'lang:admin::lang.menus.column_stock_qty',
         'type' => 'number',
-        'searchable' => TRUE,
     ],
     'special_status' => [
         'label' => 'lang:admin::lang.menus.label_special_status',
@@ -106,22 +122,31 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
 ];
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'menus',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-progress-indicator' => 'admin::lang.text_saving',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-data' => 'close:1',
             'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
@@ -180,6 +205,7 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'valueFrom' => 'locations',
             'nameFrom' => 'location_name',
+            'scope' => 'isEnabled',
         ],
         'minimum_qty' => [
             'label' => 'lang:admin::lang.menus.label_minimum_qty',
@@ -190,27 +216,23 @@ $config['form']['tabs'] = [
         ],
         'stock_qty' => [
             'label' => 'lang:admin::lang.menus.label_stock_qty',
-            'type' => 'number',
+            'type' => 'stockeditor',
             'span' => 'right',
             'default' => 0,
             'comment' => 'lang:admin::lang.menus.help_stock_qty',
         ],
         'order_restriction' => [
             'label' => 'lang:admin::lang.menus.label_order_restriction',
-            'type' => 'radiotoggle',
+            'type' => 'checkboxtoggle',
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
-            'options' => [
-                'lang:admin::lang.text_none',
-                'lang:admin::lang.menus.text_delivery_only',
-                'lang:admin::lang.menus.text_collection_only',
-            ],
+            'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],
         ],
-        'subtract_stock' => [
-            'label' => 'lang:admin::lang.menus.label_subtract_stock',
+        'menu_status' => [
+            'label' => 'lang:admin::lang.label_status',
             'type' => 'switch',
+            'default' => 1,
             'span' => 'right',
-            'comment' => 'lang:admin::lang.menus.help_subtract_stock',
         ],
         'menu_description' => [
             'label' => 'lang:admin::lang.label_description',
@@ -227,12 +249,6 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'useAttachment' => TRUE,
         ],
-        'menu_status' => [
-            'label' => 'lang:admin::lang.label_status',
-            'type' => 'switch',
-            'default' => 1,
-            'span' => 'left',
-        ],
 
         '_options' => [
             'label' => 'lang:admin::lang.menus.label_option',
@@ -243,6 +259,7 @@ $config['form']['tabs'] = [
             'modelClass' => 'Admin\Models\Menu_options_model',
             'placeholder' => 'lang:admin::lang.menus.help_menu_option',
             'formName' => 'lang:admin::lang.menu_options.text_option',
+            'popupSize' => 'modal-lg',
             'addonRight' => [
                 'label' => '<i class="fa fa-long-arrow-down"></i> Add to Menu',
                 'tag' => 'button',
@@ -312,6 +329,9 @@ $config['form']['tabs'] = [
                 'field' => 'special[validity]',
                 'condition' => 'value[period]',
             ],
+            'containerAttributes' => [
+                'style' => 'z-index:10',
+            ],
         ],
         'special[end_date]' => [
             'label' => 'lang:admin::lang.menus.label_end_date',
@@ -324,6 +344,9 @@ $config['form']['tabs'] = [
                 'action' => 'show',
                 'field' => 'special[validity]',
                 'condition' => 'value[period]',
+            ],
+            'containerAttributes' => [
+                'style' => 'z-index:10',
             ],
         ],
         'special[recurring_every]' => [

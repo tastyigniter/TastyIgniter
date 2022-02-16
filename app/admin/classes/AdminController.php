@@ -2,15 +2,12 @@
 
 namespace Admin\Classes;
 
-use Admin;
-use Admin\Traits\HasAuthentication;
-use Admin\Traits\ValidatesForm;
-use Admin\Traits\WidgetMaker;
+use Admin\Facades\Admin;
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminLocation;
+use Admin\Facades\AdminMenu;
 use Admin\Widgets\Menu;
 use Admin\Widgets\Toolbar;
-use AdminAuth;
-use AdminLocation;
-use AdminMenu;
 use Exception;
 use Igniter\Flame\Exception\AjaxException;
 use Igniter\Flame\Exception\ApplicationException;
@@ -19,25 +16,31 @@ use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Flash\Facades\Flash;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Main\Widgets\MediaManager;
-use Redirect;
-use Request;
-use Response;
-use System\Classes\BaseController;
+use System\Classes\Controller;
 use System\Classes\ErrorHandler;
-use System\Traits\AssetMaker;
-use System\Traits\ConfigMaker;
-use System\Traits\ViewMaker;
 
 class AdminController extends BaseController
 {
-    use AssetMaker;
-    use ViewMaker;
-    use ConfigMaker;
-    use WidgetMaker;
-    use ValidatesForm;
-    use HasAuthentication;
+    use \Admin\Traits\HasAuthentication;
+    use \Admin\Traits\ValidatesForm;
+    use \Admin\Traits\WidgetMaker;
+    use \System\Traits\AssetMaker;
+    use \System\Traits\ConfigMaker;
+    use \System\Traits\VerifiesCsrfToken;
+    use \System\Traits\ViewMaker;
+    use \Igniter\Flame\Traits\EventEmitter;
+    use \Igniter\Flame\Traits\ExtendableTrait;
+
+    /**
+     * A list of controller behavours/traits to be implemented
+     */
+    public $implement = [];
 
     /**
      * @var object Object used for storing a fatal error.
@@ -53,6 +56,36 @@ class AdminController extends BaseController
      * @var bool Prevents the automatic view display.
      */
     public $suppressView = FALSE;
+
+    /**
+     * @var string Page method name being called.
+     */
+    protected $action;
+
+    /**
+     * @var array Routed parameters.
+     */
+    protected $params;
+
+    /**
+     * @var array Default actions which cannot be called as actions.
+     */
+    public $hiddenActions = [
+        'checkAction',
+        'pageAction',
+        'execPageAction',
+        'handleError',
+    ];
+
+    /**
+     * @var array Array of actions available without authentication.
+     */
+    protected $publicActions = [];
+
+    /**
+     * @var array Controller specified methods which cannot be called as actions.
+     */
+    protected $guarded = [];
 
     /**
      * @var string Permission required to view this page.
@@ -75,32 +108,23 @@ class AdminController extends BaseController
      */
     public function __construct()
     {
-        // Define layout and view paths
-        $this->layout = $this->layout ?: 'default';
-        $this->configPath = [];
+        $this->action = Controller::$action;
+        $this->params = Controller::$segments;
 
+        // Apply $guarded methods to hidden actions
+        $this->hiddenActions = array_merge($this->hiddenActions, $this->guarded);
+
+        // Define layout and view paths
         $this->definePaths();
 
-        // Create a new instance of the admin user
-        $this->setUser(AdminAuth::user());
-
-        parent::__construct();
-
-        // Toolbar widget is available on all admin pages
-        $toolbar = new Toolbar($this, ['context' => $this->action]);
-        $toolbar->bindToController();
-
-        // Media Manager widget is available on all admin pages
-        if ($this->currentUser AND $this->currentUser->hasPermission('Admin.MediaManager')) {
-            $manager = new MediaManager($this, ['alias' => 'mediamanager']);
-            $manager->bindToController();
-        }
-
-        $this->fireEvent('controller.afterConstructor', [$this]);
+        $this->extendableConstruct();
     }
 
     protected function definePaths()
     {
+        $this->layout = $this->layout ?: 'default';
+        $this->configPath = [];
+
         $classPath = strtolower(str_replace('\\', '/', get_called_class()));
         $relativePath = dirname($classPath, 2);
         $className = basename($classPath);
@@ -131,13 +155,40 @@ class AdminController extends BaseController
         $this->assetPath = '~/app/'.$relativePath.'/assets';
     }
 
+    public function initialize()
+    {
+        // Set an instance of the admin user
+        $this->setUser(AdminAuth::user());
+
+        $this->fireSystemEvent('admin.controller.beforeInit');
+
+        // @deprecated This event will be deprecated soon, use controller.beforeInit
+        $this->fireEvent('controller.beforeConstructor', [$this]);
+
+        // Toolbar widget is available on all admin pages
+        $toolbar = new Toolbar($this, ['context' => $this->action]);
+        $toolbar->bindToController();
+
+        // Media Manager widget is available on all admin pages
+        if ($this->currentUser && $this->currentUser->hasPermission('Admin.MediaManager')) {
+            $manager = new MediaManager($this, ['alias' => 'mediamanager']);
+            $manager->bindToController();
+        }
+
+        // @deprecated This event will be deprecated soon, use controller.beforeRemap
+        $this->fireEvent('controller.afterConstructor', [$this]);
+    }
+
     public function remap($action, $params)
     {
-        $this->action = $action;
-        $this->params = $params;
+        $this->fireSystemEvent('admin.controller.beforeRemap');
+
+        if (!$this->verifyCsrfToken()) {
+            return Response::make(lang('admin::lang.alert_invalid_csrf_token'), 403);
+        }
 
         // Determine if this request is a public action or authentication is required
-        $requireAuthentication = !(in_array($action, $this->publicActions) OR !$this->requireAuthentication);
+        $requireAuthentication = !(in_array($action, $this->publicActions) || !$this->requireAuthentication);
 
         // Ensures that a user is logged in, if required
         if ($requireAuthentication) {
@@ -148,7 +199,7 @@ class AdminController extends BaseController
             }
 
             // Check that user has permission to view this page
-            if ($this->requiredPermissions AND !$this->getUser()->hasAnyPermission($this->requiredPermissions)) {
+            if ($this->requiredPermissions && !$this->getUser()->hasAnyPermission($this->requiredPermissions)) {
                 return Response::make(Request::ajax()
                     ? lang('admin::lang.alert_user_restricted')
                     : View::make('admin::access_denied'), 403
@@ -164,7 +215,7 @@ class AdminController extends BaseController
         }
 
         // Execute post handler and AJAX event
-        if ($handlerResponse = $this->processHandlers() AND $handlerResponse !== TRUE) {
+        if (($handlerResponse = $this->processHandlers()) && $handlerResponse !== TRUE) {
             return $handlerResponse;
         }
 
@@ -175,8 +226,24 @@ class AdminController extends BaseController
             return $response;
 
         // Return response
-        return is_string($response)
-            ? Response::make($response, $this->statusCode) : $response;
+        return Response::make()->setContent($response);
+    }
+
+    public function checkAction($action)
+    {
+        if (!$methodExists = $this->methodExists($action))
+            return FALSE;
+
+        if (in_array(strtolower($action), array_map('strtolower', $this->hiddenActions)))
+            return FALSE;
+
+        if (method_exists($this, $action)) {
+            $methodInfo = new \ReflectionMethod($this, $action);
+
+            return $methodInfo->isPublic();
+        }
+
+        return $methodExists;
     }
 
     public function pageAction()
@@ -187,6 +254,16 @@ class AdminController extends BaseController
 
         $this->suppressView = TRUE;
         $this->execPageAction($this->action, $this->params);
+    }
+
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
     }
 
     protected function execPageAction($action, $params)
@@ -203,10 +280,10 @@ class AdminController extends BaseController
         array_unshift($params, $action);
 
         // Execute the action
-        $result = call_user_func_array([$this, $action], $params);
+        $result = call_user_func_array([$this, $action], array_values($params));
 
         // Render the controller view if not already loaded
-        if (is_null($result) AND !$this->suppressView) {
+        if (is_null($result) && !$this->suppressView) {
             return $this->makeView($this->fatalError ? 'admin::error' : $action);
         }
 
@@ -221,7 +298,7 @@ class AdminController extends BaseController
         $config = [];
         $config['alias'] = 'mainmenu';
         $config['items'] = AdminMenu::getMainItems();
-        $config['context'] = $this->getClass();
+        $config['context'] = class_basename($this);
         $mainMenuWidget = new Menu($this, $config);
         $mainMenuWidget->bindToController();
     }
@@ -236,7 +313,7 @@ class AdminController extends BaseController
      */
     public function getHandler()
     {
-        if (Request::ajax() AND $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
+        if (Request::ajax() && $handler = Request::header('X-IGNITER-REQUEST-HANDLER'))
             return trim($handler);
 
         if ($handler = post('_handler'))
@@ -292,7 +369,7 @@ class AdminController extends BaseController
 
             $response['#notification'] = $this->makePartial('flash');
             $response['X_IGNITER_ERROR_FIELDS'] = $ex->getFields();
-            $response['X_IGNITER_ERROR_MESSAGE'] = $ex->getMessage();
+//            $response['X_IGNITER_ERROR_MESSAGE'] = $ex->getMessage(); avoid duplicate flash message.
 
             throw new AjaxException($response);
         }
@@ -307,7 +384,7 @@ class AdminController extends BaseController
     protected function validateHandler($handler)
     {
         if (!preg_match('/^(?:\w+\:{2})?on[A-Z]{1}[\w+]*$/', $handler)) {
-            throw new SystemException("Invalid ajax handler name: {$handler}");
+            throw new SystemException(sprintf(lang('admin::lang.alert_invalid_ajax_handler_name'), $handler));
         }
     }
 
@@ -320,7 +397,7 @@ class AdminController extends BaseController
 
         foreach ($partials as $partial) {
             if (!preg_match('/^(?:\w+\:{2}|@)?[a-z0-9\_\-\.\/]+$/i', $partial)) {
-                throw new SystemException("Invalid partial name: $partial");
+                throw new SystemException(sprintf(lang('admin::lang.alert_invalid_ajax_partial_name'), $partial));
             }
         }
 
@@ -385,14 +462,11 @@ class AdminController extends BaseController
             $this->pageAction();
 
             if (!isset($this->widgets[$widgetName])) {
-                throw new Exception(sprintf(
-                    "A widget with class name '%s' has not been bound to the controller",
-                    $widgetName
-                ));
+                throw new Exception(sprintf(lang('admin::lang.alert_widget_not_bound_to_controller'), $widgetName));
             }
 
-            if (($widget = $this->widgets[$widgetName]) AND method_exists($widget, $handlerName)) {
-                $result = call_user_func_array([$widget, $handlerName], $params);
+            if (($widget = $this->widgets[$widgetName]) && method_exists($widget, $handlerName)) {
+                $result = call_user_func_array([$widget, $handlerName], array_values($params));
 
                 return $result ?: TRUE;
             }
@@ -402,14 +476,14 @@ class AdminController extends BaseController
             $pageHandler = $this->action.'_'.$handler;
 
             if ($this->methodExists($pageHandler)) {
-                $result = call_user_func_array([$this, $pageHandler], $params);
+                $result = call_user_func_array([$this, $pageHandler], array_values($params));
 
                 return $result ?: TRUE;
             }
 
             // Process page global handler (onSomething)
             if ($this->methodExists($handler)) {
-                $result = call_user_func_array([$this, $handler], $params);
+                $result = call_user_func_array([$this, $handler], array_values($params));
 
                 return $result ?: TRUE;
             }
@@ -420,7 +494,7 @@ class AdminController extends BaseController
 
             foreach ((array)$this->widgets as $widget) {
                 if ($widget->methodExists($handler)) {
-                    $result = call_user_func_array([$widget, $handler], $params);
+                    $result = call_user_func_array([$widget, $handler], array_values($params));
 
                     return $result ?: TRUE;
                 }
@@ -444,5 +518,34 @@ class AdminController extends BaseController
         $this->vars['fatalError'] = $errorMessage;
 
         flash()->error($errorMessage)->important();
+    }
+
+    //
+    // Extendable
+    //
+
+    public function __get($name)
+    {
+        return $this->extendableGet($name);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->extendableSet($name, $value);
+    }
+
+    public function __call($name, $params)
+    {
+        return $this->extendableCall($name, $params);
+    }
+
+    public static function __callStatic($name, $params)
+    {
+        return self::extendableCallStatic($name, $params);
+    }
+
+    public static function extend(callable $callback)
+    {
+        self::extendableExtendCallback($callback);
     }
 }
