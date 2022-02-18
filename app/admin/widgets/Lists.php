@@ -7,7 +7,6 @@ use Admin\Classes\ListColumn;
 use Admin\Classes\ToolbarButton;
 use Admin\Classes\Widgets;
 use Admin\Facades\AdminAuth;
-use Admin\Traits\HasPipeline;
 use Admin\Traits\LocationAwareWidget;
 use Carbon\Carbon;
 use Exception;
@@ -21,7 +20,6 @@ use Illuminate\Support\Facades\DB;
 
 class Lists extends BaseWidget
 {
-    use HasPipeline;
     use LocationAwareWidget;
 
     /**

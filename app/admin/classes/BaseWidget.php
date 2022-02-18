@@ -2,6 +2,7 @@
 
 namespace Admin\Classes;
 
+use Admin\Traits\HasPipeline;
 use Admin\Traits\LocationAwareWidget;
 use Admin\Traits\WidgetMaker;
 use Igniter\Flame\Support\Extendable;
@@ -17,13 +18,14 @@ use System\Traits\ViewMaker;
  */
 class BaseWidget extends Extendable
 {
-    use WidgetMaker;
-    use SessionMaker;
-    use ViewMaker;
     use AssetMaker;
     use ConfigMaker;
     use EventEmitter;
+    use HasPipeline;
     use LocationAwareWidget;
+    use SessionMaker;
+    use ViewMaker;
+    use WidgetMaker;
 
     /**
      * @var \Admin\Classes\AdminController Admin controller object.
