@@ -3,7 +3,7 @@
 namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
-use Admin\Models\WorkingHours;
+use Admin\Models\WorkingHour;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
 use Igniter\Flame\Exception\ApplicationException;
@@ -136,7 +136,7 @@ class ScheduleEditor extends BaseFormWidget
     protected function makeScheduleFormWidget($scheduleItem)
     {
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-        $widgetConfig['model'] = WorkingHours::make();
+        $widgetConfig['model'] = WorkingHour::make();
         $widgetConfig['data'] = $scheduleItem;
         $widgetConfig['alias'] = $this->alias.'FormScheduleEditor';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[scheduleData]';

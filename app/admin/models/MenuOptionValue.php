@@ -38,7 +38,7 @@ class MenuOptionValue extends Model
             'option' => ['Admin\Models\MenuOption'],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
+            'allergens' => ['Admin\Models\Allergen', 'name' => 'allergenable'],
         ],
     ];
 
@@ -57,7 +57,7 @@ class MenuOptionValue extends Model
         if (self::$allergensOptionsCache)
             return self::$allergensOptionsCache;
 
-        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
+        return self::$allergensOptionsCache = Allergen::dropdown('name')->all();
     }
 
     //

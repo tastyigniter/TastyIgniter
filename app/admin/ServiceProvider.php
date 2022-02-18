@@ -554,7 +554,7 @@ class ServiceProvider extends AppServiceProvider
     {
         Relation::morphMap([
             'addresses' => 'Admin\Models\Address',
-            'allergens' => 'Admin\Models\Allergens_model',
+            'allergens' => 'Admin\Models\Allergen',
             'assignable_logs' => 'Admin\Models\AssignableLog',
             'categories' => 'Admin\Models\Category',
             'customer_groups' => 'Admin\Models\CustomerGroup',
@@ -580,7 +580,7 @@ class ServiceProvider extends AppServiceProvider
             'stock_history' => 'Admin\Models\StockHistory',
             'tables' => 'Admin\Models\Table',
             'users' => 'Admin\Models\User',
-            'working_hours' => 'Admin\Models\WorkingHours',
+            'working_hours' => 'Admin\Models\WorkingHour',
         ]);
     }
 
@@ -756,7 +756,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 1,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/setup'),
-                    'form' => '~/app/admin/models/config/SetupSettings',
+                    'form' => '~/app/admin/models/config/setupsettings',
                     'request' => 'Admin\Requests\SetupSettings',
                 ],
                 'user' => [
@@ -766,7 +766,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 3,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/user'),
-                    'form' => '~/app/admin/models/config/UserSettings',
+                    'form' => '~/app/admin/models/config/usersettings',
                     'request' => 'Admin\Requests\UserSettings',
                 ],
             ]);

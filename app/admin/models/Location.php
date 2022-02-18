@@ -40,7 +40,7 @@ class Location extends AbstractLocation
 
     public $relation = [
         'hasMany' => [
-            'working_hours' => ['Admin\Models\WorkingHours', 'delete' => TRUE],
+            'working_hours' => ['Admin\Models\WorkingHour', 'delete' => TRUE],
             'delivery_areas' => ['Admin\Models\LocationArea', 'delete' => TRUE],
         ],
         'belongsTo' => [

@@ -25,7 +25,7 @@ class Allergens extends AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.allergens.text_form_name',
-        'model' => 'Admin\Models\Allergens_model',
+        'model' => 'Admin\Models\Allergen',
         'request' => 'Admin\Requests\Allergen',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',

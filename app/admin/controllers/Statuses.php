@@ -55,23 +55,4 @@ class Statuses extends \Admin\Classes\AdminController
 
         AdminMenu::setContext('statuses', 'sales');
     }
-
-    public function comment_notify()
-    {
-        if (get('status_id')) {
-            $status = $this->Status->getStatus(get('status_id'));
-
-            $json = ['comment' => $status['status_comment'], 'notify' => $status['notify_customer']];
-
-            return $json;
-        }
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-        ];
-
-        return $this->validatePasses($form->getSaveData(), $rules);
-    }
 }

@@ -56,7 +56,7 @@ class Menu extends Model
             'mealtimes' => ['Admin\Models\Mealtime', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
+            'allergens' => ['Admin\Models\Allergen', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];

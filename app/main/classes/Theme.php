@@ -11,7 +11,7 @@ use Main\Template\Content as ContentTemplate;
 use Main\Template\Layout as LayoutTemplate;
 use Main\Template\Page as PageTemplate;
 use Main\Template\Partial as PartialTemplate;
-use System\Models\Theme;
+use System\Models\Theme as ThemeModel;
 
 class Theme
 {
@@ -239,7 +239,7 @@ class Theme
 
     public function getCustomData()
     {
-        return Theme::forTheme($this)->getThemeData();
+        return ThemeModel::forTheme($this)->getThemeData();
     }
 
     /**
@@ -250,7 +250,7 @@ class Theme
     {
         $result = [];
 
-        $formFields = Theme::forTheme($this)->getFieldsConfig();
+        $formFields = ThemeModel::forTheme($this)->getFieldsConfig();
         foreach ($formFields as $attribute => $field) {
             if (!$varNames = array_get($field, 'assetVar')) continue;
 

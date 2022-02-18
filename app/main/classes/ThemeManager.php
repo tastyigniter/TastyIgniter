@@ -9,6 +9,7 @@ use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
+use Main\Classes\Theme as ThemeClass;
 use System\Libraries\Assets;
 use System\Models\Theme;
 use ZipArchive;
@@ -74,7 +75,7 @@ class ThemeManager
         }
     }
 
-    public static function applyAssetVariablesOnCombinerFilters(array $filters, Theme $theme = null)
+    public static function applyAssetVariablesOnCombinerFilters(array $filters, ThemeClass $theme = null)
     {
         $theme = !is_null($theme) ? $theme : self::instance()->getActiveTheme();
 
@@ -149,7 +150,7 @@ class ThemeManager
         }
 
         $config = $this->getMetaFromFile($themeCode);
-        $themeObject = new Theme($path, $config);
+        $themeObject = new ThemeClass($path, $config);
 
         $themeObject->active = $this->isActive($themeCode);
 
@@ -652,7 +653,7 @@ class ThemeManager
         return $config;
     }
 
-    public function getFileNameParts($path, Theme $theme)
+    public function getFileNameParts($path, ThemeClass $theme)
     {
         $parts = explode('/', $path);
         $dirName = $parts[0];
