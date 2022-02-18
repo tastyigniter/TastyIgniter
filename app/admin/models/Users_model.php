@@ -6,6 +6,7 @@ use Admin\Classes\PermissionManager;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use System\Traits\SendsMailTemplate;
 
 /**
@@ -13,6 +14,7 @@ use System\Traits\SendsMailTemplate;
  */
 class Users_model extends AuthUserModel
 {
+    use HasFactory;
     use Purgeable;
     use SendsMailTemplate;
 

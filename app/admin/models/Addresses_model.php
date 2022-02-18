@@ -3,12 +3,15 @@
 namespace Admin\Models;
 
 use Igniter\Flame\Database\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Addresses Model Class
  */
 class Addresses_model extends Model
 {
+    use HasFactory;
+
     /**
      * @var string The database table name
      */

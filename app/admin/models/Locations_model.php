@@ -9,6 +9,7 @@ use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Locations Model Class
@@ -17,6 +18,7 @@ class Locations_model extends AbstractLocation
 {
     use HasWorkingHours;
     use HasDeliveryAreas;
+    use HasFactory;
     use HasPermalink;
     use HasMedia;
     use Purgeable;
