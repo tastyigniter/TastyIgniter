@@ -270,6 +270,9 @@ class Lists extends BaseWidget
         $withs = [];
 
         // Extensibility
+        // @deprecated, remove before v5
+        $this->fireSystemEvent('admin.list.extendQueryBefore', [$query]);
+
         $query = $this->callPipeline('extendQueryBefore', $query);
 
         // Prepare searchable column names
@@ -388,6 +391,11 @@ class Lists extends BaseWidget
 
         // Extensibility
         $query = $this->callPipeline('extendQuery', $query);
+
+        // @deprecated, remove before v5
+        if ($event = $this->fireSystemEvent('admin.list.extendQuery', [$query], TRUE)) {
+            return $event;
+        }
 
         return $query;
     }
