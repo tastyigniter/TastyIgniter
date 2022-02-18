@@ -2,7 +2,6 @@
 
 namespace Admin\Models;
 
-use Admin\Events\Menu\StockUpdated;
 use Admin\Events\Model\ExtendListFrontEndQuery;
 use Admin\Traits\Locationable;
 use Admin\Traits\Stockable;
