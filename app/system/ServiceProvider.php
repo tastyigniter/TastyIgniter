@@ -447,7 +447,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 0,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/general'),
-                    'form' => '~/app/system/models/config/GeneralSettings',
+                    'form' => '~/app/system/models/config/generalsettings',
                     'request' => 'System\Requests\GeneralSettings',
                 ],
                 'mail' => [
@@ -457,7 +457,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 5,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/mail'),
-                    'form' => '~/app/system/models/config/MailSettings',
+                    'form' => '~/app/system/models/config/mailsettings',
                     'request' => 'System\Requests\MailSettings',
                 ],
                 'advanced' => [
@@ -467,7 +467,7 @@ class ServiceProvider extends AppServiceProvider
                     'priority' => 6,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/advanced'),
-                    'form' => '~/app/system/models/config/AdvancedSettings',
+                    'form' => '~/app/system/models/config/advancedsettings',
                     'request' => 'System\Requests\AdvancedSettings',
                 ],
             ]);

@@ -20,7 +20,7 @@ class Countries extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.countries.text_title',
             'emptyMessage' => 'lang:system::lang.countries.text_empty',
             'defaultSort' => ['country_name', 'ASC'],
-            'configFile' => 'Country',
+            'configFile' => 'country',
         ],
     ];
 
@@ -47,7 +47,7 @@ class Countries extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'countries',
         ],
-        'configFile' => 'Country',
+        'configFile' => 'country',
     ];
 
     protected $requiredPermissions = 'Site.Countries';

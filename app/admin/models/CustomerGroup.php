@@ -5,7 +5,7 @@ namespace Admin\Models;
 use Igniter\Flame\Database\Model;
 
 /**
- * CustomerGroups Model Class
+ * CustomerGroup Model Class
  */
 class CustomerGroup extends Model
 {
@@ -91,3 +91,5 @@ class CustomerGroup extends Model
         return self::$defaultGroup = $defaultGroup;
     }
 }
+
+class_alias('Admin\Models\CustomerGroup', 'Admin\Models\Customer_groups_model', FALSE);

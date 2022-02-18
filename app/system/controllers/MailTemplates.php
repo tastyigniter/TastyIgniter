@@ -20,7 +20,7 @@ class MailTemplates extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.mail_templates.text_template_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['template_id', 'DESC'],
-            'configFile' => 'MailTemplate',
+            'configFile' => 'mailtemplate',
         ],
     ];
 
@@ -47,7 +47,7 @@ class MailTemplates extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'mail_templates',
         ],
-        'configFile' => 'MailTemplate',
+        'configFile' => 'mailtemplate',
     ];
 
     protected $requiredPermissions = 'Admin.MailTemplates';
@@ -89,7 +89,7 @@ class MailTemplates extends \Admin\Classes\AdminController
 
         $adminUser = $this->getUser()->staff;
 
-        config()->set('system.suppressTemplateRuntimeNotice', true);
+        config()->set('system.suppressTemplateRuntimeNotice', TRUE);
 
         Mail::send($model->code, [], function ($message) use ($adminUser) {
             $message->to($adminUser->staff_email, $adminUser->staff_name);

@@ -31,7 +31,7 @@ class Extensions extends \Admin\Classes\AdminController
             'pageLimit' => 50,
             'defaultSort' => ['name', 'ASC'],
             'showCheckboxes' => FALSE,
-            'configFile' => 'Extension',
+            'configFile' => 'extension',
         ],
     ];
 

@@ -21,7 +21,7 @@ class Locations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.locations.text_title',
             'emptyMessage' => 'lang:admin::lang.locations.text_empty',
             'defaultSort' => ['location_id', 'DESC'],
-            'configFile' => 'Location',
+            'configFile' => 'location',
         ],
     ];
 
@@ -48,7 +48,7 @@ class Locations extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'locations',
         ],
-        'configFile' => 'Location',
+        'configFile' => 'location',
     ];
 
     protected $requiredPermissions = 'Admin.Locations';

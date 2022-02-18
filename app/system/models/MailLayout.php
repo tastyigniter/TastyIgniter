@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\View;
 use System\Classes\MailManager;
 
 /**
- * MailLayouts Model Class
+ * MailLayout Model Class
  */
 class MailLayout extends Model
 {
@@ -140,3 +140,5 @@ class MailLayout extends Model
         }
     }
 }
+
+class_alias('System\Models\MailLayout', 'System\Models\Mail_layouts_model', FALSE);

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\View;
 use System\Classes\MailManager;
 
 /**
- * Mail templates Model Class
+ * MailTemplate Model Class
  */
 class MailTemplate extends Model
 {
@@ -162,3 +162,5 @@ class MailTemplate extends Model
         MailManager::instance()->registerCallback($callback);
     }
 }
+
+class_alias('System\Models\MailTemplate', 'System\Models\Mail_templates_model', FALSE);

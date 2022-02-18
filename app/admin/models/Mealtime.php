@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 
 /**
- * Mealtimes Model Class
+ * Mealtime Model Class
  */
 class Mealtime extends Model
 {
@@ -73,3 +73,5 @@ class Mealtime extends Model
         return $this->isAvailable();
     }
 }
+
+class_alias('Admin\Models\Mealtime', 'Admin\Models\Mealtimes_model', FALSE);

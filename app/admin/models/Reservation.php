@@ -13,7 +13,7 @@ use Main\Classes\MainController;
 use System\Traits\SendsMailTemplate;
 
 /**
- * Reservations Model Class
+ * Reservation Model Class
  */
 class Reservation extends Model
 {
@@ -462,3 +462,5 @@ class Reservation extends Model
         return $data;
     }
 }
+
+class_alias('Admin\Models\Reservation', 'Admin\Models\Reservations_model', FALSE);

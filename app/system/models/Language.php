@@ -4,13 +4,12 @@ namespace System\Models;
 
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
-use Igniter\Flame\Translation\Models\Language;
 use Illuminate\Support\Facades\Lang;
 
 /**
- * Languages Model Class
+ * Language Model Class
  */
-class Language extends Language
+class Language extends \Igniter\Flame\Translation\Models\Language
 {
     use Purgeable;
 
@@ -248,3 +247,5 @@ class Language extends Language
         $translation->updateAndLock($text);
     }
 }
+
+class_alias('System\Models\Language', 'System\Models\Languages_model', FALSE);

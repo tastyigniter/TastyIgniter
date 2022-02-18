@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Traits\Validation;
 use Igniter\Flame\Location\Models\AbstractArea;
 
 /**
- * Location areas Model Class
+ * LocationArea Model Class
  */
 class LocationArea extends AbstractArea
 {
@@ -66,3 +66,5 @@ class LocationArea extends AbstractArea
             ->update(['is_default' => 0]);
     }
 }
+
+class_alias('Admin\Models\LocationArea', 'Admin\Models\Location_areas_model', FALSE);

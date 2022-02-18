@@ -18,7 +18,7 @@ class CustomerGroups extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.customer_groups.text_title',
             'emptyMessage' => 'lang:admin::lang.customer_groups.text_empty',
             'defaultSort' => ['customer_group_id', 'DESC'],
-            'configFile' => 'CustomerGroup',
+            'configFile' => 'customergroup',
         ],
     ];
 
@@ -45,7 +45,7 @@ class CustomerGroups extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'customer_groups',
         ],
-        'configFile' => 'CustomerGroup',
+        'configFile' => 'customergroup',
     ];
 
     protected $requiredPermissions = 'Admin.CustomerGroups';

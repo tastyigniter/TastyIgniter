@@ -25,7 +25,7 @@ class Reservations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.reservations.text_title',
             'emptyMessage' => 'lang:admin::lang.reservations.text_empty',
             'defaultSort' => ['reservation_id', 'DESC'],
-            'configFile' => 'Reservation',
+            'configFile' => 'reservation',
         ],
     ];
 
@@ -34,7 +34,7 @@ class Reservations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.reservations.text_title',
             'emptyMessage' => 'lang:admin::lang.reservations.text_no_booking',
             'popoverPartial' => 'reservations/calendar_popover',
-            'configFile' => 'Reservation',
+            'configFile' => 'reservation',
         ],
     ];
 
@@ -61,7 +61,7 @@ class Reservations extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'reservations',
         ],
-        'configFile' => 'Reservation',
+        'configFile' => 'reservation',
     ];
 
     protected $requiredPermissions = [

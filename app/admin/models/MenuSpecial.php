@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 
 /**
- * Menu Specials Model Class
+ * MenuSpecial Model Class
  */
 class MenuSpecial extends Model
 {
@@ -113,3 +113,5 @@ class MenuSpecial extends Model
         return $price - (($price / 100) * round($this->special_price));
     }
 }
+
+class_alias('Admin\Models\MenuSpecial', 'Admin\Models\Menu_specials_model', FALSE);

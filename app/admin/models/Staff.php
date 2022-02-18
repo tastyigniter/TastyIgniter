@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
- * Staffs Model Class
+ * Staff Model Class
  */
 class Staff extends Model
 {
@@ -216,3 +216,5 @@ class Staff extends Model
         return $this->sale_permission === 3;
     }
 }
+
+class_alias('Admin\Models\Staff', 'Admin\Models\Staffs_model', FALSE);

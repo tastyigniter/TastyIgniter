@@ -9,7 +9,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
 use System\Traits\SendsMailTemplate;
 
 /**
- * Customers Model Class
+ * Customer Model Class
  */
 class Customer extends AuthUserModel
 {
@@ -263,3 +263,5 @@ class Customer extends AuthUserModel
         ]);
     }
 }
+
+class_alias('Admin\Models\Customer', 'Admin\Models\Customers_model', FALSE);

@@ -36,7 +36,7 @@ class Themes extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.themes.text_title',
             'emptyMessage' => 'lang:system::lang.themes.text_empty',
             'defaultSort' => ['theme_id', 'DESC'],
-            'configFile' => 'Theme',
+            'configFile' => 'theme',
         ],
     ];
 
@@ -57,7 +57,7 @@ class Themes extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'themes',
         ],
-        'configFile' => 'Theme',
+        'configFile' => 'theme',
     ];
 
     protected $requiredPermissions = 'Site.Themes';

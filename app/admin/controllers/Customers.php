@@ -21,7 +21,7 @@ class Customers extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.customers.text_title',
             'emptyMessage' => 'lang:admin::lang.customers.text_empty',
             'defaultSort' => ['customer_id', 'DESC'],
-            'configFile' => 'Customer',
+            'configFile' => 'customer',
         ],
     ];
 
@@ -48,7 +48,7 @@ class Customers extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'customers',
         ],
-        'configFile' => 'Customer',
+        'configFile' => 'customer',
     ];
 
     protected $requiredPermissions = 'Admin.Customers';

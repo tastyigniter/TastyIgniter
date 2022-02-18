@@ -18,7 +18,7 @@ class StaffGroups extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.staff_groups.text_title',
             'emptyMessage' => 'lang:admin::lang.staff_groups.text_empty',
             'defaultSort' => ['staff_group_id', 'DESC'],
-            'configFile' => 'StaffGroup',
+            'configFile' => 'staffgroup',
         ],
     ];
 
@@ -45,7 +45,7 @@ class StaffGroups extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'staff_groups',
         ],
-        'configFile' => 'StaffGroup',
+        'configFile' => 'staffgroup',
     ];
 
     protected $requiredPermissions = 'Admin.StaffGroups';

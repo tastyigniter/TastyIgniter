@@ -24,7 +24,7 @@ class Languages extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.languages.text_title',
             'emptyMessage' => 'lang:system::lang.languages.text_empty',
             'defaultSort' => ['language_id', 'DESC'],
-            'configFile' => 'Language',
+            'configFile' => 'language',
         ],
     ];
 
@@ -51,7 +51,7 @@ class Languages extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'languages',
         ],
-        'configFile' => 'Language',
+        'configFile' => 'language',
     ];
 
     protected $requiredPermissions = 'Site.Languages';

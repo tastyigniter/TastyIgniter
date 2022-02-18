@@ -17,7 +17,7 @@ use Main\Classes\MainController;
 use System\Traits\SendsMailTemplate;
 
 /**
- * Orders Model Class
+ * Order Model Class
  */
 class Order extends Model
 {
@@ -431,3 +431,5 @@ class Order extends Model
         return $data;
     }
 }
+
+class_alias('Admin\Models\Order', 'Admin\Models\Orders_model', FALSE);

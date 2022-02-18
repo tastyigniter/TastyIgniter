@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
 
 /**
- * RequestLogs Model Class
+ * RequestLog Model Class
  */
 class RequestLog extends Model
 {
@@ -67,3 +67,5 @@ class RequestLog extends Model
         return $this;
     }
 }
+
+class_alias('System\Models\RequestLog', 'System\Models\Request_logs_model', FALSE);

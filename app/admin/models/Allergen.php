@@ -7,9 +7,9 @@ use Igniter\Flame\Database\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Allergens Model Class
+ * Allergen Model Class
  */
-class Allergens_model extends Model
+class Allergen extends Model
 {
     use HasMedia;
 
@@ -76,3 +76,5 @@ class Allergens_model extends Model
         return $query->where('status', 1);
     }
 }
+
+class_alias('Admin\Models\Allergen', 'Admin\Models\Allergens_model', FALSE);

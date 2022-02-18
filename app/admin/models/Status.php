@@ -5,7 +5,7 @@ namespace Admin\Models;
 use Igniter\Flame\Database\Model;
 
 /**
- * Statuses Model Class
+ * Status Model Class
  */
 class Status extends Model
 {
@@ -99,3 +99,5 @@ class Status extends Model
         return static::all()->keyBy('status_id');
     }
 }
+
+class_alias('Admin\Models\Status', 'Admin\Models\Statuses_model', FALSE);

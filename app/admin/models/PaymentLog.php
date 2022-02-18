@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Traits\Validation;
 use Illuminate\Support\Facades\Event;
 
 /**
- * Payment logs Model Class
+ * PaymentLog Model Class
  */
 class PaymentLog extends Model
 {
@@ -90,3 +90,5 @@ class PaymentLog extends Model
         return TRUE;
     }
 }
+
+class_alias('Admin\Models\PaymentLog', 'Admin\Models\Payment_logs_model', FALSE);

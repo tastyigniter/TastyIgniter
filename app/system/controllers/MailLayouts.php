@@ -17,7 +17,7 @@ class MailLayouts extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.mail_templates.text_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['layout_id', 'DESC'],
-            'configFile' => 'MailLayout',
+            'configFile' => 'maillayout',
         ],
     ];
 
@@ -44,7 +44,7 @@ class MailLayouts extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'mail_layouts',
         ],
-        'configFile' => 'MailLayout',
+        'configFile' => 'maillayout',
     ];
 
     protected $requiredPermissions = 'Admin.MailTemplates';

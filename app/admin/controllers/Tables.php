@@ -21,7 +21,7 @@ class Tables extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.tables.text_title',
             'emptyMessage' => 'lang:admin::lang.tables.text_empty',
             'defaultSort' => ['table_id', 'DESC'],
-            'configFile' => 'Table',
+            'configFile' => 'table',
         ],
     ];
 
@@ -48,7 +48,7 @@ class Tables extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'tables',
         ],
-        'configFile' => 'Table',
+        'configFile' => 'table',
     ];
 
     protected $requiredPermissions = 'Admin.Tables';

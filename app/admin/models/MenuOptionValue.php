@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 
 /**
- * Menu_option_values Model Class
+ * MenuOptionValue Model Class
  */
 class MenuOptionValue extends Model
 {
@@ -84,3 +84,5 @@ class MenuOptionValue extends Model
         $this->allergens()->sync($allergenIds);
     }
 }
+
+class_alias('Admin\Models\MenuOptionValue', 'Admin\Models\Menu_option_values_model', FALSE);

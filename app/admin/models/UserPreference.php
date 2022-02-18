@@ -129,3 +129,5 @@ class UserPreference extends Model
         return $user->user_id.'-'.$item;
     }
 }
+
+class_alias('Admin\Models\UserPreference', 'Admin\Models\User_preference_model', FALSE);

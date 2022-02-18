@@ -7,7 +7,7 @@ use Igniter\Flame\Location\Models\AbstractWorkingHour;
 /**
  * Working hours Model Class
  */
-class WorkingHours extends AbstractWorkingHour
+class WorkingHour extends AbstractWorkingHour
 {
     public $fillable = ['location_id', 'weekday', 'opening_time', 'closing_time', 'status', 'type'];
 
@@ -67,3 +67,5 @@ class WorkingHours extends AbstractWorkingHour
         return $result;
     }
 }
+
+class_alias('Admin\Models\WorkingHour', 'Admin\Models\Working_hours_model', FALSE);

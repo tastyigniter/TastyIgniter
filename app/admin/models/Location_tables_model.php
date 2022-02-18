@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Model;
  * Location tables Model Class
  * @deprecated remove before v4. Added for backward compatibility, see Locationable
  */
-class Location_Table extends Model
+class Location_tables_model extends Model
 {
     /**
      * @var string The database table name

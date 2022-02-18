@@ -17,7 +17,7 @@ class MailPartials extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.mail_templates.text_partial_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['partial_id', 'DESC'],
-            'configFile' => 'MailPartial',
+            'configFile' => 'mailpartial',
         ],
     ];
 
@@ -44,7 +44,7 @@ class MailPartials extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'mail_partials',
         ],
-        'configFile' => 'MailPartial',
+        'configFile' => 'mailpartial',
     ];
 
     protected $requiredPermissions = 'Admin.MailTemplates';

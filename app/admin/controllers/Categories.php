@@ -20,7 +20,7 @@ class Categories extends AdminController
             'title' => 'lang:admin::lang.categories.text_title',
             'emptyMessage' => 'lang:admin::lang.categories.text_empty',
             'defaultSort' => ['category_id', 'DESC'],
-            'configFile' => 'Category',
+            'configFile' => 'category',
         ],
     ];
 
@@ -47,7 +47,7 @@ class Categories extends AdminController
         'delete' => [
             'redirect' => 'categories',
         ],
-        'configFile' => 'Category',
+        'configFile' => 'category',
     ];
 
     protected $requiredPermissions = 'Admin.Categories';

@@ -5,7 +5,7 @@ namespace Admin\Models;
 use Igniter\Flame\Database\Model;
 
 /**
- * Addresses Model Class
+ * Address Model Class
  */
 class Address extends Model
 {
@@ -94,3 +94,5 @@ class Address extends Model
         return format_address($this->toArray(), FALSE);
     }
 }
+
+class_alias('Admin\Models\Address', 'Admin\Models\Addresses_model', FALSE);

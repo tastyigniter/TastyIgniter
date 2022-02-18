@@ -5,9 +5,9 @@ namespace Admin\Models;
 use Igniter\Flame\Database\Model;
 
 /**
- * Menu categories Model Class
+ * MenuCategory Model Class
  */
-class Menu_Category extends Model
+class MenuCategory extends Model
 {
     /**
      * @var string The database table name
@@ -31,3 +31,5 @@ class Menu_Category extends Model
         ],
     ];
 }
+
+class_alias('Admin\Models\MenuCategory', 'Admin\Models\Menu_categories_model', FALSE);

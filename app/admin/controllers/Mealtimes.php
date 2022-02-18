@@ -18,7 +18,7 @@ class Mealtimes extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.mealtimes.text_title',
             'emptyMessage' => 'lang:admin::lang.mealtimes.text_empty',
             'defaultSort' => ['mealtime_id', 'DESC'],
-            'configFile' => 'Mealtime',
+            'configFile' => 'mealtime',
         ],
     ];
 
@@ -45,7 +45,7 @@ class Mealtimes extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'mealtimes',
         ],
-        'configFile' => 'Mealtime',
+        'configFile' => 'mealtime',
     ];
 
     protected $requiredPermissions = 'Admin.Mealtimes';

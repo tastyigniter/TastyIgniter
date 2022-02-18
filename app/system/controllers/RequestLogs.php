@@ -18,7 +18,7 @@ class RequestLogs extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.request_logs.text_title',
             'emptyMessage' => 'lang:system::lang.request_logs.text_empty',
             'defaultSort' => ['count', 'DESC'],
-            'configFile' => 'RequestLog',
+            'configFile' => 'requestlog',
         ],
     ];
 
@@ -32,7 +32,7 @@ class RequestLogs extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'request_logs',
         ],
-        'configFile' => 'RequestLog',
+        'configFile' => 'requestlog',
     ];
 
     protected $requiredPermissions = 'Admin.SystemLogs';

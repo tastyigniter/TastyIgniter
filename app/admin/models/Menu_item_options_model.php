@@ -11,7 +11,7 @@ use Igniter\Flame\Database\Traits\Validation;
  *
  * @deprecated remove before v4. Added for backward compatibility
  */
-class MenuItemOption extends Model
+class Menu_item_options_model extends Model
 {
     use Purgeable;
     use Validation;

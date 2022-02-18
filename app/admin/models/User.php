@@ -185,3 +185,5 @@ class User extends AuthUserModel
         ]);
     }
 }
+
+class_alias('Admin\Models\User', 'Admin\Models\Users_model', FALSE);

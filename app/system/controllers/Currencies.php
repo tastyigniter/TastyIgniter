@@ -17,7 +17,7 @@ class Currencies extends \Admin\Classes\AdminController
             'title' => 'lang:system::lang.currencies.text_title',
             'emptyMessage' => 'lang:system::lang.currencies.text_empty',
             'defaultSort' => ['currency_status', 'DESC'],
-            'configFile' => 'Currency',
+            'configFile' => 'currency',
         ],
     ];
 
@@ -44,7 +44,7 @@ class Currencies extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'currencies',
         ],
-        'configFile' => 'Currency',
+        'configFile' => 'currency',
     ];
 
     protected $requiredPermissions = 'Site.Currencies';

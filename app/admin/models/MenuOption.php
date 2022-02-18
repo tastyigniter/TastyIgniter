@@ -8,7 +8,7 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
- * MenuOptions Model Class
+ * MenuOption Model Class
  */
 class MenuOption extends Model
 {
@@ -174,3 +174,5 @@ class MenuOption extends Model
         });
     }
 }
+
+class_alias('Admin\Models\MenuOption', 'Admin\Models\Menu_options_model', FALSE);

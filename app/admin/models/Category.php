@@ -11,7 +11,7 @@ use Igniter\Flame\Database\Traits\Sortable;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Categories Model Class
+ * Category Model Class
  */
 class Category extends Model
 {
@@ -156,3 +156,5 @@ class Category extends Model
         return $query->paginate($pageLimit, $page);
     }
 }
+
+class_alias('Admin\Models\Category', 'Admin\Models\Categories_model', FALSE);

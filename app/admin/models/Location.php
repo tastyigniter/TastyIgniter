@@ -11,7 +11,7 @@ use Igniter\Flame\Exception\ValidationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
 
 /**
- * Locations Model Class
+ * Location Model Class
  */
 class Location extends AbstractLocation
 {
@@ -342,3 +342,5 @@ class Location extends AbstractLocation
         return self::$defaultLocation = $defaultLocation;
     }
 }
+
+class_alias('Admin\Models\Location', 'Admin\Models\Locations_model', FALSE);

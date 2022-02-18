@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Assignable logs Model Class
+ * AssignableLog Model Class
  */
 class AssignableLog extends Model
 {
@@ -192,3 +192,5 @@ class AssignableLog extends Model
         });
     }
 }
+
+class_alias('Admin\Models\AssignableLog', 'Admin\Models\Assignable_logs_model', FALSE);

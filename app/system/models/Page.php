@@ -6,7 +6,7 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
 
 /**
- * Pages Model Class
+ * Page Class
  */
 class Page extends Model
 {
@@ -68,3 +68,5 @@ class Page extends Model
         return $query->where('status', 1);
     }
 }
+
+class_alias('System\Models\Page', 'System\Models\Pages_model', FALSE);

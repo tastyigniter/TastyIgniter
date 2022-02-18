@@ -11,7 +11,7 @@ use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Support\Facades\Lang;
 
 /**
- * Payments Model Class
+ * Payment Model Class
  */
 class Payment extends Model
 {
@@ -305,3 +305,5 @@ class Payment extends Model
         $profile->delete();
     }
 }
+
+class_alias('Admin\Models\Payment', 'Admin\Models\Payments_model', FALSE);

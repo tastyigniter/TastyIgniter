@@ -10,7 +10,7 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
- * Menus Model Class
+ * Menu Model Class
  */
 class Menu extends Model
 {
@@ -385,3 +385,5 @@ class Menu extends Model
         return $isAvailable;
     }
 }
+
+class_alias('Admin\Models\Menu', 'Admin\Models\Menus_model', FALSE);

@@ -19,7 +19,7 @@ class Menus extends AdminController
             'title' => 'lang:admin::lang.menus.text_title',
             'emptyMessage' => 'lang:admin::lang.menus.text_empty',
             'defaultSort' => ['menu_id', 'DESC'],
-            'configFile' => 'Menu',
+            'configFile' => 'menu',
         ],
     ];
 
@@ -46,7 +46,7 @@ class Menus extends AdminController
         'delete' => [
             'redirect' => 'menus',
         ],
-        'configFile' => 'Menu',
+        'configFile' => 'menu',
     ];
 
     protected $requiredPermissions = 'Admin.Menus';

@@ -6,7 +6,7 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 
 /**
- * Countries Model Class
+ * Country Model Class
  */
 class Country extends Model
 {
@@ -57,3 +57,5 @@ class Country extends Model
         return $query->where('status', 1);
     }
 }
+
+class_alias('System\Models\Country', 'System\Models\Countries_model', FALSE);

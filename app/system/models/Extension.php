@@ -10,7 +10,7 @@ use Main\Classes\ThemeManager;
 use System\Classes\ExtensionManager;
 
 /**
- * Extensions Model Class
+ * Extension Model Class
  */
 class Extension extends Model
 {
@@ -179,3 +179,5 @@ class Extension extends Model
         }
     }
 }
+
+class_alias('System\Models\Extension', 'System\Models\Extensions_model', FALSE);
