@@ -3,7 +3,6 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
-
 use Admin\Events\Widgets\Calendar\UpdateEvent;
 use Carbon\Carbon;
 use Exception;
