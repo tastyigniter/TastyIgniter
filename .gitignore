@@ -2,6 +2,7 @@
 .idea
 .htaccess
 .env
+.env.testing
 .phpunit.result.cache
 phpunit.dusk.xml
 

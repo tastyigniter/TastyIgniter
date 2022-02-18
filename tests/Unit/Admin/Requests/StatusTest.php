@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Admin\Requests;
+namespace Tests\Unit\Admin\Requests;
 
 use Admin\Requests\Status;
 use Faker\Factory;
@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class StatusTest extends TestCase
 {
-    use ValidateRequest;
+    use \Tests\Unit\System\Requests\ValidateRequest;
 
     protected $requestClass = Status::class;
 
@@ -45,7 +45,7 @@ class StatusTest extends TestCase
                 'passed' => FALSE,
                 'data' => [
                     'status_name' => $faker->lexify('???'),
-                    'notify_customer' => true,
+                    'notify_customer' => TRUE,
                 ],
             ],
             'request_should_fail_when_for_is_not_alphanumeric' => [
@@ -61,7 +61,7 @@ class StatusTest extends TestCase
                     'status_name' => $faker->lexify('???'),
                     'status_for' => 'order',
                     'status_color' => $faker->sentence(8),
-                    'notify_customer' => true,
+                    'notify_customer' => TRUE,
                 ],
             ],
             'request_should_fail_when_comment_has_more_than_1028_characters' => [

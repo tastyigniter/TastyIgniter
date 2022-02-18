@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\System\Requests;
+namespace Tests\Unit\System\Requests;
 
 use Faker\Factory;
 use System\Requests\MailLayout;

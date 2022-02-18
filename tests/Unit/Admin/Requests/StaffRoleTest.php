@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Admin\Requests;
+namespace Tests\Unit\Admin\Requests;
 
 use Admin\Requests\StaffRole;
 use Faker\Factory;
@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class StaffRoleTest extends TestCase
 {
-    use ValidateRequest;
+    use \Tests\Unit\System\Requests\ValidateRequest;
 
     protected $requestClass = StaffRole::class;
 

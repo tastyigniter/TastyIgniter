@@ -1,15 +1,14 @@
 <?php
 
-namespace Tests\Feature\Admin\Requests;
+namespace Tests\Unit\Admin\Requests;
 
 use Admin\Requests\Customer;
 use Faker\Factory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CustomerTest extends TestCase
 {
-    use ValidateRequest, RefreshDatabase;
+    use \Tests\Unit\System\Requests\ValidateRequest;
 
     protected $requestClass = Customer::class;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\System\Requests;
+namespace Tests\Unit\System\Requests;
 
 use Faker\Factory;
 use System\Requests\Country;
@@ -146,7 +146,7 @@ class CountryTest extends TestCase
                     'country_name' => $faker->word(),
                     'priority' => $faker->word(),
                     'iso_code_2' => 'GB',
-                    'iso_code_3' =>  $faker->boolean(),
+                    'iso_code_3' => $faker->boolean(),
                     'format' => 'en',
                     'status' => $faker->boolean(),
                 ],
@@ -157,7 +157,7 @@ class CountryTest extends TestCase
                     'country_name' => $faker->word(),
                     'priority' => $faker->word(),
                     'iso_code_2' => 'GB',
-                    'iso_code_3' =>  $faker->lexify('??'),
+                    'iso_code_3' => $faker->lexify('??'),
                     'format' => 'en',
                     'status' => $faker->boolean(),
                 ],
@@ -168,7 +168,7 @@ class CountryTest extends TestCase
                     'country_name' => $faker->word(),
                     'priority' => $faker->word(),
                     'iso_code_2' => 'GB',
-                    'iso_code_3' =>  $faker->lexify('????'),
+                    'iso_code_3' => $faker->lexify('????'),
                     'format' => 'en',
                     'status' => $faker->boolean(),
                 ],

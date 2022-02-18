@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\System\Requests;
+namespace Tests\Unit\System\Requests;
 
 use Igniter\Flame\Exception\ValidationException;
 
@@ -32,8 +32,6 @@ trait ValidateRequest
             return TRUE;
         }
         catch (ValidationException $ex) {
-//            dump($ex->getErrors());
-
             return FALSE;
         }
     }
