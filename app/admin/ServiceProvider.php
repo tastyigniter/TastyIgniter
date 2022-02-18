@@ -562,7 +562,7 @@ class ServiceProvider extends AppServiceProvider
             'location_areas' => 'Admin\Models\LocationArea',
             'locations' => 'Admin\Models\Location',
             'mealtimes' => 'Admin\Models\Mealtime',
-            'menu_categories' => 'Admin\Models\Menu_Category',
+            'menu_categories' => 'Admin\Models\MenuCategory',
             'menu_item_option_values' => 'Admin\Models\MenuItemOptionValue',
             'menu_option_values' => 'Admin\Models\MenuOptionValue',
             'menu_options' => 'Admin\Models\MenuOption',

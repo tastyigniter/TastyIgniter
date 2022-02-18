@@ -360,7 +360,6 @@ class ServiceProvider extends AppServiceProvider
             'mail_layouts' => 'System\Models\MailLayout',
             'mail_templates' => 'System\Models\MailTemplate',
             'pages' => 'System\Models\Page',
-            'permissions' => 'System\Models\Permissions_model',
             'settings' => 'System\Models\Settings',
             'themes' => 'System\Models\Theme',
         ]);
