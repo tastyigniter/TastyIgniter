@@ -152,6 +152,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/media'),
                     'form' => '~/app/main/models/config/media_settings',
+                    'request' => 'Main\Requests\MediaSettings',
                 ],
             ]);
         });

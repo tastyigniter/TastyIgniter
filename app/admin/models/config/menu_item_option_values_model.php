@@ -6,22 +6,19 @@ $config['form']['fields'] = [
     'priority' => [
         'type' => 'hidden',
     ],
-    'is_default' => [
-        'label' => 'lang:admin::lang.menus.label_option_default_value',
-        'type' => 'checkbox',
-        'options' => [],
+    'option_value[value]' => [
+        'label' => 'lang:admin::lang.menu_options.label_option_value',
+        'type' => 'text',
+        'disabled' => TRUE,
     ],
-    'option_value_id' => [
-        'label' => 'lang:admin::lang.menus.label_option_value',
-        'type' => 'select',
-    ],
-    'new_price' => [
-        'label' => 'lang:admin::lang.menus.label_option_price',
+    'price' => [
+        'label' => 'lang:admin::lang.menu_options.label_new_price',
         'type' => 'currency',
     ],
-    'quantity' => [
-        'label' => 'lang:admin::lang.menus.label_option_qty',
-        'type' => 'number',
+    'is_default' => [
+        'label' => 'lang:admin::lang.menu_options.label_option_default_value',
+        'type' => 'checkbox',
+        'options' => [],
     ],
 ];
 

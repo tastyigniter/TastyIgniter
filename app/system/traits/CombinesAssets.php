@@ -50,14 +50,11 @@ trait CombinesAssets
 
     protected $assetsCombinerUri;
 
-    protected $combineAssets;
-
     protected function initCombiner()
     {
         $this->cacheKeyPrefix = 'ti.combiner.';
         $this->useCache = config('system.enableAssetCache', TRUE);
         $this->useMinify = config('system.enableAssetMinify', null);
-        $this->combineAssets = config('system.enableAssetCombiner', !config('app.debug', FALSE));
         $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
 
@@ -201,8 +198,8 @@ trait CombinesAssets
         foreach ($assets as $path) {
             $filters = $this->getFilters(File::extension($path)) ?: [];
 
-            if (file_exists($publicPath = public_path($path)))
-                $path = $publicPath;
+            if (file_exists($basePath = base_path($path)))
+                $path = $basePath;
 
             if (!file_exists($path))
                 $path = File::symbolizePath($path, null) ?? $path;
@@ -212,7 +209,7 @@ trait CombinesAssets
 
             $asset = starts_with($path, ['//', 'http://', 'https://'])
                 ? new HttpAsset($path, $filters)
-                : new FileAsset($path, $filters, public_path());
+                : new FileAsset($path, $filters, base_path());
 
             $files[] = $asset;
         }

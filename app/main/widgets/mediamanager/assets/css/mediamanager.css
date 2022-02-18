@@ -38,9 +38,9 @@ Media list
 	padding-top: 25px;
 }
 .media-list .media-item {
-	margin-bottom: 30px;
-	margin-left: 15px;
-	margin-right: 15px;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .media-list .media-thumb {
 	background-color: var(--gray-100);
@@ -61,27 +61,44 @@ Media list
 	padding: 0;
 	width: 100%;
 	height: 75px;
-	transform: translate(50%, 50%);
-	display: block;
+  transform: translate(50%, 50%);
+  display: block;
 }
+
 .media-list .media-thumb > a img {
-	transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
+
 .modal-lg .modal-header .close {
-	font-size: 26px;
-	font-weight: 300;
+  font-size: 26px;
+  font-weight: 300;
 }
+
+.media-list .media-thumb .media-icon {
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.media-icon .fa-document::before {
+  content: "\f15b"
+}
+
+.media-icon .fa-audio::before {
+  content: "\f1c7"
+}
+
 /*
 Sidebar
 */
 .media-sidebar .sidebar-preview-toolbar,
 .media-sidebar .sidebar-preview-info,
 .media-sidebar .sidebar-preview-placeholder {
-	text-align: center;
+  text-align: center;
 }
+
 .media-sidebar .sidebar-preview-toolbar,
 .media-sidebar .sidebar-preview-info {
-	padding: 10px 0;
+  padding: 15px 0 20px;
 }
 .media-sidebar .sidebar-preview-placeholder i {
 	font-size: 14em;
