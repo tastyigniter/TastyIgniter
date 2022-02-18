@@ -8,7 +8,6 @@ use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
-use Main\Events\Theme\GetActiveTheme;
 use System\Libraries\Assets;
 use System\Models\Themes_model;
 use ZipArchive;
@@ -185,9 +184,8 @@ class ThemeManager
     {
         $activeTheme = trim(params('default_themes.main', config('system.defaultTheme')), '/');
 
-        $apiResult = null;
-        event(new GetActiveTheme($this, $activeTheme, $apiResult));
-        if ($apiResult !== null) {
+        // @deprecated, remove before v5
+        if (!is_null($apiResult = Event::fire('theme.getActiveTheme', [], TRUE))) {
             $activeTheme = $apiResult;
         }
 

@@ -8,7 +8,6 @@ use Igniter\Flame\Support\RouterHelper;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
-use Main\Events\Router\BeforeRoute;
 use Main\Template\Page as PageTemplate;
 
 /**
@@ -81,10 +80,8 @@ class Router
         $this->url = $url;
         $url = RouterHelper::normalizeUrl($url);
 
-        $apiResult = null;
-        event(new BeforeRoute($this, $url, $apiResult));
-        if ($apiResult !== null)
-            return $apiResult;
+        // @deprecated, remove before v5
+        $apiResult = Event::fire('router.beforeRoute', [$url, $this], TRUE);
 
         for ($pass = 1; $pass <= 2; $pass++) {
             $fileName = null;

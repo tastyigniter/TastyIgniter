@@ -3,8 +3,6 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
-use Admin\Events\Widgets\Table\GetDropdownOptions;
-use Admin\Events\Widgets\Table\GetRecords;
 use Admin\Widgets\Table\Source\DataSource;
 use Exception;
 use Igniter\Flame\Html\HtmlFacade;
@@ -173,8 +171,8 @@ class Table extends BaseWidget
         $offset = Request::post('offset');
         $limit = Request::post('limit', $this->getConfig('pageLimit', $this->pageLimit));
 
-        $eventResults = collect([]);
-        event(new GetRecords($this, $offset, $limit, $search, $eventResults));
+        // @deprecated, remove before v5
+        $eventResults = $this->fireEvent('table.getRecords', [$offset, $limit, $search], TRUE);
 
         $records = $eventResults->getCollection()->toArray();
 
@@ -189,8 +187,8 @@ class Table extends BaseWidget
         $columnName = Request::get('column');
         $rowData = Request::get('rowData');
 
-        $eventResults = collect([]);
-        event(new GetDropdownOptions($this, $columnName, $rowData, $eventResults));
+        // @deprecated, remove before v5
+        $eventResults = $this->fireEvent('table.getDropdownOptions', [$columnName, $rowData]);
 
         $options = [];
         if (count($eventResults)) {

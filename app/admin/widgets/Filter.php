@@ -188,10 +188,11 @@ class Filter extends BaseWidget
 
         // Trigger class event, merge results as viewable array
         $params = func_get_args();
-        $result = false;
-        event(new FilterSubmit($this, $params, $result));
-        if ($result !== false) {
-            $redirect = $result;
+
+        // @deprecated, remove before v5
+        $result = $this->fireEvent('filter.submit', [$params]);
+        if ($result && is_array($result)) {
+            [$redirect] = $result;
 
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
@@ -205,10 +206,11 @@ class Filter extends BaseWidget
         $this->searchWidget->resetSession();
 
         $params = func_get_args();
-        $result = false;
-        event(new FilterSubmit($this, $params, $result));
-        if ($result !== false) {
-            $redirect = $result;
+
+        // @deprecated, remove before v5
+        $result = $this->fireEvent('filter.submit', [$params]);
+        if ($result && is_array($result)) {
+            [$redirect] = $result;
 
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }

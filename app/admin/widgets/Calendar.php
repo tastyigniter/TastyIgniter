@@ -3,7 +3,7 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
-use Admin\Events\Widgets\Calendar\GenerateEvents;
+
 use Admin\Events\Widgets\Calendar\UpdateEvent;
 use Carbon\Carbon;
 use Exception;
@@ -86,11 +86,16 @@ class Calendar extends BaseWidget
         $startAt = Request::get('start');
         $endAt = Request::get('end');
 
-        $eventResults = [];
-        event(new GenerateEvents($this, $startAt, $endAt, $eventResults));
+        // @deprecated, remove before v5
+        $eventResults = $this->fireEvent('calendar.generateEvents', [$startAt, $endAt]);
+
+        $generatedEvents = [];
+        if (count($eventResults)) {
+            $generatedEvents = $eventResults[0];
+        }
 
         return [
-            'generatedEvents' => $eventResults,
+            'generatedEvents' => $generatedEvents,
         ];
     }
 

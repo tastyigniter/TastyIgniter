@@ -3,7 +3,6 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
-use Admin\Events\Widgets\Searchbox\SearchSubmit;
 use Illuminate\Http\RedirectResponse;
 
 class SearchBox extends BaseWidget
@@ -79,11 +78,13 @@ class SearchBox extends BaseWidget
         // Trigger class event, merge results as viewable array
         $params = func_get_args();
 
-        $result = false;
-        event(new SearchSubmit($this, $params, $result));
-        if ($result) {
-            return ($result instanceof RedirectResponse) ?
-                $result : call_user_func_array('array_merge', $result);
+        // @deprecated, remove before v5
+        $result = $this->fireEvent('search.submit', [$params]);
+        if ($result && is_array($result)) {
+            [$redirect] = $result;
+
+            return ($redirect instanceof RedirectResponse) ?
+                $redirect : call_user_func_array('array_merge', $result);
         }
     }
 
