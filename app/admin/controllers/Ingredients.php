@@ -19,7 +19,7 @@ class Ingredients extends AdminController
             'title' => 'lang:admin::lang.ingredients.text_title',
             'emptyMessage' => 'lang:admin::lang.ingredients.text_empty',
             'defaultSort' => ['ingredient_id', 'DESC'],
-            'configFile' => 'Ingredient',
+            'configFile' => 'ingredient',
         ],
     ];
 
@@ -46,7 +46,7 @@ class Ingredients extends AdminController
         'delete' => [
             'redirect' => 'ingredients',
         ],
-        'configFile' => 'Ingredient',
+        'configFile' => 'ingredient',
     ];
 
     protected $requiredPermissions = 'Admin.Ingredients';

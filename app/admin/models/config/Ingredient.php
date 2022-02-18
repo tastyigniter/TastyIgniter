@@ -62,6 +62,10 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
+    'is_allergen' => [
+        'label' => 'lang:admin::lang.ingredients.column_is_allergen',
+        'type' => 'switch',
+    ],
     'status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
@@ -136,7 +140,7 @@ $config['form']['fields'] = [
         'comment' => 'lang:admin::lang.ingredients.help_photo',
     ],
     'is_allergen' => [
-        'label' => 'lang:admin::lang.ingredients.label_allergen',
+        'label' => 'lang:admin::lang.ingredients.label_is_allergen',
         'type' => 'switch',
         'span' => 'left',
         'default' => 0,

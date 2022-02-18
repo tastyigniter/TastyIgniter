@@ -271,7 +271,9 @@ return [
         'text_filter_search' => 'Search by name.',
         'text_empty' => 'There are no ingredients available.',
 
-        'label_allergen' => 'Is an allergen',
+        'column_is_allergen' => 'Is an allergen?',
+
+        'label_is_allergen' => 'Is an allergen',
         'label_image' => 'Image',
         'help_photo' => 'Select a file to update ingredient image, otherwise leave blank.',
     ],
@@ -741,7 +743,7 @@ return [
         'label_end_date' => 'End Date',
         'label_special_price' => 'Special Price',
         'label_special_type' => 'Special Type',
-        'label_ingredients' => 'Ingredients',
+        'label_ingredients' => 'Ingredients/Allergens',
         'label_validity' => 'Validity',
         'label_recurring_every' => 'Recurring every',
         'label_recurring_from_time' => 'Recurring from time',
