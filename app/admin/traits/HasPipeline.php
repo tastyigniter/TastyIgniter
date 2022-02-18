@@ -19,22 +19,22 @@ trait HasPipeline
         $payloadClass = (new \ReflectionClass(self::class))->getName();
 
         $pipes = collect(self::$registeredPipelines)
-                    ->filter(function ($contexts, $klass) use ($payloadClass, $callingContext) {
-                        if (! in_array($klass, ['*', $payloadClass])) {
+            ->filter(function ($contexts, $klass) use ($payloadClass, $callingContext) {
+                        if (!in_array($klass, ['*', $payloadClass])) {
                             return [];
                         }
 
                         return $contexts->filter(function ($pipelines, $pipelineContext) use ($callingContext) {
-                            if (! in_array($pipelineContext, ['*', $callingContext])) {
+                            if (!in_array($pipelineContext, ['*', $callingContext])) {
                                 return [];
                             }
 
                             return $pipelines;
                         });
                     })
-                    ->filter()
-                    ->flatten()
-                    ->values();
+            ->filter()
+            ->flatten()
+            ->values();
 
         if (empty($pipes)) {
             return $payload;
@@ -50,11 +50,11 @@ trait HasPipeline
     // or by classname (eg Admin\Widgets\Lists::class)
     public static function registerPipeline($klass, $context, $pipelineClass)
     {
-        if (! array_get(self::$registeredPipelines, $klass, false)) {
+        if (!array_get(self::$registeredPipelines, $klass, false)) {
             self::$registeredPipelines[$klass] = [];
         }
 
-        if (! array_get(self::$registeredPipelines[$klass], $context, false)) {
+        if (!array_get(self::$registeredPipelines[$klass], $context, false)) {
             self::$registeredPipelines[$klass][$context] = [];
         }
 
