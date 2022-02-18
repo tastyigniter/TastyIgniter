@@ -554,11 +554,11 @@ class ServiceProvider extends AppServiceProvider
     {
         Relation::morphMap([
             'addresses' => 'Admin\Models\Addresses_model',
-            'allergens' => 'Admin\Models\Allergens_model',
             'assignable_logs' => 'Admin\Models\Assignable_logs_model',
             'categories' => 'Admin\Models\Categories_model',
             'customer_groups' => 'Admin\Models\Customer_groups_model',
             'customers' => 'Admin\Models\Customers_model',
+            'ingredients' => 'Admin\Models\Ingredient',
             'location_areas' => 'Admin\Models\Location_areas_model',
             'locations' => 'Admin\Models\Locations_model',
             'mealtimes' => 'Admin\Models\Mealtimes_model',

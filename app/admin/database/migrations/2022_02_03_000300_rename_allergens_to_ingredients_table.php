@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateIngredientsTable extends Migration
+class RenameAllergensToIngredientsTable extends Migration
 {
     public function up()
     {
@@ -28,7 +28,7 @@ class CreateIngredientsTable extends Migration
             $table->unique(['ingredient_id', 'ingredientable_id', 'ingredientable_type'], 'ingredientable_unique');
         });
 
-        DB::table('ingredients')->update(['is_allergen' => true]);
+        DB::table('ingredients')->update(['is_allergen' => TRUE]);
     }
 
     public function down()
