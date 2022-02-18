@@ -47,15 +47,4 @@ class IgniterDown extends Command
             ['force', null, InputOption::VALUE_NONE, 'Force the operation to run.'],
         ];
     }
-
-    /**
-     * Get the default confirmation callback.
-     * @return \Closure
-     */
-    protected function getDefaultConfirmCallback()
-    {
-        return function () {
-            return TRUE;
-        };
-    }
 }
