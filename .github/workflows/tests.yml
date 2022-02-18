@@ -9,13 +9,13 @@ on:
   pull_request:
 
 jobs:
-  PHPUnitTests:
-#    runs-on: ${{ matrix.os }}
+  PestTests:
+    #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 6
       matrix:
-#        os: [ubuntu-latest, windows-latest]
+        #        os: [ubuntu-latest, windows-latest]
         php: ['7.4', '8.0', '8.1']
         db: ['mysql:5.7', 'mysql:8.0', 'mariadb:10.2', 'mariadb:10.6']
         include:
@@ -35,7 +35,7 @@ jobs:
         ports:
           - 3306
 
-    name: 'PHPUnit Tests ${{ matrix.php }} / ${{ matrix.dbName }}'
+    name: 'Pest Tests ${{ matrix.php }} / ${{ matrix.dbName }}'
 
     steps:
       - name: Checkout changes
