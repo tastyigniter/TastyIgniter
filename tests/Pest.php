@@ -1,12 +1,5 @@
 <?php
 
-use Admin\Models\Staffs_model;
-use Admin\Models\Users_model;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
-use Laravel\Dusk\Browser;
-
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -19,18 +12,20 @@ use Laravel\Dusk\Browser;
 */
 
 // our factories live inside admin/system/main, so we need to namespace to them
-Factory::guessFactoryNamesUsing(function (string $modelName) {
-    $modelName = str_replace('\\Models\\', '\\Database\\Factories\\', $modelName);
-    $modelName = str_replace('_model', '', $modelName);
+//Factory::guessFactoryNamesUsing(function (string $modelName) {
+//    $modelName = str_replace('\\Models\\', '\\Database\\Factories\\', $modelName);
+//    $modelName = str_replace('_model', '', $modelName);
+//
+//    return Str::singular($modelName).'Factory';
+//});
 
-    return Str::singular($modelName).'Factory';
-});
+uses(Tests\TestCase::class)->in(__DIR__);
 
-uses(Tests\CreatesApplication::class, RefreshDatabase::class)
-    ->beforeEach(fn () => $this->createApplication())
-    ->in(__DIR__);
+uses(Tests\RefreshDatabase::class)->in('Feature');
 
-uses(Tests\DuskTestCase::class)->in('Browser');
+uses()->group('feature')->in('Feature');
+
+uses()->group('unit')->in('Unit');
 
 /*
 |--------------------------------------------------------------------------
@@ -57,24 +52,24 @@ uses(Tests\DuskTestCase::class)->in('Browser');
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
-function createSuperuser()
-{
-    $staff = Staffs_model::factory()->create();
-    $user = Users_model::factory()->make();
-    $user->staff_id = $staff->staff_id;
-    $user->password = 'password12';
-    $user->save();
-
-    return $user;
-}
-
-function createSuperuserAndLogin(Browser $browser)
-{
-    $user = createSuperuser();
-
-    return $browser->visit('/admin')
-        ->type('username', $user->username)
-        ->type('password', 'password12')
-        ->press('Login')
-        ->waitForReload();
-}
+//function createSuperuser()
+//{
+//    $staff = Staffs_model::factory()->create();
+//    $user = Users_model::factory()->make();
+//    $user->staff_id = $staff->staff_id;
+//    $user->password = 'password12';
+//    $user->save();
+//
+//    return $user;
+//}
+//
+//function createSuperuserAndLogin(Browser $browser)
+//{
+//    $user = createSuperuser();
+//
+//    return $browser->visit('/admin')
+//        ->type('username', $user->username)
+//        ->type('password', 'password12')
+//        ->press('Login')
+//        ->waitForReload();
+//}

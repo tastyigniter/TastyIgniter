@@ -65,7 +65,7 @@ class Location extends FormRequest
             'location_address_2' => ['max:128'],
             'location_city' => ['max:128'],
             'location_state' => ['max:128'],
-            'location_postcode' => ['max:10'],
+            'location_postcode' => ['max:15'],
             'location_country_id' => ['required', 'integer'],
             'options.auto_lat_lng' => ['required', 'boolean'],
             'location_lat' => ['sometimes', 'required_if:options.auto_lat_lng,0', 'numeric'],

@@ -1,7 +1,7 @@
 @php
     $userPanel = \Admin\Classes\UserPanel::forUser();
 @endphp
-<li class="nav-item dropdown">
+<li id="menuitem-account" class="nav-item dropdown">
     <a href="#" class="nav-link" data-toggle="dropdown">
         <img
             class="rounded-circle"
