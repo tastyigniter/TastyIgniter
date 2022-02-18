@@ -71,8 +71,8 @@ jobs:
           php artisan igniter:util set version
           php artisan package:discover
 
-      - name: Run PHPUnit Test Suite
-        run: ./vendor/bin/phpunit
+      - name: Run Pest Test Suite
+        run: composer test
 
     env:
       DB_PORT: 3306
