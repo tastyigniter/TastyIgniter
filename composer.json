@@ -34,7 +34,9 @@
     "facade/ignition": "^2.5",
     "fakerphp/faker": "~1.14",
     "squizlabs/php_codesniffer": "3.*",
-    "jakub-onderka/php-parallel-lint": "^1.0"
+    "jakub-onderka/php-parallel-lint": "^1.0",
+    "pestphp/pest": "^1.21",
+    "pestphp/pest-plugin-laravel": "^1.2"
   },
   "autoload-dev": {
     "psr-4": {
@@ -54,6 +56,13 @@
       "dont-discover": [
         "*"
       ]
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "composer/installers": true,
+      "wikimedia/composer-merge-plugin": true
     }
   }
 }
