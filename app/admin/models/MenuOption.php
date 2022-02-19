@@ -174,5 +174,3 @@ class MenuOption extends Model
         });
     }
 }
-
-class_alias('Admin\Models\MenuOption', 'Admin\Models\Menu_options_model', FALSE);

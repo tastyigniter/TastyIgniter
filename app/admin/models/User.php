@@ -283,5 +283,3 @@ class User extends AuthUserModel
         return $this->pluckDates('created_at');
     }
 }
-
-class_alias('Admin\Models\User', 'Admin\Models\Users_model', FALSE);

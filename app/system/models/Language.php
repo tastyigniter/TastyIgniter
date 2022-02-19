@@ -247,5 +247,3 @@ class Language extends \Igniter\Flame\Translation\Models\Language
         $translation->updateAndLock($text);
     }
 }
-
-class_alias('System\Models\Language', 'System\Models\Languages_model', FALSE);

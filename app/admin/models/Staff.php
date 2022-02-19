@@ -216,5 +216,3 @@ class Staff extends Model
         return $this->sale_permission === 3;
     }
 }
-
-class_alias('Admin\Models\Staff', 'Admin\Models\Staffs_model', FALSE);

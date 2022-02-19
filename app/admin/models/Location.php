@@ -342,5 +342,3 @@ class Location extends AbstractLocation
         return self::$defaultLocation = $defaultLocation;
     }
 }
-
-class_alias('Admin\Models\Location', 'Admin\Models\Locations_model', FALSE);

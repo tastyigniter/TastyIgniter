@@ -179,5 +179,3 @@ class Extension extends Model
         }
     }
 }
-
-class_alias('System\Models\Extension', 'System\Models\Extensions_model', FALSE);

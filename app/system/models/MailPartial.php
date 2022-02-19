@@ -115,5 +115,3 @@ class MailPartial extends Model
         return MailParser::parse(File::get(View::make($code)->getPath()));
     }
 }
-
-class_alias('System\Models\MailPartial', 'System\Models\Mail_partials_model', FALSE);

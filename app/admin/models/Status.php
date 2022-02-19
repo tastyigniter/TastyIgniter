@@ -99,5 +99,3 @@ class Status extends Model
         return static::all()->keyBy('status_id');
     }
 }
-
-class_alias('Admin\Models\Status', 'Admin\Models\Statuses_model', FALSE);

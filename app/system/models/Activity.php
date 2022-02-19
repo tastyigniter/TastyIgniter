@@ -102,5 +102,3 @@ class Activity extends \Igniter\Flame\ActivityLog\Models\Activity
         }
     }
 }
-
-class_alias('System\Models\Activity', 'System\Models\Activities_model', FALSE);

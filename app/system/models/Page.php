@@ -68,5 +68,3 @@ class Page extends Model
         return $query->where('status', 1);
     }
 }
-
-class_alias('System\Models\Page', 'System\Models\Pages_model', FALSE);

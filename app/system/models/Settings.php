@@ -355,5 +355,3 @@ class Settings extends Model
         ]);
     }
 }
-
-class_alias('System\Models\Settings', 'System\Models\Settings_model', FALSE);

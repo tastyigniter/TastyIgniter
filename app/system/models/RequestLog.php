@@ -67,5 +67,3 @@ class RequestLog extends Model
         return $this;
     }
 }
-
-class_alias('System\Models\RequestLog', 'System\Models\Request_logs_model', FALSE);

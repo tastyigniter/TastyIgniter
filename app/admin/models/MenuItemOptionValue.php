@@ -98,5 +98,3 @@ class MenuItemOptionValue extends Model
         traceLog('MenuItemOptionValue::updateStock() has been deprecated, use Stock::updateStock() instead.');
     }
 }
-
-class_alias('Admin\Models\MenuItemOptionValue', 'Admin\Models\Menu_item_option_values_model', FALSE);

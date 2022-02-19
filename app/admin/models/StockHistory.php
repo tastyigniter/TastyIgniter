@@ -65,5 +65,3 @@ class StockHistory extends Model
         return $this->created_at ? time_elapsed($this->created_at) : null;
     }
 }
-
-class_alias('Admin\Models\StockHistory', 'Admin\Models\Stock_history_model', FALSE);

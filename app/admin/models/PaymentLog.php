@@ -90,5 +90,3 @@ class PaymentLog extends Model
         return TRUE;
     }
 }
-
-class_alias('Admin\Models\PaymentLog', 'Admin\Models\Payment_logs_model', FALSE);
