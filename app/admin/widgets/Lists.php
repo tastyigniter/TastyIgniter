@@ -486,9 +486,12 @@ class Lists extends BaseWidget
             throw new Exception(sprintf(lang('admin::lang.list.missing_column'), get_class($this->controller)));
         }
 
+        // Extensibility
+        $this->columns = $this->callPipeline('extendColumns', $this->columns);
+
         $this->addColumns($this->columns);
 
-        // Extensibility
+        // @deprecated, remove before v5
         $this->fireSystemEvent('admin.list.extendColumns');
 
         // Use a supplied column order
@@ -632,6 +635,10 @@ class Lists extends BaseWidget
         $value = lang($column->label);
 
         // Extensibility
+        $payload = $this->callPipeline('overrideHeaderValue', ['column' => $column, 'value' => $value]);
+        $value = $payload['value'] ?? null;
+
+        // @deprecated, remove before v5
         if ($response = $this->fireSystemEvent('admin.list.overrideHeaderValue', [$column, $value], TRUE)) {
             $value = $response;
         }
@@ -663,6 +670,10 @@ class Lists extends BaseWidget
             $value = $column->defaults;
 
         // Extensibility
+        $payload = $this->callPipeline('overrideColumnValue', ['column' => $column, 'value' => $value]);
+        $value = $payload['value'] ?? null;
+
+        // @deprecated, remove before v5
         if ($response = $this->fireSystemEvent('admin.list.overrideColumnValue', [$record, $column, $value], TRUE)) {
             $value = $response;
         }
@@ -679,6 +690,10 @@ class Lists extends BaseWidget
         $result = $column->attributes;
 
         // Extensibility
+        $payload = $this->callPipeline('overrideColumnValue', ['column' => $column, 'value' => $value]);
+        $value = $payload['value'] ?? null;
+
+        // @deprecated, remove before v5
         if ($response = $this->fireSystemEvent('admin.list.overrideColumnValue', [$record, $column, $result], TRUE)) {
             $result = $response;
         }
@@ -1211,6 +1226,9 @@ class Lists extends BaseWidget
 
     protected function getAvailableBulkActions()
     {
+        $this->bulkActions = $this->callPipeline('extendBulkActions', $this->bulkActions);
+
+        // @deprecated, remove before v5
         $this->fireSystemEvent('admin.list.extendBulkActions');
 
         $allBulkActions = $this->makeBulkActionButtons($this->bulkActions);
