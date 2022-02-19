@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use Admin\Models\Users_model;
+use Admin\Models\User as UserModel;
 use Exception;
 use Igniter\Flame\Auth\Manager;
 
@@ -68,6 +68,11 @@ class User extends Manager
         return $this->user()->username;
     }
 
+    public function getUserEmail()
+    {
+        return $this->user()->email;
+    }
+
     public function getStaffId()
     {
         throw new Exception('Deprecated method');
@@ -75,34 +80,42 @@ class User extends Manager
 
     public function getStaffName()
     {
-        return $this->user()->name;
+        throw new Exception('Deprecated method');
     }
 
     public function getStaffEmail()
     {
-        return $this->user()->email;
+        throw new Exception('Deprecated method');
     }
 
     public function register(array $attributes, $activate = FALSE)
     {
-        $user = new Users_model;
-        $user->name = $attributes['name'] ?? null;
-        $user->email = $attributes['email'] ?? null;
-        $user->username = $attributes['username'];
-        $user->password = $attributes['password'];
-        $user->language_id = $attributes['language_id'] ?? null;
-        $user->role_id = $attributes['role_id'] ?? null;
-        $user->super_user = $attributes['super_user'] ?? FALSE;
-        $user->activate = $activate;
-        $user->status = $attributes['status'] ?? TRUE;
+        $user = new UserModel;
+        $user->name = array_get($attributes, 'name');
+        $user->email = array_get($attributes, 'email');
+        $user->username = array_get($attributes, 'username');
+        $user->password = array_get($attributes, 'password');
+        $user->language_id = array_get($attributes, 'language_id');
+        $user->user_role_id = array_get($attributes, 'user_role_id');
+        $user->super_user = array_get($attributes, 'super_user', FALSE);
+        $user->status = array_get($attributes, 'status', TRUE);
+
+        if ($activate) {
+            $user->is_activated = TRUE;
+            $user->date_activated = now();
+        }
 
         $user->save();
 
-        $user->groups()->attach($attributes['groups']);
+        // Prevents subsequent saves to this model object
+        $user->password = null;
+
+        if (array_key_exists('groups', $attributes))
+            $user->groups()->attach($attributes['groups']);
 
         if (array_key_exists('locations', $attributes))
             $user->locations()->attach($attributes['locations']);
 
-        return $user->reload()->user;
+        return $user->reload();
     }
 }

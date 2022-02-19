@@ -177,14 +177,14 @@ class IgniterInstall extends Command
         });
 
         $user = AdminAuth::register([
-            'staff_email' => $email,
-            'staff_name' => DatabaseSeeder::$staffName,
-            'language_id' => Language::first()->language_id,
-            'user_role_id' => UserRole::first()->user_role_id,
-            'status' => TRUE,
+            'email' => $email,
+            'name' => DatabaseSeeder::$staffName,
             'username' => $username,
             'password' => $password,
             'super_user' => TRUE,
+            'status' => TRUE,
+            'language_id' => Language::first()->language_id,
+            'user_role_id' => UserRole::first()->user_role_id,
             'groups' => [UserGroup::first()->user_group_id],
             'locations' => [Location::first()->location_id],
         ], TRUE);

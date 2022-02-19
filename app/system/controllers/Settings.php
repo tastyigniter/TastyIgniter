@@ -142,8 +142,8 @@ class Settings extends \Admin\Classes\AdminController
 
         setting()->set($this->formWidget->getSaveData());
 
-        $name = AdminAuth::getStaffName();
-        $email = AdminAuth::getStaffEmail();
+        $name = AdminAuth::getUserName();
+        $email = AdminAuth::getUserEmail();
 
         try {
             Mail::raw(lang('system::lang.settings.text_test_email_message'), function (Message $message) use ($name, $email) {

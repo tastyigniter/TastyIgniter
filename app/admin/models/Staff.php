@@ -9,6 +9,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
  * Staff Model Class
+ * @deprecated in v4 remove before v5. Added for backward compatibility
  */
 class Staff extends Model
 {

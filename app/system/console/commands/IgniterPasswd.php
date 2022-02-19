@@ -2,7 +2,6 @@
 
 namespace System\Console\Commands;
 
-use Admin\Models\Staff;
 use Admin\Models\User;
 use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Console\Command;
@@ -39,9 +38,7 @@ class IgniterPasswd extends Command
         $username = $this->argument('username')
             ?? $this->ask('Username to reset');
 
-        $user = User::whereUsername($username)->first()
-            ?? Staff::whereStaffEmail($username)->first();
-        if (!$user)
+        if (!$user = User::whereUsername($username)->orWhereEmail($username)->first())
             throw new ApplicationException('The specified user does not exist.');
 
         if (is_null($password = $this->argument('password'))) {

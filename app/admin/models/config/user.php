@@ -109,6 +109,15 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
         'invisible' => TRUE,
     ],
+    'username' => [
+        'label' => 'lang:admin::lang.staff.label_username',
+        'type' => 'text',
+        'searchable' => TRUE,
+    ],
+    'super_user' => [
+        'label' => 'lang:admin::lang.staff.label_super_staff',
+        'type' => 'switch',
+    ],
     'user_group_name' => [
         'label' => 'lang:admin::lang.staff.column_group',
         'relation' => 'groups',
@@ -230,7 +239,7 @@ $config['form']['fields'] = [
         'span' => 'left',
         'trigger' => [
             'action' => 'show',
-            'field' => 'user[send_invite]',
+            'field' => 'send_invite',
             'condition' => 'unchecked',
         ],
     ],
@@ -240,7 +249,7 @@ $config['form']['fields'] = [
         'span' => 'right',
         'trigger' => [
             'action' => 'show',
-            'field' => 'user[send_invite]',
+            'field' => 'send_invite',
             'condition' => 'unchecked',
         ],
     ],

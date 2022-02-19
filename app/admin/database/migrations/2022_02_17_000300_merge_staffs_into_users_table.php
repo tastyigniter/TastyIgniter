@@ -11,6 +11,8 @@ class MergeStaffsIntoUsersTable extends Migration
 {
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::table('users', function (Blueprint $table) {
             $table->string('name');
             $table->string('email')->unique();
@@ -62,7 +64,13 @@ class MergeStaffsIntoUsersTable extends Migration
             $table->renameColumn('staff_id', 'user_id');
         });
 
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('staff_id');
+        });
+
         Schema::dropIfExists('staffs');
+
+        Schema::enableForeignKeyConstraints();
     }
 
     public function down()
