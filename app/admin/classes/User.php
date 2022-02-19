@@ -2,6 +2,8 @@
 
 namespace Admin\Classes;
 
+use Admin\Models\Users_model;
+use Exception;
 use Igniter\Flame\Auth\Manager;
 
 /**
@@ -30,7 +32,7 @@ class User extends Manager
      */
     public function staff()
     {
-        return optional($this->user())->staff;
+        throw new Exception('Deprecated method');
     }
 
     /**
@@ -38,7 +40,7 @@ class User extends Manager
      */
     public function locations()
     {
-        return optional($this->staff())->locations;
+        return $this->user()->locations;
     }
 
     //
@@ -48,10 +50,8 @@ class User extends Manager
     public function extendUserQuery($query)
     {
         $query
-            ->with(['staff', 'staff.role', 'staff.groups', 'staff.locations'])
-            ->whereHas('staff', function ($query) {
-                $query->where('staff_status', TRUE);
-            });
+            ->with(['role', 'groups', 'locations'])
+            ->isEnabled();
     }
 
     //
@@ -70,43 +70,39 @@ class User extends Manager
 
     public function getStaffId()
     {
-        return $this->staff()->staff_id;
+        throw new Exception('Deprecated method');
     }
 
     public function getStaffName()
     {
-        return $this->staff()->staff_name;
+        return $this->user()->name;
     }
 
     public function getStaffEmail()
     {
-        return $this->staff()->staff_email;
+        return $this->user()->email;
     }
 
     public function register(array $attributes, $activate = FALSE)
     {
-        $model = $this->createModel();
+        $user = new Users_model;
+        $user->name = $attributes['name'] ?? null;
+        $user->email = $attributes['email'] ?? null;
+        $user->username = $attributes['username'];
+        $user->password = $attributes['password'];
+        $user->language_id = $attributes['language_id'] ?? null;
+        $user->role_id = $attributes['role_id'] ?? null;
+        $user->super_user = $attributes['super_user'] ?? FALSE;
+        $user->activate = $activate;
+        $user->status = $attributes['status'] ?? TRUE;
 
-        $staff = $model->staff()->getModel()->newInstance();
-        $staff->staff_email = $attributes['staff_email'];
-        $staff->staff_name = $attributes['staff_name'];
-        $staff->language_id = $attributes['language_id'] ?? null;
-        $staff->staff_role_id = $attributes['staff_role_id'] ?? null;
-        $staff->staff_status = $attributes['staff_status'] ?? TRUE;
-        $staff->user = [
-            'username' => $attributes['username'],
-            'password' => $attributes['password'],
-            'super_user' => $attributes['super_user'] ?? FALSE,
-            'activate' => $activate,
-        ];
+        $user->save();
 
-        $staff->save();
-
-        $staff->groups()->attach($attributes['groups']);
+        $user->groups()->attach($attributes['groups']);
 
         if (array_key_exists('locations', $attributes))
-            $staff->locations()->attach($attributes['locations']);
+            $user->locations()->attach($attributes['locations']);
 
-        return $staff->reload()->user;
+        return $user->reload()->user;
     }
 }

@@ -8,9 +8,9 @@ use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Order;
-use Admin\Models\Staff;
-use Admin\Models\StaffGroup;
 use Admin\Models\Status;
+use Admin\Models\User;
+use Admin\Models\UserGroup;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
@@ -75,9 +75,9 @@ class StatusEditor extends BaseFormWidget
     /**
      * @var string Relation column to display for the name
      */
-    public $assigneeNameFrom = 'staff_name';
+    public $assigneeNameFrom = 'name';
 
-    public $assigneeGroupNameFrom = 'staff_group_name';
+    public $assigneeGroupNameFrom = 'user_group_name';
 
     public $assigneeRelationFrom = 'assignee';
 
@@ -236,18 +236,18 @@ class StatusEditor extends BaseFormWidget
         if (!strlen($groupId = post('groupId', $form->getField('assignee_group_id')->value)))
             return [];
 
-        return Staff::whereHas('groups', function ($query) use ($groupId) {
-            $query->where('staff_groups.staff_group_id', $groupId);
-        })->isEnabled()->dropdown('staff_name');
+        return User::whereHas('groups', function ($query) use ($groupId) {
+            $query->where('user_groups.user_group_id', $groupId);
+        })->isEnabled()->dropdown('name');
     }
 
     public static function getAssigneeGroupOptions()
     {
         if (AdminAuth::isSuperUser()) {
-            return StaffGroup::getDropdownOptions();
+            return UserGroup::getDropdownOptions();
         }
 
-        return AdminAuth::staff()->groups->pluck('staff_group_name', 'staff_group_id');
+        return AdminAuth::user()->groups->pluck('user_group_name', 'user_group_id');
     }
 
     protected function makeEditorFormWidget($model)
@@ -291,7 +291,7 @@ class StatusEditor extends BaseFormWidget
     protected function mergeSaveData()
     {
         return array_merge(post($this->getModeConfig('arrayName'), []), [
-            'staff_id' => $this->getController()->getUser()->staff->getKey(),
+            'user_id' => $this->getController()->getUser()->getKey(),
         ]);
     }
 
@@ -331,9 +331,9 @@ class StatusEditor extends BaseFormWidget
     protected function saveRecord(array $saveData, string $keyFrom)
     {
         if (!$this->isStatusMode) {
-            $group = StaffGroup::find(array_get($saveData, $this->assigneeGroupKeyFrom));
-            $staff = Staff::find(array_get($saveData, $keyFrom));
-            if ($record = $this->model->updateAssignTo($group, $staff))
+            $group = UserGroup::find(array_get($saveData, $this->assigneeGroupKeyFrom));
+            $user = User::find(array_get($saveData, $keyFrom));
+            if ($record = $this->model->updateAssignTo($group, $user))
                 AssigneeUpdated::log($record, $this->getController()->getUser());
         }
         else {

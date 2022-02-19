@@ -132,11 +132,11 @@ class Login extends \Admin\Classes\AdminController
             throw new ValidationException(['password' => lang('admin::lang.login.alert_failed_reset')]);
 
         $data = [
-            'staff_name' => $user->staff->staff_name,
+            'staff_name' => $user->name,
         ];
 
         Mail::queue('admin::_mail.password_reset', $data, function ($message) use ($user) {
-            $message->to($user->staff->staff_email, $user->staff->staff_name);
+            $message->to($user->email, $user->name);
         });
 
         flash()->success(lang('admin::lang.login.alert_success_reset'));

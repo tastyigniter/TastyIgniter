@@ -25,14 +25,14 @@ class StatusHistory extends Model
 
     protected $casts = [
         'object_id' => 'integer',
-        'staff_id' => 'integer',
+        'user_id' => 'integer',
         'status_id' => 'integer',
         'notify' => 'boolean',
     ];
 
     public $relation = [
         'belongsTo' => [
-            'staff' => 'Admin\Models\Staff',
+            'user' => 'Admin\Models\User',
             'status' => ['Admin\Models\Status', 'status_id'],
         ],
         'morphTo' => [
@@ -49,7 +49,7 @@ class StatusHistory extends Model
 
     public function getStaffNameAttribute($value)
     {
-        return ($this->staff && $this->staff->exists) ? $this->staff->staff_name : $value;
+        return $this->user->staff_name ?? $value;
     }
 
     public function getDateAddedSinceAttribute($value)
@@ -82,7 +82,7 @@ class StatusHistory extends Model
         $model->status_id = $statusId;
         $model->object_id = $object->getKey();
         $model->object_type = $object->getMorphClass();
-        $model->staff_id = array_get($options, 'staff_id');
+        $model->user_id = array_get($options, 'staff_id', array_get($options, 'user_id'));
         $model->comment = array_get($options, 'comment', $status->status_comment);
         $model->notify = array_get($options, 'notify', $status->notify_customer);
 

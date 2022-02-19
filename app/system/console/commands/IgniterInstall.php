@@ -6,9 +6,9 @@ use Admin\Facades\AdminAuth;
 use Admin\Models\CustomerGroup;
 use Admin\Models\Location;
 use Admin\Models\Staff;
-use Admin\Models\StaffGroup;
-use Admin\Models\StaffRole;
 use Admin\Models\User;
+use Admin\Models\UserGroup;
+use Admin\Models\UserRole;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -180,12 +180,12 @@ class IgniterInstall extends Command
             'staff_email' => $email,
             'staff_name' => DatabaseSeeder::$staffName,
             'language_id' => Language::first()->language_id,
-            'staff_role_id' => StaffRole::first()->staff_role_id,
-            'staff_status' => TRUE,
+            'user_role_id' => UserRole::first()->user_role_id,
+            'status' => TRUE,
             'username' => $username,
             'password' => $password,
             'super_user' => TRUE,
-            'groups' => [StaffGroup::first()->staff_group_id],
+            'groups' => [UserGroup::first()->user_group_id],
             'locations' => [Location::first()->location_id],
         ], TRUE);
 

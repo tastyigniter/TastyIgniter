@@ -4,7 +4,7 @@ namespace Admin\Jobs;
 
 use Admin\Classes\Allocator;
 use Admin\Models\AssignableLog;
-use Admin\Models\StaffGroup;
+use Admin\Models\UserGroup;
 use Admin\Traits\Assignable;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -43,13 +43,13 @@ class AllocateAssignable implements ShouldQueue
             if (!in_array(Assignable::class, class_uses_recursive(get_class($this->assignableLog->assignable))))
                 return;
 
-            if (!$this->assignableLog->assignee_group instanceof StaffGroup)
+            if (!$this->assignableLog->assignee_group instanceof UserGroup)
                 return;
 
             Allocator::addSlot($this->assignableLog->getKey());
 
             if (!$assignee = $this->assignableLog->assignee_group->findAvailableAssignee())
-                throw new Exception(lang('admin::lang.staff_groups.alert_no_available_assignee'));
+                throw new Exception(lang('admin::lang.user_groups.alert_no_available_assignee'));
 
             $this->assignableLog->assignable->assignTo($assignee);
 

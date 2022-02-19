@@ -87,12 +87,12 @@ class MailTemplates extends \Admin\Classes\AdminController
         if (!$model = $this->formFindModelObject($recordId))
             throw new ApplicationException(lang('system::lang.mail_templates.alert_template_not_found'));
 
-        $adminUser = $this->getUser()->staff;
+        $adminUser = $this->getUser();
 
         config()->set('system.suppressTemplateRuntimeNotice', TRUE);
 
         Mail::send($model->code, [], function ($message) use ($adminUser) {
-            $message->to($adminUser->staff_email, $adminUser->staff_name);
+            $message->to($adminUser->email, $adminUser->name);
         });
 
         flash()->success(sprintf(lang('system::lang.mail_templates.alert_test_message_sent'), $adminUser->staff_email));

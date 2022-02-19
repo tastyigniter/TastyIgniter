@@ -4,7 +4,7 @@ namespace Admin\Traits;
 
 use Admin\Facades\AdminAuth;
 use Admin\Models\AssignableLog;
-use Admin\Models\StaffGroup;
+use Admin\Models\UserGroup;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Assignable
@@ -12,8 +12,8 @@ trait Assignable
     public static function bootAssignable()
     {
         static::extend(function (self $model) {
-            $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staff'];
-            $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\StaffGroup'];
+            $model->relation['belongsTo']['assignee'] = ['Admin\Models\User'];
+            $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\UserGroup'];
             $model->relation['morphMany']['assignable_logs'] = [
                 'Admin\Models\AssignableLog', 'name' => 'assignable', 'delete' => TRUE,
             ];
@@ -43,7 +43,7 @@ trait Assignable
     //
 
     /**
-     * @param \Admin\Models\Staff $assignee
+     * @param \Admin\Models\User $assignee
      * @return bool
      */
     public function assignTo($assignee)
@@ -55,7 +55,7 @@ trait Assignable
     }
 
     /**
-     * @param \Admin\Models\StaffGroup $group
+     * @param \Admin\Models\UserGroup $group
      * @return bool
      */
     public function assignToGroup($group)
@@ -106,7 +106,7 @@ trait Assignable
 
     public function listGroupAssignees()
     {
-        if (!$this->assignee_group instanceof StaffGroup)
+        if (!$this->assignee_group instanceof UserGroup)
             return [];
 
         return $this->assignee_group->listAssignees();

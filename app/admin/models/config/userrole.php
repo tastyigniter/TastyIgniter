@@ -9,7 +9,7 @@ $config['list']['toolbar'] = [
         'create' => [
             'label' => 'lang:admin::lang.button_new',
             'class' => 'btn btn-primary',
-            'href' => 'staff_roles/create',
+            'href' => 'user_roles/create',
         ],
     ],
 ];
@@ -28,7 +28,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'staff_roles/edit/{staff_role_id}',
+            'href' => 'user_roles/edit/{user_role_id}',
         ],
     ],
     'name' => [
@@ -42,12 +42,12 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'staff_count' => [
-        'label' => 'lang:admin::lang.staff_groups.column_users',
+        'label' => 'lang:admin::lang.user_groups.column_users',
         'type' => 'number',
         'searchable' => TRUE,
         'sortable' => FALSE,
     ],
-    'staff_role_id' => [
+    'user_role_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
@@ -58,7 +58,7 @@ $config['form']['toolbar'] = [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
-            'href' => 'staff_roles',
+            'href' => 'user_roles',
         ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
@@ -98,7 +98,7 @@ $config['form']['fields'] = [
 ];
 
 $config['form']['tabs'] = [
-    'defaultTab' => 'lang:admin::lang.staff_roles.text_tab_permission',
+    'defaultTab' => 'lang:admin::lang.user_roles.text_tab_permission',
     'fields' => [
         'permissions' => [
             'type' => 'permissioneditor',
