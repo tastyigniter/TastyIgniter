@@ -65,6 +65,8 @@ class MergeStaffsIntoUsersTable extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['staff_id']);
+
             $table->dropColumn('staff_id');
         });
 
