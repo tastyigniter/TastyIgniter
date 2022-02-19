@@ -132,5 +132,3 @@ class MailTheme extends Model
         return File::get($basePath.'/default.css');
     }
 }
-
-class_alias('System\Models\MailTheme', 'System\Models\Mail_themes_model', FALSE);

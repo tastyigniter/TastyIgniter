@@ -119,5 +119,3 @@ class StaffGroup extends Model
         return $assignees->sortBy('assign_value')->first();
     }
 }
-
-class_alias('Admin\Models\StaffGroup', 'Admin\Models\Staff_groups_model', FALSE);

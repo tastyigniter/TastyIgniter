@@ -168,5 +168,3 @@ class Stock extends Model
         return !$this->low_stock_alert_sent;
     }
 }
-
-class_alias('Admin\Models\Stock', 'Admin\Models\Stocks_model', FALSE);

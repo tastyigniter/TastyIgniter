@@ -94,5 +94,3 @@ class Address extends Model
         return format_address($this->toArray(), FALSE);
     }
 }
-
-class_alias('Admin\Models\Address', 'Admin\Models\Addresses_model', FALSE);

@@ -462,5 +462,3 @@ class Reservation extends Model
         return $data;
     }
 }
-
-class_alias('Admin\Models\Reservation', 'Admin\Models\Reservations_model', FALSE);

@@ -91,5 +91,3 @@ class CustomerGroup extends Model
         return self::$defaultGroup = $defaultGroup;
     }
 }
-
-class_alias('Admin\Models\CustomerGroup', 'Admin\Models\Customer_groups_model', FALSE);

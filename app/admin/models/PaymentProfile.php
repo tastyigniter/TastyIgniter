@@ -96,5 +96,3 @@ class PaymentProfile extends Model
         return $query->where('customer_id', $customer);
     }
 }
-
-class_alias('Admin\Models\PaymentProfile', 'Admin\Models\Payment_profiles_model', FALSE);

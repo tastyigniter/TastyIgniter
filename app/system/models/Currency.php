@@ -213,5 +213,3 @@ class Currency extends \Igniter\Flame\Currency\Models\Currency
         return $this->currency_status;
     }
 }
-
-class_alias('System\Models\Currency', 'System\Models\Currencies_model', FALSE);

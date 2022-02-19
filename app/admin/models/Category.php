@@ -156,5 +156,3 @@ class Category extends Model
         return $query->paginate($pageLimit, $page);
     }
 }
-
-class_alias('Admin\Models\Category', 'Admin\Models\Categories_model', FALSE);

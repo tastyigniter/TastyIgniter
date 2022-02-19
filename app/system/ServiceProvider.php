@@ -18,6 +18,7 @@ use Igniter\Flame\Pagic\Loader;
 use Igniter\Flame\Pagic\PagicServiceProvider;
 use Igniter\Flame\Pagic\Parsers\FileParser;
 use Igniter\Flame\Setting\Facades\Setting;
+use Igniter\Flame\Support\ClassLoader;
 use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\HelperServiceProvider;
 use Igniter\Flame\Translation\Drivers\Database;
@@ -52,6 +53,9 @@ class ServiceProvider extends AppServiceProvider
 
         $this->registerProviders();
         $this->registerSingletons();
+
+        // Provide backward compatibility for old model class names
+        $this->registerModelClassAliases();
 
         // Register all extensions
         ExtensionManager::instance()->registerExtensions();
@@ -486,5 +490,25 @@ class ServiceProvider extends AppServiceProvider
 
             return $pagic;
         });
+    }
+
+    protected function registerModelClassAliases()
+    {
+        resolve(ClassLoader::class)->addAliases([
+            'System\Models\Activity' => 'System\Models\Activities_model',
+            'System\Models\Country' => 'System\Models\Countries_model',
+            'System\Models\Currency' => 'System\Models\Currencies_model',
+            'System\Models\Extension' => 'System\Models\Extensions_model',
+            'System\Models\Language' => 'System\Models\Languages_model',
+            'System\Models\MailLayout' => 'System\Models\Mail_layouts_model',
+            'System\Models\MailPartial' => 'System\Models\Mail_partials_model',
+            'System\Models\MailTemplate' => 'System\Models\Mail_templates_model',
+            'System\Models\MailTheme' => 'System\Models\Mail_themes_model',
+            'System\Models\Page' => 'System\Models\Pages_model',
+            'System\Models\RequestLog' => 'System\Models\Request_logs_model',
+            'System\Models\Settings' => 'System\Models\Settings_model',
+            'System\Models\Theme' => 'System\Models\Themes_model',
+            'System\Models\Translation' => 'System\Models\Translations_model',
+        ]);
     }
 }

@@ -263,5 +263,3 @@ class Customer extends AuthUserModel
         ]);
     }
 }
-
-class_alias('Admin\Models\Customer', 'Admin\Models\Customers_model', FALSE);

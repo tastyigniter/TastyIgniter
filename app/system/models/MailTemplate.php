@@ -162,5 +162,3 @@ class MailTemplate extends Model
         MailManager::instance()->registerCallback($callback);
     }
 }
-
-class_alias('System\Models\MailTemplate', 'System\Models\Mail_templates_model', FALSE);

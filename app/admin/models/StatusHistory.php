@@ -120,5 +120,3 @@ class StatusHistory extends Model
         return $query->where('status_id', $statusId)->orderBy('created_at', 'desc');
     }
 }
-
-class_alias('Admin\Models\StatusHistory', 'Admin\Models\Status_history_model', FALSE);

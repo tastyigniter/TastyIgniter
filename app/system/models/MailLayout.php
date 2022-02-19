@@ -140,5 +140,3 @@ class MailLayout extends Model
         }
     }
 }
-
-class_alias('System\Models\MailLayout', 'System\Models\Mail_layouts_model', FALSE);

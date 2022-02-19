@@ -12,6 +12,7 @@ use Admin\Facades\AdminMenu;
 use Admin\Middleware\LogUserLastSeen;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Igniter\Flame\Support\ClassLoader;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
@@ -47,6 +48,9 @@ class ServiceProvider extends AppServiceProvider
     public function register()
     {
         parent::register('admin');
+
+        // Provide backward compatibility for old model class names
+        $this->registerModelClassAliases();
 
         $this->registerAssets();
         $this->registerActivityTypes();
@@ -771,5 +775,42 @@ class ServiceProvider extends AppServiceProvider
                 ],
             ]);
         });
+    }
+
+    protected function registerModelClassAliases()
+    {
+        resolve(ClassLoader::class)->addAliases([
+            'Admin\Models\Status' => 'Admin\Models\Statuses_model',
+            'Admin\Models\Location' => 'Admin\Models\Locations_model',
+            'Admin\Models\Customer' => 'Admin\Models\Customers_model',
+            'Admin\Models\Allergen' => 'Admin\Models\Allergens_model',
+            'Admin\Models\StockHistory' => 'Admin\Models\Stock_history_model',
+            'Admin\Models\MenuSpecial' => 'Admin\Models\Menu_specials_model',
+            'Admin\Models\WorkingHour' => 'Admin\Models\Working_hours_model',
+            'Admin\Models\Table' => 'Admin\Models\Tables_model',
+            'Admin\Models\AssignableLog' => 'Admin\Models\Assignable_logs_model',
+            'Admin\Models\StaffGroup' => 'Admin\Models\Staff_groups_model',
+            'Admin\Models\MenuCategory' => 'Admin\Models\Menu_categories_model',
+            'Admin\Models\Category' => 'Admin\Models\Categories_model',
+            'Admin\Models\MenuItemOptionValue' => 'Admin\Models\Menu_item_option_values_model',
+            'Admin\Models\User' => 'Admin\Models\Users_model',
+            'Admin\Models\StaffRole' => 'Admin\Models\Staff_roles_model',
+            'Admin\Models\Order' => 'Admin\Models\Orders_model',
+            'Admin\Models\Mealtime' => 'Admin\Models\Mealtimes_model',
+            'Admin\Models\Staff' => 'Admin\Models\Staffs_model',
+            'Admin\Models\CustomerGroup' => 'Admin\Models\Customer_groups_model',
+            'Admin\Models\StatusHistory' => 'Admin\Models\Status_history_model',
+            'Admin\Models\MenuOption' => 'Admin\Models\Menu_options_model',
+            'Admin\Models\PaymentProfile' => 'Admin\Models\Payment_profiles_model',
+            'Admin\Models\LocationArea' => 'Admin\Models\Location_areas_model',
+            'Admin\Models\Menu' => 'Admin\Models\Menus_model',
+            'Admin\Models\PaymentLog' => 'Admin\Models\Payment_logs_model',
+            'Admin\Models\Reservation' => 'Admin\Models\Reservations_model',
+            'Admin\Models\MenuOptionValue' => 'Admin\Models\Menu_option_values_model',
+            'Admin\Models\Stock' => 'Admin\Models\Stocks_model',
+            'Admin\Models\Address' => 'Admin\Models\Addresses_model',
+            'Admin\Models\UserPreference' => 'Admin\Models\User_preferences_model',
+            'Admin\Models\Payment' => 'Admin\Models\Payments_model',
+        ]);
     }
 }

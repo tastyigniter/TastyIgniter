@@ -192,5 +192,3 @@ class AssignableLog extends Model
         });
     }
 }
-
-class_alias('Admin\Models\AssignableLog', 'Admin\Models\Assignable_logs_model', FALSE);

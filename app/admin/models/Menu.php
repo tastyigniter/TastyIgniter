@@ -385,5 +385,3 @@ class Menu extends Model
         return $isAvailable;
     }
 }
-
-class_alias('Admin\Models\Menu', 'Admin\Models\Menus_model', FALSE);

@@ -20,5 +20,3 @@ class Translation extends \Igniter\Flame\Translation\Models\Translation
         return $this->lockState()->save();
     }
 }
-
-class_alias('System\Models\Translation', 'System\Models\Translations_model', FALSE);

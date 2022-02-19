@@ -73,5 +73,3 @@ class Mealtime extends Model
         return $this->isAvailable();
     }
 }
-
-class_alias('Admin\Models\Mealtime', 'Admin\Models\Mealtimes_model', FALSE);
