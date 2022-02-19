@@ -3,7 +3,7 @@
 namespace System\Controllers;
 
 use Admin\Facades\AdminMenu;
-use System\Models\Request_logs_model;
+use System\Models\RequestLog;
 
 class RequestLogs extends \Admin\Classes\AdminController
 {
@@ -14,17 +14,17 @@ class RequestLogs extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Request_logs_model',
+            'model' => 'System\Models\RequestLog',
             'title' => 'lang:system::lang.request_logs.text_title',
             'emptyMessage' => 'lang:system::lang.request_logs.text_empty',
             'defaultSort' => ['count', 'DESC'],
-            'configFile' => 'request_logs_model',
+            'configFile' => 'requestlog',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:system::lang.request_logs.text_form_name',
-        'model' => 'System\Models\Request_logs_model',
+        'model' => 'System\Models\RequestLog',
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'request_logs',
@@ -32,7 +32,7 @@ class RequestLogs extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'request_logs',
         ],
-        'configFile' => 'request_logs_model',
+        'configFile' => 'requestlog',
     ];
 
     protected $requiredPermissions = 'Admin.SystemLogs';
@@ -46,7 +46,7 @@ class RequestLogs extends \Admin\Classes\AdminController
 
     public function index_onEmptyLog()
     {
-        Request_logs_model::truncate();
+        RequestLog::truncate();
 
         flash()->success(sprintf(lang('admin::lang.alert_success'), 'Logs Emptied '));
 

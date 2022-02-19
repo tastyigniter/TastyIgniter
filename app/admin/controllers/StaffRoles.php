@@ -13,17 +13,17 @@ class StaffRoles extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Staff_roles_model',
+            'model' => 'Admin\Models\StaffRole',
             'title' => 'lang:admin::lang.staff_roles.text_title',
             'emptyMessage' => 'lang:admin::lang.staff_roles.text_empty',
             'defaultSort' => ['staff_role_id', 'DESC'],
-            'configFile' => 'staff_roles_model',
+            'configFile' => 'staffrole',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.staff_roles.text_form_name',
-        'model' => 'Admin\Models\Staff_roles_model',
+        'model' => 'Admin\Models\StaffRole',
         'request' => 'Admin\Requests\StaffRole',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -44,7 +44,7 @@ class StaffRoles extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'staff_roles',
         ],
-        'configFile' => 'staff_roles_model',
+        'configFile' => 'staffrole',
     ];
 
     protected $requiredPermissions = 'Admin.Staffs';

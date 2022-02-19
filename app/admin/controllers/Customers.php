@@ -17,17 +17,17 @@ class Customers extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Customers_model',
+            'model' => 'Admin\Models\Customer',
             'title' => 'lang:admin::lang.customers.text_title',
             'emptyMessage' => 'lang:admin::lang.customers.text_empty',
             'defaultSort' => ['customer_id', 'DESC'],
-            'configFile' => 'customers_model',
+            'configFile' => 'customer',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.customers.text_form_name',
-        'model' => 'Admin\Models\Customers_model',
+        'model' => 'Admin\Models\Customer',
         'request' => 'Admin\Requests\Customer',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -48,7 +48,7 @@ class Customers extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'customers',
         ],
-        'configFile' => 'customers_model',
+        'configFile' => 'customer',
     ];
 
     protected $requiredPermissions = 'Admin.Customers';

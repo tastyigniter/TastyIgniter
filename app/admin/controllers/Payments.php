@@ -4,7 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Classes\PaymentGateways;
 use Admin\Facades\AdminMenu;
-use Admin\Models\Payments_model;
+use Admin\Models\Payment;
 use Exception;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
@@ -20,17 +20,17 @@ class Payments extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Payments_model',
+            'model' => 'Admin\Models\Payment',
             'title' => 'lang:admin::lang.payments.text_title',
             'emptyMessage' => 'lang:admin::lang.payments.text_empty',
             'defaultSort' => ['updated_at', 'DESC'],
-            'configFile' => 'payments_model',
+            'configFile' => 'payment',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.payments.text_form_name',
-        'model' => 'Admin\Models\Payments_model',
+        'model' => 'Admin\Models\Payment',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'payments/edit/{code}',
@@ -46,7 +46,7 @@ class Payments extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'payments',
         ],
-        'configFile' => 'payments_model',
+        'configFile' => 'payment',
     ];
 
     protected $requiredPermissions = 'Admin.Payments';
@@ -62,7 +62,7 @@ class Payments extends \Admin\Classes\AdminController
 
     public function index()
     {
-        Payments_model::syncAll();
+        Payment::syncAll();
 
         $this->asExtension('ListController')->index();
     }

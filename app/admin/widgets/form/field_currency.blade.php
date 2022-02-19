@@ -1,5 +1,5 @@
 @php
-$currencyModel = \System\Models\Currencies_model::getDefault();
+$currencyModel = \System\Models\Currency::getDefault();
 $symbolAfter = $currencyModel->getSymbolPosition();
 $symbol = $currencyModel->getSymbol();
 @endphp

@@ -15,17 +15,17 @@ class Menus extends AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Menus_model',
+            'model' => 'Admin\Models\Menu',
             'title' => 'lang:admin::lang.menus.text_title',
             'emptyMessage' => 'lang:admin::lang.menus.text_empty',
             'defaultSort' => ['menu_id', 'DESC'],
-            'configFile' => 'menus_model',
+            'configFile' => 'menu',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.menus.text_form_name',
-        'model' => 'Admin\Models\Menus_model',
+        'model' => 'Admin\Models\Menu',
         'request' => 'Admin\Requests\Menu',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -46,7 +46,7 @@ class Menus extends AdminController
         'delete' => [
             'redirect' => 'menus',
         ],
-        'configFile' => 'menus_model',
+        'configFile' => 'menu',
     ];
 
     protected $requiredPermissions = 'Admin.Menus';

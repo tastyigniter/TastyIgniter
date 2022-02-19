@@ -7,10 +7,10 @@ use Admin\ActivityTypes\StatusUpdated;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Facades\AdminAuth;
-use Admin\Models\Orders_model;
-use Admin\Models\Staff_groups_model;
-use Admin\Models\Staffs_model;
-use Admin\Models\Statuses_model;
+use Admin\Models\Order;
+use Admin\Models\Staff;
+use Admin\Models\StaffGroup;
+use Admin\Models\Status;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
@@ -27,7 +27,7 @@ class StatusEditor extends BaseFormWidget
     use ValidatesForm;
 
     /**
-     * @var Orders_model|\Admin\Models\Reservations_model Form model object.
+     * @var Order|\Admin\Models\Reservation Form model object.
      */
     public $model;
 
@@ -59,7 +59,7 @@ class StatusEditor extends BaseFormWidget
 
     public $statusRelationFrom = 'status';
 
-    public $statusModelClass = 'Admin\Models\Status_history_model';
+    public $statusModelClass = 'Admin\Models\StatusHistory';
 
     /**
      * @var string Text to display for the title of the popup list form
@@ -81,7 +81,7 @@ class StatusEditor extends BaseFormWidget
 
     public $assigneeRelationFrom = 'assignee';
 
-    public $assigneeModelClass = 'Admin\Models\Assignable_logs_model';
+    public $assigneeModelClass = 'Admin\Models\AssignableLog';
 
     public $assigneeOrderPermission = 'Admin.AssignOrders';
 
@@ -187,7 +187,7 @@ class StatusEditor extends BaseFormWidget
         if (!strlen($statusId = post('statusId')))
             throw new ApplicationException(lang('admin::lang.form.missing_id'));
 
-        if (!$status = Statuses_model::find($statusId))
+        if (!$status = Status::find($statusId))
             throw new Exception(sprintf(lang('admin::lang.statuses.alert_status_not_found'), $statusId));
 
         return $status->toArray();
@@ -236,7 +236,7 @@ class StatusEditor extends BaseFormWidget
         if (!strlen($groupId = post('groupId', $form->getField('assignee_group_id')->value)))
             return [];
 
-        return Staffs_model::whereHas('groups', function ($query) use ($groupId) {
+        return Staff::whereHas('groups', function ($query) use ($groupId) {
             $query->where('staff_groups.staff_group_id', $groupId);
         })->isEnabled()->dropdown('staff_name');
     }
@@ -244,7 +244,7 @@ class StatusEditor extends BaseFormWidget
     public static function getAssigneeGroupOptions()
     {
         if (AdminAuth::isSuperUser()) {
-            return Staff_groups_model::getDropdownOptions();
+            return StaffGroup::getDropdownOptions();
         }
 
         return AdminAuth::staff()->groups->pluck('staff_group_name', 'staff_group_id');
@@ -319,7 +319,7 @@ class StatusEditor extends BaseFormWidget
 
     protected function checkAssigneePermission()
     {
-        $saleType = $this->model instanceof Orders_model
+        $saleType = $this->model instanceof Order
             ? 'orderPermission' : 'reservationPermission';
 
         $permission = $this->getModeConfig($saleType);
@@ -331,13 +331,13 @@ class StatusEditor extends BaseFormWidget
     protected function saveRecord(array $saveData, string $keyFrom)
     {
         if (!$this->isStatusMode) {
-            $group = Staff_groups_model::find(array_get($saveData, $this->assigneeGroupKeyFrom));
-            $staff = Staffs_model::find(array_get($saveData, $keyFrom));
+            $group = StaffGroup::find(array_get($saveData, $this->assigneeGroupKeyFrom));
+            $staff = Staff::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->updateAssignTo($group, $staff))
                 AssigneeUpdated::log($record, $this->getController()->getUser());
         }
         else {
-            $status = Statuses_model::find(array_get($saveData, $keyFrom));
+            $status = Status::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->addStatusHistory($status, $saveData))
                 StatusUpdated::log($record, $this->getController()->getUser());
         }

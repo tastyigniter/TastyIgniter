@@ -4,7 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Classes\AdminController;
 use Admin\Facades\AdminMenu;
-use Admin\Models\Categories_model;
+use Admin\Models\Category;
 
 class Categories extends AdminController
 {
@@ -16,17 +16,17 @@ class Categories extends AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Categories_model',
+            'model' => 'Admin\Models\Category',
             'title' => 'lang:admin::lang.categories.text_title',
             'emptyMessage' => 'lang:admin::lang.categories.text_empty',
             'defaultSort' => ['category_id', 'DESC'],
-            'configFile' => 'categories_model',
+            'configFile' => 'category',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.categories.text_form_name',
-        'model' => 'Admin\Models\Categories_model',
+        'model' => 'Admin\Models\Category',
         'request' => 'Admin\Requests\Category',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -47,7 +47,7 @@ class Categories extends AdminController
         'delete' => [
             'redirect' => 'categories',
         ],
-        'configFile' => 'categories_model',
+        'configFile' => 'category',
     ];
 
     protected $requiredPermissions = 'Admin.Categories';
@@ -64,7 +64,7 @@ class Categories extends AdminController
         if (!$model->getRgt() || !$model->getLft())
             $model->fixTree();
 
-        if (Categories_model::isBroken())
-            Categories_model::fixTree();
+        if (Category::isBroken())
+            Category::fixTree();
     }
 }
