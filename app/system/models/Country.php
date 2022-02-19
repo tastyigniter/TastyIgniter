@@ -98,5 +98,3 @@ class Country extends Model
         return $query->where('status', 1);
     }
 }
-
-class_alias('System\Models\Country', 'System\Models\Countries_model', FALSE);

@@ -431,5 +431,3 @@ class Order extends Model
         return $data;
     }
 }
-
-class_alias('Admin\Models\Order', 'Admin\Models\Orders_model', FALSE);

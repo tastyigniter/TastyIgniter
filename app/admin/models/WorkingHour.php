@@ -67,5 +67,3 @@ class WorkingHour extends AbstractWorkingHour
         return $result;
     }
 }
-
-class_alias('Admin\Models\WorkingHour', 'Admin\Models\Working_hours_model', FALSE);

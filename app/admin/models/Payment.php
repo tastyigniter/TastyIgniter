@@ -305,5 +305,3 @@ class Payment extends Model
         $profile->delete();
     }
 }
-
-class_alias('Admin\Models\Payment', 'Admin\Models\Payments_model', FALSE);

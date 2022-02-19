@@ -76,5 +76,3 @@ class Allergen extends Model
         return $query->where('status', 1);
     }
 }
-
-class_alias('Admin\Models\Allergen', 'Admin\Models\Allergens_model', FALSE);

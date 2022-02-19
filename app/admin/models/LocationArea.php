@@ -66,5 +66,3 @@ class LocationArea extends AbstractArea
             ->update(['is_default' => 0]);
     }
 }
-
-class_alias('Admin\Models\LocationArea', 'Admin\Models\Location_areas_model', FALSE);

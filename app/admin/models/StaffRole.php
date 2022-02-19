@@ -70,5 +70,3 @@ class StaffRole extends Model
         $this->attributes['permissions'] = !empty($permissions) ? serialize($permissions) : '';
     }
 }
-
-class_alias('Admin\Models\StaffRole', 'Admin\Models\Staff_roles_model', FALSE);

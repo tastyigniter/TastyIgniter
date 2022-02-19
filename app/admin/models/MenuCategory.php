@@ -31,5 +31,3 @@ class MenuCategory extends Model
         ],
     ];
 }
-
-class_alias('Admin\Models\MenuCategory', 'Admin\Models\Menu_categories_model', FALSE);

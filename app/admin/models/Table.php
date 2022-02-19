@@ -67,5 +67,3 @@ class Table extends Model
             ->where('max_capacity', '>=', $noOfGuests);
     }
 }
-
-class_alias('Admin\Models\Table', 'Admin\Models\Tables_model', FALSE);

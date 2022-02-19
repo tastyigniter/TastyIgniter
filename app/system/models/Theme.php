@@ -376,5 +376,3 @@ class Theme extends Model
         return self::where('code', '=', $uniqueCode)->limit(1)->count() > 0;
     }
 }
-
-class_alias('System\Models\Theme', 'System\Models\Themes_model', FALSE);

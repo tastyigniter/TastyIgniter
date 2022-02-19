@@ -84,5 +84,3 @@ class MenuOptionValue extends Model
         $this->allergens()->sync($allergenIds);
     }
 }
-
-class_alias('Admin\Models\MenuOptionValue', 'Admin\Models\Menu_option_values_model', FALSE);
