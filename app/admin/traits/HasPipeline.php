@@ -16,22 +16,14 @@ trait HasPipeline
 
     public function callPipeline($callingContext, $payload)
     {
-        $payloadClass = (new \ReflectionClass(self::class))->getName();
-
         $pipes = collect(self::$registeredPipelines)
-            ->filter(function ($contexts, $klass) use ($payloadClass, $callingContext) {
-                        if (!in_array($klass, ['*', $payloadClass])) {
-                            return [];
-                        }
+            ->filter(function ($pipelines, $context) use ($callingContext) {
+                if (!in_array($context, ['*', $callingContext])) {
+                    return [];
+                }
 
-                        return $contexts->filter(function ($pipelines, $pipelineContext) use ($callingContext) {
-                            if (!in_array($pipelineContext, ['*', $callingContext])) {
-                                return [];
-                            }
-
-                            return $pipelines;
-                        });
-                    })
+                return $pipelines;
+            })
             ->filter()
             ->flatten()
             ->values();
@@ -46,18 +38,14 @@ trait HasPipeline
             ->thenReturn();
     }
 
-    // register a pipeline by * for all classes
+    // register a pipeline by * for all contexts
     // or by classname (eg Admin\Widgets\Lists::class)
-    public static function registerPipeline($klass, $context, $pipelineClass)
+    public static function registerPipeline($context, $pipelineClass)
     {
-        if (!array_get(self::$registeredPipelines, $klass, false)) {
-            self::$registeredPipelines[$klass] = [];
+        if (!array_get(self::$registeredPipelines, $context, false)) {
+            self::$registeredPipelines[$context] = [];
         }
 
-        if (!array_get(self::$registeredPipelines[$klass], $context, false)) {
-            self::$registeredPipelines[$klass][$context] = [];
-        }
-
-        self::$registeredPipelines[$klass][$context] = $pipelineClass;
+        self::$registeredPipelines[$context] = $pipelineClass;
     }
 }
