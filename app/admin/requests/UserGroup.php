@@ -9,7 +9,7 @@ class UserGroup extends FormRequest
     public function attributes()
     {
         return [
-            'user_group_name' => lang('admin::lang.label_name'),
+            'name' => lang('admin::lang.label_name'),
             'description' => lang('admin::lang.label_description'),
             'auto_assign' => lang('admin::lang.user_groups.label_auto_assign'),
             'assignment_mode' => lang('admin::lang.user_groups.label_assignment_mode'),
@@ -21,7 +21,7 @@ class UserGroup extends FormRequest
     public function rules()
     {
         return [
-            'user_group_name' => ['required', 'between:2,128', 'unique:user_groups'],
+            'name' => ['required', 'between:2,128', 'unique:user_groups'],
             'description' => ['string'],
             'auto_assign' => ['required', 'integer'],
             'assignment_mode' => ['required_if:auto_assign,true', 'integer'],

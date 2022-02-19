@@ -121,7 +121,7 @@ $config['list']['columns'] = [
     'user_group_name' => [
         'label' => 'lang:admin::lang.staff.column_group',
         'relation' => 'groups',
-        'select' => 'user_group_name',
+        'select' => 'name',
     ],
     'staff_role_name' => [
         'label' => 'lang:admin::lang.staff.column_role',
@@ -267,7 +267,7 @@ $config['form']['fields'] = [
         'context' => ['create', 'edit'],
         'span' => 'right',
         'relationFrom' => 'groups',
-        'nameFrom' => 'user_group_name',
+        'nameFrom' => 'name',
         'comment' => 'lang:admin::lang.staff.help_groups',
     ],
     'user_role_id' => [

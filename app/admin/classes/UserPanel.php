@@ -100,7 +100,7 @@ class UserPanel
 
     public function listGroupNames()
     {
-        return $this->user->groups->pluck('user_group_name')->all();
+        return $this->user->groups->pluck('name')->all();
     }
 
     public function getRoleName()

@@ -81,7 +81,7 @@ class AssigneeUpdated implements ActivityInterface
             'assignee_id' => $this->subject->assignee_id,
             'assignee_name' => optional($this->subject->assignee)->staff_name,
             'assignee_group_id' => $this->subject->assignee_group_id,
-            'assignee_group_name' => optional($this->subject->assignee_group)->user_group_name,
+            'assignee_group_name' => optional($this->subject->assignee_group)->name,
         ];
     }
 

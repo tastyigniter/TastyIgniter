@@ -37,7 +37,7 @@ class MergeStaffsIntoUsersTable extends Migration
 
         Schema::table('user_groups', function (Blueprint $table) {
             $table->renameColumn('staff_group_id', 'user_group_id');
-            $table->renameColumn('staff_group_name', 'user_group_name');
+            $table->renameColumn('staff_group_name', 'name');
         });
 
         Schema::table('user_roles', function (Blueprint $table) {

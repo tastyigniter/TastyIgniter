@@ -31,7 +31,7 @@ $config['list']['columns'] = [
             'href' => 'user_groups/edit/{user_group_id}',
         ],
     ],
-    'user_group_name' => [
+    'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
@@ -90,7 +90,7 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'user_group_name' => [
+    'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],

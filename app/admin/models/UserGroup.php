@@ -43,16 +43,16 @@ class UserGroup extends Model
 
     public static function getDropdownOptions()
     {
-        return static::dropdown('user_group_name');
+        return static::dropdown('name');
     }
 
     public static function listDropdownOptions()
     {
-        return self::select('user_group_id', 'user_group_name', 'description')
+        return self::select('user_group_id', 'name', 'description')
             ->get()
             ->keyBy('user_group_id')
             ->map(function ($model) {
-                return [$model->user_group_name, $model->description];
+                return [$model->name, $model->description];
             });
     }
 

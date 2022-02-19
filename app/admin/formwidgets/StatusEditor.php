@@ -77,7 +77,7 @@ class StatusEditor extends BaseFormWidget
      */
     public $assigneeNameFrom = 'name';
 
-    public $assigneeGroupNameFrom = 'user_group_name';
+    public $assigneeGroupNameFrom = 'name';
 
     public $assigneeRelationFrom = 'assignee';
 
@@ -247,7 +247,7 @@ class StatusEditor extends BaseFormWidget
             return UserGroup::getDropdownOptions();
         }
 
-        return AdminAuth::user()->groups->pluck('user_group_name', 'user_group_id');
+        return AdminAuth::user()->groups->pluck('name', 'user_group_id');
     }
 
     protected function makeEditorFormWidget($model)

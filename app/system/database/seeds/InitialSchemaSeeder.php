@@ -183,22 +183,22 @@ class InitialSchemaSeeder extends Seeder
             return;
 
         DB::table('user_groups')->insert([
-            'staff_group_name' => 'Owners',
+            'name' => 'Owners',
             'description' => 'Default group for owners',
         ]);
 
         DB::table('user_groups')->insert([
-            'staff_group_name' => 'Managers',
+            'name' => 'Managers',
             'description' => 'Default group for managers',
         ]);
 
         DB::table('user_groups')->insert([
-            'staff_group_name' => 'Waiters',
+            'name' => 'Waiters',
             'description' => 'Default group for waiters.',
         ]);
 
         DB::table('user_groups')->insert([
-            'staff_group_name' => 'Delivery',
+            'name' => 'Delivery',
             'description' => 'Default group for delivery drivers.',
         ]);
 

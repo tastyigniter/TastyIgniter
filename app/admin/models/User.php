@@ -34,6 +34,8 @@ class User extends AuthUserModel
 
     protected $hidden = ['password'];
 
+    public $timestamps = TRUE;
+
     protected $casts = [
         'user_role_id' => 'integer',
         'sale_permission' => 'integer',
