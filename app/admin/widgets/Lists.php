@@ -271,7 +271,7 @@ class Lists extends BaseWidget
         // @deprecated, remove before v5
         $this->fireSystemEvent('admin.list.extendQueryBefore', [$query]);
 
-        $query = $this->callPipeline('extendQueryBefore', $query);
+        $query = $this->callPipeline($this->controller, 'extendQueryBefore', $query);
 
         // Prepare searchable column names
         $primarySearchable = [];
@@ -388,7 +388,7 @@ class Lists extends BaseWidget
         $query->select($selects);
 
         // Extensibility
-        $query = $this->callPipeline('extendQuery', $query);
+        $query = $this->callPipeline($this->controller, 'extendQuery', $query);
 
         // @deprecated, remove before v5
         if ($event = $this->fireSystemEvent('admin.list.extendQuery', [$query], TRUE)) {
@@ -487,7 +487,7 @@ class Lists extends BaseWidget
         }
 
         // Extensibility
-        $this->columns = $this->callPipeline('extendColumns', $this->columns);
+        $this->columns = $this->callPipeline($this->controller, 'extendColumns', $this->columns);
 
         $this->addColumns($this->columns);
 
@@ -635,7 +635,7 @@ class Lists extends BaseWidget
         $value = lang($column->label);
 
         // Extensibility
-        $payload = $this->callPipeline('overrideHeaderValue', ['column' => $column, 'value' => $value]);
+        $payload = $this->callPipeline($this->controller, 'overrideHeaderValue', ['column' => $column, 'value' => $value]);
         $value = $payload['value'] ?? null;
 
         // @deprecated, remove before v5
@@ -670,7 +670,7 @@ class Lists extends BaseWidget
             $value = $column->defaults;
 
         // Extensibility
-        $payload = $this->callPipeline('overrideColumnValue', ['column' => $column, 'value' => $value]);
+        $payload = $this->callPipeline($this->controller, 'overrideColumnValue', ['column' => $column, 'value' => $value]);
         $value = $payload['value'] ?? null;
 
         // @deprecated, remove before v5
@@ -690,8 +690,8 @@ class Lists extends BaseWidget
         $result = $column->attributes;
 
         // Extensibility
-        $payload = $this->callPipeline('overrideColumnValue', ['column' => $column, 'value' => $value]);
-        $value = $payload['value'] ?? null;
+        $payload = $this->callPipeline($this->controller, 'overrideColumnValue', ['column' => $column, 'value' => $result]);
+        $result = $payload['value'] ?? null;
 
         // @deprecated, remove before v5
         if ($response = $this->fireSystemEvent('admin.list.overrideColumnValue', [$record, $column, $result], TRUE)) {
@@ -1226,7 +1226,7 @@ class Lists extends BaseWidget
 
     protected function getAvailableBulkActions()
     {
-        $this->bulkActions = $this->callPipeline('extendBulkActions', $this->bulkActions);
+        $this->bulkActions = $this->callPipeline($this->controller, 'extendBulkActions', $this->bulkActions);
 
         // @deprecated, remove before v5
         $this->fireSystemEvent('admin.list.extendBulkActions');

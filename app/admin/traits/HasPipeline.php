@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Classes\PipelinePayload;
 use Illuminate\Pipeline\Pipeline;
 
 /**
@@ -14,38 +15,33 @@ trait HasPipeline
      */
     protected static $registeredPipelines = [];
 
-    public function callPipeline($callingContext, $payload)
+    public function callPipeline($caller, $callingContext, $data)
     {
-        $pipes = collect(self::$registeredPipelines)
-            ->filter(function ($pipelines, $context) use ($callingContext) {
-                if (!in_array($context, ['*', $callingContext])) {
-                    return [];
-                }
+        $pipes = self::$registeredPipelines;
 
-                return $pipelines;
-            })
-            ->filter()
-            ->flatten()
-            ->values();
-
-        if (empty($pipes)) {
-            return $payload;
+        if (!count($pipes)) {
+            return $data;
         }
 
-        return app(Pipeline::class)
+        if (!is_string($caller)) {
+            $caller = get_class($caller);
+        }
+
+        $payload = (new PipelinePayload)
+            ->caller($caller)
+            ->context($callingContext)
+            ->data($data);
+
+        $pipelineResponse = app(Pipeline::class)
             ->send($payload)
             ->through($pipes)
             ->thenReturn();
+
+        return $pipelineResponse->data();
     }
 
-    // register a pipeline by * for all contexts
-    // or by classname (eg Admin\Widgets\Lists::class)
-    public static function registerPipeline($context, $pipelineClass)
+    public static function registerPipeline($pipelineClass)
     {
-        if (!array_get(self::$registeredPipelines, $context, false)) {
-            self::$registeredPipelines[$context] = [];
-        }
-
-        self::$registeredPipelines[$context] = $pipelineClass;
+        self::$registeredPipelines[] = $pipelineClass;
     }
 }
