@@ -5,7 +5,6 @@ namespace System\Console\Commands;
 use Admin\Facades\AdminAuth;
 use Admin\Models\CustomerGroup;
 use Admin\Models\Location;
-use Admin\Models\Staff;
 use Admin\Models\User;
 use Admin\Models\UserGroup;
 use Admin\Models\UserRole;
@@ -153,7 +152,7 @@ class IgniterInstall extends Command
     protected function createSuperUser()
     {
         $email = $this->output->ask('Admin Email', DatabaseSeeder::$siteEmail, function ($answer) {
-            if (Staff::whereStaffEmail($answer)->first()) {
+            if (User::whereEmail($answer)->first()) {
                 throw new \RuntimeException('An administrator with that email already exists, please choose a different email.');
             }
 

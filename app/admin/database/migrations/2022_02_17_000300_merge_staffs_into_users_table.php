@@ -26,14 +26,17 @@ class MergeStaffsIntoUsersTable extends Migration
 
         $this->updateStaffIdValueToUserIdOnStaffsGroups();
 
-        Schema::rename('staffs_groups', 'users_groups');
-        Schema::rename('staff_groups', 'user_groups');
-        Schema::rename('staff_roles', 'user_roles');
+        Schema::table('staffs_groups', function (Blueprint $table) {
+            $table->dropForeign(['staff_id']);
+            $table->dropForeign(['staff_group_id']);
 
-        Schema::table('users_groups', function (Blueprint $table) {
             $table->renameColumn('staff_id', 'user_id');
             $table->renameColumn('staff_group_id', 'user_group_id');
         });
+
+        Schema::rename('staffs_groups', 'users_groups');
+        Schema::rename('staff_groups', 'user_groups');
+        Schema::rename('staff_roles', 'user_roles');
 
         Schema::table('user_groups', function (Blueprint $table) {
             $table->renameColumn('staff_group_id', 'user_group_id');
