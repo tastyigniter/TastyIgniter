@@ -11,24 +11,20 @@ class PipelinePayload
     private $context;
     private $data;
 
-    public function caller($caller = null)
+    public function __construct($caller, $context)
     {
-        if (is_null($caller)) {
-            return $this->caller;
-        }
-
         $this->caller = $caller;
-        return $this;
+        $this->context = $context;
     }
 
-    public function context($context = null)
+    public function caller()
     {
-        if (is_null($context)) {
-            return $this->context;
-        }
+        return $this->caller;
+    }
 
-        $this->context = $context;
-        return $this;
+    public function context()
+    {
+        return $this->context;
     }
 
     public function data($data = null)

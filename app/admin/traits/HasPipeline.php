@@ -27,9 +27,7 @@ trait HasPipeline
             $caller = get_class($caller);
         }
 
-        $payload = (new PipelinePayload)
-            ->caller($caller)
-            ->context($callingContext)
+        $payload = (new PipelinePayload($caller, $callingContext))
             ->data($data);
 
         $pipelineResponse = app(Pipeline::class)
