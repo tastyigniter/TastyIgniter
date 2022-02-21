@@ -119,4 +119,10 @@ class Staffs extends \Admin\Classes\AdminController
             $form->removeField('user[super_user]');
         }
     }
+
+    public function formAfterSave($model)
+    {
+        if ($this->status && !$this->is_activated)
+            $model->completeActivation($model->getActivationCode());
+    }
 }
