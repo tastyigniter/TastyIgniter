@@ -173,6 +173,8 @@ class Table extends BaseWidget
 
         $eventResults = $this->fireEvent('table.getRecords', [$offset, $limit, $search], TRUE);
 
+        $eventResults = $this->callPipeline($this->controller, 'getRecords', $eventResults, ['offset' => $offset, 'limit' => $limit, 'query' => $search]);
+
         $records = $eventResults->getCollection()->toArray();
 
         return [
@@ -192,6 +194,8 @@ class Table extends BaseWidget
         if (count($eventResults)) {
             $options = $eventResults[0];
         }
+
+        $options = $this->callPipeline($this->controller, 'getDropdownOptions', $options, ['column' => $columnName, 'rowData' => $rowData]);
 
         return [
             'options' => $options,
