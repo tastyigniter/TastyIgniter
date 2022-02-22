@@ -15,7 +15,7 @@ trait HasPipeline
      */
     protected static $registeredPipelines = [];
 
-    public function callPipeline($caller, $callingContext, $data)
+    public function callPipeline($caller, $callingContext, $data, $extra = null)
     {
         $pipes = self::$registeredPipelines;
 
@@ -27,7 +27,7 @@ trait HasPipeline
             $caller = get_class($caller);
         }
 
-        $payload = (new PipelinePayload($caller, $callingContext))
+        $payload = (new PipelinePayload($caller, $callingContext, $extra))
             ->data($data);
 
         $pipelineResponse = app(Pipeline::class)
