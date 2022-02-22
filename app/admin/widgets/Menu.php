@@ -166,6 +166,8 @@ class Menu extends BaseWidget
      */
     public function getItems()
     {
+        $this->allItems = $this->callPipeline($this->controller, 'getItems', $this->allItems);
+
         return $this->allItems;
     }
 
