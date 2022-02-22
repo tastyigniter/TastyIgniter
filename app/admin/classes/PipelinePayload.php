@@ -10,11 +10,13 @@ class PipelinePayload
     private $caller;
     private $context;
     private $data;
+    private $extra;
 
-    public function __construct($caller, $context)
+    public function __construct($caller, $context, $extra = null)
     {
         $this->caller = $caller;
         $this->context = $context;
+        $this->extra = $extra;
     }
 
     public function caller()
@@ -35,5 +37,10 @@ class PipelinePayload
 
         $this->data = $data;
         return $this;
+    }
+
+    public function extra()
+    {
+        return $this->extra;
     }
 }
