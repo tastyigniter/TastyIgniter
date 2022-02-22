@@ -91,6 +91,8 @@ class Calendar extends BaseWidget
             $generatedEvents = $eventResults[0];
         }
 
+        $generatedEvents = $this->callPipeline($this->controller, 'generateEvents', $generatedEvents);
+
         return [
             'generatedEvents' => $generatedEvents,
         ];
