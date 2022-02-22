@@ -36,6 +36,7 @@ class PipelinePayload
         }
 
         $this->data = $data;
+
         return $this;
     }
 
