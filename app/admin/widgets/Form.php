@@ -320,16 +320,20 @@ class Form extends BaseWidget
         $result = [];
         $saveData = $this->getSaveData();
 
-        // Extensibility
+        // @deprecated remove before v5
         $dataHolder = (object)['data' => $saveData];
         $this->fireSystemEvent('admin.form.beforeRefresh', [$dataHolder]);
         $saveData = $dataHolder->data;
 
+        $saveData = $this->callPipeline($this->controller, 'beforeRefresh', $saveData);
+
         $this->setFormValues($saveData);
         $this->prepareVars();
 
-        // Extensibility
+        // @deprecated remove before v5
         $this->fireSystemEvent('admin.form.refreshFields', [$this->allFields]);
+
+        $this->allFields = $this->callPipeline($this->controller, 'refreshFields', $this->allFields);
 
         if (($updateFields = post('fields')) && is_array($updateFields)) {
             foreach ($updateFields as $field) {
@@ -346,12 +350,14 @@ class Form extends BaseWidget
             $result = ['#'.$this->getId() => $this->makePartial('form')];
         }
 
-        // Extensibility
+        // @deprecated remove before v5
         $eventResults = $this->fireSystemEvent('admin.form.refresh', [$result], FALSE);
 
         foreach ($eventResults as $eventResult) {
             $result = $eventResult + $result;
         }
+
+        $result = $this->callPipeline($this->controller, 'refresh', $result);
 
         return $result;
     }
@@ -860,7 +866,8 @@ class Form extends BaseWidget
             return;
         }
 
-        // Extensibility
+        // @deprecated remove before v5
+        // Ryan: I didnt add a pipeline here as I think extendFields is enough
         $this->fireSystemEvent('admin.form.extendFieldsBefore');
 
         // Outside fields
@@ -879,8 +886,10 @@ class Form extends BaseWidget
         $this->allTabs->primary = new FormTabs(FormTabs::SECTION_PRIMARY, $this->tabs);
         $this->addFields($this->tabs['fields'], FormTabs::SECTION_PRIMARY);
 
-        // Extensibility
+        // @deprecated remove before v5
         $this->fireSystemEvent('admin.form.extendFields', [$this->allFields]);
+
+        $this->allFields = $this->callPipeline($this->controller, 'extendFields', $this->allFields);
 
         // Check that the form field matches the active location context
         foreach ($this->allFields as $field) {
