@@ -75,13 +75,19 @@ class Toolbar extends BaseWidget
             $this->buttons = [];
         }
 
+        // @deprecated remove before v5
         $this->fireSystemEvent('admin.toolbar.extendButtonsBefore');
+
+        $this->buttons = $this->callPipeline($this->controller, 'extendButtonsBefore', $this->buttons);
 
         $this->prepareButtons();
 
         $this->addButtons($this->buttons);
 
+        // @deprecated remove before v5
         $this->fireSystemEvent('admin.toolbar.extendButtons', [$this->allButtons]);
+
+        $this->allButtons = $this->callPipeline($this->controller, 'extendButtons', $this->allButtons);
 
         $this->buttonsDefined = TRUE;
     }
