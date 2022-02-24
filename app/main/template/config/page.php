@@ -18,10 +18,17 @@ return [
                         'alias' => [
                             'label' => 'lang:system::lang.themes.label_component_alias',
                             'type' => 'text',
-                            'context' => 'edit',
+                            'context' => ['edit', 'partial'],
+                            'comment' => 'lang:system::lang.themes.help_component_alias',
                             'attributes' => [
                                 'data-toggle' => 'disabled',
                             ],
+                        ],
+                        'partial' => [
+                            'label' => 'lang:system::lang.themes.label_override_partial',
+                            'type' => 'select',
+                            'context' => 'partial',
+                            'placeholder' => 'lang:admin::lang.text_please_select',
                         ],
                     ],
                 ],
