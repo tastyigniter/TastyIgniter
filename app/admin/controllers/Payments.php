@@ -8,6 +8,8 @@ use Admin\Models\Payments_model;
 use Exception;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Support\Arr;
+use System\Helpers\ValidationHelper;
 
 class Payments extends \Admin\Classes\AdminController
 {
@@ -152,6 +154,8 @@ class Payments extends \Admin\Classes\AdminController
             'status' => ['required', 'integer'],
         ];
 
+        $messages = [];
+
         $attributes = [
             'payment' => lang('admin::lang.payments.label_payments'),
             'name' => lang('admin::lang.label_name'),
@@ -163,13 +167,18 @@ class Payments extends \Admin\Classes\AdminController
         ];
 
         if ($form->model->exists) {
-            if ($mergeRules = $form->model->getConfigRules())
-                array_push($rules, ...$mergeRules);
+            $parsedRules = ValidationHelper::prepareRules($form->model->getConfigRules());
 
-            if ($mergeAttributes = $form->model->getConfigAttributes())
-                array_push($attributes, ...$mergeAttributes);
+            if ($mergeRules = Arr::get($parsedRules, 'rules', $parsedRules))
+                $rules = array_merge($rules, $mergeRules);
+
+            if ($mergeMessages = $form->model->getConfigValidationMessages())
+                $messages = array_merge($messages, $mergeMessages);
+
+            if ($mergeAttributes = Arr::get($parsedRules, 'attributes', $form->model->getConfigValidationAttributes()))
+                $attributes = array_merge($attributes, $mergeAttributes);
         }
 
-        return $this->validatePasses($form->getSaveData(), $rules, [], $attributes);
+        return $this->validatePasses($form->getSaveData(), $rules, $messages, $attributes);
     }
 }

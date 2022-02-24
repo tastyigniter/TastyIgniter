@@ -25,7 +25,11 @@
   },
   "require": {
     "php": ">=7.4",
+    "composer/installers": "dev-main as 2.0",
     "tastyigniter/flame": "~1.2",
+    "tastyigniter/ti-module-system": "~3.0",
+    "tastyigniter/ti-module-admin": "~3.0",
+    "tastyigniter/ti-module-main": "~3.0",
     "laravel/framework": "~8.0"
   },
   "require-dev": {
@@ -52,6 +56,11 @@
       "dont-discover": [
         "*"
       ]
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
     }
   }
 }
