@@ -38,6 +38,8 @@ jobs:
         name: Split ${{ matrix.package.path }} module into repository ${{ matrix.package.repository }}
         uses: "symplify/monorepo-split-github-action@2.1"
         with:
+          branch: ${GITHUB_REF#refs/heads/}
+
           # ↓ split "app/admin" directory
           package_directory: 'app/${{ matrix.package.path }}'
 
