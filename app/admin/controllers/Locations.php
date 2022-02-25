@@ -4,7 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Facades\AdminLocation;
 use Admin\Facades\AdminMenu;
-use Admin\Models\Locations_model;
+use Admin\Models\Location;
 use Exception;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 
@@ -17,17 +17,17 @@ class Locations extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Locations_model',
+            'model' => 'Admin\Models\Location',
             'title' => 'lang:admin::lang.locations.text_title',
             'emptyMessage' => 'lang:admin::lang.locations.text_empty',
             'defaultSort' => ['location_id', 'DESC'],
-            'configFile' => 'locations_model',
+            'configFile' => 'location',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.locations.text_form_name',
-        'model' => 'Admin\Models\Locations_model',
+        'model' => 'Admin\Models\Location',
         'request' => 'Admin\Requests\Location',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -48,7 +48,7 @@ class Locations extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'locations',
         ],
-        'configFile' => 'locations_model',
+        'configFile' => 'location',
     ];
 
     protected $requiredPermissions = 'Admin.Locations';
@@ -80,7 +80,7 @@ class Locations extends \Admin\Classes\AdminController
     {
         $defaultId = post('default');
 
-        if (Locations_model::updateDefault($defaultId)) {
+        if (Location::updateDefault($defaultId)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.locations.alert_set_default')));
         }
 

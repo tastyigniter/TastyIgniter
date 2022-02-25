@@ -3,7 +3,7 @@
 namespace Admin\Helpers;
 
 use Admin\Facades\AdminAuth;
-use Admin\Models\Users_model;
+use Admin\Models\User;
 use Igniter\Flame\ActivityLog\Models\Activity;
 
 class ActivityMessage
@@ -13,7 +13,7 @@ class ActivityMessage
         $prefix = '<b>:causer.staff_name</b> ';
         $self = lang('system::lang.activities.activity_self');
 
-        if (!$activity->causer instanceof Users_model)
+        if (!$activity->causer instanceof User)
             $prefix = '<b>'.lang('system::lang.activities.activity_system').'</b> ';
 
         if ($activity->causer && $activity->causer->user_id == AdminAuth::getId())
@@ -27,7 +27,7 @@ class ActivityMessage
         $self = lang('system::lang.activities.activity_self');
 
         $prefix = '<b>:causer.staff_name</b> ';
-        if (!$activity->causer instanceof Users_model)
+        if (!$activity->causer instanceof User)
             $prefix = '<b>'.lang('system::lang.activities.activity_system').'</b> ';
 
         if ($activity->causer && $activity->causer->user_id == AdminAuth::getId())

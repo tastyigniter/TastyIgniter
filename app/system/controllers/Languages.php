@@ -6,7 +6,7 @@ use Admin\Facades\AdminMenu;
 use Admin\Widgets\Form;
 use System\Classes\ExtensionManager;
 use System\Classes\LanguageManager;
-use System\Models\Languages_model;
+use System\Models\Language;
 use System\Traits\SessionMaker;
 
 class Languages extends \Admin\Classes\AdminController
@@ -20,17 +20,17 @@ class Languages extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Languages_model',
+            'model' => 'System\Models\Language',
             'title' => 'lang:system::lang.languages.text_title',
             'emptyMessage' => 'lang:system::lang.languages.text_empty',
             'defaultSort' => ['language_id', 'DESC'],
-            'configFile' => 'languages_model',
+            'configFile' => 'language',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:system::lang.languages.text_form_name',
-        'model' => 'System\Models\Languages_model',
+        'model' => 'System\Models\Language',
         'request' => 'System\Requests\Language',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -51,7 +51,7 @@ class Languages extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'languages',
         ],
-        'configFile' => 'languages_model',
+        'configFile' => 'language',
     ];
 
     protected $requiredPermissions = 'Site.Languages';
@@ -71,7 +71,7 @@ class Languages extends \Admin\Classes\AdminController
 
     public function index()
     {
-        Languages_model::applySupportedLanguages();
+        Language::applySupportedLanguages();
 
         $this->asExtension('ListController')->index();
     }

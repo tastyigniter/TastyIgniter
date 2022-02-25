@@ -572,6 +572,7 @@ return [
         'label_component' => 'Component',
         'label_component_alias' => 'Component Alias',
         'label_component_status' => 'Component Status',
+        'label_override_partial' => 'Component Partial To Override',
         'label_delete_data' => 'Delete Data',
         'label_copy_data' => 'Copy Data',
         'label_type_page' => 'Pages',
@@ -593,6 +594,8 @@ return [
         'button_return_to_list' => 'No, return to list',
 
         'help_components' => 'Render the component on a layout or page by adding <code>@component(&#x27;componentAlias&#x27;)</code> to the markup. Learn more <a href="https://tastyigniter.com/docs/master/customize/components">here</a>.',
+        'help_component_alias' => 'DO NOT CHANGE. Except you know what you are doing.',
+        'help_override_partial' => 'The selected component partial file will be copied to the active theme partial directory under <code>%s</code>.',
 
         'error_config_no_found' => 'An error occurred, theme registration file could not be found',
         'error_theme_exists' => 'the theme already exists',

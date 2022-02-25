@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use Admin\Models\Payments_model;
+use Admin\Models\Payment;
 use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\Response;
@@ -160,7 +160,7 @@ class PaymentGateways
     {
         $params = explode('/', $uri);
 
-        $gateways = Payments_model::listPayments();
+        $gateways = Payment::listPayments();
         foreach ($gateways as $gateway) {
             $points = $gateway->registerEntryPoints();
 
@@ -185,7 +185,7 @@ class PaymentGateways
         $themeManager = ThemeManager::instance();
         $theme = $themeManager->getActiveTheme();
         $partials = $theme->listPartials()->pluck('baseFileName', 'baseFileName')->all();
-        $paymentMethods = Payments_model::isEnabled()->get();
+        $paymentMethods = Payment::isEnabled()->get();
 
         foreach ($paymentMethods as $paymentMethod) {
             $class = $paymentMethod->getGatewayClass();

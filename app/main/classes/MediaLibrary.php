@@ -10,7 +10,7 @@ use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use System\Models\Settings_model;
+use System\Models\Settings;
 
 /**
  * MediaLibrary Class
@@ -321,7 +321,7 @@ class MediaLibrary
 
     public function getAllowedExtensions()
     {
-        return Settings_model::defaultExtensions();
+        return Settings::defaultExtensions();
     }
 
     public function isAllowedExtension($filename)

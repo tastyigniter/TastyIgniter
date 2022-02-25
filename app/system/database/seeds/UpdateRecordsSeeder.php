@@ -2,8 +2,8 @@
 
 namespace System\Database\Seeds;
 
-use Admin\Models\Categories_model;
-use Admin\Models\Locations_model;
+use Admin\Models\Category;
+use Admin\Models\Location;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -30,12 +30,12 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function updateMorphsOnStatusHistory()
     {
-        if (DB::table('status_history')->where('object_type', 'Admin\Models\Orders_model')->count())
+        if (DB::table('status_history')->where('object_type', 'Admin\Models\Order')->count())
             return;
 
         $morphs = [
-            'order' => 'Admin\Models\Orders_model',
-            'reserve' => 'Admin\Models\Reservations_model',
+            'order' => 'Admin\Models\Order',
+            'reserve' => 'Admin\Models\Reservation',
         ];
 
         DB::table('status_history')->get()->each(function ($model) use ($morphs) {
@@ -51,11 +51,11 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function fixPermalinkSlugColumns()
     {
-        Categories_model::all()->each(function (Categories_model $model) {
+        Category::all()->each(function (Category $model) {
             $model->save();
         });
 
-        Locations_model::all()->each(function (Locations_model $model) {
+        Location::all()->each(function (Location $model) {
             $model->save();
         });
     }

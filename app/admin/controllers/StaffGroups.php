@@ -3,7 +3,7 @@
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminMenu;
-use Admin\Models\Staff_groups_model;
+use Admin\Models\StaffGroup;
 
 class StaffGroups extends \Admin\Classes\AdminController
 {
@@ -14,17 +14,17 @@ class StaffGroups extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Staff_groups_model',
+            'model' => 'Admin\Models\StaffGroup',
             'title' => 'lang:admin::lang.staff_groups.text_title',
             'emptyMessage' => 'lang:admin::lang.staff_groups.text_empty',
             'defaultSort' => ['staff_group_id', 'DESC'],
-            'configFile' => 'staff_groups_model',
+            'configFile' => 'staffgroup',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.staff_groups.text_form_name',
-        'model' => 'Admin\Models\Staff_groups_model',
+        'model' => 'Admin\Models\StaffGroup',
         'request' => 'Admin\Requests\StaffGroup',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -45,7 +45,7 @@ class StaffGroups extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'staff_groups',
         ],
-        'configFile' => 'staff_groups_model',
+        'configFile' => 'staffgroup',
     ];
 
     protected $requiredPermissions = 'Admin.StaffGroups';
@@ -59,6 +59,6 @@ class StaffGroups extends \Admin\Classes\AdminController
 
     public function formAfterSave()
     {
-        Staff_groups_model::syncAutoAssignStatus();
+        StaffGroup::syncAutoAssignStatus();
     }
 }

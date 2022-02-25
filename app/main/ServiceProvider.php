@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\View;
 use Main\Classes\ThemeManager;
 use Main\Template\Page;
 use System\Libraries\Assets;
-use System\Models\Settings_model;
+use System\Models\Settings;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -142,7 +142,7 @@ class ServiceProvider extends AppServiceProvider
 
     protected function registerSystemSettings()
     {
-        Settings_model::registerCallback(function (Settings_model $manager) {
+        Settings::registerCallback(function (Settings $manager) {
             $manager->registerSettingItems('core', [
                 'media' => [
                     'label' => 'main::lang.settings.text_tab_media_manager',

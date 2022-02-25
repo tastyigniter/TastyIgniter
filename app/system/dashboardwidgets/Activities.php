@@ -4,7 +4,7 @@ namespace System\DashboardWidgets;
 
 use Admin\Classes\BaseDashboardWidget;
 use Admin\Facades\AdminAuth;
-use System\Models\Activities_model;
+use System\Models\Activity;
 
 /**
  * System activities dashboard widget.
@@ -43,7 +43,7 @@ class Activities extends BaseDashboardWidget
     protected function prepareVars()
     {
         $user = AdminAuth::getUser();
-        $this->vars['activities'] = Activities_model::listRecent([
+        $this->vars['activities'] = Activity::listRecent([
             'pageLimit' => $this->property('count'),
             'onlyUser' => $user,
         ])->get();

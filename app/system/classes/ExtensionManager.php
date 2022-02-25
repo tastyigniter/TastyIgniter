@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use System\Models\Extensions_model;
+use System\Models\Extension;
 use ZipArchive;
 
 /**
@@ -742,7 +742,7 @@ class ExtensionManager
      */
     public function installExtension($code, $version = null)
     {
-        $model = Extensions_model::firstOrNew(['name' => $code]);
+        $model = Extension::firstOrNew(['name' => $code]);
         if (!$model->applyExtensionClass())
             return FALSE;
 
@@ -795,7 +795,7 @@ class ExtensionManager
      */
     public function deleteExtension($code, $purgeData = TRUE)
     {
-        if ($extensionModel = Extensions_model::where('name', $code)->first())
+        if ($extensionModel = Extension::where('name', $code)->first())
             $extensionModel->delete();
 
         if ($purgeData)

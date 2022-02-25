@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Main\Classes\ThemeManager;
 use System\Facades\Assets;
 use System\Libraries\Assets as AssetsManager;
-use System\Models\Themes_model;
+use System\Models\Theme;
 use System\Traits\ConfigMaker;
 use System\Traits\ManagesUpdates;
 use System\Traits\SessionMaker;
@@ -32,17 +32,17 @@ class Themes extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Themes_model',
+            'model' => 'System\Models\Theme',
             'title' => 'lang:system::lang.themes.text_title',
             'emptyMessage' => 'lang:system::lang.themes.text_empty',
             'defaultSort' => ['theme_id', 'DESC'],
-            'configFile' => 'themes_model',
+            'configFile' => 'theme',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:system::lang.themes.text_form_name',
-        'model' => 'System\Models\Themes_model',
+        'model' => 'System\Models\Theme',
         'request' => 'System\Requests\Theme',
         'edit' => [
             'title' => 'system::lang.themes.text_edit_title',
@@ -57,7 +57,7 @@ class Themes extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'themes',
         ],
-        'configFile' => 'themes_model',
+        'configFile' => 'theme',
     ];
 
     protected $requiredPermissions = 'Site.Themes';
@@ -71,7 +71,7 @@ class Themes extends \Admin\Classes\AdminController
 
     public function index()
     {
-        Themes_model::syncAll();
+        Theme::syncAll();
 
         $this->initUpdate('theme');
 
@@ -130,7 +130,7 @@ class Themes extends \Admin\Classes\AdminController
 
             $themeManager = ThemeManager::instance();
             $theme = $themeManager->findTheme($themeCode);
-            $model = Themes_model::whereCode($themeCode)->first();
+            $model = Theme::whereCode($themeCode)->first();
             $activeThemeCode = params()->get('default_themes.main');
 
             // Theme must be disabled before it can be deleted
@@ -146,7 +146,7 @@ class Themes extends \Admin\Classes\AdminController
             // Theme not found in filesystem
             // so delete from database
             if (!$theme) {
-                Themes_model::deleteTheme($themeCode, TRUE);
+                Theme::deleteTheme($themeCode, TRUE);
                 flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
 
                 return $this->redirectBack();
@@ -166,7 +166,7 @@ class Themes extends \Admin\Classes\AdminController
     public function index_onSetDefault()
     {
         $themeName = post('code');
-        if ($theme = Themes_model::activateTheme($themeName)) {
+        if ($theme = Theme::activateTheme($themeName)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme ['.$theme->name.'] set as default '));
         }
 
@@ -202,8 +202,8 @@ class Themes extends \Admin\Classes\AdminController
         $manager = ThemeManager::instance();
         $manager->bootThemes();
 
-        Themes_model::syncAll();
-        Themes_model::activateTheme($childTheme->code);
+        Theme::syncAll();
+        Theme::activateTheme($childTheme->code);
 
         flash()->success(sprintf(lang('admin::lang.alert_success'), 'Child theme ['.$childTheme->name.'] created '));
 
@@ -212,7 +212,7 @@ class Themes extends \Admin\Classes\AdminController
 
     public function delete_onDelete($context = null, $themeCode = null)
     {
-        if (Themes_model::deleteTheme($themeCode, post('delete_data', 1) == 1)) {
+        if (Theme::deleteTheme($themeCode, post('delete_data', 1) == 1)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
         }
         else {

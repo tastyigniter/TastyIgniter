@@ -14,17 +14,17 @@ class Mealtimes extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Mealtimes_model',
+            'model' => 'Admin\Models\Mealtime',
             'title' => 'lang:admin::lang.mealtimes.text_title',
             'emptyMessage' => 'lang:admin::lang.mealtimes.text_empty',
             'defaultSort' => ['mealtime_id', 'DESC'],
-            'configFile' => 'mealtimes_model',
+            'configFile' => 'mealtime',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.mealtimes.text_form_name',
-        'model' => 'Admin\Models\Mealtimes_model',
+        'model' => 'Admin\Models\Mealtime',
         'request' => 'Admin\Requests\Mealtime',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -45,7 +45,7 @@ class Mealtimes extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'mealtimes',
         ],
-        'configFile' => 'mealtimes_model',
+        'configFile' => 'mealtime',
     ];
 
     protected $requiredPermissions = 'Admin.Mealtimes';

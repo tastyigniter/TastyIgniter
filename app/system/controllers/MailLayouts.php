@@ -13,17 +13,17 @@ class MailLayouts extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Mail_layouts_model',
+            'model' => 'System\Models\MailLayout',
             'title' => 'lang:system::lang.mail_templates.text_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['layout_id', 'DESC'],
-            'configFile' => 'mail_layouts_model',
+            'configFile' => 'maillayout',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_form_name',
-        'model' => 'System\Models\Mail_layouts_model',
+        'model' => 'System\Models\MailLayout',
         'request' => 'System\Requests\MailLayout',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -44,7 +44,7 @@ class MailLayouts extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'mail_layouts',
         ],
-        'configFile' => 'mail_layouts_model',
+        'configFile' => 'maillayout',
     ];
 
     protected $requiredPermissions = 'Admin.MailTemplates';
