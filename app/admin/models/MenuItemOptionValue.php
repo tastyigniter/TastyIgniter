@@ -6,9 +6,9 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Validation;
 
 /**
- * MenuItemOptionValue Model Class
+ * MenuOptions Model Class
  */
-class MenuItemOptionValue extends Model
+class Menu_item_option_values_model extends Model
 {
     use Validation;
 
@@ -39,9 +39,9 @@ class MenuItemOptionValue extends Model
 
     public $relation = [
         'belongsTo' => [
-            'menu' => ['Admin\Models\Menu'],
-            'option' => ['Admin\Models\MenuOption'],
-            'option_value' => ['Admin\Models\MenuOptionValue'],
+            'menu' => ['Admin\Models\Menus_model'],
+            'option' => ['Admin\Models\Menu_options_model'],
+            'option_value' => ['Admin\Models\Menu_option_values_model'],
         ],
     ];
 
@@ -61,7 +61,7 @@ class MenuItemOptionValue extends Model
         if (!empty(self::$optionValuesCollection[$optionId]))
             return self::$optionValuesCollection[$optionId];
 
-        $result = MenuOptionValue::where('option_id', $optionId)->dropdown('value');
+        $result = Menu_option_values_model::where('option_id', $optionId)->dropdown('value');
 
         self::$optionValuesCollection[$optionId] = $result;
 
@@ -95,8 +95,6 @@ class MenuItemOptionValue extends Model
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        traceLog('MenuItemOptionValue::updateStock() has been deprecated, use Stock::updateStock() instead.');
+        traceLog('Menu_item_option_values_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
     }
 }
-
-class_alias('Admin\Models\MenuItemOptionValue', 'Admin\Models\Menu_item_option_values_model', FALSE);

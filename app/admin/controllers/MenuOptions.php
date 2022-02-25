@@ -14,17 +14,17 @@ class MenuOptions extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\MenuOption',
+            'model' => 'Admin\Models\Menu_options_model',
             'title' => 'lang:admin::lang.menu_options.text_title',
             'emptyMessage' => 'lang:admin::lang.menu_options.text_empty',
             'defaultSort' => ['option_id', 'DESC'],
-            'configFile' => 'menuoption',
+            'configFile' => 'menu_options_model',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.menu_options.text_form_name',
-        'model' => 'Admin\Models\MenuOption',
+        'model' => 'Admin\Models\Menu_options_model',
         'request' => 'Admin\Requests\MenuOption',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -45,7 +45,7 @@ class MenuOptions extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'menu_options',
         ],
-        'configFile' => 'menuoption',
+        'configFile' => 'menu_options_model',
     ];
 
     protected $requiredPermissions = 'Admin.Menus';

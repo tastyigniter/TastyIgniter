@@ -10,9 +10,9 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
- * Menu Model Class
+ * Menus Model Class
  */
-class Menu extends Model
+class Menus_model extends Model
 {
     use Purgeable;
     use Locationable;
@@ -46,18 +46,18 @@ class Menu extends Model
 
     public $relation = [
         'hasMany' => [
-            'menu_option_values' => ['Admin\Models\MenuItemOptionValue', 'delete' => TRUE],
+            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'delete' => TRUE],
         ],
         'hasOne' => [
-            'special' => ['Admin\Models\MenuSpecial', 'delete' => TRUE],
+            'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
         ],
         'belongsToMany' => [
-            'categories' => ['Admin\Models\Category', 'table' => 'menu_categories'],
-            'mealtimes' => ['Admin\Models\Mealtime', 'table' => 'menu_mealtimes'],
+            'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
+            'mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergen', 'name' => 'allergenable'],
-            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
@@ -214,7 +214,7 @@ class Menu extends Model
     {
         $optionIds = $this->menu_option_values->pluck('option_id')->unique();
 
-        $options = MenuOption::whereIn('option_id', $optionIds)->get();
+        $options = Menu_options_model::whereIn('option_id', $optionIds)->get();
 
         return $this->menu_option_values
             ->groupBy('option_id')
@@ -237,7 +237,7 @@ class Menu extends Model
      */
     public function updateStock($quantity = 0, $subtract = TRUE)
     {
-        traceLog('Menu::updateStock() has been deprecated, use Stock::updateStock() instead.');
+        traceLog('Menus_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
     }
 
     /**
@@ -294,7 +294,7 @@ class Menu extends Model
      */
     public function addMenuOption(array $menuOptions = [])
     {
-        traceLog('Deprecated Menu::addMenuOption function. Use addMenuOptionValues() instead.');
+        traceLog('Deprecated Menus_model::addMenuOption function. Use addMenuOptionValues() instead.');
     }
 
     /**
@@ -385,5 +385,3 @@ class Menu extends Model
         return $isAvailable;
     }
 }
-
-class_alias('Admin\Models\Menu', 'Admin\Models\Menus_model', FALSE);

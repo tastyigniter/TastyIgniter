@@ -1,14 +1,10 @@
 <?php
 
-namespace Main\Models;
+namespace Main\Helpers;
 
-use Igniter\Flame\Database\Model;
 use Main\Classes\MediaLibrary;
 
-/**
- * Image_tool Model Class
- */
-class Image_tool_model extends Model
+class ImageHelper
 {
     public static function resize($path, $width = 0, $height = 0)
     {
@@ -24,3 +20,5 @@ class Image_tool_model extends Model
         return MediaLibrary::instance()->getMediaThumb($path, $options);
     }
 }
+
+class_alias('Main\Helpers\ImageHelper', 'Main\Models\Image_tool_model', FALSE);

@@ -20,7 +20,6 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
     "composer/installers": "~2.0"
   },
   "autoload": {
@@ -30,7 +29,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "1.0-dev"
+      "dev-master": "3.x-dev"
     }
   },
   "minimum-stability": "dev"

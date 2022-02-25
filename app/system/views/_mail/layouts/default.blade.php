@@ -23,7 +23,7 @@ name = "Default layout"
                 @php $site_logo = setting('mail_logo') ?: $site_logo; @endphp
                 @isset($site_logo)
                     <img
-                        src="{{ \Main\Models\Image_tool_model::resize($site_logo, ['height' => 90]) }}"
+                        src="{{ \Main\Helpers\ImageHelper::resize($site_logo, ['height' => 90]) }}"
                         alt="{{ $site_name }}"
                     >
                 @endisset

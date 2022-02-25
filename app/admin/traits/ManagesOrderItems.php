@@ -2,9 +2,9 @@
 
 namespace Admin\Traits;
 
-use Admin\Models\Menu;
-use Admin\Models\MenuItemOptionValue;
-use Admin\Models\MenuOption;
+use Admin\Models\Menu_item_option_values_model;
+use Admin\Models\Menu_options_model;
+use Admin\Models\Menus_model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
@@ -31,7 +31,7 @@ trait ManagesOrderItems
     {
         $orderMenuOptions = $this->getOrderMenuOptions();
         $this->getOrderMenus()->each(function ($orderMenu) use ($orderMenuOptions) {
-            if (!$menu = Menu::find($orderMenu->menu_id))
+            if (!$menu = Menus_model::find($orderMenu->menu_id))
                 return TRUE;
 
             optional($menu->getStockByLocation($this->location))
@@ -40,7 +40,7 @@ trait ManagesOrderItems
             $orderMenuOptions
                 ->where('order_menu_id', $orderMenu->order_menu_id)
                 ->each(function ($orderMenuOption) {
-                    if (!$menuItemOptionValue = MenuItemOptionValue::find(
+                    if (!$menuItemOptionValue = Menu_item_option_values_model::find(
                         $orderMenuOption->menu_option_value_id
                     )) return TRUE;
 
@@ -84,7 +84,7 @@ trait ManagesOrderItems
 
         $menuOptionsIds = $orderMenuOptions->collapse()->pluck('option_id')->unique();
 
-        $menuOptions = MenuOption::whereIn('option_id', $menuOptionsIds)->get()
+        $menuOptions = Menu_options_model::whereIn('option_id', $menuOptionsIds)->get()
             ->keyBy('option_id');
 
         return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions, $menuOptions) {

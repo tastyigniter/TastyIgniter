@@ -9,7 +9,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'scope' => 'whereHasLocation',
-            'modelClass' => 'Admin\Models\Location',
+            'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
             'locationAware' => TRUE,
         ],
@@ -17,7 +17,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.menus.text_filter_category',
             'type' => 'select',
             'scope' => 'whereHasCategory',
-            'modelClass' => 'Admin\Models\Category',
+            'modelClass' => 'Admin\Models\Categories_model',
             'nameFrom' => 'name',
         ],
         'menu_status' => [
@@ -110,7 +110,6 @@ $config['list']['columns'] = [
     'stock_qty' => [
         'label' => 'lang:admin::lang.menus.column_stock_qty',
         'type' => 'number',
-        'searchable' => TRUE,
     ],
     'special_status' => [
         'label' => 'lang:admin::lang.menus.label_special_status',
@@ -232,7 +231,7 @@ $config['form']['tabs'] = [
             'type' => 'checkboxtoggle',
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
-            'options' => ['Admin\Models\Location', 'getOrderTypeOptions'],
+            'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],
         ],
         'menu_status' => [
             'label' => 'lang:admin::lang.label_status',
@@ -260,8 +259,8 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_menu_option',
             'tab' => 'lang:admin::lang.menus.text_tab_menu_option',
             'type' => 'menuoptioneditor',
-            'options' => [Admin\Models\MenuOption::class, 'getRecordEditorOptions'],
-            'form' => 'menuitemoption',
+            'options' => [Admin\Models\Menu_options_model::class, 'getRecordEditorOptions'],
+            'form' => 'menu_item_options_model',
             'context' => ['edit', 'preview'],
         ],
 
@@ -335,7 +334,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_recurring_every',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
             'type' => 'checkboxtoggle',
-            'options' => [\Admin\Models\MenuSpecial::class, 'getRecurringEveryOptions'],
+            'options' => [\Admin\Models\Menus_specials_model::class, 'getRecurringEveryOptions'],
             'trigger' => [
                 'action' => 'show',
                 'field' => 'special[validity]',
