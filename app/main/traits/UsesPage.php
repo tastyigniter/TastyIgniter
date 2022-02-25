@@ -3,7 +3,7 @@
 namespace Main\Traits;
 
 use Main\Template\Page;
-use System\Models\Page;
+use System\Models\Page as PageModel;
 
 trait UsesPage
 {
@@ -33,7 +33,7 @@ trait UsesPage
         if (self::$themePageOptionsCache)
             return self::$themePageOptionsCache;
 
-        return self::$themePageOptionsCache = Page::getDropdownOptions();
+        return self::$themePageOptionsCache = PageModel::getDropdownOptions();
     }
 
     public static function getStaticPageOptions()
@@ -41,6 +41,6 @@ trait UsesPage
         if (self::$staticPageOptionsCache)
             return self::$staticPageOptionsCache;
 
-        return self::$staticPageOptionsCache = Page::getDropdownOptions();
+        return self::$staticPageOptionsCache = PageModel::getDropdownOptions();
     }
 }
