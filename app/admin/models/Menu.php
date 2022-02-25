@@ -2,7 +2,6 @@
 
 namespace Admin\Models;
 
-use Admin\Events\Model\ExtendListFrontEndQuery;
 use Admin\Traits\Locationable;
 use Admin\Traits\Stockable;
 use Carbon\Carbon;
@@ -169,7 +168,7 @@ class Menu extends Model
             });
         }
 
-        event(new ExtendListFrontEndQuery($this, $query));
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

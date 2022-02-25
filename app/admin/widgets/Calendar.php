@@ -3,7 +3,6 @@
 namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
-use Admin\Events\Widgets\Calendar\UpdateEvent;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Request;
@@ -85,7 +84,6 @@ class Calendar extends BaseWidget
         $startAt = Request::get('start');
         $endAt = Request::get('end');
 
-        // @deprecated, remove before v5
         $eventResults = $this->fireEvent('calendar.generateEvents', [$startAt, $endAt]);
 
         $generatedEvents = [];
@@ -104,7 +102,7 @@ class Calendar extends BaseWidget
         $startAt = Request::get('start');
         $endAt = Request::get('end');
 
-        event(new UpdateEvent($eventId, $startAt, $endAt));
+        $this->fireEvent('calendar.updateEvent', [$eventId, $startAt, $endAt]);
     }
 
     public function renderPopoverPartial()

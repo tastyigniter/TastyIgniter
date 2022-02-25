@@ -2,7 +2,6 @@
 
 namespace Admin\Classes;
 
-use Admin\Events\Navigation\ExtendItems;
 use Admin\Facades\AdminAuth;
 use Igniter\Flame\Traits\EventEmitter;
 use System\Classes\BaseExtension;
@@ -180,7 +179,7 @@ class Navigation
             $this->registerNavItems($items);
         }
 
-        event(new ExtendItems($this));
+        $this->fireSystemEvent('admin.navigation.extendItems');
 
         $this->navItemsLoaded = TRUE;
     }

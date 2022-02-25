@@ -23,8 +23,6 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Main\Components\BlankComponent;
-use Main\Events\Controller\AfterConstructor;
-use Main\Events\Controller\BeforeRemap;
 use Main\Template\ComponentPartial;
 use Main\Template\Content;
 use Main\Template\Extension\BladeExtension as MainBladeExtension;
@@ -160,14 +158,12 @@ class MainController extends BaseController
 
         $this->initTemplateEnvironment();
 
-        event(new AfterConstructor($this));
-
         self::$controller = $this;
     }
 
     public function remap($url = null)
     {
-        event(new BeforeRemap($this));
+        $this->fireSystemEvent('main.controller.beforeRemap');
 
         if ($url === null)
             $url = Request::path();

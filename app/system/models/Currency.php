@@ -2,8 +2,6 @@
 
 namespace System\Models;
 
-use Admin\Events\Model\ExtendListFrontEndQuery;
-use Igniter\Flame\Currency\Models\Currency;
 use Igniter\Flame\Exception\ValidationException;
 
 /**
@@ -82,7 +80,7 @@ class Currency extends \Igniter\Flame\Currency\Models\Currency
             $query->isEnabled();
         }
 
-        event(new ExtendListFrontEndQuery($this, $query));
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

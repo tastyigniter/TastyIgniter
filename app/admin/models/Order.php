@@ -2,7 +2,6 @@
 
 namespace Admin\Models;
 
-use Admin\Events\Model\ExtendListFrontEndQuery;
 use Admin\Events\Order\BeforePaymentProcessed;
 use Admin\Events\Order\PaymentProcessed;
 use Admin\Traits\Assignable;
@@ -176,7 +175,7 @@ class Order extends Model
         if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
 
-        event(new ExtendListFrontEndQuery($this, $query));
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

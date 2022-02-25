@@ -2,7 +2,6 @@
 
 namespace Admin\Traits;
 
-use Admin\Events\Controller\FormExtendQuery;
 use Exception;
 use Illuminate\Support\Facades\Event;
 
@@ -84,7 +83,7 @@ trait FormExtendable
 
         // Prepare query and find model record
         $query = $model->newQuery();
-        event(new FormExtendQuery($query));
+        $this->controller->fireEvent('controller.form.extendQuery', [$query]);
         $this->controller->formExtendQuery($query);
 
         $result = $query->find($recordId);

@@ -9,7 +9,6 @@ use Igniter\Flame\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Main\Classes\MediaLibrary;
-use Main\Events\Widgets\MediaManager\FileUploaded;
 
 /**
  * Media Manager widget.
@@ -610,7 +609,7 @@ class MediaManager extends BaseWidget
 
             $mediaLibrary->resetCache();
 
-            event(new FileUploaded($filePath, $uploadedFile));
+            $this->fireSystemEvent('media.file.upload', [$filePath, $uploadedFile]);
 
             Response::json([
                 'link' => $mediaLibrary->getMediaUrl($filePath),

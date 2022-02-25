@@ -171,7 +171,6 @@ class Table extends BaseWidget
         $offset = Request::post('offset');
         $limit = Request::post('limit', $this->getConfig('pageLimit', $this->pageLimit));
 
-        // @deprecated, remove before v5
         $eventResults = $this->fireEvent('table.getRecords', [$offset, $limit, $search], TRUE);
 
         $records = $eventResults->getCollection()->toArray();
@@ -187,7 +186,6 @@ class Table extends BaseWidget
         $columnName = Request::get('column');
         $rowData = Request::get('rowData');
 
-        // @deprecated, remove before v5
         $eventResults = $this->fireEvent('table.getDropdownOptions', [$columnName, $rowData]);
 
         $options = [];

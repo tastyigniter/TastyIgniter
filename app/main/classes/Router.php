@@ -80,8 +80,9 @@ class Router
         $this->url = $url;
         $url = RouterHelper::normalizeUrl($url);
 
-        // @deprecated, remove before v5
-        $apiResult = Event::fire('router.beforeRoute', [$url, $this], TRUE);
+        $apiResult = event('router.beforeRoute', [$url, $this], TRUE);
+        if ($apiResult !== null)
+            return $apiResult;
 
         for ($pass = 1; $pass <= 2; $pass++) {
             $fileName = null;

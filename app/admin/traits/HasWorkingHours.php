@@ -3,7 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Classes\ScheduleItem;
-use Admin\Events\WorkingSchedule\ScheduleCreated;
+use Admin\Events\Location\ScheduleCreated;
 use Carbon\Carbon;
 use Exception;
 use Igniter\Flame\Location\OrderTypes;

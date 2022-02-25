@@ -4,7 +4,6 @@ namespace System\Classes;
 
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
-use System\Events\Controller\BeforeConstructor;
 
 /**
  * Base Controller Class
@@ -68,7 +67,7 @@ class BaseController extends Extendable
 
         $this->extendableConstruct();
 
-        event(new BeforeConstructor($this));
+        $this->fireSystemEvent('main.controller.beforeConstructor', [$this]);
     }
 
     public function getClass()

@@ -8,7 +8,6 @@ use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest as BaseFormRequest;
 use Illuminate\Support\Arr;
-use System\Events\FormRequest\ExtendValidator;
 use System\Helpers\ValidationHelper;
 use System\Traits\RuleInjector;
 
@@ -135,7 +134,7 @@ class FormRequest extends BaseFormRequest
             $dataHolder->rules = $this->injectParametersToRules($dataHolder->rules);
         }
 
-        event(new ExtendValidator($dataHolder));
+        $this->fireSystemEvent('system.formRequest.extendValidator', [$dataHolder]);
 
         return $factory->make(
             $dataHolder->data,

@@ -3,7 +3,6 @@
 namespace Main\Template\Concerns;
 
 use Main\Components\ViewBag;
-use Main\Events\Template\FillViewBagArray;
 
 trait HasViewBag
 {
@@ -71,6 +70,6 @@ trait HasViewBag
             $this->viewBag[$name] = $value;
         }
 
-        event(new FillViewBagArray());
+        $this->fireEvent('templateModel.fillViewBagArray');
     }
 }

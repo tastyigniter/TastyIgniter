@@ -4,8 +4,6 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ToolbarButton;
-use Admin\Events\Widgets\Toolbar\ExtendButtons;
-use Admin\Events\Widgets\Toolbar\ExtendButtonsBefore;
 use Admin\Facades\AdminAuth;
 use Admin\Facades\Template;
 
@@ -77,13 +75,13 @@ class Toolbar extends BaseWidget
             $this->buttons = [];
         }
 
-        event(new ExtendButtonsBefore($this));
+        $this->fireSystemEvent('admin.toolbar.extendButtonsBefore');
 
         $this->prepareButtons();
 
         $this->addButtons($this->buttons);
 
-        event(new ExtendButtons($this, $this->allButtons));
+        $this->fireSystemEvent('admin.toolbar.extendButtons', [$this->allButtons]);
 
         $this->buttonsDefined = TRUE;
     }

@@ -77,8 +77,6 @@ class SearchBox extends BaseWidget
 
         // Trigger class event, merge results as viewable array
         $params = func_get_args();
-
-        // @deprecated, remove before v5
         $result = $this->fireEvent('search.submit', [$params]);
         if ($result && is_array($result)) {
             [$redirect] = $result;

@@ -8,7 +8,6 @@ use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
 use Illuminate\Support\Facades\Lang;
 use Main\Classes\MainController;
-use Main\Events\Component\AfterRunEventHandler;
 use System\Traits\AssetMaker;
 use System\Traits\PropertyContainer;
 
@@ -135,7 +134,7 @@ abstract class BaseComponent extends Extendable
     {
         $result = $this->{$handler}();
 
-        event(new AfterRunEventHandler($this, $handler, $result));
+        $this->fireSystemEvent('main.component.afterRunEventHandler', [$handler, &$result]);
 
         return $result;
     }

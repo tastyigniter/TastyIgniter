@@ -4,9 +4,6 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
-use Admin\Events\Widgets\Filter\ExtendQuery;
-use Admin\Events\Widgets\Filter\ExtendScopes;
-use Admin\Events\Widgets\Filter\ExtendScopesBefore;
 use Admin\Facades\AdminAuth;
 use Admin\Traits\LocationAwareWidget;
 use Exception;
@@ -188,8 +185,6 @@ class Filter extends BaseWidget
 
         // Trigger class event, merge results as viewable array
         $params = func_get_args();
-
-        // @deprecated, remove before v5
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
             [$redirect] = $result;
@@ -206,8 +201,6 @@ class Filter extends BaseWidget
         $this->searchWidget->resetSession();
 
         $params = func_get_args();
-
-        // @deprecated, remove before v5
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
             [$redirect] = $result;
@@ -274,7 +267,7 @@ class Filter extends BaseWidget
         $this->locationApplyScope($query);
 
         // Extensibility
-        event(new ExtendQuery($this, $query, $scope));
+        $this->fireSystemEvent('admin.filter.extendQuery', [$query, $scope]);
 
         return $query->get();
     }
@@ -321,7 +314,7 @@ class Filter extends BaseWidget
         if ($this->scopesDefined)
             return;
 
-        event(new ExtendScopesBefore($this));
+        $this->fireSystemEvent('admin.filter.extendScopesBefore');
 
         if (!isset($this->scopes) || !is_array($this->scopes)) {
             $this->scopes = [];
@@ -329,7 +322,7 @@ class Filter extends BaseWidget
 
         $this->addScopes($this->scopes);
 
-        event(new ExtendScopes($this, $this->scopes));
+        $this->fireSystemEvent('admin.filter.extendScopes', [$this->scopes]);
 
         $this->scopesDefined = TRUE;
     }
