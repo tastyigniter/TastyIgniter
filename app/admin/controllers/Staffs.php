@@ -16,17 +16,17 @@ class Staffs extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Staffs_model',
+            'model' => 'Admin\Models\Staff',
             'title' => 'lang:admin::lang.staff.text_title',
             'emptyMessage' => 'lang:admin::lang.staff.text_empty',
             'defaultSort' => ['staff_id', 'DESC'],
-            'configFile' => 'staffs_model',
+            'configFile' => 'staff',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.staff.text_form_name',
-        'model' => 'Admin\Models\Staffs_model',
+        'model' => 'Admin\Models\Staff',
         'request' => 'Admin\Requests\Staff',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -47,7 +47,7 @@ class Staffs extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'staffs',
         ],
-        'configFile' => 'staffs_model',
+        'configFile' => 'staff',
     ];
 
     protected $requiredPermissions = 'Admin.Staffs';

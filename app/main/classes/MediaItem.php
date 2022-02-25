@@ -4,7 +4,7 @@ namespace Main\classes;
 
 use Carbon\Carbon;
 use Igniter\Flame\Support\Facades\File;
-use System\Models\Settings_model;
+use System\Models\Settings;
 
 class MediaItem
 {
@@ -101,13 +101,13 @@ class MediaItem
         }
 
         if (!self::$imageExtensions)
-            self::$imageExtensions = array_map('strtolower', Settings_model::imageExtensions());
+            self::$imageExtensions = array_map('strtolower', Settings::imageExtensions());
 
         if (!self::$audioExtensions)
-            self::$audioExtensions = array_map('strtolower', Settings_model::audioExtensions());
+            self::$audioExtensions = array_map('strtolower', Settings::audioExtensions());
 
         if (!self::$videoExtensions)
-            self::$videoExtensions = array_map('strtolower', Settings_model::videoExtensions());
+            self::$videoExtensions = array_map('strtolower', Settings::videoExtensions());
 
         $extension = pathinfo($this->path, PATHINFO_EXTENSION);
         if (!strlen($extension))

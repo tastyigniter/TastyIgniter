@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Main\Classes\ThemeManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use System\Models\Themes_model;
+use System\Models\Theme;
 
 class ThemeRemove extends Command
 {
@@ -46,7 +46,7 @@ class ThemeRemove extends Command
             return;
         }
 
-        Themes_model::deleteTheme($themeName);
+        Theme::deleteTheme($themeName);
         $this->output->writeln(sprintf('<info>Deleted theme: %s</info>', $themeName));
     }
 

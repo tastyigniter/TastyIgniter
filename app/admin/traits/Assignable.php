@@ -3,8 +3,8 @@
 namespace Admin\Traits;
 
 use Admin\Facades\AdminAuth;
-use Admin\Models\Assignable_logs_model;
-use Admin\Models\Staff_groups_model;
+use Admin\Models\AssignableLog;
+use Admin\Models\StaffGroup;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Assignable
@@ -12,10 +12,10 @@ trait Assignable
     public static function bootAssignable()
     {
         static::extend(function (self $model) {
-            $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staffs_model'];
-            $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\Staff_groups_model'];
+            $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staff'];
+            $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\StaffGroup'];
             $model->relation['morphMany']['assignable_logs'] = [
-                'Admin\Models\Assignable_logs_model', 'name' => 'assignable', 'delete' => TRUE,
+                'Admin\Models\AssignableLog', 'name' => 'assignable', 'delete' => TRUE,
             ];
 
             $model->addCasts([
@@ -35,7 +35,7 @@ trait Assignable
         if (
             $this->wasChanged('status_id')
             && strlen($this->assignee_group_id)
-        ) Assignable_logs_model::createLog($this);
+        ) AssignableLog::createLog($this);
     }
 
     //
@@ -43,7 +43,7 @@ trait Assignable
     //
 
     /**
-     * @param \Admin\Models\Staffs_model $assignee
+     * @param \Admin\Models\Staff $assignee
      * @return bool
      */
     public function assignTo($assignee)
@@ -55,7 +55,7 @@ trait Assignable
     }
 
     /**
-     * @param \Admin\Models\Staff_groups_model $group
+     * @param \Admin\Models\StaffGroup $group
      * @return bool
      */
     public function assignToGroup($group)
@@ -78,7 +78,7 @@ trait Assignable
 
         $this->save();
 
-        if (!$log = Assignable_logs_model::createLog($this))
+        if (!$log = AssignableLog::createLog($this))
             return FALSE;
 
         $this->fireSystemEvent('admin.assignable.assigned', [$log]);
@@ -106,7 +106,7 @@ trait Assignable
 
     public function listGroupAssignees()
     {
-        if (!$this->assignee_group instanceof Staff_groups_model)
+        if (!$this->assignee_group instanceof StaffGroup)
             return [];
 
         return $this->assignee_group->listAssignees();

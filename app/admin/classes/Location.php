@@ -8,7 +8,7 @@ class Location extends Manager
 {
     protected $sessionKey = 'admin_local_info';
 
-    protected $locationModel = 'Admin\Models\Locations_model';
+    protected $locationModel = 'Admin\Models\Location';
 
     public function check()
     {

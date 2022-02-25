@@ -5,7 +5,7 @@ namespace System\Controllers;
 use Admin\Facades\AdminMenu;
 use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Support\Facades\Mail;
-use System\Models\Mail_templates_model;
+use System\Models\MailTemplate;
 
 class MailTemplates extends \Admin\Classes\AdminController
 {
@@ -16,17 +16,17 @@ class MailTemplates extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Mail_templates_model',
+            'model' => 'System\Models\MailTemplate',
             'title' => 'lang:system::lang.mail_templates.text_template_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['template_id', 'DESC'],
-            'configFile' => 'mail_templates_model',
+            'configFile' => 'mailtemplate',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_form_name',
-        'model' => 'System\Models\Mail_templates_model',
+        'model' => 'System\Models\MailTemplate',
         'request' => 'System\Requests\MailTemplate',
         'create' => [
             'title' => 'lang:system::lang.mail_templates.text_new_template_title',
@@ -47,7 +47,7 @@ class MailTemplates extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'mail_templates',
         ],
-        'configFile' => 'mail_templates_model',
+        'configFile' => 'mailtemplate',
     ];
 
     protected $requiredPermissions = 'Admin.MailTemplates';
@@ -61,7 +61,7 @@ class MailTemplates extends \Admin\Classes\AdminController
 
     public function index()
     {
-        Mail_templates_model::syncAll();
+        MailTemplate::syncAll();
 
         $this->asExtension('ListController')->index();
     }
@@ -89,7 +89,7 @@ class MailTemplates extends \Admin\Classes\AdminController
 
         $adminUser = $this->getUser()->staff;
 
-        config()->set('system.suppressTemplateRuntimeNotice', true);
+        config()->set('system.suppressTemplateRuntimeNotice', TRUE);
 
         Mail::send($model->code, [], function ($message) use ($adminUser) {
             $message->to($adminUser->staff_email, $adminUser->staff_name);

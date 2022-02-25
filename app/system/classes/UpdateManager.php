@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Main\Classes\ThemeManager;
-use System\Models\Extensions_model;
-use System\Models\Themes_model;
+use System\Models\Extension;
+use System\Models\Theme;
 use ZipArchive;
 
 /**
@@ -421,7 +421,7 @@ class UpdateManager
 
         $installedItems = [];
 
-        $extensionVersions = Extensions_model::pluck('version', 'name');
+        $extensionVersions = Extension::pluck('version', 'name');
         foreach ($extensionVersions as $code => $version) {
             $installedItems['extensions'][] = [
                 'name' => $code,
@@ -430,7 +430,7 @@ class UpdateManager
             ];
         }
 
-        $themeVersions = Themes_model::pluck('version', 'code');
+        $themeVersions = Theme::pluck('version', 'code');
         foreach ($themeVersions as $code => $version) {
             $installedItems['themes'][] = [
                 'name' => $code,

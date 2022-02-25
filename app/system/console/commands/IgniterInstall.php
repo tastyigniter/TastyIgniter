@@ -3,12 +3,12 @@
 namespace System\Console\Commands;
 
 use Admin\Facades\AdminAuth;
-use Admin\Models\Customer_groups_model;
-use Admin\Models\Locations_model;
-use Admin\Models\Staff_groups_model;
-use Admin\Models\Staff_roles_model;
-use Admin\Models\Staffs_model;
-use Admin\Models\Users_model;
+use Admin\Models\CustomerGroup;
+use Admin\Models\Location;
+use Admin\Models\Staff;
+use Admin\Models\StaffGroup;
+use Admin\Models\StaffRole;
+use Admin\Models\User;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
-use System\Models\Languages_model;
+use System\Models\Language;
 
 /**
  * Console command to install TastyIgniter.
@@ -153,7 +153,7 @@ class IgniterInstall extends Command
     protected function createSuperUser()
     {
         $email = $this->output->ask('Admin Email', DatabaseSeeder::$siteEmail, function ($answer) {
-            if (Staffs_model::whereStaffEmail($answer)->first()) {
+            if (Staff::whereStaffEmail($answer)->first()) {
                 throw new \RuntimeException('An administrator with that email already exists, please choose a different email.');
             }
 
@@ -161,7 +161,7 @@ class IgniterInstall extends Command
         });
 
         $username = $this->output->ask('Admin Username', 'admin', function ($answer) {
-            if (Users_model::whereUsername($answer)->first()) {
+            if (User::whereUsername($answer)->first()) {
                 throw new \RuntimeException('An administrator with that username already exists, please choose a different username.');
             }
 
@@ -179,14 +179,14 @@ class IgniterInstall extends Command
         $user = AdminAuth::register([
             'staff_email' => $email,
             'staff_name' => DatabaseSeeder::$staffName,
-            'language_id' => Languages_model::first()->language_id,
-            'staff_role_id' => Staff_roles_model::first()->staff_role_id,
+            'language_id' => Language::first()->language_id,
+            'staff_role_id' => StaffRole::first()->staff_role_id,
             'staff_status' => TRUE,
             'username' => $username,
             'password' => $password,
             'super_user' => TRUE,
-            'groups' => [Staff_groups_model::first()->staff_group_id],
-            'locations' => [Locations_model::first()->location_id],
+            'groups' => [StaffGroup::first()->staff_group_id],
+            'locations' => [Location::first()->location_id],
         ], TRUE);
 
         $this->line('Admin user '.$user->username.' created!');
@@ -198,7 +198,7 @@ class IgniterInstall extends Command
 
         params()->set([
             'ti_setup' => 'installed',
-            'default_location_id' => Locations_model::first()->location_id,
+            'default_location_id' => Location::first()->location_id,
         ]);
 
         params()->save();
@@ -208,7 +208,7 @@ class IgniterInstall extends Command
         setting()->set('site_email', DatabaseSeeder::$siteEmail);
         setting()->set('sender_name', DatabaseSeeder::$siteName);
         setting()->set('sender_email', DatabaseSeeder::$siteEmail);
-        setting()->set('customer_group_id', Customer_groups_model::first()->customer_group_id);
+        setting()->set('customer_group_id', CustomerGroup::first()->customer_group_id);
         setting()->save();
 
         // These parameters are no longer in use

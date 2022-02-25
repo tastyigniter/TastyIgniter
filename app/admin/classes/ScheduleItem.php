@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use Admin\Models\Working_hours_model;
+use Admin\Models\WorkingHour;
 
 class ScheduleItem
 {
@@ -70,7 +70,7 @@ class ScheduleItem
         $result = [];
 
         $hours = $this->getHours();
-        foreach (Working_hours_model::make()->getWeekDaysOptions() as $index => $day) {
+        foreach (WorkingHour::make()->getWeekDaysOptions() as $index => $day) {
             $formattedHours = [];
             foreach (array_get($hours, $index, []) as $hour) {
                 if (!$hour['status'])
@@ -94,7 +94,7 @@ class ScheduleItem
             $timesheet = @json_decode($timesheet, TRUE) ?: [];
 
         $result = [];
-        foreach (Working_hours_model::$weekDays as $key => $weekDay) {
+        foreach (WorkingHour::$weekDays as $key => $weekDay) {
             $result[$key] = array_get($timesheet, $key, [
                 'day' => $key,
                 'hours' => [['open' => '00:00', 'close' => '23:59']],
@@ -108,7 +108,7 @@ class ScheduleItem
     protected function flexible(array $data)
     {
         $result = [];
-        foreach (Working_hours_model::$weekDays as $key => $weekDay) {
+        foreach (WorkingHour::$weekDays as $key => $weekDay) {
             $hour = array_get($data, $key, []);
             if (isset($hour['open']) && isset($hour['close'])) {
                 $hour['hours'] = sprintf('%s-%s', $hour['open'], $hour['close']);

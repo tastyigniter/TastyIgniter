@@ -15,17 +15,17 @@ class Allergens extends AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Allergens_model',
+            'model' => 'Admin\Models\Allergen',
             'title' => 'lang:admin::lang.allergens.text_title',
             'emptyMessage' => 'lang:admin::lang.allergens.text_empty',
             'defaultSort' => ['allergens_id', 'DESC'],
-            'configFile' => 'allergens_model',
+            'configFile' => 'allergen',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.allergens.text_form_name',
-        'model' => 'Admin\Models\Allergens_model',
+        'model' => 'Admin\Models\Allergen',
         'request' => 'Admin\Requests\Allergen',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -46,7 +46,7 @@ class Allergens extends AdminController
         'delete' => [
             'redirect' => 'allergens',
         ],
-        'configFile' => 'allergens_model',
+        'configFile' => 'allergen',
     ];
 
     protected $requiredPermissions = 'Admin.Allergens';

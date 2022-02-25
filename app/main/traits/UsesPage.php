@@ -3,7 +3,7 @@
 namespace Main\Traits;
 
 use Main\Template\Page;
-use System\Models\Pages_model;
+use System\Models\Page;
 
 trait UsesPage
 {
@@ -18,7 +18,7 @@ trait UsesPage
         if (isset(self::$staticPagesCache[$id]))
             return self::$staticPagesCache[$id];
 
-        return self::$staticPagesCache[$id] = Pages_model::find($id);
+        return self::$staticPagesCache[$id] = Page::find($id);
     }
 
     public function getStaticPagePermalink($id)
@@ -41,6 +41,6 @@ trait UsesPage
         if (self::$staticPageOptionsCache)
             return self::$staticPageOptionsCache;
 
-        return self::$staticPageOptionsCache = Pages_model::getDropdownOptions();
+        return self::$staticPageOptionsCache = Page::getDropdownOptions();
     }
 }

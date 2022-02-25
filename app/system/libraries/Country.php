@@ -2,7 +2,7 @@
 
 namespace System\Libraries;
 
-use System\Models\Countries_model;
+use System\Models\Country;
 
 /**
  * Country Class
@@ -136,7 +136,7 @@ class Country
     protected function loadCountries()
     {
         if (!count($this->countriesCollection))
-            $this->countriesCollection = Countries_model::isEnabled()->sorted()->get();
+            $this->countriesCollection = Country::isEnabled()->sorted()->get();
 
         return $this->countriesCollection;
     }
