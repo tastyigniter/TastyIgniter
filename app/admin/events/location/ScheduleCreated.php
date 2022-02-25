@@ -2,8 +2,13 @@
 
 namespace Admin\Events\Location;
 
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
 class ScheduleCreated
 {
+    use Dispatchable, SerializesModels;
+
     public $model;
 
     public $schedule;

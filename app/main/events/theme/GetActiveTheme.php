@@ -2,9 +2,7 @@
 
 namespace Main\Events\Theme;
 
-use System\Classes\BaseEvent;
-
-class GetActiveTheme extends BaseEvent
+class GetActiveTheme
 {
     protected $themeCode;
 

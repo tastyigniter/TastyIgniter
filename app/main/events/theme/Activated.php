@@ -1,18 +1,18 @@
 <?php
 
-namespace Admin\Events\Order;
+namespace Main\Events\Theme;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BeforePaymentProcessed
+class Activated
 {
     use Dispatchable, SerializesModels;
 
-    public $order;
+    public $theme;
 
-    public function __construct($order)
+    public function __construct($theme)
     {
-        $this->order = $order;
+        $this->theme = $theme;
     }
 }

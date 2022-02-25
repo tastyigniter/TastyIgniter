@@ -2,16 +2,16 @@
 
 namespace Admin\Events\Navigation;
 
-use System\Classes\BaseEvent;
+use Illuminate\Foundation\Events\Dispatchable;
 
-class ExtendUserMenuLinks extends BaseEvent
+class ExtendUserMenuLinks
 {
+    use Dispatchable;
+
     public $links;
 
     public function __construct($links)
     {
         $this->links = $links;
-
-        $this->fireBackwardsCompatibleEvent('admin.menu.extendUserMenuLinks', [$this->links]);
     }
 }
