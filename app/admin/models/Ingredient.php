@@ -66,7 +66,7 @@ class Ingredient extends Model
             $q->select(DB::raw(1))
                 ->from('ingredientables')
                 ->join('menus', 'menus.menu_id', '=', 'ingredientables.ingredientable_id')
-                ->where('ingredientables.type', 'menus')
+                ->where('ingredientables.allergenable_type', 'menus')
                 ->whereNotNull('menus.menu_status')
                 ->where('menus.menu_status', '=', 1);
         });
