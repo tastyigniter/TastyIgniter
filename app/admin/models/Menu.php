@@ -84,7 +84,7 @@ class Menu extends Model
     {
         $query->whereHas('allergens', function ($q) use ($allergenId) {
             $q->where('allergen_id', $allergenId);
-            $q->where('type', 'allergen');
+            $q->where('is_allergen', 1);
         });
     }
 
