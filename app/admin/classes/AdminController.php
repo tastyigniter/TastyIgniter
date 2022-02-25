@@ -162,9 +162,6 @@ class AdminController extends BaseController
 
         $this->fireSystemEvent('admin.controller.beforeInit');
 
-        // @deprecated This event will be deprecated soon, use controller.beforeInit
-        $this->fireEvent('controller.beforeConstructor', [$this]);
-
         // Toolbar widget is available on all admin pages
         $toolbar = new Toolbar($this, ['context' => $this->action]);
         $toolbar->bindToController();
@@ -174,9 +171,6 @@ class AdminController extends BaseController
             $manager = new MediaManager($this, ['alias' => 'mediamanager']);
             $manager->bindToController();
         }
-
-        // @deprecated This event will be deprecated soon, use controller.beforeRemap
-        $this->fireEvent('controller.afterConstructor', [$this]);
     }
 
     public function remap($action, $params)
