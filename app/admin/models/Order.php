@@ -269,12 +269,12 @@ class Order extends Model
 
     public function markAsPaymentProcessed()
     {
-        event(new BeforePaymentProcessed($this));
+        BeforePaymentProcessed::dispatch($this);
 
         $this->processed = 1;
         $this->save();
 
-        event(new PaymentProcessed($this));
+        PaymentProcessed::dispatch($this);
 
         return $this->processed;
     }

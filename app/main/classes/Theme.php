@@ -222,7 +222,7 @@ class Theme
     {
         $config = $this->getConfigValue('form', []);
 
-        event(new ExtendFormConfig($this->getDirName(), $config));
+        ExtendFormConfig::dispatch($this->getDirName(), $config);
 
         return $config;
     }

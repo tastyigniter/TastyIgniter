@@ -128,7 +128,7 @@ trait HasWorkingHours
 
         $schedule->setType($type);
 
-        event(new ScheduleCreated($this, $schedule));
+        ScheduleCreated::dispatch($this, $schedule);
 
         return $schedule;
     }

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
-use System\Events\Assets\BeforePrepare;
+use System\Events\Assets\BeforePrepareCombiner;
 
 trait CombinesAssets
 {
@@ -192,7 +192,7 @@ trait CombinesAssets
     protected function prepareCombiner(array $assets, $targetPath = null)
     {
         // Extensibility
-        event(new BeforePrepare($this, $assets));
+        BeforePrepareCombiner::dispatch($this, $assets);
 
         $files = [];
         foreach ($assets as $path) {

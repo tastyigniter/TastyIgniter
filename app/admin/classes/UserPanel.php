@@ -46,7 +46,7 @@ class UserPanel
             ],
         ]);
 
-        event(new ExtendUserMenuLinks($items));
+        ExtendUserMenuLinks::dispatch($items);
 
         $instance = self::forUser();
 
