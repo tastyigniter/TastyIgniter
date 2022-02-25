@@ -40,11 +40,11 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-default',
             'href' => 'menu_options',
         ],
-        'allergens' => [
-            'label' => 'lang:admin::lang.allergens.text_allergens',
+        'ingredients' => [
+            'label' => 'lang:admin::lang.ingredients.text_ingredients',
             'class' => 'btn btn-default',
-            'href' => 'allergens',
-            'permission' => 'Admin.Allergens',
+            'href' => 'ingredients',
+            'permission' => 'Admin.Ingredients',
         ],
     ],
 ];
@@ -192,8 +192,8 @@ $config['form']['tabs'] = [
             'type' => 'relation',
             'span' => 'left',
         ],
-        'allergens' => [
-            'label' => 'lang:admin::lang.menus.label_allergens',
+        'ingredients' => [
+            'label' => 'lang:admin::lang.menus.label_ingredients',
             'type' => 'relation',
             'span' => 'right',
         ],
@@ -259,7 +259,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_menu_option',
             'tab' => 'lang:admin::lang.menus.text_tab_menu_option',
             'type' => 'menuoptioneditor',
-            'options' => [Admin\Models\Menu_options_model::class, 'getRecordEditorOptions'],
+            'options' => [Admin\Models\MenuOption::class, 'getRecordEditorOptions'],
             'form' => 'menu_item_options_model',
             'context' => ['edit', 'preview'],
         ],

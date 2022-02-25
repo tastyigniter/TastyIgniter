@@ -56,7 +56,7 @@ class Menu extends Model
             'mealtimes' => ['Admin\Models\Mealtime', 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
-            'allergens' => ['Admin\Models\Allergen', 'name' => 'allergenable'],
+            'ingredients' => ['Admin\Models\Ingredient', 'name' => 'ingredientable'],
             'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];
@@ -83,7 +83,8 @@ class Menu extends Model
     public function scopeWhereHasAllergen($query, $allergenId)
     {
         $query->whereHas('allergens', function ($q) use ($allergenId) {
-            $q->where('allergens.allergen_id', $allergenId);
+            $q->where('allergen_id', $allergenId);
+            $q->where('is_allergen', 1);
         });
     }
 
@@ -91,6 +92,13 @@ class Menu extends Model
     {
         $query->whereHas('categories', function ($q) use ($categoryId) {
             $q->where('categories.category_id', $categoryId);
+        });
+    }
+
+    public function scopeWhereHasIngredient($query, $ingredientId)
+    {
+        $query->whereHas('ingredients', function ($q) use ($ingredientId) {
+            $q->where('ingredient_id', $ingredientId);
         });
     }
 
@@ -197,7 +205,7 @@ class Menu extends Model
     {
         $this->categories()->detach();
         $this->mealtimes()->detach();
-        $this->allergens()->detach();
+        $this->ingredients()->detach();
         $this->locations()->detach();
     }
 
@@ -249,10 +257,7 @@ class Menu extends Model
      */
     public function addMenuAllergens(array $allergenIds = [])
     {
-        if (!$this->exists)
-            return FALSE;
-
-        $this->allergens()->sync($allergenIds);
+        $this->addMenuIngredients($allergenIds);
     }
 
     /**
@@ -268,6 +273,21 @@ class Menu extends Model
             return FALSE;
 
         $this->categories()->sync($categoryIds);
+    }
+
+    /**
+     * Create new or update existing menu ingredients
+     *
+     * @param array $ingredientIds if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuIngredients(array $ingredientIds = [])
+    {
+        if (!$this->exists)
+            return FALSE;
+
+        $this->ingredients()->sync($ingredientIds);
     }
 
     /**
@@ -375,6 +395,14 @@ class Menu extends Model
             foreach ($this->mealtimes as $mealtime) {
                 if ($mealtime->mealtime_status) {
                     $isAvailable = $isAvailable || $mealtime->isAvailable($datetime);
+                }
+            }
+        }
+
+        if (count($this->ingredients) > 0) {
+            foreach ($this->ingredients as $ingredient) {
+                if (!$ingredient->status) {
+                    $isAvailable = FALSE;
                 }
             }
         }

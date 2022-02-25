@@ -264,15 +264,18 @@ return [
         ],
     ],
 
-    'allergens' => [
-        'text_title' => 'Allergens',
-        'text_allergens' => 'Allergens',
-        'text_form_name' => 'Allergen',
+    'ingredients' => [
+        'text_title' => 'Ingredients',
+        'text_ingredients' => 'Ingredients',
+        'text_form_name' => 'Ingredient',
         'text_filter_search' => 'Search by name.',
-        'text_empty' => 'There are no allergens available.',
+        'text_empty' => 'There are no ingredients available.',
 
+        'column_is_allergen' => 'Is an allergen?',
+
+        'label_is_allergen' => 'Is an allergen',
         'label_image' => 'Image',
-        'help_photo' => 'Select a file to update allergen image, otherwise leave blank.',
+        'help_photo' => 'Select a file to update ingredient image, otherwise leave blank.',
     ],
 
     'categories' => [
@@ -740,7 +743,7 @@ return [
         'label_end_date' => 'End Date',
         'label_special_price' => 'Special Price',
         'label_special_type' => 'Special Type',
-        'label_allergens' => 'Allergens',
+        'label_ingredients' => 'Ingredients/Allergens',
         'label_validity' => 'Validity',
         'label_recurring_every' => 'Recurring every',
         'label_recurring_from_time' => 'Recurring from time',
@@ -875,7 +878,7 @@ return [
         'statuses' => 'Manage orders and reservations statuses',
         'tables' => 'Create, edit and delete reservations tables',
         'mealtimes' => 'Create, edit and delete mealtimes',
-        'allergens' => 'Create, edit and delete allergens',
+        'ingredients' => 'Create, edit and delete ingredients',
     ],
 
     'reservations' => [

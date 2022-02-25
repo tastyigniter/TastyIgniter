@@ -7,32 +7,33 @@ use Igniter\Flame\Database\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Allergen Model Class
+ * Ingredients Model Class
  */
-class Allergen extends Model
+class Ingredient extends Model
 {
     use HasMedia;
 
     /**
      * @var string The database table name
      */
-    protected $table = 'allergens';
+    protected $table = 'ingredients';
 
     /**
      * @var string The database table primary key
      */
-    protected $primaryKey = 'allergen_id';
+    protected $primaryKey = 'ingredient_id';
 
     protected $guarded = [];
 
     protected $casts = [
+        'is_allergen' => 'boolean',
         'status' => 'boolean',
     ];
 
     public $relation = [
         'morphedByMany' => [
-            'menus' => ['Admin\Models\Menu', 'name' => 'allergenable'],
-            'menu_option_values' => ['Admin\Models\MenuOptionValue', 'name' => 'allergenable'],
+            'menus' => ['Admin\Models\Menu', 'name' => 'ingredientable'],
+            'menu_option_values' => ['Admin\Models\MenuOptionValue', 'name' => 'ingredientable'],
         ],
     ];
 
@@ -63,12 +64,17 @@ class Allergen extends Model
         return $query->whereExists(function ($q) {
             $prefix = DB::getTablePrefix();
             $q->select(DB::raw(1))
-                ->from('menu_allergens')
-                ->join('menus', 'menus.menu_id', '=', 'menu_allergens.menu_id')
+                ->from('ingredientables')
+                ->join('menus', 'menus.menu_id', '=', 'ingredientables.ingredientable_id')
+                ->where('ingredientables.allergenable_type', 'menus')
                 ->whereNotNull('menus.menu_status')
-                ->where('menus.menu_status', '=', 1)
-                ->whereRaw($prefix.'allergens.allergen_id = '.$prefix.'menu_allergens.allergen_id');
+                ->where('menus.menu_status', '=', 1);
         });
+    }
+
+    public function scopeIsAllergen($query)
+    {
+        return $query->where('is_allergen', 1);
     }
 
     public function scopeIsEnabled($query)

@@ -21,8 +21,8 @@ $config['form'] = [
             'type' => 'stockeditor',
             'span' => 'right',
         ],
-        'allergens' => [
-            'label' => 'lang:admin::lang.menus.label_allergens',
+        'ingredients' => [
+            'label' => 'lang:admin::lang.menus.label_ingredients',
             'type' => 'relation',
             'span' => 'right',
             'attributes' => [
@@ -39,7 +39,7 @@ $config['form'] = [
         ['value', 'lang:admin::lang.menu_options.label_option_value', 'required|min:2|max:128'],
         ['price', 'lang:admin::lang.menu_options.label_option_price', 'required|numeric|min:0'],
         ['priority', 'lang:admin::lang.menu_options.label_option_price', 'integer'],
-        ['allergens.*', 'lang:admin::lang.menus.label_allergens', 'integer'],
+        ['ingredients.*', 'lang:admin::lang.menus.label_ingredients', 'integer'],
     ],
 ];
 
