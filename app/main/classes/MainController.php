@@ -158,9 +158,6 @@ class MainController extends BaseController
 
         $this->initTemplateEnvironment();
 
-        // @deprecated This event will be deprecated soon, use controller.beforeRemap
-        $this->fireEvent('controller.afterConstructor', [$this]);
-
         self::$controller = $this;
     }
 
