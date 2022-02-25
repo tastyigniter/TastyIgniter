@@ -8,9 +8,9 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 
 /**
- * MenuOptions Model Class
+ * MenuOption Model Class
  */
-class Menu_options_model extends Model
+class MenuOption extends Model
 {
     use Locationable;
     use Purgeable;
@@ -39,11 +39,11 @@ class Menu_options_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
-            'menu_option_values' => ['Admin\Models\Menu_item_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
+            'option_values' => ['Admin\Models\MenuOptionValue', 'foreignKey' => 'option_id', 'delete' => TRUE],
+            'menu_option_values' => ['Admin\Models\MenuItemOptionValue', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
         'morphToMany' => [
-            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];
 
