@@ -80,11 +80,15 @@ class PaymentLog extends Model
     public function markAsRefundProcessed()
     {
         if (is_null($this->refunded_at)) {
+            // @deprecated namespaced event, remove before v5
+            event('admin.paymentLog.beforeRefundProcessed', [$this]);
             BeforeRefundProcessed::dispatch($this);
 
             $this->refunded_at = Carbon::now();
             $this->save();
 
+            // @deprecated namespaced event, remove before v5
+            event('admin.paymentLog.refundProcessed', [$this]);
             RefundProcessed::dispatch($this);
         }
 

@@ -222,9 +222,11 @@ class Theme
     {
         $config = $this->getConfigValue('form', []);
 
-        ExtendFormConfig::dispatch($this->getDirName(), $config);
+        // @deprecated namespaced event, remove before v5
+        event('main.theme.extendFormConfig', [$this->getDirName(), &$config]);
+        event($event = new ExtendFormConfig($this->getDirName(), $config));
 
-        return $config;
+        return $event->config;
     }
 
     public function getConfigValue($name, $default = null)

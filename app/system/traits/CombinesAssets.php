@@ -192,6 +192,8 @@ trait CombinesAssets
     protected function prepareCombiner(array $assets, $targetPath = null)
     {
         // Extensibility
+        // @deprecated namespaced event, remove before v5
+        event('assets.combiner.beforePrepare', [$this, $assets]);
         BeforePrepareCombiner::dispatch($this, $assets);
 
         $files = [];

@@ -269,11 +269,15 @@ class Order extends Model
 
     public function markAsPaymentProcessed()
     {
+        // @deprecated namespaced event, remove before v5
+        event('admin.order.beforePaymentProcessed', [$this]);
         BeforePaymentProcessed::dispatch($this);
 
         $this->processed = 1;
         $this->save();
 
+        // @deprecated namespaced event, remove before v5
+        event('admin.order.paymentProcessed', [$this]);
         PaymentProcessed::dispatch($this);
 
         return $this->processed;

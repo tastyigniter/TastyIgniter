@@ -329,6 +329,8 @@ class Theme extends Model
         params()->set('default_themes.main', $theme->code);
         params()->save();
 
+        // @deprecated namespaced event, remove before v5
+        event('main.theme.activated', [$theme]);
         Activated::dispatch($theme);
 
         return $theme;

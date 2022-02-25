@@ -128,6 +128,8 @@ trait HasWorkingHours
 
         $schedule->setType($type);
 
+        // @deprecated namespaced event, remove before v5
+        event('admin.workingSchedule.created', [$this, $schedule]);
         ScheduleCreated::dispatch($this, $schedule);
 
         return $schedule;

@@ -46,6 +46,8 @@ class UserPanel
             ],
         ]);
 
+        // @deprecated namespaced event, remove before v5
+        event('admin.menu.extendUserMenuLinks', [$items]);
         ExtendUserMenuLinks::dispatch($items);
 
         $instance = self::forUser();
