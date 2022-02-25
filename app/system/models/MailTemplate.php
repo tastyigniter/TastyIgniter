@@ -147,18 +147,4 @@ class MailTemplate extends Model
     {
         return MailParser::parse(File::get(View::make($code)->getPath()));
     }
-
-    //
-    // Registration
-    //
-
-    /**
-     * @param callable $callback A callable function.
-     * @deprecated see System\Classes\MailManager::registerCallback
-     */
-    public static function registerCallback(callable $callback)
-    {
-        traceLog('MailTemplate::registerCallback is deprecated, use '.MailManager::class.'::registerCallback instead');
-        MailManager::instance()->registerCallback($callback);
-    }
 }
