@@ -13,17 +13,17 @@ class MailPartials extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Mail_partials_model',
+            'model' => 'System\Models\MailPartial',
             'title' => 'lang:system::lang.mail_templates.text_partial_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['partial_id', 'DESC'],
-            'configFile' => 'mail_partials_model',
+            'configFile' => 'mailpartial',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_partial_form_name',
-        'model' => 'System\Models\Mail_partials_model',
+        'model' => 'System\Models\MailPartial',
         'request' => 'System\Requests\MailPartial',
         'create' => [
             'title' => 'lang:system::lang.mail_templates.text_new_partial_title',
@@ -44,7 +44,7 @@ class MailPartials extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'mail_partials',
         ],
-        'configFile' => 'mail_partials_model',
+        'configFile' => 'mailpartial',
     ];
 
     protected $requiredPermissions = 'Admin.MailTemplates';

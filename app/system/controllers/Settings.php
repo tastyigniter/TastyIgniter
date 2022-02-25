@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
-use System\Models\Mail_templates_model;
+use System\Models\MailTemplate;
 
 class Settings extends \Admin\Classes\AdminController
 {
@@ -25,7 +25,7 @@ class Settings extends \Admin\Classes\AdminController
 
     protected $requiredPermissions = 'Site.Settings';
 
-    protected $modelClass = 'System\Models\Settings_model';
+    protected $modelClass = 'System\Models\Settings';
 
     /**
      * @var \Admin\Widgets\Form
@@ -50,7 +50,7 @@ class Settings extends \Admin\Classes\AdminController
 
     public function index()
     {
-        Mail_templates_model::syncAll();
+        MailTemplate::syncAll();
 
         $this->validateSettingItems(TRUE);
 

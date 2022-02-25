@@ -3,7 +3,7 @@
 namespace Admin\ActivityTypes;
 
 use Admin\Helpers\ActivityMessage;
-use Admin\Models\Status_history_model;
+use Admin\Models\StatusHistory;
 use Igniter\Flame\ActivityLog\Contracts\ActivityInterface;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Auth\Models\User;
@@ -29,10 +29,10 @@ class StatusUpdated implements ActivityInterface
     }
 
     /**
-     * @param \Admin\Models\Status_history_model $history
+     * @param \Admin\Models\StatusHistory $history
      * @param \Igniter\Flame\Auth\Models\User|null $user
      */
-    public static function log(Status_history_model $history, User $user = null)
+    public static function log(StatusHistory $history, User $user = null)
     {
         $type = $history->isForOrder() ? self::ORDER_UPDATED_TYPE : self::RESERVATION_UPDATED_TYPE;
 

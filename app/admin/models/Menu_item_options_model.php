@@ -40,16 +40,16 @@ class Menu_item_options_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
+            'option_values' => ['Admin\Models\MenuOptionValue', 'foreignKey' => 'option_id', 'otherKey' => 'option_id'],
             'menu_option_values' => [
-                'Admin\Models\Menu_item_option_values_model',
+                'Admin\Models\MenuItemOptionValue',
                 'foreignKey' => 'menu_option_id',
                 'delete' => TRUE,
             ],
         ],
         'belongsTo' => [
-            'menu' => ['Admin\Models\Menus_model'],
-            'option' => ['Admin\Models\Menu_options_model'],
+            'menu' => ['Admin\Models\Menu'],
+            'option' => ['Admin\Models\MenuOption'],
         ],
     ];
 

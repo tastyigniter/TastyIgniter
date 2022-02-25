@@ -14,13 +14,13 @@ use System\Actions\ModelAction;
 class BasePaymentGateway extends ModelAction
 {
     /**
-     * @var \Admin\Models\Payments_model|Model Reference to the controller associated to this action
+     * @var \Admin\Models\Payment|Model Reference to the controller associated to this action
      */
     protected $model;
 
-    protected $orderModel = 'Admin\Models\Orders_model';
+    protected $orderModel = 'Admin\Models\Order';
 
-    protected $orderStatusModel = 'Admin\Models\Statuses_model';
+    protected $orderStatusModel = 'Admin\Models\Status';
 
     protected $configFields = [];
 
@@ -212,7 +212,7 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * @return \Admin\Models\Payments_model
+     * @return \Admin\Models\Payment
      */
     public function getHostObject()
     {
@@ -234,9 +234,9 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Creates a customer profile on the payment gateway or update if the profile already exists.
-     * @param \Admin\Models\Customers_model $customer Customer model to create a profile for
+     * @param \Admin\Models\Customer $customer Customer model to create a profile for
      * @param array $data Posted payment form data
-     * @return \Admin\Models\Payment_profiles_model|object Returns the customer payment profile model
+     * @return \Admin\Models\PaymentProfile|object Returns the customer payment profile model
      */
     public function updatePaymentProfile($customer, $data)
     {
@@ -245,8 +245,8 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Deletes a customer payment profile from the payment gateway.
-     * @param \Admin\Models\Customers_model $customer Customer model
-     * @param \Admin\Models\Payment_profiles_model $profile Payment profile model
+     * @param \Admin\Models\Customer $customer Customer model
+     * @param \Admin\Models\PaymentProfile $profile Payment profile model
      */
     public function deletePaymentProfile($customer, $profile)
     {
@@ -255,7 +255,7 @@ class BasePaymentGateway extends ModelAction
 
     /**
      * Creates a payment transaction from an existing payment profile.
-     * @param \Admin\Models\Orders_model $order An order object to pay
+     * @param \Admin\Models\Order $order An order object to pay
      * @param array $data
      */
     public function payFromPaymentProfile($order, $data = [])

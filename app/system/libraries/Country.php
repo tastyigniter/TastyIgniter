@@ -2,7 +2,7 @@
 
 namespace System\Libraries;
 
-use System\Models\Countries_model;
+use System\Models\Country;
 
 /**
  * Country Class
@@ -13,7 +13,9 @@ class Country
 
     const ISO_CODE_3 = 3;
 
-    protected $defaultFormat = [];
+    protected $defaultFormat = [
+        "{address_1}\n{address_2}\n{city} {postcode}\n{state}\n{country}",
+    ];
 
     protected $requiredAddressKeys = [
         'address_1',
@@ -28,7 +30,9 @@ class Country
 
     public function addressFormat($address, $useLineBreaks = TRUE)
     {
-        [$format, $placeholders] = $this->getDefaultFormat();
+        $format = $this->getDefaultFormat();
+
+        $address = $this->evalAddress($address);
 
         // Override format if present in address array
         if (!empty($address['format']))
@@ -36,7 +40,9 @@ class Country
 
         $formattedAddress = str_replace(['\r\n', '\r', '\n'], '<br />',
             preg_replace(['/\s\s+/', '/\r\r+/', '/\n\n+/'], '<br />',
-                trim(str_replace($placeholders, $this->evalAddress($address), $format))
+                trim(str_replace([
+                    '{address_1}', '{address_2}', '{city}', '{postcode}', '{state}', '{country}',
+                ], array_except($address, 'format'), $format))
             )
         );
 
@@ -79,12 +85,10 @@ class Country
 
     public function getDefaultFormat()
     {
-        return $this->defaultFormat;
-    }
+        if ($defaultCountry = Countries_model::getDefault())
+            return $defaultCountry->format;
 
-    public function setDefaultFormat($format, $placeholders = [])
-    {
-        $this->defaultFormat = [$format, $placeholders];
+        return $this->defaultFormat;
     }
 
     public function listAll($column = null, $key = 'country_id')
@@ -104,34 +108,35 @@ class Country
 
         $result = [];
         foreach ($this->requiredAddressKeys as $key) {
-            $value = isset($address[$key]) ? $address[$key] : '';
-
             if ($key == 'country') {
-                $value = $this->processCountryValue($value);
+                $this->processCountryValue($address[$key], $result);
             }
-
-            $result[$key] = $value;
+            else {
+                $result[$key] = $address[$key] ?? '';
+            }
         }
 
         return $result;
     }
 
-    protected function processCountryValue($country)
+    protected function processCountryValue($country, &$result)
     {
-        if (is_numeric($country)) {
-            return $this->getCountryNameById($country);
+        if (!is_string($country) && isset($country['country_name'])) {
+            $result['country'] = $country['country_name'];
+            $result['format'] = $country['format'];
         }
-        elseif (!is_string($country) && isset($country['country_name'])) {
-            return $country['country_name'];
+        elseif (is_numeric($country)) {
+            if ($countryModel = $this->countriesCollection->find($country)) {
+                $result['country'] = $countryModel->country_name;
+                $result['format'] = $countryModel->format;
+            }
         }
-
-        return $country;
     }
 
     protected function loadCountries()
     {
         if (!count($this->countriesCollection))
-            $this->countriesCollection = Countries_model::isEnabled()->sorted()->get();
+            $this->countriesCollection = Country::isEnabled()->sorted()->get();
 
         return $this->countriesCollection;
     }

@@ -4,8 +4,8 @@ namespace Admin\Controllers;
 
 use Admin\ActivityTypes\StatusUpdated;
 use Admin\Facades\AdminMenu;
-use Admin\Models\Reservations_model;
-use Admin\Models\Statuses_model;
+use Admin\Models\Reservation;
+use Admin\Models\Status;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 
@@ -21,11 +21,11 @@ class Reservations extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Reservations_model',
+            'model' => 'Admin\Models\Reservation',
             'title' => 'lang:admin::lang.reservations.text_title',
             'emptyMessage' => 'lang:admin::lang.reservations.text_empty',
             'defaultSort' => ['reservation_id', 'DESC'],
-            'configFile' => 'reservations_model',
+            'configFile' => 'reservation',
         ],
     ];
 
@@ -34,13 +34,13 @@ class Reservations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.reservations.text_title',
             'emptyMessage' => 'lang:admin::lang.reservations.text_no_booking',
             'popoverPartial' => 'reservations/calendar_popover',
-            'configFile' => 'reservations_model',
+            'configFile' => 'reservation',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.reservations.text_form_name',
-        'model' => 'Admin\Models\Reservations_model',
+        'model' => 'Admin\Models\Reservation',
         'request' => 'Admin\Requests\Reservation',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -61,7 +61,7 @@ class Reservations extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'reservations',
         ],
-        'configFile' => 'reservations_model',
+        'configFile' => 'reservation',
     ];
 
     protected $requiredPermissions = [
@@ -81,7 +81,7 @@ class Reservations extends \Admin\Classes\AdminController
     {
         $this->asExtension('ListController')->index();
 
-        $this->vars['statusesOptions'] = \Admin\Models\Statuses_model::getDropdownOptionsForReservation();
+        $this->vars['statusesOptions'] = \Admin\Models\Status::getDropdownOptionsForReservation();
     }
 
     public function index_onDelete()
@@ -94,8 +94,8 @@ class Reservations extends \Admin\Classes\AdminController
 
     public function index_onUpdateStatus()
     {
-        $model = Reservations_model::find((int)post('recordId'));
-        $status = Statuses_model::find((int)post('statusId'));
+        $model = Reservation::find((int)post('recordId'));
+        $status = Status::find((int)post('statusId'));
         if (!$model || !$status)
             return;
 
@@ -117,14 +117,14 @@ class Reservations extends \Admin\Classes\AdminController
 
     public function calendarGenerateEvents($startAt, $endAt)
     {
-        return Reservations_model::listCalendarEvents(
+        return Reservation::listCalendarEvents(
             $startAt, $endAt, $this->getLocationId()
         );
     }
 
     public function calendarUpdateEvent($eventId, $startAt, $endAt)
     {
-        if (!$reservation = Reservations_model::find($eventId))
+        if (!$reservation = Reservation::find($eventId))
             throw new Exception(lang('admin::lang.reservations.alert_no_reservation_found'));
 
         $startAt = make_carbon($startAt);

@@ -4,9 +4,9 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Models\Locations_model;
-use Admin\Models\Menu_option_values_model;
-use Admin\Models\Stock_history_model;
+use Admin\Models\Location;
+use Admin\Models\MenuOptionValue;
+use Admin\Models\StockHistory;
 use Admin\Widgets\Form;
 
 /**
@@ -14,7 +14,7 @@ use Admin\Widgets\Form;
  */
 class StockEditor extends BaseFormWidget
 {
-    public $form = 'stocks_model';
+    public $form = 'stock';
 
     public $quantityKeyFrom = 'stock_qty';
 
@@ -108,19 +108,19 @@ class StockEditor extends BaseFormWidget
 
     protected function getAvailableLocations()
     {
-        $locations = $this->model instanceof Menu_option_values_model
+        $locations = $this->model instanceof MenuOptionValue
             ? $this->model->option->locations
             : $this->model->locations;
 
         if (!$locations || $locations->isEmpty())
-            $locations = Locations_model::isEnabled()->get();
+            $locations = Location::isEnabled()->get();
 
         return $locations;
     }
 
     protected function getStockableName()
     {
-        return $this->model instanceof Menu_option_values_model
+        return $this->model instanceof MenuOptionValue
             ? $this->model->value
             : $this->model->menu_name;
     }
@@ -147,7 +147,7 @@ class StockEditor extends BaseFormWidget
         $field = clone $this->formField;
 
         $stockIds = $this->model->stocks->pluck('id')->all();
-        $field->value = Stock_history_model::whereIn('stock_id', $stockIds)->get();
+        $field->value = StockHistory::whereIn('stock_id', $stockIds)->get();
 
         $widgetConfig = [
             'columns' => [

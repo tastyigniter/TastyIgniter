@@ -3,7 +3,7 @@
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminMenu;
-use Admin\Models\Customer_groups_model;
+use Admin\Models\CustomerGroup;
 
 class CustomerGroups extends \Admin\Classes\AdminController
 {
@@ -14,17 +14,17 @@ class CustomerGroups extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Customer_groups_model',
+            'model' => 'Admin\Models\CustomerGroup',
             'title' => 'lang:admin::lang.customer_groups.text_title',
             'emptyMessage' => 'lang:admin::lang.customer_groups.text_empty',
             'defaultSort' => ['customer_group_id', 'DESC'],
-            'configFile' => 'customer_groups_model',
+            'configFile' => 'customergroup',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.customer_groups.text_form_name',
-        'model' => 'Admin\Models\Customer_groups_model',
+        'model' => 'Admin\Models\CustomerGroup',
         'request' => 'Admin\Requests\CustomerGroup',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -45,7 +45,7 @@ class CustomerGroups extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'customer_groups',
         ],
-        'configFile' => 'customer_groups_model',
+        'configFile' => 'customergroup',
     ];
 
     protected $requiredPermissions = 'Admin.CustomerGroups';
@@ -59,7 +59,7 @@ class CustomerGroups extends \Admin\Classes\AdminController
 
     public function index_onSetDefault()
     {
-        if (Customer_groups_model::updateDefault(post('default'))) {
+        if (CustomerGroup::updateDefault(post('default'))) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.customer_groups.alert_set_default')));
         }
 

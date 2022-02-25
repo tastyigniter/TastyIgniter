@@ -26,7 +26,7 @@ class Location_tables_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'tables' => ['Admin\Models\Tables_model'],
+            'tables' => ['Admin\Models\Table'],
         ],
     ];
 }

@@ -16,7 +16,7 @@ trait HasAuthentication
     protected $requireAuthentication = TRUE;
 
     /**
-     * @var \Admin\Models\Users_model Stores the logged in admin user model.
+     * @var \Admin\Models\User Stores the logged in admin user model.
      */
     protected $currentUser;
 

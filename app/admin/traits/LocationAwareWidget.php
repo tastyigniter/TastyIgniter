@@ -3,7 +3,7 @@
 namespace Admin\Traits;
 
 use Admin\Facades\AdminLocation;
-use Admin\Models\Locations_model;
+use Admin\Models\Location;
 
 trait LocationAwareWidget
 {
@@ -23,7 +23,7 @@ trait LocationAwareWidget
             return;
 
         $model = $query->getModel();
-        if ($model instanceof Locations_model) {
+        if ($model instanceof Location) {
             $query->whereIn('location_id', $ids);
 
             return;

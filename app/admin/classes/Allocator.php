@@ -3,7 +3,7 @@
 namespace Admin\Classes;
 
 use Admin\Jobs\AllocateAssignable;
-use Admin\Models\Assignable_logs_model;
+use Admin\Models\AssignableLog;
 
 class Allocator
 {
@@ -12,7 +12,7 @@ class Allocator
         if (!$availableSlotCount = self::countAvailableSlot())
             return;
 
-        $queue = Assignable_logs_model::getUnAssignedQueue($availableSlotCount);
+        $queue = AssignableLog::getUnAssignedQueue($availableSlotCount);
 
         $queue->each(function ($assignableLog) {
             AllocateAssignable::dispatch($assignableLog);

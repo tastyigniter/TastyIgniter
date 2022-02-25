@@ -13,7 +13,7 @@ use Igniter\Flame\Exception\SystemException;
 use Illuminate\Support\Collection;
 use Main\classes\MediaItem;
 use Main\Classes\MediaLibrary;
-use System\Models\Settings_model;
+use System\Models\Settings;
 
 /**
  * Media Finder
@@ -158,13 +158,13 @@ class MediaFinder extends BaseFormWidget
         if (!strlen($extension))
             return MediaItem::FILE_TYPE_DOCUMENT;
 
-        if (in_array($extension, Settings_model::imageExtensions()))
+        if (in_array($extension, Settings::imageExtensions()))
             return MediaItem::FILE_TYPE_IMAGE;
 
-        if (in_array($extension, Settings_model::audioExtensions()))
+        if (in_array($extension, Settings::audioExtensions()))
             return MediaItem::FILE_TYPE_AUDIO;
 
-        if (in_array($extension, Settings_model::videoExtensions()))
+        if (in_array($extension, Settings::videoExtensions()))
             return MediaItem::FILE_TYPE_VIDEO;
 
         return MediaItem::FILE_TYPE_DOCUMENT;
