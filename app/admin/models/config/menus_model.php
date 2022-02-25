@@ -35,6 +35,11 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'menus/create',
         ],
+        'menu_options' => [
+            'label' => 'lang:admin::lang.menu_options.text_options',
+            'class' => 'btn btn-default',
+            'href' => 'menu_options',
+        ],
         'allergens' => [
             'label' => 'lang:admin::lang.allergens.text_allergens',
             'class' => 'btn btn-default',
@@ -250,36 +255,12 @@ $config['form']['tabs'] = [
             'useAttachment' => TRUE,
         ],
 
-        '_options' => [
-            'label' => 'lang:admin::lang.menus.label_option',
-            'tab' => 'lang:admin::lang.menus.text_tab_menu_option',
-            'type' => 'recordeditor',
-            'context' => ['edit', 'preview'],
-            'form' => 'menu_options_model',
-            'modelClass' => 'Admin\Models\Menu_options_model',
-            'placeholder' => 'lang:admin::lang.menus.help_menu_option',
-            'formName' => 'lang:admin::lang.menu_options.text_option',
-            'popupSize' => 'modal-lg',
-            'addonRight' => [
-                'label' => '<i class="fa fa-long-arrow-down"></i> Add to Menu',
-                'tag' => 'button',
-                'attributes' => [
-                    'class' => 'btn btn-default',
-                    'data-control' => 'choose-record',
-                    'data-request' => 'onChooseMenuOption',
-                ],
-            ],
-        ],
         'menu_options' => [
             'label' => 'lang:admin::lang.menus.label_menu_option',
             'tab' => 'lang:admin::lang.menus.text_tab_menu_option',
-            'type' => 'connector',
-            'partial' => 'form/menu_options',
-            'nameFrom' => 'option_name',
-            'formName' => 'lang:admin::lang.menu_options.text_form_name',
+            'type' => 'menuoptioneditor',
+            'options' => [Admin\Models\Menu_options_model::class, 'getRecordEditorOptions'],
             'form' => 'menu_item_options_model',
-            'popupSize' => 'modal-lg',
-            'sortable' => TRUE,
             'context' => ['edit', 'preview'],
         ],
 

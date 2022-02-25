@@ -79,16 +79,12 @@ class DemoSchemaSeeder extends Seeder
             foreach (array_get($menu, 'menu_options', []) as $name) {
                 $option = DB::table('menu_options')->where('option_name', $name)->first();
 
-                $menuOptionId = DB::table('menu_item_options')->insertGetId([
-                    'option_id' => $option->option_id,
-                    'menu_id' => $menuId,
-                ]);
-
                 $optionValues = DB::table('menu_option_values')->where('option_id', $option->option_id)->get();
 
                 foreach ($optionValues as $optionValue) {
                     DB::table('menu_item_option_values')->insertGetId([
-                        'menu_option_id' => $menuOptionId,
+                        'menu_id' => $menuId,
+                        'option_id' => $option->option_id,
                         'option_value_id' => $optionValue->option_value_id,
                         'new_price' => $optionValue->price,
                         'priority' => $optionValue->priority,
@@ -98,7 +94,6 @@ class DemoSchemaSeeder extends Seeder
         }
 
         DB::table('menus')->update(['updated_at' => now(), 'created_at' => now()]);
-        DB::table('menu_item_options')->update(['updated_at' => now(), 'created_at' => now()]);
         DB::table('menu_item_option_values')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
