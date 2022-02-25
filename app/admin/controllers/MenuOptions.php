@@ -18,7 +18,7 @@ class MenuOptions extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.menu_options.text_title',
             'emptyMessage' => 'lang:admin::lang.menu_options.text_empty',
             'defaultSort' => ['option_id', 'DESC'],
-            'configFile' => 'menu_options_model',
+            'configFile' => 'menuoption',
         ],
     ];
 
@@ -45,7 +45,7 @@ class MenuOptions extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'menu_options',
         ],
-        'configFile' => 'menu_options_model',
+        'configFile' => 'menuoption',
     ];
 
     protected $requiredPermissions = 'Admin.Menus';

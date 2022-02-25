@@ -4,7 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Models\Menu_options_model;
+use Admin\Models\MenuOption;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Admin\Widgets\Form;
@@ -30,7 +30,7 @@ class MenuOptionEditor extends BaseFormWidget
 
     protected $defaultAlias = 'menuoptioneditor';
 
-    protected $modelClass = Menu_options_model::class;
+    protected $modelClass = MenuOption::class;
 
     //
     // Configurable properties
