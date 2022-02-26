@@ -50,7 +50,7 @@ class UserRole extends Model
 
     public function getStaffCountAttribute($value)
     {
-        return $this->staffs->count();
+        return $this->users->count();
     }
 
     public function setPermissionsAttribute($permissions)

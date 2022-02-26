@@ -119,7 +119,7 @@ return [
     'text_see_all_customers' => 'See all customers',
     'text_see_all_orders' => 'See all orders',
     'text_user' => 'User',
-    'text_staff_group' => 'Staff Group',
+    'text_staff_group' => 'User Group',
     'text_location' => 'Location',
     'text_set_status' => 'Set Status',
     'text_edit_details' => 'Edit Details',
@@ -766,7 +766,7 @@ return [
         'text_payment_logs' => 'Payment Attempts',
         'text_tab_menu' => 'Menu Items',
         'text_empty' => 'There are no orders available.',
-        'text_filter_search' => 'Search by id, location, status, staff or customer name.',
+        'text_filter_search' => 'Search by id, location, status, user or customer name.',
         'text_filter_assignee' => 'View all assignees',
         'text_filter_order_type' => 'View all order types',
         'text_filter_payment' => 'View all payments',
@@ -786,7 +786,7 @@ return [
         'text_no_payment' => 'No payment method selected',
         'text_unassigned' => 'Yet to be Assigned',
         'text_assigned_to_self' => 'Assigned To Me',
-        'text_assigned_to_others' => 'Assigned To Other Staff',
+        'text_assigned_to_others' => 'Assigned To Other User',
 
         'button_print_invoice' => '<i class="fa fa-receipt"></i>&nbsp;&nbsp;View Invoice',
 
@@ -797,7 +797,7 @@ return [
         'column_time' => 'Order Time',
         'column_date' => 'Order Date',
         'column_time_date' => 'Date Time',
-        'column_staff' => 'Staff',
+        'column_staff' => 'User',
         'column_comment' => 'Comment',
         'column_assignee' => 'Assigned To',
         'column_assignee_group' => 'Assigned To Group',
@@ -895,13 +895,13 @@ return [
         'text_restaurant' => 'Location',
         'text_unassigned' => 'Yet to be Assigned',
         'text_assigned_to_self' => 'Assigned To Me',
-        'text_assigned_to_others' => 'Assigned To Other Staff',
+        'text_assigned_to_others' => 'Assigned To Other User',
 
         'column_location' => 'Location',
         'column_customer_name' => 'Name',
         'column_guest' => 'Guest(s)',
         'column_table' => 'Table',
-        'column_staff' => 'Staff',
+        'column_staff' => 'User',
         'column_assignee' => 'Assigned To',
         'column_assignee_group' => 'Assigned To Group',
         'column_notify' => 'Customer Notified',
@@ -922,7 +922,7 @@ return [
         'label_send_confirmation' => 'Send reservation confirmation',
         'label_user_agent' => 'User Agent',
         'label_ip_address' => 'IP Address',
-        'label_assign_staff' => 'Assign Staff',
+        'label_assign_staff' => 'Assign User',
         'label_restaurant_name' => 'Restaurant Name',
         'label_restaurant_address' => 'Restaurant Address',
         'label_table_name' => 'Table Name',
@@ -951,9 +951,9 @@ return [
     ],
 
     'user_groups' => [
-        'text_title' => 'Staff Groups',
-        'text_form_name' => 'Staff Group',
-        'text_empty' => 'There are no staff groups available.',
+        'text_title' => 'User Groups',
+        'text_form_name' => 'User Group',
+        'text_empty' => 'There are no user groups available.',
         'text_round_robin' => 'Round Robin',
         'text_load_balanced' => 'Load Balanced',
 
@@ -966,37 +966,37 @@ return [
 
         'alert_no_available_assignee' => 'No available assignee.',
 
-        'help_auto_assign' => 'Allocate and control the number of orders assigned to staff in this group.',
-        'help_round_robin' => 'Assign orders to the staff who are online in a circular fashion.',
-        'help_load_balanced' => 'Limit the number of orders a staff can handle simultaneously.',
+        'help_auto_assign' => 'Allocate and control the number of orders assigned to user in this group.',
+        'help_round_robin' => 'Assign orders to the user who are online in a circular fashion.',
+        'help_load_balanced' => 'Limit the number of orders a user can handle simultaneously.',
         'help_load_balanced_limit' => 'Maximum number of orders per staff.',
-        'help_assignment_availability' => 'Allow staff to control their availability for automatic order assignment',
+        'help_assignment_availability' => 'Allow user to control their availability for automatic order assignment',
     ],
 
     'user_roles' => [
-        'text_title' => 'Staff Roles',
-        'text_form_name' => 'Staff Roles',
+        'text_title' => 'User Roles',
+        'text_form_name' => 'User Roles',
         'text_tab_permission' => 'Permissions',
-        'text_empty' => 'There are no staff roles available.',
+        'text_empty' => 'There are no user roles available.',
 
         'label_permissions' => 'Permissions',
     ],
 
     'staff' => [
-        'text_title' => 'Staff',
-        'text_form_name' => 'Staff',
+        'text_title' => 'User',
+        'text_form_name' => 'User',
         'text_filter_search' => 'Search by location, name or email.',
         'text_filter_role' => 'View all roles',
         'text_filter_group' => 'View all groups',
-        'text_empty' => 'There are no staffs available.',
+        'text_empty' => 'There are no users available.',
         'text_roles_scope_groups' => 'Scope, Roles and Groups',
         'text_sale_permission_global_access' => 'Global Access',
         'text_sale_permission_groups' => 'Groups',
         'text_sale_permission_restricted' => 'Restricted Access',
-        'text_impersonate' => 'Impersonate Staff',
+        'text_impersonate' => 'Impersonate User',
 
-        'column_group' => 'Staff Groups',
-        'column_role' => 'Staff Roles',
+        'column_group' => 'User Groups',
+        'column_role' => 'User Roles',
         'column_location' => 'Locations',
         'column_last_login' => 'Last Login',
 
@@ -1012,15 +1012,15 @@ return [
         'label_sale_permission' => 'Order and Reservation Scope',
 
         'help_send_invite' => 'Sends an invitation message containing a link to set a password on their account.',
-        'help_super_staff' => 'Grants this staff unlimited access to all areas of the system. Super staff can add and manage other staff.',
-        'help_role' => 'Roles define staff permissions.',
-        'help_groups' => 'Specify which groups the staff should belong to. Segmenting agents into groups lets you easily assign orders.',
-        'help_location' => 'Specify which locations the staff should belong to. The staff can ONLY view menus, categories, orders, and reservations attached to the selected location(s). Does not apply to super admins',
+        'help_super_staff' => 'Grants this user unlimited access to all areas of the system. Super user can add and manage other staff.',
+        'help_role' => 'Roles define user permissions.',
+        'help_groups' => 'Specify which groups the user should belong to. Segmenting agents into groups lets you easily assign orders.',
+        'help_location' => 'Specify which locations the user should belong to. The user can ONLY view menus, categories, orders, and reservations attached to the selected location(s). Does not apply to super admins',
         'help_sale_permission_global_access' => 'Can view all Orders and Reservations in the Admin Panel',
         'help_sale_permission_groups' => 'Can view Orders and Reservations in their Group(s) and Orders and Reservations assigned to them',
         'help_sale_permission_restricted' => 'Can only view Orders and Reservations assigned to them',
 
-        'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a staff account</b>, please contact system administrator.',
+        'alert_login_restricted' => 'Warning: You do not have the right permission to <b>access a user account</b>, please contact system administrator.',
         'alert_impersonate_confirm' => 'Are you sure you want to impersonate this staff? You can revert to your original state by logging out.',
         'alert_impersonate_success' => 'You are now impersonating staff: %s',
     ],
@@ -1035,12 +1035,12 @@ return [
         'text_reservation' => 'Reservation',
         'text_unassigned' => 'Yet to be Assigned',
         'text_assigned_to_self' => 'Assigned To Me',
-        'text_assigned_to_others' => 'Assigned To Other Staff',
+        'text_assigned_to_others' => 'Assigned To Other User',
 
         'column_comment' => 'Status Comment',
         'column_notify' => 'Notify',
         'column_time_date' => 'Date Time',
-        'column_staff' => 'Staff',
+        'column_staff' => 'User',
         'column_assignee' => 'Assigned To',
 
         'label_for' => 'Status For',
@@ -1050,12 +1050,12 @@ return [
         'label_comment' => 'Comment',
 
         'label_assignee_group' => 'Assign To Group',
-        'label_assignee' => 'Assign To Staff',
+        'label_assignee' => 'Assign To User',
 
         'help_notify' => 'Set whether an email is sent to the customer after this status is set to the order. This option can be overridden from the order edit page.',
         'help_notify_customer' => 'Set whether to send a status update email to the customer',
 
-        'help_assignee_group' => 'A notification is sent out to all the staff in the selected group',
+        'help_assignee_group' => 'A notification is sent out to all the user in the selected group',
 
         'alert_already_added' => 'The selected %s must be different from the current %s',
         'alert_invalid_action' => 'Invalid action.',
@@ -1088,7 +1088,7 @@ return [
         'label_low_stock_alert' => 'Low Stock Alerts',
         'label_low_stock_threshold' => 'Low Stock Threshold',
 
-        'column_staff_name' => 'Staff Name',
+        'column_staff_name' => 'User Name',
         'column_quantity' => 'Quantity',
         'column_created_at' => 'Calculated At',
 
@@ -1115,7 +1115,7 @@ return [
         'label_joinable' => 'Is Joinable',
 
         'help_tables' => 'Select a table to attach to this location.',
-        'help_extra_capacity' => 'Used internally by the staff to determine table convenience/inconvenience.',
+        'help_extra_capacity' => 'Used internally by the user to determine table convenience/inconvenience.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
         'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',

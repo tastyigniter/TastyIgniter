@@ -35,7 +35,7 @@ class UserPanel
             'account' => [
                 'label' => 'admin::lang.text_edit_details',
                 'iconCssClass' => 'fa fa-user fa-fw',
-                'url' => admin_url('staffs/account'),
+                'url' => admin_url('users/account'),
                 'priority' => 20,
             ],
             'logout' => [

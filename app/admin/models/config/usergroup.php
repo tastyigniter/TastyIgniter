@@ -4,7 +4,7 @@ $config['list']['toolbar'] = [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
-            'href' => 'staffs',
+            'href' => 'users',
         ],
         'create' => [
             'label' => 'lang:admin::lang.button_new',

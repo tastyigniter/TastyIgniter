@@ -17,7 +17,7 @@ class UserRoles extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.user_roles.text_title',
             'emptyMessage' => 'lang:admin::lang.user_roles.text_empty',
             'defaultSort' => ['user_role_id', 'DESC'],
-            'configFile' => 'staffrole',
+            'configFile' => 'userrole',
         ],
     ];
 
@@ -44,7 +44,7 @@ class UserRoles extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'user_roles',
         ],
-        'configFile' => 'staffrole',
+        'configFile' => 'userrole',
     ];
 
     protected $requiredPermissions = 'Admin.Staffs';
@@ -53,6 +53,6 @@ class UserRoles extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('staffs', 'users');
+        AdminMenu::setContext('users', 'system');
     }
 }

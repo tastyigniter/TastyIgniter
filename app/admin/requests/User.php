@@ -27,13 +27,13 @@ class User extends FormRequest
     public function rules()
     {
         $passwordRule = optional($this->getForm())->context != 'create'
-            ? 'sometimes' : 'required_if:user.send_invite,0';
+            ? 'sometimes' : 'required_if:send_invite,0';
 
         $rules = [
             'name' => ['required', 'between:2,128'],
             'email' => ['required', 'max:96', 'email:filter', 'unique:users,email'],
             'username' => ['required', 'alpha_dash', 'between:2,32', 'unique:users,username'],
-            'password' => [$passwordRule, 'between:6,32', 'same:user.password_confirm'],
+            'password' => [$passwordRule, 'between:6,32', 'same:password_confirm'],
         ];
 
         if (optional($this->getForm())->context != 'account') {

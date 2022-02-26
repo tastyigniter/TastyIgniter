@@ -28,6 +28,8 @@ class User extends AuthUserModel
 
     protected $primaryKey = 'user_id';
 
+    public $timestamps = TRUE;
+
     protected $fillable = ['username', 'super_user'];
 
     protected $appends = ['staff_name'];
@@ -166,7 +168,7 @@ class User extends AuthUserModel
     }
 
     /**
-     * Reset a staff password,
+     * Reset a user password,
      */
     public function resetPassword()
     {
@@ -188,7 +190,7 @@ class User extends AuthUserModel
 
     public function hasPermission($permissions, $checkAll = TRUE)
     {
-        // Bail out if the staff is a super user
+        // Bail out if the user is a super user
         if ($this->isSuperUser())
             return TRUE;
 
@@ -286,5 +288,29 @@ class User extends AuthUserModel
     public function getLocale()
     {
         return optional($this->language)->code;
+    }
+
+    /**
+     * Create a new or update existing user locations
+     *
+     * @param array $locations
+     *
+     * @return bool
+     */
+    public function addLocations($locations = [])
+    {
+        return $this->locations()->sync($locations);
+    }
+
+    /**
+     * Create a new or update existing user groups
+     *
+     * @param array $groups
+     *
+     * @return bool
+     */
+    public function addGroups($groups = [])
+    {
+        return $this->groups()->sync($groups);
     }
 }

@@ -58,7 +58,7 @@ class UserGroup extends Model
 
     public function getStaffCountAttribute($value)
     {
-        return $this->staffs->count();
+        return $this->users->count();
     }
 
     //
@@ -90,7 +90,7 @@ class UserGroup extends Model
      */
     public function listAssignees()
     {
-        return $this->staffs->filter(function (User $user) {
+        return $this->users->filter(function (User $user) {
             return $user->isEnabled() && $user->canAssignTo();
         })->values();
     }

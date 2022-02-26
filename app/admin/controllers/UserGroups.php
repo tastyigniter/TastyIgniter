@@ -18,7 +18,7 @@ class UserGroups extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.user_groups.text_title',
             'emptyMessage' => 'lang:admin::lang.user_groups.text_empty',
             'defaultSort' => ['user_group_id', 'DESC'],
-            'configFile' => 'staffgroup',
+            'configFile' => 'usergroup',
         ],
     ];
 
@@ -45,7 +45,7 @@ class UserGroups extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'user_groups',
         ],
-        'configFile' => 'staffgroup',
+        'configFile' => 'usergroup',
     ];
 
     protected $requiredPermissions = 'Admin.StaffGroups';
@@ -54,7 +54,7 @@ class UserGroups extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('staffs', 'users');
+        AdminMenu::setContext('users', 'system');
     }
 
     public function formAfterSave()

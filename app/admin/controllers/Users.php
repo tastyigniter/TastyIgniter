@@ -60,7 +60,7 @@ class Users extends \Admin\Classes\AdminController
             $this->requiredPermissions = null;
         }
 
-        AdminMenu::setContext('staffs', 'users');
+        AdminMenu::setContext('users', 'system');
     }
 
     public function account()
