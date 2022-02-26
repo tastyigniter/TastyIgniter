@@ -38,8 +38,8 @@ class AssigneeUpdated implements ActivityInterface
 
         $recipients = [];
         foreach ($assignableLog->assignable->listGroupAssignees() as $assignee) {
-            if ($user && $assignee->getKey() === $user->staff->getKey()) continue;
-            $recipients[] = $assignee->user;
+            if ($user && $assignee->getKey() === $user->getKey()) continue;
+            $recipients[] = $assignee;
         }
 
         activity()->logActivity(new self($type, $assignableLog->assignable, $user), $recipients);
@@ -81,7 +81,7 @@ class AssigneeUpdated implements ActivityInterface
             'assignee_id' => $this->subject->assignee_id,
             'assignee_name' => optional($this->subject->assignee)->staff_name,
             'assignee_group_id' => $this->subject->assignee_group_id,
-            'assignee_group_name' => optional($this->subject->assignee_group)->staff_group_name,
+            'assignee_group_name' => optional($this->subject->assignee_group)->user_group_name,
         ];
     }
 

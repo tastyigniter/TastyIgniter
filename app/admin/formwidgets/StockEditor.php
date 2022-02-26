@@ -85,7 +85,7 @@ class StockEditor extends BaseFormWidget
             $stockActionState = array_get($saveData, 'stock_action.state');
 
             $formWidget->model->updateStock($stockActionQty, $stockActionState, [
-                'staff_id' => $this->controller->getUser()->staff->getKey(),
+                'user_id' => $this->controller->getUser()->getKey(),
             ]);
         }
 

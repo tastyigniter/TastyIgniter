@@ -3,6 +3,8 @@
 namespace Admin\Models;
 
 use Admin\Classes\PermissionManager;
+use Admin\Classes\UserState;
+use Admin\Traits\Locationable;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
@@ -15,6 +17,9 @@ class User extends AuthUserModel
 {
     use Purgeable;
     use SendsMailTemplate;
+    use Locationable;
+
+    const LOCATIONABLE_RELATION = 'locations';
 
     /**
      * @var string The database table name
@@ -30,7 +35,10 @@ class User extends AuthUserModel
     protected $hidden = ['password'];
 
     protected $casts = [
-        'staff_id' => 'integer',
+        'user_role_id' => 'integer',
+        'sale_permission' => 'integer',
+        'language_id' => 'integer',
+        'status' => 'boolean',
         'super_user' => 'boolean',
         'is_activated' => 'boolean',
         'reset_time' => 'datetime',
@@ -40,14 +48,74 @@ class User extends AuthUserModel
     ];
 
     public $relation = [
+        'hasMany' => [
+            'assignable_logs' => ['Admin\Models\AssignableLog', 'foreignKey' => 'assignee_id'],
+        ],
         'belongsTo' => [
-            'staff' => ['Admin\Models\Staff', 'foreignKey' => 'staff_id'],
+            'role' => ['Admin\Models\UserRole', 'foreignKey' => 'user_role_id'],
+            'language' => ['System\Models\Language'],
+        ],
+        'belongsToMany' => [
+            'groups' => ['Admin\Models\UserGroup', 'table' => 'users_groups'],
+        ],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
         ],
     ];
 
-    protected $with = ['staff'];
-
     protected $purgeable = ['password_confirm', 'send_invite'];
+
+    public function getStaffNameAttribute()
+    {
+        return $this->name;
+    }
+
+    public function getStaffEmailAttribute()
+    {
+        return $this->email;
+    }
+
+    public function getFullNameAttribute($value)
+    {
+        return $this->name;
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return '//www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'.png?d=mm';
+    }
+
+    public static function getDropdownOptions()
+    {
+        return static::isEnabled()->dropdown('name');
+    }
+
+    //
+    // Scopes
+    //
+
+    /**
+     * Scope a query to only include enabled staff
+     * @return $this
+     */
+    public function scopeIsEnabled($query)
+    {
+        return $query->where('status', 1);
+    }
+
+    public function scopeWhereNotSuperUser($query)
+    {
+        $query->where('super_user', '!=', 1);
+    }
+
+    public function scopeWhereIsSuperUser($query)
+    {
+        $query->where('super_user', 1);
+    }
+
+    //
+    // Events
+    //
 
     protected function afterCreate()
     {
@@ -56,6 +124,12 @@ class User extends AuthUserModel
         if ($this->send_invite) {
             $this->sendInvite();
         }
+    }
+
+    protected function beforeDelete()
+    {
+        $this->groups()->detach();
+        $this->locations()->detach();
     }
 
     protected function sendInvite()
@@ -76,7 +150,7 @@ class User extends AuthUserModel
     public function beforeLogin()
     {
         app('translator.localization')->setSessionLocale(
-            optional($this->staff->language)->code ?? setting('default_language')
+            optional($this->language)->code ?? setting('default_language')
         );
     }
 
@@ -84,14 +158,6 @@ class User extends AuthUserModel
     {
         $this->last_login = Carbon::now();
         $this->save();
-    }
-
-    public function getStaffNameAttribute()
-    {
-        if (!$staff = $this->staff)
-            return null;
-
-        return $staff->staff_name;
     }
 
     public function isSuperUser()
@@ -109,11 +175,6 @@ class User extends AuthUserModel
         $this->save();
 
         return $resetCode;
-    }
-
-    public function getReminderEmail()
-    {
-        return $this->staff->staff_email;
     }
 
     //
@@ -145,7 +206,7 @@ class User extends AuthUserModel
 
     public function getPermissions()
     {
-        $role = $this->staff->role;
+        $role = $this->role;
 
         $permissions = [];
         if ($role && is_array($role->permissions)) {
@@ -161,7 +222,7 @@ class User extends AuthUserModel
 
     public function hasLocationAccess($location)
     {
-        return $this->staff->locations->contains(function ($model) use ($location) {
+        return $this->locations->contains(function ($model) use ($location) {
             return $model->location_id === $location->location_id;
         });
     }
@@ -169,7 +230,7 @@ class User extends AuthUserModel
     public function mailGetRecipients($type)
     {
         return [
-            [$this->staff->staff_email, $this->staff_name],
+            [$this->email, $this->name],
         ];
     }
 
@@ -179,9 +240,51 @@ class User extends AuthUserModel
 
         return array_merge($model->toArray(), [
             'staff' => $model,
-            'staff_name' => $model->staff_name,
-            'staff_email' => $model->staff->staff_email,
+            'staff_name' => $model->name,
+            'staff_email' => $model->email,
             'username' => $model->username,
         ]);
+    }
+
+    //
+    // Assignment
+    //
+
+    public function canAssignTo()
+    {
+        return !UserState::forUser($this->user)->isAway();
+    }
+
+    public function hasGlobalAssignableScope()
+    {
+        return $this->sale_permission === 1;
+    }
+
+    public function hasGroupAssignableScope()
+    {
+        return $this->sale_permission === 2;
+    }
+
+    public function hasRestrictedAssignableScope()
+    {
+        return $this->sale_permission === 3;
+    }
+
+    //
+    // Helpers
+    //
+
+    /**
+     * Return the dates of all staff
+     * @return array
+     */
+    public function getUserDates()
+    {
+        return $this->pluckDates('created_at');
+    }
+
+    public function getLocale()
+    {
+        return optional($this->language)->code;
     }
 }

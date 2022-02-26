@@ -5,9 +5,9 @@ namespace Admin\Models;
 use Igniter\Flame\Database\Model;
 
 /**
- * StaffGroup Model Class
+ * UserGroup Model Class
  */
-class StaffGroup extends Model
+class UserGroup extends Model
 {
     public const AUTO_ASSIGN_ROUND_ROBIN = 1;
 
@@ -16,19 +16,19 @@ class StaffGroup extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'staff_groups';
+    protected $table = 'user_groups';
 
     /**
      * @var string The database table primary key
      */
-    protected $primaryKey = 'staff_group_id';
+    protected $primaryKey = 'user_group_id';
 
     public $relation = [
         'hasMany' => [
             'assignable_logs' => ['Admin\Models\AssignableLog', 'foreignKey' => 'assignee_group_id'],
         ],
         'belongsToMany' => [
-            'staffs' => ['Admin\Models\Staff', 'table' => 'staffs_groups'],
+            'users' => ['Admin\Models\User', 'table' => 'users_groups'],
         ],
     ];
 
@@ -43,16 +43,16 @@ class StaffGroup extends Model
 
     public static function getDropdownOptions()
     {
-        return static::dropdown('staff_group_name');
+        return static::dropdown('user_group_name');
     }
 
     public static function listDropdownOptions()
     {
-        return self::select('staff_group_id', 'staff_group_name', 'description')
+        return self::select('user_group_id', 'user_group_name', 'description')
             ->get()
-            ->keyBy('staff_group_id')
+            ->keyBy('user_group_id')
             ->map(function ($model) {
-                return [$model->staff_group_name, $model->description];
+                return [$model->user_group_name, $model->description];
             });
     }
 
@@ -90,13 +90,13 @@ class StaffGroup extends Model
      */
     public function listAssignees()
     {
-        return $this->staffs->filter(function (Staff $staff) {
-            return $staff->isEnabled() && $staff->canAssignTo();
+        return $this->staffs->filter(function (User $user) {
+            return $user->isEnabled() && $user->canAssignTo();
         })->values();
     }
 
     /**
-     * @return \Admin\Models\Staff|object
+     * @return \Admin\Models\User|object
      */
     public function findAvailableAssignee()
     {
@@ -110,7 +110,7 @@ class StaffGroup extends Model
 
         $logs = $query->pluck('assign_value', 'assignee_id');
 
-        $assignees = $this->listAssignees()->map(function (Staff $model) use ($logs) {
+        $assignees = $this->listAssignees()->map(function (User $model) use ($logs) {
             $model->assign_value = $logs[$model->getKey()] ?? 0;
 
             return $model;

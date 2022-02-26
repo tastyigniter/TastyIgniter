@@ -6,7 +6,7 @@ use Admin\Facades\AdminAuth;
 use Admin\Facades\AdminMenu;
 use Igniter\Flame\Exception\ApplicationException;
 
-class Staffs extends \Admin\Classes\AdminController
+class Users extends \Admin\Classes\AdminController
 {
     public $implement = [
         'Admin\Actions\ListController',
@@ -16,38 +16,38 @@ class Staffs extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Staff',
+            'model' => 'Admin\Models\User',
             'title' => 'lang:admin::lang.staff.text_title',
             'emptyMessage' => 'lang:admin::lang.staff.text_empty',
-            'defaultSort' => ['staff_id', 'DESC'],
-            'configFile' => 'staff',
+            'defaultSort' => ['user_id', 'DESC'],
+            'configFile' => 'user',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.staff.text_form_name',
-        'model' => 'Admin\Models\Staff',
-        'request' => 'Admin\Requests\Staff',
+        'model' => 'Admin\Models\User',
+        'request' => 'Admin\Requests\User',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
-            'redirect' => 'staffs/edit/{staff_id}',
-            'redirectClose' => 'staffs',
-            'redirectNew' => 'staffs/create',
+            'redirect' => 'users/edit/{user_id}',
+            'redirectClose' => 'users',
+            'redirectNew' => 'users/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
-            'redirect' => 'staffs/edit/{staff_id}',
-            'redirectClose' => 'staffs',
-            'redirectNew' => 'staffs/create',
+            'redirect' => 'users/edit/{user_id}',
+            'redirectClose' => 'users',
+            'redirectNew' => 'users/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
-            'redirect' => 'staffs',
+            'redirect' => 'users',
         ],
         'delete' => [
-            'redirect' => 'staffs',
+            'redirect' => 'users',
         ],
-        'configFile' => 'staff',
+        'configFile' => 'user',
     ];
 
     protected $requiredPermissions = 'Admin.Staffs';
@@ -72,9 +72,9 @@ class Staffs extends \Admin\Classes\AdminController
     {
         $result = $this->asExtension('FormController')->edit_onSave('account', $this->currentUser->user_id);
 
-        $usernameChanged = $this->currentUser->username != post('Staff[user][username]');
-        $passwordChanged = strlen(post('Staff[user][password]'));
-        $languageChanged = $this->currentUser->language != post('Staff[language_id]');
+        $usernameChanged = $this->currentUser->username != post('User[username]');
+        $passwordChanged = strlen(post('User[password]'));
+        $languageChanged = $this->currentUser->language != post('User[language_id]');
         if ($usernameChanged || $passwordChanged || $languageChanged) {
             $this->currentUser->reload()->reloadRelations();
             AdminAuth::login($this->currentUser, TRUE);
@@ -90,10 +90,10 @@ class Staffs extends \Admin\Classes\AdminController
         }
 
         $id = post('recordId', $recordId);
-        if ($staff = $this->formFindModelObject((int)$id)) {
+        if ($user = $this->formFindModelObject((int)$id)) {
             AdminAuth::stopImpersonate();
-            AdminAuth::impersonate($staff->user);
-            flash()->success(sprintf(lang('admin::lang.customers.alert_impersonate_success'), $staff->staff_name));
+            AdminAuth::impersonate($user);
+            flash()->success(sprintf(lang('admin::lang.customers.alert_impersonate_success'), $user->name));
         }
     }
 
@@ -114,9 +114,9 @@ class Staffs extends \Admin\Classes\AdminController
     public function formExtendFields($form)
     {
         if (!AdminAuth::isSuperUser()) {
-            $form->removeField('staff_role_id');
-            $form->removeField('staff_status');
-            $form->removeField('user[super_user]');
+            $form->removeField('user_role_id');
+            $form->removeField('status');
+            $form->removeField('super_user');
         }
     }
 

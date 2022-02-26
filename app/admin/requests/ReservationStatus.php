@@ -25,8 +25,8 @@ class ReservationStatus extends FormRequest
             'comment' => ['max:1500'],
             'notify' => ['sometimes', 'required', 'boolean'],
 
-            'assignee_group_id' => ['sometimes', 'required', 'integer', 'exists:staff_groups,staff_group_id'],
-            'assignee_id' => ['integer', 'exists:staffs,staff_id'],
+            'assignee_group_id' => ['sometimes', 'required', 'integer', 'exists:user_groups,user_group_id'],
+            'assignee_id' => ['integer', 'exists:users,user_id'],
         ];
     }
 

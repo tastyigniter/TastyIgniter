@@ -4,7 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Facades\AdminMenu;
 
-class StaffRoles extends \Admin\Classes\AdminController
+class UserRoles extends \Admin\Classes\AdminController
 {
     public $implement = [
         'Admin\Actions\ListController',
@@ -13,36 +13,36 @@ class StaffRoles extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\StaffRole',
-            'title' => 'lang:admin::lang.staff_roles.text_title',
-            'emptyMessage' => 'lang:admin::lang.staff_roles.text_empty',
-            'defaultSort' => ['staff_role_id', 'DESC'],
+            'model' => 'Admin\Models\UserRole',
+            'title' => 'lang:admin::lang.user_roles.text_title',
+            'emptyMessage' => 'lang:admin::lang.user_roles.text_empty',
+            'defaultSort' => ['user_role_id', 'DESC'],
             'configFile' => 'staffrole',
         ],
     ];
 
     public $formConfig = [
-        'name' => 'lang:admin::lang.staff_roles.text_form_name',
-        'model' => 'Admin\Models\StaffRole',
-        'request' => 'Admin\Requests\StaffRole',
+        'name' => 'lang:admin::lang.user_roles.text_form_name',
+        'model' => 'Admin\Models\UserRole',
+        'request' => 'Admin\Requests\UserRole',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
-            'redirect' => 'staff_roles/edit/{staff_role_id}',
-            'redirectClose' => 'staff_roles',
-            'redirectNew' => 'staff_roles/create',
+            'redirect' => 'user_roles/edit/{user_role_id}',
+            'redirectClose' => 'user_roles',
+            'redirectNew' => 'user_roles/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
-            'redirect' => 'staff_roles/edit/{staff_role_id}',
-            'redirectClose' => 'staff_roles',
-            'redirectNew' => 'staff_roles/create',
+            'redirect' => 'user_roles/edit/{user_role_id}',
+            'redirectClose' => 'user_roles',
+            'redirectNew' => 'user_roles/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
-            'redirect' => 'staff_roles',
+            'redirect' => 'user_roles',
         ],
         'delete' => [
-            'redirect' => 'staff_roles',
+            'redirect' => 'user_roles',
         ],
         'configFile' => 'staffrole',
     ];

@@ -136,7 +136,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.orders.column_assignee_group',
         'type' => 'text',
         'relation' => 'assignee_group',
-        'select' => 'staff_group_name',
+        'select' => 'user_group_name',
         'searchable' => TRUE,
         'invisible' => TRUE,
     ],

@@ -159,10 +159,10 @@ return [
         'reservation' => 'Reservations',
         'user' => 'Users',
         'customer' => 'Customers',
-        'staff' => 'Staff',
+        'staff' => 'Backend Users',
         'customer_group' => 'Groups',
-        'staff_group' => 'Groups',
-        'staff_role' => 'Roles',
+        'user_group' => 'Groups',
+        'user_role' => 'Roles',
         'activities' => 'Activities',
         'restaurant' => 'Restaurant',
         'location' => 'Locations',
@@ -873,8 +873,8 @@ return [
         'assign_reservations' => 'Assign reservations',
         'payments' => 'Manage payment gateways',
         'reservations' => 'Manage reservations',
-        'staff_groups' => 'Manage staff groups',
-        'staffs' => 'Create, edit and delete staffs',
+        'user_groups' => 'Manage user groups',
+        'staffs' => 'Create, edit and delete administrators',
         'statuses' => 'Manage orders and reservations statuses',
         'tables' => 'Create, edit and delete reservations tables',
         'mealtimes' => 'Create, edit and delete mealtimes',
@@ -950,7 +950,7 @@ return [
         'text_tab_desc_setup' => 'Configure order, reservation, invoicing and taxation settings',
     ],
 
-    'staff_groups' => [
+    'user_groups' => [
         'text_title' => 'Staff Groups',
         'text_form_name' => 'Staff Group',
         'text_empty' => 'There are no staff groups available.',
@@ -973,7 +973,7 @@ return [
         'help_assignment_availability' => 'Allow staff to control their availability for automatic order assignment',
     ],
 
-    'staff_roles' => [
+    'user_roles' => [
         'text_title' => 'Staff Roles',
         'text_form_name' => 'Staff Roles',
         'text_tab_permission' => 'Permissions',

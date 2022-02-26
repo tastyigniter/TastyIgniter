@@ -80,7 +80,7 @@ class UserPanel
 
     public function getUserName()
     {
-        return $this->user->staff->staff_name;
+        return $this->user->name;
     }
 
     public function getLocationName()
@@ -90,7 +90,7 @@ class UserPanel
 
     public function getAvatarUrl()
     {
-        return $this->user->staff->avatar_url;
+        return $this->user->avatar_url;
     }
 
     public function hasActiveLocation()
@@ -100,12 +100,12 @@ class UserPanel
 
     public function listGroupNames()
     {
-        return $this->user->staff->groups->pluck('staff_group_name')->all();
+        return $this->user->groups->pluck('user_group_name')->all();
     }
 
     public function getRoleName()
     {
-        return optional($this->user->staff->role)->name;
+        return optional($this->user->role)->name;
     }
 
     public function listLocations()

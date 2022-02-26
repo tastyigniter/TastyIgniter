@@ -29,9 +29,9 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedSettings();
 
-        $this->seedStaffGroups();
+        $this->seedUserGroups();
 
-        $this->seedStaffRoles();
+        $this->seedUserRoles();
 
         $this->seedStatuses();
     }
@@ -177,67 +177,67 @@ class InitialSchemaSeeder extends Seeder
         DB::table('settings')->insert($this->getSeedRecords('settings'));
     }
 
-    protected function seedStaffGroups()
+    protected function seedUserGroups()
     {
-        if (DB::table('staff_groups')->count())
+        if (DB::table('user_groups')->count())
             return;
 
-        DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Owners',
+        DB::table('user_groups')->insert([
+            'user_group_name' => 'Owners',
             'description' => 'Default group for owners',
         ]);
 
-        DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Managers',
+        DB::table('user_groups')->insert([
+            'user_group_name' => 'Managers',
             'description' => 'Default group for managers',
         ]);
 
-        DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Waiters',
+        DB::table('user_groups')->insert([
+            'user_group_name' => 'Waiters',
             'description' => 'Default group for waiters.',
         ]);
 
-        DB::table('staff_groups')->insert([
-            'staff_group_name' => 'Delivery',
+        DB::table('user_groups')->insert([
+            'user_group_name' => 'Delivery',
             'description' => 'Default group for delivery drivers.',
         ]);
 
-        DB::table('staff_groups')->update(['updated_at' => now(), 'created_at' => now()]);
+        DB::table('user_groups')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
-    protected function seedStaffRoles()
+    protected function seedUserRoles()
     {
-        if (DB::table('staff_roles')->count())
+        if (DB::table('user_roles')->count())
             return;
 
-        DB::table('staff_roles')->insert([
+        DB::table('user_roles')->insert([
             'name' => 'Owner',
             'code' => 'owner',
             'description' => 'Default role for restaurant owners',
         ]);
 
-        DB::table('staff_roles')->insert([
+        DB::table('user_roles')->insert([
             'name' => 'Manager',
             'code' => 'manager',
             'description' => 'Default role for restaurant managers.',
             'permissions' => 'a:16:{s:15:"Admin.Dashboard";s:1:"1";s:16:"Admin.Categories";s:1:"1";s:14:"Admin.Statuses";s:1:"1";s:12:"Admin.Staffs";s:1:"1";s:17:"Admin.StaffGroups";s:1:"1";s:15:"Admin.Customers";s:1:"1";s:20:"Admin.CustomerGroups";s:1:"1";s:14:"Admin.Payments";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";s:12:"Admin.Tables";s:1:"1";s:15:"Admin.Locations";s:1:"1";s:15:"Admin.Mealtimes";s:1:"1";s:11:"Admin.Menus";s:1:"1";s:11:"Site.Themes";s:1:"1";s:18:"Admin.MediaManager";s:1:"1";}',
         ]);
 
-        DB::table('staff_roles')->insert([
+        DB::table('user_roles')->insert([
             'name' => 'Waiter',
             'code' => 'waiter',
             'description' => 'Default role for restaurant waiters.',
             'permissions' => 'a:4:{s:16:"Admin.Categories";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";s:11:"Admin.Menus";s:1:"1";}',
         ]);
 
-        DB::table('staff_roles')->insert([
+        DB::table('user_roles')->insert([
             'name' => 'Delivery',
             'code' => 'delivery',
             'description' => 'Default role for restaurant delivery.',
             'permissions' => 'a:3:{s:14:"Admin.Statuses";s:1:"1";s:18:"Admin.Reservations";s:1:"1";s:12:"Admin.Orders";s:1:"1";}',
         ]);
 
-        DB::table('staff_roles')->update(['updated_at' => now(), 'created_at' => now()]);
+        DB::table('user_roles')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
     protected function seedStatuses()

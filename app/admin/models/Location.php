@@ -47,7 +47,7 @@ class Location extends AbstractLocation
             'country' => ['System\Models\Country', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
         'morphedByMany' => [
-            'staffs' => ['Admin\Models\Staff', 'name' => 'locationable'],
+            'users' => ['Admin\Models\User', 'name' => 'locationable'],
             'tables' => ['Admin\Models\Table', 'name' => 'locationable'],
         ],
     ];

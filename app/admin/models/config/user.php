@@ -16,8 +16,8 @@ $config['list']['filter'] = [
         'role' => [
             'label' => 'lang:admin::lang.staff.text_filter_role',
             'type' => 'select',
-            'conditions' => 'staff_role_id = :filtered',
-            'modelClass' => 'Admin\Models\StaffRole',
+            'conditions' => 'user_role_id = :filtered',
+            'modelClass' => 'Admin\Models\UserRole',
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -36,18 +36,18 @@ $config['list']['toolbar'] = [
         'create' => [
             'label' => 'lang:admin::lang.button_new',
             'class' => 'btn btn-primary',
-            'href' => 'staffs/create',
+            'href' => 'users/create',
         ],
         'groups' => [
-            'label' => 'lang:admin::lang.side_menu.staff_group',
+            'label' => 'lang:admin::lang.side_menu.user_group',
             'class' => 'btn btn-default',
-            'href' => 'staff_groups',
+            'href' => 'user_groups',
             'permission' => 'Admin.StaffGroups',
         ],
         'roles' => [
-            'label' => 'lang:admin::lang.side_menu.staff_role',
+            'label' => 'lang:admin::lang.side_menu.user_role',
             'class' => 'btn btn-default',
-            'href' => 'staff_roles',
+            'href' => 'user_roles',
         ],
     ],
 ];
@@ -57,7 +57,7 @@ $config['list']['bulkActions'] = [
         'label' => 'lang:admin::lang.list.actions.label_status',
         'type' => 'dropdown',
         'class' => 'btn btn-light',
-        'statusColumn' => 'staff_status',
+        'statusColumn' => 'status',
         'menuItems' => [
             'enable' => [
                 'label' => 'lang:admin::lang.list.actions.label_enable',
@@ -84,7 +84,7 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'staffs/edit/{staff_id}',
+            'href' => 'users/edit/{user_id}',
         ],
     ],
     'impersonate' => [
@@ -94,25 +94,25 @@ $config['list']['columns'] = [
         'attributes' => [
             'class' => 'btn btn-outline-secondary',
             'data-request' => 'onImpersonate',
-            'data-request-data' => 'recordId: \'{staff_id}\'',
+            'data-request-data' => 'recordId: \'{user_id}\'',
             'data-request-confirm' => 'admin::lang.customers.alert_impersonate_confirm',
         ],
     ],
-    'staff_name' => [
+    'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
-    'staff_email' => [
+    'email' => [
         'label' => 'lang:admin::lang.label_email',
         'type' => 'text',
         'searchable' => TRUE,
         'invisible' => TRUE,
     ],
-    'staff_group_name' => [
+    'user_group_name' => [
         'label' => 'lang:admin::lang.staff.column_group',
         'relation' => 'groups',
-        'select' => 'staff_group_name',
+        'select' => 'user_group_name',
     ],
     'staff_role_name' => [
         'label' => 'lang:admin::lang.staff.column_role',
@@ -129,15 +129,13 @@ $config['list']['columns'] = [
     'last_login' => [
         'label' => 'lang:admin::lang.staff.column_last_login',
         'type' => 'timetense',
-        'relation' => 'user',
-        'select' => 'last_login',
     ],
-    'staff_status' => [
+    'status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
         'invisible' => TRUE,
     ],
-    'staff_id' => [
+    'user_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
@@ -157,7 +155,7 @@ $config['form']['toolbar'] = [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
-            'href' => 'staffs',
+            'href' => 'users',
         ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
@@ -195,17 +193,17 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'staff_name' => [
+    'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'left',
     ],
-    'staff_email' => [
+    'email' => [
         'label' => 'lang:admin::lang.label_email',
         'type' => 'text',
         'span' => 'right',
     ],
-    'user[username]' => [
+    'username' => [
         'label' => 'lang:admin::lang.staff.label_username',
         'type' => 'text',
         'span' => 'left',
@@ -218,7 +216,7 @@ $config['form']['fields'] = [
         'span' => 'right',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
-    'user[send_invite]' => [
+    'send_invite' => [
         'label' => 'lang:admin::lang.staff.label_send_invite',
         'type' => 'checkbox',
         'default' => TRUE,
@@ -226,7 +224,7 @@ $config['form']['fields'] = [
         'options' => [],
         'placeholder' => 'lang:admin::lang.staff.help_send_invite',
     ],
-    'user[password]' => [
+    'password' => [
         'label' => 'lang:admin::lang.staff.label_password',
         'type' => 'password',
         'span' => 'left',
@@ -236,7 +234,7 @@ $config['form']['fields'] = [
             'condition' => 'unchecked',
         ],
     ],
-    'user[password_confirm]' => [
+    'password_confirm' => [
         'label' => 'lang:admin::lang.staff.label_confirm_password',
         'type' => 'password',
         'span' => 'right',
@@ -260,18 +258,18 @@ $config['form']['fields'] = [
         'context' => ['create', 'edit'],
         'span' => 'right',
         'relationFrom' => 'groups',
-        'nameFrom' => 'staff_group_name',
+        'nameFrom' => 'user_group_name',
         'comment' => 'lang:admin::lang.staff.help_groups',
     ],
-    'staff_role_id' => [
+    'user_role_id' => [
         'label' => 'lang:admin::lang.staff.label_role',
         'type' => 'radiolist',
         'span' => 'left',
         'context' => ['create', 'edit'],
-        'options' => ['Admin\Models\StaffRole', 'listDropdownOptions'],
+        'options' => ['Admin\Models\UserRole', 'listDropdownOptions'],
         'commentAbove' => 'lang:admin::lang.staff.help_role',
     ],
-    'user[super_user]' => [
+    'super_user' => [
         'label' => 'lang:admin::lang.staff.label_super_staff',
         'type' => 'switch',
         'context' => ['create', 'edit'],
@@ -279,7 +277,7 @@ $config['form']['fields'] = [
         'cssClass' => 'flex-width',
         'comment' => 'lang:admin::lang.staff.help_super_staff',
     ],
-    'staff_status' => [
+    'status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
         'context' => ['create', 'edit'],

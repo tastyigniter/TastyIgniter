@@ -6,17 +6,17 @@ use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
 use InvalidArgumentException;
 
-class StaffRole extends Model
+class UserRole extends Model
 {
     /**
      * @var string The database table name
      */
-    protected $table = 'staff_roles';
+    protected $table = 'user_roles';
 
     /**
      * @var string The database table primary key
      */
-    protected $primaryKey = 'staff_role_id';
+    protected $primaryKey = 'user_role_id';
 
     /**
      * @var array The model table column to convert to dates on insert/update
@@ -25,7 +25,7 @@ class StaffRole extends Model
 
     public $relation = [
         'hasMany' => [
-            'staffs' => ['Admin\Models\Staff', 'foreignKey' => 'staff_role_id', 'otherKey' => 'staff_role_id'],
+            'users' => ['Admin\Models\User', 'foreignKey' => 'user_role_id', 'otherKey' => 'user_role_id'],
         ],
     ];
 
@@ -40,9 +40,9 @@ class StaffRole extends Model
 
     public static function listDropdownOptions()
     {
-        return self::select('staff_role_id', 'name', 'description')
+        return self::select('user_role_id', 'name', 'description')
             ->get()
-            ->keyBy('staff_role_id')
+            ->keyBy('user_role_id')
             ->map(function ($model) {
                 return [$model->name, $model->description];
             });
