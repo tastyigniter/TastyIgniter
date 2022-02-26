@@ -2,7 +2,7 @@
 
 namespace Admin\Classes;
 
-use Admin\Models\Users_model;
+use Admin\Models\User as UserModel;
 use Exception;
 use Igniter\Flame\Auth\Manager;
 
@@ -85,7 +85,7 @@ class User extends Manager
 
     public function register(array $attributes, $activate = FALSE)
     {
-        $user = new Users_model;
+        $user = new UserModel;
         $user->name = $attributes['name'] ?? null;
         $user->email = $attributes['email'] ?? null;
         $user->username = $attributes['username'];
