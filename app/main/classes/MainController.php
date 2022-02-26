@@ -33,7 +33,7 @@ use System\Classes\BaseComponent;
 use System\Classes\BaseController;
 use System\Classes\ComponentManager;
 use System\Helpers\ViewHelper;
-use System\Models\Request_logs_model;
+use System\Models\RequestLog;
 use System\Template\Extension\BladeExtension as SystemBladeExtension;
 use System\Traits\AssetMaker;
 use System\Traits\VerifiesCsrfToken;
@@ -158,9 +158,6 @@ class MainController extends BaseController
 
         $this->initTemplateEnvironment();
 
-        // @deprecated This event will be deprecated soon, use controller.beforeRemap
-        $this->fireEvent('controller.afterConstructor', [$this]);
-
         self::$controller = $this;
     }
 
@@ -191,7 +188,7 @@ class MainController extends BaseController
 
             // Log the 404 request
             if (!App::runningUnitTests())
-                Request_logs_model::createLog(404);
+                RequestLog::createLog(404);
 
             if (!$page = $this->router->findByUrl('/404'))
                 return Response::make(View::make('main::404'), $this->statusCode);

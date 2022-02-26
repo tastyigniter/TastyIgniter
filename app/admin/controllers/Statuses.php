@@ -13,17 +13,17 @@ class Statuses extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Statuses_model',
+            'model' => 'Admin\Models\Status',
             'title' => 'lang:admin::lang.statuses.text_title',
             'emptyMessage' => 'lang:admin::lang.statuses.text_empty',
             'defaultSort' => ['status_id', 'DESC'],
-            'configFile' => 'statuses_model',
+            'configFile' => 'status',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:admin::lang.statuses.text_form_name',
-        'model' => 'Admin\Models\Statuses_model',
+        'model' => 'Admin\Models\Status',
         'request' => 'Admin\Requests\Status',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -44,7 +44,7 @@ class Statuses extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'statuses',
         ],
-        'configFile' => 'statuses_model',
+        'configFile' => 'status',
     ];
 
     protected $requiredPermissions = 'Admin.Statuses';
@@ -54,24 +54,5 @@ class Statuses extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('statuses', 'sales');
-    }
-
-    public function comment_notify()
-    {
-        if (get('status_id')) {
-            $status = $this->Statuses_model->getStatus(get('status_id'));
-
-            $json = ['comment' => $status['status_comment'], 'notify' => $status['notify_customer']];
-
-            return $json;
-        }
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-        ];
-
-        return $this->validatePasses($form->getSaveData(), $rules);
     }
 }

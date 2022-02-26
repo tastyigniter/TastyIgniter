@@ -2,7 +2,7 @@
 
 namespace Admin\Database\Migrations;
 
-use Admin\Models\Stocks_model;
+use Admin\Models\Stock;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +84,7 @@ class CreateStocksTable extends Migration
 
                 DB::table('stock_history')->insert([
                     'stock_id' => $stockId,
-                    'state' => Stocks_model::STATE_IN_STOCK,
+                    'state' => Stock::STATE_IN_STOCK,
                     'quantity' => $menuItem->stock_qty,
                     'created_at' => now()->toDateTimeString(),
                     'updated_at' => now()->toDateTimeString(),

@@ -12,11 +12,11 @@ class Activities extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Activities_model',
+            'model' => 'System\Models\Activity',
             'title' => 'lang:system::lang.activities.text_title',
             'emptyMessage' => 'lang:system::lang.activities.text_empty',
             'defaultSort' => ['updated_at', 'DESC'],
-            'configFile' => 'activities_model',
+            'configFile' => 'activity',
         ],
     ];
 

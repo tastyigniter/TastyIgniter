@@ -16,17 +16,17 @@ class Countries extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Countries_model',
+            'model' => 'System\Models\Country',
             'title' => 'lang:system::lang.countries.text_title',
             'emptyMessage' => 'lang:system::lang.countries.text_empty',
             'defaultSort' => ['country_name', 'ASC'],
-            'configFile' => 'countries_model',
+            'configFile' => 'country',
         ],
     ];
 
     public $formConfig = [
         'name' => 'lang:system::lang.countries.text_form_name',
-        'model' => 'System\Models\Countries_model',
+        'model' => 'System\Models\Country',
         'request' => 'System\Requests\Country',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
@@ -47,7 +47,7 @@ class Countries extends \Admin\Classes\AdminController
         'delete' => [
             'redirect' => 'countries',
         ],
-        'configFile' => 'countries_model',
+        'configFile' => 'country',
     ];
 
     protected $requiredPermissions = 'Site.Countries';
