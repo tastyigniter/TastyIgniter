@@ -282,4 +282,9 @@ class User extends AuthUserModel
     {
         return $this->pluckDates('created_at');
     }
+
+    public function getLocale()
+    {
+        return optional($this->language)->code;
+    }
 }
