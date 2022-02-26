@@ -24,35 +24,51 @@ class MergeStaffsIntoUsersTable extends Migration
 
         $this->updateStaffIdValueToUserIdOnStaffsGroups();
 
-        Schema::rename('staffs_groups', 'users_groups');
-        Schema::rename('staff_groups', 'user_groups');
-        Schema::rename('staff_roles', 'user_roles');
+        Schema::table('staffs_groups', function (Blueprint $table) {
+            $table->dropForeign(['staff_id']);
+            $table->dropForeign(['staff_group_id']);
 
-        Schema::table('users_groups', function (Blueprint $table) {
             $table->renameColumn('staff_id', 'user_id');
             $table->renameColumn('staff_group_id', 'user_group_id');
         });
 
-        Schema::table('user_groups', function (Blueprint $table) {
+        Schema::table('staff_groups', function (Blueprint $table) {
             $table->renameColumn('staff_group_id', 'user_group_id');
             $table->renameColumn('staff_group_name', 'user_group_name');
         });
 
-        Schema::table('user_roles', function (Blueprint $table) {
+        Schema::table('staff_roles', function (Blueprint $table) {
             $table->renameColumn('staff_role_id', 'user_role_id');
         });
 
+        Schema::rename('staffs_groups', 'users_groups');
+        Schema::rename('staff_groups', 'user_groups');
+        Schema::rename('staff_roles', 'user_roles');
+
         $this->replaceLocationableTypeStaffsWithUsers();
+
+        Schema::table('assignable_logs', function (Blueprint $table) {
+            $table->dropForeign(['assignee_id']);
+        });
 
         $this->updateAssigneeIdValueToUserIdOnAssignableLogs();
 
         $this->updateAssigneeIdValueToUserIdOnOrders();
 
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropForeign(['assignee_id']);
+        });
+
         $this->updateAssigneeIdValueToUserIdOnReservations();
+
+        Schema::table('reservations', function (Blueprint $table) {
+            $table->dropForeign(['assignee_id']);
+        });
 
         $this->updateStaffIdValueToUserIdOnStatusHistory();
 
         Schema::table('status_history', function (Blueprint $table) {
+            $table->dropForeign(['staff_id']);
             $table->renameColumn('staff_id', 'user_id');
         });
 
@@ -60,6 +76,11 @@ class MergeStaffsIntoUsersTable extends Migration
 
         Schema::table('stock_history', function (Blueprint $table) {
             $table->renameColumn('staff_id', 'user_id');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['staff_id']);
+            $table->dropColumn('staff_id');
         });
 
         Schema::dropIfExists('staffs');
