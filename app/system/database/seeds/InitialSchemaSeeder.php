@@ -29,9 +29,9 @@ class InitialSchemaSeeder extends Seeder
 
         $this->seedSettings();
 
-        $this->seedStaffGroups();
+        $this->seedUserGroups();
 
-        $this->seedStaffRoles();
+        $this->seedUserRoles();
 
         $this->seedStatuses();
     }
@@ -177,7 +177,7 @@ class InitialSchemaSeeder extends Seeder
         DB::table('settings')->insert($this->getSeedRecords('settings'));
     }
 
-    protected function seedStaffGroups()
+    protected function seedUserGroups()
     {
         if (DB::table('user_groups')->count())
             return;
@@ -205,7 +205,7 @@ class InitialSchemaSeeder extends Seeder
         DB::table('user_groups')->update(['updated_at' => now(), 'created_at' => now()]);
     }
 
-    protected function seedStaffRoles()
+    protected function seedUserRoles()
     {
         if (DB::table('user_roles')->count())
             return;
