@@ -119,8 +119,3 @@ class UserGroup extends Model
         return $assignees->sortBy('assign_value')->first();
     }
 }
-<<<<<<< HEAD:app/admin/models/StaffGroup.php
-=======
-
-class_alias('Admin\Models\UserGroup', 'Admin\Models\Staff_groups_model', FALSE);
->>>>>>> 8207965b (.....):app/admin/models/UserGroup.php

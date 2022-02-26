@@ -70,8 +70,3 @@ class UserRole extends Model
         $this->attributes['permissions'] = !empty($permissions) ? serialize($permissions) : '';
     }
 }
-<<<<<<< HEAD:app/admin/models/StaffRole.php
-=======
-
-class_alias('Admin\Models\UserRole', 'Admin\Models\Staff_roles_model', FALSE);
->>>>>>> 8207965b (.....):app/admin/models/UserRole.php
