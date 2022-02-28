@@ -41,5 +41,4 @@ class NavigationTest extends TestCase
         $this->assertEquals('http://dashboard.tld', $item['href']);
         $this->assertEquals(999, $item['priority']);
     }
-
 }
