@@ -19,10 +19,10 @@ class AdvancedSettings extends FormRequest
     public function rules()
     {
         return [
-            'enable_request_log' => ['required', 'integer'],
-            'maintenance_mode' => ['required', 'integer'],
-            'maintenance_message' => ['required_if:maintenance_mode,1'],
-            'activity_log_timeout' => ['required', 'integer'],
+            'enable_request_log' => ['required', 'boolean'],
+            'maintenance_mode' => ['required', 'boolean'],
+            'maintenance_message' => ['required_if:maintenance_mode,1', 'string'],
+            'activity_log_timeout' => ['required', 'integer', 'max:999'],
         ];
     }
 }

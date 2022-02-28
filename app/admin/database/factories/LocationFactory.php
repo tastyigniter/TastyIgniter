@@ -2,12 +2,11 @@
 
 namespace Admin\Database\Factories;
 
-use Admin\Models\Locations_model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LocationFactory extends Factory
 {
-    protected $model = Locations_model::class;
+    protected $model = \Admin\Models\Location::class;
 
     public function definition(): array
     {

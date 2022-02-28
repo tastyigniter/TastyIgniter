@@ -2,89 +2,53 @@
 
 namespace Tests\Unit\System\Requests;
 
-use Faker\Factory;
-use System\Requests\Language;
-use Tests\TestCase;
+use System\Models\Language;
+use function Pest\Faker\faker;
 
-class LanguageTest extends TestCase
-{
-    use ValidateRequest;
+uses(\Tests\Unit\System\Requests\ValidateRequest::class);
 
-    protected $requestClass = Language::class;
+test('validation results as expected', function ($callback) {
+    $this->assertFormRequest(\System\Requests\Language::class, $callback);
+})->with([
+    'request_should_fail_when_no_name_is_provided' => [
+        function () {
+            return [FALSE, Language::factory(['name' => null])];
+        },
+    ],
+    'request_should_fail_when_no_code_is_provided' => [
+        function () {
+            return [FALSE, Language::factory(['code' => null])];
+        },
+    ],
+    'request_should_fail_when_no_status_is_provided' => [
+        function () {
+            return [FALSE, Language::factory(['status' => null])];
+        },
+    ],
+    'request_should_fail_when_name_has_less_than_2_characters' => [
+        function () {
+            return [FALSE, Language::factory(['name' => faker()->lexify('?')])];
+        },
+    ],
+    'request_should_fail_when_name_has_more_than_32_characters' => [
+        function () {
+            return [FALSE, Language::factory(['name' => faker()->sentence(33)])];
+        },
+    ],
+    'request_should_fail_when_code_contains_non_alpha_or_dashes' => [
+        function () {
+            return [FALSE, Language::factory(['code' => faker()->randomDigit()])];
+        },
+    ],
+    'request_should_fail_when_status_is_not_boolean' => [
+        function () {
+            return [FALSE, Language::factory(['status' => faker()->word()])];
+        },
+    ],
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function validationProvider()
-    {
-        /* WithFaker trait doesn't work in the dataProvider */
-        $faker = Factory::create(Factory::DEFAULT_LOCALE);
-
-        return [
-            'request_should_fail_when_no_name_is_provided' => [
-                'passed' => FALSE,
-                'data' => [
-                    'code' => 'en',
-                    'status' => $faker->boolean(),
-                ],
-            ],
-            'request_should_fail_when_no_code_is_provided' => [
-                'passed' => FALSE,
-                'data' => [
-                    'name' => 'English',
-                    'status' => $faker->boolean(),
-                ],
-            ],
-            'request_should_fail_when_no_status_is_provided' => [
-                'passed' => FALSE,
-                'data' => [
-                    'name' => 'English',
-                    'code' => 'en',
-                ],
-            ],
-            'request_should_fail_when_name_has_less_than_2_characters' => [
-                'passed' => FALSE,
-                'data' => [
-                    'name' => $faker->lexify('?'),
-                    'code' => 'en',
-                    'status' => $faker->boolean(),
-                ],
-            ],
-            'request_should_fail_when_name_has_more_than_32_characters' => [
-                'passed' => FALSE,
-                'data' => [
-                    'name' => $faker->sentence(33),
-                    'code' => 'en',
-                    'status' => $faker->boolean(),
-                ],
-            ],
-            'request_should_fail_when_code_contains_non_alpha_or_dashes' => [
-                'passed' => FALSE,
-                'data' => [
-                    'name' => $faker->word(),
-                    'code' => $faker->randomDigit(),
-                    'status' => $faker->boolean(),
-                ],
-            ],
-            'request_should_fail_when_status_is_not_boolean' => [
-                'passed' => FALSE,
-                'data' => [
-                    'name' => $faker->word(),
-                    'code' => 'en',
-                    'status' => $faker->word(),
-                ],
-            ],
-
-            'request_should_pass_when_data_is_provided' => [
-                'passed' => TRUE,
-                'data' => [
-                    'name' => $faker->word(),
-                    'code' => 'en',
-                    'status' => $faker->boolean(),
-                ],
-            ],
-        ];
-    }
-}
+    'request_should_pass_when_data_is_provided' => [
+        function () {
+            return [TRUE, Language::factory()];
+        },
+    ],
+]);

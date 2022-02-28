@@ -2,27 +2,16 @@
 
 namespace Tests\Unit\Admin\Requests;
 
-use Admin\Requests\Customer;
-use Faker\Factory;
-use Tests\TestCase;
+use Admin\Models\Customer;
 
-class CustomerTest extends TestCase
-{
-    use \Tests\Unit\System\Requests\ValidateRequest;
+uses(\Tests\Unit\System\Requests\ValidateRequest::class);
 
-    protected $requestClass = Customer::class;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function validationProvider()
-    {
-        /* WithFaker trait doesn't work in the dataProvider */
-        $faker = Factory::create(Factory::DEFAULT_LOCALE);
-
-        return [
-        ];
-    }
-}
+test('validation results as expected', function ($callback) {
+    $this->assertFormRequest(\Admin\Requests\Customer::class, $callback);
+})->with([
+    'request_should_fail_when_no_first_name_is_provided' => [
+        function () {
+            return [FALSE, array_except(Customer::factory()->raw(), ['first_name'])];
+        },
+    ],
+]);

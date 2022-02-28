@@ -2,6 +2,7 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Exception\ValidationException;
@@ -12,6 +13,7 @@ use Igniter\Flame\Exception\ValidationException;
 class Country extends Model
 {
     use Sortable;
+    use HasFactory;
 
     const SORT_ORDER = 'priority';
 

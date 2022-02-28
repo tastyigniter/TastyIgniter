@@ -11,14 +11,6 @@
 |
 */
 
-// our factories live inside admin/system/main, so we need to namespace to them
-//Factory::guessFactoryNamesUsing(function (string $modelName) {
-//    $modelName = str_replace('\\Models\\', '\\Database\\Factories\\', $modelName);
-//    $modelName = str_replace('_model', '', $modelName);
-//
-//    return Str::singular($modelName).'Factory';
-//});
-
 uses(Tests\TestCase::class)->in(__DIR__);
 
 uses(Tests\RefreshDatabase::class)->in('Feature');

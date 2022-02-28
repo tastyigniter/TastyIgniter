@@ -28,10 +28,13 @@ class GeneralSettings extends FormRequest
             'site_name' => ['required', 'min:2', 'max:128'],
             'site_email' => ['required', 'email:filter', 'max:96'],
             'site_logo' => ['required'],
-            'timezone' => ['required'],
-            'default_currency_code' => ['required'],
-            'detect_language' => ['required', 'integer'],
-            'default_language' => ['required'],
+            'distance_unit' => ['required', 'in:mi,km'],
+            'default_geocoder' => ['required', 'in:nominatim,google,chain'],
+            'maps_api_key' => ['required_if:default_geocoder,google,chain', 'alpha_dash'],
+            'timezone' => ['required', 'timezone'],
+            'default_currency_code' => ['required', 'string'],
+            'detect_language' => ['required', 'boolean'],
+            'default_language' => ['required', 'string'],
             'country_id' => ['required', 'integer'],
         ];
     }

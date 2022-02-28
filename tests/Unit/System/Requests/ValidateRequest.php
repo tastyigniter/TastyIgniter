@@ -2,61 +2,64 @@
 
 namespace Tests\Unit\System\Requests;
 
+use Igniter\Flame\Database\Factories\Factory;
 use Igniter\Flame\Exception\ValidationException;
 
 trait ValidateRequest
 {
+    protected $factory;
+
     /**
-     * @test
      * @dataProvider validationProvider
-     * @param bool $shouldPass
-     * @param array $mockedRequestData
+     * @param \Closure $callback
      */
-    public function validation_results_as_expected($shouldPass, $mockedRequestData)
+    public function test_validation_results_as_expected($callback)
     {
+        [$shouldPass, $mockedRequestData] = $callback();
+
         $this->assertEquals(
             $shouldPass,
             $this->validate($mockedRequestData)
         );
     }
 
-    protected function validate($mockedRequestData)
+    public function assertFormRequest($requestClass, $callback)
     {
-        $this->app->resolving($this->requestClass, function ($resolved) use ($mockedRequestData) {
+        [$shouldPass, $mockedRequestData] = $callback;
+
+        expect($this->validate($mockedRequestData, $requestClass))
+            ->toBe($shouldPass);
+    }
+
+    public function validationProvider()
+    {
+        return [];
+    }
+
+    protected function factory(...$parameters)
+    {
+        return $this->modelClass::factory(...$parameters);
+    }
+
+    protected function validate($mockedRequestData, $requestClass = null)
+    {
+        if (is_null($requestClass))
+            $requestClass = $this->requestClass;
+
+        $this->app->resolving($requestClass, function ($resolved) use ($mockedRequestData) {
+            if ($mockedRequestData instanceof Factory)
+                $mockedRequestData = $mockedRequestData->raw();
+
             $resolved->merge($mockedRequestData);
         });
 
         try {
-            app($this->requestClass);
+            app($requestClass);
 
             return TRUE;
         }
         catch (ValidationException $ex) {
             return FALSE;
         }
-    }
-
-    protected function validationData($faker)
-    {
-        return [
-        ];
-    }
-
-    protected function exceptValidationData($faker, $except)
-    {
-        return array_except($this->validationData($faker), $except);
-    }
-
-    protected function mergeValidationData($faker, $merge, $key = null)
-    {
-        $data = $this->validationData($faker);
-        if (!is_null($key)) {
-            $data[$key] = array_merge($data[$key], $merge);
-        }
-        else {
-            $data = array_merge($data, $merge);
-        }
-
-        return $data;
     }
 }
