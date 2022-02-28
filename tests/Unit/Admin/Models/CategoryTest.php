@@ -2,12 +2,12 @@
 
 namespace Tests\Unit\Admin\Models;
 
-use Admin\Models\Categories_model;
-use Admin\Models\Locations_model;
+use Admin\Models\Category;
+use Admin\Models\Location;
 
 it('can create a category and assign it to a location', function () {
-    $location = Locations_model::factory()->create();
-    $category = Categories_model::factory()->make();
+    $location = Location::factory()->create();
+    $category = Category::factory()->make();
     $category->locations = [$location->getKey()];
     $categoryModel = $category->create();
 
@@ -16,7 +16,7 @@ it('can create a category and assign it to a location', function () {
 
 it('shouldnt create a category when no name is provided', function () {
     try {
-        $category = Categories_model::factory()->make();
+        $category = Category::factory()->make();
         $category->name = null;
         $category->save();
         $this->assertFalse(TRUE);

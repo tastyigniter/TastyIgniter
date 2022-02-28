@@ -6,7 +6,7 @@ use Admin\Requests\Staff;
 use Faker\Factory;
 use Tests\TestCase;
 
-class StaffTest extends TestCase
+class UserTest extends TestCase
 {
     use \Tests\Unit\System\Requests\ValidateRequest;
 

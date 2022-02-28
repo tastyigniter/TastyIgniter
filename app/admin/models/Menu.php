@@ -6,6 +6,7 @@ use Admin\Traits\Locationable;
 use Admin\Traits\Stockable;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Attach\HasMedia;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 
@@ -18,6 +19,7 @@ class Menu extends Model
     use Locationable;
     use HasMedia;
     use Stockable;
+    use HasFactory;
 
     const LOCATIONABLE_RELATION = 'locations';
 
