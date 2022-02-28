@@ -26,7 +26,7 @@
   "require": {
     "php": ">=7.4",
     "composer/installers": "dev-main as 2.0",
-    "tastyigniter/flame": "~1.2",
+    "tastyigniter/flame": "dev-v4 as 1.2",
     "tastyigniter/ti-module-system": "dev-tests as 3.0",
     "tastyigniter/ti-module-admin": "dev-tests as 3.0",
     "tastyigniter/ti-module-main": "dev-tests as 3.0",
