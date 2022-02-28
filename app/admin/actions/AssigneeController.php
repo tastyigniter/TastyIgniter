@@ -59,20 +59,20 @@ class AssigneeController extends ControllerAction
 
     public function assigneeApplyScope($query)
     {
-        $staff = $this->controller->getUser()->staff;
+        $user = $this->controller->getUser();
 
-        if ($staff->hasGlobalAssignableScope())
+        if ($user->hasGlobalAssignableScope())
             return;
 
-        $query->whereInAssignToGroup($staff->groups->pluck('staff_group_id')->all());
+        $query->whereInAssignToGroup($user->groups->pluck('user_group_id')->all());
 
-        if ($staff->hasRestrictedAssignableScope())
-            $query->whereAssignTo($staff->getKey());
+        if ($user->hasRestrictedAssignableScope())
+            $query->whereAssignTo($user->getKey());
     }
 
     protected function assigneeBindToolbarEvents()
     {
-        if ($this->controller->getUser()->staff->hasGlobalAssignableScope())
+        if ($this->controller->getUser()->hasGlobalAssignableScope())
             return;
 
         if (isset($this->controller->widgets['toolbar'])) {
@@ -96,9 +96,7 @@ class AssigneeController extends ControllerAction
             });
 
             Event::listen('admin.filter.extendScopesBefore', function ($widget) {
-                $staff = $this->controller->getUser()->staff;
-
-                if (!$staff->hasRestrictedAssignableScope())
+                if (!$this->controller->getUser()->hasRestrictedAssignableScope())
                     return;
 
                 unset($widget->scopes['assignee']);
@@ -131,11 +129,11 @@ class AssigneeController extends ControllerAction
                 if ($assignable->assignee_group->autoAssignEnabled())
                     return;
 
-                $staff = $this->controller->getUser()->staff;
-                if (!$assignable->isAssignedToStaffGroup($staff))
+                $user = $this->controller->getUser();
+                if (!$assignable->isAssignedToStaffGroup($user))
                     return;
 
-                $assignable->assignTo($staff);
+                $assignable->assignTo($user);
             });
         }
     }

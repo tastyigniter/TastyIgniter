@@ -6,8 +6,8 @@ use Admin\Classes\BaseFormWidget;
 use Admin\Classes\PermissionManager;
 
 /**
- * Staff group permission editor
- * This widget is used by the system internally on the Users / Staff Groups pages.
+ * User group permission editor
+ * This widget is used by the system internally on the Users / User Groups pages.
  */
 class PermissionEditor extends BaseFormWidget
 {

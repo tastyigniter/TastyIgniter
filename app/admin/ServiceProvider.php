@@ -413,6 +413,14 @@ class ServiceProvider extends AppServiceProvider
                     'title' => lang('admin::lang.side_menu.marketing'),
                     'child' => [],
                 ],
+                'customers' => [
+                    'priority' => 100,
+                    'class' => 'customers',
+                    'icon' => 'fa-user',
+                    'href' => admin_url('customers'),
+                    'title' => lang('admin::lang.side_menu.customer'),
+                    'permission' => 'Admin.Customers',
+                ],
                 'design' => [
                     'priority' => 200,
                     'class' => 'design',
@@ -432,28 +440,6 @@ class ServiceProvider extends AppServiceProvider
                             'href' => admin_url('mail_templates'),
                             'title' => lang('admin::lang.side_menu.mail_template'),
                             'permission' => 'Admin.MailTemplates',
-                        ],
-                    ],
-                ],
-                'users' => [
-                    'priority' => 100,
-                    'class' => 'users',
-                    'icon' => 'fa-user',
-                    'title' => lang('admin::lang.side_menu.user'),
-                    'child' => [
-                        'customers' => [
-                            'priority' => 10,
-                            'class' => 'customers',
-                            'href' => admin_url('customers'),
-                            'title' => lang('admin::lang.side_menu.customer'),
-                            'permission' => 'Admin.Customers',
-                        ],
-                        'staffs' => [
-                            'priority' => 20,
-                            'class' => 'staffs',
-                            'href' => admin_url('staffs'),
-                            'title' => lang('admin::lang.side_menu.staff'),
-                            'permission' => 'Admin.Staffs',
                         ],
                     ],
                 ],
@@ -507,19 +493,26 @@ class ServiceProvider extends AppServiceProvider
                     'icon' => 'fa-cogs',
                     'title' => lang('admin::lang.side_menu.system'),
                     'child' => [
-                        'settings' => [
+                        'users' => [
                             'priority' => 0,
-                            'class' => 'settings',
-                            'href' => admin_url('settings'),
-                            'title' => lang('admin::lang.side_menu.setting'),
-                            'permission' => 'Site.Settings',
+                            'class' => 'users',
+                            'href' => admin_url('users'),
+                            'title' => lang('admin::lang.side_menu.user'),
+                            'permission' => 'Admin.Staffs',
                         ],
                         'extensions' => [
-                            'priority' => 20,
+                            'priority' => 10,
                             'class' => 'extensions',
                             'href' => admin_url('extensions'),
                             'title' => lang('admin::lang.side_menu.extension'),
                             'permission' => 'Admin.Extensions',
+                        ],
+                        'settings' => [
+                            'priority' => 20,
+                            'class' => 'settings',
+                            'href' => admin_url('settings'),
+                            'title' => lang('admin::lang.side_menu.setting'),
+                            'permission' => 'Site.Settings',
                         ],
                         'updates' => [
                             'priority' => 30,
@@ -576,13 +569,12 @@ class ServiceProvider extends AppServiceProvider
             'payment_logs' => 'Admin\Models\PaymentLog',
             'payments' => 'Admin\Models\Payment',
             'reservations' => 'Admin\Models\Reservation',
-            'staff_groups' => 'Admin\Models\StaffGroup',
-            'staffs' => 'Admin\Models\Staff',
             'status_history' => 'Admin\Models\StatusHistory',
             'statuses' => 'Admin\Models\Status',
             'stocks' => 'Admin\Models\Stock',
             'stock_history' => 'Admin\Models\StockHistory',
             'tables' => 'Admin\Models\Table',
+            'user_groups' => 'Admin\Models\UserGroup',
             'users' => 'Admin\Models\User',
             'working_hours' => 'Admin\Models\WorkingHour',
         ]);
@@ -725,7 +717,7 @@ class ServiceProvider extends AppServiceProvider
                     'label' => 'admin::lang.permissions.impersonate_customers', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.StaffGroups' => [
-                    'label' => 'admin::lang.permissions.staff_groups', 'group' => 'admin::lang.permissions.name',
+                    'label' => 'admin::lang.permissions.user_groups', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.Staffs' => [
                     'label' => 'admin::lang.permissions.staffs', 'group' => 'admin::lang.permissions.name',

@@ -16,7 +16,7 @@ class StockHistory extends Model
 
     protected $casts = [
         'stock_id' => 'integer',
-        'staff_id' => 'integer',
+        'user_id' => 'integer',
         'order_id' => 'integer',
         'quantity' => 'integer',
     ];
@@ -30,7 +30,7 @@ class StockHistory extends Model
     public $relation = [
         'belongsTo' => [
             'stock' => 'Admin\Models\Stock',
-            'staff' => 'Admin\Models\Staff',
+            'user' => 'Admin\Models\User',
             'order' => 'Admin\Models\Order',
         ],
     ];
@@ -41,7 +41,7 @@ class StockHistory extends Model
     {
         $model = new static;
         $model->stock_id = $stock->getKey();
-        $model->staff_id = array_get($options, 'staff_id');
+        $model->user_id = array_get($options, 'staff_id', array_get($options, 'user_id'));
         $model->order_id = array_get($options, 'order_id');
         $model->quantity = $quantity;
         $model->state = $state;
@@ -52,7 +52,7 @@ class StockHistory extends Model
 
     public function getStaffNameAttribute()
     {
-        return ($this->staff && $this->staff->exists) ? $this->staff->staff_name : null;
+        return $this->user->name ?? null;
     }
 
     public function getStateTextAttribute()

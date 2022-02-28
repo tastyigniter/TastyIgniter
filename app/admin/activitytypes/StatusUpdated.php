@@ -37,8 +37,8 @@ class StatusUpdated implements ActivityInterface
         $type = $history->isForOrder() ? self::ORDER_UPDATED_TYPE : self::RESERVATION_UPDATED_TYPE;
 
         $recipients = [];
-        if ($history->object->assignee && $history->object->assignee->getKey() !== $user->staff->getKey())
-            $recipients[] = $history->object->assignee->user;
+        if ($history->object->assignee && $history->object->assignee->getKey() !== $user->getKey())
+            $recipients[] = $history->object->assignee;
 
         $statusHistory = $history->object->getLatestStatusHistory();
         if ($history->object->customer && $statusHistory && $statusHistory->notify)

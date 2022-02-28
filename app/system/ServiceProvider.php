@@ -298,7 +298,7 @@ class ServiceProvider extends AppServiceProvider
             app('config')->set('currency.converters.openexchangerates.apiKey', setting('currency_converter.oer.apiKey'));
             app('config')->set('currency.converters.fixerio.apiKey', setting('currency_converter.fixerio.apiKey'));
             app('config')->set('currency.ratesCacheDuration', setting('currency_converter.refreshInterval'));
-            app('config')->set('currency.model', \System\Models\Currency::class);
+            app('config')->set('currency.model', \System\Models\Currencies_model::class);
         });
 
         $this->app->resolving('translator.localization', function ($localization, $app) {

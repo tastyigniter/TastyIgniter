@@ -4,7 +4,6 @@ namespace Admin\Controllers;
 
 use Admin\Facades\AdminAuth;
 use Admin\Facades\Template;
-use Admin\Models\Staff;
 use Admin\Models\User;
 use Admin\Traits\ValidatesForm;
 use Igniter\Flame\Exception\ValidationException;
@@ -93,16 +92,15 @@ class Login extends \Admin\Classes\AdminController
             'email' => lang('admin::lang.label_email'),
         ]);
 
-        $staff = Staff::whereStaffEmail(post('email'))->first();
-        if ($staff && $user = $staff->user) {
+        if ($user = User::whereEmail(post('email'))->first()) {
             if (!$user->resetPassword())
                 throw new ValidationException(['email' => lang('admin::lang.login.alert_failed_reset')]);
             $data = [
-                'staff_name' => $staff->staff_name,
+                'staff_name' => $user->name,
                 'reset_link' => admin_url('login/reset?code='.$user->reset_code),
             ];
-            Mail::queue('admin::_mail.password_reset_request', $data, function ($message) use ($staff) {
-                $message->to($staff->staff_email, $staff->staff_name);
+            Mail::queue('admin::_mail.password_reset_request', $data, function ($message) use ($user) {
+                $message->to($user->email, $user->name);
             });
         }
 
@@ -132,11 +130,11 @@ class Login extends \Admin\Classes\AdminController
             throw new ValidationException(['password' => lang('admin::lang.login.alert_failed_reset')]);
 
         $data = [
-            'staff_name' => $user->staff->staff_name,
+            'staff_name' => $user->name,
         ];
 
         Mail::queue('admin::_mail.password_reset', $data, function ($message) use ($user) {
-            $message->to($user->staff->staff_email, $user->staff->staff_name);
+            $message->to($user->email, $user->name);
         });
 
         flash()->success(lang('admin::lang.login.alert_success_reset'));

@@ -255,9 +255,9 @@ return [
         'text_email' => 'Customer email address',
         'text_telephone' => 'Customer telephone address',
 
-        'text_group_staff_reset' => 'Staff password reset variables',
-        'text_staff_name' => 'Staff name',
-        'text_staff_reset_link' => 'Staff password reset url',
+        'text_group_staff_reset' => 'User password reset variables',
+        'text_staff_name' => 'User name',
+        'text_staff_reset_link' => 'User password reset url',
 
         'text_group_registration' => 'Registration variables',
         'text_account_login_link' => 'Account login url',

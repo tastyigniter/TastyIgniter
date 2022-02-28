@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Staff Model Class
+ * @deprecated use Admin\Models\User instead. Remove before v5
  */
 class Staff extends Model
 {
@@ -37,7 +38,7 @@ class Staff extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'staff_role_id' => 'integer',
+        'user_role_id' => 'integer',
         'staff_location_id' => 'integer',
         'sale_permission' => 'integer',
         'language_id' => 'integer',
@@ -52,11 +53,11 @@ class Staff extends Model
             'assignable_logs' => ['Admin\Models\AssignableLog', 'foreignKey' => 'assignee_id'],
         ],
         'belongsTo' => [
-            'role' => ['Admin\Models\StaffRole', 'foreignKey' => 'staff_role_id'],
+            'role' => ['Admin\Models\UserRole', 'foreignKey' => 'user_role_id'],
             'language' => ['System\Models\Language'],
         ],
         'belongsToMany' => [
-            'groups' => ['Admin\Models\StaffGroup', 'table' => 'staffs_groups'],
+            'groups' => ['Admin\Models\UserGroup', 'table' => 'users_groups'],
         ],
         'morphToMany' => [
             'locations' => ['Admin\Models\Location', 'name' => 'locationable'],

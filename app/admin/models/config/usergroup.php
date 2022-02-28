@@ -4,12 +4,12 @@ $config['list']['toolbar'] = [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
-            'href' => 'staffs',
+            'href' => 'users',
         ],
         'create' => [
             'label' => 'lang:admin::lang.button_new',
             'class' => 'btn btn-primary',
-            'href' => 'staff_groups/create',
+            'href' => 'user_groups/create',
         ],
     ],
 ];
@@ -28,10 +28,10 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'staff_groups/edit/{staff_group_id}',
+            'href' => 'user_groups/edit/{user_group_id}',
         ],
     ],
-    'staff_group_name' => [
+    'user_group_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
@@ -42,11 +42,11 @@ $config['list']['columns'] = [
         'searchable' => TRUE,
     ],
     'staff_count' => [
-        'label' => 'lang:admin::lang.staff_groups.column_users',
+        'label' => 'lang:admin::lang.user_groups.column_users',
         'type' => 'text',
         'sortable' => FALSE,
     ],
-    'staff_group_id' => [
+    'user_group_id' => [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
@@ -67,7 +67,7 @@ $config['form']['toolbar'] = [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
-            'href' => 'staff_groups',
+            'href' => 'user_groups',
         ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
@@ -90,7 +90,7 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'staff_group_name' => [
+    'user_group_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
@@ -99,18 +99,18 @@ $config['form']['fields'] = [
         'type' => 'textarea',
     ],
     'auto_assign' => [
-        'label' => 'lang:admin::lang.staff_groups.label_auto_assign',
+        'label' => 'lang:admin::lang.user_groups.label_auto_assign',
         'type' => 'switch',
-        'comment' => 'lang:admin::lang.staff_groups.help_auto_assign',
+        'comment' => 'lang:admin::lang.user_groups.help_auto_assign',
     ],
     'auto_assign_mode' => [
-        'label' => 'lang:admin::lang.staff_groups.label_assignment_mode',
+        'label' => 'lang:admin::lang.user_groups.label_assignment_mode',
         'type' => 'radiolist',
         'span' => 'left',
         'default' => 1,
         'options' => [
-            1 => ['admin::lang.staff_groups.text_round_robin', 'admin::lang.staff_groups.help_round_robin'],
-            2 => ['admin::lang.staff_groups.text_load_balanced', 'admin::lang.staff_groups.help_load_balanced'],
+            1 => ['admin::lang.user_groups.text_round_robin', 'admin::lang.user_groups.help_round_robin'],
+            2 => ['admin::lang.user_groups.text_load_balanced', 'admin::lang.user_groups.help_load_balanced'],
         ],
         'trigger' => [
             'action' => 'show',
@@ -119,10 +119,10 @@ $config['form']['fields'] = [
         ],
     ],
     'auto_assign_limit' => [
-        'label' => 'lang:admin::lang.staff_groups.label_load_balanced_limit',
+        'label' => 'lang:admin::lang.user_groups.label_load_balanced_limit',
         'type' => 'number',
         'default' => 20,
-        'comment' => 'lang:admin::lang.staff_groups.help_load_balanced_limit',
+        'comment' => 'lang:admin::lang.user_groups.help_load_balanced_limit',
         'trigger' => [
             'action' => 'show',
             'field' => 'auto_assign',
@@ -130,10 +130,10 @@ $config['form']['fields'] = [
         ],
     ],
     'auto_assign_availability' => [
-        'label' => 'lang:admin::lang.staff_groups.label_assignment_availability',
+        'label' => 'lang:admin::lang.user_groups.label_assignment_availability',
         'type' => 'switch',
         'default' => TRUE,
-        'comment' => 'lang:admin::lang.staff_groups.help_assignment_availability',
+        'comment' => 'lang:admin::lang.user_groups.help_assignment_availability',
         'trigger' => [
             'action' => 'show',
             'field' => 'auto_assign',
