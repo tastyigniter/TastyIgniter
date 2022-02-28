@@ -2,7 +2,7 @@
 
 namespace Admin\Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Igniter\Flame\Database\Factories\Factory;
 
 class LocationFactory extends Factory
 {

@@ -2,8 +2,8 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Address Model Class

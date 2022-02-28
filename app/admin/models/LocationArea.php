@@ -2,10 +2,10 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
 use Igniter\Flame\Location\Models\AbstractArea;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * LocationArea Model Class

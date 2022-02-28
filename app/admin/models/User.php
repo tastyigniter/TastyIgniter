@@ -7,8 +7,8 @@ use Admin\Classes\UserState;
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use System\Traits\SendsMailTemplate;
 
 /**

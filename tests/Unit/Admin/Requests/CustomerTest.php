@@ -3,7 +3,9 @@
 namespace Tests\Unit\Admin\Requests;
 
 use Admin\Models\Customer;
+use Tests\RefreshDatabase;
 
+uses(RefreshDatabase::class);
 uses(\Tests\Unit\System\Requests\ValidateRequest::class);
 
 test('validation results as expected', function ($callback) {

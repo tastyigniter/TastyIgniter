@@ -4,8 +4,8 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Mealtime Model Class

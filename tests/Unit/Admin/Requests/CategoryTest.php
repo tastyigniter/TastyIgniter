@@ -12,7 +12,7 @@ test('validation results as expected', function ($callback) {
 })->with([
     'request_should_fail_when_no_name_is_provided' => [
         function () {
-            return [FALSE, Category::factory(['description' => faker()->sentence()])];
+            return [FALSE, Category::factory(['name' => null])];
         },
     ],
     'request_should_fail_when_name_has_more_than_128_characters' => [
