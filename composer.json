@@ -26,12 +26,11 @@
   "require": {
     "php": ">=7.4",
     "composer/installers": "dev-main as 2.0",
-    "tastyigniter/flame": "*@dev",
+    "tastyigniter/flame": "~1.2",
     "tastyigniter/ti-module-system": "dev-tests as 3.0",
     "tastyigniter/ti-module-admin": "dev-tests as 3.0",
     "tastyigniter/ti-module-main": "dev-tests as 3.0",
-    "laravel/framework": "~8.0",
-    "wikimedia/composer-merge-plugin": "~2.0"
+    "laravel/framework": "~8.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.0",
@@ -44,12 +43,6 @@
     "pestphp/pest-plugin-laravel": "^1.2",
     "pestphp/pest-plugin-faker": "^1.0"
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../flame"
-    }
-  ],
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests"
@@ -68,21 +61,12 @@
       "dont-discover": [
         "*"
       ]
-    },
-    "merge-plugin": {
-      "include": [
-        "extensions/*/*/composer.json"
-      ],
-      "replace": false,
-      "recurse": true,
-      "merge-dev": false
     }
   },
   "config": {
     "allow-plugins": {
       "pestphp/pest-plugin": true,
-      "composer/installers": true,
-      "wikimedia/composer-merge-plugin": true
+      "composer/installers": true
     }
   }
 }
