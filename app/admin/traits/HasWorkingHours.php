@@ -3,12 +3,12 @@
 namespace Admin\Traits;
 
 use Admin\Classes\ScheduleItem;
+use Admin\Events\Location\ScheduleCreated;
 use Carbon\Carbon;
 use Exception;
 use Igniter\Flame\Location\OrderTypes;
 use Igniter\Flame\Location\WorkingSchedule;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Event;
 use InvalidArgumentException;
 
 trait HasWorkingHours
@@ -128,7 +128,9 @@ trait HasWorkingHours
 
         $schedule->setType($type);
 
-        Event::fire('admin.workingSchedule.created', [$this, $schedule]);
+        // @deprecated namespaced event, remove before v5
+        event('admin.workingSchedule.created', [$this, $schedule]);
+        ScheduleCreated::dispatch($this, $schedule);
 
         return $schedule;
     }

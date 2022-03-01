@@ -6,8 +6,8 @@ use Exception;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ApplicationException;
-use Illuminate\Support\Facades\Event;
 use Main\Classes\ThemeManager;
+use Main\Events\Theme\Activated;
 use Main\Template\Layout;
 use System\Classes\ComponentManager;
 use System\Classes\ExtensionManager;
@@ -329,7 +329,9 @@ class Theme extends Model
         params()->set('default_themes.main', $theme->code);
         params()->save();
 
-        Event::fire('main.theme.activated', [$theme]);
+        // @deprecated namespaced event, remove before v5
+        event('main.theme.activated', [$theme]);
+        Activated::dispatch($theme);
 
         return $theme;
     }

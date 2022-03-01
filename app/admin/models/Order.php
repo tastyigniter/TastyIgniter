@@ -2,6 +2,8 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Order\BeforePaymentProcessed;
+use Admin\Events\Order\PaymentProcessed;
 use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
@@ -11,7 +13,6 @@ use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
 use System\Traits\SendsMailTemplate;
@@ -268,12 +269,16 @@ class Order extends Model
 
     public function markAsPaymentProcessed()
     {
-        Event::fire('admin.order.beforePaymentProcessed', [$this]);
+        // @deprecated namespaced event, remove before v5
+        event('admin.order.beforePaymentProcessed', [$this]);
+        BeforePaymentProcessed::dispatch($this);
 
         $this->processed = 1;
         $this->save();
 
-        Event::fire('admin.order.paymentProcessed', [$this]);
+        // @deprecated namespaced event, remove before v5
+        event('admin.order.paymentProcessed', [$this]);
+        PaymentProcessed::dispatch($this);
 
         return $this->processed;
     }

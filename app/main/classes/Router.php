@@ -7,7 +7,6 @@ use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Support\RouterHelper;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
 use Main\Template\Page as PageTemplate;
 
@@ -81,7 +80,7 @@ class Router
         $this->url = $url;
         $url = RouterHelper::normalizeUrl($url);
 
-        $apiResult = Event::fire('router.beforeRoute', [$url, $this], TRUE);
+        $apiResult = event('router.beforeRoute', [$url, $this], TRUE);
         if ($apiResult !== null)
             return $apiResult;
 

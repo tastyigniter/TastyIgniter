@@ -2,10 +2,11 @@
 
 namespace Admin\Models;
 
+use Admin\Events\Order\BeforeRefundProcessed;
+use Admin\Events\Order\RefundProcessed;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Validation;
-use Illuminate\Support\Facades\Event;
 
 /**
  * PaymentLog Model Class
@@ -79,12 +80,16 @@ class PaymentLog extends Model
     public function markAsRefundProcessed()
     {
         if (is_null($this->refunded_at)) {
-            Event::fire('admin.paymentLog.beforeRefundProcessed', [$this]);
+            // @deprecated namespaced event, remove before v5
+            event('admin.paymentLog.beforeRefundProcessed', [$this]);
+            BeforeRefundProcessed::dispatch($this);
 
             $this->refunded_at = Carbon::now();
             $this->save();
 
-            Event::fire('admin.paymentLog.refundProcessed', [$this]);
+            // @deprecated namespaced event, remove before v5
+            event('admin.paymentLog.refundProcessed', [$this]);
+            RefundProcessed::dispatch($this);
         }
 
         return TRUE;
