@@ -11,7 +11,7 @@ class MealtimeFactory extends Factory
     public function definition(): array
     {
         return [
-            'mealtime_name' => $this->faker->word(),
+            'mealtime_name' => $this->faker->sentence(2),
             'start_time' => $this->faker->time('H:i'),
             'end_time' => $this->faker->time('H:i'),
             'mealtime_status' => $this->faker->boolean(),

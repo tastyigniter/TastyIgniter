@@ -11,7 +11,7 @@ class MenuFactory extends Factory
     public function definition(): array
     {
         return [
-            'menu_name' => $this->faker->word(),
+            'menu_name' => $this->faker->sentence(2),
             'menu_price' => $this->faker->randomFloat(),
             'minimum_qty' => $this->faker->numberBetween(2, 500),
         ];

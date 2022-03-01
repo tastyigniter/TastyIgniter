@@ -11,7 +11,7 @@ class LocationAreaFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
+            'name' => $this->faker->sentence(2),
             'type' => $this->faker->randomElement(['address', 'circle', 'polygon']),
             'color' => $this->faker->hexColor(),
             'is_default' => $this->faker->boolean(),

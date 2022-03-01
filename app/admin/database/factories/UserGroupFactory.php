@@ -11,7 +11,7 @@ class UserGroupFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_group_name' => $this->faker->word(),
+            'user_group_name' => $this->faker->sentence(2),
             'description' => $this->faker->paragraph(),
             'auto_assign' => TRUE,
             'auto_assign_mode' => $this->faker->randomElement([1, 2]),

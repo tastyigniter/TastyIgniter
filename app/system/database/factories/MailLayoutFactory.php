@@ -11,7 +11,7 @@ class MailLayoutFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
+            'name' => $this->faker->sentence(2),
             'code' => $this->faker->slug(),
             'layout' => $this->faker->randomHtml(),
             'layout_css' => $this->faker->text(),

@@ -11,7 +11,7 @@ class CountryFactory extends Factory
     public function definition(): array
     {
         return [
-            'country_name' => $this->faker->word(),
+            'country_name' => $this->faker->sentence(2),
             'iso_code_2' => $this->faker->lexify('??'),
             'iso_code_3' => $this->faker->countryISOAlpha3(),
             'format' => "{address_1}\n{address_2}\n{city} {postcode}\n{country}",

@@ -11,7 +11,7 @@ class CustomerGroupFactory extends Factory
     public function definition(): array
     {
         return [
-            'group_name' => $this->faker->word(),
+            'group_name' => $this->faker->sentence(2),
             'description' => $this->faker->paragraph(),
             'approval' => $this->faker->boolean(),
         ];

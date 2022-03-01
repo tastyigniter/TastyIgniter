@@ -11,7 +11,7 @@ class TableFactory extends Factory
     public function definition(): array
     {
         return [
-            'table_name' => $this->faker->word(),
+            'table_name' => $this->faker->sentence(2),
             'min_capacity' => $this->faker->randomDigitNotNull(),
             'max_capacity' => $this->faker->numberBetween(10, 99),
             'extra_capacity' => $this->faker->numberBetween(1, 999),

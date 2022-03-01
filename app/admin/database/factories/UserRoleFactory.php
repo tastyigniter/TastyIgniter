@@ -11,8 +11,8 @@ class UserRoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => $this->faker->word(),
-            'name' => $this->faker->word(),
+            'code' => $this->faker->words(),
+            'name' => $this->faker->sentence(2),
             'description' => $this->faker->paragraph(),
             'permissions' => [$this->faker->numberBetween(1, 99)],
         ];

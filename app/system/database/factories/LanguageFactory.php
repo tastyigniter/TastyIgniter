@@ -12,7 +12,7 @@ class LanguageFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'code' => $this->faker->locale(),
+            'code' => $this->faker->languageCode(),
             'status' => $this->faker->boolean(),
         ];
     }
