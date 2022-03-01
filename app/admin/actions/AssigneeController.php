@@ -109,7 +109,7 @@ class AssigneeController extends ControllerAction
     protected function assigneeBindFormEvents()
     {
         if ($this->controller->isClassExtendedWith('Admin\Actions\FormController')) {
-            $this->controller->bindEvent('controller.form.extendQuery', function ($query) {
+            $this->controller->bindEvent('admin.controller.extendFormQuery', function ($query) {
                 if (!(bool)$this->getConfig('applyScopeOnFormQuery', TRUE))
                     return;
 
