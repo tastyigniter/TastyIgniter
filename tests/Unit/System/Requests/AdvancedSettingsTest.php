@@ -7,7 +7,7 @@ use function Pest\Faker\faker;
 uses(\Tests\Unit\System\Requests\ValidateRequest::class);
 
 test('validation results as expected', function ($callback) {
-    $this->assertFormRequest(\System\Requests\AdvancedSettings::class, $callback);
+    $this->assertFormRequestAsExpected(\System\Requests\AdvancedSettings::class, $callback);
 })->with([
     'request_should_fail_when_no_enable_request_log_is_provided' => [
         function () {

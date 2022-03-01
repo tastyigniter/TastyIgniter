@@ -23,7 +23,7 @@ trait ValidateRequest
         );
     }
 
-    public function assertFormRequest($requestClass, $callback)
+    public function assertFormRequestAsExpected($requestClass, $callback)
     {
         [$shouldPass, $mockedRequestData] = $callback;
 

@@ -8,7 +8,7 @@ use function Pest\Faker\faker;
 uses(\Tests\Unit\System\Requests\ValidateRequest::class);
 
 test('validation results as expected', function ($callback) {
-    $this->assertFormRequest(\Admin\Requests\Reservation::class, $callback);
+    $this->assertFormRequestAsExpected(\Admin\Requests\Reservation::class, $callback);
 })->with([
     'request_should_fail_when_no_location_id_is_provided' => [
         function () {

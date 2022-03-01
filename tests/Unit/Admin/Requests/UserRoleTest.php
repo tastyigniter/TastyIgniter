@@ -2,93 +2,67 @@
 
 namespace Tests\Unit\Admin\Requests;
 
-use Admin\Requests\StaffRole;
-use Faker\Factory;
-use Tests\TestCase;
+use Admin\Models\UserRole;
+use function Pest\Faker\faker;
 
-class UserRoleTest extends TestCase
-{
-    use \Tests\Unit\System\Requests\ValidateRequest;
+uses(\Tests\Unit\System\Requests\ValidateRequest::class);
 
-    protected $requestClass = StaffRole::class;
+test('validation results as expected', function ($callback) {
+    $this->assertFormRequestAsExpected(\Admin\Requests\UserRole::class, $callback);
+})->with([
+    'request_should_fail_when_no_code_is_provided' => [
+        function () {
+            return [FALSE, UserRole::factory(['code' => null])];
+        },
+    ],
+    'request_should_fail_when_no_name_is_provided' => [
+        function () {
+            return [FALSE, UserRole::factory(['name' => null])];
+        },
+    ],
+    'request_should_fail_when_no_permissions_is_provided' => [
+        function () {
+            return [FALSE, UserRole::factory(['permissions' => null])];
+        },
+    ],
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
+    'request_should_fail_when_code_has_non_alpha_dash_characters' => [
+        function () {
+            return [FALSE, UserRole::factory(['code' => faker()->sentence()])];
+        },
+    ],
 
-    public function validationProvider()
-    {
-        /* WithFaker trait doesn't work in the dataProvider */
-        $faker = Factory::create(Factory::DEFAULT_LOCALE);
+    'request_should_fail_when_code_has_more_than_32_characters' => [
+        function () {
+            return [FALSE, UserRole::factory(['code' => faker()->sentence(33)])];
+        },
+    ],
+    'request_should_fail_when_name_has_more_than_128_characters' => [
+        function () {
+            return [FALSE, UserRole::factory(['name' => faker()->sentence(129)])];
+        },
+    ],
 
-        return [
-            'request_should_fail_when_no_code_is_provided' => [
-                'passed' => FALSE,
-                'data' => $this->exceptValidationData($faker, ['code']),
-            ],
-            'request_should_fail_when_no_name_is_provided' => [
-                'passed' => FALSE,
-                'data' => $this->exceptValidationData($faker, ['name']),
-            ],
-            'request_should_fail_when_no_permissions_is_provided' => [
-                'passed' => FALSE,
-                'data' => $this->exceptValidationData($faker, ['permissions']),
-            ],
+    'request_should_fail_when_code_has_less_than_2_characters' => [
+        function () {
+            return [FALSE, UserRole::factory(['code' => faker()->randomLetter])];
+        },
+    ],
+    'request_should_fail_when_name_has_less_than_2_characters' => [
+        function () {
+            return [FALSE, UserRole::factory(['name' => faker()->randomLetter])];
+        },
+    ],
 
-            'request_should_fail_when_code_has_non_alpha_dash_characters' => [
-                'passed' => FALSE,
-                'data' => $this->mergeValidationData($faker, [
-                    'code' => $faker->sentence(),
-                ]),
-            ],
+    'request_should_fail_when_permissions_is_not_an_array_of_integers' => [
+        function () {
+            return [FALSE, UserRole::factory(['permissions' => [faker()->word]])];
+        },
+    ],
 
-            'request_should_fail_when_code_has_more_than_32_characters' => [
-                'passed' => FALSE,
-                'data' => $this->mergeValidationData($faker, [
-                    'code' => $faker->sentence(33),
-                ]),
-            ],
-            'request_should_fail_when_name_has_more_than_128_characters' => [
-                'passed' => FALSE,
-                'data' => $this->mergeValidationData($faker, [
-                    'name' => $faker->sentence(129),
-                ]),
-            ],
-
-            'request_should_fail_when_code_has_less_than_2_characters' => [
-                'passed' => FALSE,
-                'data' => $this->mergeValidationData($faker, [
-                    'code' => $faker->randomLetter,
-                ]),
-            ],
-            'request_should_fail_when_name_has_less_than_2_characters' => [
-                'passed' => FALSE,
-                'data' => $this->mergeValidationData($faker, [
-                    'name' => $faker->randomLetter,
-                ]),
-            ],
-
-            'request_should_fail_when_permissions_is_not_an_array_of_integers' => [
-                'passed' => FALSE,
-                'data' => $this->mergeValidationData($faker, [
-                    'permissions' => [$faker->word],
-                ]),
-            ],
-
-            'request_should_pass_when_data_is_provided' => [
-                'passed' => TRUE,
-                'data' => $this->validationData($faker),
-            ],
-        ];
-    }
-
-    protected function validationData($faker)
-    {
-        return [
-            'code' => $faker->word(),
-            'name' => $faker->word(),
-            'permissions' => [$faker->numberBetween(2, 50)],
-        ];
-    }
-}
+    'request_should_pass_when_data_is_provided' => [
+        function () {
+            return [TRUE, UserRole::factory()];
+        },
+    ],
+]);

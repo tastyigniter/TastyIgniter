@@ -13,11 +13,11 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
-            'username' => $this->faker->userName,
-            'date_activated' => time(),
-            'is_activated' => TRUE,
-            'super_user' => TRUE,
-            'status' => TRUE,
+            'username' => str_slug($this->faker->userName()),
+            'date_activated' => $this->faker->dateTime(),
+            'is_activated' => $this->faker->boolean(),
+            'super_user' => $this->faker->boolean(),
+            'status' => $this->faker->boolean(),
         ];
     }
 }

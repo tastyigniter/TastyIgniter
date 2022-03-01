@@ -8,7 +8,7 @@ use function Pest\Faker\faker;
 uses(\Tests\Unit\System\Requests\ValidateRequest::class);
 
 test('validation results as expected', function ($callback) {
-    $this->assertFormRequest(\Admin\Requests\Status::class, $callback);
+    $this->assertFormRequestAsExpected(\Admin\Requests\Status::class, $callback);
 })->with([
     'request_should_fail_when_no_name_is_provided' => [
         function () {

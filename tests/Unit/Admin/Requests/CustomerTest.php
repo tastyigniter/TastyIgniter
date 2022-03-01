@@ -8,7 +8,7 @@ use Admin\Models\Customer;
 uses(\Tests\Unit\System\Requests\ValidateRequest::class);
 
 test('validation results as expected', function ($callback) {
-    $this->assertFormRequest(\Admin\Requests\Customer::class, $callback);
+    $this->assertFormRequestAsExpected(\Admin\Requests\Customer::class, $callback);
 })->with([
     'request_should_fail_when_no_first_name_is_provided' => [
         function () {

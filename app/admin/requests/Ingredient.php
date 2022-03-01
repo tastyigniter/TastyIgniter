@@ -23,7 +23,6 @@ class Ingredient extends FormRequest
             'description' => ['min:2'],
             'status' => ['boolean'],
             'is_allergen' => ['boolean'],
-            'locations.*' => ['integer'],
         ];
     }
 }

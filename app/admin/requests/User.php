@@ -41,7 +41,7 @@ class User extends FormRequest
                 'status' => ['boolean'],
                 'language_id' => ['nullable', 'integer'],
                 'user_role_id' => ['sometimes', 'required', 'integer'],
-                'groups' => ['required', 'array'],
+                'groups' => ['sometimes', 'required', 'array'],
                 'locations' => ['nullable', 'array'],
                 'groups.*' => ['integer'],
                 'locations.*' => ['integer'],
