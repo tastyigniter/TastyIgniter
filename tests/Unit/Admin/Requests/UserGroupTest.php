@@ -30,9 +30,9 @@ test('validation results as expected', function ($callback) {
             return [FALSE, UserGroup::factory(['auto_assign_mode' => 2, 'auto_assign_limit' => null])];
         },
     ],
-    'request_should_fail_when_no_assignment_availability_is_provided' => [
+    'request_should_fail_when_no_auto_assign_availability_is_provided' => [
         function () {
-            return [FALSE, UserGroup::factory(['auto_assign' => TRUE, 'assignment_availability' => null])];
+            return [FALSE, UserGroup::factory(['auto_assign' => TRUE, 'auto_assign_availability' => null])];
         },
     ],
 
@@ -64,9 +64,9 @@ test('validation results as expected', function ($callback) {
             return [FALSE, UserGroup::factory(['auto_assign' => faker()->word()])];
         },
     ],
-    'request_should_fail_when_assignment_availability_is_not_a_boolean' => [
+    'request_should_fail_when_auto_assign_availability_is_not_a_boolean' => [
         function () {
-            return [FALSE, UserGroup::factory(['auto_assign' => TRUE, 'assignment_availability' => faker()->word()])];
+            return [FALSE, UserGroup::factory(['auto_assign' => TRUE, 'auto_assign_availability' => faker()->word()])];
         },
     ],
 
