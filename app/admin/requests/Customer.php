@@ -28,11 +28,12 @@ class Customer extends FormRequest
 
     public function rules()
     {
-        $rules = [
+        return [
             'first_name' => ['required', 'between:1,48'],
             'last_name' => ['required', 'between:1,48'],
             'email' => ['required', 'email:filter', 'max:96', 'unique:customers,email'],
-            'telephone' => ['sometimes'],
+            'password' => ['required_if:send_invite,0', 'min:8', 'max:40', 'same:_confirm_password'],
+            'telephone' => ['sometimes', 'string'],
             'newsletter' => ['sometimes', 'required', 'boolean'],
             'customer_group_id' => ['required', 'integer'],
             'status' => ['required', 'boolean'],
@@ -41,12 +42,6 @@ class Customer extends FormRequest
             'addresses.*.state' => ['max:128'],
             'addresses.*.country_id' => ['required', 'integer'],
         ];
-
-        if (!optional($this->getModel())->exists || $this->inputWith('password')) {
-            $rules['password'] = ['required_if:send_invite,0', 'min:8', 'max:40', 'same:_confirm_password'];
-        }
-
-        return $rules;
     }
 
     protected function useDataFrom()

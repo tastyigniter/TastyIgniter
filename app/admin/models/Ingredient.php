@@ -3,6 +3,7 @@
 namespace Admin\Models;
 
 use Igniter\Flame\Database\Attach\HasMedia;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 class Ingredient extends Model
 {
     use HasMedia;
+    use HasFactory;
 
     /**
      * @var string The database table name

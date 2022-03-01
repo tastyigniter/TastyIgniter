@@ -31,7 +31,7 @@ class Table extends FormRequest
             'priority' => ['required', 'integer'],
             'is_joinable' => ['required', 'boolean'],
             'table_status' => ['required', 'boolean'],
-            'locations' => ['required'],
+            'locations' => ['required', 'array'],
             'locations.*' => ['integer'],
         ];
     }

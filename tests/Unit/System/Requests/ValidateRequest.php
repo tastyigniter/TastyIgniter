@@ -47,8 +47,10 @@ trait ValidateRequest
             $requestClass = $this->requestClass;
 
         $this->app->resolving($requestClass, function ($resolved) use ($mockedRequestData) {
-            if ($mockedRequestData instanceof Factory)
+            if ($mockedRequestData instanceof Factory) {
+                $resolved->setModel($mockedRequestData->newModel());
                 $mockedRequestData = $mockedRequestData->raw();
+            }
 
             $resolved->merge($mockedRequestData);
         });

@@ -32,6 +32,7 @@ class Menu extends FormRequest
             'categories.*' => ['sometimes', 'required', 'integer'],
             'locations.*' => ['integer'],
             'minimum_qty' => ['sometimes', 'required', 'integer', 'min:1'],
+            'order_restriction' => ['array'],
             'order_restriction.*' => ['nullable', 'string'],
             'menu_status' => ['boolean'],
             'mealtime_id' => ['nullable', 'integer'],

@@ -20,6 +20,8 @@ class FormRequest extends BaseFormRequest
     protected const DATA_TYPE_POST = 'post';
     protected const DATA_TYPE_INPUT = 'input';
 
+    protected $model;
+
     /**
      * @var \Admin\Classes\AdminController
      */
@@ -45,6 +47,13 @@ class FormRequest extends BaseFormRequest
     public function setController($controller)
     {
         $this->controller = $controller;
+
+        return $this;
+    }
+
+    public function setModel($model)
+    {
+        $this->model = $model;
 
         return $this;
     }
@@ -103,6 +112,9 @@ class FormRequest extends BaseFormRequest
      */
     protected function getModel()
     {
+        if ($this->model)
+            return $this->model;
+
         if (!$this->getController())
             return null;
 

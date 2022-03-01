@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 
 /**
@@ -9,6 +10,8 @@ use Igniter\Flame\Database\Model;
  */
 class Status extends Model
 {
+    use HasFactory;
+
     /**
      * @var string The database table name
      */
