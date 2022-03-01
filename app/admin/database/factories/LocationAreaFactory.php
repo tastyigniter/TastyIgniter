@@ -13,8 +13,8 @@ class LocationAreaFactory extends Factory
         return [
             'name' => $this->faker->word(),
             'type' => $this->faker->randomElement(['address', 'circle', 'polygon']),
-            'color' => $this->faker->hexcolor,
-            'is_default' => $this->faker->boolean,
+            'color' => $this->faker->hexColor(),
+            'is_default' => $this->faker->boolean(),
         ];
     }
 }

@@ -70,6 +70,11 @@ test('validation results as expected', function ($callback) {
             ])];
         },
     ],
+    'request_should_pass_when_description_is_valid_html' => [
+        function () {
+            return [FALSE, Category::factory(['description' => faker()->randomHtml()])];
+        },
+    ],
     'request_should_pass_when_data_is_provided' => [
         function () {
             return [TRUE, Category::factory()];

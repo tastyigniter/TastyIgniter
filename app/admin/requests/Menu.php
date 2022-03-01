@@ -26,8 +26,8 @@ class Menu extends FormRequest
     public function rules()
     {
         return [
-            'menu_name' => ['required', 'between:2,255'],
-            'menu_description' => ['between:2,1028'],
+            'menu_name' => ['required', 'string', 'between:2,255'],
+            'menu_description' => ['string', 'between:2,1028'],
             'menu_price' => ['required', 'numeric', 'min:0'],
             'categories.*' => ['sometimes', 'required', 'integer'],
             'locations.*' => ['integer'],
@@ -37,7 +37,6 @@ class Menu extends FormRequest
             'menu_status' => ['boolean'],
             'mealtime_id' => ['nullable', 'integer'],
             'menu_priority' => ['nullable', 'integer'],
-            'menu_option_values' => ['array'],
         ];
     }
 }

@@ -14,7 +14,7 @@ class MenuOptions extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Menu_options_model',
+            'model' => 'Admin\Models\MenuOption',
             'title' => 'lang:admin::lang.menu_options.text_title',
             'emptyMessage' => 'lang:admin::lang.menu_options.text_empty',
             'defaultSort' => ['option_id', 'DESC'],
@@ -24,7 +24,7 @@ class MenuOptions extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.menu_options.text_form_name',
-        'model' => 'Admin\Models\Menu_options_model',
+        'model' => 'Admin\Models\MenuOption',
         'request' => 'Admin\Requests\MenuOption',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',

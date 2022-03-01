@@ -20,7 +20,7 @@ class MailLayout extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'between:2,32'],
+            'name' => ['required', 'string', 'between:2,32'],
             'code' => ['required', 'alpha_dash'],
             'layout' => ['string'],
             'layout_css' => ['string'],

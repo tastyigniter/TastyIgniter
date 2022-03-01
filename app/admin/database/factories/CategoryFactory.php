@@ -12,8 +12,8 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'description' => $this->faker->sentence(7),
-            'priority' => $this->faker->numberBetween(1, 9999),
+            'description' => $this->faker->paragraph(),
+            'priority' => $this->faker->randomDigit(),
             'status' => $this->faker->boolean(),
         ];
     }

@@ -25,12 +25,12 @@ class GeneralSettings extends FormRequest
     public function rules()
     {
         return [
-            'site_name' => ['required', 'min:2', 'max:128'],
+            'site_name' => ['required', 'string', 'min:2', 'max:128'],
             'site_email' => ['required', 'email:filter', 'max:96'],
-            'site_logo' => ['required'],
+            'site_logo' => ['required', 'string'],
             'distance_unit' => ['required', 'in:mi,km'],
             'default_geocoder' => ['required', 'in:nominatim,google,chain'],
-            'maps_api_key' => ['required_if:default_geocoder,google,chain', 'alpha_dash'],
+            'maps_api_key' => ['required_if:default_geocoder,google', 'alpha_dash'],
             'timezone' => ['required', 'timezone'],
             'default_currency_code' => ['required', 'string'],
             'detect_language' => ['required', 'boolean'],

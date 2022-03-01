@@ -29,18 +29,20 @@ class Customer extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => ['required', 'between:1,48'],
-            'last_name' => ['required', 'between:1,48'],
+            'first_name' => ['required', 'string', 'between:1,48'],
+            'last_name' => ['required', 'string', 'between:1,48'],
             'email' => ['required', 'email:filter', 'max:96', 'unique:customers,email'],
-            'password' => ['required_if:send_invite,0', 'min:8', 'max:40', 'same:_confirm_password'],
+            'password' => ['required_if:send_invite,0', 'string', 'min:8', 'max:40', 'same:_confirm_password'],
             'telephone' => ['sometimes', 'string'],
             'newsletter' => ['sometimes', 'required', 'boolean'],
             'customer_group_id' => ['required', 'integer'],
             'status' => ['required', 'boolean'],
-            'addresses.*.address_1' => ['required', 'min:3', 'max:128'],
-            'addresses.*.city' => ['required', 'min:2', 'max:128'],
-            'addresses.*.state' => ['max:128'],
+            'addresses.*.address_1' => ['required', 'string', 'min:3', 'max:128'],
+            'addresses.*.address_2' => ['string'],
+            'addresses.*.city' => ['required', 'string', 'min:2', 'max:128'],
+            'addresses.*.state' => ['string', 'max:128'],
             'addresses.*.country_id' => ['required', 'integer'],
+            'addresses.*.postcode' => ['string'],
         ];
     }
 

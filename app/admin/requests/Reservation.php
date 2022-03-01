@@ -24,10 +24,10 @@ class Reservation extends FormRequest
     {
         return [
             'location_id' => ['sometimes', 'required', 'integer'],
-            'first_name' => ['required', 'between:1,48'],
-            'last_name' => ['required', 'between:1,48'],
+            'first_name' => ['required', 'string', 'between:1,48'],
+            'last_name' => ['required', 'string', 'between:1,48'],
             'email' => ['email:filter', 'max:96'],
-            'telephone' => ['sometimes'],
+            'telephone' => ['sometimes', 'string'],
             'reserve_date' => ['required', 'valid_date'],
             'reserve_time' => ['required', 'valid_time'],
             'guest_num' => ['required', 'integer'],

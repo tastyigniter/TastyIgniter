@@ -12,7 +12,7 @@ class CustomerGroupFactory extends Factory
     {
         return [
             'group_name' => $this->faker->word(),
-            'description' => $this->faker->sentence(7),
+            'description' => $this->faker->paragraph(),
             'approval' => $this->faker->boolean(),
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Admin\Requests;
 
+use Admin\Models\Category;
 use Admin\Models\Menu;
 use function Pest\Faker\faker;
 
@@ -77,6 +78,11 @@ test('validation results as expected', function ($callback) {
         },
     ],
 
+    'request_should_pass_when_menu_description_is_valid_html' => [
+        function () {
+            return [FALSE, Category::factory(['menu_description' => faker()->randomHtml()])];
+        },
+    ],
     'request_should_pass_when_data_is_provided' => [
         function () {
             return [TRUE, Menu::factory()];

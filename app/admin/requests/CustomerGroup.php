@@ -18,9 +18,9 @@ class CustomerGroup extends FormRequest
     public function rules()
     {
         return [
-            'group_name' => ['required', 'between:2,32'],
+            'group_name' => ['required', 'string', 'between:2,32'],
             'approval' => ['required', 'boolean'],
-            'description' => ['between:2,512'],
+            'description' => ['string', 'between:2,512'],
         ];
     }
 }

@@ -18,16 +18,13 @@ class MailTemplate extends FormRequest
 
     public function rules()
     {
-        $rules = [
+        return [
             'layout_id' => ['integer'],
-            'label' => ['required'],
-            'subject' => ['required'],
+            'code' => ['sometimes', 'required', 'min:2', 'max:32'],
+            'label' => ['required', 'string'],
+            'subject' => ['required', 'string'],
+            'body' => ['string'],
+            'plain_body' => ['string'],
         ];
-
-        if (optional($this->getForm())->context == 'create') {
-            $rules['code'] = ['required', 'min:2', 'max:32'];
-        }
-
-        return $rules;
     }
 }

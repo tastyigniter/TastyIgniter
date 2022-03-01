@@ -125,7 +125,7 @@ class MenuOptionEditor extends BaseFormWidget
     public function onAssignRecord()
     {
         $menuOptionId = post('optionId');
-        if (!$menuOption = Menu_options_model::find($menuOptionId))
+        if (!$menuOption = MenuOption::find($menuOptionId))
             throw new ApplicationException(lang('admin::lang.menu_options.alert_menu_option_not_attached'));
 
         if ($this->model->menu_option_values()->where('option_id', $menuOptionId)->exists())

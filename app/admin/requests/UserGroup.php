@@ -21,7 +21,7 @@ class UserGroup extends FormRequest
     public function rules()
     {
         return [
-            'user_group_name' => ['required', 'between:2,128', 'unique:user_groups'],
+            'user_group_name' => ['required', 'string', 'between:2,128', 'unique:user_groups'],
             'description' => ['string'],
             'auto_assign' => ['required', 'boolean'],
             'auto_assign_mode' => ['required_if:auto_assign,true', 'integer', 'max:2'],

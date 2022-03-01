@@ -19,8 +19,8 @@ class UserRole extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['between:2,32'],
-            'name' => ['required', 'between:2,128'],
+            'code' => ['string', 'between:2,32', 'alpha_dash'],
+            'name' => ['required', 'string', 'between:2,128'],
             'permissions' => ['required', 'array'],
             'permissions.*' => ['required', 'integer'],
         ];

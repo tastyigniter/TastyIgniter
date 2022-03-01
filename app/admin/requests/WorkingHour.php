@@ -28,6 +28,7 @@ class WorkingHour extends FormRequest
             'open' => ['required_if:type,daily', 'valid_time'],
             'close' => ['required_if:type,daily', 'valid_time'],
             'timesheet' => ['required_if:type,timesheet', 'string'],
+            'flexible' => ['required_if:type,flexible', 'array'],
             'flexible.*.day' => ['required_if:type,flexible', 'numeric'],
             'flexible.*.hours' => ['required_if:type,flexible'],
             'flexible.*.status' => ['sometimes', 'required_if:type,flexible', 'boolean'],

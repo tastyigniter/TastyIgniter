@@ -13,7 +13,7 @@ class UserRoleFactory extends Factory
         return [
             'code' => $this->faker->word(),
             'name' => $this->faker->word(),
-            'description' => $this->faker->text(),
+            'description' => $this->faker->paragraph(),
             'permissions' => [$this->faker->numberBetween(1, 99)],
         ];
     }

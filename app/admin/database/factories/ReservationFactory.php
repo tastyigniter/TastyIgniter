@@ -17,7 +17,7 @@ class ReservationFactory extends Factory
             'telephone' => $this->faker->phoneNumber(),
             'reserve_date' => $this->faker->date(),
             'reserve_time' => $this->faker->time(),
-            'guest_num' => $this->faker->numberBetween(3, 20),
+            'guest_num' => $this->faker->numberBetween(0, 99),
         ];
     }
 }

@@ -19,8 +19,8 @@ class Ingredient extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'between:2,128'],
-            'description' => ['min:2'],
+            'name' => ['required', 'string', 'between:2,128'],
+            'description' => ['string', 'min:2'],
             'status' => ['boolean'],
             'is_allergen' => ['boolean'],
         ];

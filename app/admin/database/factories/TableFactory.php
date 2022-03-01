@@ -12,7 +12,7 @@ class TableFactory extends Factory
     {
         return [
             'table_name' => $this->faker->word(),
-            'min_capacity' => $this->faker->numberBetween(1, 9),
+            'min_capacity' => $this->faker->randomDigit(),
             'max_capacity' => $this->faker->numberBetween(10, 99),
             'extra_capacity' => $this->faker->numberBetween(1, 999),
             'priority' => $this->faker->randomDigit(),

@@ -25,14 +25,14 @@ class Currency extends FormRequest
     public function rules()
     {
         return [
-            'currency_name' => ['required', 'between:2,32'],
+            'currency_name' => ['required', 'string', 'between:2,32'],
             'currency_code' => ['required', 'string', 'size:3'],
             'currency_symbol' => ['string'],
             'country_id' => ['required', 'integer'],
             'symbol_position' => ['string', 'size:1'],
             'currency_rate' => ['numeric'],
             'thousand_sign' => ['string', 'size:1'],
-            'decimal_sign' => ['size:1'],
+            'decimal_sign' => ['string', 'size:1'],
             'decimal_position' => ['integer', 'max:10'],
             'currency_status' => ['required', 'boolean'],
         ];

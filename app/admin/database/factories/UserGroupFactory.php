@@ -12,7 +12,7 @@ class UserGroupFactory extends Factory
     {
         return [
             'user_group_name' => $this->faker->word(),
-            'description' => $this->faker->sentence(5),
+            'description' => $this->faker->paragraph(),
             'auto_assign' => TRUE,
             'auto_assign_mode' => $this->faker->randomElement([1, 2]),
             'auto_assign_limit' => $this->faker->numberBetween(2, 50),
