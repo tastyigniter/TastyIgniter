@@ -28,7 +28,7 @@ test('validation results as expected', function ($callback) {
 
     'request_should_fail_when_code_has_non_alpha_dash_characters' => [
         function () {
-            return [FALSE, UserRole::factory(['code' => faker()->sentence()])];
+            return [FALSE, UserRole::factory(['code' => faker()->text()])];
         },
     ],
 

@@ -37,7 +37,7 @@ test('validation results as expected', function ($callback) {
     ],
     'request_should_fail_when_code_contains_non_alpha_or_dashes' => [
         function () {
-            return [FALSE, Language::factory(['code' => faker()->randomDigit()])];
+            return [FALSE, Language::factory(['code' => faker()->sentence()])];
         },
     ],
     'request_should_fail_when_status_is_not_boolean' => [

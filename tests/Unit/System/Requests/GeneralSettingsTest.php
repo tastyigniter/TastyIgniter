@@ -51,86 +51,62 @@ test('validation results as expected', function ($callback) {
     ],
     'request_should_fail_when_site_name_is_less_than_2' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['site_name' => faker()->lexify('?'),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['site_name' => faker()->lexify('?')])];
         },
     ],
     'request_should_fail_when_site_name_is_greater_than_128' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['site_name' => faker()->sentence(128),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['site_name' => faker()->sentence(128)])];
         },
     ],
     'request_should_fail_when_site_email_is_not_valid_email' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['site_email' => faker()->word(),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['site_email' => faker()->word()])];
         },
     ],
     'request_should_fail_when_site_email_is_greater_than_96' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['site_email' => faker()->sentence(128),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['site_email' => faker()->sentence(128)])];
         },
     ],
     'request_should_fail_when_distance_unit_is_not_valid' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['distance_unit' => faker()->word(),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['distance_unit' => faker()->word()])];
         },
     ],
     'request_should_fail_when_default_geocoder_is_not_valid' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['default_geocoder' => faker()->word(),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['default_geocoder' => faker()->word()])];
         },
     ],
     'request_should_fail_when_maps_api_key_is_not_alpha_dash' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['maps_api_key' => faker()->text(),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['maps_api_key' => faker()->text()])];
         },
     ],
     'request_should_fail_when_timezone_is_not_valid_timezone' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['timezone' => faker()->word(),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['timezone' => faker()->word()])];
         },
     ],
     'request_should_fail_when_default_currency_code_is_not_string' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['default_currency_code' => faker()->randomDigit(),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['default_currency_code' => faker()->randomDigit()])];
         },
     ],
     'request_should_fail_when_default_language_is_not_string' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['default_language' => faker()->randomDigit(),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['default_language' => faker()->randomDigit()])];
         },
     ],
     'request_should_fail_when_detect_language_is_not_boolean' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), ['detect_language' => faker()->numberBetween(2, 99),
-            ]),
-            ];
+            return [FALSE, array_merge(generalSettingsData(), ['detect_language' => faker()->numberBetween(2, 99)])];
         },
     ],
     'request_should_fail_when_country_id_is_not_integer' => [
         function () {
-            return [FALSE, array_merge(generalSettingsData(), [
-                'country_id' => faker()->word(),
-            ])];
+            return [FALSE, array_merge(generalSettingsData(), ['country_id' => faker()->word()])];
         },
     ],
 
