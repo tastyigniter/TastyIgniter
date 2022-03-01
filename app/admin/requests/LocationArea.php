@@ -34,7 +34,7 @@ class LocationArea extends FormRequest
             'type' => ['sometimes', 'required', 'string'],
             'name' => ['sometimes', 'required', 'string'],
             'area_id' => ['integer'],
-            'boundaries.components' => ['sometimes', 'required_if:type,address'],
+            'boundaries.components' => ['sometimes', 'required_if:type,address', 'array'],
             'boundaries.components.*.type' => ['sometimes', 'required', 'string'],
             'boundaries.components.*.value' => ['sometimes', 'required', 'string'],
             'boundaries.polygon' => ['sometimes', 'required_if:type,polygon'],

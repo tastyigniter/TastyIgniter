@@ -9,22 +9,20 @@ on:
   pull_request:
 
 jobs:
-  PHPUnitTests:
-#    runs-on: ${{ matrix.os }}
+  PestTests:
+    #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 6
       matrix:
 #        os: [ubuntu-latest, windows-latest]
-        php: ['7.4', '8.0', '8.1']
-        db: ['mysql:5.7', 'mysql:8.0', 'mariadb:10.2', 'mariadb:10.6']
+        php: ['8.0', '8.1']
+        db: ['mysql:5.7', 'mysql:8.0', 'mariadb:10.6']
         include:
           - db: 'mysql:5.7'
             dbName: 'MySQL 5.7'
           - db: 'mysql:8.0'
             dbName: 'MySQL'
-          - db: 'mariadb:10.2'
-            dbName: 'MariaDB 10.2'
           - db: 'mariadb:10.6'
             dbName: 'MariaDB'
       fail-fast: false
@@ -35,7 +33,7 @@ jobs:
         ports:
           - 3306
 
-    name: 'PHPUnit Tests ${{ matrix.php }} / ${{ matrix.dbName }}'
+    name: 'Pest Tests ${{ matrix.php }} / ${{ matrix.dbName }}'
 
     steps:
       - name: Checkout changes
@@ -59,9 +57,9 @@ jobs:
         run: |
           git reset --hard HEAD
           rm -rf ./vendor/tastyigniter/flame
-          wget https://github.com/tastyigniter/flame/archive/master.zip -O ./vendor/tastyigniter/master.zip
-          unzip ./vendor/tastyigniter/master.zip -d ./vendor/tastyigniter
-          mv ./vendor/tastyigniter/flame-master ./vendor/tastyigniter/flame
+          wget https://github.com/tastyigniter/flame/archive/develop.zip -O ./vendor/tastyigniter/develop.zip
+          unzip ./vendor/tastyigniter/develop.zip -d ./vendor/tastyigniter
+          mv ./vendor/tastyigniter/flame-develop ./vendor/tastyigniter/flame
           composer dump-autoload
 
       - name: Run composer post-update scripts
@@ -71,8 +69,8 @@ jobs:
           php artisan igniter:util set version
           php artisan package:discover
 
-      - name: Run PHPUnit Test Suite
-        run: ./vendor/bin/phpunit
+      - name: Run Pest Test Suite
+        run: composer test
 
     env:
       DB_PORT: 3306

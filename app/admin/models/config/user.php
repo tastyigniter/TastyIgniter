@@ -230,7 +230,7 @@ $config['form']['fields'] = [
         'span' => 'left',
         'trigger' => [
             'action' => 'show',
-            'field' => 'user[send_invite]',
+            'field' => 'send_invite',
             'condition' => 'unchecked',
         ],
     ],
@@ -240,7 +240,7 @@ $config['form']['fields'] = [
         'span' => 'right',
         'trigger' => [
             'action' => 'show',
-            'field' => 'user[send_invite]',
+            'field' => 'send_invite',
             'condition' => 'unchecked',
         ],
     ],

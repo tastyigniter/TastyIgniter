@@ -4,6 +4,7 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 
 /**
@@ -11,6 +12,7 @@ use Igniter\Flame\Database\Model;
  */
 class Mealtime extends Model
 {
+    use HasFactory;
     use Locationable;
 
     const LOCATIONABLE_RELATION = 'locations';

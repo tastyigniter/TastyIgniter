@@ -5,6 +5,7 @@ namespace Admin\Models;
 use Admin\Traits\HasDeliveryAreas;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
@@ -17,6 +18,7 @@ class Location extends AbstractLocation
 {
     use HasWorkingHours;
     use HasDeliveryAreas;
+    use HasFactory;
     use HasPermalink;
     use HasMedia;
     use Purgeable;

@@ -18,6 +18,7 @@ class UserSettings extends FormRequest
     {
         return [
             'allow_registration' => ['required', 'integer'],
+            'registration_email' => ['required', 'array'],
             'registration_email.*' => ['required', 'alpha'],
         ];
     }

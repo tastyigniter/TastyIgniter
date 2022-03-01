@@ -2,6 +2,7 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Support\Facades\Lang;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Lang;
 class Language extends \Igniter\Flame\Translation\Models\Language
 {
     use Purgeable;
+    use HasFactory;
 
     protected $purgeable = ['translations'];
 

@@ -36,9 +36,9 @@ class MailSettings extends FormRequest
     public function rules()
     {
         return [
-            'sender_name' => ['required'],
+            'sender_name' => ['required', 'string'],
             'sender_email' => ['required', 'email:filter'],
-            'protocol' => ['required'],
+            'protocol' => ['required', 'string'],
 
             'mail_logo' => ['string'],
             'sendmail_path' => ['required_if:protocol,sendmail', 'string'],

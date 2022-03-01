@@ -260,7 +260,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.menus.text_tab_menu_option',
             'type' => 'menuoptioneditor',
             'options' => [Admin\Models\MenuOption::class, 'getRecordEditorOptions'],
-            'form' => 'menu_item_options_model',
+            'form' => 'menuitemoption',
             'context' => ['edit', 'preview'],
         ],
 
@@ -334,7 +334,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_recurring_every',
             'tab' => 'lang:admin::lang.menus.text_tab_special',
             'type' => 'checkboxtoggle',
-            'options' => [\Admin\Models\Menus_specials_model::class, 'getRecurringEveryOptions'],
+            'options' => [\Admin\Models\MenuSpecial::class, 'getRecurringEveryOptions'],
             'trigger' => [
                 'action' => 'show',
                 'field' => 'special[validity]',

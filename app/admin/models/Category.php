@@ -4,6 +4,7 @@ namespace Admin\Models;
 
 use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Attach\HasMedia;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\NestedTree;
@@ -17,6 +18,7 @@ class Category extends Model
 {
     use Sortable;
     use HasPermalink;
+    use HasFactory;
     use NestedTree;
     use Locationable;
     use HasMedia;

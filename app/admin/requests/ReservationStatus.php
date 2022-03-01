@@ -22,7 +22,7 @@ class ReservationStatus extends FormRequest
     {
         return [
             'status_id' => ['sometimes', 'required', 'integer', 'exists:statuses'],
-            'comment' => ['max:1500'],
+            'comment' => ['string', 'max:1500'],
             'notify' => ['sometimes', 'required', 'boolean'],
 
             'assignee_group_id' => ['sometimes', 'required', 'integer', 'exists:user_groups,user_group_id'],

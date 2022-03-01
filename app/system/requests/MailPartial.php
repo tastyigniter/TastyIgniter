@@ -18,9 +18,9 @@ class MailPartial extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required'],
-            'code' => ['sometimes', 'required', 'unique:mail_partials'],
-            'html' => ['required'],
+            'name' => ['required', 'string'],
+            'code' => ['sometimes', 'required', 'string', 'unique:mail_partials'],
+            'html' => ['required', 'string'],
         ];
     }
 }

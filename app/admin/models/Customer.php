@@ -5,6 +5,7 @@ namespace Admin\Models;
 use Carbon\Carbon;
 use Exception;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Traits\Purgeable;
 use System\Traits\SendsMailTemplate;
 
@@ -15,6 +16,7 @@ class Customer extends AuthUserModel
 {
     use Purgeable;
     use SendsMailTemplate;
+    use HasFactory;
 
     /**
      * @var string The database table name

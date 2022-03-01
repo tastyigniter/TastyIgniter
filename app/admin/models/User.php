@@ -7,6 +7,7 @@ use Admin\Classes\UserState;
 use Admin\Traits\Locationable;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Traits\Purgeable;
 use System\Traits\SendsMailTemplate;
 
@@ -15,6 +16,7 @@ use System\Traits\SendsMailTemplate;
  */
 class User extends AuthUserModel
 {
+    use HasFactory;
     use Purgeable;
     use SendsMailTemplate;
     use Locationable;

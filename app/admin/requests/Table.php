@@ -24,14 +24,14 @@ class Table extends FormRequest
     public function rules()
     {
         return [
-            'table_name' => ['required', 'min:2', 'max:255'],
+            'table_name' => ['required', 'string', 'min:2', 'max:255'],
             'min_capacity' => ['required', 'integer', 'min:1', 'lte:max_capacity'],
             'max_capacity' => ['required', 'integer', 'min:1', 'gte:min_capacity'],
             'extra_capacity' => ['required', 'integer'],
             'priority' => ['required', 'integer'],
             'is_joinable' => ['required', 'boolean'],
             'table_status' => ['required', 'boolean'],
-            'locations' => ['required'],
+            'locations' => ['required', 'array'],
             'locations.*' => ['integer'],
         ];
     }

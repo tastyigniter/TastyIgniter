@@ -4,6 +4,7 @@ namespace Admin\Models;
 
 use Admin\Classes\UserState;
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 
@@ -13,6 +14,7 @@ use Igniter\Flame\Database\Traits\Purgeable;
  */
 class Staff extends Model
 {
+    use HasFactory;
     use Purgeable;
     use Locationable;
 

@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 
 /**
@@ -9,6 +10,8 @@ use Igniter\Flame\Database\Model;
  */
 class UserGroup extends Model
 {
+    use HasFactory;
+
     public const AUTO_ASSIGN_ROUND_ROBIN = 1;
 
     public const AUTO_ASSIGN_LOAD_BALANCED = 2;

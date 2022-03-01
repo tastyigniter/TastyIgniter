@@ -59,7 +59,7 @@ class Login extends \Admin\Classes\AdminController
         $data = post();
 
         $this->validate($data, [
-            'username' => ['required'],
+            'username' => ['required', 'alpha_dash', 'between:2,32'],
             'password' => ['required', 'min:6'],
         ], [], [
             'username' => lang('admin::lang.login.label_username'),

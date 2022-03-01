@@ -3,6 +3,7 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 
@@ -13,6 +14,7 @@ class Table extends Model
 {
     use Locationable;
     use Sortable;
+    use HasFactory;
 
     const LOCATIONABLE_RELATION = 'locations';
 

@@ -58,19 +58,19 @@ class Location extends FormRequest
     public function rules()
     {
         return [
-            'location_name' => ['required', 'between:2,32'],
+            'location_name' => ['required', 'string', 'between:2,32'],
             'location_email' => ['required', 'email:filter', 'max:96'],
-            'location_telephone' => ['sometimes'],
-            'location_address_1' => ['required', 'between:2,128'],
-            'location_address_2' => ['max:128'],
-            'location_city' => ['max:128'],
-            'location_state' => ['max:128'],
-            'location_postcode' => ['max:10'],
+            'location_telephone' => ['sometimes', 'string'],
+            'location_address_1' => ['required', 'string', 'between:2,128'],
+            'location_address_2' => ['string', 'max:128'],
+            'location_city' => ['string', 'max:128'],
+            'location_state' => ['string', 'max:128'],
+            'location_postcode' => ['string', 'max:15'],
             'location_country_id' => ['required', 'integer'],
             'options.auto_lat_lng' => ['required', 'boolean'],
             'location_lat' => ['sometimes', 'required_if:options.auto_lat_lng,0', 'numeric'],
             'location_lng' => ['sometimes', 'required_if:options.auto_lat_lng,0', 'numeric'],
-            'description' => ['max:3028'],
+            'description' => ['string', 'max:3028'],
             'options.limit_orders' => ['boolean'],
             'options.limit_orders_count' => ['integer', 'min:1', 'max:999'],
             'options.offer_delivery' => ['boolean'],
@@ -98,8 +98,8 @@ class Location extends FormRequest
             'options.reservation_cancellation_timeout' => ['integer', 'min:0', 'max:999'],
             'location_status' => ['boolean'],
             'permalink_slug' => ['alpha_dash', 'max:255'],
-            'gallery.title' => ['max:128'],
-            'gallery.description' => ['max:255'],
+            'gallery.title' => ['string', 'max:128'],
+            'gallery.description' => ['string', 'max:255'],
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\MailParser;
@@ -14,6 +15,8 @@ use System\Classes\MailManager;
  */
 class MailLayout extends Model
 {
+    use HasFactory;
+
     protected static $codeCache;
 
     /**

@@ -2,6 +2,7 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Exception\ValidationException;
 
 /**
@@ -9,6 +10,8 @@ use Igniter\Flame\Exception\ValidationException;
  */
 class Currency extends \Igniter\Flame\Currency\Models\Currency
 {
+    use HasFactory;
+
     /**
      * @var string The database table name
      */

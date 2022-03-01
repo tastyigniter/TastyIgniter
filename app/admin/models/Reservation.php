@@ -6,6 +6,7 @@ use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Illuminate\Support\Facades\Request;
@@ -22,6 +23,7 @@ class Reservation extends Model
     use SendsMailTemplate;
     use Locationable;
     use Assignable;
+    use HasFactory;
 
     /**
      * @var string The database table name

@@ -3,11 +3,14 @@
 namespace Admin\Models;
 
 use Igniter\Flame\Database\Casts\Serialize;
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use InvalidArgumentException;
 
 class UserRole extends Model
 {
+    use HasFactory;
+
     /**
      * @var string The database table name
      */

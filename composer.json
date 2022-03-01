@@ -27,17 +27,21 @@
     "php": ">=7.4",
     "composer/installers": "dev-main as 2.0",
     "tastyigniter/flame": "~1.2",
-    "tastyigniter/ti-module-system": "dev-develop as 3.0",
-    "tastyigniter/ti-module-admin": "dev-develop as 3.0",
-    "tastyigniter/ti-module-main": "dev-develop as 3.0",
+    "tastyigniter/ti-module-system": "dev-tests as 3.0",
+    "tastyigniter/ti-module-admin": "dev-tests as 3.0",
+    "tastyigniter/ti-module-main": "dev-tests as 3.0",
     "laravel/framework": "~8.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.0",
+    "mockery/mockery": "^1.4.2",
     "facade/ignition": "^2.5",
     "fakerphp/faker": "~1.14",
     "squizlabs/php_codesniffer": "3.*",
-    "jakub-onderka/php-parallel-lint": "^1.0"
+    "jakub-onderka/php-parallel-lint": "^1.0",
+    "pestphp/pest": "^1.21",
+    "pestphp/pest-plugin-laravel": "^1.2",
+    "pestphp/pest-plugin-faker": "^1.0"
   },
   "autoload-dev": {
     "psr-4": {
@@ -45,6 +49,7 @@
     }
   },
   "scripts": {
+    "test": "vendor/bin/pest",
     "post-create-project-cmd": [
       "php artisan key:generate"
     ]
@@ -60,6 +65,7 @@
   },
   "config": {
     "allow-plugins": {
+      "pestphp/pest-plugin": true,
       "composer/installers": true
     }
   }

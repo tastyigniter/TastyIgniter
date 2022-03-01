@@ -20,10 +20,10 @@ class Status extends FormRequest
     public function rules()
     {
         return [
-            'status_name' => ['required', 'min:2', 'max:32'],
-            'status_for' => ['required', 'alpha'],
-            'status_color' => ['max:7'],
-            'status_comment' => ['max:1028'],
+            'status_name' => ['required', 'string', 'min:2', 'max:32'],
+            'status_for' => ['required', 'in:order,reservation'],
+            'status_color' => ['string', 'max:7'],
+            'status_comment' => ['string', 'max:1028'],
             'notify_customer' => ['required', 'boolean'],
         ];
     }

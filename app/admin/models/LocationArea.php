@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
 use Igniter\Flame\Location\Models\AbstractArea;
@@ -11,6 +12,7 @@ use Igniter\Flame\Location\Models\AbstractArea;
  */
 class LocationArea extends AbstractArea
 {
+    use HasFactory;
     use Validation;
     use Sortable;
 

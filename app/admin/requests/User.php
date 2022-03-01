@@ -26,28 +26,18 @@ class User extends FormRequest
 
     public function rules()
     {
-        $passwordRule = optional($this->getForm())->context != 'create'
-            ? 'sometimes' : 'required_if:send_invite,0';
-
-        $rules = [
-            'name' => ['required', 'between:2,128'],
+        return [
+            'name' => ['required', 'string', 'between:2,128'],
             'email' => ['required', 'max:96', 'email:filter', 'unique:users,email'],
             'username' => ['required', 'alpha_dash', 'between:2,32', 'unique:users,username'],
-            'password' => [$passwordRule, 'between:6,32', 'same:password_confirm'],
+            'password' => ['sometimes', 'required_if:send_invite,0', 'string', 'between:6,32', 'same:password_confirm'],
+            'status' => ['boolean'],
+            'language_id' => ['nullable', 'integer'],
+            'user_role_id' => ['sometimes', 'required', 'integer'],
+            'groups' => ['sometimes', 'required', 'array'],
+            'locations' => ['nullable', 'array'],
+            'groups.*' => ['integer'],
+            'locations.*' => ['integer'],
         ];
-
-        if (optional($this->getForm())->context != 'account') {
-            $rules = array_merge($rules, [
-                'status' => ['boolean'],
-                'language_id' => ['nullable', 'integer'],
-                'user_role_id' => ['sometimes', 'required', 'integer'],
-                'groups' => ['required', 'array'],
-                'locations' => ['nullable', 'array'],
-                'groups.*' => ['integer'],
-                'locations.*' => ['integer'],
-            ]);
-        }
-
-        return $rules;
     }
 }
