@@ -9,6 +9,7 @@ use Admin\Models\Staff_groups_model;
 use Admin\Models\Staff_roles_model;
 use Admin\Models\Staffs_model;
 use Admin\Models\Users_model;
+use DateTimeZone;
 use Igniter\Flame\Support\ConfigRewrite;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -144,7 +145,9 @@ class IgniterInstall extends Command
         DatabaseSeeder::$siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
         DatabaseSeeder::$siteUrl = $this->ask('Site URL', Config::get('app.url'));
         DatabaseSeeder::$siteLanguage = $this->ask('Site Language', DatabaseSeeder::$siteLanguage);
-        DatabaseSeeder::$siteTimezone = $this->ask('Site Timezone', DatabaseSeeder::$siteTimezone);
+
+        $availableTimezones = DateTimeZone;::listIdentifiers(DateTimeZone::ALL);
+        DatabaseSeeder::$siteTimezone = $this->choice('Site Timezone', $availableTimezones, $availableTimezones[DatabaseSeeder::$siteTimezone] ?? 0);
 
         DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
 
