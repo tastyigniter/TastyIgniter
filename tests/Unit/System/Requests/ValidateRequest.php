@@ -9,40 +9,10 @@ trait ValidateRequest
 {
     protected $factory;
 
-    /**
-     * @dataProvider validationProvider
-     * @param \Closure $callback
-     */
-    public function test_validation_results_as_expected($callback)
-    {
-        [$shouldPass, $mockedRequestData] = $callback();
-
-        $this->assertEquals(
-            $shouldPass,
-            $this->validate($mockedRequestData)
-        );
-    }
-
     public function assertFormRequestAsExpected($requestClass, $callback)
     {
         [$shouldPass, $mockedRequestData] = $callback;
 
-        expect($this->validate($mockedRequestData, $requestClass))
-            ->toBe($shouldPass);
-    }
-
-    public function validationProvider()
-    {
-        return [];
-    }
-
-    protected function factory(...$parameters)
-    {
-        return $this->modelClass::factory(...$parameters);
-    }
-
-    protected function validate($mockedRequestData, $requestClass = null)
-    {
         if (is_null($requestClass))
             $requestClass = $this->requestClass;
 
@@ -57,11 +27,12 @@ trait ValidateRequest
 
         try {
             app($requestClass);
-
-            return TRUE;
+            $actualResult = TRUE;
         }
         catch (ValidationException $ex) {
-            return FALSE;
+            $actualResult = $shouldPass ? $ex->getErrors()->toJson() : FALSE;
         }
+
+        expect($shouldPass)->toBe($actualResult);
     }
 }
