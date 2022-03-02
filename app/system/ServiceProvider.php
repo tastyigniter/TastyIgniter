@@ -245,7 +245,7 @@ class ServiceProvider extends AppServiceProvider
             ]);
 
             $manager->registerMailVariables(
-                File::getRequire(__DIR__.'/models/config/MailVariables.php')
+                File::getRequire(__DIR__.'/models/config/mailvariables.php')
             );
         });
 
