@@ -35,7 +35,7 @@ test('validation results as expected', function ($callback) {
 
     'request_should_fail_when_menu_price_is_less_than_zero' => [
         function () {
-            return [FALSE, Menu::factory(['menu_price' => faker()->numberBetween(-100, 0),
+            return [FALSE, Menu::factory(['menu_price' => faker()->numberBetween(-100, -1),
             ])];
         },
     ],
