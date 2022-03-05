@@ -115,7 +115,7 @@ class CalendarController extends ControllerAction
         $configFile = $calendarConfig['configFile'];
         $modelConfig = $this->loadConfig($configFile, ['calendar'], 'calendar');
 
-        $widget = $this->makeWidget('Admin\Widgets\Calendar', $calendarConfig);
+        $widget = $this->makeWidget(\Admin\Widgets\Calendar::class, $calendarConfig);
 
         $widget->bindEvent('calendar.generateEvents', function ($startAt, $endAt) {
             return $this->controller->calendarGenerateEvents($startAt, $endAt);

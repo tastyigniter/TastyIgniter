@@ -8,7 +8,7 @@ trait Stockable
     {
         self::extend(function (self $model) {
             $model->relation['morphMany']['stocks'] = [
-                'Admin\Models\Stock', 'name' => 'stockable', 'delete' => TRUE,
+                \Admin\Models\Stock::class, 'name' => 'stockable', 'delete' => TRUE,
             ];
 
             $model->appends[] = 'stock_qty';

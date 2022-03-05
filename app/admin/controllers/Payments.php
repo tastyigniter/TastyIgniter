@@ -14,13 +14,13 @@ use System\Helpers\ValidationHelper;
 class Payments extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Payment',
+            'model' => \Admin\Models\Payment::class,
             'title' => 'lang:admin::lang.payments.text_title',
             'emptyMessage' => 'lang:admin::lang.payments.text_empty',
             'defaultSort' => ['updated_at', 'DESC'],
@@ -30,7 +30,7 @@ class Payments extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.payments.text_form_name',
-        'model' => 'Admin\Models\Payment',
+        'model' => \Admin\Models\Payment::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'payments/edit/{code}',

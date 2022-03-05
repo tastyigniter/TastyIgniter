@@ -8,13 +8,13 @@ use System\Models\RequestLog;
 class RequestLogs extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\RequestLog',
+            'model' => \System\Models\RequestLog::class,
             'title' => 'lang:system::lang.request_logs.text_title',
             'emptyMessage' => 'lang:system::lang.request_logs.text_empty',
             'defaultSort' => ['count', 'DESC'],
@@ -24,7 +24,7 @@ class RequestLogs extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:system::lang.request_logs.text_form_name',
-        'model' => 'System\Models\RequestLog',
+        'model' => \System\Models\RequestLog::class,
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
             'redirect' => 'request_logs',

@@ -8,13 +8,13 @@ use Admin\Models\UserGroup;
 class UserGroups extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\UserGroup',
+            'model' => \Admin\Models\UserGroup::class,
             'title' => 'lang:admin::lang.user_groups.text_title',
             'emptyMessage' => 'lang:admin::lang.user_groups.text_empty',
             'defaultSort' => ['user_group_id', 'DESC'],
@@ -24,8 +24,8 @@ class UserGroups extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.user_groups.text_form_name',
-        'model' => 'Admin\Models\UserGroup',
-        'request' => 'Admin\Requests\UserGroup',
+        'model' => \Admin\Models\UserGroup::class,
+        'request' => \Admin\Requests\UserGroup::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'user_groups/edit/{user_group_id}',

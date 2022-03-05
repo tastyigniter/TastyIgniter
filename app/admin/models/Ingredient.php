@@ -34,8 +34,8 @@ class Ingredient extends Model
 
     public $relation = [
         'morphedByMany' => [
-            'menus' => ['Admin\Models\Menu', 'name' => 'ingredientable'],
-            'menu_option_values' => ['Admin\Models\MenuOptionValue', 'name' => 'ingredientable'],
+            'menus' => [\Admin\Models\Menu::class, 'name' => 'ingredientable'],
+            'menu_option_values' => [\Admin\Models\MenuOptionValue::class, 'name' => 'ingredientable'],
         ],
     ];
 

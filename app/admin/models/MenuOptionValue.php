@@ -37,10 +37,10 @@ class MenuOptionValue extends Model
 
     public $relation = [
         'belongsTo' => [
-            'option' => ['Admin\Models\MenuOption'],
+            'option' => [\Admin\Models\MenuOption::class],
         ],
         'morphToMany' => [
-            'ingredients' => ['Admin\Models\Ingredient', 'name' => 'ingredientable'],
+            'ingredients' => [\Admin\Models\Ingredient::class, 'name' => 'ingredientable'],
         ],
     ];
 

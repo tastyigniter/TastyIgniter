@@ -8,14 +8,14 @@ use Admin\Facades\AdminMenu;
 class Ingredients extends AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
-        'Admin\Actions\LocationAwareController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
+        \Admin\Actions\LocationAwareController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Ingredient',
+            'model' => \Admin\Models\Ingredient::class,
             'title' => 'lang:admin::lang.ingredients.text_title',
             'emptyMessage' => 'lang:admin::lang.ingredients.text_empty',
             'defaultSort' => ['ingredient_id', 'DESC'],
@@ -25,8 +25,8 @@ class Ingredients extends AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.ingredients.text_form_name',
-        'model' => 'Admin\Models\Ingredient',
-        'request' => 'Admin\Requests\Ingredient',
+        'model' => \Admin\Models\Ingredient::class,
+        'request' => \Admin\Requests\Ingredient::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'ingredients/edit/{ingredient_id}',

@@ -20,5 +20,3 @@ class ImageHelper
         return MediaLibrary::instance()->getMediaThumb($path, $options);
     }
 }
-
-class_alias('Main\Helpers\ImageHelper', 'Main\Models\Image_tool_model', FALSE);

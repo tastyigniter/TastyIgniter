@@ -28,9 +28,9 @@ class AssignableLog extends Model
 
     public $relation = [
         'belongsTo' => [
-            'assignee' => 'Admin\Models\User',
-            'assignee_group' => 'Admin\Models\UserGroup',
-            'status' => 'Admin\Models\Status',
+            'assignee' => \Admin\Models\User::class,
+            'assignee_group' => \Admin\Models\UserGroup::class,
+            'status' => \Admin\Models\Status::class,
         ],
         'morphTo' => [
             'assignable' => [],

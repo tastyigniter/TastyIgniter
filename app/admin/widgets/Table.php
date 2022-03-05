@@ -37,7 +37,7 @@ class Table extends BaseWidget
      */
     protected $recordsKeyFrom;
 
-    protected $dataSourceAliases = 'Admin\Widgets\Table\Source\DataSource';
+    protected $dataSourceAliases = \Admin\Widgets\Table\Source\DataSource::class;
 
     public $showPagination = TRUE;
 

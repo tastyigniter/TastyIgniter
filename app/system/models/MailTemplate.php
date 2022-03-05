@@ -28,7 +28,7 @@ class MailTemplate extends Model
 
     public $relation = [
         'belongsTo' => [
-            'layout' => ['System\Models\MailLayout', 'foreignKey' => 'layout_id'],
+            'layout' => [\System\Models\MailLayout::class, 'foreignKey' => 'layout_id'],
         ],
     ];
 

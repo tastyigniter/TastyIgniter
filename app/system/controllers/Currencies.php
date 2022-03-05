@@ -7,13 +7,13 @@ use Admin\Facades\AdminMenu;
 class Currencies extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Currency',
+            'model' => \System\Models\Currency::class,
             'title' => 'lang:system::lang.currencies.text_title',
             'emptyMessage' => 'lang:system::lang.currencies.text_empty',
             'defaultSort' => ['currency_status', 'DESC'],
@@ -23,8 +23,8 @@ class Currencies extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:system::lang.currencies.text_form_name',
-        'model' => 'System\Models\Currency',
-        'request' => 'System\Requests\Currency',
+        'model' => \System\Models\Currency::class,
+        'request' => \System\Requests\Currency::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'currencies/edit/{currency_id}',

@@ -12,9 +12,9 @@ trait LogsStatusHistory
     public static function bootLogsStatusHistory()
     {
         self::extend(function (self $model) {
-            $model->relation['belongsTo']['status'] = ['Admin\Models\Status'];
+            $model->relation['belongsTo']['status'] = [\Admin\Models\Status::class];
             $model->relation['morphMany']['status_history'] = [
-                'Admin\Models\StatusHistory', 'name' => 'object', 'delete' => TRUE,
+                \Admin\Models\StatusHistory::class, 'name' => 'object', 'delete' => TRUE,
             ];
 
             $model->appends[] = 'status_name';

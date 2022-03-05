@@ -32,8 +32,8 @@ class StatusHistory extends Model
 
     public $relation = [
         'belongsTo' => [
-            'user' => 'Admin\Models\User',
-            'status' => ['Admin\Models\Status', 'status_id'],
+            'user' => \Admin\Models\User::class,
+            'status' => [\Admin\Models\Status::class, 'status_id'],
         ],
         'morphTo' => [
             'object' => [],

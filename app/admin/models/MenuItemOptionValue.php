@@ -39,9 +39,9 @@ class MenuItemOptionValue extends Model
 
     public $relation = [
         'belongsTo' => [
-            'menu' => ['Admin\Models\Menu'],
-            'option' => ['Admin\Models\MenuOption'],
-            'option_value' => ['Admin\Models\MenuOptionValue'],
+            'menu' => [\Admin\Models\Menu::class],
+            'option' => [\Admin\Models\MenuOption::class],
+            'option_value' => [\Admin\Models\MenuOptionValue::class],
         ],
     ];
 

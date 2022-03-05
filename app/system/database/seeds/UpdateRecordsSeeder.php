@@ -30,12 +30,12 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function updateMorphsOnStatusHistory()
     {
-        if (DB::table('status_history')->where('object_type', 'Admin\Models\Order')->count())
+        if (DB::table('status_history')->where('object_type', \Admin\Models\Order::class)->count())
             return;
 
         $morphs = [
-            'order' => 'Admin\Models\Order',
-            'reserve' => 'Admin\Models\Reservation',
+            'order' => \Admin\Models\Order::class,
+            'reserve' => \Admin\Models\Reservation::class,
         ];
 
         DB::table('status_history')->get()->each(function ($model) use ($morphs) {

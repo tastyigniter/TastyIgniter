@@ -29,9 +29,9 @@ class StockHistory extends Model
 
     public $relation = [
         'belongsTo' => [
-            'stock' => 'Admin\Models\Stock',
-            'user' => 'Admin\Models\User',
-            'order' => 'Admin\Models\Order',
+            'stock' => \Admin\Models\Stock::class,
+            'user' => \Admin\Models\User::class,
+            'order' => \Admin\Models\Order::class,
         ],
     ];
 

@@ -36,7 +36,7 @@ class Currency extends \Igniter\Flame\Currency\Models\Currency
 
     public $relation = [
         'belongsTo' => [
-            'country' => 'System\Models\Country',
+            'country' => \System\Models\Country::class,
         ],
     ];
 

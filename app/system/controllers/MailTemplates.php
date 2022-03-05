@@ -10,13 +10,13 @@ use System\Models\MailTemplate;
 class MailTemplates extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\MailTemplate',
+            'model' => \System\Models\MailTemplate::class,
             'title' => 'lang:system::lang.mail_templates.text_template_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['template_id', 'DESC'],
@@ -26,8 +26,8 @@ class MailTemplates extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_form_name',
-        'model' => 'System\Models\MailTemplate',
-        'request' => 'System\Requests\MailTemplate',
+        'model' => \System\Models\MailTemplate::class,
+        'request' => \System\Requests\MailTemplate::class,
         'create' => [
             'title' => 'lang:system::lang.mail_templates.text_new_template_title',
             'redirect' => 'mail_templates/edit/{template_id}',

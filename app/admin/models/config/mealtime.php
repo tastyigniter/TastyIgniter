@@ -5,7 +5,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'scope' => 'whereHasLocation',
-            'modelClass' => 'Admin\Models\Location',
+            'modelClass' => \Admin\Models\Location::class,
             'nameFrom' => 'location_name',
             'locationAware' => TRUE,
         ],

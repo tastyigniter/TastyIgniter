@@ -11,7 +11,7 @@ class Customer extends \Igniter\Flame\Auth\Manager
 {
     protected $sessionKey = 'customer_auth';
 
-    protected $model = 'Admin\Models\Customer';
+    protected $model = \Admin\Models\Customer::class;
 
     public function __construct()
     {

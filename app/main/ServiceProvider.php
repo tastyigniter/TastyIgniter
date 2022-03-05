@@ -6,6 +6,7 @@ use Admin\Classes\PermissionManager;
 use Admin\Classes\Widgets;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Igniter\Flame\Setting\Facades\Setting;
+use Igniter\Flame\Support\ClassLoader;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Main\Classes\ThemeManager;
@@ -44,6 +45,9 @@ class ServiceProvider extends AppServiceProvider
     public function register()
     {
         parent::register('main');
+
+        // Provide backward compatibility for old model class names
+        $this->registerModelClassAliases();
 
         if (!$this->app->runningInAdmin()) {
             $this->registerSingletons();
@@ -114,12 +118,12 @@ class ServiceProvider extends AppServiceProvider
     protected function registerFormWidgets()
     {
         Widgets::instance()->registerFormWidgets(function (Widgets $manager) {
-            $manager->registerFormWidget('Main\FormWidgets\Components', [
+            $manager->registerFormWidget(\Main\FormWidgets\Components::class, [
                 'label' => 'Components',
                 'code' => 'components',
             ]);
 
-            $manager->registerFormWidget('Main\FormWidgets\TemplateEditor', [
+            $manager->registerFormWidget(\Main\FormWidgets\TemplateEditor::class, [
                 'label' => 'Template editor',
                 'code' => 'templateeditor',
             ]);
@@ -152,9 +156,16 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/media'),
                     'form' => '~/app/main/models/config/media_settings',
-                    'request' => 'Main\Requests\MediaSettings',
+                    'request' => \Main\Requests\MediaSettings::class,
                 ],
             ]);
         });
+    }
+
+    protected function registerModelClassAliases()
+    {
+        resolve(ClassLoader::class)->addAliases([
+            'Main\Helpers\ImageHelper' => 'Main\Models\Image_tool_model',
+        ]);
     }
 }

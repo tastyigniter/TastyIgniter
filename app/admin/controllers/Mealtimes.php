@@ -7,14 +7,14 @@ use Admin\Facades\AdminMenu;
 class Mealtimes extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
-        'Admin\Actions\LocationAwareController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
+        \Admin\Actions\LocationAwareController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Mealtime',
+            'model' => \Admin\Models\Mealtime::class,
             'title' => 'lang:admin::lang.mealtimes.text_title',
             'emptyMessage' => 'lang:admin::lang.mealtimes.text_empty',
             'defaultSort' => ['mealtime_id', 'DESC'],
@@ -24,8 +24,8 @@ class Mealtimes extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.mealtimes.text_form_name',
-        'model' => 'Admin\Models\Mealtime',
-        'request' => 'Admin\Requests\Mealtime',
+        'model' => \Admin\Models\Mealtime::class,
+        'request' => \Admin\Requests\Mealtime::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'mealtimes/edit/{mealtime_id}',

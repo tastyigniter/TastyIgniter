@@ -59,7 +59,7 @@ class StatusEditor extends BaseFormWidget
 
     public $statusRelationFrom = 'status';
 
-    public $statusModelClass = 'Admin\Models\StatusHistory';
+    public $statusModelClass = \Admin\Models\StatusHistory::class;
 
     /**
      * @var string Text to display for the title of the popup list form
@@ -81,7 +81,7 @@ class StatusEditor extends BaseFormWidget
 
     public $assigneeRelationFrom = 'assignee';
 
-    public $assigneeModelClass = 'Admin\Models\AssignableLog';
+    public $assigneeModelClass = \Admin\Models\AssignableLog::class;
 
     public $assigneeOrderPermission = 'Admin.AssignOrders';
 

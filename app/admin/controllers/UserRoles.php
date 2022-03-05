@@ -7,13 +7,13 @@ use Admin\Facades\AdminMenu;
 class UserRoles extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\UserRole',
+            'model' => \Admin\Models\UserRole::class,
             'title' => 'lang:admin::lang.user_roles.text_title',
             'emptyMessage' => 'lang:admin::lang.user_roles.text_empty',
             'defaultSort' => ['user_role_id', 'DESC'],
@@ -23,8 +23,8 @@ class UserRoles extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.user_roles.text_form_name',
-        'model' => 'Admin\Models\UserRole',
-        'request' => 'Admin\Requests\UserRole',
+        'model' => \Admin\Models\UserRole::class,
+        'request' => \Admin\Requests\UserRole::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'user_roles/edit/{user_role_id}',

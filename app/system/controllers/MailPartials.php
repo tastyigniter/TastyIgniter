@@ -7,13 +7,13 @@ use Admin\Facades\AdminMenu;
 class MailPartials extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\MailPartial',
+            'model' => \System\Models\MailPartial::class,
             'title' => 'lang:system::lang.mail_templates.text_partial_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['partial_id', 'DESC'],
@@ -23,8 +23,8 @@ class MailPartials extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_partial_form_name',
-        'model' => 'System\Models\MailPartial',
-        'request' => 'System\Requests\MailPartial',
+        'model' => \System\Models\MailPartial::class,
+        'request' => \System\Requests\MailPartial::class,
         'create' => [
             'title' => 'lang:system::lang.mail_templates.text_new_partial_title',
             'redirect' => 'mail_partials/edit/{partial_id}',

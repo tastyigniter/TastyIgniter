@@ -972,7 +972,7 @@ class Form extends BaseWidget
             return FALSE;
         }
 
-        if (is_subclass_of($widgetClass, 'Admin\Classes\BaseFormWidget')) {
+        if (is_subclass_of($widgetClass, \Admin\Classes\BaseFormWidget::class)) {
             return TRUE;
         }
 

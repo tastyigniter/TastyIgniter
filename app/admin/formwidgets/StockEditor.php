@@ -173,7 +173,7 @@ class StockEditor extends BaseFormWidget
         $widgetConfig['alias'] = $this->alias.'FormStockHistory';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[stockHistory]';
 
-        $widget = $this->makeFormWidget('Admin\FormWidgets\DataTable', $field, $widgetConfig);
+        $widget = $this->makeFormWidget(\Admin\FormWidgets\DataTable::class, $field, $widgetConfig);
         $widget->bindToController();
         $widget->previewMode = $this->previewMode;
 

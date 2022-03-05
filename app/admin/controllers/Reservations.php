@@ -12,16 +12,16 @@ use Igniter\Flame\Exception\ApplicationException;
 class Reservations extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\CalendarController',
-        'Admin\Actions\FormController',
-        'Admin\Actions\AssigneeController',
-        'Admin\Actions\LocationAwareController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\CalendarController::class,
+        \Admin\Actions\FormController::class,
+        \Admin\Actions\AssigneeController::class,
+        \Admin\Actions\LocationAwareController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Reservation',
+            'model' => \Admin\Models\Reservation::class,
             'title' => 'lang:admin::lang.reservations.text_title',
             'emptyMessage' => 'lang:admin::lang.reservations.text_empty',
             'defaultSort' => ['reservation_id', 'DESC'],
@@ -40,8 +40,8 @@ class Reservations extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.reservations.text_form_name',
-        'model' => 'Admin\Models\Reservation',
-        'request' => 'Admin\Requests\Reservation',
+        'model' => \Admin\Models\Reservation::class,
+        'request' => \Admin\Requests\Reservation::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'reservations/edit/{reservation_id}',
@@ -89,7 +89,7 @@ class Reservations extends \Admin\Classes\AdminController
         if (!$this->getUser()->hasPermission('Admin.DeleteReservations'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
-        return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
+        return $this->asExtension(\Admin\Actions\ListController::class)->index_onDelete();
     }
 
     public function index_onUpdateStatus()
@@ -112,7 +112,7 @@ class Reservations extends \Admin\Classes\AdminController
         if (!$this->getUser()->hasPermission('Admin.DeleteReservations'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
-        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete();
+        return $this->asExtension(\Admin\Actions\FormController::class)->edit_onDelete();
     }
 
     public function calendarGenerateEvents($startAt, $endAt)

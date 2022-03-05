@@ -9,7 +9,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.menu_options.text_filter_display_type',
             'type' => 'select',
             'conditions' => 'display_type = :filtered',
-            'options' => ['Admin\Models\MenuOption', 'getDisplayTypeOptions'],
+            'options' => [\Admin\Models\MenuOption::class, 'getDisplayTypeOptions'],
         ],
     ],
 ];

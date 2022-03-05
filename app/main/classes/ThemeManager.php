@@ -21,7 +21,7 @@ class ThemeManager
 {
     use Singleton;
 
-    protected $themeModel = 'System\Models\Theme';
+    protected $themeModel = \System\Models\Theme::class;
 
     /**
      * @var array of disabled themes.

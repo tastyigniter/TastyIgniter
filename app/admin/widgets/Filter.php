@@ -90,7 +90,7 @@ class Filter extends BaseWidget
         if (isset($this->search)) {
             $searchConfig = $this->search;
             $searchConfig['alias'] = $this->alias.'Search';
-            $this->searchWidget = $this->makeWidget('Admin\Widgets\SearchBox', $searchConfig);
+            $this->searchWidget = $this->makeWidget(\Admin\Widgets\SearchBox::class, $searchConfig);
             $this->searchWidget->bindToController();
         }
     }

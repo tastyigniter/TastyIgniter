@@ -19,7 +19,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'conditions' => 'location_id = :filtered',
-            'modelClass' => 'Admin\Models\Location',
+            'modelClass' => \Admin\Models\Location::class,
             'nameFrom' => 'location_name',
             'locationAware' => TRUE,
         ],
@@ -27,21 +27,21 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'selectlist',
             'conditions' => 'status_id IN(:filtered)',
-            'modelClass' => 'Admin\Models\Status',
+            'modelClass' => \Admin\Models\Status::class,
             'options' => 'getDropdownOptionsForOrder',
         ],
         'type' => [
             'label' => 'lang:admin::lang.orders.text_filter_order_type',
             'type' => 'select',
             'conditions' => 'order_type = :filtered',
-            'modelClass' => 'Admin\Models\Location',
+            'modelClass' => \Admin\Models\Location::class,
             'options' => 'getOrderTypeOptions',
         ],
         'payment' => [
             'label' => 'lang:admin::lang.orders.text_filter_payment',
             'type' => 'select',
             'conditions' => 'payment = :filtered',
-            'modelClass' => 'Admin\Models\Payment',
+            'modelClass' => \Admin\Models\Payment::class,
             'options' => 'getDropdownOptions',
         ],
         'date' => [
@@ -197,7 +197,7 @@ $config['form']['fields'] = [
         'type' => 'statuseditor',
         'span' => 'right',
         'form' => 'orderstatus',
-        'request' => 'Admin\Requests\OrderStatus',
+        'request' => \Admin\Requests\OrderStatus::class,
     ],
 ];
 
