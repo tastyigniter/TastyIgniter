@@ -83,7 +83,10 @@ trait FormExtendable
 
         // Prepare query and find model record
         $query = $model->newQuery();
+
+        // @deprecated event controller.form.extendQuery, use admin.controller.extendFormQuery. Remove before v4
         $this->controller->fireEvent('controller.form.extendQuery', [$query]);
+        $this->controller->fireEvent('admin.controller.extendFormQuery', [$query]);
         $this->controller->formExtendQuery($query);
 
         $result = $query->find($recordId);

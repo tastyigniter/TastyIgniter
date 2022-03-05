@@ -369,6 +369,14 @@ $config['form']['tabs'] = [
             'default' => 0,
             'comment' => 'lang:admin::lang.locations.help_delivery_cancellation_timeout',
         ],
+        'options[delivery_add_lead_time]' => [
+            'label' => 'lang:admin::lang.locations.label_delivery_add_lead_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
+            'type' => 'switch',
+            'span' => 'right',
+            'default' => 0,
+            'comment' => 'lang:admin::lang.locations.help_delivery_add_lead_time',
+        ],
 
         'collection_order' => [
             'label' => 'lang:admin::lang.locations.text_tab_collection_order',
@@ -451,6 +459,14 @@ $config['form']['tabs'] = [
             'span' => 'left',
             'default' => 0,
             'comment' => 'lang:admin::lang.locations.help_collection_cancellation_timeout',
+        ],
+        'options[collection_add_lead_time]' => [
+            'label' => 'lang:admin::lang.locations.label_collection_add_lead_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_orders',
+            'type' => 'switch',
+            'span' => 'right',
+            'default' => 0,
+            'comment' => 'lang:admin::lang.locations.help_collection_add_lead_time',
         ],
 
         'options[offer_reservation]' => [
@@ -551,6 +567,14 @@ $config['form']['tabs'] = [
             'span' => 'left',
             'default' => 0,
             'comment' => 'lang:admin::lang.locations.help_reservation_cancellation_timeout',
+        ],
+        'options[reservation_include_start_time]' => [
+            'label' => 'lang:admin::lang.locations.label_reservation_include_start_time',
+            'tab' => 'lang:admin::lang.locations.text_tab_reservation',
+            'type' => 'switch',
+            'span' => 'right',
+            'default' => 1,
+            'comment' => 'lang:admin::lang.locations.help_reservation_include_start_time',
         ],
 
         'options[payments]' => [

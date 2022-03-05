@@ -126,6 +126,8 @@ class Country
             $result['format'] = $country['format'];
         }
         elseif (is_numeric($country)) {
+            $this->loadCountries();
+
             if ($countryModel = $this->countriesCollection->find($country)) {
                 $result['country'] = $countryModel->country_name;
                 $result['format'] = $countryModel->format;
