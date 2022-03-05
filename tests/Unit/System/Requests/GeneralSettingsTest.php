@@ -120,7 +120,7 @@ test('validation results as expected', function ($callback) {
 function generalSettingsData(): array
 {
     return [
-        'site_name' => faker()->word(),
+        'site_name' => faker()->lexify('?????'),
         'site_email' => faker()->email(),
         'site_logo' => 'no_phone.png',
         'timezone' => faker()->timezone(),
