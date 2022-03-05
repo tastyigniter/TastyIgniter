@@ -24,7 +24,7 @@ class Language extends \Igniter\Flame\Translation\Models\Language
 
     public $relation = [
         'hasMany' => [
-            'translations' => ['System\Models\Translation', 'foreignKey' => 'locale', 'otherKey' => 'code', 'delete' => TRUE],
+            'translations' => [\System\Models\Translation::class, 'foreignKey' => 'locale', 'otherKey' => 'code', 'delete' => TRUE],
         ],
     ];
 

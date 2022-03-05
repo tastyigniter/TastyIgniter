@@ -185,7 +185,7 @@ class ListController extends ControllerAction
         $columnConfig['model'] = $model;
         $columnConfig['alias'] = $alias;
 
-        $widget = $this->makeWidget('Admin\Widgets\Lists', array_merge($columnConfig, $listConfig));
+        $widget = $this->makeWidget(\Admin\Widgets\Lists::class, array_merge($columnConfig, $listConfig));
 
         $widget->bindEvent('list.extendColumns', function () use ($widget) {
             $this->controller->listExtendColumns($widget);
@@ -220,7 +220,7 @@ class ListController extends ControllerAction
         if (array_get($modelConfig, 'filter')) {
             $filterConfig = $modelConfig['filter'];
             $filterConfig['alias'] = "{$widget->alias}_filter";
-            $filterWidget = $this->makeWidget('Admin\Widgets\Filter', $filterConfig);
+            $filterWidget = $this->makeWidget(\Admin\Widgets\Filter::class, $filterConfig);
             $filterWidget->bindToController();
 
             if ($searchWidget = $filterWidget->getSearchWidget()) {

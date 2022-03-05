@@ -9,14 +9,14 @@ use Admin\Models\Category;
 class Categories extends AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
-        'Admin\Actions\LocationAwareController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
+        \Admin\Actions\LocationAwareController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Category',
+            'model' => \Admin\Models\Category::class,
             'title' => 'lang:admin::lang.categories.text_title',
             'emptyMessage' => 'lang:admin::lang.categories.text_empty',
             'defaultSort' => ['category_id', 'DESC'],
@@ -26,8 +26,8 @@ class Categories extends AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.categories.text_form_name',
-        'model' => 'Admin\Models\Category',
-        'request' => 'Admin\Requests\Category',
+        'model' => \Admin\Models\Category::class,
+        'request' => \Admin\Requests\Category::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'categories/edit/{category_id}',

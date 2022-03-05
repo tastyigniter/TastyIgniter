@@ -28,7 +28,7 @@ class CustomerGroup extends Model
 
     public $relation = [
         'hasMany' => [
-            'customers' => 'Admin\Models\Customer',
+            'customers' => \Admin\Models\Customer::class,
         ],
     ];
 

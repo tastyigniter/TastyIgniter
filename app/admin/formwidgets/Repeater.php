@@ -229,7 +229,7 @@ class Repeater extends BaseFormWidget
         $config['alias'] = $this->alias.'Form'.$index;
         $config['arrayName'] = $this->formField->getName().'['.$index.']';
 
-        $widget = $this->makeWidget('Admin\Widgets\Form', $config);
+        $widget = $this->makeWidget(\Admin\Widgets\Form::class, $config);
         $widget->bindToController();
 
         return $widget;

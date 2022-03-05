@@ -246,7 +246,7 @@ class Components extends BaseFormWidget
         $formConfig['previewMode'] = $this->previewMode;
         $formConfig['context'] = $context;
 
-        $widget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
+        $widget = $this->makeWidget(\Admin\Widgets\Form::class, $formConfig);
 
         $widget->bindEvent('form.extendFields', function ($allFields) use ($widget, $componentObj) {
             if (!$formField = $widget->getField('partial'))

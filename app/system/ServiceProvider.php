@@ -350,16 +350,16 @@ class ServiceProvider extends AppServiceProvider
     protected function defineEloquentMorphMaps()
     {
         Relation::morphMap([
-            'activities' => 'System\Models\Activity',
-            'countries' => 'System\Models\Country',
-            'currencies' => 'System\Models\Currency',
-            'extensions' => 'System\Models\Extension',
-            'languages' => 'System\Models\Language',
-            'mail_layouts' => 'System\Models\MailLayout',
-            'mail_templates' => 'System\Models\MailTemplate',
-            'pages' => 'System\Models\Page',
-            'settings' => 'System\Models\Settings',
-            'themes' => 'System\Models\Theme',
+            'activities' => \System\Models\Activity::class,
+            'countries' => \System\Models\Country::class,
+            'currencies' => \System\Models\Currency::class,
+            'extensions' => \System\Models\Extension::class,
+            'languages' => \System\Models\Language::class,
+            'mail_layouts' => \System\Models\MailLayout::class,
+            'mail_templates' => \System\Models\MailTemplate::class,
+            'pages' => \System\Models\Page::class,
+            'settings' => \System\Models\Settings::class,
+            'themes' => \System\Models\Theme::class,
         ]);
     }
 
@@ -445,7 +445,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/general'),
                     'form' => '~/app/system/models/config/generalsettings',
-                    'request' => 'System\Requests\GeneralSettings',
+                    'request' => \System\Requests\GeneralSettings::class,
                 ],
                 'mail' => [
                     'label' => 'lang:system::lang.settings.text_tab_mail',
@@ -455,7 +455,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/mail'),
                     'form' => '~/app/system/models/config/mailsettings',
-                    'request' => 'System\Requests\MailSettings',
+                    'request' => \System\Requests\MailSettings::class,
                 ],
                 'advanced' => [
                     'label' => 'lang:system::lang.settings.text_tab_server',
@@ -465,7 +465,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/advanced'),
                     'form' => '~/app/system/models/config/advancedsettings',
-                    'request' => 'System\Requests\AdvancedSettings',
+                    'request' => \System\Requests\AdvancedSettings::class,
                 ],
             ]);
         });

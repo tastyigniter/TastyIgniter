@@ -250,7 +250,7 @@ $config['form']['tabs'] = [
             'type' => 'scheduleeditor',
             'context' => ['edit'],
             'form' => 'workinghour',
-            'request' => 'Admin\Requests\WorkingHour',
+            'request' => \Admin\Requests\WorkingHour::class,
         ],
 
         'options[limit_orders]' => [
@@ -581,7 +581,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.locations.label_payments',
             'tab' => 'lang:admin::lang.locations.label_payments',
             'type' => 'checkboxlist',
-            'options' => ['Admin\Models\Payment', 'listDropdownOptions'],
+            'options' => [\Admin\Models\Payment::class, 'listDropdownOptions'],
             'commentAbove' => 'lang:admin::lang.locations.help_payments',
             'placeholder' => 'lang:admin::lang.locations.help_no_payments',
         ],
@@ -592,7 +592,7 @@ $config['form']['tabs'] = [
             'type' => 'maparea',
             'context' => ['edit'],
             'form' => 'locationarea',
-            'request' => 'Admin\Requests\LocationArea',
+            'request' => \Admin\Requests\LocationArea::class,
             'commentAbove' => 'lang:admin::lang.locations.help_delivery_areas',
         ],
 

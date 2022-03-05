@@ -12,10 +12,10 @@ trait Assignable
     public static function bootAssignable()
     {
         static::extend(function (self $model) {
-            $model->relation['belongsTo']['assignee'] = ['Admin\Models\User'];
-            $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\UserGroup'];
+            $model->relation['belongsTo']['assignee'] = [\Admin\Models\User::class];
+            $model->relation['belongsTo']['assignee_group'] = [\Admin\Models\UserGroup::class];
             $model->relation['morphMany']['assignable_logs'] = [
-                'Admin\Models\AssignableLog', 'name' => 'assignable', 'delete' => TRUE,
+                \Admin\Models\AssignableLog::class, 'name' => 'assignable', 'delete' => TRUE,
             ];
 
             $model->addCasts([

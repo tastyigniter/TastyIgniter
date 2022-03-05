@@ -9,14 +9,14 @@ use Igniter\Flame\Exception\ApplicationException;
 class Users extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
-        'Admin\Actions\LocationAwareController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
+        \Admin\Actions\LocationAwareController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\User',
+            'model' => \Admin\Models\User::class,
             'title' => 'lang:admin::lang.staff.text_title',
             'emptyMessage' => 'lang:admin::lang.staff.text_empty',
             'defaultSort' => ['user_id', 'DESC'],
@@ -26,8 +26,8 @@ class Users extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.staff.text_form_name',
-        'model' => 'Admin\Models\User',
-        'request' => 'Admin\Requests\User',
+        'model' => \Admin\Models\User::class,
+        'request' => \Admin\Requests\User::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'users/edit/{user_id}',

@@ -7,12 +7,12 @@ use Admin\Facades\AdminMenu;
 class Activities extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
+        \Admin\Actions\ListController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Activity',
+            'model' => \System\Models\Activity::class,
             'title' => 'lang:system::lang.activities.text_title',
             'emptyMessage' => 'lang:system::lang.activities.text_empty',
             'defaultSort' => ['updated_at', 'DESC'],

@@ -377,7 +377,7 @@ class DashboardContainer extends BaseWidget
         $formConfig['alias'] = $this->alias.studly_case('Form_'.$alias);
         $formConfig['arrayName'] = $alias.'_fields';
 
-        $formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
+        $formWidget = $this->makeWidget(\Admin\Widgets\Form::class, $formConfig);
         $formWidget->bindToController();
 
         return $formWidget;

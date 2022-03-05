@@ -7,7 +7,7 @@ return [
                 'context' => 'status',
                 'label' => 'lang:admin::lang.label_status',
                 'type' => 'select',
-                'options' => ['Admin\Models\Status', 'getDropdownOptionsForOrder'],
+                'options' => [\Admin\Models\Status::class, 'getDropdownOptionsForOrder'],
                 'placeholder' => 'lang:admin::lang.text_please_select',
                 'attributes' => [
                     'data-status-value' => '',

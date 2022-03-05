@@ -10,14 +10,14 @@ use Admin\Facades\AdminMenu;
 class Tables extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
-        'Admin\Actions\LocationAwareController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
+        \Admin\Actions\LocationAwareController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Table',
+            'model' => \Admin\Models\Table::class,
             'title' => 'lang:admin::lang.tables.text_title',
             'emptyMessage' => 'lang:admin::lang.tables.text_empty',
             'defaultSort' => ['table_id', 'DESC'],
@@ -27,8 +27,8 @@ class Tables extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.tables.text_form_name',
-        'model' => 'Admin\Models\Table',
-        'request' => 'Admin\Requests\Table',
+        'model' => \Admin\Models\Table::class,
+        'request' => \Admin\Requests\Table::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'tables/edit/{table_id}',

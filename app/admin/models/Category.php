@@ -49,13 +49,13 @@ class Category extends Model
 
     public $relation = [
         'belongsTo' => [
-            'parent_cat' => ['Admin\Models\Category', 'foreignKey' => 'parent_id', 'otherKey' => 'category_id'],
+            'parent_cat' => [\Admin\Models\Category::class, 'foreignKey' => 'parent_id', 'otherKey' => 'category_id'],
         ],
         'belongsToMany' => [
-            'menus' => ['Admin\Models\Menu', 'table' => 'menu_categories'],
+            'menus' => [\Admin\Models\Menu::class, 'table' => 'menu_categories'],
         ],
         'morphToMany' => [
-            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
+            'locations' => [\Admin\Models\Location::class, 'name' => 'locationable'],
         ],
     ];
 

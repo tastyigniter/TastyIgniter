@@ -26,13 +26,13 @@ class Themes extends \Admin\Classes\AdminController
     use ManagesUpdates;
 
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Theme',
+            'model' => \System\Models\Theme::class,
             'title' => 'lang:system::lang.themes.text_title',
             'emptyMessage' => 'lang:system::lang.themes.text_empty',
             'defaultSort' => ['theme_id', 'DESC'],
@@ -42,8 +42,8 @@ class Themes extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:system::lang.themes.text_form_name',
-        'model' => 'System\Models\Theme',
-        'request' => 'System\Requests\Theme',
+        'model' => \System\Models\Theme::class,
+        'request' => \System\Requests\Theme::class,
         'edit' => [
             'title' => 'system::lang.themes.text_edit_title',
             'redirect' => 'themes/edit/{code}',

@@ -40,10 +40,10 @@ class Stock extends Model
 
     public $relation = [
         'belongsTo' => [
-            'location' => 'Admin\Models\Location',
+            'location' => \Admin\Models\Location::class,
         ],
         'hasMany' => [
-            'history' => 'Admin\Models\StockHistory',
+            'history' => \Admin\Models\StockHistory::class,
         ],
         'morphTo' => [
             'stockable' => [],

@@ -7,13 +7,13 @@ use Admin\Facades\AdminMenu;
 class MailLayouts extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\MailLayout',
+            'model' => \System\Models\MailLayout::class,
             'title' => 'lang:system::lang.mail_templates.text_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
             'defaultSort' => ['layout_id', 'DESC'],
@@ -23,8 +23,8 @@ class MailLayouts extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_form_name',
-        'model' => 'System\Models\MailLayout',
-        'request' => 'System\Requests\MailLayout',
+        'model' => \System\Models\MailLayout::class,
+        'request' => \System\Requests\MailLayout::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'mail_layouts/edit/{layout_id}',

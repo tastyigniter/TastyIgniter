@@ -8,13 +8,13 @@ use Admin\Models\CustomerGroup;
 class CustomerGroups extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\CustomerGroup',
+            'model' => \Admin\Models\CustomerGroup::class,
             'title' => 'lang:admin::lang.customer_groups.text_title',
             'emptyMessage' => 'lang:admin::lang.customer_groups.text_empty',
             'defaultSort' => ['customer_group_id', 'DESC'],
@@ -24,8 +24,8 @@ class CustomerGroups extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.customer_groups.text_form_name',
-        'model' => 'Admin\Models\CustomerGroup',
-        'request' => 'Admin\Requests\CustomerGroup',
+        'model' => \Admin\Models\CustomerGroup::class,
+        'request' => \Admin\Requests\CustomerGroup::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'customer_groups/edit/{customer_group_id}',

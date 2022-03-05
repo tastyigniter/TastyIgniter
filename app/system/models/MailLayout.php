@@ -44,10 +44,10 @@ class MailLayout extends Model
 
     public $relation = [
         'hasMany' => [
-            'templates' => ['System\Models\MailTemplate', 'foreignKey' => 'layout_id'],
+            'templates' => [\System\Models\MailTemplate::class, 'foreignKey' => 'layout_id'],
         ],
         'belongsTo' => [
-            'language' => 'System\Models\Language',
+            'language' => \System\Models\Language::class,
         ],
     ];
 

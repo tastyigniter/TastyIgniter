@@ -33,8 +33,8 @@ class PaymentLog extends Model
 
     public $relation = [
         'belongsTo' => [
-            'order' => ['Admin\Models\Order'],
-            'payment_method' => ['Admin\Models\Payment', 'foreignKey' => 'payment_code', 'otherKey' => 'code'],
+            'order' => [\Admin\Models\Order::class],
+            'payment_method' => [\Admin\Models\Payment::class, 'foreignKey' => 'payment_code', 'otherKey' => 'code'],
         ],
     ];
 
