@@ -2,6 +2,8 @@
 
 namespace System\Classes;
 
+use Igniter\Flame\Support\Facades\File;
+
 /**
  * ComposerManager Class
  */
@@ -75,6 +77,36 @@ class ComposerManager
                 $this->includeFilesPool[$relativeFile] = TRUE;
             }
         }
+    }
+
+    public function listInstalledPackages($vendorPath)
+    {
+        if (!file_exists($path = $vendorPath.'/composer/installed.json'))
+            return [];
+
+        $installed = json_decode(File::get($path), TRUE);
+
+        // Structure of the installed.json manifest in different in Composer 2.0
+        return $installed['packages'] ?? $installed;
+    }
+
+    public function getConfig($path, $type = 'extension')
+    {
+        $composer = json_decode(File::get($path.'/composer.json'), TRUE) ?? [];
+
+        if (!$config = array_get($composer, 'extra.tastyigniter-'.$type, []))
+            return $config;
+
+        if (array_key_exists('description', $composer))
+            $config['description'] = $composer['description'];
+
+        if (array_key_exists('authors', $composer))
+            $config['author'] = $composer['authors'][0]['name'];
+
+        if (!array_key_exists('homepage', $config) && array_key_exists('homepage', $composer))
+            $config['homepage'] = $composer['homepage'];
+
+        return $config;
     }
 
     protected function preloadPools()
