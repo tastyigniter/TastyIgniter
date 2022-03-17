@@ -476,7 +476,7 @@ class Filter extends BaseWidget
                 break;
 
             default:
-                $value = is_array($scope->value) ? array_keys($scope->value) : $scope->value;
+                $value = is_array($scope->value) ? array_values($scope->value) : $scope->value;
 
                 if ($scopeConditions = $scope->conditions) {
                     // Switch scope: multiple conditions, value either 1 or 2
