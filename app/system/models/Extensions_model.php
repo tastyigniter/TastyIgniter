@@ -16,9 +16,6 @@ class Extensions_model extends Model
 {
     const ICON_MIMETYPES = [
         'svg' => 'image/svg+xml',
-        'png' => 'image/png',
-        'jpeg' => 'image/jpeg',
-        'jpg' => 'image/jpeg',
     ];
 
     /**
@@ -99,7 +96,7 @@ class Extensions_model extends Model
             if (file_exists($file)) {
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
                 if (!array_key_exists($extension, self::ICON_MIMETYPES))
-                    throw new ApplicationException('Invalid extension icon type');
+                    throw new ApplicationException('Invalid extension icon file type in: '.$this->name.'. Only SVG images are supported');
 
                 $mimeType = self::ICON_MIMETYPES[$extension];
                 $data = base64_encode(file_get_contents($file));

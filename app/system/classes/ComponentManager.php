@@ -50,7 +50,7 @@ class ComponentManager
     {
         // Load manually registered components
         foreach ($this->componentsCallbacks as $callback) {
-            $callback($this->instance);
+            $callback($this);
         }
 
         // Load extensions components
