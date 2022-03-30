@@ -1,10 +1,12 @@
 <div class="table-responsive">
     <table class="table table-borderless mb-0">
         <tbody>
-        <tr>
-            <td class="text-muted">@lang('admin::lang.orders.label_payment_method')</td>
-            <td class="text-right">{{ $formModel->payment_method->name }}</td>
-        </tr>
+        @if($formModel->payment_method)
+            <tr>
+                <td class="text-muted">@lang('admin::lang.orders.label_payment_method')</td>
+                <td class="text-right">{{ $formModel->payment_method->name }}</td>
+            </tr>
+        @endif
         <tr>
             <td class="text-muted">@lang('admin::lang.orders.label_invoice')</td>
             <td class="text-right">

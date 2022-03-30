@@ -758,7 +758,7 @@ class ExtensionManager
         // set extension migration to the latest version
         UpdateManager::instance()->migrateExtension($model->name);
 
-        $model->version = $version ?? $this->getComposerInstalledVersion($extension) ?? $model->version;
+        $model->version = $version ?? $this->getComposerInstalledVersion($model->name) ?? $model->version;
         $model->save();
 
         $this->updateInstalledExtensions($model->name);
@@ -823,29 +823,18 @@ class ExtensionManager
         }
     }
 
-    protected function getComposerInstalledVersion($extension)
+    protected function getComposerInstalledVersion($extensionCode)
     {
-        if (!$extensionCode = array_get($extension->extensionMeta(), 'code'))
-            return null;
-
         if (!File::exists(sprintf('%s/composer.json', $this->path($extensionCode))))
             return null;
 
-        if (!File::exists($path = base_path('/vendor/composer/installed.json')))
-            return null;
+        return collect(ComposerManager::instance()->listInstalledPackages(base_path('vendor')))
+            ->filter(function ($package) use ($extensionCode) {
+                if (array_get($package, 'type') !== 'tastyigniter-extension')
+                    return FALSE;
 
-        $installed = json_decode(File::get($path), TRUE);
-
-        // Structure of the installed.json manifest in different in Composer 2.0
-        $installed = $installed['packages'] ?? $installed;
-
-        $package = collect($installed)->first(function ($package) use ($extensionCode) {
-            if (array_get($package, 'type') !== 'tastyigniter-extension')
-                return FALSE;
-
-            return array_get($package, 'extra.tastyigniter-extension.code') === $extensionCode;
-        });
-
-        return array_get($package ?? [], 'version');
+                return array_get($package, 'extra.tastyigniter-extension.code') === $extensionCode;
+            })
+            ->get('version');
     }
 }
