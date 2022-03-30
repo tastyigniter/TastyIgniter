@@ -232,6 +232,12 @@ class MediaFinder extends BaseFormWidget
         if (!in_array(HasMedia::class, class_uses_recursive(get_class($this->model))))
             return;
 
+        if (!array_key_exists($this->fieldName, $this->model->mediable())) {
+            throw new ApplicationException(sprintf(lang('main::lang.media_manager.alert_missing_mediable'),
+                $this->fieldName, get_class($this->model)
+            ));
+        }
+
         $items = post('items');
         if (!is_array($items))
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_item_to_attach'));

@@ -3,7 +3,7 @@
     data-control="component"
     data-component-alias="{{ $component->alias }}"
 >
-    <div class="btn btn-light text-left p-3 component{{ $component->fatalError ? ' border-danger' : '' }}">
+    <div class="btn btn-light text-left p-3 w-100 component{{ $component->fatalError ? ' border-danger' : '' }}">
         <div
             class="components-item-info"
             data-component-control="load"

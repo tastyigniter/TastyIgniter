@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use Main\Classes\Theme as ThemeClass;
 use Main\Events\Theme\GetActiveTheme;
+use System\Classes\ComposerManager;
 use System\Libraries\Assets;
 use System\Models\Theme;
 use ZipArchive;
@@ -590,7 +591,7 @@ class ThemeManager
 
         $model->name = $themeObj->label ?? title_case($code);
         $model->code = $code;
-        $model->version = $version ?? $model->version;
+        $model->version = $version ?? $this->getComposerInstalledVersion($code) ?? $model->version;
         $model->description = $themeObj->description ?? '';
         $model->save();
 
@@ -604,9 +605,6 @@ class ThemeManager
      */
     public function createChildTheme($model)
     {
-        if ($this->checkParent($model->code))
-            throw new ApplicationException('Child theme already exists.');
-
         $parentTheme = $this->findTheme($model->code);
         if ($parentTheme->hasParent())
             throw new ApplicationException('Can not create a child theme from another child theme');
@@ -615,8 +613,8 @@ class ThemeManager
         $childThemePath = dirname($parentTheme->getPath()).'/'.$childThemeCode;
 
         $themeConfig = [
-            'name' => $parentTheme->label.' [child]',
             'code' => $childThemeCode,
+            'name' => $parentTheme->label.' [child]',
             'description' => $parentTheme->description,
         ];
 
@@ -640,12 +638,20 @@ class ThemeManager
      */
     public function getMetaFromFile($themeCode)
     {
-        $config = [];
         if (isset($this->loadedConfig[$themeCode]))
             return $this->loadedConfig[$themeCode];
 
-        if ($metaPath = $this->findFile('theme.json', $themeCode))
-            $config = $this->validateMetaFile($metaPath, $themeCode);
+        if ($metaPath = $this->findFile('theme.json', $themeCode)) {
+            $config = json_decode(File::get($metaPath), TRUE);
+        }
+        elseif ($metaPath = $this->findFile('composer.json', $themeCode)) {
+            $config = ComposerManager::instance()->getConfig(dirname($metaPath), 'theme');
+        }
+        else {
+            throw new SystemException('Theme ['.$themeCode.'] does not have a registration file.');
+        }
+
+        $config = $this->validateMetaFile($config, $metaPath);
 
         $this->loadedConfig[$themeCode] = $config;
 
@@ -675,15 +681,10 @@ class ThemeManager
      */
     protected function validateMetaFile($path, $themeCode)
     {
-        if (!$config = json_decode(File::get($path), TRUE)) {
-            throw new SystemException('Theme ['.$themeCode.'] does not have a registration file.');
-        }
-
         foreach ([
             'code',
             'name',
             'description',
-            'version',
             'author',
         ] as $item) {
             if (!array_key_exists($item, $config)) {
@@ -701,16 +702,40 @@ class ThemeManager
     {
         $config = array_merge($parentTheme->config, $themeConfig);
         $config['parent'] = $parentTheme->name;
-        unset($config['locked'], $config['require']);
+        unset($config['author'], $config['locked'], $config['require']);
 
         if (File::isDirectory($path))
             throw new ApplicationException('Child theme path already exists.');
 
         File::makeDirectory($path, 0777, FALSE, TRUE);
 
-        $manifestFile = $path.'/theme.json';
-        File::put($manifestFile, json_encode($config, JSON_PRETTY_PRINT));
+        if (File::exists($parentTheme->path.'/theme.json')) {
+            File::put($path.'/theme.json', json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        }
+        elseif (File::exists($metaPath = $parentTheme->path.'/composer.json')) {
+            $composer = json_decode(File::get($metaPath), TRUE) ?? [];
 
-        return $manifestFile;
+            $composer['extra']['tastyigniter-theme'] = array_merge(
+                $composer['extra']['tastyigniter-theme'],
+                array_except($config, ['description'])
+            );
+
+            File::put($path.'/composer.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        }
+    }
+
+    protected function getComposerInstalledVersion($themeCode)
+    {
+        if (!File::exists(sprintf('%s/composer.json', $this->path($themeCode))))
+            return null;
+
+        return collect(ComposerManager::instance()->listInstalledPackages(base_path('vendor')))
+            ->filter(function ($package) use ($themeCode) {
+                if (array_get($package, 'type') !== 'tastyigniter-theme')
+                    return FALSE;
+
+                return array_get($package, 'extra.tastyigniter-theme.code') === $themeCode;
+            })
+            ->get('version');
     }
 }

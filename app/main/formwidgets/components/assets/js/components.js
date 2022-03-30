@@ -6,7 +6,7 @@
         this.options = options
 
         this.init()
-        // this.initSortable()
+        this.initSortable()
     }
 
     Components.prototype.constructor = Components
@@ -20,7 +20,7 @@
 
         Sortable.create($sortableContainer, {
             handle: '.handle',
-            filter: '.components-picker',
+            animation: 150,
         })
     }
 
@@ -69,9 +69,6 @@
 
         switch (control) {
             case 'load':
-                this.loadComponentForm($el)
-                break;
-            case 'drag':
                 this.loadComponentForm($el)
                 break;
             case 'remove':

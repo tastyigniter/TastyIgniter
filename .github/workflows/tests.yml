@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - develop
-      - tests
+      - 3.x
   pull_request:
 
 jobs:

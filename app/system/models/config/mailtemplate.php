@@ -62,6 +62,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
         'searchable' => TRUE,
+        'invisible' => TRUE,
     ],
     'template_id' => [
         'label' => 'lang:admin::lang.column_id',
