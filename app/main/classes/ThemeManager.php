@@ -679,7 +679,7 @@ class ThemeManager
      * @throws \Igniter\Flame\Exception\SystemException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function validateMetaFile($path, $themeCode)
+    protected function validateMetaFile($config, $path)
     {
         foreach ([
             'code',
