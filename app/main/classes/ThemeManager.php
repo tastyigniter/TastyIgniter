@@ -702,7 +702,7 @@ class ThemeManager
     {
         $config = array_merge($parentTheme->config, $themeConfig);
         $config['parent'] = $parentTheme->name;
-        unset($config['author'], $config['locked'], $config['require']);
+        unset($config['locked'], $config['require']);
 
         if (File::isDirectory($path))
             throw new ApplicationException('Child theme path already exists.');
