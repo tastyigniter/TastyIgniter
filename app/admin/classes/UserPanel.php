@@ -110,11 +110,11 @@ class UserPanel
 
     public function listLocations()
     {
-        return AdminLocation::listLocations()->map(function ($value, $key) {
+        return AdminLocation::listLocations()->map(function ($location) {
             return (object)[
-                'id' => $key,
-                'name' => $value,
-                'active' => $key === optional($this->location)->location_id,
+                'id' => $location->location_id,
+                'name' => $location->location_name,
+                'active' => $location->location_id === optional($this->location)->location_id,
             ];
         });
     }
