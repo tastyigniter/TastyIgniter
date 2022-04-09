@@ -489,20 +489,20 @@ class ServiceProvider extends AppServiceProvider
     protected function registerModelClassAliases()
     {
         resolve(ClassLoader::class)->addAliases([
-            'System\Models\Activity' => 'System\Models\Activities_model',
-            'System\Models\Country' => 'System\Models\Countries_model',
-            'System\Models\Currency' => 'System\Models\Currencies_model',
-            'System\Models\Extension' => 'System\Models\Extensions_model',
-            'System\Models\Language' => 'System\Models\Languages_model',
-            'System\Models\MailLayout' => 'System\Models\Mail_layouts_model',
-            'System\Models\MailPartial' => 'System\Models\Mail_partials_model',
-            'System\Models\MailTemplate' => 'System\Models\Mail_templates_model',
-            'System\Models\MailTheme' => 'System\Models\Mail_themes_model',
-            'System\Models\Page' => 'System\Models\Pages_model',
-            'System\Models\RequestLog' => 'System\Models\Request_logs_model',
-            'System\Models\Settings' => 'System\Models\Settings_model',
-            'System\Models\Theme' => 'System\Models\Themes_model',
-            'System\Models\Translation' => 'System\Models\Translations_model',
+            \System\Models\Activity::class => 'System\Models\Activities_model',
+            \System\Models\Country::class => 'System\Models\Countries_model',
+            \System\Models\Currency::class => 'System\Models\Currencies_model',
+            \System\Models\Extension::class => 'System\Models\Extensions_model',
+            \System\Models\Language::class => 'System\Models\Languages_model',
+            \System\Models\MailLayout::class => 'System\Models\Mail_layouts_model',
+            \System\Models\MailPartial::class => 'System\Models\Mail_partials_model',
+            \System\Models\MailTemplate::class => 'System\Models\Mail_templates_model',
+            \System\Models\MailTheme::class => 'System\Models\Mail_themes_model',
+            \System\Models\Page::class => 'System\Models\Pages_model',
+            \System\Models\RequestLog::class => 'System\Models\Request_logs_model',
+            \System\Models\Settings::class => 'System\Models\Settings_model',
+            \System\Models\Theme::class => 'System\Models\Themes_model',
+            \System\Models\Translation::class => 'System\Models\Translations_model',
         ]);
     }
 }

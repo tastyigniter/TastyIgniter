@@ -76,6 +76,6 @@ class Page extends Model
      */
     public function getCodeClassParent()
     {
-        return '\Main\Template\Code\PageCode';
+        return \Main\Template\Code\PageCode::class;
     }
 }

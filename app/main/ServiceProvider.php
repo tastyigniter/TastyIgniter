@@ -178,7 +178,7 @@ class ServiceProvider extends AppServiceProvider
     protected function registerModelClassAliases()
     {
         resolve(ClassLoader::class)->addAliases([
-            'Main\Helpers\ImageHelper' => 'Main\Models\Image_tool_model',
+            \Main\Helpers\ImageHelper::class => 'Main\Models\Image_tool_model',
         ]);
     }
 }
