@@ -154,6 +154,21 @@ class Menu_options_model extends Model
         return count($idsToKeep);
     }
 
+    public function attachToMenu($menu)
+    {
+        $menuItemOption = $menu->menu_options()->create([
+            'option_id' => $this->getKey(),
+        ]);
+
+        $this->option_values()->get()->each(function ($model) use ($menuItemOption) {
+            $menuItemOption->menu_option_values()->create([
+                'menu_option_id' => $menuItemOption->menu_option_id,
+                'option_value_id' => $model->option_value_id,
+                'new_price' => $model->price,
+            ]);
+        });
+    }
+
     /**
      * Overwrite any menu items this option is attached to
      *
