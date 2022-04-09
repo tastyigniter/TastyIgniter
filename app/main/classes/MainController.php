@@ -527,7 +527,7 @@ class MainController extends BaseController
         $options = [
             'auto_reload' => TRUE,
             'cache' => TRUE,
-            'templateClass' => 'Main\\Classes\\Template',
+            'templateClass' => \Main\Classes\Template::class,
             'debug' => Config::get('app.debug', FALSE),
         ];
 

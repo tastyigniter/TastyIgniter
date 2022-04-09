@@ -25,7 +25,7 @@ class Settings extends \Admin\Classes\AdminController
 
     protected $requiredPermissions = 'Site.Settings';
 
-    protected $modelClass = 'System\Models\Settings';
+    protected $modelClass = \System\Models\Settings::class;
 
     /**
      * @var \Admin\Widgets\Form
@@ -171,7 +171,7 @@ class Settings extends \Admin\Classes\AdminController
         $formConfig['context'] = 'edit';
 
         // Form Widget with extensibility
-        $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
+        $this->formWidget = $this->makeWidget(\Admin\Widgets\Form::class, $formConfig);
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget

@@ -159,92 +159,92 @@ class ServiceProvider extends AppServiceProvider
     protected function registerFormWidgets()
     {
         Widgets::instance()->registerFormWidgets(function (Widgets $manager) {
-            $manager->registerFormWidget('Admin\FormWidgets\CodeEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\CodeEditor::class, [
                 'label' => 'Code editor',
                 'code' => 'codeeditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\ColorPicker', [
+            $manager->registerFormWidget(\Admin\FormWidgets\ColorPicker::class, [
                 'label' => 'Color picker',
                 'code' => 'colorpicker',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\Connector', [
+            $manager->registerFormWidget(\Admin\FormWidgets\Connector::class, [
                 'label' => 'Connector',
                 'code' => 'connector',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\DataTable', [
+            $manager->registerFormWidget(\Admin\FormWidgets\DataTable::class, [
                 'label' => 'Data Table',
                 'code' => 'datatable',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\DatePicker', [
+            $manager->registerFormWidget(\Admin\FormWidgets\DatePicker::class, [
                 'label' => 'Date picker',
                 'code' => 'datepicker',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\MapArea', [
+            $manager->registerFormWidget(\Admin\FormWidgets\MapArea::class, [
                 'label' => 'Map Area',
                 'code' => 'maparea',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\MapView', [
+            $manager->registerFormWidget(\Admin\FormWidgets\MapView::class, [
                 'label' => 'Map View',
                 'code' => 'mapview',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\MarkdownEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\MarkdownEditor::class, [
                 'label' => 'Markdown Editor',
                 'code' => 'markdowneditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\MediaFinder', [
+            $manager->registerFormWidget(\Admin\FormWidgets\MediaFinder::class, [
                 'label' => 'Media finder',
                 'code' => 'mediafinder',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\MenuOptionEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\MenuOptionEditor::class, [
                 'label' => 'Menu Option Editor',
                 'code' => 'menuoptioneditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\PermissionEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\PermissionEditor::class, [
                 'label' => 'Permission Editor',
                 'code' => 'permissioneditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\RecordEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\RecordEditor::class, [
                 'label' => 'Record Editor',
                 'code' => 'recordeditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\Relation', [
+            $manager->registerFormWidget(\Admin\FormWidgets\Relation::class, [
                 'label' => 'Relationship',
                 'code' => 'relation',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\Repeater', [
+            $manager->registerFormWidget(\Admin\FormWidgets\Repeater::class, [
                 'label' => 'Repeater',
                 'code' => 'repeater',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\RichEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\RichEditor::class, [
                 'label' => 'Rich editor',
                 'code' => 'richeditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\StatusEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\StatusEditor::class, [
                 'label' => 'Status Editor',
                 'code' => 'statuseditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\ScheduleEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\ScheduleEditor::class, [
                 'label' => 'Schedule Editor',
                 'code' => 'scheduleeditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\StockEditor', [
+            $manager->registerFormWidget(\Admin\FormWidgets\StockEditor::class, [
                 'label' => 'Stock Editor',
                 'code' => 'stockeditor',
             ]);
@@ -272,9 +272,9 @@ class ServiceProvider extends AppServiceProvider
                     'icon' => 'fa-bell',
                     'badge' => 'badge-danger',
                     'type' => 'dropdown',
-                    'badgeCount' => ['System\Models\Activity', 'unreadCount'],
-                    'markAsRead' => ['System\Models\Activity', 'markAllAsRead'],
-                    'options' => ['System\Models\Activity', 'listMenuActivities'],
+                    'badgeCount' => [\System\Models\Activity::class, 'unreadCount'],
+                    'markAsRead' => [\System\Models\Activity::class, 'markAllAsRead'],
+                    'options' => [\System\Models\Activity::class, 'listMenuActivities'],
                     'partial' => '~/app/system/views/activities/latest',
                     'viewMoreUrl' => admin_url('activities'),
                     'permission' => 'Admin.Activities',
@@ -287,14 +287,14 @@ class ServiceProvider extends AppServiceProvider
                 'settings' => [
                     'type' => 'partial',
                     'path' => 'top_settings_menu',
-                    'badgeCount' => ['System\Models\Settings', 'updatesCount'],
-                    'options' => ['System\Models\Settings', 'listMenuSettingItems'],
+                    'badgeCount' => [\System\Models\Settings::class, 'updatesCount'],
+                    'options' => [\System\Models\Settings::class, 'listMenuSettingItems'],
                     'permission' => 'Site.Settings',
                 ],
                 'user' => [
                     'type' => 'partial',
                     'path' => 'top_nav_user_menu',
-                    'options' => ['Admin\Classes\UserPanel', 'listMenuLinks'],
+                    'options' => [\Admin\Classes\UserPanel::class, 'listMenuLinks'],
                 ],
             ]);
         });
@@ -550,33 +550,33 @@ class ServiceProvider extends AppServiceProvider
     protected function defineEloquentMorphMaps()
     {
         Relation::morphMap([
-            'addresses' => 'Admin\Models\Address',
-            'assignable_logs' => 'Admin\Models\AssignableLog',
-            'categories' => 'Admin\Models\Category',
-            'customer_groups' => 'Admin\Models\CustomerGroup',
-            'customers' => 'Admin\Models\Customer',
-            'ingredients' => 'Admin\Models\Ingredient',
-            'location_areas' => 'Admin\Models\LocationArea',
-            'locations' => 'Admin\Models\Location',
-            'mealtimes' => 'Admin\Models\Mealtime',
-            'menu_categories' => 'Admin\Models\MenuCategory',
-            'menu_item_option_values' => 'Admin\Models\MenuItemOptionValue',
-            'menu_option_values' => 'Admin\Models\MenuOptionValue',
-            'menu_options' => 'Admin\Models\MenuOption',
-            'menus' => 'Admin\Models\Menu',
-            'menus_specials' => 'Admin\Models\MenuSpecial',
-            'orders' => 'Admin\Models\Order',
-            'payment_logs' => 'Admin\Models\PaymentLog',
-            'payments' => 'Admin\Models\Payment',
-            'reservations' => 'Admin\Models\Reservation',
-            'status_history' => 'Admin\Models\StatusHistory',
-            'statuses' => 'Admin\Models\Status',
-            'stocks' => 'Admin\Models\Stock',
-            'stock_history' => 'Admin\Models\StockHistory',
-            'tables' => 'Admin\Models\Table',
-            'user_groups' => 'Admin\Models\UserGroup',
-            'users' => 'Admin\Models\User',
-            'working_hours' => 'Admin\Models\WorkingHour',
+            'addresses' => \Admin\Models\Address::class,
+            'assignable_logs' => \Admin\Models\AssignableLog::class,
+            'categories' => \Admin\Models\Category::class,
+            'customer_groups' => \Admin\Models\CustomerGroup::class,
+            'customers' => \Admin\Models\Customer::class,
+            'ingredients' => \Admin\Models\Ingredient::class,
+            'location_areas' => \Admin\Models\LocationArea::class,
+            'locations' => \Admin\Models\Location::class,
+            'mealtimes' => \Admin\Models\Mealtime::class,
+            'menu_categories' => \Admin\Models\MenuCategory::class,
+            'menu_item_option_values' => \Admin\Models\MenuItemOptionValue::class,
+            'menu_option_values' => \Admin\Models\MenuOptionValue::class,
+            'menu_options' => \Admin\Models\MenuOption::class,
+            'menus' => \Admin\Models\Menu::class,
+            'menus_specials' => \Admin\Models\MenuSpecial::class,
+            'orders' => \Admin\Models\Order::class,
+            'payment_logs' => \Admin\Models\PaymentLog::class,
+            'payments' => \Admin\Models\Payment::class,
+            'reservations' => \Admin\Models\Reservation::class,
+            'status_history' => \Admin\Models\StatusHistory::class,
+            'statuses' => \Admin\Models\Status::class,
+            'stocks' => \Admin\Models\Stock::class,
+            'stock_history' => \Admin\Models\StockHistory::class,
+            'tables' => \Admin\Models\Table::class,
+            'user_groups' => \Admin\Models\UserGroup::class,
+            'users' => \Admin\Models\User::class,
+            'working_hours' => \Admin\Models\WorkingHour::class,
         ]);
     }
 
@@ -596,35 +596,35 @@ class ServiceProvider extends AppServiceProvider
                     'description' => 'admin::lang.dashboard.onboarding.help_settings',
                     'icon' => 'fa-gears',
                     'url' => admin_url('settings'),
-                    'complete' => ['System\Models\Settings', 'onboardingIsComplete'],
+                    'complete' => [\System\Models\Settings::class, 'onboardingIsComplete'],
                 ],
                 'admin::locations' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_locations',
                     'description' => 'admin::lang.dashboard.onboarding.help_locations',
                     'icon' => 'fa-store',
                     'url' => admin_url('locations'),
-                    'complete' => ['Admin\Models\Location', 'onboardingIsComplete'],
+                    'complete' => [\Admin\Models\Location::class, 'onboardingIsComplete'],
                 ],
                 'admin::themes' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_themes',
                     'description' => 'admin::lang.dashboard.onboarding.help_themes',
                     'icon' => 'fa-paint-brush',
                     'url' => admin_url('themes'),
-                    'complete' => ['System\Models\Theme', 'onboardingIsComplete'],
+                    'complete' => [\System\Models\Theme::class, 'onboardingIsComplete'],
                 ],
                 'admin::extensions' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_extensions',
                     'description' => 'admin::lang.dashboard.onboarding.help_extensions',
                     'icon' => 'fa-plug',
                     'url' => admin_url('extensions'),
-                    'complete' => ['System\Models\Extension', 'onboardingIsComplete'],
+                    'complete' => [\System\Models\Extension::class, 'onboardingIsComplete'],
                 ],
                 'admin::payments' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_payments',
                     'description' => 'admin::lang.dashboard.onboarding.help_payments',
                     'icon' => 'fa-credit-card',
                     'url' => admin_url('payments'),
-                    'complete' => ['Admin\Models\Payment', 'onboardingIsComplete'],
+                    'complete' => [\Admin\Models\Payment::class, 'onboardingIsComplete'],
                 ],
                 'admin::menus' => [
                     'label' => 'admin::lang.dashboard.onboarding.label_menus',
@@ -753,7 +753,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/setup'),
                     'form' => '~/app/admin/models/config/setupsettings',
-                    'request' => 'Admin\Requests\SetupSettings',
+                    'request' => \Admin\Requests\SetupSettings::class,
                 ],
                 'user' => [
                     'label' => 'lang:admin::lang.settings.text_tab_user',
@@ -763,7 +763,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/user'),
                     'form' => '~/app/admin/models/config/usersettings',
-                    'request' => 'Admin\Requests\UserSettings',
+                    'request' => \Admin\Requests\UserSettings::class,
                 ],
             ]);
         });
@@ -772,37 +772,37 @@ class ServiceProvider extends AppServiceProvider
     protected function registerModelClassAliases()
     {
         resolve(ClassLoader::class)->addAliases([
-            'Admin\Models\Status' => 'Admin\Models\Statuses_model',
-            'Admin\Models\Location' => 'Admin\Models\Locations_model',
-            'Admin\Models\Customer' => 'Admin\Models\Customers_model',
-            'Admin\Models\Allergen' => 'Admin\Models\Allergens_model',
-            'Admin\Models\StockHistory' => 'Admin\Models\Stock_history_model',
-            'Admin\Models\MenuSpecial' => 'Admin\Models\Menu_specials_model',
-            'Admin\Models\WorkingHour' => 'Admin\Models\Working_hours_model',
-            'Admin\Models\Table' => 'Admin\Models\Tables_model',
-            'Admin\Models\AssignableLog' => 'Admin\Models\Assignable_logs_model',
-            'Admin\Models\StaffGroup' => 'Admin\Models\Staff_groups_model',
-            'Admin\Models\MenuCategory' => 'Admin\Models\Menu_categories_model',
-            'Admin\Models\Category' => 'Admin\Models\Categories_model',
-            'Admin\Models\MenuItemOptionValue' => 'Admin\Models\Menu_item_option_values_model',
-            'Admin\Models\User' => 'Admin\Models\Users_model',
-            'Admin\Models\StaffRole' => 'Admin\Models\Staff_roles_model',
-            'Admin\Models\Order' => 'Admin\Models\Orders_model',
-            'Admin\Models\Mealtime' => 'Admin\Models\Mealtimes_model',
-            'Admin\Models\Staff' => 'Admin\Models\Staffs_model',
-            'Admin\Models\CustomerGroup' => 'Admin\Models\Customer_groups_model',
-            'Admin\Models\StatusHistory' => 'Admin\Models\Status_history_model',
-            'Admin\Models\MenuOption' => 'Admin\Models\Menu_options_model',
-            'Admin\Models\PaymentProfile' => 'Admin\Models\Payment_profiles_model',
-            'Admin\Models\LocationArea' => 'Admin\Models\Location_areas_model',
-            'Admin\Models\Menu' => 'Admin\Models\Menus_model',
-            'Admin\Models\PaymentLog' => 'Admin\Models\Payment_logs_model',
-            'Admin\Models\Reservation' => 'Admin\Models\Reservations_model',
-            'Admin\Models\MenuOptionValue' => 'Admin\Models\Menu_option_values_model',
-            'Admin\Models\Stock' => 'Admin\Models\Stocks_model',
-            'Admin\Models\Address' => 'Admin\Models\Addresses_model',
-            'Admin\Models\UserPreference' => 'Admin\Models\User_preferences_model',
-            'Admin\Models\Payment' => 'Admin\Models\Payments_model',
+            \Admin\Models\Status::class => 'Admin\Models\Statuses_model',
+            \Admin\Models\Location::class => 'Admin\Models\Locations_model',
+            \Admin\Models\Customer::class => 'Admin\Models\Customers_model',
+            \Admin\Models\Allergen::class => 'Admin\Models\Allergens_model',
+            \Admin\Models\StockHistory::class => 'Admin\Models\Stock_history_model',
+            \Admin\Models\MenuSpecial::class => 'Admin\Models\Menu_specials_model',
+            \Admin\Models\WorkingHour::class => 'Admin\Models\Working_hours_model',
+            \Admin\Models\Table::class => 'Admin\Models\Tables_model',
+            \Admin\Models\AssignableLog::class => 'Admin\Models\Assignable_logs_model',
+            \Admin\Models\StaffGroup::class => 'Admin\Models\Staff_groups_model',
+            \Admin\Models\MenuCategory::class => 'Admin\Models\Menu_categories_model',
+            \Admin\Models\Category::class => 'Admin\Models\Categories_model',
+            \Admin\Models\MenuItemOptionValue::class => 'Admin\Models\Menu_item_option_values_model',
+            \Admin\Models\User::class => 'Admin\Models\Users_model',
+            \Admin\Models\StaffRole::class => 'Admin\Models\Staff_roles_model',
+            \Admin\Models\Order::class => 'Admin\Models\Orders_model',
+            \Admin\Models\Mealtime::class => 'Admin\Models\Mealtimes_model',
+            \Admin\Models\Staff::class => 'Admin\Models\Staffs_model',
+            \Admin\Models\CustomerGroup::class => 'Admin\Models\Customer_groups_model',
+            \Admin\Models\StatusHistory::class => 'Admin\Models\Status_history_model',
+            \Admin\Models\MenuOption::class => 'Admin\Models\Menu_options_model',
+            \Admin\Models\PaymentProfile::class => 'Admin\Models\Payment_profiles_model',
+            \Admin\Models\LocationArea::class => 'Admin\Models\Location_areas_model',
+            \Admin\Models\Menu::class => 'Admin\Models\Menus_model',
+            \Admin\Models\PaymentLog::class => 'Admin\Models\Payment_logs_model',
+            \Admin\Models\Reservation::class => 'Admin\Models\Reservations_model',
+            \Admin\Models\MenuOptionValue::class => 'Admin\Models\Menu_option_values_model',
+            \Admin\Models\Stock::class => 'Admin\Models\Stocks_model',
+            \Admin\Models\Address::class => 'Admin\Models\Addresses_model',
+            \Admin\Models\UserPreference::class => 'Admin\Models\User_preferences_model',
+            \Admin\Models\Payment::class => 'Admin\Models\Payments_model',
         ]);
     }
 }

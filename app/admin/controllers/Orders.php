@@ -11,15 +11,15 @@ use Igniter\Flame\Exception\ApplicationException;
 class Orders extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
-        'Admin\Actions\LocationAwareController',
-        'Admin\Actions\AssigneeController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
+        \Admin\Actions\LocationAwareController::class,
+        \Admin\Actions\AssigneeController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Order',
+            'model' => \Admin\Models\Order::class,
             'title' => 'lang:admin::lang.orders.text_title',
             'emptyMessage' => 'lang:admin::lang.orders.text_empty',
             'defaultSort' => ['order_id', 'DESC'],
@@ -29,8 +29,8 @@ class Orders extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.orders.text_form_name',
-        'model' => 'Admin\Models\Order',
-        'request' => 'Admin\Requests\Order',
+        'model' => \Admin\Models\Order::class,
+        'request' => \Admin\Requests\Order::class,
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'orders/edit/{order_id}',
@@ -71,7 +71,7 @@ class Orders extends \Admin\Classes\AdminController
         if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
-        return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
+        return $this->asExtension(\Admin\Actions\ListController::class)->index_onDelete();
     }
 
     public function index_onUpdateStatus()
@@ -94,7 +94,7 @@ class Orders extends \Admin\Classes\AdminController
         if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
-        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete($context, $recordId);
+        return $this->asExtension(\Admin\Actions\FormController::class)->edit_onDelete($context, $recordId);
     }
 
     public function invoice($context, $recordId = null)

@@ -7,14 +7,14 @@ use Admin\Facades\AdminMenu;
 class MenuOptions extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
-        'Admin\Actions\LocationAwareController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
+        \Admin\Actions\LocationAwareController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\MenuOption',
+            'model' => \Admin\Models\MenuOption::class,
             'title' => 'lang:admin::lang.menu_options.text_title',
             'emptyMessage' => 'lang:admin::lang.menu_options.text_empty',
             'defaultSort' => ['option_id', 'DESC'],
@@ -24,8 +24,8 @@ class MenuOptions extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.menu_options.text_form_name',
-        'model' => 'Admin\Models\MenuOption',
-        'request' => 'Admin\Requests\MenuOption',
+        'model' => \Admin\Models\MenuOption::class,
+        'request' => \Admin\Requests\MenuOption::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'menu_options/edit/{option_id}',

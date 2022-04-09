@@ -36,13 +36,13 @@ class Customer extends AuthUserModel
 
     public $relation = [
         'hasMany' => [
-            'addresses' => ['Admin\Models\Address', 'delete' => TRUE],
-            'orders' => ['Admin\Models\Order'],
-            'reservations' => ['Admin\Models\Reservation'],
+            'addresses' => [\Admin\Models\Address::class, 'delete' => TRUE],
+            'orders' => [\Admin\Models\Order::class],
+            'reservations' => [\Admin\Models\Reservation::class],
         ],
         'belongsTo' => [
-            'group' => ['Admin\Models\CustomerGroup', 'foreignKey' => 'customer_group_id'],
-            'address' => 'Admin\Models\Address',
+            'group' => [\Admin\Models\CustomerGroup::class, 'foreignKey' => 'customer_group_id'],
+            'address' => \Admin\Models\Address::class,
         ],
     ];
 

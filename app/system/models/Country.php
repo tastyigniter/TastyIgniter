@@ -36,7 +36,7 @@ class Country extends Model
 
     public $relation = [
         'hasOne' => [
-            'currency' => 'System\Models\Currency',
+            'currency' => \System\Models\Currency::class,
         ],
     ];
 

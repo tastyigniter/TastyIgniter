@@ -66,7 +66,7 @@ class LocationAwareController extends ControllerAction
 
     protected function locationBindEvents()
     {
-        if ($this->controller->isClassExtendedWith('Admin\Actions\ListController')) {
+        if ($this->controller->isClassExtendedWith(\Admin\Actions\ListController::class)) {
             Event::listen('admin.list.extendQuery', function ($listWidget, $query) {
                 if ((bool)$this->getConfig('applyScopeOnListQuery', TRUE))
                     $this->locationApplyScope($query);
@@ -79,7 +79,7 @@ class LocationAwareController extends ControllerAction
             });
         }
 
-        if ($this->controller->isClassExtendedWith('Admin\Actions\FormController')) {
+        if ($this->controller->isClassExtendedWith(\Admin\Actions\FormController::class)) {
             $this->controller->bindEvent('admin.controller.extendFormQuery', function ($query) {
                 if ((bool)$this->getConfig('applyScopeOnFormQuery', TRUE))
                     $this->locationApplyScope($query);

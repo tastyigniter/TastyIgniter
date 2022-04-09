@@ -19,7 +19,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'conditions' => 'location_id = :filtered',
-            'modelClass' => 'Admin\Models\Location',
+            'modelClass' => \Admin\Models\Location::class,
             'nameFrom' => 'location_name',
             'locationAware' => TRUE,
         ],
@@ -27,7 +27,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'select',
             'conditions' => 'status_id = :filtered',
-            'modelClass' => 'Admin\Models\Status',
+            'modelClass' => \Admin\Models\Status::class,
             'options' => 'getDropdownOptionsForReservation',
         ],
         'date' => [
@@ -177,7 +177,7 @@ $config['form']['fields'] = [
         'span' => 'right',
         'context' => ['edit', 'preview'],
         'form' => 'reservationstatus',
-        'request' => 'Admin\Requests\ReservationStatus',
+        'request' => \Admin\Requests\ReservationStatus::class,
     ],
 ];
 

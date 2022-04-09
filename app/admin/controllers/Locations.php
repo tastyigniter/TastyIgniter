@@ -11,13 +11,13 @@ use Igniter\Flame\Geolite\Facades\Geocoder;
 class Locations extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Location',
+            'model' => \Admin\Models\Location::class,
             'title' => 'lang:admin::lang.locations.text_title',
             'emptyMessage' => 'lang:admin::lang.locations.text_empty',
             'defaultSort' => ['location_id', 'DESC'],
@@ -27,8 +27,8 @@ class Locations extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.locations.text_form_name',
-        'model' => 'Admin\Models\Location',
-        'request' => 'Admin\Requests\Location',
+        'model' => \Admin\Models\Location::class,
+        'request' => \Admin\Requests\Location::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'locations/edit/{location_id}',

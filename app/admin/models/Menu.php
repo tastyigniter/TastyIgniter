@@ -48,18 +48,18 @@ class Menu extends Model
 
     public $relation = [
         'hasMany' => [
-            'menu_option_values' => ['Admin\Models\MenuItemOptionValue', 'delete' => TRUE],
+            'menu_option_values' => [\Admin\Models\MenuItemOptionValue::class, 'delete' => TRUE],
         ],
         'hasOne' => [
-            'special' => ['Admin\Models\MenuSpecial', 'delete' => TRUE],
+            'special' => [\Admin\Models\MenuSpecial::class, 'delete' => TRUE],
         ],
         'belongsToMany' => [
-            'categories' => ['Admin\Models\Category', 'table' => 'menu_categories'],
-            'mealtimes' => ['Admin\Models\Mealtime', 'table' => 'menu_mealtimes'],
+            'categories' => [\Admin\Models\Category::class, 'table' => 'menu_categories'],
+            'mealtimes' => [\Admin\Models\Mealtime::class, 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
-            'ingredients' => ['Admin\Models\Ingredient', 'name' => 'ingredientable'],
-            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
+            'ingredients' => [\Admin\Models\Ingredient::class, 'name' => 'ingredientable'],
+            'locations' => [\Admin\Models\Location::class, 'name' => 'locationable'],
         ],
     ];
 

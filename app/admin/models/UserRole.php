@@ -28,7 +28,7 @@ class UserRole extends Model
 
     public $relation = [
         'hasMany' => [
-            'users' => ['Admin\Models\User', 'foreignKey' => 'user_role_id', 'otherKey' => 'user_role_id'],
+            'users' => [\Admin\Models\User::class, 'foreignKey' => 'user_role_id', 'otherKey' => 'user_role_id'],
         ],
     ];
 

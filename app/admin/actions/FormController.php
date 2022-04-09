@@ -173,7 +173,7 @@ class FormController extends ControllerAction
         $this->controller->formExtendConfig($formConfig);
 
         // Form Widget with extensibility
-        $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
+        $this->formWidget = $this->makeWidget(\Admin\Widgets\Form::class, $formConfig);
 
         $this->formWidget->bindEvent('form.extendFieldsBefore', function () {
             $this->controller->formExtendFieldsBefore($this->formWidget);

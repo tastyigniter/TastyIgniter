@@ -42,15 +42,15 @@ class Location extends AbstractLocation
 
     public $relation = [
         'hasMany' => [
-            'working_hours' => ['Admin\Models\WorkingHour', 'delete' => TRUE],
-            'delivery_areas' => ['Admin\Models\LocationArea', 'delete' => TRUE],
+            'working_hours' => [\Admin\Models\WorkingHour::class, 'delete' => TRUE],
+            'delivery_areas' => [\Admin\Models\LocationArea::class, 'delete' => TRUE],
         ],
         'belongsTo' => [
-            'country' => ['System\Models\Country', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
+            'country' => [\System\Models\Country::class, 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
         'morphedByMany' => [
-            'users' => ['Admin\Models\User', 'name' => 'locationable'],
-            'tables' => ['Admin\Models\Table', 'name' => 'locationable'],
+            'users' => [\Admin\Models\User::class, 'name' => 'locationable'],
+            'tables' => [\Admin\Models\Table::class, 'name' => 'locationable'],
         ],
     ];
 

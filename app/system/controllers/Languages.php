@@ -14,13 +14,13 @@ class Languages extends \Admin\Classes\AdminController
     use SessionMaker;
 
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Language',
+            'model' => \System\Models\Language::class,
             'title' => 'lang:system::lang.languages.text_title',
             'emptyMessage' => 'lang:system::lang.languages.text_empty',
             'defaultSort' => ['language_id', 'DESC'],
@@ -30,8 +30,8 @@ class Languages extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:system::lang.languages.text_form_name',
-        'model' => 'System\Models\Language',
-        'request' => 'System\Requests\Language',
+        'model' => \System\Models\Language::class,
+        'request' => \System\Requests\Language::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'languages/edit/{language_id}',

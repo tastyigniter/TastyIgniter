@@ -279,7 +279,7 @@ class MapArea extends BaseFormWidget
         $config['alias'] = $this->alias.'Form';
         $config['arrayName'] = $this->formField->arrayName.'[areaData]';
 
-        $widget = $this->makeWidget('Admin\Widgets\Form', $config);
+        $widget = $this->makeWidget(\Admin\Widgets\Form::class, $config);
         $widget->bindToController();
 
         return $this->formWidget = $widget;

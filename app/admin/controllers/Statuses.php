@@ -7,13 +7,13 @@ use Admin\Facades\AdminMenu;
 class Statuses extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Status',
+            'model' => \Admin\Models\Status::class,
             'title' => 'lang:admin::lang.statuses.text_title',
             'emptyMessage' => 'lang:admin::lang.statuses.text_empty',
             'defaultSort' => ['status_id', 'DESC'],
@@ -23,8 +23,8 @@ class Statuses extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.statuses.text_form_name',
-        'model' => 'Admin\Models\Status',
-        'request' => 'Admin\Requests\Status',
+        'model' => \Admin\Models\Status::class,
+        'request' => \Admin\Requests\Status::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'statuses/edit/{status_id}',

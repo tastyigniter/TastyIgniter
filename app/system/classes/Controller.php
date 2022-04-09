@@ -94,7 +94,7 @@ class Controller extends IlluminateController
             return Response::make(View::make('system::no_database'));
         }
 
-        return App::make('Main\Classes\MainController')->remap($url);
+        return App::make(\Main\Classes\MainController::class)->remap($url);
     }
 
     /**

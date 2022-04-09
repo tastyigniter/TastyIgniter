@@ -66,11 +66,11 @@ class Reservation extends Model
 
     public $relation = [
         'belongsTo' => [
-            'related_table' => ['Admin\Models\Table', 'foreignKey' => 'table_id'],
-            'location' => 'Admin\Models\Location',
+            'related_table' => [\Admin\Models\Table::class, 'foreignKey' => 'table_id'],
+            'location' => \Admin\Models\Location::class,
         ],
         'belongsToMany' => [
-            'tables' => ['Admin\Models\Table', 'table' => 'reservation_tables'],
+            'tables' => [\Admin\Models\Table::class, 'table' => 'reservation_tables'],
         ],
     ];
 

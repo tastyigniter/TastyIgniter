@@ -350,16 +350,16 @@ class ServiceProvider extends AppServiceProvider
     protected function defineEloquentMorphMaps()
     {
         Relation::morphMap([
-            'activities' => 'System\Models\Activity',
-            'countries' => 'System\Models\Country',
-            'currencies' => 'System\Models\Currency',
-            'extensions' => 'System\Models\Extension',
-            'languages' => 'System\Models\Language',
-            'mail_layouts' => 'System\Models\MailLayout',
-            'mail_templates' => 'System\Models\MailTemplate',
-            'pages' => 'System\Models\Page',
-            'settings' => 'System\Models\Settings',
-            'themes' => 'System\Models\Theme',
+            'activities' => \System\Models\Activity::class,
+            'countries' => \System\Models\Country::class,
+            'currencies' => \System\Models\Currency::class,
+            'extensions' => \System\Models\Extension::class,
+            'languages' => \System\Models\Language::class,
+            'mail_layouts' => \System\Models\MailLayout::class,
+            'mail_templates' => \System\Models\MailTemplate::class,
+            'pages' => \System\Models\Page::class,
+            'settings' => \System\Models\Settings::class,
+            'themes' => \System\Models\Theme::class,
         ]);
     }
 
@@ -445,7 +445,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/general'),
                     'form' => '~/app/system/models/config/generalsettings',
-                    'request' => 'System\Requests\GeneralSettings',
+                    'request' => \System\Requests\GeneralSettings::class,
                 ],
                 'mail' => [
                     'label' => 'lang:system::lang.settings.text_tab_mail',
@@ -455,7 +455,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/mail'),
                     'form' => '~/app/system/models/config/mailsettings',
-                    'request' => 'System\Requests\MailSettings',
+                    'request' => \System\Requests\MailSettings::class,
                 ],
                 'advanced' => [
                     'label' => 'lang:system::lang.settings.text_tab_server',
@@ -465,7 +465,7 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/advanced'),
                     'form' => '~/app/system/models/config/advancedsettings',
-                    'request' => 'System\Requests\AdvancedSettings',
+                    'request' => \System\Requests\AdvancedSettings::class,
                 ],
             ]);
         });
@@ -489,20 +489,20 @@ class ServiceProvider extends AppServiceProvider
     protected function registerModelClassAliases()
     {
         resolve(ClassLoader::class)->addAliases([
-            'System\Models\Activity' => 'System\Models\Activities_model',
-            'System\Models\Country' => 'System\Models\Countries_model',
-            'System\Models\Currency' => 'System\Models\Currencies_model',
-            'System\Models\Extension' => 'System\Models\Extensions_model',
-            'System\Models\Language' => 'System\Models\Languages_model',
-            'System\Models\MailLayout' => 'System\Models\Mail_layouts_model',
-            'System\Models\MailPartial' => 'System\Models\Mail_partials_model',
-            'System\Models\MailTemplate' => 'System\Models\Mail_templates_model',
-            'System\Models\MailTheme' => 'System\Models\Mail_themes_model',
-            'System\Models\Page' => 'System\Models\Pages_model',
-            'System\Models\RequestLog' => 'System\Models\Request_logs_model',
-            'System\Models\Settings' => 'System\Models\Settings_model',
-            'System\Models\Theme' => 'System\Models\Themes_model',
-            'System\Models\Translation' => 'System\Models\Translations_model',
+            \System\Models\Activity::class => 'System\Models\Activities_model',
+            \System\Models\Country::class => 'System\Models\Countries_model',
+            \System\Models\Currency::class => 'System\Models\Currencies_model',
+            \System\Models\Extension::class => 'System\Models\Extensions_model',
+            \System\Models\Language::class => 'System\Models\Languages_model',
+            \System\Models\MailLayout::class => 'System\Models\Mail_layouts_model',
+            \System\Models\MailPartial::class => 'System\Models\Mail_partials_model',
+            \System\Models\MailTemplate::class => 'System\Models\Mail_templates_model',
+            \System\Models\MailTheme::class => 'System\Models\Mail_themes_model',
+            \System\Models\Page::class => 'System\Models\Pages_model',
+            \System\Models\RequestLog::class => 'System\Models\Request_logs_model',
+            \System\Models\Settings::class => 'System\Models\Settings_model',
+            \System\Models\Theme::class => 'System\Models\Themes_model',
+            \System\Models\Translation::class => 'System\Models\Translations_model',
         ]);
     }
 }

@@ -26,8 +26,8 @@ class MenuCategory extends Model
 
     public $relation = [
         'belongsTo' => [
-            'menu' => ['Admin\Models\Menu'],
-            'category' => ['Admin\Models\Category'],
+            'menu' => [\Admin\Models\Menu::class],
+            'category' => [\Admin\Models\Category::class],
         ],
     ];
 }

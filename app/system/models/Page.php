@@ -37,7 +37,7 @@ class Page extends Model
 
     public $relation = [
         'belongsTo' => [
-            'language' => 'System\Models\Language',
+            'language' => \System\Models\Language::class,
         ],
     ];
 

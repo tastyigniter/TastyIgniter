@@ -19,6 +19,6 @@ class Partial extends Model
      */
     public function getCodeClassParent()
     {
-        return '\Main\Template\Code\PartialCode';
+        return \Main\Template\Code\PartialCode::class;
     }
 }

@@ -11,13 +11,13 @@ use Main\Facades\Auth;
 class Customers extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'Admin\Models\Customer',
+            'model' => \Admin\Models\Customer::class,
             'title' => 'lang:admin::lang.customers.text_title',
             'emptyMessage' => 'lang:admin::lang.customers.text_empty',
             'defaultSort' => ['customer_id', 'DESC'],
@@ -27,8 +27,8 @@ class Customers extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:admin::lang.customers.text_form_name',
-        'model' => 'Admin\Models\Customer',
-        'request' => 'Admin\Requests\Customer',
+        'model' => \Admin\Models\Customer::class,
+        'request' => \Admin\Requests\Customer::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'customers/edit/{customer_id}',

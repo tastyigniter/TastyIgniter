@@ -30,6 +30,6 @@ class Layout extends Model
      */
     public function getCodeClassParent()
     {
-        return '\Main\Template\Code\LayoutCode';
+        return \Main\Template\Code\LayoutCode::class;
     }
 }

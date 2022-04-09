@@ -28,10 +28,10 @@ class UserGroup extends Model
 
     public $relation = [
         'hasMany' => [
-            'assignable_logs' => ['Admin\Models\AssignableLog', 'foreignKey' => 'assignee_group_id'],
+            'assignable_logs' => [\Admin\Models\AssignableLog::class, 'foreignKey' => 'assignee_group_id'],
         ],
         'belongsToMany' => [
-            'users' => ['Admin\Models\User', 'table' => 'users_groups'],
+            'users' => [\Admin\Models\User::class, 'table' => 'users_groups'],
         ],
     ];
 

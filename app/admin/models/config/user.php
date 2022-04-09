@@ -9,7 +9,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'scope' => 'whereHasLocation',
-            'modelClass' => 'Admin\Models\Location',
+            'modelClass' => \Admin\Models\Location::class,
             'nameFrom' => 'location_name',
             'locationAware' => TRUE,
         ],
@@ -17,7 +17,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.staff.text_filter_role',
             'type' => 'select',
             'conditions' => 'user_role_id = :filtered',
-            'modelClass' => 'Admin\Models\UserRole',
+            'modelClass' => \Admin\Models\UserRole::class,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -266,7 +266,7 @@ $config['form']['fields'] = [
         'type' => 'radiolist',
         'span' => 'left',
         'context' => ['create', 'edit'],
-        'options' => ['Admin\Models\UserRole', 'listDropdownOptions'],
+        'options' => [\Admin\Models\UserRole::class, 'listDropdownOptions'],
         'commentAbove' => 'lang:admin::lang.staff.help_role',
     ],
     'super_user' => [

@@ -9,7 +9,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'select',
             'scope' => 'whereHasLocation',
-            'modelClass' => 'Admin\Models\Locations_model',
+            'modelClass' => \Admin\Models\Locations_model::class,
             'nameFrom' => 'location_name',
             'locationAware' => TRUE,
         ],
@@ -17,7 +17,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.menus.text_filter_category',
             'type' => 'select',
             'scope' => 'whereHasCategory',
-            'modelClass' => 'Admin\Models\Categories_model',
+            'modelClass' => \Admin\Models\Categories_model::class,
             'nameFrom' => 'name',
         ],
         'menu_status' => [
@@ -231,7 +231,7 @@ $config['form']['tabs'] = [
             'type' => 'checkboxtoggle',
             'span' => 'left',
             'comment' => 'lang:admin::lang.menus.help_order_restriction',
-            'options' => ['Admin\Models\Locations_model', 'getOrderTypeOptions'],
+            'options' => [\Admin\Models\Locations_model::class, 'getOrderTypeOptions'],
         ],
         'menu_status' => [
             'label' => 'lang:admin::lang.label_status',

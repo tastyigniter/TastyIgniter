@@ -35,7 +35,7 @@ class Mealtime extends Model
 
     public $relation = [
         'morphToMany' => [
-            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
+            'locations' => [\Admin\Models\Location::class, 'name' => 'locationable'],
         ],
     ];
 

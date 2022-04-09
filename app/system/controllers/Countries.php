@@ -10,13 +10,13 @@ use Admin\Facades\AdminMenu;
 class Countries extends \Admin\Classes\AdminController
 {
     public $implement = [
-        'Admin\Actions\ListController',
-        'Admin\Actions\FormController',
+        \Admin\Actions\ListController::class,
+        \Admin\Actions\FormController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Country',
+            'model' => \System\Models\Country::class,
             'title' => 'lang:system::lang.countries.text_title',
             'emptyMessage' => 'lang:system::lang.countries.text_empty',
             'defaultSort' => ['country_name', 'ASC'],
@@ -26,8 +26,8 @@ class Countries extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:system::lang.countries.text_form_name',
-        'model' => 'System\Models\Country',
-        'request' => 'System\Requests\Country',
+        'model' => \System\Models\Country::class,
+        'request' => \System\Requests\Country::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'countries/edit/{country_id}',

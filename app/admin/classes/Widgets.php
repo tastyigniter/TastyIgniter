@@ -193,7 +193,7 @@ class Widgets
      * Usage:
      * <pre>
      *   WidgetManager::registerFormWidgets(function($manager){
-     *       $manager->registerFormWidget('Backend\FormWidgets\CodeEditor', [
+     *       $manager->registerFormWidget(\Admin\FormWidgets\CodeEditor::class, [
      *           'name' => 'Code editor',
      *           'code'  => 'codeeditor'
      *       ]);
@@ -283,7 +283,7 @@ class Widgets
      * Usage:
      * <pre>
      *   Widgets::registerDashboardWidgets(function($manager){
-     *       $manager->registerDashboardWidget('IgniterLab\GoogleAnalytics\DashboardWidgets\TrafficOverview', [
+     *       $manager->registerDashboardWidget(\IgniterLab\GoogleAnalytics\DashboardWidgets\TrafficOverview::class, [
      *           'name'=>'Google Analytics traffic overview',
      *           'context'=>'dashboard'
      *       ]);

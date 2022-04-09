@@ -72,13 +72,13 @@ class Order extends Model
 
     public $relation = [
         'belongsTo' => [
-            'customer' => 'Admin\Models\Customer',
-            'location' => 'Admin\Models\Location',
-            'address' => 'Admin\Models\Address',
-            'payment_method' => ['Admin\Models\Payment', 'foreignKey' => 'payment', 'otherKey' => 'code'],
+            'customer' => \Admin\Models\Customer::class,
+            'location' => \Admin\Models\Location::class,
+            'address' => \Admin\Models\Address::class,
+            'payment_method' => [\Admin\Models\Payment::class, 'foreignKey' => 'payment', 'otherKey' => 'code'],
         ],
         'hasMany' => [
-            'payment_logs' => 'Admin\Models\PaymentLog',
+            'payment_logs' => \Admin\Models\PaymentLog::class,
         ],
     ];
 

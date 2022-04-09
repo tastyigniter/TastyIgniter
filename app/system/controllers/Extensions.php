@@ -20,12 +20,12 @@ class Extensions extends \Admin\Classes\AdminController
     use ManagesUpdates;
 
     public $implement = [
-        'Admin\Actions\ListController',
+        \Admin\Actions\ListController::class,
     ];
 
     public $listConfig = [
         'list' => [
-            'model' => 'System\Models\Extension',
+            'model' => \System\Models\Extension::class,
             'title' => 'lang:system::lang.extensions.text_title',
             'emptyMessage' => 'lang:system::lang.extensions.text_empty',
             'pageLimit' => 50,
@@ -261,7 +261,7 @@ class Extensions extends \Admin\Classes\AdminController
         $modelConfig['context'] = $context;
 
         // Form Widget with extensibility
-        $this->formWidget = $this->makeWidget('Admin\Widgets\Form', $modelConfig);
+        $this->formWidget = $this->makeWidget(\Admin\Widgets\Form::class, $modelConfig);
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget

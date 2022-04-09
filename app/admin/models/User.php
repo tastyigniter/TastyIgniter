@@ -53,17 +53,17 @@ class User extends AuthUserModel
 
     public $relation = [
         'hasMany' => [
-            'assignable_logs' => ['Admin\Models\AssignableLog', 'foreignKey' => 'assignee_id'],
+            'assignable_logs' => [\Admin\Models\AssignableLog::class, 'foreignKey' => 'assignee_id'],
         ],
         'belongsTo' => [
-            'role' => ['Admin\Models\UserRole', 'foreignKey' => 'user_role_id'],
-            'language' => ['System\Models\Language'],
+            'role' => [\Admin\Models\UserRole::class, 'foreignKey' => 'user_role_id'],
+            'language' => [\System\Models\Language::class],
         ],
         'belongsToMany' => [
-            'groups' => ['Admin\Models\UserGroup', 'table' => 'users_groups'],
+            'groups' => [\Admin\Models\UserGroup::class, 'table' => 'users_groups'],
         ],
         'morphToMany' => [
-            'locations' => ['Admin\Models\Location', 'name' => 'locationable'],
+            'locations' => [\Admin\Models\Location::class, 'name' => 'locationable'],
         ],
     ];
 

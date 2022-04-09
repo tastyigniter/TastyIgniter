@@ -10,7 +10,7 @@ use Igniter\Flame\Support\Facades\File;
  * Based on October/ModelBehaviour
  * Usage:
  * In the model class definition:
- *   public $implement = ['System\Actions\SettingsModel'];
+ *   public $implement = [\System\Actions\SettingsModel::class];
  *   public $settingsCode = 'owner_extension_settings';
  *   public $settingsFieldsConfig = 'Settings';
  */
