@@ -218,6 +218,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.menus.label_stock_qty',
             'type' => 'stockeditor',
             'span' => 'right',
+            'context' => ['edit', 'preview'],
             'default' => 0,
             'comment' => 'lang:admin::lang.menus.help_stock_qty',
         ],

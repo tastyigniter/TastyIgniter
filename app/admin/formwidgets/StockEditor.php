@@ -4,8 +4,7 @@ namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use Admin\Models\Locations_model;
-use Admin\Models\Menu_option_values_model;
+use Admin\Facades\AdminLocation;
 use Admin\Models\Stock_history_model;
 use Admin\Widgets\Form;
 
@@ -62,7 +61,7 @@ class StockEditor extends BaseFormWidget
             $formWidgets[] = $this->makeStockFormWidget($location);
         }
 
-        $stockableName = $this->getStockableName();
+        $stockableName = $this->model->getStockableName();
 
         return $this->makePartial('stockeditor/form', [
             'formTitle' => sprintf(lang('admin::lang.stocks.text_title_manage_stock'), ''),
@@ -108,21 +107,9 @@ class StockEditor extends BaseFormWidget
 
     protected function getAvailableLocations()
     {
-        $locations = $this->model instanceof Menu_option_values_model
-            ? $this->model->option->locations
-            : $this->model->locations;
+        $locations = $this->model->getStockableLocations();
 
-        if (!$locations || $locations->isEmpty())
-            $locations = Locations_model::isEnabled()->get();
-
-        return $locations;
-    }
-
-    protected function getStockableName()
-    {
-        return $this->model instanceof Menu_option_values_model
-            ? $this->model->value
-            : $this->model->menu_name;
+        return $locations->isNotEmpty() ? $locations : AdminLocation::listLocations();
     }
 
     protected function makeStockFormWidget($location)
@@ -133,7 +120,7 @@ class StockEditor extends BaseFormWidget
         $widgetConfig['model'] = $this->model->getStockByLocation($location);
         $widgetConfig['alias'] = 'StockEditor';
         $widgetConfig['arrayName'] = 'Stock['.$location->getKey().']';
-        $widgetConfig['context'] = $this->formField->context;
+        $widgetConfig['context'] = $this->controller->getFormContext();
         $widget = $this->makeWidget(Form::class, $widgetConfig);
 
         $widget->bindToController();
