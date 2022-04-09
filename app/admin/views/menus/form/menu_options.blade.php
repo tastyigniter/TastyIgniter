@@ -35,7 +35,9 @@
     <div class="px-2">
         <p class="card-title font-weight-bold mb-1">{{ $item->option_name }}</p>
         @foreach($item->menu_option_values->sortBy('priority')->take(10) as $menuOptionValue)
-            <span class="badge border">{{ $menuOptionValue->name }}</span>
+            <span
+                @class(['badge border', 'bg-secondary border-secondary text-white' => $menuOptionValue->is_default])
+            >{{ $menuOptionValue->name }}</span>
         @endforeach
     </div>
 </div>

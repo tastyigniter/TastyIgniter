@@ -54,7 +54,7 @@ class Menu_options_model extends Model
         ],
     ];
 
-    protected $purgeable = ['option_values'];
+    protected $purgeable = ['values'];
 
     public $timestamps = TRUE;
 
@@ -86,8 +86,8 @@ class Menu_options_model extends Model
     {
         $this->restorePurgedValues();
 
-        if (array_key_exists('option_values', $this->attributes))
-            $this->addOptionValues($this->attributes['option_values']);
+        if (array_key_exists('values', $this->attributes))
+            $this->addOptionValues($this->attributes['values']);
 
         if ($this->update_related_menu_item)
             $this->updateRelatedMenuItemsOptionValues();
