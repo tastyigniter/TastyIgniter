@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Main\Classes\ThemeManager;
 use System\Facades\Assets;
+use System\Helpers\CacheHelper;
 use System\Libraries\Assets as AssetsManager;
 use System\Models\Themes_model;
 use System\Traits\ConfigMaker;
@@ -167,6 +168,8 @@ class Themes extends \Admin\Classes\AdminController
     {
         $themeName = post('code');
         if ($theme = Themes_model::activateTheme($themeName)) {
+            CacheHelper::instance()->clearView();
+
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme ['.$theme->name.'] set as default '));
         }
 
