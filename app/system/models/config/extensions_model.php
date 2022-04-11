@@ -11,7 +11,7 @@ $config['list']['toolbar'] = [
         'browse' => [
             'label' => 'lang:system::lang.extensions.button_browse',
             'class' => 'btn btn-primary',
-            'href' => 'https://tastyigniter.com/marketplace',
+            'href' => 'https://tastyigniter.com/marketplace/extensions',
             'target' => '_blank',
         ],
         'check' => [

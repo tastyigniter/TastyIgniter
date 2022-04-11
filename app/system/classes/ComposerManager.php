@@ -3,6 +3,7 @@
 namespace System\Classes;
 
 use Igniter\Flame\Support\Facades\File;
+use Main\Classes\ThemeManager;
 
 /**
  * ComposerManager Class
@@ -79,6 +80,20 @@ class ComposerManager
         }
     }
 
+    public function getExtensionVersion($name)
+    {
+        $path = ExtensionManager::instance()->path($name);
+
+        return $this->getInstalledVersion('extension', $name, $path);
+    }
+
+    public function getThemeVersion($name)
+    {
+        $path = ThemeManager::instance()->path($name);
+
+        return $this->getInstalledVersion('theme', $name, $path);
+    }
+
     public function listInstalledPackages($vendorPath)
     {
         if (!file_exists($path = $vendorPath.'/composer/installed.json'))
@@ -150,5 +165,19 @@ class ComposerManager
         }
 
         return $path;
+    }
+
+    protected function getInstalledVersion($type, $code, $path)
+    {
+        if (!File::exists(sprintf('%s/composer.json', $path)))
+            return null;
+
+        $package = collect($this->listInstalledPackages(base_path('vendor')))
+            ->first(function ($package) use ($type, $code) {
+                return array_get($package, 'type') === 'tastyigniter-'.$type
+                    && array_get($package, 'extra.tastyigniter-'.$type.'.code') === $code;
+            }, []);
+
+        return array_get($package, 'version');
     }
 }

@@ -758,7 +758,7 @@ class ExtensionManager
         // set extension migration to the latest version
         UpdateManager::instance()->migrateExtension($model->name);
 
-        $model->version = $version ?? $this->getComposerInstalledVersion($model->name) ?? $model->version;
+        $model->version = $version ?? ComposerManager::instance()->getExtensionVersion($model->name) ?? $model->version;
         $model->save();
 
         $this->updateInstalledExtensions($model->name);
@@ -821,20 +821,5 @@ class ExtensionManager
                 require $configPath, $this->app['config']->get($configKey, [])
             ));
         }
-    }
-
-    protected function getComposerInstalledVersion($extensionCode)
-    {
-        if (!File::exists(sprintf('%s/composer.json', $this->path($extensionCode))))
-            return null;
-
-        return collect(ComposerManager::instance()->listInstalledPackages(base_path('vendor')))
-            ->filter(function ($package) use ($extensionCode) {
-                if (array_get($package, 'type') !== 'tastyigniter-extension')
-                    return FALSE;
-
-                return array_get($package, 'extra.tastyigniter-extension.code') === $extensionCode;
-            })
-            ->get('version');
     }
 }
