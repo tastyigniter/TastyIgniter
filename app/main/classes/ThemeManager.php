@@ -51,6 +51,8 @@ class ThemeManager
 
     protected $booted = FALSE;
 
+    protected static $directories = [];
+
     public function initialize()
     {
         // This prevents reading settings from the database before its been created
@@ -58,6 +60,11 @@ class ThemeManager
             $this->loadInstalled();
             $this->loadThemes();
         }
+    }
+
+    public static function addDirectory($directory)
+    {
+        self::$directories[] = $directory;
     }
 
     public static function addAssetsFromActiveThemeManifest(Assets $manager)
@@ -155,7 +162,6 @@ class ThemeManager
         $themeObject->active = $this->isActive($themeCode);
 
         $this->themes[$themeCode] = $themeObject;
-        $this->paths[$themeCode] = $path;
 
         return $themeObject;
     }
@@ -254,13 +260,20 @@ class ThemeManager
      */
     public function paths()
     {
-        $themes = [];
-        foreach (File::directories(App::themesPath()) as $path) {
-            $themeDir = basename($path);
-            $themes[$themeDir] = $path;
+        if ($this->paths)
+            return $this->paths;
+
+        $paths = [];
+
+        $directories = array_merge([App::themesPath()], self::$directories);
+        foreach ($directories as $directory) {
+            foreach (File::directories($directory) as $path) {
+                $themeDir = basename($path);
+                $paths[$themeDir] = $path;
+            }
         }
 
-        return $themes;
+        return $this->paths = $paths;
     }
 
     /**
