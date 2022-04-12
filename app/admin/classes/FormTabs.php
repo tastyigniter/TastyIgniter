@@ -190,7 +190,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet($offset, $value)
     {
         $this->fields[$offset] = $value;
     }
@@ -202,7 +202,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
      *
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists($offset)
     {
         return isset($this->fields[$offset]);
     }
@@ -212,7 +212,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
      *
      * @param mixed $offset
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset($offset)
     {
         unset($this->fields[$offset]);
     }
@@ -224,7 +224,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
      *
      * @return mixed|null
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet($offset)
     {
         return isset($this->fields[$offset]) ? $this->fields[$offset] : null;
     }
