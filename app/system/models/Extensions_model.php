@@ -7,6 +7,7 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\Markdown;
 use Igniter\Flame\Support\Facades\File;
 use Main\Classes\ThemeManager;
+use System\Classes\ComposerManager;
 use System\Classes\ExtensionManager;
 
 /**
@@ -170,6 +171,7 @@ class Extensions_model extends Model
 
             $enableExtension = ($model->exists && !$extension->disabled);
 
+            $model->version = $model->attributes['version'] ?? ComposerManager::instance()->getExtensionVersion($model->name) ?? $model->version;
             $model->save();
 
             $extensionManager->updateInstalledExtensions($code, $enableExtension);
