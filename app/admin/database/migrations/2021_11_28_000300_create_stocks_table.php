@@ -77,7 +77,7 @@ class CreateStocksTable extends Migration
                     'stockable_id' => $menuItem->menu_id,
                     'stockable_type' => 'menus',
                     'quantity' => $menuItem->stock_qty,
-                    'is_tracked' => $menuItem->subtract_stock,
+                    'is_tracked' => (bool)$menuItem->subtract_stock,
                     'created_at' => now()->toDateTimeString(),
                     'updated_at' => now()->toDateTimeString(),
                 ]);
@@ -114,7 +114,7 @@ class CreateStocksTable extends Migration
                     'stockable_id' => $optionValue->option_value_id,
                     'stockable_type' => 'menu_option_values',
                     'quantity' => $optionValue->quantity,
-                    'is_tracked' => $optionValue->subtract_stock,
+                    'is_tracked' => (bool)$optionValue->subtract_stock,
                     'created_at' => now()->toDateTimeString(),
                     'updated_at' => now()->toDateTimeString(),
                 ]);

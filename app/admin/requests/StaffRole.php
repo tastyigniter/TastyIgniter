@@ -20,7 +20,7 @@ class StaffRole extends FormRequest
     {
         return [
             'code' => ['between:2,32'],
-            'name' => ['required', 'between:2,128'],
+            'name' => ['required', 'between:2,128', 'unique:staff_roles'],
             'permissions' => ['required', 'array'],
             'permissions.*' => ['required', 'integer'],
         ];

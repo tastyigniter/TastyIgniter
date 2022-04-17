@@ -23,11 +23,20 @@ class CacheHelper
     {
         $instance = self::instance();
         $instance->clearCache();
+        $instance->clearView();
         $instance->clearTemplates();
 
         $instance->clearCombiner();
 
         $instance->clearMeta();
+    }
+
+    public function clearView()
+    {
+        $path = config()->get('view.compiled');
+        foreach (File::glob("{$path}/*") as $view) {
+            File::delete($view);
+        }
     }
 
     public function clearCombiner()

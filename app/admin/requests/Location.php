@@ -58,7 +58,7 @@ class Location extends FormRequest
     public function rules()
     {
         return [
-            'location_name' => ['required', 'between:2,32'],
+            'location_name' => ['required', 'between:2,32', 'unique:locations'],
             'location_email' => ['required', 'email:filter', 'max:96'],
             'location_telephone' => ['sometimes'],
             'location_address_1' => ['required', 'between:2,128'],
@@ -68,8 +68,8 @@ class Location extends FormRequest
             'location_postcode' => ['max:10'],
             'location_country_id' => ['required', 'integer'],
             'options.auto_lat_lng' => ['required', 'boolean'],
-            'location_lat' => ['sometimes', 'required_if:options.auto_lat_lng,0', 'numeric'],
-            'location_lng' => ['sometimes', 'required_if:options.auto_lat_lng,0', 'numeric'],
+            'location_lat' => ['sometimes', 'numeric'],
+            'location_lng' => ['sometimes', 'numeric'],
             'description' => ['max:3028'],
             'options.limit_orders' => ['boolean'],
             'options.limit_orders_count' => ['integer', 'min:1', 'max:999'],

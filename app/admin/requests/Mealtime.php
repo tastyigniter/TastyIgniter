@@ -20,7 +20,7 @@ class Mealtime extends FormRequest
     public function rules()
     {
         return [
-            'mealtime_name' => ['required', 'between:2,128'],
+            'mealtime_name' => ['required', 'between:2,128', 'unique:mealtimes'],
             'start_time' => ['required', 'valid_time'],
             'end_time' => ['required', 'valid_time'],
             'mealtime_status' => ['required', 'boolean'],

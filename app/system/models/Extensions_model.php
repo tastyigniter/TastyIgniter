@@ -7,6 +7,7 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\Markdown;
 use Igniter\Flame\Support\Facades\File;
 use Main\Classes\ThemeManager;
+use System\Classes\ComposerManager;
 use System\Classes\ExtensionManager;
 
 /**
@@ -16,9 +17,6 @@ class Extensions_model extends Model
 {
     const ICON_MIMETYPES = [
         'svg' => 'image/svg+xml',
-        'png' => 'image/png',
-        'jpeg' => 'image/jpeg',
-        'jpg' => 'image/jpeg',
     ];
 
     /**
@@ -99,7 +97,7 @@ class Extensions_model extends Model
             if (file_exists($file)) {
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
                 if (!array_key_exists($extension, self::ICON_MIMETYPES))
-                    throw new ApplicationException('Invalid extension icon type');
+                    throw new ApplicationException('Invalid extension icon file type in: '.$this->name.'. Only SVG images are supported');
 
                 $mimeType = self::ICON_MIMETYPES[$extension];
                 $data = base64_encode(file_get_contents($file));
@@ -173,6 +171,7 @@ class Extensions_model extends Model
 
             $enableExtension = ($model->exists && !$extension->disabled);
 
+            $model->version = $model->attributes['version'] ?? ComposerManager::instance()->getExtensionVersion($model->name) ?? $model->version;
             $model->save();
 
             $extensionManager->updateInstalledExtensions($code, $enableExtension);
