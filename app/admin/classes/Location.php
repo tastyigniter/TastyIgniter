@@ -99,7 +99,7 @@ class Location extends Manager
     {
         return $this->getAuth()->isSuperUser()
             ? $this->createLocationModel()->isEnabled()->get()
-            : $this->getLocations()->get();
+            : $this->getLocations();
     }
 
     public function getDefaultLocation()
