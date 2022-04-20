@@ -58,6 +58,7 @@ class Menu extends Model
             'mealtimes' => [\Admin\Models\Mealtime::class, 'table' => 'menu_mealtimes'],
         ],
         'morphToMany' => [
+            'allergens' => [\Admin\Models\Ingredient::class, 'name' => 'ingredientable', 'conditions' => 'is_allergen = 1'],
             'ingredients' => [\Admin\Models\Ingredient::class, 'name' => 'ingredientable'],
             'locations' => [\Admin\Models\Location::class, 'name' => 'locationable'],
         ],

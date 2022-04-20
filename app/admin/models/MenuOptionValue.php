@@ -67,6 +67,16 @@ class MenuOptionValue extends Model
         return self::$ingredientOptionsCache = Ingredient::dropdown('name')->all();
     }
 
+    public function getStockableName()
+    {
+        return $this->value;
+    }
+
+    public function getStockableLocations()
+    {
+        return $this->option->locations;
+    }
+
     //
     // Events
     //

@@ -97,10 +97,9 @@ class Location extends Manager
 
     public function listLocations()
     {
-        if ($this->getAuth()->isSuperUser())
-            return $this->createLocationModel()->getDropdownOptions();
-
-        return $this->getLocations()->pluck('location_name', 'location_id');
+        return $this->getAuth()->isSuperUser()
+            ? $this->createLocationModel()->isEnabled()->get()
+            : $this->getLocations()->get();
     }
 
     public function getDefaultLocation()

@@ -34,9 +34,9 @@ class Dashboard extends \Admin\Classes\AdminController
 
     public function initDashboardContainer()
     {
-        $this->containerConfig['canManage'] = $this->canManageWidgets();
-        $this->containerConfig['canSetDefault'] = AdminAuth::isSuperUser();
-        $this->containerConfig['defaultWidgets'] = $this->getDefaultWidgets();
+        $this->containerConfig['canManage'] = array_get($this->containerConfig, 'canManage', $this->canManageWidgets());
+        $this->containerConfig['canSetDefault'] = array_get($this->containerConfig, 'canSetDefault', AdminAuth::isSuperUser());
+        $this->containerConfig['defaultWidgets'] = array_get($this->containerConfig, 'defaultWidgets', $this->getDefaultWidgets());
 
         new DashboardContainer($this, $this->containerConfig);
     }

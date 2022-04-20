@@ -2,7 +2,7 @@
 
 namespace System\Libraries;
 
-use System\Models\Country;
+use System\Models\Country as CountryModel;
 
 /**
  * Country Class
@@ -28,7 +28,7 @@ class Country
 
     protected $countriesCollection = [];
 
-    public function addressFormat($address, $useLineBreaks = TRUE)
+    public function addressFormat($address, $useLineBreaks = true)
     {
         $format = $this->getDefaultFormat();
 
@@ -85,7 +85,7 @@ class Country
 
     public function getDefaultFormat()
     {
-        if ($defaultCountry = Countries_model::getDefault())
+        if ($defaultCountry = CountryModel::getDefault())
             return $defaultCountry->format;
 
         return $this->defaultFormat;
@@ -138,7 +138,7 @@ class Country
     protected function loadCountries()
     {
         if (!count($this->countriesCollection))
-            $this->countriesCollection = Country::isEnabled()->sorted()->get();
+            $this->countriesCollection = CountryModel::isEnabled()->sorted()->get();
 
         return $this->countriesCollection;
     }
