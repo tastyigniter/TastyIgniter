@@ -745,7 +745,7 @@ class ExtensionManager
         // set extension migration to the latest version
         UpdateManager::instance()->migrateExtension($model->name);
 
-        $model->version = $version ?? ComposerManager::instance()->getExtensionVersion($model->name) ?? $model->version;
+        $model->version = $version ?? ComposerManager::instance()->getPackageVersion($model->name) ?? $model->version;
         $model->save();
 
         $this->updateInstalledExtensions($model->name);

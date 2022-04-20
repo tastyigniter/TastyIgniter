@@ -604,7 +604,7 @@ class ThemeManager
 
         $model->name = $themeObj->label ?? title_case($code);
         $model->code = $code;
-        $model->version = $version ?? ComposerManager::instance()->getThemeVersion($code) ?? $model->version;
+        $model->version = $version ?? ComposerManager::instance()->getPackageVersion($code) ?? $model->version;
         $model->description = $themeObj->description ?? '';
         $model->save();
 

@@ -63,7 +63,7 @@ class IgniterInstall extends Command
 
         if (
             App::hasDatabase() &&
-            !$this->confirm('Application appears to be installed already. Continue anyway?', FALSE)
+            !$this->confirm('Application appears to be installed already. Continue anyway?', false)
         ) {
             return;
         }
@@ -80,9 +80,6 @@ class IgniterInstall extends Command
 
         $this->addSystemValues();
 
-        $this->moveExampleFile('htaccess', null, 'backup');
-        $this->moveExampleFile('htaccess', 'example', null);
-
         $this->alert('INSTALLATION COMPLETE');
     }
 
@@ -98,7 +95,7 @@ class IgniterInstall extends Command
 
     protected function rewriteEnvFile()
     {
-        if (file_exists(base_path().'/.env') && !$this->confirm('Rewrite environment file?', FALSE))
+        if (file_exists(base_path().'/.env') && !$this->confirm('Rewrite environment file?', false))
             return;
 
         $this->moveExampleFile('env', null, 'backup');
@@ -116,6 +113,9 @@ class IgniterInstall extends Command
             if ($key === 'password') $value = '"'.$value.'"';
             $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
         }
+
+        $this->moveExampleFile('htaccess', null, 'backup');
+        $this->moveExampleFile('htaccess', 'example', null);
     }
 
     protected function migrateDatabase()
@@ -135,11 +135,11 @@ class IgniterInstall extends Command
     {
         $name = Config::get('database.default');
         $this->dbConfig['host'] = $this->ask('MySQL Host', Config::get("database.connections.$name.host"));
-        $this->dbConfig['port'] = $this->ask('MySQL Port', Config::get("database.connections.$name.port") ?: FALSE) ?: '';
+        $this->dbConfig['port'] = $this->ask('MySQL Port', Config::get("database.connections.$name.port") ?: false) ?: '';
         $this->dbConfig['database'] = $this->ask('MySQL Database', Config::get("database.connections.$name.database"));
         $this->dbConfig['username'] = $this->ask('MySQL Username', Config::get("database.connections.$name.username"));
-        $this->dbConfig['password'] = $this->ask('MySQL Password', Config::get("database.connections.$name.password") ?: FALSE) ?: '';
-        $this->dbConfig['prefix'] = $this->ask('MySQL Table Prefix', Config::get("database.connections.$name.prefix") ?: FALSE) ?: '';
+        $this->dbConfig['password'] = $this->ask('MySQL Password', Config::get("database.connections.$name.password") ?: false) ?: '';
+        $this->dbConfig['prefix'] = $this->ask('MySQL Table Prefix', Config::get("database.connections.$name.prefix") ?: false) ?: '';
 
         DatabaseSeeder::$siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
         DatabaseSeeder::$siteUrl = $this->ask('Site URL', Config::get('app.url'));
@@ -181,13 +181,13 @@ class IgniterInstall extends Command
             'staff_name' => DatabaseSeeder::$staffName,
             'language_id' => Languages_model::first()->language_id,
             'staff_role_id' => Staff_roles_model::first()->staff_role_id,
-            'staff_status' => TRUE,
+            'staff_status' => true,
             'username' => $username,
             'password' => $password,
-            'super_user' => TRUE,
+            'super_user' => true,
             'groups' => [Staff_groups_model::first()->staff_group_id],
             'locations' => [Locations_model::first()->location_id],
-        ], TRUE);
+        ], true);
 
         $this->line('Admin user '.$user->username.' created!');
     }
